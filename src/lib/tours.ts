@@ -45,6 +45,16 @@ function resolveListingAccommodationType(slug: string, nights: number): Accommod
   return nights === 0 ? "Без проживания" : "Отель";
 }
 
+function resolveDetailComfort(
+  slug: string,
+  nights: number,
+  extraComfort: string
+): ComfortLevel {
+  const type = resolveListingAccommodationType(slug, nights);
+  if (type === "Без проживания" || nights === 0) return "Без проживания";
+  return mapComfort(extraComfort);
+}
+
 /** Build a TourDetail from catalog data when full detail is not yet in DB */
 function buildTourDetailFromBase(
   base: (typeof baseTours)[number],
@@ -69,7 +79,7 @@ function buildTourDetailFromBase(
     image: base.image,
     shortDescription: base.shortDescription,
     difficulty: mapDifficulty(base.difficulty),
-    comfort: mapComfort(extra.comfort),
+    comfort: resolveDetailComfort(base.slug, nights, extra.comfort),
     accommodationType: resolveListingAccommodationType(base.slug, nights),
     groupMin: min,
     groupMax: max,

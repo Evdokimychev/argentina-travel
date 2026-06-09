@@ -41,6 +41,7 @@ export type AccommodationType =
 export type DurationBucket = "1–2 дня" | "2–3 дня" | "4–7 дней" | "8–14 дней" | "15+ дней";
 
 export type ComfortLevel =
+  | "Без проживания"
   | "Базовый"
   | "Стандарт"
   | "Комфорт"

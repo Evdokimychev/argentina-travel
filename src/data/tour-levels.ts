@@ -1,9 +1,15 @@
 import { DifficultyLevel, ComfortLevel } from "@/types";
 import {
   AlertTriangle,
+  Bed,
+  Crown,
   Footprints,
+  Hotel,
   Mountain,
   MountainSnow,
+  Sparkles,
+  Sun,
+  Tent,
   TrendingUp,
   type LucideIcon,
 } from "lucide-react";
@@ -14,6 +20,15 @@ export const DIFFICULTY_ICONS: Record<DifficultyLevel, LucideIcon> = {
   Средняя: Mountain,
   Высокая: MountainSnow,
   Экстремальная: AlertTriangle,
+};
+
+export const COMFORT_ICONS: Record<ComfortLevel, LucideIcon> = {
+  "Без проживания": Sun,
+  Базовый: Tent,
+  Стандарт: Bed,
+  Комфорт: Hotel,
+  Премиум: Sparkles,
+  Люкс: Crown,
 };
 
 export const DIFFICULTY_LEVELS: {
@@ -58,6 +73,11 @@ export const COMFORT_LEVELS: {
   description: string;
 }[] = [
   {
+    level: "Без проживания",
+    description:
+      "Однодневный тур без ночёвки. Проживание не включено в программу и не требуется.",
+  },
+  {
     level: "Базовый",
     description: "Хостелы, общие удобства, палаточный лагерь.",
   },
@@ -88,12 +108,30 @@ export const DIFFICULTY_DOT_COUNT: Record<DifficultyLevel, number> = {
 };
 
 export const COMFORT_DOT_COUNT: Record<ComfortLevel, number> = {
+  "Без проживания": 0,
   Базовый: 1,
   Стандарт: 2,
   Комфорт: 3,
   Премиум: 4,
   Люкс: 5,
 };
+
+export const COMFORT_INFO_ITEMS = COMFORT_LEVELS.map(({ level, description }) => ({
+  level,
+  description,
+  scale: COMFORT_DOT_COUNT[level],
+}));
+
+export function primaryComfortLevel(levels: ComfortLevel[]): ComfortLevel {
+  if (!levels.length) return "Комфорт";
+
+  const housed = levels.filter((level) => level !== "Без проживания");
+  if (!housed.length) return "Без проживания";
+
+  return housed.reduce((best, level) =>
+    COMFORT_DOT_COUNT[level] > COMFORT_DOT_COUNT[best] ? level : best
+  );
+}
 
 export const DEFAULT_IGUAZU_DIFFICULTY_DESCRIPTION = `**Сложность программы**
 • Маршрут включает прогулки по оборудованным дорожкам, лестницам и смотровым площадкам.

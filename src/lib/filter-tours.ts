@@ -15,6 +15,7 @@ import {
   isPriceFilterActive,
 } from "@/lib/tour-price-bounds";
 import { matchesTourFormat } from "@/lib/tour-format";
+import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -118,7 +119,7 @@ export function filterTours(
 
     if (
       filters.comfortLevels.length &&
-      !filters.comfortLevels.includes(tour.comfortLevel)
+      !filters.comfortLevels.includes(resolveListingComfortLevel(tour))
     )
       return false;
 

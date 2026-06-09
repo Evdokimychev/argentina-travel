@@ -19,9 +19,26 @@ import TourGeneralDescriptionBlock from "@/components/organizer/TourGeneralDescr
 import TourPhotosBlock from "@/components/organizer/TourPhotosBlock";
 import TourImpressionsBlock from "@/components/organizer/TourImpressionsBlock";
 import TourGuidesBlock from "@/components/organizer/TourGuidesBlock";
+import TourComfortBlock from "@/components/organizer/TourComfortBlock";
+import TourAccommodationDescriptionBlock from "@/components/organizer/TourAccommodationDescriptionBlock";
+import TourAccommodationVariantsBlock from "@/components/organizer/TourAccommodationVariantsBlock";
+import TourAccommodationPlacesBlock from "@/components/organizer/TourAccommodationPlacesBlock";
+import TourCurrencyBlock from "@/components/organizer/TourCurrencyBlock";
+import TourDiscountBlock from "@/components/organizer/TourDiscountBlock";
+import TourIndividualBlock from "@/components/organizer/TourIndividualBlock";
+import TourGroupDatesBlock from "@/components/organizer/TourGroupDatesBlock";
+import TourProgramBlock from "@/components/organizer/TourProgramBlock";
+import TourTermsListBlock from "@/components/organizer/TourTermsListBlock";
+import TourFAQBlock from "@/components/organizer/TourFAQBlock";
+import TourPackingListBlock from "@/components/organizer/TourPackingListBlock";
+import { listItemsToText, textToListItems } from "@/data/tour-terms-defaults";
+import {
+  ACCOMMODATION_VARIANT_NOT_FILLED,
+  IGUAZU_VARIANT_ACCOMMODATIONS,
+} from "@/data/tour-accommodation-defaults";
+import { primaryComfortLevel } from "@/data/tour-levels";
+import { NO_ACCOMMODATION_LABEL } from "@/lib/tour-accommodation";
 import type {
-  AccommodationType,
-  ComfortLevel,
   TourBookingMode,
   TourLanguage,
 } from "@/types";
@@ -31,26 +48,24 @@ import {
   type OrganizerTourDraft,
   type OrganizerTourEditorTabId,
   type OrganizerTourStatus,
-  type OrganizerTourType,
 } from "@/types/organizer-tour";
-
-const COMFORT_LEVELS: ComfortLevel[] = ["Базовый", "Стандарт", "Комфорт", "Премиум", "Люкс"];
-
-const ACCOMMODATION_TYPES: AccommodationType[] = [
-  "Без проживания",
-  "Отель",
-  "Лодж",
-  "Палатка",
-  "Бутик-отель",
-];
 
 const LANGUAGES: TourLanguage[] = ["Русский", "Испанский", "Английский", "Португальский"];
 
-const BOOKING_MODES: { value: TourBookingMode; label: string }[] = [
-  { value: "scheduled", label: "Только по расписанию" },
-  { value: "on_request", label: "Только по запросу" },
-  { value: "both", label: "Расписание и индивидуально" },
-];
+function syncBookingModeForIndividual(
+  enabled: boolean,
+  current: TourBookingMode,
+  hasGroupDates: boolean
+): TourBookingMode {
+  if (enabled) {
+    if (current === "scheduled") return hasGroupDates ? "both" : "on_request";
+    return current;
+  }
+
+  if (current === "on_request") return "scheduled";
+  if (current === "both") return hasGroupDates ? "scheduled" : "scheduled";
+  return current;
+}
 
 const TOUR_VARIANT_SYNC: Record<
   string,
@@ -59,6 +74,7 @@ const TOUR_VARIANT_SYNC: Record<
     titleDiff?: string;
     minAgeDiff?: number;
     shortDescriptionDiff?: string;
+    accommodationDescriptionDiff?: string;
   }
 > = {
   "org-iguazu": {
@@ -67,6 +83,7 @@ const TOUR_VARIANT_SYNC: Record<
     minAgeDiff: 12,
     shortDescriptionDiff:
       "Двухдневный маршрут с ночёвкой у парка, бразильской стороной и более глубоким погружением в джунгли Misiones.",
+    accommodationDescriptionDiff: ACCOMMODATION_VARIANT_NOT_FILLED,
   },
 };
 
@@ -88,6 +105,87 @@ function FieldLabel({
         {required ? <span className="text-brand"> *</span> : null}
       </label>
       {hint ? <p className="mt-0.5 text-xs leading-relaxed text-slate">{hint}</p> : null}
+    </div>
+  );
+}
+
+function FloatingLabeledInput({
+  id,
+  label,
+  required,
+  className,
+  ...props
+}: React.ComponentProps<typeof Input> & {
+  label: string;
+  required?: boolean;
+}) {
+  return (
+    <div className={cn("relative min-w-0 flex-1", className)}>
+      <label
+        htmlFor={id}
+        className="pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-xs font-medium text-slate"
+      >
+        {label}
+        {required ? <span className="text-brand"> *</span> : null}
+      </label>
+      <Input id={id} className="h-14 pt-1" {...props} />
+    </div>
+  );
+}
+
+function RangeInputPair({
+  minId,
+  maxId,
+  minLabel,
+  maxLabel,
+  minValue,
+  maxValue,
+  onMinChange,
+  onMaxChange,
+  minRequired,
+  maxRequired,
+  minInputProps,
+  maxInputProps,
+}: {
+  minId: string;
+  maxId: string;
+  minLabel: string;
+  maxLabel: string;
+  minValue: number | string;
+  maxValue: number | string;
+  onMinChange: (value: number) => void;
+  onMaxChange: (value: number) => void;
+  minRequired?: boolean;
+  maxRequired?: boolean;
+  minInputProps?: React.ComponentProps<typeof Input>;
+  maxInputProps?: React.ComponentProps<typeof Input>;
+}) {
+  return (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <FloatingLabeledInput
+        id={minId}
+        label={minLabel}
+        required={minRequired}
+        type="number"
+        value={minValue}
+        onChange={(event) => onMinChange(Number(event.target.value) || 0)}
+        {...minInputProps}
+      />
+      <span
+        className="flex h-14 w-5 shrink-0 items-center justify-center text-lg font-light text-gray-300"
+        aria-hidden
+      >
+        —
+      </span>
+      <FloatingLabeledInput
+        id={maxId}
+        label={maxLabel}
+        required={maxRequired}
+        type="number"
+        value={maxValue}
+        onChange={(event) => onMaxChange(Number(event.target.value) || 0)}
+        {...maxInputProps}
+      />
     </div>
   );
 }
@@ -574,70 +672,53 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <LanguageTagsField languages={draft.languages} onToggle={toggleLanguage} />
-                  <div>
-                    <FieldLabel htmlFor="tour-days" required>
-                      Количество дней
-                    </FieldLabel>
-                    <Input
-                      id="tour-days"
-                      type="number"
-                      min={1}
-                      value={draft.durationDays}
-                      onChange={(event) =>
-                        updateDraft({ durationDays: Number(event.target.value) || 1 })
+                  <FloatingLabeledInput
+                    id="tour-days"
+                    label="Количество дней"
+                    required
+                    type="number"
+                    min={1}
+                    value={draft.durationDays}
+                    onChange={(event) =>
+                      updateDraft({ durationDays: Number(event.target.value) || 1 })
+                    }
+                  />
+
+                  <div className="sm:col-span-2">
+                    <RangeInputPair
+                      minId="tour-group-min"
+                      maxId="tour-group-max"
+                      minLabel="Мин. человек в группе"
+                      maxLabel="Макс. человек в группе"
+                      minValue={draft.groupMin}
+                      maxValue={draft.groupMax}
+                      maxRequired
+                      minInputProps={{ min: 1 }}
+                      maxInputProps={{ min: 1 }}
+                      onMinChange={(groupMin) => updateDraft({ groupMin: Math.max(1, groupMin) })}
+                      onMaxChange={(groupMax) =>
+                        updateDraft({ groupMax: Math.max(draft.groupMin, groupMax || 1) })
                       }
                     />
                   </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-group-min">Мин. человек в группе</FieldLabel>
-                    <Input
-                      id="tour-group-min"
-                      type="number"
-                      min={1}
-                      value={draft.groupMin}
-                      onChange={(event) =>
-                        updateDraft({ groupMin: Number(event.target.value) || 1 })
+
+                  <div className="sm:col-span-2">
+                    <RangeInputPair
+                      minId="tour-min-age"
+                      maxId="tour-max-age"
+                      minLabel="Минимальный возраст, лет"
+                      maxLabel="Максимальный возраст, лет"
+                      minValue={draft.minimumAge}
+                      maxValue={draft.maximumAge ?? ""}
+                      minRequired
+                      minInputProps={{ min: 0 }}
+                      maxInputProps={{ min: 0 }}
+                      onMinChange={(minimumAge) =>
+                        updateDraft({ minimumAge: Math.max(0, minimumAge) })
                       }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-group-max" required>
-                      Макс. человек в группе
-                    </FieldLabel>
-                    <Input
-                      id="tour-group-max"
-                      type="number"
-                      min={1}
-                      value={draft.groupMax}
-                      onChange={(event) =>
-                        updateDraft({ groupMax: Number(event.target.value) || 1 })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-min-age" required>
-                      Минимальный возраст, лет
-                    </FieldLabel>
-                    <Input
-                      id="tour-min-age"
-                      type="number"
-                      min={0}
-                      value={draft.minimumAge}
-                      onChange={(event) =>
-                        updateDraft({ minimumAge: Number(event.target.value) || 0 })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-max-age">Максимальный возраст, лет</FieldLabel>
-                    <Input
-                      id="tour-max-age"
-                      type="number"
-                      min={0}
-                      value={draft.maximumAge ?? ""}
-                      onChange={(event) =>
+                      onMaxChange={(maximumAge) =>
                         updateDraft({
-                          maximumAge: event.target.value ? Number(event.target.value) : null,
+                          maximumAge: maximumAge > 0 ? maximumAge : null,
                         })
                       }
                     />
@@ -755,188 +836,154 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "description" ? (
-              <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-                <div>
-                  <FieldLabel htmlFor="tour-description">Полное описание</FieldLabel>
-                  <textarea
-                    id="tour-description"
-                    value={draft.description}
-                    rows={12}
-                    onChange={(event) => updateDraft({ description: event.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              <>
+                <TourComfortBlock
+                  comfortLevels={draft.comfortLevels}
+                  onChange={(comfortLevels) => {
+                    const comfortLevel = primaryComfortLevel(comfortLevels);
+                    updateDraft({
+                      comfortLevels,
+                      comfortLevel,
+                      ...(comfortLevel === NO_ACCOMMODATION_LABEL
+                        ? { accommodationType: "Без проживания" }
+                        : {}),
+                    });
+                  }}
+                />
+
+                <TourAccommodationDescriptionBlock
+                  description={draft.accommodationDescriptionText}
+                  photos={draft.accommodationPhotos}
+                  onDescriptionChange={(accommodationDescriptionText) =>
+                    updateDraft({ accommodationDescriptionText })
+                  }
+                  onPhotosChange={(accommodationPhotos) => updateDraft({ accommodationPhotos })}
+                  variantLabel={variantSync?.variantLabel}
+                  variantDiff={variantSync?.accommodationDescriptionDiff}
+                  onApplySync={() => markDirty()}
+                />
+
+                {variantSync?.accommodationDescriptionDiff ? (
+                  <TourAccommodationVariantsBlock
+                    variantLabel={variantSync.variantLabel}
+                    variantPlaces={IGUAZU_VARIANT_ACCOMMODATIONS}
+                    onReplaceAll={() => markDirty()}
                   />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="tour-included">Что включено (каждый пункт с новой строки)</FieldLabel>
-                  <textarea
-                    id="tour-included"
-                    value={draft.includedText}
-                    rows={6}
-                    onChange={(event) => updateDraft({ includedText: event.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="tour-excluded">Что не включено</FieldLabel>
-                  <textarea
-                    id="tour-excluded"
-                    value={draft.excludedText}
-                    rows={6}
-                    onChange={(event) => updateDraft({ excludedText: event.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  />
-                </div>
-              </section>
+                ) : null}
+
+                <TourAccommodationPlacesBlock
+                  places={draft.accommodationPlaces}
+                  onChange={(accommodationPlaces) => updateDraft({ accommodationPlaces })}
+                />
+              </>
             ) : null}
 
             {activeTab === "conditions" ? (
-              <section className="space-y-6 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-                <div className="space-y-4">
-                  <h2 className="font-display text-lg font-bold text-charcoal">Категория и формат</h2>
-                  <div>
-                    <FieldLabel htmlFor="tour-type">Тип</FieldLabel>
-                    <select
-                      id="tour-type"
-                      value={draft.type}
-                      onChange={(event) =>
-                        updateDraft({ type: event.target.value as OrganizerTourType })
-                      }
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                    >
-                      <option value="tour">Тур</option>
-                      <option value="excursion">Экскурсия</option>
-                    </select>
-                  </div>
-                </div>
+              <>
+              <TourCurrencyBlock
+                currency={draft.priceCurrency}
+                priceFromPrefix={draft.priceFromPrefix}
+                onCurrencyChange={(priceCurrency) => updateDraft({ priceCurrency })}
+                onPriceFromPrefixChange={(priceFromPrefix) => updateDraft({ priceFromPrefix })}
+              />
 
-                <div className="space-y-4 border-t border-gray-200 pt-6">
-                  <h2 className="font-display text-lg font-bold text-charcoal">Медиа</h2>
-                  <div>
-                    <FieldLabel htmlFor="tour-cover-label">Подпись на обложке</FieldLabel>
-                    <Input
-                      id="tour-cover-label"
-                      value={draft.coverLabel ?? ""}
-                      onChange={(event) => updateDraft({ coverLabel: event.target.value })}
-                      placeholder="IGUAZU"
-                    />
-                  </div>
-                </div>
+              <TourDiscountBlock
+                enabledDiscounts={draft.enabledDiscounts}
+                onChange={(enabledDiscounts) => updateDraft({ enabledDiscounts })}
+              />
 
-                <div className="space-y-4 border-t border-gray-200 pt-6">
-                  <h2 className="font-display text-lg font-bold text-charcoal">Цена и условия</h2>
-                  <div>
-                    <FieldLabel htmlFor="tour-nights">Ночей</FieldLabel>
-                    <Input
-                      id="tour-nights"
-                      type="number"
-                      min={0}
-                      value={draft.durationNights}
-                      onChange={(event) =>
-                        updateDraft({ durationNights: Number(event.target.value) || 0 })
-                      }
-                    />
-                  </div>
+              <TourIndividualBlock
+                enabled={draft.individualTourEnabled}
+                periodFrom={draft.individualPeriodFrom}
+                periodTo={draft.individualPeriodTo}
+                priceUsd={draft.individualPriceUsd}
+                currency={draft.priceCurrency}
+                onEnabledChange={(individualTourEnabled) =>
+                  updateDraft({
+                    individualTourEnabled,
+                    bookingMode: syncBookingModeForIndividual(
+                      individualTourEnabled,
+                      draft.bookingMode,
+                      draft.groupTourDates.length > 0
+                    ),
+                  })
+                }
+                onPeriodFromChange={(individualPeriodFrom) => updateDraft({ individualPeriodFrom })}
+                onPeriodToChange={(individualPeriodTo) => updateDraft({ individualPeriodTo })}
+                onPriceChange={(individualPriceUsd) => updateDraft({ individualPriceUsd })}
+              />
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <FieldLabel htmlFor="tour-price">Цена, USD</FieldLabel>
-                    <Input
-                      id="tour-price"
-                      type="number"
-                      min={0}
-                      value={draft.priceUsd}
-                      onChange={(event) =>
-                        updateDraft({ priceUsd: Number(event.target.value) || 0 })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-old-price">Старая цена, USD</FieldLabel>
-                    <Input
-                      id="tour-old-price"
-                      type="number"
-                      min={0}
-                      value={draft.originalPriceUsd ?? ""}
-                      onChange={(event) =>
-                        updateDraft({
-                          originalPriceUsd: event.target.value
-                            ? Number(event.target.value)
-                            : null,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <FieldLabel htmlFor="tour-comfort">Комфорт</FieldLabel>
-                    <select
-                      id="tour-comfort"
-                      value={draft.comfortLevel}
-                      onChange={(event) =>
-                        updateDraft({ comfortLevel: event.target.value as ComfortLevel })
-                      }
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                    >
-                      {COMFORT_LEVELS.map((level) => (
-                        <option key={level} value={level}>
-                          {level}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-accommodation">Проживание</FieldLabel>
-                    <select
-                      id="tour-accommodation"
-                      value={draft.accommodationType}
-                      onChange={(event) =>
-                        updateDraft({
-                          accommodationType: event.target.value as AccommodationType,
-                        })
-                      }
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                    >
-                      {ACCOMMODATION_TYPES.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div>
-                  <FieldLabel htmlFor="tour-booking-mode">Формат бронирования</FieldLabel>
-                  <select
-                    id="tour-booking-mode"
-                    value={draft.bookingMode}
-                    onChange={(event) =>
-                      updateDraft({ bookingMode: event.target.value as TourBookingMode })
-                    }
-                    className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  >
-                    {BOOKING_MODES.map((mode) => (
-                      <option key={mode.value} value={mode.value}>
-                        {mode.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                </div>
-              </section>
+              <TourGroupDatesBlock
+                dates={draft.groupTourDates}
+                autoRollToNextYear={draft.autoRollGroupDatesToNextYear}
+                durationDays={draft.durationDays}
+                durationNights={draft.durationNights}
+                priceCurrency={draft.priceCurrency}
+                defaultPriceUsd={draft.priceUsd || draft.individualPriceUsd}
+                onDatesChange={(groupTourDates) =>
+                  updateDraft({
+                    groupTourDates,
+                    bookingMode: syncBookingModeForIndividual(
+                      draft.individualTourEnabled,
+                      draft.bookingMode,
+                      groupTourDates.length > 0
+                    ),
+                  })
+                }
+                onAutoRollChange={(autoRollGroupDatesToNextYear) =>
+                  updateDraft({ autoRollGroupDatesToNextYear })
+                }
+              />
+              </>
             ) : null}
 
             {activeTab === "program" ? (
-              <section className="rounded-2xl border border-gray-200/60 bg-white px-4 py-4 text-sm leading-relaxed text-charcoal shadow-sm sm:px-5 sm:py-5">
-                <p className="font-medium">Редактор программы по дням</p>
-                <p className="mt-2 text-slate">
-                  Полный конструктор маршрута появится в следующем обновлении. Пока сохраняйте
-                  ключевые детали в полном описании и условиях тура — они уже синхронизируются со
-                  списком и карточкой.
-                </p>
-              </section>
+              <TourProgramBlock
+                routeMapImage={draft.routeMapImage}
+                programDays={draft.programDays}
+                onRouteMapChange={(routeMapImage) => updateDraft({ routeMapImage })}
+                onProgramDaysChange={(programDays) => updateDraft({ programDays })}
+              />
+            ) : null}
+
+            {activeTab === "terms" ? (
+              <>
+                <TourTermsListBlock
+                  title="Что включено"
+                  description="Перечислите услуги и расходы, которые уже входят в стоимость тура"
+                  items={textToListItems(draft.includedText)}
+                  onChange={(items) => updateDraft({ includedText: listItemsToText(items) })}
+                  placeholder="Например: трансферы по программе"
+                />
+
+                <TourTermsListBlock
+                  title="Что не включено"
+                  description="Укажите расходы, которые участник оплачивает отдельно"
+                  items={textToListItems(draft.excludedText)}
+                  onChange={(items) => updateDraft({ excludedText: listItemsToText(items) })}
+                  placeholder="Например: авиабилеты"
+                />
+
+                <TourTermsListBlock
+                  title="Важно знать"
+                  description="Ключевые рекомендации и ограничения для участников тура"
+                  items={draft.importantInfo}
+                  onChange={(importantInfo) => updateDraft({ importantInfo })}
+                  placeholder="Например: возьмите непромокаемую обувь"
+                />
+
+                <TourPackingListBlock
+                  enabled={draft.packingListEnabled}
+                  value={draft.packingListText}
+                  onEnabledChange={(packingListEnabled) => updateDraft({ packingListEnabled })}
+                  onChange={(packingListText) => updateDraft({ packingListText })}
+                />
+
+                <TourFAQBlock
+                  items={draft.faq}
+                  onChange={(faq) => updateDraft({ faq })}
+                />
+              </>
             ) : null}
 
             {activeTab === "publish" ? (

@@ -11,6 +11,7 @@ import { formatDateShort } from "@/lib/utils";
 import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
+import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -29,6 +30,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
   const hasReviews = tour.reviewCount > 0;
+  const comfortLevel = resolveListingComfortLevel(tour);
 
   return (
     <Link
@@ -140,7 +142,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             {tour.groupSizeBucket}
           </span>
           <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
-            {tour.comfortLevel}
+            {comfortLevel}
           </span>
           <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
             {tour.difficultyLevel}

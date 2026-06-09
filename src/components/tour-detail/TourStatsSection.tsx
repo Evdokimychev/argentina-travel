@@ -5,13 +5,13 @@ import { Mountain, BedDouble, Users, Sun, type LucideIcon } from "lucide-react";
 import { TourDetail } from "@/types";
 import {
   DIFFICULTY_LEVELS,
-  COMFORT_LEVELS,
-  DIFFICULTY_DOT_COUNT,
   COMFORT_DOT_COUNT,
+  COMFORT_INFO_ITEMS,
+  DIFFICULTY_DOT_COUNT,
 } from "@/data/tour-levels";
 import {
-  NO_ACCOMMODATION_INFO,
   NO_ACCOMMODATION_LABEL,
+  resolveTourComfortLevel,
   tourHasAccommodation,
 } from "@/lib/tour-accommodation";
 import InfoModal, { HelpButton } from "./InfoModal";
@@ -108,8 +108,9 @@ export default function TourStatsSection({ tour }: TourStatsSectionProps) {
   const [modal, setModal] = useState<"difficulty" | "comfort" | null>(null);
 
   const hasAccommodation = tourHasAccommodation(tour);
+  const comfortLevel = resolveTourComfortLevel(tour);
   const difficultyDots = DIFFICULTY_DOT_COUNT[tour.difficulty] ?? 3;
-  const comfortDots = COMFORT_DOT_COUNT[tour.comfort] ?? 3;
+  const comfortDots = COMFORT_DOT_COUNT[comfortLevel] ?? 0;
 
   return (
     <section>
@@ -128,20 +129,16 @@ export default function TourStatsSection({ tour }: TourStatsSectionProps) {
 
         <StatColumn
           icon={hasAccommodation ? BedDouble : Sun}
-          title={hasAccommodation ? "Комфорт" : "Проживание"}
+          title="Уровень комфорта"
           helpOnClick={() => setModal("comfort")}
         >
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+            <span className="text-sm text-slate">{comfortLevel}</span>
+            <DotRating filled={comfortDots} variant="comfort" />
+          </div>
           {hasAccommodation ? (
-            <>
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <span className="text-sm text-slate">{tour.comfort}</span>
-                <DotRating filled={comfortDots} variant="comfort" />
-              </div>
-              <SectionLink href="#accommodations">К проживанию</SectionLink>
-            </>
-          ) : (
-            <p className="text-sm text-slate">{NO_ACCOMMODATION_LABEL}</p>
-          )}
+            <SectionLink href="#accommodations">К проживанию</SectionLink>
+          ) : null}
         </StatColumn>
 
         <StatColumn icon={Users} title="Размер группы">
@@ -169,25 +166,14 @@ export default function TourStatsSection({ tour }: TourStatsSectionProps) {
       <InfoModal
         open={modal === "comfort"}
         onClose={() => setModal(null)}
-        title={hasAccommodation ? "Уровень комфорта" : "Проживание"}
+        title="Уровень комфорта"
         variant="comfort"
-        highlightLevel={hasAccommodation ? tour.comfort : NO_ACCOMMODATION_LABEL}
-        items={
-          hasAccommodation
-            ? [
-                NO_ACCOMMODATION_INFO,
-                ...COMFORT_LEVELS.map((l) => ({
-                  level: l.level,
-                  description: l.description,
-                  scale: COMFORT_DOT_COUNT[l.level],
-                })),
-              ]
-            : [NO_ACCOMMODATION_INFO]
-        }
+        highlightLevel={comfortLevel}
+        items={COMFORT_INFO_ITEMS}
         hint={
-          hasAccommodation
-            ? undefined
-            : "Подходит для однодневных экскурсий и туров без ночёвки."
+          comfortLevel === NO_ACCOMMODATION_LABEL
+            ? "Подходит для однодневных экскурсий и туров без ночёвки."
+            : undefined
         }
       />
     </section>

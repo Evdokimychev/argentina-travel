@@ -21,6 +21,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import { DIFFICULTY_DOT_COUNT, COMFORT_DOT_COUNT } from "@/data/tour-levels";
+import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { formatMinimumAgeShort } from "@/lib/tour-age";
 import { buttonVariants } from "@/components/ui/button";
 
@@ -72,6 +73,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
   const hasReviews = tour.reviewCount > 0;
+  const comfortLevel = resolveListingComfortLevel(tour);
   const activityIcon = ACTIVITY_TYPE_OPTIONS.find((o) => o.type === tour.activityType)?.icon;
   const ActivityIcon = activityIcon;
   const isIndividualOnly = tour.bookingMode === "on_request";
@@ -162,8 +164,8 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               <DifficultyDots level={tour.difficultyLevel} />
             </StatCell>
             <StatCell label="Комфорт">
-              <span>{tour.comfortLevel}</span>
-              <ComfortDots level={tour.comfortLevel} />
+              <span>{comfortLevel}</span>
+              <ComfortDots level={comfortLevel} />
             </StatCell>
             <StatCell label="Язык">{tour.language[0]}</StatCell>
             <StatCell label="Возраст">

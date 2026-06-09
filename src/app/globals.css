@@ -250,3 +250,50 @@ h6 {
   font-weight: 700;
   color: #1a1a2e;
 }
+
+.rich-text-editor-content:focus {
+  outline: none;
+}
+
+.rich-text-editor-content p {
+  margin: 0 0 0.75rem;
+}
+
+.rich-text-editor-content p:last-child {
+  margin-bottom: 0;
+}
+
+.rich-text-editor-content ul,
+.rich-text-editor-content ol {
+  margin: 0 0 0.75rem;
+  padding-left: 1.25rem;
+}
+
+.rich-text-editor-content ul {
+  list-style: disc;
+}
+
+.rich-text-editor-content ol {
+  list-style: decimal;
+}
+
+.rich-text-editor-content li {
+  margin: 0.25rem 0;
+}
+
+.rich-text-editor-content strong,
+.rich-text-editor-content b {
+  font-weight: 700;
+}
+
+.rich-text-editor-content blockquote {
+  margin: 0 0 0.75rem;
+  border-left: 3px solid #e5e7eb;
+  padding-left: 0.75rem;
+  color: #4a5568;
+}
+
+.rich-text-editor-content a {
+  color: #d4533b;
+  text-decoration: underline;
+}

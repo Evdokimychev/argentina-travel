@@ -1,7 +1,6 @@
 import {
   AccommodationType,
   ChildrenPolicy,
-  ComfortLevel,
   DifficultyLevel,
   DurationBucket,
   GroupSizeBucket,
@@ -60,13 +59,7 @@ export const ACCOMMODATION_OPTIONS: AccommodationType[] = [
   "Круизная каюта",
 ];
 
-export const COMFORT_OPTIONS: { level: ComfortLevel; description: string }[] = [
-  { level: "Базовый", description: "Палатки, кемпинги, минимальные удобства." },
-  { level: "Стандарт", description: "Хостелы, бюджетные отели, удобства на этаже." },
-  { level: "Комфорт", description: "Отели 3–4*, завтраки, уборка." },
-  { level: "Премиум", description: "Boutique-отели, спа, индивидуальный сервис." },
-  { level: "Люкс", description: "Лучшие отели, глэмпинг, VIP-трансферы." },
-];
+export { COMFORT_LEVELS as COMFORT_OPTIONS } from "@/data/tour-levels";
 
 export const DIFFICULTY_OPTIONS: { level: DifficultyLevel; description: string }[] = [
   { level: "Лёгкая", description: "Подходит для всех." },

@@ -26,6 +26,7 @@ import {
   countToursByDurationBucket,
   countDayTripTours,
 } from "@/lib/filter-counts";
+import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 
 interface FilterBarProps {
   tours: TourListing[];
@@ -94,7 +95,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
     [tours]
   );
   const comfortCounts = useMemo(
-    () => countToursByField(tours, (t) => t.comfortLevel),
+    () => countToursByField(tours, (t) => resolveListingComfortLevel(t)),
     [tours]
   );
   const difficultyCounts = useMemo(

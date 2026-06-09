@@ -1,5 +1,11 @@
 import type { TourCollection } from "@/data/tour-collections";
+import type { OrganizerTourAccommodationPlace } from "@/data/tour-accommodation-defaults";
 import type { TourPlace } from "@/types";
+import type { CurrencyCode } from "@/types/locale";
+import type { OrganizerTourDiscountType } from "@/data/tour-discount-defaults";
+import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
+import type { OrganizerProgramDay } from "@/data/tour-program-defaults";
+import type { OrganizerTourFAQ } from "@/data/tour-terms-defaults";
 import type {
   AccommodationType,
   ActivityType,
@@ -53,13 +59,26 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   durationNights: number;
   priceUsd: number;
   originalPriceUsd: number | null;
+  priceCurrency: CurrencyCode;
+  priceFromPrefix: boolean;
+  enabledDiscounts: OrganizerTourDiscountType[];
+  individualTourEnabled: boolean;
+  individualPeriodFrom: string;
+  individualPeriodTo: string;
+  individualPriceUsd: number;
+  autoRollGroupDatesToNextYear: boolean;
+  groupTourDates: OrganizerGroupTourDate[];
   activityType: ActivityType;
   tourActivities: ActivityType[];
   collections: TourCollection[];
   difficultyLevel: DifficultyLevel;
   difficultyDescriptionText: string;
   comfortLevel: ComfortLevel;
+  comfortLevels: ComfortLevel[];
   accommodationType: AccommodationType;
+  accommodationDescriptionText: string;
+  accommodationPhotos: string[];
+  accommodationPlaces: OrganizerTourAccommodationPlace[];
   groupMin: number;
   groupMax: number;
   minimumAge: number;
@@ -72,6 +91,12 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   gallery: string[];
   places: TourPlace[];
   guides: OrganizerTourGuide[];
+  routeMapImage: string;
+  programDays: OrganizerProgramDay[];
+  importantInfo: string[];
+  faq: OrganizerTourFAQ[];
+  packingListEnabled: boolean;
+  packingListText: string;
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;
@@ -81,6 +106,7 @@ export const ORGANIZER_TOUR_EDITOR_TABS = [
   { id: "description", label: "Жильё и комфорт" },
   { id: "conditions", label: "Условия и цена" },
   { id: "program", label: "Программа" },
+  { id: "terms", label: "Условия и FAQ" },
   { id: "publish", label: "Публикация" },
 ] as const;
 
