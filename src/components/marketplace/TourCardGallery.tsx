@@ -1,0 +1,71 @@
+"use client";
+
+import { useState } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { cn } from "@/lib/cn";
+
+interface TourCardGalleryProps {
+  images: string[];
+  alt: string;
+}
+
+export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
+  const [index, setIndex] = useState(0);
+  const count = images.length;
+  const hasMultiple = count > 1;
+
+  function goTo(next: number, e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    setIndex((next + count) % count);
+  }
+
+  return (
+    <>
+      <Image
+        src={images[index]}
+        alt={alt}
+        fill
+        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      />
+
+      {hasMultiple && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => goTo(index - 1, e)}
+            aria-label="Предыдущее фото"
+            className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => goTo(index + 1, e)}
+            aria-label="Следующее фото"
+            className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+
+          <div
+            className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1"
+            aria-hidden
+          >
+            {images.map((_, i) => (
+              <span
+                key={i}
+                className={cn(
+                  "rounded-full bg-white transition-all",
+                  i === index ? "h-1.5 w-4 opacity-100" : "h-1.5 w-1.5 opacity-60"
+                )}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </>
+  );
+}

@@ -1,0 +1,15 @@
+{
+  "nav.home": "Home",
+  "nav.tours": "Tours",
+  "nav.blog": "Blog",
+  "nav.contacts": "Contacts",
+  "nav.chooseTour": "Choose tour",
+  "nav.profile": "Profile",
+  "nav.favorites": "Favorites",
+  "locale.language": "Language",
+  "locale.currency": "Currency",
+  "locale.search": "Search",
+  "locale.languageHint": "Choose interface language. More translations coming soon.",
+  "locale.currencyHint": "Prices converted using test exchange rates.",
+  "locale.title": "Language & currency"
+}

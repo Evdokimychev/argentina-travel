@@ -1,0 +1,15 @@
+{
+  "nav.home": "Início",
+  "nav.tours": "Tours",
+  "nav.blog": "Blog",
+  "nav.contacts": "Contato",
+  "nav.chooseTour": "Escolher tour",
+  "nav.profile": "Perfil",
+  "nav.favorites": "Favoritos",
+  "locale.language": "Idioma",
+  "locale.currency": "Moeda",
+  "locale.search": "Pesquisar",
+  "locale.languageHint": "Escolha o idioma da interface.",
+  "locale.currencyHint": "Preços convertidos com taxas de teste.",
+  "locale.title": "Idioma e moeda"
+}

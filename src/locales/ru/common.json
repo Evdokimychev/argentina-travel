@@ -1,0 +1,15 @@
+{
+  "nav.home": "Главная",
+  "nav.tours": "Туры",
+  "nav.blog": "Блог",
+  "nav.contacts": "Контакты",
+  "nav.chooseTour": "Выбрать тур",
+  "nav.profile": "Профиль",
+  "nav.favorites": "Избранное",
+  "locale.language": "Язык",
+  "locale.currency": "Валюта",
+  "locale.search": "Поиск",
+  "locale.languageHint": "Выберите язык интерфейса. Переводы будут расширяться.",
+  "locale.currencyHint": "Цены конвертируются по тестовому курсу. Актуальный курс — через API.",
+  "locale.title": "Язык и валюта"
+}

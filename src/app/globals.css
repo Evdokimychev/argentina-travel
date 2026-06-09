@@ -1,0 +1,142 @@
+@import "tailwindcss";
+
+@theme {
+  --color-sky: #74acdf;
+  --color-sky-dark: #5a8fc4;
+  --color-sun: #fcbf49;
+  --color-sun-dark: #e5a832;
+  --color-pampas: #f5f0e8;
+  --color-patagonia: #2d4a3e;
+  --color-patagonia-light: #3d6354;
+  --color-wine: #722f37;
+  --color-wine-light: #8b3a44;
+  --color-charcoal: #1a1a2e;
+  --color-slate: #4a5568;
+  --color-brand: #d4533b;
+  --color-brand-dark: #b8432e;
+  --color-brand-light: #fef3f0;
+
+  --font-display: "Georgia", "Times New Roman", serif;
+  --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-charcoal);
+  background-color: var(--color-pampas);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.gradient-hero {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 26, 46, 0.75) 0%,
+    rgba(45, 74, 62, 0.6) 50%,
+    rgba(116, 172, 223, 0.4) 100%
+  );
+}
+
+.gradient-argentina {
+  background: linear-gradient(135deg, var(--color-sky) 0%, var(--color-sun) 100%);
+}
+
+.card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(26, 26, 46, 0.12);
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.route-map-canvas .leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.12) !important;
+}
+
+.route-map-canvas .leaflet-control-zoom a {
+  color: #1a1a2e !important;
+  border-color: #e5e7eb !important;
+}
+
+.route-map-marker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  background: #d4533b;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.25);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.route-map-marker--active {
+  background: #2d4a3e;
+  transform: scale(1.12);
+}
+
+.route-map-popup .leaflet-popup-content-wrapper {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(26, 26, 46, 0.15);
+}
+
+.route-map-popup .leaflet-popup-content {
+  margin: 10px 14px;
+  font-size: 13px;
+  line-height: 1.4;
+  color: #1a1a2e;
+}
+
+.route-map-popup .leaflet-popup-content span {
+  color: #4a5568;
+  font-size: 12px;
+}

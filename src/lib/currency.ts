@@ -1,0 +1,98 @@
+import { CurrencyCode, LocaleCode } from "@/types/locale";
+import { CURRENCIES, getCurrency } from "@/data/locale-config";
+
+/** Upper bound for price filter slider (USD base, ~highest tour + margin) */
+export const FILTER_PRICE_MAX_USD = 3000;
+
+export function getFilterPriceMax(currency: CurrencyCode): number {
+  return convertFromUsd(FILTER_PRICE_MAX_USD, currency);
+}
+
+export function getFilterPriceStep(currency: CurrencyCode): number {
+  const raw = convertFromUsd(50, currency);
+  if (currency === "RUB" || currency === "CLP" || currency === "ARS") {
+    return Math.max(Math.round(raw / 1000) * 1000, 1000);
+  }
+  return Math.max(Math.round(raw / 10) * 10, 10);
+}
+
+/** Convert USD base price to target currency */
+export function convertFromUsd(priceUsd: number, currency: CurrencyCode): number {
+  const rate = getCurrency(currency).rateFromUsd;
+  return Math.round(priceUsd * rate);
+}
+
+/** Convert any currency amount to USD (for filters) */
+export function convertToUsd(amount: number, currency: CurrencyCode): number {
+  const rate = getCurrency(currency).rateFromUsd;
+  return amount / rate;
+}
+
+export function formatCurrencyAmount(
+  amount: number,
+  currency: CurrencyCode,
+  locale: LocaleCode
+): string {
+  const localeMap: Record<LocaleCode, string> = {
+    ru: "ru-RU",
+    es: "es-ES",
+    en: "en-US",
+    pt: "pt-BR",
+  };
+
+  try {
+    return new Intl.NumberFormat(localeMap[locale], {
+      style: "currency",
+      currency,
+      maximumFractionDigits: currency === "CLP" || currency === "ARS" ? 0 : 0,
+    }).format(amount);
+  } catch {
+    const sym = getCurrency(currency).symbol;
+    return `${sym}${amount.toLocaleString()}`;
+  }
+}
+
+export function formatPriceUsd(
+  priceUsd: number,
+  currency: CurrencyCode,
+  locale: LocaleCode
+): string {
+  const converted = convertFromUsd(priceUsd, currency);
+  return formatCurrencyAmount(converted, currency, locale);
+}
+
+/** Future: fetch rates from API and update CURRENCIES */
+export async function fetchExchangeRates(): Promise<Record<CurrencyCode, number>> {
+  // TODO: fetch from /api/exchange-rates
+  return Object.fromEntries(
+    CURRENCIES.map((c) => [c.code, c.rateFromUsd])
+  ) as Record<CurrencyCode, number>;
+}
+
+/** Future: detect locale from browser */
+export function detectBrowserLocale(): LocaleCode {
+  if (typeof navigator === "undefined") return "ru";
+  const lang = navigator.language.slice(0, 2);
+  if (lang === "es" || lang === "en" || lang === "pt" || lang === "ru") return lang;
+  return "en";
+}
+
+/** Future: map country to default currency */
+export function detectCurrencyByCountry(countryCode: string): CurrencyCode {
+  const map: Record<string, CurrencyCode> = {
+    RU: "RUB",
+    US: "USD",
+    AR: "ARS",
+    BR: "BRL",
+    CL: "CLP",
+    UY: "UYU",
+    GB: "GBP",
+    CA: "CAD",
+    AU: "AUD",
+    CH: "CHF",
+    ES: "EUR",
+    DE: "EUR",
+    FR: "EUR",
+  };
+  return map[countryCode] ?? "USD";
+}
