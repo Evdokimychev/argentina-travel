@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
@@ -15,6 +15,8 @@ import { cn } from "@/lib/cn";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
 import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
+import TourTicketRecommendationsBlock from "@/components/organizer/TourTicketRecommendationsBlock";
+import TourArrivalDepartureBlock from "@/components/organizer/TourArrivalDepartureBlock";
 import TourGeneralDescriptionBlock from "@/components/organizer/TourGeneralDescriptionBlock";
 import TourPhotosBlock from "@/components/organizer/TourPhotosBlock";
 import TourImpressionsBlock from "@/components/organizer/TourImpressionsBlock";
@@ -29,9 +31,11 @@ import TourIndividualBlock from "@/components/organizer/TourIndividualBlock";
 import TourGroupDatesBlock from "@/components/organizer/TourGroupDatesBlock";
 import TourProgramBlock from "@/components/organizer/TourProgramBlock";
 import TourTermsListBlock from "@/components/organizer/TourTermsListBlock";
+import TourTermsConditionsBlock from "@/components/organizer/TourTermsConditionsBlock";
+import TourInsuranceBlock from "@/components/organizer/TourInsuranceBlock";
+import TourCancellationBlock from "@/components/organizer/TourCancellationBlock";
 import TourFAQBlock from "@/components/organizer/TourFAQBlock";
 import TourPackingListBlock from "@/components/organizer/TourPackingListBlock";
-import { listItemsToText, textToListItems } from "@/data/tour-terms-defaults";
 import {
   ACCOMMODATION_VARIANT_NOT_FILLED,
   IGUAZU_VARIANT_ACCOMMODATIONS,
@@ -51,6 +55,19 @@ import {
 } from "@/types/organizer-tour";
 
 const LANGUAGES: TourLanguage[] = ["Русский", "Испанский", "Английский", "Португальский"];
+
+function getNavStickyTopPx(): number {
+  if (typeof window === "undefined") return 84;
+
+  const root = document.documentElement;
+  const headerVar = getComputedStyle(root).getPropertyValue("--site-header-height").trim();
+  const headerPx = headerVar.endsWith("px")
+    ? parseFloat(headerVar)
+    : Number.parseFloat(headerVar) || 72;
+  const remPx = Number.parseFloat(getComputedStyle(root).fontSize) || 16;
+
+  return Math.round(headerPx + 0.75 * remPx);
+}
 
 function syncBookingModeForIndividual(
   enabled: boolean,
@@ -120,7 +137,7 @@ function FloatingLabeledInput({
   required?: boolean;
 }) {
   return (
-    <div className={cn("relative min-w-0 flex-1", className)}>
+    <div className={cn("relative w-full min-w-0", className)}>
       <label
         htmlFor={id}
         className="pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-xs font-medium text-slate"
@@ -167,6 +184,7 @@ function RangeInputPair({
         label={minLabel}
         required={minRequired}
         type="number"
+        className="min-w-0 flex-1"
         value={minValue}
         onChange={(event) => onMinChange(Number(event.target.value) || 0)}
         {...minInputProps}
@@ -182,6 +200,7 @@ function RangeInputPair({
         label={maxLabel}
         required={maxRequired}
         type="number"
+        className="min-w-0 flex-1"
         value={maxValue}
         onChange={(event) => onMaxChange(Number(event.target.value) || 0)}
         {...maxInputProps}
@@ -498,6 +517,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [navStuck, setNavStuck] = useState(false);
+  const navSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const nextDraft = readOrganizerTourDraft(tourId);
@@ -507,6 +528,37 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     }
     setDraft(nextDraft);
   }, [router, tourId]);
+
+  useEffect(() => {
+    const sentinel = navSentinelRef.current;
+    if (!sentinel) return;
+
+    let observer: IntersectionObserver | null = null;
+
+    function mountObserver() {
+      const el = navSentinelRef.current;
+      if (!el) return;
+
+      observer?.disconnect();
+      const topPx = getNavStickyTopPx();
+      observer = new IntersectionObserver(
+        ([entry]) => setNavStuck(!entry.isIntersecting),
+        {
+          threshold: 0,
+          rootMargin: `-${topPx}px 0px 0px 0px`,
+        }
+      );
+      observer.observe(el);
+    }
+
+    mountObserver();
+    window.addEventListener("resize", mountObserver);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", mountObserver);
+    };
+  }, [draft]);
 
   if (!draft) {
     return (
@@ -573,8 +625,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
-        <div className="flex flex-col gap-4 border-b border-gray-200/60 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
+        <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 items-start gap-3">
           <Link
             href="/organizer/tours"
@@ -612,26 +664,38 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 : "Сохранить черновик"}
           </Button>
         </div>
+        </div>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto border-b border-gray-200/60 px-3 scrollbar-hide sm:px-6">
-        {ORGANIZER_TOUR_EDITOR_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveTab(tab.id)}
-            className={cn(
-              "relative shrink-0 px-3 py-3.5 text-sm font-medium transition-colors sm:px-4",
-              activeTab === tab.id
-                ? "text-charcoal after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-brand sm:after:inset-x-3"
-                : "text-slate hover:text-charcoal"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      </div>
+      <div ref={navSentinelRef} className="h-px" aria-hidden />
+
+      <nav
+        aria-label="Разделы редактора тура"
+        className={cn(
+          "sticky top-[calc(var(--site-header-height,72px)+0.75rem)] z-30 w-full transition-[max-width] duration-300 ease-out",
+          navStuck && "xl:max-w-[calc(100%-19rem)]"
+        )}
+      >
+        <div className="overflow-hidden rounded-2xl bg-white/95 shadow-sm ring-1 ring-gray-200/60 backdrop-blur-md supports-[backdrop-filter]:bg-white/90">
+          <div className="flex gap-1 overflow-x-auto px-3 scrollbar-hide sm:px-4">
+            {ORGANIZER_TOUR_EDITOR_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "relative shrink-0 px-3 py-3.5 text-sm font-medium transition-colors sm:px-4",
+                  activeTab === tab.id
+                    ? "text-charcoal after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-brand sm:after:inset-x-3"
+                    : "text-slate hover:text-charcoal"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start">
         <div className="min-w-0 space-y-6">
@@ -670,7 +734,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   </div>
                 ) : null}
 
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 sm:items-end">
                   <LanguageTagsField languages={draft.languages} onToggle={toggleLanguage} />
                   <FloatingLabeledInput
                     id="tour-days"
@@ -678,6 +742,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                     required
                     type="number"
                     min={1}
+                    className="w-full"
                     value={draft.durationDays}
                     onChange={(event) =>
                       updateDraft({ durationDays: Number(event.target.value) || 1 })
@@ -799,6 +864,30 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 landmarks={draft.landmarks}
                 mapStartPoint={draft.mapStartPoint}
                 onChange={(patch) => updateDraft(patch)}
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourTicketRecommendationsBlock
+                enabled={draft.ticketRecommendationsEnabled}
+                text={draft.ticketRecommendationsText}
+                onEnabledChange={(ticketRecommendationsEnabled) =>
+                  updateDraft({ ticketRecommendationsEnabled })
+                }
+                onChange={(ticketRecommendationsText) =>
+                  updateDraft({ ticketRecommendationsText })
+                }
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourArrivalDepartureBlock
+                enabled={draft.arrivalDepartureEnabled}
+                cities={draft.arrivalDepartureCities}
+                onEnabledChange={(arrivalDepartureEnabled) =>
+                  updateDraft({ arrivalDepartureEnabled })
+                }
+                onChange={(arrivalDepartureCities) => updateDraft({ arrivalDepartureCities })}
               />
             ) : null}
 
@@ -941,6 +1030,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               <TourProgramBlock
                 routeMapImage={draft.routeMapImage}
                 programDays={draft.programDays}
+                durationDays={draft.durationDays}
                 onRouteMapChange={(routeMapImage) => updateDraft({ routeMapImage })}
                 onProgramDaysChange={(programDays) => updateDraft({ programDays })}
               />
@@ -948,20 +1038,31 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "terms" ? (
               <>
-                <TourTermsListBlock
-                  title="Что включено"
-                  description="Перечислите услуги и расходы, которые уже входят в стоимость тура"
-                  items={textToListItems(draft.includedText)}
-                  onChange={(items) => updateDraft({ includedText: listItemsToText(items) })}
-                  placeholder="Например: трансферы по программе"
+                <TourTermsConditionsBlock
+                  includedText={draft.includedText}
+                  excludedText={draft.excludedText}
+                  onIncludedChange={(includedText) => updateDraft({ includedText })}
+                  onExcludedChange={(excludedText) => updateDraft({ excludedText })}
                 />
 
-                <TourTermsListBlock
-                  title="Что не включено"
-                  description="Укажите расходы, которые участник оплачивает отдельно"
-                  items={textToListItems(draft.excludedText)}
-                  onChange={(items) => updateDraft({ excludedText: listItemsToText(items) })}
-                  placeholder="Например: авиабилеты"
+                <TourInsuranceBlock
+                  insuranceType={draft.insuranceType}
+                  insuranceDescription={draft.insuranceDescription}
+                  onInsuranceTypeChange={(insuranceType) => updateDraft({ insuranceType })}
+                  onInsuranceDescriptionChange={(insuranceDescription) =>
+                    updateDraft({ insuranceDescription })
+                  }
+                />
+
+                <TourCancellationBlock
+                  useTemplate={draft.useCancellationTemplate}
+                  customText={draft.customCancellationText}
+                  onUseTemplateChange={(useCancellationTemplate) =>
+                    updateDraft({ useCancellationTemplate })
+                  }
+                  onCustomTextChange={(customCancellationText) =>
+                    updateDraft({ customCancellationText })
+                  }
                 />
 
                 <TourTermsListBlock

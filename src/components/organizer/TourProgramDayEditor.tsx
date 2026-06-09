@@ -9,11 +9,13 @@ import {
 } from "@/data/tour-program-defaults";
 import OrganizerPhotoUpload from "@/components/organizer/OrganizerPhotoUpload";
 import OrganizerRichTextField from "@/components/organizer/OrganizerRichTextField";
+import { formatDays } from "@/lib/pluralize";
 
 interface TourProgramDayEditorProps {
   day: OrganizerProgramDay;
   index: number;
   total: number;
+  expectedDays: number;
   onChange: (day: OrganizerProgramDay) => void;
   onRemove: () => void;
   onMoveUp: () => void;
@@ -26,6 +28,7 @@ export default function TourProgramDayEditor({
   day,
   index,
   total,
+  expectedDays,
   onChange,
   onRemove,
   onMoveUp,
@@ -39,7 +42,12 @@ export default function TourProgramDayEditor({
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand/10 text-lg font-bold text-brand">
           {day.dayNumber}
         </span>
-        <span className="text-base font-bold text-charcoal">День</span>
+        <div>
+          <span className="text-base font-bold text-charcoal">День</span>
+          <p className="text-xs text-slate">
+            {day.dayNumber} из {expectedDays} · в «Основное» указано {formatDays(expectedDays)}
+          </p>
+        </div>
       </div>
 
       <div className="relative">

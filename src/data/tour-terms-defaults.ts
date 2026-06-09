@@ -1,4 +1,5 @@
 import type { TourFAQ } from "@/types";
+import { normalizeEditorValue, trimHtmlToPlainTextLength } from "@/lib/rich-text";
 
 export const ORGANIZER_TOUR_TERMS_ITEMS_MAX = 30;
 export const ORGANIZER_TOUR_FAQ_MAX = 20;
@@ -6,6 +7,32 @@ export const ORGANIZER_TOUR_FAQ_QUESTION_MAX = 200;
 export const ORGANIZER_TOUR_FAQ_ANSWER_MAX = 2000;
 export const ORGANIZER_TOUR_TERMS_ITEM_MAX = 300;
 export const ORGANIZER_TOUR_PACKING_LIST_MAX = 8000;
+export const ORGANIZER_TOUR_INSURANCE_DESCRIPTION_MAX = 1000;
+export const ORGANIZER_TOUR_CANCELLATION_TEXT_MAX = 2000;
+
+export type OrganizerTourInsuranceType =
+  | "not_required"
+  | "recommended"
+  | "required_not_included"
+  | "included";
+
+export const ORGANIZER_TOUR_INSURANCE_OPTIONS: {
+  value: OrganizerTourInsuranceType;
+  label: string;
+}[] = [
+  { value: "not_required", label: "Страховка не обязательна" },
+  { value: "recommended", label: "Рекомендуем оформить страховку самостоятельно" },
+  {
+    value: "required_not_included",
+    label: "Страховка обязательна и не включена в стоимость тура",
+  },
+  { value: "included", label: "Страховка включена в стоимость тура" },
+];
+
+export const DEFAULT_IGUAZU_INSURANCE_TYPE: OrganizerTourInsuranceType = "required_not_included";
+
+export const DEFAULT_IGUAZU_INSURANCE_DESCRIPTION =
+  "Оформите медицинскую страховку на весь период поездки до начала тура. Полис должен покрывать активный отдых и экстренную медицинскую помощь за рубежом.";
 
 export type OrganizerTourFAQ = TourFAQ;
 
@@ -20,14 +47,12 @@ export function createEmptyFaqItem(): OrganizerTourFAQ {
 }
 
 export function textToListItems(text: string): string[] {
-  return text
-    .split(/\n+/)
-    .map((line) => line.replace(/^•\s*/, "").trim())
-    .filter(Boolean);
+  if (!text) return [];
+  return text.split("\n").map((line) => line.replace(/^•\s*/, "").trim());
 }
 
 export function listItemsToText(items: string[]): string {
-  return items.filter((item) => item.trim()).join("\n");
+  return items.join("\n");
 }
 
 export function normalizeTermsItems(items: string[] | undefined): string[] {
@@ -40,7 +65,10 @@ export function normalizeFaqItems(items: OrganizerTourFAQ[] | undefined): Organi
   return (items ?? []).map((item) => ({
     id: item.id?.trim() || createFaqItemId(),
     question: item.question.trim().slice(0, ORGANIZER_TOUR_FAQ_QUESTION_MAX),
-    answer: item.answer.trim().slice(0, ORGANIZER_TOUR_FAQ_ANSWER_MAX),
+    answer: trimHtmlToPlainTextLength(
+      normalizeEditorValue(item.answer.trim()),
+      ORGANIZER_TOUR_FAQ_ANSWER_MAX
+    ),
   }));
 }
 

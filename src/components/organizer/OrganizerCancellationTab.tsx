@@ -24,6 +24,7 @@ import {
   type OrganizerCancellationPolicyType,
   type OrganizerCancellationSettings,
 } from "@/types/organizer-profile";
+import { buildCancellationTouristPreviewFull } from "@/lib/organizer-cancellation-preview";
 import { readOrganizerProfile, updateOrganizerProfile } from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
 
@@ -54,24 +55,6 @@ function SaveSidebar({
       </div>
     </aside>
   );
-}
-
-function buildTouristPreview(settings: OrganizerCancellationSettings): string {
-  if (settings.policyType === "standard") {
-    return "При отмене бронирования туристу возвращается полная сумма за вычетом организационных расходов.";
-  }
-
-  const filled = settings.penalties.filter(
-    (penalty) => penalty.amount.trim() && penalty.period.trim()
-  );
-
-  if (filled.length === 0) {
-    return "Штрафные санкции отсутствуют";
-  }
-
-  return filled
-    .map((penalty) => `${penalty.amount.trim()} — ${penalty.period.trim()}`)
-    .join("; ");
 }
 
 function PolicyCard({
@@ -325,7 +308,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
     setSaved(true);
   }
 
-  const previewText = buildTouristPreview(settings);
+  const previewText = buildCancellationTouristPreviewFull(settings);
 
   return (
     <form onSubmit={handleSubmit} className="p-4 sm:p-6">
@@ -472,12 +455,9 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
             <p className="text-xs font-medium uppercase tracking-wide text-slate">
               Турист увидит условия отмены:
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal">{previewText}</p>
-            {settings.additionalConditions.trim() ? (
-              <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-charcoal">
-                {settings.additionalConditions.trim()}
-              </p>
-            ) : null}
+            <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-charcoal">
+              {previewText}
+            </p>
           </div>
 
           {error ? (

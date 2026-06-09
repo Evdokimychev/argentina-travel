@@ -5,7 +5,8 @@ import type { CurrencyCode } from "@/types/locale";
 import type { OrganizerTourDiscountType } from "@/data/tour-discount-defaults";
 import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
 import type { OrganizerProgramDay } from "@/data/tour-program-defaults";
-import type { OrganizerTourFAQ } from "@/data/tour-terms-defaults";
+import type { OrganizerTourFAQ, OrganizerTourInsuranceType } from "@/data/tour-terms-defaults";
+import type { OrganizerArrivalDepartureCity } from "@/data/tour-logistics-defaults";
 import type {
   AccommodationType,
   ActivityType,
@@ -97,6 +98,14 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   faq: OrganizerTourFAQ[];
   packingListEnabled: boolean;
   packingListText: string;
+  insuranceType: OrganizerTourInsuranceType;
+  insuranceDescription: string;
+  useCancellationTemplate: boolean;
+  customCancellationText: string;
+  ticketRecommendationsEnabled: boolean;
+  ticketRecommendationsText: string;
+  arrivalDepartureEnabled: boolean;
+  arrivalDepartureCities: OrganizerArrivalDepartureCity[];
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;
@@ -104,7 +113,7 @@ export const ORGANIZER_TOUR_TITLE_MAX = 120;
 export const ORGANIZER_TOUR_EDITOR_TABS = [
   { id: "main", label: "Основное" },
   { id: "description", label: "Жильё и комфорт" },
-  { id: "conditions", label: "Условия и цена" },
+  { id: "conditions", label: "Цены и даты" },
   { id: "program", label: "Программа" },
   { id: "terms", label: "Условия и FAQ" },
   { id: "publish", label: "Публикация" },

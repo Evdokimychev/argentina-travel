@@ -1,7 +1,9 @@
 import type { TourPlace } from "@/types";
+import { normalizeEditorValue, trimHtmlToPlainTextLength } from "@/lib/rich-text";
 
 export const ORGANIZER_TOUR_IMPRESSION_TITLE_MAX = 55;
 export const ORGANIZER_TOUR_IMPRESSION_DESCRIPTION_MAX = 150;
+export const ORGANIZER_TOUR_IMPRESSION_EXTENDED_SCHEDULE_MAX = 2000;
 export const ORGANIZER_TOUR_IMPRESSIONS_MAX = 9;
 
 export const DEFAULT_IGUAZU_IMPRESSIONS: TourPlace[] = [
@@ -34,5 +36,23 @@ export function createEmptyImpression(id?: string): TourPlace {
     title: "",
     description: "",
     image: "",
+    extendedScheduleEnabled: false,
+    extendedSchedule: "",
   };
+}
+
+export function normalizeImpressions(items: TourPlace[] | undefined): TourPlace[] {
+  return (items ?? []).map((item) => ({
+    id: item.id?.trim() || createEmptyImpression().id,
+    title: item.title.trim().slice(0, ORGANIZER_TOUR_IMPRESSION_TITLE_MAX),
+    description: item.description.trim().slice(0, ORGANIZER_TOUR_IMPRESSION_DESCRIPTION_MAX),
+    image: item.image.trim(),
+    extendedScheduleEnabled: Boolean(item.extendedScheduleEnabled),
+    extendedSchedule: item.extendedScheduleEnabled
+      ? trimHtmlToPlainTextLength(
+          normalizeEditorValue(item.extendedSchedule?.trim() ?? ""),
+          ORGANIZER_TOUR_IMPRESSION_EXTENDED_SCHEDULE_MAX
+        )
+      : "",
+  }));
 }

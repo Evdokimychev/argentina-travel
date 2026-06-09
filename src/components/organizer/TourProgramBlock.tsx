@@ -14,11 +14,14 @@ import {
 } from "@/data/tour-program-defaults";
 import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
 import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { daysWord, formatDays } from "@/lib/pluralize";
+import { cn } from "@/lib/cn";
 import TourProgramDayEditor from "@/components/organizer/TourProgramDayEditor";
 
 interface TourProgramBlockProps {
   routeMapImage: string;
   programDays: OrganizerProgramDay[];
+  durationDays: number;
   onRouteMapChange: (image: string) => void;
   onProgramDaysChange: (days: OrganizerProgramDay[]) => void;
   designExampleHref?: string;
@@ -27,6 +30,7 @@ interface TourProgramBlockProps {
 export default function TourProgramBlock({
   routeMapImage,
   programDays,
+  durationDays,
   onRouteMapChange,
   onProgramDaysChange,
   designExampleHref = "/tours/iguazu-falls#itinerary",
@@ -38,6 +42,9 @@ export default function TourProgramBlock({
 
   const days = programDays.length ? programDays : [createEmptyProgramDay(1)];
   const canAddDay = days.length < ORGANIZER_TOUR_PROGRAM_DAYS_MAX;
+  const expectedDays = Math.max(1, durationDays);
+  const filledDays = days.length;
+  const daysMatch = filledDays === expectedDays;
 
   async function uploadFile(file: File) {
     if (!file.type.startsWith("image/")) throw new Error("Выберите файл изображения");
@@ -204,12 +211,39 @@ export default function TourProgramBlock({
       </section>
 
       <div className="space-y-4">
+        <div
+          className={cn(
+            "rounded-xl px-4 py-3 text-sm leading-relaxed text-charcoal",
+            daysMatch ? "bg-sky/10" : "bg-amber-50 ring-1 ring-amber-200/80"
+          )}
+        >
+          <p>
+            В разделе «Основное» указано:{" "}
+            <span className="font-semibold">{formatDays(expectedDays)}</span>.
+          </p>
+          <p className="mt-1">
+            {daysMatch ? (
+              <>Количество дней в программе совпадает с настройками.</>
+            ) : filledDays < expectedDays ? (
+              <>
+                Заполнено {filledDays} из {expectedDays}. Добавьте описание для оставшихся дней.
+              </>
+            ) : (
+              <>
+                В программе {filledDays} {daysWord(filledDays)} — больше, чем в основных настройках (
+                {expectedDays}).
+              </>
+            )}
+          </p>
+        </div>
+
         {days.map((day, index) => (
           <TourProgramDayEditor
             key={day.id}
             day={day}
             index={index}
             total={days.length}
+            expectedDays={expectedDays}
             canAddDay={canAddDay}
             onChange={(next) => updateAt(index, next)}
             onRemove={() => removeAt(index)}

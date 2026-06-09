@@ -6,7 +6,7 @@ import {
   ORGANIZER_TOUR_GENERAL_DESCRIPTION_MAX,
 } from "@/data/tour-description-defaults";
 import { DEFAULT_IGUAZU_GALLERY } from "@/data/tour-photos-defaults";
-import { DEFAULT_IGUAZU_IMPRESSIONS } from "@/data/tour-impressions-defaults";
+import { DEFAULT_IGUAZU_IMPRESSIONS, normalizeImpressions } from "@/data/tour-impressions-defaults";
 import { createDefaultTourGuides } from "@/data/tour-guides-defaults";
 import {
   ACCOMMODATION_VARIANT_NOT_FILLED,
@@ -37,13 +37,21 @@ import {
   DEFAULT_IGUAZU_FAQ,
   DEFAULT_IGUAZU_IMPORTANT_INFO,
   DEFAULT_IGUAZU_INCLUDED,
+  DEFAULT_IGUAZU_INSURANCE_DESCRIPTION,
+  DEFAULT_IGUAZU_INSURANCE_TYPE,
   DEFAULT_IGUAZU_PACKING_LIST,
+  ORGANIZER_TOUR_INSURANCE_DESCRIPTION_MAX,
+  ORGANIZER_TOUR_CANCELLATION_TEXT_MAX,
   ORGANIZER_TOUR_PACKING_LIST_MAX,
   listItemsToText,
   normalizeFaqItems,
   normalizeTermsItems,
   textToListItems,
 } from "@/data/tour-terms-defaults";
+import {
+  ORGANIZER_TICKET_RECOMMENDATIONS_MAX,
+  normalizeArrivalDepartureCities,
+} from "@/data/tour-logistics-defaults";
 import {
   ORGANIZER_TOUR_TITLE_MAX,
   ORGANIZER_TOURS_UPDATED_EVENT,
@@ -213,6 +221,16 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     packingListEnabled: listing.slug === "iguazu-waterfalls-day",
     packingListText:
       listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_PACKING_LIST : "",
+    insuranceType:
+      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_INSURANCE_TYPE : "recommended",
+    insuranceDescription:
+      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_INSURANCE_DESCRIPTION : "",
+    useCancellationTemplate: true,
+    customCancellationText: "",
+    ticketRecommendationsEnabled: false,
+    ticketRecommendationsText: "",
+    arrivalDepartureEnabled: false,
+    arrivalDepartureCities: [],
     updatedAt: listing.updatedAt,
   };
 }
@@ -263,7 +281,7 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
     touristRegions: draft.touristRegions ?? seed.touristRegions,
     landmarks: draft.landmarks ?? seed.landmarks,
     mapStartPoint: draft.mapStartPoint?.trim() ? draft.mapStartPoint : seed.mapStartPoint,
-    places: draft.places?.length ? draft.places : seed.places,
+    places: normalizeImpressions(draft.places?.length ? draft.places : seed.places),
     guides: draft.guides?.length ? draft.guides : seed.guides,
     comfortLevels: draft.comfortLevels?.length
       ? draft.comfortLevels
@@ -303,8 +321,27 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
     packingListText: draft.packingListText?.trim()
       ? draft.packingListText
       : seed.packingListText,
+    insuranceType: draft.insuranceType ?? seed.insuranceType,
+    insuranceDescription: draft.insuranceDescription?.trim()
+      ? draft.insuranceDescription
+      : seed.insuranceDescription,
+    useCancellationTemplate: draft.useCancellationTemplate ?? seed.useCancellationTemplate,
+    customCancellationText: draft.customCancellationText?.trim()
+      ? draft.customCancellationText
+      : seed.customCancellationText,
     includedText: draft.includedText?.trim() ? draft.includedText : seed.includedText,
     excludedText: draft.excludedText?.trim() ? draft.excludedText : seed.excludedText,
+    ticketRecommendationsEnabled:
+      draft.ticketRecommendationsEnabled ?? seed.ticketRecommendationsEnabled,
+    ticketRecommendationsText: draft.ticketRecommendationsText?.trim()
+      ? draft.ticketRecommendationsText.slice(0, ORGANIZER_TICKET_RECOMMENDATIONS_MAX)
+      : seed.ticketRecommendationsText,
+    arrivalDepartureEnabled: draft.arrivalDepartureEnabled ?? seed.arrivalDepartureEnabled,
+    arrivalDepartureCities: normalizeArrivalDepartureCities(
+      draft.arrivalDepartureCities?.length
+        ? draft.arrivalDepartureCities
+        : seed.arrivalDepartureCities
+    ),
   };
 }
 
@@ -388,7 +425,14 @@ export function saveOrganizerTourDraft(
     excludedText: listItemsToText(normalizeTermsItems(textToListItems(draft.excludedText))),
     importantInfo: normalizeTermsItems(draft.importantInfo),
     faq: normalizeFaqItems(draft.faq).filter((item) => item.question && item.answer),
+    places: normalizeImpressions(draft.places),
     packingListText: draft.packingListText.trim().slice(0, ORGANIZER_TOUR_PACKING_LIST_MAX),
+    insuranceDescription: draft.insuranceDescription
+      .trim()
+      .slice(0, ORGANIZER_TOUR_INSURANCE_DESCRIPTION_MAX),
+    customCancellationText: draft.customCancellationText
+      .trim()
+      .slice(0, ORGANIZER_TOUR_CANCELLATION_TEXT_MAX),
     country: draft.countries[0] ?? draft.country,
     destination: draft.mainLocation || draft.destination,
     region: draft.touristRegions[0] ?? draft.region,

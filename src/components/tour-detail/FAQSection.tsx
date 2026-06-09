@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { TourFAQ } from "@/types";
+import { normalizeEditorValue } from "@/lib/rich-text";
 import { SectionHeading } from "./InfoModal";
 
 export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
@@ -31,9 +32,10 @@ export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
                 </svg>
               </button>
               {isOpen && (
-                <div className="px-5 pb-4 text-sm leading-relaxed text-slate">
-                  {item.answer}
-                </div>
+                <div
+                  className="rich-text-editor-content px-5 pb-4 text-sm leading-relaxed text-slate"
+                  dangerouslySetInnerHTML={{ __html: normalizeEditorValue(item.answer) }}
+                />
               )}
             </div>
           );

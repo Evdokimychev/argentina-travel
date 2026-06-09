@@ -192,6 +192,8 @@ export interface TourPlace {
   title: string;
   description: string;
   image: string;
+  extendedScheduleEnabled?: boolean;
+  extendedSchedule?: string;
 }
 
 export interface TourRoutePoint {

@@ -4,6 +4,12 @@ import { useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
+  ClearFieldButton,
+  FieldFloatingLabel,
+  PopoverFieldTrigger,
+  SelectionChip,
+} from "@/components/organizer/OrganizerSelectFieldParts";
+import {
   TOUR_CITY_OPTIONS,
   TOUR_COUNTRY_OPTIONS,
   TOUR_LANDMARK_OPTIONS,
@@ -13,22 +19,6 @@ import { cn } from "@/lib/cn";
 
 function toggleItem<T>(items: T[], item: T): T[] {
   return items.includes(item) ? items.filter((value) => value !== item) : [...items, item];
-}
-
-function Chip({ label, onRemove }: { label: string; onRemove: () => void }) {
-  return (
-    <span className="inline-flex max-w-full items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-medium text-charcoal">
-      <span className="truncate">{label}</span>
-      <button
-        type="button"
-        onClick={onRemove}
-        className="text-slate transition-colors hover:text-charcoal"
-        aria-label={`Убрать ${label}`}
-      >
-        <X className="h-3 w-3" />
-      </button>
-    </span>
-  );
 }
 
 function MultiSelectField({
@@ -51,18 +41,12 @@ function MultiSelectField({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <button
-          type="button"
-          className="relative flex min-h-14 w-full items-start justify-between gap-2 rounded-2xl border border-gray-200 bg-white px-3 pb-2.5 pt-6 text-left transition-colors hover:border-gray-300"
-        >
-          <span className="absolute left-3 top-2 text-[11px] font-medium text-slate">
-            {label}
-            {required ? " *" : ""}
-          </span>
+        <PopoverFieldTrigger align="start">
+          <FieldFloatingLabel required={required}>{label}</FieldFloatingLabel>
           <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 pt-0.5">
             {selected.length ? (
               selected.map((item) => (
-                <Chip
+                <SelectionChip
                   key={item}
                   label={item}
                   onRemove={() => onChange(selected.filter((value) => value !== item))}
@@ -73,32 +57,12 @@ function MultiSelectField({
             )}
           </div>
           <div className="flex shrink-0 items-center gap-1 self-center">
-            {selected.length ? (
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onChange([]);
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" || event.key === " ") {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    onChange([]);
-                  }
-                }}
-                className="rounded p-0.5 text-slate transition-colors hover:text-charcoal"
-                aria-label="Очистить"
-              >
-                <X className="h-4 w-4" />
-              </span>
-            ) : null}
+            {selected.length ? <ClearFieldButton onClear={() => onChange([])} /> : null}
             <ChevronDown
               className={cn("h-4 w-4 text-slate transition-transform", open && "rotate-180")}
             />
           </div>
-        </button>
+        </PopoverFieldTrigger>
       </PopoverTrigger>
       <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
         <ul className="max-h-72 overflow-y-auto p-1">
@@ -159,44 +123,18 @@ function SingleSelectField({
     <div>
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
-          <button
-            type="button"
-            className="relative flex min-h-14 w-full items-center justify-between gap-2 rounded-2xl border border-gray-200 bg-white px-3 pb-2.5 pt-6 text-left transition-colors hover:border-gray-300"
-          >
-            <span className="absolute left-3 top-2 text-[11px] font-medium text-slate">
-              {label}
-              {required ? " *" : ""}
-            </span>
+          <PopoverFieldTrigger>
+            <FieldFloatingLabel required={required}>{label}</FieldFloatingLabel>
             <span className={cn("truncate pt-0.5 text-sm", value ? "text-charcoal" : "text-slate")}>
               {value || placeholder}
             </span>
             <div className="flex shrink-0 items-center gap-1">
-              {value ? (
-                <span
-                  role="button"
-                  tabIndex={0}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onChange("");
-                  }}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" || event.key === " ") {
-                      event.preventDefault();
-                      event.stopPropagation();
-                      onChange("");
-                    }
-                  }}
-                  className="rounded p-0.5 text-slate transition-colors hover:text-charcoal"
-                  aria-label="Очистить"
-                >
-                  <X className="h-4 w-4" />
-                </span>
-              ) : null}
+              {value ? <ClearFieldButton onClear={() => onChange("")} /> : null}
               <ChevronDown
                 className={cn("h-4 w-4 text-slate transition-transform", open && "rotate-180")}
               />
             </div>
-          </button>
+          </PopoverFieldTrigger>
         </PopoverTrigger>
         <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
           <ul className="max-h-72 overflow-y-auto p-1">
