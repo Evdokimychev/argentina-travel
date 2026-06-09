@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import SearchBlock from "./SearchBlock";
 import FilterBar from "./FilterBar";
@@ -59,17 +60,17 @@ export default function MarketplaceHome({
   testimonials,
 }: MarketplaceHomeProps) {
   const { currency } = useLocaleCurrency();
-  const [filters, setFilters] = useState<TourFilters>(() => getDefaultFilters(currency));
+  const [filters, setFilters] = useState<TourFilters>(() =>
+    getDefaultFilters(currency, tours)
+  );
 
-  useEffect(() => {
-    setFilters(getDefaultFilters(currency));
-  }, [currency]);
+  useSyncPriceFilters(tours, currency, setFilters);
 
   const filtered = useMemo(
     () => filterTours(tours, filters, currency),
     [tours, filters, currency]
   );
-  const activeCount = countActiveFilters(filters, currency);
+  const activeCount = countActiveFilters(filters, currency, tours);
 
   const bestOfMonth = tours.filter((t) => t.isBestOfMonth).slice(0, 3);
   const hotTours = tours.filter((t) => t.isHot).slice(0, 3);
@@ -118,7 +119,7 @@ export default function MarketplaceHome({
           </div>
 
           <div className="mx-auto mt-4 max-w-4xl">
-            <FilterBar filters={filters} onChange={setFilters} />
+            <FilterBar tours={tours} filters={filters} onChange={setFilters} />
           </div>
         </div>
       </section>
@@ -138,7 +139,7 @@ export default function MarketplaceHome({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setFilters(getDefaultFilters(currency))}
+              onClick={() => setFilters(getDefaultFilters(currency, tours))}
             >
               Сбросить всё
             </Button>
@@ -156,7 +157,7 @@ export default function MarketplaceHome({
             <Button
               className="mt-4"
               variant="outline"
-              onClick={() => setFilters(getDefaultFilters(currency))}
+              onClick={() => setFilters(getDefaultFilters(currency, tours))}
             >
               Сбросить фильтры
             </Button>

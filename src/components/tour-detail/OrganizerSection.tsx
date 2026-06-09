@@ -111,7 +111,7 @@ export default function OrganizerSection({
   }
 
   return (
-    <section id="organizer" className="scroll-mt-32">
+    <section id="organizer" className="tour-section-target">
       <SectionHeading title="Организатор" />
       <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">

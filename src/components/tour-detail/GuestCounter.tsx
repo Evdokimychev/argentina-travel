@@ -10,6 +10,7 @@ interface GuestCounterProps {
   min: number;
   max: number;
   minimumAge?: number;
+  hint?: string;
   onChange: (value: number) => void;
   className?: string;
 }
@@ -27,6 +28,7 @@ export default function GuestCounter({
   min,
   max,
   minimumAge,
+  hint,
   onChange,
   className,
 }: GuestCounterProps) {
@@ -34,7 +36,9 @@ export default function GuestCounter({
     <div className={cn("flex items-center justify-between gap-4", className)}>
       <div className="min-w-0">
         <p className="text-sm font-medium text-charcoal">Кол-во туристов</p>
-        <p className="mt-0.5 text-xs text-slate">{groupSizeHint(min, max, minimumAge)}</p>
+        <p className="mt-0.5 text-xs text-slate">
+          {hint ?? groupSizeHint(min, max, minimumAge)}
+        </p>
       </div>
 
       <div className="flex shrink-0 items-center gap-2">

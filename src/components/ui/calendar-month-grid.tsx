@@ -23,6 +23,7 @@ interface CalendarMonthGridProps {
   minDate?: Date | null;
   maxDate?: Date | null;
   disablePast?: boolean;
+  hideTitle?: boolean;
   onDayClick: (day: Date) => void;
   className?: string;
 }
@@ -53,7 +54,8 @@ export default function CalendarMonthGrid({
   rangeTo,
   minDate,
   maxDate,
-  disablePast = true,
+  disablePast = false,
+  hideTitle = false,
   onDayClick,
   className,
 }: CalendarMonthGridProps) {
@@ -65,9 +67,11 @@ export default function CalendarMonthGrid({
 
   return (
     <div className={cn("px-2", className)}>
-      <p className="mb-3 text-center text-sm font-semibold capitalize text-charcoal">
-        {format(month, "LLLL yyyy", { locale: ru })}
-      </p>
+      {!hideTitle && (
+        <p className="mb-3 text-center text-sm font-semibold capitalize text-charcoal">
+          {format(month, "LLLL yyyy", { locale: ru })}
+        </p>
+      )}
       <div className="mb-1 grid grid-cols-7 text-center text-[11px] font-medium text-slate">
         {WEEKDAYS.map((d) => (
           <span key={d} className="py-1">

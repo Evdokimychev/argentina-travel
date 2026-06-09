@@ -3,12 +3,20 @@
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
-import { getFilterPriceMax, getFilterPriceStep } from "@/lib/currency";
+import { TourListing } from "@/types";
+import {
+  getFilterPriceMax,
+  getSliderPriceBounds,
+  getSliderPriceStep,
+  snapPriceToStep,
+} from "@/lib/currency";
+import { clampPriceRange, getDefaultPriceRange, getTourPriceBounds } from "@/lib/tour-price-bounds";
 import { cn } from "@/lib/cn";
 
 interface PriceFilterFieldsProps {
   priceMin: number;
   priceMax: number;
+  priceMinLimit: number;
   onChange: (patch: { priceMin: number; priceMax: number }) => void;
   className?: string;
   showCurrencyHeader?: boolean;
@@ -18,11 +26,15 @@ function PriceInput({
   label,
   value,
   symbol,
+  min,
+  max,
   onChange,
 }: {
   label: string;
   value: number;
   symbol: string;
+  min: number;
+  max: number;
   onChange: (value: number) => void;
 }) {
   return (
@@ -31,9 +43,13 @@ function PriceInput({
       <div className="relative mt-1">
         <Input
           type="number"
-          min={0}
+          min={min}
+          max={max}
           value={value}
-          onChange={(e) => onChange(+e.target.value)}
+          onChange={(e) => {
+            const next = Number(e.target.value);
+            if (Number.isFinite(next)) onChange(next);
+          }}
           className="h-9 pr-10 tabular-nums"
         />
         <span
@@ -50,15 +66,36 @@ function PriceInput({
 export default function PriceFilterFields({
   priceMin,
   priceMax,
+  priceMinLimit,
   onChange,
   className,
   showCurrencyHeader = true,
 }: PriceFilterFieldsProps) {
   const { currency, currencyInfo, locale } = useLocaleCurrency();
   const priceMaxLimit = getFilterPriceMax(currency);
-  const priceStep = getFilterPriceStep(currency);
-  const effectiveMax = priceMax || priceMaxLimit;
+  const sliderStep = getSliderPriceStep(priceMinLimit, priceMaxLimit);
+  const { min: sliderMin, max: sliderMax } = getSliderPriceBounds(
+    priceMinLimit,
+    priceMaxLimit,
+    sliderStep
+  );
+  const effectiveMax = priceMax || sliderMax;
   const currencyName = currencyInfo.name[locale];
+
+  const sliderMinValue = snapPriceToStep(
+    Math.max(priceMin, sliderMin),
+    sliderMin,
+    sliderStep
+  );
+  const sliderMaxValue = snapPriceToStep(
+    Math.min(effectiveMax, sliderMax),
+    sliderMin,
+    sliderStep
+  );
+
+  function applyRange(nextMin: number, nextMax: number) {
+    onChange(clampPriceRange(nextMin, nextMax, priceMinLimit, sliderMax));
+  }
 
   return (
     <div className={cn("space-y-4", className)}>
@@ -76,31 +113,40 @@ export default function PriceFilterFields({
           label="от"
           value={priceMin}
           symbol={currencyInfo.symbol}
-          onChange={(priceMin) => onChange({ priceMin, priceMax: effectiveMax })}
+          min={priceMinLimit}
+          max={effectiveMax}
+          onChange={(min) => applyRange(min, effectiveMax)}
         />
         <PriceInput
           label="до"
           value={effectiveMax}
           symbol={currencyInfo.symbol}
-          onChange={(priceMax) => onChange({ priceMin, priceMax })}
+          min={priceMin}
+          max={sliderMax}
+          onChange={(max) => applyRange(priceMin, max)}
         />
       </div>
 
       <Slider
-        min={0}
-        max={priceMaxLimit}
-        step={priceStep}
-        value={[priceMin, effectiveMax]}
-        onValueChange={([min, max]) => onChange({ priceMin: min, priceMax: max })}
+        min={sliderMin}
+        max={sliderMax}
+        step={sliderStep}
+        minStepsBetweenThumbs={1}
+        value={[sliderMinValue, Math.max(sliderMinValue + sliderStep, sliderMaxValue)]}
+        onValueChange={([min, max]) => applyRange(min, max)}
+        onPointerDown={(e) => e.stopPropagation()}
       />
     </div>
   );
 }
 
-export function usePriceFilterLimits() {
+export function usePriceFilterLimits(tours: TourListing[] = []) {
   const { currency } = useLocaleCurrency();
+  const { min } = getTourPriceBounds(tours, currency);
+  const { priceMax } = getDefaultPriceRange(tours, currency);
   return {
     currency,
-    priceMax: getFilterPriceMax(currency),
+    priceMin: min,
+    priceMax,
   };
 }

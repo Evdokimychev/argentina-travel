@@ -8,7 +8,7 @@ export default function IncludedExcludedSection({
   excluded: string[];
 }) {
   return (
-    <section id="included" className="scroll-mt-32 grid gap-4 sm:grid-cols-2">
+    <section id="included" className="tour-section-target grid gap-4 sm:grid-cols-2">
       <div>
         <SectionHeading title="Что включено" />
         <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-5 sm:p-6">

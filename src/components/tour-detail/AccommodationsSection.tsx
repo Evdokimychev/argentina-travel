@@ -8,7 +8,7 @@ export default function AccommodationsSection({
   accommodations: TourAccommodation[];
 }) {
   return (
-    <section id="accommodations" className="scroll-mt-32">
+    <section id="accommodations" className="tour-section-target">
       <SectionHeading title="Проживание" subtitle="Варианты размещения по маршруту" />
       <div className="space-y-6">
         {accommodations.map((acc) => (

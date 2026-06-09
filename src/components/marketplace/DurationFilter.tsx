@@ -15,6 +15,8 @@ interface DurationFilterProps {
   durationMax: number | null;
   dayTripsOnly: boolean;
   selectedPresets: DurationBucket[];
+  dayTripsCount: number;
+  counts: Partial<Record<DurationBucket, number>>;
   onChange: (patch: {
     durationMin: number | null;
     durationMax: number | null;
@@ -34,12 +36,15 @@ export default function DurationFilter({
   durationMax,
   dayTripsOnly,
   selectedPresets,
+  dayTripsCount,
+  counts,
   onChange,
   onClear,
   onApply,
 }: DurationFilterProps) {
   const displayMin = durationMin ?? "";
   const displayMax = durationMax ?? "";
+  const dayTripsDisabled = dayTripsCount === 0;
 
   function handleManualMin(raw: string) {
     const min = raw === "" ? null : Math.max(1, parseInt(raw, 10) || 1);
@@ -80,7 +85,7 @@ export default function DurationFilter({
     onChange({
       durationMin: min,
       durationMax: max,
-      dayTripsOnly: next.length === 1 && next[0] === "1 день",
+      dayTripsOnly: false,
       durations: next,
     });
   }
@@ -91,7 +96,7 @@ export default function DurationFilter({
         durationMin: 1,
         durationMax: 1,
         dayTripsOnly: true,
-        durations: ["1 день"],
+        durations: [],
       });
     } else {
       onChange({
@@ -138,8 +143,13 @@ export default function DurationFilter({
           type="button"
           role="switch"
           aria-checked={dayTripsOnly}
-          onClick={() => handleDayTripsOnly(!dayTripsOnly)}
-          className="flex w-full items-center gap-3 rounded-xl bg-sky/10 px-3 py-3 text-left transition-colors hover:bg-sky/15"
+          aria-disabled={dayTripsDisabled}
+          disabled={dayTripsDisabled}
+          onClick={() => !dayTripsDisabled && handleDayTripsOnly(!dayTripsOnly)}
+          className={cn(
+            "flex w-full items-center gap-3 rounded-xl bg-sky/10 px-3 py-3 text-left transition-colors hover:bg-sky/15",
+            dayTripsDisabled && "cursor-not-allowed opacity-45 hover:bg-sky/10"
+          )}
         >
           <span
             className={cn(
@@ -167,14 +177,19 @@ export default function DurationFilter({
       <ul className="max-h-56 overflow-y-auto bg-sky/[0.04] px-2 py-1">
         {DURATION_PRESETS.map(({ bucket }) => {
           const isSelected = selectedPresets.includes(bucket);
+          const count = counts[bucket] ?? 0;
+          const disabled = count === 0;
+
           return (
             <li key={bucket}>
               <button
                 type="button"
-                onClick={() => handlePresetToggle(bucket)}
+                onClick={() => !disabled && handlePresetToggle(bucket)}
+                disabled={disabled}
                 className={cn(
                   "flex w-full items-center gap-3 rounded-xl px-3 py-3 text-left transition-colors hover:bg-white/80",
-                  isSelected && "bg-white/60"
+                  isSelected && "bg-white/60",
+                  disabled && "cursor-not-allowed opacity-45"
                 )}
               >
                 <span
@@ -187,14 +202,21 @@ export default function DurationFilter({
                 >
                   {isSelected && <Check className="h-3 w-3" strokeWidth={3} />}
                 </span>
-                <span className="text-sm font-medium text-charcoal">{bucket}</span>
+                <span className="flex min-w-0 flex-1 items-center justify-between gap-2">
+                  <span className="text-sm font-medium text-charcoal">{bucket}</span>
+                  {count > 0 && (
+                    <span className="shrink-0 rounded-full bg-white/80 px-2 py-0.5 text-[11px] tabular-nums text-slate">
+                      {count}
+                    </span>
+                  )}
+                </span>
               </button>
             </li>
           );
         })}
       </ul>
 
-      <FilterFooter onClear={onClear} onApply={onApply} />
+      <FilterFooter onClear={onClear} onApply={onApply} applyAfterClear={false} />
     </>
   );
 }

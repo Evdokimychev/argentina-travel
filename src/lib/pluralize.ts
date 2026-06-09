@@ -121,6 +121,15 @@ export function formatAgeFrom(count: number): string {
   return `от ${count} ${yearsFromAgeWord(count)}`;
 }
 
+// Месяцы (1 месяц, 2 месяца, 5 месяцев)
+export function monthsWord(count: number): string {
+  return pluralRu(count, "месяц", "месяца", "месяцев");
+}
+
+export function formatMonths(count: number): string {
+  return formatWithWord(count, "месяц", "месяца", "месяцев");
+}
+
 /** Компактная длительность для карточек */
 export function formatDurationShort(days: number, nights: number): string {
   if (nights > 0) {

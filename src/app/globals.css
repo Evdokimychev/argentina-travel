@@ -16,7 +16,7 @@
   --color-brand-dark: #b8432e;
   --color-brand-light: #fef3f0;
 
-  --font-display: "Georgia", "Times New Roman", serif;
+  --font-display: var(--font-unbounded), system-ui, sans-serif;
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
@@ -24,10 +24,25 @@ html {
   scroll-behavior: smooth;
 }
 
+.tour-section-target {
+  scroll-margin-top: calc(
+    var(--site-header-height, 72px) + var(--tour-section-nav-height, 52px) + 1rem
+  );
+}
+
 body {
   font-family: var(--font-body);
   color: var(--color-charcoal);
   background-color: var(--color-pampas);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
 }
 
 .font-display {
@@ -139,4 +154,99 @@ body {
 .route-map-popup .leaflet-popup-content span {
   color: #4a5568;
   font-size: 12px;
+}
+
+/* Catalog tours map */
+.tours-map-canvas .leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(26, 26, 46, 0.12) !important;
+}
+
+.tours-map-canvas .leaflet-control-zoom a {
+  color: #1a1a2e !important;
+  border-color: #e5e7eb !important;
+}
+
+.tours-map-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  background: #3b82f6;
+  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.45);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+}
+
+.tours-map-marker--active {
+  width: 20px;
+  height: 20px;
+  background: #d4533b;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(212, 83, 59, 0.45);
+}
+
+.tours-map-popup-shell .leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(26, 26, 46, 0.18);
+}
+
+.tours-map-popup-shell .leaflet-popup-content {
+  margin: 0;
+  width: 240px !important;
+}
+
+.tours-map-popup-shell .leaflet-popup-tip {
+  background: #fff;
+}
+
+.tours-map-popup {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  color: inherit;
+  text-decoration: none;
+}
+
+.tours-map-popup:hover .tours-map-popup__title {
+  color: #d4533b;
+}
+
+.tours-map-popup__img {
+  width: 64px;
+  height: 64px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.tours-map-popup__body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.tours-map-popup__title {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #1a1a2e;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.tours-map-popup__meta {
+  font-size: 11px;
+  color: #64748b;
+}
+
+.tours-map-popup__price {
+  margin-top: 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a2e;
 }

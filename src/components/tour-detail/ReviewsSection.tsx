@@ -31,7 +31,7 @@ export default function ReviewsSection({
 
   if (reviews.length === 0) {
     return (
-      <section id="reviews" className="scroll-mt-32">
+      <section id="reviews" className="tour-section-target">
         <SectionHeading title="Отзывы" />
         <p className="text-slate">Отзывов пока нет. Будьте первым!</p>
       </section>
@@ -39,7 +39,7 @@ export default function ReviewsSection({
   }
 
   return (
-    <section id="reviews" className="scroll-mt-32">
+    <section id="reviews" className="tour-section-target">
       <SectionHeading
         title="Отзывы"
         subtitle={`${rating} · ${formatReviews(reviewCount)}`}

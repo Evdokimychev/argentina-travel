@@ -53,7 +53,7 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
   const [activeTab, setActiveTab] = useState<DescriptionExtraTabId>("seasonality");
 
   return (
-    <section id="description" className="scroll-mt-32">
+    <section id="description" className="tour-section-target">
       <SectionHeading title="Описание путешествия" />
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="space-y-5 p-6 sm:p-8">

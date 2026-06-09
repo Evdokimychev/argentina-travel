@@ -3,7 +3,7 @@
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import { MapPin } from "lucide-react";
-import type { TourRoutePoint } from "@/types";
+import type { TourArrivalInfo, TourRoutePoint } from "@/types";
 import { cn } from "@/lib/cn";
 import { SectionHeading } from "./InfoModal";
 
@@ -16,77 +16,128 @@ const RouteMap = dynamic(() => import("./RouteMap"), {
   ),
 });
 
-interface RouteMapSectionProps {
-  points: TourRoutePoint[];
+function ArrivalDetails({ arrival }: { arrival: TourArrivalInfo }) {
+  return (
+    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div>
+          <h4 className="text-sm font-semibold text-charcoal">Аэропорты</h4>
+          <ul className="mt-2 space-y-1 text-sm text-slate">
+            {arrival.airports.map((airport) => (
+              <li key={airport}>✈ {airport}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold text-charcoal">Рекомендуемые рейсы</h4>
+          <ul className="mt-2 space-y-1 text-sm text-slate">
+            {arrival.flights.map((flight) => (
+              <li key={flight}>• {flight}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold text-charcoal">Трансферы</h4>
+          <ul className="mt-2 space-y-1 text-sm text-slate">
+            {arrival.transfers.map((transfer) => (
+              <li key={transfer}>• {transfer}</li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <h4 className="text-sm font-semibold text-charcoal">Место встречи</h4>
+          <p className="mt-2 text-sm text-slate">{arrival.meetingPoint}</p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
-export default function RouteMapSection({ points }: RouteMapSectionProps) {
-  const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
+interface RouteMapSectionProps {
+  points?: TourRoutePoint[];
+  arrival?: TourArrivalInfo;
+}
 
-  if (!points.length) return null;
+export default function RouteMapSection({ points = [], arrival }: RouteMapSectionProps) {
+  const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
+  const hasMap = points.length > 0;
+
+  if (!hasMap && !arrival) return null;
 
   return (
-    <section id="route-map" className="scroll-mt-32">
-      <SectionHeading
-        title="Маршрут на карте"
-        subtitle="Основные точки путешествия — нажмите на город, чтобы увидеть его на карте"
-      />
-
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="grid lg:grid-cols-[1fr_260px]">
-          <RouteMap
-            points={points}
-            selectedId={selectedId}
-            onSelect={setSelectedId}
-            className="h-72 lg:h-[420px]"
+    <section id="route-map" className="tour-section-target space-y-8">
+      {hasMap ? (
+        <div className="space-y-4">
+          <SectionHeading
+            title="Маршрут на карте"
+            subtitle="Основные точки путешествия — нажмите на город, чтобы увидеть его на карте"
           />
 
-          <ol className="flex flex-col gap-1 border-t border-gray-100 p-4 lg:border-l lg:border-t-0">
-            {points.map((point, index) => {
-              const active = point.id === selectedId;
-              return (
-                <li key={point.id}>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedId(point.id)}
-                    className={cn(
-                      "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
-                      active
-                        ? "bg-brand-light text-charcoal"
-                        : "text-slate hover:bg-gray-50 hover:text-charcoal"
-                    )}
-                  >
-                    <span
-                      className={cn(
-                        "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                        active
-                          ? "bg-brand text-white"
-                          : "bg-gray-100 text-charcoal"
-                      )}
-                      aria-hidden
-                    >
-                      {index + 1}
-                    </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block text-sm font-medium leading-snug">{point.name}</span>
-                      {point.dayNumber != null && (
-                        <span className="mt-0.5 flex items-center gap-1 text-xs text-slate">
-                          <MapPin className="h-3 w-3 shrink-0" aria-hidden />
-                          День {point.dayNumber}
-                        </span>
-                      )}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
-          </ol>
-        </div>
+          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="grid lg:grid-cols-[1fr_260px]">
+              <RouteMap
+                points={points}
+                selectedId={selectedId}
+                onSelect={setSelectedId}
+                className="h-72 lg:h-[420px]"
+              />
 
-        <p className="border-t border-gray-100 px-4 py-2.5 text-[11px] leading-relaxed text-slate/80">
-          Карта построена по OpenStreetMap и CARTO — бесплатные сервисы с открытыми данными.
-        </p>
-      </div>
+              <ol className="flex flex-col gap-1 border-t border-gray-100 p-4 lg:border-l lg:border-t-0">
+                {points.map((point, index) => {
+                  const active = point.id === selectedId;
+                  return (
+                    <li key={point.id}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedId(point.id)}
+                        className={cn(
+                          "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
+                          active
+                            ? "bg-brand-light text-charcoal"
+                            : "text-slate hover:bg-gray-50 hover:text-charcoal"
+                        )}
+                      >
+                        <span
+                          className={cn(
+                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                            active ? "bg-brand text-white" : "bg-gray-100 text-charcoal"
+                          )}
+                          aria-hidden
+                        >
+                          {index + 1}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span className="block text-sm font-medium leading-snug">{point.name}</span>
+                          {point.dayNumber != null && (
+                            <span className="mt-0.5 flex items-center gap-1 text-xs text-slate">
+                              <MapPin className="h-3 w-3 shrink-0" aria-hidden />
+                              День {point.dayNumber}
+                            </span>
+                          )}
+                        </span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ol>
+            </div>
+
+            <p className="border-t border-gray-100 px-4 py-2.5 text-[11px] leading-relaxed text-slate/80">
+              Карта построена по OpenStreetMap и CARTO — бесплатные сервисы с открытыми данными.
+            </p>
+          </div>
+        </div>
+      ) : null}
+
+      {arrival ? (
+        <div className="space-y-4">
+          <SectionHeading
+            title="Как добраться"
+            subtitle={hasMap ? "Аэропорты, трансферы и место встречи" : undefined}
+          />
+          <ArrivalDetails arrival={arrival} />
+        </div>
+      ) : null}
     </section>
   );
 }

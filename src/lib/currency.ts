@@ -16,6 +16,39 @@ export function getFilterPriceStep(currency: CurrencyCode): number {
   return Math.max(Math.round(raw / 10) * 10, 10);
 }
 
+/** Fine step for range slider — avoids Radix snap conflicts with catalog min */
+export function getSliderPriceStep(
+  catalogMin: number,
+  priceMaxLimit: number
+): number {
+  const range = Math.max(priceMaxLimit - catalogMin, 1);
+  if (range <= 1_000) return 1;
+  if (range <= 10_000) return 10;
+  if (range <= 100_000) return 100;
+  return Math.max(100, Math.round(range / 200));
+}
+
+export function snapPriceToStep(
+  value: number,
+  origin: number,
+  step: number
+): number {
+  if (step <= 0) return value;
+  return Math.round((value - origin) / step) * step + origin;
+}
+
+export function getSliderPriceBounds(
+  catalogMin: number,
+  priceMaxLimit: number,
+  step: number
+): { min: number; max: number } {
+  const max = snapPriceToStep(priceMaxLimit, catalogMin, step);
+  return {
+    min: catalogMin,
+    max: Math.max(max, catalogMin + step),
+  };
+}
+
 /** Convert USD base price to target currency */
 export function convertFromUsd(priceUsd: number, currency: CurrencyCode): number {
   const rate = getCurrency(currency).rateFromUsd;

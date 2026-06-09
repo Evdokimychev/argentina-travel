@@ -1,7 +1,12 @@
 "use client";
 
 import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
+import { AuthProvider } from "@/context/AuthContext";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
-  return <LocaleCurrencyProvider>{children}</LocaleCurrencyProvider>;
+  return (
+    <LocaleCurrencyProvider>
+      <AuthProvider>{children}</AuthProvider>
+    </LocaleCurrencyProvider>
+  );
 }

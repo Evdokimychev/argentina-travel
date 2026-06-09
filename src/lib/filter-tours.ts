@@ -6,7 +6,15 @@ import {
 } from "@/types";
 import { CurrencyCode } from "@/types/locale";
 import { convertFromUsd, getFilterPriceMax } from "@/lib/currency";
-import { isDurationFilterActive } from "@/data/duration-presets";
+import {
+  DURATION_PRESETS,
+  isDurationFilterActive,
+} from "@/data/duration-presets";
+import {
+  getDefaultPriceRange,
+  isPriceFilterActive,
+} from "@/lib/tour-price-bounds";
+import { matchesTourFormat } from "@/lib/tour-format";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -59,6 +67,17 @@ function matchesChildren(tour: TourListing, policy: ChildrenPolicy | null) {
 
 function matchesDuration(tour: TourListing, filters: TourFilters): boolean {
   if (filters.dayTripsOnly) return tour.durationDays === 1;
+
+  if (filters.durations.length > 0) {
+    return filters.durations.some((bucket) => {
+      const preset = DURATION_PRESETS.find((p) => p.bucket === bucket);
+      return (
+        preset != null &&
+        tour.durationDays >= preset.min &&
+        tour.durationDays <= preset.max
+      );
+    });
+  }
 
   const hasRange = filters.durationMin != null || filters.durationMax != null;
   if (hasRange) {
@@ -123,6 +142,9 @@ export function filterTours(
     )
       return false;
 
+    if (filters.tourFormats.length && !matchesTourFormat(tour, filters.tourFormats))
+      return false;
+
     return true;
   });
 
@@ -149,14 +171,14 @@ export function filterTours(
 
 export function countActiveFilters(
   filters: TourFilters,
-  currency: CurrencyCode
+  currency: CurrencyCode,
+  tours: TourListing[] = []
 ): number {
-  const priceMax = filters.priceMax || getFilterPriceMax(currency);
   let n = 0;
   if (filters.query) n++;
   if (filters.dateFrom || filters.dateTo) n++;
   if (filters.activityTypes.length) n++;
-  if (filters.priceMin > 0 || filters.priceMax < priceMax) n++;
+  if (isPriceFilterActive(filters.priceMin, filters.priceMax, currency, tours)) n++;
   if (isDurationFilterActive(filters)) n++;
   if (filters.accommodations.length) n++;
   if (filters.comfortLevels.length) n++;
@@ -164,13 +186,17 @@ export function countActiveFilters(
   if (filters.languages.length) n++;
   if (filters.childrenPolicy) n++;
   if (filters.groupSizes.length) n++;
+  if (filters.tourFormats.length) n++;
   if (filters.nearMe) n++;
   return n;
 }
 
-export function getDefaultFilters(currency: CurrencyCode): TourFilters {
+export function getDefaultFilters(
+  currency: CurrencyCode,
+  tours: TourListing[] = []
+): TourFilters {
   return {
     ...DEFAULT_FILTERS,
-    priceMax: getFilterPriceMax(currency),
+    ...getDefaultPriceRange(tours, currency),
   };
 }

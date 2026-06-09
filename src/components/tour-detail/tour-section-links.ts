@@ -12,27 +12,29 @@ export function buildTourSectionLinks(
 ): TourSectionLink[] {
   const links: TourSectionLink[] = [
     { id: "description", label: "Описание" },
-    { id: "places", label: "Места" },
+    { id: "places", label: "Впечатления" },
   ];
 
   if (tour.itinerary?.length) {
     links.push({ id: "itinerary", label: "Программа" });
   }
 
-  links.push({ id: "included", label: "Включено" });
+  links.push({ id: "included", label: "Что включено" });
 
   if (tourHasAccommodation(tour)) {
     links.push({ id: "accommodations", label: "Проживание" });
   }
 
-  links.push({ id: "arrival", label: "Добраться" });
+  links.push({ id: "important", label: "Важно" });
 
-  if (tour.routePoints?.length) {
-    links.push({ id: "route-map", label: "Карта" });
+  if (tour.routePoints?.length || tour.arrival) {
+    links.push({
+      id: "route-map",
+      label: tour.routePoints?.length ? "Карта" : "Добраться",
+    });
   }
 
   links.push(
-    { id: "important", label: "Важно" },
     { id: "faq", label: "FAQ" },
     { id: "dates", label: "Даты" },
     { id: "organizer", label: "Организатор" },

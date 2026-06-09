@@ -7,7 +7,7 @@ import {
 import { baseTours } from "./tours";
 
 function durationBucket(days: number): DurationBucket {
-  if (days <= 1) return "1 день";
+  if (days <= 2) return "1–2 дня";
   if (days <= 3) return "2–3 дня";
   if (days <= 7) return "4–7 дней";
   if (days <= 14) return "8–14 дней";

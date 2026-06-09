@@ -149,7 +149,6 @@ export default function TourStatsSection({ tour }: TourStatsSectionProps) {
             {formatTouristsRange(tour.groupMin, tour.groupMax)}
           </p>
           <p className="mt-1 text-xs text-slate/80">
-            мин. {tour.groupMin} · макс. {tour.groupMax} ·{" "}
             {formatMinimumAgeSummary(tour.minimumAge)}
           </p>
         </StatColumn>

@@ -1,16 +1,17 @@
 "use client";
 
-import { ChevronDown, LayoutGrid, LayoutList } from "lucide-react";
+import { ChevronDown, LayoutGrid, LayoutList, Map } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   PRIMARY_SORT_OPTIONS,
   SECONDARY_SORT_OPTIONS,
   TourSortOption,
 } from "@/lib/sort-tours";
-import { formatToursFound } from "@/lib/pluralize";
+import { formatToursFound, filtersWord } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui/button";
 
-export type CatalogViewMode = "grid" | "list";
+export type CatalogViewMode = "grid" | "list" | "map";
 
 interface CatalogToolbarProps {
   count: number;
@@ -18,6 +19,8 @@ interface CatalogToolbarProps {
   onSortChange: (sort: TourSortOption) => void;
   viewMode: CatalogViewMode;
   onViewModeChange: (mode: CatalogViewMode) => void;
+  activeFilterCount?: number;
+  onResetFilters?: () => void;
 }
 
 function ViewToggle({
@@ -29,9 +32,9 @@ function ViewToggle({
 }) {
   return (
     <div
-      className="flex items-center rounded-full bg-gray-100 p-1"
+      className="flex shrink-0 items-center rounded-full bg-gray-100 p-1"
       role="group"
-      aria-label="Вид карточек"
+      aria-label="Вид каталога"
     >
       <button
         type="button"
@@ -39,7 +42,7 @@ function ViewToggle({
         aria-pressed={viewMode === "list"}
         aria-label="Список"
         className={cn(
-          "flex h-9 w-10 items-center justify-center rounded-full transition-all",
+          "flex h-8 w-9 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
           viewMode === "list"
             ? "bg-white text-charcoal shadow-sm"
             : "text-slate hover:text-charcoal"
@@ -53,13 +56,27 @@ function ViewToggle({
         aria-pressed={viewMode === "grid"}
         aria-label="Сетка"
         className={cn(
-          "flex h-9 w-10 items-center justify-center rounded-full transition-all",
+          "flex h-8 w-9 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
           viewMode === "grid"
             ? "bg-white text-charcoal shadow-sm"
             : "text-slate hover:text-charcoal"
         )}
       >
         <LayoutGrid className="h-[18px] w-[18px]" />
+      </button>
+      <button
+        type="button"
+        onClick={() => onViewModeChange("map")}
+        aria-pressed={viewMode === "map"}
+        aria-label="Карта"
+        className={cn(
+          "flex h-8 w-9 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
+          viewMode === "map"
+            ? "bg-white text-charcoal shadow-sm"
+            : "text-slate hover:text-charcoal"
+        )}
+      >
+        <Map className="h-[18px] w-[18px]" />
       </button>
     </div>
   );
@@ -71,28 +88,36 @@ export default function CatalogToolbar({
   onSortChange,
   viewMode,
   onViewModeChange,
+  activeFilterCount = 0,
+  onResetFilters,
 }: CatalogToolbarProps) {
   const isSecondary = SECONDARY_SORT_OPTIONS.some((o) => o.value === sort);
   const secondaryLabel =
     SECONDARY_SORT_OPTIONS.find((o) => o.value === sort)?.label ?? "Ещё";
 
   return (
-    <div className="space-y-3 border-b border-gray-100 pb-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-sm text-slate">{formatToursFound(count)}</p>
-        <ViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
-      </div>
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-gray-100 pb-4">
+      <p className="shrink-0 text-sm text-slate">
+        {formatToursFound(count)}
+        {activeFilterCount > 0 && (
+          <span className="ml-1.5 text-brand">· {filtersWord(activeFilterCount)}</span>
+        )}
+      </p>
 
-      <div className="flex flex-wrap items-center gap-x-1 gap-y-2">
+      <div
+        role="group"
+        aria-label="Сортировка"
+        className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 rounded-full bg-gray-100 px-1 py-1"
+      >
         {PRIMARY_SORT_OPTIONS.map((option) => (
           <button
             key={option.value}
             type="button"
             onClick={() => onSortChange(option.value)}
             className={cn(
-              "rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
+              "rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
               sort === option.value
-                ? "text-brand"
+                ? "bg-white text-brand shadow-sm"
                 : "text-slate hover:text-charcoal"
             )}
           >
@@ -105,12 +130,14 @@ export default function CatalogToolbar({
             <button
               type="button"
               className={cn(
-                "flex items-center gap-0.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                isSecondary ? "text-brand" : "text-slate hover:text-charcoal"
+                "flex items-center gap-0.5 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+                isSecondary
+                  ? "bg-white text-brand shadow-sm"
+                  : "text-slate hover:text-charcoal"
               )}
             >
               {isSecondary ? secondaryLabel : "Ещё"}
-              <ChevronDown className="h-4 w-4 opacity-60" />
+              <ChevronDown className="h-3.5 w-3.5 opacity-60 sm:h-4 sm:w-4" />
             </button>
           </PopoverTrigger>
           <PopoverContent className="w-52 p-1" align="start">
@@ -134,6 +161,20 @@ export default function CatalogToolbar({
             </ul>
           </PopoverContent>
         </Popover>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-2">
+        {activeFilterCount > 0 && onResetFilters && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="hidden h-8 px-2 text-xs sm:inline-flex"
+            onClick={onResetFilters}
+          >
+            Сбросить
+          </Button>
+        )}
+        <ViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
       </div>
     </div>
   );

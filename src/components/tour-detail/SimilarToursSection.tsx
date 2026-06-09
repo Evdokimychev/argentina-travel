@@ -9,7 +9,7 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
   if (tours.length === 0) return null;
 
   return (
-    <section id="similar" className="scroll-mt-32">
+    <section id="similar" className="tour-section-target">
       <SectionHeading title="Похожие путешествия" />
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tours.map((tour) => (

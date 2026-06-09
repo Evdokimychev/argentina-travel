@@ -8,7 +8,7 @@ export interface DurationPreset {
 }
 
 export const DURATION_PRESETS: DurationPreset[] = [
-  { bucket: "1 день", min: 1, max: 1 },
+  { bucket: "1–2 дня", min: 1, max: 2 },
   { bucket: "2–3 дня", min: 2, max: 3 },
   { bucket: "4–7 дней", min: 4, max: 7 },
   { bucket: "8–14 дней", min: 8, max: 14 },
@@ -54,10 +54,12 @@ export function isDurationFilterActive(filters: {
   durationMin: number | null;
   durationMax: number | null;
   dayTripsOnly: boolean;
+  durations?: DurationBucket[];
 }): boolean {
   return (
     filters.dayTripsOnly ||
     filters.durationMin != null ||
-    filters.durationMax != null
+    filters.durationMax != null ||
+    (filters.durations?.length ?? 0) > 0
   );
 }

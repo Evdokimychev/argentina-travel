@@ -244,7 +244,7 @@ export default function SearchBlock({
             )}
           </div>
           <PopoverContent
-            className="w-[580px] max-w-[calc(100vw-2rem)] p-0"
+            className="w-[calc(100vw-2rem)] max-w-[580px] p-0"
             align="start"
           >
             <DateRangePicker

@@ -12,7 +12,7 @@ import OrganizerSection from "./OrganizerSection";
 import ReviewsSection from "./ReviewsSection";
 import AccommodationsSection from "./AccommodationsSection";
 import IncludedExcludedSection from "./IncludedExcludedSection";
-import ArrivalSection, { ImportantSection } from "./ArrivalSection";
+import { ImportantSection } from "./ArrivalSection";
 import FAQSection from "./FAQSection";
 import DatesSection from "./DatesSection";
 import SimilarToursSection from "./SimilarToursSection";
@@ -20,6 +20,7 @@ import TourSidebar from "./TourSidebar";
 import RouteMapSection from "./RouteMapSection";
 import { TourBookingProvider } from "./TourBookingContext";
 import MobileBookingBar from "./MobileBookingBar";
+import TourCheckoutModal from "./checkout/TourCheckoutModal";
 import TourSectionNav from "./TourSectionNav";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
@@ -67,25 +68,23 @@ export default function TourDetailView({ tour, similarTours }: TourDetailViewPro
               {tourHasAccommodation(tour) ? (
                 <AccommodationsSection accommodations={tour.accommodations} />
               ) : null}
-              <ArrivalSection arrival={tour.arrival} />
-              {tour.routePoints?.length ? (
-                <RouteMapSection points={tour.routePoints} />
-              ) : null}
               <ImportantSection items={tour.importantInfo} />
+              <RouteMapSection points={tour.routePoints} arrival={tour.arrival} />
               <FAQSection faq={tour.faq} />
-              <DatesSection dates={tour.dates} />
+              <DatesSection tour={tour} />
               <OrganizerSection organizer={tour.organizer} comment={tour.organizerComment} />
               <ReviewsSection reviews={tour.reviews} rating={tour.rating} reviewCount={tour.reviewCount} />
               <SimilarToursSection tours={similarTours} />
             </div>
 
-            <aside className="hidden lg:sticky lg:top-24 lg:block lg:max-h-[calc(100vh-6rem)] lg:w-full lg:self-start lg:overflow-y-auto">
+            <aside className="hidden lg:sticky lg:top-[calc(var(--site-header-height,72px)+1rem)] lg:block lg:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] lg:w-full lg:self-start lg:overflow-y-auto">
               <TourSidebar tour={tour} />
             </aside>
           </div>
         </div>
 
-        <MobileBookingBar />
+        <MobileBookingBar tour={tour} />
+        <TourCheckoutModal tour={tour} />
       </div>
     </TourBookingProvider>
   );

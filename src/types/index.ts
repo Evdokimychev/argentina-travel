@@ -38,7 +38,7 @@ export type AccommodationType =
   | "Лодж"
   | "Круизная каюта";
 
-export type DurationBucket = "1 день" | "2–3 дня" | "4–7 дней" | "8–14 дней" | "15+ дней";
+export type DurationBucket = "1–2 дня" | "2–3 дня" | "4–7 дней" | "8–14 дней" | "15+ дней";
 
 export type ComfortLevel =
   | "Базовый"
@@ -72,6 +72,9 @@ export type GroupSizeBucket =
   | "До 12 человек"
   | "До 20 человек"
   | "Более 20 человек";
+
+/** Group departure vs individual / private booking */
+export type TourFormat = "group" | "individual";
 
 export interface TourDate {
   start: string; // ISO date
@@ -154,6 +157,7 @@ export interface TourFilters {
   languages: TourLanguage[];
   childrenPolicy: ChildrenPolicy | null;
   groupSizes: GroupSizeBucket[];
+  tourFormats: TourFormat[];
   nearMe: boolean;
   userCoords: { lat: number; lng: number } | null;
 }
@@ -175,6 +179,7 @@ export const DEFAULT_FILTERS: TourFilters = {
   languages: [],
   childrenPolicy: null,
   groupSizes: [],
+  tourFormats: [],
   nearMe: false,
   userCoords: null,
 };

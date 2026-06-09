@@ -214,7 +214,7 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
   }
 
   return (
-    <section id="itinerary" className="scroll-mt-32">
+    <section id="itinerary" className="tour-section-target">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
         <SectionHeading title="Программа по дням" />
         {totalDays > 1 && (

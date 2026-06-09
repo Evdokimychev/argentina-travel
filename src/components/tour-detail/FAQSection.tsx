@@ -8,7 +8,7 @@ export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
   const [openId, setOpenId] = useState<string | null>(faq[0]?.id ?? null);
 
   return (
-    <section id="faq" className="scroll-mt-32">
+    <section id="faq" className="tour-section-target">
       <SectionHeading title="Часто задаваемые вопросы" />
       <div className="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
         {faq.map((item) => {

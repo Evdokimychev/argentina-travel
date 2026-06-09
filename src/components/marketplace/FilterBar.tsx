@@ -1,62 +1,140 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { TourFilters } from "@/types";
-import {
-  ACCOMMODATION_OPTIONS,
-  COMFORT_OPTIONS,
-  DIFFICULTY_OPTIONS,
-  LANGUAGE_OPTIONS,
-  CHILDREN_OPTIONS,
-  GROUP_SIZE_OPTIONS,
-} from "@/data/filters";
-import { FilterPopover, FilterFooter, CheckboxList } from "./FilterPopover";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { TourFilters, TourListing, TourFormat } from "@/types";
+import { CHILDREN_OPTIONS } from "@/data/filters";
+import { pruneGroupSizes } from "@/data/group-format-options";
+import { FilterPopover, FilterFooter } from "./FilterPopover";
 import ActivityTypesFilter from "./ActivityTypesFilter";
+import AccommodationFilter from "./AccommodationFilter";
+import ComfortFilter from "./ComfortFilter";
+import DifficultyFilter from "./DifficultyFilter";
+import LanguageFilter from "./LanguageFilter";
+import GroupFormatFilter, {
+  groupFormatFilterLabel,
+  isGroupFormatFilterActive,
+} from "./GroupFormatFilter";
 import DurationFilter from "./DurationFilter";
 import FilterScrollRow from "./FilterScrollRow";
 import { isDurationFilterActive } from "@/data/duration-presets";
 import PriceFilterFields, { usePriceFilterLimits } from "./PriceFilterFields";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { isPriceFilterActive } from "@/lib/tour-price-bounds";
+import {
+  countToursByAccommodation,
+  countToursByField,
+  countToursByDurationBucket,
+  countDayTripTours,
+} from "@/lib/filter-counts";
 
 interface FilterBarProps {
+  tours: TourListing[];
   filters: TourFilters;
   onChange: (filters: TourFilters) => void;
-  /** Hide filters shown in the catalog sidebar */
-  exclude?: ("activities" | "price" | "duration" | "difficulty" | "comfort")[];
 }
 
 function toggle<T>(arr: T[], item: T): T[] {
   return arr.includes(item) ? arr.filter((x) => x !== item) : [...arr, item];
 }
 
-export default function FilterBar({ filters, onChange, exclude = [] }: FilterBarProps) {
+export default function FilterBar({ tours, filters, onChange }: FilterBarProps) {
   const { currency } = useLocaleCurrency();
-  const { priceMax } = usePriceFilterLimits();
+  const { priceMin: catalogMin, priceMax } = usePriceFilterLimits(tours);
   const [draft, setDraft] = useState(filters);
 
   useEffect(() => {
     setDraft(filters);
   }, [filters]);
 
-  useEffect(() => {
-    setDraft((d) => ({
-      ...d,
-      priceMin: 0,
-      priceMax: priceMax,
-    }));
-  }, [currency, priceMax]);
+  const commit = useCallback(
+    (patch?: Partial<TourFilters>) => {
+      setDraft((d) => {
+        const next = {
+          ...d,
+          ...patch,
+          priceMax: (patch?.priceMax ?? d.priceMax) || priceMax,
+        };
+        onChange(next);
+        return next;
+      });
+    },
+    [onChange, priceMax]
+  );
 
-  const apply = () => onChange({ ...draft, priceMax: draft.priceMax || priceMax });
-  const patch = (p: Partial<TourFilters>) => setDraft((d) => ({ ...d, ...p }));
+  const apply = useCallback(() => commit(), [commit]);
 
-  const effectiveMax = draft.priceMax || priceMax;
-  const priceActive = draft.priceMin > 0 || effectiveMax < priceMax;
+  const patch = useCallback(
+    (p: Partial<TourFilters>) => setDraft((d) => ({ ...d, ...p })),
+    []
+  );
 
-  const hidden = new Set(exclude);
+  const toggleDraft = useCallback(
+    <K extends keyof TourFilters>(key: K, item: TourFilters[K] extends (infer U)[] ? U : never) => {
+      setDraft((d) => ({
+        ...d,
+        [key]: toggle(d[key] as typeof item[], item),
+      }));
+    },
+    []
+  );
+
+  const toggleFormat = useCallback((format: TourFormat) => {
+    setDraft((d) => {
+      const nextFormats = toggle(d.tourFormats, format);
+      return {
+        ...d,
+        tourFormats: nextFormats,
+        groupSizes: pruneGroupSizes(d.groupSizes, nextFormats),
+      };
+    });
+  }, []);
+
+  const accommodationCounts = useMemo(
+    () => countToursByAccommodation(tours),
+    [tours]
+  );
+  const comfortCounts = useMemo(
+    () => countToursByField(tours, (t) => t.comfortLevel),
+    [tours]
+  );
+  const difficultyCounts = useMemo(
+    () => countToursByField(tours, (t) => t.difficultyLevel),
+    [tours]
+  );
+  const languageCounts = useMemo(() => {
+    const counts: Partial<Record<string, number>> = {};
+    for (const tour of tours) {
+      for (const lang of tour.language) {
+        counts[lang] = (counts[lang] ?? 0) + 1;
+      }
+    }
+    return counts;
+  }, [tours]);
+  const durationCounts = useMemo(
+    () => countToursByDurationBucket(tours),
+    [tours]
+  );
+  const dayTripsCount = useMemo(() => countDayTripTours(tours), [tours]);
+
+  const priceActive = isPriceFilterActive(
+    draft.priceMin,
+    draft.priceMax,
+    currency,
+    tours
+  );
+
+  const groupFormatActive = isGroupFormatFilterActive(
+    draft.tourFormats,
+    draft.groupSizes
+  );
+
+  const groupFormatLabel = groupFormatFilterLabel(
+    draft.tourFormats,
+    draft.groupSizes
+  );
 
   return (
     <FilterScrollRow>
-      {!hidden.has("activities") && (
       <FilterPopover
         label="Виды отдыха"
         active={draft.activityTypes.length > 0}
@@ -64,32 +142,28 @@ export default function FilterBar({ filters, onChange, exclude = [] }: FilterBar
       >
         <ActivityTypesFilter
           selected={draft.activityTypes}
-          onToggle={(item) =>
-            patch({ activityTypes: toggle(draft.activityTypes, item) })
-          }
-          onClear={() => patch({ activityTypes: [] })}
+          onToggle={(item) => toggleDraft("activityTypes", item)}
+          onClear={() => commit({ activityTypes: [] })}
           onApply={apply}
         />
       </FilterPopover>
-      )}
 
-      {!hidden.has("price") && (
       <FilterPopover label="Цена" active={priceActive}>
         <div className="p-4">
           <PriceFilterFields
             priceMin={draft.priceMin}
             priceMax={draft.priceMax}
+            priceMinLimit={catalogMin}
             onChange={(p) => patch(p)}
           />
         </div>
         <FilterFooter
-          onClear={() => patch({ priceMin: 0, priceMax: priceMax })}
+          onClear={() => commit({ priceMin: catalogMin, priceMax: priceMax })}
           onApply={apply}
+          applyAfterClear={false}
         />
       </FilterPopover>
-      )}
 
-      {!hidden.has("duration") && (
       <FilterPopover
         label="Продолжительность"
         active={isDurationFilterActive(draft)}
@@ -100,9 +174,11 @@ export default function FilterBar({ filters, onChange, exclude = [] }: FilterBar
           durationMax={draft.durationMax}
           dayTripsOnly={draft.dayTripsOnly}
           selectedPresets={draft.durations}
-          onChange={(patch) => setDraft((d) => ({ ...d, ...patch }))}
+          dayTripsCount={dayTripsCount}
+          counts={durationCounts}
+          onChange={(updates) => setDraft((d) => ({ ...d, ...updates }))}
           onClear={() =>
-            patch({
+            commit({
               durationMin: null,
               durationMax: null,
               dayTripsOnly: false,
@@ -112,56 +188,61 @@ export default function FilterBar({ filters, onChange, exclude = [] }: FilterBar
           onApply={apply}
         />
       </FilterPopover>
-      )}
 
-      <FilterPopover label="Проживание" active={draft.accommodations.length > 0}>
-        <CheckboxList
-          items={ACCOMMODATION_OPTIONS}
+      <FilterPopover
+        label="Проживание"
+        active={draft.accommodations.length > 0}
+        width="min-w-[360px]"
+      >
+        <AccommodationFilter
           selected={draft.accommodations}
-          onToggle={(item) =>
-            patch({ accommodations: toggle(draft.accommodations, item as typeof draft.accommodations[0]) })
-          }
+          counts={accommodationCounts}
+          onToggle={(type) => toggleDraft("accommodations", type)}
+          onClear={() => commit({ accommodations: [] })}
+          onApply={apply}
         />
-        <FilterFooter onClear={() => patch({ accommodations: [] })} onApply={apply} />
       </FilterPopover>
 
-      {!hidden.has("comfort") && (
-      <FilterPopover label="Комфорт" active={draft.comfortLevels.length > 0}>
-        <CheckboxList
-          items={COMFORT_OPTIONS}
+      <FilterPopover
+        label="Комфорт"
+        active={draft.comfortLevels.length > 0}
+        width="min-w-[360px]"
+      >
+        <ComfortFilter
           selected={draft.comfortLevels}
-          onToggle={(item) =>
-            patch({ comfortLevels: toggle(draft.comfortLevels, item as typeof draft.comfortLevels[0]) })
-          }
-          withDescription
+          counts={comfortCounts}
+          onToggle={(level) => toggleDraft("comfortLevels", level)}
+          onClear={() => commit({ comfortLevels: [] })}
+          onApply={apply}
         />
-        <FilterFooter onClear={() => patch({ comfortLevels: [] })} onApply={apply} />
       </FilterPopover>
-      )}
 
-      {!hidden.has("difficulty") && (
-      <FilterPopover label="Нагрузка" active={draft.difficultyLevels.length > 0}>
-        <CheckboxList
-          items={DIFFICULTY_OPTIONS}
+      <FilterPopover
+        label="Нагрузка"
+        active={draft.difficultyLevels.length > 0}
+        width="min-w-[360px]"
+      >
+        <DifficultyFilter
           selected={draft.difficultyLevels}
-          onToggle={(item) =>
-            patch({ difficultyLevels: toggle(draft.difficultyLevels, item as typeof draft.difficultyLevels[0]) })
-          }
-          withDescription
+          counts={difficultyCounts}
+          onToggle={(level) => toggleDraft("difficultyLevels", level)}
+          onClear={() => commit({ difficultyLevels: [] })}
+          onApply={apply}
         />
-        <FilterFooter onClear={() => patch({ difficultyLevels: [] })} onApply={apply} />
       </FilterPopover>
-      )}
 
-      <FilterPopover label="Язык" active={draft.languages.length > 0}>
-        <CheckboxList
-          items={LANGUAGE_OPTIONS}
+      <FilterPopover
+        label="Язык"
+        active={draft.languages.length > 0}
+        width="min-w-[360px]"
+      >
+        <LanguageFilter
           selected={draft.languages}
-          onToggle={(item) =>
-            patch({ languages: toggle(draft.languages, item as typeof draft.languages[0]) })
-          }
+          counts={languageCounts}
+          onToggle={(lang) => toggleDraft("languages", lang)}
+          onClear={() => commit({ languages: [] })}
+          onApply={apply}
         />
-        <FilterFooter onClear={() => patch({ languages: [] })} onApply={apply} />
       </FilterPopover>
 
       <FilterPopover label="С детьми" active={!!draft.childrenPolicy}>
@@ -182,20 +263,26 @@ export default function FilterBar({ filters, onChange, exclude = [] }: FilterBar
           ))}
         </ul>
         <FilterFooter
-          onClear={() => patch({ childrenPolicy: null })}
+          onClear={() => commit({ childrenPolicy: null })}
           onApply={apply}
+          applyAfterClear={false}
         />
       </FilterPopover>
 
-      <FilterPopover label="Группа" active={draft.groupSizes.length > 0}>
-        <CheckboxList
-          items={GROUP_SIZE_OPTIONS}
-          selected={draft.groupSizes}
-          onToggle={(item) =>
-            patch({ groupSizes: toggle(draft.groupSizes, item as typeof draft.groupSizes[0]) })
-          }
+      <FilterPopover
+        label={groupFormatLabel}
+        active={groupFormatActive}
+        width="min-w-[400px]"
+      >
+        <GroupFormatFilter
+          tours={tours}
+          selectedFormats={draft.tourFormats}
+          selectedSizes={draft.groupSizes}
+          onToggleFormat={toggleFormat}
+          onToggleSize={(size) => toggleDraft("groupSizes", size)}
+          onClear={() => commit({ tourFormats: [], groupSizes: [] })}
+          onApply={apply}
         />
-        <FilterFooter onClear={() => patch({ groupSizes: [] })} onApply={apply} />
       </FilterPopover>
     </FilterScrollRow>
   );

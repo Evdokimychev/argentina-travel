@@ -1,18 +1,55 @@
 "use client";
 
-import { TourDatePrice } from "@/types";
+import { useEffect, useState } from "react";
+import { TourDetail, TourDatePrice } from "@/types";
 import FormattedPrice from "@/components/FormattedPrice";
 import { formatDateShort } from "@/lib/utils";
 import { formatSpots } from "@/lib/pluralize";
+import { cn } from "@/lib/cn";
+import {
+  dateFitsGuestCount,
+  validateGuestsForScheduledBooking,
+} from "@/lib/tour-booking-spots";
 import { SectionHeading } from "./InfoModal";
 import { useTourBooking } from "./TourBookingContext";
 
-export default function DatesSection({ dates }: { dates: TourDatePrice[] }) {
-  const { selectedDateId, setSelectedDateId } = useTourBooking();
+interface DatesSectionProps {
+  tour: TourDetail;
+}
+
+export default function DatesSection({ tour }: DatesSectionProps) {
+  const { dates } = tour;
+  const { guests, selectedDateId, setSelectedDateId } = useTourBooking();
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setError(null);
+  }, [guests, selectedDateId]);
+
+  function handleSelect(date: TourDatePrice) {
+    const selectionError = validateGuestsForScheduledBooking(tour, guests, date.id);
+    if (selectionError) {
+      setError(selectionError);
+      return;
+    }
+
+    setError(null);
+    setSelectedDateId(date.id);
+  }
 
   return (
-    <section id="dates" className="scroll-mt-32">
+    <section id="dates" className="tour-section-target">
       <SectionHeading title="Даты и цены" subtitle="Выберите подходящую дату отправления" />
+
+      {error ? (
+        <div
+          role="alert"
+          className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+        >
+          {error}
+        </div>
+      ) : null}
+
       <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
         <table className="w-full min-w-[540px] text-left text-sm">
           <thead>
@@ -25,46 +62,59 @@ export default function DatesSection({ dates }: { dates: TourDatePrice[] }) {
             </tr>
           </thead>
           <tbody>
-            {dates.map((d) => (
-              <tr
-                key={d.id}
-                className={`border-b border-gray-50 transition-colors ${
-                  selectedDateId === d.id ? "bg-sky/5" : "hover:bg-gray-50"
-                }`}
-              >
-                <td className="px-5 py-4 font-medium text-charcoal">
-                  {formatDateShort(d.startDate)}
-                </td>
-                <td className="px-5 py-4 text-slate">{formatDateShort(d.endDate)}</td>
-                <td className="px-5 py-4">
-                  <span
-                    className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      d.spotsLeft <= 3
-                        ? "bg-wine/10 text-wine"
-                        : "bg-emerald-50 text-emerald-700"
-                    }`}
-                  >
-                    {formatSpots(d.spotsLeft)}
-                  </span>
-                </td>
-                <td className="px-5 py-4 font-semibold text-charcoal">
-                  <FormattedPrice priceUsd={d.priceUsd} className="font-semibold text-charcoal" />
-                </td>
-                <td className="px-5 py-4">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedDateId(d.id)}
-                    className={`rounded-lg px-3 py-1.5 text-xs font-medium ${
-                      selectedDateId === d.id
-                        ? "bg-patagonia text-white"
-                        : "border border-gray-200 hover:bg-gray-50"
-                    }`}
-                  >
-                    Выбрать
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {dates.map((date) => {
+              const bookable = dateFitsGuestCount(date, guests, tour.groupMin);
+              const selected = selectedDateId === date.id;
+
+              return (
+                <tr
+                  key={date.id}
+                  className={cn(
+                    "border-b border-gray-50 transition-colors",
+                    selected && "bg-sky/5",
+                    bookable && !selected && "hover:bg-gray-50",
+                    !bookable && "bg-gray-50/40"
+                  )}
+                >
+                  <td className="px-5 py-4 font-medium text-charcoal">
+                    {formatDateShort(date.startDate)}
+                  </td>
+                  <td className="px-5 py-4 text-slate">{formatDateShort(date.endDate)}</td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={cn(
+                        "rounded-full px-2.5 py-0.5 text-xs font-medium",
+                        !bookable && "bg-wine/10 text-wine",
+                        bookable && date.spotsLeft <= 3 && "bg-wine/10 text-wine",
+                        bookable && date.spotsLeft > 3 && "bg-emerald-50 text-emerald-700"
+                      )}
+                    >
+                      {formatSpots(date.spotsLeft)}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 font-semibold text-charcoal">
+                    <FormattedPrice priceUsd={date.priceUsd} className="font-semibold text-charcoal" />
+                  </td>
+                  <td className="px-5 py-4">
+                    <button
+                      type="button"
+                      onClick={() => handleSelect(date)}
+                      aria-disabled={!bookable}
+                      className={cn(
+                        "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
+                        selected && "bg-patagonia text-white",
+                        !selected && bookable && "border border-gray-200 hover:bg-gray-50",
+                        !selected &&
+                          !bookable &&
+                          "border border-gray-200 bg-gray-100 text-slate hover:bg-gray-100"
+                      )}
+                    >
+                      {selected ? "Выбрано" : "Выбрать"}
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

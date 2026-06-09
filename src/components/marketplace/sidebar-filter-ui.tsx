@@ -29,6 +29,60 @@ export function LevelScale({
   );
 }
 
+/** Emerald dot scale used on tour pages and comfort filters */
+export function ComfortDotRating({
+  filled,
+  total = 5,
+  className,
+}: {
+  filled: number;
+  total?: number;
+  className?: string;
+}) {
+  return (
+    <span className={cn("inline-flex items-center gap-1", className)} aria-hidden>
+      {Array.from({ length: total }, (_, i) => (
+        <span
+          key={i}
+          className={cn(
+            "h-2 w-2 rounded-full",
+            i < filled ? "bg-emerald-500" : "bg-gray-200"
+          )}
+        />
+      ))}
+    </span>
+  );
+}
+
+/** Brand/red dot scale for difficulty filters and tour cards */
+export function DifficultyDotRating({
+  filled,
+  total = 5,
+  className,
+}: {
+  filled: number;
+  total?: number;
+  className?: string;
+}) {
+  return (
+    <span className={cn("inline-flex items-center gap-1", className)} aria-hidden>
+      {Array.from({ length: total }, (_, i) => (
+        <span
+          key={i}
+          className={cn(
+            "h-2 w-2 rounded-full",
+            i < filled
+              ? i >= 4
+                ? "bg-red-500"
+                : "bg-brand"
+              : "bg-gray-200"
+          )}
+        />
+      ))}
+    </span>
+  );
+}
+
 export function DurationScale({
   level,
   className,

@@ -36,9 +36,11 @@ export const DATE_PRESETS = [
 ] as const;
 
 export { ACTIVITY_TYPES } from "@/data/activity-icons";
+export { TOUR_COLLECTIONS, TOUR_COLLECTION_OPTIONS } from "@/data/tour-collections";
+export { DIFFICULTY_LEVELS, DIFFICULTY_DOT_COUNT, DIFFICULTY_ICONS } from "@/data/tour-levels";
 
 export const DURATION_OPTIONS: DurationBucket[] = [
-  "1 день",
+  "1–2 дня",
   "2–3 дня",
   "4–7 дней",
   "8–14 дней",

@@ -82,7 +82,7 @@ function MonthGrid({ month, from, to, onDayClick }: MonthGridProps) {
   }
 
   return (
-    <div className="w-[252px] shrink-0 px-3">
+    <div className="w-full min-w-0 px-2 sm:px-3 md:w-[252px] md:shrink-0">
       <p className="mb-3 text-center text-sm font-semibold capitalize text-charcoal">
         {format(month, "LLLL yyyy", { locale: ru })}
       </p>
@@ -146,7 +146,7 @@ export default function DateRangePicker({
   }
 
   return (
-    <div className="w-[580px] max-w-[calc(100vw-2rem)]">
+    <div className="w-full max-w-[580px]">
       <div className="flex items-center border-b border-gray-100 py-2">
         <button
           type="button"
@@ -157,14 +157,16 @@ export default function DateRangePicker({
           <ChevronLeft className="h-5 w-5 text-charcoal" />
         </button>
 
-        <div className="flex flex-1 divide-x divide-gray-100">
+        <div className="flex min-w-0 flex-1 justify-center md:divide-x md:divide-gray-100">
           <MonthGrid month={month} from={from} to={to} onDayClick={handleDayClick} />
-          <MonthGrid
-            month={secondMonth}
-            from={from}
-            to={to}
-            onDayClick={handleDayClick}
-          />
+          <div className="hidden md:block">
+            <MonthGrid
+              month={secondMonth}
+              from={from}
+              to={to}
+              onDayClick={handleDayClick}
+            />
+          </div>
         </div>
 
         <button
