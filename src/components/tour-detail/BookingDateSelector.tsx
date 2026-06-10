@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Info } from "lucide-react";
 import { TourDetail } from "@/types";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { spotsWord } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import SingleDatePicker from "@/components/ui/single-date-picker";
@@ -35,14 +35,18 @@ function formatSelectionSummary(
 ): string {
   if (dateMode === "custom" && canPickCustom(tour.bookingMode ?? "scheduled")) {
     const datePart = customDate
-      ? new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short" }).format(customDate)
+      ? new Intl.DateTimeFormat("ru-RU", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }).format(customDate)
       : null;
     return datePart ? `Индивидуально · ${datePart}` : "Индивидуально";
   }
 
   const selected = tour.dates.find((d) => d.id === selectedDateId);
   const datesPart = selected
-    ? `${formatDateShort(selected.startDate)} – ${formatDateShort(selected.endDate)}`
+    ? formatDateRange(selected.startDate, selected.endDate)
     : null;
 
   if (showModeToggle || (tour.bookingMode ?? "scheduled") === "scheduled") {
@@ -178,7 +182,7 @@ export default function BookingDateSelector({
                     const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
                     return (
                       <option key={d.id} value={d.id} disabled={!bookable}>
-                        {formatDateShort(d.startDate)} – {formatDateShort(d.endDate)} ({d.spotsLeft}{" "}
+                        {formatDateRange(d.startDate, d.endDate)} ({d.spotsLeft}{" "}
                         {spotsWord(d.spotsLeft)})
                         {dateOptionSuffix(d, guests, tour.groupMin)}
                       </option>
@@ -203,7 +207,7 @@ export default function BookingDateSelector({
                           onClick={() => setSelectedDateId(d.id)}
                           className="rounded-lg border border-amber-200 bg-white px-2.5 py-1 text-xs font-medium text-charcoal transition-colors hover:border-brand hover:text-brand"
                         >
-                          {formatDateShort(d.startDate)} – {formatDateShort(d.endDate)}
+                          {formatDateRange(d.startDate, d.endDate)}
                         </button>
                       ))}
                     </div>
@@ -221,8 +225,7 @@ export default function BookingDateSelector({
                   <p className="font-medium">Индивидуальный заезд</p>
                   {tour.requestDateFrom && tour.requestDateTo && (
                     <p className="mt-1 text-slate">
-                      Доступны любые даты в период {formatDateShort(tour.requestDateFrom)} по{" "}
-                      {formatDateShort(tour.requestDateTo)}
+                      Доступны любые даты в период {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
                     </p>
                   )}
                   <p className="mt-1 text-slate">

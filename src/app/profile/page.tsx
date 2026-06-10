@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { getRecentBookings, getTouristDashboardStats } from "@/lib/tourist-dashboard";
 import { BOOKINGS_UPDATED_EVENT, FAVORITES_UPDATED_EVENT, REVIEWS_UPDATED_EVENT } from "@/types/tourist";
 import { BOOKING_STATUS_LABELS } from "@/data/tourist-dashboard";
-import { formatDateShort } from "@/lib/utils";
+import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
 
 function StatCard({
@@ -121,8 +121,10 @@ export default function ProfileDashboardPage() {
                 <div className="min-w-0">
                   <p className="font-medium text-charcoal">{booking.tourTitle}</p>
                   <p className="mt-1 text-sm text-slate">
-                    {booking.startDate ? formatDateShort(booking.startDate) : "Дата по запросу"} ·{" "}
-                    {booking.guests} гостей
+                    {booking.startDate
+                      ? formatBookingTourDates(booking, "Дата по запросу")
+                      : "Дата по запросу"}{" "}
+                    · {booking.guests} гостей
                   </p>
                 </div>
                 <div className="flex items-center gap-3">

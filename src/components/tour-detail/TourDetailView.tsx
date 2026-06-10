@@ -116,6 +116,7 @@ export default function TourDetailView({ slug, tour: initialTour, similarTours }
               <RouteMapSection
                 points={tour.routePoints}
                 arrival={tour.arrival}
+                logistics={canonicalTour?.logistics}
                 routeMapImage={canonicalTour?.program.routeMapImage}
               />
               <FAQSection faq={tour.faq} />

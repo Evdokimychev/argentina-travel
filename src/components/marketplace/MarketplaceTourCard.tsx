@@ -7,7 +7,7 @@ import FavoriteButton from "@/components/profile/FavoriteButton";
 import { TourListing, TourBadge } from "@/types";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
@@ -117,7 +117,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
 
         {nextDate && tour.bookingMode !== "on_request" && (
           <p className="mt-2 text-xs text-slate">
-            {formatDateShort(nextDate.start)} – {formatDateShort(nextDate.end)}
+            {formatDateRange(nextDate.start, nextDate.end)}
             {moreDates > 0 && (
               <span className="ml-1 text-brand">{formatMoreDates(moreDates)}</span>
             )}

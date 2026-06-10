@@ -113,6 +113,10 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   ticketRecommendationsText: string;
   arrivalDepartureEnabled: boolean;
   arrivalDepartureCities: OrganizerArrivalDepartureCity[];
+  arrivalDetailsEnabled: boolean;
+  arrivalAirportsText: string;
+  arrivalTransfersText: string;
+  arrivalMeetingPoint: string;
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;

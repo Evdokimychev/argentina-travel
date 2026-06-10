@@ -5,8 +5,10 @@ import Image from "next/image";
 import dynamic from "next/dynamic";
 import { MapPin } from "lucide-react";
 import type { TourArrivalInfo, TourRoutePoint } from "@/types";
+import type { TourLogistics } from "@/types/tour";
 import { cn } from "@/lib/cn";
 import { SectionHeading } from "./InfoModal";
+import ArrivalDetails, { ArrivalRecommendations } from "./ArrivalDetails";
 
 const RouteMap = dynamic(() => import("./RouteMap"), {
   ssr: false,
@@ -17,59 +19,37 @@ const RouteMap = dynamic(() => import("./RouteMap"), {
   ),
 });
 
-function ArrivalDetails({ arrival }: { arrival: TourArrivalInfo }) {
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-      <div className="grid gap-6 sm:grid-cols-2">
-        <div>
-          <h4 className="text-sm font-semibold text-charcoal">Аэропорты</h4>
-          <ul className="mt-2 space-y-1 text-sm text-slate">
-            {arrival.airports.map((airport) => (
-              <li key={airport}>✈ {airport}</li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold text-charcoal">Рекомендуемые рейсы</h4>
-          <ul className="mt-2 space-y-1 text-sm text-slate">
-            {arrival.flights.map((flight) => (
-              <li key={flight}>• {flight}</li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold text-charcoal">Трансферы</h4>
-          <ul className="mt-2 space-y-1 text-sm text-slate">
-            {arrival.transfers.map((transfer) => (
-              <li key={transfer}>• {transfer}</li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <h4 className="text-sm font-semibold text-charcoal">Место встречи</h4>
-          <p className="mt-2 text-sm text-slate">{arrival.meetingPoint}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 interface RouteMapSectionProps {
   points?: TourRoutePoint[];
   arrival?: TourArrivalInfo;
+  logistics?: TourLogistics;
   routeMapImage?: string;
 }
 
 export default function RouteMapSection({
   points = [],
   arrival,
+  logistics,
   routeMapImage,
 }: RouteMapSectionProps) {
   const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
   const hasMap = points.length > 0;
   const hasRouteImage = Boolean(routeMapImage?.trim());
+  const hasArrivalRecommendations = Boolean(
+    logistics?.arrivalDepartureEnabled &&
+      logistics.arrivalDepartureCities.some(
+        (city) => city.city.trim() && city.plane.enabled && (city.canArrive || city.canDepart)
+      )
+  );
+  const hasArrivalPanel = Boolean(
+    arrival &&
+      (arrival.airports.length > 0 ||
+        arrival.flights.length > 0 ||
+        arrival.transfers.length > 0 ||
+        arrival.meetingPoint.trim())
+  );
 
-  if (!hasMap && !arrival && !hasRouteImage) return null;
+  if (!hasMap && !hasArrivalPanel && !hasArrivalRecommendations && !hasRouteImage) return null;
 
   return (
     <section id="route-map" className="tour-section-target space-y-8">
@@ -156,7 +136,7 @@ export default function RouteMapSection({
         </div>
       ) : null}
 
-      {arrival ? (
+      {arrival && hasArrivalPanel ? (
         <div className="space-y-4">
           <SectionHeading
             title="Как добраться"
@@ -164,6 +144,10 @@ export default function RouteMapSection({
           />
           <ArrivalDetails arrival={arrival} />
         </div>
+      ) : null}
+
+      {logistics && hasArrivalRecommendations ? (
+        <ArrivalRecommendations logistics={logistics} />
       ) : null}
     </section>
   );

@@ -67,7 +67,15 @@ export type RoomAllocations = Record<RoomOptionId, number>;
 
 export type { TransferAllocations };
 
-export type PaymentOption = "full" | "deposit";
+import type { BookingCheckoutPaymentOption } from "@/types/booking-params";
+
+export type PaymentOption = BookingCheckoutPaymentOption;
+
+export const CHECKOUT_PAYMENT_OPTIONS: Array<{ id: PaymentOption; label: string }> = [
+  { id: "full", label: "Полная оплата" },
+  { id: "deposit", label: "Депозит 10%" },
+  { id: "later", label: "Оплатить позже" },
+];
 
 export interface TravelerForm {
   firstName: string;

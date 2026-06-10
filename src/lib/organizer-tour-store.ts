@@ -263,6 +263,10 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     ticketRecommendationsText: "",
     arrivalDepartureEnabled: false,
     arrivalDepartureCities: [],
+    arrivalDetailsEnabled: false,
+    arrivalAirportsText: "",
+    arrivalTransfersText: "",
+    arrivalMeetingPoint: "",
     updatedAt: listing.updatedAt,
   };
 
@@ -337,6 +341,10 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     ticketRecommendationsText: "",
     arrivalDepartureEnabled: false,
     arrivalDepartureCities: [],
+    arrivalDetailsEnabled: false,
+    arrivalAirportsText: "",
+    arrivalTransfersText: "",
+    arrivalMeetingPoint: "",
     updatedAt: new Date().toISOString(),
   };
 }
@@ -459,6 +467,16 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
         ? draft.arrivalDepartureCities
         : seed.arrivalDepartureCities
     ),
+    arrivalDetailsEnabled: draft.arrivalDetailsEnabled ?? seed.arrivalDetailsEnabled,
+    arrivalAirportsText: draft.arrivalAirportsText?.trim()
+      ? draft.arrivalAirportsText
+      : seed.arrivalAirportsText,
+    arrivalTransfersText: draft.arrivalTransfersText?.trim()
+      ? draft.arrivalTransfersText
+      : seed.arrivalTransfersText,
+    arrivalMeetingPoint: draft.arrivalMeetingPoint?.trim()
+      ? draft.arrivalMeetingPoint
+      : seed.arrivalMeetingPoint,
     maxWeightEnabled:
       draft.maxWeightEnabled ??
       ((draft.maxWeightKg ?? 0) > 0 ? true : seed.maxWeightEnabled),

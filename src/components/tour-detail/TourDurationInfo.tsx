@@ -14,14 +14,14 @@ export default function TourDurationInfo({ days, nights, className }: TourDurati
   return (
     <div
       className={cn(
-        "inline-flex shrink-0 items-center gap-2 rounded-lg border border-gray-100 bg-white px-2.5 py-2 shadow-sm",
+        "inline-flex shrink-0 flex-col items-center gap-1.5 rounded-lg border border-gray-100 bg-white px-2.5 py-2 text-center shadow-sm",
         className
       )}
     >
       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-sky/10 text-sky">
         <CalendarDays className="h-3.5 w-3.5 stroke-[1.75]" aria-hidden />
       </span>
-      <div className="text-right leading-tight">
+      <div className="leading-tight">
         <p className="text-sm font-semibold text-charcoal">{formatDays(days)}</p>
         {showNights && (
           <p className="mt-0.5 text-[11px] text-slate">{formatNights(nights)}</p>

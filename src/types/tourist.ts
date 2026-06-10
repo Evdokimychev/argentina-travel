@@ -1,4 +1,9 @@
-/** Tourist cabinet — localStorage-backed entities (Phase C/D). */
+import type { BookingInvoice, BookingPaymentSummary } from "@/types/booking-payment";
+import type {
+  BookingCheckoutPaymentOption,
+  BookingOrganizerParams,
+  BookingPaymentStatus,
+} from "@/types/booking-params";
 
 /** Active CRM statuses (Phase D v1 UI). */
 export type BookingStatusActive =
@@ -29,6 +34,18 @@ export interface BookingOrganizerComment {
   text: string;
   authorName: string;
   createdAt: string;
+}
+
+/** Participant details for tour booking processing. */
+export interface BookingTraveler {
+  id: string;
+  fullName: string;
+  /** ISO date YYYY-MM-DD */
+  dateOfBirth: string;
+  passportNumber?: string;
+  dietaryRestrictions?: string;
+  email?: string;
+  phone?: string;
 }
 
 export type TouristReviewStatus = "draft" | "published";
@@ -66,6 +83,24 @@ export interface Booking {
   comments?: string;
   organizerComments: BookingOrganizerComment[];
   statusHistory: BookingStatusChange[];
+  /** Checkout: tourist chose to fill participant data later. */
+  fillTravelersLater?: boolean;
+  /** Participant details (from checkout or travelers form). */
+  travelers?: BookingTraveler[];
+  /** Public token for /booking/travelers/[token] form. */
+  travelersFormToken?: string;
+  /** When participant data was submitted. */
+  travelersCompletedAt?: string;
+  /** Payment invoices (optional until payment integration). */
+  invoices?: BookingInvoice[];
+  /** Aggregated payment totals (optional until payment integration). */
+  paymentSummary?: BookingPaymentSummary;
+  /** Organizer-editable payment status (UI stub until payment integration). */
+  paymentStatus?: BookingPaymentStatus;
+  /** Organizer-editable booking parameters (dates, pricing, prepayment). */
+  organizerParams?: BookingOrganizerParams;
+  /** Payment choice at checkout (full / deposit / pay later). */
+  checkoutPaymentOption?: BookingCheckoutPaymentOption;
   createdAt: string;
   updatedAt: string;
 }

@@ -1,5 +1,18 @@
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
+import {
+  ensureTravelersSlotCount,
+  hasCompleteBookingTravelers,
+  travelersFromCheckoutForm,
+} from "@/lib/booking-travelers";
+import {
+  buildPaymentSummaryFromStatus,
+  computePrepaymentAmount,
+  normalizeOrganizerParams,
+  resolveOrganizerParams,
+} from "@/lib/booking-params";
+import type { BookingCheckoutPaymentOption } from "@/types/booking-params";
+import { formatBookingDisplayNumber } from "@/lib/booking-display";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getCanonicalTourBySlug } from "@/lib/tour-repository";
@@ -18,8 +31,11 @@ import {
   type BookingStatus,
   type BookingStatusActor,
   type BookingStatusChange,
+  type BookingTraveler,
   type OrganizerBookingStats,
 } from "@/types/tourist";
+import type { BookingOrganizerParams, BookingPaymentStatus } from "@/types/booking-params";
+import type { BookingInvoice } from "@/types/booking-payment";
 
 function createId(prefix: string): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -50,6 +66,28 @@ function notifyUpdated() {
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(BOOKINGS_UPDATED_EVENT));
   }
+}
+
+function resolveTravelersFormToken(raw: Pick<Booking, "id" | "travelersFormToken">): string {
+  if (raw.travelersFormToken) return raw.travelersFormToken;
+  let hash = 0;
+  for (let i = 0; i < raw.id.length; i += 1) {
+    hash = (hash * 33 + raw.id.charCodeAt(i)) >>> 0;
+  }
+  return `trv-${hash.toString(36).slice(0, 12)}`;
+}
+
+function normalizeTravelers(raw: BookingTraveler[] | undefined): BookingTraveler[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((traveler, index) => ({
+    id: traveler.id || createId(`guest-${index}`),
+    fullName: traveler.fullName?.trim() ?? "",
+    dateOfBirth: traveler.dateOfBirth?.trim() ?? "",
+    passportNumber: traveler.passportNumber?.trim() || undefined,
+    dietaryRestrictions: traveler.dietaryRestrictions?.trim() || undefined,
+    email: traveler.email?.trim() || undefined,
+    phone: traveler.phone?.trim() || undefined,
+  }));
 }
 
 function createStatusChange(input: {
@@ -113,6 +151,14 @@ export function normalizeBooking(raw: Booking): Booking {
       createdAt: item.createdAt || raw.updatedAt || raw.createdAt,
     })),
     statusHistory,
+    fillTravelersLater: raw.fillTravelersLater ?? false,
+    travelers: normalizeTravelers(raw.travelers),
+    travelersFormToken: resolveTravelersFormToken(raw),
+    travelersCompletedAt: raw.travelersCompletedAt,
+    organizerParams: raw.organizerParams
+      ? normalizeOrganizerParams(raw.organizerParams)
+      : undefined,
+    paymentStatus: raw.paymentStatus,
   };
 }
 
@@ -154,6 +200,8 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       ],
       createdAt: now,
       updatedAt: now,
+      fillTravelersLater: true,
+      travelersFormToken: "trv-demo-new",
     },
     {
       id: "booking-demo-pending",
@@ -198,6 +246,8 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       ],
       createdAt: "2026-06-01T10:24:00.000Z",
       updatedAt: now,
+      fillTravelersLater: true,
+      travelersFormToken: "trv-demo-pending",
     },
     {
       id: "booking-demo-completed",
@@ -256,6 +306,29 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       ],
       createdAt: "2025-10-01T10:00:00.000Z",
       updatedAt: "2025-11-06T10:00:00.000Z",
+      fillTravelersLater: false,
+      travelersFormToken: "trv-demo-completed",
+      travelersCompletedAt: "2025-10-08T14:30:00.000Z",
+      travelers: [
+        {
+          id: "guest-1",
+          fullName: "Иван Евдокимычев",
+          dateOfBirth: "1990-05-15",
+          passportNumber: "4510 123456",
+          dietaryRestrictions: "Без ограничений",
+          email: "IAEvdokimychev@ya.ru",
+          phone: "+79999226564",
+        },
+        {
+          id: "guest-2",
+          fullName: "Мария Евдокимычева",
+          dateOfBirth: "1992-08-22",
+          passportNumber: "4511 654321",
+          dietaryRestrictions: "Без глютена",
+          email: "maria@example.com",
+          phone: "+79991234567",
+        },
+      ],
     },
   ];
 
@@ -314,14 +387,20 @@ export function createBooking(input: {
   touristComment?: string;
   status?: BookingStatus;
   organizerTourId?: string;
+  fillTravelersLater?: boolean;
+  travelers?: BookingTraveler[];
+  travelersFormToken?: string;
+  travelersCompletedAt?: string;
+  checkoutPaymentOption?: BookingCheckoutPaymentOption;
 }): Booking | { error: string } {
   const allowed = assertPermission(canBookTour(input.actor));
   if ("error" in allowed) return { error: allowed.error };
 
   const now = new Date().toISOString();
   const status = input.status ?? "new";
+  const id = createId("booking");
   const booking: Booking = {
-    id: createId("booking"),
+    id,
     userId: input.userId,
     organizerTourId: input.organizerTourId ?? resolveOrganizerTourId(input.tour.slug),
     tourId: input.tour.id,
@@ -337,6 +416,11 @@ export function createBooking(input: {
     contactEmail: input.contactEmail,
     contactPhone: input.contactPhone,
     touristComment: input.touristComment?.trim() || undefined,
+    fillTravelersLater: input.fillTravelersLater ?? false,
+    travelers: normalizeTravelers(input.travelers),
+    travelersFormToken: input.travelersFormToken ?? resolveTravelersFormToken({ id }),
+    travelersCompletedAt: input.travelersCompletedAt,
+    checkoutPaymentOption: input.checkoutPaymentOption,
     organizerComments: [],
     statusHistory: [
       createStatusChange({
@@ -489,7 +573,25 @@ export function createBookingFromCheckout(input: {
   totalPriceUsd: number;
   form: CheckoutFormState;
 }): Booking | { error: string } {
-  return createBooking({
+  const fillTravelersLater = input.form.fillTravelersLater;
+  const travelers = travelersFromCheckoutForm(input.form);
+  const now = new Date().toISOString();
+  const paymentOption = input.form.paymentOption;
+  const organizerParams = normalizeOrganizerParams(undefined);
+  const paymentStatus =
+    paymentOption === "later" ? "unpaid" : paymentOption === "deposit" ? "partial" : "unpaid";
+  const paymentSummary = buildPaymentSummaryFromStatus(
+    input.totalPriceUsd,
+    paymentStatus,
+    organizerParams
+  );
+
+  if (paymentOption === "deposit") {
+    paymentSummary.paidAmountUsd = 0;
+    paymentSummary.remainingAmountUsd = input.totalPriceUsd;
+  }
+
+  const bookingResult = createBooking({
     actor: input.actor,
     userId: input.userId,
     tour: input.tour,
@@ -506,7 +608,180 @@ export function createBookingFromCheckout(input: {
     touristComment: input.form.comments,
     status: "new",
     organizerTourId: resolveOrganizerTourId(input.tour.slug),
+    fillTravelersLater,
+    travelers,
+    travelersCompletedAt: travelers?.length ? now : undefined,
+    checkoutPaymentOption: paymentOption,
   });
+
+  if ("error" in bookingResult) return bookingResult;
+
+  const all = getAllBookings();
+  const index = all.findIndex((item) => item.id === bookingResult.id);
+  if (index === -1) return bookingResult;
+
+  const updated: Booking = {
+    ...bookingResult,
+    paymentStatus,
+    paymentSummary,
+    invoices: [
+      buildPrepaymentInvoice(
+        { ...bookingResult, totalPriceUsd: input.totalPriceUsd },
+        organizerParams
+      ),
+    ],
+    updatedAt: now,
+  };
+
+  persistBookingUpdate(index, updated);
+  return updated;
+}
+
+export function getBookingByTravelersToken(token: string): Booking | undefined {
+  const booking = getAllBookings().find((item) => item.travelersFormToken === token);
+  return booking ? normalizeBooking(booking) : undefined;
+}
+
+export function submitBookingTravelers(input: {
+  token: string;
+  travelers: BookingTraveler[];
+}): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.travelersFormToken === input.token);
+  if (index === -1) return { error: "Ссылка недействительна или заявка не найдена" };
+
+  const current = normalizeBooking(all[index]);
+  const travelers = ensureTravelersSlotCount(
+    normalizeTravelers(input.travelers),
+    current.guests
+  );
+
+  const incomplete = travelers.find(
+    (traveler) => !traveler.fullName.trim() || !traveler.dateOfBirth.trim()
+  );
+  if (incomplete) {
+    return { error: "Заполните ФИО и дату рождения для всех участников" };
+  }
+
+  const now = new Date().toISOString();
+  const updated: Booking = {
+    ...current,
+    travelers,
+    fillTravelersLater: false,
+    travelersCompletedAt: now,
+    updatedAt: now,
+  };
+
+  if (!hasCompleteBookingTravelers(updated)) {
+    return { error: "Не удалось сохранить данные участников" };
+  }
+
+  persistBookingUpdate(index, updated);
+  return { booking: updated };
+}
+
+function buildPrepaymentInvoice(
+  booking: Booking,
+  params: BookingOrganizerParams
+): BookingInvoice {
+  const prepaymentAmount = computePrepaymentAmount(booking.totalPriceUsd, params);
+  const paidAmountUsd = booking.paymentSummary?.paidAmountUsd ?? 0;
+
+  return {
+    id: `inv-prepay-${booking.id}`,
+    type: "prepayment",
+    number: formatBookingDisplayNumber(booking.id),
+    createdAt: booking.createdAt,
+    amountUsd: prepaymentAmount,
+    paidAmountUsd: Math.min(paidAmountUsd, prepaymentAmount),
+    status: paidAmountUsd >= prepaymentAmount ? "paid" : paidAmountUsd > 0 ? "partial" : "pending",
+    paymentChannel: "platform",
+  };
+}
+
+export function updateOrganizerBookingDetails(input: {
+  bookingId: string;
+  actor: SessionUser | null;
+  contactName: string;
+  guests: number;
+  paymentStatus: BookingPaymentStatus;
+  organizerTourId?: string;
+  tourId: string;
+  tourSlug: string;
+  tourTitle: string;
+  tourImage: string;
+  startDate?: string;
+  endDate?: string;
+  totalPriceUsd: number;
+  organizerParams: BookingOrganizerParams;
+}): { booking: Booking } | { error: string } {
+  const contactName = input.contactName.trim();
+  if (!contactName) return { error: "Укажите ФИО заказчика" };
+
+  const guests = Math.max(1, Math.round(input.guests));
+  const totalPriceUsd = Math.max(0, Math.round(input.totalPriceUsd));
+  const organizerParams = normalizeOrganizerParams({
+    ...input.organizerParams,
+    pricePerGuestUsd:
+      guests > 0
+        ? Math.round(totalPriceUsd / guests)
+        : input.organizerParams.pricePerGuestUsd,
+  });
+
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.id === input.bookingId);
+  if (index === -1) return { error: "Бронирование не найдено" };
+
+  const current = normalizeBooking(all[index]);
+  const tourOwnerUserId = current.organizerTourId
+    ? getOrganizerTourOwnerId(current.organizerTourId)
+    : undefined;
+
+  const allowed = assertPermission(
+    canManageBooking(input.actor, {
+      tourOwnerUserId: input.organizerTourId
+        ? getOrganizerTourOwnerId(input.organizerTourId)
+        : tourOwnerUserId,
+    })
+  );
+  if ("error" in allowed) return { error: allowed.error };
+
+  const travelers = ensureTravelersSlotCount(normalizeTravelers(current.travelers), guests);
+  const travelersComplete = travelers
+    .slice(0, guests)
+    .every((traveler) => traveler.fullName.trim() && traveler.dateOfBirth.trim());
+
+  const now = new Date().toISOString();
+  const paymentSummary = buildPaymentSummaryFromStatus(
+    totalPriceUsd,
+    input.paymentStatus,
+    organizerParams
+  );
+
+  const draftBooking: Booking = {
+    ...current,
+    contactName,
+    guests,
+    organizerTourId: input.organizerTourId || current.organizerTourId,
+    tourId: input.tourId,
+    tourSlug: input.tourSlug,
+    tourTitle: input.tourTitle,
+    tourImage: input.tourImage,
+    startDate: input.startDate?.trim() || undefined,
+    endDate: input.endDate?.trim() || undefined,
+    totalPriceUsd,
+    organizerParams,
+    paymentStatus: input.paymentStatus,
+    paymentSummary,
+    invoices: [buildPrepaymentInvoice({ ...current, totalPriceUsd }, organizerParams)],
+    travelers,
+    travelersCompletedAt: travelersComplete ? current.travelersCompletedAt ?? now : undefined,
+    fillTravelersLater: travelersComplete ? false : current.fillTravelersLater,
+    updatedAt: now,
+  };
+
+  persistBookingUpdate(index, draftBooking);
+  return { booking: draftBooking };
 }
 
 export function getPendingBookingsCount(userId: string): number {

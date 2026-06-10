@@ -64,7 +64,7 @@ export default function TourTicketRecommendationsBlock({
         checked={enabled}
         onChange={onEnabledChange}
         label="Рекомендации для покупки билетов"
-        description="Подскажите, как добраться до города начала тура, каким транспортом лучше приехать и когда покупать билеты."
+        description="Появятся в блоке «Рекомендуемые рейсы» на странице тура. Каждый пункт можно указать с новой строки."
       />
 
       {enabled ? (

@@ -25,6 +25,7 @@ import {
 import {
   CHECKOUT_ROOM_OPTIONS,
   CHECKOUT_STEPS,
+  CHECKOUT_PAYMENT_OPTIONS,
   CheckoutFormState,
   CheckoutStepId,
   createEmptyTraveler,
@@ -259,12 +260,25 @@ function CheckoutSummary({
             <FormattedPrice priceUsd={payNowUsd} className="font-semibold" />
           </div>
         )}
+        {form.paymentOption === "later" && (
+          <div className="flex justify-between gap-3 text-sm text-slate">
+            <span>К оплате сейчас</span>
+            <span className="font-semibold text-charcoal">Оплата позже</span>
+          </div>
+        )}
       </div>
 
-      <p className="mt-auto flex items-center gap-2 pt-4 text-xs text-slate">
-        <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-        Безопасное SSL-шифрование. Данные карты не сохраняются.
-      </p>
+      {(form.paymentOption === "full" || form.paymentOption === "deposit") ? (
+        <p className="mt-auto flex items-center gap-2 pt-4 text-xs text-slate">
+          <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+          Безопасное SSL-шифрование. Данные карты не сохраняются.
+        </p>
+      ) : (
+        <p className="mt-auto pt-4 text-xs leading-relaxed text-slate">
+          Оплата не требуется сейчас. Организатор пришлёт ссылку или реквизиты после подтверждения
+          заявки.
+        </p>
+      )}
     </div>
   );
 }
@@ -326,7 +340,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   );
   const subtotalUsd = totalPriceUsd;
   const totalUsd = subtotalUsd + roomTotalUsd + addonsTotalUsd;
-  const payNowUsd = form.paymentOption === "deposit" ? Math.round(totalUsd * 0.1) : totalUsd;
+  const payNowUsd =
+    form.paymentOption === "deposit"
+      ? Math.round(totalUsd * 0.1)
+      : form.paymentOption === "later"
+        ? 0
+        : totalUsd;
 
   const bookingMode = tour.bookingMode ?? "scheduled";
   const dateModeLabel =
@@ -549,9 +568,17 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 <p className="mt-2 text-sm leading-relaxed text-slate">
                   Мы отправили подтверждение на{" "}
                   <span className="font-medium text-charcoal">{form.contactEmail}</span>.
-                  {form.fillTravelersLater
-                    ? " Ссылка для указания имён участников придёт отдельным письмом."
-                    : " Организатор свяжется с вами в ближайшее время."}
+                  {form.paymentOption === "later" ? (
+                    <>
+                      {" "}
+                      Оплата не требуется сейчас — организатор пришлёт реквизиты после подтверждения
+                      заявки.
+                    </>
+                  ) : form.fillTravelersLater ? (
+                    " Ссылка для указания имён участников придёт отдельным письмом."
+                  ) : (
+                    " Организатор свяжется с вами в ближайшее время."
+                  )}
                 </p>
                 {savedToProfile ? (
                   <p className="mt-3 text-sm text-emerald-700">
@@ -979,23 +1006,27 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         {hasAccommodation ? "5" : "4"}. Оплата
                       </h3>
                       <p className="mt-1 text-sm text-slate">
-                        Выберите способ оплаты и введите данные карты
+                        {form.paymentOption === "later"
+                          ? "Можно оформить заявку сейчас и оплатить после подтверждения"
+                          : "Выберите способ оплаты и введите данные карты"}
                       </p>
                     </div>
 
                     <div className="flex rounded-xl bg-gray-100 p-1">
-                      {(
-                        [
-                          { id: "full", label: "Полная оплата" },
-                          { id: "deposit", label: "Депозит 10%" },
-                        ] as const
-                      ).map((opt) => (
+                      {CHECKOUT_PAYMENT_OPTIONS.map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
-                          onClick={() => patchForm({ paymentOption: opt.id })}
+                          onClick={() =>
+                            patchForm({
+                              paymentOption: opt.id,
+                              ...(opt.id === "later"
+                                ? { cardNumber: "", cardExpiry: "", cardCvc: "" }
+                                : {}),
+                            })
+                          }
                           className={cn(
-                            "flex-1 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                            "flex-1 rounded-lg px-2 py-2.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
                             form.paymentOption === opt.id
                               ? "bg-white text-charcoal shadow-sm"
                               : "text-slate hover:text-charcoal"
@@ -1006,31 +1037,38 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                       ))}
                     </div>
 
-                    <div className="space-y-3">
-                      <Input
-                        placeholder="Номер карты"
-                        value={form.cardNumber}
-                        onChange={(e) =>
-                          patchForm({
-                            cardNumber: e.target.value.replace(/[^\d\s]/g, "").slice(0, 19),
-                          })
-                        }
-                      />
-                      <div className="grid grid-cols-2 gap-3">
+                    {form.paymentOption === "later" ? (
+                      <div className="rounded-xl border border-sky-200/70 bg-sky-50/50 px-4 py-3 text-sm leading-relaxed text-charcoal">
+                        Заявка будет отправлена организатору без списания средств. После
+                        подтверждения вы получите ссылку на оплату предоплаты или полной суммы.
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
                         <Input
-                          placeholder="MM/ГГ"
-                          value={form.cardExpiry}
-                          onChange={(e) => patchForm({ cardExpiry: e.target.value })}
-                        />
-                        <Input
-                          placeholder="CVC"
-                          value={form.cardCvc}
+                          placeholder="Номер карты"
+                          value={form.cardNumber}
                           onChange={(e) =>
-                            patchForm({ cardCvc: e.target.value.replace(/\D/g, "").slice(0, 4) })
+                            patchForm({
+                              cardNumber: e.target.value.replace(/[^\d\s]/g, "").slice(0, 19),
+                            })
                           }
                         />
+                        <div className="grid grid-cols-2 gap-3">
+                          <Input
+                            placeholder="MM/ГГ"
+                            value={form.cardExpiry}
+                            onChange={(e) => patchForm({ cardExpiry: e.target.value })}
+                          />
+                          <Input
+                            placeholder="CVC"
+                            value={form.cardCvc}
+                            onChange={(e) =>
+                              patchForm({ cardCvc: e.target.value.replace(/\D/g, "").slice(0, 4) })
+                            }
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     <div className="border-t border-gray-100 pt-5">
                       <p className="mb-3 text-sm font-medium text-charcoal">Промокод</p>
@@ -1072,7 +1110,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
               </Button>
               <Button type="button" onClick={goNext} className="min-w-[140px]">
                 {stepIndex === visibleSteps.length - 1 ? (
-                  "Забронировать"
+                  form.paymentOption === "later" ? "Отправить заявку" : "Забронировать"
                 ) : (
                   <>
                     Далее

@@ -14,6 +14,7 @@ import type {
 import type { Tour, TourStatus } from "@/types/tour";
 import { primaryComfortLevel } from "@/data/tour-levels";
 import { textToListItems } from "@/data/tour-terms-defaults";
+import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
 import { getTourRoutePoints } from "@/data/tour-routes";
 import { getLegacyTourDetail } from "@/lib/tours-legacy";
 
@@ -91,16 +92,36 @@ function mapProgramDaysToItinerary(days: Tour["program"]["days"]): TourItinerary
 }
 
 function buildArrivalInfo(tour: Tour): TourArrivalInfo {
+  const { logistics, geography } = tour;
   const flights: string[] = [];
-  if (tour.logistics.ticketRecommendationsEnabled && tour.logistics.ticketRecommendationsText.trim()) {
-    flights.push(tour.logistics.ticketRecommendationsText.trim());
+
+  if (logistics.ticketRecommendationsEnabled && logistics.ticketRecommendationsText.trim()) {
+    flights.push(...linesToLogisticsList(logistics.ticketRecommendationsText));
   }
 
+  const fallbackLocation = geography.startLocation || geography.mainLocation || "";
+  const airports =
+    logistics.arrivalDetailsEnabled && logistics.arrivalAirportsText.trim()
+      ? linesToLogisticsList(logistics.arrivalAirportsText)
+      : fallbackLocation
+        ? [fallbackLocation]
+        : [];
+
+  const transfers =
+    logistics.arrivalDetailsEnabled && logistics.arrivalTransfersText.trim()
+      ? linesToLogisticsList(logistics.arrivalTransfersText)
+      : [];
+
+  const meetingPoint =
+    logistics.arrivalDetailsEnabled && logistics.arrivalMeetingPoint.trim()
+      ? logistics.arrivalMeetingPoint.trim()
+      : fallbackLocation;
+
   return {
-    airports: tour.geography.startLocation ? [tour.geography.startLocation] : [],
+    airports,
     flights,
-    transfers: [],
-    meetingPoint: tour.geography.startLocation,
+    transfers,
+    meetingPoint,
   };
 }
 
@@ -251,10 +272,14 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       faq: detail.faq,
     },
     logistics: {
-      ticketRecommendationsEnabled: false,
+      ticketRecommendationsEnabled: detail.arrival.flights.length > 0,
       ticketRecommendationsText: detail.arrival.flights.join("\n"),
       arrivalDepartureEnabled: false,
       arrivalDepartureCities: [],
+      arrivalDetailsEnabled: true,
+      arrivalAirportsText: detail.arrival.airports.join("\n"),
+      arrivalTransfersText: detail.arrival.transfers.join("\n"),
+      arrivalMeetingPoint: detail.arrival.meetingPoint,
     },
     social: {
       rating: listing.rating,
@@ -408,6 +433,10 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       ticketRecommendationsText: draft.ticketRecommendationsText,
       arrivalDepartureEnabled: draft.arrivalDepartureEnabled,
       arrivalDepartureCities: draft.arrivalDepartureCities,
+      arrivalDetailsEnabled: draft.arrivalDetailsEnabled,
+      arrivalAirportsText: draft.arrivalAirportsText,
+      arrivalTransfersText: draft.arrivalTransfersText,
+      arrivalMeetingPoint: draft.arrivalMeetingPoint,
     },
     partnerName: draft.partnerName,
     coverLabel: draft.coverLabel,
@@ -704,6 +733,10 @@ export function createMinimalTourFromDraft(
       ticketRecommendationsText: draft.ticketRecommendationsText,
       arrivalDepartureEnabled: draft.arrivalDepartureEnabled,
       arrivalDepartureCities: draft.arrivalDepartureCities,
+      arrivalDetailsEnabled: draft.arrivalDetailsEnabled,
+      arrivalAirportsText: draft.arrivalAirportsText,
+      arrivalTransfersText: draft.arrivalTransfersText,
+      arrivalMeetingPoint: draft.arrivalMeetingPoint,
     },
     social: {
       rating: 0,

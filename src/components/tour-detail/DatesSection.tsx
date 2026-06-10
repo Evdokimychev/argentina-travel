@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { TourDetail, TourDatePrice } from "@/types";
 import FormattedPrice from "@/components/FormattedPrice";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShortWithYear } from "@/lib/utils";
 import { formatSpots } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import {
@@ -82,9 +82,9 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
                   )}
                 >
                   <td className="px-5 py-4 font-medium text-charcoal">
-                    {formatDateShort(date.startDate)}
+                    {formatDateShortWithYear(date.startDate)}
                   </td>
-                  <td className="px-5 py-4 text-slate">{formatDateShort(date.endDate)}</td>
+                  <td className="px-5 py-4 text-slate">{formatDateShortWithYear(date.endDate)}</td>
                   <td className="px-5 py-4">
                     <span
                       className={cn(

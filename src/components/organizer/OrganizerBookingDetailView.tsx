@@ -3,27 +3,84 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Mail, Phone } from "lucide-react";
+import {
+  ArrowLeft,
+  BadgeCheck,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Clock3,
+  Inbox,
+  Mail,
+  MessageCircle,
+  Phone,
+  X,
+} from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsEditor from "@/components/booking/BookingOrganizerCommentsEditor";
+import BookingTravelersOrganizerSection from "@/components/booking/BookingTravelersOrganizerSection";
 import {
-  BOOKING_STATUS_LABELS,
   ORGANIZER_BOOKING_TRANSITIONS,
   isActiveBookingStatus,
 } from "@/data/booking-statuses";
+import {
+  getOrganizerBookingAlerts,
+  ORGANIZER_BOOKING_STATUS_META,
+} from "@/data/organizer-booking-detail";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
+import {
+  canOrganizerSeeContactDetails,
+  formatBookingDisplayNumber,
+  formatBookingTourDates,
+} from "@/lib/booking-display";
 import { getBookingById, updateBookingStatusWithHistory } from "@/lib/bookings-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
-import { formatDateShort } from "@/lib/utils";
+import BookingOrganizerDataPanel from "@/components/booking/BookingOrganizerDataPanel";
 import FormattedPrice from "@/components/FormattedPrice";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
-function formatTourDates(booking: Booking): string {
-  if (!booking.startDate) return "Даты по согласованию";
-  const start = formatDateShort(booking.startDate);
-  return booking.endDate ? `${start} — ${formatDateShort(booking.endDate)}` : start;
+function StatusIcon({ status }: { status: BookingStatusActive }) {
+  const className = "h-5 w-5";
+  switch (status) {
+    case "new":
+      return <Inbox className={className} strokeWidth={1.75} />;
+    case "pending":
+      return <Clock3 className={className} strokeWidth={1.75} />;
+    case "confirmed":
+      return <Check className={className} strokeWidth={2} />;
+    case "cancelled":
+      return <X className={className} strokeWidth={2} />;
+    case "completed":
+      return <BadgeCheck className={className} strokeWidth={1.75} />;
+  }
+}
+
+function DetailRow({
+  label,
+  children,
+  className,
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cn("grid gap-1 border-b border-gray-100 py-3 sm:grid-cols-[140px_1fr] sm:gap-4", className)}>
+      <dt className="text-sm text-slate">{label}</dt>
+      <dd className="text-sm font-medium text-charcoal">{children}</dd>
+    </div>
+  );
+}
+
+function MaskedContact({ label }: { label: string }) {
+  return (
+    <span className="text-sm text-slate">
+      {label}{" "}
+      <span className="font-normal text-slate/80">· доступны после перевода в обработку</span>
+    </span>
+  );
 }
 
 export default function OrganizerBookingDetailView({ bookingId }: { bookingId: string }) {
@@ -31,6 +88,7 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   const [booking, setBooking] = useState<Booking | null>(null);
   const [statusError, setStatusError] = useState<string | null>(null);
   const [statusLoading, setStatusLoading] = useState(false);
+  const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
     function refresh() {
@@ -44,9 +102,12 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
 
   if (!booking) {
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+      <div className="rounded-3xl border border-gray-200 bg-white p-8 text-center shadow-sm">
         <p className="text-sm text-slate">Заявка не найдена</p>
-        <Link href="/organizer/bookings" className="mt-4 inline-block text-sm font-medium text-brand hover:underline">
+        <Link
+          href="/organizer/bookings"
+          className="mt-4 inline-block text-sm font-medium text-brand hover:underline"
+        >
           Вернуться к списку
         </Link>
       </div>
@@ -54,7 +115,23 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   }
 
   const currentStatus = isActiveBookingStatus(booking.status) ? booking.status : "pending";
+  const statusMeta = ORGANIZER_BOOKING_STATUS_META[currentStatus];
   const nextStatuses = ORGANIZER_BOOKING_TRANSITIONS[currentStatus] ?? [];
+  const displayNumber = formatBookingDisplayNumber(booking.id);
+  const showContacts = canOrganizerSeeContactDetails(booking.status);
+  const alerts = getOrganizerBookingAlerts(currentStatus, Boolean(booking.startDate));
+
+  const primaryAction: BookingStatusActive | null =
+    currentStatus === "new" && nextStatuses.includes("pending")
+      ? "pending"
+      : nextStatuses.includes("confirmed")
+        ? "confirmed"
+        : null;
+  const secondaryConfirmAction =
+    currentStatus === "new" && nextStatuses.includes("confirmed") ? "confirmed" : null;
+  const cancelAction = nextStatuses.includes("cancelled") ? "cancelled" : null;
+  const completeAction =
+    currentStatus === "confirmed" && nextStatuses.includes("completed") ? "completed" : null;
 
   function handleStatusChange(nextStatus: BookingStatusActive) {
     setStatusLoading(true);
@@ -78,130 +155,264 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <Link
-            href="/organizer/bookings"
-            className="inline-flex items-center gap-1.5 text-sm text-slate transition-colors hover:text-brand"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Все заявки
-          </Link>
-          <h1 className="mt-2 font-display text-2xl font-bold text-charcoal">Заявка #{booking.id.slice(-8)}</h1>
-          <p className="mt-1 text-sm text-slate">
-            Создана {formatBookingCreatedAt(booking.createdAt)}
-          </p>
-        </div>
-        <BookingStatusBadge status={booking.status} className="text-sm" />
-      </div>
+    <div className="space-y-4">
+      <Link
+        href="/organizer/bookings"
+        className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-charcoal shadow-sm transition-colors hover:bg-gray-50"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Назад
+      </Link>
 
-      {nextStatuses.length > 0 ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5">
-          <p className="text-sm font-medium text-charcoal">Изменить статус</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            {nextStatuses.map((status) => (
-              <Button
-                key={status}
-                type="button"
-                size="sm"
-                variant={status === "cancelled" ? "outline" : "default"}
-                disabled={statusLoading}
-                onClick={() => handleStatusChange(status)}
-              >
-                {BOOKING_STATUS_LABELS[status]}
-              </Button>
-            ))}
-          </div>
-          {statusError ? (
-            <p role="alert" className="mt-2 text-sm text-red-600">
-              {statusError}
-            </p>
-          ) : null}
-        </div>
-      ) : null}
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="font-display text-lg font-bold text-charcoal">Турист</h2>
-          <dl className="mt-4 space-y-3 text-sm">
-            <div>
-              <dt className="text-slate">Имя</dt>
-              <dd className="mt-0.5 font-medium text-charcoal">{booking.contactName}</dd>
-            </div>
-            <div>
-              <dt className="text-slate">Email</dt>
-              <dd className="mt-0.5">
-                <a
-                  href={`mailto:${booking.contactEmail}`}
-                  className="inline-flex items-center gap-1.5 font-medium text-brand hover:underline"
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="space-y-4">
+          <article className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
+            <div className="border-b border-gray-100 px-5 py-5 sm:px-6">
+              <div className="flex items-center gap-3">
+                <span
+                  className={cn(
+                    "flex h-10 w-10 items-center justify-center rounded-xl",
+                    statusMeta.iconToneClass
+                  )}
                 >
-                  <Mail className="h-4 w-4" />
-                  {booking.contactEmail}
-                </a>
-              </dd>
-            </div>
-            <div>
-              <dt className="text-slate">Телефон</dt>
-              <dd className="mt-0.5">
-                <a
-                  href={`tel:${booking.contactPhone}`}
-                  className="inline-flex items-center gap-1.5 font-medium text-brand hover:underline"
-                >
-                  <Phone className="h-4 w-4" />
-                  {booking.contactPhone}
-                </a>
-              </dd>
-            </div>
-          </dl>
-        </section>
+                  <StatusIcon status={currentStatus} />
+                </span>
+                <p className={cn("text-base font-semibold", statusMeta.toneClass)}>
+                  {statusMeta.headline}
+                </p>
+              </div>
 
-        <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="font-display text-lg font-bold text-charcoal">Тур</h2>
-          <div className="mt-4 flex gap-4">
-            <div className="relative h-20 w-28 shrink-0 overflow-hidden rounded-xl bg-gray-100">
-              <Image src={booking.tourImage} alt="" fill className="object-cover" sizes="112px" />
-            </div>
-            <div className="min-w-0">
-              <Link
-                href={`/tours/${booking.tourSlug}`}
-                className="font-medium text-charcoal hover:text-brand"
-              >
-                {booking.tourTitle}
-              </Link>
-              <p className="mt-2 text-sm text-slate">{formatTourDates(booking)}</p>
-              <p className="mt-1 text-sm text-slate">{booking.guests} гостей</p>
-              <p className="mt-2">
-                <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-semibold" />
+              <h1 className="mt-4 font-display text-2xl font-bold text-charcoal">
+                Заявка №{displayNumber}
+              </h1>
+              <p className="mt-1 text-sm text-slate">С маркетплейса «Пора в Аргентину»</p>
+              <p className="mt-0.5 text-sm text-slate">
+                Создана {formatBookingCreatedAt(booking.createdAt)}
               </p>
             </div>
-          </div>
-          {booking.touristComment ? (
-            <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3">
-              <p className="text-xs font-medium uppercase tracking-wide text-slate">
-                Комментарий туриста
-              </p>
-              <p className="mt-1 text-sm text-charcoal">{booking.touristComment}</p>
+
+            <div className="space-y-4 px-5 py-5 sm:px-6">
+              {alerts.map((alert) => (
+                <div
+                  key={alert.text}
+                  className={cn(
+                    "rounded-xl px-4 py-3 text-sm leading-relaxed",
+                    alert.tone === "amber"
+                      ? "bg-amber-50 text-amber-950 ring-1 ring-amber-100"
+                      : "bg-yellow-50 text-yellow-950 ring-1 ring-yellow-100"
+                  )}
+                >
+                  {alert.text}
+                </div>
+              ))}
+
+              <dl>
+                <DetailRow label="Тур">
+                  <div className="flex items-start gap-3">
+                    <div className="relative h-12 w-16 shrink-0 overflow-hidden rounded-lg bg-gray-100">
+                      <Image
+                        src={booking.tourImage}
+                        alt=""
+                        fill
+                        className="object-cover"
+                        sizes="64px"
+                      />
+                    </div>
+                    <div className="min-w-0">
+                      <Link
+                        href={`/tours/${booking.tourSlug}`}
+                        className="font-medium text-brand hover:underline"
+                      >
+                        {booking.tourTitle}
+                      </Link>
+                    </div>
+                  </div>
+                </DetailRow>
+
+                <DetailRow label="Туристов">
+                  {booking.guests} {booking.guests === 1 ? "человек" : "человека"}
+                </DetailRow>
+
+                <DetailRow label="Стоимость">
+                  <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-semibold" />
+                </DetailRow>
+
+                <DetailRow label="Даты">{formatBookingTourDates(booking)}</DetailRow>
+
+                <DetailRow label="Контактное лицо">{booking.contactName}</DetailRow>
+
+                <DetailRow label="Телефон">
+                  {showContacts ? (
+                    <a
+                      href={`tel:${booking.contactPhone}`}
+                      className="inline-flex items-center gap-1.5 text-brand hover:underline"
+                    >
+                      <Phone className="h-4 w-4" />
+                      {booking.contactPhone}
+                    </a>
+                  ) : (
+                    <MaskedContact label="Скрыт" />
+                  )}
+                </DetailRow>
+
+                <DetailRow label="Email">
+                  {showContacts ? (
+                    <a
+                      href={`mailto:${booking.contactEmail}`}
+                      className="inline-flex items-center gap-1.5 break-all text-brand hover:underline"
+                    >
+                      <Mail className="h-4 w-4 shrink-0" />
+                      {booking.contactEmail}
+                    </a>
+                  ) : (
+                    <MaskedContact label="Скрыт" />
+                  )}
+                </DetailRow>
+
+                {booking.touristComment ? (
+                  <DetailRow label="Комментарий" className="border-b-0">
+                    <span className="font-normal leading-relaxed text-charcoal">
+                      {booking.touristComment}
+                    </span>
+                  </DetailRow>
+                ) : null}
+              </dl>
+
+              {showContacts ? (
+                <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-4">
+                  <a
+                    href={`mailto:${booking.contactEmail}`}
+                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
+                  >
+                    <MessageCircle className="h-4 w-4 text-slate" />
+                    Написать туристу
+                  </a>
+                  <a
+                    href={`tel:${booking.contactPhone}`}
+                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
+                  >
+                    <Phone className="h-4 w-4 text-slate" />
+                    Позвонить
+                  </a>
+                </div>
+              ) : null}
+
+              <BookingOrganizerCommentsEditor
+                bookingId={booking.id}
+                comments={booking.organizerComments}
+                authorName={user?.fullName ?? "Организатор"}
+                variant="organizer-detail"
+                onUpdated={() => setBooking(getBookingById(bookingId) ?? null)}
+              />
             </div>
-          ) : null}
-        </section>
-      </div>
+          </article>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-        <h2 className="font-display text-lg font-bold text-charcoal">История статусов</h2>
-        <div className="mt-4">
-          <BookingStatusTimeline history={booking.statusHistory} />
+          <article className="rounded-3xl bg-white px-5 py-4 shadow-sm ring-1 ring-gray-200/60 sm:px-6">
+            <button
+              type="button"
+              onClick={() => setHistoryOpen((open) => !open)}
+              className="flex w-full items-center justify-between gap-3 text-left"
+            >
+              <span className="font-display text-base font-bold text-charcoal">История статусов</span>
+              {historyOpen ? (
+                <ChevronUp className="h-5 w-5 text-slate" />
+              ) : (
+                <ChevronDown className="h-5 w-5 text-slate" />
+              )}
+            </button>
+            {historyOpen ? (
+              <div className="mt-4 border-t border-gray-100 pt-4">
+                <BookingStatusTimeline history={booking.statusHistory} />
+              </div>
+            ) : null}
+          </article>
+
+          <BookingTravelersOrganizerSection booking={booking} sectionId="booking-travelers-section" />
         </div>
-      </section>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-        <BookingOrganizerCommentsEditor
-          bookingId={booking.id}
-          comments={booking.organizerComments}
-          authorName={user?.fullName ?? "Организатор"}
-          onUpdated={() => setBooking(getBookingById(bookingId) ?? null)}
-        />
-      </section>
+        <aside className="space-y-4 xl:sticky xl:top-[calc(var(--site-header-height,72px)+1rem)]">
+          {(primaryAction || secondaryConfirmAction || cancelAction || completeAction) && (
+            <article className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gray-200/60">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate">
+                Заявка №{displayNumber}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-charcoal">{statusMeta.actionHint}</p>
+
+              <div className="mt-4 space-y-2">
+                {primaryAction === "pending" ? (
+                  <Button
+                    type="button"
+                    className="h-12 w-full rounded-2xl bg-brand text-base font-semibold hover:bg-brand-dark"
+                    disabled={statusLoading}
+                    onClick={() => handleStatusChange("pending")}
+                  >
+                    <Clock3 className="h-5 w-5" />
+                    Взять в обработку
+                  </Button>
+                ) : null}
+
+                {primaryAction === "confirmed" ? (
+                  <Button
+                    type="button"
+                    className="h-12 w-full rounded-2xl bg-brand text-base font-semibold hover:bg-brand-dark"
+                    disabled={statusLoading}
+                    onClick={() => handleStatusChange("confirmed")}
+                  >
+                    <Check className="h-5 w-5" />
+                    Подтвердить
+                  </Button>
+                ) : null}
+
+                {secondaryConfirmAction ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-12 w-full rounded-2xl text-base font-semibold"
+                    disabled={statusLoading}
+                    onClick={() => handleStatusChange("confirmed")}
+                  >
+                    <Check className="h-5 w-5" />
+                    Подтвердить сразу
+                  </Button>
+                ) : null}
+
+                {completeAction ? (
+                  <Button
+                    type="button"
+                    className="h-12 w-full rounded-2xl bg-brand text-base font-semibold hover:bg-brand-dark"
+                    disabled={statusLoading}
+                    onClick={() => handleStatusChange("completed")}
+                  >
+                    <BadgeCheck className="h-5 w-5" />
+                    Завершить поездку
+                  </Button>
+                ) : null}
+
+                {cancelAction ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="h-12 w-full rounded-2xl text-base font-semibold"
+                    disabled={statusLoading}
+                    onClick={() => handleStatusChange("cancelled")}
+                  >
+                    <X className="h-5 w-5" />
+                    Отменить
+                  </Button>
+                ) : null}
+              </div>
+
+              {statusError ? (
+                <p role="alert" className="mt-3 text-sm text-red-600">
+                  {statusError}
+                </p>
+              ) : null}
+            </article>
+          )}
+
+          <BookingOrganizerDataPanel booking={booking} currentStatus={currentStatus} />
+        </aside>
+      </div>
     </div>
   );
 }

@@ -79,6 +79,35 @@ export function buildPlaneSchedulePreview(city: OrganizerArrivalDepartureCity): 
   return `Если тур начинается в выбранную дату, туристу нужно прибыть в ${city.city} ${arrivalDay} не позднее ${city.plane.latestArrivalTime}. Вылет возможен ${departureDay} не ранее ${city.plane.earliestDepartureTime}.`;
 }
 
+export function getTransportDayShortLabel(value: OrganizerTransportDayOption): string {
+  const labels: Record<OrganizerTransportDayOption, string> = {
+    tour_start_day: "в день начала тура",
+    day_before_tour: "за день до начала тура",
+    tour_end_day: "в день окончания тура",
+    day_after_tour: "на следующий день после тура",
+  };
+  return labels[value];
+}
+
+export function formatLatestArrivalTime(time: string): string {
+  const normalized = time.trim();
+  if (!normalized) return "";
+  return `До ${normalized.slice(0, 5)}`;
+}
+
+export function formatEarliestDepartureTime(time: string): string {
+  const normalized = time.trim();
+  if (!normalized) return "";
+  return `После ${normalized.slice(0, 5)}`;
+}
+
+export function linesToLogisticsList(text: string): string[] {
+  return text
+    .split(/\r?\n/)
+    .map((line) => line.trim())
+    .filter(Boolean);
+}
+
 export function normalizeArrivalDepartureCities(
   items: OrganizerArrivalDepartureCity[] | undefined
 ): OrganizerArrivalDepartureCity[] {

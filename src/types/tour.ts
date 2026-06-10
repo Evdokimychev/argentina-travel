@@ -143,6 +143,11 @@ export interface TourLogistics {
   ticketRecommendationsText: string;
   arrivalDepartureEnabled: boolean;
   arrivalDepartureCities: OrganizerArrivalDepartureCity[];
+  /** Airports, transfers, meeting point panel on tour page. */
+  arrivalDetailsEnabled: boolean;
+  arrivalAirportsText: string;
+  arrivalTransfersText: string;
+  arrivalMeetingPoint: string;
 }
 
 export interface TourSocial {

@@ -13,8 +13,8 @@ import { useAuth } from "@/context/AuthContext";
 import {
   getOrganizerBookingsForCabinet,
 } from "@/lib/organizer-bookings";
+import { formatBookingTourDates } from "@/lib/booking-display";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
-import { formatDateShort } from "@/lib/utils";
 import FormattedPrice from "@/components/FormattedPrice";
 
 type StatusFilter = "all" | BookingStatusActive;
@@ -27,12 +27,6 @@ const SORT_OPTIONS: { id: SortOption; label: string }[] = [
   { id: "amountDesc", label: "Сумма: по убыванию" },
   { id: "amountAsc", label: "Сумма: по возрастанию" },
 ];
-
-function formatTourDates(booking: Booking): string {
-  if (!booking.startDate) return "Даты по согласованию";
-  const start = formatDateShort(booking.startDate);
-  return booking.endDate ? `${start} — ${formatDateShort(booking.endDate)}` : start;
-}
 
 export default function OrganizerBookingsView() {
   const { user } = useAuth();
@@ -199,7 +193,7 @@ export default function OrganizerBookingsView() {
                       {formatBookingCreatedAt(booking.createdAt)}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-slate">
-                      {formatTourDates(booking)}
+                      {formatBookingTourDates(booking, "Даты по согласованию")}
                     </td>
                     <td className="px-4 py-4 text-charcoal">{booking.guests}</td>
                     <td className="px-4 py-4">

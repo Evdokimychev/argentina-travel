@@ -2,7 +2,6 @@ import { Plane, Train, Bus } from "lucide-react";
 import type { Tour } from "@/types/tour";
 import {
   formatArrivalDepartureCity,
-  hasArrivalDepartureLogistics,
   hasTicketRecommendations,
 } from "@/lib/tour-public-display";
 import { SectionHeading } from "./InfoModal";
@@ -12,18 +11,18 @@ interface LogisticsDetailSectionProps {
 }
 
 export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionProps) {
-  const showTickets = hasTicketRecommendations(tour);
-  const showCities = hasArrivalDepartureLogistics(tour);
+  const showTickets =
+    hasTicketRecommendations(tour) && !tour.logistics.arrivalDetailsEnabled;
 
-  if (!showTickets && !showCities) return null;
-
-  const cities = tour.logistics.arrivalDepartureCities
-    .filter((city) => city.city.trim())
+  const nonPlaneCities = tour.logistics.arrivalDepartureCities
+    .filter((city) => city.city.trim() && (city.trainEnabled || city.otherEnabled))
     .map(formatArrivalDepartureCity);
+
+  if (!showTickets && nonPlaneCities.length === 0) return null;
 
   return (
     <section id="logistics" className="tour-section-target space-y-8">
-      {showTickets ? (
+      {showTickets && !tour.logistics.arrivalDetailsEnabled ? (
         <div>
           <SectionHeading
             title="Рекомендации по перелёту"
@@ -37,14 +36,14 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
         </div>
       ) : null}
 
-      {showCities ? (
+      {nonPlaneCities.length > 0 ? (
         <div>
           <SectionHeading
-            title="Прибытие и отъезд"
-            subtitle="Города, транспорт и рекомендуемое время"
+            title="Другие способы добраться"
+            subtitle="Поезд и альтернативный транспорт"
           />
           <div className="space-y-4">
-            {cities.map((city) => (
+            {nonPlaneCities.map((city) => (
               <article
                 key={city.title}
                 className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
@@ -69,10 +68,6 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
                       </span>
                     ))}
                   </div>
-                ) : null}
-
-                {city.schedule ? (
-                  <p className="mt-3 text-sm leading-relaxed text-slate">{city.schedule}</p>
                 ) : null}
 
                 {city.comment ? (

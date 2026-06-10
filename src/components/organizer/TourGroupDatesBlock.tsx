@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Info, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import TourGroupDatesAddModal from "@/components/organizer/TourGroupDatesAddModal";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import {
   type OrganizerGroupTourDate,
 } from "@/data/tour-booking-defaults";
@@ -77,8 +77,7 @@ function GroupDateSummary({
         <div>
           <p className="text-sm font-semibold text-charcoal">Заезд {index + 1}</p>
           <p className="mt-1 text-sm text-slate">
-            {date.startDate ? formatDateShort(date.startDate) : "—"}
-            {date.endDate ? ` — ${formatDateShort(date.endDate)}` : ""}
+            {date.startDate ? formatDateRange(date.startDate, date.endDate) : "—"}
           </p>
         </div>
         <button

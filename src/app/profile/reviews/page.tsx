@@ -7,7 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { getUserReviews, updateReviewStatus } from "@/lib/reviews-store";
 import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
 import { REVIEW_STATUS_LABELS } from "@/data/tourist-dashboard";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShortWithYear } from "@/lib/utils";
 import { cn } from "@/lib/cn";
 
 function RatingStars({ rating }: { rating: number }) {
@@ -84,8 +84,8 @@ export default function ProfileReviewsPage() {
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate">
                 <span>
                   {review.tripDate
-                    ? `Поездка: ${formatDateShort(review.tripDate)}`
-                    : `Создан: ${formatDateShort(review.createdAt.slice(0, 10))}`}
+                    ? `Поездка: ${formatDateShortWithYear(review.tripDate)}`
+                    : `Создан: ${formatDateShortWithYear(review.createdAt.slice(0, 10))}`}
                 </span>
                 {review.status === "draft" ? (
                   <button

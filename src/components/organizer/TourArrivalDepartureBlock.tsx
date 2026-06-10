@@ -367,7 +367,7 @@ export default function TourArrivalDepartureBlock({
         checked={enabled}
         onChange={handleEnabledChange}
         label="Города прибытия и отправления"
-        description="Укажите города, в которые туристы могут прибыть или из которых могут уехать после тура."
+        description="Формируют блок «Рекомендации по прибытию» на странице тура: время прилёта и вылета на самолёте."
       />
 
       {enabled ? (

@@ -14,7 +14,7 @@ import {
 import { TourListing, TourBadge } from "@/types";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { formatDays, formatNights, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
@@ -207,8 +207,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
                 </p>
                 {tour.requestDateFrom && tour.requestDateTo ? (
                   <p className="mt-1.5 text-xs leading-relaxed text-slate">
-                    Любые даты с {formatDateShort(tour.requestDateFrom)} по{" "}
-                    {formatDateShort(tour.requestDateTo)}
+                    Любые даты с {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
                   </p>
                 ) : (
                   <p className="mt-1.5 text-xs leading-relaxed text-slate">
@@ -222,7 +221,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               <div className="mt-4">
                 <p className="text-[11px] text-slate">Дата набора групп</p>
                 <p className="mt-0.5 text-sm font-medium text-charcoal">
-                  {formatDateShort(nextDate.start)} – {formatDateShort(nextDate.end)}
+                  {formatDateRange(nextDate.start, nextDate.end)}
                 </p>
                 {moreDates > 0 && (
                   <span className="mt-1.5 inline-block rounded-md bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">

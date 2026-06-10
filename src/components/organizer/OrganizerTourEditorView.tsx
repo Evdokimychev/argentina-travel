@@ -21,6 +21,7 @@ import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
 import TourTicketRecommendationsBlock from "@/components/organizer/TourTicketRecommendationsBlock";
 import TourArrivalDepartureBlock from "@/components/organizer/TourArrivalDepartureBlock";
+import TourArrivalDetailsBlock from "@/components/organizer/TourArrivalDetailsBlock";
 import TourGeneralDescriptionBlock from "@/components/organizer/TourGeneralDescriptionBlock";
 import TourPhotosBlock from "@/components/organizer/TourPhotosBlock";
 import TourImpressionsBlock from "@/components/organizer/TourImpressionsBlock";
@@ -952,6 +953,18 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 onChange={(ticketRecommendationsText) =>
                   updateDraft({ ticketRecommendationsText })
                 }
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourArrivalDetailsBlock
+                enabled={draft.arrivalDetailsEnabled}
+                airportsText={draft.arrivalAirportsText}
+                transfersText={draft.arrivalTransfersText}
+                meetingPoint={draft.arrivalMeetingPoint}
+                mapStartPoint={draft.mapStartPoint}
+                onEnabledChange={(arrivalDetailsEnabled) => updateDraft({ arrivalDetailsEnabled })}
+                onChange={(patch) => updateDraft(patch)}
               />
             ) : null}
 

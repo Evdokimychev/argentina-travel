@@ -10,14 +10,8 @@ import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
-import { formatDateShort } from "@/lib/utils";
+import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
-
-function formatTourDates(booking: Booking): string {
-  if (!booking.startDate) return "Даты по согласованию";
-  const start = formatDateShort(booking.startDate);
-  return booking.endDate ? `${start} — ${formatDateShort(booking.endDate)}` : start;
-}
 
 export default function ProfileBookingsPage() {
   const { user } = useAuth();
@@ -89,7 +83,7 @@ export default function ProfileBookingsPage() {
                           {booking.tourTitle}
                         </Link>
                         <p className="mt-1 text-sm text-slate">
-                          {formatTourDates(booking)} · {booking.guests} гостей
+                          {formatBookingTourDates(booking, "Даты по согласованию")} · {booking.guests} гостей
                         </p>
                         <p className="mt-1 text-xs text-slate">
                           Заявка от {formatBookingCreatedAt(booking.createdAt)}
