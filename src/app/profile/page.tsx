@@ -1,0 +1,148 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import { ArrowRight, CalendarDays, Clock3, Heart } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { getRecentBookings, getTouristDashboardStats } from "@/lib/tourist-dashboard";
+import { BOOKINGS_UPDATED_EVENT, FAVORITES_UPDATED_EVENT, REVIEWS_UPDATED_EVENT } from "@/types/tourist";
+import { BOOKING_STATUS_LABELS } from "@/data/tourist-dashboard";
+import { formatDateShort } from "@/lib/utils";
+import FormattedPrice from "@/components/FormattedPrice";
+
+function StatCard({
+  label,
+  value,
+  href,
+  icon: Icon,
+}: {
+  label: string;
+  value: number;
+  href: string;
+  icon: typeof Heart;
+}) {
+  return (
+    <Link
+      href={href}
+      className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-colors hover:border-brand/30 hover:bg-brand-light/20"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-slate">{label}</p>
+          <p className="mt-2 font-display text-3xl font-bold text-charcoal">{value}</p>
+        </div>
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light text-brand">
+          <Icon className="h-5 w-5" strokeWidth={1.75} />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+export default function ProfileDashboardPage() {
+  const { user } = useAuth();
+  const [stats, setStats] = useState({
+    tripsCount: 0,
+    favoritesCount: 0,
+    pendingBookingsCount: 0,
+    reviewsCount: 0,
+  });
+  const [recentBookings, setRecentBookings] = useState<ReturnType<typeof getRecentBookings>>([]);
+
+  useEffect(() => {
+    if (!user) return;
+
+    function refresh() {
+      setStats(getTouristDashboardStats(user!.id));
+      setRecentBookings(getRecentBookings(user!.id));
+    }
+
+    refresh();
+    window.addEventListener(FAVORITES_UPDATED_EVENT, refresh);
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
+    window.addEventListener(REVIEWS_UPDATED_EVENT, refresh);
+    return () => {
+      window.removeEventListener(FAVORITES_UPDATED_EVENT, refresh);
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
+      window.removeEventListener(REVIEWS_UPDATED_EVENT, refresh);
+    };
+  }, [user]);
+
+  if (!user) return null;
+
+  return (
+    <div className="space-y-6">
+      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+        <h2 className="font-display text-xl font-bold text-charcoal">
+          Добро пожаловать, {user.fullName.split(/\s+/)[0]}!
+        </h2>
+        <p className="mt-2 text-sm text-slate">
+          Здесь собраны ваши поездки, избранные туры и заявки на бронирование.
+        </p>
+      </section>
+
+      <div className="grid gap-4 sm:grid-cols-3">
+        <StatCard
+          label="Поездки"
+          value={stats.tripsCount}
+          href="/profile/bookings"
+          icon={CalendarDays}
+        />
+        <StatCard
+          label="Избранное"
+          value={stats.favoritesCount}
+          href="/profile/favorites"
+          icon={Heart}
+        />
+        <StatCard
+          label="Заявки"
+          value={stats.pendingBookingsCount}
+          href="/profile/bookings"
+          icon={Clock3}
+        />
+      </div>
+
+      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="flex items-center justify-between gap-3">
+          <h3 className="font-display text-lg font-bold text-charcoal">Последние бронирования</h3>
+          <Link
+            href="/profile/bookings"
+            className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"
+          >
+            Все бронирования
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </div>
+
+        {recentBookings.length > 0 ? (
+          <ul className="mt-4 divide-y divide-gray-100">
+            {recentBookings.map((booking) => (
+              <li key={booking.id} className="flex flex-col gap-2 py-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="min-w-0">
+                  <p className="font-medium text-charcoal">{booking.tourTitle}</p>
+                  <p className="mt-1 text-sm text-slate">
+                    {booking.startDate ? formatDateShort(booking.startDate) : "Дата по запросу"} ·{" "}
+                    {booking.guests} гостей
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-charcoal">
+                    {BOOKING_STATUS_LABELS[booking.status]}
+                  </span>
+                  <FormattedPrice priceUsd={booking.totalPriceUsd} className="text-sm font-semibold" />
+                </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="mt-4 text-sm text-slate">
+            Пока нет бронирований.{" "}
+            <Link href="/tours" className="font-medium text-brand hover:underline">
+              Выберите тур
+            </Link>
+          </p>
+        )}
+      </section>
+    </div>
+  );
+}

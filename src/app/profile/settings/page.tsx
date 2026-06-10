@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 import { format, isValid, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,9 +11,10 @@ import { useAuth } from "@/context/AuthContext";
 import { formatPhoneInput } from "@/lib/auth-store";
 import { maxBirthDateIso, minBirthDateIso, participantAgeLabel } from "@/lib/participant-age";
 import { PROFILE_COUNTRIES, getProfileCountryFlag } from "@/data/profile-countries";
-import ProfileMenu from "@/components/auth/ProfileMenu";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
+
+import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -106,7 +106,7 @@ function FieldLabel({
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const { user, isAuthenticated, openAuth, updateProfile, updateAvatar, logout } = useAuth();
+  const { user, updateProfile, updateAvatar, logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [firstName, setFirstName] = useState("");
@@ -131,19 +131,7 @@ export default function ProfileSettingsPage() {
     setCountry(user.country);
   }, [user]);
 
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-          <h1 className="font-display text-2xl font-bold text-charcoal">Настройки профиля</h1>
-          <p className="mt-3 text-sm text-slate">Войдите в аккаунт, чтобы редактировать профиль</p>
-          <Button type="button" className="mt-6" onClick={() => openAuth()}>
-            Войти
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  if (!user) return null;
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -220,28 +208,15 @@ export default function ProfileSettingsPage() {
   }
 
   return (
-    <div className="bg-pampas pb-16">
-      <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <div>
-            <Link href="/" className="text-sm text-slate transition-colors hover:text-brand">
-              ← На главную
-            </Link>
-            <h1 className="mt-1 font-display text-2xl font-bold text-charcoal">Настройки аккаунта</h1>
-          </div>
-          <div className="hidden sm:block">
-            <ProfileMenu />
-          </div>
-        </div>
-      </div>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+      <form
+        onSubmit={handleSubmit}
+        className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
+      >
+        <h2 className="font-display text-xl font-bold text-charcoal">Настройки аккаунта</h2>
+        <p className="mt-1 text-sm text-slate">Контактные данные и фото профиля</p>
 
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
-          >
-            <div className="space-y-4">
+        <div className="mt-5 space-y-4">
               <div className="flex gap-4 border-b border-gray-100 pb-4">
                 <div className="flex shrink-0 flex-col items-center">
                   <UserAvatar
@@ -447,8 +422,6 @@ export default function ProfileSettingsPage() {
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </aside>
-        </div>
-      </div>
     </div>
   );
 }

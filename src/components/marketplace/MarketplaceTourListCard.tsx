@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import FavoriteButton from "@/components/profile/FavoriteButton";
 import {
-  Heart,
   Star,
   Flame,
   MapPin,
@@ -69,7 +68,6 @@ function StatCell({ label, children }: { label: string; children: React.ReactNod
 }
 
 export default function MarketplaceTourListCard({ tour }: { tour: TourListing }) {
-  const [fav, setFav] = useState(false);
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
   const hasReviews = tour.reviewCount > 0;
@@ -242,16 +240,16 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             >
               Смотреть тур
             </Link>
-            <button
-              type="button"
-              onClick={() => setFav(!fav)}
-              aria-label="В избранное"
+            <FavoriteButton
+              tourId={tour.id}
+              tourSlug={tour.slug}
+              tourTitle={tour.title}
+              tourImage={tour.image}
+              region={tour.region}
+              priceUsd={tour.priceUsd}
               className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white transition-colors hover:bg-gray-50"
-            >
-              <Heart
-                className={cn("h-5 w-5", fav ? "fill-wine text-wine" : "text-charcoal")}
-              />
-            </button>
+              iconClassName="h-5 w-5"
+            />
           </div>
         </div>
       </div>

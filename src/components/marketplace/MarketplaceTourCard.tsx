@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, Star, Flame, MapPin, UserRound } from "lucide-react";
+import { Flame, MapPin, Star, UserRound } from "lucide-react";
+import FavoriteButton from "@/components/profile/FavoriteButton";
 import { TourListing, TourBadge } from "@/types";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
@@ -26,7 +26,6 @@ interface MarketplaceTourCardProps {
 }
 
 export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) {
-  const [fav, setFav] = useState(false);
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
   const hasReviews = tour.reviewCount > 0;
@@ -56,19 +55,16 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             ))}
         </div>
 
-        <button
-          type="button"
-          onClick={(e) => {
-            e.preventDefault();
-            setFav(!fav);
-          }}
+        <FavoriteButton
+          tourId={tour.id}
+          tourSlug={tour.slug}
+          tourTitle={tour.title}
+          tourImage={tour.image}
+          region={tour.region}
+          priceUsd={tour.priceUsd}
+          onClick={(event) => event.preventDefault()}
           className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
-          aria-label="В избранное"
-        >
-          <Heart
-            className={cn("h-4 w-4", fav ? "fill-wine text-wine" : "text-charcoal")}
-          />
-        </button>
+        />
 
         <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
           <div className="relative h-7 w-7 overflow-hidden rounded-full">

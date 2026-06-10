@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, LayoutGrid, LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, Heart, LayoutGrid, LogOut, Settings, User } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import { userHasRole } from "@/types/auth";
@@ -169,6 +169,18 @@ export default function ProfileMenu() {
           </div>
 
           <div className="mt-1 space-y-0.5 px-1 py-1">
+            <MenuItem
+              href="/profile"
+              icon={User}
+              label="Личный кабинет"
+              onClick={() => setOpen(false)}
+            />
+            <MenuItem
+              href="/profile/favorites"
+              icon={Heart}
+              label="Избранное"
+              onClick={() => setOpen(false)}
+            />
             {hasOrganizerRole ? (
               <MenuItem
                 href="/organizer"

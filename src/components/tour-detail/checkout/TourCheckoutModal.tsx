@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Check, ChevronLeft, ChevronRight, Lock, X } from "lucide-react";
 import { TourDetail } from "@/types";
 import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
@@ -52,6 +53,7 @@ import TransferAddonPicker from "./TransferAddonPicker";
 import InsuranceAddonPicker from "./InsuranceAddonPicker";
 import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm } from "./checkout-contact";
 import { useAuth } from "@/context/AuthContext";
+import { createBookingFromCheckout } from "@/lib/bookings-store";
 
 interface TourCheckoutModalProps {
   tour: TourDetail;
@@ -289,6 +291,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const [stepIndex, setStepIndex] = useState(0);
   const [form, setForm] = useState<CheckoutFormState>(() => createCheckoutForm(guests, user));
   const [submitted, setSubmitted] = useState(false);
+  const [savedToProfile, setSavedToProfile] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const currentStep = visibleSteps[stepIndex]?.id ?? "travelers";
@@ -338,6 +341,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       document.body.style.overflow = "hidden";
       setStepIndex(0);
       setSubmitted(false);
+      setSavedToProfile(false);
       setError(null);
       setForm(createCheckoutForm(guests, null));
     } else {
@@ -459,6 +463,31 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     if (stepIndex < visibleSteps.length - 1) {
       setStepIndex((i) => i + 1);
     } else {
+      if (isAuthenticated && user) {
+        const startDate =
+          dateMode === "custom" && customDate
+            ? customDate.toISOString().slice(0, 10)
+            : selectedDate?.startDate;
+        const endDate =
+          dateMode === "custom" && customDate
+            ? new Date(
+                customDate.getTime() + (tour.durationDays - 1) * 86400000
+              )
+                .toISOString()
+                .slice(0, 10)
+            : selectedDate?.endDate;
+
+        createBookingFromCheckout({
+          userId: user.id,
+          tour,
+          guests,
+          startDate,
+          endDate,
+          totalPriceUsd: totalUsd,
+          form,
+        });
+        setSavedToProfile(true);
+      }
       setSubmitted(true);
     }
   }
@@ -521,9 +550,26 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                     ? " Ссылка для указания имён участников придёт отдельным письмом."
                     : " Организатор свяжется с вами в ближайшее время."}
                 </p>
+                {savedToProfile ? (
+                  <p className="mt-3 text-sm text-emerald-700">
+                    Заявка сохранена в{" "}
+                    <Link href="/profile/bookings" className="font-medium underline">
+                      личном кабинете
+                    </Link>
+                    .
+                  </p>
+                ) : null}
                 <Button className="mt-6 w-full" onClick={closeCheckout}>
                   Вернуться к туру
                 </Button>
+                {savedToProfile ? (
+                  <Link
+                    href="/profile/bookings"
+                    className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-charcoal hover:bg-gray-50"
+                  >
+                    Мои бронирования
+                  </Link>
+                ) : null}
               </div>
             ) : (
               <>

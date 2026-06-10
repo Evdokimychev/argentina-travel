@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { Heart, MapPin, Share2 } from "lucide-react";
+import { MapPin, Share2 } from "lucide-react";
 import { TourDetail } from "@/types";
 import { cn } from "@/lib/cn";
 import { formatReviews } from "@/lib/pluralize";
 import TourDurationInfo from "./TourDurationInfo";
+import FavoriteButton from "@/components/profile/FavoriteButton";
 
 interface TourDetailHeroProps {
   tour: TourDetail;
 }
 
 export default function TourDetailHero({ tour }: TourDetailHeroProps) {
-  const [favorited, setFavorited] = useState(false);
   const [shared, setShared] = useState(false);
 
   async function handleShare() {
@@ -41,20 +41,19 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
         </p>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => setFavorited(!favorited)}
-            aria-label={favorited ? "Убрать из избранного" : "Добавить в избранное"}
-            aria-pressed={favorited}
+          <FavoriteButton
+            tourId={tour.id}
+            tourSlug={tour.slug}
+            tourTitle={tour.title}
+            tourImage={tour.image}
+            region={tour.region}
+            country={tour.country}
+            priceUsd={tour.priceUsd}
             className={cn(
               "flex h-9 w-9 items-center justify-center rounded-full border transition-colors",
-              favorited
-                ? "border-wine bg-wine/5 text-wine"
-                : "border-gray-200 bg-white text-charcoal hover:border-gray-300"
+              "border-gray-200 bg-white text-charcoal hover:border-gray-300"
             )}
-          >
-            <Heart className={cn("h-4 w-4", favorited && "fill-current")} />
-          </button>
+          />
           <button
             type="button"
             onClick={handleShare}

@@ -208,11 +208,11 @@ export default function Header() {
             <div className="mt-3 border-t border-gray-100 pt-3">
               {isAuthenticated ? (
                 <Link
-                  href="/profile/settings"
+                  href="/profile"
                   onClick={() => setMenuOpen(false)}
                   className="inline-flex px-1 py-1 text-sm font-medium text-charcoal hover:text-sky"
                 >
-                  Настройки профиля
+                  Личный кабинет
                 </Link>
               ) : (
                 <button

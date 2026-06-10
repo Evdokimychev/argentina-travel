@@ -1,0 +1,42 @@
+"use client";
+
+import { useCallback, useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import {
+  isTourFavorite,
+  toggleFavorite,
+} from "@/lib/favorites-store";
+import { FAVORITES_UPDATED_EVENT, type FavoriteTour } from "@/types/tourist";
+
+export type FavoriteTourInput = Omit<FavoriteTour, "addedAt">;
+
+export function useFavoriteTour(tour: FavoriteTourInput) {
+  const { user, isAuthenticated, openAuth } = useAuth();
+  const [favorited, setFavorited] = useState(false);
+
+  const sync = useCallback(() => {
+    if (!user) {
+      setFavorited(false);
+      return;
+    }
+    setFavorited(isTourFavorite(user.id, tour.tourSlug));
+  }, [tour.tourSlug, user]);
+
+  useEffect(() => {
+    sync();
+    window.addEventListener(FAVORITES_UPDATED_EVENT, sync);
+    return () => window.removeEventListener(FAVORITES_UPDATED_EVENT, sync);
+  }, [sync]);
+
+  function handleToggle() {
+    if (!isAuthenticated || !user) {
+      openAuth();
+      return;
+    }
+
+    const result = toggleFavorite(user.id, tour);
+    setFavorited(result.favorited);
+  }
+
+  return { favorited, toggle: handleToggle, isAuthenticated };
+}
