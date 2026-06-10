@@ -2,8 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Cookie } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Cookie, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 const CONSENT_KEY = "site-cookie-consent";
@@ -37,33 +36,36 @@ export default function CookieConsentBanner() {
       role="dialog"
       aria-label="Уведомление о cookie"
       className={cn(
-        "fixed inset-x-0 bottom-0 z-[80] border-t border-gray-200 bg-white/95 p-4 shadow-modal backdrop-blur-md",
-        "sm:bottom-4 sm:left-4 sm:right-auto sm:max-w-md sm:rounded-2xl sm:border"
+        "fixed bottom-5 left-1/2 z-[80] flex max-w-[min(calc(100%-2rem),34rem)] -translate-x-1/2 items-center gap-2.5",
+        "rounded-full px-3 py-2 sm:gap-3 sm:px-4 sm:py-2.5",
+        "bg-charcoal/10 text-charcoal/65 shadow-sm backdrop-blur-sm"
       )}
     >
-      <div className="flex gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
-          <Cookie className="h-5 w-5" strokeWidth={1.75} />
-        </span>
-        <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold text-charcoal">Мы используем cookie</p>
-          <p className="mt-1 text-xs leading-relaxed text-slate">
-            Cookie помогают сохранить язык, валюту и настройки сессии. Подробнее — в{" "}
-            <Link href="/legal/privacy" className="font-medium text-sky hover:underline">
-              политике конфиденциальности
-            </Link>
-            .
-          </p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <Button type="button" size="sm" onClick={accept}>
-              Принять
-            </Button>
-            <Link href="/legal/privacy" className={buttonVariants({ variant: "outline", size: "sm" })}>
-              Подробнее
-            </Link>
-          </div>
-        </div>
-      </div>
+      <Cookie className="h-4 w-4 shrink-0" strokeWidth={2} aria-hidden />
+
+      <p className="min-w-0 flex-1 text-xs leading-snug sm:text-sm">
+        <span>Сайт сохраняет cookie на вашем устройстве. </span>
+        <Link
+          href="/legal/privacy"
+          className="font-medium text-charcoal/85 underline-offset-2 transition-colors hover:text-charcoal hover:underline"
+        >
+          Политика cookie
+        </Link>
+      </p>
+
+      <button
+        type="button"
+        onClick={accept}
+        data-no-custom-cursor
+        className={cn(
+          "flex h-7 w-7 shrink-0 items-center justify-center rounded-full",
+          "text-charcoal/55 transition-colors hover:bg-charcoal/10 hover:text-charcoal/85",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal/20 focus-visible:ring-offset-2"
+        )}
+        aria-label="Закрыть и принять"
+      >
+        <X className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+      </button>
     </div>
   );
 }

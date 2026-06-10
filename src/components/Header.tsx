@@ -25,7 +25,7 @@ function CircleButton({
   className?: string;
 }) {
   const cls = cn(
-    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-200/80 bg-white text-charcoal transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky",
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky",
     className
   );
 
@@ -65,7 +65,7 @@ function NavLink({
       onClick={onClick}
       className={cn(
         "group relative inline-flex items-baseline gap-1 px-1 py-1 text-sm font-medium transition-colors",
-        active ? "text-sky" : "text-charcoal/70 hover:text-sky"
+        active ? "text-sky" : "text-foreground/70 hover:text-sky"
       )}
     >
       {label}
@@ -119,16 +119,16 @@ export default function Header() {
     href === "/" ? pathname === "/" : pathname.startsWith(href);
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 bg-white/90 backdrop-blur-md">
+    <header ref={headerRef} className="sticky top-0 z-50 bg-surface-elevated/90 backdrop-blur-md">
       {/* Top utility bar */}
-      <div className="hidden border-b border-gray-100 bg-white lg:block">
+      <div className="hidden border-b border-border-subtle bg-surface-elevated lg:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-xs text-slate sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span>Откройте Аргентину 🇦🇷 вместе с нами</span>
             <span className="hidden text-gray-300 xl:inline">|</span>
             <Link
               href="/tours"
-              className="hidden items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky xl:inline-flex"
+              className="hidden items-center gap-1 font-medium text-foreground transition-colors hover:text-sky xl:inline-flex"
             >
               Бронируйте лучшие туры
               <ArrowUpRight className="h-3 w-3" />
@@ -136,7 +136,7 @@ export default function Header() {
             <span className="hidden text-gray-300 xl:inline">|</span>
             <Link
               href="/join"
-              className="hidden items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky xl:inline-flex"
+              className="hidden items-center gap-1 font-medium text-foreground transition-colors hover:text-sky xl:inline-flex"
             >
               Авторам туров
               <ArrowUpRight className="h-3 w-3" />
@@ -144,7 +144,7 @@ export default function Header() {
           </div>
           <Link
             href="/contacts"
-            className="flex shrink-0 items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky"
+            className="flex shrink-0 items-center gap-1 font-medium text-foreground transition-colors hover:text-sky"
           >
             Свяжитесь с нами
             <ArrowUpRight className="h-3 w-3" />
@@ -192,7 +192,7 @@ export default function Header() {
       </div>
 
       {menuOpen && (
-        <nav className="border-t border-gray-100 bg-white px-4 py-4 lg:hidden">
+        <nav className="border-t border-border-subtle bg-surface-elevated px-4 py-4 lg:hidden">
           <div className="mx-auto flex max-w-7xl flex-col gap-1">
             {navLinks.map((link, i) => (
               <NavLink
@@ -204,15 +204,15 @@ export default function Header() {
                 onClick={() => setMenuOpen(false)}
               />
             ))}
-            <div className="mt-3 border-t border-gray-100 pt-3 sm:hidden">
+            <div className="mt-3 border-t border-border-subtle pt-3 sm:hidden">
               <LocaleCurrencySwitcher />
             </div>
-            <div className="mt-3 border-t border-gray-100 pt-3">
+            <div className="mt-3 border-t border-border-subtle pt-3">
               {isAuthenticated ? (
                 <Link
                   href="/profile"
                   onClick={() => setMenuOpen(false)}
-                  className="inline-flex px-1 py-1 text-sm font-medium text-charcoal hover:text-sky"
+                  className="inline-flex px-1 py-1 text-sm font-medium text-foreground hover:text-sky"
                 >
                   Личный кабинет
                 </Link>
@@ -223,7 +223,7 @@ export default function Header() {
                     setMenuOpen(false);
                     openAuth();
                   }}
-                  className="inline-flex px-1 py-1 text-sm font-medium text-charcoal hover:text-sky"
+                  className="inline-flex px-1 py-1 text-sm font-medium text-foreground hover:text-sky"
                 >
                   Войти
                 </button>

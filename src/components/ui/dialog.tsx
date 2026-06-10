@@ -42,7 +42,7 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         className={cn(
-          "fixed z-50 bg-white shadow-modal outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "fixed z-50 bg-surface-elevated shadow-modal outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
           bottomSheet
             ? "inset-x-0 bottom-0 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85vh] sm:w-[calc(100%-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
             : "left-1/2 top-1/2 w-[calc(100%-2rem)] max-h-[85vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl",
@@ -53,7 +53,7 @@ function DialogContent({
         {children}
         {showClose ? (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Закрыть"
           >
             <X className="h-4 w-4" />
@@ -67,7 +67,7 @@ function DialogContent({
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex flex-col gap-1.5 border-b border-gray-100 px-5 py-4 sm:px-6", className)}
+      className={cn("flex flex-col gap-1.5 border-b border-border-subtle px-5 py-4 sm:px-6", className)}
       {...props}
     />
   );
@@ -77,7 +77,7 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
   return (
     <div
       className={cn(
-        "flex flex-col-reverse gap-2 border-t border-gray-100 px-5 py-4 sm:flex-row sm:justify-end sm:px-6",
+        "flex flex-col-reverse gap-2 border-t border-border-subtle px-5 py-4 sm:flex-row sm:justify-end sm:px-6",
         className
       )}
       {...props}
@@ -91,7 +91,7 @@ function DialogTitle({
 }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn("font-display text-xl font-bold text-charcoal", className)}
+      className={cn("font-display text-xl font-bold text-foreground", className)}
       {...props}
     />
   );
@@ -102,7 +102,7 @@ function DialogDescription({
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Description>) {
   return (
-    <DialogPrimitive.Description className={cn("text-sm text-slate", className)} {...props} />
+    <DialogPrimitive.Description className={cn("text-sm text-muted", className)} {...props} />
   );
 }
 

@@ -33,7 +33,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article>
-      <section className="relative h-[40vh] min-h-[300px]">
+      <section className="relative h-[40vh] min-h-[300px]" data-scroll-rail-tone="dark">
         <Image
           src={post.image}
           alt={post.title}

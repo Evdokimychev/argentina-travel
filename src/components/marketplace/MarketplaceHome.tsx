@@ -315,7 +315,7 @@ export default function MarketplaceHome({
       </section>
 
       {/* Why us */}
-      <section className="bg-patagonia py-16 text-white">
+      <section className="bg-patagonia py-16 text-white" data-scroll-rail-tone="dark">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-2xl font-bold sm:text-3xl">
             Почему путешествовать с нами

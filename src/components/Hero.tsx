@@ -21,6 +21,7 @@ export default function Hero({
 }: HeroProps) {
   return (
     <section
+      data-scroll-rail-tone="dark"
       className={`relative flex items-center justify-center overflow-hidden ${compact ? "h-[40vh] min-h-[280px]" : "h-[85vh] min-h-[500px]"}`}
     >
       <div

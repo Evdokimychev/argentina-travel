@@ -316,9 +316,8 @@ export const marketplaceTours: TourListing[] = rawMarketplaceTours.map((tour) =>
   gallery: baseTours.find((b) => b.slug === tour.slug)?.gallery ?? [tour.image],
 }));
 
-import { fetchRepositoryMarketplaceTours } from "@/lib/tour-repository";
-
 export async function fetchMarketplaceTours(): Promise<TourListing[]> {
   // TODO: supabase.from('tours').select('*')
+  const { fetchRepositoryMarketplaceTours } = await import("@/lib/tour-repository");
   return fetchRepositoryMarketplaceTours();
 }

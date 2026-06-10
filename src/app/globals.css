@@ -24,6 +24,13 @@
   --color-charcoal: #1a1a2e;
   --color-slate: #4a5568;
 
+  /* Theme-aware semantic tokens */
+  --color-foreground: var(--color-charcoal);
+  --color-muted: var(--color-slate);
+  --color-background: var(--color-surface-muted);
+  --color-surface-elevated: #ffffff;
+  --color-border-subtle: #e5e7eb;
+
   /* Accent earth / promo — terracotta, not primary actions */
   --color-brand: #d4533b;
   --color-brand-dark: #b8432e;
@@ -64,8 +71,8 @@ html {
 
 body {
   font-family: var(--font-body);
-  color: var(--color-charcoal);
-  background-color: var(--color-surface-muted);
+  color: var(--color-foreground);
+  background-color: var(--color-background);
 }
 
 h1,
@@ -347,4 +354,18 @@ h6 {
 .rich-text-editor-content a {
   color: #d4533b;
   text-decoration: underline;
+}
+
+/* Custom trailing cursor — desktop pointer devices only */
+html.custom-cursor-active,
+html.custom-cursor-active
+  *:not(input):not(textarea):not(select):not([contenteditable="true"]) {
+  cursor: none !important;
+}
+
+html.custom-cursor-active input,
+html.custom-cursor-active textarea,
+html.custom-cursor-active select,
+html.custom-cursor-active [contenteditable="true"] {
+  cursor: auto !important;
 }
