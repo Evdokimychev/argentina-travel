@@ -65,9 +65,9 @@ export const GUIDE_HUB_CATEGORIES: GuideHubCategory[] = [
     links: [
       {
         id: "immigration-hub",
-        label: "Все материалы по иммиграции",
+        label: "Полный справочник по иммиграции",
         href: "/immigration",
-        description: "Визы, документы и обзор ВНЖ",
+        description: "ВНЖ, RADEX, гражданство и практические шаги",
       },
       ...immigrationArticles,
     ],

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNav";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { getContentHubMeta } from "@/lib/content-pages";
@@ -13,7 +14,9 @@ export default function ContentPageView({ page }: ContentPageViewProps) {
   const hub = getContentHubMeta(page.section);
 
   return (
-    <div className="bg-surface-muted pb-16">
+    <>
+      {page.section === "immigration" ? <ImmigrationSectionNav /> : null}
+      <div className="bg-surface-muted pb-16">
       <div className={cn(siteContainerClass, "py-8 md:py-12")}>
         <nav className="text-sm text-slate" aria-label="Хлебные крошки">
           <Link href="/" className="transition-colors hover:text-sky">
@@ -136,6 +139,7 @@ export default function ContentPageView({ page }: ContentPageViewProps) {
           )}
         </p>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

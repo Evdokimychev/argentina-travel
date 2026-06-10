@@ -7,7 +7,7 @@ import {
   Plane,
   Shield,
 } from "lucide-react";
-import Hero from "@/components/Hero";
+import HubHero from "@/components/guide/hub/HubHero";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
 import HubDataTable from "@/components/guide/hub/HubDataTable";
@@ -39,43 +39,13 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
       <WebPageJsonLd name={hub.heroTitle} description={hub.heroSubtitle} path={path} />
       <FAQPageJsonLd questions={hub.faq} path={path} />
 
-      <Hero
+      <HubHero
         title={hub.heroTitle}
         subtitle={hub.heroSubtitle}
         image={hub.heroImage}
-        compact={false}
+        eyebrow={{ label: "Путеводитель", href: "/guide" }}
+        ctas={hub.heroCtas}
       />
-
-      <div className="border-b border-gray-100 bg-white">
-        <div
-          className={cn(
-            siteContainerClass,
-            "flex flex-wrap items-center justify-center gap-3 py-5"
-          )}
-        >
-          {hub.heroCtas.map((cta) => (
-            <Link
-              key={cta.href + cta.label}
-              href={cta.href}
-              target={cta.external ? "_blank" : undefined}
-              rel={cta.external ? "noopener noreferrer" : undefined}
-              className={cn(
-                buttonVariants({
-                  variant:
-                    cta.variant === "primary"
-                      ? "default"
-                      : cta.variant === "secondary"
-                        ? "outline"
-                        : "ghost",
-                }),
-                "rounded-full px-5 text-sm"
-              )}
-            >
-              {cta.label}
-            </Link>
-          ))}
-        </div>
-      </div>
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>
@@ -366,7 +336,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                   href="/immigration"
                   className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
                 >
-                  Все материалы по иммиграции
+                  Полный справочник по иммиграции
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </HubSection>

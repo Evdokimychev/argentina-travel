@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { ArrowUpRight, Menu, Plane } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Menu, Plane } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
 import ProfileMenu from "@/components/auth/ProfileMenu";
@@ -17,7 +17,9 @@ import {
   SITE_NAV_PRIMARY_SECTIONS,
   SITE_NAV_UTILITY_LINKS,
 } from "@/data/site-nav";
+import { useCanGoBack } from "@/hooks/useCanGoBack";
 import { cn } from "@/lib/cn";
+import { siteViewportInsetClass } from "@/lib/site-container";
 import { isNavSectionActive, resolveNavLabel } from "@/lib/site-nav";
 
 function useIsLgUp() {
@@ -50,7 +52,7 @@ const CircleButton = forwardRef<
   ref
 ) {
   const cls = cn(
-    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
+    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal/[0.06] text-foreground ring-1 ring-charcoal/10 backdrop-blur-sm transition-colors hover:bg-sky/10 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
     className
   );
   const aria = {
@@ -75,7 +77,9 @@ const CircleButton = forwardRef<
 });
 
 export default function Header() {
+  const router = useRouter();
   const pathname = usePathname();
+  const canGoBack = useCanGoBack();
   const [menuOpen, setMenuOpen] = useState(false);
   const [openMegaMenuId, setOpenMegaMenuId] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement>(null);
@@ -151,17 +155,25 @@ export default function Header() {
   );
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 bg-surface-elevated/90 backdrop-blur-md">
-      <div className="hidden border-b border-border-subtle bg-surface-elevated lg:block">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-xs text-slate sm:px-6 lg:px-8">
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span>Откройте Аргентину 🇦🇷 вместе с нами</span>
-            <span className="hidden text-gray-300 xl:inline">|</span>
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-50 border-b border-charcoal/[0.06] bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70"
+    >
+      <div className="hidden border-b border-charcoal/[0.04] lg:block">
+        <div
+          className={cn(
+            siteViewportInsetClass,
+            "flex items-center justify-between gap-4 py-2 text-[11px] text-slate"
+          )}
+        >
+          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="font-medium text-foreground/80">Откройте Аргентину 🇦🇷 вместе с нами</span>
+            <span className="hidden text-charcoal/15 xl:inline">|</span>
             {utilityLinks.slice(0, 2).map((link) => (
               <Link
                 key={link.id}
                 href={link.href}
-                className="hidden items-center gap-1 font-medium text-foreground transition-colors hover:text-sky xl:inline-flex"
+                className="hidden items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky xl:inline-flex"
               >
                 {resolveNavLabel(link, t)}
                 <ArrowUpRight className="h-3 w-3" />
@@ -170,7 +182,7 @@ export default function Header() {
           </div>
           <Link
             href={utilityLinks[2]?.href ?? "/contacts"}
-            className="flex shrink-0 items-center gap-1 font-medium text-foreground transition-colors hover:text-sky"
+            className="flex shrink-0 items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky"
           >
             {utilityLinks[2] ? resolveNavLabel(utilityLinks[2], t) : t("nav.contacts")}
             <ArrowUpRight className="h-3 w-3" />
@@ -178,8 +190,21 @@ export default function Header() {
         </div>
       </div>
 
-      <div className="mx-auto max-w-7xl px-3 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2 rounded-full bg-nav-pill px-2 py-2 shadow-card sm:gap-3 sm:px-3">
+      <div className={cn(siteViewportInsetClass, "pb-2.5 pt-3 sm:pb-3 sm:pt-3.5 lg:pt-4")}>
+        <div
+          className={cn(
+            "flex w-full items-center gap-2 rounded-2xl border border-charcoal/[0.07]",
+            "bg-gradient-to-r from-white via-surface-muted/30 to-white",
+            "px-2 py-2.5 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_24px_-12px_rgba(26,26,46,0.12)]",
+            "sm:gap-3 sm:px-3"
+          )}
+        >
+          {canGoBack ? (
+            <CircleButton ariaLabel="Назад" onClick={() => router.back()}>
+              <ArrowLeft className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </CircleButton>
+          ) : null}
+
           <CircleButton
             ref={mobileMenuTriggerRef}
             ariaLabel={t("nav.menu")}
@@ -191,12 +216,12 @@ export default function Header() {
             <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} />
           </CircleButton>
 
-          <Link href="/" className="shrink-0 pl-0.5 sm:pl-1" aria-label={t("nav.home")}>
+          <Link href="/" className="shrink-0" aria-label={t("nav.home")}>
             <ArgentinaLogo />
           </Link>
 
           <nav
-            className="hidden flex-1 items-center justify-center gap-3 xl:gap-5 lg:flex"
+            className="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:gap-4 lg:flex"
             aria-label={t("nav.main")}
           >
             {SITE_NAV_PRIMARY_SECTIONS.map((section, index) => (
@@ -226,10 +251,10 @@ export default function Header() {
                 aria-label={t("nav.more")}
                 onClick={() => setMenuOpen((open) => !open)}
                 className={cn(
-                  "inline-flex items-center gap-1 rounded-full border border-border-subtle px-2.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
+                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
                   menuOpen
-                    ? "border-sky/40 bg-sky/5 text-sky"
-                    : "text-foreground/70 hover:border-sky/30 hover:text-sky"
+                    ? "bg-sky/10 text-sky ring-1 ring-sky/25"
+                    : "text-foreground/70 hover:bg-charcoal/[0.04] hover:text-sky"
                 )}
               >
                 {t("nav.more")}
@@ -238,13 +263,22 @@ export default function Header() {
             ) : null}
           </nav>
 
-          <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
             <div className="hidden sm:block">
-              <LocaleCurrencySwitcher variant="compact" />
+              <LocaleCurrencySwitcher variant="header" />
             </div>
-            <CircleButton href="/tours" ariaLabel={t("nav.chooseTour")}>
-              <Plane className="h-[18px] w-[18px] text-sky" strokeWidth={1.75} />
-            </CircleButton>
+            <Link
+              href="/tours"
+              aria-label={t("nav.chooseTour")}
+              className={cn(
+                "flex h-10 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-sm font-medium transition-colors sm:px-3",
+                "bg-sky/10 text-sky ring-1 ring-sky/20 hover:bg-sky/15 hover:ring-sky/35",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+              )}
+            >
+              <Plane className="h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden />
+              <span className="hidden lg:inline">{t("nav.tours")}</span>
+            </Link>
             <ProfileMenu />
           </div>
         </div>

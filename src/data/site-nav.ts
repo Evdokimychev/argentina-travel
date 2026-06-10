@@ -190,6 +190,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     id: "guide",
     label: "Путеводитель",
     labelKey: "nav.guide",
+    href: "/guide",
     columns: buildGuideNavColumns(),
   },
   {
@@ -211,8 +212,9 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         links: [
           {
             id: "immigration-all",
-            label: "Все материалы по иммиграции",
+            label: "Полный справочник по иммиграции",
             href: "/immigration",
+            description: "ВНЖ, RADEX, гражданство и практические шаги",
           },
           ...IMMIGRATION_LINKS.slice(0, 2),
         ],
@@ -296,8 +298,14 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
   },
 ];
 
-/** Core conversion sections — visible in the desktop pill bar (max ~3–4 items). */
-export const SITE_NAV_PRIMARY_IDS = ["destinations", "tours", "guide"] as const;
+/** Core conversion sections — visible in the desktop pill bar. */
+export const SITE_NAV_PRIMARY_IDS = ["destinations", "tours", "guide", "immigration"] as const;
+
+export function getSiteNavSection(id: string): SiteNavSection | undefined {
+  return SITE_NAV_SECTIONS.find((section) => section.id === id);
+}
+
+export const IMMIGRATION_SITE_NAV = getSiteNavSection("immigration")!;
 
 export const SITE_NAV_PRIMARY_SECTIONS = SITE_NAV_SECTIONS.filter((section) =>
   (SITE_NAV_PRIMARY_IDS as readonly string[]).includes(section.id)

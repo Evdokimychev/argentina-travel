@@ -55,7 +55,15 @@ export function buildGuideNavColumns(): SiteNavColumn[] {
       id: "guide-practice",
       title: "Практика",
       titleKey: "nav.columns.guidePractice",
-      links: buildGuideNavLinks(GUIDE_PRACTICE_SLUGS),
+      links: [
+        {
+          id: "guide-all",
+          label: "Полный путеводитель",
+          href: "/guide",
+          description: "14 тем: практика, регионы, культура и деньги",
+        },
+        ...buildGuideNavLinks(GUIDE_PRACTICE_SLUGS),
+      ],
     },
     {
       id: "guide-travel",

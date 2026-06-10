@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import GuidePageView from "@/components/guide/GuidePageView";
+import GuideHubView from "@/components/guide/GuideHubView";
 
 export const metadata: Metadata = {
-  title: "Путеводитель — Пора в Аргентину",
+  title: "Путеводитель по Аргентине — Пора в Аргентину",
   description:
-    "14 тем путеводителя: как добраться, где жить, регионы, культура, деньги и безопасность — с турами и сервисами.",
+    "14 тем для планирования поездки: перелёты, регионы, деньги, культура и безопасность — с турами, сервисами и FAQ.",
 };
 
 export default function GuidePage() {
-  return <GuidePageView />;
+  return <GuideHubView />;
 }

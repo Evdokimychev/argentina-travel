@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { Search, Check, Globe, X } from "lucide-react";
+import { Search, Check, ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
@@ -201,9 +201,9 @@ function CurrencyRow({
 export default function LocaleCurrencySwitcher({
   variant = "default",
 }: {
-  variant?: "default" | "compact";
+  variant?: "default" | "compact" | "header";
 }) {
-  const { language, currencyInfo, ready, t } = useLocaleCurrency();
+  const { locale, language, currencyInfo, ready, t } = useLocaleCurrency();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
 
@@ -216,11 +216,37 @@ export default function LocaleCurrencySwitcher({
   }, [mobileOpen]);
 
   const triggerLabel =
-    variant === "compact" ? (
-      <Globe className="h-[18px] w-[18px] text-sky" strokeWidth={1.75} />
+    variant === "header" ? (
+      <>
+        <span className="flex items-center gap-1.5">
+          <span className="text-base leading-none" aria-hidden>
+            {language.flag}
+          </span>
+          <span className="text-[11px] font-semibold uppercase tracking-wide text-charcoal">
+            {locale}
+          </span>
+        </span>
+        <span className="h-3.5 w-px shrink-0 bg-charcoal/10" aria-hidden />
+        <span className="flex items-baseline gap-0.5">
+          <span className="text-[11px] font-medium text-slate">{currencyInfo.symbol}</span>
+          <span className="text-[11px] font-semibold text-charcoal">{currencyInfo.code}</span>
+        </span>
+        <ChevronDown className="h-3.5 w-3.5 shrink-0 text-slate" aria-hidden />
+      </>
+    ) : variant === "compact" ? (
+      <>
+        <span className="text-base leading-none">{language.flag}</span>
+        <span className="hidden text-[11px] font-semibold uppercase tracking-wide text-charcoal min-[420px]:inline">
+          {locale}
+        </span>
+        <span className="hidden h-3 w-px bg-charcoal/10 min-[420px]:inline" />
+        <span className="hidden text-[11px] font-semibold text-charcoal min-[420px]:inline">
+          {currencyInfo.code}
+        </span>
+      </>
     ) : (
       <>
-        <Globe className="h-4 w-4 shrink-0 text-slate" />
+        <span className="text-base leading-none">{language.flag}</span>
         <span className="hidden sm:inline">{language.nativeName}</span>
         <span className="text-gray-300">|</span>
         <span className="font-semibold">{currencyInfo.code}</span>
@@ -228,16 +254,20 @@ export default function LocaleCurrencySwitcher({
     );
 
   const triggerClassName =
-    variant === "compact"
-      ? "flex h-10 w-10 items-center justify-center rounded-full border border-gray-200/80 bg-white text-charcoal transition-colors hover:border-sky/40 hover:bg-sky/5"
-      : "flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-charcoal transition-all duration-200 hover:border-brand/40 hover:bg-brand-light/30";
+    variant === "header"
+      ? "flex h-10 items-center gap-2 rounded-full bg-charcoal/[0.04] px-2.5 text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-3"
+      : variant === "compact"
+        ? "flex h-10 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:ring-sky/25 sm:gap-2 sm:px-3"
+        : "flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-charcoal transition-all duration-200 hover:border-brand/40 hover:bg-brand-light/30";
+
+  const triggerAriaLabel = `${t("locale.language")}: ${language.nativeName}. ${t("locale.currency")}: ${currencyInfo.code}`;
 
   if (!ready) {
     return (
       <div
         className={cn(
           "animate-pulse rounded-full bg-gray-100",
-          variant === "compact" ? "h-10 w-10" : "h-10 w-28 rounded-xl"
+          variant === "header" || variant === "compact" ? "h-10 w-[7.5rem]" : "h-10 w-28 rounded-xl"
         )}
       />
     );
@@ -245,12 +275,13 @@ export default function LocaleCurrencySwitcher({
 
   return (
     <>
-      <div className={variant === "compact" ? "hidden sm:block" : "hidden md:block"}>
+      <div className={variant === "compact" ? "hidden sm:block" : variant === "header" ? "hidden sm:block" : "hidden md:block"}>
         <Popover open={desktopOpen} onOpenChange={(open) => setDesktopOpen(open)}>
           <PopoverTrigger asChild>
             <button
               type="button"
               className={triggerClassName}
+              aria-label={triggerAriaLabel}
             >
               {triggerLabel}
             </button>
@@ -265,15 +296,12 @@ export default function LocaleCurrencySwitcher({
         </Popover>
       </div>
 
-      <div className={variant === "compact" ? "hidden" : "md:hidden"}>
+      <div className={variant === "compact" || variant === "header" ? "hidden" : "md:hidden"}>
         <button
           type="button"
           onClick={() => setMobileOpen(true)}
-          className={
-            variant === "compact"
-              ? triggerClassName
-              : "flex items-center gap-1.5 rounded-xl border border-gray-200 bg-white px-2.5 py-2 text-xs font-medium text-charcoal"
-          }
+          className="flex h-10 items-center gap-2 rounded-full bg-charcoal/[0.04] px-3 text-charcoal ring-1 ring-charcoal/10"
+          aria-label={triggerAriaLabel}
         >
           {triggerLabel}
         </button>

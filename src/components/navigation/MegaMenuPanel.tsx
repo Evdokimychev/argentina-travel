@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BookOpen } from "lucide-react";
+import { BookOpen, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { getGuideTopicIcon } from "@/lib/guide-nav-icons";
 import { getNavBadgeLabel, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
@@ -24,18 +24,22 @@ function MegaMenuLink({
   t,
   onNavigate,
   showIcon = false,
+  resolveIcon,
 }: {
   link: SiteNavLink;
   t: NavTranslate;
   onNavigate?: () => void;
   showIcon?: boolean;
+  resolveIcon?: (link: SiteNavLink) => LucideIcon;
 }) {
-  const Icon = link.topicSlug ? getGuideTopicIcon(link.topicSlug) : BookOpen;
+  const Icon =
+    resolveIcon?.(link) ?? (link.topicSlug ? getGuideTopicIcon(link.topicSlug) : BookOpen);
+  const hasIcon = showIcon && (resolveIcon || link.topicSlug);
 
   const content = (
     <>
       <span className="flex items-start gap-2.5">
-        {showIcon && link.topicSlug ? (
+        {hasIcon ? (
           <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-sky/10 text-sky transition-colors group-hover/link:bg-sky group-hover/link:text-white">
             <Icon className="h-3.5 w-3.5" aria-hidden />
           </span>
@@ -83,12 +87,14 @@ export function MegaMenuPanel({
   onNavigate,
   className,
   showIcons = false,
+  resolveIcon,
 }: {
   columns: SiteNavColumn[];
   t: NavTranslate;
   onNavigate?: () => void;
   className?: string;
   showIcons?: boolean;
+  resolveIcon?: (link: SiteNavLink) => LucideIcon;
 }) {
   return (
     <div
@@ -109,7 +115,13 @@ export function MegaMenuPanel({
           <ul className="space-y-0.5">
             {column.links.map((link) => (
               <li key={link.id}>
-                <MegaMenuLink link={link} t={t} onNavigate={onNavigate} showIcon={showIcons} />
+                <MegaMenuLink
+                  link={link}
+                  t={t}
+                  onNavigate={onNavigate}
+                  showIcon={showIcons}
+                  resolveIcon={resolveIcon}
+                />
               </li>
             ))}
           </ul>

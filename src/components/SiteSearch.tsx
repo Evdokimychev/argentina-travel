@@ -22,6 +22,8 @@ import {
 } from "@/components/ui/dialog";
 import { useAdaptiveFloatingTone } from "@/hooks/useAdaptiveFloatingTone";
 import { floatingChromeButtonClass } from "@/lib/floating-chrome-button";
+import { cn } from "@/lib/cn";
+import { floatingChromeInsetClass } from "@/lib/site-container";
 import { searchSiteIndex, type SearchResultGroup } from "@/lib/site-search";
 import { getDefaultSearchIndex, loadSearchIndex } from "@/lib/site-search-client";
 import type { SearchIndexItem, SearchResultType } from "@/lib/site-search-index";
@@ -116,7 +118,7 @@ export default function SiteSearch() {
         data-floating-chrome="true"
         className={floatingChromeButtonClass(
           tone === "dark",
-          "fixed bottom-20 left-4 z-[90] sm:bottom-6"
+          cn(floatingChromeInsetClass, "fixed bottom-20 z-[90] sm:bottom-6")
         )}
         aria-label="Поиск по сайту"
       >

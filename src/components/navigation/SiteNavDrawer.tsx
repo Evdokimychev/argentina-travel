@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
+import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
 import { cn } from "@/lib/cn";
 import {
@@ -75,6 +76,60 @@ function DrawerLink({
   );
 }
 
+function DrawerSectionColumns({
+  section,
+  t,
+  pathname,
+  onNavigate,
+}: {
+  section: SiteNavSection;
+  t: NavTranslate;
+  pathname: string;
+  onNavigate: () => void;
+}) {
+  return (
+    <div className="space-y-4 px-1 pb-3 pt-2">
+      {section.id === "guide" ? (
+        <GuideMegaMenuPanel
+          columns={section.columns ?? []}
+          t={t}
+          onNavigate={onNavigate}
+          layout="drawer"
+          className="-mx-1"
+        />
+      ) : section.id === "immigration" ? (
+        <ImmigrationMegaMenuPanel
+          columns={section.columns ?? []}
+          t={t}
+          onNavigate={onNavigate}
+          layout="drawer"
+          className="-mx-1"
+        />
+      ) : (
+        (section.columns ?? []).map((column) => (
+          <div key={column.id}>
+            <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate">
+              {resolveNavLabel({ label: column.title ?? "", labelKey: column.titleKey }, t)}
+            </p>
+            <div className="space-y-0.5">
+              {column.links.map((link) => (
+                <DrawerLink
+                  key={link.id}
+                  link={link}
+                  t={t}
+                  pathname={pathname}
+                  onNavigate={onNavigate}
+                  compact
+                />
+              ))}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
 function DrawerSection({
   section,
   index,
@@ -91,8 +146,14 @@ function DrawerSection({
   const active = isNavSectionActive(pathname, section);
   const label = navSectionLabel(section, t);
   const num = String(index).padStart(2, "0");
+  const hasColumns = (section.columns?.length ?? 0) > 0;
+  const [expanded, setExpanded] = useState(() => active);
 
-  if (section.href && !section.columns?.length) {
+  useEffect(() => {
+    if (active) setExpanded(true);
+  }, [active]);
+
+  if (section.href && !hasColumns) {
     return (
       <Link
         href={section.href}
@@ -108,6 +169,54 @@ function DrawerSection({
     );
   }
 
+  if (section.href && hasColumns) {
+    return (
+      <div
+        className={cn(
+          "rounded-xl border border-border-subtle bg-surface-muted/40",
+          expanded && "bg-surface-muted/60"
+        )}
+      >
+        <div className="flex items-center justify-between gap-2 px-3 py-3">
+          <Link
+            href={section.href}
+            onClick={onNavigate}
+            className={cn(
+              "inline-flex min-w-0 flex-1 items-baseline gap-1 text-sm font-medium transition-colors",
+              active ? "text-sky" : "text-foreground hover:text-sky"
+            )}
+          >
+            {label}
+            <sup className="text-[10px] font-normal text-gray-400">{num}</sup>
+            {section.badge ? <NavBadge badge={section.badge} /> : null}
+          </Link>
+          <button
+            type="button"
+            onClick={() => setExpanded((prev) => !prev)}
+            aria-expanded={expanded}
+            aria-label={expanded ? `Свернуть «${label}»` : `Развернуть «${label}»`}
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+          >
+            <ChevronDown
+              className={cn("h-4 w-4 transition-transform", expanded && "rotate-180")}
+              aria-hidden
+            />
+          </button>
+        </div>
+        {expanded ? (
+          <div className="border-t border-border-subtle">
+            <DrawerSectionColumns
+              section={section}
+              t={t}
+              pathname={pathname}
+              onNavigate={onNavigate}
+            />
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <details className="group/section rounded-xl border border-border-subtle bg-surface-muted/40 open:bg-surface-muted/60">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-3 text-sm font-medium text-foreground marker:content-none">
@@ -118,39 +227,8 @@ function DrawerSection({
         </span>
         <ChevronDown className="h-4 w-4 shrink-0 text-slate transition-transform group-open/section:rotate-180" />
       </summary>
-      <div className="space-y-4 border-t border-border-subtle px-1 pb-3 pt-2">
-        {section.id === "guide" ? (
-          <GuideMegaMenuPanel
-            columns={section.columns ?? []}
-            t={t}
-            onNavigate={onNavigate}
-            layout="drawer"
-            className="-mx-1"
-          />
-        ) : (
-          (section.columns ?? []).map((column) => (
-            <div key={column.id}>
-              <p className="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wider text-slate">
-                {resolveNavLabel(
-                  { label: column.title ?? "", labelKey: column.titleKey },
-                  t
-                )}
-              </p>
-              <div className="space-y-0.5">
-                {column.links.map((link) => (
-                  <DrawerLink
-                    key={link.id}
-                    link={link}
-                    t={t}
-                    pathname={pathname}
-                    onNavigate={onNavigate}
-                    compact
-                  />
-                ))}
-              </div>
-            </div>
-          ))
-        )}
+      <div className="border-t border-border-subtle">
+        <DrawerSectionColumns section={section} t={t} pathname={pathname} onNavigate={onNavigate} />
       </div>
     </details>
   );
@@ -215,6 +293,13 @@ export function SiteNavFullMenu({
           {section.columns?.length ? (
             section.id === "guide" ? (
               <GuideMegaMenuPanel
+                columns={section.columns}
+                t={t}
+                onNavigate={onNavigate}
+                layout="drawer"
+              />
+            ) : section.id === "immigration" ? (
+              <ImmigrationMegaMenuPanel
                 columns={section.columns}
                 t={t}
                 onNavigate={onNavigate}

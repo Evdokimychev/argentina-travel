@@ -1,12 +1,17 @@
 import type { Metadata } from "next";
-import ImmigrationPageView from "@/components/immigration/ImmigrationPageView";
+import ImmigrationHubView from "@/components/immigration/ImmigrationHubView";
+import { IMMIGRATION_HUB } from "@/data/immigration-hub-content";
 
 export const metadata: Metadata = {
-  title: "Иммиграция и въезд — Пора в Аргентину",
+  title: "Иммиграция в Аргентину — ВНЖ, гражданство, RADEX | Пора в Аргентину",
   description:
-    "Справочные материалы о визах, документах для въезда и видах ВНЖ в Аргентине — для туристов и тех, кто планирует длительное пребывание.",
+    "Полный справочник по иммиграции: 14 оснований ВНЖ, путь к гражданству, DNU 366/2025, RADEX, документы и FAQ. Справочно, без юридических гарантий.",
+  openGraph: {
+    title: IMMIGRATION_HUB.heroTitle,
+    description: IMMIGRATION_HUB.heroSubtitle,
+  },
 };
 
 export default function ImmigrationPage() {
-  return <ImmigrationPageView />;
+  return <ImmigrationHubView />;
 }
