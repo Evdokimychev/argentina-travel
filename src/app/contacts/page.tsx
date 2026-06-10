@@ -4,10 +4,18 @@ import { Suspense, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Hero from "@/components/Hero";
 import { getTourBySlug } from "@/data/tours";
+import {
+  SITE_EMAIL,
+  SITE_OFFICE,
+  SITE_PHONES,
+  SITE_WHATSAPP_URL,
+  SITE_WORKING_HOURS,
+} from "@/data/site-contacts";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
+import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
 
 function ContactsForm() {
   const searchParams = useSearchParams();
@@ -128,12 +136,26 @@ export default function ContactsPage() {
     <>
       <Hero
         title="Контакты"
-        subtitle="Свяжитесь с нами — поможем спланировать ваше путешествие"
+        subtitle="Оставьте сообщение или задайте вопрос — мы с радостью ответим"
         image="https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80"
         compact
       />
 
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mb-10 flex flex-wrap gap-3">
+          <a
+            href={SITE_WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "inline-flex sm:px-8"
+            )}
+          >
+            Написать в WhatsApp
+          </a>
+        </div>
+
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
             <h2 className="font-display text-2xl font-bold text-charcoal">Напишите нам</h2>
@@ -154,76 +176,103 @@ export default function ContactsPage() {
             <h2 className="font-display text-2xl font-bold text-charcoal">Как нас найти</h2>
 
             <div className="mt-8 space-y-6">
-              {[
-                {
-                  icon: (
+              <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
+                  <svg
+                    className="h-6 w-6 text-sky"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
                     />
-                  ),
-                  title: "Телефон",
-                  content: "+7 (495) 123-45-67",
-                  sub: "Пн–Пт, 10:00–19:00 (МСК)",
-                },
-                {
-                  icon: (
+                  </svg>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="font-semibold text-charcoal">WhatsApp и Telegram</p>
+                  <ul className="mt-2 space-y-1.5">
+                    {SITE_PHONES.map((phone) => (
+                      <li key={phone.tel}>
+                        <a
+                          href={phone.whatsapp}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate transition-colors hover:text-sky"
+                        >
+                          {phone.display}
+                        </a>
+                        <span className="ml-2 text-xs text-slate/60">{phone.label}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-sm text-slate/70">{SITE_WORKING_HOURS}</p>
+                  <ContactTeamStatus />
+                </div>
+              </div>
+
+              <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
+                  <svg
+                    className="h-6 w-6 text-sky"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
                       d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                     />
-                  ),
-                  title: "Email",
-                  content: "info@argentina-travel.ru",
-                  sub: "Ответим в течение 24 часов",
-                },
-                {
-                  icon: (
-                    <>
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </>
-                  ),
-                  title: "Офис",
-                  content: "Москва, ул. Путешествий, 1",
-                  sub: "м. Парк культуры",
-                },
-              ].map((item) => (
-                <div
-                  key={item.title}
-                  className="flex gap-4 rounded-2xl bg-white p-5 shadow-md"
-                >
-                  <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
-                    <svg
-                      className="h-6 w-6 text-sky"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      {item.icon}
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-charcoal">{item.title}</p>
-                    <p className="mt-1 text-slate">{item.content}</p>
-                    <p className="mt-0.5 text-sm text-slate/70">{item.sub}</p>
-                  </div>
+                  </svg>
                 </div>
-              ))}
+                <div>
+                  <p className="font-semibold text-charcoal">Email</p>
+                  <a
+                    href={SITE_EMAIL.href}
+                    className="mt-1 block text-slate transition-colors hover:text-sky"
+                  >
+                    {SITE_EMAIL.display}
+                  </a>
+                  <p className="mt-0.5 text-sm text-slate/70">{SITE_EMAIL.note}</p>
+                </div>
+              </div>
+
+              <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
+                  <svg
+                    className="h-6 w-6 text-sky"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    aria-hidden
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                    />
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-semibold text-charcoal">Где мы находимся</p>
+                  <p className="mt-1 text-slate">{SITE_OFFICE.display}</p>
+                  <p className="mt-0.5 text-sm text-slate/70">{SITE_OFFICE.note}</p>
+                </div>
+              </div>
             </div>
 
             <div className="mt-8 flex h-64 items-center justify-center overflow-hidden rounded-2xl bg-gray-200">
@@ -233,6 +282,7 @@ export default function ContactsPage() {
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
+                  aria-hidden
                 >
                   <path
                     strokeLinecap="round"
@@ -241,7 +291,7 @@ export default function ContactsPage() {
                     d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
                   />
                 </svg>
-                <p className="mt-2 text-sm">Карта офиса</p>
+                <p className="mt-2 text-sm">Буэнос-Айрес, Аргентина</p>
               </div>
             </div>
           </div>
