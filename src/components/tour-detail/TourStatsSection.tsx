@@ -22,7 +22,6 @@ import type { TourLanguage } from "@/types";
 
 interface TourStatsSectionProps {
   tour: TourDetail;
-  difficultyDescription?: string;
   maximumAge?: number | null;
   maxWeightEnabled?: boolean;
   maxWeightKg?: number | null;
@@ -112,7 +111,6 @@ function StatColumn({
 
 export default function TourStatsSection({
   tour,
-  difficultyDescription,
   maximumAge,
   maxWeightEnabled,
   maxWeightKg,
@@ -124,6 +122,7 @@ export default function TourStatsSection({
   const comfortLevel = resolveTourComfortLevel(tour);
   const difficultyDots = DIFFICULTY_DOT_COUNT[tour.difficulty] ?? 3;
   const comfortDots = COMFORT_DOT_COUNT[comfortLevel] ?? 0;
+  const hasDifficultyDetails = Boolean(tour.descriptionExtra?.difficulty.trim());
 
   return (
     <section>
@@ -137,8 +136,8 @@ export default function TourStatsSection({
             <span className="text-sm text-slate">{tour.difficulty}</span>
             <DotRating filled={difficultyDots} variant="difficulty" />
           </div>
-          {difficultyDescription?.trim() ? (
-            <p className="mt-2 text-sm leading-relaxed text-slate">{difficultyDescription}</p>
+          {hasDifficultyDetails ? (
+            <SectionLink href="#description">Подробнее о сложности</SectionLink>
           ) : null}
           <SectionLink href="#route-map">К маршруту</SectionLink>
         </StatColumn>

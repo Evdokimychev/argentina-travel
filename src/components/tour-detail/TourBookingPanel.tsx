@@ -19,9 +19,14 @@ import { useTourBooking } from "./TourBookingContext";
 interface TourBookingPanelProps {
   tour: TourDetail;
   className?: string;
+  previewMode?: boolean;
 }
 
-export default function TourBookingPanel({ tour, className }: TourBookingPanelProps) {
+export default function TourBookingPanel({
+  tour,
+  className,
+  previewMode = false,
+}: TourBookingPanelProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
   const [bookingError, setBookingError] = useState<string | null>(null);
   const {
@@ -125,23 +130,31 @@ export default function TourBookingPanel({ tour, className }: TourBookingPanelPr
 
       <BookingAdvantages items={advantages} className="mt-5 border-t border-gray-100 pt-5" />
 
-      {bookingError && (
-        <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{bookingError}</p>
-      )}
+      {previewMode ? (
+        <div className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal">
+          Бронирование недоступно в режиме предпросмотра. Опубликуйте тур, чтобы принимать заявки.
+        </div>
+      ) : (
+        <>
+          {bookingError && (
+            <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{bookingError}</p>
+          )}
 
-      <button
-        type="button"
-        onClick={handleBookClick}
-        className="mt-5 block w-full rounded-xl bg-brand py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-brand/90"
-      >
-        {bookLabel}
-      </button>
-      <Link
-        href="/contacts"
-        className="mt-2 block w-full rounded-xl border border-gray-200 py-3 text-center text-sm font-medium text-charcoal hover:bg-gray-50"
-      >
-        Задать вопрос
-      </Link>
+          <button
+            type="button"
+            onClick={handleBookClick}
+            className="mt-5 block w-full rounded-xl bg-brand py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-brand/90"
+          >
+            {bookLabel}
+          </button>
+          <Link
+            href="/contacts"
+            className="mt-2 block w-full rounded-xl border border-gray-200 py-3 text-center text-sm font-medium text-charcoal hover:bg-gray-50"
+          >
+            Задать вопрос
+          </Link>
+        </>
+      )}
     </div>
   );
 }

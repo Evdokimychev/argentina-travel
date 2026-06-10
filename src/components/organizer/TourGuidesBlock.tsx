@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { ChevronDown, Plus, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -8,10 +8,16 @@ import UserAvatar from "@/components/auth/UserAvatar";
 import { useAuth } from "@/context/AuthContext";
 import {
   ORGANIZER_TOUR_GUIDES_MAX,
-  TOUR_GUIDE_CATALOG,
+  ORGANIZER_TEAM_GUIDES_MAX,
   buildTourAuthorGuide,
+  teamGuideFromTourGuide,
 } from "@/data/tour-guides-defaults";
-import { readOrganizerProfile } from "@/lib/organizer-profile-store";
+import {
+  ORGANIZER_PROFILE_UPDATED_EVENT,
+  readOrganizerGuideTeam,
+  readOrganizerProfile,
+  updateOrganizerProfile,
+} from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
 import TourGuideCreateModal from "@/components/organizer/TourGuideCreateModal";
@@ -99,6 +105,16 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
   const { user } = useAuth();
   const [pickerOpen, setPickerOpen] = useState(false);
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [teamVersion, setTeamVersion] = useState(0);
+
+  useEffect(() => {
+    function handleProfileUpdate() {
+      setTeamVersion((value) => value + 1);
+    }
+
+    window.addEventListener(ORGANIZER_PROFILE_UPDATED_EVENT, handleProfileUpdate);
+    return () => window.removeEventListener(ORGANIZER_PROFILE_UPDATED_EVENT, handleProfileUpdate);
+  }, []);
 
   const resolvedGuides = useMemo(() => {
     if (!user) return guides;
@@ -112,19 +128,25 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
         ...guide,
         name: user.fullName || guide.name,
         avatar: user.avatarUrl || guide.avatar,
-        bio: profile.bio.trim() || guide.bio,
+        bio: profile.extendedDescription.trim() || guide.bio,
       };
     });
   }, [guides, user]);
 
+  const teamGuides = useMemo(() => {
+    if (!user) return [];
+    return readOrganizerGuideTeam(user.id);
+    // teamVersion keeps the list in sync after profile updates
+  }, [user, teamVersion]);
+
   const assignedIds = new Set(guides.map((guide) => guide.id));
-  const availableGuides = TOUR_GUIDE_CATALOG.filter((guide) => !assignedIds.has(guide.id));
+  const availableGuides = teamGuides.filter((guide) => !assignedIds.has(guide.id));
   const canAdd = guides.length < ORGANIZER_TOUR_GUIDES_MAX;
   const showAuthorInPicker =
     Boolean(user) &&
     !guides.some((guide) => guide.userId === user?.id) &&
     canAdd;
-  const hasCatalogOptions = showAuthorInPicker || availableGuides.length > 0;
+  const hasTeamOptions = showAuthorInPicker || availableGuides.length > 0;
 
   function addGuide(guide: Omit<OrganizerTourGuide, "isTourAuthor">) {
     if (guides.length >= ORGANIZER_TOUR_GUIDES_MAX) return;
@@ -134,6 +156,15 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
 
   function addCustomGuide(guide: OrganizerTourGuide) {
     if (guides.length >= ORGANIZER_TOUR_GUIDES_MAX) return;
+
+    if (user) {
+      const team = readOrganizerGuideTeam(user.id);
+      const teamGuide = teamGuideFromTourGuide(guide);
+      if (!team.some((item) => item.id === teamGuide.id) && team.length < ORGANIZER_TEAM_GUIDES_MAX) {
+        updateOrganizerProfile(user.id, { guides: [...team, teamGuide] });
+      }
+    }
+
     onChange([...guides, guide]);
     setPickerOpen(false);
   }
@@ -153,7 +184,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
         id: `guide-author-${user.id}`,
         name: user.fullName,
         avatar: user.avatarUrl || buildTourAuthorGuide().avatar,
-        bio: profile.bio.trim() || buildTourAuthorGuide().bio,
+        bio: profile.extendedDescription.trim() || buildTourAuthorGuide().bio,
         userId: user.id,
       }),
     ]);
@@ -234,7 +265,17 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
                 </button>
               ))}
 
-              {hasCatalogOptions ? <div className="my-1 border-t border-gray-100" /> : null}
+              {!hasTeamOptions ? (
+                <p className="px-3 py-2 text-xs leading-relaxed text-slate">
+                  Команда пуста.{" "}
+                  <Link href="/organizer/settings?tab=guides" className="font-medium text-brand hover:underline">
+                    Добавьте гидов в настройках
+                  </Link>{" "}
+                  или создайте нового ниже.
+                </p>
+              ) : null}
+
+              {hasTeamOptions ? <div className="my-1 border-t border-gray-100" /> : null}
 
               <button
                 type="button"
@@ -246,7 +287,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
                 </span>
                 <div className="min-w-0">
                   <p className="text-sm font-semibold text-charcoal">Создать нового гида</p>
-                  <p className="text-xs text-slate">Фото, имя и описание</p>
+                  <p className="text-xs text-slate">Добавится в команду и на этот тур</p>
                 </div>
               </button>
             </div>
@@ -261,15 +302,15 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
       <TourGuideCreateModal
         open={createModalOpen}
         onClose={() => setCreateModalOpen(false)}
-        onCreate={addCustomGuide}
+        onSave={addCustomGuide}
       />
 
       <p className="text-xs text-slate">
-        Описание автора тура можно изменить в{" "}
-        <Link href="/organizer/settings" className="font-medium text-brand hover:underline">
+        Команду гидов можно редактировать в{" "}
+        <Link href="/organizer/settings?tab=guides" className="font-medium text-brand hover:underline">
           настройках профиля
         </Link>
-        .
+        . Описание автора тура — в разделе «Основное».
       </p>
     </section>
   );

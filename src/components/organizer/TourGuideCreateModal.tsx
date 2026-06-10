@@ -11,21 +11,28 @@ import {
   createCustomGuide,
 } from "@/data/tour-guides-defaults";
 import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
-import { joinFullName } from "@/lib/full-name";
+import { joinFullName, splitFullName } from "@/lib/full-name";
 import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import type { OrganizerTeamGuide } from "@/types/organizer-profile";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
 
 interface TourGuideCreateModalProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (guide: OrganizerTourGuide) => void;
+  /** @deprecated Use onSave */
+  onCreate?: (guide: OrganizerTourGuide) => void;
+  onSave?: (guide: OrganizerTourGuide) => void;
+  initialGuide?: OrganizerTeamGuide | OrganizerTourGuide;
 }
 
 export default function TourGuideCreateModal({
   open,
   onClose,
   onCreate,
+  onSave,
+  initialGuide,
 }: TourGuideCreateModalProps) {
+  const isEditing = Boolean(initialGuide);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -36,15 +43,33 @@ export default function TourGuideCreateModal({
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (open) return;
-    setLastName("");
-    setFirstName("");
-    setBio("");
-    setAvatar("");
+    if (!open) {
+      setLastName("");
+      setFirstName("");
+      setBio("");
+      setAvatar("");
+      setUrlInput("");
+      setError(null);
+      setUploading(false);
+      return;
+    }
+
+    if (initialGuide) {
+      const { firstName: nextFirst, lastName: nextLast } = splitFullName(initialGuide.name);
+      setFirstName(nextFirst);
+      setLastName(nextLast);
+      setBio(initialGuide.bio);
+      setAvatar(initialGuide.avatar);
+    } else {
+      setLastName("");
+      setFirstName("");
+      setBio("");
+      setAvatar("");
+    }
     setUrlInput("");
     setError(null);
     setUploading(false);
-  }, [open]);
+  }, [open, initialGuide]);
 
   useEffect(() => {
     if (!open) return;
@@ -128,14 +153,15 @@ export default function TourGuideCreateModal({
       return;
     }
 
-    onCreate(
-      createCustomGuide({
-        firstName,
-        lastName,
-        avatar,
-        bio,
-      })
-    );
+    const guide = createCustomGuide({
+      id: initialGuide?.id,
+      firstName,
+      lastName,
+      avatar,
+      bio,
+    });
+
+    (onSave ?? onCreate)?.(guide);
     onClose();
   }
 
@@ -158,9 +184,13 @@ export default function TourGuideCreateModal({
               id="tour-guide-create-title"
               className="font-display text-lg font-bold text-charcoal sm:text-xl"
             >
-              Новый гид
+              {isEditing ? "Редактировать гида" : "Новый гид"}
             </h3>
-            <p className="mt-1 text-sm text-slate">Загрузите фото и заполните данные гида</p>
+            <p className="mt-1 text-sm text-slate">
+              {isEditing
+                ? "Обновите фото и данные гида"
+                : "Загрузите фото и заполните данные гида"}
+            </p>
           </div>
           <button
             type="button"
@@ -295,7 +325,7 @@ export default function TourGuideCreateModal({
           <Button type="button" variant="outline" onClick={onClose}>
             Отмена
           </Button>
-          <Button type="submit">Добавить гида</Button>
+          <Button type="submit">{isEditing ? "Сохранить" : "Добавить гида"}</Button>
         </div>
       </form>
     </div>

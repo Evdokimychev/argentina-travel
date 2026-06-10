@@ -1,6 +1,8 @@
 // Supabase-ready marketplace tour listing type
 // Maps to `tours` table + related fields
 
+import type { OrganizerProfessionalExperience } from "@/types/organizer-profile";
+
 export type TourBadge = "hot" | "new" | "hit" | "family" | "expedition";
 
 export type ActivityType =
@@ -229,6 +231,7 @@ export interface RichTextBlock {
 }
 
 export interface TourDescriptionExtra {
+  difficulty: string;
   seasonality: string;
   packing: string[];
   flights: string;
@@ -242,11 +245,17 @@ export interface TourOrganizerDetail {
   name: string;
   role: string;
   avatar: string;
+  shortDescription?: string;
+  extendedDescription?: string;
   rating: number;
   tourCount: number;
   travelerCount: number;
   languages: string[];
   experienceYears: number;
+  /** ISO date when organizer registered on the platform. */
+  platformRegisteredAt?: string;
+  /** Organizer-provided professional experience (settings). */
+  professionalExperience?: OrganizerProfessionalExperience | null;
   phone: string;
   email: string;
 }

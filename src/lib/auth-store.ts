@@ -172,6 +172,11 @@ export function findUserByEmail(email: string): StoredAuthUser | null {
   return getAllUsers().find((user) => user.email.toLowerCase() === normalized) ?? null;
 }
 
+export function getUserById(userId: string): User | null {
+  const stored = getAllUsers().find((user) => user.id === userId);
+  return stored ? toUserRecord(stored) : null;
+}
+
 function toUserRecord(user: StoredAuthUser, activeRole?: AccountRole): User {
   const roles = normalizeAccountRoles(user);
   const role =

@@ -28,21 +28,37 @@ import { TourBookingProvider } from "./TourBookingContext";
 import MobileBookingBar from "./MobileBookingBar";
 import TourCheckoutModal from "./checkout/TourCheckoutModal";
 import TourSectionNav from "./TourSectionNav";
+import TourPreviewBanner from "./TourPreviewBanner";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import { hasVisibleGuides } from "@/lib/tour-public-display";
+import type { Tour } from "@/types/tour";
 
 interface TourDetailViewProps {
   slug: string;
   tour?: TourDetail | null;
   similarTours: TourDetail[];
+  previewMode?: boolean;
+  previewCanonicalTour?: Tour | null;
+  previewEditHref?: string;
+  previewIsPublished?: boolean;
 }
 
-export default function TourDetailView({ slug, tour: initialTour, similarTours }: TourDetailViewProps) {
-  const tour = useRepositoryTourDetail(slug, initialTour);
-  const canonicalTour = useCanonicalTour(slug);
+export default function TourDetailView({
+  slug,
+  tour: initialTour,
+  similarTours,
+  previewMode = false,
+  previewCanonicalTour = null,
+  previewEditHref,
+  previewIsPublished = false,
+}: TourDetailViewProps) {
+  const syncedTour = useRepositoryTourDetail(slug, initialTour);
+  const liveCanonicalTour = useCanonicalTour(slug);
+  const tour = previewMode ? initialTour ?? null : syncedTour;
+  const canonicalTour = previewMode ? previewCanonicalTour : liveCanonicalTour;
 
   if (!tour) {
     return (
@@ -66,6 +82,14 @@ export default function TourDetailView({ slug, tour: initialTour, similarTours }
   return (
     <TourBookingProvider tour={tour}>
       <div className="bg-pampas pb-20">
+        {previewMode && previewEditHref ? (
+          <TourPreviewBanner
+            title={tour.title}
+            editHref={previewEditHref}
+            isPublished={previewIsPublished}
+          />
+        ) : null}
+
         <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8 lg:pt-6">
           <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-slate">
             <Link href="/" className="hover:text-sky">Главная</Link>
@@ -87,7 +111,6 @@ export default function TourDetailView({ slug, tour: initialTour, similarTours }
               {canonicalTour ? <TourClassificationBar tour={canonicalTour} /> : null}
               <TourStatsSection
                 tour={tour}
-                difficultyDescription={canonicalTour?.levels.difficultyDescription}
                 maximumAge={canonicalTour?.participants.maximumAge}
                 maxWeightEnabled={canonicalTour?.participants.maxWeightEnabled}
                 maxWeightKg={canonicalTour?.participants.maxWeightKg}
@@ -123,17 +146,17 @@ export default function TourDetailView({ slug, tour: initialTour, similarTours }
               <DatesSection tour={tour} canonicalTour={canonicalTour} />
               <OrganizerSection organizer={tour.organizer} comment={tour.organizerComment} />
               <ReviewsSection reviews={tour.reviews} rating={tour.rating} reviewCount={tour.reviewCount} />
-              <SimilarToursSection tours={similarTours} />
+              {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
             </div>
 
             <aside className="hidden lg:sticky lg:top-[calc(var(--site-header-height,72px)+1rem)] lg:block lg:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] lg:w-full lg:self-start lg:overflow-y-auto">
-              <TourSidebar tour={tour} canonicalTour={canonicalTour} />
+              <TourSidebar tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
             </aside>
           </div>
         </div>
 
-        <MobileBookingBar tour={tour} />
-        <TourCheckoutModal tour={tour} />
+        {!previewMode ? <MobileBookingBar tour={tour} /> : null}
+        {!previewMode ? <TourCheckoutModal tour={tour} /> : null}
       </div>
     </TourBookingProvider>
   );

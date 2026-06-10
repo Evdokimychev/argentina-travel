@@ -41,6 +41,10 @@ import {
   type OrganizerTourListing,
 } from "@/types/organizer-tour";
 import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
+import {
+  normalizeParticipantRecommendations,
+  normalizeRouteFeaturesText,
+} from "@/data/tour-organizer-display-defaults";
 import type { TourLanguage } from "@/types";
 import {
   markTourDeletedBySlug,
@@ -269,6 +273,10 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     arrivalTransfersText: "",
     arrivalMeetingPoint: "",
     checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
+    participantRecommendations: detail?.organizerComment?.recommendations?.length
+      ? [...detail.organizerComment.recommendations]
+      : [],
+    routeFeaturesText: detail?.organizerComment?.routeNotes ?? "",
     updatedAt: listing.updatedAt,
   };
 
@@ -348,6 +356,8 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     arrivalTransfersText: "",
     arrivalMeetingPoint: "",
     checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
+    participantRecommendations: [],
+    routeFeaturesText: "",
     updatedAt: new Date().toISOString(),
   };
 }
@@ -482,6 +492,14 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
       : seed.arrivalMeetingPoint,
     checkoutPaymentOptions: normalizeTourCheckoutPaymentOptions(
       draft.checkoutPaymentOptions ?? seed.checkoutPaymentOptions
+    ),
+    participantRecommendations: normalizeParticipantRecommendations(
+      draft.participantRecommendations?.length
+        ? draft.participantRecommendations
+        : seed.participantRecommendations
+    ),
+    routeFeaturesText: normalizeRouteFeaturesText(
+      draft.routeFeaturesText?.trim() ? draft.routeFeaturesText : seed.routeFeaturesText
     ),
     maxWeightEnabled:
       draft.maxWeightEnabled ??

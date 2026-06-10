@@ -125,6 +125,25 @@ export function getRepositoryTourDetail(slug: string): TourDetail | undefined {
   return tourToDetail(tour);
 }
 
+export function buildTourDetailFromOrganizerDraft(draft: OrganizerTourDraft): {
+  tour: TourDetail;
+  canonical: Tour;
+} {
+  const catalogSlug = getCatalogSlug(draft);
+  const base = resolveBaseTourForDraft(draft, catalogSlug);
+  const canonical = organizerDraftToTour(draft, {
+    ...base,
+    id: base.id.startsWith("org-") ? draft.id : base.id,
+    slug: catalogSlug,
+    organizerTourId: draft.id,
+  });
+
+  return {
+    tour: tourToDetail(canonical),
+    canonical,
+  };
+}
+
 function resolveBaseTourForDraft(draft: OrganizerTourDraft, catalogSlug: string): Tour {
   const store = getTourStore();
   const existing = store[catalogSlug];

@@ -1,6 +1,7 @@
 import { TourDescriptionExtra, TourDetail } from "@/types";
 
 const patagoniaExtra: TourDescriptionExtra = {
+  difficulty: "",
   seasonality:
     "Лучшее время — с октября по апрель (южное лето). Пик сезона: декабрь–февраль. Ветрено круглый год, температура +5…+18 °C. Зимой (июнь–август) часть маршрутов может быть ограничена погодой.",
   packing: [
@@ -31,6 +32,7 @@ function buildDefaultExtra(tour: TourDetail): TourDescriptionExtra {
   );
 
   return {
+    difficulty: "",
     seasonality: `Оптимальный сезон для региона «${tour.region}» уточняйте при бронировании. Погода может меняться — возьмите слои одежды.`,
     packing: tour.organizerComment.recommendations.length
       ? [...tour.organizerComment.recommendations]
@@ -56,6 +58,7 @@ export function getTourDescriptionExtra(tour: TourDetail): TourDescriptionExtra 
 }
 
 export const DESCRIPTION_EXTRA_TABS = [
+  { id: "difficulty", label: "Сложность" },
   { id: "seasonality", label: "Сезонность" },
   { id: "packing", label: "Что взять" },
   { id: "flights", label: "Перелёт" },

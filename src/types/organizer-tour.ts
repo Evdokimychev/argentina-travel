@@ -119,6 +119,10 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   arrivalTransfersText: string;
   arrivalMeetingPoint: string;
   checkoutPaymentOptions: TourCheckoutPaymentOptions;
+  /** Up to 6 tips for participants — shown in organizer card. */
+  participantRecommendations: string[];
+  /** Route features text — shown in organizer card. */
+  routeFeaturesText: string;
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;

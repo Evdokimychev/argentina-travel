@@ -1,5 +1,12 @@
 import type { OrganizerTourDraft } from "@/types/organizer-tour";
 import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
+import {
+  normalizeParticipantRecommendations,
+  normalizeRouteFeaturesText,
+} from "@/data/tour-organizer-display-defaults";
+import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
+import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
+import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
 import type {
   ChildrenPolicy,
   DurationBucket,
@@ -12,12 +19,23 @@ import type {
   TourItineraryDay,
   TourListing,
 } from "@/types";
-import type { Tour, TourStatus } from "@/types/tour";
+import type { Tour, TourOrganizerComment, TourStatus } from "@/types/tour";
 import { primaryComfortLevel } from "@/data/tour-levels";
 import { textToListItems } from "@/data/tour-terms-defaults";
 import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
 import { getTourRoutePoints } from "@/data/tour-routes";
 import { getLegacyTourDetail } from "@/lib/tours-legacy";
+
+function buildOrganizerCommentFromDraft(
+  draft: OrganizerTourDraft,
+  fallback: TourOrganizerComment
+): TourOrganizerComment {
+  return {
+    greeting: fallback.greeting,
+    recommendations: normalizeParticipantRecommendations(draft.participantRecommendations),
+    routeNotes: normalizeRouteFeaturesText(draft.routeFeaturesText),
+  };
+}
 
 function durationBucket(days: number): DurationBucket {
   if (days <= 2) return "1–2 дня";
@@ -133,6 +151,7 @@ function buildDescriptionExtra(tour: Tour, fallback?: TourDescriptionExtra): Tou
       : fallback?.packing ?? [];
 
   return {
+    difficulty: tour.levels.difficultyDescription?.trim() || fallback?.difficulty || "",
     seasonality: fallback?.seasonality ?? "",
     packing,
     flights:
@@ -407,13 +426,7 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
             languages: draft.languages,
           }
         : base.team.organizerDetail,
-      organizerComment: authorGuide?.bio
-        ? {
-            greeting: authorGuide.bio.split("\n")[0] ?? base.team.organizerComment.greeting,
-            recommendations: base.team.organizerComment.recommendations,
-            routeNotes: draft.shortDescription || base.team.organizerComment.routeNotes,
-          }
-        : base.team.organizerComment,
+      organizerComment: buildOrganizerCommentFromDraft(draft, base.team.organizerComment),
     },
     terms: {
       included: included.length ? included : base.terms.included,
@@ -577,7 +590,12 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
       ? mapProgramDaysToItinerary(tour.program.days)
       : legacy?.itinerary ?? [],
     organizerComment: tour.team.organizerComment,
-    organizer: tour.team.organizerDetail,
+    organizer: enrichTourOrganizerDetail(
+      tour.team.organizerDetail,
+      tour.organizerTourId
+        ? getOrganizerTourOwnerId(tour.organizerTourId)
+        : DEFAULT_ORGANIZER_OWNER_ID
+    ),
     reviews: tour.social.reviews,
     accommodations: publicAccommodations,
     included: tour.terms.included,
@@ -711,11 +729,11 @@ export function createMinimalTourFromDraft(
         phone: "",
         email: "",
       },
-      organizerComment: {
+      organizerComment: buildOrganizerCommentFromDraft(draft, {
         greeting: "",
         recommendations: [],
-        routeNotes: draft.shortDescription,
-      },
+        routeNotes: "",
+      }),
     },
     terms: {
       included,

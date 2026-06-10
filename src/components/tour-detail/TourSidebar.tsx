@@ -9,12 +9,13 @@ import EarlyBookingDiscounts from "./EarlyBookingDiscounts";
 interface TourSidebarProps {
   tour: TourDetail;
   canonicalTour?: Tour | null;
+  previewMode?: boolean;
 }
 
-export default function TourSidebar({ tour, canonicalTour }: TourSidebarProps) {
+export default function TourSidebar({ tour, canonicalTour, previewMode = false }: TourSidebarProps) {
   return (
     <div className="space-y-4">
-      <TourBookingPanel tour={tour} />
+      <TourBookingPanel tour={tour} previewMode={previewMode} />
       {canonicalTour ? <EarlyBookingDiscounts tour={canonicalTour} compact /> : null}
       <OrganizerSection organizer={tour.organizer} compact />
     </div>

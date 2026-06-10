@@ -14,6 +14,7 @@ interface TourTermsListBlockProps {
   placeholder?: string;
   addLabel?: string;
   variant?: "standalone" | "embedded";
+  maxItems?: number;
 }
 
 function createRowKey() {
@@ -37,8 +38,9 @@ export default function TourTermsListBlock({
   placeholder = "Введите пункт",
   addLabel = "Добавить пункт",
   variant = "standalone",
+  maxItems = ORGANIZER_TOUR_TERMS_ITEMS_MAX,
 }: TourTermsListBlockProps) {
-  const canAdd = items.length < ORGANIZER_TOUR_TERMS_ITEMS_MAX;
+  const canAdd = items.length < maxItems;
   const embedded = variant === "embedded";
   const list = items.length ? items : [""];
   const canReorder = list.length > 1;

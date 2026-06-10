@@ -15,6 +15,7 @@ import {
   saveOrganizerTourDraft,
 } from "@/lib/organizer-tour-store";
 import { getCatalogSlug } from "@/lib/tour-slug";
+import { stageOrganizerTourPreviewDraft } from "@/lib/tour-preview";
 import { cn } from "@/lib/cn";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
 import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
@@ -26,6 +27,8 @@ import TourGeneralDescriptionBlock from "@/components/organizer/TourGeneralDescr
 import TourPhotosBlock from "@/components/organizer/TourPhotosBlock";
 import TourImpressionsBlock from "@/components/organizer/TourImpressionsBlock";
 import TourGuidesBlock from "@/components/organizer/TourGuidesBlock";
+import TourParticipantRecommendationsBlock from "@/components/organizer/TourParticipantRecommendationsBlock";
+import TourRouteFeaturesBlock from "@/components/organizer/TourRouteFeaturesBlock";
 import TourComfortBlock from "@/components/organizer/TourComfortBlock";
 import TourAccommodationDescriptionBlock from "@/components/organizer/TourAccommodationDescriptionBlock";
 import TourAccommodationVariantsBlock from "@/components/organizer/TourAccommodationVariantsBlock";
@@ -414,6 +417,7 @@ function TourEditorSidebar({
   onArchive,
   onClone,
   onDelete,
+  onPreview,
 }: {
   draft: OrganizerTourDraft;
   loading: boolean;
@@ -422,12 +426,13 @@ function TourEditorSidebar({
   onArchive: () => void;
   onClone: () => void;
   onDelete: () => void;
+  onPreview: () => void;
 }) {
   const isPublished = draft.status === "published";
-  const platformName = draft.partnerName || "Клуб Гидов";
+  const platformName = draft.partnerName || "Пора в Аргентину";
   const catalogSlug = getCatalogSlug(draft);
   const tourUrl = `/tours/${catalogSlug}`;
-  const previewUrl = `${tourUrl}?preview=1`;
+  const previewUrl = `/organizer/tours/${draft.id}/preview`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
   const statusLabel = isPublished ? "Опубликовано" : "Черновик";
@@ -491,12 +496,31 @@ function TourEditorSidebar({
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <h2 className="font-display text-base font-bold text-charcoal">Предпросмотр тура</h2>
-          <div className="mt-3 flex items-center gap-2">
-            <Link href={previewUrl} target="_blank" className="text-sm font-medium text-sky hover:underline">
-              {platformName}
-            </Link>
-            <Eye className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-          </div>
+          <p className="mt-1.5 line-clamp-2 text-xs text-slate">
+            {draft.title.trim() || "Без названия"}
+          </p>
+          <button
+            type="button"
+            onClick={onPreview}
+            className="mt-3 flex w-full items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3 text-left transition-colors hover:border-brand/30 hover:bg-brand-light/40"
+          >
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold text-charcoal">{platformName}</span>
+              <span className="mt-0.5 block text-xs text-slate">Как увидят туристы</span>
+            </span>
+            <Eye className="h-5 w-5 shrink-0 text-brand" aria-hidden />
+          </button>
+          <p className="mt-2 text-xs leading-relaxed text-slate">
+            Откроется в новой вкладке с учётом текущих изменений из редактора.
+          </p>
+          <Link
+            href={previewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
+          >
+            Открыть сохранённую версию
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -650,6 +674,12 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     setSaved(true);
   }
 
+  function handlePreview() {
+    if (!draft) return;
+    stageOrganizerTourPreviewDraft(draft);
+    window.open(`/organizer/tours/${draft.id}/preview`, "_blank", "noopener,noreferrer");
+  }
+
   function handleClone() {
     const result = cloneOrganizerTour(tourId, user);
     if ("error" in result) {
@@ -698,6 +728,14 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-2 lg:pt-1">
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200/80 bg-white px-4 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50 xl:hidden"
+          >
+            <Eye className="h-4 w-4 text-brand" />
+            Предпросмотр
+          </button>
           {draft.status === "published" ? (
             <Link
               href={`/tours/${draft.slug}`}
@@ -1013,6 +1051,20 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               />
             ) : null}
 
+            {activeTab === "main" ? (
+              <TourParticipantRecommendationsBlock
+                items={draft.participantRecommendations}
+                onChange={(participantRecommendations) => updateDraft({ participantRecommendations })}
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourRouteFeaturesBlock
+                text={draft.routeFeaturesText}
+                onChange={(routeFeaturesText) => updateDraft({ routeFeaturesText })}
+              />
+            ) : null}
+
             {activeTab === "description" ? (
               <>
                 <TourComfortBlock
@@ -1249,6 +1301,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             onArchive={() => updateDraft({ archived: true, status: "draft" })}
             onClone={handleClone}
             onDelete={handleDelete}
+            onPreview={handlePreview}
           />
         </div>
     </form>

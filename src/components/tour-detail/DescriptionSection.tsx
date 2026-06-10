@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { RichTextBlock, TourDescriptionExtra } from "@/types";
+import { normalizeEditorValue } from "@/lib/rich-text";
 import {
   DESCRIPTION_EXTRA_TABS,
   type DescriptionExtraTabId,
@@ -17,6 +18,8 @@ interface DescriptionSectionProps {
 
 function tabHasContent(tabId: DescriptionExtraTabId, extra: TourDescriptionExtra): boolean {
   switch (tabId) {
+    case "difficulty":
+      return extra.difficulty.trim().length > 0;
     case "seasonality":
       return extra.seasonality.trim().length > 0;
     case "packing":
@@ -42,6 +45,13 @@ function ExtraTabContent({
   extra: TourDescriptionExtra;
 }) {
   switch (tabId) {
+    case "difficulty":
+      return (
+        <div
+          className="rich-text-editor-content text-sm leading-relaxed text-slate"
+          dangerouslySetInnerHTML={{ __html: normalizeEditorValue(extra.difficulty) }}
+        />
+      );
     case "seasonality":
       return <p className="leading-relaxed text-slate">{extra.seasonality}</p>;
     case "packing":
@@ -74,12 +84,12 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
     [extra]
   );
   const [activeTab, setActiveTab] = useState<DescriptionExtraTabId>(
-    visibleTabs[0]?.id ?? "seasonality"
+    visibleTabs[0]?.id ?? "difficulty"
   );
 
   useEffect(() => {
     if (!visibleTabs.some((tab) => tab.id === activeTab)) {
-      setActiveTab(visibleTabs[0]?.id ?? "seasonality");
+      setActiveTab(visibleTabs[0]?.id ?? "difficulty");
     }
   }, [activeTab, visibleTabs]);
 
