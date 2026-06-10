@@ -40,6 +40,7 @@ import {
   type OrganizerTourDraft,
   type OrganizerTourListing,
 } from "@/types/organizer-tour";
+import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
 import type { TourLanguage } from "@/types";
 import {
   markTourDeletedBySlug,
@@ -267,6 +268,7 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     arrivalAirportsText: "",
     arrivalTransfersText: "",
     arrivalMeetingPoint: "",
+    checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
     updatedAt: listing.updatedAt,
   };
 
@@ -345,6 +347,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     arrivalAirportsText: "",
     arrivalTransfersText: "",
     arrivalMeetingPoint: "",
+    checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
     updatedAt: new Date().toISOString(),
   };
 }
@@ -477,6 +480,9 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
     arrivalMeetingPoint: draft.arrivalMeetingPoint?.trim()
       ? draft.arrivalMeetingPoint
       : seed.arrivalMeetingPoint,
+    checkoutPaymentOptions: normalizeTourCheckoutPaymentOptions(
+      draft.checkoutPaymentOptions ?? seed.checkoutPaymentOptions
+    ),
     maxWeightEnabled:
       draft.maxWeightEnabled ??
       ((draft.maxWeightKg ?? 0) > 0 ? true : seed.maxWeightEnabled),

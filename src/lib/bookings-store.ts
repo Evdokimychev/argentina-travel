@@ -12,7 +12,15 @@ import {
   resolveOrganizerParams,
 } from "@/lib/booking-params";
 import type { BookingCheckoutPaymentOption } from "@/types/booking-params";
+import type { BookingPaymentLinkTarget } from "@/types/booking-payment";
 import { formatBookingDisplayNumber } from "@/lib/booking-display";
+import {
+  createBookingPaymentLinkRecord,
+  isBookingPaymentLinkExpired,
+  buildBookingPaymentLinkUrl,
+} from "@/lib/booking-payment-link";
+import { resolveBookingInvoices } from "@/lib/booking-payment";
+import type { BookingInvoice } from "@/types/booking-payment";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getCanonicalTourBySlug } from "@/lib/tour-repository";
@@ -35,7 +43,6 @@ import {
   type OrganizerBookingStats,
 } from "@/types/tourist";
 import type { BookingOrganizerParams, BookingPaymentStatus } from "@/types/booking-params";
-import type { BookingInvoice } from "@/types/booking-payment";
 
 function createId(prefix: string): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -159,6 +166,8 @@ export function normalizeBooking(raw: Booking): Booking {
       ? normalizeOrganizerParams(raw.organizerParams)
       : undefined,
     paymentStatus: raw.paymentStatus,
+    paymentLink: raw.paymentLink,
+    checkoutPaymentOption: raw.checkoutPaymentOption,
   };
 }
 
@@ -624,12 +633,20 @@ export function createBookingFromCheckout(input: {
     ...bookingResult,
     paymentStatus,
     paymentSummary,
-    invoices: [
-      buildPrepaymentInvoice(
-        { ...bookingResult, totalPriceUsd: input.totalPriceUsd },
-        organizerParams
-      ),
-    ],
+    invoices:
+      paymentOption === "later"
+        ? [
+            buildFullPaymentInvoice({
+              ...bookingResult,
+              totalPriceUsd: input.totalPriceUsd,
+            }),
+          ]
+        : [
+            buildPrepaymentInvoice(
+              { ...bookingResult, totalPriceUsd: input.totalPriceUsd },
+              organizerParams
+            ),
+          ],
     updatedAt: now,
   };
 
@@ -678,6 +695,22 @@ export function submitBookingTravelers(input: {
 
   persistBookingUpdate(index, updated);
   return { booking: updated };
+}
+
+function buildFullPaymentInvoice(booking: Booking): BookingInvoice {
+  const paidAmountUsd = booking.paymentSummary?.paidAmountUsd ?? 0;
+
+  return {
+    id: `inv-full-${booking.id}`,
+    type: "full",
+    number: formatBookingDisplayNumber(booking.id),
+    createdAt: booking.createdAt,
+    amountUsd: booking.totalPriceUsd,
+    paidAmountUsd: Math.min(paidAmountUsd, booking.totalPriceUsd),
+    status: paidAmountUsd >= booking.totalPriceUsd ? "paid" : "pending",
+    paymentChannel: "platform",
+    title: "Счёт на полную оплату",
+  };
 }
 
 function buildPrepaymentInvoice(
@@ -773,7 +806,20 @@ export function updateOrganizerBookingDetails(input: {
     organizerParams,
     paymentStatus: input.paymentStatus,
     paymentSummary,
-    invoices: [buildPrepaymentInvoice({ ...current, totalPriceUsd }, organizerParams)],
+    invoices: syncInvoicesAfterPayment({
+      ...current,
+      totalPriceUsd,
+      paymentStatus: input.paymentStatus,
+      paymentSummary,
+    }),
+    paymentLink:
+      input.paymentStatus === "paid" && current.paymentLink?.status === "active"
+        ? {
+            ...current.paymentLink,
+            status: "paid",
+            paidAt: now,
+          }
+        : current.paymentLink,
     travelers,
     travelersCompletedAt: travelersComplete ? current.travelersCompletedAt ?? now : undefined,
     fillTravelersLater: travelersComplete ? false : current.fillTravelersLater,
@@ -782,6 +828,162 @@ export function updateOrganizerBookingDetails(input: {
 
   persistBookingUpdate(index, draftBooking);
   return { booking: draftBooking };
+}
+
+export function getBookingByPaymentLinkToken(token: string): Booking | undefined {
+  const booking = getAllBookings().find((item) => item.paymentLink?.token === token);
+  return booking ? normalizeBooking(booking) : undefined;
+}
+
+function syncInvoicesAfterPayment(booking: Booking): BookingInvoice[] {
+  const paidAmountUsd = booking.paymentSummary?.paidAmountUsd ?? 0;
+  const invoices = booking.invoices?.length
+    ? booking.invoices
+    : resolveBookingInvoices(booking);
+
+  return invoices.map((invoice) => {
+    const invoicePaid = Math.min(paidAmountUsd, invoice.amountUsd);
+    const status =
+      invoicePaid >= invoice.amountUsd ? "paid" : invoicePaid > 0 ? "partial" : invoice.status;
+
+    return {
+      ...invoice,
+      paidAmountUsd: invoicePaid,
+      status,
+    };
+  });
+}
+
+export function generateOrganizerBookingPaymentLink(input: {
+  bookingId: string;
+  actor: SessionUser | null;
+  target?: BookingPaymentLinkTarget;
+}): { booking: Booking; paymentLinkUrl: string } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.id === input.bookingId);
+  if (index === -1) return { error: "Бронирование не найдено" };
+
+  const current = normalizeBooking(all[index]);
+  const tourOwnerUserId = current.organizerTourId
+    ? getOrganizerTourOwnerId(current.organizerTourId)
+    : undefined;
+
+  const allowed = assertPermission(
+    canManageBooking(input.actor, {
+      tourOwnerUserId,
+    })
+  );
+  if ("error" in allowed) return { error: allowed.error };
+
+  const now = new Date().toISOString();
+  const token = createId("pay");
+  const paymentLink = createBookingPaymentLinkRecord({
+    token,
+    booking: current,
+    target: input.target,
+    now,
+  });
+
+  const updated: Booking = {
+    ...current,
+    paymentLink,
+    updatedAt: now,
+  };
+
+  persistBookingUpdate(index, updated);
+
+  return {
+    booking: updated,
+    paymentLinkUrl: buildBookingPaymentLinkUrl(token),
+  };
+}
+
+export function markBookingPaymentLinkOpened(token: string): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.paymentLink?.token === token);
+  if (index === -1) return { error: "Ссылка недействительна" };
+
+  const current = normalizeBooking(all[index]);
+  const link = current.paymentLink;
+  if (!link) return { error: "Ссылка недействительна" };
+  if (link.status === "paid" || link.status === "cancelled") {
+    return { booking: current };
+  }
+  if (isBookingPaymentLinkExpired(link)) {
+    const updated: Booking = {
+      ...current,
+      paymentLink: { ...link, status: "expired" },
+      updatedAt: new Date().toISOString(),
+    };
+    persistBookingUpdate(index, updated);
+    return { booking: updated };
+  }
+
+  if (link.openedAt) return { booking: current };
+
+  const now = new Date().toISOString();
+  const updated: Booking = {
+    ...current,
+    paymentLink: { ...link, openedAt: now },
+    updatedAt: now,
+  };
+  persistBookingUpdate(index, updated);
+  return { booking: updated };
+}
+
+/** Webhook-ready handler: marks booking paid after successful payment by link token. */
+export function completeBookingPaymentFromLink(input: {
+  token: string;
+}): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.paymentLink?.token === input.token);
+  if (index === -1) return { error: "Ссылка недействительна" };
+
+  const current = normalizeBooking(all[index]);
+  const link = current.paymentLink;
+  if (!link) return { error: "Ссылка недействительна" };
+  if (link.status === "paid") return { booking: current };
+  if (link.status === "cancelled") return { error: "Ссылка отменена" };
+  if (isBookingPaymentLinkExpired(link)) return { error: "Ссылка истекла" };
+
+  const now = new Date().toISOString();
+  const organizerParams = resolveOrganizerParams(current);
+  const previousPaid = current.paymentSummary?.paidAmountUsd ?? 0;
+  const nextPaid = Math.min(current.totalPriceUsd, previousPaid + link.amountUsd);
+  const paymentStatus =
+    nextPaid >= current.totalPriceUsd
+      ? "paid"
+      : nextPaid > 0
+        ? "partial"
+        : "unpaid";
+
+  const paymentSummary = buildPaymentSummaryFromStatus(
+    current.totalPriceUsd,
+    paymentStatus,
+    organizerParams
+  );
+  paymentSummary.paidAmountUsd = nextPaid;
+  paymentSummary.remainingAmountUsd = Math.max(0, current.totalPriceUsd - nextPaid);
+
+  const draft: Booking = {
+    ...current,
+    paymentStatus,
+    paymentSummary,
+    paymentLink: {
+      ...link,
+      status: "paid",
+      paidAt: now,
+    },
+    invoices: syncInvoicesAfterPayment({
+      ...current,
+      paymentStatus,
+      paymentSummary,
+    }),
+    updatedAt: now,
+  };
+
+  persistBookingUpdate(index, draft);
+  return { booking: draft };
 }
 
 export function getPendingBookingsCount(userId: string): number {

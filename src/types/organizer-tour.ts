@@ -15,6 +15,7 @@ import type {
   TourBookingMode,
   TourLanguage,
 } from "@/types";
+import type { TourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
 
 export type OrganizerTourType = "tour" | "excursion";
 export type OrganizerTourStatus = "published" | "draft";
@@ -117,6 +118,7 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   arrivalAirportsText: string;
   arrivalTransfersText: string;
   arrivalMeetingPoint: string;
+  checkoutPaymentOptions: TourCheckoutPaymentOptions;
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;

@@ -1,4 +1,8 @@
-import type { BookingInvoice, BookingPaymentSummary } from "@/types/booking-payment";
+import type {
+  BookingInvoice,
+  BookingPaymentLink,
+  BookingPaymentSummary,
+} from "@/types/booking-payment";
 import type {
   BookingCheckoutPaymentOption,
   BookingOrganizerParams,
@@ -101,6 +105,8 @@ export interface Booking {
   organizerParams?: BookingOrganizerParams;
   /** Payment choice at checkout (full / deposit / pay later). */
   checkoutPaymentOption?: BookingCheckoutPaymentOption;
+  /** Public payment link for pay-later and manual collection (webhook-ready stub). */
+  paymentLink?: BookingPaymentLink;
   createdAt: string;
   updatedAt: string;
 }

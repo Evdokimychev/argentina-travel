@@ -34,6 +34,7 @@ import TourCurrencyBlock from "@/components/organizer/TourCurrencyBlock";
 import TourDiscountBlock from "@/components/organizer/TourDiscountBlock";
 import TourIndividualBlock from "@/components/organizer/TourIndividualBlock";
 import TourGroupDatesBlock from "@/components/organizer/TourGroupDatesBlock";
+import TourCheckoutPaymentOptionsBlock from "@/components/organizer/TourCheckoutPaymentOptionsBlock";
 import TourProgramBlock from "@/components/organizer/TourProgramBlock";
 import TourTermsListBlock from "@/components/organizer/TourTermsListBlock";
 import TourTermsConditionsBlock from "@/components/organizer/TourTermsConditionsBlock";
@@ -1110,6 +1111,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 onAutoRollChange={(autoRollGroupDatesToNextYear) =>
                   updateDraft({ autoRollGroupDatesToNextYear })
                 }
+              />
+
+              <TourCheckoutPaymentOptionsBlock
+                options={draft.checkoutPaymentOptions}
+                onChange={(checkoutPaymentOptions) => updateDraft({ checkoutPaymentOptions })}
               />
               </>
             ) : null}

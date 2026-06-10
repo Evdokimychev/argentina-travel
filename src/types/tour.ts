@@ -23,6 +23,7 @@ import type {
   TourRoutePoint,
 } from "@/types";
 import type { OrganizerTourGuide, OrganizerTourType } from "@/types/organizer-tour";
+import type { TourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
 
 export type TourStatus = "draft" | "published" | "archived" | "hidden" | "deleted";
 
@@ -61,6 +62,7 @@ export interface TourBooking {
   };
   advantages: string[];
   autoRollDatesToNextYear: boolean;
+  checkoutPaymentOptions?: TourCheckoutPaymentOptions;
 }
 
 export interface TourClassification {

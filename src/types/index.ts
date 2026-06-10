@@ -342,6 +342,7 @@ export interface TourDetail {
   dates: TourDatePrice[];
   tags: string[];
   featured?: boolean;
+  checkoutPaymentOptions?: import("@/types/tour-checkout-payment").TourCheckoutPaymentOptions;
 }
 
 /** @deprecated Use TourListing for marketplace */

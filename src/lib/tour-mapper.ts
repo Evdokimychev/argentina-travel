@@ -1,4 +1,5 @@
 import type { OrganizerTourDraft } from "@/types/organizer-tour";
+import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
 import type {
   ChildrenPolicy,
   DurationBucket,
@@ -219,6 +220,7 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
           : undefined,
       advantages: detail.bookingAdvantages ?? listing.bookingAdvantages ?? [],
       autoRollDatesToNextYear: false,
+      checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
     },
     classification: {
       primaryActivity: listing.activityType,
@@ -351,6 +353,9 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
         : undefined,
       advantages: base.booking.advantages,
       autoRollDatesToNextYear: draft.autoRollGroupDatesToNextYear,
+      checkoutPaymentOptions: normalizeTourCheckoutPaymentOptions(
+        draft.checkoutPaymentOptions ?? base.booking.checkoutPaymentOptions
+      ),
     },
     classification: {
       primaryActivity: draft.activityType,
@@ -583,6 +588,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     dates,
     tags: tour.classification.tags,
     featured: tour.display.featured,
+    checkoutPaymentOptions: tour.booking.checkoutPaymentOptions,
   };
 }
 
@@ -650,6 +656,7 @@ export function createMinimalTourFromDraft(
         : undefined,
       advantages: [],
       autoRollDatesToNextYear: draft.autoRollGroupDatesToNextYear,
+      checkoutPaymentOptions: normalizeTourCheckoutPaymentOptions(draft.checkoutPaymentOptions),
     },
     classification: {
       primaryActivity: draft.activityType,

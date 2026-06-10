@@ -26,3 +26,20 @@ export interface BookingPaymentSummary {
   remainingAmountUsd: number;
   serviceFeeUsd: number;
 }
+
+/** Payment link lifecycle — webhook-ready stub until gateway integration. */
+export type BookingPaymentLinkStatus = "active" | "paid" | "expired" | "cancelled";
+
+export type BookingPaymentLinkTarget = "full" | "deposit" | "remaining";
+
+export interface BookingPaymentLink {
+  token: string;
+  createdAt: string;
+  expiresAt?: string;
+  sentAt?: string;
+  openedAt?: string;
+  paidAt?: string;
+  status: BookingPaymentLinkStatus;
+  target: BookingPaymentLinkTarget;
+  amountUsd: number;
+}

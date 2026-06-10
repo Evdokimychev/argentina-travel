@@ -1,18 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { type ReactNode } from "react";
-import { Check, Clock3, Percent, Trash2 } from "lucide-react";
+import { Check, Clock3, Copy, Link2, Percent, Trash2 } from "lucide-react";
 import { format, isValid, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import type { Booking } from "@/types/tourist";
+import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import type { BookingInvoice } from "@/types/booking-payment";
 import {
   getBookingInvoiceTitle,
   resolveBookingInvoices,
   resolveBookingPaymentSummary,
 } from "@/lib/booking-payment";
+import {
+  buildBookingPaymentLinkUrl,
+  formatBookingPaymentLinkStatus,
+  shouldShowOrganizerPaymentLink,
+} from "@/lib/booking-payment-link";
+import { generateOrganizerBookingPaymentLink, getBookingById } from "@/lib/bookings-store";
+import { useAuth } from "@/context/AuthContext";
 import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
+import { Button } from "@/components/ui/button";
 
 function formatInvoiceDate(iso: string): string {
   const parsed = parseISO(iso);
@@ -93,12 +103,138 @@ function InvoiceRow({ invoice }: { invoice: BookingInvoice }) {
 }
 
 export default function BookingOrganizerInvoicesSection({ booking }: { booking: Booking }) {
-  const invoices = resolveBookingInvoices(booking);
-  const summary = resolveBookingPaymentSummary(booking);
+  const { user } = useAuth();
+  const [currentBooking, setCurrentBooking] = useState(booking);
+  const [paymentLinkUrl, setPaymentLinkUrl] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [linkError, setLinkError] = useState<string | null>(null);
+  const [generating, setGenerating] = useState(false);
+
+  useEffect(() => {
+    setCurrentBooking(booking);
+    if (booking.paymentLink?.token) {
+      setPaymentLinkUrl(buildBookingPaymentLinkUrl(booking.paymentLink.token));
+    }
+  }, [booking]);
+
+  useEffect(() => {
+    function refresh() {
+      const found = getBookingById(booking.id);
+      if (found) {
+        setCurrentBooking(found);
+        if (found.paymentLink?.token) {
+          setPaymentLinkUrl(buildBookingPaymentLinkUrl(found.paymentLink.token));
+        }
+      }
+    }
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
+    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
+  }, [booking.id]);
+
+  useEffect(() => {
+    if (!copied) return;
+    const timer = window.setTimeout(() => setCopied(false), 2000);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  const invoices = resolveBookingInvoices(currentBooking);
+  const summary = resolveBookingPaymentSummary(currentBooking);
+  const showPaymentLink = shouldShowOrganizerPaymentLink(currentBooking);
+
+  async function handleGenerateLink() {
+    setGenerating(true);
+    setLinkError(null);
+    const result = generateOrganizerBookingPaymentLink({
+      bookingId: currentBooking.id,
+      actor: user,
+    });
+    setGenerating(false);
+
+    if ("error" in result) {
+      setLinkError(result.error);
+      return;
+    }
+
+    setCurrentBooking(result.booking);
+    setPaymentLinkUrl(result.paymentLinkUrl);
+  }
+
+  async function handleCopyLink() {
+    if (!paymentLinkUrl) return;
+    try {
+      await navigator.clipboard.writeText(paymentLinkUrl);
+      setCopied(true);
+    } catch {
+      setLinkError("Не удалось скопировать ссылку");
+    }
+  }
 
   return (
     <div className="rounded-2xl bg-cyan-50/80 px-4 py-4 ring-1 ring-cyan-100">
       <h4 className="text-sm font-semibold text-charcoal">Счета</h4>
+
+      {showPaymentLink ? (
+        <div className="mt-3 rounded-xl bg-white/80 px-3 py-3 ring-1 ring-cyan-100/80">
+          <div className="flex items-start gap-2">
+            <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky">
+              <Link2 className="h-4 w-4" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-charcoal">Ссылка на оплату</p>
+              {currentBooking.paymentLink ? (
+                <>
+                  <p className="mt-1 text-xs text-slate">
+                    {formatBookingPaymentLinkStatus(currentBooking.paymentLink)} ·{" "}
+                    <FormattedPrice
+                      priceUsd={currentBooking.paymentLink.amountUsd}
+                      className="font-medium text-charcoal"
+                    />
+                  </p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="h-8"
+                      onClick={handleCopyLink}
+                      disabled={!paymentLinkUrl}
+                    >
+                      <Copy className="h-3.5 w-3.5" />
+                      {copied ? "Скопировано" : "Копировать"}
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="h-8"
+                      onClick={handleGenerateLink}
+                      disabled={generating}
+                    >
+                      Обновить ссылку
+                    </Button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <p className="mt-1 text-xs leading-relaxed text-slate">
+                    Создайте ссылку и отправьте туристу для оплаты предоплаты или полной суммы.
+                  </p>
+                  <Button
+                    type="button"
+                    size="sm"
+                    className="mt-2 h-8"
+                    onClick={handleGenerateLink}
+                    disabled={generating}
+                  >
+                    Создать ссылку на оплату
+                  </Button>
+                </>
+              )}
+              {linkError ? <p className="mt-2 text-xs text-red-600">{linkError}</p> : null}
+            </div>
+          </div>
+        </div>
+      ) : null}
 
       <div className="mt-3 space-y-2">
         {invoices.map((invoice) => (

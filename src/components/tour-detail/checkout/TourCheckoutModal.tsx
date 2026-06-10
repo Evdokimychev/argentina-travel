@@ -25,11 +25,16 @@ import {
 import {
   CHECKOUT_ROOM_OPTIONS,
   CHECKOUT_STEPS,
-  CHECKOUT_PAYMENT_OPTIONS,
   CheckoutFormState,
   CheckoutStepId,
   createEmptyTraveler,
 } from "./types";
+import {
+  ensureValidCheckoutPaymentOption,
+  getEnabledCheckoutPaymentOptions,
+  resolveCheckoutDepositAmountUsd,
+  resolveTourCheckoutPaymentOptionsFromTour,
+} from "@/lib/tour-checkout-payment";
 import {
   calcRoomTotalUsd,
   createDefaultRoomAllocations,
@@ -135,6 +140,7 @@ function CheckoutSummary({
   roomAllocations,
   totalUsd,
   payNowUsd,
+  depositPercent,
 }: {
   tour: TourDetail;
   form: CheckoutFormState;
@@ -146,6 +152,7 @@ function CheckoutSummary({
   roomAllocations: CheckoutFormState["roomAllocations"];
   totalUsd: number;
   payNowUsd: number;
+  depositPercent: number;
 }) {
   const selectedAddons = CHECKOUT_ADDONS.filter((a) => form.addonIds.includes(a.id));
 
@@ -256,7 +263,7 @@ function CheckoutSummary({
         </div>
         {form.paymentOption === "deposit" && (
           <div className="flex justify-between gap-3 text-sm text-brand">
-            <span>К оплате сейчас (10%)</span>
+            <span>К оплате сейчас ({depositPercent}%)</span>
             <FormattedPrice priceUsd={payNowUsd} className="font-semibold" />
           </div>
         )}
@@ -301,9 +308,24 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     () => getVisibleSteps(hasAccommodation),
     [hasAccommodation]
   );
+  const checkoutPaymentOptions = useMemo(
+    () => resolveTourCheckoutPaymentOptionsFromTour(tour),
+    [tour]
+  );
+  const enabledPaymentOptions = useMemo(
+    () => getEnabledCheckoutPaymentOptions(checkoutPaymentOptions),
+    [checkoutPaymentOptions]
+  );
 
   const [stepIndex, setStepIndex] = useState(0);
-  const [form, setForm] = useState<CheckoutFormState>(() => createCheckoutForm(guests, user));
+  const [form, setForm] = useState<CheckoutFormState>(() => {
+    const base = createCheckoutForm(guests, user);
+    const paymentOption = ensureValidCheckoutPaymentOption(
+      base.paymentOption,
+      checkoutPaymentOptions
+    );
+    return { ...base, paymentOption };
+  });
   const [submitted, setSubmitted] = useState(false);
   const [savedToProfile, setSavedToProfile] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -342,10 +364,27 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const totalUsd = subtotalUsd + roomTotalUsd + addonsTotalUsd;
   const payNowUsd =
     form.paymentOption === "deposit"
-      ? Math.round(totalUsd * 0.1)
+      ? resolveCheckoutDepositAmountUsd(totalUsd, checkoutPaymentOptions)
       : form.paymentOption === "later"
         ? 0
         : totalUsd;
+
+  useEffect(() => {
+    setForm((prev) => {
+      const paymentOption = ensureValidCheckoutPaymentOption(
+        prev.paymentOption,
+        checkoutPaymentOptions
+      );
+      if (paymentOption === prev.paymentOption) return prev;
+      return {
+        ...prev,
+        paymentOption,
+        ...(paymentOption === "later"
+          ? { cardNumber: "", cardExpiry: "", cardCvc: "" }
+          : {}),
+      };
+    });
+  }, [checkoutPaymentOptions]);
 
   const bookingMode = tour.bookingMode ?? "scheduled";
   const dateModeLabel =
@@ -1013,7 +1052,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                     </div>
 
                     <div className="flex rounded-xl bg-gray-100 p-1">
-                      {CHECKOUT_PAYMENT_OPTIONS.map((opt) => (
+                      {enabledPaymentOptions.map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
@@ -1134,6 +1173,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             roomAllocations={form.roomAllocations}
             totalUsd={totalUsd}
             payNowUsd={payNowUsd}
+            depositPercent={checkoutPaymentOptions.depositPercent}
           />
         </aside>
       </div>
