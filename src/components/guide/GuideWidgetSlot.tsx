@@ -1,5 +1,9 @@
+import { Suspense } from "react";
 import { Calculator, MapPin, Megaphone, Sparkles } from "lucide-react";
 import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
+import ArgentinaWeatherPanel, {
+  ArgentinaWeatherPanelSkeleton,
+} from "@/components/guide/weather/ArgentinaWeatherPanel";
 import type { GuidePillarWidgetSlot } from "@/types/guide-pillar";
 
 type GuideWidgetSlotProps = {
@@ -17,6 +21,16 @@ export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
     return (
       <div id={slot.id} className="scroll-mt-24">
         <ArgentinaExchangeRates />
+      </div>
+    );
+  }
+
+  if (slot.type === "weather-panel") {
+    return (
+      <div id={slot.id} className="scroll-mt-24">
+        <Suspense fallback={<ArgentinaWeatherPanelSkeleton />}>
+          <ArgentinaWeatherPanel />
+        </Suspense>
       </div>
     );
   }

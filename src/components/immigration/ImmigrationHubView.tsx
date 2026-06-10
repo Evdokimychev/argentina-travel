@@ -22,9 +22,120 @@ import { IMMIGRATION_HUB } from "@/data/immigration-hub-content";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 
+function HubTopicGrid({
+  topics,
+}: {
+  topics: typeof IMMIGRATION_HUB.hubTopics;
+}) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {topics.map((topic) => (
+        <Link
+          key={topic.id}
+          href={topic.href}
+          className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
+        >
+          <span className="text-2xl" aria-hidden>
+            {topic.emoji}
+          </span>
+          <h3 className="mt-3 font-display font-bold text-charcoal group-hover:text-sky">
+            {topic.title}
+          </h3>
+          <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
+          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky">
+            Перейти
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+function CardGrid({ cards }: { cards: typeof IMMIGRATION_HUB.lifeInCountry.cards }) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {cards.map((card) => (
+        <article
+          key={card.title}
+          className="flex flex-col rounded-2xl border border-gray-100 bg-surface-muted/40 p-4 transition-shadow hover:shadow-md"
+        >
+          <span className="text-2xl" aria-hidden>
+            {card.emoji}
+          </span>
+          <h3 className="mt-2 font-display font-bold text-charcoal">{card.title}</h3>
+          <p className="mt-1 flex-1 text-sm leading-relaxed text-slate">{card.body}</p>
+          {card.href && card.linkLabel ? (
+            <Link
+              href={card.href}
+              className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+            >
+              {card.linkLabel}
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          ) : null}
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function StepList({ steps }: { steps: typeof IMMIGRATION_HUB.citizenship.pathSteps }) {
+  return (
+    <ol className="space-y-4">
+      {steps.map((step) => (
+        <li
+          key={step.step}
+          className="flex gap-4 rounded-2xl border border-gray-100 bg-surface-muted/30 p-4 sm:p-5"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky/10 font-display text-lg font-bold text-sky">
+            {step.step}
+          </span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-baseline gap-2">
+              <h3 className="font-display font-bold text-charcoal">{step.title}</h3>
+              {step.duration ? (
+                <span className="rounded-full bg-charcoal/5 px-2 py-0.5 text-xs text-slate">
+                  {step.duration}
+                </span>
+              ) : null}
+            </div>
+            <p className="mt-1 text-sm leading-relaxed text-slate">{step.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function LinkGrid({ links }: { links: { title: string; href: string; description?: string }[] }) {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      {links.map((link) => (
+        <Link
+          key={link.href + link.title}
+          href={link.href}
+          target={link.href.startsWith("http") ? "_blank" : undefined}
+          rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+          className="group flex items-start justify-between gap-3 rounded-2xl border border-gray-100 p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
+        >
+          <span>
+            <span className="block font-medium text-charcoal group-hover:text-sky">{link.title}</span>
+            {link.description ? (
+              <span className="mt-0.5 block text-xs text-slate">{link.description}</span>
+            ) : null}
+          </span>
+          <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate group-hover:text-sky" />
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export default function ImmigrationHubView() {
   const hub = IMMIGRATION_HUB;
   const path = "/immigration";
+  const process = hub.immigrationProcess;
 
   return (
     <>
@@ -56,7 +167,7 @@ export default function ImmigrationHubView() {
               <HubToc items={hub.toc} variant="mobile" />
 
               <HubSection id="quick-30" title="Кратко за 30 секунд">
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
                   {hub.quickFacts30.map((fact) => (
                     <div
                       key={fact.label}
@@ -75,33 +186,29 @@ export default function ImmigrationHubView() {
               </HubSection>
 
               <HubSection
-                id="why-argentina"
-                title="Почему Аргентина для релокации"
-                subtitle={hub.whyArgentina.intro}
+                id="hub-overview"
+                title="Разделы справочника"
+                subtitle="Основные блоки — от жизни в стране до гражданства и полезных ссылок."
               >
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {hub.whyArgentina.cards.map((card) => (
-                    <div
-                      key={card.title}
-                      className="rounded-2xl border border-gray-100 bg-surface-muted/40 p-4 transition-shadow hover:shadow-md"
-                    >
-                      <span className="text-2xl" aria-hidden>
-                        {card.emoji}
-                      </span>
-                      <p className="mt-2 font-display font-bold text-charcoal">{card.title}</p>
-                      <p className="mt-1 text-sm leading-relaxed text-slate">{card.body}</p>
-                    </div>
-                  ))}
-                </div>
+                <HubTopicGrid topics={hub.hubTopics} />
               </HubSection>
 
               <HubSection
-                id="tourist-entry"
-                title="Въезд туриста и смена статуса"
-                subtitle={hub.touristEntry.intro}
+                id="life-in-country"
+                title="Жизнь в стране"
+                subtitle={hub.lifeInCountry.intro}
               >
-                <ul className="space-y-2">
-                  {hub.touristEntry.rules.map((rule) => (
+                <CardGrid cards={hub.lifeInCountry.cards} />
+              </HubSection>
+
+              <HubSection
+                id="immigration-process"
+                title="Процесс иммиграции"
+                subtitle={process.intro}
+              >
+                <h3 className="font-display text-lg font-bold text-charcoal">Въезд туриста</h3>
+                <ul className="mt-3 space-y-2">
+                  {process.touristRules.map((rule) => (
                     <li key={rule} className="flex gap-2 text-sm text-charcoal">
                       <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
                       {rule}
@@ -109,112 +216,62 @@ export default function ImmigrationHubView() {
                   ))}
                 </ul>
                 <p className="mt-4 rounded-xl border border-sky/15 bg-sky/5 px-4 py-3 text-sm leading-relaxed text-charcoal">
-                  {hub.touristEntry.statusChangeNote}
+                  {process.statusChangeNote}
                 </p>
                 <Link
-                  href={hub.touristEntry.linkHref}
+                  href={process.entryDocsHref}
                   className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
                 >
-                  {hub.touristEntry.linkLabel}
+                  {process.entryDocsLabel}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-              </HubSection>
 
-              <HubSection
-                id="residency-types"
-                title="Виды резиденции"
-                subtitle={hub.residencyTypes.intro}
-              >
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {hub.residencyTypes.types.map((type) => (
-                    <article
-                      key={type.title}
-                      className="rounded-2xl border border-gray-100 bg-gradient-to-br from-white to-surface-muted/50 p-5"
-                    >
-                      <span className="text-3xl" aria-hidden>
-                        {type.emoji}
-                      </span>
-                      <h3 className="mt-2 font-display text-lg font-bold text-charcoal">{type.title}</h3>
-                      <p className="mt-2 text-sm leading-relaxed text-slate">{type.body}</p>
-                    </article>
-                  ))}
+                <div className="mt-8 rounded-2xl border border-amber-200/60 bg-amber-50/40 p-5">
+                  <h3 className="font-display text-lg font-bold text-charcoal">{process.dnuTitle}</h3>
+                  <ul className="mt-3 space-y-2">
+                    {process.dnuChanges.map((change) => (
+                      <li key={change} className="flex gap-2 text-sm text-charcoal">
+                        <span className="text-amber-600" aria-hidden>
+                          •
+                        </span>
+                        {change}
+                      </li>
+                    ))}
+                  </ul>
+                  <p className="mt-3 text-sm text-slate">{process.dnuNote}</p>
                 </div>
-              </HubSection>
 
-              <HubSection
-                id="grounds-14"
-                title="14 оснований для residencia temporaria"
-                subtitle="Официальные категории Migraciones — выберите подходящую и сверьте актуальные требования на портале."
-              >
-                <HubDataTable table={hub.groundsTable} />
-                <Link
-                  href="/immigration/obzor-vnzh"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
-                >
-                  Подробный обзор видов ВНЖ
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              </HubSection>
-
-              <HubSection
-                id="path-steps"
-                title="Путь к гражданству"
-                subtitle={hub.residencyPath.intro}
-              >
-                <ol className="space-y-4">
-                  {hub.residencyPath.steps.map((step) => (
+                <h3 className="mt-8 font-display text-lg font-bold text-charcoal">Процесс RADEX</h3>
+                <ol className="mt-3 space-y-3">
+                  {process.radexSteps.map((step) => (
                     <li
                       key={step.step}
-                      className="flex gap-4 rounded-2xl border border-gray-100 bg-surface-muted/30 p-4 sm:p-5"
+                      className="flex gap-3 rounded-xl border border-gray-100 bg-white p-4"
                     >
-                      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky/10 font-display text-lg font-bold text-sky">
-                        {step.step}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <div className="flex flex-wrap items-baseline gap-2">
-                          <h3 className="font-display font-bold text-charcoal">{step.title}</h3>
-                          {step.duration ? (
-                            <span className="rounded-full bg-charcoal/5 px-2 py-0.5 text-xs text-slate">
-                              {step.duration}
-                            </span>
-                          ) : null}
-                        </div>
-                        <p className="mt-1 text-sm leading-relaxed text-slate">{step.body}</p>
+                      <span className="font-display text-lg font-bold text-sky">{step.step}.</span>
+                      <div>
+                        <p className="font-medium text-charcoal">{step.title}</p>
+                        <p className="mt-0.5 text-sm text-slate">{step.body}</p>
                       </div>
                     </li>
                   ))}
                 </ol>
-                <aside className="mt-5 rounded-2xl border border-sky/20 bg-sky/5 p-4 text-sm text-charcoal">
-                  {hub.residencyPath.citizenshipNote}
-                </aside>
-              </HubSection>
-
-              <HubSection id="dnu-2025" title={hub.dnu2025.title} subtitle={hub.dnu2025.intro}>
-                <ul className="space-y-2">
-                  {hub.dnu2025.changes.map((change) => (
-                    <li key={change} className="flex gap-2 text-sm text-charcoal">
-                      <span className="text-sky" aria-hidden>
-                        •
-                      </span>
-                      {change}
-                    </li>
-                  ))}
-                </ul>
-                {hub.dnu2025.note ? (
-                  <p className="mt-4 text-sm text-slate">{hub.dnu2025.note}</p>
-                ) : null}
                 <Link
-                  href="/immigration/dokumenty-dlya-vyezda"
-                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+                  href={process.radexPortalUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cn(buttonVariants({ variant: "outline" }), "mt-6 rounded-full")}
                 >
-                  Чеклист документов для въезда
-                  <ArrowRight className="h-4 w-4" />
+                  Открыть RADEX
+                  <ExternalLink className="ml-2 h-4 w-4" />
                 </Link>
-              </HubSection>
 
-              <HubSection id="documents" title="Документы для residencia" subtitle={hub.documents.intro}>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {hub.documents.checklist.map((item) => (
+                <h3 className="mt-8 font-display text-lg font-bold text-charcoal">
+                  Документы для residencia
+                </h3>
+                <p className="mt-2 text-sm text-slate">{process.documentsIntro}</p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {process.documentsChecklist.map((item) => (
                     <div
                       key={item.title}
                       className={cn(
@@ -239,105 +296,126 @@ export default function ImmigrationHubView() {
                 </div>
                 <p className="mt-5 rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm leading-relaxed text-slate">
                   <FileText className="mb-0.5 mr-1 inline h-4 w-4 text-sky" aria-hidden />
-                  {hub.documents.apostilleNote}
+                  {process.apostilleNote}
                 </p>
               </HubSection>
 
-              <HubSection id="radex-process" title="Процесс RADEX" subtitle={hub.radexProcess.intro}>
-                <ol className="space-y-3">
-                  {hub.radexProcess.steps.map((step) => (
-                    <li
-                      key={step.step}
-                      className="flex gap-3 rounded-xl border border-gray-100 bg-white p-4"
+              <HubSection id="birth" title="Роды в Аргентине" subtitle={hub.birthInArgentina.intro}>
+                <CardGrid cards={hub.birthInArgentina.cards} />
+                <div className="mt-6">
+                  <h3 className="font-display text-lg font-bold text-charcoal">Типичный порядок</h3>
+                  <div className="mt-4">
+                    <StepList steps={hub.birthInArgentina.steps} />
+                  </div>
+                </div>
+                <aside className="mt-5 rounded-2xl border border-sky/20 bg-sky/5 p-4 text-sm text-charcoal">
+                  {hub.birthInArgentina.note}
+                </aside>
+              </HubSection>
+
+              <HubSection id="citizenship" title="Гражданство Аргентины" subtitle={hub.citizenship.intro}>
+                <CardGrid cards={hub.citizenship.cards} />
+                <div className="mt-6">
+                  <h3 className="font-display text-lg font-bold text-charcoal">Путь к паспорту</h3>
+                  <div className="mt-4">
+                    <StepList steps={hub.citizenship.pathSteps} />
+                  </div>
+                </div>
+                <aside className="mt-5 rounded-2xl border border-gray-100 bg-surface-muted/40 p-4 text-sm text-slate">
+                  {hub.citizenship.note}
+                </aside>
+              </HubSection>
+
+              <HubSection id="residency" title="ВНЖ и ПМЖ Аргентины" subtitle={hub.residency.intro}>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {hub.residency.types.map((type) => (
+                    <article
+                      key={type.title}
+                      className="rounded-2xl border border-gray-100 bg-gradient-to-br from-white to-surface-muted/50 p-5"
                     >
-                      <span className="font-display text-lg font-bold text-sky">{step.step}.</span>
-                      <div>
-                        <p className="font-medium text-charcoal">{step.title}</p>
-                        <p className="mt-0.5 text-sm text-slate">{step.body}</p>
-                      </div>
-                    </li>
+                      <span className="text-3xl" aria-hidden>
+                        {type.emoji}
+                      </span>
+                      <h3 className="mt-2 font-display text-lg font-bold text-charcoal">{type.title}</h3>
+                      <p className="mt-2 text-sm leading-relaxed text-slate">{type.body}</p>
+                    </article>
                   ))}
-                </ol>
+                </div>
+                <div className="mt-6">
+                  <h3 className="font-display text-lg font-bold text-charcoal">
+                    14 оснований для residencia temporaria
+                  </h3>
+                  <HubDataTable table={hub.residency.groundsTable} />
+                </div>
                 <Link
-                  href={hub.radexProcess.portalUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={cn(buttonVariants({ variant: "outline" }), "mt-6 rounded-full")}
+                  href={hub.residency.overviewHref}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
                 >
-                  Открыть портал Migraciones
-                  <ExternalLink className="ml-2 h-4 w-4" />
+                  {hub.residency.overviewLabel}
+                  <ArrowRight className="h-4 w-4" />
                 </Link>
               </HubSection>
 
-              <HubSection id="articles" title="Статьи по иммиграции">
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {hub.articles.map((article) => (
-                    <Link
-                      key={article.href + article.title}
-                      href={article.href}
-                      className="group flex items-start justify-between gap-3 rounded-2xl border border-gray-100 p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
+              <HubSection id="opportunities" title="Возможности" subtitle={hub.opportunities.intro}>
+                <CardGrid cards={hub.opportunities.highlights} />
+                <h3 className="mt-8 font-display text-lg font-bold text-charcoal">
+                  Альтернативы в LatAm
+                </h3>
+                <p className="mt-2 text-sm text-slate">
+                  Если Аргентина не подходит по срокам или налогам — сравните соседние юрисдикции.
+                </p>
+                <div className="mt-4 grid gap-4 sm:grid-cols-3">
+                  {hub.opportunities.alternatives.map((alt) => (
+                    <div
+                      key={alt.title}
+                      className="rounded-2xl border border-gray-100 bg-surface-muted/40 p-4"
                     >
-                      <span>
-                        <span className="block font-medium text-charcoal group-hover:text-sky">
-                          {article.title}
-                        </span>
-                        <span className="mt-0.5 block text-xs text-slate">{article.description}</span>
+                      <span className="text-2xl" aria-hidden>
+                        {alt.emoji}
                       </span>
-                      <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate group-hover:text-sky" />
-                    </Link>
+                      <p className="mt-2 font-display font-bold text-charcoal">{alt.title}</p>
+                      <p className="mt-1 text-sm text-slate">{alt.body}</p>
+                    </div>
                   ))}
                 </div>
-              </HubSection>
-
-              <HubSection
-                id="alternatives"
-                title="Самостоятельно или с помощью"
-                subtitle="Оба пути легальны — выбор зависит от времени, языка и сложности вашего основания."
-              >
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="mt-8 grid gap-4 sm:grid-cols-2">
                   <div className="rounded-2xl border border-gray-100 bg-surface-muted/40 p-5">
                     <Users className="h-8 w-8 text-sky" aria-hidden />
                     <h3 className="mt-3 font-display text-lg font-bold text-charcoal">
-                      {hub.alternatives.diyTitle}
+                      {hub.opportunities.diyTitle}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate">{hub.alternatives.diyBody}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-slate">{hub.opportunities.diyBody}</p>
                   </div>
                   <div className="rounded-2xl border border-sky/25 bg-gradient-to-br from-sky/5 to-white p-5">
                     <Scale className="h-8 w-8 text-sky" aria-hidden />
                     <h3 className="mt-3 font-display text-lg font-bold text-charcoal">
-                      {hub.alternatives.proTitle}
+                      {hub.opportunities.proTitle}
                     </h3>
-                    <p className="mt-2 text-sm leading-relaxed text-slate">{hub.alternatives.proBody}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-slate">{hub.opportunities.proBody}</p>
                     <Link
-                      href={hub.alternatives.contactsHref}
+                      href={hub.opportunities.contactsHref}
                       className={cn(buttonVariants({ variant: "default" }), "mt-4 rounded-full")}
                     >
-                      {hub.alternatives.contactsLabel}
+                      {hub.opportunities.contactsLabel}
                     </Link>
                   </div>
                 </div>
               </HubSection>
 
-              <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8">
-                <h2 className="font-display text-xl font-bold text-charcoal">См. также</h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  {hub.relatedLinks.map((link) => (
-                    <Link
-                      key={link.href + link.title}
-                      href={link.href}
-                      className="group flex items-start justify-between gap-3 rounded-2xl border border-gray-100 p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
-                    >
-                      <span>
-                        <span className="block font-medium text-charcoal group-hover:text-sky">
-                          {link.title}
-                        </span>
-                        <span className="mt-0.5 block text-xs text-slate">{link.description}</span>
-                      </span>
-                      <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-slate group-hover:text-sky" />
-                    </Link>
-                  ))}
+              <HubSection id="useful-links" title="Полезные ссылки" subtitle={hub.usefulLinks.intro}>
+                <h3 className="font-display text-base font-bold text-charcoal">Официальные источники</h3>
+                <div className="mt-3">
+                  <LinkGrid links={hub.usefulLinks.official} />
                 </div>
-              </section>
+                <h3 className="mt-8 font-display text-base font-bold text-charcoal">Статьи</h3>
+                <div className="mt-3">
+                  <LinkGrid links={hub.usefulLinks.articles} />
+                </div>
+                <h3 className="mt-8 font-display text-base font-bold text-charcoal">Смежные разделы</h3>
+                <div className="mt-3">
+                  <LinkGrid links={hub.usefulLinks.related} />
+                </div>
+              </HubSection>
 
               <div className="space-y-3">
                 {hub.warnings.map((warning) => (
@@ -355,7 +433,7 @@ export default function ImmigrationHubView() {
 
               <GuidePillarFaq
                 items={hub.faq}
-                intro="20 ответов о ВНЖ, RADEX, гражданстве и правилах въезда — для туристов и планирующих релокацию."
+                intro="15 ответов о ВНЖ, RADEX, гражданстве, родах и правилах въезда."
               />
 
               <GuidePillarCta

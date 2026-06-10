@@ -1,16 +1,24 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import { BookOpen } from "lucide-react";
+import GuideNextTopic from "@/components/guide/GuideNextTopic";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
-import GuidePillarHero from "@/components/guide/GuidePillarHero";
 import GuidePillarRecommend from "@/components/guide/GuidePillarRecommend";
 import GuidePillarSectionBlock from "@/components/guide/GuidePillarSection";
-import GuidePillarToc from "@/components/guide/GuidePillarToc";
+import GuidePracticalTips from "@/components/guide/GuidePracticalTips";
 import GuideQuickFacts, { GuideQuickFactsStatic } from "@/components/guide/GuideQuickFacts";
+import GuideRelatedArticlesGrid, {
+  type GuideRelatedArticle,
+} from "@/components/guide/GuideRelatedArticlesGrid";
+import GuideSectionNav from "@/components/guide/GuideSectionNav";
 import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
+import HubHero from "@/components/guide/hub/HubHero";
+import HubSection from "@/components/guide/hub/HubSection";
+import HubToc from "@/components/guide/hub/HubToc";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { getGuidePracticalTips } from "@/data/guide-pillar-practical-tips";
+import { buildGuidePillarToc } from "@/lib/build-guide-pillar-toc";
 import { cn } from "@/lib/cn";
 import { guideTopicHref } from "@/lib/guide-topics";
 import { siteContainerClass } from "@/lib/site-container";
@@ -22,14 +30,11 @@ interface GuidePillarViewProps {
 
 function QuickFactsFallback() {
   return (
-    <section className="mt-8 animate-pulse" aria-busy="true">
-      <div className="h-6 w-40 rounded bg-gray-200" />
-      <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="h-16 rounded-2xl bg-gray-100" />
-        ))}
-      </div>
-    </section>
+    <div className="grid animate-pulse gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-busy="true">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="h-24 rounded-2xl bg-gray-100" />
+      ))}
+    </div>
   );
 }
 
@@ -39,21 +44,46 @@ export default function GuidePillarView({ topic }: GuidePillarViewProps) {
 
   const heroTitle = pillar.heroTitle ?? `${topic.title} в Аргентине`;
   const heroSubtitle = pillar.heroSubtitle ?? topic.shortDescription;
+  const heroImage =
+    topic.heroImage ??
+    "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80";
   const widgetSlots = pillar.widgetSlots ?? [];
   const hasLiveFacts = pillar.quickFacts.some((f) => f.live);
+  const practicalTips = pillar.practicalTips ?? getGuidePracticalTips(topic.slug);
   const path = guideTopicHref(topic.slug);
+
+  const relatedArticles: GuideRelatedArticle[] = [
+    ...pillar.blogLinks.map((link) => ({
+      title: link.title,
+      href: link.href,
+      description: link.description,
+    })),
+    ...(topic.relatedArticles?.map((article) => ({
+      title: article.label,
+      href: article.href,
+      description: article.description,
+    })) ?? []),
+  ];
+
+  const tocItems = buildGuidePillarToc(pillar, {
+    hasPracticalTips: Boolean(practicalTips),
+    hasReadMore: relatedArticles.length > 0,
+  });
 
   return (
     <>
       <WebPageJsonLd name={heroTitle} description={heroSubtitle} path={path} />
       <FAQPageJsonLd questions={pillar.faq} path={path} />
 
-      <GuidePillarHero
-        topic={topic}
-        heroTitle={heroTitle}
-        heroSubtitle={heroSubtitle}
+      <HubHero
+        title={heroTitle}
+        subtitle={heroSubtitle}
+        image={heroImage}
+        eyebrow={{ label: "Путеводитель", href: "/guide" }}
         ctas={pillar.heroCtas}
       />
+
+      <GuideSectionNav />
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>
@@ -69,92 +99,49 @@ export default function GuidePillarView({ topic }: GuidePillarViewProps) {
             <span className="text-charcoal">{topic.title}</span>
           </nav>
 
-          <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate">{topic.intro}</p>
+          <div className="mt-8 lg:flex lg:items-start lg:gap-8 xl:gap-10">
+            <div className="min-w-0 flex-1 space-y-8">
+              <HubToc items={tocItems} variant="mobile" />
 
-          {hasLiveFacts ? (
-            <Suspense fallback={<QuickFactsFallback />}>
-              <GuideQuickFacts facts={pillar.quickFacts} />
-            </Suspense>
-          ) : (
-            <GuideQuickFactsStatic facts={pillar.quickFacts} />
-          )}
+              <HubSection id="quick-30" title="Кратко за 30 секунд">
+                {hasLiveFacts ? (
+                  <Suspense fallback={<QuickFactsFallback />}>
+                    <GuideQuickFacts facts={pillar.quickFacts} slug={topic.slug} />
+                  </Suspense>
+                ) : (
+                  <GuideQuickFactsStatic facts={pillar.quickFacts} slug={topic.slug} />
+                )}
+              </HubSection>
 
-          <div className="mt-8 lg:hidden">
-            <GuidePillarToc
-              sections={pillar.sections}
-              widgetSlots={widgetSlots}
-              variant="mobile"
-            />
-          </div>
-
-          <div className="mt-10 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:gap-10 xl:grid-cols-[minmax(0,1fr)_260px]">
-            <div className="min-w-0 space-y-12">
               {pillar.sections.map((section) => (
                 <GuidePillarSectionBlock key={section.id} section={section} />
               ))}
 
               {widgetSlots.length > 0 ? (
-                <section className="space-y-6" aria-label="Интерактивные блоки">
+                <div className="space-y-8" aria-label="Интерактивные блоки">
                   {widgetSlots.map((slot) => (
                     <GuideWidgetSlot key={slot.id} slot={slot} />
                   ))}
-                </section>
+                </div>
               ) : null}
+
+              {practicalTips ? <GuidePracticalTips tips={practicalTips} /> : null}
 
               <GuidePillarRecommend
                 services={pillar.partnerServices}
                 intro={pillar.recommendIntro}
               />
 
-              <section id="read-more" className="scroll-mt-24">
-                <div className="flex items-center gap-2">
-                  <BookOpen className="h-5 w-5 text-sky" aria-hidden />
-                  <h2 className="font-display text-xl font-bold text-charcoal">Читайте также</h2>
-                </div>
-                <ul className="mt-4 space-y-2">
-                  {pillar.blogLinks.map((link) => (
-                    <li key={link.href}>
-                      <Link
-                        href={link.href}
-                        className="group flex flex-col rounded-xl border border-gray-100 bg-white px-4 py-3 transition-colors hover:border-sky/30 hover:bg-sky/5"
-                      >
-                        <span className="text-sm font-medium text-charcoal group-hover:text-sky">
-                          {link.title}
-                        </span>
-                        {link.description ? (
-                          <span className="mt-0.5 text-xs text-slate">{link.description}</span>
-                        ) : null}
-                      </Link>
-                    </li>
-                  ))}
-                  {topic.relatedArticles?.map((article) => (
-                    <li key={article.href}>
-                      <Link
-                        href={article.href}
-                        className="group flex flex-col rounded-xl border border-gray-100 bg-white px-4 py-3 transition-colors hover:border-sky/30 hover:bg-sky/5"
-                      >
-                        <span className="text-sm font-medium text-charcoal group-hover:text-sky">
-                          {article.label}
-                        </span>
-                        {article.description ? (
-                          <span className="mt-0.5 text-xs text-slate">{article.description}</span>
-                        ) : null}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              <GuideRelatedArticlesGrid articles={relatedArticles} />
+
+              <GuideNextTopic slug={topic.slug} />
 
               <GuidePillarFaq items={pillar.faq} />
 
               <GuidePillarCta />
             </div>
 
-            <GuidePillarToc
-              sections={pillar.sections}
-              widgetSlots={widgetSlots}
-              variant="sidebar"
-            />
+            <HubToc items={tocItems} variant="sidebar" />
           </div>
         </div>
       </div>

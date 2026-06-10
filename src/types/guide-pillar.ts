@@ -46,7 +46,7 @@ export type GuidePillarBlogLink = {
   description?: string;
 };
 
-export type GuidePillarWidgetSlotType = "exchange-rates" | "calculator" | "map" | "promo";
+export type GuidePillarWidgetSlotType = "exchange-rates" | "calculator" | "map" | "promo" | "weather-panel";
 
 export type GuidePillarWidgetSlot = {
   id: string;
@@ -54,7 +54,14 @@ export type GuidePillarWidgetSlot = {
   type: GuidePillarWidgetSlotType;
 };
 
+export type GuidePracticalTips = {
+  do: string[];
+  consider: string[];
+  avoid: string[];
+};
+
 export type GuideQuickFact = {
+  emoji?: string;
   label: string;
   value: string;
   /** Render live exchange rate instead of static value */
@@ -76,6 +83,7 @@ export type GuidePillarContent = {
   heroSubtitle?: string;
   heroCtas: GuidePillarHeroCta[];
   quickFacts: GuideQuickFact[];
+  practicalTips?: GuidePracticalTips;
   sections: GuidePillarSection[];
   faq: GuidePillarFaqItem[];
   partnerServices: GuidePartnerCard[];

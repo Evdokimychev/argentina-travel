@@ -6,3 +6,10 @@ export const siteViewportInsetClass = "w-full px-4 sm:px-6 lg:px-8";
 
 /** Fixed-кнопки у левого края окна (поиск) */
 export const floatingChromeInsetClass = "left-4 sm:left-6 lg:left-8";
+
+/** Sticky TOC на hub-страницах — ниже хедера и section nav */
+export const hubTocStickyTopClass =
+  "top-[calc(var(--site-header-height,72px)+var(--site-section-nav-height,0px)+1rem)]";
+
+export const hubTocStickyMaxHeightClass =
+  "max-h-[calc(100vh-var(--site-header-height,72px)-var(--site-section-nav-height,0px)-2rem)]";

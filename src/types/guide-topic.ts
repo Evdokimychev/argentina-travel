@@ -19,6 +19,7 @@ export type {
   GuidePillarTable,
   GuidePillarWidgetSlot,
   GuidePillarWidgetSlotType,
+  GuidePracticalTips,
   GuideQuickFact,
 } from "@/types/guide-pillar";
 

@@ -8,6 +8,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
+import HubSection from "@/components/guide/hub/HubSection";
 import { cn } from "@/lib/cn";
 import type {
   GuidePillarInfoBox,
@@ -128,13 +129,9 @@ export default function GuidePillarSectionBlock({
   showImagePlaceholder,
 }: GuidePillarSectionProps) {
   return (
-    <section id={section.id} className="scroll-mt-24">
-      <h2 className="font-display text-2xl font-bold text-charcoal">{section.title}</h2>
-      {section.content ? (
-        <p className="mt-4 text-sm leading-relaxed text-slate">{section.content}</p>
-      ) : null}
+    <HubSection id={section.id} title={section.title} subtitle={section.content}>
       {section.subsections?.map((sub) => (
-        <div key={sub.title} className="mt-6">
+        <div key={sub.title} className="mt-6 first:mt-0">
           <h3 className="font-display text-lg font-bold text-charcoal">{sub.title}</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate">{sub.body}</p>
         </div>
@@ -156,7 +153,7 @@ export default function GuidePillarSectionBlock({
           <GuideWidgetSlot slot={section.widgetSlot} />
         </div>
       ) : null}
-    </section>
+    </HubSection>
   );
 }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import HubSection from "@/components/guide/hub/HubSection";
 import type { GuidePillarFaqItem } from "@/types/guide-pillar";
 
 type GuidePillarFaqProps = {
@@ -14,13 +15,16 @@ export default function GuidePillarFaq({ items, intro }: GuidePillarFaqProps) {
   if (!items.length) return null;
 
   return (
-    <section id="faq" className="scroll-mt-24">
-      <h2 className="font-display text-2xl font-bold text-charcoal">Часто задаваемые вопросы</h2>
-      <p className="mt-2 text-sm text-slate">
-        {intro ??
-          "Ответы для туристов и тех, кто планирует переезд. Информация справочная — уточняйте актуальность перед поездкой."}
-      </p>
-      <div className="mt-5 divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white shadow-card">
+    <HubSection
+      id="faq"
+      title="Часто задаваемые вопросы"
+      subtitle={
+        intro ??
+        "Ответы для туристов и тех, кто планирует переезд. Информация справочная — уточняйте актуальность перед поездкой."
+      }
+      className="[&>header]:mb-5"
+    >
+      <div className="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-surface-muted/30">
         {items.map((item, index) => {
           const isOpen = openIndex === index;
           return (
@@ -54,6 +58,6 @@ export default function GuidePillarFaq({ items, intro }: GuidePillarFaqProps) {
           );
         })}
       </div>
-    </section>
+    </HubSection>
   );
 }

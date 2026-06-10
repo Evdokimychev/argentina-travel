@@ -5,6 +5,8 @@ export type ImmigrationHubCard = {
   emoji: string;
   title: string;
   body: string;
+  href?: string;
+  linkLabel?: string;
 };
 
 export type ImmigrationHubStep = {
@@ -21,20 +23,19 @@ export type ImmigrationHubChecklistItem = {
   required?: boolean;
 };
 
-export type ImmigrationHubDnuBlock = {
+export type ImmigrationHubTopicItem = {
+  id: string;
   title: string;
-  intro: string;
-  changes: string[];
-  note?: string;
+  description: string;
+  href: string;
+  emoji: string;
 };
 
-export type ImmigrationHubAlternatives = {
-  diyTitle: string;
-  diyBody: string;
-  proTitle: string;
-  proBody: string;
-  contactsHref: string;
-  contactsLabel: string;
+export type ImmigrationHubTopicGroup = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  topics: ImmigrationHubTopicItem[];
 };
 
 export type ImmigrationHubContent = {
@@ -44,42 +45,64 @@ export type ImmigrationHubContent = {
   heroCtas: GuidePillarHeroCta[];
   quickFacts30: TravelHubQuickFact[];
   toc: TravelHubTocItem[];
-  whyArgentina: {
+  /** Карточки-якоря основных блоков справочника */
+  hubTopics: ImmigrationHubTopicItem[];
+  lifeInCountry: {
     intro: string;
     cards: ImmigrationHubCard[];
   };
-  touristEntry: {
+  immigrationProcess: {
     intro: string;
-    rules: string[];
+    touristRules: string[];
     statusChangeNote: string;
-    linkHref: string;
-    linkLabel: string;
+    dnuTitle: string;
+    dnuChanges: string[];
+    dnuNote: string;
+    radexSteps: ImmigrationHubStep[];
+    radexPortalUrl: string;
+    documentsIntro: string;
+    documentsChecklist: ImmigrationHubChecklistItem[];
+    apostilleNote: string;
+    entryDocsHref: string;
+    entryDocsLabel: string;
   };
-  residencyTypes: {
+  birthInArgentina: {
+    intro: string;
+    cards: ImmigrationHubCard[];
+    steps: ImmigrationHubStep[];
+    note: string;
+  };
+  citizenship: {
+    intro: string;
+    cards: ImmigrationHubCard[];
+    pathSteps: ImmigrationHubStep[];
+    note: string;
+  };
+  residency: {
     intro: string;
     types: ImmigrationHubCard[];
+    groundsTable: GuidePillarTable;
+    overviewHref: string;
+    overviewLabel: string;
   };
-  groundsTable: GuidePillarTable;
-  residencyPath: {
+  opportunities: {
     intro: string;
-    steps: ImmigrationHubStep[];
-    citizenshipNote: string;
+    highlights: ImmigrationHubCard[];
+    alternatives: ImmigrationHubCard[];
+    diyTitle: string;
+    diyBody: string;
+    proTitle: string;
+    proBody: string;
+    contactsHref: string;
+    contactsLabel: string;
   };
-  dnu2025: ImmigrationHubDnuBlock;
-  documents: {
+  usefulLinks: {
     intro: string;
-    checklist: ImmigrationHubChecklistItem[];
-    apostilleNote: string;
+    official: TravelHubArticleLink[];
+    articles: TravelHubArticleLink[];
+    related: TravelHubArticleLink[];
   };
-  radexProcess: {
-    intro: string;
-    steps: ImmigrationHubStep[];
-    portalUrl: string;
-  };
-  articles: TravelHubArticleLink[];
-  relatedLinks: TravelHubArticleLink[];
   warnings: string[];
-  alternatives: ImmigrationHubAlternatives;
   faq: GuidePillarFaqItem[];
   disclaimer: string;
 };

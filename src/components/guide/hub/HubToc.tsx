@@ -5,11 +5,13 @@ import {
   ArrowLeftRight,
   BookOpen,
   Building2,
+  Calculator,
   Car,
   ChevronLeft,
   ChevronRight,
   CircleHelp,
   ClipboardList,
+  CloudSun,
   Compass,
   FileText,
   Flag,
@@ -20,6 +22,7 @@ import {
   ListOrdered,
   Map,
   MapPin,
+  Megaphone,
   MessageCircle,
   Plane,
   Route,
@@ -27,6 +30,7 @@ import {
   Search,
   Shield,
   ShieldAlert,
+  Sparkles,
   Stamp,
   Timer,
   UserCheck,
@@ -34,6 +38,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { hubTocStickyMaxHeightClass, hubTocStickyTopClass } from "@/lib/site-container";
 import type { TravelHubTocItem } from "@/types/guide-travel-hub";
 
 const TOC_COLLAPSED_KEY = "guide-hub-toc-collapsed";
@@ -69,7 +74,29 @@ const TOC_ICONS: Record<string, LucideIcon> = {
   documents: ClipboardList,
   "radex-process": FileText,
   alternatives: Scale,
+  "hub-overview": Grid3X3,
+  "life-in-country": Globe,
+  "immigration-process": Stamp,
+  birth: UserCheck,
+  citizenship: Flag,
+  residency: ListOrdered,
+  opportunities: Lightbulb,
+  "useful-links": Link2,
+  "practical-tips": Lightbulb,
+  recommend: Sparkles,
+  "read-more": BookOpen,
+  "widget-exchange-rates": ArrowLeftRight,
+  "widget-calculator": Calculator,
+  "widget-map": Map,
+  "widget-weather-panel": CloudSun,
+  "widget-promo": Megaphone,
 };
+
+function resolveTocIcon(id: string): LucideIcon {
+  if (TOC_ICONS[id]) return TOC_ICONS[id];
+  if (id.startsWith("widget-")) return Wrench;
+  return FileText;
+}
 
 type HubTocProps = {
   items: TravelHubTocItem[];
@@ -155,7 +182,7 @@ function HubTocSidebar({ items }: { items: TravelHubTocItem[] }) {
   if (!hydrated) {
     return (
       <aside className="hidden w-[240px] shrink-0 lg:block">
-        <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] h-[320px] rounded-3xl border border-gray-200 bg-white shadow-sm" />
+        <div className={cn("sticky h-[320px] rounded-3xl border border-gray-200 bg-white shadow-sm", hubTocStickyTopClass)} />
       </aside>
     );
   }
@@ -168,7 +195,9 @@ function HubTocSidebar({ items }: { items: TravelHubTocItem[] }) {
   return (
     <aside
       className={cn(
-        "sticky top-[calc(var(--site-header-height,72px)+1rem)] hidden h-fit max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] shrink-0 flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-[width] duration-300 ease-out lg:flex",
+        "sticky hidden h-fit shrink-0 flex-col overflow-hidden rounded-3xl border border-gray-200 bg-white shadow-sm transition-[width] duration-300 ease-out lg:flex",
+        hubTocStickyTopClass,
+        hubTocStickyMaxHeightClass,
         isCompact ? "w-[72px]" : "w-[240px]"
       )}
     >
@@ -193,7 +222,7 @@ function HubTocSidebar({ items }: { items: TravelHubTocItem[] }) {
       >
         <ol className="space-y-0.5">
           {navItems.map((item) => {
-            const Icon = TOC_ICONS[item.id] ?? FileText;
+            const Icon = resolveTocIcon(item.id);
             const active = activeId === item.id;
 
             return (
@@ -262,7 +291,7 @@ function HubTocMobile({ items }: { items: TravelHubTocItem[] }) {
         </summary>
         <ol className="mt-3 flex flex-wrap gap-2">
           {items.map((item) => {
-            const Icon = TOC_ICONS[item.id] ?? FileText;
+            const Icon = resolveTocIcon(item.id);
             return (
               <li key={item.id}>
                 <a

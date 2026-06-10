@@ -7,6 +7,8 @@ import {
   Plane,
   Shield,
 } from "lucide-react";
+import GuideNextTopic from "@/components/guide/GuideNextTopic";
+import GuideSectionNav from "@/components/guide/GuideSectionNav";
 import HubHero from "@/components/guide/hub/HubHero";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
@@ -46,6 +48,8 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
         eyebrow={{ label: "Путеводитель", href: "/guide" }}
         ctas={hub.heroCtas}
       />
+
+      <GuideSectionNav />
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>
@@ -470,6 +474,8 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                 items={hub.faq}
                 intro="25 ответов о перелётах, аэропортах, трансферах и документах — для туристов и планирующих длительное пребывание."
               />
+
+              <GuideNextTopic slug={topic.slug} />
 
               <GuidePillarCta
                 title="Остались вопросы о дороге в Аргентину?"

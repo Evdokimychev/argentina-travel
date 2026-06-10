@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, ExternalLink, Sparkles } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
+import HubSection from "@/components/guide/hub/HubSection";
 import type { GuidePartnerCard } from "@/types/guide-pillar";
 
 type GuidePillarRecommendProps = {
@@ -11,20 +12,19 @@ export default function GuidePillarRecommend({ services, intro }: GuidePillarRec
   if (!services.length) return null;
 
   return (
-    <section id="recommend" className="scroll-mt-24">
-      <div className="flex items-center gap-2">
-        <Sparkles className="h-5 w-5 text-sky" aria-hidden />
-        <h2 className="font-display text-xl font-bold text-charcoal">Рекомендуем</h2>
-      </div>
-      <p className="mt-2 text-sm text-slate">
-        {intro ??
-          "Проверенные сервисы и консультации — без навязанных схем. Выбирайте то, что подходит вашему маршруту."}
-      </p>
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
+    <HubSection
+      id="recommend"
+      title="Рекомендуем"
+      subtitle={
+        intro ??
+        "Проверенные сервисы и консультации — без навязанных схем. Выбирайте то, что подходит вашему маршруту."
+      }
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
         {services.map((service) => (
           <article
             key={service.href + service.title}
-            className="flex flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-card"
+            className="flex flex-col rounded-2xl border border-gray-100 bg-surface-muted/40 p-5"
           >
             {service.softIntro ? (
               <p className="text-xs font-medium text-sky">{service.softIntro}</p>
@@ -47,6 +47,6 @@ export default function GuidePillarRecommend({ services, intro }: GuidePillarRec
           </article>
         ))}
       </div>
-    </section>
+    </HubSection>
   );
 }

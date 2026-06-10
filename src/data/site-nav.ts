@@ -5,6 +5,7 @@ import { SITE_LEGAL_LINKS } from "@/data/site-links";
 import { TOUR_COLLECTION_OPTIONS } from "@/data/tour-collections";
 import { destinationHref } from "@/lib/destinations";
 import { buildGuideNavColumns } from "@/lib/guide-nav";
+import { buildImmigrationNavColumns } from "@/lib/immigration-nav";
 import { destinationCatalogHref } from "@/lib/site-nav";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 
@@ -37,33 +38,6 @@ const REGION_LINKS: SiteNavLink[] = [
   { id: "region-salta", label: "Сальта и северо-запад", href: destinationHref("salta") },
   { id: "region-mendoza", label: "Мендоса и винодельни", href: destinationHref("mendoza") },
   { id: "region-tierra", label: "Огненная Земля", href: destinationHref("ushuaia") },
-];
-
-const IMMIGRATION_LINKS: SiteNavLink[] = [
-  {
-    id: "immigration-visas",
-    label: "Визы для туристов",
-    href: "/immigration/vizy-dlya-turistov",
-    description: "Безвиз, AVE и граница",
-  },
-  {
-    id: "immigration-residency",
-    label: "Обзор видов ВНЖ",
-    href: "/immigration/obzor-vnzh",
-    description: "Rentista, работа, учёба",
-  },
-  {
-    id: "immigration-documents",
-    label: "Документы для въезда",
-    href: "/immigration/dokumenty-dlya-vyezda",
-    description: "Чеклист перед поездкой",
-  },
-  {
-    id: "immigration-extension",
-    label: "Продление пребывания",
-    href: "/immigration/prodlenie-turisticheskogo-vizita",
-    description: "Migraciones и лимиты",
-  },
 ];
 
 const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
@@ -204,28 +178,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     label: "Иммиграция",
     labelKey: "nav.immigration",
     href: "/immigration",
-    columns: [
-      {
-        id: "immigration-basics",
-        title: "Въезд и статус",
-        titleKey: "nav.columns.immigrationBasics",
-        links: [
-          {
-            id: "immigration-all",
-            label: "Полный справочник по иммиграции",
-            href: "/immigration",
-            description: "ВНЖ, RADEX, гражданство и практические шаги",
-          },
-          ...IMMIGRATION_LINKS.slice(0, 2),
-        ],
-      },
-      {
-        id: "immigration-docs",
-        title: "Документы",
-        titleKey: "nav.columns.immigrationDocs",
-        links: IMMIGRATION_LINKS.slice(2),
-      },
-    ],
+    columns: buildImmigrationNavColumns(),
   },
   {
     id: "shop",

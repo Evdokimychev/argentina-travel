@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRef } from "react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { getSiteNavSection } from "@/data/site-nav";
+import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 import { cn } from "@/lib/cn";
 import { isNavHrefActive, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
 import { siteContainerClass } from "@/lib/site-container";
@@ -13,10 +15,13 @@ const GUIDE_SITE_NAV = getSiteNavSection("guide")!;
 export default function GuideSectionNav() {
   const pathname = usePathname();
   const { t } = useLocaleCurrency();
+  const navRef = useRef<HTMLElement>(null);
   const columns = GUIDE_SITE_NAV.columns ?? [];
+  useSyncSiteSectionNavHeight(navRef);
 
   return (
     <nav
+      ref={navRef}
       className="sticky top-[var(--site-header-height,0px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
       aria-label="Разделы путеводителя"
     >

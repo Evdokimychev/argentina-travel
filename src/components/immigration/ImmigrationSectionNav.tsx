@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useRef } from "react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { IMMIGRATION_SITE_NAV } from "@/data/site-nav";
+import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 import { cn } from "@/lib/cn";
 import { isNavHrefActive, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
 import { siteContainerClass } from "@/lib/site-container";
@@ -11,10 +13,13 @@ import { siteContainerClass } from "@/lib/site-container";
 export default function ImmigrationSectionNav() {
   const pathname = usePathname();
   const { t } = useLocaleCurrency();
+  const navRef = useRef<HTMLElement>(null);
   const columns = IMMIGRATION_SITE_NAV.columns ?? [];
+  useSyncSiteSectionNavHeight(navRef);
 
   return (
     <nav
+      ref={navRef}
       className="sticky top-[var(--site-header-height,0px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
       aria-label="Разделы иммиграции"
     >
