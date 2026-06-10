@@ -64,6 +64,7 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
       bookingId,
       status: nextStatus,
       changedBy: "organizer",
+      actor: user,
     });
 
     setStatusLoading(false);

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { BookingOrganizerComment } from "@/types/tourist";
 import { addOrganizerComment } from "@/lib/bookings-store";
+import { useAuth } from "@/context/AuthContext";
 import BookingOrganizerCommentsJournal from "./BookingOrganizerCommentsJournal";
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +18,7 @@ export default function BookingOrganizerCommentsEditor({
   authorName: string;
   onUpdated?: () => void;
 }) {
+  const { user } = useAuth();
   const [text, setText] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -30,6 +32,7 @@ export default function BookingOrganizerCommentsEditor({
       bookingId,
       text,
       authorName,
+      actor: user,
     });
 
     setLoading(false);

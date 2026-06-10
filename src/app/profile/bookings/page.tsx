@@ -41,7 +41,7 @@ export default function ProfileBookingsPage() {
 
   function handleCancel(bookingId: string) {
     setCancelError(null);
-    const result = cancelBookingByTourist(bookingId, user!.id);
+    const result = cancelBookingByTourist(bookingId, user);
     if ("error" in result) {
       setCancelError(result.error);
     }

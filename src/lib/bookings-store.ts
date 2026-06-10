@@ -1,8 +1,15 @@
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
 import { getCatalogSlug } from "@/lib/tour-slug";
-import { getOrganizerTourListings } from "@/lib/organizer-tour-store";
+import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getCanonicalTourBySlug } from "@/lib/tour-repository";
+import {
+  assertPermission,
+  canBookTour,
+  canCancelOwnBooking,
+  canManageBooking,
+} from "@/lib/permissions";
+import type { SessionUser } from "@/types/user";
 import {
   BOOKINGS_STORE_KEY,
   BOOKINGS_UPDATED_EVENT,
@@ -294,6 +301,7 @@ function persistBookingUpdate(index: number, booking: Booking) {
 }
 
 export function createBooking(input: {
+  actor: SessionUser | null;
   userId: string;
   tour: Pick<TourDetail, "id" | "slug" | "title" | "image">;
   guests: number;
@@ -306,7 +314,10 @@ export function createBooking(input: {
   touristComment?: string;
   status?: BookingStatus;
   organizerTourId?: string;
-}): Booking {
+}): Booking | { error: string } {
+  const allowed = assertPermission(canBookTour(input.actor));
+  if ("error" in allowed) return { error: allowed.error };
+
   const now = new Date().toISOString();
   const status = input.status ?? "new";
   const booking: Booking = {
@@ -349,12 +360,26 @@ export function updateBookingStatusWithHistory(input: {
   status: BookingStatus;
   changedBy: BookingStatusActor;
   note?: string;
+  actor: SessionUser | null;
 }): { booking: Booking } | { error: string } {
   const all = getAllBookings();
   const index = all.findIndex((booking) => booking.id === input.bookingId);
   if (index === -1) return { error: "Бронирование не найдено" };
 
   const current = normalizeBooking(all[index]);
+  const tourOwnerUserId = current.organizerTourId
+    ? getOrganizerTourOwnerId(current.organizerTourId)
+    : undefined;
+
+  if (input.changedBy === "organizer") {
+    const allowed = assertPermission(
+      canManageBooking(input.actor, {
+        tourOwnerUserId,
+      })
+    );
+    if ("error" in allowed) return { error: allowed.error };
+  }
+
   if (current.status === input.status) {
     return { booking: current };
   }
@@ -381,22 +406,27 @@ export function updateBookingStatusWithHistory(input: {
 /** @deprecated Use updateBookingStatusWithHistory */
 export function updateBookingStatus(
   bookingId: string,
-  status: BookingStatus
+  status: BookingStatus,
+  actor: SessionUser | null
 ): { booking: Booking } | { error: string } {
   return updateBookingStatusWithHistory({
     bookingId,
     status,
     changedBy: "organizer",
+    actor,
   });
 }
 
 export function cancelBookingByTourist(
   bookingId: string,
-  userId: string
+  actor: SessionUser | null
 ): { booking: Booking } | { error: string } {
   const booking = getBookingById(bookingId);
   if (!booking) return { error: "Бронирование не найдено" };
-  if (booking.userId !== userId) return { error: "Нет доступа" };
+
+  const allowed = assertPermission(canCancelOwnBooking(actor, booking.userId));
+  if ("error" in allowed) return { error: allowed.error };
+
   if (booking.status !== "new" && booking.status !== "pending") {
     return { error: "Эту заявку нельзя отменить" };
   }
@@ -405,6 +435,7 @@ export function cancelBookingByTourist(
     bookingId,
     status: "cancelled",
     changedBy: "tourist",
+    actor,
   });
 }
 
@@ -412,6 +443,7 @@ export function addOrganizerComment(input: {
   bookingId: string;
   text: string;
   authorName: string;
+  actor: SessionUser | null;
 }): { booking: Booking } | { error: string } {
   const trimmed = input.text.trim();
   if (!trimmed) return { error: "Введите текст комментария" };
@@ -421,6 +453,15 @@ export function addOrganizerComment(input: {
   if (index === -1) return { error: "Бронирование не найдено" };
 
   const current = normalizeBooking(all[index]);
+  const tourOwnerUserId = current.organizerTourId
+    ? getOrganizerTourOwnerId(current.organizerTourId)
+    : undefined;
+
+  const allowed = assertPermission(
+    canManageBooking(input.actor, { tourOwnerUserId })
+  );
+  if ("error" in allowed) return { error: allowed.error };
+
   const comment: BookingOrganizerComment = {
     id: createId("comment"),
     text: trimmed,
@@ -439,6 +480,7 @@ export function addOrganizerComment(input: {
 }
 
 export function createBookingFromCheckout(input: {
+  actor: SessionUser | null;
   userId: string;
   tour: TourDetail;
   guests: number;
@@ -446,8 +488,9 @@ export function createBookingFromCheckout(input: {
   endDate?: string;
   totalPriceUsd: number;
   form: CheckoutFormState;
-}): Booking {
+}): Booking | { error: string } {
   return createBooking({
+    actor: input.actor,
     userId: input.userId,
     tour: input.tour,
     guests: input.guests,

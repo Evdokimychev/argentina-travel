@@ -18,6 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
+import { useAuth } from "@/context/AuthContext";
 import { getOrganizerCabinetBookingStats } from "@/lib/organizer-bookings";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import type { OrganizerBookingStats } from "@/types/tourist";
@@ -83,6 +84,7 @@ function BookingStatCard({
 }
 
 export default function OrganizerDashboardView() {
+  const { user } = useAuth();
   const [copied, setCopied] = useState(false);
   const [publicToursUrl, setPublicToursUrl] = useState("https://argentina-travel.ru/tours");
   const [bookingStats, setBookingStats] = useState<OrganizerBookingStats>({
@@ -99,14 +101,16 @@ export default function OrganizerDashboardView() {
   }, []);
 
   useEffect(() => {
+    if (!user) return;
+
     function refreshStats() {
-      setBookingStats(getOrganizerCabinetBookingStats());
+      setBookingStats(getOrganizerCabinetBookingStats(user!.id));
     }
 
     refreshStats();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     if (!copied) return;

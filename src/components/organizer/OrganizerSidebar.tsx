@@ -18,6 +18,7 @@ import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
 import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
+import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 
@@ -62,6 +63,7 @@ export default function OrganizerSidebar({
   avatarUrl,
   forceCompact = false,
 }: OrganizerSidebarProps) {
+  const { user } = useAuth();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -87,14 +89,16 @@ export default function OrganizerSidebar({
   }, []);
 
   useEffect(() => {
+    if (!user) return;
+
     function refreshNavBadges() {
-      setNavItems(getOrganizerNavItemsWithBadges());
+      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
     }
 
     refreshNavBadges();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-  }, []);
+  }, [user]);
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
@@ -271,18 +275,21 @@ export function OrganizerMobileHeader() {
 }
 
 export function OrganizerMobileNav() {
+  const { user } = useAuth();
   const pathname = usePathname();
   const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
 
   useEffect(() => {
+    if (!user) return;
+
     function refreshNavBadges() {
-      setNavItems(getOrganizerNavItemsWithBadges());
+      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
     }
 
     refreshNavBadges();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-  }, []);
+  }, [user]);
 
   return (
     <nav className="flex gap-1 overflow-x-auto border-b border-gray-200 bg-white px-3 py-2 md:hidden scrollbar-hide">

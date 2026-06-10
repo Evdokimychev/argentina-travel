@@ -9,23 +9,16 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { AuthIntent, AuthUser, AuthUserRole } from "@/types/auth";
-import { userHasRole } from "@/types/auth";
-import {
-  addOrganizerRole,
-  loginTouristForOrganizerUpgrade,
-  loginWithEmail,
-  loginWithPhone,
-  logoutUser,
-  readSessionUser,
-  registerUser,
-  updateUserAvatar,
-  updateUserProfile,
-} from "@/lib/auth-store";
+import type { AuthIntent } from "@/types/auth";
+import type { AccountRole, SessionUser } from "@/types/user";
+import { userHasAccountRole } from "@/types/user";
+import { splitFullName } from "@/lib/full-name";
+import { localAuthProvider } from "@/lib/auth-provider";
+import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
 
 interface AuthContextValue {
-  user: AuthUser | null;
+  user: SessionUser | null;
   isAuthenticated: boolean;
   authOpen: boolean;
   authIntent: AuthIntent;
@@ -33,7 +26,7 @@ interface AuthContextValue {
   closeAuth: () => void;
   loginByPhone: (
     phone: string,
-    role: AuthUserRole
+    role: AccountRole
   ) => Promise<
     | { ok: true }
     | { ok: false; error: string; notFound?: boolean; roleNotConnected?: boolean }
@@ -41,17 +34,14 @@ interface AuthContextValue {
   loginByEmail: (
     email: string,
     password: string,
-    role: AuthUserRole
-  ) => Promise<
-    | { ok: true }
-    | { ok: false; error: string; roleNotConnected?: boolean }
-  >;
+    role: AccountRole
+  ) => Promise<{ ok: true } | { ok: false; error: string; roleNotConnected?: boolean }>;
   loginForOrganizerUpgrade: (
     email: string,
     password: string
   ) => Promise<{ ok: true } | { ok: false; error: string }>;
   register: (input: {
-    role: AuthUserRole;
+    role: AccountRole;
     fullName: string;
     phone: string;
     email: string;
@@ -74,14 +64,14 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authIntent, setAuthIntent] = useState<AuthIntent>("default");
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
-    setUser(readSessionUser());
+    setUser(localAuthProvider.getSessionUser());
     setHydrated(true);
   }, []);
 
@@ -106,8 +96,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setAuthIntent("default");
   }, []);
 
-  const loginByPhone = useCallback(async (phone: string, role: AuthUserRole) => {
-    const result = loginWithPhone(phone, role);
+  const loginByPhone = useCallback(async (phone: string, role: AccountRole) => {
+    const result = localAuthProvider.loginWithPhone(phone, role);
     if ("error" in result) {
       if (result.code === "NOT_FOUND") {
         return { ok: false as const, error: "NOT_FOUND", notFound: true };
@@ -126,8 +116,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { ok: true as const };
   }, []);
 
-  const loginByEmail = useCallback(async (email: string, password: string, role: AuthUserRole) => {
-    const result = loginWithEmail(email, password, role);
+  const loginByEmail = useCallback(async (email: string, password: string, role: AccountRole) => {
+    const result = localAuthProvider.loginWithEmail(email, password, role);
     if ("error" in result) {
       if (result.code === "ROLE_NOT_CONNECTED") {
         return {
@@ -144,7 +134,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const loginForOrganizerUpgrade = useCallback(async (email: string, password: string) => {
-    const result = loginTouristForOrganizerUpgrade(email, password);
+    const result = localAuthProvider.loginTouristForOrganizerUpgrade(email, password);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
@@ -155,22 +145,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = useCallback(
     async (input: {
-      role: AuthUserRole;
+      role: AccountRole;
       fullName: string;
       phone: string;
       email: string;
       password?: string;
     }) => {
-      const result = registerUser(input);
+      const { firstName, lastName } = splitFullName(input.fullName);
+      const result = localAuthProvider.register({
+        role: input.role,
+        firstName,
+        lastName,
+        phone: input.phone,
+        email: input.email,
+        password: input.password,
+      });
+
       if ("error" in result) {
-        if (result.error === "DUPLICATE_PHONE") {
+        if (result.error === "DUPLICATE_PHONE" || result.code === "DUPLICATE_PHONE") {
           return {
             ok: false as const,
             error: "Пользователь с таким телефоном уже зарегистрирован",
             duplicatePhone: true,
           };
         }
-        if (result.error === "DUPLICATE_EMAIL") {
+        if (result.error === "DUPLICATE_EMAIL" || result.code === "DUPLICATE_EMAIL") {
           return {
             ok: false as const,
             error: "Пользователь с такой почтой уже зарегистрирован",
@@ -191,7 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { ok: false as const, error: "Войдите в аккаунт" };
     }
 
-    const result = addOrganizerRole(user.id);
+    const result = localAuthProvider.addOrganizerRole(user.id);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
@@ -212,7 +211,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { ok: false as const, error: "Войдите в аккаунт" };
       }
 
-      const result = updateUserProfile(user.id, input);
+      const { firstName, lastName } = splitFullName(input.fullName);
+      const result = localAuthProvider.updateProfile(user.id, {
+        firstName,
+        lastName,
+        phone: input.phone,
+        email: input.email,
+        country: input.country,
+        dateOfBirth: input.dateOfBirth,
+      });
+
       if ("error" in result) {
         return { ok: false as const, error: result.error };
       }
@@ -229,7 +237,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { ok: false as const, error: "Войдите в аккаунт" };
       }
 
-      const result = updateUserAvatar(user.id, avatarUrl);
+      const result = localAuthProvider.updateAvatar(user.id, avatarUrl);
       if ("error" in result) {
         return { ok: false as const, error: result.error };
       }
@@ -241,7 +249,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    logoutUser();
+    localAuthProvider.logout();
     setUser(null);
     setAuthOpen(false);
     setAuthIntent("default");
@@ -298,6 +306,13 @@ export function useAuth() {
   return context;
 }
 
-export function useHasOrganizerRole(user: AuthUser | null): boolean {
-  return user != null && userHasRole(user, "organizer");
+/** @deprecated Prefer canAccessOrganizerPanel from @/lib/permissions */
+export function useHasOrganizerRole(user: SessionUser | null): boolean {
+  return canAccessOrganizerPanel(user);
 }
+
+export function useCanAccessOrganizerPanel(user: SessionUser | null): boolean {
+  return canAccessOrganizerPanel(user);
+}
+
+export type { SessionUser as AuthUser };

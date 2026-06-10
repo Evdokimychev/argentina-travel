@@ -51,6 +51,14 @@ import {
   generateUniqueTourSlug,
   getCatalogSlug,
 } from "@/lib/tour-slug";
+import {
+  assertPermission,
+  canCreateTour,
+  canDeleteTour,
+  canEditTour,
+} from "@/lib/permissions";
+import type { SessionUser } from "@/types/user";
+import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
 
 const DRAFTS_KEY = "argentina-travel-organizer-tour-drafts";
 const LISTINGS_KEY = "argentina-travel-organizer-tour-listings";
@@ -94,7 +102,24 @@ function writeListingsMap(listings: Record<string, OrganizerTourListing>) {
 
 function mergeSeedListing(seed: OrganizerTourListing): OrganizerTourListing {
   const overrides = readListingsMap();
-  return overrides[seed.id] ? { ...seed, ...overrides[seed.id] } : seed;
+  const merged = overrides[seed.id] ? { ...seed, ...overrides[seed.id] } : seed;
+  return {
+    ...merged,
+    ownerUserId: merged.ownerUserId ?? seed.ownerUserId ?? DEFAULT_ORGANIZER_OWNER_ID,
+  };
+}
+
+export function resolveOwnerUserId(listing: Pick<OrganizerTourListing, "ownerUserId">): string {
+  return listing.ownerUserId ?? DEFAULT_ORGANIZER_OWNER_ID;
+}
+
+export function getOrganizerTourOwnerId(tourId: string): string | undefined {
+  const listing = findOrganizerTourListing(tourId);
+  return listing ? resolveOwnerUserId(listing) : undefined;
+}
+
+export function isOrganizerTourOwner(tourId: string, userId: string): boolean {
+  return getOrganizerTourOwnerId(tourId) === userId;
 }
 
 export function getAllOrganizerListingsIncludingDeleted(): OrganizerTourListing[] {
@@ -319,6 +344,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
 function draftToListing(draft: OrganizerTourDraft): OrganizerTourListing {
   return {
     id: draft.id,
+    ownerUserId: resolveOwnerUserId(draft),
     slug: draft.slug,
     catalogSlug: draft.catalogSlug,
     title: draft.title,
@@ -343,6 +369,12 @@ export function getOrganizerTourListings(): OrganizerTourListing[] {
     const draft = drafts[listing.id] ?? buildSeedDraft(listing);
     return draftToListing(draft);
   });
+}
+
+export function getOrganizerTourListingsForUser(userId: string): OrganizerTourListing[] {
+  return getOrganizerTourListings().filter(
+    (listing) => resolveOwnerUserId(listing) === userId
+  );
 }
 
 function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing): OrganizerTourDraft {
@@ -445,9 +477,17 @@ function resolveAccommodationPlaces(
   return seed.accommodationPlaces;
 }
 
-export function readOrganizerTourDraft(tourId: string): OrganizerTourDraft | null {
+export function readOrganizerTourDraft(
+  tourId: string,
+  actor: SessionUser | null = null
+): OrganizerTourDraft | null {
   const listing = findOrganizerTourListing(tourId);
   if (!listing || listing.deleted) return null;
+
+  if (actor) {
+    const allowed = assertPermission(canEditTour(actor, resolveOwnerUserId(listing)));
+    if ("error" in allowed) return null;
+  }
 
   const drafts = readDraftMap();
   const draft = drafts[tourId] ?? (
@@ -459,8 +499,12 @@ export function readOrganizerTourDraft(tourId: string): OrganizerTourDraft | nul
 }
 
 export function saveOrganizerTourDraft(
-  draft: OrganizerTourDraft
+  draft: OrganizerTourDraft,
+  actor: SessionUser | null
 ): { draft: OrganizerTourDraft } | { error: string } {
+  const allowed = assertPermission(canEditTour(actor, resolveOwnerUserId(draft)));
+  if ("error" in allowed) return { error: allowed.error };
+
   if (!draft.id.trim()) {
     return { error: "Не удалось сохранить тур" };
   }
@@ -547,7 +591,12 @@ export function saveOrganizerTourDraft(
   return { draft: next };
 }
 
-export function createOrganizerTour(): { draft: OrganizerTourDraft } | { error: string } {
+export function createOrganizerTour(
+  actor: SessionUser | null
+): { draft: OrganizerTourDraft } | { error: string } {
+  const allowed = assertPermission(canCreateTour(actor));
+  if ("error" in allowed) return { error: allowed.error };
+
   if (typeof window === "undefined") {
     return { error: "Создание тура доступно в браузере" };
   }
@@ -561,6 +610,7 @@ export function createOrganizerTour(): { draft: OrganizerTourDraft } | { error: 
 
   const listing: OrganizerTourListing = {
     id,
+    ownerUserId: actor!.id,
     slug,
     catalogSlug: slug,
     title: "Новый тур",
@@ -591,14 +641,18 @@ export function createOrganizerTour(): { draft: OrganizerTourDraft } | { error: 
 }
 
 export function cloneOrganizerTour(
-  sourceTourId: string
+  sourceTourId: string,
+  actor: SessionUser | null
 ): { draft: OrganizerTourDraft } | { error: string } {
   if (typeof window === "undefined") {
     return { error: "Клонирование доступно в браузере" };
   }
 
-  const source = readOrganizerTourDraft(sourceTourId);
+  const source = readOrganizerTourDraft(sourceTourId, actor);
   if (!source) return { error: "Исходный тур не найден" };
+
+  const allowed = assertPermission(canEditTour(actor, resolveOwnerUserId(source)));
+  if ("error" in allowed) return { error: allowed.error };
 
   const takenSlugs = collectTakenCatalogSlugs(
     getAllOrganizerListingsIncludingDeleted(),
@@ -609,6 +663,7 @@ export function cloneOrganizerTour(
 
   const listing: OrganizerTourListing = {
     id,
+    ownerUserId: actor!.id,
     slug,
     catalogSlug: slug,
     title: `${source.title} (копия)`.slice(0, ORGANIZER_TOUR_TITLE_MAX),
@@ -670,13 +725,19 @@ export function cloneOrganizerTour(
   return { draft: clone };
 }
 
-export function deleteOrganizerTour(tourId: string): { ok: true } | { error: string } {
+export function deleteOrganizerTour(
+  tourId: string,
+  actor: SessionUser | null
+): { ok: true } | { error: string } {
   if (typeof window === "undefined") {
     return { error: "Удаление доступно в браузере" };
   }
 
   const listing = findOrganizerTourListing(tourId);
   if (!listing) return { error: "Тур не найден" };
+
+  const allowed = assertPermission(canDeleteTour(actor, resolveOwnerUserId(listing)));
+  if ("error" in allowed) return { error: allowed.error };
 
   const catalogSlug = getCatalogSlug(listing);
   markTourDeletedBySlug(catalogSlug);

@@ -90,7 +90,7 @@ export default function ProfileReviewsPage() {
                 {review.status === "draft" ? (
                   <button
                     type="button"
-                    onClick={() => updateReviewStatus(review.id, "published")}
+                    onClick={() => user && updateReviewStatus(review.id, "published", user)}
                     className="text-sm font-medium text-brand hover:underline"
                   >
                     Отправить на публикацию

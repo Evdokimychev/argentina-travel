@@ -477,7 +477,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 .slice(0, 10)
             : selectedDate?.endDate;
 
-        createBookingFromCheckout({
+        const bookingResult = createBookingFromCheckout({
+          actor: user,
           userId: user.id,
           tour,
           guests,
@@ -486,7 +487,9 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
           totalPriceUsd: totalUsd,
           form,
         });
-        setSavedToProfile(true);
+        if (!("error" in bookingResult)) {
+          setSavedToProfile(true);
+        }
       }
       setSubmitted(true);
     }

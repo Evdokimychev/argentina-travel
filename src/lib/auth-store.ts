@@ -1,5 +1,12 @@
-import type { AuthUser, AuthUserRole, StoredAuthUser } from "@/types/auth";
-import { normalizeUserRoles, userHasRole } from "@/types/auth";
+import type { AuthProvider, AuthResult } from "@/lib/auth-provider";
+import { toSessionUser } from "@/lib/auth-session";
+import { joinFullName, splitFullName } from "@/lib/full-name";
+import type { AccountRole, SessionUser, User } from "@/types/user";
+import {
+  DEFAULT_ORGANIZER_OWNER_ID,
+  normalizeAccountRoles,
+  userHasAccountRole,
+} from "@/types/user";
 import { DEFAULT_PROFILE_COUNTRY } from "@/data/profile-countries";
 import {
   DEFAULT_PHONE_COUNTRY,
@@ -7,6 +14,7 @@ import {
   getPhoneCountry,
   parseInternationalPhone,
 } from "@/lib/phone-countries";
+import type { StoredAuthUser } from "@/types/auth";
 
 const SESSION_KEY = "argentina-travel-auth-session";
 const USERS_KEY = "argentina-travel-auth-users";
@@ -16,16 +24,18 @@ export const DEMO_PASSWORD = "demo123";
 
 export const SEED_USERS: StoredAuthUser[] = [
   {
-    id: "ivan-evdokimychev",
+    id: DEFAULT_ORGANIZER_OWNER_ID,
     role: "tourist",
-    fullName: "Иван Евдокимычев",
+    roles: ["tourist", "organizer"],
+    firstName: "Иван",
+    lastName: "Евдокимычев",
     phone: "+79999226564",
     email: "IAEvdokimychev@ya.ru",
     password: DEMO_PASSWORD,
     country: "Россия",
-    avatarUrl: null,
+    avatar: null,
     dateOfBirth: "1990-05-15",
-    roles: ["tourist"],
+    createdAt: "2024-01-01T00:00:00.000Z",
   },
 ];
 
@@ -36,7 +46,7 @@ function readStoredUsers(): StoredAuthUser[] {
     const raw = window.localStorage.getItem(USERS_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw) as StoredAuthUser[];
-    return Array.isArray(parsed) ? parsed : [];
+    return Array.isArray(parsed) ? parsed.map(normalizeStoredUser) : [];
   } catch {
     return [];
   }
@@ -63,10 +73,34 @@ function writeProfileOverrides(overrides: Record<string, Partial<StoredAuthUser>
   window.localStorage.setItem(OVERRIDES_KEY, JSON.stringify(overrides));
 }
 
+function normalizeStoredUser(raw: StoredAuthUser): StoredAuthUser {
+  const name =
+    raw.firstName?.trim()
+      ? { firstName: raw.firstName.trim(), lastName: raw.lastName?.trim() ?? "" }
+      : splitFullName(raw.fullName ?? "");
+
+  const roles = normalizeAccountRoles({
+    role: raw.role,
+    roles: raw.roles,
+  });
+
+  return {
+    ...raw,
+    firstName: name.firstName,
+    lastName: name.lastName,
+    avatar: raw.avatar ?? raw.avatarUrl ?? null,
+    roles,
+    role: roles.includes(raw.role) ? raw.role : roles[0],
+    country: raw.country ?? DEFAULT_PROFILE_COUNTRY,
+    dateOfBirth: raw.dateOfBirth ?? null,
+    createdAt: raw.createdAt ?? new Date().toISOString(),
+  };
+}
+
 function applyOverrides(user: StoredAuthUser): StoredAuthUser {
   const override = readProfileOverrides()[user.id];
-  if (!override) return user;
-  return { ...user, ...override };
+  if (!override) return normalizeStoredUser(user);
+  return normalizeStoredUser({ ...user, ...override });
 }
 
 export function getAllUsers(): StoredAuthUser[] {
@@ -138,8 +172,8 @@ export function findUserByEmail(email: string): StoredAuthUser | null {
   return getAllUsers().find((user) => user.email.toLowerCase() === normalized) ?? null;
 }
 
-function toAuthUser(user: StoredAuthUser, activeRole?: AuthUserRole): AuthUser {
-  const roles = normalizeUserRoles(user);
+function toUserRecord(user: StoredAuthUser, activeRole?: AccountRole): User {
+  const roles = normalizeAccountRoles(user);
   const role =
     activeRole && roles.includes(activeRole)
       ? activeRole
@@ -151,36 +185,56 @@ function toAuthUser(user: StoredAuthUser, activeRole?: AuthUserRole): AuthUser {
     id: user.id,
     role,
     roles,
-    fullName: user.fullName,
+    firstName: user.firstName,
+    lastName: user.lastName,
     phone: user.phone,
     email: user.email,
-    avatarUrl: user.avatarUrl ?? null,
+    avatar: user.avatar ?? null,
     country: user.country ?? DEFAULT_PROFILE_COUNTRY,
     dateOfBirth: user.dateOfBirth ?? null,
+    createdAt: user.createdAt,
   };
 }
 
-export function readSessionUser(): AuthUser | null {
+function toSession(user: StoredAuthUser, activeRole?: AccountRole): SessionUser {
+  return toSessionUser(toUserRecord(user, activeRole));
+}
+
+function readSessionPayload(): { id: string; role?: AccountRole } | null {
   if (typeof window === "undefined") return null;
 
   try {
     const raw = window.localStorage.getItem(SESSION_KEY);
     if (!raw) return null;
-
-    const parsed = JSON.parse(raw) as AuthUser;
-    const fresh = getAllUsers().find((user) => user.id === parsed.id);
-    return fresh ? toAuthUser(fresh) : null;
+    const parsed = JSON.parse(raw) as { id: string; role?: AccountRole };
+    if (!parsed?.id) return null;
+    return parsed;
   } catch {
     return null;
   }
 }
 
-export function writeSessionUser(user: AuthUser | null) {
+function writeSessionPayload(user: SessionUser | null) {
   if (user) {
-    window.localStorage.setItem(SESSION_KEY, JSON.stringify(user));
+    window.localStorage.setItem(
+      SESSION_KEY,
+      JSON.stringify({ id: user.id, role: user.role })
+    );
   } else {
     window.localStorage.removeItem(SESSION_KEY);
   }
+}
+
+export function readSessionUser(): SessionUser | null {
+  const payload = readSessionPayload();
+  if (!payload) return null;
+
+  const fresh = getAllUsers().find((user) => user.id === payload.id);
+  return fresh ? toSession(fresh, payload.role) : null;
+}
+
+export function writeSessionUser(user: SessionUser | null) {
+  writeSessionPayload(user);
 }
 
 export type LoginErrorCode =
@@ -189,10 +243,17 @@ export type LoginErrorCode =
   | "WRONG_ROLE"
   | "INVALID_CREDENTIALS";
 
+function rejectLogin(
+  error: string,
+  code?: LoginErrorCode
+): AuthResult {
+  return { error, code };
+}
+
 export function loginWithPhone(
   phone: string,
-  role: AuthUserRole
-): { user: AuthUser } | { error: string; code?: LoginErrorCode } {
+  role: AccountRole
+): AuthResult {
   const normalized = normalizePhone(phone);
   if (!normalized) {
     return { error: "Введите корректный номер телефона" };
@@ -200,21 +261,19 @@ export function loginWithPhone(
 
   const account = findUserByPhone(normalized);
   if (!account) {
-    return { error: "NOT_FOUND", code: "NOT_FOUND" };
+    return rejectLogin("NOT_FOUND", "NOT_FOUND");
   }
 
-  if (!userHasRole(account, role)) {
-    return {
-      error:
-        role === "organizer"
-          ? "ROLE_NOT_CONNECTED"
-          : "Этот номер зарегистрирован как автор тура. Войдите как организатор.",
-      code: role === "organizer" ? "ROLE_NOT_CONNECTED" : "WRONG_ROLE",
-    };
+  if (!userHasAccountRole(account, role)) {
+    return rejectLogin(
+      role === "organizer"
+        ? "ROLE_NOT_CONNECTED"
+        : "Этот номер зарегистрирован как автор тура. Войдите как организатор.",
+      role === "organizer" ? "ROLE_NOT_CONNECTED" : "WRONG_ROLE"
+    );
   }
 
-  const user = toAuthUser(account, role);
-
+  const user = toSession(account, role);
   writeSessionUser(user);
   return { user };
 }
@@ -222,50 +281,50 @@ export function loginWithPhone(
 export function loginWithEmail(
   email: string,
   password: string,
-  role: AuthUserRole
-): { user: AuthUser } | { error: string; code?: LoginErrorCode } {
+  role: AccountRole
+): AuthResult {
   const account = findUserByEmail(email);
   if (!account) {
     return { error: "Аккаунт с такой почтой не найден. Зарегистрируйтесь по телефону." };
   }
 
-  if (!userHasRole(account, role)) {
-    return {
-      error:
-        role === "organizer"
-          ? "ROLE_NOT_CONNECTED"
-          : "Эта почта зарегистрирована как автор тура.",
-      code: role === "organizer" ? "ROLE_NOT_CONNECTED" : "WRONG_ROLE",
-    };
+  if (!userHasAccountRole(account, role)) {
+    return rejectLogin(
+      role === "organizer"
+        ? "ROLE_NOT_CONNECTED"
+        : "Эта почта зарегистрирована как автор тура.",
+      role === "organizer" ? "ROLE_NOT_CONNECTED" : "WRONG_ROLE"
+    );
   }
 
   if (!account.password || account.password !== password) {
-    return { error: "Неверный пароль", code: "INVALID_CREDENTIALS" };
+    return rejectLogin("Неверный пароль", "INVALID_CREDENTIALS");
   }
 
-  const user = toAuthUser(account, role);
-
+  const user = toSession(account, role);
   writeSessionUser(user);
   return { user };
 }
 
 export function registerUser(input: {
-  role: AuthUserRole;
-  fullName: string;
+  role: AccountRole;
+  firstName: string;
+  lastName: string;
   phone: string;
   email: string;
   password?: string;
-}): { user: AuthUser } | { error: string; code?: "DUPLICATE_PHONE" | "DUPLICATE_EMAIL" } {
+}): AuthResult {
   const normalizedPhone = normalizePhone(input.phone);
   const normalizedEmail = input.email.trim().toLowerCase();
-  const fullName = input.fullName.trim();
+  const firstName = input.firstName.trim();
+  const lastName = input.lastName.trim();
 
   if (!normalizedPhone) {
     return { error: "Введите корректный номер телефона" };
   }
 
-  if (!fullName) {
-    return { error: "Укажите имя и фамилию" };
+  if (!firstName) {
+    return { error: "Укажите имя" };
   }
 
   if (!normalizedEmail || !normalizedEmail.includes("@")) {
@@ -273,60 +332,61 @@ export function registerUser(input: {
   }
 
   if (findUserByPhone(normalizedPhone)) {
-    return { error: "DUPLICATE_PHONE", code: "DUPLICATE_PHONE" as const };
+    return { error: "DUPLICATE_PHONE", code: "DUPLICATE_PHONE" };
   }
 
   if (findUserByEmail(normalizedEmail)) {
-    return { error: "DUPLICATE_EMAIL", code: "DUPLICATE_EMAIL" as const };
+    return { error: "DUPLICATE_EMAIL", code: "DUPLICATE_EMAIL" };
   }
 
-  const roles: AuthUserRole[] =
+  const roles: AccountRole[] =
     input.role === "organizer" ? ["tourist", "organizer"] : [input.role];
 
   const user: StoredAuthUser = {
     id: `user-${Date.now()}`,
     role: input.role,
     roles,
-    fullName,
+    firstName,
+    lastName,
     phone: normalizedPhone,
     email: normalizedEmail,
     password: input.password ?? DEMO_PASSWORD,
     country: DEFAULT_PROFILE_COUNTRY,
-    avatarUrl: null,
+    avatar: null,
     dateOfBirth: null,
+    createdAt: new Date().toISOString(),
   };
 
   const stored = readStoredUsers();
   stored.push(user);
   writeStoredUsers(stored);
 
-  const sessionUser = toAuthUser(user, input.role);
-
+  const sessionUser = toSession(user, input.role);
   writeSessionUser(sessionUser);
   return { user: sessionUser };
 }
 
-export function addOrganizerRole(userId: string): { user: AuthUser } | { error: string } {
+export function addOrganizerRole(userId: string): AuthResult {
   const current = getAllUsers().find((user) => user.id === userId);
   if (!current) {
     return { error: "Пользователь не найден" };
   }
 
-  const roles = normalizeUserRoles(current);
+  const roles = normalizeAccountRoles(current);
   if (roles.includes("organizer")) {
-    const user = toAuthUser(current, "organizer");
+    const user = toSession(current, "organizer");
     writeSessionUser(user);
     return { user };
   }
 
-  const nextRoles: AuthUserRole[] = [...roles, "organizer"];
+  const nextRoles: AccountRole[] = [...roles, "organizer"];
   const patch = { roles: nextRoles, role: "organizer" as const };
   const persisted = persistProfilePatch(userId, patch);
   if (persisted.error) {
     return { error: persisted.error };
   }
 
-  const updated = toAuthUser({ ...current, ...patch }, "organizer");
+  const updated = toSession({ ...current, ...patch }, "organizer");
   writeSessionUser(updated);
   return { user: updated };
 }
@@ -334,17 +394,17 @@ export function addOrganizerRole(userId: string): { user: AuthUser } | { error: 
 export function loginTouristForOrganizerUpgrade(
   email: string,
   password: string
-): { user: AuthUser } | { error: string; code?: LoginErrorCode } {
+): AuthResult {
   const account = findUserByEmail(email);
   if (!account) {
     return { error: "Аккаунт с такой почтой не найден." };
   }
 
   if (!account.password || account.password !== password) {
-    return { error: "Неверный пароль", code: "INVALID_CREDENTIALS" };
+    return rejectLogin("Неверный пароль", "INVALID_CREDENTIALS");
   }
 
-  const user = toAuthUser(account, "tourist");
+  const user = toSession(account, "tourist");
   writeSessionUser(user);
   return { user };
 }
@@ -366,7 +426,7 @@ function persistProfilePatch(userId: string, patch: Partial<StoredAuthUser>): { 
 
   if (isStoredUser) {
     const stored = readStoredUsers().map((user) =>
-      user.id === userId ? { ...user, ...patch } : user
+      user.id === userId ? normalizeStoredUser({ ...user, ...patch }) : user
     );
     writeStoredUsers(stored);
     return {};
@@ -378,19 +438,21 @@ function persistProfilePatch(userId: string, patch: Partial<StoredAuthUser>): { 
 export function updateUserProfile(
   userId: string,
   input: {
-    fullName: string;
+    firstName: string;
+    lastName: string;
     phone: string;
     email: string;
     country: string;
     dateOfBirth: string | null;
   }
-): { user: AuthUser } | { error: string } {
-  const fullName = input.fullName.trim();
+): AuthResult {
+  const firstName = input.firstName.trim();
+  const lastName = input.lastName.trim();
   const normalizedPhone = normalizePhone(input.phone);
   const normalizedEmail = input.email.trim().toLowerCase();
 
-  if (!fullName) {
-    return { error: "Укажите имя и фамилию" };
+  if (!firstName) {
+    return { error: "Укажите имя" };
   }
 
   if (!normalizedPhone) {
@@ -426,7 +488,8 @@ export function updateUserProfile(
   }
 
   const patch = {
-    fullName,
+    firstName,
+    lastName,
     phone: normalizedPhone,
     email: normalizedEmail,
     country,
@@ -438,8 +501,7 @@ export function updateUserProfile(
     return { error: persisted.error };
   }
 
-  const updated = toAuthUser({ ...current, ...patch });
-
+  const updated = toSession({ ...current, ...patch });
   writeSessionUser(updated);
   return { user: updated };
 }
@@ -447,18 +509,31 @@ export function updateUserProfile(
 export function updateUserAvatar(
   userId: string,
   avatarUrl: string | null
-): { user: AuthUser } | { error: string } {
+): AuthResult {
   const current = getAllUsers().find((user) => user.id === userId);
   if (!current) {
     return { error: "Пользователь не найден" };
   }
 
-  const persisted = persistProfilePatch(userId, { avatarUrl });
+  const patch = { avatar: avatarUrl };
+  const persisted = persistProfilePatch(userId, patch);
   if (persisted.error) {
     return { error: persisted.error };
   }
 
-  const updated = toAuthUser({ ...current, avatarUrl });
+  const updated = toSession({ ...current, ...patch });
   writeSessionUser(updated);
   return { user: updated };
 }
+
+export const localAuthProvider: AuthProvider = {
+  getSessionUser: readSessionUser,
+  loginWithPhone,
+  loginWithEmail,
+  loginTouristForOrganizerUpgrade,
+  register: registerUser,
+  addOrganizerRole,
+  updateProfile: updateUserProfile,
+  updateAvatar: updateUserAvatar,
+  logout: logoutUser,
+};

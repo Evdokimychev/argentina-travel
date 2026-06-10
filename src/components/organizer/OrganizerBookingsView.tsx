@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
+import { useAuth } from "@/context/AuthContext";
 import {
   getOrganizerBookingsForCabinet,
 } from "@/lib/organizer-bookings";
@@ -34,6 +35,7 @@ function formatTourDates(booking: Booking): string {
 }
 
 export default function OrganizerBookingsView() {
+  const { user } = useAuth();
   const searchParams = useSearchParams();
   const initialStatus = (searchParams.get("status") as StatusFilter) || "all";
 
@@ -47,14 +49,16 @@ export default function OrganizerBookingsView() {
   const [sort, setSort] = useState<SortOption>("newest");
 
   useEffect(() => {
+    if (!user) return;
+
     function refresh() {
-      setBookings(getOrganizerBookingsForCabinet());
+      setBookings(getOrganizerBookingsForCabinet(user!.id));
     }
 
     refresh();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
-  }, []);
+  }, [user]);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();

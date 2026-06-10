@@ -34,7 +34,8 @@ export function useFavoriteTour(tour: FavoriteTourInput) {
       return;
     }
 
-    const result = toggleFavorite(user.id, tour);
+    const result = toggleFavorite(user, user.id, tour);
+    if ("error" in result) return;
     setFavorited(result.favorited);
   }
 

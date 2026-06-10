@@ -3,6 +3,8 @@ import {
   FAVORITES_UPDATED_EVENT,
   type FavoriteTour,
 } from "@/types/tourist";
+import { assertPermission, canSaveFavorite } from "@/lib/permissions";
+import type { SessionUser } from "@/types/user";
 
 type FavoritesStore = Record<string, FavoriteTour[]>;
 
@@ -30,6 +32,13 @@ function notifyUpdated() {
   }
 }
 
+function assertFavoriteActor(actor: SessionUser | null, userId: string): { ok: true } | { error: string } {
+  const allowed = assertPermission(canSaveFavorite(actor));
+  if ("error" in allowed) return allowed;
+  if (!actor || actor.id !== userId) return { error: "Нет доступа" };
+  return { ok: true };
+}
+
 export function getUserFavorites(userId: string): FavoriteTour[] {
   return readStore()[userId] ?? [];
 }
@@ -38,7 +47,14 @@ export function isTourFavorite(userId: string, tourSlug: string): boolean {
   return getUserFavorites(userId).some((item) => item.tourSlug === tourSlug);
 }
 
-export function addFavorite(userId: string, tour: Omit<FavoriteTour, "addedAt">): FavoriteTour {
+export function addFavorite(
+  actor: SessionUser | null,
+  userId: string,
+  tour: Omit<FavoriteTour, "addedAt">
+): FavoriteTour | { error: string } {
+  const gate = assertFavoriteActor(actor, userId);
+  if ("error" in gate) return gate;
+
   const store = readStore();
   const current = store[userId] ?? [];
 
@@ -57,23 +73,34 @@ export function addFavorite(userId: string, tour: Omit<FavoriteTour, "addedAt">)
   return next;
 }
 
-export function removeFavorite(userId: string, tourSlug: string): void {
+export function removeFavorite(
+  actor: SessionUser | null,
+  userId: string,
+  tourSlug: string
+): { ok: true } | { error: string } {
+  const gate = assertFavoriteActor(actor, userId);
+  if ("error" in gate) return gate;
+
   const store = readStore();
   const current = store[userId] ?? [];
   store[userId] = current.filter((item) => item.tourSlug !== tourSlug);
   writeStore(store);
   notifyUpdated();
+  return { ok: true };
 }
 
 export function toggleFavorite(
+  actor: SessionUser | null,
   userId: string,
   tour: Omit<FavoriteTour, "addedAt">
-): { favorited: boolean } {
+): { favorited: boolean } | { error: string } {
   if (isTourFavorite(userId, tour.tourSlug)) {
-    removeFavorite(userId, tour.tourSlug);
+    const result = removeFavorite(actor, userId, tour.tourSlug);
+    if ("error" in result) return result;
     return { favorited: false };
   }
 
-  addFavorite(userId, tour);
+  const result = addFavorite(actor, userId, tour);
+  if ("error" in result) return result;
   return { favorited: true };
 }

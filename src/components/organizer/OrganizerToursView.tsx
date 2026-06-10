@@ -14,7 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ORGANIZER_TOUR_LISTINGS } from "@/data/organizer-tours";
-import { getOrganizerTourListings, createOrganizerTour } from "@/lib/organizer-tour-store";
+import { useAuth } from "@/context/AuthContext";
+import { getOrganizerTourListingsForUser, createOrganizerTour } from "@/lib/organizer-tour-store";
 import { cn } from "@/lib/cn";
 import { formatDays, formatWithWord, pluralRu } from "@/lib/pluralize";
 import type { OrganizerTourListing, OrganizerTourStatus, OrganizerTourType } from "@/types/organizer-tour";
@@ -128,6 +129,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
 
 export default function OrganizerToursView() {
   const router = useRouter();
+  const { user } = useAuth();
   const [archiveTab, setArchiveTab] = useState<ArchiveTab>("active");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
@@ -135,8 +137,10 @@ export default function OrganizerToursView() {
   const [tours, setTours] = useState<OrganizerTourListing[]>(ORGANIZER_TOUR_LISTINGS);
 
   useEffect(() => {
+    if (!user) return;
+
     function refreshTours() {
-      setTours(getOrganizerTourListings());
+      setTours(getOrganizerTourListingsForUser(user!.id));
     }
 
     refreshTours();
@@ -148,7 +152,7 @@ export default function OrganizerToursView() {
       window.removeEventListener(ORGANIZER_TOURS_UPDATED_EVENT, refreshTours);
       window.removeEventListener("focus", refreshTours);
     };
-  }, []);
+  }, [user]);
 
   const baseList = useMemo(
     () =>
@@ -160,7 +164,7 @@ export default function OrganizerToursView() {
   );
 
   function handleCreateTour() {
-    const result = createOrganizerTour();
+    const result = createOrganizerTour(user);
     if ("error" in result) return;
     router.push(`/organizer/tours/${result.draft.id}/edit`);
   }

@@ -7,6 +7,7 @@ import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizonta
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
 import {
   cloneOrganizerTour,
   deleteOrganizerTour,
@@ -533,6 +534,7 @@ interface OrganizerTourEditorViewProps {
 
 export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorViewProps) {
   const router = useRouter();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<OrganizerTourEditorTabId>("main");
   const [draft, setDraft] = useState<OrganizerTourDraft | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -542,13 +544,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const navSentinelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const nextDraft = readOrganizerTourDraft(tourId);
+    const nextDraft = readOrganizerTourDraft(tourId, user);
     if (!nextDraft) {
       router.replace("/organizer/tours");
       return;
     }
     setDraft(nextDraft);
-  }, [router, tourId]);
+  }, [router, tourId, user]);
 
   useEffect(() => {
     const sentinel = navSentinelRef.current;
@@ -619,18 +621,21 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     setError(null);
     setSaved(false);
 
-    const result = saveOrganizerTourDraft({
-      ...draft,
-      title: draft.title.slice(0, ORGANIZER_TOUR_TITLE_MAX),
-      durationDays: Math.max(1, draft.durationDays),
-      durationNights: Math.max(0, draft.durationNights),
-      priceUsd: Math.max(0, draft.priceUsd),
-      groupMin: Math.max(1, draft.groupMin),
-      groupMax: Math.max(draft.groupMin, draft.groupMax),
-      maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
-      maxWeightEnabled: draft.maxWeightEnabled,
-      gallery: draft.gallery.filter(Boolean),
-    });
+    const result = saveOrganizerTourDraft(
+      {
+        ...draft,
+        title: draft.title.slice(0, ORGANIZER_TOUR_TITLE_MAX),
+        durationDays: Math.max(1, draft.durationDays),
+        durationNights: Math.max(0, draft.durationNights),
+        priceUsd: Math.max(0, draft.priceUsd),
+        groupMin: Math.max(1, draft.groupMin),
+        groupMax: Math.max(draft.groupMin, draft.groupMax),
+        maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
+        maxWeightEnabled: draft.maxWeightEnabled,
+        gallery: draft.gallery.filter(Boolean),
+      },
+      user
+    );
 
     setLoading(false);
 
@@ -644,7 +649,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   }
 
   function handleClone() {
-    const result = cloneOrganizerTour(tourId);
+    const result = cloneOrganizerTour(tourId, user);
     if ("error" in result) {
       setError(result.error);
       return;
@@ -658,7 +663,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     );
     if (!confirmed) return;
 
-    const result = deleteOrganizerTour(tourId);
+    const result = deleteOrganizerTour(tourId, user);
     if ("error" in result) {
       setError(result.error);
       return;

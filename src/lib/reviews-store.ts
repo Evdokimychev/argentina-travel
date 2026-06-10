@@ -4,6 +4,8 @@ import {
   type TouristReview,
   type TouristReviewStatus,
 } from "@/types/tourist";
+import { assertPermission, canLeaveReview } from "@/lib/permissions";
+import type { SessionUser } from "@/types/user";
 
 function createReviewId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -89,6 +91,7 @@ export function getUserReviews(userId: string): TouristReview[] {
 }
 
 export function createReview(input: {
+  actor: SessionUser | null;
   userId: string;
   tourId: string;
   tourSlug: string;
@@ -99,7 +102,13 @@ export function createReview(input: {
   photos?: string[];
   tripDate?: string;
   status?: TouristReviewStatus;
-}): TouristReview {
+}): TouristReview | { error: string } {
+  const allowed = assertPermission(canLeaveReview(input.actor));
+  if ("error" in allowed) return allowed;
+  if (!input.actor || input.actor.id !== input.userId) {
+    return { error: "Нет доступа" };
+  }
+
   const now = new Date().toISOString();
   const review: TouristReview = {
     id: createReviewId(),
@@ -125,11 +134,18 @@ export function createReview(input: {
 
 export function updateReviewStatus(
   reviewId: string,
-  status: TouristReviewStatus
+  status: TouristReviewStatus,
+  actor: SessionUser | null
 ): { review: TouristReview } | { error: string } {
   const all = getAllReviews();
   const index = all.findIndex((review) => review.id === reviewId);
   if (index === -1) return { error: "Отзыв не найден" };
+
+  const allowed = assertPermission(canLeaveReview(actor));
+  if ("error" in allowed) return allowed;
+  if (!actor || all[index].userId !== actor.id) {
+    return { error: "Нет доступа" };
+  }
 
   const updated: TouristReview = {
     ...all[index],

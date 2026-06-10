@@ -21,6 +21,8 @@ export type OrganizerTourStatus = "published" | "draft";
 
 export interface OrganizerTourListing {
   id: string;
+  /** Owner organizer account id. */
+  ownerUserId?: string;
   /** Internal slug; defaults to catalogSlug for new tours. */
   slug: string;
   /** Public catalog slug used in /tours/[slug]. Falls back to slug when omitted. */
