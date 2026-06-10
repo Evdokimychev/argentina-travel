@@ -68,7 +68,7 @@ export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
     title: "Ледники Патагонии: Перито-Морено и национальный парк Лос-Гласьярес",
     image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
     coverLabel: "PATAGONIA",
-    durationDays: 5,
+    durationDays: 10,
     type: "tour",
     status: "published",
     archived: true,

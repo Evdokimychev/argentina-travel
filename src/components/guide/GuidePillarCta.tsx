@@ -2,6 +2,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_WHATSAPP_URL } from "@/data/site-contacts";
 import { cn } from "@/lib/cn";
+import { siteScrollAnchorClass } from "@/lib/site-container";
 
 type GuidePillarCtaProps = {
   title?: string;
@@ -15,7 +16,7 @@ export default function GuidePillarCta({
   return (
     <section
       id="cta"
-      className="scroll-mt-24 rounded-2xl bg-patagonia/5 p-6 text-center sm:p-8"
+      className={cn(siteScrollAnchorClass, "rounded-2xl bg-patagonia/5 p-6 text-center sm:p-8")}
     >
       <p className="font-display text-lg font-bold text-charcoal">{title}</p>
       <p className="mt-2 text-sm text-slate">{subtitle}</p>

@@ -1,4 +1,8 @@
+"use client";
+
+import type { MouseEvent } from "react";
 import type { GuidePillarSection, GuidePillarWidgetSlot } from "@/types/guide-pillar";
+import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 
 type GuidePillarTocProps = {
   sections: GuidePillarSection[];
@@ -12,6 +16,13 @@ const EXTRA_LINKS = [
   { id: "faq", label: "FAQ" },
   { id: "cta", label: "Контакты" },
 ] as const;
+
+function handleAnchorClick(id: string) {
+  return (event: MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+    scrollToSiteAnchor(id);
+  };
+}
 
 export default function GuidePillarToc({ sections, widgetSlots, variant }: GuidePillarTocProps) {
   const widgetLinks = widgetSlots ?? [];
@@ -29,6 +40,7 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
+                  onClick={handleAnchorClick(section.id)}
                   className="text-slate transition-colors hover:text-sky"
                 >
                   {section.title}
@@ -37,14 +49,14 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
             ))}
             {widgetLinks.map((slot) => (
               <li key={slot.id}>
-                <a href={`#${slot.id}`} className="text-slate transition-colors hover:text-sky">
+                <a href={`#${slot.id}`} onClick={handleAnchorClick(slot.id)} className="text-slate transition-colors hover:text-sky">
                   {slot.label}
                 </a>
               </li>
             ))}
             {EXTRA_LINKS.map((link) => (
               <li key={link.id}>
-                <a href={`#${link.id}`} className="text-slate transition-colors hover:text-sky">
+                <a href={`#${link.id}`} onClick={handleAnchorClick(link.id)} className="text-slate transition-colors hover:text-sky">
                   {link.label}
                 </a>
               </li>
@@ -72,6 +84,7 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
+                onClick={handleAnchorClick(section.id)}
                 className="inline-block rounded-full border border-gray-200 bg-surface-muted/60 px-3 py-1.5 text-xs text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
               >
                 {section.title}
@@ -82,6 +95,7 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
             <li key={slot.id}>
               <a
                 href={`#${slot.id}`}
+                onClick={handleAnchorClick(slot.id)}
                 className="inline-block rounded-full border border-gray-200 bg-surface-muted/60 px-3 py-1.5 text-xs text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
               >
                 {slot.label}
@@ -92,6 +106,7 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
             <li key={link.id}>
               <a
                 href={`#${link.id}`}
+                onClick={handleAnchorClick(link.id)}
                 className="inline-block rounded-full border border-gray-200 bg-surface-muted/60 px-3 py-1.5 text-xs text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
               >
                 {link.label}

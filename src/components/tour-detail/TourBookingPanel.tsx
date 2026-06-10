@@ -91,7 +91,7 @@ export default function TourBookingPanel({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-elevated",
+        "relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6",
         className
       )}
     >

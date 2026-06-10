@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { TourItineraryDay } from "@/types";
 import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
@@ -204,10 +205,11 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
   }
 
   return (
-    <section id="itinerary" className="tour-section-target">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading title="Программа по дням" />
-        {totalDays > 1 && (
+    <TourSection
+      id="itinerary"
+      title="Программа по дням"
+      headerAddon={
+        totalDays > 1 ? (
           <ItineraryExpandToggle
             allExpanded={allExpanded}
             openCount={openCount}
@@ -215,9 +217,9 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
             openSegments={openSegments}
             onToggle={handleExpandAll}
           />
-        )}
-      </div>
-
+        ) : undefined
+      }
+    >
       <div className="relative space-y-0">
         <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200 sm:left-[23px]" />
         {itineraryDays.map((day) => (
@@ -229,6 +231,6 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
           />
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }

@@ -38,6 +38,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { hubTocStickyMaxHeightClass, hubTocStickyTopClass } from "@/lib/site-container";
 import type { TravelHubTocItem } from "@/types/guide-travel-hub";
 
@@ -232,6 +233,10 @@ function HubTocSidebar({ items }: { items: TravelHubTocItem[] }) {
                   title={isCompact ? item.label : undefined}
                   aria-label={item.label}
                   aria-current={active ? "location" : undefined}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSiteAnchor(item.id);
+                  }}
                   className={cn(
                     "flex items-center rounded-xl text-sm font-medium transition-colors",
                     isCompact ? "justify-center px-2 py-2.5" : "gap-2.5 px-2.5 py-2",
@@ -296,6 +301,10 @@ function HubTocMobile({ items }: { items: TravelHubTocItem[] }) {
               <li key={item.id}>
                 <a
                   href={`#${item.id}`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSiteAnchor(item.id);
+                  }}
                   className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-surface-muted/60 px-3 py-1.5 text-xs text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
                 >
                   <Icon className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden />
@@ -307,6 +316,10 @@ function HubTocMobile({ items }: { items: TravelHubTocItem[] }) {
           <li>
             <a
               href="#cta"
+              onClick={(event) => {
+                event.preventDefault();
+                scrollToSiteAnchor("cta");
+              }}
               className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-surface-muted/60 px-3 py-1.5 text-xs text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
             >
               <MessageCircle className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} aria-hidden />

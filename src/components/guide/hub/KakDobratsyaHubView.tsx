@@ -13,6 +13,7 @@ import HubHero from "@/components/guide/hub/HubHero";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
 import HubDataTable from "@/components/guide/hub/HubDataTable";
+import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
 import AirlineRouteCard from "@/components/guide/hub/AirlineRouteCard";
@@ -70,22 +71,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
               <HubToc items={hub.toc} variant="mobile" />
 
               <HubSection id="quick-30" title="Кратко за 30 секунд">
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {hub.quickFacts30.map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-4"
-                    >
-                      <span className="text-2xl" aria-hidden>
-                        {fact.emoji}
-                      </span>
-                      <p className="mt-2 text-xs font-medium uppercase tracking-wide text-slate">
-                        {fact.label}
-                      </p>
-                      <p className="mt-1 font-display text-base font-bold text-charcoal">{fact.value}</p>
-                    </div>
-                  ))}
-                </div>
+                <HubQuickFactsGrid facts={hub.quickFacts30} />
               </HubSection>
 
               <HubSection

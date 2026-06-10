@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { siteScrollAnchorClass } from "@/lib/site-container";
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Check, MessageSquare } from "lucide-react";
@@ -73,7 +74,7 @@ export default function DesignSystemShowcase() {
   const [switchOn, setSwitchOn] = useState(true);
 
   return (
-    <section id="design-system" className="scroll-mt-24 border-t border-gray-100 bg-white py-16 sm:py-20">
+    <section id="design-system" className={`${siteScrollAnchorClass} border-t border-gray-100 bg-white py-16 sm:py-20`}>
       <div className={siteContainerClass}>
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-wider text-sky">Design System</p>

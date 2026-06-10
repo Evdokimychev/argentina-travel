@@ -35,7 +35,7 @@ import {
   JOIN_STEPS,
 } from "@/data/join-page";
 import { cn } from "@/lib/cn";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import { CARD_HOVER } from "@/styles/design-tokens";
 
 function SectionLabel({
@@ -277,7 +277,7 @@ export default function JoinPageView() {
       {/* Steps */}
       <section
         id="how-it-works"
-        className={cn(siteContainerClass, "scroll-mt-28 py-16 sm:py-20")}
+        className={cn(siteContainerClass, siteScrollAnchorClass, "py-16 sm:py-20")}
       >
         <div className="text-center">
           <SectionLabel>Присоединиться</SectionLabel>

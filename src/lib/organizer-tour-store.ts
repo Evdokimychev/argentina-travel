@@ -188,7 +188,12 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     startLocation: detail?.startLocation ?? "",
   });
 
-  const durationNights = detail?.durationNights ?? Math.max(listing.durationDays - 1, 0);
+  const durationDays =
+    detail?.durationDays ?? marketplace?.durationDays ?? listing.durationDays;
+  const durationNights =
+    detail?.durationNights ??
+    marketplace?.durationNights ??
+    Math.max(durationDays - 1, 0);
   const accommodationType =
     marketplace?.accommodationType ?? detail?.accommodationType ?? "Отель";
   const hasAccommodation = tourHasAccommodation({
@@ -210,6 +215,7 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     country: geography.countries[0] ?? detail?.country ?? "Аргентина",
     startLocation: geography.mapStartPoint || (detail?.startLocation ?? ""),
     ...geography,
+    durationDays,
     durationNights,
     priceUsd: detail?.priceUsd ?? marketplace?.priceUsd ?? 0,
     originalPriceUsd: detail?.originalPriceUsd ?? marketplace?.originalPriceUsd ?? null,

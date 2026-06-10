@@ -5,53 +5,53 @@ export const IMMIGRATION_NAV_PROMO_TITLE = "Иммиграция в Аргент
 export const IMMIGRATION_NAV_PROMO_INTRO =
   "ВНЖ, ПМЖ, гражданство, роды и правила въезда — справочные материалы для туристов и тех, кто планирует переезд.";
 
-const HUB_ANCHOR_LINKS: SiteNavLink[] = [
+const HUB_TOPIC_LINKS: SiteNavLink[] = [
   {
     id: "immigration-all",
     label: "Полный справочник",
     href: "/immigration",
-    description: "Все блоки: от въезда до гражданства",
+    description: "Обзор всех тем: от въезда до гражданства",
   },
   {
     id: "immigration-life",
     label: "Жизнь в стране",
-    href: "/immigration#life-in-country",
+    href: "/immigration/zhizn-v-strane",
     description: "Климат, медицина, жильё, сообщество",
   },
   {
     id: "immigration-process",
     label: "Процесс иммиграции",
-    href: "/immigration#immigration-process",
+    href: "/immigration/protsess-immigratsii",
     description: "Въезд, RADEX, DNU 366/2025, документы",
   },
   {
     id: "immigration-birth",
     label: "Роды в Аргентине",
-    href: "/immigration#birth",
+    href: "/immigration/rody-v-argentine",
     description: "Jus soli и residencia для родителей",
   },
   {
     id: "immigration-citizenship",
     label: "Гражданство",
-    href: "/immigration#citizenship",
+    href: "/immigration/grazhdanstvo",
     description: "Паспорт, экзамены, сроки",
   },
   {
     id: "immigration-residency",
     label: "ВНЖ и ПМЖ",
-    href: "/immigration#residency",
+    href: "/immigration/vnzh-i-pmzh",
     description: "14 оснований, temporaria и permanente",
   },
   {
     id: "immigration-opportunities",
     label: "Возможности",
-    href: "/immigration#opportunities",
+    href: "/immigration/vozmozhnosti",
     description: "Rentista, nomad, DIY и сопровождение",
   },
   {
     id: "immigration-links",
     label: "Полезные ссылки",
-    href: "/immigration#useful-links",
+    href: "/immigration/poleznye-ssylki",
     description: "Migraciones, статьи, смежные разделы",
   },
 ];
@@ -85,8 +85,8 @@ const ARTICLE_LINKS: SiteNavLink[] = [
 
 /** Карточки в блоке «Популярное» mega-menu. */
 export const IMMIGRATION_NAV_FEATURED: SiteNavLink[] = [
-  HUB_ANCHOR_LINKS[0],
-  HUB_ANCHOR_LINKS[5],
+  HUB_TOPIC_LINKS[0],
+  HUB_TOPIC_LINKS[5],
   ARTICLE_LINKS[0],
 ];
 
@@ -96,7 +96,7 @@ export function buildImmigrationNavColumns(): SiteNavColumn[] {
       id: "immigration-handbook",
       title: "Справочник",
       titleKey: "nav.columns.immigrationHandbook",
-      links: HUB_ANCHOR_LINKS,
+      links: HUB_TOPIC_LINKS,
     },
     {
       id: "immigration-articles",

@@ -4,6 +4,7 @@ import HubHero from "@/components/guide/hub/HubHero";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
 import GuideSectionNav from "@/components/guide/GuideSectionNav";
+import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
@@ -11,7 +12,7 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { GUIDE_HUB } from "@/data/guide-hub-index-content";
 import { getGuideTopicIcon } from "@/lib/guide-nav-icons";
 import { cn } from "@/lib/cn";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 
 export default function GuideHubView() {
   const hub = GUIDE_HUB;
@@ -47,22 +48,7 @@ export default function GuideHubView() {
               <HubToc items={hub.toc} variant="mobile" />
 
               <HubSection id="quick-30" title="Кратко за 30 секунд">
-                <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                  {hub.quickFacts30.map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-4"
-                    >
-                      <span className="text-2xl" aria-hidden>
-                        {fact.emoji}
-                      </span>
-                      <p className="mt-2 text-xs font-medium uppercase tracking-wide text-slate">
-                        {fact.label}
-                      </p>
-                      <p className="mt-1 font-display text-base font-bold text-charcoal">{fact.value}</p>
-                    </div>
-                  ))}
-                </div>
+                <HubQuickFactsGrid facts={hub.quickFacts30} />
               </HubSection>
 
               <HubSection id="planning" title="Планирование поездки" subtitle={hub.planning.intro}>
@@ -152,7 +138,7 @@ export default function GuideHubView() {
 
               <section
                 id="related"
-                className="scroll-mt-28 rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8"
+                className={cn(siteScrollAnchorClass, "rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8")}
               >
                 <h2 className="font-display text-xl font-bold text-charcoal">См. также</h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">

@@ -12,6 +12,7 @@ import { SHOP_PRODUCTS } from "@/data/shop-products";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
 import { buildContentSearchItems } from "@/lib/content-pages";
 import { buildGuideTopicSearchItems } from "@/lib/guide-topics";
+import { buildImmigrationTopicSearchItems } from "@/lib/immigration-topics";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import type { TourListing } from "@/types";
@@ -250,7 +251,7 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     title: post.title,
     description: post.excerpt,
     href: `/blog/${post.slug}`,
-    keywords: [post.category, post.author, post.slug.replace(/-/g, " ")],
+    keywords: [post.category, post.author, ...post.tags, post.slug.replace(/-/g, " ")],
   }));
 
   const faqItems: SearchIndexItem[] = FAQ_ITEMS.map((item, index) => ({
@@ -346,6 +347,7 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     ...destinationItems,
     ...contentItems,
     ...guideTopicItems,
+    ...buildImmigrationTopicSearchItems(),
     ...shopItems,
     ...serviceItems,
   ]);

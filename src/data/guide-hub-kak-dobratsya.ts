@@ -158,12 +158,12 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
     },
   ],
   quickFacts30: [
-    { emoji: "🛂", label: "Виза для граждан РФ", value: "90 дней в 180-дневном периоде" },
-    { emoji: "✈", label: "Основной аэропорт", value: "Ezeiza (EZE)" },
-    { emoji: "🏙", label: "Аэропорт внутренних рейсов", value: "Aeroparque (AEP)" },
-    { emoji: "🕐", label: "Среднее время перелёта", value: "16–24 часа" },
-    { emoji: "🚕", label: "Трансфер в центр", value: "40–60 минут" },
-    { emoji: "🌎", label: "Прямых рейсов из России", value: "Нет" },
+    { emoji: "🛂", label: "Виза для граждан РФ", headline: "90 дней в 180-дневном периоде", detail: "Безвиз; паспорт, обратный билет и proof of funds на контроле" },
+    { emoji: "✈", label: "Основной аэропорт", headline: "Ezeiza (EZE)", detail: "35 км от centro BA — международные рейсы" },
+    { emoji: "🏙", label: "Аэропорт внутренних рейсов", headline: "Aeroparque (AEP)", detail: "В черте города — Patagonia, Iguazú, Mendoza" },
+    { emoji: "🕐", label: "Среднее время перелёта", headline: "16–24 часа", detail: "Из РФ и Европы — 1 пересадка (Istanbul, Doha, São Paulo)" },
+    { emoji: "🚕", label: "Трансфер в центр", headline: "40–60 минут", detail: "Taxi $40–60 USD; remis или Cabify из зоны прилёта" },
+    { emoji: "🌎", label: "Прямых рейсов из России", headline: "Нет", detail: "Планируйте стыковку и время на таможню в хабе" },
   ],
   toc: [
     { id: "quick-30", label: "Кратко за 30 секунд" },

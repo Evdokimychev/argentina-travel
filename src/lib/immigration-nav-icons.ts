@@ -13,6 +13,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+export const IMMIGRATION_HUB_LINK_ID = "immigration-all";
+
 export const IMMIGRATION_NAV_ICONS: Record<string, LucideIcon> = {
   "immigration-all": BookOpenCheck,
   "immigration-life": Home,

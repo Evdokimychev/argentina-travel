@@ -29,11 +29,11 @@ const SLUG_LABEL_EMOJIS: Record<string, Record<string, string>> = {
     "Виза для РФ (туризм)": "🛂",
   },
   "gde-zhit": {
-    "Лучшие районы BA для туриста": "🏙️",
-    "Бронирование Патагонии": "📅",
-    Estancia: "🐎",
-    "Средний отель BA": "💰",
-    Платформа: "🎫",
+    "Районы BA": "🏙️",
+    Патагония: "🏔️",
+    "Короткий trip": "🧳",
+    "Долгий stay": "📅",
+    Оплата: "💳",
     "Check-in": "🔑",
   },
   transport: {
@@ -103,10 +103,10 @@ const SLUG_LABEL_EMOJIS: Record<string, Record<string, string>> = {
   svyaz: {
     Операторы: "📶",
     eSIM: "📲",
-    "Регистрация SIM": "🪪",
-    Мессенджер: "💬",
+    "4G в городах": "🏙️",
     "Patagonia тропы": "📴",
-    Напряжение: "🔌",
+    Мессенджер: "💬",
+    Пополнение: "💳",
   },
   "ekonomika-i-dengi": {
     "Официальный USD": "🏦",
@@ -126,11 +126,11 @@ const SLUG_LABEL_EMOJIS: Record<string, Record<string, string>> = {
   },
   bezopasnost: {
     "Главный риск BA": "⚠️",
-    "Безопаснее днём": "✅",
-    "La Boca": "🎨",
+    Безопаснее: "✅",
     Такси: "🚖",
-    Страховка: "🏥",
-    Документы: "📄",
+    Экстренно: "🆘",
+    Деньги: "💵",
+    Patagonia: "🏔️",
   },
 };
 

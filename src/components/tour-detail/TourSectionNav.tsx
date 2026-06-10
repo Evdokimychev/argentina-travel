@@ -2,20 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
+import { getSiteScrollAnchorOffset, scrollToSiteAnchor } from "@/lib/scroll-anchor";
+import { getTourSectionIcon } from "@/lib/tour-nav-icons";
+import { siteContainerClass } from "@/lib/site-container";
 import type { TourSectionLink } from "./tour-section-links";
 
 interface TourSectionNavProps {
   items: TourSectionLink[];
-}
-
-function readCssPx(name: string, fallback: number): number {
-  const raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
-  const value = parseFloat(raw);
-  return Number.isFinite(value) ? value : fallback;
-}
-
-function getScrollAnchorOffset(navHeight: number): number {
-  return readCssPx("--site-header-height", 72) + navHeight + 12;
 }
 
 export default function TourSectionNav({ items }: TourSectionNavProps) {
@@ -33,14 +26,10 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
   }, []);
 
   const scrollToSection = useCallback((id: string) => {
-    const target = document.getElementById(id);
-    if (!target) return;
+    if (!document.getElementById(id)) return;
 
     isClickScrollingRef.current = true;
-    const offset = getScrollAnchorOffset(navHeightRef.current);
-    const top = target.getBoundingClientRect().top + window.scrollY - offset;
-
-    window.scrollTo({ top, behavior: "smooth" });
+    scrollToSiteAnchor(id);
     setActiveId(id);
 
     window.setTimeout(() => {
@@ -71,7 +60,7 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
       frame = 0;
       if (isClickScrollingRef.current) return;
 
-      const offset = getScrollAnchorOffset(navHeightRef.current);
+      const offset = getSiteScrollAnchorOffset();
       let nextActiveId = items[0].id;
 
       for (const item of items) {
@@ -115,38 +104,38 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     <nav
       ref={navRef}
       aria-label="Разделы страницы тура"
-      className={cn(
-        "sticky z-40 -mx-4 border-b border-gray-200/80 bg-pampas/95 px-4 py-2.5 backdrop-blur-md",
-        "top-[calc(var(--site-header-height,72px)+0.5rem)]",
-        "sm:-mx-0 sm:rounded-xl sm:border sm:px-3 sm:shadow-sm"
-      )}
+      className="sticky top-[var(--site-header-height,72px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
     >
-      <ul className="scrollbar-hide flex gap-1 overflow-x-auto">
-        {items.map((item) => {
-          const active = item.id === activeId;
-          return (
-            <li key={item.id} className="shrink-0">
-              <a
-                href={`#${item.id}`}
-                data-section-id={item.id}
-                onClick={(event) => {
-                  event.preventDefault();
-                  scrollToSection(item.id);
-                }}
-                className={cn(
-                  "inline-flex rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
-                  active
-                    ? "bg-sky text-white shadow-sm"
-                    : "text-slate hover:bg-white hover:text-charcoal"
-                )}
-                aria-current={active ? "location" : undefined}
-              >
-                {item.label}
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+      <div className={cn(siteContainerClass, "overflow-x-auto py-3")}>
+        <ul className="flex min-w-max gap-1.5">
+          {items.map((item) => {
+            const active = item.id === activeId;
+            const Icon = getTourSectionIcon(item.id);
+            return (
+              <li key={item.id} className="shrink-0">
+                <a
+                  href={`#${item.id}`}
+                  data-section-id={item.id}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    scrollToSection(item.id);
+                  }}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                    active
+                      ? "border-sky bg-sky text-white shadow-sm"
+                      : "border-gray-200 bg-white text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+                  )}
+                  aria-current={active ? "location" : undefined}
+                >
+                  <Icon className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
+                  {item.label}
+                </a>
+              </li>
+            );
+          })}
+        </ul>
+      </div>
     </nav>
   );
 }

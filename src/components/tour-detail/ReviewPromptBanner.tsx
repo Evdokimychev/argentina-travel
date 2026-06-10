@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { useSearchParams } from "next/navigation";
 
 export default function ReviewPromptBanner() {
@@ -13,7 +14,7 @@ export default function ReviewPromptBanner() {
 
   useEffect(() => {
     if (!wantsReview) return;
-    document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    scrollToSiteAnchor("reviews");
   }, [wantsReview]);
 
   if (!wantsReview || dismissed) return null;

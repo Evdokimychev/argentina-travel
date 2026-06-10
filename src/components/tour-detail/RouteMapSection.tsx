@@ -7,7 +7,7 @@ import { MapPin } from "lucide-react";
 import type { TourArrivalInfo, TourRoutePoint } from "@/types";
 import type { TourLogistics } from "@/types/tour";
 import { cn } from "@/lib/cn";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 import ArrivalDetails, { ArrivalRecommendations } from "./ArrivalDetails";
 
 const RouteMap = dynamic(() => import("./RouteMap"), {
@@ -52,13 +52,10 @@ export default function RouteMapSection({
   if (!hasMap && !hasArrivalPanel && !hasArrivalRecommendations && !hasRouteImage) return null;
 
   return (
-    <section id="route-map" className="tour-section-target space-y-8">
+    <TourSection id="route-map" title="Маршрут и дорога">
       {hasRouteImage ? (
         <div className="space-y-4">
-          <SectionHeading
-            title="Схема маршрута"
-            subtitle="Карта маршрута от организатора"
-          />
+          <h3 className="font-display text-lg font-bold text-charcoal">Схема маршрута</h3>
           <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             <div className="relative aspect-[16/10] w-full">
               <Image
@@ -74,12 +71,13 @@ export default function RouteMapSection({
       ) : null}
 
       {hasMap ? (
-        <div className="space-y-4">
-          <SectionHeading
-            title="Маршрут на карте"
-            subtitle="Основные точки путешествия — нажмите на город, чтобы увидеть его на карте"
-          />
-
+        <div className={cn("space-y-4", hasRouteImage && "mt-8")}>
+          <div>
+            <h3 className="font-display text-lg font-bold text-charcoal">Маршрут на карте</h3>
+            <p className="mt-1 text-sm text-slate">
+              Основные точки путешествия — нажмите на город, чтобы увидеть его на карте
+            </p>
+          </div>
           <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             <div className="grid lg:grid-cols-[1fr_260px]">
               <RouteMap
@@ -137,18 +135,22 @@ export default function RouteMapSection({
       ) : null}
 
       {arrival && hasArrivalPanel ? (
-        <div className="space-y-4">
-          <SectionHeading
-            title="Как добраться"
-            subtitle={hasMap ? "Аэропорты, трансферы и место встречи" : undefined}
-          />
+        <div className={cn("space-y-4", (hasMap || hasRouteImage) && "mt-8")}>
+          <div>
+            <h3 className="font-display text-lg font-bold text-charcoal">Как добраться</h3>
+            {hasMap ? (
+              <p className="mt-1 text-sm text-slate">Аэропорты, трансферы и место встречи</p>
+            ) : null}
+          </div>
           <ArrivalDetails arrival={arrival} />
         </div>
       ) : null}
 
       {logistics && hasArrivalRecommendations ? (
-        <ArrivalRecommendations logistics={logistics} />
+        <div className="mt-8">
+          <ArrivalRecommendations logistics={logistics} />
+        </div>
       ) : null}
-    </section>
+    </TourSection>
   );
 }

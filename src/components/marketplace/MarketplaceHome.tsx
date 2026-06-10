@@ -21,7 +21,9 @@ import TestimonialCard from "@/components/TestimonialCard";
 import { tripsWord, filtersWord } from "@/lib/pluralize";
 import PlatformStatsBlock from "./PlatformStatsBlock";
 import type { PlatformStats } from "@/lib/organizer-public";
+import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
+import { siteScrollAnchorClass } from "@/lib/site-container";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 
@@ -129,7 +131,7 @@ export default function MarketplaceHome({
               }
               onSearch={() => {
                 if (hasActiveSearch) {
-                  document.getElementById("tour-results")?.scrollIntoView({ behavior: "smooth" });
+                  scrollToSiteAnchor("tour-results");
                 } else {
                   router.push("/tours");
                 }
@@ -144,7 +146,7 @@ export default function MarketplaceHome({
       </section>
 
       {hasActiveSearch ? (
-      <section id="tour-results" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section id="tour-results" className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${siteScrollAnchorClass}`}>
         <div className="flex items-center justify-between border-b border-gray-100 py-6">
           <p className="text-sm text-slate">
             Найдено{" "}

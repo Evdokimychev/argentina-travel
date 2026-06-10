@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { TourFAQ } from "@/types";
 import { normalizeEditorValue } from "@/lib/rich-text";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
   const items = faq.filter((item) => item.question?.trim() && item.answer?.trim());
@@ -12,9 +12,8 @@ export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
   if (!items.length) return null;
 
   return (
-    <section id="faq" className="tour-section-target">
-      <SectionHeading title="Часто задаваемые вопросы" />
-      <div className="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
+    <TourSection id="faq" title="Часто задаваемые вопросы">
+      <div className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-surface-muted/30">
         {items.map((item) => {
           const isOpen = openId === item.id;
           return (
@@ -44,6 +43,6 @@ export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
           );
         })}
       </div>
-    </section>
+    </TourSection>
   );
 }

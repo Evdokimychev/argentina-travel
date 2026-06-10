@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { TourAccommodation } from "@/types";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 export default function AccommodationsSection({
   accommodations,
@@ -8,8 +8,7 @@ export default function AccommodationsSection({
   accommodations: TourAccommodation[];
 }) {
   return (
-    <section id="accommodations" className="tour-section-target">
-      <SectionHeading title="Проживание" subtitle="Варианты размещения по маршруту" />
+    <TourSection id="accommodations" title="Проживание" subtitle="Варианты размещения по маршруту">
       <div className="space-y-6">
         {accommodations.map((acc) => (
           <article
@@ -38,7 +37,7 @@ export default function AccommodationsSection({
                   {acc.amenities.map((a) => (
                     <span
                       key={a}
-                      className="rounded-lg bg-pampas px-2.5 py-1 text-xs text-slate"
+                      className="rounded-lg bg-surface-muted px-2.5 py-1 text-xs text-slate"
                     >
                       {a}
                     </span>
@@ -49,6 +48,6 @@ export default function AccommodationsSection({
           </article>
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }

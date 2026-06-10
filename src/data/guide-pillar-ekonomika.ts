@@ -12,12 +12,12 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
   ],
 
   quickFacts: [
-    { label: "Официальный USD", value: "загрузка…", live: "exchange-oficial" },
-    { label: "Синий USD", value: "загрузка…", live: "exchange-blue" },
-    { label: "Валюта", value: "Аргентинский песо (ARS)" },
-    { label: "Инфляция", value: "Высокая — цены в песо меняются быстро" },
-    { label: "Visa / Mastercard", value: "Работают, курс часто официальный" },
-    { label: "Лучший курс для туриста", value: "USD/EUR наличными или Western Union" },
+    { label: "Официальный USD", headline: "загрузка…", detail: "Курс ЦБ и банков — карты, банкоматы", live: "exchange-oficial" },
+    { label: "Синий USD", headline: "загрузка…", detail: "Рыночный курс — наличный обмен и WU", live: "exchange-blue" },
+    { label: "Валюта", headline: "Аргентинский песо (ARS)", detail: "Расчёты в peso; USD часто принимают в туристических местах" },
+    { label: "Инфляция", headline: "Цены в peso растут быстро", detail: "Пересчитывайте бюджет по актуальному blue, не по старым статьям" },
+    { label: "Visa / Mastercard", headline: "Работают повсеместно", detail: "Конвертация часто по официальному курсу — не всегда выгодно" },
+    { label: "Лучший курс для туриста", headline: "USD/EUR наличными", detail: "Cueva или Western Union — близко к синему курсу" },
   ],
 
   recommendIntro:

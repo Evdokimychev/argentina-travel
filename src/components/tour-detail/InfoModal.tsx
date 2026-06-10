@@ -256,17 +256,19 @@ export default function InfoModal({
 export function SectionHeading({
   title,
   subtitle,
+  variant = "default",
 }: {
   title: string;
   subtitle?: string;
+  variant?: "default" | "card";
 }) {
   return (
-    <div className="mb-6">
-      <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
-        {title}
-      </h2>
-      {subtitle && <p className="mt-2 text-slate">{subtitle}</p>}
-    </div>
+    <header className={cn(variant === "card" ? "mb-6 border-b border-gray-100 pb-4" : "mb-6")}>
+      <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
+      {subtitle ? (
+        <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate">{subtitle}</p>
+      ) : null}
+    </header>
   );
 }
 

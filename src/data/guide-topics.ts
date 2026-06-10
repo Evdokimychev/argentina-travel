@@ -76,26 +76,26 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     id: "gde-zhit",
     slug: "gde-zhit",
     title: "Где жить",
-    shortDescription: "Отели, районы и типы размещения",
+    shortDescription: "Отели, районы BA, аренда, Patagonia и регионы — полный справочник",
     intro:
-      "Выбор жилья зависит от маршрута: в Буэнос-Айресе важен район, в Патагонии — близость к паркам и трансферам, в винодельнях — estancia или бутик-отель среди лоз.",
+      "Полный гид по жилью в Аргентине: типы размещения (отель, хостел, апартаменты, estancia), районы Buenos Aires с таблицей сравнения, Patagonia, Mendoza, Salta, Iguazú и побережье, Booking и Airbnb, депозиты и garantía, сезонность, оплата картами и типичные ошибки — от короткой поездки до digital nomad и долгого stay.",
     heroImage:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80",
     sections: [
       {
+        heading: "Типы жилья и платформы",
+        body:
+          "Отель — для 3–14 дней. Airbnb и апартаменты — неделя+. Estancia и lodge — Mendoza и Patagonia. Booking, Airbnb, туры на платформе — разная защита и гибкость отмены.",
+      },
+      {
         heading: "Буэнос-Айрес: районы",
         body:
-          "Palermo — кафе, парки, безопаснее для первого визита. Recoleta — классика, музеи, спокойнее. San Telmo — атмосфера, но шумнее и осторожнее с вещами. Puerto Madero — современно и дороже. Для короткой поездки удобны Palermo Soho или Recoleta.",
+          "Palermo, Recoleta, Belgrano — для первого визита и семей. San Telmo — атмосфера. La Boca и Once — не для ночёвки. Безопасность района — /guide/bezopasnost.",
       },
       {
-        heading: "Патагония и регионы",
+        heading: "Регионы и долгий срок",
         body:
-          "Эль-Калафате и Ушуайя — отели у набережной или центра, бронируйте за 2–3 месяца в сезон. El Chaltén — хостелы и лоджи у троп. Барилoche — озёрная зона и центр. Estancia (ранчо) — для глубокого погружения в степи и винодельни.",
-      },
-      {
-        heading: "Бронирование и туры с проживанием",
-        body:
-          "На платформе «Пора в Аргентину» многие авторские туры включают отели или лоджи — уровень комфорта указан в карточке. Для самостоятельной поездки сравнивайте Booking, Airbnb и прямое бронирование у estancia.",
+          "Patagonia — бронь за 2–3 месяца. Garantía — барьер для долгой аренды без резидентства. Nomad — monthly Airbnb в Palermo с проверкой Wi‑Fi. Оплата — /guide/ekonomika-i-dengi.",
       },
     ],
     serviceCards: [
@@ -106,10 +106,10 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
         ctaLabel: "Смотреть туры",
       },
       {
-        title: "PDF-путеводитель: Патагония",
-        description: "Сезоны, жильё у троп и практические советы по региону.",
-        href: "/shop",
-        ctaLabel: "В магазин",
+        title: "Консультация по маршруту",
+        description: "Подскажем базы и сроки брони под ваш план.",
+        href: "/contacts?topic=gde-zhit",
+        ctaLabel: "Связаться",
       },
     ],
     tourRecommendations: [
@@ -118,14 +118,24 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     ],
     relatedArticles: [
       {
-        label: "Патагония: с чего начать",
-        href: "/guide/patagoniya-s-chego-nachat",
-        description: "Логистика и базовые точки",
+        label: "Безопасность",
+        href: "/guide/bezopasnost",
+        description: "Районы BA и вещи",
       },
       {
-        label: "Туристические регионы",
-        href: "/guide/turistskie-regiony",
-        description: "Обзор направлений",
+        label: "Экономика и деньги",
+        href: "/guide/ekonomika-i-dengi",
+        description: "Карты и pesos при брони",
+      },
+      {
+        label: "Связь",
+        href: "/guide/svyaz",
+        description: "Wi‑Fi для nomad",
+      },
+      {
+        label: "Патагония: с чего начать",
+        href: "/guide/patagoniya-s-chego-nachat",
+        description: "Логистика и базы",
       },
     ],
     relatedDestinations: [
@@ -569,33 +579,43 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     id: "svyaz",
     slug: "svyaz",
     title: "Связь",
-    shortDescription: "SIM-карты, интернет и роуминг",
+    shortDescription: "SIM, eSIM, покрытие по регионам и связь на маршруте",
     intro:
-      "Мобильный интернет в городах стабилен (4G/LTE). В Патагонии связь пропадает на тропах — скачайте офлайн-карты. Локальная SIM дешевле роуминга; eSIM удобна для короткой поездки.",
+      "Полный справочник по мобильной связи и интернету в Аргентине: операторы Claro/Personal/Movistar, eSIM, покрытие от BA до Patagonia, приложения для туриста, пополнение prepago и связь с гидами после бронирования тура.",
     heroImage:
       "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&q=80",
     sections: [
       {
         heading: "Операторы и SIM",
         body:
-          "Claro, Personal, Movistar — киоски в аэропортах и центре BA. Нужен паспорт для регистрации. Пакеты prepago с данными от 3000–8000 ARS. eSIM (Airalo, Holafly) — без визита в салон.",
+          "Prepago по паспорту в EZE, centro BA и туристических городах. Claro и Personal — для Patagonia; сравните пакеты data перед покупкой.",
       },
       {
-        heading: "Wi‑Fi",
+        heading: "eSIM и роуминг",
         body:
-          "В отелях и кафе Wi‑Fi обычно есть. Скорость переменная. Не вводите банковские данные в публичных сетях без VPN.",
+          "Airalo/Holafly — до вылета на 1–2 недели. Роуминг из РФ дорог на длинной поездке. Telegram и WhatsApp работают через mobile data.",
       },
       {
-        heading: "На маршруте",
+        heading: "Patagonia и offline",
         body:
-          "В El Chaltén и на тропах Fitz Roy связи нет — сообщите близким заранее. Спутниковые мессенджеры (WhatsApp) работают везде, где есть хотя бы EDGE.",
+          "В Calafate и Chaltén — 4G в поселках, на тропах — нет. Offline maps, power bank и контакт гида до выхода на маршрут обязательны.",
       },
     ],
     relatedArticles: [
       {
+        label: "Как добраться",
+        href: "/guide/kak-dobratsya",
+        description: "EZE и первый день",
+      },
+      {
+        label: "Экономика и деньги",
+        href: "/guide/ekonomika-i-dengi",
+        description: "Pesos на SIM",
+      },
+      {
         label: "Безопасность",
         href: "/guide/bezopasnost",
-        description: "Цифровая и личная",
+        description: "Телефон и карманники",
       },
     ],
   },
@@ -719,26 +739,26 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     id: "bezopasnost",
     slug: "bezopasnost",
     title: "Безопасность",
-    shortDescription: "Районы, мелкое воровство и практические правила",
+    shortDescription: "Районы BA, кражи, транспорт, «что делать если» и страховка",
     intro:
-      "Аргентина в целом безопасна для туристов при базовой осмотрительности. Основной риск — карманники и snatch theft в BA; в туристических регионах — стандартные меры для путешественника.",
+      "Полный практический справочник: безопасные районы Buenos Aires, snatch theft и карманники, такси и Subte, деньги и ATM, Patagonia и нацпарки, экстренные номера и пошаговые действия при краже телефона или паспорта.",
     heroImage:
       "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80",
     sections: [
       {
         heading: "Буэнос-Айрес",
         body:
-          "Днём Palermo, Recoleta, Puerto Madero — спокойнее. La Boca — только днём, туристические улицы. Не носите телефон в руке на тротуаре у дороги. Такси Cabify/ Uber или radio taxi, не ловите машину с улицы ночью.",
+          "Palermo, Recoleta, Puerto Madero — спокойнее. La Boca — только Caminito днём. Телефон не у проезжей части. Cabify/Uber ночью.",
       },
       {
-        heading: "Документы и деньги",
+        heading: "Что делать при краже",
         body:
-          "Копия паспорта в облаке, оригинал в сейфе отеля. Разделяйте карты и наличные. Не меняйте валюту с уличными менялами. Полис медстраховки — обязателен для активных туров.",
+          "Блокировка телефона и карт → denuncia в полиции → consulate при потере паспорта → страховка. Копии документов — в облаке offline.",
       },
       {
-        heading: "На природе",
+        heading: "Patagonia и природа",
         body:
-          "Патагония — погода и тропы: сообщайте маршрут, берите слои. Iguazú — скользкие тропы, репеллент. Соблюдайте правила национальных парков.",
+          "Главный риск — погода и тропы, не преступность. Iguazú — репеллент и нескользкая обувь. Страховка с треккингом обязательна.",
       },
     ],
     serviceCards: [
@@ -758,14 +778,19 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     ],
     relatedArticles: [
       {
-        label: "Визы для туристов",
-        href: "/immigration/vizy-dlya-turistov",
-        description: "Въезд и документы",
+        label: "Экономика и деньги",
+        href: "/guide/ekonomika-i-dengi",
+        description: "Безопасный обмен",
       },
       {
-        label: "Гид по Буэнос-Айресу (PDF)",
-        href: "/shop",
-        description: "Безопасные маршруты",
+        label: "Связь",
+        href: "/guide/svyaz",
+        description: "Блокировка SIM",
+      },
+      {
+        label: "Транспорт",
+        href: "/guide/transport",
+        description: "Такси и авто",
       },
     ],
   },

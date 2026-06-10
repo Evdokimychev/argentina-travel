@@ -8,7 +8,7 @@ import {
   DESCRIPTION_EXTRA_TABS,
   type DescriptionExtraTabId,
 } from "@/data/tour-description-extra";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 import { cn } from "@/lib/cn";
 
 interface DescriptionSectionProps {
@@ -94,10 +94,8 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
   }, [activeTab, visibleTabs]);
 
   return (
-    <section id="description" className="tour-section-target">
-      <SectionHeading title="Описание путешествия" />
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="space-y-5 p-6 sm:p-8">
+    <TourSection id="description" title="Описание путешествия">
+      <div className="space-y-5">
           {blocks.map((block, i) => {
             switch (block.type) {
               case "heading":
@@ -152,12 +150,12 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
                 return null;
             }
           })}
-        </div>
+      </div>
 
-        {visibleTabs.length > 0 ? (
-          <div className="border-t border-gray-100 bg-pampas/40">
-            <div
-              className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-gray-100 px-4 pt-3 sm:px-6"
+      {visibleTabs.length > 0 ? (
+        <div className="-mx-2 mt-8 border-t border-gray-100 pt-6 sm:-mx-4">
+          <div
+            className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-gray-100 pb-px"
               role="tablist"
               aria-label="Дополнительная информация о туре"
             >
@@ -178,13 +176,12 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
                   {tab.label}
                 </button>
               ))}
-            </div>
-            <div className="p-6 sm:p-8" role="tabpanel">
-              <ExtraTabContent tabId={activeTab} extra={extra} />
-            </div>
           </div>
-        ) : null}
-      </div>
-    </section>
+          <div className="pt-5" role="tabpanel">
+            <ExtraTabContent tabId={activeTab} extra={extra} />
+          </div>
+        </div>
+      ) : null}
+    </TourSection>
   );
 }

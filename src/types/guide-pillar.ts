@@ -63,8 +63,13 @@ export type GuidePracticalTips = {
 export type GuideQuickFact = {
   emoji?: string;
   label: string;
-  value: string;
-  /** Render live exchange rate instead of static value */
+  /** Короткий главный вывод */
+  headline: string;
+  /** Расшифровка — контекст, который можно прочитать за секунды */
+  detail?: string;
+  /** @deprecated Используйте headline + detail */
+  value?: string;
+  /** Render live exchange rate instead of static headline */
   live?: "exchange-oficial" | "exchange-blue";
 };
 

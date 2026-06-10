@@ -4,7 +4,7 @@ import {
   formatArrivalDepartureCity,
   hasTicketRecommendations,
 } from "@/lib/tour-public-display";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 interface LogisticsDetailSectionProps {
   tour: Tour;
@@ -21,14 +21,12 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
   if (!showTickets && nonPlaneCities.length === 0) return null;
 
   return (
-    <section id="logistics" className="tour-section-target space-y-8">
+    <TourSection id="logistics" title="Логистика и перелёт">
       {showTickets && !tour.logistics.arrivalDetailsEnabled ? (
         <div>
-          <SectionHeading
-            title="Рекомендации по перелёту"
-            subtitle="Как лучше спланировать дорогу до начала тура"
-          />
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <h3 className="font-display text-lg font-bold text-charcoal">Рекомендации по перелёту</h3>
+          <p className="mt-1 text-sm text-slate">Как лучше спланировать дорогу до начала тура</p>
+          <div className="mt-4 rounded-2xl border border-gray-100 bg-surface-muted/40 p-6">
             <p className="whitespace-pre-line text-sm leading-relaxed text-slate">
               {tour.logistics.ticketRecommendationsText.trim()}
             </p>
@@ -37,25 +35,23 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
       ) : null}
 
       {nonPlaneCities.length > 0 ? (
-        <div>
-          <SectionHeading
-            title="Другие способы добраться"
-            subtitle="Поезд и альтернативный транспорт"
-          />
-          <div className="space-y-4">
+        <div className={showTickets ? "mt-8" : undefined}>
+          <h3 className="font-display text-lg font-bold text-charcoal">Другие способы добраться</h3>
+          <p className="mt-1 text-sm text-slate">Поезд и альтернативный транспорт</p>
+          <div className="mt-4 space-y-4">
             {nonPlaneCities.map((city) => (
               <article
                 key={city.title}
-                className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+                className="rounded-2xl border border-gray-100 bg-surface-muted/30 p-6"
               >
-                <h3 className="font-display text-lg font-bold text-charcoal">{city.title}</h3>
+                <h4 className="font-display text-base font-bold text-charcoal">{city.title}</h4>
 
                 {city.transport.length > 0 ? (
                   <div className="mt-3 flex flex-wrap gap-2">
                     {city.transport.map((mode) => (
                       <span
                         key={mode}
-                        className="inline-flex items-center gap-1.5 rounded-lg bg-gray-50 px-2.5 py-1 text-xs font-medium text-charcoal"
+                        className="inline-flex items-center gap-1.5 rounded-lg bg-white px-2.5 py-1 text-xs font-medium text-charcoal"
                       >
                         {mode === "Самолёт" ? (
                           <Plane className="h-3.5 w-3.5 text-sky" />
@@ -71,7 +67,7 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
                 ) : null}
 
                 {city.comment ? (
-                  <p className="mt-3 rounded-xl bg-pampas/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
+                  <p className="mt-3 rounded-xl bg-white px-4 py-3 text-sm leading-relaxed text-charcoal">
                     {city.comment}
                   </p>
                 ) : null}
@@ -80,6 +76,6 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
           </div>
         </div>
       ) : null}
-    </section>
+    </TourSection>
   );
 }

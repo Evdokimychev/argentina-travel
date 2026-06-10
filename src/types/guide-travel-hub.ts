@@ -8,7 +8,10 @@ export type TravelHubTocItem = {
 export type TravelHubQuickFact = {
   emoji: string;
   label: string;
-  value: string;
+  headline: string;
+  detail?: string;
+  /** @deprecated Используйте headline + detail */
+  value?: string;
 };
 
 export type TravelHubAirlineNoteType = "info" | "tech-stop" | "connection" | "from-russia" | "hub";

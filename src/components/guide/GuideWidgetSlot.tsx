@@ -4,6 +4,7 @@ import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
 import ArgentinaWeatherPanel, {
   ArgentinaWeatherPanelSkeleton,
 } from "@/components/guide/weather/ArgentinaWeatherPanel";
+import { siteScrollAnchorClass } from "@/lib/site-container";
 import type { GuidePillarWidgetSlot } from "@/types/guide-pillar";
 
 type GuideWidgetSlotProps = {
@@ -19,7 +20,7 @@ const PLACEHOLDER_MESSAGES: Record<string, string> = {
 export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
   if (slot.type === "exchange-rates") {
     return (
-      <div id={slot.id} className="scroll-mt-24">
+      <div id={slot.id} className={siteScrollAnchorClass}>
         <ArgentinaExchangeRates />
       </div>
     );
@@ -27,7 +28,7 @@ export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
 
   if (slot.type === "weather-panel") {
     return (
-      <div id={slot.id} className="scroll-mt-24">
+      <div id={slot.id} className={siteScrollAnchorClass}>
         <Suspense fallback={<ArgentinaWeatherPanelSkeleton />}>
           <ArgentinaWeatherPanel />
         </Suspense>
@@ -45,7 +46,7 @@ export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
   return (
     <div
       id={slot.id}
-      className="scroll-mt-24 rounded-2xl border border-dashed border-gray-200 bg-white p-6 shadow-card sm:p-8"
+      className={`${siteScrollAnchorClass} rounded-2xl border border-dashed border-gray-200 bg-white p-6 shadow-card sm:p-8`}
     >
       <div className="flex items-start gap-3">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100">

@@ -61,11 +61,17 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: calc(
+    var(--site-header-height, 72px) + var(--site-section-nav-height, 0px) +
+      var(--tour-section-nav-height, 0px) + var(--site-scroll-anchor-gap, 1rem)
+  );
 }
 
+.site-scroll-anchor-target,
 .tour-section-target {
   scroll-margin-top: calc(
-    var(--site-header-height, 72px) + var(--tour-section-nav-height, 52px) + 1rem
+    var(--site-header-height, 72px) + var(--site-section-nav-height, 0px) +
+      var(--tour-section-nav-height, 0px) + var(--site-scroll-anchor-gap, 1rem)
   );
 }
 

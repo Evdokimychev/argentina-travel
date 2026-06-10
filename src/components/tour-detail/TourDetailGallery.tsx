@@ -30,7 +30,7 @@ function GalleryTile({
     <button
       type="button"
       onClick={onClick}
-      className={`relative overflow-hidden rounded-2xl bg-gray-100 ${className ?? ""}`}
+      className={cn("relative overflow-hidden rounded-2xl bg-gray-100", className)}
     >
       <SafeImage
         src={src}
@@ -178,10 +178,17 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
     setLightbox(true);
   };
 
+  const desktopHeight = "md:h-[480px]";
+
   return (
     <div data-scroll-rail-tone="dark">
       {/* Desktop */}
-      <div className="hidden gap-2 md:grid md:grid-cols-4 md:grid-rows-2 md:h-[480px]">
+      <div
+        className={cn(
+          "hidden gap-2 md:grid md:grid-cols-4 md:grid-rows-2",
+          desktopHeight
+        )}
+      >
         <GalleryTile
           src={main}
           alt={title}

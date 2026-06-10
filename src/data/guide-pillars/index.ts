@@ -1,9 +1,6 @@
 import { EKONOMIKA_PILLAR } from "@/data/guide-pillar-ekonomika";
-import {
-  KAK_DOBRATSYA_PILLAR,
-  GDE_ZHIT_PILLAR,
-  TRANSPORT_PILLAR,
-} from "@/data/guide-pillars/travel-logistics";
+import { KAK_DOBRATSYA_PILLAR, TRANSPORT_PILLAR } from "@/data/guide-pillars/travel-logistics";
+import { GDE_ZHIT_PILLAR } from "@/data/guide-pillar-gde-zhit";
 import {
   TURISTICSKIE_REGIONY_PILLAR,
   DOSTOPRIMECHATELNOSTI_PILLAR,
@@ -15,11 +12,9 @@ import {
   ISTORIYA_PILLAR,
   KUHNYA_PILLAR,
 } from "@/data/guide-pillars/culture-life";
-import {
-  SVYAZ_PILLAR,
-  SHOPPING_PILLAR,
-  BEZOPASNOST_PILLAR,
-} from "@/data/guide-pillars/practical";
+import { SVYAZ_PILLAR } from "@/data/guide-pillar-svyaz";
+import { BEZOPASNOST_PILLAR } from "@/data/guide-pillar-bezopasnost";
+import { SHOPPING_PILLAR } from "@/data/guide-pillars/practical";
 import type { GuidePillarContent } from "@/types/guide-pillar";
 
 export const GUIDE_PILLARS: Record<string, GuidePillarContent> = {

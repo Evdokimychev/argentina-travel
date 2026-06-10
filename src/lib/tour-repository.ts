@@ -17,6 +17,7 @@ import {
   tourToListing,
 } from "@/lib/tour-mapper";
 import { getCatalogSlug } from "@/lib/tour-slug";
+import { normalizeTourDuration } from "@/lib/tour-duration";
 
 let seedToursCache: Tour[] | null = null;
 
@@ -77,8 +78,26 @@ function writeTourStore(store: Record<string, Tour>) {
 function ensureSeedToursInStore(store: Record<string, Tour>): Record<string, Tour> {
   const next = { ...store };
   for (const seed of buildSeedTours()) {
-    if (!next[seed.slug]) {
+    const existing = next[seed.slug];
+    if (!existing) {
       next[seed.slug] = seed;
+      continue;
+    }
+
+    const normalized = normalizeTourDuration(existing.durationDays, existing.durationNights);
+    const seedNormalized = normalizeTourDuration(seed.durationDays, seed.durationNights);
+    const needsDurationFix =
+      existing.durationDays !== normalized.durationDays ||
+      existing.durationNights !== normalized.durationNights ||
+      (existing.durationNights >= existing.durationDays &&
+        seedNormalized.durationDays > existing.durationDays);
+
+    if (needsDurationFix) {
+      next[seed.slug] = {
+        ...existing,
+        durationDays: seedNormalized.durationDays,
+        durationNights: seedNormalized.durationNights,
+      };
     }
   }
   return next;

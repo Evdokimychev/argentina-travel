@@ -22,6 +22,7 @@ import type {
 } from "@/types";
 import type { Tour, TourOrganizerComment, TourStatus } from "@/types/tour";
 import { primaryComfortLevel } from "@/data/tour-levels";
+import { normalizeTourDuration } from "@/lib/tour-duration";
 import { textToListItems } from "@/data/tour-terms-defaults";
 import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
 import { getTourRoutePoints } from "@/data/tour-routes";
@@ -326,6 +327,10 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       : base.descriptionBlocks;
 
   const authorGuide = draft.guides.find((guide) => guide.isTourAuthor) ?? draft.guides[0];
+  const { durationDays, durationNights } = normalizeTourDuration(
+    draft.durationDays,
+    draft.durationNights
+  );
 
   return {
     ...base,
@@ -351,8 +356,8 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       country: draft.countries[0] ?? draft.country,
       coordinates: base.geography.coordinates,
     },
-    durationDays: draft.durationDays,
-    durationNights: draft.durationNights,
+    durationDays,
+    durationNights,
     pricing: {
       basePriceUsd: draft.priceUsd,
       originalPriceUsd: draft.originalPriceUsd ?? undefined,
@@ -559,14 +564,19 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
   const publicAccommodations =
     accommodations.length > 0 ? accommodations : legacy?.accommodations ?? [];
 
+  const { durationDays, durationNights } = normalizeTourDuration(
+    tour.durationDays,
+    tour.durationNights
+  );
+
   return {
     id: tour.id,
     slug: tour.slug,
     title: tour.title,
     country: tour.geography.country,
     region: tour.geography.region,
-    durationDays: tour.durationDays,
-    durationNights: tour.durationNights,
+    durationDays,
+    durationNights,
     priceUsd: tour.pricing.basePriceUsd,
     originalPriceUsd: tour.pricing.originalPriceUsd,
     rating: tour.social.rating,

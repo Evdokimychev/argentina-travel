@@ -1,12 +1,11 @@
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 export function ImportantSection({ items }: { items: string[] }) {
   const visibleItems = items.filter((item) => item.trim());
   if (!visibleItems.length) return null;
 
   return (
-    <section id="important" className="tour-section-target">
-      <SectionHeading title="Важно знать" />
+    <TourSection id="important" title="Важно знать">
       <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-6">
         <ul className="space-y-3">
           {visibleItems.map((item) => (
@@ -17,6 +16,6 @@ export function ImportantSection({ items }: { items: string[] }) {
           ))}
         </ul>
       </div>
-    </section>
+    </TourSection>
   );
 }

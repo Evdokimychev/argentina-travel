@@ -147,3 +147,15 @@ export function hasPlacesContent(
 export function hasTermsListContent(items: string[]): boolean {
   return items.some((item) => item.trim());
 }
+
+/** Теги вида «10 дней (9 ночей)» — длительность уже показана отдельно */
+const TOUR_DURATION_TAG =
+  /^\d+\s*(?:день|дня|дней|дн\.?)(?:\s*\(\s*\d+\s*(?:ночь|ночи|ночей|нч\.?)\s*\))?$/i;
+
+export function isTourDurationTag(tag: string): boolean {
+  return TOUR_DURATION_TAG.test(tag.trim());
+}
+
+export function filterTourDisplayTags(tags: string[]): string[] {
+  return tags.map((tag) => tag.trim()).filter(Boolean).filter((tag) => !isTourDurationTag(tag));
+}

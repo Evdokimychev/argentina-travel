@@ -8,7 +8,7 @@ import { formatDate } from "@/lib/utils";
 import { formatReviews } from "@/lib/pluralize";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StarRating } from "@/components/ui/star-rating";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 const PER_PAGE = 3;
 
@@ -34,8 +34,7 @@ export default function ReviewsSection({
 
   if (reviews.length === 0) {
     return (
-      <section id="reviews" className="tour-section-target">
-        <SectionHeading title="Отзывы" />
+      <TourSection id="reviews" title="Отзывы">
         <EmptyState
           icon={MessageSquare}
           title="Отзывов пока нет"
@@ -43,17 +42,12 @@ export default function ReviewsSection({
           bordered={false}
           className="px-0"
         />
-      </section>
+      </TourSection>
     );
   }
 
   return (
-    <section id="reviews" className="tour-section-target">
-      <SectionHeading
-        title="Отзывы"
-        subtitle={`${rating} · ${formatReviews(reviewCount)}`}
-      />
-
+    <TourSection id="reviews" title="Отзывы" subtitle={`${rating} · ${formatReviews(reviewCount)}`}>
       <div className="mb-4 flex flex-wrap gap-2">
         {(["all", 5, 4, 3] as const).map((f) => (
           <button
@@ -138,6 +132,6 @@ export default function ReviewsSection({
           </button>
         </div>
       )}
-    </section>
+    </TourSection>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { siteScrollAnchorClass } from "@/lib/site-container";
 import { Copy, Link2, Users } from "lucide-react";
 import type { Booking } from "@/types/tourist";
 import {
@@ -70,7 +71,7 @@ export default function BookingTravelersOrganizerSection({
   return (
     <article
       id={sectionId}
-      className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gray-200/60 sm:p-6 scroll-mt-24"
+      className={`rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gray-200/60 sm:p-6 ${siteScrollAnchorClass}`}
     >
       <div className="flex items-center gap-2">
         <Users className="h-5 w-5 text-slate" />

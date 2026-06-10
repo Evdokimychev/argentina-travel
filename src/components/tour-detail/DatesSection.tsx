@@ -10,7 +10,7 @@ import {
   dateFitsGuestCount,
   validateGuestsForScheduledBooking,
 } from "@/lib/tour-booking-spots";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 import { useTourBooking } from "./TourBookingContext";
 import type { Tour } from "@/types/tour";
 import EarlyBookingDiscounts from "./EarlyBookingDiscounts";
@@ -49,16 +49,15 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
   }
 
   return (
-    <section id="dates" className="tour-section-target space-y-6">
-      <SectionHeading
-        title="Даты и цены"
-        subtitle={
-          isOnRequestOnly
-            ? "Тур проводится индивидуально — выберите удобную дату в блоке бронирования"
-            : "Выберите подходящую дату отправления"
-        }
-      />
-
+    <TourSection
+      id="dates"
+      title="Даты и цены"
+      subtitle={
+        isOnRequestOnly
+          ? "Тур проводится индивидуально — выберите удобную дату в блоке бронирования"
+          : "Выберите подходящую дату отправления"
+      }
+    >
       {canonicalTour ? <EarlyBookingDiscounts tour={canonicalTour} /> : null}
 
       {error ? (
@@ -82,7 +81,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
         <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full min-w-[540px] text-left text-sm">
             <thead>
-              <tr className="border-b border-gray-100 bg-pampas/50">
+              <tr className="border-b border-gray-100 bg-surface-muted/50">
                 <th className="px-5 py-3 font-medium text-slate">Начало</th>
                 <th className="px-5 py-3 font-medium text-slate">Окончание</th>
                 <th className="px-5 py-3 font-medium text-slate">Мест</th>
@@ -153,6 +152,6 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
           </table>
         </div>
       )}
-    </section>
+    </TourSection>
   );
 }

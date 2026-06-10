@@ -1,6 +1,7 @@
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import type { Tour } from "@/types/tour";
 import { cn } from "@/lib/cn";
+import { filterTourDisplayTags } from "@/lib/tour-public-display";
 
 interface TourClassificationBarProps {
   tour: Tour;
@@ -9,13 +10,11 @@ interface TourClassificationBarProps {
 export default function TourClassificationBar({ tour }: TourClassificationBarProps) {
   const activities = tour.classification.activities.filter(Boolean);
   const collections = tour.classification.collections.filter(Boolean);
-  const languages = tour.participants.languages.filter(Boolean);
-  const tags = tour.classification.tags.filter(Boolean);
+  const tags = filterTourDisplayTags(tour.classification.tags);
 
   const hasContent =
     activities.length > 0 ||
     collections.length > 0 ||
-    languages.length > 0 ||
     tags.length > 0 ||
     tour.isPreliminaryProgram ||
     tour.partnerName?.trim();
@@ -27,12 +26,12 @@ export default function TourClassificationBar({ tour }: TourClassificationBarPro
       {(tour.isPreliminaryProgram || tour.partnerName?.trim()) && (
         <div className="flex flex-wrap items-center gap-2">
           {tour.isPreliminaryProgram ? (
-            <span className="inline-flex rounded-lg bg-brand px-2.5 py-1 text-xs font-semibold text-white">
+            <span className="inline-flex rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-white">
               Предварительная программа
             </span>
           ) : null}
           {tour.partnerName?.trim() ? (
-            <span className="inline-flex rounded-lg border border-gray-200 bg-white px-2.5 py-1 text-xs font-medium text-charcoal">
+            <span className="inline-flex rounded-full border border-gray-200/80 bg-white/80 px-2.5 py-1 text-xs font-medium text-charcoal shadow-sm">
               Площадка: {tour.partnerName}
             </span>
           ) : null}
@@ -70,22 +69,14 @@ export default function TourClassificationBar({ tour }: TourClassificationBarPro
         </div>
       ) : null}
 
-      {(languages.length > 0 || tags.length > 0) && (
+      {tags.length > 0 ? (
         <div className={cn("flex flex-wrap gap-x-4 gap-y-2 text-xs text-slate")}>
-          {languages.length > 0 ? (
-            <span>
-              <span className="font-medium text-charcoal">Языки: </span>
-              {languages.join(", ")}
-            </span>
-          ) : null}
-          {tags.length > 0 ? (
-            <span>
-              <span className="font-medium text-charcoal">Теги: </span>
-              {tags.join(", ")}
-            </span>
-          ) : null}
+          <span>
+            <span className="font-medium text-charcoal">Теги: </span>
+            {tags.join(", ")}
+          </span>
         </div>
-      )}
+      ) : null}
     </section>
   );
 }

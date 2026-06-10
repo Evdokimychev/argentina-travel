@@ -72,12 +72,12 @@ export const KAK_DOBRATSYA_PILLAR: GuidePillarContent = {
     { label: "Задать вопрос", href: "/contacts?topic=kak-dobratsya", variant: "tertiary" },
   ],
   quickFacts: [
-    { label: "Главный международный аэропорт", value: "Ezeiza (EZE), 35 км от центра BA" },
-    { label: "Внутренний хаб", value: "Aeroparque Jorge Newbery (AEP)" },
-    { label: "Типичный перелёт из Европы", value: "15–20 ч с 1 пересадкой" },
-    { label: "Внутренние авиалинии", value: "Aerolíneas, Flybondi, Jetsmart" },
-    { label: "Трансфер EZE → центр", value: "40–60 мин, $40–60 USD" },
-    { label: "Виза для РФ (туризм)", value: "Безвиз до 90 дней" },
+    { label: "Главный международный аэропорт", headline: "Ezeiza (EZE)", detail: "35 км от centro BA — все международные рейсы" },
+    { label: "Внутренний хаб", headline: "Aeroparque (AEP)", detail: "В черте города — Patagonia, Iguazú, Mendoza" },
+    { label: "Типичный перелёт из Европы", headline: "15–20 ч", detail: "1 пересадка — Istanbul, Doha, Madrid" },
+    { label: "Внутренние авиалинии", headline: "Aerolíneas, Flybondi", detail: "Jetsmart — багаж часто отдельно на лоукостерах" },
+    { label: "Трансфер EZE → центр", headline: "40–60 мин", detail: "$40–60 USD — такsi на стойке или Cabify" },
+    { label: "Виза для РФ (туризм)", headline: "Безвиз до 90 дней", detail: "Паспорт 6+ мес., обратный билет желателен" },
   ],
   sections: [
     {
@@ -189,98 +189,6 @@ export const KAK_DOBRATSYA_PILLAR: GuidePillarContent = {
   ],
 };
 
-const GDE_ZHIT_FAQ = [
-  { question: "Какой район Буэнос-Айреса выбрать туристу?", answer: "Palermo и Recoleta — безопаснее и удобнее для первого визита. San Telmo — атмосферно, но осторожнее с вещами. Puerto Madero — современно и дороже." },
-  { question: "Когда бронировать отель в Патагонии?", answer: "За 2–3 месяца в высокий сезон (ноябрь–март). El Chaltén и Ушуайя заполняются быстро." },
-  { question: "Что такое estancia?", answer: "Рanchо/усадьба для проживания в степи или винодельнях — глубокое погружение, часто с полупансионом и активностями." },
-  { question: "Airbnb или отель?", answer: "Отель проще для короткой поездки. Airbnb выгоден на неделю+ в BA, но проверяйте отзывы и правила здания." },
-  { question: "Нужен ли депозит при заселении?", answer: "Часто блокируют сумму на карте или просят наличный депозит. Уточняйте при бронировании." },
-  { question: "Где жить в El Chaltén?", answer: "Хостелы и лоджи в центре деревни — всё в пешей доступности к тропам. Бронируйте заранее в сезон." },
-  { question: "Безопасны ли хостелы?", answer: "В туристических зонах — да, при базовой осмотрительности. Используйте сейф для документов и не оставляйте вещи в общих dorm." },
-  { question: "Включён ли завтрак?", answer: "В BA часто только continental. В estancia и лоджах Патагонии — часто полный завтрак или полупансион." },
-  { question: "Можно ли жить в тур с проживанием?", answer: "Да — многие авторские туры на платформе включают отели или лоджи. Уровень комфорта указан в карточке тура." },
-  { question: "Как выбрать отель у водопадов Игуасу?", answer: "Аргентинская сторона: Puerto Iguazú. Отели в парке дороже, но ближе к тропам. Бронируйте с учётом трансфера из аэропорта IGR." },
-  { question: "Есть ли кухня в апартаментах?", answer: "В Palermo и Recoleta много апартаментов с кухней — удобно для длительного пребывания и экономии на обедах." },
-  { question: "Нужен ли адаптер для розеток?", answer: "Тип C/I, 220V. Европейская вилка часто подходит, но лучше иметь универсальный адаптер." },
-];
-
-export const GDE_ZHIT_PILLAR: GuidePillarContent = {
-  heroSubtitle:
-    "Отели, районы и типы размещения — от Palermo до лоджей Патагонии и estancia на винодельнях",
-  heroCtas: [
-    { label: "Туры с проживанием", href: "/tours", variant: "primary" },
-    { label: "Районы BA", href: "#gde-zhit-1", variant: "secondary" },
-    { label: "Задать вопрос", href: "/contacts?topic=gde-zhit", variant: "tertiary" },
-  ],
-  quickFacts: [
-    { label: "Лучшие районы BA для туриста", value: "Palermo, Recoleta, Puerto Madero" },
-    { label: "Бронирование Патагонии", value: "За 2–3 месяца в сезон" },
-    { label: "Estancia", value: "Рanchо с проживанием и активностями" },
-    { label: "Средний отель BA", value: "От $60–120 USD/ночь" },
-    { label: "Платформа", value: "Туры с отелями в карточке" },
-    { label: "Check-in", value: "Обычно с 15:00, поздний — по запросу" },
-  ],
-  sections: [
-    {
-      id: "gde-zhit-1",
-      title: "Буэнос-Айрес: районы",
-      content:
-        "Palermo — кафе, парки, безопаснее для первого визита. Recoleta — классика, музеи. San Telmo — атмосфера, но шумнее. Puerto Madero — современно и дороже.",
-      subsections: [
-        { title: "Palermo Soho vs Hollywood", body: "Soho — рестораны и бутики; Hollywood — парки и спокойнее. Оба удобны пешком." },
-        { title: "Microcentro", body: "Деловой центр — шумно, мало charm для жилья, но удобно на 1–2 ночи." },
-      ],
-    },
-    {
-      id: "gde-zhit-2",
-      title: "Патагония и регионы",
-      content:
-        "Эль-Калафате и Ушуайя — отели у набережной или центра. El Chaltén — хостелы у троп. Барилoche — озёрная зона.",
-    },
-    {
-      id: "gde-zhit-3",
-      title: "Estancia и agrotourism",
-      content:
-        "Для глубокого погружения — проживание на estancia в степи или среди лоз в Mendoza. Часто включены asado, конные прогулки, дегустации.",
-    },
-    {
-      id: "gde-zhit-4",
-      title: "Бронирование: платформа vs самостоятельно",
-      content:
-        "На «Пора в Аргентину» туры включают отели — прозрачный уровень комфорта. Самостоятельно — Booking, Airbnb, прямое бронирование estancia.",
-      infoBoxes: [
-        { variant: "tip", title: "Отмена", body: "Проверяйте flexible rate при нестабильных планах — правила отличаются от европейских." },
-      ],
-    },
-    {
-      id: "gde-zhit-5",
-      title: "Север и Iguazú",
-      content:
-        "Salta — колониальный центр, бутик-отели. Кафаяте — винодельни с ложами. Puerto Iguazú — база для водопадов.",
-    },
-  ],
-  faq: GDE_ZHIT_FAQ,
-  blogLinks: [
-    { title: "Патагония: с чего начать", href: "/guide/patagoniya-s-chego-nachat", description: "Логистика и базовые точки" },
-    { title: "Туристические регионы", href: "/guide/turistskie-regiony", description: "Обзор направлений" },
-  ],
-  partnerServices: [
-    {
-      softIntro: "Нужна помощь с подбором жилья?",
-      title: "Туры с проживанием",
-      description: "Авторские маршруты с отелями и лоджами от организаторов.",
-      href: "/tours",
-      ctaLabel: "Смотреть туры",
-    },
-    {
-      title: "PDF-путеводитель: Патагония",
-      description: "Сезоны, жильё у троп и практические советы.",
-      href: "/shop",
-      ctaLabel: "В магазин",
-    },
-  ],
-};
-
 const TRANSPORT_FAQ = [
   { question: "Нужно ли бронировать внутренние перелёты заранее?", answer: "Да, особенно декабрь–февраль и на маршруты в Калафате и Ушуайю. Лоукостеры повышают цены ближе к дате." },
   { question: "Какие авиакомпании летают внутри страны?", answer: "Aerolíneas Argentinas, Flybondi, Jetsmart — основные. Сравнивайте багаж и аэропорт вылета (EZE vs AEP)." },
@@ -305,12 +213,12 @@ export const TRANSPORT_PILLAR: GuidePillarContent = {
     { label: "Задать вопрос", href: "/contacts?topic=transport", variant: "tertiary" },
   ],
   quickFacts: [
-    { label: "BA → El Calafate", value: "~3 ч перелёт / ~30 ч автобус" },
-    { label: "Лоукостеры", value: "Flybondi, Jetsmart — багаж отдельно" },
-    { label: "Ночной автобус", value: "Cama — лежачие места, ~12–20 ч" },
-    { label: "Метро BA", value: "Subte — 6 линий, SUBE-карта" },
-    { label: "Аренда авто", value: "Удобно в Mendoza, Salta, Patagonia" },
-    { label: "Приложения", value: "Cabify, Uber, Moovit (BA)" },
+    { label: "BA → El Calafate", headline: "~3 ч перелёт", detail: "Автобус ~30 ч — ночной cama с лежачими местами" },
+    { label: "Лоукостеры", headline: "Flybondi, Jetsmart", detail: "Багаж и место — отдельная оплата при брони" },
+    { label: "Ночной автобус", headline: "Cama, semicama", detail: "12–20 ч между крупными городами из Retiro" },
+    { label: "Метро BA", headline: "Subte, 6 линий", detail: "SUBE-карта в kiosco — пополнение наличными" },
+    { label: "Аренда авто", headline: "Mendoza, Salta, Patagonia", detail: "Международные права обязательны; ветер на юге" },
+    { label: "Приложения", headline: "Cabify, Uber, Moovit", detail: "Такси безопаснее уличного — особенно ночью" },
   ],
   sections: [
     { id: "transport-1", title: "Внутренние перелёты", content: "Aerolíneas, Flybondi, Jetsmart связывают BA с Калафате, Барилоче, Ушуайей, Мендосой, Сальтой. Багаж у лоукостеров — отдельно." },

@@ -3,14 +3,13 @@ import Link from "next/link";
 import { TourDetail } from "@/types";
 import TourPriceDisplay from "./TourPriceDisplay";
 import { formatDurationShort } from "@/lib/pluralize";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) {
   if (tours.length === 0) return null;
 
   return (
-    <section id="similar" className="tour-section-target">
-      <SectionHeading title="Похожие путешествия" />
+    <TourSection id="similar" title="Похожие путешествия">
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tours.map((tour) => (
           <Link
@@ -46,6 +45,6 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
           </Link>
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }

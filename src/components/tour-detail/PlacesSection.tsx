@@ -4,14 +4,17 @@ import Image from "next/image";
 import { TourPlace } from "@/types";
 import { normalizeEditorValue } from "@/lib/rich-text";
 import { hasPlacesContent } from "@/lib/tour-public-display";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 export default function PlacesSection({ places }: { places: TourPlace[] }) {
   if (!hasPlacesContent(places)) return null;
 
   return (
-    <section id="places" className="tour-section-target">
-      <SectionHeading title="Главные впечатления" subtitle="Уникальные моменты тура" />
+    <TourSection
+      id="places"
+      title="Главные впечатления"
+      subtitle="Уникальные моменты тура"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         {places.map((place) => (
           <article
@@ -42,6 +45,6 @@ export default function PlacesSection({ places }: { places: TourPlace[] }) {
           </article>
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }

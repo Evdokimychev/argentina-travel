@@ -7,10 +7,23 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { getSiteNavSection } from "@/data/site-nav";
 import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 import { cn } from "@/lib/cn";
+import {
+  GUIDE_HUB_LINK_ID,
+  getGuideNavColumnIcon,
+  getGuideNavLinkIcon,
+} from "@/lib/guide-nav-icons";
 import { isNavHrefActive, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
 import { siteContainerClass } from "@/lib/site-container";
+import type { SiteNavLink } from "@/types/site-nav";
 
 const GUIDE_SITE_NAV = getSiteNavSection("guide")!;
+
+function isGuideNavLinkActive(pathname: string, link: SiteNavLink): boolean {
+  if (link.id === GUIDE_HUB_LINK_ID) {
+    return pathname === "/guide";
+  }
+  return isNavHrefActive(pathname, link.href);
+}
 
 export default function GuideSectionNav() {
   const pathname = usePathname();
@@ -27,33 +40,62 @@ export default function GuideSectionNav() {
     >
       <div className={cn(siteContainerClass, "overflow-x-auto py-3")}>
         <div className="flex min-w-max items-start gap-6 sm:gap-8">
-          {columns.map((column) => (
-            <div key={column.id} className="min-w-0">
-              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate">
-                {resolveNavLabel({ label: column.title ?? "", labelKey: column.titleKey }, t)}
-              </p>
-              <ul className="flex flex-wrap gap-1.5">
-                {column.links.map((link) => {
-                  const active = isNavHrefActive(pathname, link.href);
-                  return (
-                    <li key={link.id}>
-                      <Link
-                        href={link.href}
-                        className={cn(
-                          "inline-flex rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
-                          active
-                            ? "border-sky/30 bg-sky/10 text-sky"
-                            : "border-gray-200 bg-white text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
-                        )}
-                      >
-                        {navLinkLabel(link, t)}
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          ))}
+          {columns.map((column) => {
+            const ColumnIcon = getGuideNavColumnIcon(column.id);
+            return (
+              <div key={column.id} className="min-w-0">
+                <p className="mb-1.5 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate">
+                  <ColumnIcon className="h-3.5 w-3.5 shrink-0 text-sky/70" aria-hidden />
+                  {resolveNavLabel({ label: column.title ?? "", labelKey: column.titleKey }, t)}
+                </p>
+                <ul className="flex flex-wrap gap-1.5">
+                  {column.links.map((link) => {
+                    const active = isGuideNavLinkActive(pathname, link);
+                    const isHub = link.id === GUIDE_HUB_LINK_ID;
+                    const LinkIcon = getGuideNavLinkIcon(link);
+
+                    return (
+                      <li key={link.id}>
+                        <Link
+                          href={link.href}
+                          aria-current={active ? "page" : undefined}
+                          className={cn(
+                            "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm transition-colors",
+                            isHub &&
+                              "font-semibold shadow-sm ring-1 ring-sky/10",
+                            isHub &&
+                              !active &&
+                              "border-sky/35 bg-gradient-to-br from-sky/12 via-sky/5 to-white text-charcoal hover:border-sky/45 hover:from-sky/18",
+                            isHub &&
+                              active &&
+                              "border-sky bg-sky text-white shadow-md ring-sky/30",
+                            !isHub &&
+                              active &&
+                              "border-sky/30 bg-sky/10 font-medium text-sky",
+                            !isHub &&
+                              !active &&
+                              "border-gray-200 bg-white font-medium text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+                          )}
+                        >
+                          <LinkIcon
+                            className={cn(
+                              "h-3.5 w-3.5 shrink-0",
+                              isHub && active && "text-white",
+                              isHub && !active && "text-sky",
+                              !isHub && active && "text-sky",
+                              !isHub && !active && "text-slate/70"
+                            )}
+                            aria-hidden
+                          />
+                          {navLinkLabel(link, t)}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            );
+          })}
         </div>
       </div>
     </nav>

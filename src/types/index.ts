@@ -392,6 +392,15 @@ export interface Tour {
   tags: string[];
 }
 
+export type BlogCardVariant = "featured" | "standard" | "compact";
+
+export type BlogRelatedResource = {
+  label: string;
+  href: string;
+  type: "guide" | "immigration" | "tour" | "blog";
+  description?: string;
+};
+
 export interface BlogPost {
   id: string;
   slug: string;
@@ -399,10 +408,19 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   author: string;
+  authorBio?: string;
+  authorAvatar?: string;
   date: string;
   image: string;
   category: string;
+  /** @deprecated Prefer readTimeMinutes + formatBlogReadTime */
   readTime: string;
+  readTimeMinutes: number;
+  views: number;
+  tags: string[];
+  featured?: boolean;
+  cardVariant?: BlogCardVariant;
+  relatedResources?: BlogRelatedResource[];
 }
 
 export interface Testimonial {

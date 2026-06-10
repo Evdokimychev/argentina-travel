@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 
 interface GuidesSectionProps {
   guides: OrganizerTourGuide[];
@@ -11,11 +11,11 @@ export default function GuidesSection({ guides }: GuidesSectionProps) {
   if (visible.length === 0) return null;
 
   return (
-    <section id="guides" className="tour-section-target">
-      <SectionHeading
-        title="Гиды и сопровождение"
-        subtitle="Команда, которая проведёт вас по маршруту"
-      />
+    <TourSection
+      id="guides"
+      title="Гиды и сопровождение"
+      subtitle="Команда, которая проведёт вас по маршруту"
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         {visible.map((guide) => (
           <article
@@ -53,6 +53,6 @@ export default function GuidesSection({ guides }: GuidesSectionProps) {
           </article>
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }
