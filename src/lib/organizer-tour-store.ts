@@ -174,6 +174,7 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     groupMax: detail?.groupMax ?? marketplace?.groupSizeMax ?? 12,
     minimumAge: detail?.minimumAge ?? marketplace?.minimumAge ?? 0,
     maximumAge: null,
+    maxWeightEnabled: false,
     maxWeightKg: null,
     languages: (marketplace?.language ??
       detail?.organizer?.languages ?? ["Русский"]) as TourLanguage[],
@@ -342,6 +343,10 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
         ? draft.arrivalDepartureCities
         : seed.arrivalDepartureCities
     ),
+    maxWeightEnabled:
+      draft.maxWeightEnabled ??
+      ((draft.maxWeightKg ?? 0) > 0 ? true : seed.maxWeightEnabled),
+    maxWeightKg: draft.maxWeightKg ?? seed.maxWeightKg,
   };
 }
 

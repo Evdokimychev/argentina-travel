@@ -607,6 +607,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
       groupMin: Math.max(1, draft.groupMin),
       groupMax: Math.max(draft.groupMin, draft.groupMax),
       maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
+      maxWeightEnabled: draft.maxWeightEnabled,
       gallery: draft.gallery.filter(Boolean),
     });
 
@@ -801,34 +802,58 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 ) : null}
 
                 <div className="space-y-3 border-t border-gray-200/80 pt-5">
-                  <div>
-                    <h3 className="font-display text-base font-bold text-charcoal">
-                      Максимальный вес туриста
-                    </h3>
-                    <p className="mt-1 text-sm text-slate">
-                      Например, это может быть актуально для конных туров верхом
-                    </p>
-                  </div>
-                  <div>
-                    <FieldLabel
-                      htmlFor="tour-max-weight"
-                      hint="Если заполнить это поле — информация будет отражена на странице тура на сайте. Или вы можете оставить поле пустым."
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={draft.maxWeightEnabled}
+                    onClick={() => updateDraft({ maxWeightEnabled: !draft.maxWeightEnabled })}
+                    className="flex w-full items-start gap-3 text-left"
+                  >
+                    <span
+                      className={cn(
+                        "relative mt-0.5 inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
+                        draft.maxWeightEnabled ? "bg-brand" : "bg-gray-300"
+                      )}
                     >
-                      Максимальный вес туриста, кг
-                    </FieldLabel>
-                    <Input
-                      id="tour-max-weight"
-                      type="number"
-                      min={0}
-                      value={draft.maxWeightKg ?? ""}
-                      onChange={(event) =>
-                        updateDraft({
-                          maxWeightKg: event.target.value ? Number(event.target.value) : null,
-                        })
-                      }
-                      placeholder="0"
-                    />
-                  </div>
+                      <span
+                        className={cn(
+                          "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
+                          draft.maxWeightEnabled ? "translate-x-5" : "translate-x-0"
+                        )}
+                      />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-semibold text-charcoal">
+                        Максимальный вес туриста
+                      </span>
+                      <span className="mt-1 block text-sm leading-relaxed text-slate">
+                        Например, это может быть актуально для конных туров верхом
+                      </span>
+                    </span>
+                  </button>
+
+                  {draft.maxWeightEnabled ? (
+                    <div>
+                      <FieldLabel
+                        htmlFor="tour-max-weight"
+                        hint="Если заполнить это поле — информация будет отражена на странице тура на сайте. Или вы можете оставить поле пустым."
+                      >
+                        Максимальный вес туриста, кг
+                      </FieldLabel>
+                      <Input
+                        id="tour-max-weight"
+                        type="number"
+                        min={0}
+                        value={draft.maxWeightKg ?? ""}
+                        onChange={(event) =>
+                          updateDraft({
+                            maxWeightKg: event.target.value ? Number(event.target.value) : null,
+                          })
+                        }
+                        placeholder="0"
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </section>
             ) : null}

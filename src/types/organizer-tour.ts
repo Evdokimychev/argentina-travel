@@ -84,6 +84,7 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   groupMax: number;
   minimumAge: number;
   maximumAge: number | null;
+  maxWeightEnabled: boolean;
   maxWeightKg: number | null;
   languages: TourLanguage[];
   includedText: string;
