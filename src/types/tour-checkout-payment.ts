@@ -25,8 +25,8 @@ export function normalizeTourCheckoutPaymentOptions(
 
   const depositPercent = Math.min(100, Math.max(1, Math.round(merged.depositPercent || 10)));
 
-  let fullPaymentEnabled = merged.fullPaymentEnabled !== false;
-  let depositEnabled = merged.depositEnabled !== false;
+  const fullPaymentEnabled = merged.fullPaymentEnabled !== false;
+  const depositEnabled = merged.depositEnabled !== false;
   let payLaterEnabled = merged.payLaterEnabled !== false;
 
   if (!fullPaymentEnabled && !depositEnabled && !payLaterEnabled) {
