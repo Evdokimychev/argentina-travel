@@ -1,7 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { Search } from "lucide-react";
@@ -12,6 +12,7 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
+import { destinationHref } from "@/lib/destinations";
 import SearchBlock from "./SearchBlock";
 import FilterBar from "./FilterBar";
 import MarketplaceTourCard from "./MarketplaceTourCard";
@@ -227,13 +228,10 @@ export default function MarketplaceHome({
           <p className="mt-2 text-slate">Откройте для себя лучшие уголки Аргентины</p>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {POPULAR_DESTINATIONS.map((dest) => (
-              <button
+              <Link
                 key={dest.id}
-                type="button"
-                onClick={() =>
-                  setFilters((f) => ({ ...f, query: dest.name }))
-                }
-                className="group relative h-48 overflow-hidden rounded-2xl text-left sm:h-56"
+                href={destinationHref(dest.id)}
+                className="group relative block h-48 overflow-hidden rounded-2xl text-left sm:h-56"
               >
                 <Image
                   src={dest.image}
@@ -248,8 +246,13 @@ export default function MarketplaceHome({
                   <h3 className="font-display text-lg font-bold">{dest.name}</h3>
                   <p className="mt-0.5 text-xs text-white/80">{dest.description}</p>
                 </div>
-              </button>
+              </Link>
             ))}
+          </div>
+          <div className="mt-6">
+            <Link href="/destinations" className="text-sm font-medium text-brand hover:underline">
+              Все направления →
+            </Link>
           </div>
         </div>
       </section>

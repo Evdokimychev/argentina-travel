@@ -1,14 +1,20 @@
+"use client";
+
 import Link from "next/link";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import FooterNewsletter from "@/components/FooterNewsletter";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
   SITE_FOOTER_CONTACTS,
   SITE_FOOTER_NAV,
   SITE_LEGAL_LINKS,
   SITE_SOCIAL_LINKS,
 } from "@/data/site-links";
+import { resolveNavLabel } from "@/lib/site-nav";
 
 export default function Footer() {
+  const { t } = useLocaleCurrency();
+
   return (
     <footer className="bg-charcoal text-white" data-scroll-rail-tone="dark">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -18,7 +24,7 @@ export default function Footer() {
               <ArgentinaLogo size="sm" />
             </Link>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-gray-400">
-              Маркетплейс авторских туров по Аргентине: Патагония, Буэнос-Айрес, вино и тango.
+              Маркетплейс авторских туров по Аргентине: Патагония, Буэнос-Айрес, вино и tango.
               Бронируйте напрямую у проверенных организаторов.
             </p>
             <FooterNewsletter />
@@ -36,7 +42,7 @@ export default function Footer() {
                       href={link.href}
                       className="text-sm text-gray-400 transition-colors hover:text-white"
                     >
-                      {link.label}
+                      {resolveNavLabel(link, t)}
                     </Link>
                   </li>
                 ))}

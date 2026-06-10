@@ -7,10 +7,12 @@ import {
   BookOpen,
   Compass,
   FileText,
+  Globe,
   HelpCircle,
   MapPin,
   Plane,
   Search,
+  Stamp,
 } from "lucide-react";
 import {
   Dialog,
@@ -32,6 +34,8 @@ const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   page: Compass,
   legal: FileText,
   destination: MapPin,
+  guide: Globe,
+  immigration: Stamp,
 };
 
 export default function SiteSearch() {

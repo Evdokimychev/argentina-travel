@@ -3,6 +3,7 @@ import { Unbounded } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -12,6 +13,7 @@ const unbounded = Unbounded({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
     default: "ArgentinaTravel — Путешествия по Аргентине",
     template: "%s | ArgentinaTravel",

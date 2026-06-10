@@ -23,47 +23,64 @@ function tokenize(query: string): string[] {
     .filter((token) => token.length > 0);
 }
 
+function scoreText(
+  text: string,
+  tokens: string[],
+  fullQuery: string,
+  weights: { phrase: number; exact: number; prefix: number; includes: number }
+): number {
+  const haystack = normalize(text);
+  if (!haystack) return 0;
+
+  let score = 0;
+  if (haystack.includes(fullQuery)) score += weights.phrase;
+
+  for (const token of tokens) {
+    if (haystack === token) score += weights.exact;
+    else if (haystack.startsWith(token)) score += weights.prefix;
+    else if (haystack.includes(token)) score += weights.includes;
+  }
+
+  return score;
+}
+
 function scoreItem(item: SearchIndexItem, tokens: string[]): number {
   if (tokens.length === 0) return 0;
 
-  const haystacks = [
-    item.title,
-    item.description ?? "",
-    ...(item.keywords ?? []),
-  ].map(normalize);
-
   const fullQuery = tokens.join(" ");
-  let score = 0;
+  let score = scoreText(item.title, tokens, fullQuery, {
+    phrase: 15,
+    exact: 10,
+    prefix: 7,
+    includes: 5,
+  });
 
-  for (const haystack of haystacks) {
-    if (haystack.includes(fullQuery)) {
-      score += 12;
-    }
+  score += scoreText(item.description ?? "", tokens, fullQuery, {
+    phrase: 4,
+    exact: 3,
+    prefix: 2,
+    includes: 2,
+  });
+
+  for (const keyword of item.keywords ?? []) {
+    score += scoreText(keyword, tokens, fullQuery, {
+      phrase: 6,
+      exact: 4,
+      prefix: 3,
+      includes: 2,
+    });
   }
-
-  for (const token of tokens) {
-    for (const haystack of haystacks) {
-      if (haystack === token) {
-        score += 8;
-      } else if (haystack.startsWith(token)) {
-        score += 5;
-      } else if (haystack.includes(token)) {
-        score += 3;
-      }
-    }
-  }
-
-  if (item.type === "tour") score += 1;
-  if (item.type === "destination" && tokens.length === 1) score += 1;
 
   return score;
 }
 
 const TYPE_ORDER: SearchResultType[] = [
   "tour",
-  "destination",
-  "page",
   "blog",
+  "guide",
+  "destination",
+  "immigration",
+  "page",
   "faq",
   "legal",
 ];

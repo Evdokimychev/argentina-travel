@@ -3,6 +3,8 @@
 import { Suspense, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Hero from "@/components/Hero";
+import { getShopProductBySlug } from "@/data/shop-products";
+import { getServiceBySlug } from "@/data/services-hub";
 import { getTourBySlug } from "@/data/tours";
 import {
   SITE_EMAIL,
@@ -20,14 +22,27 @@ import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
 function ContactsForm() {
   const searchParams = useSearchParams();
   const tourSlug = searchParams.get("tour");
+  const productSlug = searchParams.get("product");
+  const serviceSlug = searchParams.get("service");
   const tour = useMemo(
     () => (tourSlug ? getTourBySlug(tourSlug) : undefined),
     [tourSlug]
   );
-  const [submitted, setSubmitted] = useState(false);
-  const [message, setMessage] = useState(() =>
-    tour ? `Интересует тур «${tour.title}». ` : ""
+  const product = useMemo(
+    () => (productSlug ? getShopProductBySlug(productSlug) : undefined),
+    [productSlug]
   );
+  const service = useMemo(
+    () => (serviceSlug ? getServiceBySlug(serviceSlug) : undefined),
+    [serviceSlug]
+  );
+  const [submitted, setSubmitted] = useState(false);
+  const [message, setMessage] = useState(() => {
+    if (tour) return `Интересует тур «${tour.title}». `;
+    if (product) return `Хочу заказать «${product.title}» (${product.format}). `;
+    if (service) return `Запрос по сервису: «${service.title}». `;
+    return "";
+  });
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,6 +55,21 @@ function ContactsForm() {
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
           Вопрос по туру:{" "}
           <span className="font-medium">{tour.title}</span>
+        </div>
+      ) : null}
+
+      {product ? (
+        <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
+          Заказ продукта:{" "}
+          <span className="font-medium">{product.title}</span>
+          <span className="text-slate"> · ${product.price} {product.currency}</span>
+        </div>
+      ) : null}
+
+      {service ? (
+        <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
+          Запрос по сервису:{" "}
+          <span className="font-medium">{service.title}</span>
         </div>
       ) : null}
 
