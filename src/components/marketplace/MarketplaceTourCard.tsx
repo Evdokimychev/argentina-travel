@@ -16,6 +16,7 @@ import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-ca
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { formatShortDisplayName } from "@/lib/full-name";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -38,6 +39,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
     tour.organizer.slug ?? tour.organizerOwnerId
       ? buildOrganizerPublicHref(tour.organizer.slug ?? tour.organizerOwnerId!)
       : null;
+  const organizerLabel = formatShortDisplayName(tour.organizer.name);
 
   return (
     <Link
@@ -78,7 +80,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           <div className="relative h-7 w-7 overflow-hidden rounded-full">
             <SafeImage
               src={tour.organizer.avatar}
-              alt={tour.organizer.name}
+              alt={organizerLabel}
               fill
               placeholderVariant="avatar"
               className="object-cover"
@@ -91,10 +93,10 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               onClick={(event) => event.stopPropagation()}
               className="text-xs font-medium text-white hover:underline"
             >
-              {tour.organizer.name}
+              {organizerLabel}
             </Link>
           ) : (
-            <span className="text-xs font-medium text-white">{tour.organizer.name}</span>
+            <span className="text-xs font-medium text-white">{organizerLabel}</span>
           )}
         </div>
       </div>

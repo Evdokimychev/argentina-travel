@@ -25,6 +25,7 @@ import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { formatMinimumAgeShort } from "@/lib/tour-age";
 import { buttonVariants } from "@/components/ui/button";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { formatShortDisplayName } from "@/lib/full-name";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -77,6 +78,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const activityIcon = ACTIVITY_TYPE_OPTIONS.find((o) => o.type === tour.activityType)?.icon;
   const ActivityIcon = activityIcon;
   const isIndividualOnly = tour.bookingMode === "on_request";
+  const organizerLabel = formatShortDisplayName(tour.organizer.name);
 
   return (
     <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
@@ -108,13 +110,13 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             <div className="relative h-7 w-7 overflow-hidden rounded-full">
               <Image
                 src={tour.organizer.avatar}
-                alt={tour.organizer.name}
+                alt={organizerLabel}
                 fill
                 className="object-cover"
                 sizes="28px"
               />
             </div>
-            <span className="text-xs font-medium text-white">{tour.organizer.name}</span>
+            <span className="text-xs font-medium text-white">{organizerLabel}</span>
           </div>
         </Link>
 
