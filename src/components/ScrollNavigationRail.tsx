@@ -82,6 +82,7 @@ export default function ScrollNavigationRail() {
       type="button"
       onClick={scrollToTop}
       data-no-custom-cursor
+      data-floating-chrome="true"
       className={cn(
         "group fixed left-3 top-1/2 z-[85] hidden -translate-y-1/2 sm:flex",
         "flex-col items-center gap-3 transition-colors duration-200",

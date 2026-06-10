@@ -18,6 +18,8 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useAdaptiveFloatingTone } from "@/hooks/useAdaptiveFloatingTone";
+import { floatingChromeButtonClass } from "@/lib/floating-chrome-button";
 import { searchSiteIndex, type SearchResultGroup } from "@/lib/site-search";
 import { getDefaultSearchIndex, loadSearchIndex } from "@/lib/site-search-client";
 import type { SearchIndexItem, SearchResultType } from "@/lib/site-search-index";
@@ -38,6 +40,8 @@ export default function SiteSearch() {
   const [query, setQuery] = useState("");
   const [indexVersion, setIndexVersion] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const tone = useAdaptiveFloatingTone(buttonRef);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -101,10 +105,15 @@ export default function SiteSearch() {
   return (
     <>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen(true)}
         data-no-custom-cursor
-        className="fixed bottom-20 left-4 z-[90] flex h-10 w-10 items-center justify-center rounded-full bg-charcoal/10 text-charcoal/65 shadow-sm backdrop-blur-sm transition-colors hover:bg-charcoal/18 hover:text-charcoal/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-charcoal/20 focus-visible:ring-offset-2 sm:bottom-6"
+        data-floating-chrome="true"
+        className={floatingChromeButtonClass(
+          tone === "dark",
+          "fixed bottom-20 left-4 z-[90] sm:bottom-6"
+        )}
         aria-label="Поиск по сайту"
       >
         <Search className="h-4 w-4" strokeWidth={2} />

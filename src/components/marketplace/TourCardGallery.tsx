@@ -45,7 +45,7 @@ export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
             type="button"
             onClick={(e) => goTo(index - 1, e)}
             aria-label="Предыдущее фото"
-            className="absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+            className="pointer-events-auto absolute left-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
           >
             <ChevronLeft className="h-4 w-4" strokeWidth={1.75} />
           </button>
@@ -53,7 +53,7 @@ export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
             type="button"
             onClick={(e) => goTo(index + 1, e)}
             aria-label="Следующее фото"
-            className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
+            className="pointer-events-auto absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal opacity-100 shadow-sm backdrop-blur-sm transition-opacity hover:bg-white sm:opacity-0 sm:group-hover:opacity-100"
           >
             <ChevronRight className="h-4 w-4" strokeWidth={1.75} />
           </button>

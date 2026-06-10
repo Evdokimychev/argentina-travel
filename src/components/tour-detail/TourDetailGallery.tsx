@@ -179,7 +179,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
   };
 
   return (
-    <>
+    <div data-scroll-rail-tone="dark">
       {/* Desktop */}
       <div className="hidden gap-2 md:grid md:grid-cols-4 md:grid-rows-2 md:h-[480px]">
         <GalleryTile
@@ -286,6 +286,6 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 }
