@@ -21,7 +21,10 @@ export type OrganizerTourStatus = "published" | "draft";
 
 export interface OrganizerTourListing {
   id: string;
+  /** Internal slug; defaults to catalogSlug for new tours. */
   slug: string;
+  /** Public catalog slug used in /tours/[slug]. Falls back to slug when omitted. */
+  catalogSlug?: string;
   title: string;
   image: string;
   coverLabel?: string;
@@ -29,6 +32,7 @@ export interface OrganizerTourListing {
   type: OrganizerTourType;
   status: OrganizerTourStatus;
   archived: boolean;
+  deleted?: boolean;
   isPreliminaryProgram?: boolean;
   partnerName: string;
   partnerUrl?: string;

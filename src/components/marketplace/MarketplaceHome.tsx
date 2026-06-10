@@ -7,6 +7,7 @@ import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
+import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import SearchBlock from "./SearchBlock";
 import FilterBar from "./FilterBar";
@@ -55,10 +56,11 @@ function TourGrid({
 }
 
 export default function MarketplaceHome({
-  tours,
+  tours: initialTours,
   blogPosts,
   testimonials,
 }: MarketplaceHomeProps) {
+  const tours = useRepositoryTourListings(initialTours);
   const { currency } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
     getDefaultFilters(currency, tours)

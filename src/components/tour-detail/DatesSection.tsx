@@ -12,12 +12,15 @@ import {
 } from "@/lib/tour-booking-spots";
 import { SectionHeading } from "./InfoModal";
 import { useTourBooking } from "./TourBookingContext";
+import type { Tour } from "@/types/tour";
+import EarlyBookingDiscounts from "./EarlyBookingDiscounts";
 
 interface DatesSectionProps {
   tour: TourDetail;
+  canonicalTour?: Tour | null;
 }
 
-export default function DatesSection({ tour }: DatesSectionProps) {
+export default function DatesSection({ tour, canonicalTour }: DatesSectionProps) {
   const { dates } = tour;
   const { guests, selectedDateId, setSelectedDateId } = useTourBooking();
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +41,10 @@ export default function DatesSection({ tour }: DatesSectionProps) {
   }
 
   return (
-    <section id="dates" className="tour-section-target">
+    <section id="dates" className="tour-section-target space-y-6">
       <SectionHeading title="Даты и цены" subtitle="Выберите подходящую дату отправления" />
+
+      {canonicalTour ? <EarlyBookingDiscounts tour={canonicalTour} /> : null}
 
       {error ? (
         <div

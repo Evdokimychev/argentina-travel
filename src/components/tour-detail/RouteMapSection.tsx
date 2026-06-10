@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import dynamic from "next/dynamic";
 import { MapPin } from "lucide-react";
 import type { TourArrivalInfo, TourRoutePoint } from "@/types";
@@ -56,16 +57,42 @@ function ArrivalDetails({ arrival }: { arrival: TourArrivalInfo }) {
 interface RouteMapSectionProps {
   points?: TourRoutePoint[];
   arrival?: TourArrivalInfo;
+  routeMapImage?: string;
 }
 
-export default function RouteMapSection({ points = [], arrival }: RouteMapSectionProps) {
+export default function RouteMapSection({
+  points = [],
+  arrival,
+  routeMapImage,
+}: RouteMapSectionProps) {
   const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
   const hasMap = points.length > 0;
+  const hasRouteImage = Boolean(routeMapImage?.trim());
 
-  if (!hasMap && !arrival) return null;
+  if (!hasMap && !arrival && !hasRouteImage) return null;
 
   return (
     <section id="route-map" className="tour-section-target space-y-8">
+      {hasRouteImage ? (
+        <div className="space-y-4">
+          <SectionHeading
+            title="Схема маршрута"
+            subtitle="Карта маршрута от организатора"
+          />
+          <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+            <div className="relative aspect-[16/10] w-full">
+              <Image
+                src={routeMapImage!}
+                alt="Схема маршрута"
+                fill
+                className="object-contain bg-gray-50 p-2"
+                sizes="(max-width: 768px) 100vw, 900px"
+              />
+            </div>
+          </figure>
+        </div>
+      ) : null}
+
       {hasMap ? (
         <div className="space-y-4">
           <SectionHeading

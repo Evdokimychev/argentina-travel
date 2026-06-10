@@ -1,15 +1,31 @@
 import { TourDetail } from "@/types";
+import type { Tour } from "@/types/tour";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
+import {
+  hasArrivalDepartureLogistics,
+  hasTicketRecommendations,
+  hasTourPolicies,
+  hasVisibleGuides,
+  resolvePackingListItems,
+} from "@/lib/tour-public-display";
 
 export interface TourSectionLink {
   id: string;
   label: string;
 }
 
+export interface TourSectionNavContext {
+  hasSimilarTours: boolean;
+  canonicalTour?: Tour | null;
+}
+
 export function buildTourSectionLinks(
   tour: TourDetail,
-  hasSimilarTours: boolean
+  context: TourSectionNavContext | boolean
 ): TourSectionLink[] {
+  const hasSimilarTours = typeof context === "boolean" ? context : context.hasSimilarTours;
+  const canonicalTour = typeof context === "boolean" ? null : context.canonicalTour;
+
   const links: TourSectionLink[] = [
     { id: "description", label: "Описание" },
     { id: "places", label: "Впечатления" },
@@ -19,19 +35,44 @@ export function buildTourSectionLinks(
     links.push({ id: "itinerary", label: "Программа" });
   }
 
+  if (canonicalTour && hasVisibleGuides(canonicalTour)) {
+    links.push({ id: "guides", label: "Гиды" });
+  }
+
   links.push({ id: "included", label: "Что включено" });
 
   if (tourHasAccommodation(tour)) {
     links.push({ id: "accommodations", label: "Проживание" });
   }
 
+  if (canonicalTour && resolvePackingListItems(canonicalTour).length > 0) {
+    links.push({ id: "packing", label: "Что взять" });
+  }
+
+  if (canonicalTour && hasTourPolicies(canonicalTour)) {
+    links.push({ id: "policies", label: "Условия" });
+  }
+
   links.push({ id: "important", label: "Важно" });
 
-  if (tour.routePoints?.length || tour.arrival) {
+  if (
+    tour.routePoints?.length ||
+    tour.arrival ||
+    canonicalTour?.program.routeMapImage?.trim()
+  ) {
     links.push({
       id: "route-map",
-      label: tour.routePoints?.length ? "Карта" : "Добраться",
+      label: tour.routePoints?.length || canonicalTour?.program.routeMapImage?.trim()
+        ? "Карта"
+        : "Добраться",
     });
+  }
+
+  if (
+    canonicalTour &&
+    (hasTicketRecommendations(canonicalTour) || hasArrivalDepartureLogistics(canonicalTour))
+  ) {
+    links.push({ id: "logistics", label: "Логистика" });
   }
 
   links.push(

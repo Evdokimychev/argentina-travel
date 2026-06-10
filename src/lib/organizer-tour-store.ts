@@ -1,16 +1,11 @@
 import { ORGANIZER_TOUR_LISTINGS } from "@/data/organizer-tours";
 import { marketplaceTours } from "@/data/marketplace-tours";
+import { applyOrganizerSeedOverrides } from "@/data/tour-organizer-seeds";
 import { getTourDetail } from "@/lib/tours";
-import {
-  DEFAULT_IGUAZU_GENERAL_DESCRIPTION,
-  ORGANIZER_TOUR_GENERAL_DESCRIPTION_MAX,
-} from "@/data/tour-description-defaults";
-import { DEFAULT_IGUAZU_GALLERY } from "@/data/tour-photos-defaults";
-import { DEFAULT_IGUAZU_IMPRESSIONS, normalizeImpressions } from "@/data/tour-impressions-defaults";
+import { ORGANIZER_TOUR_GENERAL_DESCRIPTION_MAX } from "@/data/tour-description-defaults";
+import { normalizeImpressions } from "@/data/tour-impressions-defaults";
 import { createDefaultTourGuides } from "@/data/tour-guides-defaults";
 import {
-  ACCOMMODATION_VARIANT_NOT_FILLED,
-  DEFAULT_IGUAZU_ACCOMMODATION_DESCRIPTION,
   ORGANIZER_TOUR_ACCOMMODATION_DESCRIPTION_MAX,
   mapTourAccommodationToPlace,
 } from "@/data/tour-accommodation-defaults";
@@ -22,10 +17,7 @@ import {
   mapTourDatePriceToGroupDate,
   normalizeGroupTourDate,
 } from "@/data/tour-booking-defaults";
-import type { TourCollection } from "@/data/tour-collections";
-import { DEFAULT_IGUAZU_DIFFICULTY_DESCRIPTION } from "@/data/tour-levels";
 import {
-  DEFAULT_IGUAZU_PROGRAM_DAYS,
   createEmptyProgramDay,
   mapItineraryToProgramDay,
   normalizeProgramDay,
@@ -33,13 +25,6 @@ import {
   renumberProgramDays,
 } from "@/data/tour-program-defaults";
 import {
-  DEFAULT_IGUAZU_EXCLUDED,
-  DEFAULT_IGUAZU_FAQ,
-  DEFAULT_IGUAZU_IMPORTANT_INFO,
-  DEFAULT_IGUAZU_INCLUDED,
-  DEFAULT_IGUAZU_INSURANCE_DESCRIPTION,
-  DEFAULT_IGUAZU_INSURANCE_TYPE,
-  DEFAULT_IGUAZU_PACKING_LIST,
   ORGANIZER_TOUR_INSURANCE_DESCRIPTION_MAX,
   ORGANIZER_TOUR_CANCELLATION_TEXT_MAX,
   ORGANIZER_TOUR_PACKING_LIST_MAX,
@@ -48,19 +33,30 @@ import {
   normalizeTermsItems,
   textToListItems,
 } from "@/data/tour-terms-defaults";
-import {
-  ORGANIZER_TICKET_RECOMMENDATIONS_MAX,
-  normalizeArrivalDepartureCities,
-} from "@/data/tour-logistics-defaults";
+import { normalizeArrivalDepartureCities } from "@/data/tour-logistics-defaults";
 import {
   ORGANIZER_TOUR_TITLE_MAX,
   ORGANIZER_TOURS_UPDATED_EVENT,
   type OrganizerTourDraft,
   type OrganizerTourListing,
 } from "@/types/organizer-tour";
-import type { ActivityType, TourLanguage } from "@/types";
+import type { TourLanguage } from "@/types";
+import {
+  markTourDeletedBySlug,
+  upsertTourFromOrganizerDraft,
+} from "@/lib/tour-repository";
+import {
+  collectTakenCatalogSlugs,
+  createOrganizerTourId,
+  generateUniqueTourSlug,
+  getCatalogSlug,
+} from "@/lib/tour-slug";
 
 const DRAFTS_KEY = "argentina-travel-organizer-tour-drafts";
+const LISTINGS_KEY = "argentina-travel-organizer-tour-listings";
+
+const DEFAULT_TOUR_IMAGE =
+  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80";
 
 function readDraftMap(): Record<string, OrganizerTourDraft> {
   if (typeof window === "undefined") return {};
@@ -77,6 +73,52 @@ function readDraftMap(): Record<string, OrganizerTourDraft> {
 
 function writeDraftMap(drafts: Record<string, OrganizerTourDraft>) {
   window.localStorage.setItem(DRAFTS_KEY, JSON.stringify(drafts));
+}
+
+function readListingsMap(): Record<string, OrganizerTourListing> {
+  if (typeof window === "undefined") return {};
+
+  try {
+    const raw = window.localStorage.getItem(LISTINGS_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as Record<string, OrganizerTourListing>;
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
+function writeListingsMap(listings: Record<string, OrganizerTourListing>) {
+  window.localStorage.setItem(LISTINGS_KEY, JSON.stringify(listings));
+}
+
+function mergeSeedListing(seed: OrganizerTourListing): OrganizerTourListing {
+  const overrides = readListingsMap();
+  return overrides[seed.id] ? { ...seed, ...overrides[seed.id] } : seed;
+}
+
+export function getAllOrganizerListingsIncludingDeleted(): OrganizerTourListing[] {
+  const overrides = readListingsMap();
+  const seedIds = new Set(ORGANIZER_TOUR_LISTINGS.map((item) => item.id));
+
+  const seeded = ORGANIZER_TOUR_LISTINGS.map((seed) => mergeSeedListing(seed));
+  const custom = Object.values(overrides).filter((item) => !seedIds.has(item.id));
+
+  return [...seeded, ...custom];
+}
+
+export function getAllOrganizerListings(): OrganizerTourListing[] {
+  return getAllOrganizerListingsIncludingDeleted().filter((item) => !item.deleted);
+}
+
+export function findOrganizerTourListing(tourId: string): OrganizerTourListing | null {
+  return getAllOrganizerListingsIncludingDeleted().find((item) => item.id === tourId) ?? null;
+}
+
+function saveOrganizerListing(listing: OrganizerTourListing) {
+  const map = readListingsMap();
+  map[listing.id] = listing;
+  writeListingsMap(map);
 }
 
 function blocksToText(
@@ -96,17 +138,17 @@ function blocksToText(
 }
 
 function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
-  const marketplace = marketplaceTours.find((tour) => tour.slug === listing.slug);
-  const detail = getTourDetail(listing.slug);
+  const catalogSlug = getCatalogSlug(listing);
+  const marketplace = marketplaceTours.find((tour) => tour.slug === catalogSlug);
+  const detail = getTourDetail(catalogSlug);
 
   const description = detail
     ? blocksToText(detail.descriptionBlocks)
     : marketplace?.shortDescription ?? "";
 
   const activityType = marketplace?.activityType ?? "Авторские туры";
-  const iguazuActivities: ActivityType[] = ["Экскурсионные туры", "Пешие туры", "Рафтинг"];
   const geography = buildGeographySeed({
-    slug: listing.slug,
+    slug: catalogSlug,
     country: detail?.country ?? "Аргентина",
     destination: marketplace?.destination ?? detail?.region ?? "",
     region: marketplace?.region ?? detail?.region ?? "",
@@ -126,12 +168,9 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     : NO_ACCOMMODATION_LABEL;
   const bookingMode = detail?.bookingMode ?? marketplace?.bookingMode ?? "both";
 
-  return {
+  const draft: OrganizerTourDraft = {
     ...listing,
-    shortDescription:
-      listing.slug === "iguazu-waterfalls-day"
-        ? DEFAULT_IGUAZU_GENERAL_DESCRIPTION
-        : detail?.shortDescription ?? marketplace?.shortDescription ?? "",
+    shortDescription: detail?.shortDescription ?? marketplace?.shortDescription ?? "",
     description,
     destination: geography.mainLocation || (marketplace?.destination ?? detail?.region ?? ""),
     region: geography.touristRegions[0] ?? marketplace?.region ?? detail?.region ?? "",
@@ -155,17 +194,14 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
       ? detail.dates.map(mapTourDatePriceToGroupDate)
       : [],
     activityType,
-    tourActivities:
-      listing.slug === "iguazu-waterfalls-day" ? iguazuActivities : [activityType],
-    collections: listing.slug === "iguazu-waterfalls-day" ? (["Водные туры"] as TourCollection[]) : [],
+    tourActivities: [activityType],
+    collections: [],
     difficultyLevel: marketplace?.difficultyLevel ?? detail?.difficulty ?? "Умеренная",
-    difficultyDescriptionText:
-      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_DIFFICULTY_DESCRIPTION : "",
+    difficultyDescriptionText: "",
     comfortLevel: defaultComfortLevel,
     comfortLevels: [defaultComfortLevel],
     accommodationType,
-    accommodationDescriptionText:
-      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_ACCOMMODATION_DESCRIPTION : "",
+    accommodationDescriptionText: "",
     accommodationPhotos: [],
     accommodationPlaces: detail?.accommodations?.length
       ? detail.accommodations.map(mapTourAccommodationToPlace)
@@ -178,54 +214,24 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     maxWeightKg: null,
     languages: (marketplace?.language ??
       detail?.organizer?.languages ?? ["Русский"]) as TourLanguage[],
-    includedText:
-      listing.slug === "iguazu-waterfalls-day"
-        ? listItemsToText(DEFAULT_IGUAZU_INCLUDED)
-        : (detail?.included ?? []).join("\n"),
-    excludedText:
-      listing.slug === "iguazu-waterfalls-day"
-        ? listItemsToText(DEFAULT_IGUAZU_EXCLUDED)
-        : (detail?.excluded ?? []).join("\n"),
+    includedText: (detail?.included ?? []).join("\n"),
+    excludedText: (detail?.excluded ?? []).join("\n"),
     bookingMode,
-    gallery:
-      listing.slug === "iguazu-waterfalls-day"
-        ? [...DEFAULT_IGUAZU_GALLERY]
-        : detail?.gallery?.length
-          ? detail.gallery
-          : marketplace?.gallery ?? [listing.image],
-    places:
-      listing.slug === "iguazu-waterfalls-day"
-        ? [...DEFAULT_IGUAZU_IMPRESSIONS]
-        : detail?.places?.length
-          ? detail.places
-          : [],
+    gallery: detail?.gallery?.length
+      ? detail.gallery
+      : marketplace?.gallery ?? [listing.image],
+    places: detail?.places?.length ? detail.places : [],
     guides: createDefaultTourGuides(),
     routeMapImage: "",
-    programDays:
-      listing.slug === "iguazu-waterfalls-day"
-        ? [...DEFAULT_IGUAZU_PROGRAM_DAYS]
-        : detail?.itinerary?.length
-          ? detail.itinerary.map(mapItineraryToProgramDay)
-          : [createEmptyProgramDay(1)],
-    importantInfo:
-      listing.slug === "iguazu-waterfalls-day"
-        ? [...DEFAULT_IGUAZU_IMPORTANT_INFO]
-        : detail?.importantInfo?.length
-          ? [...detail.importantInfo]
-          : [],
-    faq:
-      listing.slug === "iguazu-waterfalls-day"
-        ? [...DEFAULT_IGUAZU_FAQ]
-        : detail?.faq?.length
-          ? detail.faq.map((item) => ({ ...item }))
-          : [],
-    packingListEnabled: listing.slug === "iguazu-waterfalls-day",
-    packingListText:
-      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_PACKING_LIST : "",
-    insuranceType:
-      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_INSURANCE_TYPE : "recommended",
-    insuranceDescription:
-      listing.slug === "iguazu-waterfalls-day" ? DEFAULT_IGUAZU_INSURANCE_DESCRIPTION : "",
+    programDays: detail?.itinerary?.length
+      ? detail.itinerary.map(mapItineraryToProgramDay)
+      : [createEmptyProgramDay(1)],
+    importantInfo: detail?.importantInfo?.length ? [...detail.importantInfo] : [],
+    faq: detail?.faq?.length ? detail.faq.map((item) => ({ ...item })) : [],
+    packingListEnabled: false,
+    packingListText: "",
+    insuranceType: "recommended",
+    insuranceDescription: "",
     useCancellationTemplate: true,
     customCancellationText: "",
     ticketRecommendationsEnabled: false,
@@ -234,12 +240,87 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     arrivalDepartureCities: [],
     updatedAt: listing.updatedAt,
   };
+
+  return applyOrganizerSeedOverrides(listing.id, draft);
+}
+
+function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
+  const geography = buildGeographySeed({
+    slug: getCatalogSlug(listing),
+    country: "Аргентина",
+    destination: "",
+    region: "",
+    startLocation: "",
+  });
+
+  return {
+    ...listing,
+    shortDescription: "",
+    description: "",
+    destination: "",
+    region: "",
+    country: "Аргентина",
+    startLocation: "",
+    ...geography,
+    durationNights: Math.max(listing.durationDays - 1, 0),
+    priceUsd: 0,
+    originalPriceUsd: null,
+    priceCurrency: "USD",
+    priceFromPrefix: false,
+    enabledDiscounts: [],
+    individualTourEnabled: false,
+    individualPeriodFrom: "01.01",
+    individualPeriodTo: "31.12",
+    individualPriceUsd: 0,
+    autoRollGroupDatesToNextYear: false,
+    groupTourDates: [],
+    activityType: "Авторские туры",
+    tourActivities: ["Авторские туры"],
+    collections: [],
+    difficultyLevel: "Умеренная",
+    difficultyDescriptionText: "",
+    comfortLevel: "Комфорт",
+    comfortLevels: ["Комфорт"],
+    accommodationType: "Отель",
+    accommodationDescriptionText: "",
+    accommodationPhotos: [],
+    accommodationPlaces: [],
+    groupMin: 1,
+    groupMax: 12,
+    minimumAge: 0,
+    maximumAge: null,
+    maxWeightEnabled: false,
+    maxWeightKg: null,
+    languages: ["Русский"],
+    includedText: "",
+    excludedText: "",
+    bookingMode: "both",
+    gallery: [listing.image],
+    places: [],
+    guides: createDefaultTourGuides(),
+    routeMapImage: "",
+    programDays: [createEmptyProgramDay(1)],
+    importantInfo: [],
+    faq: [],
+    packingListEnabled: false,
+    packingListText: "",
+    insuranceType: "recommended",
+    insuranceDescription: "",
+    useCancellationTemplate: true,
+    customCancellationText: "",
+    ticketRecommendationsEnabled: false,
+    ticketRecommendationsText: "",
+    arrivalDepartureEnabled: false,
+    arrivalDepartureCities: [],
+    updatedAt: new Date().toISOString(),
+  };
 }
 
 function draftToListing(draft: OrganizerTourDraft): OrganizerTourListing {
   return {
     id: draft.id,
     slug: draft.slug,
+    catalogSlug: draft.catalogSlug,
     title: draft.title,
     image: draft.image,
     coverLabel: draft.coverLabel,
@@ -247,6 +328,7 @@ function draftToListing(draft: OrganizerTourDraft): OrganizerTourListing {
     type: draft.type,
     status: draft.status,
     archived: draft.archived,
+    deleted: draft.deleted,
     isPreliminaryProgram: draft.isPreliminaryProgram,
     partnerName: draft.partnerName,
     partnerUrl: draft.partnerUrl,
@@ -257,14 +339,16 @@ function draftToListing(draft: OrganizerTourDraft): OrganizerTourListing {
 export function getOrganizerTourListings(): OrganizerTourListing[] {
   const drafts = readDraftMap();
 
-  return ORGANIZER_TOUR_LISTINGS.map((listing) => {
+  return getAllOrganizerListings().map((listing) => {
     const draft = drafts[listing.id] ?? buildSeedDraft(listing);
     return draftToListing(draft);
   });
 }
 
 function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing): OrganizerTourDraft {
-  const seed = buildSeedDraft(listing);
+  const seed = ORGANIZER_TOUR_LISTINGS.some((item) => item.id === listing.id)
+    ? buildSeedDraft(listing)
+    : buildEmptyDraft(listing);
 
   return {
     ...seed,
@@ -335,7 +419,7 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
     ticketRecommendationsEnabled:
       draft.ticketRecommendationsEnabled ?? seed.ticketRecommendationsEnabled,
     ticketRecommendationsText: draft.ticketRecommendationsText?.trim()
-      ? draft.ticketRecommendationsText.slice(0, ORGANIZER_TICKET_RECOMMENDATIONS_MAX)
+      ? draft.ticketRecommendationsText
       : seed.ticketRecommendationsText,
     arrivalDepartureEnabled: draft.arrivalDepartureEnabled ?? seed.arrivalDepartureEnabled,
     arrivalDepartureCities: normalizeArrivalDepartureCities(
@@ -362,11 +446,15 @@ function resolveAccommodationPlaces(
 }
 
 export function readOrganizerTourDraft(tourId: string): OrganizerTourDraft | null {
-  const listing = ORGANIZER_TOUR_LISTINGS.find((tour) => tour.id === tourId);
-  if (!listing) return null;
+  const listing = findOrganizerTourListing(tourId);
+  if (!listing || listing.deleted) return null;
 
   const drafts = readDraftMap();
-  const draft = drafts[tourId] ?? buildSeedDraft(listing);
+  const draft = drafts[tourId] ?? (
+    ORGANIZER_TOUR_LISTINGS.some((item) => item.id === listing.id)
+      ? buildSeedDraft(listing)
+      : buildEmptyDraft(listing)
+  );
   return normalizeDraft(draft, listing);
 }
 
@@ -449,11 +537,167 @@ export function saveOrganizerTourDraft(
   drafts[next.id] = next;
   writeDraftMap(drafts);
 
+  saveOrganizerListing(draftToListing(next));
+  upsertTourFromOrganizerDraft(next);
+
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
   }
 
   return { draft: next };
+}
+
+export function createOrganizerTour(): { draft: OrganizerTourDraft } | { error: string } {
+  if (typeof window === "undefined") {
+    return { error: "Создание тура доступно в браузере" };
+  }
+
+  const takenSlugs = collectTakenCatalogSlugs(
+    getAllOrganizerListingsIncludingDeleted(),
+    marketplaceTours.map((tour) => tour.slug)
+  );
+  const slug = generateUniqueTourSlug("novyi-tur", takenSlugs);
+  const id = createOrganizerTourId();
+
+  const listing: OrganizerTourListing = {
+    id,
+    slug,
+    catalogSlug: slug,
+    title: "Новый тур",
+    image: DEFAULT_TOUR_IMAGE,
+    durationDays: 1,
+    type: "tour",
+    status: "draft",
+    archived: false,
+    partnerName: "Пора в Аргентину",
+    partnerUrl: "/tours",
+    updatedAt: new Date().toISOString(),
+  };
+
+  const draft = buildEmptyDraft(listing);
+  saveOrganizerListing(listing);
+
+  const drafts = readDraftMap();
+  drafts[id] = draft;
+  writeDraftMap(drafts);
+
+  upsertTourFromOrganizerDraft(draft);
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
+  }
+
+  return { draft };
+}
+
+export function cloneOrganizerTour(
+  sourceTourId: string
+): { draft: OrganizerTourDraft } | { error: string } {
+  if (typeof window === "undefined") {
+    return { error: "Клонирование доступно в браузере" };
+  }
+
+  const source = readOrganizerTourDraft(sourceTourId);
+  if (!source) return { error: "Исходный тур не найден" };
+
+  const takenSlugs = collectTakenCatalogSlugs(
+    getAllOrganizerListingsIncludingDeleted(),
+    marketplaceTours.map((tour) => tour.slug)
+  );
+  const slug = generateUniqueTourSlug(`${source.title} kopiya`, takenSlugs);
+  const id = createOrganizerTourId();
+
+  const listing: OrganizerTourListing = {
+    id,
+    slug,
+    catalogSlug: slug,
+    title: `${source.title} (копия)`.slice(0, ORGANIZER_TOUR_TITLE_MAX),
+    image: source.image,
+    coverLabel: source.coverLabel,
+    durationDays: source.durationDays,
+    type: source.type,
+    status: "draft",
+    archived: false,
+    isPreliminaryProgram: source.isPreliminaryProgram,
+    partnerName: source.partnerName,
+    partnerUrl: source.partnerUrl,
+    updatedAt: new Date().toISOString(),
+  };
+
+  const clone: OrganizerTourDraft = normalizeDraft(
+    {
+      ...source,
+      ...listing,
+      id,
+      slug,
+      catalogSlug: slug,
+      status: "draft",
+      archived: false,
+      deleted: false,
+      faq: source.faq.map((item) => ({ ...item, id: `${item.id}-copy-${Date.now()}` })),
+      programDays: source.programDays.map((day) => ({
+        ...day,
+        id: `${day.id}-copy-${Date.now()}`,
+      })),
+      groupTourDates: source.groupTourDates.map((date) => ({
+        ...date,
+        id: `${date.id}-copy-${Date.now()}`,
+      })),
+      places: source.places.map((place) => ({
+        ...place,
+        id: `${place.id}-copy-${Date.now()}`,
+      })),
+      guides: source.guides.map((guide) => ({
+        ...guide,
+        id: `${guide.id}-copy-${Date.now()}`,
+      })),
+    },
+    listing
+  );
+
+  saveOrganizerListing(listing);
+
+  const drafts = readDraftMap();
+  drafts[id] = clone;
+  writeDraftMap(drafts);
+
+  upsertTourFromOrganizerDraft(clone);
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
+  }
+
+  return { draft: clone };
+}
+
+export function deleteOrganizerTour(tourId: string): { ok: true } | { error: string } {
+  if (typeof window === "undefined") {
+    return { error: "Удаление доступно в браузере" };
+  }
+
+  const listing = findOrganizerTourListing(tourId);
+  if (!listing) return { error: "Тур не найден" };
+
+  const catalogSlug = getCatalogSlug(listing);
+  markTourDeletedBySlug(catalogSlug);
+
+  saveOrganizerListing({
+    ...listing,
+    deleted: true,
+    updatedAt: new Date().toISOString(),
+  });
+
+  const drafts = readDraftMap();
+  if (drafts[tourId]) {
+    drafts[tourId] = { ...drafts[tourId], deleted: true };
+    writeDraftMap(drafts);
+  }
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
+  }
+
+  return { ok: true };
 }
 
 export function notifyOrganizerToursUpdated() {

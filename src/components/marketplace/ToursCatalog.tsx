@@ -12,6 +12,7 @@ import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter
 import { sortTours, TourSortOption } from "@/lib/sort-tours";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
+import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 
@@ -31,7 +32,8 @@ interface ToursCatalogProps {
   tours: TourListing[];
 }
 
-export default function ToursCatalog({ tours }: ToursCatalogProps) {
+export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps) {
+  const tours = useRepositoryTourListings(initialTours);
   const { currency } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
     getDefaultFilters(currency, tours)

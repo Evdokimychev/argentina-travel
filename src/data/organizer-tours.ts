@@ -4,7 +4,7 @@ import type { OrganizerTourListing } from "@/types/organizer-tour";
 export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   {
     id: "org-iguazu",
-    slug: "iguazu-waterfalls-day",
+    slug: "iguazu-falls",
     title: "Водопады Игуасу за 1 день: аргентинская и бразильская стороны",
     image: "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
     coverLabel: "IGUAZU",
@@ -18,7 +18,7 @@ export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   },
   {
     id: "org-salta",
-    slug: "salta-jujuy-colors",
+    slug: "salta-northwest",
     title: "Сальта и ХуХуй: горные деревни, виноградники и долина Калчакí",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     coverLabel: "SALTA",

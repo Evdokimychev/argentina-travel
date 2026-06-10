@@ -8,9 +8,12 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  cloneOrganizerTour,
+  deleteOrganizerTour,
   readOrganizerTourDraft,
   saveOrganizerTourDraft,
 } from "@/lib/organizer-tour-store";
+import { getCatalogSlug } from "@/lib/tour-slug";
 import { cn } from "@/lib/cn";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
 import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
@@ -312,11 +315,13 @@ function TourEditorActionsMenu({
   isArchived,
   onUnpublish,
   onArchive,
+  onDelete,
 }: {
   isPublished: boolean;
   isArchived: boolean;
   onUnpublish: () => void;
   onArchive: () => void;
+  onDelete: () => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -343,6 +348,15 @@ function TourEditorActionsMenu({
           },
         }
       : null,
+    {
+      key: "delete",
+      label: "Удалить тур",
+      icon: Trash2,
+      onClick: () => {
+        onDelete();
+        setOpen(false);
+      },
+    },
   ].filter(Boolean) as {
     key: string;
     label: string;
@@ -395,16 +409,21 @@ function TourEditorSidebar({
   saved,
   onUnpublish,
   onArchive,
+  onClone,
+  onDelete,
 }: {
   draft: OrganizerTourDraft;
   loading: boolean;
   saved: boolean;
   onUnpublish: () => void;
   onArchive: () => void;
+  onClone: () => void;
+  onDelete: () => void;
 }) {
   const isPublished = draft.status === "published";
   const platformName = draft.partnerName || "Клуб Гидов";
-  const tourUrl = `/tours/${draft.slug}`;
+  const catalogSlug = getCatalogSlug(draft);
+  const tourUrl = `/tours/${catalogSlug}`;
   const previewUrl = `${tourUrl}?preview=1`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
@@ -451,6 +470,7 @@ function TourEditorSidebar({
           <div className="space-y-2">
             <button
               type="button"
+              onClick={onClone}
               className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
             >
               <Copy className="h-4 w-4 text-slate" />
@@ -461,6 +481,7 @@ function TourEditorSidebar({
               isArchived={draft.archived}
               onUnpublish={onUnpublish}
               onArchive={onArchive}
+              onDelete={onDelete}
             />
           </div>
         </div>
@@ -622,7 +643,31 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     setSaved(true);
   }
 
+  function handleClone() {
+    const result = cloneOrganizerTour(tourId);
+    if ("error" in result) {
+      setError(result.error);
+      return;
+    }
+    router.push(`/organizer/tours/${result.draft.id}/edit`);
+  }
+
+  function handleDelete() {
+    const confirmed = window.confirm(
+      "Удалить тур? Он исчезнет из каталога и поиска. Это действие нельзя отменить."
+    );
+    if (!confirmed) return;
+
+    const result = deleteOrganizerTour(tourId);
+    if ("error" in result) {
+      setError(result.error);
+      return;
+    }
+    router.replace("/organizer/tours");
+  }
+
   const variantSync = TOUR_VARIANT_SYNC[draft.id];
+  const catalogSlug = getCatalogSlug(draft);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -1131,7 +1176,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   </div>
                   <div>
                     <FieldLabel htmlFor="tour-slug">URL тура</FieldLabel>
-                    <Input id="tour-slug" value={draft.slug} readOnly className="bg-gray-50" />
+                    <Input id="tour-slug" value={catalogSlug} readOnly className="bg-gray-50" />
                   </div>
                 </div>
 
@@ -1178,6 +1223,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             loading={loading}
             onUnpublish={() => updateDraft({ status: "draft" })}
             onArchive={() => updateDraft({ archived: true, status: "draft" })}
+            onClone={handleClone}
+            onDelete={handleDelete}
           />
         </div>
     </form>

@@ -1,4 +1,3 @@
-import { notFound } from "next/navigation";
 import TourDetailView from "@/components/tour-detail/TourDetailView";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours";
 import { baseTours } from "@/data/tours";
@@ -24,12 +23,7 @@ export async function generateMetadata({ params }: TourPageProps) {
 export default async function TourDetailPage({ params }: TourPageProps) {
   const { slug } = await params;
   const tour = await fetchTourDetail(slug);
+  const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
 
-  if (!tour) {
-    notFound();
-  }
-
-  const similarTours = await fetchSimilarTours(slug, 3);
-
-  return <TourDetailView tour={tour} similarTours={similarTours} />;
+  return <TourDetailView slug={slug} tour={tour} similarTours={similarTours} />;
 }

@@ -50,7 +50,7 @@ export function buildGeographySeed(input: {
   region?: string;
   startLocation?: string;
 }) {
-  const isIguazu = input.slug === "iguazu-waterfalls-day";
+  const isIguazu = input.slug === "iguazu-falls";
 
   return {
     countries: [input.country ?? "Аргентина"],

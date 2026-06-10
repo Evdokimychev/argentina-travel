@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { RichTextBlock, TourDescriptionExtra } from "@/types";
 import {
@@ -13,6 +13,25 @@ import { cn } from "@/lib/cn";
 interface DescriptionSectionProps {
   blocks: RichTextBlock[];
   extra: TourDescriptionExtra;
+}
+
+function tabHasContent(tabId: DescriptionExtraTabId, extra: TourDescriptionExtra): boolean {
+  switch (tabId) {
+    case "seasonality":
+      return extra.seasonality.trim().length > 0;
+    case "packing":
+      return extra.packing.length > 0;
+    case "flights":
+      return extra.flights.trim().length > 0;
+    case "meals":
+      return extra.meals.trim().length > 0;
+    case "comfort":
+      return extra.comfort.trim().length > 0;
+    case "transfers":
+      return extra.transfers.trim().length > 0;
+    default:
+      return false;
+  }
 }
 
 function ExtraTabContent({
@@ -50,7 +69,19 @@ function ExtraTabContent({
 }
 
 export default function DescriptionSection({ blocks, extra }: DescriptionSectionProps) {
-  const [activeTab, setActiveTab] = useState<DescriptionExtraTabId>("seasonality");
+  const visibleTabs = useMemo(
+    () => DESCRIPTION_EXTRA_TABS.filter((tab) => tabHasContent(tab.id, extra)),
+    [extra]
+  );
+  const [activeTab, setActiveTab] = useState<DescriptionExtraTabId>(
+    visibleTabs[0]?.id ?? "seasonality"
+  );
+
+  useEffect(() => {
+    if (!visibleTabs.some((tab) => tab.id === activeTab)) {
+      setActiveTab(visibleTabs[0]?.id ?? "seasonality");
+    }
+  }, [activeTab, visibleTabs]);
 
   return (
     <section id="description" className="tour-section-target">
@@ -113,34 +144,36 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
           })}
         </div>
 
-        <div className="border-t border-gray-100 bg-pampas/40">
-          <div
-            className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-gray-100 px-4 pt-3 sm:px-6"
-            role="tablist"
-            aria-label="Дополнительная информация о туре"
-          >
-            {DESCRIPTION_EXTRA_TABS.map((tab) => (
-              <button
-                key={tab.id}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={cn(
-                  "shrink-0 rounded-t-lg px-3 py-2 text-sm font-medium transition-colors",
-                  activeTab === tab.id
-                    ? "bg-white text-charcoal shadow-sm"
-                    : "text-slate hover:text-charcoal"
-                )}
-              >
-                {tab.label}
-              </button>
-            ))}
+        {visibleTabs.length > 0 ? (
+          <div className="border-t border-gray-100 bg-pampas/40">
+            <div
+              className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-gray-100 px-4 pt-3 sm:px-6"
+              role="tablist"
+              aria-label="Дополнительная информация о туре"
+            >
+              {visibleTabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "shrink-0 rounded-t-lg px-3 py-2 text-sm font-medium transition-colors",
+                    activeTab === tab.id
+                      ? "bg-white text-charcoal shadow-sm"
+                      : "text-slate hover:text-charcoal"
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+            <div className="p-6 sm:p-8" role="tabpanel">
+              <ExtraTabContent tabId={activeTab} extra={extra} />
+            </div>
           </div>
-          <div className="p-6 sm:p-8" role="tabpanel">
-            <ExtraTabContent tabId={activeTab} extra={extra} />
-          </div>
-        </div>
+        ) : null}
       </div>
     </section>
   );

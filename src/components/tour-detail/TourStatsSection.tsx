@@ -17,10 +17,16 @@ import {
 import InfoModal, { HelpButton } from "./InfoModal";
 import { cn } from "@/lib/cn";
 import { formatTouristsRange } from "@/lib/pluralize";
-import { formatMinimumAgeSummary } from "@/lib/tour-age";
+import { formatAgeRangeSummary, formatMaxWeightSummary } from "@/lib/tour-age";
+import type { TourLanguage } from "@/types";
 
 interface TourStatsSectionProps {
   tour: TourDetail;
+  difficultyDescription?: string;
+  maximumAge?: number | null;
+  maxWeightEnabled?: boolean;
+  maxWeightKg?: number | null;
+  languages?: TourLanguage[];
 }
 
 function DotRating({
@@ -104,7 +110,14 @@ function StatColumn({
   );
 }
 
-export default function TourStatsSection({ tour }: TourStatsSectionProps) {
+export default function TourStatsSection({
+  tour,
+  difficultyDescription,
+  maximumAge,
+  maxWeightEnabled,
+  maxWeightKg,
+  languages = [],
+}: TourStatsSectionProps) {
   const [modal, setModal] = useState<"difficulty" | "comfort" | null>(null);
 
   const hasAccommodation = tourHasAccommodation(tour);
@@ -124,6 +137,9 @@ export default function TourStatsSection({ tour }: TourStatsSectionProps) {
             <span className="text-sm text-slate">{tour.difficulty}</span>
             <DotRating filled={difficultyDots} variant="difficulty" />
           </div>
+          {difficultyDescription?.trim() ? (
+            <p className="mt-2 text-sm leading-relaxed text-slate">{difficultyDescription}</p>
+          ) : null}
           <SectionLink href="#route-map">К маршруту</SectionLink>
         </StatColumn>
 
@@ -146,8 +162,16 @@ export default function TourStatsSection({ tour }: TourStatsSectionProps) {
             {formatTouristsRange(tour.groupMin, tour.groupMax)}
           </p>
           <p className="mt-1 text-xs text-slate/80">
-            {formatMinimumAgeSummary(tour.minimumAge)}
+            {formatAgeRangeSummary(tour.minimumAge, maximumAge)}
           </p>
+          {formatMaxWeightSummary(maxWeightEnabled, maxWeightKg) ? (
+            <p className="mt-1 text-xs text-slate/80">
+              {formatMaxWeightSummary(maxWeightEnabled, maxWeightKg)}
+            </p>
+          ) : null}
+          {languages.length > 0 ? (
+            <p className="mt-1 text-xs text-slate/80">Языки: {languages.join(", ")}</p>
+          ) : null}
         </StatColumn>
       </div>
 

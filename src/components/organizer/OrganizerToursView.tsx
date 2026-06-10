@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ExternalLink,
   MoreHorizontal,
@@ -13,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ORGANIZER_TOUR_LISTINGS } from "@/data/organizer-tours";
-import { getOrganizerTourListings } from "@/lib/organizer-tour-store";
+import { getOrganizerTourListings, createOrganizerTour } from "@/lib/organizer-tour-store";
 import { cn } from "@/lib/cn";
 import { formatDays, formatWithWord, pluralRu } from "@/lib/pluralize";
 import type { OrganizerTourListing, OrganizerTourStatus, OrganizerTourType } from "@/types/organizer-tour";
@@ -126,6 +127,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
 }
 
 export default function OrganizerToursView() {
+  const router = useRouter();
   const [archiveTab, setArchiveTab] = useState<ArchiveTab>("active");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
@@ -150,9 +152,18 @@ export default function OrganizerToursView() {
 
   const baseList = useMemo(
     () =>
-      tours.filter((tour) => (archiveTab === "active" ? !tour.archived : tour.archived)),
+      tours.filter(
+        (tour) =>
+          !tour.deleted && (archiveTab === "active" ? !tour.archived : tour.archived)
+      ),
     [archiveTab, tours]
   );
+
+  function handleCreateTour() {
+    const result = createOrganizerTour();
+    if ("error" in result) return;
+    router.push(`/organizer/tours/${result.draft.id}/edit`);
+  }
 
   const filteredList = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -201,7 +212,7 @@ export default function OrganizerToursView() {
               {formatToursAndExcursions(tourCount, excursionCount)}
             </p>
           </div>
-          <Button type="button" className="shrink-0 gap-2 self-start">
+          <Button type="button" className="shrink-0 gap-2 self-start" onClick={handleCreateTour}>
             <Plus className="h-4 w-4" />
             Добавить тур или экскурсию
           </Button>

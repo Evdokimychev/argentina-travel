@@ -19,6 +19,14 @@ function OrganizerStats({ organizer }: { organizer: TourOrganizerDetail }) {
         <span>{formatYears(organizer.experienceYears)} опыта</span>
       </div>
       <p className="mt-2 text-sm text-slate">Языки: {organizer.languages.join(", ")}</p>
+      {organizer.email?.trim() ? (
+        <p className="mt-1 text-sm text-slate">
+          Email:{" "}
+          <a href={`mailto:${organizer.email}`} className="text-sky hover:underline">
+            {organizer.email}
+          </a>
+        </p>
+      ) : null}
     </>
   );
 }
