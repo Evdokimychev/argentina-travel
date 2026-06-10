@@ -17,21 +17,27 @@ import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
 import { daysWord, formatDays } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import TourProgramDayEditor from "@/components/organizer/TourProgramDayEditor";
+import TourRoutePointsEditor from "@/components/organizer/TourRoutePointsEditor";
+import type { TourRoutePoint } from "@/types";
 
 interface TourProgramBlockProps {
   routeMapImage: string;
+  routePoints: TourRoutePoint[];
   programDays: OrganizerProgramDay[];
   durationDays: number;
   onRouteMapChange: (image: string) => void;
+  onRoutePointsChange: (points: TourRoutePoint[]) => void;
   onProgramDaysChange: (days: OrganizerProgramDay[]) => void;
   designExampleHref?: string;
 }
 
 export default function TourProgramBlock({
   routeMapImage,
+  routePoints,
   programDays,
   durationDays,
   onRouteMapChange,
+  onRoutePointsChange,
   onProgramDaysChange,
   designExampleHref = "/tours/iguazu-falls#itinerary",
 }: TourProgramBlockProps) {
@@ -209,6 +215,12 @@ export default function TourProgramBlock({
           {error ? <p className="text-xs text-brand">{error}</p> : null}
         </div>
       </section>
+
+      <TourRoutePointsEditor
+        routePoints={routePoints}
+        durationDays={durationDays}
+        onChange={onRoutePointsChange}
+      />
 
       <div className="space-y-4">
         <div

@@ -123,7 +123,7 @@ export default function Header() {
       {/* Top utility bar */}
       <div className="hidden border-b border-gray-100 bg-white lg:block">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-2 text-xs text-slate sm:px-6 lg:px-8">
-          <p className="flex flex-wrap items-center gap-x-3 gap-y-1">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span>Откройте Аргентину 🇦🇷 вместе с нами</span>
             <span className="hidden text-gray-300 xl:inline">|</span>
             <Link
@@ -133,18 +133,18 @@ export default function Header() {
               Бронируйте лучшие туры
               <ArrowUpRight className="h-3 w-3" />
             </Link>
-          </p>
-          <Link
-            href="/join"
-            className="hidden items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky xl:inline-flex"
-          >
-            Авторам туров
-            <ArrowUpRight className="h-3 w-3" />
-          </Link>
-          <span className="hidden text-gray-300 xl:inline">|</span>
+            <span className="hidden text-gray-300 xl:inline">|</span>
+            <Link
+              href="/join"
+              className="hidden items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky xl:inline-flex"
+            >
+              Авторам туров
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          </div>
           <Link
             href="/contacts"
-            className="flex items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky"
+            className="flex shrink-0 items-center gap-1 font-medium text-charcoal transition-colors hover:text-sky"
           >
             Свяжитесь с нами
             <ArrowUpRight className="h-3 w-3" />

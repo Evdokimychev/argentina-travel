@@ -15,7 +15,7 @@ interface TourSidebarProps {
 export default function TourSidebar({ tour, canonicalTour, previewMode = false }: TourSidebarProps) {
   return (
     <div className="space-y-4">
-      <TourBookingPanel tour={tour} previewMode={previewMode} />
+      <TourBookingPanel tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
       {canonicalTour ? <EarlyBookingDiscounts tour={canonicalTour} compact /> : null}
       <OrganizerSection organizer={tour.organizer} tourSlug={tour.slug} compact />
     </div>

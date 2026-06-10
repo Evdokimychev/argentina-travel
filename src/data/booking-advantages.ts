@@ -1,49 +1,83 @@
 import type { TourDetail } from "@/types";
-import {
-  getEnabledCheckoutPaymentOptions,
-  resolveTourCheckoutPaymentOptionsFromTour,
-} from "@/lib/tour-checkout-payment";
+import type { Tour } from "@/types/tour";
+import { hasVisibleGuides, resolveCancellationText } from "@/lib/tour-public-display";
+import { resolveTourCheckoutPaymentOptionsFromTour } from "@/lib/tour-checkout-payment";
+import { daysWord } from "@/lib/pluralize";
 
-export const DEFAULT_BOOKING_ADVANTAGES = [
-  "Заявка без предоплаты",
-  "Организатор подтверждает детали лично",
-  "Гибкие условия отмены",
-  "Оплата после подтверждения",
-] as const;
+const GUIDE_MENTION_PATTERN = /\bгид\b/i;
 
-export const PAY_LATER_ONLY_BOOKING_ADVANTAGES = [
-  "Заявка без предоплаты",
-  "Организатор подтверждает детали лично",
-  "Гибкие условия отмены",
-  "Оплата после подтверждения",
-] as const;
+export function parseFreeCancellationDays(text: string): number | null {
+  const normalized = text.trim();
+  if (!normalized) return null;
 
-export function resolveTourBookingAdvantages(tour: TourDetail): readonly string[] {
-  if (tour.bookingAdvantages?.length) {
-    return tour.bookingAdvantages;
+  const patterns = [
+    /бесплатн\w*\s+отмен\w*\s+за\s+(\d+)\s*дн/i,
+    /отмен\w*\s+без\s+штраф\w*\s+за\s+(\d+)\s*дн/i,
+    /(?:^|;\s*)(?:0\s*%|бесплатно)\s*[—–-]\s*(?:за\s+)?(\d+)\s*дн/i,
+  ];
+
+  for (const pattern of patterns) {
+    const match = normalized.match(pattern);
+    if (match?.[1]) {
+      const days = Number.parseInt(match[1], 10);
+      if (days > 0) return days;
+    }
   }
 
-  const options = resolveTourCheckoutPaymentOptionsFromTour(tour);
-  const enabled = getEnabledCheckoutPaymentOptions(options);
-  const ids = new Set(enabled.map((item) => item.id));
+  return null;
+}
 
-  if (ids.size === 1 && ids.has("later")) {
-    return PAY_LATER_ONLY_BOOKING_ADVANTAGES;
+function resolveFreeCancellationDays(
+  tour: TourDetail,
+  canonicalTour?: Tour | null
+): number | null {
+  for (const item of tour.faq) {
+    if (!/отмен/i.test(`${item.question} ${item.answer}`)) continue;
+    const days = parseFreeCancellationDays(item.answer);
+    if (days) return days;
   }
 
+  if (canonicalTour) {
+    const days = parseFreeCancellationDays(resolveCancellationText(canonicalTour));
+    if (days) return days;
+  }
+
+  return null;
+}
+
+function tourMentionsGuide(tour: TourDetail): boolean {
+  return tour.included.some((item) => GUIDE_MENTION_PATTERN.test(item));
+}
+
+function tourHasVisibleGuides(tour: TourDetail, canonicalTour?: Tour | null): boolean {
+  if (canonicalTour && hasVisibleGuides(canonicalTour)) return true;
+  return tourMentionsGuide(tour);
+}
+
+export function resolveTourBookingAdvantages(
+  tour: TourDetail,
+  options?: { canonicalTour?: Tour | null }
+): readonly string[] {
+  const canonicalTour = options?.canonicalTour;
   const advantages: string[] = [];
+  const paymentOptions = resolveTourCheckoutPaymentOptionsFromTour(tour);
 
-  if (ids.has("later")) {
-    advantages.push("Заявка без предоплаты", "Оплата после подтверждения");
-  }
-  if (ids.has("deposit")) {
-    advantages.push(`Можно внести депозит ${options.depositPercent}%`);
-  }
-  if (ids.has("full")) {
-    advantages.push("Полная оплата на сайте");
+  if (paymentOptions.payLaterEnabled) {
+    advantages.push("Не требует оплаты сейчас");
   }
 
-  advantages.push("Организатор подтверждает детали лично", "Гибкие условия отмены");
+  const freeCancellationDays = resolveFreeCancellationDays(tour, canonicalTour);
+  if (freeCancellationDays) {
+    advantages.push(`Бесплатная отмена за ${freeCancellationDays} ${daysWord(freeCancellationDays)}`);
+  }
 
-  return advantages.length > 0 ? advantages : DEFAULT_BOOKING_ADVANTAGES;
+  if (tourHasVisibleGuides(tour, canonicalTour)) {
+    advantages.push("Профессиональный местный гид");
+  }
+
+  if (tour.bookingMode === "on_request") {
+    advantages.push("Тур полностью настраивается под вас");
+  }
+
+  return advantages;
 }

@@ -3,7 +3,8 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { TourDetail } from "@/types";
-import { resolveTourBookingAdvantages } from "@/data/booking-advantages";
+import type { Tour } from "@/types/tour";
+import { getDiscountPercent, hasDiscount } from "@/lib/discount";
 import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
@@ -19,12 +20,14 @@ import { useTourBooking } from "./TourBookingContext";
 
 interface TourBookingPanelProps {
   tour: TourDetail;
+  canonicalTour?: Tour | null;
   className?: string;
   previewMode?: boolean;
 }
 
 export default function TourBookingPanel({
   tour,
+  canonicalTour,
   className,
   previewMode = false,
 }: TourBookingPanelProps) {
@@ -51,11 +54,16 @@ export default function TourBookingPanel({
       : undefined;
 
   const startLocation = tour.startLocation ?? tour.arrival.meetingPoint;
-  const advantages = [...resolveTourBookingAdvantages(tour)];
 
   const priceSuffix = useMemo(() => {
     return `${formatTouristsBooking(guests)} за ${formatDays(tour.durationDays)}`;
   }, [tour.durationDays, guests]);
+
+  const discounted = hasDiscount(totalOriginalPriceUsd, totalPriceUsd);
+  const percentOff =
+    discounted && totalOriginalPriceUsd
+      ? getDiscountPercent(totalOriginalPriceUsd, totalPriceUsd)
+      : null;
 
   const bookLabel =
     dateMode === "custom" || bookingMode === "on_request"
@@ -81,12 +89,26 @@ export default function TourBookingPanel({
   }
 
   return (
-    <div className={cn("rounded-2xl border border-gray-200 bg-white p-5 shadow-elevated", className)}>
+    <div
+      className={cn(
+        "relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-5 shadow-elevated",
+        className
+      )}
+    >
+      {percentOff != null ? (
+        <span
+          className="pointer-events-none absolute right-0 top-0 rounded-bl-xl rounded-tr-2xl bg-brand px-2.5 py-1.5 text-[11px] font-bold leading-none tracking-tight text-white shadow-sm"
+          aria-label={`Скидка ${percentOff} процентов`}
+        >
+          −{percentOff}%
+        </span>
+      ) : null}
       <TourPriceDisplay
         priceUsd={totalPriceUsd}
         originalPriceUsd={totalOriginalPriceUsd}
         suffix={priceSuffix}
         showFrom={false}
+        showDiscountRibbon={false}
       />
       {guests > 1 && (
         <p className="mt-1 text-xs text-slate">
@@ -122,7 +144,11 @@ export default function TourBookingPanel({
         />
       </div>
 
-      <BookingAdvantages items={advantages} className="mt-5 border-t border-gray-100 pt-5" />
+      <BookingAdvantages
+        tour={tour}
+        canonicalTour={canonicalTour}
+        className="mt-5 border-t border-gray-100 pt-5"
+      />
 
       {previewMode ? (
         <div className="mt-5 rounded-xl bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal">

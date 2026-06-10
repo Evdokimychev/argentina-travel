@@ -1,6 +1,6 @@
 import type { TourCollection } from "@/data/tour-collections";
 import type { OrganizerTourAccommodationPlace } from "@/data/tour-accommodation-defaults";
-import type { TourPlace } from "@/types";
+import type { TourPlace, TourRoutePoint } from "@/types";
 import type { CurrencyCode } from "@/types/locale";
 import type { OrganizerTourDiscountType } from "@/data/tour-discount-defaults";
 import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
@@ -101,6 +101,7 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   places: TourPlace[];
   guides: OrganizerTourGuide[];
   routeMapImage: string;
+  routePoints: TourRoutePoint[];
   programDays: OrganizerProgramDay[];
   importantInfo: string[];
   faq: OrganizerTourFAQ[];

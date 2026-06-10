@@ -11,6 +11,8 @@ import {
 } from "@/data/tour-accommodation-defaults";
 import { primaryComfortLevel } from "@/data/tour-levels";
 import { buildGeographySeed } from "@/data/tour-geography";
+import { getTourRoutePoints } from "@/data/tour-routes";
+import { normalizeRoutePoints } from "@/data/tour-route-defaults";
 import { NO_ACCOMMODATION_LABEL, tourHasAccommodation } from "@/lib/tour-accommodation";
 import {
   isoToDayMonth,
@@ -254,6 +256,9 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     places: detail?.places?.length ? detail.places : [],
     guides: createDefaultTourGuides(),
     routeMapImage: "",
+    routePoints: detail?.routePoints?.length
+      ? detail.routePoints.map((point) => ({ ...point }))
+      : getTourRoutePoints(catalogSlug),
     programDays: detail?.itinerary?.length
       ? detail.itinerary.map(mapItineraryToProgramDay)
       : [createEmptyProgramDay(1)],
@@ -339,6 +344,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     places: [],
     guides: createDefaultTourGuides(),
     routeMapImage: "",
+    routePoints: [],
     programDays: [createEmptyProgramDay(1)],
     importantInfo: [],
     faq: [],
@@ -451,6 +457,7 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
       ? draft.groupTourDates.map((item) => normalizeGroupTourDate(item))
       : seed.groupTourDates,
     routeMapImage: draft.routeMapImage ?? seed.routeMapImage,
+    routePoints: normalizeRoutePoints(draft.routePoints, seed.routePoints),
     programDays: normalizeProgramDays(draft.programDays, seed.programDays),
     importantInfo: draft.importantInfo?.length
       ? normalizeTermsItems(draft.importantInfo)
@@ -603,6 +610,7 @@ export function saveOrganizerTourDraft(
       };
     }),
     routeMapImage: draft.routeMapImage.trim(),
+    routePoints: normalizeRoutePoints(draft.routePoints),
     programDays: renumberProgramDays(
       (draft.programDays?.length ? draft.programDays : [createEmptyProgramDay(1)]).map((day, index) =>
         normalizeProgramDay(day, index + 1)
@@ -751,6 +759,10 @@ export function cloneOrganizerTour(
       places: source.places.map((place) => ({
         ...place,
         id: `${place.id}-copy-${Date.now()}`,
+      })),
+      routePoints: source.routePoints.map((point) => ({
+        ...point,
+        id: `${point.id}-copy-${Date.now()}`,
       })),
       guides: source.guides.map((guide) => ({
         ...guide,

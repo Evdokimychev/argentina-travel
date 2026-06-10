@@ -1169,9 +1169,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             {activeTab === "program" ? (
               <TourProgramBlock
                 routeMapImage={draft.routeMapImage}
+                routePoints={draft.routePoints}
                 programDays={draft.programDays}
                 durationDays={draft.durationDays}
                 onRouteMapChange={(routeMapImage) => updateDraft({ routeMapImage })}
+                onRoutePointsChange={(routePoints) => updateDraft({ routePoints })}
                 onProgramDaysChange={(programDays) => updateDraft({ programDays })}
               />
             ) : null}

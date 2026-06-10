@@ -1,12 +1,26 @@
+import { useMemo } from "react";
 import { CircleCheck } from "lucide-react";
+import { resolveTourBookingAdvantages } from "@/data/booking-advantages";
 import { cn } from "@/lib/cn";
+import type { TourDetail } from "@/types";
+import type { Tour } from "@/types/tour";
 
 interface BookingAdvantagesProps {
-  items: string[];
+  tour: TourDetail;
+  canonicalTour?: Tour | null;
   className?: string;
 }
 
-export default function BookingAdvantages({ items, className }: BookingAdvantagesProps) {
+export default function BookingAdvantages({
+  tour,
+  canonicalTour,
+  className,
+}: BookingAdvantagesProps) {
+  const items = useMemo(
+    () => [...resolveTourBookingAdvantages(tour, { canonicalTour })],
+    [tour, canonicalTour]
+  );
+
   if (items.length === 0) return null;
 
   return (

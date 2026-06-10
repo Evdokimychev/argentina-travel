@@ -406,7 +406,9 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
     },
     program: {
       routeMapImage: draft.routeMapImage,
-      routePoints: base.program.routePoints,
+      routePoints: draft.routePoints?.length
+        ? draft.routePoints
+        : base.program.routePoints,
       days: draft.programDays,
     },
     media: {
@@ -713,7 +715,9 @@ export function createMinimalTourFromDraft(
     },
     program: {
       routeMapImage: draft.routeMapImage,
-      routePoints: getTourRoutePoints(catalogSlug),
+      routePoints: draft.routePoints?.length
+        ? draft.routePoints
+        : getTourRoutePoints(catalogSlug),
       days: draft.programDays,
     },
     media: {
