@@ -1,13 +1,45 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Star, MapPin, Check } from "lucide-react";
+import { MapPin, Check, MessageSquare } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { NativeSelect } from "@/components/ui/native-select";
+import { SwitchField, SwitchRow } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { StarRating } from "@/components/ui/star-rating";
+import { EmptyState } from "@/components/ui/empty-state";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, StatCard } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
+import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import {
+  SHADOW_CARD,
+  SHADOW_ELEVATED,
+  SHADOW_MODAL,
+  CARD_HOVER,
+} from "@/styles/design-tokens";
 
 const COLOR_SWATCHES = [
   { name: "Primary (Sky)", className: "bg-sky", hex: "#74ACDF", note: "CTA, ссылки, фокус" },
@@ -38,6 +70,8 @@ function Swatch({ name, className, hex, note }: (typeof COLOR_SWATCHES)[number])
 }
 
 export default function DesignSystemShowcase() {
+  const [switchOn, setSwitchOn] = useState(true);
+
   return (
     <section id="design-system" className="scroll-mt-24 border-t border-gray-100 bg-white py-16 sm:py-20">
       <div className={siteContainerClass}>
@@ -102,16 +136,47 @@ export default function DesignSystemShowcase() {
             <Button variant="outline">Outline</Button>
             <Button variant="secondary">Secondary</Button>
             <Button variant="ghost">Ghost</Button>
+            <Button variant="destructive">Удалить</Button>
+            <Button variant="link">Ссылка-кнопка</Button>
             <Button size="sm">Small</Button>
             <Button size="lg">Large</Button>
           </div>
+        </div>
+
+        {/* Dialog */}
+        <div className="mt-16">
+          <h3 className="font-display text-xl font-bold text-charcoal">Диалог</h3>
+          <p className="mt-2 text-sm text-slate">
+            Единый оверлей, bottom sheet на мобильных, панель rounded-2xl на десктопе.
+          </p>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" className="mt-4">
+                Открыть демо-диалог
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md p-0">
+              <DialogHeader>
+                <DialogTitle>Пример модального окна</DialogTitle>
+                <DialogDescription>
+                  Используется для авторизации, бронирования, подсказок и форм организатора.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="px-5 pb-5 sm:px-6">
+                <p className="text-sm text-slate">
+                  Нажмите вне панели или Esc, чтобы закрыть. z-50, backdrop charcoal/50 + blur.
+                </p>
+                <Button className="mt-4 w-full">Понятно</Button>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
 
         {/* Cards */}
         <div className="mt-16">
           <h3 className="font-display text-xl font-bold text-charcoal">Карточки</h3>
           <div className="mt-6 grid gap-6 lg:grid-cols-3">
-            <article className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-md">
+            <article className={cn(tourCardShellClass, tourCardShellInteractiveClass)}>
               <div className="relative aspect-[4/3] bg-gray-100">
                 <Image
                   src="https://images.unsplash.com/photo-1551524164-6cf2ac7bd851?w=400&q=80"
@@ -133,28 +198,29 @@ export default function DesignSystemShowcase() {
               </div>
             </article>
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm">
-              <p className="font-display text-3xl font-bold text-charcoal">12</p>
-              <p className="mt-1 text-sm text-slate">Туров в каталоге</p>
-            </div>
+            <StatCard value={12} label="Туров в каталоге" />
 
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
-              <div className="flex items-center justify-between gap-2">
-                <p className="text-sm font-semibold text-charcoal">Заявка #AT-1042</p>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle>Заявка #AT-1042</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-slate">Патагония · 12–20 марта</p>
                 <BookingPaymentStatusBadge status="pending" />
-              </div>
-              <p className="mt-2 text-sm text-slate">Патагония · 12–20 марта</p>
-              <Link href="/tours" className={cn(buttonVariants({ size: "sm" }), "mt-4 w-full")}>
-                Подробнее
-              </Link>
-            </div>
+              </CardContent>
+              <CardFooter className="pt-0">
+                <Link href="/tours" className={cn(buttonVariants({ size: "sm" }), "w-full")}>
+                  Подробнее
+                </Link>
+              </CardFooter>
+            </Card>
           </div>
         </div>
 
         {/* Form fields */}
         <div className="mt-16">
           <h3 className="font-display text-xl font-bold text-charcoal">Поля форм</h3>
-          <div className="mt-6 max-w-md space-y-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+          <div className="mt-6 max-w-md space-y-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <div>
               <label htmlFor="ds-name" className="text-sm font-medium text-charcoal">
                 Имя
@@ -165,17 +231,71 @@ export default function DesignSystemShowcase() {
               <label htmlFor="ds-message" className="text-sm font-medium text-charcoal">
                 Сообщение
               </label>
-              <textarea
+              <Textarea
                 id="ds-message"
                 rows={3}
                 placeholder="Расскажите о планах..."
-                className="mt-1 flex w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-charcoal placeholder:text-gray-400 focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+                className="mt-1"
               />
             </div>
+            <div>
+              <label htmlFor="ds-region" className="text-sm font-medium text-charcoal">
+                Регион
+              </label>
+              <NativeSelect id="ds-region" className="mt-1" defaultValue="patagonia">
+                <option value="patagonia">Патагония</option>
+                <option value="buenos-aires">Буэнос-Айрес</option>
+                <option value="mendoza">Мендоса</option>
+              </NativeSelect>
+            </div>
+            <SwitchField
+              checked={switchOn}
+              onCheckedChange={setSwitchOn}
+              label="Уведомления о бронировании"
+              description="Получать email при новых заявках"
+            />
+            <SwitchRow
+              checked={switchOn}
+              onCheckedChange={setSwitchOn}
+              label="Строка с переключателем"
+              labelAddon={<Badge variant="new">Новый</Badge>}
+            />
             <label className="flex cursor-pointer items-center gap-3 text-sm text-charcoal">
               <Checkbox defaultChecked id="ds-check" />
               Согласен с условиями бронирования
             </label>
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="mt-16">
+          <h3 className="font-display text-xl font-bold text-charcoal">Таблица</h3>
+          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100">
+            <Table>
+              <TableHeader className="bg-pampas/60">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Тур</TableHead>
+                  <TableHead>Турист</TableHead>
+                  <TableHead>Статус</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell className="font-medium text-charcoal">Патагония Premium</TableCell>
+                  <TableCell>Анна К.</TableCell>
+                  <TableCell>
+                    <BookingPaymentStatusBadge status="paid" />
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium text-charcoal">Танго в Буэнос-Айресе</TableCell>
+                  <TableCell>Игорь М.</TableCell>
+                  <TableCell>
+                    <BookingPaymentStatusBadge status="pending" />
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
 
@@ -186,15 +306,54 @@ export default function DesignSystemShowcase() {
             <Badge variant="new">Новый</Badge>
             <Badge variant="hot">Горящий</Badge>
             <Badge variant="hit">Хит</Badge>
-            <span className="inline-flex items-center gap-1 rounded-full bg-sky/10 px-2.5 py-1 text-xs font-semibold text-sky">
-              <Star className="h-3 w-3 fill-current" /> Новый тур
-            </span>
+            <Badge variant="family">Семейный</Badge>
+            <Badge variant="expedition">Экспедиция</Badge>
+            <Badge variant="outline">Outline</Badge>
+            <StarRating layout="badge" isNew newLabel="Новый тур" size="xs" />
             <span className="inline-flex items-center gap-1 rounded-full bg-success-muted px-2.5 py-1 text-xs font-semibold text-success">
               <Check className="h-3 w-3" /> Проверенная поездка
             </span>
             <BookingPaymentStatusBadge status="paid" />
             <BookingPaymentStatusBadge status="partial" />
             <BookingPaymentStatusBadge status="refunded" />
+          </div>
+        </div>
+
+        {/* Shadows & motion */}
+        <div className="mt-16">
+          <h3 className="font-display text-xl font-bold text-charcoal">Тени и motion</h3>
+          <p className="mt-2 text-sm text-slate">
+            Три уровня elevation: карточки каталога → панель бронирования → модалки. Hover карточек —
+            только тень, без translateY. При <code className="text-xs">prefers-reduced-motion</code>{" "}
+            анимации и transform отключаются.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <div className={cn("rounded-2xl border border-gray-100 bg-white p-6", SHADOW_CARD)}>
+              <p className="font-semibold text-charcoal">shadow-card</p>
+              <p className="mt-1 text-xs text-slate">Каталог, list tiles</p>
+            </div>
+            <div className={cn("rounded-2xl border border-gray-100 bg-white p-6", SHADOW_ELEVATED)}>
+              <p className="font-semibold text-charcoal">shadow-elevated</p>
+              <p className="mt-1 text-xs text-slate">Booking panel, sticky</p>
+            </div>
+            <div className={cn("rounded-2xl border border-gray-100 bg-white p-6", SHADOW_MODAL)}>
+              <p className="font-semibold text-charcoal">shadow-modal</p>
+              <p className="mt-1 text-xs text-slate">Dialog, popover</p>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-slate">
+            Hover-класс карточек: <code className="font-mono">{CARD_HOVER}</code>
+          </p>
+        </div>
+
+        {/* Star rating */}
+        <div className="mt-16">
+          <h3 className="font-display text-xl font-bold text-charcoal">Рейтинг</h3>
+          <div className="mt-6 flex flex-wrap items-center gap-6 rounded-2xl border border-gray-100 bg-surface-muted/50 p-6">
+            <StarRating layout="badge" score="4.8" count={24} size="sm" />
+            <StarRating layout="badge" isNew newLabel="Новый" size="sm" />
+            <StarRating stars={5} size="md" />
+            <StarRating stars={4} size="lg" />
           </div>
         </div>
 
@@ -218,17 +377,17 @@ export default function DesignSystemShowcase() {
         <div className="mt-16">
           <h3 className="font-display text-xl font-bold text-charcoal">Пустые состояния</h3>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-surface-muted/50 px-6 py-10 text-center">
-              <Star className="mx-auto h-8 w-8 text-sky/60" />
-              <p className="mt-3 font-medium text-charcoal">Новый тур</p>
-              <p className="mt-1 text-sm text-slate">Отзывов пока нет — будьте первым</p>
-            </div>
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-surface-muted/50 px-6 py-10 text-center">
-              <p className="font-medium text-charcoal">Отзывов пока нет</p>
-              <p className="mt-1 text-sm text-slate">
-                Мы показываем только реальные отзывы после поездок
-              </p>
-            </div>
+            <EmptyState
+              icon={MessageSquare}
+              title="Отзывов пока нет"
+              description="Мы показываем только реальные отзывы после поездок."
+            />
+            <EmptyState
+              icon={MapPin}
+              title="Туры не найдены"
+              description="Попробуйте изменить фильтры или сбросить их."
+              action={{ label: "Сбросить фильтры", href: "/tours", variant: "outline" }}
+            />
           </div>
         </div>
       </div>

@@ -17,6 +17,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import { useAuth } from "@/context/AuthContext";
@@ -47,10 +48,12 @@ function DashboardCard({
   className?: string;
 }) {
   return (
-    <article className={cn("rounded-2xl border border-gray-200 bg-white p-5 shadow-sm", className)}>
-      <h3 className="font-display text-base font-bold text-charcoal">{title}</h3>
-      <div className="mt-3">{children}</div>
-    </article>
+    <Card className={cn("border-gray-200", className)}>
+      <CardHeader className="p-5 pb-0 sm:p-5 sm:pb-0">
+        <CardTitle>{title}</CardTitle>
+      </CardHeader>
+      <CardContent className="p-5 pt-3 sm:p-5 sm:pt-3">{children}</CardContent>
+    </Card>
   );
 }
 

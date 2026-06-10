@@ -7,6 +7,7 @@ import PublishReadinessPanel from "@/components/organizer/PublishReadinessPanel"
 import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { SwitchField } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -908,35 +909,12 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 ) : null}
 
                 <div className="space-y-3 border-t border-gray-200/80 pt-5">
-                  <button
-                    type="button"
-                    role="switch"
-                    aria-checked={draft.maxWeightEnabled}
-                    onClick={() => updateDraft({ maxWeightEnabled: !draft.maxWeightEnabled })}
-                    className="flex w-full items-start gap-3 text-left"
-                  >
-                    <span
-                      className={cn(
-                        "relative mt-0.5 inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-                        draft.maxWeightEnabled ? "bg-brand" : "bg-gray-300"
-                      )}
-                    >
-                      <span
-                        className={cn(
-                          "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-                          draft.maxWeightEnabled ? "translate-x-5" : "translate-x-0"
-                        )}
-                      />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-sm font-semibold text-charcoal">
-                        Максимальный вес туриста
-                      </span>
-                      <span className="mt-1 block text-sm leading-relaxed text-slate">
-                        Например, это может быть актуально для конных туров верхом
-                      </span>
-                    </span>
-                  </button>
+                  <SwitchField
+                    checked={draft.maxWeightEnabled}
+                    onCheckedChange={(maxWeightEnabled) => updateDraft({ maxWeightEnabled })}
+                    label="Максимальный вес туриста"
+                    description="Например, это может быть актуально для конных туров верхом"
+                  />
 
                   {draft.maxWeightEnabled ? (
                     <div>

@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import UserAvatar from "@/components/auth/UserAvatar";
 import {
   ORGANIZER_TOUR_GUIDE_BIO_MAX,
@@ -70,23 +72,6 @@ export default function TourGuideCreateModal({
     setError(null);
     setUploading(false);
   }, [open, initialGuide]);
-
-  useEffect(() => {
-    if (!open) return;
-    document.body.style.overflow = "hidden";
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
 
   const previewName = joinFullName(firstName, lastName) || "Новый гид";
 
@@ -166,26 +151,21 @@ export default function TourGuideCreateModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="tour-guide-create-title"
-    >
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[90vh] max-w-lg animate-fade-in-up flex-col overflow-hidden p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
+      >
       <form
-        className="flex max-h-[90vh] w-full max-w-lg animate-fade-in-up flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+        className="flex flex-col overflow-hidden"
         onSubmit={handleSubmit}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
           <div>
-            <h3
-              id="tour-guide-create-title"
-              className="font-display text-lg font-bold text-charcoal sm:text-xl"
-            >
+            <DialogTitle className="text-lg sm:text-xl">
               {isEditing ? "Редактировать гида" : "Новый гид"}
-            </h3>
+            </DialogTitle>
             <p className="mt-1 text-sm text-slate">
               {isEditing
                 ? "Обновите фото и данные гида"
@@ -297,7 +277,7 @@ export default function TourGuideCreateModal({
             <label htmlFor="guide-bio" className="mb-1.5 block text-xs font-medium text-charcoal">
               Описание *
             </label>
-            <textarea
+            <Textarea
               id="guide-bio"
               value={bio}
               rows={6}
@@ -306,7 +286,6 @@ export default function TourGuideCreateModal({
                 setBio(event.target.value.slice(0, ORGANIZER_TOUR_GUIDE_BIO_MAX))
               }
               placeholder="Расскажите об опыте гида, языках и специализации…"
-              className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
               required
             />
             <p className="mt-1 text-right text-xs text-slate">
@@ -328,6 +307,7 @@ export default function TourGuideCreateModal({
           <Button type="submit">{isEditing ? "Сохранить" : "Добавить гида"}</Button>
         </div>
       </form>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

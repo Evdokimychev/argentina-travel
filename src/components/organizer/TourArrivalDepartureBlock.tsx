@@ -2,6 +2,7 @@
 
 import { Plus, Trash2 } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SwitchField, SwitchRow } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { TOUR_CITY_OPTIONS } from "@/data/tour-geography";
 import {
@@ -19,83 +20,6 @@ interface TourArrivalDepartureBlockProps {
   cities: OrganizerArrivalDepartureCity[];
   onEnabledChange: (enabled: boolean) => void;
   onChange: (cities: OrganizerArrivalDepartureCity[]) => void;
-}
-
-function ToggleSwitch({
-  checked,
-  onChange,
-  label,
-  description,
-}: {
-  checked: boolean;
-  onChange: (next: boolean) => void;
-  label: string;
-  description?: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-start gap-3 text-left"
-    >
-      <span
-        className={cn(
-          "relative mt-0.5 inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          checked ? "bg-brand" : "bg-gray-300"
-        )}
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            checked ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-sm font-semibold text-charcoal">{label}</span>
-        {description ? (
-          <span className="mt-1 block text-sm leading-relaxed text-slate">{description}</span>
-        ) : null}
-      </span>
-    </button>
-  );
-}
-
-function InlineToggle({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: (next: boolean) => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex items-center gap-2.5 text-left"
-    >
-      <span
-        className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          checked ? "bg-brand" : "bg-gray-300"
-        )}
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            checked ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-      <span className="text-sm text-charcoal">{label}</span>
-    </button>
-  );
 }
 
 function FieldSelect({
@@ -200,15 +124,17 @@ function CityCard({
       </label>
 
       <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-6">
-        <InlineToggle
+        <SwitchRow
           checked={city.canArrive}
-          onChange={(canArrive) => onChange({ ...city, canArrive })}
+          onCheckedChange={(canArrive) => onChange({ ...city, canArrive })}
           label="Можно прибывать в этот город"
+          align="start"
         />
-        <InlineToggle
+        <SwitchRow
           checked={city.canDepart}
-          onChange={(canDepart) => onChange({ ...city, canDepart })}
+          onCheckedChange={(canDepart) => onChange({ ...city, canDepart })}
           label="Можно отправляться из этого города"
+          align="start"
         />
       </div>
 
@@ -363,9 +289,9 @@ export default function TourArrivalDepartureBlock({
 
   return (
     <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <ToggleSwitch
+      <SwitchField
         checked={enabled}
-        onChange={handleEnabledChange}
+        onCheckedChange={handleEnabledChange}
         label="Города прибытия и отправления"
         description="Формируют блок «Рекомендации по прибытию» на странице тура: время прилёта и вылета на самолёте."
       />

@@ -5,7 +5,7 @@ export default function Footer() {
   return (
     <footer className="bg-charcoal text-white">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-4">
+        <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
             <Link href="/" className="inline-flex">
               <ArgentinaLogo size="sm" />
@@ -42,7 +42,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-sm font-semibold uppercase tracking-wider text-sun">
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-gray-300">
               Контакты
             </h3>
             <ul className="mt-4 space-y-2 text-sm text-gray-400">

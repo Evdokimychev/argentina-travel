@@ -18,6 +18,7 @@ import { formatDateRange } from "@/lib/utils";
 import { formatDays, formatNights, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
+import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import { DIFFICULTY_DOT_COUNT, COMFORT_DOT_COUNT } from "@/data/tour-levels";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
@@ -78,7 +79,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const isIndividualOnly = tour.bookingMode === "on_request";
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-lg">
+    <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
       <div className="flex flex-col lg:flex-row">
         {/* Image */}
         <Link

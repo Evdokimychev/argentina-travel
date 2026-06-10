@@ -12,6 +12,8 @@ import { buildTourContactHref } from "@/lib/tour-contact";
 import type { TourListing } from "@/types";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
+import { MapPin } from "lucide-react";
 import { tripsWord } from "@/lib/pluralize";
 
 interface OrganizerPublicViewProps {
@@ -128,12 +130,13 @@ export default function OrganizerPublicView({
             ))}
           </div>
         ) : (
-          <div className="mt-6 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
-            <p className="text-slate">Организатор готовит новые маршруты.</p>
-            <Link href="/tours" className="mt-4 inline-block text-sm font-medium text-brand hover:underline">
-              Смотреть все туры площадки
-            </Link>
-          </div>
+          <EmptyState
+            icon={MapPin}
+            title="Туров пока нет"
+            description="Организатор готовит новые маршруты."
+            action={{ label: "Смотреть все туры площадки", href: "/tours", variant: "outline" }}
+            className="mt-6"
+          />
         )}
       </section>
     </div>

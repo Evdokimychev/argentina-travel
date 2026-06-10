@@ -2,9 +2,12 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import { MessageSquare } from "lucide-react";
 import { TourReview } from "@/types";
 import { formatDate } from "@/lib/utils";
 import { formatReviews } from "@/lib/pluralize";
+import { EmptyState } from "@/components/ui/empty-state";
+import { StarRating } from "@/components/ui/star-rating";
 import { SectionHeading } from "./InfoModal";
 
 const PER_PAGE = 3;
@@ -33,7 +36,13 @@ export default function ReviewsSection({
     return (
       <section id="reviews" className="tour-section-target">
         <SectionHeading title="Отзывы" />
-        <p className="text-slate">Отзывов пока нет. Будьте первым!</p>
+        <EmptyState
+          icon={MessageSquare}
+          title="Отзывов пока нет"
+          description="Будьте первым — оставьте отзыв после поездки."
+          bordered={false}
+          className="px-0"
+        />
       </section>
     );
   }
@@ -85,13 +94,7 @@ export default function ReviewsSection({
                       </span>
                     ) : null}
                   </div>
-                  <div className="flex text-sun">
-                    {Array.from({ length: review.rating }).map((_, i) => (
-                      <svg key={i} className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
+                  <StarRating stars={review.rating} size="md" />
                 </div>
                 <p className="mt-1 text-xs text-slate">
                   Поездка: {formatDate(review.tripDate)} · {formatDate(review.date)}

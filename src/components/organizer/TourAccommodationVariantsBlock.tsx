@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Info, Link2, X } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import type { TourAccommodation } from "@/types";
 
 interface TourAccommodationVariantsBlockProps {
@@ -22,22 +23,16 @@ function VariantPlacesModal({
   variantLabel: string;
   places: TourAccommodation[];
 }) {
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[90vh] max-w-lg flex-col overflow-hidden p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4">
           <div>
-            <h3 className="font-display text-lg font-bold text-charcoal">Проживание в варианте</h3>
+            <DialogTitle className="text-lg">Проживание в варианте</DialogTitle>
             <p className="mt-1 text-sm text-slate">«{variantLabel}»</p>
           </div>
           <button
@@ -87,8 +82,8 @@ function VariantPlacesModal({
             </article>
           ))}
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 

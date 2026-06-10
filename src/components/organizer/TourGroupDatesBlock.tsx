@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Info, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SwitchRow } from "@/components/ui/switch";
 import TourGroupDatesAddModal from "@/components/organizer/TourGroupDatesAddModal";
 import { formatDateRange } from "@/lib/utils";
 import {
@@ -20,44 +21,6 @@ interface TourGroupDatesBlockProps {
   defaultPriceUsd: number;
   onDatesChange: (dates: OrganizerGroupTourDate[]) => void;
   onAutoRollChange: (enabled: boolean) => void;
-}
-
-function ToggleRow({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-center gap-3 text-left"
-    >
-      <span
-        className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          checked ? "bg-brand" : "bg-gray-300"
-        )}
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            checked ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-      <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-semibold text-charcoal">
-        {label}
-        <Info className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-      </span>
-    </button>
-  );
 }
 
 function GroupDateSummary({
@@ -149,10 +112,11 @@ export default function TourGroupDatesBlock({
           Даты группового тура
         </h2>
 
-        <ToggleRow
+        <SwitchRow
           checked={autoRollToNextYear}
-          onChange={onAutoRollChange}
+          onCheckedChange={onAutoRollChange}
           label="Автоматически переносить групповые даты на следующий год"
+          labelAddon={<Info className="h-4 w-4 shrink-0 text-sky" aria-hidden />}
         />
 
         {dates.length ? (

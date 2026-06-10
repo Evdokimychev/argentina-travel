@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import {
   X,
   Bus,
@@ -17,6 +16,13 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export type InfoModalVariant = "difficulty" | "comfort";
 
@@ -63,27 +69,27 @@ const COMFORT_ICONS: Record<string, LucideIcon> = {
 };
 
 function scaleColor(variant: InfoModalVariant, scale: number): string {
-  if (variant === "comfort") return "bg-emerald-500";
-  if (scale >= 5) return "bg-red-500";
-  if (scale >= 4) return "bg-orange-500";
-  if (scale >= 3) return "bg-brand";
-  if (scale >= 2) return "bg-amber-400";
-  return "bg-emerald-500";
+  if (variant === "comfort") return "bg-success";
+  if (scale >= 5) return "bg-error";
+  if (scale >= 4) return "bg-warning";
+  if (scale >= 3) return "bg-sky";
+  if (scale >= 2) return "bg-sun";
+  return "bg-success";
 }
 
 function iconTone(variant: InfoModalVariant, scale: number): string {
   if (variant === "comfort") {
-    if (scale >= 5) return "bg-emerald-100 text-emerald-700";
-    if (scale >= 4) return "bg-emerald-50 text-emerald-600";
-    if (scale >= 3) return "bg-teal-50 text-teal-600";
-    if (scale >= 2) return "bg-sky/15 text-sky";
-    return "bg-gray-100 text-slate";
+    if (scale >= 5) return "bg-success-muted text-success";
+    if (scale >= 4) return "bg-success-muted/70 text-success";
+    if (scale >= 3) return "bg-sky/10 text-sky-dark";
+    if (scale >= 2) return "bg-sky/10 text-sky";
+    return "bg-surface-muted text-slate";
   }
-  if (scale >= 5) return "bg-red-50 text-red-600";
-  if (scale >= 4) return "bg-orange-50 text-orange-600";
-  if (scale >= 3) return "bg-brand/10 text-brand";
-  if (scale >= 2) return "bg-amber-50 text-amber-600";
-  return "bg-emerald-50 text-emerald-600";
+  if (scale >= 5) return "bg-error-muted text-error";
+  if (scale >= 4) return "bg-warning-muted text-warning";
+  if (scale >= 3) return "bg-sky/10 text-sky";
+  if (scale >= 2) return "bg-sun/15 text-charcoal";
+  return "bg-success-muted text-success";
 }
 
 function LevelScaleBar({
@@ -151,50 +157,38 @@ export default function InfoModal({
   highlightLevel,
   hint,
 }: InfoModalProps) {
-  useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  if (!open) return null;
-
   const icons = variant === "difficulty" ? DIFFICULTY_ICONS : COMFORT_ICONS;
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="info-modal-title"
-    >
-      <div
-        className="flex max-h-[85vh] w-full max-w-md animate-fade-in-up flex-col overflow-hidden rounded-2xl border border-sky/20 bg-[#f0f7ff] shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[85vh] max-w-md flex-col overflow-hidden border border-gray-100 p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
       >
-        <div className="flex items-start justify-between gap-4 px-6 pt-6 pb-4">
-          <h3 id="info-modal-title" className="font-display text-xl font-bold text-charcoal">
-            {title}
-          </h3>
+        <DialogHeader className="flex-row items-start justify-between gap-4 border-b border-gray-100">
+          <div className="min-w-0 flex-1">
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription className="sr-only">
+              {hint ?? DEFAULT_HINTS[variant]}
+            </DialogDescription>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/80 text-slate shadow-sm transition-colors hover:bg-white hover:text-charcoal"
+            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
             aria-label="Закрыть"
           >
             <X className="h-4 w-4" />
           </button>
-        </div>
+        </DialogHeader>
 
-        <div className="overflow-y-auto px-6 pb-6">
-          <p className="mb-5 rounded-xl border border-sky/15 bg-white/60 px-3 py-2.5 text-xs leading-relaxed text-slate">
+        <div className="overflow-y-auto px-5 pb-5 sm:px-6 sm:pb-6">
+          <p className="mb-5 rounded-xl border border-gray-100 bg-surface-muted/60 px-3 py-2.5 text-xs leading-relaxed text-slate">
             {hint ?? DEFAULT_HINTS[variant]}
           </p>
 
-          <ul className="space-y-4">
+          <ul className="space-y-3">
             {items.map((item) => {
               const Icon = icons[item.level] ?? Mountain;
               const isHighlighted = highlightLevel === item.level;
@@ -205,8 +199,8 @@ export default function InfoModal({
                   className={cn(
                     "rounded-xl border p-4 transition-colors",
                     isHighlighted
-                      ? "border-brand/30 bg-white shadow-sm ring-2 ring-brand/20"
-                      : "border-sky/15 bg-white/70"
+                      ? "border-sky/30 bg-white shadow-card ring-2 ring-sky/15"
+                      : "border-gray-100 bg-white"
                   )}
                 >
                   <div className="flex items-start gap-3">
@@ -223,7 +217,7 @@ export default function InfoModal({
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <p className="font-semibold text-charcoal">{item.level}</p>
                         {isHighlighted && (
-                          <span className="rounded-full bg-brand/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-brand">
+                          <span className="rounded-full bg-sky/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-sky">
                             Этот тур
                           </span>
                         )}
@@ -244,7 +238,7 @@ export default function InfoModal({
             })}
           </ul>
 
-          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-sky/15 pt-4 text-xs text-slate">
+          <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-gray-100 pt-4 text-xs text-slate">
             <span>Шкала:</span>
             <LevelScaleDots scale={1} variant={variant} />
             <span aria-hidden>→</span>
@@ -254,8 +248,8 @@ export default function InfoModal({
             </span>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
 
@@ -281,7 +275,7 @@ export function HelpButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 text-xs text-slate hover:border-sky hover:text-sky"
+      className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full border border-gray-300 text-xs text-slate transition-colors hover:border-sky hover:text-sky"
       aria-label="Подробнее"
     >
       ?

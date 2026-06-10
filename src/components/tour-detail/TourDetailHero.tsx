@@ -1,12 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { MapPin, Share2, Star } from "lucide-react";
+import { MapPin, Share2 } from "lucide-react";
 import { TourDetail } from "@/types";
 import { cn } from "@/lib/cn";
 import { formatReviews } from "@/lib/pluralize";
 import TourDurationInfo from "./TourDurationInfo";
 import FavoriteButton from "@/components/profile/FavoriteButton";
+import { StarRating } from "@/components/ui/star-rating";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourDetailHeroProps {
@@ -88,10 +89,9 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
             <button
               type="button"
               onClick={scrollToReviews}
-              className="flex items-center gap-1 rounded-lg bg-sun/15 px-2.5 py-1 text-sm font-semibold text-charcoal transition-colors hover:bg-sun/25"
+              className="flex items-center gap-1.5 rounded-lg bg-sun/15 px-2.5 py-1 transition-colors hover:bg-sun/25"
             >
-              <Star className="h-4 w-4 fill-sun text-sun" aria-hidden />
-              {ratingDisplay.ratingText}
+              <StarRating layout="badge" score={ratingDisplay.ratingText} size="md" />
             </button>
             <button
               type="button"
@@ -105,10 +105,9 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
           <button
             type="button"
             onClick={scrollToReviews}
-            className="flex items-center gap-1 text-sky transition-colors hover:text-sky-dark"
+            className="transition-colors hover:text-sky-dark"
           >
-            <Star className="h-4 w-4 fill-current" aria-hidden />
-            <span className="text-sm font-medium">{ratingDisplay.badgeLabel}</span>
+            <StarRating layout="badge" isNew newLabel={ratingDisplay.badgeLabel} size="md" />
           </button>
         )}
       </div>

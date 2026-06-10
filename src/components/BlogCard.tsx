@@ -11,14 +11,14 @@ export default function BlogCard({ post }: BlogCardProps) {
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group card-hover block overflow-hidden rounded-2xl bg-white shadow-md"
+      className="group card-hover block overflow-hidden rounded-2xl bg-white shadow-card"
     >
       <div className="relative h-48 overflow-hidden">
         <Image
           src={post.image}
           alt={post.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <span className="absolute left-4 top-4 rounded-full bg-wine px-3 py-1 text-xs font-semibold text-white">

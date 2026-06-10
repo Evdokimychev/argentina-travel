@@ -6,6 +6,7 @@ import Hero from "@/components/Hero";
 import { getTourBySlug } from "@/data/tours";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
 
 function ContactsForm() {
@@ -102,14 +103,14 @@ function ContactsForm() {
             <label htmlFor="message" className="block text-sm font-medium text-charcoal">
               Сообщение
             </label>
-            <textarea
+            <Textarea
               id="message"
               name="message"
               rows={4}
               required
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="mt-1 flex w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-charcoal placeholder:text-gray-400 focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              className="mt-1"
               placeholder="Расскажите о ваших планах..."
             />
           </div>

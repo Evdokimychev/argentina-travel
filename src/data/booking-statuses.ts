@@ -25,9 +25,9 @@ export const BOOKING_STATUS_LABELS: Record<BookingStatus, string> = {
 };
 
 export const BOOKING_STATUS_TONE: Record<BookingStatusActive, string> = {
-  new: "bg-violet-50 text-violet-800 ring-violet-200/60",
-  pending: "bg-amber-50 text-amber-900 ring-amber-200/60",
-  confirmed: "bg-emerald-50 text-emerald-800 ring-emerald-200/60",
+  new: "bg-sky/10 text-sky ring-sky/20",
+  pending: "bg-warning-muted text-warning ring-warning/30",
+  confirmed: "bg-success-muted text-success ring-success/30",
   cancelled: "bg-gray-100 text-slate ring-gray-200/60",
   completed: "bg-sky/10 text-sky ring-sky/20",
 };

@@ -4,10 +4,20 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, ClipboardList } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
+import { EmptyState } from "@/components/ui/empty-state";
 import { resolveBookingAmounts } from "@/lib/booking-payment-display";
 import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
@@ -94,7 +104,7 @@ export default function OrganizerBookingsView() {
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="space-y-6 p-4 sm:p-6">
         <div>
-          <h1 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Заявки</h1>
+          <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Заявки</h1>
           <p className="mt-1 text-sm text-slate">
             Входящие бронирования и запросы туристов по вашим турам
           </p>
@@ -115,11 +125,10 @@ export default function OrganizerBookingsView() {
             <label htmlFor="booking-status-filter" className="sr-only">
               Статус заявки
             </label>
-            <select
+            <NativeSelect
               id="booking-status-filter"
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
-              className="flex h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
             >
               <option value="all">Все статусы</option>
               {BOOKING_STATUSES_ACTIVE.map((status) => (
@@ -127,50 +136,49 @@ export default function OrganizerBookingsView() {
                   {BOOKING_STATUS_LABELS[status]}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
 
           <div>
             <label htmlFor="booking-sort" className="sr-only">
               Сортировка
             </label>
-            <select
+            <NativeSelect
               id="booking-sort"
               value={sort}
               onChange={(event) => setSort(event.target.value as SortOption)}
-              className="flex h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.id} value={option.id}>
                   {option.label}
                 </option>
               ))}
-            </select>
+            </NativeSelect>
           </div>
         </div>
 
         {filtered.length > 0 ? (
           <div className="overflow-x-auto rounded-2xl border border-gray-200">
-            <table className="w-full min-w-[920px] text-left text-sm">
-              <thead className="border-b border-gray-100 bg-pampas/60 text-slate">
-                <tr>
-                  <th className="px-4 py-3 font-medium">Тур</th>
-                  <th className="px-4 py-3 font-medium">Турист</th>
-                  <th className="px-4 py-3 font-medium">Контакты</th>
-                  <th className="px-4 py-3 font-medium">Заявка</th>
-                  <th className="px-4 py-3 font-medium">Тур</th>
-                  <th className="px-4 py-3 font-medium">Гости</th>
-                  <th className="px-4 py-3 font-medium">Сумма</th>
-                  <th className="px-4 py-3 font-medium">Оплата</th>
-                  <th className="px-4 py-3 font-medium">Статус</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
+            <Table className="min-w-[920px] text-left">
+              <TableHeader className="bg-pampas/60">
+                <TableRow className="hover:bg-transparent">
+                  <TableHead>Тур</TableHead>
+                  <TableHead>Турист</TableHead>
+                  <TableHead>Контакты</TableHead>
+                  <TableHead>Заявка</TableHead>
+                  <TableHead>Тур</TableHead>
+                  <TableHead>Гости</TableHead>
+                  <TableHead>Сумма</TableHead>
+                  <TableHead>Оплата</TableHead>
+                  <TableHead>Статус</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {filtered.map((booking) => {
                   const amounts = resolveBookingAmounts(booking);
                   return (
-                  <tr key={booking.id} className="transition-colors hover:bg-gray-50/80">
-                    <td className="px-4 py-4">
+                  <TableRow key={booking.id}>
+                    <TableCell>
                       <Link
                         href={`/organizer/bookings/${booking.id}`}
                         className="flex min-w-[220px] items-center gap-3"
@@ -188,23 +196,23 @@ export default function OrganizerBookingsView() {
                           {booking.tourTitle}
                         </span>
                       </Link>
-                    </td>
-                    <td className="px-4 py-4 text-charcoal">{booking.contactName}</td>
-                    <td className="px-4 py-4 text-slate">
+                    </TableCell>
+                    <TableCell className="text-charcoal">{booking.contactName}</TableCell>
+                    <TableCell className="text-slate">
                       <div>{booking.contactEmail}</div>
                       <div className="mt-0.5">{booking.contactPhone}</div>
-                    </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-slate">
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap text-slate">
                       {formatBookingCreatedAt(booking.createdAt)}
-                    </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-slate">
+                    </TableCell>
+                    <TableCell className="whitespace-nowrap text-slate">
                       {formatBookingTourDates(booking, "Даты по согласованию")}
-                    </td>
-                    <td className="px-4 py-4 text-charcoal">{booking.guests}</td>
-                    <td className="px-4 py-4">
+                    </TableCell>
+                    <TableCell className="text-charcoal">{booking.guests}</TableCell>
+                    <TableCell>
                       <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-medium" />
-                    </td>
-                    <td className="px-4 py-4">
+                    </TableCell>
+                    <TableCell>
                       <BookingPaymentStatusBadge booking={booking} />
                       {amounts.due > 0 ? (
                         <p className="mt-1 text-xs text-slate">
@@ -215,23 +223,22 @@ export default function OrganizerBookingsView() {
                           />
                         </p>
                       ) : null}
-                    </td>
-                    <td className="px-4 py-4">
+                    </TableCell>
+                    <TableCell>
                       <BookingStatusBadge status={booking.status} />
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 );
                 })}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
-            <p className="font-medium text-charcoal">Заявок не найдено</p>
-            <p className="mt-2 text-sm text-slate">
-              Измените фильтры или дождитесь новых бронирований с сайта.
-            </p>
-          </div>
+          <EmptyState
+            icon={ClipboardList}
+            title="Заявок не найдено"
+            description="Измените фильтры или дождитесь новых бронирований с сайта."
+          />
         )}
       </div>
     </div>

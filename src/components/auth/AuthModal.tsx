@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
@@ -87,8 +88,6 @@ export default function AuthModal() {
     setShowPassword(false);
     setTermsAccepted(true);
   }, [authOpen, isOrganizerFlow]);
-
-  if (!authOpen) return null;
 
   async function handlePhoneContinue(targetRole = role) {
     if (!termsAccepted) {
@@ -635,22 +634,15 @@ export default function AuthModal() {
         : "Войдите или зарегистрируйтесь";
 
   return (
-    <div
-      className="fixed inset-0 z-[120] flex items-end justify-center bg-charcoal/55 p-0 backdrop-blur-sm sm:items-center sm:p-4"
-      onClick={closeAuth}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="auth-modal-title"
-    >
-      <div
-        className="max-h-[92vh] w-full max-w-md overflow-y-auto rounded-t-2xl bg-white shadow-2xl sm:rounded-2xl"
-        onClick={(event) => event.stopPropagation()}
+    <Dialog open={authOpen} onOpenChange={(next) => !next && closeAuth()}>
+      <DialogContent
+        className="max-h-[92vh] max-w-md overflow-y-auto p-0 shadow-2xl"
+        onPointerDownOutside={closeAuth}
+        onEscapeKeyDown={closeAuth}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
           <div>
-            <h2 id="auth-modal-title" className="font-display text-xl font-bold text-charcoal">
-              {modalTitle}
-            </h2>
+            <DialogTitle>{modalTitle}</DialogTitle>
             {isOrganizerFlow && !isAuthenticated ? (
               <p className="mt-1 text-xs text-slate">
                 Регистрация и вход представителя организатора
@@ -890,7 +882,7 @@ export default function AuthModal() {
             )}
           </div>
         )}
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

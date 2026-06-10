@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { CalendarDays } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
@@ -10,6 +11,7 @@ import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
+import { EmptyState } from "@/components/ui/empty-state";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import {
@@ -161,20 +163,14 @@ export default function ProfileBookingsPage() {
           })}
         </div>
       ) : (
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
-          <p className="font-medium text-charcoal">Бронирований пока нет</p>
-          <p className="mt-2 text-sm text-slate">
-            Оформите заявку на странице тура или найдите гостевую заявку по email.
-          </p>
-          <div className="mt-4 flex flex-wrap justify-center gap-4">
-            <Link href="/tours" className="text-sm font-medium text-brand hover:underline">
-              Выбрать тур
-            </Link>
-            <Link href="/booking/find" className="text-sm font-medium text-brand hover:underline">
-              Найти заявку по email
-            </Link>
-          </div>
-        </div>
+        <EmptyState
+          icon={CalendarDays}
+          title="Бронирований пока нет"
+          description="Оформите заявку на странице тура или найдите гостевую заявку по email."
+          action={{ label: "Выбрать тур", href: "/tours", variant: "outline" }}
+          secondaryAction={{ label: "Найти заявку по email", href: "/booking/find" }}
+          className="mt-8"
+        />
       )}
     </div>
   );

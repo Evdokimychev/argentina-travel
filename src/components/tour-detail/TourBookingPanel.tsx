@@ -8,6 +8,7 @@ import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } f
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import TourPriceDisplay from "./TourPriceDisplay";
 import GuestCounter from "./GuestCounter";
@@ -80,7 +81,7 @@ export default function TourBookingPanel({
   }
 
   return (
-    <div className={cn("rounded-2xl border border-gray-200 bg-white p-5 shadow-lg", className)}>
+    <div className={cn("rounded-2xl border border-gray-200 bg-white p-5 shadow-elevated", className)}>
       <TourPriceDisplay
         priceUsd={totalPriceUsd}
         originalPriceUsd={totalOriginalPriceUsd}
@@ -133,16 +134,12 @@ export default function TourBookingPanel({
             <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{bookingError}</p>
           )}
 
-          <button
-            type="button"
-            onClick={handleBookClick}
-            className="mt-5 block w-full rounded-xl bg-brand py-3.5 text-center text-sm font-semibold text-white transition-colors hover:bg-brand/90"
-          >
+          <Button type="button" onClick={handleBookClick} className="mt-5 w-full">
             {bookLabel}
-          </button>
+          </Button>
           <Link
             href={buildTourContactHref(tour.slug)}
-            className="mt-2 block w-full rounded-xl border border-gray-200 py-3 text-center text-sm font-medium text-charcoal hover:bg-gray-50"
+            className={cn(buttonVariants({ variant: "outline" }), "mt-2 w-full")}
           >
             Задать вопрос
           </Link>

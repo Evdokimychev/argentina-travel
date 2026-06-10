@@ -6,6 +6,7 @@ import {
   mergePlatformStats,
   type PlatformStats,
 } from "@/lib/organizer-public";
+import { StatCard } from "@/components/ui/card";
 import { tripsWord } from "@/lib/pluralize";
 
 function countCompletedBookings(): number {
@@ -66,10 +67,7 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-6 text-center sm:grid-cols-3">
           {items.map((item) => (
-            <div key={item.label}>
-              <p className="font-display text-3xl font-bold text-charcoal">{item.value}</p>
-              <p className="mt-1 text-sm text-slate">{item.label}</p>
-            </div>
+            <StatCard key={item.label} value={item.value} label={item.label} />
           ))}
         </div>
       </div>

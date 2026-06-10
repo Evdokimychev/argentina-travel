@@ -2,6 +2,7 @@
 
 import { Info } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { SwitchRow } from "@/components/ui/switch";
 import { getCurrency } from "@/data/locale-config";
 import { cn } from "@/lib/cn";
 import type { CurrencyCode } from "@/types/locale";
@@ -16,44 +17,6 @@ interface TourIndividualBlockProps {
   onPeriodFromChange: (value: string) => void;
   onPeriodToChange: (value: string) => void;
   onPriceChange: (value: number) => void;
-}
-
-function ToggleRow({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  label: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-center gap-3 text-left"
-    >
-      <span
-        className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          checked ? "bg-brand" : "bg-gray-300"
-        )}
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            checked ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-      <span className="flex min-w-0 flex-1 items-center gap-1.5 text-sm font-semibold text-charcoal">
-        {label}
-        <Info className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-      </span>
-    </button>
-  );
 }
 
 function FieldLabel({
@@ -92,10 +55,11 @@ export default function TourIndividualBlock({
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Индивидуальный тур</h2>
 
-      <ToggleRow
+      <SwitchRow
         checked={enabled}
-        onChange={onEnabledChange}
+        onCheckedChange={onEnabledChange}
         label="Тур может проводиться индивидуально"
+        labelAddon={<Info className="h-4 w-4 shrink-0 text-sky" aria-hidden />}
       />
 
       {enabled ? (

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { EmptyState } from "@/components/ui/empty-state";
 import { useAuth } from "@/context/AuthContext";
 import { getTourDetail } from "@/lib/tours";
 import {
@@ -218,11 +220,11 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
           )}
           <label className="mt-3 block text-sm text-slate">
             Сообщение
-            <textarea
+            <Textarea
               value={newMessage}
               onChange={(event) => setNewMessage(event.target.value)}
               rows={4}
-              className="mt-1 w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+              className="mt-1"
               placeholder="Здравствуйте! Хотел(а) уточнить..."
             />
           </label>
@@ -238,15 +240,17 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
       <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
         <div className="space-y-2">
           {threads.length === 0 ? (
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-white px-4 py-8 text-center">
-              <MessageCircle className="mx-auto h-8 w-8 text-slate" />
-              <p className="mt-3 text-sm text-slate">Пока нет переписки</p>
-              {role === "tourist" ? (
-                <p className="mt-1 text-xs text-slate">
-                  Нажмите «Задать вопрос» на странице тура
-                </p>
-              ) : null}
-            </div>
+            <EmptyState
+              icon={MessageCircle}
+              title="Пока нет переписки"
+              description={
+                role === "tourist"
+                  ? "Нажмите «Задать вопрос» на странице тура."
+                  : "Когда турист напишет вам, переписка появится здесь."
+              }
+              bordered
+              className="px-4"
+            />
           ) : (
             threads.map((thread) => (
               <ThreadListItem
@@ -313,12 +317,12 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
 
               <div className="border-t border-gray-100 p-4 sm:p-5">
                 <div className="flex gap-2">
-                  <textarea
+                  <Textarea
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
                     rows={2}
                     placeholder="Напишите ответ..."
-                    className="min-h-[44px] flex-1 resize-none rounded-xl border border-gray-200 px-3 py-2 text-sm"
+                    className="min-h-[44px] flex-1 resize-none"
                   />
                   <Button
                     type="button"

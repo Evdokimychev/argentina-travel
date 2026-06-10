@@ -1,6 +1,8 @@
 "use client";
 
-import { cn } from "@/lib/cn";
+import { Input } from "@/components/ui/input";
+import { SwitchField } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import {
   ORGANIZER_ARRIVAL_CITY_COMMENT_MAX,
   linesToLogisticsList,
@@ -18,48 +20,6 @@ interface TourArrivalDetailsBlockProps {
     arrivalTransfersText?: string;
     arrivalMeetingPoint?: string;
   }) => void;
-}
-
-function ToggleSwitch({
-  checked,
-  onChange,
-  label,
-  description,
-}: {
-  checked: boolean;
-  onChange: (next: boolean) => void;
-  label: string;
-  description?: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
-      className="flex w-full items-start gap-3 text-left"
-    >
-      <span
-        className={cn(
-          "relative mt-0.5 inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          checked ? "bg-brand" : "bg-gray-300"
-        )}
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            checked ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-      <span className="min-w-0">
-        <span className="block text-sm font-semibold text-charcoal">{label}</span>
-        {description ? (
-          <span className="mt-1 block text-sm leading-relaxed text-slate">{description}</span>
-        ) : null}
-      </span>
-    </button>
-  );
 }
 
 function FieldTextarea({
@@ -82,13 +42,12 @@ function FieldTextarea({
   return (
     <label htmlFor={id} className="block space-y-1.5">
       <span className="text-xs font-medium text-charcoal">{label}</span>
-      <textarea
+      <Textarea
         id={id}
         rows={rows}
         value={value}
         placeholder={placeholder}
         onChange={(event) => onChange(event.target.value)}
-        className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
       />
       {hint ? <span className="block text-[11px] leading-relaxed text-slate">{hint}</span> : null}
     </label>
@@ -110,9 +69,9 @@ export default function TourArrivalDetailsBlock({
 
   return (
     <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <ToggleSwitch
+      <SwitchField
         checked={enabled}
-        onChange={onEnabledChange}
+        onCheckedChange={onEnabledChange}
         label="Аэропорты, трансферы и место встречи"
         description="Блок «Как добраться» на странице тура: аэропорты, рекомендуемые рейсы, трансферы и точка встречи."
       />
@@ -139,14 +98,13 @@ export default function TourArrivalDetailsBlock({
 
           <label htmlFor="arrival-meeting-point" className="block space-y-1.5">
             <span className="text-xs font-medium text-charcoal">Место встречи</span>
-            <input
+            <Input
               id="arrival-meeting-point"
               type="text"
               value={meetingPoint}
               maxLength={ORGANIZER_ARRIVAL_CITY_COMMENT_MAX}
               placeholder={mapStartPoint || "Буэнос-Айрес, аэропорт Ezeiza"}
               onChange={(event) => onChange({ arrivalMeetingPoint: event.target.value })}
-              className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal outline-none focus:border-brand focus:ring-2 focus:ring-brand/20"
             />
             {mapStartPoint ? (
               <span className="block text-[11px] leading-relaxed text-slate">

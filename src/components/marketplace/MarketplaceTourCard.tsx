@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Flame, MapPin, Star, UserRound } from "lucide-react";
+import { Flame, MapPin, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import { TourListing, TourBadge } from "@/types";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
@@ -10,7 +10,9 @@ import TourCardGallery from "./TourCardGallery";
 import { formatDateRange } from "@/lib/utils";
 import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
+import { StarRating } from "@/components/ui/star-rating";
 import { cn } from "@/lib/cn";
+import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
@@ -40,7 +42,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
   return (
     <Link
       href={`/tours/${tour.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+      className={cn("group flex flex-col", tourCardShellClass, tourCardShellInteractiveClass)}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         <TourCardGallery images={tour.gallery} alt={tour.title} />
@@ -103,16 +105,14 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             <span className="truncate">{tour.region}</span>
           </span>
           {ratingDisplay.hasReviews ? (
-            <span className="flex shrink-0 items-center gap-1">
-              <Star className="h-3.5 w-3.5 fill-sun text-sun" />
-              <span className="font-semibold text-charcoal">{ratingDisplay.ratingText}</span>
-              <span className="text-slate">({tour.reviewCount})</span>
-            </span>
+            <StarRating
+              layout="badge"
+              score={ratingDisplay.ratingText}
+              count={tour.reviewCount}
+              size="sm"
+            />
           ) : (
-            <span className="flex shrink-0 items-center gap-1 text-sky">
-              <Star className="h-3.5 w-3.5 fill-current" aria-hidden />
-              <span className="font-medium">{ratingDisplay.badgeLabel}</span>
-            </span>
+            <StarRating layout="badge" isNew newLabel={ratingDisplay.badgeLabel} size="sm" />
           )}
         </div>
 

@@ -16,6 +16,7 @@ import {
 } from "@/data/tour-impressions-defaults";
 import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
 import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { SwitchField } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import type { TourPlace } from "@/types";
 
@@ -304,38 +305,17 @@ function ImpressionCard({
         />
 
         <div className="space-y-3 border-t border-gray-200/80 pt-4">
-          <button
-            type="button"
-            role="switch"
-            aria-checked={Boolean(impression.extendedScheduleEnabled)}
-            onClick={() =>
+          <SwitchField
+            checked={Boolean(impression.extendedScheduleEnabled)}
+            onCheckedChange={(extendedScheduleEnabled) =>
               onChange({
                 ...impression,
-                extendedScheduleEnabled: !impression.extendedScheduleEnabled,
+                extendedScheduleEnabled,
               })
             }
-            className="flex w-full items-center gap-3 text-left"
-          >
-            <span
-              className={cn(
-                "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-                impression.extendedScheduleEnabled ? "bg-brand" : "bg-gray-300"
-              )}
-            >
-              <span
-                className={cn(
-                  "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-                  impression.extendedScheduleEnabled ? "translate-x-5" : "translate-x-0"
-                )}
-              />
-            </span>
-            <span className="min-w-0">
-              <span className="block text-sm font-semibold text-charcoal">Расширенное расписание</span>
-              <span className="mt-0.5 block text-xs leading-relaxed text-slate">
-                Подробно опишите, когда и как это впечатление происходит в программе тура
-              </span>
-            </span>
-          </button>
+            label="Расширенное расписание"
+            description="Подробно опишите, когда и как это впечатление происходит в программе тура"
+          />
 
           {impression.extendedScheduleEnabled ? (
             <OrganizerRichTextField

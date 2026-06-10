@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { Search } from "lucide-react";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { buildCatalogFilterHref } from "@/lib/catalog-filter-url";
@@ -21,6 +22,7 @@ import PlatformStatsBlock from "./PlatformStatsBlock";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 interface MarketplaceHomeProps {
   tours: TourListing[];
@@ -176,16 +178,18 @@ export default function MarketplaceHome({
             ))}
           </div>
         ) : (
-          <div className="py-16 text-center">
-            <p className="text-lg text-slate">По вашему запросу ничего не найдено</p>
-            <Button
-              className="mt-4"
-              variant="outline"
-              onClick={() => setFilters(getDefaultFilters(currency, tours))}
-            >
-              Сбросить фильтры
-            </Button>
-          </div>
+          <EmptyState
+            icon={Search}
+            title="По вашему запросу ничего не найдено"
+            description="Попробуйте изменить фильтры или сбросить их."
+            action={{
+              label: "Сбросить фильтры",
+              onClick: () => setFilters(getDefaultFilters(currency, tours)),
+              variant: "outline",
+            }}
+            bordered={false}
+            className="py-16"
+          />
         )}
         {filtered.length > 6 ? (
           <div className="pb-10 text-center">

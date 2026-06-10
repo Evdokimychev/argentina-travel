@@ -10,9 +10,11 @@ import {
   PencilLine,
   Plus,
   Search,
+  Map,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { EmptyState } from "@/components/ui/empty-state";
 import { ORGANIZER_TOUR_LISTINGS } from "@/data/organizer-tours";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerTourListingsForUser, createOrganizerTour } from "@/lib/organizer-tour-store";
@@ -275,14 +277,20 @@ export default function OrganizerToursView() {
             ))}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
-            <p className="font-display text-lg font-bold text-charcoal">Ничего не найдено</p>
-            <p className="mt-2 text-sm text-slate">
-              {archiveTab === "archive"
+          <EmptyState
+            icon={Map}
+            title="Ничего не найдено"
+            description={
+              archiveTab === "archive"
                 ? "В архиве пока нет туров по выбранным фильтрам."
-                : "Измените фильтры или добавьте новый тур."}
-            </p>
-          </div>
+                : "Измените фильтры или добавьте новый тур."
+            }
+            action={
+              archiveTab !== "archive"
+                ? { label: "Добавить тур", onClick: handleCreateTour }
+                : undefined
+            }
+          />
         )}
       </div>
     </div>

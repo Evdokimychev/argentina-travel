@@ -6,6 +6,7 @@ import { Pencil, Plus, Trash2, Users } from "lucide-react";
 import UserAvatar from "@/components/auth/UserAvatar";
 import TourGuideCreateModal from "@/components/organizer/TourGuideCreateModal";
 import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   ORGANIZER_TEAM_GUIDES_MAX,
   teamGuideFromTourGuide,
@@ -209,25 +210,12 @@ export default function OrganizerGuidesTab({ userId }: OrganizerGuidesTabProps) 
             ))}
           </div>
         ) : (
-          <div
-            className={cn(
-              "rounded-2xl border border-dashed border-gray-200 px-6 py-10 text-center",
-              "bg-gray-50/50"
-            )}
-          >
-            <Users className="mx-auto h-10 w-10 text-slate/60" />
-            <p className="mt-3 font-display text-base font-bold text-charcoal">Пока нет гидов</p>
-            <p className="mx-auto mt-1 max-w-md text-sm text-slate">
-              Добавьте первого гида — фото, имя и описание. Потом их можно назначать на конкретные
-              туры.
-            </p>
-            {canAdd ? (
-              <Button type="button" onClick={openCreateModal} className="mt-4">
-                <Plus className="h-4 w-4" />
-                Добавить гида
-              </Button>
-            ) : null}
-          </div>
+          <EmptyState
+            icon={Users}
+            title="Пока нет гидов"
+            description="Добавьте первого гида — фото, имя и описание. Потом их можно назначать на конкретные туры."
+            action={canAdd ? { label: "Добавить гида", onClick: openCreateModal } : undefined}
+          />
         )}
 
         {!canAdd ? (

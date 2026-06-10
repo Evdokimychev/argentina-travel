@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Star } from "lucide-react";
+import { Star, MessageSquare } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserReviews, updateReviewStatus } from "@/lib/reviews-store";
 import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
 import { REVIEW_STATUS_LABELS } from "@/data/tourist-dashboard";
 import { formatDateShortWithYear } from "@/lib/utils";
 import { cn } from "@/lib/cn";
+import { EmptyState } from "@/components/ui/empty-state";
 
 function RatingStars({ rating }: { rating: number }) {
   return (
@@ -101,13 +102,12 @@ export default function ProfileReviewsPage() {
           ))}
         </ul>
       ) : (
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
-          <Star className="mx-auto h-10 w-10 text-slate/40" strokeWidth={1.5} />
-          <p className="mt-4 font-medium text-charcoal">Отзывов пока нет</p>
-          <p className="mt-2 text-sm text-slate">
-            После завершённой поездки вы сможете оставить отзыв о туре.
-          </p>
-        </div>
+        <EmptyState
+          icon={MessageSquare}
+          title="Отзывов пока нет"
+          description="После завершённой поездки вы сможете оставить отзыв о туре."
+          className="mt-8"
+        />
       )}
     </div>
   );

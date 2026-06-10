@@ -4,7 +4,10 @@ import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { Calendar, CircleX, Globe2, Info, Save, Users, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { NativeSelect } from "@/components/ui/native-select";
+import { Textarea } from "@/components/ui/textarea";
 import { computeEndDateFromStart } from "@/data/tour-booking-defaults";
 import {
   BOOKING_PAYMENT_PROCEDURE_LABELS,
@@ -173,23 +176,6 @@ export default function BookingOrganizerEditModal({
     }
   }, [open, booking, user]);
 
-  useEffect(() => {
-    if (!open) return;
-    document.body.style.overflow = "hidden";
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
-
   const currencySuffix =
     form.organizerParams.currency === "USD" ? "US$" : form.organizerParams.currency;
   const touristLines = getTouristStatusLines({
@@ -301,24 +287,16 @@ export default function BookingOrganizerEditModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="booking-edit-modal-title"
-    >
-      <div
-        className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[92vh] max-w-2xl flex-col overflow-hidden border border-gray-200 p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
       >
         <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
-          <h3
-            id="booking-edit-modal-title"
-            className="font-display text-lg font-bold text-charcoal sm:text-xl"
-          >
+          <DialogTitle className="text-lg sm:text-xl">
             Редактирование параметров бронирования
-          </h3>
+          </DialogTitle>
           <button
             type="button"
             onClick={onClose}
@@ -332,7 +310,7 @@ export default function BookingOrganizerEditModal({
         <div className="overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
           <div className="space-y-6">
             <FormField id="booking-payment-status" label="Статус бронирования">
-              <select
+              <NativeSelect
                 id="booking-payment-status"
                 value={form.paymentStatus}
                 onChange={(event) =>
@@ -349,7 +327,7 @@ export default function BookingOrganizerEditModal({
                     {BOOKING_PAYMENT_STATUS_LABELS[key]}
                   </option>
                 ))}
-              </select>
+              </NativeSelect>
             </FormField>
 
             <section className="space-y-3">
@@ -398,7 +376,7 @@ export default function BookingOrganizerEditModal({
               <FormField id="booking-tour-select" label="Выбрать тур/экскурсию">
                 <div className="relative">
                   <Globe2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate" />
-                  <select
+                  <NativeSelect
                     id="booking-tour-select"
                     value={form.organizerTourId}
                     onChange={(event) => handleTourChange(event.target.value)}
@@ -416,7 +394,7 @@ export default function BookingOrganizerEditModal({
                         {tour.title}
                       </option>
                     ))}
-                  </select>
+                  </NativeSelect>
                 </div>
               </FormField>
 
@@ -447,7 +425,7 @@ export default function BookingOrganizerEditModal({
                     onChange={handlePricePerGuestChange}
                   />
                   <FormField id="booking-currency" label="Валюта">
-                    <select
+                    <NativeSelect
                       id="booking-currency"
                       value={form.organizerParams.currency}
                       onChange={(event) =>
@@ -460,7 +438,7 @@ export default function BookingOrganizerEditModal({
                           {option.label}
                         </option>
                       ))}
-                    </select>
+                    </NativeSelect>
                   </FormField>
                 </div>
 
@@ -474,7 +452,7 @@ export default function BookingOrganizerEditModal({
               </div>
 
               <FormField id="booking-payment-procedure" label="Порядок оплаты">
-                <select
+                <NativeSelect
                   id="booking-payment-procedure"
                   value={form.organizerParams.paymentProcedure}
                   onChange={(event) =>
@@ -490,7 +468,7 @@ export default function BookingOrganizerEditModal({
                       {label}
                     </option>
                   ))}
-                </select>
+                </NativeSelect>
               </FormField>
 
               <div className="grid gap-3 sm:grid-cols-2">
@@ -509,7 +487,7 @@ export default function BookingOrganizerEditModal({
                   />
                 </FormField>
                 <FormField id="booking-prepayment-type" label="Тип предоплаты">
-                  <select
+                  <NativeSelect
                     id="booking-prepayment-type"
                     value={form.organizerParams.prepaymentType}
                     onChange={(event) =>
@@ -521,7 +499,7 @@ export default function BookingOrganizerEditModal({
                   >
                     <option value="percent">%</option>
                     <option value="fixed">{currencySuffix}</option>
-                  </select>
+                  </NativeSelect>
                 </FormField>
               </div>
 
@@ -573,12 +551,11 @@ export default function BookingOrganizerEditModal({
                 label="Условия размещения"
                 hint="Необязательное поле. Укажите названия отелей, типы номеров, доплаты за одноместное размещение."
               >
-                <textarea
+                <Textarea
                   id="booking-accommodation-terms"
                   rows={4}
                   value={form.organizerParams.accommodationTerms ?? ""}
                   onChange={(event) => patchParams({ accommodationTerms: event.target.value })}
-                  className="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                 />
               </FormField>
             </section>
@@ -614,7 +591,7 @@ export default function BookingOrganizerEditModal({
             </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { TourItineraryDay } from "@/types";
 import { SectionHeading } from "./InfoModal";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
 
@@ -22,15 +23,17 @@ function ItineraryExpandToggle({
   onToggle: () => void;
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={allExpanded}
+    <div
+      role="group"
       aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
-      onClick={onToggle}
       className="flex max-w-full items-center gap-3 rounded-xl border border-gray-100 bg-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5"
     >
-      <div className="min-w-0 flex-1">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="min-w-0 flex-1 text-left"
+        aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
+      >
         <div className="flex items-baseline justify-between gap-3">
           <span className="text-sm font-medium text-charcoal">
             {allExpanded ? "Свернуть все" : "Раскрыть все"}
@@ -50,30 +53,17 @@ function ItineraryExpandToggle({
               key={index}
               className={cn(
                 "h-1 flex-1 rounded-full transition-colors",
-                isOpen ? "bg-brand" : "bg-gray-200"
+                isOpen ? "bg-sky" : "bg-gray-200"
               )}
             />
           ))}
         </div>
 
         <p className="mt-1.5 text-xs text-slate">{formatOpenedDaysLabel(openCount, allExpanded)}</p>
-      </div>
+      </button>
 
-      <span
-        className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          allExpanded ? "bg-brand" : "bg-gray-300"
-        )}
-        aria-hidden
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            allExpanded ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-    </button>
+      <Switch checked={allExpanded} onCheckedChange={() => onToggle()} aria-hidden />
+    </div>
   );
 }
 

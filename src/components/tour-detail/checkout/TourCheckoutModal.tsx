@@ -10,7 +10,9 @@ import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import FormattedPrice from "@/components/FormattedPrice";
 import GuestCounter from "../GuestCounter";
 import SingleDatePicker from "@/components/ui/single-date-picker";
@@ -471,8 +473,6 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     });
   }, [guests]);
 
-  if (!checkoutOpen) return null;
-
   function patchForm(patch: Partial<CheckoutFormState>) {
     setForm((prev) => ({ ...prev, ...patch }));
   }
@@ -589,16 +589,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/55 p-0 backdrop-blur-sm sm:items-center sm:p-4"
-      onClick={closeCheckout}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="checkout-title"
-    >
-      <div
-        className="flex h-[100dvh] w-full max-w-6xl flex-col overflow-hidden bg-white shadow-2xl sm:h-auto sm:max-h-[92vh] sm:rounded-2xl lg:flex-row"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={checkoutOpen} onOpenChange={(next) => !next && closeCheckout()}>
+      <DialogContent
+        bottomSheet
+        className="flex h-[100dvh] max-w-6xl flex-col overflow-hidden p-0 shadow-2xl sm:h-auto sm:max-h-[92vh] lg:flex-row"
+        onPointerDownOutside={closeCheckout}
+        onEscapeKeyDown={closeCheckout}
       >
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <header className="flex shrink-0 items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
@@ -1094,12 +1090,11 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         </h4>
                         <p className="mt-0.5 text-xs text-slate">Необязательно</p>
                       </div>
-                      <textarea
+                      <Textarea
                         value={form.comments}
                         onChange={(e) => patchForm({ comments: e.target.value })}
                         rows={3}
                         placeholder="Аллергии, диетические предпочтения, время прилёта…"
-                        className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                       />
                     </div>
                   </section>
@@ -1232,7 +1227,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             depositPercent={checkoutPaymentOptions.depositPercent}
           />
         </aside>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

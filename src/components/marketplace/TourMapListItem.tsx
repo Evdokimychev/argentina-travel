@@ -6,6 +6,7 @@ import { Star, MapPin } from "lucide-react";
 import { TourListing } from "@/types";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import { cn } from "@/lib/cn";
+import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { formatDays } from "@/lib/pluralize";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
@@ -28,8 +29,10 @@ export default function TourMapListItem({
     <li ref={listItemRef} data-tour-id={tour.id}>
       <article
         className={cn(
-          "flex gap-3 border-b border-gray-100 p-4 transition-colors last:border-b-0",
-          selected ? "bg-brand-light/40" : "hover:bg-gray-50/80"
+          "flex gap-3 p-4 transition-colors",
+          tourCardShellClass,
+          "border-b border-gray-100 last:border-b-0 last:rounded-b-2xl first:rounded-t-2xl",
+          selected ? "bg-brand-light/40 ring-1 ring-sky/20" : "hover:bg-gray-50/80"
         )}
       >
         <button

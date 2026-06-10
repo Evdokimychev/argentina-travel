@@ -11,8 +11,11 @@ import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
 import ProfileNotifications from "@/components/profile/ProfileNotifications";
+import { Card } from "@/components/ui/card";
+import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/cn";
 
-function StatCard({
+function DashboardStatCard({
   label,
   value,
   href,
@@ -26,17 +29,19 @@ function StatCard({
   return (
     <Link
       href={href}
-      className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm transition-colors hover:border-brand/30 hover:bg-brand-light/20"
+      className="block transition-colors hover:[&>div]:border-sky/30 hover:[&>div]:shadow-md motion-reduce:transition-none"
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-sm text-slate">{label}</p>
-          <p className="mt-2 font-display text-3xl font-bold text-charcoal">{value}</p>
+      <Card className="p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm text-slate">{label}</p>
+            <p className="mt-2 font-display text-3xl font-bold text-charcoal">{value}</p>
+          </div>
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
+            <Icon className="h-5 w-5" strokeWidth={1.75} />
+          </span>
         </div>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand-light text-brand">
-          <Icon className="h-5 w-5" strokeWidth={1.75} />
-        </span>
-      </div>
+      </Card>
     </Link>
   );
 }
@@ -74,8 +79,8 @@ export default function ProfileDashboardPage() {
 
   return (
     <div className="space-y-6">
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-        <h2 className="font-display text-xl font-bold text-charcoal">
+      <section className={cn("rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6")}>
+        <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
           Добро пожаловать, {user.fullName.split(/\s+/)[0]}!
         </h2>
         <p className="mt-2 text-sm text-slate">
@@ -86,19 +91,19 @@ export default function ProfileDashboardPage() {
       <ProfileNotifications limit={5} />
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <StatCard
+        <DashboardStatCard
           label="Поездки"
           value={stats.tripsCount}
           href="/profile/bookings"
           icon={CalendarDays}
         />
-        <StatCard
+        <DashboardStatCard
           label="Избранное"
           value={stats.favoritesCount}
           href="/profile/favorites"
           icon={Heart}
         />
-        <StatCard
+        <DashboardStatCard
           label="Заявки"
           value={stats.pendingBookingsCount}
           href="/profile/bookings"
@@ -106,7 +111,7 @@ export default function ProfileDashboardPage() {
         />
       </div>
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <section className={cn("rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6")}>
         <div className="flex items-center justify-between gap-3">
           <h3 className="font-display text-lg font-bold text-charcoal">Последние бронирования</h3>
           <Link
@@ -152,12 +157,14 @@ export default function ProfileDashboardPage() {
             ))}
           </ul>
         ) : (
-          <p className="mt-4 text-sm text-slate">
-            Пока нет бронирований.{" "}
-            <Link href="/tours" className="font-medium text-brand hover:underline">
-              Выберите тур
-            </Link>
-          </p>
+          <EmptyState
+            icon={CalendarDays}
+            title="Пока нет бронирований"
+            description="Выберите тур в каталоге и оформите заявку."
+            action={{ label: "Выбрать тур", href: "/tours", variant: "outline" }}
+            bordered={false}
+            className="mt-4 px-0"
+          />
         )}
       </section>
     </div>

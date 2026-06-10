@@ -3,7 +3,9 @@
 import { useEffect, useState } from "react";
 import { Calendar, CircleX, Info, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import {
   buildGroupTourDatesFromBatch,
   computeEndDateFromStart,
@@ -137,11 +139,7 @@ function ToggleSwitch({
   compact?: boolean;
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={checked}
-      onClick={() => onChange(!checked)}
+    <div
       className={cn(
         "flex w-full items-start gap-3 text-left transition-colors",
         compact
@@ -149,26 +147,14 @@ function ToggleSwitch({
           : "rounded-xl border border-gray-100 bg-gray-50/70 px-3 py-3 hover:border-gray-200"
       )}
     >
-      <span
-        className={cn(
-          "relative mt-0.5 inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          checked ? "bg-brand" : "bg-gray-300"
-        )}
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            checked ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
+      <Switch checked={checked} onCheckedChange={onChange} className="mt-0.5" />
       <span className="min-w-0 flex-1">
         <span className="block text-sm font-medium text-charcoal">{label}</span>
         {hint ? (
           <span className="mt-0.5 block text-xs leading-relaxed text-slate">{hint}</span>
         ) : null}
       </span>
-    </button>
+    </div>
   );
 }
 
@@ -209,23 +195,6 @@ export default function TourGroupDatesAddModal({
     setForm(createInitialForm(defaultPriceUsd));
     setError(null);
   }, [open, defaultPriceUsd]);
-
-  useEffect(() => {
-    if (!open) return;
-    document.body.style.overflow = "hidden";
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
 
   function updateTrip(id: string, startDate: string) {
     setForm((current) => ({
@@ -281,21 +250,14 @@ export default function TourGroupDatesAddModal({
   const currencySuffix = currency === "USD" ? "US$" : currency;
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="group-dates-modal-title"
-    >
-      <div
-        className="flex max-h-[92vh] w-full max-w-2xl flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[92vh] max-w-2xl flex-col overflow-hidden border border-gray-200 p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
       >
         <div className="flex items-center justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
-          <h3 id="group-dates-modal-title" className="font-display text-lg font-bold text-charcoal sm:text-xl">
-            Добавление групповых дат
-          </h3>
+          <DialogTitle className="text-lg sm:text-xl">Добавление групповых дат</DialogTitle>
           <button
             type="button"
             onClick={onClose}
@@ -550,7 +512,7 @@ export default function TourGroupDatesAddModal({
             </Button>
           </div>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

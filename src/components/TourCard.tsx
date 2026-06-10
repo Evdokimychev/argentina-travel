@@ -13,14 +13,14 @@ export default function TourCard({ tour }: TourCardProps) {
   return (
     <Link
       href={`/tours/${tour.slug}`}
-      className="group card-hover block overflow-hidden rounded-2xl bg-white shadow-md"
+      className="group card-hover block overflow-hidden rounded-2xl bg-white shadow-card"
     >
       <div className="relative h-52 overflow-hidden">
         <Image
           src={tour.image}
           alt={tour.title}
           fill
-          className="object-cover transition-transform duration-500 group-hover:scale-105"
+          className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/60 to-transparent" />

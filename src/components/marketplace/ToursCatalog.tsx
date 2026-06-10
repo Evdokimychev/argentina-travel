@@ -21,9 +21,10 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
-import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
 import Link from "next/link";
+import { MapPin } from "lucide-react";
 
 const CatalogMapView = dynamic(
   () => import("@/components/marketplace/CatalogMapView"),
@@ -155,17 +156,17 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
           />
 
           {sorted.length === 0 ? (
-            <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-16 text-center">
-              <p className="font-medium text-charcoal">Туры не найдены</p>
-              <p className="mt-2 text-sm text-slate">
-                Попробуйте изменить фильтры или сбросить их
-              </p>
-              {activeFilterCount > 0 && (
-                <Button className="mt-4" variant="outline" onClick={resetFilters}>
-                  Сбросить фильтры
-                </Button>
-              )}
-            </div>
+            <EmptyState
+              icon={MapPin}
+              title="Туры не найдены"
+              description="Попробуйте изменить фильтры или сбросить их."
+              action={
+                activeFilterCount > 0
+                  ? { label: "Сбросить фильтры", onClick: resetFilters, variant: "outline" }
+                  : undefined
+              }
+              className="mt-8"
+            />
           ) : viewMode === "map" ? (
             <CatalogMapView tours={sorted} />
           ) : (

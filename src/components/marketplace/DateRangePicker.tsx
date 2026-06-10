@@ -2,21 +2,9 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  format,
-  addMonths,
-  subMonths,
-  startOfMonth,
-  endOfMonth,
-  eachDayOfInterval,
-  isSameDay,
-  isWithinInterval,
-  isBefore,
-  startOfDay,
-} from "date-fns";
-import { ru } from "date-fns/locale";
-import { cn } from "@/lib/cn";
+import { addMonths, subMonths, isBefore } from "date-fns";
 import { Button } from "@/components/ui/button";
+import CalendarMonthGrid from "@/components/ui/calendar-month-grid";
 import { DATE_PRESETS } from "@/data/filters";
 
 interface DateRangePickerProps {
@@ -60,71 +48,6 @@ function getPresetRange(id: string): { from: Date; to: Date } | null {
   }
 }
 
-const WEEKDAYS = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
-
-interface MonthGridProps {
-  month: Date;
-  from: Date | null;
-  to: Date | null;
-  onDayClick: (day: Date) => void;
-}
-
-function MonthGrid({ month, from, to, onDayClick }: MonthGridProps) {
-  const days = eachDayOfInterval({
-    start: startOfMonth(month),
-    end: endOfMonth(month),
-  });
-  const startPad = (startOfMonth(month).getDay() + 6) % 7;
-
-  function isInRange(day: Date) {
-    if (!from || !to) return false;
-    return isWithinInterval(day, { start: from, end: to });
-  }
-
-  return (
-    <div className="w-full min-w-0 px-2 sm:px-3 md:w-[252px] md:shrink-0">
-      <p className="mb-3 text-center text-sm font-semibold capitalize text-charcoal">
-        {format(month, "LLLL yyyy", { locale: ru })}
-      </p>
-      <div className="mb-1 grid grid-cols-7 text-center text-[11px] font-medium text-slate">
-        {WEEKDAYS.map((d) => (
-          <span key={d} className="py-1">
-            {d}
-          </span>
-        ))}
-      </div>
-      <div className="grid grid-cols-7">
-        {Array.from({ length: startPad }).map((_, i) => (
-          <div key={`pad-${i}`} className="h-8" />
-        ))}
-        {days.map((day) => {
-          const selected =
-            (from && isSameDay(day, from)) || (to && isSameDay(day, to));
-          const inRange = isInRange(day);
-          const past = isBefore(day, startOfDay(new Date()));
-          return (
-            <button
-              key={day.toISOString()}
-              type="button"
-              disabled={past}
-              onClick={() => onDayClick(day)}
-              className={cn(
-                "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
-                selected && "bg-sky text-white",
-                inRange && !selected && "bg-sky/10 text-sky-dark",
-                !selected && !inRange && !past && "hover:bg-gray-100",
-                past && "cursor-not-allowed text-gray-300"
-              )}
-            >
-              {format(day, "d")}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 export default function DateRangePicker({
   from,
   to,
@@ -158,13 +81,22 @@ export default function DateRangePicker({
         </button>
 
         <div className="flex min-w-0 flex-1 justify-center md:divide-x md:divide-gray-100">
-          <MonthGrid month={month} from={from} to={to} onDayClick={handleDayClick} />
+          <CalendarMonthGrid
+            month={month}
+            rangeFrom={from}
+            rangeTo={to}
+            disablePast
+            onDayClick={handleDayClick}
+            className="w-full min-w-0 px-2 sm:px-3 md:w-[252px] md:shrink-0"
+          />
           <div className="hidden md:block">
-            <MonthGrid
+            <CalendarMonthGrid
               month={secondMonth}
-              from={from}
-              to={to}
+              rangeFrom={from}
+              rangeTo={to}
+              disablePast
               onDayClick={handleDayClick}
+              className="w-full min-w-0 px-2 sm:px-3 md:w-[252px] md:shrink-0"
             />
           </div>
         </div>
