@@ -14,15 +14,7 @@ export const PROFILE_NAV_ITEMS: ProfileNavItem[] = [
   { id: "settings", label: "Настройки", href: "/profile/settings" },
 ];
 
-export const BOOKING_STATUS_LABELS: Record<
-  import("@/types/tourist").BookingStatus,
-  string
-> = {
-  pending: "Ожидает подтверждения",
-  confirmed: "Подтверждено",
-  cancelled: "Отменено",
-  completed: "Завершено",
-};
+export { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 
 export const REVIEW_STATUS_LABELS: Record<
   import("@/types/tourist").TouristReviewStatus,

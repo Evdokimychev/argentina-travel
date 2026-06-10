@@ -18,7 +18,7 @@ export interface OrganizerNavItem {
 export const ORGANIZER_NAV_ITEMS: OrganizerNavItem[] = [
   { id: "dashboard", label: "Дашборд", href: "/organizer" },
   { id: "tours", label: "Туры и экскурсии", href: "/organizer/tours" },
-  { id: "bookings", label: "Заявки", href: "/organizer/bookings", badge: 8 },
+  { id: "bookings", label: "Заявки", href: "/organizer/bookings" },
   { id: "messages", label: "Сообщения", href: "/organizer/messages", badge: 3 },
   { id: "reviews", label: "Отзывы", href: "/organizer/reviews" },
   { id: "payments", label: "Платежи", href: "/organizer/payments" },

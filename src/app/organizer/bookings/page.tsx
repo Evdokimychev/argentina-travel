@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import OrganizerSectionPageClient from "../OrganizerSectionPageClient";
+import OrganizerBookingsPageClient from "./OrganizerBookingsPageClient";
 
-export const metadata: Metadata = { title: "Заявки" };
+export const metadata: Metadata = { title: "Заявки — кабинет организатора" };
 
-export default function Page() {
-  return (
-    <OrganizerSectionPageClient
-      title="Заявки"
-      description="Входящие бронирования и запросы туристов появятся здесь."
-    />
-  );
+export default function OrganizerBookingsPage() {
+  return <OrganizerBookingsPageClient />;
 }

@@ -4,15 +4,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   BadgeCheck,
+  CalendarClock,
+  CheckCircle2,
   Coins,
   Copy,
   ExternalLink,
   FileText,
   Headphones,
+  Inbox,
   Send,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
+import { getOrganizerCabinetBookingStats } from "@/lib/organizer-bookings";
+import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
+import type { OrganizerBookingStats } from "@/types/tourist";
 
 function StatusBadge({ label }: { label: string }) {
   return (
@@ -40,12 +48,64 @@ function DashboardCard({
   );
 }
 
+function BookingStatCard({
+  label,
+  value,
+  href,
+  icon: Icon,
+  tone,
+}: {
+  label: string;
+  value: number;
+  href: string;
+  icon: typeof Inbox;
+  tone: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={cn(
+        "rounded-2xl border bg-white p-4 shadow-sm transition-colors hover:border-brand/30",
+        tone
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-sm text-slate">{label}</p>
+          <p className="mt-2 font-display text-3xl font-bold text-charcoal">{value}</p>
+        </div>
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 text-brand">
+          <Icon className="h-5 w-5" strokeWidth={1.75} />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
 export default function OrganizerDashboardView() {
   const [copied, setCopied] = useState(false);
   const [publicToursUrl, setPublicToursUrl] = useState("https://argentina-travel.ru/tours");
+  const [bookingStats, setBookingStats] = useState<OrganizerBookingStats>({
+    newCount: 0,
+    pendingCount: 0,
+    confirmedCount: 0,
+    completedCount: 0,
+    cancelledCount: 0,
+    activeInboxCount: 0,
+  });
 
   useEffect(() => {
     setPublicToursUrl(`${window.location.origin}/tours`);
+  }, []);
+
+  useEffect(() => {
+    function refreshStats() {
+      setBookingStats(getOrganizerCabinetBookingStats());
+    }
+
+    refreshStats();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
+    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
   }, []);
 
   useEffect(() => {
@@ -82,6 +142,58 @@ export default function OrganizerDashboardView() {
       <div>
         <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Дашборд</h1>
       </div>
+
+      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-display text-lg font-bold text-charcoal">Заявки</h2>
+            <p className="mt-1 text-sm text-slate">CRM по входящим бронированиям</p>
+          </div>
+          <Link
+            href="/organizer/bookings"
+            className="text-sm font-medium text-brand hover:underline"
+          >
+            Все заявки
+          </Link>
+        </div>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+          <BookingStatCard
+            label={BOOKING_STATUS_LABELS.new}
+            value={bookingStats.newCount}
+            href="/organizer/bookings?status=new"
+            icon={Inbox}
+            tone="border-violet-100 bg-violet-50/40"
+          />
+          <BookingStatCard
+            label={BOOKING_STATUS_LABELS.pending}
+            value={bookingStats.pendingCount}
+            href="/organizer/bookings?status=pending"
+            icon={CalendarClock}
+            tone="border-amber-100 bg-amber-50/40"
+          />
+          <BookingStatCard
+            label={BOOKING_STATUS_LABELS.confirmed}
+            value={bookingStats.confirmedCount}
+            href="/organizer/bookings?status=confirmed"
+            icon={CheckCircle2}
+            tone="border-emerald-100 bg-emerald-50/40"
+          />
+          <BookingStatCard
+            label={BOOKING_STATUS_LABELS.completed}
+            value={bookingStats.completedCount}
+            href="/organizer/bookings?status=completed"
+            icon={CheckCircle2}
+            tone="border-sky/20 bg-sky/5"
+          />
+          <BookingStatCard
+            label={BOOKING_STATUS_LABELS.cancelled}
+            value={bookingStats.cancelledCount}
+            href="/organizer/bookings?status=cancelled"
+            icon={XCircle}
+            tone="border-gray-200 bg-gray-50"
+          />
+        </div>
+      </section>
 
       <div className="grid gap-4 xl:grid-cols-3">
         <DashboardCard title="Верификация личности">

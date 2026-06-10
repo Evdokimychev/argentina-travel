@@ -18,6 +18,8 @@ import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
 import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
+import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
+import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 
 const SIDEBAR_COLLAPSED_KEY = "organizer-sidebar-collapsed";
 /** Ниже этой ширины окна сайдбар сворачивается автоматически */
@@ -63,6 +65,7 @@ export default function OrganizerSidebar({
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
   const isSettingsActive = pathname.startsWith("/organizer/settings");
 
   const isCompact = forceCompact || collapsed;
@@ -81,6 +84,16 @@ export default function OrganizerSidebar({
 
     window.addEventListener("resize", syncCollapsedState, { passive: true });
     return () => window.removeEventListener("resize", syncCollapsedState);
+  }, []);
+
+  useEffect(() => {
+    function refreshNavBadges() {
+      setNavItems(getOrganizerNavItemsWithBadges());
+    }
+
+    refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
   }, []);
 
   function toggleCollapsed() {
@@ -159,7 +172,7 @@ export default function OrganizerSidebar({
           isCompact ? "px-2 py-3" : "px-3 py-4"
         )}
       >
-        {ORGANIZER_NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const Icon = NAV_ICONS[item.id];
           const active =
             item.href === "/organizer"
@@ -259,10 +272,21 @@ export function OrganizerMobileHeader() {
 
 export function OrganizerMobileNav() {
   const pathname = usePathname();
+  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+
+  useEffect(() => {
+    function refreshNavBadges() {
+      setNavItems(getOrganizerNavItemsWithBadges());
+    }
+
+    refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+  }, []);
 
   return (
     <nav className="flex gap-1 overflow-x-auto border-b border-gray-200 bg-white px-3 py-2 md:hidden scrollbar-hide">
-      {ORGANIZER_NAV_ITEMS.map((item) => {
+      {navItems.map((item) => {
         const Icon = NAV_ICONS[item.id];
         const active =
           item.href === "/organizer"
