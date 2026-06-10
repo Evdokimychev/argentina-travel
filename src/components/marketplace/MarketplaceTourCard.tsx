@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Flame, MapPin, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
@@ -11,6 +10,7 @@ import { formatDateRange } from "@/lib/utils";
 import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { StarRating } from "@/components/ui/star-rating";
+import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
@@ -76,10 +76,11 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
 
         <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
           <div className="relative h-7 w-7 overflow-hidden rounded-full">
-            <Image
+            <SafeImage
               src={tour.organizer.avatar}
               alt={tour.organizer.name}
               fill
+              placeholderVariant="avatar"
               className="object-cover"
               sizes="28px"
             />

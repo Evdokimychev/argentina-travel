@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 import { getProfileNavItemsWithBadges } from "@/lib/tourist-nav";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "profile-sidebar-collapsed";
 const AUTO_COLLAPSE_MAX_WIDTH = 1279;
@@ -225,12 +226,15 @@ export default function ProfileSidebar({
         <div className="shrink-0 space-y-2 border-t border-gray-100 px-4 py-4 text-[11px] leading-relaxed text-slate">
           <p>© Пора в Аргентину, {new Date().getFullYear()}</p>
           <div className="space-y-1">
-            <Link href="/contacts" className="block transition-colors hover:text-brand">
-              Публичная оферта
-            </Link>
-            <Link href="/contacts" className="block transition-colors hover:text-brand">
-              Политика конфиденциальности
-            </Link>
+            {SITE_LEGAL_LINKS.slice(0, 2).map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block transition-colors hover:text-brand"
+              >
+                {link.label}
+              </Link>
+            ))}
             <Link href="/join" className="block transition-colors hover:text-brand">
               Стать организатором
             </Link>

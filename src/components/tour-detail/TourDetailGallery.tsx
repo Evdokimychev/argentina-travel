@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { SafeImage } from "@/components/ui/safe-image";
 
 interface TourDetailGalleryProps {
   images: string[];
@@ -31,10 +32,11 @@ function GalleryTile({
       onClick={onClick}
       className={`relative overflow-hidden rounded-2xl bg-gray-100 ${className ?? ""}`}
     >
-      <Image
+      <SafeImage
         src={src}
         alt={alt}
         fill
+        placeholderVariant="tour"
         className="object-cover transition-transform duration-500 hover:scale-105"
         sizes="(max-width: 768px) 50vw, 40vw"
         priority={priority}
