@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ContentPageView from "@/components/content/ContentPageView";
+import KakDobratsyaHubView from "@/components/guide/hub/KakDobratsyaHubView";
 import GuidePillarView from "@/components/guide/GuidePillarView";
 import GuideTopicView from "@/components/guide/GuideTopicView";
+import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { getContentPage, getPagesBySection } from "@/lib/content-pages";
 import {
   getAllGuideTopics,
@@ -26,6 +28,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const topicMeta = getGuideTopicMetadata(slug);
   if (topicMeta) {
+    if (slug === "kak-dobratsya") {
+      return {
+        title: KAK_DOBRATSYA_HUB.heroTitle,
+        description: KAK_DOBRATSYA_HUB.heroSubtitle,
+      };
+    }
     return {
       title: topicMeta.title,
       description: topicMeta.description,
@@ -46,6 +54,9 @@ export default async function GuideSlugPage({ params }: PageProps) {
   if (isGuideTopicSlug(slug)) {
     const topic = getGuideTopicBySlug(slug);
     if (!topic) notFound();
+    if (slug === "kak-dobratsya") {
+      return <KakDobratsyaHubView topic={topic} />;
+    }
     if (topic.pillarPage) {
       return <GuidePillarView topic={topic} />;
     }
