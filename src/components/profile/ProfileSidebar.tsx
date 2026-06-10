@@ -1,22 +1,28 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   CalendarDays,
   Heart,
   LayoutGrid,
+  Mail,
   Settings,
   Star,
 } from "lucide-react";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
 import { PROFILE_NAV_ITEMS, type ProfileNavId } from "@/data/tourist-dashboard";
+import { useAuth } from "@/context/AuthContext";
+import { getUnreadMessagesCount } from "@/lib/messages-store";
+import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 
 const NAV_ICONS: Record<ProfileNavId, typeof LayoutGrid> = {
   dashboard: LayoutGrid,
   favorites: Heart,
   bookings: CalendarDays,
+  messages: Mail,
   reviews: Star,
   settings: Settings,
 };
@@ -27,7 +33,21 @@ interface ProfileSidebarProps {
 }
 
 export default function ProfileSidebar({ userName, avatarUrl }: ProfileSidebarProps) {
+  const { user } = useAuth();
   const pathname = usePathname();
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  useEffect(() => {
+    if (!user) return;
+
+    function refresh() {
+      setUnreadMessages(getUnreadMessagesCount({ userId: user!.id, role: "tourist" }));
+    }
+
+    refresh();
+    window.addEventListener(MESSAGES_UPDATED_EVENT, refresh);
+    return () => window.removeEventListener(MESSAGES_UPDATED_EVENT, refresh);
+  }, [user]);
 
   return (
     <div>
@@ -57,7 +77,7 @@ export default function ProfileSidebar({ userName, avatarUrl }: ProfileSidebarPr
               key={item.id}
               href={item.href}
               className={cn(
-                "inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors md:flex md:w-full",
+                "relative inline-flex shrink-0 items-center gap-2 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors md:flex md:w-full",
                 active
                   ? "bg-brand-light text-charcoal"
                   : "text-slate hover:bg-gray-50 hover:text-charcoal"
@@ -65,6 +85,11 @@ export default function ProfileSidebar({ userName, avatarUrl }: ProfileSidebarPr
             >
               <Icon className="h-4 w-4 shrink-0" strokeWidth={1.75} />
               {item.label}
+              {item.id === "messages" && unreadMessages > 0 ? (
+                <span className="ml-auto flex h-5 min-w-5 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white">
+                  {unreadMessages}
+                </span>
+              ) : null}
             </Link>
           );
         })}

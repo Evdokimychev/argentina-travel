@@ -1,4 +1,5 @@
 import TourDetailView from "@/components/tour-detail/TourDetailView";
+import TourJsonLd from "@/components/seo/TourJsonLd";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours";
 import { baseTours } from "@/data/tours";
 
@@ -15,8 +16,17 @@ export async function generateMetadata({ params }: TourPageProps) {
   const tour = await fetchTourDetail(slug);
   if (!tour) return { title: "Тур не найден" };
   return {
-    title: tour.title,
+    title: `${tour.title} — тур по Аргентине`,
     description: tour.shortDescription,
+    openGraph: {
+      title: tour.title,
+      description: tour.shortDescription,
+      images: tour.gallery.length ? [tour.image] : undefined,
+      type: "website",
+    },
+    alternates: {
+      canonical: `/tours/${slug}`,
+    },
   };
 }
 
@@ -25,5 +35,10 @@ export default async function TourDetailPage({ params }: TourPageProps) {
   const tour = await fetchTourDetail(slug);
   const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
 
-  return <TourDetailView slug={slug} tour={tour} similarTours={similarTours} />;
+  return (
+    <>
+      {tour ? <TourJsonLd tour={tour} /> : null}
+      <TourDetailView slug={slug} tour={tour} similarTours={similarTours} />
+    </>
+  );
 }

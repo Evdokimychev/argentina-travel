@@ -14,6 +14,7 @@ import type { AccountRole, SessionUser } from "@/types/user";
 import { userHasAccountRole } from "@/types/user";
 import { splitFullName } from "@/lib/full-name";
 import { localAuthProvider } from "@/lib/auth-provider";
+import { attachGuestBookingsToUser } from "@/lib/bookings-store";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
 
@@ -113,6 +114,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setUser(result.user);
+    if (result.user.email) {
+      attachGuestBookingsToUser(result.user.id, result.user.email);
+    }
     return { ok: true as const };
   }, []);
 
@@ -130,6 +134,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
 
     setUser(result.user);
+    if (result.user.email) {
+      attachGuestBookingsToUser(result.user.id, result.user.email);
+    }
     return { ok: true as const };
   }, []);
 
@@ -180,6 +187,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setUser(result.user);
+      if (result.user.email) {
+        attachGuestBookingsToUser(result.user.id, result.user.email);
+      }
       return { ok: true as const };
     },
     []

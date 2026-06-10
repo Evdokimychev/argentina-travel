@@ -29,12 +29,14 @@ import MobileBookingBar from "./MobileBookingBar";
 import TourCheckoutModal from "./checkout/TourCheckoutModal";
 import TourSectionNav from "./TourSectionNav";
 import TourPreviewBanner from "./TourPreviewBanner";
+import ReviewPromptBanner from "./ReviewPromptBanner";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import { hasVisibleGuides } from "@/lib/tour-public-display";
 import type { Tour } from "@/types/tour";
+import { Suspense } from "react";
 
 interface TourDetailViewProps {
   slug: string;
@@ -44,6 +46,7 @@ interface TourDetailViewProps {
   previewCanonicalTour?: Tour | null;
   previewEditHref?: string;
   previewIsPublished?: boolean;
+  previewPublishBlockingCount?: number;
 }
 
 export default function TourDetailView({
@@ -54,6 +57,7 @@ export default function TourDetailView({
   previewCanonicalTour = null,
   previewEditHref,
   previewIsPublished = false,
+  previewPublishBlockingCount = 0,
 }: TourDetailViewProps) {
   const syncedTour = useRepositoryTourDetail(slug, initialTour);
   const liveCanonicalTour = useCanonicalTour(slug);
@@ -87,8 +91,13 @@ export default function TourDetailView({
             title={tour.title}
             editHref={previewEditHref}
             isPublished={previewIsPublished}
+            publishBlockingCount={previewPublishBlockingCount}
           />
         ) : null}
+
+        <Suspense fallback={null}>
+          <ReviewPromptBanner />
+        </Suspense>
 
         <div className="mx-auto max-w-7xl px-4 pt-5 sm:px-6 lg:px-8 lg:pt-6">
           <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-slate">
@@ -128,6 +137,7 @@ export default function TourDetailView({
               {canonicalTour && hasVisibleGuides(canonicalTour) ? (
                 <GuidesSection guides={canonicalTour.team.guides} />
               ) : null}
+              <DatesSection tour={tour} canonicalTour={canonicalTour} />
               <IncludedExcludedSection included={tour.included} excluded={tour.excluded} />
               {tourHasAccommodation(tour) ? (
                 <AccommodationsSection accommodations={tour.accommodations} />
@@ -143,8 +153,11 @@ export default function TourDetailView({
                 routeMapImage={canonicalTour?.program.routeMapImage}
               />
               <FAQSection faq={tour.faq} />
-              <DatesSection tour={tour} canonicalTour={canonicalTour} />
-              <OrganizerSection organizer={tour.organizer} comment={tour.organizerComment} />
+              <OrganizerSection
+                organizer={tour.organizer}
+                comment={tour.organizerComment}
+                tourSlug={tour.slug}
+              />
               <ReviewsSection reviews={tour.reviews} rating={tour.rating} reviewCount={tour.reviewCount} />
               {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
             </div>

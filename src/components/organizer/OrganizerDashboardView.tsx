@@ -13,6 +13,7 @@ import {
   Headphones,
   Inbox,
   Send,
+  Wallet,
   XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,8 +21,12 @@ import { cn } from "@/lib/cn";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerCabinetBookingStats } from "@/lib/organizer-bookings";
+import { getOrganizerAnalytics, type OrganizerAnalytics } from "@/lib/organizer-analytics";
+import FormattedPrice from "@/components/FormattedPrice";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import type { OrganizerBookingStats } from "@/types/tourist";
+import { ORGANIZER_TOURS_UPDATED_EVENT } from "@/types/organizer-tour";
+import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 
 function StatusBadge({ label }: { label: string }) {
   return (
@@ -95,6 +100,7 @@ export default function OrganizerDashboardView() {
     cancelledCount: 0,
     activeInboxCount: 0,
   });
+  const [analytics, setAnalytics] = useState<OrganizerAnalytics | null>(null);
 
   useEffect(() => {
     setPublicToursUrl(`${window.location.origin}/tours`);
@@ -105,11 +111,18 @@ export default function OrganizerDashboardView() {
 
     function refreshStats() {
       setBookingStats(getOrganizerCabinetBookingStats(user!.id));
+      setAnalytics(getOrganizerAnalytics(user!.id));
     }
 
     refreshStats();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
-    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
+    window.addEventListener(ORGANIZER_TOURS_UPDATED_EVENT, refreshStats);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshStats);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
+      window.removeEventListener(ORGANIZER_TOURS_UPDATED_EVENT, refreshStats);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshStats);
+    };
   }, [user]);
 
   useEffect(() => {
@@ -144,14 +157,46 @@ export default function OrganizerDashboardView() {
       </div>
 
       <div>
-        <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Дашборд</h1>
+        <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Обзор</h1>
       </div>
+
+      {analytics ? (
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4 shadow-sm">
+            <p className="text-sm text-slate">Выручка (подтверждённые)</p>
+            <p className="mt-2 font-display text-2xl font-bold text-charcoal">
+              <FormattedPrice priceUsd={analytics.revenueUsd} />
+            </p>
+          </div>
+          <div className="rounded-2xl border border-amber-100 bg-amber-50/40 p-4 shadow-sm">
+            <p className="text-sm text-slate">Ожидают оплаты</p>
+            <p className="mt-2 font-display text-3xl font-bold text-charcoal">
+              {analytics.pendingPaymentsCount}
+            </p>
+          </div>
+          <div className="rounded-2xl border border-sky/20 bg-sky/5 p-4 shadow-sm">
+            <p className="text-sm text-slate">Туры в каталоге</p>
+            <p className="mt-2 font-display text-3xl font-bold text-charcoal">
+              {analytics.publishedToursCount}
+              <span className="ml-2 text-base font-medium text-slate">
+                / {analytics.draftToursCount} черн.
+              </span>
+            </p>
+          </div>
+          <div className="rounded-2xl border border-violet-100 bg-violet-50/40 p-4 shadow-sm">
+            <p className="text-sm text-slate">Конверсия в подтверждение</p>
+            <p className="mt-2 font-display text-3xl font-bold text-charcoal">
+              {analytics.conversionRate != null ? `${analytics.conversionRate}%` : "—"}
+            </p>
+          </div>
+        </section>
+      ) : null}
 
       <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-display text-lg font-bold text-charcoal">Заявки</h2>
-            <p className="mt-1 text-sm text-slate">CRM по входящим бронированиям</p>
+            <p className="mt-1 text-sm text-slate">Воронка по статусам — данные из ваших заявок</p>
           </div>
           <Link
             href="/organizer/bookings"
@@ -201,33 +246,47 @@ export default function OrganizerDashboardView() {
 
       <div className="grid gap-4 xl:grid-cols-3">
         <DashboardCard title="Верификация личности">
-          <StatusBadge label="Пройдена" />
+          <StatusBadge label="Скоро" />
           <p className="mt-3 text-sm leading-relaxed text-slate">
-            Для верификации личности потребуется паспорт и камера. Подойдёт камера мобильного
-            телефона.
+            Проверка документов организаторов появится на следующем этапе. Пока вы можете
+            публиковать туры и принимать заявки.
           </p>
         </DashboardCard>
 
         <DashboardCard title="Проверка данных">
-          <StatusBadge label="Пройдена" />
+          <StatusBadge label="Не требуется" />
           <p className="mt-3 text-sm leading-relaxed text-slate">
-            Администраторы проверяют данные новых пользователей. Проверка занимает до 5 рабочих
-            дней.
+            Модерация новых организаторов будет подключена вместе с расширением маркетплейса.
           </p>
         </DashboardCard>
 
-        <DashboardCard title="Поддержка">
+        <DashboardCard title="Сообщения">
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
             <Headphones className="h-5 w-5" />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate">
-            Есть вопросы? Напишите в чат поддержки.
+            Переписка с туристами по турам и заявкам — в кабинете, без почты.
+          </p>
+          <Link
+            href="/organizer/messages"
+            className="mt-4 inline-flex h-9 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-xs font-semibold text-charcoal transition-colors hover:bg-gray-50"
+          >
+            Открыть сообщения
+          </Link>
+        </DashboardCard>
+
+        <DashboardCard title="Поддержка платформы">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
+            <Wallet className="h-5 w-5" />
+          </div>
+          <p className="mt-3 text-sm leading-relaxed text-slate">
+            Вопросы по работе площадки — через форму контактов.
           </p>
           <Link
             href="/contacts"
             className="mt-4 inline-flex h-9 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-xs font-semibold text-charcoal transition-colors hover:bg-gray-50"
           >
-            Перейти в чат
+            Написать в поддержку
           </Link>
         </DashboardCard>
 
@@ -266,18 +325,13 @@ export default function OrganizerDashboardView() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
             <Coins className="h-5 w-5" />
           </div>
-          <div className="mt-3 space-y-2">
-            <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-              На карту банка РФ
-            </span>
-            <p className="text-sm font-medium text-charcoal">МИР 2200 **** **** **99</p>
-            <p className="text-xs leading-relaxed text-slate">
-              Платежи обрабатываются партнёром. Реквизиты хранятся на стороне платёжного сервиса.
-            </p>
-          </div>
-          <Button type="button" variant="outline" size="sm" className="mt-4">
-            Изменить
-          </Button>
+          <p className="mt-3 text-sm leading-relaxed text-slate">
+            Подключение выплат через партнёра будет доступно позже. Сейчас вы можете принимать
+            заявки и согласовывать оплату с путешественниками напрямую.
+          </p>
+          <span className="mt-4 inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-slate">
+            Скоро
+          </span>
         </DashboardCard>
 
         <DashboardCard title="Правила работы" className="xl:col-span-3">

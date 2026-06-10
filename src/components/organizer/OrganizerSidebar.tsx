@@ -21,6 +21,7 @@ import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashb
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
+import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 
 const SIDEBAR_COLLAPSED_KEY = "organizer-sidebar-collapsed";
 /** Ниже этой ширины окна сайдбар сворачивается автоматически */
@@ -97,7 +98,11 @@ export default function OrganizerSidebar({
 
     refreshNavBadges();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    };
   }, [user]);
 
   function toggleCollapsed() {
@@ -288,7 +293,11 @@ export function OrganizerMobileNav() {
 
     refreshNavBadges();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    };
   }, [user]);
 
   return (

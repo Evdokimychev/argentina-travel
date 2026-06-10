@@ -7,6 +7,8 @@ import { useSearchParams } from "next/navigation";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
+import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
+import { resolveBookingAmounts } from "@/lib/booking-payment-display";
 import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { useAuth } from "@/context/AuthContext";
@@ -159,11 +161,14 @@ export default function OrganizerBookingsView() {
                   <th className="px-4 py-3 font-medium">Тур</th>
                   <th className="px-4 py-3 font-medium">Гости</th>
                   <th className="px-4 py-3 font-medium">Сумма</th>
+                  <th className="px-4 py-3 font-medium">Оплата</th>
                   <th className="px-4 py-3 font-medium">Статус</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filtered.map((booking) => (
+                {filtered.map((booking) => {
+                  const amounts = resolveBookingAmounts(booking);
+                  return (
                   <tr key={booking.id} className="transition-colors hover:bg-gray-50/80">
                     <td className="px-4 py-4">
                       <Link
@@ -200,10 +205,23 @@ export default function OrganizerBookingsView() {
                       <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-medium" />
                     </td>
                     <td className="px-4 py-4">
+                      <BookingPaymentStatusBadge booking={booking} />
+                      {amounts.due > 0 ? (
+                        <p className="mt-1 text-xs text-slate">
+                          К оплате:{" "}
+                          <FormattedPrice
+                            priceUsd={amounts.due}
+                            className="font-medium text-charcoal"
+                          />
+                        </p>
+                      ) : null}
+                    </td>
+                    <td className="px-4 py-4">
                       <BookingStatusBadge status={booking.status} />
                     </td>
                   </tr>
-                ))}
+                );
+                })}
               </tbody>
             </table>
           </div>

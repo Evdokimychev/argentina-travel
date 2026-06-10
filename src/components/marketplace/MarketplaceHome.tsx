@@ -2,9 +2,11 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
+import { buildCatalogFilterHref } from "@/lib/catalog-filter-url";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
@@ -15,12 +17,16 @@ import MarketplaceTourCard from "./MarketplaceTourCard";
 import BlogCard from "@/components/BlogCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import { tripsWord, filtersWord } from "@/lib/pluralize";
+import PlatformStatsBlock from "./PlatformStatsBlock";
+import type { PlatformStats } from "@/lib/organizer-public";
+import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { Button } from "@/components/ui/button";
 
 interface MarketplaceHomeProps {
   tours: TourListing[];
   blogPosts: BlogPost[];
   testimonials: Testimonial[];
+  platformStats: PlatformStats;
 }
 
 function TourGrid({
@@ -59,7 +65,9 @@ export default function MarketplaceHome({
   tours: initialTours,
   blogPosts,
   testimonials,
+  platformStats,
 }: MarketplaceHomeProps) {
+  const router = useRouter();
   const tours = useRepositoryTourListings(initialTours);
   const { currency } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
@@ -73,10 +81,12 @@ export default function MarketplaceHome({
     [tours, filters, currency]
   );
   const activeCount = countActiveFilters(filters, currency, tours);
+  const hasActiveSearch = activeCount > 0 || Boolean(filters.query.trim());
 
   const bestOfMonth = tours.filter((t) => t.isBestOfMonth).slice(0, 3);
   const hotTours = tours.filter((t) => t.isHot).slice(0, 3);
   const newTours = tours.filter((t) => t.isNew).slice(0, 3);
+  const recommendedTours = useMemo(() => getRecommendedListings(tours, 6), [tours]);
 
   return (
     <>
@@ -115,7 +125,11 @@ export default function MarketplaceHome({
                 }))
               }
               onSearch={() => {
-                document.getElementById("tour-results")?.scrollIntoView({ behavior: "smooth" });
+                if (hasActiveSearch) {
+                  document.getElementById("tour-results")?.scrollIntoView({ behavior: "smooth" });
+                } else {
+                  router.push("/tours");
+                }
               }}
             />
           </div>
@@ -126,7 +140,7 @@ export default function MarketplaceHome({
         </div>
       </section>
 
-      {/* Search results */}
+      {hasActiveSearch ? (
       <section id="tour-results" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between border-b border-gray-100 py-6">
           <p className="text-sm text-slate">
@@ -137,19 +151,27 @@ export default function MarketplaceHome({
               <span className="ml-2 text-brand">· {filtersWord(activeCount)}</span>
             )}
           </p>
-          {activeCount > 0 && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setFilters(getDefaultFilters(currency, tours))}
+          <div className="flex items-center gap-2">
+            {activeCount > 0 ? (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFilters(getDefaultFilters(currency, tours))}
+              >
+                Сбросить всё
+              </Button>
+            ) : null}
+            <Link
+              href={buildCatalogFilterHref(filters, "recommended", currency, tours)}
+              className="text-sm font-medium text-brand hover:underline"
             >
-              Сбросить всё
-            </Button>
-          )}
+              Открыть каталог →
+            </Link>
+          </div>
         </div>
         {filtered.length > 0 ? (
           <div className="grid gap-5 py-8 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.map((t) => (
+            {filtered.slice(0, 6).map((t) => (
               <MarketplaceTourCard key={t.id} tour={t} />
             ))}
           </div>
@@ -165,7 +187,32 @@ export default function MarketplaceHome({
             </Button>
           </div>
         )}
+        {filtered.length > 6 ? (
+          <div className="pb-10 text-center">
+            <Link href="/tours">
+              <Button>Смотреть все {filtered.length} {tripsWord(filtered.length)} в каталоге</Button>
+            </Link>
+          </div>
+        ) : null}
       </section>
+      ) : (
+        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+          <div className="rounded-3xl bg-gradient-to-br from-brand-light/80 via-white to-sky/10 px-6 py-10 text-center sm:px-10">
+            <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+              Более {tours.length} {tripsWord(tours.length)} по Аргентине
+            </h2>
+            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate sm:text-base">
+              Авторские маршруты от местных организаторов — выбирайте даты, сравнивайте программы и
+              отправляйте заявку без предоплаты.
+            </p>
+            <Link href="/tours" className="mt-6 inline-block">
+              <Button size="lg">Перейти в каталог туров</Button>
+            </Link>
+          </div>
+        </section>
+      )}
+
+      <PlatformStatsBlock initialStats={platformStats} />
 
       {/* Popular destinations */}
       <section className="bg-white py-12">
@@ -204,6 +251,12 @@ export default function MarketplaceHome({
       </section>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <TourGrid
+          id="recommended"
+          title="Рекомендуем"
+          subtitle="Подборка по рейтингу, отзывам и актуальности"
+          tours={recommendedTours}
+        />
         <TourGrid title="Лучшие туры месяца" subtitle="Выбор редакции ArgentinaTravel" tours={bestOfMonth} />
         <TourGrid title="Горящие предложения" subtitle="Успейте забронировать" tours={hotTours} />
         <TourGrid title="Новые туры" subtitle="Свежие маршруты сезона" tours={newTours} />
@@ -215,11 +268,21 @@ export default function MarketplaceHome({
           <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
             Отзывы путешественников
           </h2>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {testimonials.map((t) => (
-              <TestimonialCard key={t.id} testimonial={t} />
-            ))}
-          </div>
+          {testimonials.length > 0 ? (
+            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((t) => (
+                <TestimonialCard key={t.id} testimonial={t} />
+              ))}
+            </div>
+          ) : (
+            <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-white/60 px-6 py-12 text-center">
+              <p className="font-medium text-charcoal">Отзывы появляются после поездок</p>
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate">
+                Мы показываем только реальные отзывы с меткой «Проверенная поездка» — без выдуманных
+                имён и статичных цитат.
+              </p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -254,7 +317,7 @@ export default function MarketplaceHome({
               { title: "Проверенные организаторы", desc: "Каждый гид проходит отбор и имеет реальные отзывы" },
               { title: "Малые группы", desc: "Комфортные размеры групп для лучшего опыта" },
               { title: "На русском языке", desc: "Большинство туров с русскоязычными гидами" },
-              { title: "Безопасная оплата", desc: "Бронирование без предоплаты — платите перед поездкой" },
+              { title: "Безопасная оплата", desc: "Заявка без предоплаты — оплата после подтверждения организатором" },
             ].map((item) => (
               <div key={item.title} className="rounded-2xl bg-white/10 p-5 backdrop-blur-sm">
                 <h3 className="font-semibold">{item.title}</h3>

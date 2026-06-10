@@ -7,6 +7,10 @@ import {
   hasTourPolicies,
   hasVisibleGuides,
   resolvePackingListItems,
+  hasFaqContent,
+  hasPlacesContent,
+  hasTermsListContent,
+  hasTourDatesSection,
 } from "@/lib/tour-public-display";
 
 export interface TourSectionLink {
@@ -26,10 +30,11 @@ export function buildTourSectionLinks(
   const hasSimilarTours = typeof context === "boolean" ? context : context.hasSimilarTours;
   const canonicalTour = typeof context === "boolean" ? null : context.canonicalTour;
 
-  const links: TourSectionLink[] = [
-    { id: "description", label: "Описание" },
-    { id: "places", label: "Впечатления" },
-  ];
+  const links: TourSectionLink[] = [{ id: "description", label: "Описание" }];
+
+  if (hasPlacesContent(tour.places)) {
+    links.push({ id: "places", label: "Впечатления" });
+  }
 
   if (tour.itinerary?.length) {
     links.push({ id: "itinerary", label: "Программа" });
@@ -39,7 +44,9 @@ export function buildTourSectionLinks(
     links.push({ id: "guides", label: "Гиды" });
   }
 
-  links.push({ id: "included", label: "Что включено" });
+  if (hasTermsListContent(tour.included) || hasTermsListContent(tour.excluded)) {
+    links.push({ id: "included", label: "Что включено" });
+  }
 
   if (tourHasAccommodation(tour)) {
     links.push({ id: "accommodations", label: "Проживание" });
@@ -53,7 +60,9 @@ export function buildTourSectionLinks(
     links.push({ id: "policies", label: "Условия" });
   }
 
-  links.push({ id: "important", label: "Важно" });
+  if (tour.importantInfo?.some((item) => item.trim())) {
+    links.push({ id: "important", label: "Важно" });
+  }
 
   if (
     tour.routePoints?.length ||
@@ -75,9 +84,15 @@ export function buildTourSectionLinks(
     links.push({ id: "logistics", label: "Логистика" });
   }
 
+  if (hasFaqContent(tour.faq)) {
+    links.push({ id: "faq", label: "Вопросы" });
+  }
+
+  if (hasTourDatesSection(tour)) {
+    links.push({ id: "dates", label: "Даты" });
+  }
+
   links.push(
-    { id: "faq", label: "FAQ" },
-    { id: "dates", label: "Даты" },
     { id: "organizer", label: "Организатор" },
     { id: "reviews", label: "Отзывы" }
   );

@@ -10,6 +10,9 @@ import {
 import type { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
 
+/** Card payments disabled until a real gateway is integrated (Phase 1). */
+export const CHECKOUT_CARD_PAYMENTS_ENABLED = false;
+
 export function resolveTourCheckoutPaymentOptions(
   source?: Partial<TourCheckoutPaymentOptions> | null
 ): TourCheckoutPaymentOptions {
@@ -35,11 +38,11 @@ export function getEnabledCheckoutPaymentOptions(
 ): Array<{ id: BookingCheckoutPaymentOption; label: string }> {
   const items: Array<{ id: BookingCheckoutPaymentOption; label: string }> = [];
 
-  if (options.fullPaymentEnabled) {
+  if (CHECKOUT_CARD_PAYMENTS_ENABLED && options.fullPaymentEnabled) {
     items.push({ id: "full", label: BOOKING_CHECKOUT_PAYMENT_LABELS.full });
   }
 
-  if (options.depositEnabled) {
+  if (CHECKOUT_CARD_PAYMENTS_ENABLED && options.depositEnabled) {
     items.push({
       id: "deposit",
       label: `Депозит ${options.depositPercent}%`,
@@ -47,6 +50,10 @@ export function getEnabledCheckoutPaymentOptions(
   }
 
   if (options.payLaterEnabled) {
+    items.push({ id: "later", label: BOOKING_CHECKOUT_PAYMENT_LABELS.later });
+  }
+
+  if (items.length === 0) {
     items.push({ id: "later", label: BOOKING_CHECKOUT_PAYMENT_LABELS.later });
   }
 

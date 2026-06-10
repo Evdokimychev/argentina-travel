@@ -8,7 +8,9 @@ import {
 import {
   buildPaymentSummaryFromStatus,
   computePrepaymentAmount,
+  normalizeBookingPaymentStatus,
   normalizeOrganizerParams,
+  resolveBookingPaymentStatus,
   resolveOrganizerParams,
 } from "@/lib/booking-params";
 import type { BookingCheckoutPaymentOption } from "@/types/booking-params";
@@ -43,12 +45,44 @@ import {
   type OrganizerBookingStats,
 } from "@/types/tourist";
 import type { BookingOrganizerParams, BookingPaymentStatus } from "@/types/booking-params";
+import {
+  notifyBookingCreated,
+  notifyPaymentReminder,
+  notifyPaymentStatusChanged,
+  notifyPayLaterAcknowledged,
+  notifyTravelersFormDue,
+} from "@/lib/notifications";
+import {
+  bookingMatchesContactEmail,
+  guestUserIdFromEmail,
+  isGuestUserId,
+  normalizeContactEmail,
+} from "@/lib/guest-booking";
 
 function createId(prefix: string): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
     return `${prefix}-${crypto.randomUUID().slice(0, 8)}`;
   }
   return `${prefix}-${Date.now().toString(36)}`;
+}
+
+function syncPaymentDenormalizedFields(booking: Booking): Booking {
+  const organizerParams = booking.organizerParams
+    ? normalizeOrganizerParams(booking.organizerParams)
+    : resolveOrganizerParams(booking);
+  const paymentStatus = booking.paymentStatus
+    ? normalizeBookingPaymentStatus(booking.paymentStatus)
+    : resolveBookingPaymentStatus(booking);
+  const paymentSummary =
+    booking.paymentSummary ??
+    buildPaymentSummaryFromStatus(booking.totalPriceUsd, paymentStatus, organizerParams);
+
+  return {
+    ...booking,
+    paymentStatus,
+    paymentSummary,
+    organizerParams: booking.organizerParams ?? organizerParams,
+  };
 }
 
 function readRawBookings(): Booking[] {
@@ -145,7 +179,7 @@ export function normalizeBooking(raw: Booking): Booking {
     ];
   }
 
-  return {
+  return syncPaymentDenormalizedFields({
     ...raw,
     status,
     organizerTourId: raw.organizerTourId ?? resolveOrganizerTourId(raw.tourSlug),
@@ -165,10 +199,12 @@ export function normalizeBooking(raw: Booking): Booking {
     organizerParams: raw.organizerParams
       ? normalizeOrganizerParams(raw.organizerParams)
       : undefined,
-    paymentStatus: raw.paymentStatus,
+    paymentStatus: raw.paymentStatus
+      ? normalizeBookingPaymentStatus(raw.paymentStatus)
+      : undefined,
     paymentLink: raw.paymentLink,
     checkoutPaymentOption: raw.checkoutPaymentOption,
-  };
+  });
 }
 
 function seedDemoBookingsIfEmpty(): Booking[] {
@@ -375,6 +411,44 @@ export function getBookingById(bookingId: string): Booking | undefined {
   return booking ? normalizeBooking(booking) : undefined;
 }
 
+export { guestUserIdFromEmail };
+
+export function getBookingsByContactEmail(email: string): Booking[] {
+  const normalized = normalizeContactEmail(email);
+  if (!normalized) return [];
+
+  return getAllBookings()
+    .filter((booking) => bookingMatchesContactEmail(booking, normalized))
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+}
+
+export function attachGuestBookingsToUser(userId: string, email: string): number {
+  const normalized = normalizeContactEmail(email);
+  if (!normalized || isGuestUserId(userId)) return 0;
+
+  const guestId = guestUserIdFromEmail(normalized);
+  const all = getAllBookings();
+  let attached = 0;
+
+  const updated = all.map((raw) => {
+    const booking = normalizeBooking(raw);
+    const matchesGuest =
+      booking.userId === guestId || bookingMatchesContactEmail(booking, normalized);
+
+    if (!matchesGuest || booking.userId === userId) return booking;
+
+    attached += 1;
+    return normalizeBooking({ ...booking, userId, updatedAt: new Date().toISOString() });
+  });
+
+  if (attached > 0) {
+    writeAllBookings(updated);
+    notifyUpdated();
+  }
+
+  return attached;
+}
+
 function persistBookingUpdate(index: number, booking: Booking) {
   const all = getAllBookings();
   all[index] = normalizeBooking(booking);
@@ -401,9 +475,17 @@ export function createBooking(input: {
   travelersFormToken?: string;
   travelersCompletedAt?: string;
   checkoutPaymentOption?: BookingCheckoutPaymentOption;
+  /** Allow checkout without login when contact email is provided. */
+  allowGuestRequest?: boolean;
 }): Booking | { error: string } {
-  const allowed = assertPermission(canBookTour(input.actor));
-  if ("error" in allowed) return { error: allowed.error };
+  if (input.allowGuestRequest) {
+    if (!input.contactEmail.trim()) {
+      return { error: "Укажите email для заявки" };
+    }
+  } else {
+    const allowed = assertPermission(canBookTour(input.actor));
+    if ("error" in allowed) return { error: allowed.error };
+  }
 
   const now = new Date().toISOString();
   const status = input.status ?? "new";
@@ -443,9 +525,14 @@ export function createBooking(input: {
   };
 
   const all = getAllBookings();
-  writeAllBookings([normalizeBooking(booking), ...all]);
+  const normalized = normalizeBooking(booking);
+  writeAllBookings([normalized, ...all]);
   notifyUpdated();
-  return booking;
+  notifyBookingCreated(normalized);
+  if (normalized.fillTravelersLater) {
+    notifyTravelersFormDue(normalized);
+  }
+  return normalized;
 }
 
 export function updateBookingStatusWithHistory(input: {
@@ -574,7 +661,7 @@ export function addOrganizerComment(input: {
 
 export function createBookingFromCheckout(input: {
   actor: SessionUser | null;
-  userId: string;
+  userId?: string;
   tour: TourDetail;
   guests: number;
   startDate?: string;
@@ -582,13 +669,23 @@ export function createBookingFromCheckout(input: {
   totalPriceUsd: number;
   form: CheckoutFormState;
 }): Booking | { error: string } {
+  const contactEmail = input.form.contactEmail.trim();
+  const userId =
+    input.userId ??
+    input.actor?.id ??
+    (contactEmail ? guestUserIdFromEmail(contactEmail) : "");
+
+  if (!userId) {
+    return { error: "Укажите email для отправки заявки" };
+  }
+
   const fillTravelersLater = input.form.fillTravelersLater;
   const travelers = travelersFromCheckoutForm(input.form);
   const now = new Date().toISOString();
   const paymentOption = input.form.paymentOption;
   const organizerParams = normalizeOrganizerParams(undefined);
-  const paymentStatus =
-    paymentOption === "later" ? "unpaid" : paymentOption === "deposit" ? "partial" : "unpaid";
+  const paymentStatus: BookingPaymentStatus =
+    paymentOption === "later" ? "pending" : paymentOption === "deposit" ? "partial" : "pending";
   const paymentSummary = buildPaymentSummaryFromStatus(
     input.totalPriceUsd,
     paymentStatus,
@@ -602,7 +699,7 @@ export function createBookingFromCheckout(input: {
 
   const bookingResult = createBooking({
     actor: input.actor,
-    userId: input.userId,
+    userId,
     tour: input.tour,
     guests: input.guests,
     startDate: input.startDate,
@@ -612,7 +709,7 @@ export function createBookingFromCheckout(input: {
       .map((part) => part.trim())
       .filter(Boolean)
       .join(" "),
-    contactEmail: input.form.contactEmail.trim(),
+    contactEmail,
     contactPhone: input.form.contactPhone.trim(),
     touristComment: input.form.comments,
     status: "new",
@@ -621,6 +718,7 @@ export function createBookingFromCheckout(input: {
     travelers,
     travelersCompletedAt: travelers?.length ? now : undefined,
     checkoutPaymentOption: paymentOption,
+    allowGuestRequest: !input.actor,
   });
 
   if ("error" in bookingResult) return bookingResult;
@@ -629,10 +727,21 @@ export function createBookingFromCheckout(input: {
   const index = all.findIndex((item) => item.id === bookingResult.id);
   if (index === -1) return bookingResult;
 
-  const updated: Booking = {
+  const payToken = createId("pay");
+  const paymentLink =
+    paymentOption === "later"
+      ? createBookingPaymentLinkRecord({
+          token: payToken,
+          booking: { ...bookingResult, paymentStatus, paymentSummary },
+          now,
+        })
+      : undefined;
+
+  const updated: Booking = syncPaymentDenormalizedFields({
     ...bookingResult,
     paymentStatus,
     paymentSummary,
+    paymentLink,
     invoices:
       paymentOption === "later"
         ? [
@@ -648,9 +757,14 @@ export function createBookingFromCheckout(input: {
             ),
           ],
     updatedAt: now,
-  };
+  });
 
   persistBookingUpdate(index, updated);
+
+  if (paymentLink) {
+    notifyPaymentReminder(updated, paymentLink.token);
+  }
+
   return updated;
 }
 
@@ -827,6 +941,19 @@ export function updateOrganizerBookingDetails(input: {
   };
 
   persistBookingUpdate(index, draftBooking);
+
+  const previousStatus = resolveBookingPaymentStatus(current);
+  if (input.paymentStatus !== previousStatus) {
+    if (input.paymentStatus === "paid" || input.paymentStatus === "partial") {
+      notifyPaymentStatusChanged(
+        draftBooking,
+        input.paymentStatus === "paid" ? "paid" : "partial"
+      );
+    } else if (input.paymentStatus === "refunded") {
+      notifyPaymentStatusChanged(draftBooking, "refunded");
+    }
+  }
+
   return { booking: draftBooking };
 }
 
@@ -891,6 +1018,7 @@ export function generateOrganizerBookingPaymentLink(input: {
   };
 
   persistBookingUpdate(index, updated);
+  notifyPaymentReminder(updated, token);
 
   return {
     booking: updated,
@@ -950,12 +1078,12 @@ export function completeBookingPaymentFromLink(input: {
   const organizerParams = resolveOrganizerParams(current);
   const previousPaid = current.paymentSummary?.paidAmountUsd ?? 0;
   const nextPaid = Math.min(current.totalPriceUsd, previousPaid + link.amountUsd);
-  const paymentStatus =
+  const paymentStatus: BookingPaymentStatus =
     nextPaid >= current.totalPriceUsd
       ? "paid"
       : nextPaid > 0
         ? "partial"
-        : "unpaid";
+        : "pending";
 
   const paymentSummary = buildPaymentSummaryFromStatus(
     current.totalPriceUsd,
@@ -983,7 +1111,30 @@ export function completeBookingPaymentFromLink(input: {
   };
 
   persistBookingUpdate(index, draft);
+  notifyPaymentStatusChanged(
+    draft,
+    paymentStatus === "paid" ? "paid" : paymentStatus === "partial" ? "partial" : "partial"
+  );
   return { booking: draft };
+}
+
+/** Pay-later acknowledgment — no charge, records intent for organizer follow-up. */
+export function acknowledgeBookingPaymentIntent(
+  token: string
+): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.paymentLink?.token === token);
+  if (index === -1) return { error: "Ссылка недействительна" };
+
+  const current = normalizeBooking(all[index]);
+  const link = current.paymentLink;
+  if (!link) return { error: "Ссылка недействительна" };
+  if (link.status === "paid") return { booking: current };
+  if (link.status === "cancelled") return { error: "Ссылка отменена" };
+  if (isBookingPaymentLinkExpired(link)) return { error: "Ссылка истекла" };
+
+  notifyPayLaterAcknowledged(current);
+  return { booking: current };
 }
 
 export function getPendingBookingsCount(userId: string): number {

@@ -31,6 +31,10 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
     }
   }
 
+  function scrollToReviews() {
+    document.getElementById("reviews")?.scrollIntoView({ behavior: "smooth" });
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
@@ -80,19 +84,31 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
       <div className="flex flex-wrap items-center gap-3">
         {hasReviews ? (
           <>
-            <span className="flex items-center gap-1 rounded-lg bg-sun/15 px-2.5 py-1 text-sm font-semibold text-charcoal">
+            <button
+              type="button"
+              onClick={scrollToReviews}
+              className="flex items-center gap-1 rounded-lg bg-sun/15 px-2.5 py-1 text-sm font-semibold text-charcoal transition-colors hover:bg-sun/25"
+            >
               <Star className="h-4 w-4 fill-sun text-sun" aria-hidden />
               {tour.rating}
-            </span>
-            <button type="button" className="text-sm text-sky hover:underline">
+            </button>
+            <button
+              type="button"
+              onClick={scrollToReviews}
+              className="text-sm text-sky hover:underline"
+            >
               {formatReviews(tour.reviewCount)}
             </button>
           </>
         ) : (
-          <span className="flex items-center gap-1 text-brand">
+          <button
+            type="button"
+            onClick={scrollToReviews}
+            className="flex items-center gap-1 text-brand transition-colors hover:text-brand-dark"
+          >
             <Star className="h-4 w-4 fill-current" aria-hidden />
             <span className="text-sm font-medium">Новый</span>
-          </span>
+          </button>
         )}
       </div>
     </div>

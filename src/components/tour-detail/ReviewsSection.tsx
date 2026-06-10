@@ -77,7 +77,14 @@ export default function ReviewsSection({
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <p className="font-semibold text-charcoal">{review.author}</p>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <p className="font-semibold text-charcoal">{review.author}</p>
+                    {review.verifiedTrip ? (
+                      <span className="rounded-full bg-sky/10 px-2 py-0.5 text-[11px] font-medium text-sky">
+                        Проверенная поездка
+                      </span>
+                    ) : null}
+                  </div>
                   <div className="flex text-sun">
                     {Array.from({ length: review.rating }).map((_, i) => (
                       <svg key={i} className="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">

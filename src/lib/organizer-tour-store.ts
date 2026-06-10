@@ -56,6 +56,7 @@ import {
   generateUniqueTourSlug,
   getCatalogSlug,
 } from "@/lib/tour-slug";
+import { evaluatePublishReadiness } from "@/lib/publish-readiness";
 import {
   assertPermission,
   canCreateTour,
@@ -553,6 +554,13 @@ export function saveOrganizerTourDraft(
 
   if (!draft.title.trim()) {
     return { error: "Укажите название тура" };
+  }
+
+  if (draft.status === "published" && !draft.archived) {
+    const readiness = evaluatePublishReadiness(draft);
+    if (!readiness.ready && readiness.blockingMessage) {
+      return { error: readiness.blockingMessage };
+    }
   }
 
   const next: OrganizerTourDraft = {

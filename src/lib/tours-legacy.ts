@@ -144,6 +144,7 @@ function buildTourDetailFromBase(
         tripDate: "2025-02-01",
         text: "Отличный тур, всё организовано на высшем уровне. Рекомендую!",
         photos: [],
+        verifiedTrip: true,
       },
     ],
     accommodations: (() => {

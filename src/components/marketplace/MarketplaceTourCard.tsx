@@ -12,6 +12,7 @@ import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
+import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -30,6 +31,10 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
   const moreDates = tour.availableDates.length - 1;
   const hasReviews = tour.reviewCount > 0;
   const comfortLevel = resolveListingComfortLevel(tour);
+  const organizerHref =
+    tour.organizer.slug ?? tour.organizerOwnerId
+      ? buildOrganizerPublicHref(tour.organizer.slug ?? tour.organizerOwnerId!)
+      : null;
 
   return (
     <Link
@@ -76,7 +81,17 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               sizes="28px"
             />
           </div>
-          <span className="text-xs font-medium text-white">{tour.organizer.name}</span>
+          {organizerHref ? (
+            <Link
+              href={organizerHref}
+              onClick={(event) => event.stopPropagation()}
+              className="text-xs font-medium text-white hover:underline"
+            >
+              {tour.organizer.name}
+            </Link>
+          ) : (
+            <span className="text-xs font-medium text-white">{tour.organizer.name}</span>
+          )}
         </div>
       </div>
 

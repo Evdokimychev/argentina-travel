@@ -20,9 +20,12 @@ export function enrichTourOrganizerDetail(
     avatar,
     shortDescription: profile.shortDescription || organizer.shortDescription,
     extendedDescription: profile.extendedDescription || organizer.extendedDescription,
+    statusText: profile.statusText.trim() || organizer.statusText,
     platformRegisteredAt: user?.createdAt,
     professionalExperience: profile.professionalExperience ?? null,
-    email: organizer.email?.trim() || profile.contacts.contactEmail || organizer.email,
-    phone: organizer.phone?.trim() || user?.phone || organizer.phone,
+    slug: ownerUserId,
+    ownerUserId,
+    email: "",
+    phone: "",
   };
 }

@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import PublishReadinessPanel from "@/components/organizer/PublishReadinessPanel";
 import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -418,6 +419,7 @@ function TourEditorSidebar({
   onClone,
   onDelete,
   onPreview,
+  onTabSelect,
 }: {
   draft: OrganizerTourDraft;
   loading: boolean;
@@ -427,6 +429,7 @@ function TourEditorSidebar({
   onClone: () => void;
   onDelete: () => void;
   onPreview: () => void;
+  onTabSelect: (tabId: OrganizerTourEditorTabId) => void;
 }) {
   const isPublished = draft.status === "published";
   const platformName = draft.partnerName || "Пора в Аргентину";
@@ -452,6 +455,8 @@ function TourEditorSidebar({
             Статус в личном кабинете:{" "}
             <span className="font-semibold text-emerald-700">{statusLabel}</span>
           </div>
+
+          <PublishReadinessPanel draft={draft} compact onTabSelect={onTabSelect} />
 
           <Button type="submit" className="h-12 w-full rounded-2xl text-sm" disabled={loading}>
             <Upload className="h-4 w-4" />
@@ -560,6 +565,7 @@ interface OrganizerTourEditorViewProps {
 
 export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorViewProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<OrganizerTourEditorTabId>("main");
   const [draft, setDraft] = useState<OrganizerTourDraft | null>(null);
@@ -568,6 +574,16 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const [loading, setLoading] = useState(false);
   const [navStuck, setNavStuck] = useState(false);
   const navSentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (
+      tab &&
+      ORGANIZER_TOUR_EDITOR_TABS.some((item) => item.id === tab)
+    ) {
+      setActiveTab(tab as OrganizerTourEditorTabId);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const nextDraft = readOrganizerTourDraft(tourId, user);
@@ -1235,6 +1251,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "publish" ? (
               <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
+                <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <FieldLabel htmlFor="tour-status">Статус публикации</FieldLabel>
@@ -1302,6 +1320,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             onClone={handleClone}
             onDelete={handleDelete}
             onPreview={handlePreview}
+            onTabSelect={setActiveTab}
           />
         </div>
     </form>

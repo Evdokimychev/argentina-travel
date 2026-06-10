@@ -9,8 +9,8 @@ export interface TourCheckoutPaymentOptions {
 }
 
 export const DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS: TourCheckoutPaymentOptions = {
-  fullPaymentEnabled: true,
-  depositEnabled: true,
+  fullPaymentEnabled: false,
+  depositEnabled: false,
   payLaterEnabled: true,
   depositPercent: 10,
 };
@@ -30,7 +30,7 @@ export function normalizeTourCheckoutPaymentOptions(
   let payLaterEnabled = merged.payLaterEnabled !== false;
 
   if (!fullPaymentEnabled && !depositEnabled && !payLaterEnabled) {
-    fullPaymentEnabled = true;
+    payLaterEnabled = true;
   }
 
   return {
@@ -63,6 +63,7 @@ export function isTourCheckoutPaymentOptionEnabled(
 export function pickDefaultTourCheckoutPaymentOption(
   options: TourCheckoutPaymentOptions
 ): BookingCheckoutPaymentOption {
+  if (options.payLaterEnabled) return "later";
   if (options.fullPaymentEnabled) return "full";
   if (options.depositEnabled) return "deposit";
   return "later";

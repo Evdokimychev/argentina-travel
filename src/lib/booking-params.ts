@@ -15,10 +15,19 @@ import type { CurrencyCode } from "@/types/locale";
 import { hasCompleteBookingTravelers } from "@/lib/booking-travelers";
 
 export const BOOKING_PAYMENT_STATUS_LABELS: Record<BookingPaymentStatus, string> = {
-  unpaid: "Оплат не поступало",
+  pending: "Ожидает оплаты",
   partial: "Частичная оплата",
   paid: "Оплачено полностью",
+  refunded: "Возврат оформлен",
 };
+
+/** Maps legacy `unpaid` and resolves status from booking fields. */
+export function normalizeBookingPaymentStatus(
+  status: BookingPaymentStatus | "unpaid" | undefined
+): BookingPaymentStatus {
+  if (!status || status === "unpaid") return "pending";
+  return status;
+}
 
 export const BOOKING_PAYMENT_PROCEDURE_LABELS: Record<BookingPaymentProcedure, string> = {
   platform_prepay_balance_direct:
@@ -51,12 +60,14 @@ export function resolveOrganizerParams(booking: Booking): BookingOrganizerParams
 }
 
 export function resolveBookingPaymentStatus(booking: Booking): BookingPaymentStatus {
-  if (booking.paymentStatus) return booking.paymentStatus;
+  if (booking.paymentStatus) {
+    return normalizeBookingPaymentStatus(booking.paymentStatus);
+  }
 
   const paid = booking.paymentSummary?.paidAmountUsd ?? 0;
   const total = booking.totalPriceUsd;
 
-  if (paid <= 0) return "unpaid";
+  if (paid <= 0) return "pending";
   if (paid >= total) return "paid";
   return "partial";
 }
@@ -83,6 +94,8 @@ export function buildPaymentSummaryFromStatus(
     paidAmountUsd = totalUsd;
   } else if (paymentStatus === "partial") {
     paidAmountUsd = prepaymentUsd;
+  } else if (paymentStatus === "refunded") {
+    paidAmountUsd = 0;
   }
 
   return {

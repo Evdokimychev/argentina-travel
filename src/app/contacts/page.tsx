@@ -1,16 +1,128 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { Suspense, useMemo, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import Hero from "@/components/Hero";
+import { getTourBySlug } from "@/data/tours";
 
-export default function ContactsPage() {
+function ContactsForm() {
+  const searchParams = useSearchParams();
+  const tourSlug = searchParams.get("tour");
+  const tour = useMemo(
+    () => (tourSlug ? getTourBySlug(tourSlug) : undefined),
+    [tourSlug]
+  );
   const [submitted, setSubmitted] = useState(false);
+  const [message, setMessage] = useState(() =>
+    tour ? `Интересует тур «${tour.title}». ` : ""
+  );
 
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setSubmitted(true);
   }
 
+  return (
+    <>
+      {tour ? (
+        <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
+          Вопрос по туру:{" "}
+          <span className="font-medium">{tour.title}</span>
+        </div>
+      ) : null}
+
+      {submitted ? (
+        <div className="mt-8 rounded-2xl bg-patagonia/10 p-8 text-center">
+          <svg
+            className="mx-auto h-12 w-12 text-patagonia"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          <p className="mt-4 font-semibold text-charcoal">
+            Спасибо! Мы получили ваше сообщение.
+          </p>
+          <p className="mt-2 text-sm text-slate">
+            Наш менеджер свяжется с вами в ближайшее время.
+          </p>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-charcoal">
+              Имя
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              placeholder="Ваше имя"
+            />
+          </div>
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-charcoal">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              placeholder="email@example.com"
+            />
+          </div>
+          <div>
+            <label htmlFor="tour" className="block text-sm font-medium text-charcoal">
+              Интересующий тур
+            </label>
+            <input
+              type="text"
+              id="tour"
+              name="tour"
+              readOnly={Boolean(tour)}
+              defaultValue={tour?.title ?? ""}
+              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20 read-only:bg-gray-50"
+              placeholder="Название тура (необязательно)"
+            />
+          </div>
+          <div>
+            <label htmlFor="message" className="block text-sm font-medium text-charcoal">
+              Сообщение
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              rows={4}
+              required
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              placeholder="Расскажите о ваших планах..."
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full rounded-full bg-patagonia py-3 font-semibold text-white transition-colors hover:bg-patagonia-light sm:w-auto sm:px-10"
+          >
+            Отправить
+          </button>
+        </form>
+      )}
+    </>
+  );
+}
+
+export default function ContactsPage() {
   return (
     <>
       <Hero
@@ -23,121 +135,22 @@ export default function ContactsPage() {
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal">
-              Напишите нам
-            </h2>
+            <h2 className="font-display text-2xl font-bold text-charcoal">Напишите нам</h2>
             <p className="mt-3 text-slate">
               Заполните форму, и мы свяжемся с вами в течение 24 часов
             </p>
 
-            {submitted ? (
-              <div className="mt-8 rounded-2xl bg-patagonia/10 p-8 text-center">
-                <svg
-                  className="mx-auto h-12 w-12 text-patagonia"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                <p className="mt-4 font-semibold text-charcoal">
-                  Спасибо! Мы получили ваше сообщение.
-                </p>
-                <p className="mt-2 text-sm text-slate">
-                  Наш менеджер свяжется с вами в ближайшее время.
-                </p>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-                <div>
-                  <label
-                    htmlFor="name"
-                    className="block text-sm font-medium text-charcoal"
-                  >
-                    Имя
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
-                    placeholder="Ваше имя"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-charcoal"
-                  >
-                    Email
-                  </label>
-                  <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
-                    placeholder="email@example.com"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="tour"
-                    className="block text-sm font-medium text-charcoal"
-                  >
-                    Интересующий тур
-                  </label>
-                  <select
-                    id="tour"
-                    name="tour"
-                    className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
-                  >
-                    <option value="">Выберите тур (необязательно)</option>
-                    <option value="patagonia">Ледники Патагонии</option>
-                    <option value="ba">Буэнос-Айрес и танго</option>
-                    <option value="mendoza">Винные туры Мендосы</option>
-                    <option value="iguazu">Водопады Игуасу</option>
-                    <option value="salta">Северо-Запад: Сальта</option>
-                    <option value="ushuaia">Ушуайя — край света</option>
-                    <option value="custom">Индивидуальный маршрут</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="message"
-                    className="block text-sm font-medium text-charcoal"
-                  >
-                    Сообщение
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    rows={4}
-                    required
-                    className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
-                    placeholder="Расскажите о ваших планах..."
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full rounded-full bg-patagonia py-3 font-semibold text-white transition-colors hover:bg-patagonia-light sm:w-auto sm:px-10"
-                >
-                  Отправить
-                </button>
-              </form>
-            )}
+            <Suspense
+              fallback={
+                <div className="mt-8 h-40 animate-pulse rounded-2xl bg-gray-100" />
+              }
+            >
+              <ContactsForm />
+            </Suspense>
           </div>
 
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal">
-              Как нас найти
-            </h2>
+            <h2 className="font-display text-2xl font-bold text-charcoal">Как нас найти</h2>
 
             <div className="mt-8 space-y-6">
               {[
@@ -212,7 +225,7 @@ export default function ContactsPage() {
               ))}
             </div>
 
-            <div className="mt-8 overflow-hidden rounded-2xl bg-gray-200 h-64 flex items-center justify-center">
+            <div className="mt-8 flex h-64 items-center justify-center overflow-hidden rounded-2xl bg-gray-200">
               <div className="text-center text-slate">
                 <svg
                   className="mx-auto h-12 w-12 text-slate/40"

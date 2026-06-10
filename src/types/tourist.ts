@@ -107,6 +107,14 @@ export interface Booking {
   checkoutPaymentOption?: BookingCheckoutPaymentOption;
   /** Public payment link for pay-later and manual collection (webhook-ready stub). */
   paymentLink?: BookingPaymentLink;
+  /** Denormalized for lists — synced from paymentSummary on read/write. */
+  amountDue?: number;
+  /** Denormalized for lists — synced from paymentSummary on read/write. */
+  amountPaid?: number;
+  /** Denormalized — synced from paymentLink.token. */
+  paymentLinkToken?: string;
+  /** Denormalized — synced from paymentLink.expiresAt. */
+  paymentLinkExpiresAt?: string;
   createdAt: string;
   updatedAt: string;
 }

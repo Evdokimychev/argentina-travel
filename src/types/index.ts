@@ -91,6 +91,9 @@ export type TourBookingMode = "scheduled" | "on_request" | "both";
 export interface TourOrganizerPreview {
   name: string;
   avatar: string;
+  /** Public profile URL segment — organizer account id. */
+  slug?: string;
+  ownerUserId?: string;
 }
 
 export interface TourListing {
@@ -108,6 +111,8 @@ export interface TourListing {
   durationDays: number;
   durationNights: number;
   durationBucket: DurationBucket;
+  /** Organizer account id for catalog filtering and public profile links. */
+  organizerOwnerId?: string;
   /** Base price in USD — convert on frontend */
   priceUsd: number;
   /** Strikethrough price when a discount is active */
@@ -163,6 +168,8 @@ export interface TourFilters {
   tourFormats: TourFormat[];
   nearMe: boolean;
   userCoords: { lat: number; lng: number } | null;
+  /** Filter by organizer public profile slug (account id). */
+  organizerSlug: string;
 }
 
 export const DEFAULT_FILTERS: TourFilters = {
@@ -185,6 +192,7 @@ export const DEFAULT_FILTERS: TourFilters = {
   tourFormats: [],
   nearMe: false,
   userCoords: null,
+  organizerSlug: "",
 };
 
 // --- Detail page types (unchanged subset) ---
@@ -247,6 +255,11 @@ export interface TourOrganizerDetail {
   avatar: string;
   shortDescription?: string;
   extendedDescription?: string;
+  /** Status line from organizer settings — shown on tour and profile pages. */
+  statusText?: string;
+  /** Public profile URL segment — organizer account id. */
+  slug?: string;
+  ownerUserId?: string;
   rating: number;
   tourCount: number;
   travelerCount: number;
@@ -269,6 +282,8 @@ export interface TourReview {
   tripDate: string;
   text: string;
   photos: string[];
+  /** Review from a verified booking / completed trip. */
+  verifiedTrip?: boolean;
 }
 
 export interface TourAccommodation {
@@ -396,6 +411,9 @@ export interface Testimonial {
   location: string;
   text: string;
   rating: number;
+  tourSlug?: string;
+  tourTitle?: string;
+  verifiedTrip?: boolean;
 }
 
 export interface Destination {

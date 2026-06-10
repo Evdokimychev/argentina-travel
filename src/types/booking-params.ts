@@ -11,7 +11,10 @@ export const BOOKING_CHECKOUT_PAYMENT_LABELS: Record<BookingCheckoutPaymentOptio
 
 export type BookingPaymentProcedure = "platform_prepay_balance_direct";
 
-export type BookingPaymentStatus = "unpaid" | "partial" | "paid";
+/** @deprecated Legacy value — migrated to `pending` on read. */
+export type BookingPaymentStatusLegacy = "unpaid";
+
+export type BookingPaymentStatus = "pending" | "partial" | "paid" | "refunded";
 
 export interface BookingOrganizerParams {
   currency: CurrencyCode;

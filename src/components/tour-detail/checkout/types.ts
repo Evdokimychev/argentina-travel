@@ -132,7 +132,7 @@ export function createInitialCheckoutForm(guests: number): CheckoutFormState {
     insuranceTravelers: 0,
     transferAllocations: { ...EMPTY_TRANSFER_ALLOCATIONS },
     comments: "",
-    paymentOption: "full",
+    paymentOption: "later",
     cardNumber: "",
     cardExpiry: "",
     cardCvc: "",

@@ -1,16 +1,14 @@
 import type { TourDetail } from "@/types";
-import { getLegacySimilarTours, getLegacyTourDetail } from "@/lib/tours-legacy";
+import { getLegacyTourDetail } from "@/lib/tours-legacy";
 import { getRepositoryTourDetail } from "@/lib/tour-repository";
+import { getSimilarTourDetails } from "@/lib/tour-recommendations";
 
 export function getTourDetail(slug: string): TourDetail | undefined {
   return getRepositoryTourDetail(slug) ?? getLegacyTourDetail(slug);
 }
 
 export function getSimilarTours(currentSlug: string, limit = 3): TourDetail[] {
-  return getLegacySimilarTours(currentSlug, limit)
-    .map((tour) => getTourDetail(tour.slug)!)
-    .filter(Boolean)
-    .slice(0, limit);
+  return getSimilarTourDetails(currentSlug, limit);
 }
 
 export async function fetchTourDetail(slug: string): Promise<TourDetail | null> {

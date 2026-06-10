@@ -16,6 +16,7 @@ import {
 } from "@/lib/tour-price-bounds";
 import { matchesTourFormat } from "@/lib/tour-format";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -146,6 +147,13 @@ export function filterTours(
     if (filters.tourFormats.length && !matchesTourFormat(tour, filters.tourFormats))
       return false;
 
+    if (
+      filters.organizerSlug.trim() &&
+      resolveListingOwnerUserId(tour) !== filters.organizerSlug.trim()
+    ) {
+      return false;
+    }
+
     return true;
   });
 
@@ -189,6 +197,7 @@ export function countActiveFilters(
   if (filters.groupSizes.length) n++;
   if (filters.tourFormats.length) n++;
   if (filters.nearMe) n++;
+  if (filters.organizerSlug.trim()) n++;
   return n;
 }
 

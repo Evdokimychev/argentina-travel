@@ -17,7 +17,7 @@ export default function TourSidebar({ tour, canonicalTour, previewMode = false }
     <div className="space-y-4">
       <TourBookingPanel tour={tour} previewMode={previewMode} />
       {canonicalTour ? <EarlyBookingDiscounts tour={canonicalTour} compact /> : null}
-      <OrganizerSection organizer={tour.organizer} compact />
+      <OrganizerSection organizer={tour.organizer} tourSlug={tour.slug} compact />
     </div>
   );
 }

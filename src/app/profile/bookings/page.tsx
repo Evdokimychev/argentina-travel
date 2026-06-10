@@ -9,9 +9,17 @@ import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
+import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { formatBookingTourDates } from "@/lib/booking-display";
+import {
+  paymentStatusNeedsAction,
+  resolveBookingAmounts,
+  resolveTouristPaymentLinkHref,
+} from "@/lib/booking-payment-display";
+import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingReviewCta from "@/components/profile/BookingReviewCta";
 
 export default function ProfileBookingsPage() {
   const { user } = useAuth();
@@ -57,6 +65,10 @@ export default function ProfileBookingsPage() {
           {bookings.map((booking) => {
             const expanded = expandedId === booking.id;
             const canCancel = booking.status === "new" || booking.status === "pending";
+            const amounts = resolveBookingAmounts(booking);
+            const paymentStatus = resolveBookingPaymentStatus(booking);
+            const payHref = resolveTouristPaymentLinkHref(booking);
+            const needsPayment = paymentStatusNeedsAction(paymentStatus);
 
             return (
               <article
@@ -95,6 +107,11 @@ export default function ProfileBookingsPage() {
                     <div className="mt-auto flex flex-wrap items-center justify-between gap-3 pt-4">
                       <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-semibold" />
                       <div className="flex flex-wrap gap-3">
+                        <BookingReviewCta
+                          booking={booking}
+                          userId={user.id}
+                          className="text-sm font-medium text-brand hover:underline"
+                        />
                         <button
                           type="button"
                           onClick={() => setExpandedId(expanded ? null : booking.id)}
@@ -147,11 +164,16 @@ export default function ProfileBookingsPage() {
         <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
           <p className="font-medium text-charcoal">Бронирований пока нет</p>
           <p className="mt-2 text-sm text-slate">
-            Оформите заявку на странице тура — она появится здесь со статусом «Новая заявка».
+            Оформите заявку на странице тура или найдите гостевую заявку по email.
           </p>
-          <Link href="/tours" className="mt-4 inline-flex text-sm font-medium text-brand hover:underline">
-            Выбрать тур
-          </Link>
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <Link href="/tours" className="text-sm font-medium text-brand hover:underline">
+              Выбрать тур
+            </Link>
+            <Link href="/booking/find" className="text-sm font-medium text-brand hover:underline">
+              Найти заявку по email
+            </Link>
+          </div>
         </div>
       )}
     </div>

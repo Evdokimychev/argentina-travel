@@ -2,12 +2,12 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Plane } from "lucide-react";
 import { TourDetail } from "@/types";
-import { DEFAULT_BOOKING_ADVANTAGES } from "@/data/booking-advantages";
+import { resolveTourBookingAdvantages } from "@/data/booking-advantages";
 import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
+import { buildTourContactHref } from "@/lib/tour-contact";
 import { cn } from "@/lib/cn";
 import TourPriceDisplay from "./TourPriceDisplay";
 import GuestCounter from "./GuestCounter";
@@ -50,7 +50,7 @@ export default function TourBookingPanel({
       : undefined;
 
   const startLocation = tour.startLocation ?? tour.arrival.meetingPoint;
-  const advantages = tour.bookingAdvantages ?? [...DEFAULT_BOOKING_ADVANTAGES];
+  const advantages = [...resolveTourBookingAdvantages(tour)];
 
   const priceSuffix = useMemo(() => {
     return `${formatTouristsBooking(guests)} за ${formatDays(tour.durationDays)}`;
@@ -105,13 +105,6 @@ export default function TourBookingPanel({
         <div className="mt-5 border-t border-gray-100 pt-5">
           <p className="text-sm font-medium text-charcoal">Место начала тура</p>
           <p className="mt-1 text-sm text-slate">{startLocation}</p>
-          <button
-            type="button"
-            className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-brand hover:text-brand/80"
-          >
-            <Plane className="h-4 w-4" aria-hidden />
-            Узнать стоимость с билетами из вашего города
-          </button>
         </div>
       )}
 
@@ -148,7 +141,7 @@ export default function TourBookingPanel({
             {bookLabel}
           </button>
           <Link
-            href="/contacts"
+            href={buildTourContactHref(tour.slug)}
             className="mt-2 block w-full rounded-xl border border-gray-200 py-3 text-center text-sm font-medium text-charcoal hover:bg-gray-50"
           >
             Задать вопрос

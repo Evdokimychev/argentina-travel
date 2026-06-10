@@ -211,6 +211,7 @@ const patagoniaDetail: TourDetail = {
       tripDate: "2025-03-01",
       text: "Ледник Перито-Морено — это что-то невероятное! Организация на высшем уровне, гид Мария знает каждый камень.",
       photos: ["https://images.unsplash.com/photo-1558980664-769d59546b3d?w=400&q=80"],
+      verifiedTrip: true,
     },
     {
       id: "r2",
@@ -221,6 +222,7 @@ const patagoniaDetail: TourDetail = {
       tripDate: "2025-02-15",
       text: "Трек к Base Torres был сложным, но того стоил. Группа была дружная, все поддерживали друг друга.",
       photos: [],
+      verifiedTrip: true,
     },
     {
       id: "r3",
@@ -234,6 +236,7 @@ const patagoniaDetail: TourDetail = {
         "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80",
         "https://images.unsplash.com/photo-1551632811-561732d1e306?w=400&q=80",
       ],
+      verifiedTrip: true,
     },
     {
       id: "r4",
@@ -244,6 +247,7 @@ const patagoniaDetail: TourDetail = {
       tripDate: "2024-12-10",
       text: "Отличный тур, единственное — на 6-й день было очень ветрено. Но гид предупреждал заранее.",
       photos: [],
+      verifiedTrip: false,
     },
     {
       id: "r5",
@@ -254,6 +258,7 @@ const patagoniaDetail: TourDetail = {
       tripDate: "2024-11-05",
       text: "Круиз по озеру Аргентино — отдельная магия. Рекомендую брать тёплые перчатки!",
       photos: ["https://images.unsplash.com/photo-1519682337058-a94d51933763?w=400&q=80"],
+      verifiedTrip: false,
     },
   ],
   accommodations: [

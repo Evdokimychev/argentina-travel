@@ -6,6 +6,7 @@ import {
 } from "@/data/tour-organizer-display-defaults";
 import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
+import { getOrganizerSlug, resolveTourOwnerUserId } from "@/lib/organizer-public";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
 import type {
   ChildrenPolicy,
@@ -463,6 +464,8 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
 }
 
 export function tourToListing(tour: Tour): TourListing {
+  const ownerUserId = resolveTourOwnerUserId(tour);
+  const organizerSlug = getOrganizerSlug(ownerUserId);
   const availableDates: TourDate[] = tour.booking.groupDates
     .filter((date) => date.startDate && date.endDate)
     .map((date) => ({
@@ -515,7 +518,12 @@ export function tourToListing(tour: Tour): TourListing {
     longitude: coords.lng,
     rating: tour.social.rating,
     reviewCount: tour.social.reviewCount,
-    organizer: tour.team.organizerPreview,
+    organizer: {
+      ...tour.team.organizerPreview,
+      slug: organizerSlug,
+      ownerUserId,
+    },
+    organizerOwnerId: ownerUserId,
     badges: tour.display.badges,
     isHot: tour.display.isHot,
     isNew: tour.display.isNew,

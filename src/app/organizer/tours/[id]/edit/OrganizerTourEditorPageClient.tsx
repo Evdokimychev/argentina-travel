@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { Suspense, use } from "react";
 import OrganizerShell from "@/components/organizer/OrganizerShell";
 import OrganizerTourEditorView from "@/components/organizer/OrganizerTourEditorView";
 
@@ -13,7 +13,9 @@ export default function OrganizerTourEditorPageClient({
 
   return (
     <OrganizerShell>
-      <OrganizerTourEditorView tourId={id} />
+      <Suspense fallback={<div className="text-sm text-slate">Загрузка редактора…</div>}>
+        <OrganizerTourEditorView tourId={id} />
+      </Suspense>
     </OrganizerShell>
   );
 }

@@ -9,6 +9,8 @@ import { BOOKINGS_UPDATED_EVENT, FAVORITES_UPDATED_EVENT, REVIEWS_UPDATED_EVENT 
 import { BOOKING_STATUS_LABELS } from "@/data/tourist-dashboard";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingReviewCta from "@/components/profile/BookingReviewCta";
+import ProfileNotifications from "@/components/profile/ProfileNotifications";
 
 function StatCard({
   label,
@@ -81,6 +83,8 @@ export default function ProfileDashboardPage() {
         </p>
       </section>
 
+      <ProfileNotifications limit={5} />
+
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard
           label="Поездки"
@@ -127,10 +131,21 @@ export default function ProfileDashboardPage() {
                     · {booking.guests} гостей
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex flex-wrap items-center gap-3">
                   <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-charcoal">
                     {BOOKING_STATUS_LABELS[booking.status]}
                   </span>
+                  <Link
+                    href={`/profile/bookings/${booking.id}`}
+                    className="text-xs font-medium text-brand hover:underline"
+                  >
+                    Подробнее
+                  </Link>
+                  <BookingReviewCta
+                    booking={booking}
+                    userId={user.id}
+                    className="text-xs font-medium text-brand hover:underline"
+                  />
                   <FormattedPrice priceUsd={booking.totalPriceUsd} className="text-sm font-semibold" />
                 </div>
               </li>

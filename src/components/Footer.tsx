@@ -45,9 +45,16 @@ export default function Footer() {
               Контакты
             </h3>
             <ul className="mt-4 space-y-2 text-sm text-gray-400">
-              <li>+7 (495) 123-45-67</li>
-              <li>info@argentina-travel.ru</li>
-              <li>Москва, ул. Путешествий, 1</li>
+              <li>
+                <Link href="/contacts" className="transition-colors hover:text-white">
+                  Написать нам
+                </Link>
+              </li>
+              <li>
+                <Link href="/join" className="transition-colors hover:text-white">
+                  Стать организатором
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

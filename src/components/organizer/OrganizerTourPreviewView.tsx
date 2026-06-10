@@ -11,6 +11,7 @@ import {
   readStagedOrganizerTourPreviewDraft,
 } from "@/lib/tour-preview";
 import { getCatalogSlug } from "@/lib/tour-slug";
+import { evaluatePublishReadiness } from "@/lib/publish-readiness";
 import type { OrganizerTourDraft } from "@/types/organizer-tour";
 
 interface OrganizerTourPreviewViewProps {
@@ -52,6 +53,7 @@ export default function OrganizerTourPreviewView({ tourId }: OrganizerTourPrevie
   }
 
   const slug = getCatalogSlug(draft);
+  const publishBlockingCount = evaluatePublishReadiness(draft).blockingCount;
 
   return (
     <TourDetailView
@@ -60,8 +62,9 @@ export default function OrganizerTourPreviewView({ tourId }: OrganizerTourPrevie
       similarTours={[]}
       previewMode
       previewCanonicalTour={preview.canonical}
-      previewEditHref={`/organizer/tours/${tourId}/edit`}
+      previewEditHref={`/organizer/tours/${tourId}/edit?tab=publish`}
       previewIsPublished={draft.status === "published" && !draft.archived}
+      previewPublishBlockingCount={publishBlockingCount}
     />
   );
 }

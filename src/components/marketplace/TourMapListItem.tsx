@@ -55,10 +55,15 @@ export default function TourMapListItem({
               <span className="truncate">{tour.destination}</span>
             </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate">
-              {hasReviews && (
+              {hasReviews ? (
                 <span className="inline-flex items-center gap-0.5 font-medium text-charcoal">
                   <Star className="h-3 w-3 fill-sun text-sun" aria-hidden />
                   {tour.rating.toFixed(1)}
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-0.5 font-medium text-sky">
+                  <Star className="h-3 w-3 text-sky" aria-hidden />
+                  Новый
                 </span>
               )}
               <span>{formatDays(tour.durationDays)}</span>

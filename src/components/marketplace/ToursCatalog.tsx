@@ -1,7 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import { useRouter, useSearchParams } from "next/navigation";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import MarketplaceTourListCard from "@/components/marketplace/MarketplaceTourListCard";
 import SearchBlock from "@/components/marketplace/SearchBlock";
@@ -10,11 +11,19 @@ import CatalogToolbar, { CatalogViewMode } from "@/components/marketplace/Catalo
 import { TourListing, TourFilters } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { sortTours, TourSortOption } from "@/lib/sort-tours";
+import {
+  buildCatalogFilterSearchParams,
+  catalogFilterParamsMatch,
+  parseCatalogFiltersFromSearchParams,
+  parseCatalogSortFromSearchParams,
+} from "@/lib/catalog-filter-url";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import Link from "next/link";
 
 const CatalogMapView = dynamic(
   () => import("@/components/marketplace/CatalogMapView"),
@@ -33,15 +42,44 @@ interface ToursCatalogProps {
 }
 
 export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const tours = useRepositoryTourListings(initialTours);
   const { currency } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
-    getDefaultFilters(currency, tours)
+    parseCatalogFiltersFromSearchParams(searchParams, currency, tours)
   );
-  const [sort, setSort] = useState<TourSortOption>("recommended");
+  const [sort, setSort] = useState<TourSortOption>(() =>
+    parseCatalogSortFromSearchParams(searchParams)
+  );
   const [viewMode, setViewMode] = useState<CatalogViewMode>("grid");
+  const skipUrlSyncRef = useRef(false);
 
   useSyncPriceFilters(tours, currency, setFilters);
+
+  useEffect(() => {
+    skipUrlSyncRef.current = true;
+    setFilters(parseCatalogFiltersFromSearchParams(searchParams, currency, tours));
+    setSort(parseCatalogSortFromSearchParams(searchParams));
+  }, [searchParams, currency, tours]);
+
+  useEffect(() => {
+    if (skipUrlSyncRef.current) {
+      skipUrlSyncRef.current = false;
+      return;
+    }
+
+    const nextParams = buildCatalogFilterSearchParams(filters, sort, currency, tours);
+    const currentParams = new URLSearchParams(searchParams.toString());
+    if (catalogFilterParamsMatch(nextParams, currentParams)) return;
+
+    const qs = nextParams.toString();
+    router.replace(qs ? `/tours?${qs}` : "/tours", { scroll: false });
+  }, [filters, sort, currency, tours, router, searchParams]);
+
+  const handleFiltersChange = useCallback((next: TourFilters) => {
+    setFilters(next);
+  }, []);
 
   const filtered = useMemo(
     () => filterTours(tours, filters, currency),
@@ -50,14 +88,44 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
 
   const sorted = useMemo(() => sortTours(filtered, sort), [filtered, sort]);
   const activeFilterCount = countActiveFilters(filters, currency, tours);
+  const organizerProfile = filters.organizerSlug.trim()
+    ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
+    : null;
 
   const resetFilters = () => setFilters(getDefaultFilters(currency, tours));
+
+  const handleSearch = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <div className="pb-16">
       <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
         <h1 className="font-display text-3xl font-bold text-charcoal">Каталог туров</h1>
         <p className="mt-2 text-slate">Все авторские путешествия по Аргентине</p>
+
+        {organizerProfile ? (
+          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-3">
+            <p className="text-sm text-charcoal">
+              Туры организатора{" "}
+              <Link
+                href={`/organizers/${organizerProfile.slug}`}
+                className="font-semibold text-brand hover:underline"
+              >
+                {organizerProfile.name}
+              </Link>
+            </p>
+            <button
+              type="button"
+              onClick={() =>
+                setFilters((current) => ({ ...current, organizerSlug: "" }))
+              }
+              className="text-sm font-medium text-slate hover:text-charcoal"
+            >
+              Сбросить фильтр
+            </button>
+          </div>
+        ) : null}
 
         <div className="mt-6 space-y-4">
           <SearchBlock
@@ -70,9 +138,9 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
             onNearMe={(coords) =>
               setFilters((f) => ({ ...f, nearMe: !!coords, userCoords: coords }))
             }
-            onSearch={() => {}}
+            onSearch={handleSearch}
           />
-          <FilterBar tours={tours} filters={filters} onChange={setFilters} />
+          <FilterBar tours={tours} filters={filters} onChange={handleFiltersChange} />
         </div>
 
         <div className="mt-8">

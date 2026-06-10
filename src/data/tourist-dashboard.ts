@@ -1,4 +1,10 @@
-export type ProfileNavId = "dashboard" | "favorites" | "bookings" | "reviews" | "settings";
+export type ProfileNavId =
+  | "dashboard"
+  | "favorites"
+  | "bookings"
+  | "messages"
+  | "reviews"
+  | "settings";
 
 export interface ProfileNavItem {
   id: ProfileNavId;
@@ -10,6 +16,7 @@ export const PROFILE_NAV_ITEMS: ProfileNavItem[] = [
   { id: "dashboard", label: "Обзор", href: "/profile" },
   { id: "favorites", label: "Избранное", href: "/profile/favorites" },
   { id: "bookings", label: "Бронирования", href: "/profile/bookings" },
+  { id: "messages", label: "Сообщения", href: "/profile/messages" },
   { id: "reviews", label: "Отзывы", href: "/profile/reviews" },
   { id: "settings", label: "Настройки", href: "/profile/settings" },
 ];

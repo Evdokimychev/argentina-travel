@@ -7,12 +7,14 @@ interface TourPreviewBannerProps {
   title: string;
   editHref: string;
   isPublished: boolean;
+  publishBlockingCount?: number;
 }
 
 export default function TourPreviewBanner({
   title,
   editHref,
   isPublished,
+  publishBlockingCount = 0,
 }: TourPreviewBannerProps) {
   return (
     <div className="border-b border-amber-200/80 bg-amber-50">
@@ -28,6 +30,13 @@ export default function TourPreviewBanner({
               {isPublished
                 ? "Так страница выглядит для туристов. Бронирование в предпросмотре отключено."
                 : "Тур ещё не опубликован — туристы эту страницу не увидят. Бронирование недоступно."}
+              {publishBlockingCount > 0 ? (
+                <>
+                  {" "}
+                  Для публикации осталось исправить {publishBlockingCount}{" "}
+                  {publishBlockingCount === 1 ? "пункт" : "пункта"} в чеклисте.
+                </>
+              ) : null}
             </p>
           </div>
         </div>

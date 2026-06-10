@@ -6,13 +6,16 @@ import { normalizeEditorValue } from "@/lib/rich-text";
 import { SectionHeading } from "./InfoModal";
 
 export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
-  const [openId, setOpenId] = useState<string | null>(faq[0]?.id ?? null);
+  const items = faq.filter((item) => item.question?.trim() && item.answer?.trim());
+  const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
+
+  if (!items.length) return null;
 
   return (
     <section id="faq" className="tour-section-target">
       <SectionHeading title="Часто задаваемые вопросы" />
       <div className="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
-        {faq.map((item) => {
+        {items.map((item) => {
           const isOpen = openId === item.id;
           return (
             <div key={item.id}>

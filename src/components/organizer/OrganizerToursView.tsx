@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   ExternalLink,
-  MoreHorizontal,
+  Eye,
   PencilLine,
   Plus,
   Search,
@@ -114,13 +114,15 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
             <PencilLine className="h-3.5 w-3.5 shrink-0" strokeWidth={1.75} />
             <span className="truncate">Редактировать</span>
           </Link>
-          <button
-            type="button"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
-            aria-label="Ещё"
+          <Link
+            href={`/organizer/tours/${tour.id}/preview`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-slate transition-colors hover:bg-gray-100 hover:text-brand"
+            aria-label="Предпросмотр тура"
           >
-            <MoreHorizontal className="h-4 w-4" />
-          </button>
+            <Eye className="h-4 w-4" />
+          </Link>
         </div>
       </div>
     </article>

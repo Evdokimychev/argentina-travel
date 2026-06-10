@@ -468,9 +468,6 @@ export default function AuthModal() {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
-              <p className="mt-1.5 text-xs text-slate">
-                Демо-пароль: <span className="font-medium">{DEMO_PASSWORD}</span>
-              </p>
             </div>
           </>
         ) : (
@@ -749,10 +746,6 @@ export default function AuthModal() {
                         }}
                       />
                     </div>
-                    <p className="text-xs text-slate">
-                      Демо-пароль для тестового аккаунта:{" "}
-                      <span className="font-medium">{DEMO_PASSWORD}</span>
-                    </p>
                   </div>
                 )}
 

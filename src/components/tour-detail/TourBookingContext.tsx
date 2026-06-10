@@ -53,13 +53,11 @@ export function TourBookingProvider({
   children: ReactNode;
 }) {
   const bookingMode = tour.bookingMode ?? "scheduled";
-  const [guests, setGuests] = useState(() =>
-    Math.min(Math.max(2, tour.groupMin), tour.groupMax)
+  const initialGuests = Math.min(tour.groupMax, tour.groupMin);
+  const [guests, setGuests] = useState(() => initialGuests);
+  const [selectedDateId, setSelectedDateId] = useState(() =>
+    pickInitialDateId(tour.dates, initialGuests, tour.groupMin)
   );
-  const [selectedDateId, setSelectedDateId] = useState(() => {
-    const initialGuests = Math.min(Math.max(2, tour.groupMin), tour.groupMax);
-    return pickInitialDateId(tour.dates, initialGuests, tour.groupMin);
-  });
   const [dateMode, setDateMode] = useState<BookingDateMode>(() =>
     resolveInitialDateMode(bookingMode)
   );

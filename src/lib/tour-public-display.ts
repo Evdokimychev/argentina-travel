@@ -88,3 +88,62 @@ export function hasTourPolicies(tour: Tour): boolean {
 
   return Boolean(hasInsurance || resolveCancellationText(tour).trim());
 }
+
+/** Rating label for listings — never show raw zero without reviews. */
+export function resolveTourRatingLabel(tour: {
+  rating: number;
+  reviewCount: number;
+}): { hasReviews: boolean; ratingText: string; badgeLabel: string } {
+  const hasReviews = tour.reviewCount > 0;
+  if (!hasReviews) {
+    return { hasReviews: false, ratingText: "", badgeLabel: "Новый" };
+  }
+  return {
+    hasReviews: true,
+    ratingText: String(tour.rating),
+    badgeLabel: `${tour.rating}`,
+  };
+}
+
+export function resolveOrganizerRatingDisplay(organizer: {
+  rating: number;
+  reviewCount?: number;
+}): { show: boolean; label: string; isNew: boolean } {
+  const reviewCount = organizer.reviewCount ?? 0;
+  if (reviewCount > 0 && organizer.rating > 0) {
+    return { show: true, label: organizer.rating.toFixed(1), isNew: false };
+  }
+  return { show: true, label: "Новый организатор", isNew: true };
+}
+
+export function resolveOrganizerTourCountDisplay(tourCount: number): string | null {
+  if (tourCount <= 0) return "Первый тур на площадке";
+  return null;
+}
+
+export function resolveOrganizerTravelerCountDisplay(travelerCount: number): string | null {
+  if (travelerCount <= 0) return null;
+  return `${travelerCount}+ путешественников`;
+}
+
+export function hasTourDatesSection(tour: {
+  dates: unknown[];
+  bookingMode?: string;
+}): boolean {
+  if (tour.dates.length > 0) return true;
+  return tour.bookingMode === "on_request" || tour.bookingMode === "both";
+}
+
+export function hasFaqContent(faq: Array<{ question?: string; answer?: string }>): boolean {
+  return faq.some((item) => item.question?.trim() && item.answer?.trim());
+}
+
+export function hasPlacesContent(
+  places: Array<{ title?: string; description?: string; image?: string }>
+): boolean {
+  return places.some((place) => place.title?.trim() || place.description?.trim());
+}
+
+export function hasTermsListContent(items: string[]): boolean {
+  return items.some((item) => item.trim());
+}

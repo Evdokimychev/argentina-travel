@@ -158,7 +158,17 @@ function MobileGalleryCarousel({
 export default function TourDetailGallery({ images, title }: TourDetailGalleryProps) {
   const [lightbox, setLightbox] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [main, ...rest] = images;
+  const galleryImages = images.filter(Boolean);
+
+  if (!galleryImages.length) {
+    return (
+      <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 md:h-[320px]">
+        <p className="text-sm text-slate">Фото тура скоро появятся</p>
+      </div>
+    );
+  }
+
+  const [main, ...rest] = galleryImages;
   const side = rest.slice(0, 4);
 
   const openLightbox = (index: number) => {
@@ -184,7 +194,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
             alt={`${title} — ${i + 2}`}
             onClick={() => openLightbox(i + 1)}
           >
-            {i === side.length - 1 && images.length > 5 && (
+            {i === side.length - 1 && galleryImages.length > 5 && (
               <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
@@ -194,7 +204,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                     d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
                   />
                 </svg>
-                Показать все ({images.length})
+                Показать все ({galleryImages.length})
               </span>
             )}
           </GalleryTile>
@@ -202,7 +212,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
       </div>
 
       <MobileGalleryCarousel
-        images={images}
+        images={galleryImages}
         title={title}
         activeIndex={activeIndex}
         onActiveIndexChange={setActiveIndex}
@@ -217,7 +227,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
         >
           <div className="flex items-center justify-between p-4 text-white">
             <span className="text-sm">
-              {activeIndex + 1} / {images.length}
+              {activeIndex + 1} / {galleryImages.length}
             </span>
             <button
               type="button"
@@ -228,11 +238,15 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
             </button>
           </div>
           <div className="relative flex-1">
-            {images.length > 1 ? (
+            {galleryImages.length > 1 ? (
               <>
                 <button
                   type="button"
-                  onClick={() => setActiveIndex((activeIndex - 1 + images.length) % images.length)}
+                  onClick={() =>
+                    setActiveIndex(
+                      (activeIndex - 1 + galleryImages.length) % galleryImages.length
+                    )
+                  }
                   aria-label="Предыдущее фото"
                   className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:left-6"
                 >
@@ -240,7 +254,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActiveIndex((activeIndex + 1) % images.length)}
+                  onClick={() => setActiveIndex((activeIndex + 1) % galleryImages.length)}
                   aria-label="Следующее фото"
                   className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:right-6"
                 >
@@ -249,7 +263,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
               </>
             ) : null}
             <Image
-              src={images[activeIndex]}
+              src={galleryImages[activeIndex]}
               alt={`${title} — ${activeIndex + 1}`}
               fill
               className="object-contain p-4"
@@ -257,7 +271,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
             />
           </div>
           <div className="flex gap-2 overflow-x-auto p-4">
-            {images.map((src, i) => (
+            {galleryImages.map((src, i) => (
               <button
                 key={`${src}-${i}`}
                 type="button"
