@@ -4,6 +4,9 @@ import { Suspense, useMemo, useState, type FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Hero from "@/components/Hero";
 import { getTourBySlug } from "@/data/tours";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 function ContactsForm() {
   const searchParams = useSearchParams();
@@ -32,9 +35,9 @@ function ContactsForm() {
       ) : null}
 
       {submitted ? (
-        <div className="mt-8 rounded-2xl bg-patagonia/10 p-8 text-center">
+        <div className="mt-8 rounded-2xl border border-success/20 bg-success-muted p-8 text-center">
           <svg
-            className="mx-auto h-12 w-12 text-patagonia"
+            className="mx-auto h-12 w-12 text-success"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -59,12 +62,12 @@ function ContactsForm() {
             <label htmlFor="name" className="block text-sm font-medium text-charcoal">
               Имя
             </label>
-            <input
+            <Input
               type="text"
               id="name"
               name="name"
               required
-              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              className="mt-1"
               placeholder="Ваше имя"
             />
           </div>
@@ -72,12 +75,12 @@ function ContactsForm() {
             <label htmlFor="email" className="block text-sm font-medium text-charcoal">
               Email
             </label>
-            <input
+            <Input
               type="email"
               id="email"
               name="email"
               required
-              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              className="mt-1"
               placeholder="email@example.com"
             />
           </div>
@@ -85,13 +88,13 @@ function ContactsForm() {
             <label htmlFor="tour" className="block text-sm font-medium text-charcoal">
               Интересующий тур
             </label>
-            <input
+            <Input
               type="text"
               id="tour"
               name="tour"
               readOnly={Boolean(tour)}
               defaultValue={tour?.title ?? ""}
-              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20 read-only:bg-gray-50"
+              className={cn("mt-1", tour && "read-only:bg-gray-50")}
               placeholder="Название тура (необязательно)"
             />
           </div>
@@ -106,16 +109,13 @@ function ContactsForm() {
               required
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-gray-200 px-4 py-2.5 text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
+              className="mt-1 flex w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-charcoal placeholder:text-gray-400 focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
               placeholder="Расскажите о ваших планах..."
             />
           </div>
-          <button
-            type="submit"
-            className="w-full rounded-full bg-patagonia py-3 font-semibold text-white transition-colors hover:bg-patagonia-light sm:w-auto sm:px-10"
-          >
+          <Button type="submit" className="w-full sm:w-auto sm:px-10">
             Отправить
-          </button>
+          </Button>
         </form>
       )}
     </>

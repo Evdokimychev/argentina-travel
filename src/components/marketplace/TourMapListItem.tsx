@@ -7,6 +7,7 @@ import { TourListing } from "@/types";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import { cn } from "@/lib/cn";
 import { formatDays } from "@/lib/pluralize";
+import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourMapListItemProps {
   tour: TourListing;
@@ -21,7 +22,7 @@ export default function TourMapListItem({
   onSelect,
   listItemRef,
 }: TourMapListItemProps) {
-  const hasReviews = tour.reviewCount > 0;
+  const ratingDisplay = resolveTourRatingLabel(tour);
 
   return (
     <li ref={listItemRef} data-tour-id={tour.id}>
@@ -55,15 +56,15 @@ export default function TourMapListItem({
               <span className="truncate">{tour.destination}</span>
             </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate">
-              {hasReviews ? (
+              {ratingDisplay.hasReviews ? (
                 <span className="inline-flex items-center gap-0.5 font-medium text-charcoal">
                   <Star className="h-3 w-3 fill-sun text-sun" aria-hidden />
-                  {tour.rating.toFixed(1)}
+                  {ratingDisplay.ratingText}
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-0.5 font-medium text-sky">
                   <Star className="h-3 w-3 text-sky" aria-hidden />
-                  Новый
+                  {ratingDisplay.badgeLabel}
                 </span>
               )}
               <span>{formatDays(tour.durationDays)}</span>

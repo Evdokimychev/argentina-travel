@@ -96,8 +96,8 @@ export default function CalendarMonthGrid({
               onClick={() => onDayClick(day)}
               className={cn(
                 "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
-                isSelected && "bg-brand text-white",
-                inRange && !isSelected && "bg-brand-light text-brand",
+                isSelected && "bg-sky text-white",
+                inRange && !isSelected && "bg-sky/10 text-sky-dark",
                 !isSelected && !inRange && !disabled && "hover:bg-gray-100",
                 disabled && "cursor-not-allowed text-gray-300"
               )}

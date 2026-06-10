@@ -150,7 +150,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
             <button
               type="button"
               onClick={handleBookClick}
-              className="flex-1 rounded-xl bg-patagonia py-3 text-center text-sm font-semibold text-white"
+              className="flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark"
             >
               Забронировать
             </button>

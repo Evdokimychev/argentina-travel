@@ -136,7 +136,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
                         aria-disabled={!bookable}
                         className={cn(
                           "rounded-lg px-3 py-1.5 text-xs font-medium transition-colors",
-                          selected && "bg-patagonia text-white",
+                          selected && "bg-sky text-white",
                           !selected && bookable && "border border-gray-200 hover:bg-gray-50",
                           !selected &&
                             !bookable &&

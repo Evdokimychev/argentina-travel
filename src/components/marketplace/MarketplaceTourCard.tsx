@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
+import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -29,7 +30,7 @@ interface MarketplaceTourCardProps {
 export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) {
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
-  const hasReviews = tour.reviewCount > 0;
+  const ratingDisplay = resolveTourRatingLabel(tour);
   const comfortLevel = resolveListingComfortLevel(tour);
   const organizerHref =
     tour.organizer.slug ?? tour.organizerOwnerId
@@ -101,16 +102,16 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
             <span className="truncate">{tour.region}</span>
           </span>
-          {hasReviews ? (
+          {ratingDisplay.hasReviews ? (
             <span className="flex shrink-0 items-center gap-1">
               <Star className="h-3.5 w-3.5 fill-sun text-sun" />
-              <span className="font-semibold text-charcoal">{tour.rating}</span>
+              <span className="font-semibold text-charcoal">{ratingDisplay.ratingText}</span>
               <span className="text-slate">({tour.reviewCount})</span>
             </span>
           ) : (
-            <span className="flex shrink-0 items-center gap-1 text-brand">
+            <span className="flex shrink-0 items-center gap-1 text-sky">
               <Star className="h-3.5 w-3.5 fill-current" aria-hidden />
-              <span className="font-medium">Новый</span>
+              <span className="font-medium">{ratingDisplay.badgeLabel}</span>
             </span>
           )}
         </div>

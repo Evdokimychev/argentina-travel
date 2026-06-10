@@ -108,7 +108,7 @@ function OrganizerActions({
         </Link>
         <Link
           href={catalogHref}
-          className="flex-1 rounded-xl bg-patagonia py-2 text-center text-sm font-medium text-white hover:bg-patagonia-light"
+          className="flex-1 rounded-xl bg-sky py-2 text-center text-sm font-medium text-white hover:bg-sky-dark"
         >
           Туры
         </Link>
@@ -126,7 +126,7 @@ function OrganizerActions({
       </Link>
       <Link
         href={catalogHref}
-        className="rounded-xl bg-patagonia px-5 py-2.5 text-sm font-medium text-white hover:bg-patagonia-light"
+        className="rounded-xl bg-sky px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-dark"
       >
         Все туры организатора
       </Link>

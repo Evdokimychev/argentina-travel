@@ -7,9 +7,9 @@ import type { BookingPaymentStatus } from "@/types/booking-params";
 import { cn } from "@/lib/cn";
 
 const PAYMENT_STATUS_TONE: Record<BookingPaymentStatus, string> = {
-  pending: "bg-amber-50 text-amber-800 ring-amber-200/80",
-  partial: "bg-sky-50 text-sky-800 ring-sky-200/80",
-  paid: "bg-emerald-50 text-emerald-800 ring-emerald-200/80",
+  pending: "bg-warning-muted text-warning ring-warning/20",
+  partial: "bg-sky/10 text-sky ring-sky/20",
+  paid: "bg-success-muted text-success ring-success/20",
   refunded: "bg-gray-100 text-slate ring-gray-200/80",
 };
 

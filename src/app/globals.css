@@ -1,20 +1,42 @@
 @import "tailwindcss";
 
 @theme {
+  /* Primary brand — Argentine sky blue (CTAs, links, focus rings) */
   --color-sky: #74acdf;
   --color-sky-dark: #5a8fc4;
+  --color-primary: var(--color-sky);
+  --color-primary-dark: var(--color-sky-dark);
+
   --color-sun: #fcbf49;
   --color-sun-dark: #e5a832;
+
+  /* Neutrals */
   --color-pampas: #f5f0e8;
+  --color-surface-muted: #f7f8fa;
+  --color-nav-pill: #efefef;
+
+  /* Editorial accent — nature / «Почему мы» sections only, not CTAs */
   --color-patagonia: #2d4a3e;
   --color-patagonia-light: #3d6354;
+
   --color-wine: #722f37;
   --color-wine-light: #8b3a44;
   --color-charcoal: #1a1a2e;
   --color-slate: #4a5568;
+
+  /* Accent earth / promo — terracotta, not primary actions */
   --color-brand: #d4533b;
   --color-brand-dark: #b8432e;
   --color-brand-light: #fef3f0;
+  --color-accent-earth: var(--color-brand);
+
+  /* Semantic status — muted premium tones */
+  --color-success: #2f6f4e;
+  --color-success-muted: #ecf6f0;
+  --color-warning: #9a6700;
+  --color-warning-muted: #fdf6e3;
+  --color-error: #b42318;
+  --color-error-muted: #fef2f1;
 
   --font-display: var(--font-unbounded), system-ui, sans-serif;
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
@@ -33,7 +55,7 @@ html {
 body {
   font-family: var(--font-body);
   color: var(--color-charcoal);
-  background-color: var(--color-pampas);
+  background-color: var(--color-surface-muted);
 }
 
 h1,
@@ -172,17 +194,17 @@ h6 {
   height: 14px;
   border-radius: 9999px;
   border: 2px solid #fff;
-  background: #3b82f6;
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.45);
+  background: var(--color-sky);
+  box-shadow: 0 2px 8px rgba(116, 172, 223, 0.45);
   transition: transform 0.15s ease, background-color 0.15s ease;
 }
 
 .tours-map-marker--active {
   width: 20px;
   height: 20px;
-  background: #d4533b;
+  background: var(--color-sky-dark);
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(212, 83, 59, 0.45);
+  box-shadow: 0 4px 12px rgba(90, 143, 196, 0.5);
 }
 
 .tours-map-popup-shell .leaflet-popup-content-wrapper {

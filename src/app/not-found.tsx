@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 export default function NotFound() {
   return (
@@ -10,10 +12,7 @@ export default function NotFound() {
       <p className="mt-2 text-slate">
         Возможно, страница была удалена или адрес введён неверно.
       </p>
-      <Link
-        href="/"
-        className="mt-8 rounded-full bg-patagonia px-8 py-3 font-semibold text-white hover:bg-patagonia-light"
-      >
+      <Link href="/" className={cn(buttonVariants(), "mt-8 rounded-full px-8")}>
         На главную
       </Link>
     </div>

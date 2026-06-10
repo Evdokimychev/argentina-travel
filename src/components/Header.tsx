@@ -109,6 +109,7 @@ export default function Header() {
   const navLinks = [
     { href: "/", label: t("nav.home") },
     { href: "/tours", label: t("nav.tours") },
+    { href: "/about", label: t("nav.about") },
     { href: "/blog", label: t("nav.blog") },
     { href: "/contacts", label: t("nav.contacts") },
   ];
@@ -152,7 +153,7 @@ export default function Header() {
 
       {/* Pill navigation */}
       <div className="mx-auto max-w-7xl px-3 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-2 rounded-full bg-[#EFEFEF] px-2 py-2 shadow-sm sm:gap-3 sm:px-3">
+        <div className="flex items-center gap-2 rounded-full bg-nav-pill px-2 py-2 shadow-sm sm:gap-3 sm:px-3">
           <CircleButton
             ariaLabel="Меню"
             onClick={() => setMenuOpen(!menuOpen)}

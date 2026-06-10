@@ -23,6 +23,7 @@ import { DIFFICULTY_DOT_COUNT, COMFORT_DOT_COUNT } from "@/data/tour-levels";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { formatMinimumAgeShort } from "@/lib/tour-age";
 import { buttonVariants } from "@/components/ui/button";
+import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -70,7 +71,7 @@ function StatCell({ label, children }: { label: string; children: React.ReactNod
 export default function MarketplaceTourListCard({ tour }: { tour: TourListing }) {
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
-  const hasReviews = tour.reviewCount > 0;
+  const ratingDisplay = resolveTourRatingLabel(tour);
   const comfortLevel = resolveListingComfortLevel(tour);
   const activityIcon = ACTIVITY_TYPE_OPTIONS.find((o) => o.type === tour.activityType)?.icon;
   const ActivityIcon = activityIcon;
@@ -124,16 +125,16 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             </h3>
 
             <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-slate">
-              {hasReviews ? (
+              {ratingDisplay.hasReviews ? (
                 <>
                   <Star className="h-3.5 w-3.5 fill-sun text-sun" aria-hidden />
-                  <span className="font-semibold text-charcoal">{tour.rating}</span>
+                  <span className="font-semibold text-charcoal">{ratingDisplay.ratingText}</span>
                   <span>({tour.reviewCount})</span>
                 </>
               ) : (
                 <>
-                  <Star className="h-3.5 w-3.5 fill-brand text-brand" aria-hidden />
-                  <span className="font-medium text-brand">Новый</span>
+                  <Star className="h-3.5 w-3.5 fill-sky text-sky" aria-hidden />
+                  <span className="font-medium text-sky">{ratingDisplay.badgeLabel}</span>
                 </>
               )}
               <span aria-hidden>·</span>

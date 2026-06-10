@@ -110,8 +110,8 @@ function MonthGrid({ month, from, to, onDayClick }: MonthGridProps) {
               onClick={() => onDayClick(day)}
               className={cn(
                 "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
-                selected && "bg-brand text-white",
-                inRange && !selected && "bg-brand-light text-brand",
+                selected && "bg-sky text-white",
+                inRange && !selected && "bg-sky/10 text-sky-dark",
                 !selected && !inRange && !past && "hover:bg-gray-100",
                 past && "cursor-not-allowed text-gray-300"
               )}

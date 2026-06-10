@@ -56,7 +56,7 @@ export default function ReviewsSection({
             }}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               filter === f
-                ? "bg-patagonia text-white"
+                ? "bg-sky text-white"
                 : "border border-gray-200 bg-white text-slate hover:border-gray-300"
             }`}
           >

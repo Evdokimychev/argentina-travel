@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { formatReviews } from "@/lib/pluralize";
 import TourDurationInfo from "./TourDurationInfo";
 import FavoriteButton from "@/components/profile/FavoriteButton";
+import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourDetailHeroProps {
   tour: TourDetail;
@@ -14,7 +15,7 @@ interface TourDetailHeroProps {
 
 export default function TourDetailHero({ tour }: TourDetailHeroProps) {
   const [shared, setShared] = useState(false);
-  const hasReviews = tour.reviewCount > 0;
+  const ratingDisplay = resolveTourRatingLabel(tour);
 
   async function handleShare() {
     const url = window.location.href;
@@ -82,7 +83,7 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
-        {hasReviews ? (
+        {ratingDisplay.hasReviews ? (
           <>
             <button
               type="button"
@@ -90,7 +91,7 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
               className="flex items-center gap-1 rounded-lg bg-sun/15 px-2.5 py-1 text-sm font-semibold text-charcoal transition-colors hover:bg-sun/25"
             >
               <Star className="h-4 w-4 fill-sun text-sun" aria-hidden />
-              {tour.rating}
+              {ratingDisplay.ratingText}
             </button>
             <button
               type="button"
@@ -104,10 +105,10 @@ export default function TourDetailHero({ tour }: TourDetailHeroProps) {
           <button
             type="button"
             onClick={scrollToReviews}
-            className="flex items-center gap-1 text-brand transition-colors hover:text-brand-dark"
+            className="flex items-center gap-1 text-sky transition-colors hover:text-sky-dark"
           >
             <Star className="h-4 w-4 fill-current" aria-hidden />
-            <span className="text-sm font-medium">Новый</span>
+            <span className="text-sm font-medium">{ratingDisplay.badgeLabel}</span>
           </button>
         )}
       </div>

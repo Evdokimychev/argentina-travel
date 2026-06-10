@@ -136,7 +136,7 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
                 className={cn(
                   "inline-flex rounded-lg px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
                   active
-                    ? "bg-patagonia text-white shadow-sm"
+                    ? "bg-sky text-white shadow-sm"
                     : "text-slate hover:bg-white hover:text-charcoal"
                 )}
                 aria-current={active ? "location" : undefined}

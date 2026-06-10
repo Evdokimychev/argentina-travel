@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 import { useSearchParams } from "next/navigation";
 
 export default function ReviewPromptBanner() {
@@ -27,10 +29,7 @@ export default function ReviewPromptBanner() {
           </p>
         </div>
         <div className="flex shrink-0 flex-wrap gap-2">
-          <Link
-            href="/profile/reviews"
-            className="rounded-xl bg-patagonia px-4 py-2 text-sm font-medium text-white hover:bg-patagonia-light"
-          >
+          <Link href="/profile/reviews" className={cn(buttonVariants({ size: "sm" }))}>
             Мои отзывы
           </Link>
           <button

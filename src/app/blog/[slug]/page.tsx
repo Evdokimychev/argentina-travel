@@ -2,6 +2,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getBlogPostBySlug, formatDate, blogPosts } from "@/data/blog";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -82,15 +84,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             Посмотрите наши туры или свяжитесь с нами для консультации
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
-            <Link
-              href="/tours"
-              className="rounded-full bg-patagonia px-6 py-2 text-sm font-semibold text-white hover:bg-patagonia-light"
-            >
+            <Link href="/tours" className={cn(buttonVariants(), "rounded-full px-6")}>
               Каталог туров
             </Link>
             <Link
               href="/contacts"
-              className="rounded-full border-2 border-patagonia px-6 py-2 text-sm font-semibold text-patagonia hover:bg-patagonia hover:text-white"
+              className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-6")}
             >
               Контакты
             </Link>

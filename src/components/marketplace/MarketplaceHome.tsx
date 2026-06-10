@@ -251,6 +251,8 @@ export default function MarketplaceHome({
       </section>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="rounded-3xl bg-white py-12 shadow-sm ring-1 ring-gray-100">
+          <div className="px-4 sm:px-6 lg:px-8">
         <TourGrid
           id="recommended"
           title="Рекомендуем"
@@ -260,10 +262,12 @@ export default function MarketplaceHome({
         <TourGrid title="Лучшие туры месяца" subtitle="Выбор редакции ArgentinaTravel" tours={bestOfMonth} />
         <TourGrid title="Горящие предложения" subtitle="Успейте забронировать" tours={hotTours} />
         <TourGrid title="Новые туры" subtitle="Свежие маршруты сезона" tours={newTours} />
+          </div>
+        </section>
       </div>
 
       {/* Reviews */}
-      <section className="bg-pampas py-12">
+      <section className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
             Отзывы путешественников

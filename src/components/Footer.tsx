@@ -24,6 +24,7 @@ export default function Footer() {
               {[
                 { href: "/", label: "Главная" },
                 { href: "/tours", label: "Каталог туров" },
+                { href: "/about", label: "О нас" },
                 { href: "/join", label: "Авторам" },
                 { href: "/blog", label: "Блог" },
                 { href: "/contacts", label: "Контакты" },
