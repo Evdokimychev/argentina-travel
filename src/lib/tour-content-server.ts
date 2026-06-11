@@ -115,27 +115,35 @@ export async function fetchAllToursAdmin(supabase: DbClient): Promise<TourConten
   return data.map(rowToAdminSummary);
 }
 
-async function getServerSupabase(): Promise<DbClient> {
-  const { createSupabaseServerClient } = await import("@/lib/supabase/server");
-  return createSupabaseServerClient();
+async function getServerSupabase(): Promise<DbClient | null> {
+  try {
+    const { createSupabaseServerClient } = await import("@/lib/supabase/server");
+    return await createSupabaseServerClient();
+  } catch {
+    return null;
+  }
 }
 
 export async function fetchPublishedListingsServer(): Promise<TourListing[]> {
   const supabase = await getServerSupabase();
+  if (!supabase) return [];
   return fetchPublishedListings(supabase);
 }
 
 export async function fetchPublishedSlugsServer(): Promise<string[]> {
   const supabase = await getServerSupabase();
+  if (!supabase) return [];
   return fetchPublishedSlugs(supabase);
 }
 
 export async function fetchTourDetailBySlugServer(slug: string) {
   const supabase = await getServerSupabase();
+  if (!supabase) return null;
   return fetchTourDetailBySlug(supabase, slug);
 }
 
 export async function fetchCanonicalTourBySlugServer(slug: string): Promise<Tour | null> {
   const supabase = await getServerSupabase();
+  if (!supabase) return null;
   return fetchTourBySlug(supabase, slug);
 }
