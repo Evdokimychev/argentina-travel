@@ -37,6 +37,8 @@ function ContactsForm() {
     [serviceSlug]
   );
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [message, setMessage] = useState(() => {
     if (tour) return `Интересует тур «${tour.title}». `;
     if (product) return `Хочу заказать «${product.title}» (${product.format}). `;
@@ -44,9 +46,51 @@ function ContactsForm() {
     return "";
   });
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    const name = String(formData.get("name") ?? "").trim();
+    const email = String(formData.get("email") ?? "").trim();
+    const tourTitle = String(formData.get("tour") ?? "").trim();
+    const bodyMessage = String(formData.get("message") ?? message).trim();
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          email,
+          message: bodyMessage,
+          tourSlug: tourSlug ?? undefined,
+          productSlug: productSlug ?? undefined,
+          serviceSlug: serviceSlug ?? undefined,
+          context: {
+            tour_title: tour?.title ?? (tourTitle || undefined),
+            product_title: product?.title,
+            service_title: service?.title,
+          },
+          pageUrl: typeof window !== "undefined" ? window.location.href : null,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = (await response.json()) as { error?: string };
+        throw new Error(data.error ?? "Не удалось отправить сообщение.");
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(
+        error instanceof Error ? error.message : "Не удалось отправить сообщение."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -97,6 +141,9 @@ function ContactsForm() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          {submitError ? (
+            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{submitError}</p>
+          ) : null}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-charcoal">
               Имя
@@ -152,8 +199,8 @@ function ContactsForm() {
               placeholder="Расскажите о ваших планах..."
             />
           </div>
-          <Button type="submit" className="w-full sm:w-auto sm:px-10">
-            Отправить
+          <Button type="submit" className="w-full sm:w-auto sm:px-10" disabled={submitting}>
+            {submitting ? "Отправка…" : "Отправить"}
           </Button>
         </form>
       )}

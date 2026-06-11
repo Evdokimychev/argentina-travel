@@ -71,10 +71,42 @@ export default function JoinPageView() {
   const [openFaqId, setOpenFaqId] = useState<string | null>(JOIN_FAQ[0]?.id ?? null);
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  function handleContactSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleContactSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setSubmitted(true);
+    setSubmitting(true);
+    setSubmitError(null);
+
+    const form = event.currentTarget;
+    const formData = new FormData(form);
+    const name = String(formData.get("name") ?? "").trim();
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name,
+          phone,
+          organizerApplication: true,
+          message: "Заявка со страницы «Стать организатором»",
+          pageUrl: typeof window !== "undefined" ? window.location.href : null,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = (await response.json()) as { error?: string };
+        throw new Error(data.error ?? "Не удалось отправить заявку.");
+      }
+
+      setSubmitted(true);
+    } catch (error) {
+      setSubmitError(error instanceof Error ? error.message : "Не удалось отправить заявку.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -436,6 +468,11 @@ export default function JoinPageView() {
                     Перезвоним или напишем, когда будем на связи
                   </p>
                   <form onSubmit={handleContactSubmit} className="mt-6 space-y-5">
+                    {submitError ? (
+                      <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
+                        {submitError}
+                      </p>
+                    ) : null}
                     <div>
                       <label htmlFor="join-name" className="block text-sm font-medium text-charcoal">
                         Имя
@@ -459,8 +496,13 @@ export default function JoinPageView() {
                         className="mt-1.5"
                       />
                     </div>
-                    <Button type="submit" size="lg" className="w-full rounded-full">
-                      Отправить
+                    <Button
+                      type="submit"
+                      size="lg"
+                      className="w-full rounded-full"
+                      disabled={submitting}
+                    >
+                      {submitting ? "Отправка…" : "Отправить"}
                     </Button>
                   </form>
                 </>
