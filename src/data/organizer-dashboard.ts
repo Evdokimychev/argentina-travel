@@ -20,6 +20,8 @@ export const ORGANIZER_NAV_ITEMS: OrganizerNavItem[] = [
   { id: "tours", label: "Туры и экскурсии", href: "/organizer/tours" },
   { id: "bookings", label: "Заявки", href: "/organizer/bookings" },
   { id: "messages", label: "Сообщения", href: "/organizer/messages" },
+  { id: "reviews", label: "Отзывы", href: "/organizer/reviews" },
+  { id: "payments", label: "Платежи", href: "/organizer/payments" },
 ];
 
 export interface OrganizerDashboardCard {

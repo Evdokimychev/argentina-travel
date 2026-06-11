@@ -4,6 +4,7 @@ import {
   type TouristReview,
   type TouristReviewStatus,
 } from "@/types/tourist";
+import { shouldSeedDemoData } from "@/lib/demo-mode";
 import { assertPermission, canLeaveReview } from "@/lib/permissions";
 import type { SessionUser } from "@/types/user";
 
@@ -41,6 +42,10 @@ function notifyUpdated() {
 function seedDemoReviewsIfEmpty(): TouristReview[] {
   const existing = readAllReviews();
   if (existing.length > 0) return existing;
+
+  if (!shouldSeedDemoData()) {
+    return [];
+  }
 
   const now = new Date().toISOString();
   const seeded: TouristReview[] = [

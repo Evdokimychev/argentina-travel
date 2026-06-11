@@ -94,12 +94,21 @@ export function formatPriceUsd(
   return formatCurrencyAmount(converted, currency, locale);
 }
 
-/** Future: fetch rates from API and update CURRENCIES */
+/** Fetch live rates from API (client) or frankfurter (server). */
 export async function fetchExchangeRates(): Promise<Record<CurrencyCode, number>> {
-  // TODO: fetch from /api/exchange-rates
-  return Object.fromEntries(
-    CURRENCIES.map((c) => [c.code, c.rateFromUsd])
-  ) as Record<CurrencyCode, number>;
+  if (typeof window !== "undefined") {
+    const res = await fetch("/api/exchange-rates");
+    if (res.ok) {
+      const payload = (await res.json()) as { rates?: Partial<Record<CurrencyCode, number>> };
+      return Object.fromEntries(
+        CURRENCIES.map((c) => [c.code, payload.rates?.[c.code] ?? c.rateFromUsd])
+      ) as Record<CurrencyCode, number>;
+    }
+  }
+  return Object.fromEntries(CURRENCIES.map((c) => [c.code, c.rateFromUsd])) as Record<
+    CurrencyCode,
+    number
+  >;
 }
 
 /** Future: detect locale from browser */

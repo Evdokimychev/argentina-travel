@@ -1,5 +1,6 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { notifyLeadCaptured } from "@/lib/leads-notify";
 import type {
   ContactSubmissionInsert,
   ContactSubmissionKind,
@@ -60,6 +61,11 @@ export async function submitNewsletter(input: SubmitNewsletterInput): Promise<vo
     if (error.code === "23505") return;
     throw new LeadCaptureError(error.message, "database");
   }
+
+  void notifyLeadCaptured({
+    subject: `Новая подписка: ${email}`,
+    html: `<p>Email: <strong>${email}</strong></p><p>Источник: ${row.source ?? "footer"}</p>`,
+  });
 }
 
 export async function submitContact(input: SubmitContactInput): Promise<void> {
@@ -95,6 +101,14 @@ export async function submitContact(input: SubmitContactInput): Promise<void> {
   if (error) {
     throw new LeadCaptureError(error.message, "database");
   }
+
+  void notifyLeadCaptured({
+    subject: `Новая заявка: ${input.kind}`,
+    html: `<p><strong>${name}</strong></p>
+<p>Email: ${email ?? "—"}<br/>Телефон: ${phone ?? "—"}</p>
+<p>${row.message}</p>
+<pre>${JSON.stringify(row.context, null, 2)}</pre>`,
+  });
 }
 
 export function resolveContactKind(params: {

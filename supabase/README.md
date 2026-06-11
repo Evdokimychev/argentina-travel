@@ -94,6 +94,20 @@ npm run supabase:verify
 
 - `POST /api/newsletter` — подписка
 - `POST /api/contact` — все contact/lead формы
+- `GET /api/exchange-rates` — курсы валют (Frankfurter + fallback)
+- `GET /api/admin/leads` — inbox лидов (Bearer `LEADS_ADMIN_TOKEN`, service role)
+
+## Phase 1 — быстрые улучшения
+
+| Функция | Где | Env |
+|---------|-----|-----|
+| Live курсы валют | `LocaleCurrencyContext`, `/api/exchange-rates` | — |
+| Demo-seed off в prod | `bookings-store`, `reviews-store` | `NEXT_PUBLIC_ENABLE_DEMO_SEED` |
+| Email при новом лиде | `leads-notify.ts` | `RESEND_API_KEY`, `LEADS_NOTIFY_EMAIL` |
+| Inbox лидов | `/admin/leads` | `LEADS_ADMIN_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY` |
+| Платежи / отзывы организатора | `/organizer/payments`, `/organizer/reviews` | — |
+
+`robots.txt` закрывает `/admin/` от индексации.
 
 ## Деплой (Vercel / др.)
 

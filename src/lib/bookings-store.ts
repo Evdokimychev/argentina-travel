@@ -1,5 +1,6 @@
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
+import { shouldSeedDemoData } from "@/lib/demo-mode";
 import {
   ensureTravelersSlotCount,
   hasCompleteBookingTravelers,
@@ -211,6 +212,10 @@ function seedDemoBookingsIfEmpty(): Booking[] {
   const existing = readRawBookings();
   if (existing.length > 0) {
     return existing.map(normalizeBooking);
+  }
+
+  if (!shouldSeedDemoData()) {
+    return [];
   }
 
   const now = new Date().toISOString();
