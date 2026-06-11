@@ -56,6 +56,13 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=   # publishable key из Dashboard
 
 ### 2. Применить миграцию
 
+**Рекомендуется (локально):**
+
+```bash
+# DATABASE_URL должен быть в .env.local
+npm run supabase:migrate
+```
+
 **Dashboard:** SQL Editor → вставить `supabase/migrations/20250611000000_lead_capture.sql` → Run
 
 **CLI** (если установлен Supabase CLI):
@@ -64,6 +71,15 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=   # publishable key из Dashboard
 supabase link --project-ref ejseeuszipxwvdeuqamc
 supabase db push
 ```
+
+### 2.1. Проверка после миграции
+
+```bash
+npm run dev          # в отдельном терминале
+npm run supabase:verify
+```
+
+Ожидается `200 { ok: true }` для newsletter и contact. Тестовые строки появятся в Supabase Dashboard → Table Editor.
 
 ### 3. Клиенты в коде
 
