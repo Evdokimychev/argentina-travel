@@ -8,7 +8,7 @@ interface TestimonialCardProps {
 
 export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
   return (
-    <div className="rounded-2xl bg-white p-6 shadow-card">
+    <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/[0.06] to-white p-6">
       <div className="flex flex-wrap items-center gap-2">
         <StarRating stars={testimonial.rating} size="lg" />
         {testimonial.verifiedTrip ? (
@@ -24,7 +24,7 @@ export default function TestimonialCard({ testimonial }: TestimonialCardProps) {
         {testimonial.tourSlug && testimonial.tourTitle ? (
           <Link
             href={`/tours/${testimonial.tourSlug}#reviews`}
-            className="mt-2 inline-block text-xs font-medium text-brand hover:underline"
+            className="mt-2 inline-block text-xs font-medium text-sky hover:underline"
           >
             {testimonial.tourTitle}
           </Link>

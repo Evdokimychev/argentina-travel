@@ -123,7 +123,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
         {/* Main content */}
         <div className="flex min-w-0 flex-1 flex-col p-5">
           <Link href={`/tours/${tour.slug}`} className="block min-w-0 flex-1">
-            <h3 className="font-display text-lg font-bold leading-snug text-charcoal group-hover:text-brand sm:text-xl">
+            <h3 className="font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky sm:text-xl">
               {tour.title}
             </h3>
 

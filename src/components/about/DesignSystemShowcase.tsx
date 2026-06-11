@@ -102,18 +102,14 @@ export default function DesignSystemShowcase() {
           <h3 className="font-heading text-xl font-bold text-charcoal">Типографика</h3>
           <div className="mt-6 space-y-6 rounded-2xl border border-gray-100 bg-surface-muted/50 p-6 sm:p-8">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate">Display · Unbounded (h1 страниц, названия туров)</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-slate">Display · Unbounded (h1 страниц и тура)</p>
               <p className="mt-1 font-display text-4xl font-bold leading-tight text-charcoal sm:text-5xl">
                 Путешествия по Аргентине
               </p>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate">Heading · system-ui (карточки, секции)</p>
-              <p className="mt-1 font-heading text-xl font-bold text-charcoal">Патагония и Буэнос-Айрес</p>
-            </div>
-            <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate">Tour title · Unbounded</p>
-              <p className="mt-1 font-display text-lg font-bold text-charcoal">Треккинг в Национальном парке Лос-Гласьярес</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-slate">Карточка тура · system-ui</p>
+              <p className="mt-1 font-heading text-lg font-bold text-charcoal">Треккинг в Национальном парке Лос-Гласьярес</p>
             </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-wider text-slate">Body</p>

@@ -120,7 +120,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             )}
           </div>
 
-          <h3 className="mt-2 line-clamp-2 font-semibold leading-snug text-charcoal group-hover:text-brand">
+          <h3 className="mt-2 line-clamp-2 font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky">
             {tour.title}
           </h3>
 
@@ -139,7 +139,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             <p className="mt-2 text-xs text-slate">
               {formatDateRange(nextDate.start, nextDate.end)}
               {moreDates > 0 && (
-                <span className="ml-1 text-brand">{formatMoreDates(moreDates)}</span>
+                <span className="ml-1 text-sky">{formatMoreDates(moreDates)}</span>
               )}
             </p>
           )}

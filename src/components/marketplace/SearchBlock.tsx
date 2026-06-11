@@ -114,7 +114,7 @@ export default function SearchBlock({
                 type="button"
                 className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left lg:py-4"
               >
-                <Search className="h-5 w-5 shrink-0 text-brand" />
+                <Search className="h-5 w-5 shrink-0 text-sky" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-medium text-slate">Направление</p>
                   <p
@@ -167,8 +167,8 @@ export default function SearchBlock({
                 className={cn(
                   "mt-3 flex w-full items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-medium transition-colors",
                   nearMe
-                    ? "border-brand bg-brand-light text-brand"
-                    : "border-gray-200 hover:border-brand hover:text-brand"
+                    ? "border-sky/30 bg-sky/10 text-sky-dark"
+                    : "border-gray-200 hover:border-sky/30 hover:text-sky"
                 )}
               >
                 <Navigation className="h-4 w-4" />
@@ -223,7 +223,7 @@ export default function SearchBlock({
                 type="button"
                 className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left lg:py-4"
               >
-                <Calendar className="h-5 w-5 shrink-0 text-brand" />
+                <Calendar className="h-5 w-5 shrink-0 text-sky" />
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-medium text-slate">Даты</p>
                   <p

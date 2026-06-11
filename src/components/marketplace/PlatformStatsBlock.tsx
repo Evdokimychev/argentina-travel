@@ -6,8 +6,9 @@ import {
   mergePlatformStats,
   type PlatformStats,
 } from "@/lib/organizer-public";
-import { StatCard } from "@/components/ui/card";
+import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { tripsWord } from "@/lib/pluralize";
+import { siteContainerClass } from "@/lib/site-container";
 
 function countCompletedBookings(): number {
   if (typeof window === "undefined") return 0;
@@ -32,44 +33,65 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
 
   if (stats.isNewPlatform && stats.tourCount <= 3) {
     return (
-      <section className="border-y border-gray-100 bg-white py-10">
-        <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <p className="font-heading text-lg font-semibold text-charcoal">
-            Новая площадка авторских туров
-          </p>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-slate">
-            Мы только начинаем — отзывы и статистика появляются после реальных поездок. Сейчас в
-            каталоге{" "}
-            {stats.tourCount > 0 ? `${stats.tourCount} ${tripsWord(stats.tourCount)}` : "первые маршруты"}.
-          </p>
+      <section className="border-y border-gray-100 bg-surface-muted/50 py-10">
+        <div className={siteContainerClass}>
+          <HubQuickFactsGrid
+            columns={3}
+            facts={[
+              {
+                emoji: "✨",
+                label: "Площадка",
+                headline: "Новая площадка авторских туров",
+                detail:
+                  stats.tourCount > 0
+                    ? `В каталоге уже ${stats.tourCount} ${tripsWord(stats.tourCount)} — отзывы появятся после реальных поездок`
+                    : "Первые маршруты уже в каталоге — отзывы появятся после реальных поездок",
+              },
+            ]}
+          />
         </div>
       </section>
     );
   }
 
-  const items = [
-    stats.tourCount > 0 ? { label: "Туров в каталоге", value: stats.tourCount } : null,
+  const facts = [
+    stats.tourCount > 0
+      ? {
+          emoji: "🗺",
+          label: "Каталог",
+          headline: `${stats.tourCount} ${tripsWord(stats.tourCount)}`,
+          detail: "Авторские маршруты по всей стране",
+        }
+      : null,
     stats.organizerCount > 0
       ? {
-          label: stats.organizerCount === 1 ? "Организатор" : "Организаторов",
-          value: stats.organizerCount,
+          emoji: "🧭",
+          label: stats.organizerCount === 1 ? "Организатор" : "Организаторы",
+          headline: String(stats.organizerCount),
+          detail: "Проверенные гиды и туроператоры",
         }
       : null,
     stats.completedBookingsCount != null && stats.completedBookingsCount > 0
-      ? { label: "Завершённых поездок", value: stats.completedBookingsCount }
+      ? {
+          emoji: "✅",
+          label: "Поездки",
+          headline: String(stats.completedBookingsCount),
+          detail: "Завершённые бронирования на площадке",
+        }
       : null,
-  ].filter(Boolean) as Array<{ label: string; value: number }>;
+  ].filter(Boolean) as Array<{
+    emoji: string;
+    label: string;
+    headline: string;
+    detail: string;
+  }>;
 
-  if (items.length === 0) return null;
+  if (facts.length === 0) return null;
 
   return (
-    <section className="border-y border-gray-100 bg-white py-10">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-6 text-center sm:grid-cols-3">
-          {items.map((item) => (
-            <StatCard key={item.label} value={item.value} label={item.label} />
-          ))}
-        </div>
+    <section className="border-y border-gray-100 bg-surface-muted/50 py-10">
+      <div className={siteContainerClass}>
+        <HubQuickFactsGrid facts={facts} columns={facts.length >= 3 ? 3 : 3} />
       </div>
     </section>
   );

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Search } from "lucide-react";
+import { ArrowRight, Search, ShieldCheck, Users, Wallet } from "lucide-react";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { buildCatalogFilterHref } from "@/lib/catalog-filter-url";
@@ -23,9 +23,14 @@ import PlatformStatsBlock from "./PlatformStatsBlock";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
-import { siteScrollAnchorClass } from "@/lib/site-container";
+import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
+import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { cn } from "@/lib/cn";
+
+const HOME_HERO_IMAGE =
+  "https://images.unsplash.com/photo-1589903308904-0e0234572c67?w=1200&q=80";
 
 interface MarketplaceHomeProps {
   tours: TourListing[];
@@ -34,29 +39,55 @@ interface MarketplaceHomeProps {
   platformStats: PlatformStats;
 }
 
+function SectionHeader({
+  title,
+  subtitle,
+  href,
+  linkLabel,
+}: {
+  title: string;
+  subtitle?: string;
+  href?: string;
+  linkLabel?: string;
+}) {
+  return (
+    <div className="mb-6 flex items-end justify-between gap-4">
+      <div>
+        <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
+        {subtitle ? <p className="mt-1.5 text-sm leading-relaxed text-slate sm:text-base">{subtitle}</p> : null}
+      </div>
+      {href && linkLabel ? (
+        <Link
+          href={href}
+          className="hidden shrink-0 items-center gap-1 text-sm font-medium text-sky hover:underline sm:inline-flex"
+        >
+          {linkLabel}
+          <ArrowRight className="h-4 w-4" />
+        </Link>
+      ) : null}
+    </div>
+  );
+}
+
 function TourGrid({
   title,
   subtitle,
   tours,
   id,
+  href = "/tours",
+  linkLabel = "Все туры",
 }: {
   title: string;
   subtitle?: string;
   tours: TourListing[];
   id?: string;
+  href?: string;
+  linkLabel?: string;
 }) {
   if (!tours.length) return null;
   return (
-    <section id={id} className="py-12">
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <div>
-          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
-          {subtitle && <p className="mt-1 text-slate">{subtitle}</p>}
-        </div>
-        <Link href="/tours" className="hidden text-sm font-medium text-brand hover:underline sm:block">
-          Все туры →
-        </Link>
-      </div>
+    <section id={id} className={cn(id && siteScrollAnchorClass)}>
+      <SectionHeader title={title} subtitle={subtitle} href={href} linkLabel={linkLabel} />
       <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
         {tours.map((t) => (
           <MarketplaceTourCard key={t.id} tour={t} />
@@ -93,26 +124,103 @@ export default function MarketplaceHome({
   const newTours = tours.filter((t) => t.isNew).slice(0, 3);
   const recommendedTours = useMemo(() => getRecommendedListings(tours, 6), [tours]);
 
+  const valueProps = [
+    {
+      emoji: "🧭",
+      label: "Организаторы",
+      headline: "Проверенные авторы",
+      detail: "Реальные программы и отзывы после поездок",
+    },
+    {
+      emoji: "👥",
+      label: "Группы",
+      headline: "Комфортный размер",
+      detail: "Малые группы и индивидуальные заявки",
+    },
+    {
+      emoji: "💬",
+      label: "Язык",
+      headline: "На русском",
+      detail: "Большинство туров с русскоязычными гидами",
+    },
+    {
+      emoji: "🛡",
+      label: "Оплата",
+      headline: "Без предоплаты",
+      detail: "Заявка сейчас — оплата после подтверждения",
+    },
+  ];
+
+  const whyUs = [
+    {
+      icon: ShieldCheck,
+      title: "Проверенные организаторы",
+      desc: "Каждый гид проходит отбор; отзывы только после реальных поездок",
+    },
+    {
+      icon: Users,
+      title: "Малые группы",
+      desc: "Комфортный размер группы — больше внимания и гибкости маршрута",
+    },
+    {
+      icon: Wallet,
+      title: "Прозрачная оплата",
+      desc: "Отправляете заявку без предоплаты, платите после подтверждения организатором",
+    },
+    {
+      icon: ArrowRight,
+      title: "Путеводитель и иммиграция",
+      desc: "Справочник по стране и переезду — дополняет выбор тура",
+    },
+  ];
+
   return (
     <>
-      {/* Hero + Search */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-brand-light via-white to-sky/10 pb-8 pt-6 sm:pb-12 sm:pt-10">
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-sun/30 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-48 w-48 rounded-full bg-sky/30 blur-3xl" />
-        </div>
-        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-3xl text-center">
-            <h1 className="font-display text-3xl font-bold leading-tight text-charcoal sm:text-4xl lg:text-5xl">
-              Путешествия по{" "}
-              <span className="text-brand">Аргентине</span>
-            </h1>
-            <p className="mt-4 text-base text-slate sm:text-lg">
-              Авторские туры от проверенных организаторов — от танго Буэнос-Айреса до ледников Патагонии
-            </p>
+      {/* Hero */}
+      <section
+        data-scroll-rail-tone="light"
+        className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]"
+      >
+        <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl" aria-hidden />
+        <div className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl" aria-hidden />
+
+        <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-14")}>
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">
+            <div className="min-w-0">
+              <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
+                Авторские туры
+              </span>
+              <h1 className="mt-4 max-w-2xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.65rem]">
+                Путешествия по{" "}
+                <span className="text-sky">Аргентине</span>
+              </h1>
+              <p className="mt-3 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
+                Маршруты от местных организаторов — от танго Буэнос-Айреса до ледников Патагонии
+              </p>
+            </div>
+
+            <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+              <div
+                className="pointer-events-none absolute -bottom-3 -left-3 hidden h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] rounded-2xl border border-sky/20 lg:block"
+                aria-hidden
+              />
+              <div className="relative overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100">
+                <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
+                  <Image
+                    src={HOME_HERO_IMAGE}
+                    alt=""
+                    fill
+                    priority
+                    sizes="(max-width: 1024px) 100vw, 360px"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/25 via-transparent to-transparent" aria-hidden />
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div className="mx-auto mt-8 max-w-4xl">
+          <div className="mt-8 max-w-4xl lg:max-w-none">
             <SearchBlock
               query={filters.query}
               dateFrom={filters.dateFrom}
@@ -139,160 +247,164 @@ export default function MarketplaceHome({
             />
           </div>
 
-          <div className="mx-auto mt-4 max-w-4xl">
+          <div className="mt-4">
             <FilterBar tours={tours} filters={filters} onChange={setFilters} />
           </div>
         </div>
       </section>
 
       {hasActiveSearch ? (
-      <section id="tour-results" className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ${siteScrollAnchorClass}`}>
-        <div className="flex items-center justify-between border-b border-gray-100 py-6">
-          <p className="text-sm text-slate">
-            Найдено{" "}
-            <span className="font-semibold text-charcoal">{filtered.length}</span>{" "}
-            {tripsWord(filtered.length)}
-            {activeCount > 0 && (
-              <span className="ml-2 text-brand">· {filtersWord(activeCount)}</span>
-            )}
-          </p>
-          <div className="flex items-center gap-2">
-            {activeCount > 0 ? (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setFilters(getDefaultFilters(currency, tours))}
-              >
-                Сбросить всё
-              </Button>
-            ) : null}
-            <Link
-              href={buildCatalogFilterHref(filters, "recommended", currency, tours)}
-              className="text-sm font-medium text-brand hover:underline"
-            >
-              Открыть каталог →
-            </Link>
-          </div>
-        </div>
-        {filtered.length > 0 ? (
-          <div className="grid gap-5 py-8 sm:grid-cols-2 xl:grid-cols-3">
-            {filtered.slice(0, 6).map((t) => (
-              <MarketplaceTourCard key={t.id} tour={t} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState
-            icon={Search}
-            title="По вашему запросу ничего не найдено"
-            description="Попробуйте изменить фильтры или сбросить их."
-            action={{
-              label: "Сбросить фильтры",
-              onClick: () => setFilters(getDefaultFilters(currency, tours)),
-              variant: "outline",
-            }}
-            bordered={false}
-            className="py-16"
-          />
-        )}
-        {filtered.length > 6 ? (
-          <div className="pb-10 text-center">
-            <Link href="/tours">
-              <Button>Смотреть все {filtered.length} {tripsWord(filtered.length)} в каталоге</Button>
-            </Link>
-          </div>
-        ) : null}
-      </section>
-      ) : (
-        <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="rounded-3xl bg-gradient-to-br from-brand-light/80 via-white to-sky/10 px-6 py-10 text-center sm:px-10">
-            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
-              Более {tours.length} {tripsWord(tours.length)} по Аргентине
-            </h2>
-            <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate sm:text-base">
-              Авторские маршруты от местных организаторов — выбирайте даты, сравнивайте программы и
-              отправляйте заявку без предоплаты.
+        <section id="tour-results" className={cn(siteContainerClass, "py-8", siteScrollAnchorClass)}>
+          <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-6">
+            <p className="text-sm text-slate">
+              Найдено{" "}
+              <span className="font-semibold text-charcoal">{filtered.length}</span>{" "}
+              {tripsWord(filtered.length)}
+              {activeCount > 0 ? (
+                <span className="ml-2 text-sky">· {filtersWord(activeCount)}</span>
+              ) : null}
             </p>
-            <Link href="/tours" className="mt-6 inline-block">
-              <Button size="lg">Перейти в каталог туров</Button>
-            </Link>
+            <div className="flex items-center gap-2">
+              {activeCount > 0 ? (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setFilters(getDefaultFilters(currency, tours))}
+                >
+                  Сбросить всё
+                </Button>
+              ) : null}
+              <Link
+                href={buildCatalogFilterHref(filters, "recommended", currency, tours)}
+                className="text-sm font-medium text-sky hover:underline"
+              >
+                Открыть каталог →
+              </Link>
+            </div>
+          </div>
+          {filtered.length > 0 ? (
+            <div className="grid gap-5 py-8 sm:grid-cols-2 xl:grid-cols-3">
+              {filtered.slice(0, 6).map((t) => (
+                <MarketplaceTourCard key={t.id} tour={t} />
+              ))}
+            </div>
+          ) : (
+            <EmptyState
+              icon={Search}
+              title="По вашему запросу ничего не найдено"
+              description="Попробуйте изменить фильтры или сбросить их."
+              action={{
+                label: "Сбросить фильтры",
+                onClick: () => setFilters(getDefaultFilters(currency, tours)),
+                variant: "outline",
+              }}
+              bordered={false}
+              className="py-16"
+            />
+          )}
+          {filtered.length > 6 ? (
+            <div className="pb-4 text-center">
+              <Link href="/tours">
+                <Button>
+                  Смотреть все {filtered.length} {tripsWord(filtered.length)} в каталоге
+                </Button>
+              </Link>
+            </div>
+          ) : null}
+        </section>
+      ) : (
+        <section className="border-b border-gray-100 bg-surface-muted/50 py-10">
+          <div className={siteContainerClass}>
+            <HubQuickFactsGrid columns={4} facts={valueProps} />
+            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <p className="text-center text-sm text-slate">
+                В каталоге{" "}
+                <span className="font-semibold text-charcoal">
+                  {tours.length} {tripsWord(tours.length)}
+                </span>{" "}
+                — выбирайте даты и отправляйте заявку
+              </p>
+              <Link href="/tours">
+                <Button size="lg" className="rounded-full px-8">
+                  Открыть каталог
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
       )}
 
       <PlatformStatsBlock initialStats={platformStats} />
 
-      {/* Popular destinations */}
-      <section className="bg-white py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
-            Популярные направления
-          </h2>
-          <p className="mt-2 text-slate">Откройте для себя лучшие уголки Аргентины</p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Destinations */}
+      <section className="py-12 md:py-14">
+        <div className={siteContainerClass}>
+          <SectionHeader
+            title="Популярные направления"
+            subtitle="Откройте лучшие уголки страны — от столицы до края света"
+            href="/destinations"
+            linkLabel="Все направления"
+          />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {POPULAR_DESTINATIONS.map((dest) => (
               <Link
                 key={dest.id}
                 href={destinationHref(dest.id)}
-                className="group relative block h-48 overflow-hidden rounded-2xl text-left sm:h-56"
+                className="group relative block h-48 overflow-hidden rounded-2xl ring-1 ring-gray-100 transition-shadow hover:shadow-elevated sm:h-56"
               >
                 <Image
                   src={dest.image}
                   alt={dest.name}
                   fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                   sizes="(max-width: 768px) 50vw, 25vw"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
                 <div className="absolute bottom-0 p-4 text-white">
-                  <p className="text-xs text-white/70">{dest.region}</p>
-                  <h3 className="font-heading text-lg font-bold">{dest.name}</h3>
-                  <p className="mt-0.5 text-xs text-white/80">{dest.description}</p>
+                  <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{dest.region}</p>
+                  <h3 className="mt-1 font-heading text-lg font-bold">{dest.name}</h3>
+                  <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/80">{dest.description}</p>
                 </div>
               </Link>
             ))}
           </div>
-          <div className="mt-6">
-            <Link href="/destinations" className="text-sm font-medium text-brand hover:underline">
-              Все направления →
-            </Link>
-          </div>
         </div>
       </section>
 
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <section className="rounded-3xl bg-white py-12 shadow-sm ring-1 ring-gray-100">
-          <div className="px-4 sm:px-6 lg:px-8">
-        <TourGrid
-          id="recommended"
-          title="Рекомендуем"
-          subtitle="Подборка по рейтингу, отзывам и актуальности"
-          tours={recommendedTours}
-        />
-        <TourGrid title="Лучшие туры месяца" subtitle="Выбор редакции ArgentinaTravel" tours={bestOfMonth} />
-        <TourGrid title="Горящие предложения" subtitle="Успейте забронировать" tours={hotTours} />
-        <TourGrid title="Новые туры" subtitle="Свежие маршруты сезона" tours={newTours} />
-          </div>
-        </section>
-      </div>
+      {/* Tour collections */}
+      <section className="border-y border-gray-100 bg-white py-12 md:py-14">
+        <div className={cn(siteContainerClass, "space-y-14")}>
+          <TourGrid
+            id="recommended"
+            title="Рекомендуем"
+            subtitle="Подборка по рейтингу, отзывам и актуальности"
+            tours={recommendedTours}
+          />
+          <TourGrid
+            title="Лучшие туры месяца"
+            subtitle="Выбор редакции"
+            tours={bestOfMonth}
+          />
+          <TourGrid title="Горящие предложения" subtitle="Успейте забронировать" tours={hotTours} />
+          <TourGrid title="Новые туры" subtitle="Свежие маршруты сезона" tours={newTours} />
+        </div>
+      </section>
 
       {/* Reviews */}
-      <section className="bg-white py-12">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
-            Отзывы путешественников
-          </h2>
+      <section className="bg-surface-muted/50 py-12 md:py-14">
+        <div className={siteContainerClass}>
+          <SectionHeader title="Отзывы путешественников" subtitle="Только после реальных поездок" />
           {testimonials.length > 0 ? (
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {testimonials.map((t) => (
                 <TestimonialCard key={t.id} testimonial={t} />
               ))}
             </div>
           ) : (
-            <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-white/60 px-6 py-12 text-center">
-              <p className="font-medium text-charcoal">Отзывы появляются после поездок</p>
-              <p className="mx-auto mt-2 max-w-md text-sm text-slate">
-                Мы показываем только реальные отзывы с меткой «Проверенная поездка» — без выдуманных
-                имён и статичных цитат.
+            <div className="rounded-2xl border border-dashed border-gray-200 bg-white/80 px-6 py-12 text-center">
+              <p className="font-heading font-semibold text-charcoal">Отзывы появляются после поездок</p>
+              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate">
+                Показываем только отзывы с меткой «Проверенная поездка» — без выдуманных цитат.
               </p>
             </div>
           )}
@@ -300,43 +412,56 @@ export default function MarketplaceHome({
       </section>
 
       {/* Blog */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="flex items-end justify-between">
-          <div>
-            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
-              Статьи из блога
-            </h2>
-            <p className="mt-2 text-slate">Советы и вдохновение для поездки</p>
+      <section className="py-12 md:py-14">
+        <div className={siteContainerClass}>
+          <SectionHeader
+            title="Статьи из блога"
+            subtitle="Советы и вдохновение перед поездкой"
+            href="/blog"
+            linkLabel="Все статьи"
+          />
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {blogPosts.slice(0, 3).map((p) => (
+              <BlogCard key={p.id} post={p} />
+            ))}
           </div>
-          <Link href="/blog" className="text-sm font-medium text-brand hover:underline">
-            Все статьи →
-          </Link>
-        </div>
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {blogPosts.slice(0, 3).map((p) => (
-            <BlogCard key={p.id} post={p} />
-          ))}
         </div>
       </section>
 
-      {/* Why us */}
-      <section className="bg-patagonia py-16 text-white" data-scroll-rail-tone="dark">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-heading text-2xl font-bold sm:text-3xl">
-            Почему путешествовать с нами
-          </h2>
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { title: "Проверенные организаторы", desc: "Каждый гид проходит отбор и имеет реальные отзывы" },
-              { title: "Малые группы", desc: "Комфортные размеры групп для лучшего опыта" },
-              { title: "На русском языке", desc: "Большинство туров с русскоязычными гидами" },
-              { title: "Безопасная оплата", desc: "Заявка без предоплаты — оплата после подтверждения организатором" },
-            ].map((item) => (
-              <div key={item.title} className="rounded-2xl bg-white/10 p-5 backdrop-blur-sm">
-                <h3 className="font-semibold">{item.title}</h3>
-                <p className="mt-2 text-sm text-white/75">{item.desc}</p>
+      {/* Why us + guide links */}
+      <section className="border-t border-gray-100 bg-patagonia py-14 text-white" data-scroll-rail-tone="dark">
+        <div className={siteContainerClass}>
+          <h2 className="font-heading text-2xl font-bold sm:text-3xl">Почему путешествовать с нами</h2>
+          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">
+            Площадка, справочник и иммиграционный раздел — всё в одном проекте о жизни и поездках в Аргентину.
+          </p>
+          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {whyUs.map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm"
+              >
+                <Icon className="h-6 w-6 text-sun" aria-hidden />
+                <h3 className="mt-3 font-heading font-semibold">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-white/75">{desc}</p>
               </div>
             ))}
+          </div>
+          <div className="mt-8 flex flex-wrap gap-3">
+            <Link
+              href="/guide"
+              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
+            >
+              Путеводитель
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link
+              href="/immigration"
+              className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
+            >
+              Иммиграция
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>

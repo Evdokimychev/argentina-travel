@@ -37,7 +37,7 @@ export default function TourCard({ tour }: TourCardProps) {
           <span>•</span>
           <span>{tour.difficulty}</span>
         </div>
-        <h3 className="mt-2 font-display text-lg font-bold text-charcoal transition-colors group-hover:text-sky">
+        <h3 className="mt-2 font-heading text-lg font-bold text-charcoal transition-colors group-hover:text-sky">
           {tour.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm text-slate">

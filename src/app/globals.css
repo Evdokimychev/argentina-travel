@@ -81,7 +81,7 @@ body {
   background-color: var(--color-background);
 }
 
-/* Unbounded — только явно через .font-display (h1 страниц, названия туров, ключевые hero) */
+/* Unbounded — только явно через .font-display (h1 страниц и страницы тура) */
 .font-display {
   font-family: var(--font-display);
 }
