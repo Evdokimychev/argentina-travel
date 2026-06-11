@@ -4,7 +4,7 @@ import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 const PAGE_TITLE = "Магазин гидов — Пора в Аргентину";
 const PAGE_DESCRIPTION =
-  "PDF-путеводители и чеклисты для подготовки к поездке в Аргентину — запрос через менеджера.";
+  "PDF-путеводители и чек-листы для подготовки к поездке в Аргентину — заказ на сайте или через менеджера.";
 
 export const metadata = buildPublicPageMetadata({
   title: PAGE_TITLE,

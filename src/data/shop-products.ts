@@ -8,6 +8,8 @@ export type ShopProduct = {
   deliveryType: "digital";
   image: string;
   format: string;
+  /** Supabase Storage path for future signed PDF delivery */
+  storagePath?: string;
 };
 
 export const SHOP_PRODUCTS: ShopProduct[] = [

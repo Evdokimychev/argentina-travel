@@ -5,8 +5,11 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cabinetCardClass, cabinetPanelClass } from "@/lib/cabinet-ui";
+import { SHOP_ORDER_STATUS_LABELS } from "@/types/shop-order";
 
 const TOKEN_KEY = "leads-admin-token";
+
+type AdminTab = "leads" | "shop";
 
 type NewsletterRow = {
   id: string;
@@ -29,6 +32,22 @@ type ContactRow = {
   created_at: string;
 };
 
+type ShopOrderRow = {
+  id: string;
+  productTitle: string;
+  productSlug: string;
+  priceUsd: number;
+  currency: string;
+  status: string;
+  paymentStatus: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  deliveryUrl: string | null;
+  notes: string | null;
+  createdAt: string;
+};
+
 function formatWhen(iso: string) {
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
@@ -38,29 +57,48 @@ function formatWhen(iso: string) {
   }).format(new Date(iso));
 }
 
+function shopStatusLabel(status: string): string {
+  return status in SHOP_ORDER_STATUS_LABELS
+    ? SHOP_ORDER_STATUS_LABELS[status as keyof typeof SHOP_ORDER_STATUS_LABELS]
+    : status;
+}
+
 export default function AdminLeadsPage() {
   const [token, setToken] = useState("");
   const [storedToken, setStoredToken] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<AdminTab>("leads");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [newsletter, setNewsletter] = useState<NewsletterRow[]>([]);
   const [contacts, setContacts] = useState<ContactRow[]>([]);
+  const [shopOrders, setShopOrders] = useState<ShopOrderRow[]>([]);
 
   const load = useCallback(async (authToken: string) => {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch("/api/admin/leads", {
-        headers: { Authorization: `Bearer ${authToken}` },
-      });
-      const data = (await res.json()) as {
+      const headers = { Authorization: `Bearer ${authToken}` };
+      const [leadsRes, shopRes] = await Promise.all([
+        fetch("/api/admin/leads", { headers }),
+        fetch("/api/admin/shop/orders", { headers }),
+      ]);
+
+      const leadsData = (await leadsRes.json()) as {
         error?: string;
         newsletter?: NewsletterRow[];
         contacts?: ContactRow[];
       };
-      if (!res.ok) throw new Error(data.error ?? "Не удалось загрузить лиды");
-      setNewsletter(data.newsletter ?? []);
-      setContacts(data.contacts ?? []);
+      const shopData = (await shopRes.json()) as {
+        error?: string;
+        orders?: ShopOrderRow[];
+      };
+
+      if (!leadsRes.ok) throw new Error(leadsData.error ?? "Не удалось загрузить лиды");
+      if (!shopRes.ok) throw new Error(shopData.error ?? "Не удалось загрузить заказы");
+
+      setNewsletter(leadsData.newsletter ?? []);
+      setContacts(leadsData.contacts ?? []);
+      setShopOrders(shopData.orders ?? []);
       sessionStorage.setItem(TOKEN_KEY, authToken);
       setStoredToken(authToken);
     } catch (loadError) {
@@ -86,13 +124,14 @@ export default function AdminLeadsPage() {
     setStoredToken(null);
     setNewsletter([]);
     setContacts([]);
+    setShopOrders([]);
   }
 
   if (!storedToken) {
     return (
       <div className="min-h-screen bg-surface-muted px-4 py-16">
         <div className={`mx-auto max-w-md ${cabinetPanelClass} p-8`}>
-          <h1 className="font-heading text-2xl font-bold text-charcoal">Вход: лиды</h1>
+          <h1 className="font-heading text-2xl font-bold text-charcoal">Вход: админ</h1>
           <p className="mt-2 text-sm text-slate">
             Токен из переменной <code className="text-xs">LEADS_ADMIN_TOKEN</code> на сервере.
           </p>
@@ -124,8 +163,8 @@ export default function AdminLeadsPage() {
       <div className="mx-auto max-w-5xl space-y-8">
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
-            <h1 className="font-heading text-2xl font-bold text-charcoal">Лиды</h1>
-            <p className="mt-1 text-sm text-slate">Подписки и заявки из Supabase</p>
+            <h1 className="font-heading text-2xl font-bold text-charcoal">Админ</h1>
+            <p className="mt-1 text-sm text-slate">Лиды и заказы магазина из Supabase</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => void load(storedToken)} disabled={loading}>
@@ -137,52 +176,115 @@ export default function AdminLeadsPage() {
           </div>
         </header>
 
-        <section className={`${cabinetCardClass} overflow-hidden`}>
-          <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
-            Подписки ({newsletter.length})
-          </h2>
-          <ul className="divide-y divide-gray-100">
-            {newsletter.length === 0 ? (
-              <li className="px-5 py-8 text-sm text-slate">Пока пусто</li>
-            ) : (
-              newsletter.map((row) => (
-                <li key={row.id} className="flex flex-wrap items-center justify-between gap-2 px-5 py-3 text-sm">
-                  <span className="font-medium text-charcoal">{row.email}</span>
-                  <span className="text-slate">
-                    {row.source} · {formatWhen(row.created_at)}
-                  </span>
-                </li>
-              ))
-            )}
-          </ul>
-        </section>
+        <div className="flex flex-wrap gap-2">
+          <Button
+            variant={activeTab === "leads" ? "default" : "outline"}
+            onClick={() => setActiveTab("leads")}
+          >
+            Лиды
+          </Button>
+          <Button
+            variant={activeTab === "shop" ? "default" : "outline"}
+            onClick={() => setActiveTab("shop")}
+          >
+            Магазин ({shopOrders.length})
+          </Button>
+        </div>
 
-        <section className={`${cabinetCardClass} overflow-hidden`}>
-          <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
-            Заявки ({contacts.length})
-          </h2>
-          <ul className="divide-y divide-gray-100">
-            {contacts.length === 0 ? (
-              <li className="px-5 py-8 text-sm text-slate">Пока пусто</li>
-            ) : (
-              contacts.map((row) => (
-                <li key={row.id} className="space-y-1 px-5 py-4 text-sm">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
-                      {row.kind}
-                    </span>
-                    <span className="font-medium text-charcoal">{row.name}</span>
-                    <span className="text-slate">{formatWhen(row.created_at)}</span>
-                  </div>
-                  <p className="text-slate">
-                    {[row.email, row.phone].filter(Boolean).join(" · ") || "—"}
-                  </p>
-                  {row.message ? <p className="text-charcoal">{row.message}</p> : null}
-                </li>
-              ))
-            )}
-          </ul>
-        </section>
+        {activeTab === "leads" ? (
+          <>
+            <section className={`${cabinetCardClass} overflow-hidden`}>
+              <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+                Подписки ({newsletter.length})
+              </h2>
+              <ul className="divide-y divide-gray-100">
+                {newsletter.length === 0 ? (
+                  <li className="px-5 py-8 text-sm text-slate">Пока пусто</li>
+                ) : (
+                  newsletter.map((row) => (
+                    <li
+                      key={row.id}
+                      className="flex flex-wrap items-center justify-between gap-2 px-5 py-3 text-sm"
+                    >
+                      <span className="font-medium text-charcoal">{row.email}</span>
+                      <span className="text-slate">
+                        {row.source} · {formatWhen(row.created_at)}
+                      </span>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </section>
+
+            <section className={`${cabinetCardClass} overflow-hidden`}>
+              <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+                Заявки ({contacts.length})
+              </h2>
+              <ul className="divide-y divide-gray-100">
+                {contacts.length === 0 ? (
+                  <li className="px-5 py-8 text-sm text-slate">Пока пусто</li>
+                ) : (
+                  contacts.map((row) => (
+                    <li key={row.id} className="space-y-1 px-5 py-4 text-sm">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="rounded-full bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
+                          {row.kind}
+                        </span>
+                        <span className="font-medium text-charcoal">{row.name}</span>
+                        <span className="text-slate">{formatWhen(row.created_at)}</span>
+                      </div>
+                      <p className="text-slate">
+                        {[row.email, row.phone].filter(Boolean).join(" · ") || "—"}
+                      </p>
+                      {row.message ? <p className="text-charcoal">{row.message}</p> : null}
+                    </li>
+                  ))
+                )}
+              </ul>
+            </section>
+          </>
+        ) : (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Заказы магазина ({shopOrders.length})
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {shopOrders.length === 0 ? (
+                <li className="px-5 py-8 text-sm text-slate">Пока пусто</li>
+              ) : (
+                shopOrders.map((row) => (
+                  <li key={row.id} className="space-y-1 px-5 py-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium text-charcoal">{row.productTitle}</span>
+                      <span className="rounded-full bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
+                        {shopStatusLabel(row.status)}
+                      </span>
+                      <span className="text-slate">{formatWhen(row.createdAt)}</span>
+                    </div>
+                    <p className="text-slate">
+                      {row.id} · ${row.priceUsd} {row.currency}
+                    </p>
+                    <p className="text-charcoal">
+                      {row.customerName} · {row.customerEmail}
+                      {row.customerPhone ? ` · ${row.customerPhone}` : ""}
+                    </p>
+                    {row.notes ? <p className="text-slate">{row.notes}</p> : null}
+                    {row.deliveryUrl ? (
+                      <a
+                        href={row.deliveryUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-sky hover:underline"
+                      >
+                        delivery_url
+                      </a>
+                    ) : null}
+                  </li>
+                ))
+              )}
+            </ul>
+          </section>
+        )}
       </div>
     </div>
   );

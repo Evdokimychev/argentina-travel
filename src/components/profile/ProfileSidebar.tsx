@@ -11,6 +11,7 @@ import {
   LayoutGrid,
   Mail,
   Settings,
+  ShoppingBag,
   Star,
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
@@ -43,6 +44,7 @@ const NAV_ICONS: Record<Exclude<ProfileNavId, "settings">, typeof LayoutGrid> = 
   dashboard: LayoutGrid,
   favorites: Heart,
   bookings: CalendarDays,
+  orders: ShoppingBag,
   messages: Mail,
   reviews: Star,
 };

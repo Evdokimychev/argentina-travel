@@ -135,6 +135,66 @@ export interface Database {
         };
         Relationships: [];
       };
+      shop_orders: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          guest_email: string | null;
+          product_id: string;
+          product_slug: string;
+          product_title: string;
+          price_usd: number;
+          currency: string;
+          status: string;
+          payment_status: string;
+          customer_name: string;
+          customer_email: string;
+          customer_phone: string;
+          delivery_url: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          user_id?: string | null;
+          guest_email?: string | null;
+          product_id: string;
+          product_slug: string;
+          product_title: string;
+          price_usd?: number;
+          currency?: string;
+          status?: string;
+          payment_status?: string;
+          customer_name?: string;
+          customer_email: string;
+          customer_phone?: string;
+          delivery_url?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          guest_email?: string | null;
+          product_id?: string;
+          product_slug?: string;
+          product_title?: string;
+          price_usd?: number;
+          currency?: string;
+          status?: string;
+          payment_status?: string;
+          customer_name?: string;
+          customer_email?: string;
+          customer_phone?: string;
+          delivery_url?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;
@@ -212,6 +272,9 @@ export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 export type BookingRow = Database["public"]["Tables"]["bookings"]["Row"];
 export type BookingInsert = Database["public"]["Tables"]["bookings"]["Insert"];
 export type BookingUpdate = Database["public"]["Tables"]["bookings"]["Update"];
+export type ShopOrderRow = Database["public"]["Tables"]["shop_orders"]["Row"];
+export type ShopOrderInsert = Database["public"]["Tables"]["shop_orders"]["Insert"];
+export type ShopOrderUpdate = Database["public"]["Tables"]["shop_orders"]["Update"];
 
 export type NewsletterSubscriber =
   Database["public"]["Tables"]["newsletter_subscribers"]["Row"];

@@ -131,6 +131,32 @@ npm run supabase:migrate   # все файлы в supabase/migrations/ по по
 - `GET /api/organizer/bookings` — заявки организатора
 - `POST /api/auth/login-by-phone` — вход по телефону (демо-пароль `demo123`)
 
+## Phase 3 — Shop orders (PDF guides)
+
+| Компонент | Файлы | Env |
+|-----------|-------|-----|
+| Таблица `shop_orders` | migration `20250613000000_shop_orders.sql` | `NEXT_PUBLIC_SUPABASE_*` |
+| Self-serve checkout | `ShopCheckoutModal`, `/shop/[slug]` | `NEXT_PUBLIC_SUPABASE_AUTH` |
+| ЛК туриста | `/profile/orders` | — |
+| Админ заказов | `/admin/leads` → вкладка «Магазин», `/api/admin/shop/orders` | `LEADS_ADMIN_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY` |
+| Email при заказе | `shop-order-notify.ts` | `RESEND_API_KEY`, `LEADS_NOTIFY_EMAIL` |
+| Dual mode fallback | без Supabase → `/contacts?product=slug` | `NEXT_PUBLIC_SUPABASE_AUTH=false` |
+
+### Миграция Phase 3
+
+```bash
+npm run supabase:migrate   # применит 20250613000000_shop_orders.sql
+```
+
+### API Phase 3
+
+- `POST /api/shop/orders` — создать заказ (guest или auth)
+- `GET /api/shop/orders` — заказы авторизованного пользователя
+- `GET /api/shop/orders/[id]` — детали заказа
+- `GET /api/admin/shop/orders` — все заказы (Bearer `LEADS_ADMIN_TOKEN`)
+
+Поля `delivery_url` и `storagePath` в каталоге — задел под signed URL из Supabase Storage; оплата вручную менеджером.
+
 ## Phase 1 — быстрые улучшения
 
 | Функция | Где | Env |

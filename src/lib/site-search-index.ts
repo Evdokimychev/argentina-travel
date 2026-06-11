@@ -318,7 +318,7 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     type: "page" as const,
     title: product.title,
     description: product.description,
-    href: `/contacts?product=${product.slug}`,
+    href: `/shop/${product.slug}`,
     keywords: ["магазин", "pdf", product.format],
   }));
 
