@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DestinationDetailView from "@/components/destinations/DestinationDetailView";
 import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 
 type PageProps = {
   params: Promise<{ slug: string }>;

@@ -41,7 +41,29 @@ function toSitemapEntry(
   };
 }
 
-export function collectSitemapPaths(): string[] {
+export async function collectTourSitemapPaths(): Promise<string[]> {
+  const staticPaths = marketplaceTours.map((tour) => `/tours/${tour.slug}`);
+
+  try {
+    const { isSupabaseToursEnabled } = await import("@/lib/auth-mode");
+    if (isSupabaseToursEnabled()) {
+      const { fetchPublishedSlugsServer } = await import("@/lib/tour-content-server");
+      const slugs = await fetchPublishedSlugsServer();
+      if (slugs.length > 0) {
+        return uniquePaths([
+          ...staticPaths,
+          ...slugs.map((slug) => `/tours/${slug}`),
+        ]);
+      }
+    }
+  } catch {
+    // use static slugs only
+  }
+
+  return staticPaths;
+}
+
+export async function collectSitemapPaths(): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
     .filter(isIndexableInternalPath);
@@ -51,7 +73,7 @@ export function collectSitemapPaths(): string[] {
     ...SITE_FOOTER_CONTACTS.map((link) => link.href),
   ].filter(isIndexableInternalPath);
 
-  const tourPaths = marketplaceTours.map((tour) => `/tours/${tour.slug}`);
+  const tourPaths = await collectTourSitemapPaths();
   const blogPaths = blogPosts.map((post) => `/blog/${post.slug}`);
   const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
@@ -76,7 +98,7 @@ export function collectSitemapPaths(): string[] {
   ]);
 }
 
-export function buildSitemapEntries(): MetadataRoute.Sitemap {
+export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const contentUpdatedAt = new Map(
     getAllContentPages().map((page) => [contentPageHref(page), page.updatedAt])
   );
@@ -85,7 +107,9 @@ export function buildSitemapEntries(): MetadataRoute.Sitemap {
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  return collectSitemapPaths().map((path) => {
+  const paths = await collectSitemapPaths();
+
+  return paths.map((path) => {
     const lastModified =
       contentUpdatedAt.get(path) ?? blogUpdatedAt.get(path) ?? legalUpdatedAt.get(path);
     return toSitemapEntry(path, lastModified);

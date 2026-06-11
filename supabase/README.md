@@ -157,6 +157,42 @@ npm run supabase:migrate   # применит 20250613000000_shop_orders.sql
 
 Поля `delivery_url` и `storagePath` в каталоге — задел под signed URL из Supabase Storage; оплата вручную менеджером.
 
+## Phase 4 — Tours content (CMS mirror)
+
+| Компонент | Файлы | Env |
+|-----------|-------|-----|
+| Таблица `tours` | migration `20250614000000_tours_content.sql` | `NEXT_PUBLIC_SUPABASE_TOURS` |
+| Публичный каталог | `fetchMarketplaceTours`, `/api/tours` | `NEXT_PUBLIC_SUPABASE_AUTH` |
+| Синхронизация организатора | `organizer-tour-store` → `/api/organizer/tours/sync` | — |
+| Sitemap | `collectTourSitemapPaths` | — |
+| Админ | `/admin/leads` → вкладка «Туры» | `LEADS_ADMIN_TOKEN` |
+| Dual mode fallback | localStorage + `marketplace-tours` seed | `NEXT_PUBLIC_SUPABASE_TOURS=false` |
+
+Редактор организатора остаётся на localStorage; Supabase — зеркало опубликованного каталога для SSR/SEO.
+
+### Миграция Phase 4
+
+```bash
+npm run supabase:migrate   # применит 20250614000000_tours_content.sql
+```
+
+### Seed каталога из статики
+
+```bash
+npm run dev                # в отдельном терминале
+npm run supabase:seed-tours
+```
+
+Или `POST /api/admin/tours/seed` с Bearer `LEADS_ADMIN_TOKEN`.
+
+### API Phase 4
+
+- `GET /api/tours` — опубликованные листинги
+- `GET /api/tours/[slug]` — детальная страница тура
+- `POST /api/organizer/tours/sync` — upsert после publish (organizer auth)
+- `GET /api/admin/tours` — все туры (Bearer `LEADS_ADMIN_TOKEN`)
+- `POST /api/admin/tours/seed` — seed из `marketplace-tours`
+
 ## Phase 1 — быстрые улучшения
 
 | Функция | Где | Env |

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import MarketplaceHome from "@/components/marketplace/MarketplaceHome";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
 import { collectTopVerifiedReviews } from "@/lib/homepage-reviews";
 import { getPlatformStatsFromRepository } from "@/lib/organizer-public";

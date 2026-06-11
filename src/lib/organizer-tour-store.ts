@@ -48,6 +48,7 @@ import {
   normalizeRouteFeaturesText,
 } from "@/data/tour-organizer-display-defaults";
 import type { TourLanguage } from "@/types";
+import { fireOrganizerTourSync } from "@/lib/tour-content-api";
 import {
   markTourDeletedBySlug,
   upsertTourFromOrganizerDraft,
@@ -646,7 +647,8 @@ export function saveOrganizerTourDraft(
   writeDraftMap(drafts);
 
   saveOrganizerListing(draftToListing(next));
-  upsertTourFromOrganizerDraft(next);
+  const canonical = upsertTourFromOrganizerDraft(next);
+  fireOrganizerTourSync(canonical);
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
@@ -695,7 +697,8 @@ export function createOrganizerTour(
   drafts[id] = draft;
   writeDraftMap(drafts);
 
-  upsertTourFromOrganizerDraft(draft);
+  const canonical = upsertTourFromOrganizerDraft(draft);
+  fireOrganizerTourSync(canonical);
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
@@ -784,7 +787,8 @@ export function cloneOrganizerTour(
   drafts[id] = clone;
   writeDraftMap(drafts);
 
-  upsertTourFromOrganizerDraft(clone);
+  const canonical = upsertTourFromOrganizerDraft(clone);
+  fireOrganizerTourSync(canonical);
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
@@ -820,6 +824,8 @@ export function deleteOrganizerTour(
   if (drafts[tourId]) {
     drafts[tourId] = { ...drafts[tourId], deleted: true };
     writeDraftMap(drafts);
+    const canonical = upsertTourFromOrganizerDraft(drafts[tourId]);
+    fireOrganizerTourSync(canonical);
   }
 
   if (typeof window !== "undefined") {

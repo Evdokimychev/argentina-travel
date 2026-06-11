@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import ToursCatalog from "@/components/marketplace/ToursCatalog";
 import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { buildCatalogMetadata, getServerCatalogView } from "@/lib/catalog-seo";
 
 type ToursPageProps = {

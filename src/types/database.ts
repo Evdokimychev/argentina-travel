@@ -135,6 +135,45 @@ export interface Database {
         };
         Relationships: [];
       };
+      tours: {
+        Row: {
+          id: string;
+          slug: string;
+          owner_user_id: string;
+          status: string;
+          title: string;
+          listing: Json | null;
+          payload: Json;
+          published_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          slug: string;
+          owner_user_id: string;
+          status?: string;
+          title: string;
+          listing?: Json | null;
+          payload: Json;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          owner_user_id?: string;
+          status?: string;
+          title?: string;
+          listing?: Json | null;
+          payload?: Json;
+          published_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       shop_orders: {
         Row: {
           id: string;
@@ -272,6 +311,9 @@ export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 export type BookingRow = Database["public"]["Tables"]["bookings"]["Row"];
 export type BookingInsert = Database["public"]["Tables"]["bookings"]["Insert"];
 export type BookingUpdate = Database["public"]["Tables"]["bookings"]["Update"];
+export type TourRow = Database["public"]["Tables"]["tours"]["Row"];
+export type TourInsert = Database["public"]["Tables"]["tours"]["Insert"];
+export type TourUpdate = Database["public"]["Tables"]["tours"]["Update"];
 export type ShopOrderRow = Database["public"]["Tables"]["shop_orders"]["Row"];
 export type ShopOrderInsert = Database["public"]["Tables"]["shop_orders"]["Insert"];
 export type ShopOrderUpdate = Database["public"]["Tables"]["shop_orders"]["Update"];

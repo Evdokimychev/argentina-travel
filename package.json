@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "supabase:migrate": "node scripts/supabase-apply-migration.mjs",
-    "supabase:verify": "node scripts/supabase-verify.mjs"
+    "supabase:verify": "node scripts/supabase-verify.mjs",
+    "supabase:seed-tours": "node scripts/supabase-seed-tours.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.4",

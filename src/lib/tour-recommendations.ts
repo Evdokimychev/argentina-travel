@@ -87,8 +87,11 @@ export function getRecommendedListings(
     .slice(0, limit);
 }
 
-export function getSimilarTourDetails(currentSlug: string, limit = 3): TourDetail[] {
-  const listings = getMarketplaceListings();
+export function getSimilarTourDetails(
+  currentSlug: string,
+  limit = 3,
+  listings: TourListing[] = getMarketplaceListings()
+): TourDetail[] {
   const baseListing = listings.find((item) => item.slug === currentSlug);
   if (!baseListing) {
     return listings

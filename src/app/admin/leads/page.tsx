@@ -9,7 +9,7 @@ import { SHOP_ORDER_STATUS_LABELS } from "@/types/shop-order";
 
 const TOKEN_KEY = "leads-admin-token";
 
-type AdminTab = "leads" | "shop";
+type AdminTab = "leads" | "shop" | "tours";
 
 type NewsletterRow = {
   id: string;
@@ -48,6 +48,16 @@ type ShopOrderRow = {
   createdAt: string;
 };
 
+type TourContentRow = {
+  id: string;
+  slug: string;
+  ownerUserId: string;
+  status: string;
+  title: string;
+  publishedAt: string | null;
+  updatedAt: string;
+};
+
 function formatWhen(iso: string) {
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
@@ -72,15 +82,17 @@ export default function AdminLeadsPage() {
   const [newsletter, setNewsletter] = useState<NewsletterRow[]>([]);
   const [contacts, setContacts] = useState<ContactRow[]>([]);
   const [shopOrders, setShopOrders] = useState<ShopOrderRow[]>([]);
+  const [tourRows, setTourRows] = useState<TourContentRow[]>([]);
 
   const load = useCallback(async (authToken: string) => {
     setLoading(true);
     setError(null);
     try {
       const headers = { Authorization: `Bearer ${authToken}` };
-      const [leadsRes, shopRes] = await Promise.all([
+      const [leadsRes, shopRes, toursRes] = await Promise.all([
         fetch("/api/admin/leads", { headers }),
         fetch("/api/admin/shop/orders", { headers }),
+        fetch("/api/admin/tours", { headers }),
       ]);
 
       const leadsData = (await leadsRes.json()) as {
@@ -92,13 +104,19 @@ export default function AdminLeadsPage() {
         error?: string;
         orders?: ShopOrderRow[];
       };
+      const toursData = (await toursRes.json()) as {
+        error?: string;
+        tours?: TourContentRow[];
+      };
 
       if (!leadsRes.ok) throw new Error(leadsData.error ?? "Не удалось загрузить лиды");
       if (!shopRes.ok) throw new Error(shopData.error ?? "Не удалось загрузить заказы");
+      if (!toursRes.ok) throw new Error(toursData.error ?? "Не удалось загрузить туры");
 
       setNewsletter(leadsData.newsletter ?? []);
       setContacts(leadsData.contacts ?? []);
       setShopOrders(shopData.orders ?? []);
+      setTourRows(toursData.tours ?? []);
       sessionStorage.setItem(TOKEN_KEY, authToken);
       setStoredToken(authToken);
     } catch (loadError) {
@@ -125,6 +143,7 @@ export default function AdminLeadsPage() {
     setNewsletter([]);
     setContacts([]);
     setShopOrders([]);
+    setTourRows([]);
   }
 
   if (!storedToken) {
@@ -164,7 +183,7 @@ export default function AdminLeadsPage() {
         <header className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="font-heading text-2xl font-bold text-charcoal">Админ</h1>
-            <p className="mt-1 text-sm text-slate">Лиды и заказы магазина из Supabase</p>
+            <p className="mt-1 text-sm text-slate">Лиды, заказы магазина и туры из Supabase</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={() => void load(storedToken)} disabled={loading}>
@@ -188,6 +207,12 @@ export default function AdminLeadsPage() {
             onClick={() => setActiveTab("shop")}
           >
             Магазин ({shopOrders.length})
+          </Button>
+          <Button
+            variant={activeTab === "tours" ? "default" : "outline"}
+            onClick={() => setActiveTab("tours")}
+          >
+            Туры ({tourRows.length})
           </Button>
         </div>
 
@@ -243,7 +268,7 @@ export default function AdminLeadsPage() {
               </ul>
             </section>
           </>
-        ) : (
+        ) : activeTab === "shop" ? (
           <section className={`${cabinetCardClass} overflow-hidden`}>
             <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
               Заказы магазина ({shopOrders.length})
@@ -279,6 +304,35 @@ export default function AdminLeadsPage() {
                         delivery_url
                       </a>
                     ) : null}
+                  </li>
+                ))
+              )}
+            </ul>
+          </section>
+        ) : (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Туры в Supabase ({tourRows.length})
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {tourRows.length === 0 ? (
+                <li className="px-5 py-8 text-sm text-slate">Пока пусто</li>
+              ) : (
+                tourRows.map((row) => (
+                  <li key={row.id} className="space-y-1 px-5 py-4 text-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-medium text-charcoal">{row.title}</span>
+                      <span className="rounded-full bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
+                        {row.status}
+                      </span>
+                      <span className="text-slate">{formatWhen(row.updatedAt)}</span>
+                    </div>
+                    <p className="text-slate">
+                      {row.slug} · {row.ownerUserId}
+                    </p>
+                    <Link href={`/tours/${row.slug}`} className="text-sky hover:underline">
+                      Открыть на сайте
+                    </Link>
                   </li>
                 ))
               )}

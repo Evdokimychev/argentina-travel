@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import OrganizerPublicView from "@/components/organizer-public/OrganizerPublicView";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import {
   buildPublicOrganizerProfile,
-  getPublishedToursByOrganizer,
+  resolveListingOwnerUserId,
 } from "@/lib/organizer-public";
 import { SEED_USERS } from "@/lib/auth-store";
 
@@ -31,7 +32,8 @@ export default async function OrganizerPublicPage({ params }: OrganizerPageProps
   const profile = buildPublicOrganizerProfile(slug);
   if (!profile) notFound();
 
-  const tours = getPublishedToursByOrganizer(slug);
+  const allTours = await fetchMarketplaceTours();
+  const tours = allTours.filter((listing) => resolveListingOwnerUserId(listing) === slug);
 
   return <OrganizerPublicView profile={profile} initialTours={tours} />;
 }
