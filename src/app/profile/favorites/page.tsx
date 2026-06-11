@@ -30,7 +30,7 @@ export default function ProfileFavoritesPage() {
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 className="font-display text-xl font-bold text-charcoal">Избранные туры</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal">Избранные туры</h2>
       <p className="mt-1 text-sm text-slate">Туры, которые вы сохранили для будущих поездок</p>
 
       {favorites.length > 0 ? (
@@ -62,7 +62,7 @@ export default function ProfileFavoritesPage() {
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="line-clamp-2 font-display text-base font-bold text-charcoal">
+                <h3 className="line-clamp-2 font-heading text-base font-bold text-charcoal">
                   {favorite.tourTitle}
                 </h3>
                 {favorite.region ? (

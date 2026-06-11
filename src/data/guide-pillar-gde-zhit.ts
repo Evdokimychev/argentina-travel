@@ -19,7 +19,7 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Airbnb или отель в BA?",
     answer:
-      "Отель проще на 3–7 ночей: ресепшен, сейф, гибкий check-in. Airbnb/апартаменты выгоднее на 2+ недели с кухней, но проверяйте район, отзывы и правила здания (expensas, шум).",
+      "Отель проще на 3–7 ночей: ресепшен, сейф, гибкий заезд. Airbnb/апартаменты выгоднее на 2+ недели с кухней, но проверяйте район, отзывы и правила здания (expensas, шум).",
   },
   {
     question: "Нужен ли депозит при заселении?",
@@ -54,7 +54,7 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Есть ли кухня в апартаментах BA?",
     answer:
-      "Да, в Palermo, Recoleta и Belgrano много вариантов с полной кухней — удобно для digital nomad и семей. Проверьте бойлер (calefón) и шум от улицы в отзывах.",
+      "Да, в Palermo, Recoleta и Belgrano много вариантов с полной кухней — удобно для цифровых кочевников и семей. Проверьте бойлер (calefón) и шум от улицы в отзывах.",
   },
   {
     question: "Что такое garantía при аренде квартиры?",
@@ -64,15 +64,15 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Работают ли Booking и Airbnb с иностранными картами?",
     answer:
-      "Да, Visa/Mastercard обычно проходят. Курс конвертации может быть официальным — см. /guide/ekonomika-i-dengi. Наличные pesos после обмена — для депозита на месте и мелких хостелов.",
+      "Да, Visa/Mastercard обычно проходят. Курс конвертации может быть официальным — см. /guide/ekonomika-i-dengi. Наличные песо после обмена — для депозита на месте и мелких хостелов.",
   },
   {
     question: "Сколько стоит отель в Palermo?",
     answer:
-      "Ориентир: 3* — $60–100 USD/ночь, boutique/4* — $100–180, высокий сезон (дек–фев, праздники) +20–40%. Цены в peso меняются из-за инфляции — перепроверяйте перед оплатой.",
+      "Ориентир: 3* — $60–100 USD/ночь, boutique/4* — $100–180, высокий сезон (дек–фев, праздники) +20–40%. Цены в песо меняются из-за инфляции — перепроверяйте перед оплатой.",
   },
   {
-    question: "Где жить digital nomad в BA?",
+    question: "Где жить цифровому кочевнику в BA?",
     answer:
       "Palermo, Belgrano, Colegiales, Villa Crespo — коворкинги, кафе, транспорт. Апартаменты на 1–3 месяца через Airbnb monthly или temporary rental. Проверьте Wi‑Fi speedtest до оплаты — /guide/svyaz.",
   },
@@ -114,12 +114,12 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Есть ли туристический налог на проживание?",
     answer:
-      "En la Ciudad de Buenos Aires — impuesto turístico (процент от тарифа) часто включён в счёт отеля или добавляется при check-out. В провинции правила разные — уточняйте при брони.",
+      "En la Ciudad de Buenos Aires — impuesto turístico (процент от тарифа) часто включён в счёт отеля или добавляется при выезд. В провинции правила разные — уточняйте при брони.",
   },
   {
     question: "Что делать при позднем прилёте в EZE?",
     answer:
-      "Запросите late check-in заранее (после 22:00). Многие отели оставляют ключ в lockbox. Первая ночь — отель у аэропорта или Palermo с 24h ресепшен; не ночуйте в Retiro/Constitución.",
+      "Запросите поздний заезд заранее (после 22:00). Многие отели оставляют ключ в кодовом ящике. Первая ночь — отель у аэропорта или Palermo с круглосуточной стойкой; не ночуйте в Retiro/Constitución.",
   },
   {
     question: "Где жить в Mendoza?",
@@ -146,7 +146,7 @@ const GDE_ZHIT_FAQ = [
 export const GDE_ZHIT_PILLAR: GuidePillarContent = {
   metadataTitle: "Где жить в Аргентине — отели, районы BA, аренда и Patagonia",
   heroSubtitle:
-    "Типы жилья, районы Buenos Aires, Patagonia и регионы, Airbnb и Booking, депозиты, сезонность, оплата и ловушки — от короткой поездки до долгого stay",
+    "Типы жилья, районы Buenos Aires, Patagonia и регионы, Airbnb и Booking, депозиты, сезонность, оплата и ловушки — от короткой поездки до долгого проживания",
   heroCtas: [
     { label: "Районы BA", href: "#gde-zhit-3", variant: "primary" },
     { label: "Туры с проживанием", href: "/tours", variant: "secondary" },
@@ -155,17 +155,17 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
   quickFacts: [
     { label: "Районы BA", headline: "Palermo, Recoleta, Belgrano", detail: "San Telmo — атмосфера; La Boca — не для ночёвки" },
     { label: "Патагония", headline: "Бронь за 2–3 мес", detail: "Calafate, Chaltén, Ushuaia — пик дек–фев" },
-    { label: "Короткий trip", headline: "Отель или тур с отелем", detail: "Booking, платформа — прозрачный уровень комфорта" },
-    { label: "Долгий stay", headline: "Апартаменты, Airbnb monthly", detail: "Garantía на классическом рынке — барьер для иностранца" },
-    { label: "Оплата", headline: "Карта + pesos наличными", detail: "Курс карты может быть oficial — /guide/ekonomika-i-dengi" },
-    { label: "Check-in", headline: "Обычно с 15:00", detail: "Поздний заезд — запросите заранее; багаж — у ресепшен" },
+    { label: "Короткая поездка", headline: "Отель или тур с отелем", detail: "Booking, платформа — прозрачный уровень комфорта" },
+    { label: "Долгое проживание", headline: "Апартаменты, Airbnb monthly", detail: "Garantía на классическом рынке — барьер для иностранца" },
+    { label: "Оплата", headline: "Карта + песо наличными", detail: "Курс карты может быть oficial — /guide/ekonomika-i-dengi" },
+    { label: "Заезд", headline: "Обычно с 15:00", detail: "Поздний заезд — запросите заранее; багаж — у ресепшен" },
   ],
   practicalTips: {
     do: [
       "Выбирайте Palermo, Recoleta или Belgrano для первой поездки в BA",
       "Бронируйте Patagonia, Iguazú и Bariloche за 2–3 месяца в высокий сезон",
       "Читайте отзывы о шуме, Wi‑Fi и безопасности района перед оплатой",
-      "Уточняйте поздний check-in при ночном прилёте в EZE",
+      "Уточняйте поздний заезд при ночном прилёте в EZE",
       "Сверяйте адрес на карте — «centro» в BA бывает разным",
     ],
     consider: [
@@ -173,7 +173,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
       "Airbnb в BA — правила здания, expensas и соседи важнее скидки",
       "Депозит на карте — отдельная сумма от оплаты брони",
       "Туры с проживанием на платформе — логистика без головной боли в Patagonia",
-      "Для nomad — speedtest Wi‑Fi до оплаты долгого stay",
+      "Для кочевника — проверьте скорость Wi‑Fi до оплаты долгого проживания",
     ],
     avoid: [
       "Не бронируйте La Boca, Once или Constitución для ночёвки",
@@ -195,7 +195,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
           ["Отель 3–5*", "Турист 3–14 дней", "Ресепшен, сейф, завтрак", "Дороже на длинном сроке"],
           ["Boutique / B&B", "Пара, premium", "Характер, сервис", "Мало номеров — бронь рано"],
           ["Хостел", "Бюджет, solo", "Социальность, кухня", "Шум, dorm — берегите вещи"],
-          ["Апартаменты / Airbnb", "Неделя+, семья, nomad", "Кухня, пространство", "Нет ресепшен, район критичен"],
+          ["Апартаменты / Airbnb", "Неделя+, семья, кочевники", "Кухня, пространство", "Нет ресепшен, район критичен"],
           ["Guesthouse / posada", "Регионы, Iguazú", "Локальный вайб", "Английский не везде"],
           ["Estancia / lodge", "Mendoza, Patagonia", "Природа, питание, активности", "Удалённость, нужен трансфер"],
           ["Тур с проживанием", "Patagonia, вино", "Логистика «под ключ»", "Меньше гибкости дат"],
@@ -228,7 +228,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         headers: ["Канал", "Срок", "Защита", "Совет"],
         rows: [
           ["Booking / Hotels.com", "1–14 ночей", "Отмена по тарифу", "Сравните flexible vs non-refundable"],
-          ["Airbnb", "3 ночи – несколько мес.", "AirCover, отзывы", "Проверьте superhost и район на карте"],
+          ["Airbnb", "3 ночи – несколько мес.", "AirCover, отзывы", "Проверьте статус суперхоста и район на карте"],
           ["Прямо у отеля", "Любой", "Зависит от договора", "Иногда лучше rate при email/WhatsApp"],
           ["«Пора в Аргентину» туры", "Маршрут целиком", "Платформа + организатор", "Уровень отеля в карточке"],
           ["Facebook / expat группы", "1+ мес.", "Низкая", "Только с личным осмотром и договором"],
@@ -244,7 +244,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         {
           title: "Airbnb в BA",
           body:
-            "Правила города менялись — легальные объявления с регистрацией. Смотрите этаж, лифт, calefón (горячая вода). Для nomad — фильтр Wi‑Fi и monthly discount.",
+            "Правила города менялись — легальные объявления с регистрацией. Смотрите этаж, лифт, calefón (горячая вода). Для кочевника — фильтр Wi‑Fi и скидка за месяц.",
         },
         {
           title: "Туры с отелем на платформе",
@@ -270,9 +270,9 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         headers: ["Район", "Атмосфера", "Бюджет", "Кому", "Ночью"],
         rows: [
           ["Palermo Soho", "Кафе, бутики, ночь", "Средний+", "Первый визит, еда", "Обычно ok"],
-          ["Palermo Hollywood", "Парки, спокойнее", "Средний+", "Семьи, nomad", "Обычно ok"],
+          ["Palermo Hollywood", "Парки, спокойнее", "Средний+", "Семьи, кочевникии", "Обычно ok"],
           ["Recoleta", "Классика, музеи", "Выше среднего", "Пара, premium", "Ok"],
-          ["Belgrano", "Жилой, зелёный", "Средний", "Семьи, long stay", "Ok"],
+          ["Belgrano", "Жилой, зелёный", "Средний", "Семьи, длительное проживание", "Ok"],
           ["Puerto Madero", "Современный", "Высокий", "Бизнес, комфорт", "Ok"],
           ["San Telmo", "Колониальный, feria", "Средний", "Атмосфера", "Осторожно"],
           ["Villa Crespo / Chacarita", "Локальный, тренд", "Ниже Palermo", "Nomad, бюджет", "Выборочно"],
@@ -289,7 +289,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         {
           title: "Recoleta и Belgrano",
           body:
-            "Recoleta — кладбище, музеи, Alvear. Belgrano — Chinatown, парки, семейный вайб. Colegiales на стыке — популярен у expat и nomad.",
+            "Recoleta — кладбище, музеи, Alvear. Belgrano — Chinatown, парки, семейный вайб. Colegiales на стыке — популярен у экспатов и кочевников.",
         },
         {
           title: "San Telmo и Puerto Madero",
@@ -347,7 +347,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
       id: "gde-zhit-5",
       title: "Короткий vs долгий срок: стратегия выбора",
       content:
-        "1–2 недели турист, 1–3 месяца nomad, 6+ месяцев будущий резидент — три разных рынка жилья с разными правилами и ценами.",
+        "1–2 недели турист, 1–3 месяца для кочевника, 6+ месяцев будущий резидент — три разных рынка жилья с разными правилами и ценами.",
       subsections: [
         {
           title: "1–14 дней (турист)",
@@ -357,7 +357,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         {
           title: "2 недели – 3 месяца",
           body:
-            "Airbnb monthly, furnished temporary, расширенный stay в отеле (редко выгодно). Скидка за месяц на Airbnb 15–40%. Проверьте счета: expensas, utilities включены или нет.",
+            "Airbnb monthly, furnished temporary, продлённое проживание в отеле (редко выгодно). Скидка за месяц на Airbnb 15–40%. Проверьте счета: expensas, utilities включены или нет.",
         },
         {
           title: "6+ месяцев (эмиграция)",
@@ -378,17 +378,17 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
       id: "gde-zhit-6",
       title: "Депозиты, garantía и договор аренды",
       content:
-        "Аргентинский рынок аренды построен на поручительстве. Турист на Booking этого не видит; nomad на 6 месяцев — столкнётся обязательно.",
+        "Аргентинский рынок аренды построен на поручительстве. Турист на Booking этого не видит; кочевник при аренде на 6 месяцев — столкнётся обязательно.",
       subsections: [
         {
           title: "Депозит в отеле и Airbnb",
           body:
-            "Отель: preauthorization на карте ($50–200 USD эквивалент) или наличные. Airbnb: залог через платформу. Возврат — при check-out, иногда 7–14 дней на карту.",
+            "Отель: preauthorization на карте ($50–200 USD эквивалент) или наличные. Airbnb: залог через платформу. Возврат — при выезд, иногда 7–14 дней на карту.",
         },
         {
           title: "Garantía (поручительство)",
           body:
-            "Garante — аргентинец с недвижимостью или stable income, подписывает garantía. Альтернативы: seguro de caución, prepago 3–6 месяцев, корпоративный контракт. Без этого — только temporary и Airbnb.",
+            "Garante — аргентинец с недвижимостью или стабильным доходом, подписывает garantía. Альтернативы: seguro de caución, prepago 3–6 месяцев, корпоративный контракт. Без этого — только temporary и Airbnb.",
         },
         {
           title: "Contrato и depósito",
@@ -425,7 +425,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         {
           title: "Инфляция и валюта",
           body:
-            "Цены в peso в отелях обновляются. Туры на платформе в USD — прозрачнее для планирования. Наличные pesos после обмена — для мелких guesthouse — /guide/ekonomika-i-dengi.",
+            "Цены в песо в отелях обновляются. Туры на платформе в USD — прозрачнее для планирования. Наличные песо после обмена — для мелких guesthouse — /guide/ekonomika-i-dengi.",
         },
         {
           title: "Праздники и события",
@@ -436,14 +436,14 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
     },
     {
       id: "gde-zhit-8",
-      title: "Check-in, налоги и правила заселения",
+      title: "Заезд, налоги и правила заселения",
       content:
         "Мелочи при заселении экономят часы после перелёта. Иностранец — паспорт на ресепшен, иногда migraciones form.",
       subsections: [
         {
           title: "Время заезда и выезда",
           body:
-            "Check-in с 15:00, check-out до 10:00–11:00 — норма. Ранний заезд — по запросу и availability. Багаж до check-in часто хранят бесплатно.",
+            "Заезд с 15:00, выезд до 10:00–11:00 — норма. Ранний заезд — по запросу и при наличии мест. Багаж до заезда часто хранят бесплатно.",
         },
         {
           title: "Поздний прилёт в EZE",
@@ -471,12 +471,12 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         {
           title: "Иностранные карты",
           body:
-            "Visa/Mastercard на Booking, Airbnb, отелях — работают. Курс — часто oficial, не blue. Для выгоды на улице — pesos после cueva, не вся сумма с карты.",
+            "Visa/Mastercard на Booking, Airbnb, отелях — работают. Курс — часто oficial, не blue. Для выгоды на улице — песо после cueva, не вся сумма с карты.",
         },
         {
           title: "Наличные на месте",
           body:
-            "Депозит, хостел, guesthouse в provincia — иногда только pesos. Мелкие купюры для чаевых porter. USD на ресепшене — курс невыгодный.",
+            "Депозит, хостел, guesthouse в provincia — иногда только песо. Мелкие купюры для чаевых porter. USD на ресепшене — курс невыгодный.",
         },
         {
           title: "Оплата тура с проживанием",
@@ -489,7 +489,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
           variant: "tip",
           title: "Памятка оплаты",
           body:
-            "Крупное — карта/платформа · мелкое на месте — pesos · не вся наличность в сейф отеля без необходимости · чек депозита · курс — ekonomika-i-dengi.",
+            "Крупное — карта/платформа · мелкое на месте — песо · не вся наличность в сейф отеля без необходимости · чек депозита · курс — ekonomika-i-dengi.",
         },
       ],
     },
@@ -512,7 +512,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         {
           title: "Ошибки туристов",
           body:
-            "Жильё в La Boca «для аутентичности» · нет отзывов о шуме · игнор расстояния до Subte · нет запроса late check-in · одна сумка без сейфа в dorm · бронь Patagonia в последний момент.",
+            "Жильё в La Boca «для аутентичности» · нет отзывов о шуме · игнор расстояния до Subte · нет запроса поздний заезд · одна сумка без сейфа в dorm · бронь Patagonia в последний момент.",
         },
       ],
       infoBoxes: [
@@ -520,7 +520,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
           variant: "warning",
           title: "Если обманули",
           body:
-            "Airbnb/Booking — dispute через платформу. Кража при заселении — denuncia, /guide/bezopasnost. Не продолжайте stay в небезопасном месте ради «уже заплачено».",
+            "Airbnb/Booking — жалоба через платформу. Кража при заселении — denuncia, /guide/bezopasnost. Не продолжайте проживание в небезопасном месте ради «уже заплачено».",
         },
       ],
     },
@@ -541,7 +541,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
             "Апартаменты 2 спальни Belgrano/Hollywood, кухня, парк рядом. Отель с breakfast и pool — реже в BA centro. Patagonia — не dorm; отель с отоплением.",
         },
         {
-          title: "Digital nomad",
+          title: "Цифровой кочевники",
           body:
             "Palermo, Colegiales, Belgrano — monthly Airbnb, coworking. Wi‑Fi 20+ Mbps, backup 4G. Договор на 1–3 мес. без garantía через платформу. Связь — /guide/svyaz.",
         },
@@ -581,8 +581,8 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
     "Нужен маршрут с отелями в Patagonia или подбор района BA под ваш срок и бюджет?",
   blogLinks: [
     { title: "Безопасность", href: "/guide/bezopasnost", description: "Районы BA и вещи" },
-    { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", description: "Карты и pesos" },
-    { title: "Связь", href: "/guide/svyaz", description: "Wi‑Fi и SIM для nomad" },
+    { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", description: "Карты и песо" },
+    { title: "Связь", href: "/guide/svyaz", description: "Wi‑Fi и SIM для кочевники" },
     { title: "Патагония: с чего начать", href: "/guide/patagoniya-s-chego-nachat", description: "Логистика и базы" },
     { title: "Погода и сезонность", href: "/guide/pogoda-i-sezonnost", description: "Когда бронировать" },
   ],

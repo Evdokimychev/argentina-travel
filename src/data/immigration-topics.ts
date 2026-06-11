@@ -29,7 +29,7 @@ const TOPIC_META: Record<
     id: "immigration-process",
     slug: "protsess-immigratsii",
     title: "Процесс иммиграции",
-    shortDescription: "Въезд, DNU 366/2025, RADEX и документы для residencia",
+    shortDescription: "Въезд, DNU 366/2025, RADEX и документы для ВНЖ",
     heroImage:
       "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80",
   },
@@ -37,7 +37,7 @@ const TOPIC_META: Record<
     id: "birth",
     slug: "rody-v-argentine",
     title: "Роды в Аргентине",
-    shortDescription: "Jus soli, гражданство ребёнку и residencia для родителей",
+    shortDescription: "Jus soli, гражданство ребёнку и ВНЖ для родителей",
     heroImage:
       "https://images.unsplash.com/photo-1555252333-9f8e92e665df?w=1920&q=80",
   },
@@ -45,7 +45,7 @@ const TOPIC_META: Record<
     id: "citizenship",
     slug: "grazhdanstvo",
     title: "Гражданство",
-    shortDescription: "Паспорт, экзамены, сроки и безвизовый режим",
+    shortDescription: "Натурализация через суд, 2 года резиденции, документы и сроки",
     heroImage:
       "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=1920&q=80",
   },
@@ -53,7 +53,7 @@ const TOPIC_META: Record<
     id: "residency",
     slug: "vnzh-i-pmzh",
     title: "ВНЖ и ПМЖ",
-    shortDescription: "Temporaria, permanente и 14 оснований для residencia",
+    shortDescription: "15 оснований temporaria, ПМЖ, precaria и реформа 366/2025",
     heroImage:
       "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80",
   },
@@ -61,7 +61,7 @@ const TOPIC_META: Record<
     id: "opportunities",
     slug: "vozmozhnosti",
     title: "Возможности",
-    shortDescription: "Rentista, nomad, DIY и сопровождение специалиста",
+    shortDescription: "Рантье, кочевник, самостоятельно и с сопровождением специалиста",
     heroImage:
       "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1920&q=80",
   },

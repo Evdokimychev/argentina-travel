@@ -199,7 +199,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
 
       {isNewCompose && role === "tourist" ? (
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-display text-base font-bold text-charcoal">Новое сообщение</h2>
+          <h2 className="font-heading text-base font-bold text-charcoal">Новое сообщение</h2>
           {presetTour ? (
             <p className="mt-2 text-sm text-slate">
               Тур:{" "}

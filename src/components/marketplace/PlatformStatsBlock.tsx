@@ -34,7 +34,7 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
     return (
       <section className="border-y border-gray-100 bg-white py-10">
         <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-          <p className="font-display text-lg font-semibold text-charcoal">
+          <p className="font-heading text-lg font-semibold text-charcoal">
             Новая площадка авторских туров
           </p>
           <p className="mx-auto mt-2 max-w-xl text-sm text-slate">

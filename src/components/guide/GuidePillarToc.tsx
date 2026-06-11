@@ -34,7 +34,7 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
           className="sticky top-24 max-h-[calc(100vh-7rem)] overflow-y-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-card"
           aria-label="Содержание"
         >
-          <p className="font-display text-sm font-bold text-charcoal">Содержание</p>
+          <p className="font-heading text-sm font-bold text-charcoal">Содержание</p>
           <ol className="mt-3 space-y-2 text-sm">
             {sections.map((section) => (
               <li key={section.id}>
@@ -73,7 +73,7 @@ export default function GuidePillarToc({ sections, widgetSlots, variant }: Guide
       aria-label="Содержание"
     >
       <details className="group">
-        <summary className="cursor-pointer list-none font-display text-sm font-bold text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
+        <summary className="cursor-pointer list-none font-heading text-sm font-bold text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
           <span className="flex items-center justify-between">
             Содержание
             <span className="text-xs font-normal text-slate group-open:hidden">развернуть</span>

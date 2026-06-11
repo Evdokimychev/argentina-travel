@@ -99,7 +99,7 @@ export default function TourAccommodationVariantsBlock({
   return (
     <>
       <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-        <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">
+        <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
           Проживание имеет отличия в вариантах тура
         </h2>
 

@@ -201,7 +201,7 @@ export default function TourAccommodationPlaceEditor({
 
   return (
     <article className="space-y-5 rounded-2xl border border-gray-200 bg-brand-light/20 p-4 sm:p-5">
-      <h3 className="font-display text-lg font-bold text-charcoal">{index + 1} Место проживания</h3>
+      <h3 className="font-heading text-lg font-bold text-charcoal">{index + 1} Место проживания</h3>
 
       <div className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
         <div>

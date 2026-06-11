@@ -226,7 +226,7 @@ export default function TourGeographyBlock({
 }: TourGeographyBlockProps) {
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">География тура</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">География тура</h2>
 
       <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Если вы не нашли свой регион, напишите в{" "}
@@ -283,7 +283,7 @@ export default function TourGeographyBlock({
       </div>
 
       <div className="space-y-4 border-t border-gray-200/80 pt-5">
-        <h3 className="font-display text-base font-bold text-charcoal">Где начинается</h3>
+        <h3 className="font-heading text-base font-bold text-charcoal">Где начинается</h3>
         <TextField
           label="Точка на карте"
           value={mapStartPoint}

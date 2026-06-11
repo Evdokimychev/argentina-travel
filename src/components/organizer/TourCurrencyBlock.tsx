@@ -20,7 +20,7 @@ export default function TourCurrencyBlock({
 }: TourCurrencyBlockProps) {
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Валюта тура</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Валюта тура</h2>
 
       <div className="relative">
         <label

@@ -17,27 +17,27 @@ const FAQ: ImmigrationHubContent["faq"] = [
   {
     question: "Сколько оснований для ВНЖ существует в Аргентине?",
     answer:
-      "Закон предусматривает 14 категорий residencia temporaria — от rentista и цифрового кочевника до работы, учёбы, инвестиций и семейных оснований. Актуальный список публикует Dirección Nacional de Migraciones.",
+      "15 подкategorий residencia temporaria в ст. 23 Ley 25.871 (incisos a–ñ), включая reunificación familiar с Decreto 366/2025. Nómada digital — transitoria по Disposición 758/2022, не входит в эту таблицу.",
   },
   {
     question: "Через сколько лет можно получить гражданство?",
     answer:
-      "При непрерывном легальном проживании — обычно 2 года с момента одобрения permanente (или с даты въезда по некоторым основаниям). Нужны испанский язык, экзамен «Conocer Argentina», отсутствие судимостей.",
+      "Decreto 366/2025: 2 года непрерывного legal residence без выезда; подача в DNM (не суд). Дела до 29.05.2025 — по старым правилам через суд. Precaria и turista не засчитываются.",
   },
   {
     question: "Чем отличается temporaria от permanente?",
     answer:
-      "Temporaria выдаётся на срок до 3 лет по конкретному основанию. Permanente — после 3 лет непрерывной temporaria или по особым основаниям (например, родитель аргентинского ребёнка). Permanente не требует ежегодного продления по тому же пункту.",
+      "Temporaria — до 3 лет с prórroga. Permanente — без продления по пункту; отмена при ≥1 годе вне AR. Arraigo для ПМЖ: 2–3 года temporaria, ≥50% времени в стране, не более 6 мес. подряд за границей.",
   },
   {
     question: "Что такое DNU 366/2025 и как он влияет на въезд?",
     answer:
-      "Декрет ужесточил требования к туристическому въезду: обязательная медстраховка на весь срок, более строгая проверка документов и цели визита. На residencia напрямую не распространяется, но первый контакт с Migraciones проходит по новым правилам.",
+      "Декрет 366/2025 ужесточил правила въезда: медстраховка и декларация о цели поездки закреплены в законе, но на практике на границе их пока не всегда проверяют. Для подачи на residencia требования строже.",
   },
   {
     question: "Нужна ли медстраховка для въезда?",
     answer:
-      "С 2025 года — да, для туристов: полис или travel assistance с покрытием на всей территории Аргентины на весь заявленный срок. Для подачи на ВНЖ страховка также часто входит в пакет документов.",
+      "Decreto 366/2025 закрепил требование медстраховки на весь срок пребывания. На границе декларацию пока не всегда запрашивают, но полис рекомендуется иметь — без него плановая помощь в госпиталях оплачивается. Для подачи на ВНЖ страховка обычно входит в пакет документов.",
   },
   {
     question: "Что такое RADEX и как им пользоваться?",
@@ -57,7 +57,7 @@ const FAQ: ImmigrationHubContent["faq"] = [
   {
     question: "Что такое precaria?",
     answer:
-      "Временное разрешение на пребывание после подачи на residencia, пока рассматривается заявление. Даёт право легально находиться в стране; условия зависят от типа дела.",
+      "Residencia precaria — до 90 дней, продлевается DNM на период рассмотрения заявления. Даёт легальное пребывание, работу и учёбу, но с Decreto 366/2025 не засчитывается в arraigo для ПМЖ и гражданства.",
   },
   {
     question: "Подходит ли Аргентина цифровым кочевникам?",
@@ -98,11 +98,11 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
     { label: "👶 Роды", href: "/immigration/rody-v-argentine", variant: "tertiary" },
   ],
   quickFacts30: [
-    { emoji: "🌎", label: "Открытая страна", headline: "14 оснований для ВНЖ", detail: "От digital nomad до family reunification — выбор под ваш кейс" },
-    { emoji: "⏱", label: "Путь к гражданству", headline: "~2 года после permanente", detail: "После 2 лет с ПМЖ — подача на гражданство (сроки уточняйте)" },
+    { emoji: "🌎", label: "Открытая страна", headline: "15 оснований для ВНЖ", detail: "Temporaria по Ley 25.871 — от rentista до reunificación familiar" },
+    { emoji: "⏱", label: "Путь к гражданству", headline: "~2 года после ПМЖ", detail: "После 2 лет с постоянным видом на жительство — подача на гражданство" },
     { emoji: "🛂", label: "Турист → резидент", headline: "Смена статуса в стране", detail: "Не обязательно выезжать — подача Radication в Migraciones" },
-    { emoji: "📘", label: "Пасport AR", headline: "Безвиз ~170 стран", detail: "После гражданства — сильный travel document" },
-    { emoji: "💻", label: "Digital nomad", headline: "Отдельное основание ВНЖ", detail: "Доказательство удалённого дохода и страховки" },
+    { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 стран", detail: "После гражданства — сильный проездной документ" },
+    { emoji: "💻", label: "Цифровой кочевник", headline: "Отдельное основание ВНЖ", detail: "Доказательство удалённого дохода и страховки" },
     { emoji: "👶", label: "Jus soli", headline: "Гражданство ребёнку при рождении", detail: "Ребёнок, рождённый в AR, — гражданин (с нюансами для родителей)" },
     { emoji: "⚠️", label: "DNU 366/2025", headline: "Страховка и контроль въезда", detail: "Проверяйте актуальные требования перед поездкой" },
     { emoji: "🏥", label: "Медицина", headline: "Экстренная помощь бесплатна", detail: "Плановая — через prepaga или частные клиники" },
@@ -111,7 +111,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
     { id: "quick-30", label: "Кратко за 30 секунд" },
     { id: "hub-overview", label: "Разделы справочника" },
     { id: "topic-summaries", label: "Обзор тем" },
-    { id: "faq", label: "FAQ" },
+    { id: "faq", label: "Частые вопросы" },
   ],
   hubTopics: [
     {
@@ -134,7 +134,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "birth",
       emoji: "👶",
       title: "Роды в Аргентине",
-      description: "Jus soli, гражданство ребёнку и residencia родителям",
+      description: "Jus soli, гражданство ребёнку и ВНЖ для родителей",
       teaser: IMMIGRATION_BIRTH.intro,
       href: "/immigration/rody-v-argentine",
     },
@@ -150,7 +150,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "residency",
       emoji: "📋",
       title: "ВНЖ и ПМЖ",
-      description: "Temporaria, permanente и 14 оснований",
+      description: "ВНЖ, ПМЖ и 14 оснований",
       teaser: IMMIGRATION_RESIDENCY.intro,
       href: "/immigration/vnzh-i-pmzh",
     },
@@ -158,7 +158,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "opportunities",
       emoji: "💡",
       title: "Возможности",
-      description: "Rentista, nomad, DIY и сопровождение",
+      description: "Рантье, кочевник, самостоятельно и с сопровождением",
       teaser: IMMIGRATION_OPPORTUNITIES.intro,
       href: "/immigration/vozmozhnosti",
     },

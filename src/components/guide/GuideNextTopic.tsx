@@ -59,7 +59,7 @@ function TopicNavCard({ topic, direction }: { topic: GuideTopicPage; direction: 
           <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate">
             {isPrev ? "Предыдущая тема" : "Следующая тема"}
           </span>
-          <span className="mt-0.5 block font-display text-base font-bold leading-snug text-charcoal group-hover:text-sky sm:text-lg">
+          <span className="mt-0.5 block font-heading text-base font-bold leading-snug text-charcoal group-hover:text-sky sm:text-lg">
             {topic.title}
           </span>
           <span className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate sm:text-sm">

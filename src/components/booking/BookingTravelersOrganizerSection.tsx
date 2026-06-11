@@ -75,7 +75,7 @@ export default function BookingTravelersOrganizerSection({
     >
       <div className="flex items-center gap-2">
         <Users className="h-5 w-5 text-slate" />
-        <h2 className="font-display text-base font-bold text-charcoal">Информация о туристах</h2>
+        <h2 className="font-heading text-base font-bold text-charcoal">Информация о туристах</h2>
       </div>
       <p className="mt-3 text-sm text-slate">
         {booking.guests} {booking.guests === 1 ? "участник" : "участника"} · контактное лицо{" "}

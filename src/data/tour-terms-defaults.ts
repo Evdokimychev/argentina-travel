@@ -95,7 +95,7 @@ export const DEFAULT_IGUAZU_IMPORTANT_INFO: string[] = [
 
 export const DEFAULT_IGUAZU_PACKING_LIST = `**Документы и деньги:**
 • Загранпаспорт и страховка
-• Наличные pesos и карта для оплат
+• Наличные песо и карта для оплат
 
 **Одежда и обувь:**
 • Удобная обувь для прогулок по мосткам

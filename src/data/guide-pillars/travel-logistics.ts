@@ -154,7 +154,7 @@ export const KAK_DOBRATSYA_PILLAR: GuidePillarContent = {
         {
           variant: "info",
           title: "Подробнее",
-          body: "Чеклист документов — в разделе иммиграции: /immigration/dokumenty-dlya-vyezda",
+          body: "Список документов — в разделе иммиграции: /immigration/dokumenty-dlya-vyezda",
         },
       ],
     },
@@ -164,7 +164,7 @@ export const KAK_DOBRATSYA_PILLAR: GuidePillarContent = {
     {
       title: "Документы для въезда",
       href: "/immigration/dokumenty-dlya-vyezda",
-      description: "Чеклист перед поездкой",
+      description: "Список перед поездкой",
     },
     {
       title: "Экономика и деньги",

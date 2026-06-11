@@ -35,7 +35,7 @@ export default function FaqPage() {
                 key={item.question}
                 className="rounded-2xl border border-border-subtle bg-surface-elevated p-5 shadow-sm"
               >
-                <dt className="font-display text-base font-bold text-charcoal">{item.question}</dt>
+                <dt className="font-heading text-base font-bold text-charcoal">{item.question}</dt>
                 <dd className="mt-2 text-sm leading-relaxed text-slate">{item.answer}</dd>
               </div>
             ))}

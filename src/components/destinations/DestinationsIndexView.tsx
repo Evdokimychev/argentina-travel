@@ -49,7 +49,7 @@ export default function DestinationsIndexView({ destinations }: DestinationsInde
                     <MapPin className="h-3 w-3" aria-hidden />
                     {dest.region}
                   </p>
-                  <h2 className="mt-1 font-display text-lg font-bold">{dest.name}</h2>
+                  <h2 className="mt-1 font-heading text-lg font-bold">{dest.name}</h2>
                   <p className="mt-1 line-clamp-2 text-xs text-white/85">{dest.description}</p>
                 </div>
               </div>

@@ -91,7 +91,7 @@ function DialogTitle({
 }: React.ComponentProps<typeof DialogPrimitive.Title>) {
   return (
     <DialogPrimitive.Title
-      className={cn("font-display text-xl font-bold text-foreground", className)}
+      className={cn("font-heading text-xl font-bold text-foreground", className)}
       {...props}
     />
   );

@@ -306,7 +306,7 @@ export default function AuthModal() {
           </div>
 
           <div className="rounded-2xl border border-brand/20 bg-brand-light/40 p-4">
-            <h3 className="font-display text-base font-bold text-charcoal">
+            <h3 className="font-heading text-base font-bold text-charcoal">
               Подключить роль организатора
             </h3>
             <p className="mt-2 text-sm leading-relaxed text-slate">

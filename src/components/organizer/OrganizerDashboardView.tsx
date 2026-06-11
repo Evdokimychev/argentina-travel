@@ -81,7 +81,7 @@ function BookingStatCard({
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm text-slate">{label}</p>
-          <p className="mt-2 font-display text-3xl font-bold text-charcoal">{value}</p>
+          <p className="mt-2 font-heading text-3xl font-bold text-charcoal">{value}</p>
         </div>
         <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 text-brand">
           <Icon className="h-5 w-5" strokeWidth={1.75} />
@@ -167,19 +167,19 @@ export default function OrganizerDashboardView() {
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div className="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4 shadow-sm">
             <p className="text-sm text-slate">Выручка (подтверждённые)</p>
-            <p className="mt-2 font-display text-2xl font-bold text-charcoal">
+            <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
               <FormattedPrice priceUsd={analytics.revenueUsd} />
             </p>
           </div>
           <div className="rounded-2xl border border-amber-100 bg-amber-50/40 p-4 shadow-sm">
             <p className="text-sm text-slate">Ожидают оплаты</p>
-            <p className="mt-2 font-display text-3xl font-bold text-charcoal">
+            <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.pendingPaymentsCount}
             </p>
           </div>
           <div className="rounded-2xl border border-sky/20 bg-sky/5 p-4 shadow-sm">
             <p className="text-sm text-slate">Туры в каталоге</p>
-            <p className="mt-2 font-display text-3xl font-bold text-charcoal">
+            <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.publishedToursCount}
               <span className="ml-2 text-base font-medium text-slate">
                 / {analytics.draftToursCount} черн.
@@ -188,7 +188,7 @@ export default function OrganizerDashboardView() {
           </div>
           <div className="rounded-2xl border border-violet-100 bg-violet-50/40 p-4 shadow-sm">
             <p className="text-sm text-slate">Конверсия в подтверждение</p>
-            <p className="mt-2 font-display text-3xl font-bold text-charcoal">
+            <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.conversionRate != null ? `${analytics.conversionRate}%` : "—"}
             </p>
           </div>
@@ -198,7 +198,7 @@ export default function OrganizerDashboardView() {
       <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-display text-lg font-bold text-charcoal">Заявки</h2>
+            <h2 className="font-heading text-lg font-bold text-charcoal">Заявки</h2>
             <p className="mt-1 text-sm text-slate">Воронка по статусам — данные из ваших заявок</p>
           </div>
           <Link

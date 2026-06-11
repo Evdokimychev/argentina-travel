@@ -117,7 +117,7 @@ export default function BlogPostView({ post }: BlogPostViewProps) {
 
                 {post.relatedResources && post.relatedResources.length > 0 ? (
                   <section className="mt-10 border-t border-gray-100 pt-8">
-                    <h2 className="font-display text-xl font-bold text-charcoal">Смотрите также</h2>
+                    <h2 className="font-heading text-xl font-bold text-charcoal">Смотрите также</h2>
                     <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                       {post.relatedResources.map((resource) => (
                         <li key={resource.href}>
@@ -150,7 +150,7 @@ export default function BlogPostView({ post }: BlogPostViewProps) {
               </div>
 
               <div className="mt-8 rounded-3xl border border-sky/15 bg-gradient-to-br from-sky/[0.06] to-white p-6 text-center shadow-card sm:p-8">
-                <p className="font-display text-xl font-bold text-charcoal">Планируете поездку?</p>
+                <p className="font-heading text-xl font-bold text-charcoal">Планируете поездку?</p>
                 <p className="mt-2 text-sm text-slate">
                   Соберите маршрут в путеводителе или выберите готовый тур с гидом
                 </p>

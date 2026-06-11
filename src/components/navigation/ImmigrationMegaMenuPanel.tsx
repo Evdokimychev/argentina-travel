@@ -34,7 +34,7 @@ function ImmigrationFeaturedCard({
       <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-sky/10 text-sky transition-colors group-hover:bg-sky group-hover:text-white">
         <Icon className="h-4 w-4" aria-hidden />
       </span>
-      <span className="mt-3 font-display text-sm font-semibold text-charcoal group-hover:text-sky">
+      <span className="mt-3 font-heading text-sm font-semibold text-charcoal group-hover:text-sky">
         {navLinkLabel(link, t)}
       </span>
       {link.description ? (
@@ -50,7 +50,7 @@ function ImmigrationPromoBlock({ onNavigate }: { onNavigate?: () => void }) {
       <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-700">
         <Stamp className="h-5 w-5" aria-hidden />
       </span>
-      <h3 className="mt-4 font-display text-base font-bold leading-snug text-charcoal">
+      <h3 className="mt-4 font-heading text-base font-bold leading-snug text-charcoal">
         {IMMIGRATION_NAV_PROMO_TITLE}
       </h3>
       <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-slate">{IMMIGRATION_NAV_PROMO_INTRO}</p>

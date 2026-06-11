@@ -149,7 +149,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
             </div>
             <div className="flex flex-col gap-3 border-t border-white/10 bg-charcoal p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
-                <p className="font-display text-lg font-bold text-white">{lightboxItem.title}</p>
+                <p className="font-heading text-lg font-bold text-white">{lightboxItem.title}</p>
                 <p className="mt-1 flex items-center gap-1 text-sm text-gray-300">
                   <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
                   {lightboxItem.destination} · {lightboxItem.region}

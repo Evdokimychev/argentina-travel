@@ -188,7 +188,7 @@ export const KUHNYA_PILLAR: GuidePillarContent = {
   faq: KUHNYA_FAQ,
   blogLinks: [
     { title: "Гастрономия и asado", href: "/guide/gastronomiya-i-asado", description: "Отрубы и этикет" },
-    { title: "Гид по аргентинскому стейку", href: "/blog/argentinian-steak-guide", description: "Parrilla и chimichurri" },
+    { title: "Путеводитель по аргентинскому стейку", href: "/blog/argentinian-steak-guide", description: "Parrilla и chimichurri" },
   ],
   partnerServices: [
     { softIntro: "Хотите asado с гидом?", title: "Гастрономические туры", description: "Asado, bodega, рынки.", href: "/tours?query=гастрономический", ctaLabel: "Смотреть туры" },

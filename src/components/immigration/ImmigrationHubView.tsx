@@ -25,7 +25,7 @@ function HubTopicGrid({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) 
           <span className="text-2xl" aria-hidden>
             {topic.emoji}
           </span>
-          <h3 className="mt-3 font-display font-bold text-charcoal group-hover:text-sky">
+          <h3 className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky">
             {topic.title}
           </h3>
           <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
@@ -52,7 +52,7 @@ function TopicTeaserList({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics 
               {topic.emoji}
             </span>
             <div className="min-w-0 flex-1">
-              <h3 className="font-display text-lg font-bold text-charcoal">{topic.title}</h3>
+              <h3 className="font-heading text-lg font-bold text-charcoal">{topic.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate line-clamp-3">{topic.teaser}</p>
               <Link
                 href={topic.href}

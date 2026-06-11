@@ -18,7 +18,7 @@ export default function GuidePillarCta({
       id="cta"
       className={cn(siteScrollAnchorClass, "rounded-2xl bg-patagonia/5 p-6 text-center sm:p-8")}
     >
-      <p className="font-display text-lg font-bold text-charcoal">{title}</p>
+      <p className="font-heading text-lg font-bold text-charcoal">{title}</p>
       <p className="mt-2 text-sm text-slate">{subtitle}</p>
       <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
         <Link

@@ -51,7 +51,7 @@ function StatTile({
         </span>
         <span className="text-xs font-medium uppercase tracking-wider">{label}</span>
       </div>
-      <p className="mt-3 font-display text-2xl font-bold tabular-nums text-charcoal">{value}</p>
+      <p className="mt-3 font-heading text-2xl font-bold tabular-nums text-charcoal">{value}</p>
     </div>
   );
 }

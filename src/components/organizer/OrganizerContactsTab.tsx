@@ -47,7 +47,7 @@ function FieldLabel({
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="font-display text-base font-bold text-charcoal sm:text-lg">{children}</h2>
+    <h2 className="font-heading text-base font-bold text-charcoal sm:text-lg">{children}</h2>
   );
 }
 
@@ -160,7 +160,7 @@ function SaveSidebar({
   return (
     <aside className="hidden xl:block">
       <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="font-display text-base font-bold text-charcoal">{title}</h2>
+        <h2 className="font-heading text-base font-bold text-charcoal">{title}</h2>
         {saved ? <p className="mt-2 text-sm text-emerald-700">Изменения сохранены</p> : null}
         <Button type="submit" className="mt-4 w-full" disabled={loading || disabled}>
           <Check className="h-4 w-4" />

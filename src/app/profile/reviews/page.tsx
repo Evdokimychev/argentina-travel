@@ -47,7 +47,7 @@ export default function ProfileReviewsPage() {
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 className="font-display text-xl font-bold text-charcoal">Мои отзывы</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal">Мои отзывы</h2>
       <p className="mt-1 text-sm text-slate">
         Отзывы о турах, которые вы прошли. Публикация — после модерации организатора.
       </p>

@@ -60,7 +60,7 @@ export default function TourPriceDisplay({
         {size === "lg" ? (
           <PriceOtherCurrenciesPopover
             priceUsd={priceUsd}
-            className="font-bold text-charcoal font-display text-3xl"
+            className="font-bold text-charcoal font-heading text-3xl"
           />
         ) : (
           <FormattedPrice

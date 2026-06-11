@@ -10,7 +10,7 @@ export default function ShopPageView() {
     <>
       <Hero
         title="Магазин гидов"
-        subtitle="PDF-путеводители и чеклисты для самостоятельной подготовки к поездке"
+        subtitle="PDF-путеводители и списки для самостоятельной подготовки к поездке"
         image="https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80"
         compact
       />
@@ -43,12 +43,12 @@ export default function ShopPageView() {
                 </span>
               </div>
               <div className="flex flex-1 flex-col p-5">
-                <h2 className="font-display text-lg font-bold text-charcoal">{product.title}</h2>
+                <h2 className="font-heading text-lg font-bold text-charcoal">{product.title}</h2>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">
                   {product.description}
                 </p>
                 <div className="mt-4 flex items-center justify-between gap-3 border-t border-gray-100 pt-4">
-                  <span className="font-display text-xl font-bold text-charcoal">
+                  <span className="font-heading text-xl font-bold text-charcoal">
                     ${product.price}{" "}
                     <span className="text-sm font-normal text-slate">{product.currency}</span>
                   </span>

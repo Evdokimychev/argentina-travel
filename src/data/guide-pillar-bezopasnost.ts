@@ -212,7 +212,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
         {
           title: "Мошенничество с деньгами",
           body:
-            "Arbolitos — подделки, кража. «Помощник» у ATM. Считайте pesos при обмене. Подробнее о безопасном обмене — /guide/ekonomika-i-dengi.",
+            "Arbolitos — подделки, кража. «Помощник» у ATM. Считайте песо при обмене. Подробнее о безопасном обмене — /guide/ekonomika-i-dengi.",
         },
       ],
       infoBoxes: [
@@ -262,7 +262,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
         {
           title: "Наличные и карты",
           body:
-            "Не храните всё в одном месте: отель-сейф, поясная сумка, резерв в другом кармане. Карта — для отелей и крупных сетей; pesos после обмена — для улицы.",
+            "Не храните всё в одном месте: отель-сейф, поясная сумка, резерв в другом кармане. Карта — для отелей и крупных сетей; песо после обмена — для улицы.",
         },
         {
           title: "Банкоматы",
@@ -280,7 +280,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
           variant: "info",
           title: "Памятка по обмену",
           body:
-            "Только cueva по рекомендации отеля или WU. Не Florida arbolitos. Считайте pesos при меняле. Новые USD $100 принимают охотнее.",
+            "Только cueva по рекомендации отеля или WU. Не Florida arbolitos. Считайте песо при меняле. Новые USD $100 принимают охотнее.",
         },
       ],
     },
@@ -350,7 +350,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
       infoBoxes: [
         {
           variant: "tip",
-          title: "Чеклист Patagonia",
+          title: "Список для Patagonia",
           body:
             "Страховка с треккингом ✓ · Слои и ветровка ✓ · Сообщил маршрут ✓ · Offline maps ✓ · Наличные на refugio ✓ · Погода — /guide/pogoda-i-sezonnost",
         },
@@ -404,9 +404,9 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
             "BA — Pride, gay-friendly bars Palermo. Публичные проявления в provincia — осторожнее. Закон на вашей стороне; практика — как в любом крупном городе.",
         },
         {
-          title: "Digital nomad",
+          title: "Цифровой кочевник",
           body:
-            "Ноутбук в кафе — место у стены, не у двери. Coworking с locker. Жильё — договор, не переводы «на карту незнакомцу». Районы long stay: Palermo, Belgrano, Colegiales.",
+            "Ноутбук в кафе — место у стены, не у двери. Коворкинг с шкафчиком. Жильё — договор, не переводы «на карту незнакомцу». Районы для длительного проживания: Palermo, Belgrano, Colegiales.",
         },
         {
           title: "Wi‑Fi и интернет",
@@ -419,7 +419,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
           variant: "tip",
           title: "Связка с проектом",
           body:
-            "Тур с гидом в La Boca / BA — /tours · Деньги — /guide/ekonomika-i-dengi · Транспорт — /guide/transport · Долгий stay — /immigration",
+            "Тур с гидом в La Boca / BA — /tours · Деньги — /guide/ekonomika-i-dengi · Транспорт — /guide/transport · Долгое проживание — /immigration",
         },
       ],
     },

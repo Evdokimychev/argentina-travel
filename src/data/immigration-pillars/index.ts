@@ -87,7 +87,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       {
         question: "Что такое DNU 366/2025 и как он влияет на въезд?",
         answer:
-          "Декрет ужесточил требования к туристическому въезду: обязательная медстраховка на весь срок, более строгая проверка документов и цели визита. На residencia напрямую не распространяется, но первый контакт с Migraciones проходит по новым правилам.",
+          "Decreto 366/2025 закрепил требование медстраховки и декларации о цели поездки; на границе их пока не всегда проверяют. Для подачи на residencia требования строже.",
       },
       {
         question: "Что такое RADEX и как им пользоваться?",
@@ -155,28 +155,58 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { label: "Запросить контакты", href: "/contacts", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "📘", label: "Пасport AR", headline: "Безвиз ~170 стран", detail: "Шенген, Великобритания, Япония и LatAm" },
-      { emoji: "⏱", label: "Срок", headline: "~2 года после permanente", detail: "При непрерывном легальном проживании" },
-      { emoji: "📝", label: "Экзамены", headline: "Испанский + Conocer Argentina", detail: "Подготовка 3–12 месяцев" },
-      { emoji: "🗳", label: "Права", headline: "Голосование и работа без ограничений", detail: "Двойное гражданство — по законам вашей страны" },
+      { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 стран", detail: "Шенген, Великобритания, Япония и страны Латинской Америки" },
+      { emoji: "⏱", label: "Резиденция", headline: "2 года непрерывно", detail: "Легальный статус на момент подачи в суд" },
+      { emoji: "⚖️", label: "Подача", headline: "Федеральный суд PJN", detail: "CARTADECIUDADANIA@PJN.GOV.AR — с 2023 электронно" },
+      { emoji: "🗳", label: "Срок дела", headline: "6 мес — 3 года", detail: "От подачи до Carta de Ciudadanía; затем DNI и паспорт" },
     ],
     sections: [
       {
         id: "overview",
-        title: "Путь к паспорту",
+        title: "Натурализация",
         content: IMMIGRATION_CITIZENSHIP.intro,
       },
     ],
     faq: [
       {
-        question: "Через сколько лет можно получить гражданство?",
+        question: "Через сколько можно подать на гражданство?",
         answer:
-          "При непрерывном легальном проживании — обычно 2 года с момента одобрения permanente (или с даты въезда по некоторым основаниям). Нужны испанский язык, экзамен «Conocer Argentina», отсутствие судимостей.",
+          "При натурализации — 2 года непрерывной резиденции в Аргентине и легальный статус на дату подачи. Супруг(а) аргентинца по рождению и родители ребёнка-аргентинца могут подать без периода ожидания.",
+      },
+      {
+        question: "Нужен ли ПМЖ перед подачей на гражданство?",
+        answer:
+          "Для граждан стран вне Mercosur ПМЖ обычно оформляют после 3 лет temporaria, но на гражданство можно подать раньше — при 2 годах резиденции. Это разные процедуры.",
+      },
+      {
+        question: "Как подать документы на гражданство?",
+        answer:
+          "С 1 декабря 2023 года — полностью в электронном виде: письмо на CARTADECIUDADANIA@PJN.GOV.AR с двумя PDF (комплект документов и заполненное заявление). Затем — оригиналы в назначенный суд.",
+      },
+      {
+        question: "Сколько длится рассмотрение дела?",
+        answer:
+          "Законом срок не ограничен. На практике — от 6 месяцев до 3 лет и дольше. Дольше всего занимает сбор справок о несудимости по всем 24 субъектам федерации и запросы в Interpol.",
+      },
+      {
+        question: "Нужны ли экзамены по испанскому или «Conocer Argentina»?",
+        answer:
+          "Суд может назначить языковую проверку или вопросы по конституции — практика различается по судьям. Часть таких требований оспаривается; можно согласиться или обжаловать через abogado.",
+      },
+      {
+        question: "Что такое Carta de Ciudadanía?",
+        answer:
+          "Документ суда о принятии в гражданство. С ним обращаются в RENAPER за DNI гражданина Аргентины, затем оформляют pasaporte argentino.",
       },
       {
         question: "Даёт ли аргентинский паспорт безвизовый режим?",
         answer:
-          "Да — паспорт Аргентины открывает безвиз или visa on arrival примерно в 170 стран, включая Шенген, Великобританию, Японию и большинство Латинской Америки.",
+          "Да — паспорт открывает безвиз, визу по прилёте или электронное разрешение примерно в 170 направлений, включая Шенген, Великобританию, Японию и большинство Латинской Америки.",
+      },
+      {
+        question: "Как Decreto 366/2025 влияет на гражданство?",
+        answer:
+          "Декрет изменил правила иммиграции в целом. Детали по гражданству могут уточняться регламентами — следите за обновлениями на migraciones.gob.ar и pjn.gov.ar.",
       },
     ],
     partnerServices: [],
@@ -191,42 +221,57 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     heroCtas: [
       { label: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh", variant: "primary" },
       hubCta("Процесс иммиграции", topicHref("protsess-immigratsii")),
+      hubCta("Гражданство", topicHref("grazhdanstvo")),
       hubCta("Возможности", topicHref("vozmozhnosti")),
     ],
     quickFacts: [
-      { emoji: "🌎", label: "14 оснований", headline: "От digital nomad до family", detail: "Rentista, trabajo, estudiante и другие категории" },
-      { emoji: "📄", label: "Temporaria", headline: "ВНЖ до 3 лет", detail: "DNI, банки, аренда, работа по основанию" },
-      { emoji: "🏡", label: "Permanente", headline: "ПМЖ после 3 лет temporaria", detail: "Или по особым основаниям (padre de argentino)" },
-      { emoji: "⏳", label: "Precaria", headline: "Временное разрешение", detail: "Пока рассматривается заявление на residencia" },
+      {
+        emoji: "🌎",
+        label: "15 оснований",
+        headline: "Temporaria по Ley 25.871",
+        detail: "Ст. 23 incisos a–ñ, включая reunificación familiar",
+      },
+      {
+        emoji: "📄",
+        label: "ВНЖ",
+        labelEs: "residencia temporaria",
+        headline: "До 3 лет",
+        detail: "Prórroga, DNI, arraigo 2–3 года → ПМЖ",
+      },
+      {
+        emoji: "🏡",
+        label: "ПМЖ",
+        labelEs: "residencia permanente",
+        headline: "После arraigo или по семье",
+        detail: "Доход и antecedentes — обязательны с 366/2025",
+      },
+      {
+        emoji: "⏳",
+        label: "Прекария",
+        labelEs: "residencia precaria",
+        headline: "До 90 дней",
+        detail: "Не засчитывается в срок ПМЖ и гражданства",
+      },
     ],
     sections: [
       {
         id: "overview",
-        title: "Temporaria и permanente",
+        title: "ВНЖ и ПМЖ",
         content: IMMIGRATION_RESIDENCY.intro,
       },
-    ],
-    faq: [
       {
-        question: "Сколько оснований для ВНЖ существует в Аргентине?",
-        answer:
-          "Закон предусматривает 14 категорий residencia temporaria — от rentista и цифрового кочевника до работы, учёбы, инвестиций и семейных оснований. Актуальный список публикует Dirección Nacional de Migraciones.",
-      },
-      {
-        question: "Чем отличается temporaria от permanente?",
-        answer:
-          "Temporaria выдаётся на срок до 3 лет по конкретному основанию. Permanente — после 3 лет непрерывной temporaria или по особым основаниям (например, родитель аргентинского ребёнка). Permanente не требует ежегодного продления по тому же пункту.",
-      },
-      {
-        question: "Rentista — сколько нужно дохода?",
-        answer:
-          "Требуется доказать стабильный пассивный доход из-за рубежа (аренда, дивиденды, пенсия). Порог устанавливает Migraciones и пересматривается — сверяйте актуальную сумму на момент подачи.",
+        id: "dnu-note",
+        title: "Decreto 366/2025",
+        content: IMMIGRATION_RESIDENCY.dnuWarning,
       },
     ],
+    faq: IMMIGRATION_RESIDENCY.extendedFaq,
     partnerServices: [],
     blogLinks: [
       { title: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh" },
-      { title: "Возможности", href: topicHref("vozmozhnosti") },
+      { title: "Процесс иммиграции", href: topicHref("protsess-immigratsii") },
+      { title: "Гражданство", href: topicHref("grazhdanstvo") },
+      { title: "Роды в Аргентине", href: topicHref("rody-v-argentine") },
     ],
   },
   vozmozhnosti: {
@@ -238,10 +283,34 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { label: "Запросить контакты", href: "/contacts", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "💰", label: "Rentista", headline: "Пассивный доход из-за рубежа", detail: "Популярный путь для релокантов" },
-      { emoji: "💻", label: "Nómada digital", headline: "Remote work + страховка", detail: "Отдельное основание для кочевников" },
-      { emoji: "👶", label: "Padre de argentino", headline: "Рождение ребёнка в AR", detail: "Ускоренный путь к permanente" },
-      { emoji: "🌎", label: "Mercosur", headline: "Упрощённый режим", detail: "Для граждан стран Mercosur" },
+      {
+        emoji: "💰",
+        label: "Рантье",
+        labelEs: "rentista",
+        headline: "Пассивный доход из-за рубежа",
+        detail: "Популярный путь для релокантов",
+      },
+      {
+        emoji: "💻",
+        label: "Цифровой кочевник",
+        labelEs: "nómada digital",
+        headline: "Удалённая работа + страховка",
+        detail: "Отдельное основание для кочевников",
+      },
+      {
+        emoji: "👶",
+        label: "Родитель ребёнка-аргентинца",
+        labelEs: "padre/madre de argentino",
+        headline: "Рождение ребёнка в AR",
+        detail: "Ускоренный путь к ПМЖ",
+      },
+      {
+        emoji: "🌎",
+        label: "Гражданин Mercosur",
+        labelEs: "mercosur",
+        headline: "Упрощённый режим",
+        detail: "Для граждан стран Mercosur",
+      },
     ],
     sections: [
       {

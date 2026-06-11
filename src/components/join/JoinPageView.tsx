@@ -54,7 +54,7 @@ function SectionLabel({
 
 function SectionTitle({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <h2 className={cn("font-display text-2xl font-bold text-charcoal sm:text-3xl", className)}>
+    <h2 className={cn("font-heading text-2xl font-bold text-charcoal sm:text-3xl", className)}>
       {children}
     </h2>
   );
@@ -140,7 +140,7 @@ export default function JoinPageView() {
             </div>
             <Card className="absolute -bottom-4 -left-2 border-0 px-4 py-3 shadow-elevated sm:-left-6">
               <p className="text-xs font-medium text-slate">Размещение туров</p>
-              <p className="font-display text-lg font-bold text-charcoal">Бесплатно</p>
+              <p className="font-heading text-lg font-bold text-charcoal">Бесплатно</p>
             </Card>
           </div>
         </div>
@@ -182,7 +182,7 @@ export default function JoinPageView() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sky/10 text-sky">
                       <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
                     </div>
-                    <h3 className="mt-5 font-display text-lg font-bold text-charcoal">
+                    <h3 className="mt-5 font-heading text-lg font-bold text-charcoal">
                       {benefit.title}
                     </h3>
                     <p className="mt-2 text-sm leading-relaxed text-slate">{benefit.description}</p>
@@ -225,7 +225,7 @@ export default function JoinPageView() {
           <Card className="overflow-hidden border-0 bg-gradient-to-br from-brand to-brand-dark text-white shadow-elevated">
             <CardContent className="p-8 sm:p-10">
               <Map className="h-10 w-10 text-sun" aria-hidden />
-              <p className="mt-6 font-display text-2xl font-bold leading-snug sm:text-3xl">
+              <p className="mt-6 font-heading text-2xl font-bold leading-snug sm:text-3xl">
                 Редактор тура с маршрутом на карте, программой и настройками бронирования
               </p>
               <p className="mt-4 text-sm leading-relaxed text-white/85">
@@ -265,7 +265,7 @@ export default function JoinPageView() {
                   />
                 </div>
                 <CardContent className="p-5">
-                  <h3 className="font-display text-lg font-bold text-charcoal">{author.name}</h3>
+                  <h3 className="font-heading text-lg font-bold text-charcoal">{author.name}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate">{author.bio}</p>
                 </CardContent>
               </Card>
@@ -289,10 +289,10 @@ export default function JoinPageView() {
             <li key={step.id}>
               <Card className="h-full border-gray-200 shadow-sm">
                 <CardContent className="p-6">
-                  <span className="font-display text-4xl font-bold text-sky/25">
+                  <span className="font-heading text-4xl font-bold text-sky/25">
                     {String(index + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="mt-4 font-display text-lg font-bold text-charcoal">{step.title}</h3>
+                  <h3 className="mt-4 font-heading text-lg font-bold text-charcoal">{step.title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate">{step.description}</p>
                 </CardContent>
               </Card>
@@ -357,7 +357,7 @@ export default function JoinPageView() {
           <div className="grid lg:grid-cols-2">
             <div className="bg-gradient-to-br from-charcoal to-patagonia p-8 text-white sm:p-10 lg:p-12">
               <SectionLabel className="text-sun">Поддержка авторов</SectionLabel>
-              <h2 className="mt-3 font-display text-2xl font-bold sm:text-3xl">
+              <h2 className="mt-3 font-heading text-2xl font-bold sm:text-3xl">
                 Остались вопросы? Свяжитесь с нами
               </h2>
               <p className="mt-4 text-sm leading-relaxed text-white/85">
@@ -414,7 +414,7 @@ export default function JoinPageView() {
                   <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success-muted text-success">
                     <BadgeCheck className="h-7 w-7" aria-hidden />
                   </div>
-                  <p className="mt-4 font-display text-xl font-bold text-charcoal">
+                  <p className="mt-4 font-heading text-xl font-bold text-charcoal">
                     Спасибо за заявку!
                   </p>
                   <p className="mt-2 text-sm text-slate">
@@ -429,7 +429,7 @@ export default function JoinPageView() {
                 </div>
               ) : (
                 <>
-                  <h3 className="font-display text-lg font-bold text-charcoal">
+                  <h3 className="font-heading text-lg font-bold text-charcoal">
                     Оставить заявку
                   </h3>
                   <p className="mt-1 text-sm text-slate">

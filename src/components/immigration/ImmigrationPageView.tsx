@@ -33,7 +33,7 @@ export default function ImmigrationPageView() {
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
                 <Stamp className="h-5 w-5" aria-hidden />
               </span>
-              <span className="mt-4 font-display text-lg font-bold text-charcoal group-hover:text-sky">
+              <span className="mt-4 font-heading text-lg font-bold text-charcoal group-hover:text-sky">
                 {article.label}
               </span>
               <span className="mt-2 text-sm text-slate">{article.description}</span>
@@ -46,7 +46,7 @@ export default function ImmigrationPageView() {
         </div>
 
         <aside className="mt-12 rounded-2xl border border-gray-100 bg-white p-6 shadow-card">
-          <h2 className="font-display text-lg font-bold text-charcoal">См. также</h2>
+          <h2 className="font-heading text-lg font-bold text-charcoal">См. также</h2>
           <ul className="mt-4 space-y-2">
             {IMMIGRATION_HUB_RELATED.map((link) => (
               <li key={link.id}>

@@ -188,7 +188,7 @@ export default function ContactsPage() {
 
         <div className="grid gap-12 lg:grid-cols-2">
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal">Напишите нам</h2>
+            <h2 className="font-heading text-2xl font-bold text-charcoal">Напишите нам</h2>
             <p className="mt-3 text-slate">
               Заполните форму, и мы свяжемся с вами в течение 24 часов
             </p>
@@ -203,7 +203,7 @@ export default function ContactsPage() {
           </div>
 
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal">Как нас найти</h2>
+            <h2 className="font-heading text-2xl font-bold text-charcoal">Как нас найти</h2>
 
             <div className="mt-8 space-y-6">
               <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">

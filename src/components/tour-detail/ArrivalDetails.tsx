@@ -140,7 +140,7 @@ export function ArrivalRecommendations({ logistics }: { logistics: TourLogistics
     <div className="space-y-5">
       {planeCities.map((city) => (
         <article key={city.id} className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-          <h4 className="font-display text-lg font-bold text-charcoal">Рекомендации по прибытию</h4>
+          <h4 className="font-heading text-lg font-bold text-charcoal">Рекомендации по прибытию</h4>
 
           <div className="mt-4">
             <p className="text-sm font-bold text-charcoal">На самолёте</p>

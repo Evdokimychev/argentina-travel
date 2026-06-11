@@ -104,7 +104,7 @@ const FAQ: TravelHubContent["faq"] = [
   {
     question: "Сколько денег брать наличными?",
     answer:
-      "Зависит от маршрута. USD в хорошем состоянии принимают широко. Не меняйте всё в аэропорту — см. гид по деньгам.",
+      "Зависит от маршрута. USD в хорошем состоянии принимают широко. Не меняйте всё в аэропорту — см. раздел об экономике и деньгах.",
   },
   {
     question: "Как заказать трансфер заранее?",
@@ -712,7 +712,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
     {
       title: "Документы для въезда",
       href: "/immigration/dokumenty-dlya-vyezda",
-      description: "Чеклист Migraciones",
+      description: "Список документов Migraciones",
     },
     {
       title: "Полный справочник по иммиграции",

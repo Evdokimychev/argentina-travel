@@ -118,7 +118,7 @@ export default function TourTermsListBlock({
           <h3
             className={cn(
               "font-bold text-charcoal",
-              embedded ? "text-base" : "font-display text-xl sm:text-2xl"
+              embedded ? "text-base" : "font-heading text-xl sm:text-2xl"
             )}
           >
             {title}

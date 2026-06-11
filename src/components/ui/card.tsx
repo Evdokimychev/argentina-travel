@@ -15,7 +15,7 @@ export function CardHeader({ className, ...props }: React.HTMLAttributes<HTMLDiv
 
 export function CardTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
-    <h3 className={cn("font-display text-base font-bold text-charcoal", className)} {...props} />
+    <h3 className={cn("font-heading text-base font-bold text-charcoal", className)} {...props} />
   );
 }
 
@@ -46,7 +46,7 @@ export function StatCard({
 }) {
   return (
     <Card className={cn("p-6 text-center", className)}>
-      <p className={cn("font-display text-3xl font-bold text-charcoal", valueClassName)}>{value}</p>
+      <p className={cn("font-heading text-3xl font-bold text-charcoal", valueClassName)}>{value}</p>
       <p className="mt-1 text-sm text-slate">{label}</p>
     </Card>
   );

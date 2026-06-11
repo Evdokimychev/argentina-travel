@@ -38,7 +38,7 @@ export default function LegalPageView({ document }: LegalPageViewProps) {
           {document.sections.map((section, index) => (
             <section key={index}>
               {section.heading ? (
-                <h2 className="font-display text-xl font-bold text-charcoal">{section.heading}</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">{section.heading}</h2>
               ) : null}
               {section.paragraphs?.map((paragraph, pIndex) => (
                 <p

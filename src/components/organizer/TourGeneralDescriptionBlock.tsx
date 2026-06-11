@@ -34,7 +34,7 @@ export default function TourGeneralDescriptionBlock({
 
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Общее описание</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Общее описание</h2>
 
       <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Опишите, в чём уникальность и польза вашего тура по сравнению с другими. Рекомендуемый

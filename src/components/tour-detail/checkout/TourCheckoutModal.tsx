@@ -174,7 +174,7 @@ function CheckoutSummary({
 
   return (
     <div className="flex h-full flex-col bg-gray-50 p-5">
-      <h3 className="font-display text-lg font-bold text-charcoal">Ваш тур</h3>
+      <h3 className="font-heading text-lg font-bold text-charcoal">Ваш тур</h3>
 
       <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
         <div className="relative aspect-[16/10] w-full">
@@ -187,7 +187,7 @@ function CheckoutSummary({
           />
         </div>
         <div className="p-4">
-          <p className="font-display text-sm font-bold leading-snug text-charcoal">
+          <p className="font-heading text-sm font-bold leading-snug text-charcoal">
             {tour.title}
           </p>
           <dl className="mt-3 space-y-2 text-xs text-slate">
@@ -273,7 +273,7 @@ function CheckoutSummary({
             <FormattedPrice priceUsd={addon.priceUsd} className="shrink-0 font-medium text-charcoal" />
           </div>
         ))}
-        <div className="flex justify-between gap-3 border-t border-gray-100 pt-3 font-display text-base font-bold text-charcoal">
+        <div className="flex justify-between gap-3 border-t border-gray-100 pt-3 font-heading text-base font-bold text-charcoal">
           <span>Итого</span>
           <FormattedPrice priceUsd={totalUsd} />
         </div>
@@ -602,7 +602,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
               <p className="text-xs font-medium uppercase tracking-wide text-slate">
                 Бронирование
               </p>
-              <h2 id="checkout-title" className="font-display text-xl font-bold text-charcoal">
+              <h2 id="checkout-title" className="font-heading text-xl font-bold text-charcoal">
                 {submitted ? "Заявка отправлена" : "Подтверждение и оплата"}
               </h2>
               {!submitted && (
@@ -627,7 +627,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
                   <Check className="h-8 w-8" strokeWidth={2.5} />
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-bold text-charcoal">
+                <h3 className="mt-5 font-heading text-2xl font-bold text-charcoal">
                   Спасибо за бронирование!
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate">
@@ -708,7 +708,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "travelers" && (
                   <section className="mx-auto max-w-xl space-y-5">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
                         1. Туристы
                       </h3>
                       <p className="mt-1 text-sm text-slate">
@@ -751,7 +751,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "addons" && (
                   <section className="mx-auto max-w-xl space-y-4">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
                         {hasAccommodation ? "3" : "2"}. Дополнения
                       </h3>
                       <p className="mt-1 text-sm text-slate">Необязательные услуги к туру</p>
@@ -808,7 +808,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "details" && (
                   <section className="mx-auto max-w-xl space-y-8">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
                         {hasAccommodation ? "4" : "3"}. Данные путешественников
                       </h3>
                       <p className="mt-1 text-sm text-slate">
@@ -1103,7 +1103,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "payment" && (
                   <section className="mx-auto max-w-xl space-y-5">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
                         {hasAccommodation ? "5" : "4"}. Оплата
                       </h3>
                       <p className="mt-1 text-sm text-slate">
@@ -1168,7 +1168,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                     <p className="text-xs text-slate">Итого за {formatTouristsBooking(guests)}</p>
                     <FormattedPrice
                       priceUsd={totalUsd}
-                      className="font-display text-lg font-bold text-charcoal"
+                      className="font-heading text-lg font-bold text-charcoal"
                     />
                   </div>
                   <p className="text-right text-xs text-slate">

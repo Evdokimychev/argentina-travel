@@ -279,12 +279,12 @@ export function SiteNavFullMenu({
               <Link
                 href={section.href}
                 onClick={onNavigate}
-                className="font-display text-base font-semibold text-charcoal hover:text-sky"
+                className="font-heading text-base font-semibold text-charcoal hover:text-sky"
               >
                 {navSectionLabel(section, t)}
               </Link>
             ) : (
-              <h3 className="font-display text-base font-semibold text-charcoal">
+              <h3 className="font-heading text-base font-semibold text-charcoal">
                 {navSectionLabel(section, t)}
               </h3>
             )}
@@ -408,7 +408,7 @@ export function SiteNavFullScreenOverlay({
         className="relative flex h-full flex-col bg-surface-elevated"
       >
         <div className="flex shrink-0 items-center justify-between border-b border-border-subtle px-4 py-3 sm:px-6">
-          <p className="font-display text-lg font-semibold text-charcoal">{title}</p>
+          <p className="font-heading text-lg font-semibold text-charcoal">{title}</p>
           <button
             ref={closeButtonRef}
             type="button"

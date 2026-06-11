@@ -61,7 +61,7 @@ export default function GuideHubView() {
                       <span className="text-2xl" aria-hidden>
                         {card.emoji}
                       </span>
-                      <h3 className="mt-2 font-display font-bold text-charcoal">{card.title}</h3>
+                      <h3 className="mt-2 font-heading font-bold text-charcoal">{card.title}</h3>
                       <p className="mt-1 flex-1 text-sm leading-relaxed text-slate">{card.body}</p>
                       {card.href && card.linkLabel ? (
                         <Link
@@ -96,7 +96,7 @@ export default function GuideHubView() {
                           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky transition-colors group-hover:bg-sky group-hover:text-white">
                             <Icon className="h-5 w-5" aria-hidden />
                           </span>
-                          <h3 className="mt-3 font-display font-bold text-charcoal group-hover:text-sky">
+                          <h3 className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky">
                             {topic.title}
                           </h3>
                           <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
@@ -140,7 +140,7 @@ export default function GuideHubView() {
                 id="related"
                 className={cn(siteScrollAnchorClass, "rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8")}
               >
-                <h2 className="font-display text-xl font-bold text-charcoal">См. также</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">См. также</h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {hub.relatedLinks.map((link) => (
                     <Link

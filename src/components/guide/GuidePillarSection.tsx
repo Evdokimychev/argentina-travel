@@ -55,7 +55,7 @@ function InfoBox({ box }: { box: GuidePillarInfoBox }) {
       <div className="flex items-start gap-3">
         <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", style.iconClass)} aria-hidden />
         <div>
-          <p className="font-display text-sm font-bold text-charcoal">{box.title}</p>
+          <p className="font-heading text-sm font-bold text-charcoal">{box.title}</p>
           <p className="mt-1.5 text-sm leading-relaxed text-slate">{box.body}</p>
         </div>
       </div>
@@ -73,7 +73,7 @@ function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] })
               <th
                 key={header}
                 scope="col"
-                className="px-4 py-3 font-display font-bold text-charcoal"
+                className="px-4 py-3 font-heading font-bold text-charcoal"
               >
                 {header}
               </th>
@@ -132,7 +132,7 @@ export default function GuidePillarSectionBlock({
     <HubSection id={section.id} title={section.title} subtitle={section.content}>
       {section.subsections?.map((sub) => (
         <div key={sub.title} className="mt-6 first:mt-0">
-          <h3 className="font-display text-lg font-bold text-charcoal">{sub.title}</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">{sub.title}</h3>
           <p className="mt-2 text-sm leading-relaxed text-slate">{sub.body}</p>
         </div>
       ))}

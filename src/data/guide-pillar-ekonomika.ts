@@ -1,9 +1,9 @@
 import type { GuidePillarContent } from "@/types/guide-pillar";
 
 export const EKONOMIKA_PILLAR: GuidePillarContent = {
-  metadataTitle: "Экономика и деньги — полный гид по деньгам в Аргентине",
+  metadataTitle: "Экономика и деньги — полное руководство по финансам в Аргентине",
   heroSubtitle:
-    "Полный гид по песо, курсу доллара, оплате и обмену — для туристов и тех, кто планирует жить в Аргентине",
+    "Подробное руководство по песо, курсу доллара, оплате и обмену — для туристов и тех, кто планирует жить в Аргентине",
 
   heroCtas: [
     { label: "Курс доллара сегодня", href: "#widget-exchange-rates", variant: "primary" },
@@ -14,8 +14,8 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
   quickFacts: [
     { label: "Официальный USD", headline: "загрузка…", detail: "Курс ЦБ и банков — карты, банкоматы", live: "exchange-oficial" },
     { label: "Синий USD", headline: "загрузка…", detail: "Рыночный курс — наличный обмен и WU", live: "exchange-blue" },
-    { label: "Валюта", headline: "Аргентинский песо (ARS)", detail: "Расчёты в peso; USD часто принимают в туристических местах" },
-    { label: "Инфляция", headline: "Цены в peso растут быстро", detail: "Пересчитывайте бюджет по актуальному blue, не по старым статьям" },
+    { label: "Валюта", headline: "Аргентинский песо (ARS)", detail: "Расчёты в песо; USD часто принимают в туристических местах" },
+    { label: "Инфляция", headline: "Цены в песо растут быстро", detail: "Пересчитывайте бюджет по актуальному blue, не по старым статьям" },
     { label: "Visa / Mastercard", headline: "Работают повсеместно", detail: "Конвертация часто по официальному курсу — не всегда выгодно" },
     { label: "Лучший курс для туриста", headline: "USD/EUR наличными", detail: "Cueva или Western Union — близко к синему курсу" },
   ],
@@ -225,7 +225,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
         {
           title: "Открытие счёта",
           body:
-            "С туристическим паспортом открыть полноценный счёт сложно. После получения DNI (или при наличии ВНЖ) банки Galicia, Santander, BBVA, Brubank (digital) открывают cuenta en pesos и иногда cuenta en dólares. Нужны: DNI, proof of address, иногда proof of income. Сроки — от нескольких дней до недель.",
+            "С туристическим паспортом открыть полноценный счёт сложно. После получения DNI (или при наличии ВНЖ) банки Galicia, Santander, BBVA, Brubank (digital) открывают cuenta en песо и иногда cuenta en dólares. Нужны: DNI, proof of address, иногда proof of income. Сроки — от нескольких дней до недель.",
         },
         {
           title: "Переводы из-за рубежа",
@@ -377,7 +377,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
     {
       question: "Можно ли открыть банковский счёт туристу?",
       answer:
-        "Полноценный счёт с туристическим паспортом открыть сложно. После DNI или определённых видов ВНЖ банки предлагают cuenta en pesos; требования различаются.",
+        "Полноценный счёт с туристическим паспортом открыть сложно. После DNI или определённых видов ВНЖ банки предлагают cuenta en песо; требования различаются.",
     },
     {
       question: "Как эмигранту перевести деньги в Аргентину?",
@@ -413,7 +413,7 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
 
   blogLinks: [
     {
-      title: "Гид по аргентинскому стейку: asado и parrilla",
+      title: "Путеводитель по аргентинскому стейку: asado и parrilla",
       href: "/blog/argentinian-steak-guide",
       description: "Бюджет на ужины и чаевые в ресторанах",
     },

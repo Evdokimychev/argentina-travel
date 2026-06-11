@@ -66,7 +66,7 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
         </div>
         <div className="flex flex-col justify-center p-6 sm:p-8">
           <MetaRow post={post} />
-          <h2 className="mt-3 font-display text-2xl font-bold leading-snug text-charcoal transition-colors group-hover:text-sky sm:text-3xl">
+          <h2 className="mt-3 font-heading text-2xl font-bold leading-snug text-charcoal transition-colors group-hover:text-sky sm:text-3xl">
             {post.title}
           </h2>
           <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate sm:text-base">{post.excerpt}</p>
@@ -118,7 +118,7 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <MetaRow post={post} />
-        <h3 className="mt-2 font-display text-lg font-bold leading-snug text-charcoal transition-colors group-hover:text-sky">
+        <h3 className="mt-2 font-heading text-lg font-bold leading-snug text-charcoal transition-colors group-hover:text-sky">
           {post.title}
         </h3>
         <p className="mt-2 line-clamp-2 flex-1 text-sm leading-relaxed text-slate">{post.excerpt}</p>

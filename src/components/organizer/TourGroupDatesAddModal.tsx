@@ -54,7 +54,7 @@ function InfoBanner({
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h4 className="font-display text-base font-bold text-charcoal">{children}</h4>;
+  return <h4 className="font-heading text-base font-bold text-charcoal">{children}</h4>;
 }
 
 function FormField({

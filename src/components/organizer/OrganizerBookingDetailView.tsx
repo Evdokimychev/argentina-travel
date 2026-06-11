@@ -347,7 +347,7 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
               onClick={() => setHistoryOpen((open) => !open)}
               className="flex w-full items-center justify-between gap-3 text-left"
             >
-              <span className="font-display text-base font-bold text-charcoal">История статусов</span>
+              <span className="font-heading text-base font-bold text-charcoal">История статусов</span>
               {historyOpen ? (
                 <ChevronUp className="h-5 w-5 text-slate" />
               ) : (

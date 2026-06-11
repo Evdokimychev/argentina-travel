@@ -33,6 +33,7 @@ import {
   Sparkles,
   Stamp,
   Timer,
+  TrendingUp,
   UserCheck,
   Wrench,
   type LucideIcon,
@@ -80,6 +81,12 @@ const TOC_ICONS: Record<string, LucideIcon> = {
   "immigration-process": Stamp,
   birth: UserCheck,
   citizenship: Flag,
+  "passport-power": TrendingUp,
+  "citizenship-cards": Flag,
+  "citizenship-grounds": UserCheck,
+  "citizenship-documents": FileText,
+  "citizenship-submission": Stamp,
+  "citizenship-path": Route,
   residency: ListOrdered,
   opportunities: Lightbulb,
   "useful-links": Link2,
@@ -213,7 +220,7 @@ function HubTocSidebar({ items }: { items: TravelHubTocItem[] }) {
             TOC
           </p>
         ) : (
-          <p className="font-display text-sm font-bold text-charcoal">Содержание</p>
+          <p className="font-heading text-sm font-bold text-charcoal">Содержание</p>
         )}
       </div>
 
@@ -288,7 +295,7 @@ function HubTocMobile({ items }: { items: TravelHubTocItem[] }) {
       aria-label="Содержание"
     >
       <details className="group">
-        <summary className="cursor-pointer list-none font-display text-sm font-bold text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
+        <summary className="cursor-pointer list-none font-heading text-sm font-bold text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
           <span className="flex items-center justify-between">
             Содержание
             <span className="text-xs font-normal text-slate group-open:hidden">развернуть</span>

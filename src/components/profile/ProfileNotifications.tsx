@@ -97,7 +97,7 @@ export default function ProfileNotifications({ limit }: { limit?: number }) {
             <Bell className="h-4 w-4" />
           </span>
           <div>
-            <h3 className="font-display text-lg font-bold text-charcoal">Уведомления</h3>
+            <h3 className="font-heading text-lg font-bold text-charcoal">Уведомления</h3>
             {unread > 0 ? (
               <p className="text-xs text-slate">{unread} непрочитанных</p>
             ) : (

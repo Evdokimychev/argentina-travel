@@ -18,7 +18,7 @@ export default function TourTermsConditionsBlock({
 }: TourTermsConditionsBlockProps) {
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Условия тура</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Условия тура</h2>
 
       <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
         <div className="rounded-2xl border border-gray-200/80 bg-gray-50/50 p-4 sm:p-5">

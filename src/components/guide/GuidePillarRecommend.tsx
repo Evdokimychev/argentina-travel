@@ -29,7 +29,7 @@ export default function GuidePillarRecommend({ services, intro }: GuidePillarRec
             {service.softIntro ? (
               <p className="text-xs font-medium text-sky">{service.softIntro}</p>
             ) : null}
-            <h3 className="font-display text-base font-bold text-charcoal">{service.title}</h3>
+            <h3 className="font-heading text-base font-bold text-charcoal">{service.title}</h3>
             <p className="mt-2 flex-1 text-sm text-slate">{service.description}</p>
             <Link
               href={service.href}

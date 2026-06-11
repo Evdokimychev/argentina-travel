@@ -213,7 +213,7 @@ export default function ProfileSettingsPage() {
         onSubmit={handleSubmit}
         className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
       >
-        <h2 className="font-display text-xl font-bold text-charcoal">Настройки аккаунта</h2>
+        <h2 className="font-heading text-xl font-bold text-charcoal">Настройки аккаунта</h2>
         <p className="mt-1 text-sm text-slate">Контактные данные и фото профиля</p>
 
         <div className="mt-5 space-y-4">
@@ -410,7 +410,7 @@ export default function ProfileSettingsPage() {
         </form>
 
           <aside className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="font-display text-lg font-bold text-charcoal">Авторам путешествий</h2>
+            <h2 className="font-heading text-lg font-bold text-charcoal">Авторам путешествий</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate">
               Организуйте собственный тур вместе с нами
             </p>

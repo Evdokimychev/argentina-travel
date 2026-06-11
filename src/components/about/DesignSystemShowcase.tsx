@@ -78,7 +78,7 @@ export default function DesignSystemShowcase() {
       <div className={siteContainerClass}>
         <div className="max-w-2xl">
           <p className="text-sm font-semibold uppercase tracking-wider text-sky">Design System</p>
-          <h2 className="mt-2 font-display text-3xl font-bold text-charcoal sm:text-4xl">
+          <h2 className="mt-2 font-heading text-3xl font-bold text-charcoal sm:text-4xl">
             Визуальный язык платформы
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate">
@@ -89,7 +89,7 @@ export default function DesignSystemShowcase() {
 
         {/* Colors */}
         <div className="mt-14">
-          <h3 className="font-display text-xl font-bold text-charcoal">Цвета</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Цвета</h3>
           <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
             {COLOR_SWATCHES.map((swatch) => (
               <Swatch key={swatch.name} {...swatch} />
@@ -99,21 +99,21 @@ export default function DesignSystemShowcase() {
 
         {/* Typography */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Типографика</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Типографика</h3>
           <div className="mt-6 space-y-6 rounded-2xl border border-gray-100 bg-surface-muted/50 p-6 sm:p-8">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate">Display XL · Unbounded</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-slate">Display · Unbounded (h1 страниц, названия туров)</p>
               <p className="mt-1 font-display text-4xl font-bold leading-tight text-charcoal sm:text-5xl">
                 Путешествия по Аргентине
               </p>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate">Display LG</p>
-              <p className="mt-1 font-display text-3xl font-bold text-charcoal">Авторские туры</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-slate">Heading · system-ui (карточки, секции)</p>
+              <p className="mt-1 font-heading text-xl font-bold text-charcoal">Патагония и Буэнос-Айрес</p>
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wider text-slate">Heading MD</p>
-              <p className="mt-1 font-display text-xl font-bold text-charcoal">Патагония и Буэнос-Айрес</p>
+              <p className="text-xs font-medium uppercase tracking-wider text-slate">Tour title · Unbounded</p>
+              <p className="mt-1 font-display text-lg font-bold text-charcoal">Треккинг в Национальном парке Лос-Гласьярес</p>
             </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-wider text-slate">Body</p>
@@ -131,7 +131,7 @@ export default function DesignSystemShowcase() {
 
         {/* Buttons */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Кнопки</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Кнопки</h3>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <Button>Primary</Button>
             <Button variant="outline">Outline</Button>
@@ -146,7 +146,7 @@ export default function DesignSystemShowcase() {
 
         {/* Dialog */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Диалог</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Диалог</h3>
           <p className="mt-2 text-sm text-slate">
             Единый оверлей, bottom sheet на мобильных, панель rounded-2xl на десктопе.
           </p>
@@ -175,7 +175,7 @@ export default function DesignSystemShowcase() {
 
         {/* Cards */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Карточки</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Карточки</h3>
           <div className="mt-6 grid gap-6 lg:grid-cols-3">
             <article className={cn(tourCardShellClass, tourCardShellInteractiveClass)}>
               <div className="relative aspect-[4/3] bg-gray-100">
@@ -220,7 +220,7 @@ export default function DesignSystemShowcase() {
 
         {/* Form fields */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Поля форм</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Поля форм</h3>
           <div className="mt-6 max-w-md space-y-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
             <div>
               <label htmlFor="ds-name" className="text-sm font-medium text-charcoal">
@@ -270,7 +270,7 @@ export default function DesignSystemShowcase() {
 
         {/* Table */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Таблица</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Таблица</h3>
           <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100">
             <Table>
               <TableHeader className="bg-pampas/60">
@@ -302,7 +302,7 @@ export default function DesignSystemShowcase() {
 
         {/* Badges */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Бейджи и статусы</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Бейджи и статусы</h3>
           <div className="mt-6 flex flex-wrap gap-2">
             <Badge variant="new">Новый</Badge>
             <Badge variant="hot">Горящий</Badge>
@@ -322,7 +322,7 @@ export default function DesignSystemShowcase() {
 
         {/* Shadows & motion */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Тени и motion</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Тени и motion</h3>
           <p className="mt-2 text-sm text-slate">
             Три уровня elevation: карточки каталога → панель бронирования → модалки. Hover карточек —
             только тень, без translateY. При <code className="text-xs">prefers-reduced-motion</code>{" "}
@@ -335,7 +335,7 @@ export default function DesignSystemShowcase() {
             </div>
             <div className={cn("rounded-2xl border border-gray-100 bg-white p-6", SHADOW_ELEVATED)}>
               <p className="font-semibold text-charcoal">shadow-elevated</p>
-              <p className="mt-1 text-xs text-slate">Booking panel, sticky</p>
+              <p className="mt-1 text-xs text-slate">Панель бронирования, sticky</p>
             </div>
             <div className={cn("rounded-2xl border border-gray-100 bg-white p-6", SHADOW_MODAL)}>
               <p className="font-semibold text-charcoal">shadow-modal</p>
@@ -349,7 +349,7 @@ export default function DesignSystemShowcase() {
 
         {/* Star rating */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Рейтинг</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Рейтинг</h3>
           <div className="mt-6 flex flex-wrap items-center gap-6 rounded-2xl border border-gray-100 bg-surface-muted/50 p-6">
             <StarRating layout="badge" score="4.8" count={24} size="sm" />
             <StarRating layout="badge" isNew newLabel="Новый" size="sm" />
@@ -360,7 +360,7 @@ export default function DesignSystemShowcase() {
 
         {/* Spacing */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Шкала отступов</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Шкала отступов</h3>
           <div className="mt-6 flex flex-wrap items-end gap-4">
             {SPACING_STEPS.map((px) => (
               <div key={px} className="text-center">
@@ -376,7 +376,7 @@ export default function DesignSystemShowcase() {
 
         {/* Empty states */}
         <div className="mt-16">
-          <h3 className="font-display text-xl font-bold text-charcoal">Пустые состояния</h3>
+          <h3 className="font-heading text-xl font-bold text-charcoal">Пустые состояния</h3>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <EmptyState
               icon={MessageSquare}

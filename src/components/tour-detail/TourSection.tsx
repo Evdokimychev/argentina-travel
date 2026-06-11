@@ -32,7 +32,7 @@ function TourSectionHeader({
       )}
     >
       <div className="min-w-0">
-        <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
+        <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
         {subtitle ? (
           <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate">{subtitle}</p>
         ) : null}

@@ -9,6 +9,7 @@ import HubHero from "@/components/guide/hub/HubHero";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
 import ImmigrationNextTopic from "@/components/immigration/ImmigrationNextTopic";
+import ArgentinaPassportPowerWidget from "@/components/immigration/ArgentinaPassportPowerWidget";
 import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNav";
 import ImmigrationTopicRichSections, {
   getImmigrationTopicTocExtras,
@@ -46,7 +47,7 @@ export default function ImmigrationPillarView({ topic }: ImmigrationPillarViewPr
   });
   const richToc = getImmigrationTopicTocExtras(topic.slug as ImmigrationTopicSlug);
   const overviewIndex = baseToc.findIndex((item) => item.id !== "quick-30");
-  const tocItems =
+  let tocItems =
     overviewIndex >= 0
       ? [
           ...baseToc.slice(0, overviewIndex + 1),
@@ -54,6 +55,17 @@ export default function ImmigrationPillarView({ topic }: ImmigrationPillarViewPr
           ...baseToc.slice(overviewIndex + 1),
         ]
       : [...baseToc, ...richToc];
+
+  if (topic.slug === "grazhdanstvo") {
+    const quickIndex = tocItems.findIndex((item) => item.id === "quick-30");
+    if (quickIndex >= 0) {
+      tocItems = [
+        ...tocItems.slice(0, quickIndex + 1),
+        { id: "passport-power", label: "Сила паспорта" },
+        ...tocItems.slice(quickIndex + 1),
+      ];
+    }
+  }
 
   return (
     <>
@@ -89,7 +101,18 @@ export default function ImmigrationPillarView({ topic }: ImmigrationPillarViewPr
               <HubToc items={tocItems} variant="mobile" />
 
               <HubSection id="quick-30" title="Кратко за 30 секунд">
-                <GuideQuickFactsStatic facts={pillar.quickFacts} slug={topic.slug} />
+                {topic.slug === "grazhdanstvo" ? (
+                  <div className="space-y-6">
+                    <ArgentinaPassportPowerWidget />
+                    <GuideQuickFactsStatic
+                      facts={pillar.quickFacts.filter((fact) => fact.label !== "Паспорт AR")}
+                      slug={topic.slug}
+                      columns={3}
+                    />
+                  </div>
+                ) : (
+                  <GuideQuickFactsStatic facts={pillar.quickFacts} slug={topic.slug} />
+                )}
               </HubSection>
 
               {pillar.sections.map((section) => (

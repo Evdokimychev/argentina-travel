@@ -59,7 +59,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         label: "Документы для въезда",
         href: "/immigration/dokumenty-dlya-vyezda",
-        description: "Чеклист перед поездкой",
+        description: "Список перед поездкой",
       },
       {
         label: "Экономика и деньги",
@@ -78,7 +78,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     title: "Где жить",
     shortDescription: "Отели, районы BA, аренда, Patagonia и регионы — полный справочник",
     intro:
-      "Полный гид по жилью в Аргентине: типы размещения (отель, хостел, апартаменты, estancia), районы Buenos Aires с таблицей сравнения, Patagonia, Mendoza, Salta, Iguazú и побережье, Booking и Airbnb, депозиты и garantía, сезонность, оплата картами и типичные ошибки — от короткой поездки до digital nomad и долгого stay.",
+      "Подробный путеводитель по жилью в Аргентине: типы размещения (отель, хостел, апартаменты, estancia), районы Буэнос-Айреса с таблицей сравнения, Патагония, Мендоса, Сальта, Игуасу и побережье, Booking и Airbnb, депозиты и garantía, сезонность, оплата картами и типичные ошибки — от короткой поездки до цифрового кочевника и долгого проживания.",
     heroImage:
       "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80",
     sections: [
@@ -125,12 +125,12 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         label: "Экономика и деньги",
         href: "/guide/ekonomika-i-dengi",
-        description: "Карты и pesos при брони",
+        description: "Карты и песо при брони",
       },
       {
         label: "Связь",
         href: "/guide/svyaz",
-        description: "Wi‑Fi для nomad",
+        description: "Wi‑Fi для кочевник",
       },
       {
         label: "Патагония: с чего начать",
@@ -610,7 +610,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         label: "Экономика и деньги",
         href: "/guide/ekonomika-i-dengi",
-        description: "Pesos на SIM",
+        description: "Песо на SIM",
       },
       {
         label: "Безопасность",
@@ -624,7 +624,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     slug: "ekonomika-i-dengi",
     title: "Экономика и деньги",
     shortDescription:
-      "Полный гид: песо, синий и официальный курс, обмен, карты, банкоматы и деньги для эмигрантов",
+      "Подробное руководство: песо, синий и официальный курс, обмен, карты, банкоматы и деньги для эмигрантов",
     intro:
       "Аргентина живёт с несколькими курсами доллара одновременно: oficial, blue, MEP и tarjeta. От выбора способа оплаты зависит, насколько выгодно ваше путешествие или переезд. Этот гид — для туристов и будущих резидентов: курс, обмен, банкоматы, инфляция, счета и 20 ответов в FAQ.",
     features: { exchangeRates: true },
@@ -634,7 +634,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         heading: "Валюта",
         body:
-          "Официальная валюта — аргентинский peso (ARS). USD и EUR часто принимают в туристических местах, но курс может быть невыгодным. Банкоматы выдают peso с комиссией; лимиты и комиссии зависят от вашего банка.",
+          "Официальная валюта — аргентинский песо (ARS). USD и EUR часто принимают в туристических местах, но курс может быть невыгодным. Банкоматы выдают песо с комиссией; лимиты и комиссии зависят от вашего банка.",
       },
       {
         heading: "Как платить туристу",
@@ -644,7 +644,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         heading: "Инфляция и цены",
         body:
-          "Цены в peso меняются быстро — перепроверяйте перед поездкой. Рестораны и отели для туристов часто указывают USD. На платформе туры в USD — прозрачная база для сравнения.",
+          "Цены в песо меняются быстро — перепроверяйте перед поездкой. Рестораны и отели для туристов часто указывают USD. На платформе туры в USD — прозрачная база для сравнения.",
       },
     ],
     serviceCards: [
@@ -718,7 +718,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     serviceCards: [
       {
         title: "Магазин гидов",
-        description: "PDF-путеводители и чеклисты для поездки.",
+        description: "PDF-путеводители и списки для поездки.",
         href: "/shop",
         ctaLabel: "Открыть магазин",
       },

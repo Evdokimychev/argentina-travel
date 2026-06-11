@@ -95,7 +95,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                           {mode.emoji}
                         </span>
                         <div className="min-w-0 flex-1">
-                          <h3 className="font-display text-xl font-bold text-charcoal">{mode.title}</h3>
+                          <h3 className="font-heading text-xl font-bold text-charcoal">{mode.title}</h3>
                           <p className="mt-2 text-sm leading-relaxed text-slate">{mode.summary}</p>
                           {mode.note ? (
                             <p className="mt-2 text-sm text-slate/80">{mode.note}</p>
@@ -155,7 +155,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                     <div className="max-w-xl">
                       <div className="flex items-center gap-2 text-sky">
                         <Plane className="h-6 w-6" aria-hidden />
-                        <span className="font-display text-lg font-bold text-charcoal">Aviasales</span>
+                        <span className="font-heading text-lg font-bold text-charcoal">Aviasales</span>
                       </div>
                       <p className="mt-3 text-sm leading-relaxed text-slate">
                         Встроенный поиск маршрутов в Буэнос-Айрес и региональные аэропорты. Сравнивайте
@@ -190,7 +190,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
               >
                 <div className="mb-6 rounded-2xl border border-dashed border-sky/30 bg-sky/5 p-8 text-center">
                   <MapPin className="mx-auto h-10 w-10 text-sky/60" aria-hidden />
-                  <p className="mt-3 font-display text-sm font-semibold text-charcoal">
+                  <p className="mt-3 font-heading text-sm font-semibold text-charcoal">
                     Карта аэропортов — скоро
                   </p>
                   <p className="mt-1 text-xs text-slate">
@@ -208,7 +208,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                           {airport.emoji}
                         </span>
                         <div>
-                          <p className="font-display font-bold text-charcoal">
+                          <p className="font-heading font-bold text-charcoal">
                             {airport.city}{" "}
                             <span className="rounded-md bg-charcoal/5 px-1.5 py-0.5 text-sm font-mono text-sky">
                               {airport.code}
@@ -259,7 +259,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
               <HubSection id="entry-docs" title="Документы и правила въезда" subtitle={hub.entryDocsIntro}>
                 {hub.entryVisaFree ? (
                   <div className="rounded-2xl border border-sky/20 bg-sky/5 p-4 sm:p-5">
-                    <p className="font-display font-bold text-charcoal">{hub.entryVisaFree.title}</p>
+                    <p className="font-heading font-bold text-charcoal">{hub.entryVisaFree.title}</p>
                     <p className="mt-2 text-sm leading-relaxed text-slate">{hub.entryVisaFree.summary}</p>
                     <p className="mt-2 text-xs leading-relaxed text-slate">{hub.entryVisaFree.countriesNote}</p>
                     <ul className="mt-3 space-y-1.5">
@@ -281,7 +281,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                       <span className="text-2xl" aria-hidden>
                         {doc.emoji}
                       </span>
-                      <p className="mt-2 font-display font-bold text-charcoal">{doc.title}</p>
+                      <p className="mt-2 font-heading font-bold text-charcoal">{doc.title}</p>
                       <p className="mt-1 text-sm leading-relaxed text-slate">{doc.description}</p>
                     </div>
                   ))}
@@ -289,7 +289,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
 
                 {hub.entryHealthcare ? (
                   <aside className="mt-5 rounded-2xl border border-emerald-200/80 bg-emerald-50/60 p-4 sm:p-5">
-                    <p className="font-display font-bold text-charcoal">{hub.entryHealthcare.title}</p>
+                    <p className="font-heading font-bold text-charcoal">{hub.entryHealthcare.title}</p>
                     <p className="mt-2 text-sm leading-relaxed text-charcoal">{hub.entryHealthcare.body}</p>
                     <ul className="mt-3 flex flex-wrap gap-2">
                       {hub.entryHealthcare.emergencyNumbers.map((num) => (
@@ -336,7 +336,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                   <div className="flex gap-4">
                     <Shield className="h-10 w-10 shrink-0 text-emerald-600" aria-hidden />
                     <div>
-                      <p className="font-display font-bold text-charcoal">{hub.insurance.title}</p>
+                      <p className="font-heading font-bold text-charcoal">{hub.insurance.title}</p>
                       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">{hub.insurance.body}</p>
                     </div>
                   </div>
@@ -356,7 +356,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                   ) : null}
                   {hub.transferTables.map((block) => (
                     <div key={block.id}>
-                      <h3 className="mb-4 font-display text-lg font-bold text-charcoal">{block.title}</h3>
+                      <h3 className="mb-4 font-heading text-lg font-bold text-charcoal">{block.title}</h3>
                       <HubDataTable table={block.table} />
                     </div>
                   ))}
@@ -405,7 +405,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                       <span className="text-2xl" aria-hidden>
                         {tip.emoji}
                       </span>
-                      <p className="mt-2 font-display font-bold text-charcoal">{tip.title}</p>
+                      <p className="mt-2 font-heading font-bold text-charcoal">{tip.title}</p>
                       <p className="mt-1 text-sm text-slate">{tip.body}</p>
                     </div>
                   ))}
@@ -433,7 +433,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
               </HubSection>
 
               <section className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8">
-                <h2 className="font-display text-xl font-bold text-charcoal">Рекомендуем</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">Рекомендуем</h2>
                 <p className="mt-2 text-sm text-slate">
                   Полезные сервисы — без агрессивной рекламы, только то, что реально помогает в поездке.
                 </p>

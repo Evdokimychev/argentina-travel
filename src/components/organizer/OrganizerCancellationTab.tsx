@@ -46,7 +46,7 @@ function SaveSidebar({
   return (
     <aside className="hidden xl:block">
       <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="font-display text-base font-bold text-charcoal">Отмена бронирования</h2>
+        <h2 className="font-heading text-base font-bold text-charcoal">Отмена бронирования</h2>
         {saved ? <p className="mt-2 text-sm text-emerald-700">Изменения сохранены</p> : null}
         <Button type="submit" className="mt-4 w-full" disabled={loading}>
           <Check className="h-4 w-4" />
@@ -341,7 +341,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
 
           {settings.policyType === "individual" ? (
             <section className="space-y-4">
-              <h2 className="font-display text-base font-bold text-charcoal">Штрафные санкции</h2>
+              <h2 className="font-heading text-base font-bold text-charcoal">Штрафные санкции</h2>
               <InfoBox>
                 <p>
                   Укажите штрафы в порядке убывания срока до начала тура. Например: «20% — от 30 до
@@ -427,7 +427,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
           ) : null}
 
           <section className="space-y-4 border-t border-gray-100 pt-8">
-            <h2 className="font-display text-base font-bold text-charcoal">Дополнительные условия</h2>
+            <h2 className="font-heading text-base font-bold text-charcoal">Дополнительные условия</h2>
             <InfoBox>
               <p>
                 Например: «Сумма бронирования может быть перенесена на другой тур автора в течение 12

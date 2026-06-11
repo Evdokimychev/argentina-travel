@@ -446,7 +446,7 @@ function TourEditorSidebar({
       <div className="space-y-4">
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
-            <h2 className="font-display text-base font-bold text-charcoal">Редактирование тура</h2>
+            <h2 className="font-heading text-base font-bold text-charcoal">Редактирование тура</h2>
             {lastChanged ? (
               <p className="mt-1.5 text-xs text-slate">Последнее изменение: {lastChanged}</p>
             ) : null}
@@ -501,7 +501,7 @@ function TourEditorSidebar({
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-display text-base font-bold text-charcoal">Предпросмотр тура</h2>
+          <h2 className="font-heading text-base font-bold text-charcoal">Предпросмотр тура</h2>
           <p className="mt-1.5 line-clamp-2 text-xs text-slate">
             {draft.title.trim() || "Без названия"}
           </p>
@@ -530,7 +530,7 @@ function TourEditorSidebar({
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-display text-base font-bold text-charcoal">Тур на площадке</h2>
+          <h2 className="font-heading text-base font-bold text-charcoal">Тур на площадке</h2>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Link
               href={isPublished ? tourUrl : "#"}
@@ -809,7 +809,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         <div className="min-w-0 space-y-6">
             {activeTab === "main" ? (
               <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-                <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">
+                <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
                   Расскажите о вашем туре
                 </h2>
 

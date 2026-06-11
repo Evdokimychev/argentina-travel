@@ -90,7 +90,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
 
         <div className="mt-6 rounded-xl bg-gray-50 px-4 py-4">
           <p className="text-sm text-slate">К оплате</p>
-          <p className="mt-1 font-display text-3xl font-bold text-charcoal">
+          <p className="mt-1 font-heading text-3xl font-bold text-charcoal">
             <FormattedPrice priceUsd={link.amountUsd} />
           </p>
           <p className="mt-2 text-xs text-slate">{formatBookingPaymentLinkStatus(link)}</p>

@@ -53,7 +53,7 @@ export default function ProfileBookingsPage() {
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 className="font-display text-xl font-bold text-charcoal">Мои бронирования</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal">Мои бронирования</h2>
       <p className="mt-1 text-sm text-slate">Заявки и подтверждённые поездки</p>
 
       {cancelError ? (
@@ -92,7 +92,7 @@ export default function ProfileBookingsPage() {
                       <div className="min-w-0">
                         <Link
                           href={`/tours/${booking.tourSlug}`}
-                          className="font-display text-base font-bold text-charcoal hover:text-brand"
+                          className="font-heading text-base font-bold text-charcoal hover:text-brand"
                         >
                           {booking.tourTitle}
                         </Link>
@@ -149,7 +149,7 @@ export default function ProfileBookingsPage() {
                     <BookingOrganizerCommentsJournal comments={booking.organizerComments} />
 
                     <div>
-                      <h3 className="font-display text-base font-bold text-charcoal">
+                      <h3 className="font-heading text-base font-bold text-charcoal">
                         История статусов
                       </h3>
                       <div className="mt-3 rounded-xl bg-white p-4 ring-1 ring-gray-200">

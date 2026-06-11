@@ -195,7 +195,7 @@ export default function AccommodationStep({
   return (
     <section className={cn("mx-auto max-w-2xl space-y-4", className)}>
       <div>
-        <h3 className="font-display text-lg font-bold text-charcoal">2. Проживание</h3>
+        <h3 className="font-heading text-lg font-bold text-charcoal">2. Проживание</h3>
         <p className="mt-1 text-sm text-slate">
           {expanded
             ? "Распределите туристов по типам номеров на маршруте"

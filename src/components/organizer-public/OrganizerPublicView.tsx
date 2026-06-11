@@ -104,7 +104,7 @@ export default function OrganizerPublicView({
       <section className="mt-12">
         <div className="flex flex-wrap items-end justify-between gap-4">
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal">
+            <h2 className="font-heading text-2xl font-bold text-charcoal">
               Туры организатора
             </h2>
             <p className="mt-1 text-sm text-slate">

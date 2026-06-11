@@ -63,6 +63,8 @@ export type GuidePracticalTips = {
 export type GuideQuickFact = {
   emoji?: string;
   label: string;
+  /** Официальный испанский термин — показывается бейджем под label */
+  labelEs?: string;
   /** Короткий главный вывод */
   headline: string;
   /** Расшифровка — контекст, который можно прочитать за секунды */

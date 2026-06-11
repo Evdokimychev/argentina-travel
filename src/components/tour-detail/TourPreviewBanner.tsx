@@ -34,7 +34,7 @@ export default function TourPreviewBanner({
                 <>
                   {" "}
                   Для публикации осталось исправить {publishBlockingCount}{" "}
-                  {publishBlockingCount === 1 ? "пункт" : "пункта"} в чеклисте.
+                  {publishBlockingCount === 1 ? "пункт" : "пункта"} в контрольном списке.
                 </>
               ) : null}
             </p>

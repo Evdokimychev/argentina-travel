@@ -86,7 +86,7 @@ function MonthCard({
         ) : null}
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="font-display text-sm font-bold text-charcoal">{month.labelShort}</p>
+            <p className="font-heading text-sm font-bold text-charcoal">{month.labelShort}</p>
             <p className="text-[11px] text-slate">{month.label}</p>
           </div>
           <span className="text-xl drop-shadow-sm" aria-hidden>
@@ -103,7 +103,7 @@ function MonthCard({
             />
           </div>
           <div className="min-w-0 flex-1">
-            <p className="font-display text-lg font-bold tabular-nums text-charcoal">
+            <p className="font-heading text-lg font-bold tabular-nums text-charcoal">
               {month.highC}°
               <span className="text-sm font-normal text-slate"> / {month.lowC}°</span>
             </p>
@@ -248,7 +248,7 @@ function ClimateScheduleView({
                   key: "temp",
                   label: "Темп.",
                   render: (m: ArgentinaClimateMonth) => (
-                    <span className="font-display text-[10px] font-bold tabular-nums leading-tight text-charcoal sm:text-[11px]">
+                    <span className="font-heading text-[10px] font-bold tabular-nums leading-tight text-charcoal sm:text-[11px]">
                       {m.highC}°
                       <span className="font-normal text-slate">/{m.lowC}°</span>
                     </span>
@@ -346,7 +346,7 @@ function ForecastDayCompact({
           </p>
         </div>
       </div>
-      <p className="mt-1 font-display text-base font-bold tabular-nums text-charcoal sm:mt-0 sm:min-w-[4.5rem]">
+      <p className="mt-1 font-heading text-base font-bold tabular-nums text-charcoal sm:mt-0 sm:min-w-[4.5rem]">
         {day.highC}°
         <span className="text-sm font-normal text-slate"> / {day.lowC}°</span>
       </p>
@@ -467,7 +467,7 @@ export default function ArgentinaWeatherPanel() {
         <div>
           <div className="flex items-center gap-2">
             <CloudSun className="h-5 w-5 text-sky" aria-hidden />
-            <h3 className="font-display text-lg font-bold text-charcoal">Климат и прогноз</h3>
+            <h3 className="font-heading text-lg font-bold text-charcoal">Климат и прогноз</h3>
           </div>
           <p className="mt-1 text-sm text-slate">
             Средние нормы по месяцам и актуальный прогноз на три дня — данные Open-Meteo.

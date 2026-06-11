@@ -8,6 +8,8 @@ export type TravelHubTocItem = {
 export type TravelHubQuickFact = {
   emoji: string;
   label: string;
+  /** Официальный испанский термин — показывается бейджем под label */
+  labelEs?: string;
   headline: string;
   detail?: string;
   /** @deprecated Используйте headline + detail */

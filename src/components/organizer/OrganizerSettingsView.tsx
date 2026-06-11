@@ -456,7 +456,7 @@ export default function OrganizerSettingsView() {
                 </div>
 
                 <div className="space-y-3 border-t border-gray-100 pt-6">
-                  <h2 className="font-display text-base font-bold text-charcoal">
+                  <h2 className="font-heading text-base font-bold text-charcoal">
                     Профессиональный опыт
                   </h2>
                   <InfoBox variant="sky">
@@ -520,7 +520,7 @@ export default function OrganizerSettingsView() {
                 </div>
 
                 <div className="space-y-3 border-t border-gray-100 pt-6">
-                  <h2 className="font-display text-base font-bold text-charcoal">
+                  <h2 className="font-heading text-base font-bold text-charcoal">
                     Статус на странице автора
                   </h2>
                   <InfoBox variant="amber">
@@ -574,7 +574,7 @@ export default function OrganizerSettingsView() {
 
               <aside className="hidden xl:block">
                 <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <h2 className="font-display text-base font-bold text-charcoal">
+                  <h2 className="font-heading text-base font-bold text-charcoal">
                     Настройки автора тура
                   </h2>
                   {saved ? (

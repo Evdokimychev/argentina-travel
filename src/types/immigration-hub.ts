@@ -1,9 +1,16 @@
-import type { GuidePillarFaqItem, GuidePillarHeroCta, GuidePillarTable } from "@/types/guide-pillar";
+import type {
+  GuidePillarFaqItem,
+  GuidePillarHeroCta,
+  GuidePillarTable,
+} from "@/types/guide-pillar";
 import type { TravelHubArticleLink, TravelHubQuickFact, TravelHubTocItem } from "@/types/guide-travel-hub";
 
 export type ImmigrationHubCard = {
   emoji: string;
+  /** Русское название — основной заголовок */
   title: string;
+  /** Официальный испанский термин Migraciones */
+  titleEs?: string;
   body: string;
   href?: string;
   linkLabel?: string;
@@ -12,13 +19,35 @@ export type ImmigrationHubCard = {
 export type ImmigrationHubStep = {
   step: number;
   title: string;
+  titleEs?: string;
   body: string;
   duration?: string;
+};
+
+export type ImmigrationResidencyGround = {
+  num: string;
+  titleRu: string;
+  titleEs: string;
+  summary: string;
+  duration: string;
+};
+
+export type ImmigrationWasNowItem = {
+  topic: string;
+  before: string;
+  after: string;
+};
+
+export type ImmigrationHistoryEvent = {
+  period: string;
+  title: string;
+  body: string;
 };
 
 export type ImmigrationHubChecklistItem = {
   emoji: string;
   title: string;
+  titleEs?: string;
   description: string;
   required?: boolean;
 };

@@ -36,7 +36,7 @@ export default function EarlyBookingDiscounts({ tour, compact = false }: EarlyBo
 
   return (
     <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6">
-      <h3 className="flex items-center gap-2 font-display text-lg font-bold text-charcoal">
+      <h3 className="flex items-center gap-2 font-heading text-lg font-bold text-charcoal">
         <Tag className="h-5 w-5 text-emerald-700" />
         Скидки за раннее бронирование
       </h3>

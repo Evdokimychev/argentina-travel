@@ -11,7 +11,7 @@ const SHOPPING_FAQ = [
   { question: "Торг уместен?", answer: "На feria — иногда. В бутиках — нет." },
   { question: "Когда Galerías Pacífico?", answer: "Классический mall в centro — tax free partner, архитектура." },
   { question: "Что такое alfajor?", answer: "Печенье с dulce de leche — Havanna, Cachafaz — бренды для подарков." },
-  { question: "Оплата в магазинах?", answer: "Карта или peso/USD. Tax free — часто карта для возврата." },
+  { question: "Оплата в магазинах?", answer: "Карта или песо/USD. Tax free — часто карта для возврата." },
   { question: "Есть ли аутлеты?", answer: "На outskirts BA — дешевле, нужен транспорт. Outlet Nordelta и аналоги." },
 ];
 
@@ -36,7 +36,7 @@ export const SHOPPING_PILLAR: GuidePillarContent = {
     { id: "shopping-2", title: "Где покупать в BA", content: "Palermo Soho, San Telmo feria, Galerías Pacífico." },
     { id: "shopping-3", title: "Tax free и таможня", content: "Global Blue, чеки, лимиты алкоголя при вылете." },
     { id: "shopping-4", title: "Региональные сувениры", content: "Salta — текстиль, Mendoza — vino, Patagonia — шерсть." },
-    { id: "shopping-5", title: "PDF и материалы", content: "Путеводители и чеклисты — /shop." },
+    { id: "shopping-5", title: "PDF и материалы", content: "Путеводители и списки для поездки — /shop." },
   ],
   faq: SHOPPING_FAQ,
   blogLinks: [
@@ -44,7 +44,7 @@ export const SHOPPING_PILLAR: GuidePillarContent = {
     { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", description: "Оплата и tax free" },
   ],
   partnerServices: [
-    { title: "Магазин гидов", description: "PDF-путеводители и чеклисты.", href: "/shop", ctaLabel: "Открыть магазин" },
+    { title: "Магазин путеводителей", description: "PDF-путеводители и списки для поездки.", href: "/shop", ctaLabel: "Открыть магазин" },
     { title: "Шопинг-туры BA", description: "С гидом по Palermo и San Telmo.", href: "/tours?query=Буэнос-Айрес", ctaLabel: "Туры" },
   ],
 };

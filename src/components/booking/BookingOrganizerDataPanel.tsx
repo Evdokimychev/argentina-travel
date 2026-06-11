@@ -97,7 +97,7 @@ export default function BookingOrganizerDataPanel({
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
             <FileText className="h-4 w-4" strokeWidth={1.75} />
           </span>
-          <h3 className="font-display text-base font-bold leading-tight text-charcoal">
+          <h3 className="font-heading text-base font-bold leading-tight text-charcoal">
             Данные о бронировании
           </h3>
         </div>

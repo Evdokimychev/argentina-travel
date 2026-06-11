@@ -38,7 +38,7 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
   {
     id: "shop-immigration-checklist",
     slug: "immigration-checklist",
-    title: "Чеклист документов для въезда",
+    title: "Список документов для въезда",
     description:
       "Список документов, сроки, ссылки на Migraciones и типичные ошибки перед поездкой в Аргентину.",
     price: 9,
@@ -74,7 +74,7 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
   {
     id: "shop-family-checklist",
     slug: "family-travel-checklist",
-    title: "Чеклист семейной поездки",
+    title: "Список для семейной поездки",
     description:
       "Документы детей, медицина, страховка, развлечения и подбор туров для семей с детьми.",
     price: 7,

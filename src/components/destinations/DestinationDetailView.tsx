@@ -62,7 +62,7 @@ export default function DestinationDetailView({
       <section className={siteContainerClass + " py-12 sm:py-16"}>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal">О направлении</h2>
+            <h2 className="font-heading text-2xl font-bold text-charcoal">О направлении</h2>
             <p className="mt-4 text-base leading-relaxed text-slate">{destination.intro}</p>
             <ul className="mt-6 grid gap-3 sm:grid-cols-2">
               {destination.highlights.map((item) => (
@@ -100,7 +100,7 @@ export default function DestinationDetailView({
         <div className={siteContainerClass}>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+              <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
                 Туры в регионе
               </h2>
               <p className="mt-2 text-slate">

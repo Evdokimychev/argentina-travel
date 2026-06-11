@@ -20,7 +20,7 @@ export default function IncludedExcludedSection({
       <div className="grid gap-4 sm:grid-cols-2">
         {hasTermsListContent(includedItems) ? (
           <div className="rounded-2xl border border-success/20 bg-success-muted p-5 sm:p-6">
-            <h3 className="font-display text-lg font-bold text-charcoal">Что включено</h3>
+            <h3 className="font-heading text-lg font-bold text-charcoal">Что включено</h3>
             <ul className="mt-4 space-y-3">
               {includedItems.map((item) => (
                 <li key={item} className="flex gap-2 text-sm text-charcoal">
@@ -40,7 +40,7 @@ export default function IncludedExcludedSection({
         ) : null}
         {hasTermsListContent(excludedItems) ? (
           <div className="rounded-2xl border border-gray-100 bg-surface-muted/40 p-5 sm:p-6">
-            <h3 className="font-display text-lg font-bold text-charcoal">Что не включено</h3>
+            <h3 className="font-heading text-lg font-bold text-charcoal">Что не включено</h3>
             <ul className="mt-4 space-y-3">
               {excludedItems.map((item) => (
                 <li key={item} className="flex gap-2 text-sm text-slate">

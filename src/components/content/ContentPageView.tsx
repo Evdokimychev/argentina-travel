@@ -52,7 +52,7 @@ export default function ContentPageView({ page }: ContentPageViewProps) {
           {page.sections.map((section, index) => (
             <section key={index}>
               {section.heading ? (
-                <h2 className="font-display text-xl font-bold text-charcoal">{section.heading}</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">{section.heading}</h2>
               ) : null}
               {section.paragraphs?.map((paragraph, pIndex) => (
                 <p
@@ -78,7 +78,7 @@ export default function ContentPageView({ page }: ContentPageViewProps) {
 
         {page.relatedLinks && page.relatedLinks.length > 0 ? (
           <aside className="mt-10 max-w-3xl">
-            <h2 className="font-display text-lg font-bold text-charcoal">См. также</h2>
+            <h2 className="font-heading text-lg font-bold text-charcoal">См. также</h2>
             <ul className="mt-4 space-y-2">
               {page.relatedLinks.map((link) => (
                 <li key={link.href}>
@@ -101,7 +101,7 @@ export default function ContentPageView({ page }: ContentPageViewProps) {
 
         {page.relatedTourQuery ? (
           <div className="mt-10 max-w-3xl rounded-2xl bg-patagonia/5 p-6 text-center">
-            <p className="font-display text-lg font-bold text-charcoal">
+            <p className="font-heading text-lg font-bold text-charcoal">
               Туры по теме: {page.relatedTourQuery}
             </p>
             <p className="mt-2 text-sm text-slate">

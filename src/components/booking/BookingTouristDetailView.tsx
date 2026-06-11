@@ -122,7 +122,7 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
               </p>
               <Link
                 href={`/tours/${booking.tourSlug}`}
-                className="mt-1 font-display text-xl font-bold text-charcoal hover:text-brand"
+                className="mt-1 font-heading text-xl font-bold text-charcoal hover:text-brand"
               >
                 {booking.tourTitle}
               </Link>
@@ -186,7 +186,7 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
 
           {nextSteps.length > 0 ? (
             <div className="mt-6">
-              <h3 className="font-display text-base font-bold text-charcoal">Следующие шаги</h3>
+              <h3 className="font-heading text-base font-bold text-charcoal">Следующие шаги</h3>
               <ul className="mt-3 space-y-3">
                 {nextSteps.map((step) => (
                   <li
@@ -239,7 +239,7 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
           </div>
 
           <div className="mt-6">
-            <h3 className="font-display text-base font-bold text-charcoal">История статусов</h3>
+            <h3 className="font-heading text-base font-bold text-charcoal">История статусов</h3>
             <div className="mt-3 rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">
               <BookingStatusTimeline history={booking.statusHistory} />
             </div>

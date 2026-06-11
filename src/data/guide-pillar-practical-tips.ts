@@ -24,7 +24,7 @@ const GUIDE_PRACTICAL_TIPS: Record<string, GuidePracticalTips> = {
       "Выбирайте Palermo, Recoleta или Belgrano для первой поездки в BA",
       "Бронируйте Patagonia, Iguazú и Bariloche за 2–3 месяца в высокий сезон",
       "Читайте отзывы о шуме, Wi‑Fi и безопасности района перед оплатой",
-      "Уточняйте поздний check-in при ночном прилёте в EZE",
+      "Уточняйте поздний заезд при ночном прилёте в EZE",
       "Сверяйте адрес на карте — «centro» в BA бывает разным",
     ],
     consider: [
@@ -32,7 +32,7 @@ const GUIDE_PRACTICAL_TIPS: Record<string, GuidePracticalTips> = {
       "Airbnb в BA — правила здания, expensas и соседи важнее скидки",
       "Депозит на карте — отдельная сумма от оплаты брони",
       "Туры с проживанием на платформе — логистика без головной боли в Patagonia",
-      "Для nomad — speedtest Wi‑Fi до оплаты долгого stay",
+      "Для кочевника — проверьте скорость Wi‑Fi до оплаты долгого проживания",
     ],
     avoid: [
       "Не бронируйте La Boca, Once или Constitución для ночёвки",
@@ -86,7 +86,7 @@ const GUIDE_PRACTICAL_TIPS: Record<string, GuidePracticalTips> = {
       "Смотрите пингвинов на Península Valdés с гидом в сезон",
     ],
     consider: [
-      "Iguazú с двух сторон (AR/BR) — отдельный день и виза для РФ в Бразилию",
+      "Iguazú с двух сторон (AR/BR) — отдельный день; для граждан РФ виза в Бразилию не нужна, но возьмите загранпаспорт",
       "BA must-see можно разбить на 2–3 дня без спешки",
       "Некоторые объекты закрыты по понедельникам",
     ],
@@ -199,7 +199,7 @@ const GUIDE_PRACTICAL_TIPS: Record<string, GuidePracticalTips> = {
       "Claro/Personal сильнее в Patagonia — сверьте с маршрутом",
       "VPN на публичном Wi‑Fi; для работы — проверьте upload в коворкинге",
       "Dual SIM: eSIM для data + физическая линия для местного номера",
-      "Пополняйте prepago небольшими суммами — тарифы в peso меняются быстро",
+      "Пополняйте prepago небольшими суммами — тарифы в песо меняются быстро",
     ],
     avoid: [
       "Не покупайте SIM у перекупщиков без регистрации на паспорт",

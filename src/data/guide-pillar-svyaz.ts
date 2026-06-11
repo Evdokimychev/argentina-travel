@@ -19,7 +19,7 @@ const SVYAZ_FAQ = [
   {
     question: "Где купить SIM в аэропорту EZE?",
     answer:
-      "В терминалах A и B есть киоски операторов и resellers. Удобно для первого дня, но пакеты часто дороже, чем в centro. Имейте паспорт и pesos или USD на оплату.",
+      "В терминалах A и B есть киоски операторов и resellers. Удобно для первого дня, но пакеты часто дороже, чем в centro. Имейте паспорт и песо или USD на оплату.",
   },
   {
     question: "Работает ли WhatsApp?",
@@ -59,7 +59,7 @@ const SVYAZ_FAQ = [
   {
     question: "Как пополнить prepago без местной карты?",
     answer:
-      "Kiosco (locutorio), Rapipago, Pago Fácil — наличные pesos. В приложении оператора иногда проходит иностранная карта, но надёжнее kiosco. Сохраните чек.",
+      "Kiosco (locutorio), Rapipago, Pago Fácil — наличные песо. В приложении оператора иногда проходит иностранная карта, но надёжнее kiosco. Сохраните чек.",
   },
   {
     question: "Работает ли роуминг из России?",
@@ -94,7 +94,7 @@ const SVYAZ_FAQ = [
   {
     question: "Starlink и спутниковый интернет?",
     answer:
-      "Starlink появляется в Patagonia (estancia, удалённые лоджи). Для обычного туриста не нужен; digital nomads уточняют наличие у арендодателя. На тропах — только offline.",
+      "Starlink появляется в Patagonia (estancia, удалённые лоджи). Для обычного туриста не нужен; цифровые кочевники уточняют наличие у арендодателя. На тропах — только без связи.",
   },
   {
     question: "Как позвонить в Россию?",
@@ -118,7 +118,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
     { label: "4G в городах", headline: "BA, Córdoba, Mendoza, Iguazú", detail: "Стабильный LTE; в метро BA и на трассах — пробелы" },
     { label: "Patagonia тропы", headline: "Связи нет на маршруте", detail: "Offline maps, power bank и сообщите план до выхода" },
     { label: "Мессенджер", headline: "WhatsApp — основной", detail: "Гиды, отели, такси; аргентинский номер не обязателен" },
-    { label: "Пополнение", headline: "Kiosco, Rapipago", detail: "Наличные pesos — без местной банковской карты" },
+    { label: "Пополнение", headline: "Kiosco, Rapipago", detail: "Наличные песо — без местной банковской карты" },
   ],
   practicalTips: {
     do: [
@@ -133,7 +133,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
       "Claro/Personal сильнее в Patagonia, чем Movistar — сверьте с маршрутом",
       "VPN на публичном Wi‑Fi; для работы — проверьте скорость upload в коворкинге",
       "Dual SIM: eSIM для data + физическая линия для местного номера",
-      "Пополняйте prepago небольшими суммами — тарифы в peso меняются из-за инфляции",
+      "Пополняйте prepago небольшими суммами — тарифы в песо меняются из-за инфляции",
     ],
     avoid: [
       "Не покупайте SIM у перекупщиков без регистрации на ваш паспорт",
@@ -153,7 +153,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         {
           title: "Где купить",
           body:
-            "EZE и AEP — киоски в зале прилёта: быстро, но дороже. Centro BA (Florida, Microcentro), Palermo — салоны операторов и locutorios. Calafate, Ushuaia, Puerto Iguazú, Mendoza — салоны в центре. Возьмите паспорт, pesos или USD; иностранная карта не всегда проходит.",
+            "EZE и AEP — киоски в зале прилёта: быстро, но дороже. Centro BA (Florida, Microcentro), Palermo — салоны операторов и locutorios. Calafate, Ushuaia, Puerto Iguazú, Mendoza — салоны в центре. Возьмите паспорт, песо или USD; иностранная карта не всегда проходит.",
         },
         {
           title: "Пошагово: первый день",
@@ -171,7 +171,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         rows: [
           ["Claro", "Сильное (Calafate, Ushuaia, Chaltén)", "Салоны, kiosco, EZE", "Треккинг, юг, длинные маршруты"],
           ["Personal", "Сильное, часто лучший 4G в Chaltén", "Салоны, kiosco", "Patagonia, combo WhatsApp"],
-          ["Movistar", "Среднее на юге, хорошо в BA/NOA", "Салоны, kiosco", "Короткий trip в BA + Iguazú"],
+          ["Movistar", "Среднее на юге, хорошо в BA/NOA", "Салоны, kiosco", "Короткая поездка в BA + Iguazú"],
         ],
       },
       infoBoxes: [
@@ -183,7 +183,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         },
         {
           variant: "warning",
-          title: "Цены в peso меняются",
+          title: "Цены в песо меняются",
           body:
             "Конкретные суммы ARS в статьях устаревают за месяцы. Сверяйте пакет на месте и пересчитывайте через синий курс из раздела «Экономика и деньги».",
         },
@@ -291,7 +291,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
       infoBoxes: [
         {
           variant: "tip",
-          title: "Чеклист Patagonia trek",
+          title: "Список для Patagonia trek",
           body:
             "Offline maps ✓ · GPX маршрута ✓ · Power bank ✓ · Сообщил маршрут ✓ · Контакт гида сохранён ✓ · Фото документов в облаке ✓ · Наличные на refugio.",
         },
@@ -301,7 +301,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
       id: "svyaz-5",
       title: "Пополнение prepago и тарифы",
       content:
-        "Prepago пополняется наличными pesos без банковского счёта AR. Из-за инфляции пакеты пересматривают — смотрите актуальное меню в приложении или *611.",
+        "Prepago пополняется наличными песо без банковского счёта AR. Из-за инфляции пакеты пересматривают — смотрите актуальное меню в приложении или *611.",
       subsections: [
         {
           title: "Способы пополнения",
@@ -309,12 +309,12 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
             "Kiosco / locutorio — назовите номер и сумму, получите чек. Rapipago, Pago Fácil — терминалы в супермаркете (Coto, Carrefour). Приложения Mi Claro, Personal Flow, Movistar — с иностранной картой иногда работает. Автопродление отключите перед отъездом.",
         },
         {
-          title: "Связь с оплатой в peso",
+          title: "Связь с оплатой в песо",
           body:
-            "SIM и пополнение — в peso по местным ценам. Пересчитывайте через синий курс (/guide/ekonomika-i-dengi). USD в kiosco не всегда принимают — имейте pesos после обмена.",
+            "SIM и пополнение — в песо по местным ценам. Пересчитывайте через синий курс (/guide/ekonomika-i-dengi). USD в kiosco не всегда принимают — имейте песо после обмена.",
         },
         {
-          title: "Долгий stay (1–3 месяца)",
+          title: "Долгое проживание (1–3 месяца)",
           body:
             "Prepago с ежемесячным пакетом 20–40 GB обычно достаточно. Контракт с DNI — для резидентов; турист на паспорту остаётся на prepago. Подробнее — /immigration.",
         },
@@ -401,7 +401,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
             "Организованные туры с гидом не требуют вашей связи на тропе — гид отвечает за группу. Самостоятельный треккинг — offline maps и регистрация в refugio.",
         },
         {
-          title: "Digital nomad light",
+          title: "Цифровой кочевник light",
           body:
             "BA (Palermo, Belgrano) — coworking 20–50 Mbps часто достаточно для Zoom. Patagonia — не место для daily standup. Проверьте upload на speedtest до оплаты жилья.",
         },
@@ -418,10 +418,10 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
   ],
   faq: SVYAZ_FAQ,
   recommendIntro:
-    "Нужен PDF-чеклист связи под ваш маршрут или тур с гидом, который координирует логистику в Patagonia?",
+    "Нужен PDF-список по связи под ваш маршрут или тур с гидом, который координирует логистику в Patagonia?",
   blogLinks: [
     { title: "Как добраться", href: "/guide/kak-dobratsya", description: "EZE, документы, первый день" },
-    { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", description: "Pesos на SIM и пополнение" },
+    { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", description: "Песо на SIM и пополнение" },
     { title: "Безопасность", href: "/guide/bezopasnost", description: "Телефон и карманники" },
     { title: "Что взять в Patagonia", href: "/blog/patagonia-packing-list", description: "Power bank и offline" },
   ],
@@ -433,7 +433,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
       ctaLabel: "Смотреть туры",
     },
     {
-      title: "PDF-чеклисты в магазине",
+      title: "PDF-списки в магазине",
       description: "Списки для поездки, включая связь и offline-подготовку.",
       href: "/shop",
       ctaLabel: "Магазин",

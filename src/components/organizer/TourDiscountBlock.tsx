@@ -22,7 +22,7 @@ export default function TourDiscountBlock({
 
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Скидка</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Скидка</h2>
 
       <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Если скидки пересекаются (одновременно выполняются условия 2 или 3 скидок) — то к

@@ -403,7 +403,7 @@ export default function TourImpressionsBlock({
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
-          <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">
+          <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
             Главные впечатления
           </h2>
           <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate">

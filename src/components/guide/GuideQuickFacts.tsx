@@ -11,6 +11,7 @@ type GuideQuickFactsProps = {
   facts: GuideQuickFact[];
   slug: string;
   className?: string;
+  columns?: 3 | 4;
 };
 
 async function resolveLiveValue(live: GuideQuickFact["live"]): Promise<string | null> {
@@ -47,6 +48,8 @@ export default async function GuideQuickFacts({ facts, slug, className }: GuideQ
   return <HubQuickFactsGrid facts={resolved} className={className} />;
 }
 
-export function GuideQuickFactsStatic({ facts, slug, className }: GuideQuickFactsProps) {
-  return <HubQuickFactsGrid facts={withEmojis(facts, slug)} className={className} />;
+export function GuideQuickFactsStatic({ facts, slug, className, columns }: GuideQuickFactsProps) {
+  return (
+    <HubQuickFactsGrid facts={withEmojis(facts, slug)} className={className} columns={columns} />
+  );
 }

@@ -127,7 +127,7 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
             key={traveler.id}
             className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:p-5"
           >
-            <h2 className="font-display text-base font-bold text-charcoal">Турист #{index + 1}</h2>
+            <h2 className="font-heading text-base font-bold text-charcoal">Турист #{index + 1}</h2>
 
             <div className="mt-4 space-y-3">
               <div>

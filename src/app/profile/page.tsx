@@ -35,7 +35,7 @@ function DashboardStatCard({
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm text-slate">{label}</p>
-            <p className="mt-2 font-display text-3xl font-bold text-charcoal">{value}</p>
+            <p className="mt-2 font-heading text-3xl font-bold text-charcoal">{value}</p>
           </div>
           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <Icon className="h-5 w-5" strokeWidth={1.75} />
@@ -80,7 +80,7 @@ export default function ProfileDashboardPage() {
   return (
     <div className="space-y-6">
       <section className={cn("rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6")}>
-        <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+        <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
           Добро пожаловать, {user.fullName.split(/\s+/)[0]}!
         </h2>
         <p className="mt-2 text-sm text-slate">
@@ -113,7 +113,7 @@ export default function ProfileDashboardPage() {
 
       <section className={cn("rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6")}>
         <div className="flex items-center justify-between gap-3">
-          <h3 className="font-display text-lg font-bold text-charcoal">Последние бронирования</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Последние бронирования</h3>
           <Link
             href="/profile/bookings"
             className="inline-flex items-center gap-1 text-sm font-medium text-brand hover:underline"

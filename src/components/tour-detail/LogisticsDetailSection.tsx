@@ -24,7 +24,7 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
     <TourSection id="logistics" title="Логистика и перелёт">
       {showTickets && !tour.logistics.arrivalDetailsEnabled ? (
         <div>
-          <h3 className="font-display text-lg font-bold text-charcoal">Рекомендации по перелёту</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Рекомендации по перелёту</h3>
           <p className="mt-1 text-sm text-slate">Как лучше спланировать дорогу до начала тура</p>
           <div className="mt-4 rounded-2xl border border-gray-100 bg-surface-muted/40 p-6">
             <p className="whitespace-pre-line text-sm leading-relaxed text-slate">
@@ -36,7 +36,7 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
 
       {nonPlaneCities.length > 0 ? (
         <div className={showTickets ? "mt-8" : undefined}>
-          <h3 className="font-display text-lg font-bold text-charcoal">Другие способы добраться</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Другие способы добраться</h3>
           <p className="mt-1 text-sm text-slate">Поезд и альтернативный транспорт</p>
           <div className="mt-4 space-y-4">
             {nonPlaneCities.map((city) => (
@@ -44,7 +44,7 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
                 key={city.title}
                 className="rounded-2xl border border-gray-100 bg-surface-muted/30 p-6"
               >
-                <h4 className="font-display text-base font-bold text-charcoal">{city.title}</h4>
+                <h4 className="font-heading text-base font-bold text-charcoal">{city.title}</h4>
 
                 {city.transport.length > 0 ? (
                   <div className="mt-3 flex flex-wrap gap-2">

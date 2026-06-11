@@ -31,7 +31,7 @@ export default function ServicesPageView() {
                   <Plane className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
-                  <h2 className="font-display text-xl font-bold text-charcoal">{category.title}</h2>
+                  <h2 className="font-heading text-xl font-bold text-charcoal">{category.title}</h2>
                   <p className="mt-1 text-sm text-slate">{category.description}</p>
                 </div>
               </div>

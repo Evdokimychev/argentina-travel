@@ -4,6 +4,7 @@ import { cn } from "@/lib/cn";
 export type HubQuickFactItem = {
   emoji?: string;
   label: string;
+  labelEs?: string;
   headline?: string;
   detail?: string;
   value?: string;
@@ -20,12 +21,14 @@ type HubQuickFactsGridProps = {
 function QuickFactCard({
   emoji,
   label,
+  labelEs,
   headline,
   detail,
   live,
 }: {
   emoji?: string;
   label: string;
+  labelEs?: string;
   headline: string;
   detail?: string;
   live?: HubQuickFactItem["live"];
@@ -40,6 +43,11 @@ function QuickFactCard({
       <p className={cn("text-[11px] font-medium uppercase tracking-wider text-slate/90", emoji && "mt-2.5")}>
         {label}
       </p>
+      {labelEs ? (
+        <span className="mt-1.5 inline-flex items-center rounded-md border border-sky/30 bg-sky/10 px-2 py-0.5 text-[10px] font-semibold normal-case tracking-normal text-sky-dark">
+          {labelEs}
+        </span>
+      ) : null}
       <p className="mt-1.5 text-[15px] font-semibold leading-snug tracking-tight text-charcoal">{headline}</p>
       {detail ? (
         <p className="mt-1.5 text-xs leading-relaxed text-slate">{detail}</p>
@@ -66,6 +74,7 @@ export default function HubQuickFactsGrid({ facts, className, columns = 3 }: Hub
             key={fact.label}
             emoji={fact.emoji}
             label={fact.label}
+            labelEs={fact.labelEs}
             headline={headline}
             detail={detail}
             live={fact.live}

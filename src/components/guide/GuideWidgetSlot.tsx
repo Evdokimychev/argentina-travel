@@ -53,7 +53,7 @@ export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
           <Icon className="h-5 w-5 text-slate" aria-hidden />
         </div>
         <div>
-          <h3 className="font-display text-base font-bold text-charcoal">{slot.label}</h3>
+          <h3 className="font-heading text-base font-bold text-charcoal">{slot.label}</h3>
           <p className="mt-1 text-sm text-slate">
             {PLACEHOLDER_MESSAGES[slot.type] ?? "Интерактивный блок — в разработке."}
           </p>

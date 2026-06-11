@@ -57,7 +57,7 @@ export default function DomesticAirlinesSection({ airlines }: DomesticAirlinesSe
               <div className="flex items-start gap-3">
                 <AirlineLogo name={airline.name} size="md" />
                 <div className="min-w-0 flex-1">
-                  <p className="font-display text-base font-bold leading-snug text-charcoal">
+                  <p className="font-heading text-base font-bold leading-snug text-charcoal">
                     {airline.name}
                   </p>
                   {badge && BadgeIcon ? (
@@ -103,7 +103,7 @@ export default function DomesticAirlinesSection({ airlines }: DomesticAirlinesSe
         >
           <div className="flex items-center gap-2">
             <AirlineLogo name={selected.name} size="sm" />
-            <p className="font-display font-bold text-charcoal">{selected.name} — подробнее</p>
+            <p className="font-heading font-bold text-charcoal">{selected.name} — подробнее</p>
           </div>
 
           {selected.warning ? (

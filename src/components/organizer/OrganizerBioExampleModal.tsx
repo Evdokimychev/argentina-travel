@@ -61,7 +61,7 @@ export default function OrganizerBioExampleModal({
         <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <h4 className="font-display text-xl font-bold leading-tight text-charcoal sm:text-2xl">
+              <h4 className="font-heading text-xl font-bold leading-tight text-charcoal sm:text-2xl">
                 {EXAMPLE_AUTHOR.name} — {EXAMPLE_AUTHOR.title}
               </h4>
               <div className="mt-2 flex flex-wrap items-center gap-1.5 text-sm text-slate">

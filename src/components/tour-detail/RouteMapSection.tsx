@@ -55,7 +55,7 @@ export default function RouteMapSection({
     <TourSection id="route-map" title="Маршрут и дорога">
       {hasRouteImage ? (
         <div className="space-y-4">
-          <h3 className="font-display text-lg font-bold text-charcoal">Схема маршрута</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Схема маршрута</h3>
           <figure className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
             <div className="relative aspect-[16/10] w-full">
               <Image
@@ -73,7 +73,7 @@ export default function RouteMapSection({
       {hasMap ? (
         <div className={cn("space-y-4", hasRouteImage && "mt-8")}>
           <div>
-            <h3 className="font-display text-lg font-bold text-charcoal">Маршрут на карте</h3>
+            <h3 className="font-heading text-lg font-bold text-charcoal">Маршрут на карте</h3>
             <p className="mt-1 text-sm text-slate">
               Основные точки путешествия — нажмите на город, чтобы увидеть его на карте
             </p>
@@ -137,7 +137,7 @@ export default function RouteMapSection({
       {arrival && hasArrivalPanel ? (
         <div className={cn("space-y-4", (hasMap || hasRouteImage) && "mt-8")}>
           <div>
-            <h3 className="font-display text-lg font-bold text-charcoal">Как добраться</h3>
+            <h3 className="font-heading text-lg font-bold text-charcoal">Как добраться</h3>
             {hasMap ? (
               <p className="mt-1 text-sm text-slate">Аэропорты, трансферы и место встречи</p>
             ) : null}

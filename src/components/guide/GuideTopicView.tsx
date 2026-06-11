@@ -54,7 +54,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
           <article className="prose-legal mt-10 max-w-3xl space-y-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
             {topic.sections.map((section) => (
               <section key={section.heading}>
-                <h2 className="font-display text-xl font-bold text-charcoal">{section.heading}</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">{section.heading}</h2>
                 <p className="mt-3 text-sm leading-relaxed text-slate">{section.body}</p>
               </section>
             ))}
@@ -64,7 +64,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
             <section className="mt-12">
               <div className="flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-sky" aria-hidden />
-                <h2 className="font-display text-xl font-bold text-charcoal">Рекомендуем</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">Рекомендуем</h2>
               </div>
               <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {topic.serviceCards.map((card) => (
@@ -75,7 +75,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
                     rel={card.external ? "noopener noreferrer" : undefined}
                     className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-card transition-colors hover:border-sky/30 hover:bg-sky/5"
                   >
-                    <span className="font-display text-base font-bold text-charcoal group-hover:text-sky">
+                    <span className="font-heading text-base font-bold text-charcoal group-hover:text-sky">
                       {card.title}
                     </span>
                     <span className="mt-2 flex-1 text-sm text-slate">{card.description}</span>
@@ -95,7 +95,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
 
           {topic.tourRecommendations && topic.tourRecommendations.length > 0 ? (
             <section className="mt-12">
-              <h2 className="font-display text-xl font-bold text-charcoal">Туры по теме</h2>
+              <h2 className="font-heading text-xl font-bold text-charcoal">Туры по теме</h2>
               <ul className="mt-4 flex flex-wrap gap-3">
                 {topic.tourRecommendations.map((rec) => (
                   <li key={rec.label}>
@@ -118,7 +118,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
             <section className="mt-12 max-w-3xl">
               <div className="flex items-center gap-2">
                 <BookOpen className="h-5 w-5 text-sky" aria-hidden />
-                <h2 className="font-display text-xl font-bold text-charcoal">Читать подробнее</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">Читать подробнее</h2>
               </div>
               <ul className="mt-4 space-y-2">
                 {topic.relatedArticles.map((article) => (
@@ -142,7 +142,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
 
           {topic.relatedDestinations && topic.relatedDestinations.length > 0 ? (
             <section className="mt-10">
-              <h2 className="font-display text-lg font-bold text-charcoal">Направления</h2>
+              <h2 className="font-heading text-lg font-bold text-charcoal">Направления</h2>
               <ul className="mt-3 flex flex-wrap gap-2">
                 {topic.relatedDestinations.map((dest) => (
                   <li key={dest.href}>
@@ -160,7 +160,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
           ) : null}
 
           <div className="mt-12 max-w-3xl rounded-2xl bg-patagonia/5 p-6 text-center sm:p-8">
-            <p className="font-display text-lg font-bold text-charcoal">
+            <p className="font-heading text-lg font-bold text-charcoal">
               Готовы спланировать поездку?
             </p>
             <p className="mt-2 text-sm text-slate">

@@ -25,7 +25,7 @@ export default function TourPoliciesSection({ tour }: TourPoliciesSectionProps) 
     <TourSection id="policies" title="Условия и страхование">
       {showInsurance ? (
         <div>
-          <h3 className="font-display text-lg font-bold text-charcoal">Страхование</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Страхование</h3>
           <div className="mt-4 rounded-2xl border border-sky/20 bg-sky/5 p-6">
             {insuranceLabel ? (
               <p className="text-sm font-semibold text-charcoal">{insuranceLabel}</p>
@@ -39,7 +39,7 @@ export default function TourPoliciesSection({ tour }: TourPoliciesSectionProps) 
 
       {cancellationText ? (
         <div className={showInsurance ? "mt-8" : undefined}>
-          <h3 className="font-display text-lg font-bold text-charcoal">Условия отмены</h3>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Условия отмены</h3>
           <div className="mt-4 rounded-2xl border border-gray-100 bg-surface-muted/40 p-6">
             <p className="whitespace-pre-line text-sm leading-relaxed text-slate">
               {cancellationText}

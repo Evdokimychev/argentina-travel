@@ -81,17 +81,14 @@ body {
   background-color: var(--color-background);
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+/* Unbounded — только явно через .font-display (h1 страниц, названия туров, ключевые hero) */
+.font-display {
   font-family: var(--font-display);
 }
 
-.font-display {
-  font-family: var(--font-display);
+/* Заголовки карточек, секций и информационных блоков — системный sans */
+.font-heading {
+  font-family: var(--font-body);
 }
 
 .gradient-hero {

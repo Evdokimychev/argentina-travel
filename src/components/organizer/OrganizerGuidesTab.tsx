@@ -65,7 +65,7 @@ function GuideTeamCard({
           className="h-16 w-16 sm:h-20 sm:w-20"
         />
         <div className="min-w-0 flex-1 space-y-2">
-          <h3 className="font-display text-base font-bold text-charcoal sm:text-lg">{guide.name}</h3>
+          <h3 className="font-heading text-base font-bold text-charcoal sm:text-lg">{guide.name}</h3>
           <p className="line-clamp-4 text-sm leading-relaxed text-slate">{guide.bio}</p>
         </div>
       </div>
@@ -161,7 +161,7 @@ export default function OrganizerGuidesTab({ userId }: OrganizerGuidesTabProps) 
           <div>
             <div className="flex items-center gap-2">
               <Users className="h-5 w-5 text-brand" />
-              <h2 className="font-display text-lg font-bold text-charcoal sm:text-xl">Команда гидов</h2>
+              <h2 className="font-heading text-lg font-bold text-charcoal sm:text-xl">Команда гидов</h2>
             </div>
             <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate">
               Добавьте гидов, с которыми вы работаете. Их можно будет быстро выбирать при

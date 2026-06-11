@@ -27,7 +27,7 @@ export default function TourDifficultyBlock({
 }: TourDifficultyBlockProps) {
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
         Уровень сложности тура
       </h2>
 
@@ -79,7 +79,7 @@ export default function TourDifficultyBlock({
       </div>
 
       <div className="space-y-3 border-t border-gray-200/80 pt-5">
-        <h3 className="font-display text-base font-bold text-charcoal">
+        <h3 className="font-heading text-base font-bold text-charcoal">
           Опишите, насколько сложная программа ждёт туристов
         </h3>
 

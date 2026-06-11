@@ -41,7 +41,7 @@ export default function GuidePracticalTips({ tips }: GuidePracticalTipsProps) {
             key={column.key}
             className={`rounded-2xl border p-5 ${column.border} ${column.bg}`}
           >
-            <h3 className={`font-display text-base font-bold ${column.titleClass}`}>
+            <h3 className={`font-heading text-base font-bold ${column.titleClass}`}>
               <span aria-hidden>{column.symbol}</span> {column.title}
             </h3>
             <ul className="mt-3 space-y-2">

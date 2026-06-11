@@ -231,7 +231,7 @@ export default function TourRoutePointsEditor({
   return (
     <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <div className="space-y-1">
-        <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Маршрут на карте</h2>
+        <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Маршрут на карте</h2>
         <p className="text-sm text-slate">
           Добавьте точки маршрута — они отобразятся на интерактивной карте на странице тура.
         </p>

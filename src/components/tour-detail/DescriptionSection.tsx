@@ -100,7 +100,7 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
             switch (block.type) {
               case "heading":
                 return (
-                  <h3 key={i} className="font-display text-xl font-bold text-charcoal">
+                  <h3 key={i} className="font-heading text-xl font-bold text-charcoal">
                     {block.content}
                   </h3>
                 );

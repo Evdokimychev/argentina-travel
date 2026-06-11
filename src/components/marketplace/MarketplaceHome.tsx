@@ -50,7 +50,7 @@ function TourGrid({
     <section id={id} className="py-12">
       <div className="mb-6 flex items-end justify-between gap-4">
         <div>
-          <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
+          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
           {subtitle && <p className="mt-1 text-slate">{subtitle}</p>}
         </div>
         <Link href="/tours" className="hidden text-sm font-medium text-brand hover:underline sm:block">
@@ -205,7 +205,7 @@ export default function MarketplaceHome({
       ) : (
         <section className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
           <div className="rounded-3xl bg-gradient-to-br from-brand-light/80 via-white to-sky/10 px-6 py-10 text-center sm:px-10">
-            <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
               Более {tours.length} {tripsWord(tours.length)} по Аргентине
             </h2>
             <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-slate sm:text-base">
@@ -224,7 +224,7 @@ export default function MarketplaceHome({
       {/* Popular destinations */}
       <section className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
             Популярные направления
           </h2>
           <p className="mt-2 text-slate">Откройте для себя лучшие уголки Аргентины</p>
@@ -245,7 +245,7 @@ export default function MarketplaceHome({
                 <div className="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent" />
                 <div className="absolute bottom-0 p-4 text-white">
                   <p className="text-xs text-white/70">{dest.region}</p>
-                  <h3 className="font-display text-lg font-bold">{dest.name}</h3>
+                  <h3 className="font-heading text-lg font-bold">{dest.name}</h3>
                   <p className="mt-0.5 text-xs text-white/80">{dest.description}</p>
                 </div>
               </Link>
@@ -278,7 +278,7 @@ export default function MarketplaceHome({
       {/* Reviews */}
       <section className="bg-white py-12">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
             Отзывы путешественников
           </h2>
           {testimonials.length > 0 ? (
@@ -303,7 +303,7 @@ export default function MarketplaceHome({
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="flex items-end justify-between">
           <div>
-            <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
               Статьи из блога
             </h2>
             <p className="mt-2 text-slate">Советы и вдохновение для поездки</p>
@@ -322,7 +322,7 @@ export default function MarketplaceHome({
       {/* Why us */}
       <section className="bg-patagonia py-16 text-white" data-scroll-rail-tone="dark">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="font-display text-2xl font-bold sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold sm:text-3xl">
             Почему путешествовать с нами
           </h2>
           <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">

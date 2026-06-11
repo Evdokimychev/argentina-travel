@@ -32,7 +32,7 @@ const SLUG_LABEL_EMOJIS: Record<string, Record<string, string>> = {
     "Районы BA": "🏙️",
     Патагония: "🏔️",
     "Короткий trip": "🧳",
-    "Долгий stay": "📅",
+    "Долгое проживание": "📅",
     Оплата: "💳",
     "Check-in": "🔑",
   },

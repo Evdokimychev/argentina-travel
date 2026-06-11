@@ -40,7 +40,7 @@ const HUB_TOPIC_LINKS: SiteNavLink[] = [
     id: "immigration-residency",
     label: "ВНЖ и ПМЖ",
     href: "/immigration/vnzh-i-pmzh",
-    description: "14 оснований, temporaria и permanente",
+    description: "15 оснований temporaria, ПМЖ и precaria",
   },
   {
     id: "immigration-opportunities",

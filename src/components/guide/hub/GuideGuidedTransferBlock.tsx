@@ -17,7 +17,7 @@ export default function GuideGuidedTransferBlock({ block }: GuideGuidedTransferB
             🚕
           </span>
           <div>
-            <p className="font-display text-lg font-bold text-charcoal">{block.title}</p>
+            <p className="font-heading text-lg font-bold text-charcoal">{block.title}</p>
             <p className="mt-1 text-sm leading-relaxed text-slate">{block.subtitle}</p>
           </div>
         </div>
@@ -34,13 +34,13 @@ export default function GuideGuidedTransferBlock({ block }: GuideGuidedTransferB
                 <p className="text-xs font-semibold uppercase tracking-wide text-sky">
                   {option.airportCode}
                 </p>
-                <p className="mt-0.5 font-display text-base font-bold text-charcoal">
+                <p className="mt-0.5 font-heading text-base font-bold text-charcoal">
                   {option.airportLabel}
                 </p>
                 <p className="mt-1 text-xs text-slate">{option.route}</p>
               </div>
               <div className="text-right">
-                <p className="font-display text-3xl font-bold tabular-nums text-charcoal">
+                <p className="font-heading text-3xl font-bold tabular-nums text-charcoal">
                   ${option.priceUsd}
                 </p>
                 <p className="text-[11px] text-slate">USD · фикс. цена</p>

@@ -91,7 +91,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-3">
           <StatusBadge status={tour.status} />
-          <h3 className="mt-2 line-clamp-2 font-display text-sm font-bold leading-snug text-charcoal sm:text-base">
+          <h3 className="mt-2 line-clamp-2 font-heading text-sm font-bold leading-snug text-charcoal sm:text-base">
             {tour.title}
           </h3>
           <div className="mt-2 flex items-center gap-1.5 text-xs text-slate">

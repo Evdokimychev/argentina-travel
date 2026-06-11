@@ -18,7 +18,7 @@ export default function BookingOrganizerCommentsJournal({
 
   return (
     <div className="space-y-3">
-      <h3 className="font-display text-base font-bold text-charcoal">{title}</h3>
+      <h3 className="font-heading text-base font-bold text-charcoal">{title}</h3>
       <ul className="space-y-3">
         {comments.map((comment) => {
           const { date, time } = formatBookingDateTime(comment.createdAt);

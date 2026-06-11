@@ -22,18 +22,18 @@ function RateColumn({
     <div className="rounded-xl border border-gray-100 bg-surface-muted/60 p-4">
       <div className="flex items-center gap-2">
         <span className={cn("h-2 w-2 rounded-full", accentClass)} aria-hidden />
-        <h3 className="font-display text-sm font-bold text-charcoal">{label}</h3>
+        <h3 className="font-heading text-sm font-bold text-charcoal">{label}</h3>
       </div>
       <dl className="mt-3 space-y-2">
         <div className="flex items-baseline justify-between gap-3">
           <dt className="text-xs text-slate">Покупка</dt>
-          <dd className="font-display text-lg font-bold tabular-nums text-charcoal">
+          <dd className="font-heading text-lg font-bold tabular-nums text-charcoal">
             {formatArsRate(quote.buy)}
           </dd>
         </div>
         <div className="flex items-baseline justify-between gap-3">
           <dt className="text-xs text-slate">Продажа</dt>
-          <dd className="font-display text-lg font-bold tabular-nums text-sky">
+          <dd className="font-heading text-lg font-bold tabular-nums text-sky">
             {formatArsRate(quote.sell)}
           </dd>
         </div>
@@ -72,7 +72,7 @@ function ExchangeRatesUnavailable() {
       <div className="flex items-start gap-3">
         <AlertCircle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" aria-hidden />
         <div>
-          <h2 className="font-display text-lg font-bold text-charcoal">Курс доллара сегодня</h2>
+          <h2 className="font-heading text-lg font-bold text-charcoal">Курс доллара сегодня</h2>
           <p className="mt-2 text-sm text-slate">
             Не удалось загрузить актуальные курсы. Попробуйте обновить страницу позже.
           </p>
@@ -109,7 +109,7 @@ async function ArgentinaExchangeRatesContent() {
         <div>
           <h2
             id="exchange-rates-title"
-            className="font-display text-lg font-bold text-charcoal"
+            className="font-heading text-lg font-bold text-charcoal"
           >
             Курс доллара сегодня
           </h2>

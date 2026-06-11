@@ -86,7 +86,7 @@ function GuideCard({
           className="h-16 w-16 sm:h-20 sm:w-20"
         />
         <div className="min-w-0 flex-1 space-y-3">
-          <h3 className="font-display text-base font-bold text-charcoal sm:text-lg">
+          <h3 className="font-heading text-base font-bold text-charcoal sm:text-lg">
             {guide.isTourAuthor ? `Автор тура — ${guide.name}` : guide.name}
           </h3>
           <GuideBio bio={guide.bio} />
@@ -198,7 +198,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <div>
-        <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Гиды этого тура</h2>
+        <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Гиды этого тура</h2>
         <p className="mt-1 text-sm text-slate">Добавьте гидов, которые будут вести этот тур</p>
       </div>
 

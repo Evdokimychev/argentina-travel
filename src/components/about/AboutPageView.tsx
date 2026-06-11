@@ -71,7 +71,7 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
         <div className={siteContainerClass}>
           <div className="grid gap-12 lg:grid-cols-2 lg:items-start">
             <div>
-              <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+              <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
                 Кто мы и зачем это делаем
               </h2>
               <p className="mt-4 text-base leading-relaxed text-slate">
@@ -102,7 +102,7 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
                   <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-sky/10 text-sky">
                     <Icon className="h-5 w-5" aria-hidden />
                   </div>
-                  <h3 className="mt-4 font-display text-lg font-bold text-charcoal">{title}</h3>
+                  <h3 className="mt-4 font-heading text-lg font-bold text-charcoal">{title}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-slate">{description}</p>
                 </div>
               ))}
@@ -116,7 +116,7 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
       {/* CTA */}
       <section className="border-t border-gray-100 bg-surface-muted py-16">
         <div className={cn(siteContainerClass, "text-center")}>
-          <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
             Готовы открыть Аргентину?
           </h2>
           <p className="mx-auto mt-3 max-w-lg text-slate">
