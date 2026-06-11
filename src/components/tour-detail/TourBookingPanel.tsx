@@ -97,7 +97,7 @@ export default function TourBookingPanel({
     >
       {percentOff != null ? (
         <span
-          className="pointer-events-none absolute right-0 top-0 rounded-bl-xl rounded-tr-2xl bg-brand px-2.5 py-1.5 text-[11px] font-bold leading-none tracking-tight text-white shadow-sm"
+          className="pointer-events-none absolute right-0 top-0 rounded-bl-2xl rounded-tr-[1.35rem] bg-brand px-3.5 py-2 text-sm font-bold leading-none tracking-tight text-white shadow-md sm:px-4 sm:py-2.5 sm:text-base"
           aria-label={`Скидка ${percentOff} процентов`}
         >
           −{percentOff}%
@@ -109,6 +109,7 @@ export default function TourBookingPanel({
         suffix={priceSuffix}
         showFrom={false}
         showDiscountRibbon={false}
+        className={percentOff != null ? "pt-2 pr-[4.75rem] sm:pt-3 sm:pr-20" : undefined}
       />
       {guests > 1 && (
         <p className="mt-1 text-xs text-slate">

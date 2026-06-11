@@ -94,6 +94,10 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
     () => countToursByAccommodation(tours),
     [tours]
   );
+  const activityCounts = useMemo(
+    () => countToursByField(tours, (t) => t.activityType),
+    [tours]
+  );
   const comfortCounts = useMemo(
     () => countToursByField(tours, (t) => resolveListingComfortLevel(t)),
     [tours]
@@ -143,6 +147,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       >
         <ActivityTypesFilter
           selected={draft.activityTypes}
+          counts={activityCounts}
           onToggle={(item) => toggleDraft("activityTypes", item)}
           onClear={() => commit({ activityTypes: [] })}
           onApply={apply}
