@@ -548,39 +548,43 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     if (stepIndex < visibleSteps.length - 1) {
       setStepIndex((i) => i + 1);
     } else {
-      const startDate =
-        dateMode === "custom" && customDate
-          ? customDate.toISOString().slice(0, 10)
-          : selectedDate?.startDate;
-      const endDate =
-        dateMode === "custom" && customDate
-          ? new Date(customDate.getTime() + (tour.durationDays - 1) * 86400000)
-              .toISOString()
-              .slice(0, 10)
-          : selectedDate?.endDate;
-
-      const bookingResult = createBookingFromCheckout({
-        actor: user,
-        userId: user?.id,
-        tour,
-        guests,
-        startDate,
-        endDate,
-        totalPriceUsd: totalUsd,
-        form,
-      });
-
-      if ("error" in bookingResult) {
-        setError(bookingResult.error);
-        return;
-      }
-
-      if (user) {
-        setSavedToProfile(true);
-      }
-      setCreatedBookingId(bookingResult.id);
-      setSubmitted(true);
+      void submitCheckout();
     }
+  }
+
+  async function submitCheckout() {
+    const startDate =
+      dateMode === "custom" && customDate
+        ? customDate.toISOString().slice(0, 10)
+        : selectedDate?.startDate;
+    const endDate =
+      dateMode === "custom" && customDate
+        ? new Date(customDate.getTime() + (tour.durationDays - 1) * 86400000)
+            .toISOString()
+            .slice(0, 10)
+        : selectedDate?.endDate;
+
+    const bookingResult = await createBookingFromCheckout({
+      actor: user,
+      userId: user?.id,
+      tour,
+      guests,
+      startDate,
+      endDate,
+      totalPriceUsd: totalUsd,
+      form,
+    });
+
+    if ("error" in bookingResult) {
+      setError(bookingResult.error);
+      return;
+    }
+
+    if (user) {
+      setSavedToProfile(true);
+    }
+    setCreatedBookingId(bookingResult.id);
+    setSubmitted(true);
   }
 
   function goBack() {

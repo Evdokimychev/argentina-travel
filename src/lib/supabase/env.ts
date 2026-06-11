@@ -26,3 +26,9 @@ export function requireSupabasePublicEnv(): SupabasePublicEnv {
 export function isSupabaseConfigured(): boolean {
   return getSupabasePublicEnv() !== null;
 }
+
+/** Re-export for server/client — see auth-mode.ts for full logic. */
+export function isSupabaseAuthEnabled(): boolean {
+  if (!isSupabaseConfigured()) return false;
+  return process.env.NEXT_PUBLIC_SUPABASE_AUTH !== "false";
+}

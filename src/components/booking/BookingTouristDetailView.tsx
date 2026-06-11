@@ -33,6 +33,11 @@ import {
   cancelBookingByTourist,
   getBookingById,
 } from "@/lib/bookings-store";
+import {
+  apiCancelBooking,
+  apiFetchBookingById,
+  isRemoteBookingsMode,
+} from "@/lib/bookings-api";
 import { cn } from "@/lib/cn";
 
 export default function BookingTouristDetailView({ bookingId }: { bookingId: string }) {
@@ -41,9 +46,20 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
-    function refresh() {
+    function refreshLocal() {
       setBooking(getBookingById(bookingId) ?? null);
     }
+
+    function refresh() {
+      if (isRemoteBookingsMode()) {
+        void apiFetchBookingById(bookingId)
+          .then(setBooking)
+          .catch(() => setBooking(null));
+        return;
+      }
+      refreshLocal();
+    }
+
     refresh();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
@@ -88,6 +104,12 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
 
   function handleCancel() {
     setCancelError(null);
+    if (isRemoteBookingsMode()) {
+      void apiCancelBooking(booking!.id)
+        .then(setBooking)
+        .catch((error: Error) => setCancelError(error.message));
+      return;
+    }
     const result = cancelBookingByTourist(booking!.id, user);
     if ("error" in result) setCancelError(result.error);
   }

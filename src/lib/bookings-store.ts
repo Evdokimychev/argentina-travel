@@ -1,6 +1,7 @@
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
 import { shouldSeedDemoData } from "@/lib/demo-mode";
+import { isRemoteBookingsMode, apiAttachGuestBookings, apiCreateBooking } from "@/lib/bookings-api";
 import {
   ensureTravelersSlotCount,
   hasCompleteBookingTravelers,
@@ -132,7 +133,7 @@ function normalizeTravelers(raw: BookingTraveler[] | undefined): BookingTraveler
   }));
 }
 
-function createStatusChange(input: {
+export function createStatusChange(input: {
   from: BookingStatus | null;
   to: BookingStatus;
   changedBy: BookingStatusActor;
@@ -428,6 +429,11 @@ export function getBookingsByContactEmail(email: string): Booking[] {
 }
 
 export function attachGuestBookingsToUser(userId: string, email: string): number {
+  if (isRemoteBookingsMode()) {
+    void apiAttachGuestBookings().then(() => notifyUpdated());
+    return 0;
+  }
+
   const normalized = normalizeContactEmail(email);
   if (!normalized || isGuestUserId(userId)) return 0;
 
@@ -482,6 +488,8 @@ export function createBooking(input: {
   checkoutPaymentOption?: BookingCheckoutPaymentOption;
   /** Allow checkout without login when contact email is provided. */
   allowGuestRequest?: boolean;
+  /** When false, return booking without writing to localStorage (Supabase path). */
+  persist?: boolean;
 }): Booking | { error: string } {
   if (input.allowGuestRequest) {
     if (!input.contactEmail.trim()) {
@@ -531,6 +539,13 @@ export function createBooking(input: {
 
   const all = getAllBookings();
   const normalized = normalizeBooking(booking);
+  if (input.persist === false) {
+    notifyBookingCreated(normalized);
+    if (normalized.fillTravelersLater) {
+      notifyTravelersFormDue(normalized);
+    }
+    return normalized;
+  }
   writeAllBookings([normalized, ...all]);
   notifyUpdated();
   notifyBookingCreated(normalized);
@@ -664,7 +679,7 @@ export function addOrganizerComment(input: {
   return { booking: updated };
 }
 
-export function createBookingFromCheckout(input: {
+export function createBookingFromCheckoutLocal(input: {
   actor: SessionUser | null;
   userId?: string;
   tour: TourDetail;
@@ -673,6 +688,7 @@ export function createBookingFromCheckout(input: {
   endDate?: string;
   totalPriceUsd: number;
   form: CheckoutFormState;
+  persist?: boolean;
 }): Booking | { error: string } {
   const contactEmail = input.form.contactEmail.trim();
   const userId =
@@ -724,13 +740,10 @@ export function createBookingFromCheckout(input: {
     travelersCompletedAt: travelers?.length ? now : undefined,
     checkoutPaymentOption: paymentOption,
     allowGuestRequest: !input.actor,
+    persist: input.persist,
   });
 
   if ("error" in bookingResult) return bookingResult;
-
-  const all = getAllBookings();
-  const index = all.findIndex((item) => item.id === bookingResult.id);
-  if (index === -1) return bookingResult;
 
   const payToken = createId("pay");
   const paymentLink =
@@ -764,6 +777,17 @@ export function createBookingFromCheckout(input: {
     updatedAt: now,
   });
 
+  if (input.persist === false) {
+    if (paymentLink) {
+      notifyPaymentReminder(updated, paymentLink.token);
+    }
+    return updated;
+  }
+
+  const all = getAllBookings();
+  const index = all.findIndex((item) => item.id === bookingResult.id);
+  if (index === -1) return updated;
+
   persistBookingUpdate(index, updated);
 
   if (paymentLink) {
@@ -771,6 +795,48 @@ export function createBookingFromCheckout(input: {
   }
 
   return updated;
+}
+
+export async function createBookingFromCheckout(input: {
+  actor: SessionUser | null;
+  userId?: string;
+  tour: TourDetail;
+  guests: number;
+  startDate?: string;
+  endDate?: string;
+  totalPriceUsd: number;
+  form: CheckoutFormState;
+}): Promise<Booking | { error: string }> {
+  if (!isRemoteBookingsMode()) {
+    return createBookingFromCheckoutLocal(input);
+  }
+
+  const built = createBookingFromCheckoutLocal({ ...input, persist: false });
+  if ("error" in built) return built;
+
+  try {
+    const saved = await apiCreateBooking(built);
+    notifyUpdated();
+    return saved;
+  } catch (error) {
+    return {
+      error: error instanceof Error ? error.message : "Не удалось сохранить заявку",
+    };
+  }
+}
+
+/** @deprecated Use createBookingFromCheckout — kept for sync local callers */
+export function createBookingFromCheckoutSync(input: {
+  actor: SessionUser | null;
+  userId?: string;
+  tour: TourDetail;
+  guests: number;
+  startDate?: string;
+  endDate?: string;
+  totalPriceUsd: number;
+  form: CheckoutFormState;
+}): Booking | { error: string } {
+  return createBookingFromCheckoutLocal(input);
 }
 
 export function getBookingByTravelersToken(token: string): Booking | undefined {

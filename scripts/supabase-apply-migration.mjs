@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Apply supabase/migrations/*.sql using DATABASE_URL from .env.local
+ * Apply all supabase/migrations/*.sql (sorted by name) using DATABASE_URL from .env.local
  * Usage: npm run supabase:migrate
  */
 import fs from "node:fs";
@@ -35,11 +35,15 @@ async function main() {
     throw new Error("DATABASE_URL is missing in .env.local");
   }
 
-  const migrationPath = path.join(
-    root,
-    "supabase/migrations/20250611000000_lead_capture.sql"
-  );
-  const sql = fs.readFileSync(migrationPath, "utf8");
+  const migrationsDir = path.join(root, "supabase/migrations");
+  const migrationFiles = fs
+    .readdirSync(migrationsDir)
+    .filter((name) => name.endsWith(".sql"))
+    .sort();
+
+  if (migrationFiles.length === 0) {
+    throw new Error(`No migration files in ${migrationsDir}`);
+  }
 
   const client = new pg.Client({
     connectionString,
@@ -48,14 +52,24 @@ async function main() {
 
   console.log("Connecting to Supabase Postgres…");
   await client.connect();
-  console.log("Applying migration:", path.basename(migrationPath));
-  await client.query(sql);
+
+  for (const file of migrationFiles) {
+    const migrationPath = path.join(migrationsDir, file);
+    const sql = fs.readFileSync(migrationPath, "utf8");
+    console.log("Applying migration:", file);
+    await client.query(sql);
+  }
 
   const { rows } = await client.query(`
     select tablename
     from pg_tables
     where schemaname = 'public'
-      and tablename in ('newsletter_subscribers', 'contact_submissions')
+      and tablename in (
+        'newsletter_subscribers',
+        'contact_submissions',
+        'profiles',
+        'bookings'
+      )
     order by tablename
   `);
 

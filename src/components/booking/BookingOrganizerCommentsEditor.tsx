@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { BookingOrganizerComment } from "@/types/tourist";
 import { addOrganizerComment } from "@/lib/bookings-store";
+import { apiAddOrganizerComment, isRemoteBookingsMode } from "@/lib/bookings-api";
 import { useAuth } from "@/context/AuthContext";
 import { formatBookingDateTime } from "@/lib/booking-datetime";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,19 @@ export default function BookingOrganizerCommentsEditor({
     event.preventDefault();
     setLoading(true);
     setError(null);
+
+    if (isRemoteBookingsMode()) {
+      try {
+        await apiAddOrganizerComment({ bookingId, text, authorName });
+        setText("");
+        onUpdated?.();
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Ошибка сохранения");
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
 
     const result = addOrganizerComment({
       bookingId,

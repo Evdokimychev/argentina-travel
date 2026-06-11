@@ -11,12 +11,15 @@ import {
 } from "react";
 import type { AuthIntent } from "@/types/auth";
 import type { AccountRole, SessionUser } from "@/types/user";
-import { userHasAccountRole } from "@/types/user";
 import { splitFullName } from "@/lib/full-name";
-import { localAuthProvider } from "@/lib/auth-provider";
+import { getAuthProvider } from "@/lib/auth-provider";
+import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { profileToSessionUser } from "@/lib/profile-mapper";
 import { attachGuestBookingsToUser } from "@/lib/bookings-store";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
+import AuthQueryHandler from "@/components/auth/AuthQueryHandler";
 
 interface AuthContextValue {
   user: SessionUser | null;
@@ -65,16 +68,69 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+async function resolveProviderUser(activeRole?: AccountRole): Promise<SessionUser | null> {
+  const provider = getAuthProvider();
+  const user = await provider.getSessionUser();
+  if (!user || !activeRole || user.role === activeRole) return user;
+  return { ...user, role: activeRole };
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authIntent, setAuthIntent] = useState<AuthIntent>("default");
   const [hydrated, setHydrated] = useState(false);
 
-  useEffect(() => {
-    setUser(localAuthProvider.getSessionUser());
-    setHydrated(true);
+  const refreshSessionUser = useCallback(async (activeRole?: AccountRole) => {
+    const next = await resolveProviderUser(activeRole);
+    setUser(next);
+    return next;
   }, []);
+
+  useEffect(() => {
+    if (!isSupabaseAuthEnabled()) {
+      void refreshSessionUser().finally(() => setHydrated(true));
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClient();
+
+    async function loadProfile(userId: string) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+      if (profile) {
+        setUser(profileToSessionUser(profile));
+      } else {
+        setUser(null);
+      }
+      setHydrated(true);
+    }
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        void loadProfile(session.user.id);
+      } else {
+        setUser(null);
+        setHydrated(true);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        void loadProfile(session.user.id);
+      } else {
+        setUser(null);
+        setHydrated(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [refreshSessionUser]);
 
   useEffect(() => {
     if (!authOpen) return;
@@ -97,10 +153,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setAuthIntent("default");
   }, []);
 
+  const afterAuthSuccess = useCallback(async (nextUser: SessionUser) => {
+    setUser(nextUser);
+    if (nextUser.email) {
+      attachGuestBookingsToUser(nextUser.id, nextUser.email);
+    }
+  }, []);
+
   const loginByPhone = useCallback(async (phone: string, role: AccountRole) => {
-    const result = localAuthProvider.loginWithPhone(phone, role);
+    const result = await getAuthProvider().loginWithPhone(phone, role);
     if ("error" in result) {
-      if (result.code === "NOT_FOUND") {
+      if (result.code === "NOT_FOUND" || result.error === "NOT_FOUND") {
         return { ok: false as const, error: "NOT_FOUND", notFound: true };
       }
       if (result.code === "ROLE_NOT_CONNECTED") {
@@ -113,15 +176,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { ok: false as const, error: result.error };
     }
 
-    setUser(result.user);
-    if (result.user.email) {
-      attachGuestBookingsToUser(result.user.id, result.user.email);
-    }
+    await afterAuthSuccess(result.user);
     return { ok: true as const };
-  }, []);
+  }, [afterAuthSuccess]);
 
   const loginByEmail = useCallback(async (email: string, password: string, role: AccountRole) => {
-    const result = localAuthProvider.loginWithEmail(email, password, role);
+    const result = await getAuthProvider().loginWithEmail(email, password, role);
     if ("error" in result) {
       if (result.code === "ROLE_NOT_CONNECTED") {
         return {
@@ -133,15 +193,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { ok: false as const, error: result.error };
     }
 
-    setUser(result.user);
-    if (result.user.email) {
-      attachGuestBookingsToUser(result.user.id, result.user.email);
-    }
+    await afterAuthSuccess(result.user);
     return { ok: true as const };
-  }, []);
+  }, [afterAuthSuccess]);
 
   const loginForOrganizerUpgrade = useCallback(async (email: string, password: string) => {
-    const result = localAuthProvider.loginTouristForOrganizerUpgrade(email, password);
+    const result = await getAuthProvider().loginTouristForOrganizerUpgrade(email, password);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
@@ -159,7 +216,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       password?: string;
     }) => {
       const { firstName, lastName } = splitFullName(input.fullName);
-      const result = localAuthProvider.register({
+      const result = await getAuthProvider().register({
         role: input.role,
         firstName,
         lastName,
@@ -186,13 +243,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { ok: false as const, error: result.error };
       }
 
-      setUser(result.user);
-      if (result.user.email) {
-        attachGuestBookingsToUser(result.user.id, result.user.email);
-      }
+      await afterAuthSuccess(result.user);
       return { ok: true as const };
     },
-    []
+    [afterAuthSuccess]
   );
 
   const connectOrganizerRole = useCallback(async () => {
@@ -200,7 +254,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return { ok: false as const, error: "Войдите в аккаунт" };
     }
 
-    const result = localAuthProvider.addOrganizerRole(user.id);
+    const result = await getAuthProvider().addOrganizerRole(user.id);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
@@ -222,7 +276,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       const { firstName, lastName } = splitFullName(input.fullName);
-      const result = localAuthProvider.updateProfile(user.id, {
+      const result = await getAuthProvider().updateProfile(user.id, {
         firstName,
         lastName,
         phone: input.phone,
@@ -247,7 +301,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         return { ok: false as const, error: "Войдите в аккаунт" };
       }
 
-      const result = localAuthProvider.updateAvatar(user.id, avatarUrl);
+      const result = await getAuthProvider().updateAvatar(user.id, avatarUrl);
       if ("error" in result) {
         return { ok: false as const, error: result.error };
       }
@@ -259,7 +313,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    localAuthProvider.logout();
+    void getAuthProvider().logout();
     setUser(null);
     setAuthOpen(false);
     setAuthIntent("default");
@@ -303,6 +357,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider value={value}>
       {children}
+      <AuthQueryHandler />
       <AuthModal />
     </AuthContext.Provider>
   );

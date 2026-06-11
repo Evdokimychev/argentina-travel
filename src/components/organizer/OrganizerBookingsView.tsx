@@ -25,6 +25,7 @@ import { useAuth } from "@/context/AuthContext";
 import {
   getOrganizerBookingsForCabinet,
 } from "@/lib/organizer-bookings";
+import { apiFetchOrganizerBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import FormattedPrice from "@/components/FormattedPrice";
@@ -60,6 +61,12 @@ export default function OrganizerBookingsView() {
     if (!user) return;
 
     function refresh() {
+      if (isRemoteBookingsMode()) {
+        void apiFetchOrganizerBookings()
+          .then(setBookings)
+          .catch(() => setBookings([]));
+        return;
+      }
       setBookings(getOrganizerBookingsForCabinet(user!.id));
     }
 

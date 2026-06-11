@@ -9,8 +9,8 @@
 | Заявки на консультации (services → `/contacts?service=…`) | Тот же контакт-форма | **БД** — `kind: service_request` / `consultation` |
 | Заявка организатора (`/join`) | Заглушка | **БД** — `kind: organizer_application` |
 | Контент туров, блог, иммиграция, guide | TS/markdown в `src/data/` | **Код** — CMS/Supabase позже |
-| Auth, профиль, роли | localStorage (`auth-store`) | **Позже** — Supabase Auth + `profiles` |
-| Бронирования, избранное, отзывы | localStorage | **Позже** — отдельные таблицы при миграции checkout |
+| Auth, профиль, роли | Supabase Auth + `profiles` (Phase 2) | **БД** — при `NEXT_PUBLIC_SUPABASE_AUTH` |
+| Бронирования | Supabase `bookings` или localStorage fallback | **БД** — Phase 2 |
 | Каталог жилья | Не реализован | **Позже** — `listings` + связь с Lustra |
 | Lustra | Нет интеграции в репо | **Позже** — `external_id`, sync webhook или read replica |
 
@@ -96,6 +96,40 @@ npm run supabase:verify
 - `POST /api/contact` — все contact/lead формы
 - `GET /api/exchange-rates` — курсы валют (Frankfurter + fallback)
 - `GET /api/admin/leads` — inbox лидов (Bearer `LEADS_ADMIN_TOKEN`, service role)
+
+## Phase 2 — Auth, profiles, bookings
+
+| Компонент | Файлы | Env |
+|-----------|-------|-----|
+| Supabase Auth + profiles | `supabase-auth-provider.ts`, `AuthContext`, migration | `NEXT_PUBLIC_SUPABASE_*` |
+| Middleware `/profile`, `/organizer` | `src/middleware.ts` | — |
+| Bookings в Postgres | `bookings` table, `/api/bookings/*` | `SUPABASE_SERVICE_ROLE_KEY` (phone login) |
+| Guest → registered | `POST /api/bookings/attach-guest` | — |
+| Email при смене статуса | `bookings-notify.ts` | `RESEND_API_KEY`, `LEADS_NOTIFY_EMAIL` |
+| Dual mode fallback | `NEXT_PUBLIC_SUPABASE_AUTH=false` | localStorage без изменений |
+
+### Миграция Phase 2
+
+```bash
+npm run supabase:migrate   # все файлы в supabase/migrations/ по порядку
+```
+
+Файл: `supabase/migrations/20250612000000_auth_profiles_bookings.sql`
+
+### Ручная настройка Supabase Dashboard
+
+1. **Authentication → Providers → Email** — включить Email auth
+2. **Authentication → URL Configuration** — Site URL и Redirect URLs (`http://localhost:3000/auth/callback`)
+3. При необходимости отключить подтверждение email для dev
+
+### API Phase 2
+
+- `POST /api/bookings` — создать заявку (guest или auth)
+- `GET /api/bookings` — бронирования туриста
+- `GET/PATCH /api/bookings/[id]` — детали / обновление статуса
+- `POST /api/bookings/attach-guest` — привязать гостевые заявки по email
+- `GET /api/organizer/bookings` — заявки организатора
+- `POST /api/auth/login-by-phone` — вход по телефону (демо-пароль `demo123`)
 
 ## Phase 1 — быстрые улучшения
 

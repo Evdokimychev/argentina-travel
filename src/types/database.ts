@@ -16,9 +16,125 @@ export type ContactSubmissionKind =
 
 export type NewsletterSubscriberStatus = "active" | "unsubscribed";
 
+export type AccountRoleDb = "tourist" | "organizer" | "admin";
+
 export interface Database {
   public: {
     Tables: {
+      profiles: {
+        Row: {
+          id: string;
+          first_name: string;
+          last_name: string;
+          phone: string | null;
+          email: string | null;
+          avatar_url: string | null;
+          country: string;
+          date_of_birth: string | null;
+          roles: AccountRoleDb[];
+          active_role: AccountRoleDb;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          first_name?: string;
+          last_name?: string;
+          phone?: string | null;
+          email?: string | null;
+          avatar_url?: string | null;
+          country?: string;
+          date_of_birth?: string | null;
+          roles?: AccountRoleDb[];
+          active_role?: AccountRoleDb;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          first_name?: string;
+          last_name?: string;
+          phone?: string | null;
+          email?: string | null;
+          avatar_url?: string | null;
+          country?: string;
+          date_of_birth?: string | null;
+          roles?: AccountRoleDb[];
+          active_role?: AccountRoleDb;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      bookings: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          guest_user_id: string | null;
+          organizer_user_id: string | null;
+          tour_id: string;
+          tour_slug: string;
+          tour_title: string;
+          tour_image: string;
+          status: string;
+          guests: number;
+          total_price_usd: number;
+          contact_name: string;
+          contact_email: string;
+          contact_phone: string;
+          start_date: string | null;
+          end_date: string | null;
+          payment_status: string | null;
+          payload: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          user_id?: string | null;
+          guest_user_id?: string | null;
+          organizer_user_id?: string | null;
+          tour_id: string;
+          tour_slug: string;
+          tour_title: string;
+          tour_image?: string;
+          status?: string;
+          guests?: number;
+          total_price_usd?: number;
+          contact_name?: string;
+          contact_email: string;
+          contact_phone?: string;
+          start_date?: string | null;
+          end_date?: string | null;
+          payment_status?: string | null;
+          payload?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          guest_user_id?: string | null;
+          organizer_user_id?: string | null;
+          tour_id?: string;
+          tour_slug?: string;
+          tour_title?: string;
+          tour_image?: string;
+          status?: string;
+          guests?: number;
+          total_price_usd?: number;
+          contact_name?: string;
+          contact_email?: string;
+          contact_phone?: string;
+          start_date?: string | null;
+          end_date?: string | null;
+          payment_status?: string | null;
+          payload?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;
@@ -89,6 +205,13 @@ export interface Database {
     CompositeTypes: Record<string, never>;
   };
 }
+
+export type Profile = Database["public"]["Tables"]["profiles"]["Row"];
+export type ProfileInsert = Database["public"]["Tables"]["profiles"]["Insert"];
+export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
+export type BookingRow = Database["public"]["Tables"]["bookings"]["Row"];
+export type BookingInsert = Database["public"]["Tables"]["bookings"]["Insert"];
+export type BookingUpdate = Database["public"]["Tables"]["bookings"]["Update"];
 
 export type NewsletterSubscriber =
   Database["public"]["Tables"]["newsletter_subscribers"]["Row"];

@@ -35,6 +35,11 @@ import {
   formatBookingTourDates,
 } from "@/lib/booking-display";
 import { getBookingById, updateBookingStatusWithHistory } from "@/lib/bookings-store";
+import {
+  apiFetchBookingById,
+  apiUpdateBookingStatus,
+  isRemoteBookingsMode,
+} from "@/lib/bookings-api";
 import { buildOrganizerBookingMessageHref } from "@/lib/messages-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import BookingOrganizerDataPanel from "@/components/booking/BookingOrganizerDataPanel";
@@ -95,8 +100,18 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   const [historyOpen, setHistoryOpen] = useState(false);
 
   useEffect(() => {
-    function refresh() {
+    function refreshLocal() {
       setBooking(getBookingById(bookingId) ?? null);
+    }
+
+    function refresh() {
+      if (isRemoteBookingsMode()) {
+        void apiFetchBookingById(bookingId)
+          .then(setBooking)
+          .catch(() => setBooking(null));
+        return;
+      }
+      refreshLocal();
     }
 
     refresh();
@@ -140,6 +155,23 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   function handleStatusChange(nextStatus: BookingStatusActive) {
     setStatusLoading(true);
     setStatusError(null);
+
+    if (isRemoteBookingsMode()) {
+      void apiUpdateBookingStatus({
+        bookingId,
+        status: nextStatus,
+        changedBy: "organizer",
+      })
+        .then((updated) => {
+          setBooking(updated);
+          setStatusLoading(false);
+        })
+        .catch((error: Error) => {
+          setStatusError(error.message);
+          setStatusLoading(false);
+        });
+      return;
+    }
 
     const result = updateBookingStatusWithHistory({
       bookingId,
@@ -336,7 +368,13 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                 comments={booking.organizerComments}
                 authorName={user?.fullName ?? "Организатор"}
                 variant="organizer-detail"
-                onUpdated={() => setBooking(getBookingById(bookingId) ?? null)}
+                onUpdated={() => {
+                  if (isRemoteBookingsMode()) {
+                    void apiFetchBookingById(bookingId).then(setBooking);
+                    return;
+                  }
+                  setBooking(getBookingById(bookingId) ?? null);
+                }}
               />
             </div>
           </article>

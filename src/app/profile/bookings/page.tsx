@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
+import { apiCancelBooking, apiFetchUserBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
 import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
@@ -34,6 +35,12 @@ export default function ProfileBookingsPage() {
     if (!user) return;
 
     function refresh() {
+      if (isRemoteBookingsMode()) {
+        void apiFetchUserBookings()
+          .then(setBookings)
+          .catch(() => setBookings([]));
+        return;
+      }
       setBookings(getUserBookings(user!.id));
     }
 
@@ -46,10 +53,25 @@ export default function ProfileBookingsPage() {
 
   function handleCancel(bookingId: string) {
     setCancelError(null);
+    if (isRemoteBookingsMode()) {
+      void apiCancelBooking(bookingId)
+        .then(() => refreshBookings())
+        .catch((error: Error) => setCancelError(error.message));
+      return;
+    }
     const result = cancelBookingByTourist(bookingId, user);
     if ("error" in result) {
       setCancelError(result.error);
     }
+  }
+
+  function refreshBookings() {
+    if (!user) return;
+    if (isRemoteBookingsMode()) {
+      void apiFetchUserBookings().then(setBookings);
+      return;
+    }
+    setBookings(getUserBookings(user.id));
   }
 
   return (
