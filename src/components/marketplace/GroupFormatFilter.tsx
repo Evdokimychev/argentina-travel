@@ -8,7 +8,6 @@ import {
 import {
   TOUR_FORMAT_OPTIONS,
   countToursByFormat,
-  getTourFormats,
   matchesTourFormat,
 } from "@/lib/tour-format";
 import { cn } from "@/lib/cn";

@@ -4,7 +4,6 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { TourItineraryDay } from "@/types";
-import { SectionHeading } from "./InfoModal";
 import TourSection from "./TourSection";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";

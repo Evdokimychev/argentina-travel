@@ -10,16 +10,9 @@ import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
-import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { formatBookingTourDates } from "@/lib/booking-display";
-import {
-  paymentStatusNeedsAction,
-  resolveBookingAmounts,
-  resolveTouristPaymentLinkHref,
-} from "@/lib/booking-payment-display";
-import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
 
@@ -67,11 +60,6 @@ export default function ProfileBookingsPage() {
           {bookings.map((booking) => {
             const expanded = expandedId === booking.id;
             const canCancel = booking.status === "new" || booking.status === "pending";
-            const amounts = resolveBookingAmounts(booking);
-            const paymentStatus = resolveBookingPaymentStatus(booking);
-            const payHref = resolveTouristPaymentLinkHref(booking);
-            const needsPayment = paymentStatusNeedsAction(paymentStatus);
-
             return (
               <article
                 key={booking.id}

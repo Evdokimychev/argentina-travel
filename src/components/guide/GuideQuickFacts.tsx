@@ -4,7 +4,6 @@ import {
   formatArsRate,
   getArgentinaExchangeRates,
 } from "@/lib/argentina-exchange-rates";
-import { cn } from "@/lib/cn";
 import type { GuideQuickFact } from "@/types/guide-pillar";
 
 type GuideQuickFactsProps = {
