@@ -9,6 +9,14 @@ import { getUserFavorites } from "@/lib/favorites-store";
 import { FAVORITES_UPDATED_EVENT, type FavoriteTour } from "@/types/tourist";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import FormattedPrice from "@/components/FormattedPrice";
+import { cn } from "@/lib/cn";
+import {
+  cabinetCardClass,
+  cabinetLinkClass,
+  cabinetPageSubtitleClass,
+  cabinetPageTitleClass,
+  cabinetPanelClass,
+} from "@/lib/cabinet-ui";
 
 export default function ProfileFavoritesPage() {
   const { user } = useAuth();
@@ -29,16 +37,16 @@ export default function ProfileFavoritesPage() {
   if (!user) return null;
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 className="font-heading text-xl font-bold text-charcoal">Избранные туры</h2>
-      <p className="mt-1 text-sm text-slate">Туры, которые вы сохранили для будущих поездок</p>
+    <div className={cabinetPanelClass}>
+      <h2 className={cabinetPageTitleClass}>Избранные туры</h2>
+      <p className={cabinetPageSubtitleClass}>Туры, которые вы сохранили для будущих поездок</p>
 
       {favorites.length > 0 ? (
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {favorites.map((favorite) => (
             <article
               key={favorite.tourSlug}
-              className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+              className={cn(cabinetCardClass, "overflow-hidden")}
             >
               <div className="relative aspect-[16/10]">
                 <Image
@@ -78,7 +86,7 @@ export default function ProfileFavoritesPage() {
                 ) : null}
                 <Link
                   href={`/tours/${favorite.tourSlug}`}
-                  className="mt-4 inline-flex text-sm font-medium text-brand hover:underline"
+                  className={cn(cabinetLinkClass, "mt-4 inline-flex text-sm")}
                 >
                   Открыть тур
                 </Link>
@@ -87,7 +95,7 @@ export default function ProfileFavoritesPage() {
           ))}
         </div>
       ) : (
-        <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-gray-50 px-6 py-12 text-center">
+        <div className="mt-8 rounded-3xl border border-dashed border-gray-200 bg-surface-muted/60 px-6 py-12 text-center">
           <Heart className="mx-auto h-10 w-10 text-slate/40" strokeWidth={1.5} />
           <p className="mt-4 font-medium text-charcoal">Избранное пока пусто</p>
           <p className="mt-2 text-sm text-slate">
@@ -95,7 +103,7 @@ export default function ProfileFavoritesPage() {
           </p>
           <Link
             href="/tours"
-            className="mt-4 inline-flex text-sm font-medium text-brand hover:underline"
+            className={cn(cabinetLinkClass, "mt-4 inline-flex text-sm")}
           >
             Перейти в каталог
           </Link>

@@ -19,6 +19,7 @@ import { ORGANIZER_TOUR_LISTINGS } from "@/data/organizer-tours";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerTourListingsForUser, createOrganizerTour } from "@/lib/organizer-tour-store";
 import { cn } from "@/lib/cn";
+import { cabinetCardClass, cabinetLinkClass } from "@/lib/cabinet-ui";
 import { formatDays, formatWithWord, pluralRu } from "@/lib/pluralize";
 import type { OrganizerTourListing, OrganizerTourStatus, OrganizerTourType } from "@/types/organizer-tour";
 import { ORGANIZER_TOURS_UPDATED_EVENT } from "@/types/organizer-tour";
@@ -60,7 +61,7 @@ function StatusBadge({ status }: { status: OrganizerTourStatus }) {
 
 function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <article className={cn(cabinetCardClass, "flex h-full flex-col overflow-hidden")}>
       <div className="relative aspect-[16/10] overflow-hidden">
         <Image
           src={tour.image}
@@ -78,7 +79,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
         ) : null}
 
         {tour.isPreliminaryProgram ? (
-          <span className="absolute left-3 top-3 max-w-[calc(100%-5.5rem)] rounded-md bg-brand px-2 py-1 text-[10px] font-semibold leading-snug text-white shadow-sm">
+          <span className="absolute left-3 top-3 max-w-[calc(100%-5.5rem)] rounded-md bg-sky px-2 py-1 text-[10px] font-semibold leading-snug text-white shadow-sm">
             Предв. программа
           </span>
         ) : null}
@@ -99,7 +100,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
             {tour.partnerUrl ? (
               <Link
                 href={tour.partnerUrl}
-                className="shrink-0 text-brand transition-colors hover:text-brand-dark"
+                className="shrink-0 text-sky transition-colors hover:text-sky-dark"
                 aria-label="Открыть на сайте"
               >
                 <ExternalLink className="h-3.5 w-3.5" strokeWidth={1.75} />
@@ -120,7 +121,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
             href={`/organizer/tours/${tour.id}/preview`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-slate transition-colors hover:bg-gray-100 hover:text-brand"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-slate transition-colors hover:bg-gray-100 hover:text-sky"
             aria-label="Предпросмотр тура"
           >
             <Eye className="h-4 w-4" />
@@ -191,7 +192,7 @@ export default function OrganizerToursView() {
   const excursionCount = baseList.filter((tour) => tour.type === "excursion").length;
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div className={cn(cabinetCardClass, "overflow-hidden")}>
       <div className="flex gap-1 overflow-x-auto border-b border-gray-200 px-3 scrollbar-hide sm:px-4">
         {LIST_TABS.map((tab) => (
           <button
@@ -201,7 +202,7 @@ export default function OrganizerToursView() {
             className={cn(
               "relative shrink-0 px-3 py-3.5 text-sm font-medium transition-colors sm:px-4",
               archiveTab === tab.id
-                ? "text-charcoal after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-brand sm:after:inset-x-3"
+                ? "text-charcoal after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-sky sm:after:inset-x-3"
                 : "text-slate hover:text-charcoal"
             )}
           >
@@ -245,7 +246,7 @@ export default function OrganizerToursView() {
               id="organizer-tour-type-filter"
               value={typeFilter}
               onChange={(event) => setTypeFilter(event.target.value as TypeFilter)}
-              className="flex h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              className="flex h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
             >
               <option value="all">Туры и экскурсии</option>
               <option value="tour">Только туры</option>
@@ -261,7 +262,7 @@ export default function OrganizerToursView() {
               id="organizer-tour-status-filter"
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as StatusFilter)}
-              className="flex h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              className="flex h-11 w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm text-charcoal focus:border-sky focus:outline-none focus:ring-2 focus:ring-sky/20"
             >
               <option value="all">Опубликованные и черновики</option>
               <option value="published">Опубликованные</option>

@@ -12,6 +12,11 @@ import OrganizerSidebar, {
   OrganizerMobileNav,
 } from "@/components/organizer/OrganizerSidebar";
 import { cn } from "@/lib/cn";
+import {
+  cabinetContentGapClass,
+  cabinetPanelClass,
+  cabinetShellClass,
+} from "@/lib/cabinet-ui";
 import { siteContainerClass } from "@/lib/site-container";
 
 export default function OrganizerShell({ children }: { children: React.ReactNode }) {
@@ -28,7 +33,7 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
 
   const loginFallback = (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
+      <div className={cn(cabinetPanelClass, "mx-auto max-w-lg text-center")}>
         <h1 className="font-display text-2xl font-bold text-charcoal">Кабинет организатора</h1>
         <p className="mt-3 text-sm text-slate">Войдите, чтобы управлять турами и заявками</p>
         <Button type="button" className="mt-6" onClick={() => openAuth("organizer")}>
@@ -44,7 +49,7 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
 
   const connectRoleFallback = (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
-      <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+      <div className={cn(cabinetPanelClass, "mx-auto max-w-lg")}>
         <h1 className="font-display text-2xl font-bold text-charcoal">Подключите роль организатора</h1>
         <p className="mt-3 text-sm text-slate">
           Аккаунт <span className="font-medium text-charcoal">{user.fullName}</span> зарегистрирован
@@ -71,11 +76,11 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
 
   return (
     <AccessGate allowed={hasOrganizerAccess} fallback={connectRoleFallback}>
-      <div className="bg-pampas">
+      <div className={cabinetShellClass}>
         <OrganizerMobileHeader />
         <OrganizerMobileNav />
 
-        <div className={cn(siteContainerClass, "flex items-start gap-4 py-4")}>
+        <div className={cn(siteContainerClass, cabinetContentGapClass)}>
           <OrganizerSidebar userName={user.fullName} avatarUrl={user.avatarUrl} />
 
           <div className="min-w-0 flex-1">

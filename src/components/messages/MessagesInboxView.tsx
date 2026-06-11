@@ -19,6 +19,7 @@ import {
 } from "@/lib/messages-store";
 import { MESSAGES_UPDATED_EVENT, type MessageSenderRole, type MessageThread } from "@/types/messages";
 import { cn } from "@/lib/cn";
+import { cabinetCardClass, cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 
 interface MessagesInboxViewProps {
   role: MessageSenderRole;
@@ -58,8 +59,8 @@ function ThreadListItem({
       className={cn(
         "w-full rounded-xl border px-3 py-3 text-left transition-colors",
         active
-          ? "border-brand/30 bg-brand-light/40"
-          : "border-gray-200 bg-white hover:border-gray-300"
+          ? "border-sky/30 bg-sky/5"
+          : "border-gray-100 bg-white hover:border-sky/20"
       )}
     >
       <div className="flex items-start justify-between gap-2">
@@ -68,7 +69,7 @@ function ThreadListItem({
           <p className="truncate text-xs text-slate">{thread.tourTitle}</p>
         </div>
         {unread > 0 ? (
-          <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-brand px-1 text-[10px] font-bold text-white">
+          <span className="flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-sky px-1 text-[10px] font-bold text-white">
             {unread}
           </span>
         ) : null}
@@ -198,12 +199,12 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
       </div>
 
       {isNewCompose && role === "tourist" ? (
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+        <div className={cabinetPanelClass}>
           <h2 className="font-heading text-base font-bold text-charcoal">Новое сообщение</h2>
           {presetTour ? (
             <p className="mt-2 text-sm text-slate">
               Тур:{" "}
-              <Link href={`/tours/${presetTour.slug}`} className="font-medium text-brand hover:underline">
+              <Link href={`/tours/${presetTour.slug}`} className={cabinetLinkClass}>
                 {presetTour.title}
               </Link>
             </p>
@@ -267,7 +268,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
           )}
         </div>
 
-        <div className="flex min-h-[420px] flex-col rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className={cn(cabinetCardClass, "flex min-h-[420px] flex-col")}>
           {activeThread ? (
             <>
               <div className="border-b border-gray-100 px-4 py-4 sm:px-5">
@@ -275,7 +276,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
                   {role === "organizer" ? activeThread.touristName : activeThread.organizerName}
                 </p>
                 <p className="mt-1 text-sm text-slate">
-                  <Link href={`/tours/${activeThread.tourSlug}`} className="text-brand hover:underline">
+                  <Link href={`/tours/${activeThread.tourSlug}`} className={cabinetLinkClass}>
                     {activeThread.tourTitle}
                   </Link>
                   {activeThread.bookingId ? (

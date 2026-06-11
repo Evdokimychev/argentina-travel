@@ -13,6 +13,7 @@ import { maxBirthDateIso, minBirthDateIso, participantAgeLabel } from "@/lib/par
 import { PROFILE_COUNTRIES, getProfileCountryFlag } from "@/data/profile-countries";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
+import { cabinetLinkClass, cabinetPageSubtitleClass, cabinetPageTitleClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 
 import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 
@@ -77,7 +78,7 @@ function CompactActionLink({
         "inline-flex items-center gap-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
         variant === "danger"
           ? "text-slate hover:text-red-600"
-          : "text-brand hover:text-brand-dark"
+          : "text-sky hover:text-sky-dark"
       )}
     >
       {children}
@@ -211,10 +212,10 @@ export default function ProfileSettingsPage() {
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
       <form
         onSubmit={handleSubmit}
-        className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
+        className={cabinetPanelClass}
       >
-        <h2 className="font-heading text-xl font-bold text-charcoal">Настройки аккаунта</h2>
-        <p className="mt-1 text-sm text-slate">Контактные данные и фото профиля</p>
+        <h2 className={cabinetPageTitleClass}>Настройки аккаунта</h2>
+        <p className={cabinetPageSubtitleClass}>Контактные данные и фото профиля</p>
 
         <div className="mt-5 space-y-4">
               <div className="flex gap-4 border-b border-gray-100 pb-4">
@@ -409,14 +410,14 @@ export default function ProfileSettingsPage() {
           </div>
         </form>
 
-          <aside className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <aside className={cn(cabinetPanelClass, "p-6")}>
             <h2 className="font-heading text-lg font-bold text-charcoal">Авторам путешествий</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate">
               Организуйте собственный тур вместе с нами
             </p>
             <Link
               href="/join"
-              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand transition-colors hover:text-brand-dark"
+              className={cn(cabinetLinkClass, "mt-4 inline-flex items-center gap-1 text-sm font-semibold")}
             >
               Стать автором
               <ArrowRight className="h-4 w-4" aria-hidden />

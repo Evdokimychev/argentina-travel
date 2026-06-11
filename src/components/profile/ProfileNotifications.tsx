@@ -12,6 +12,7 @@ import {
   type AppNotification,
 } from "@/lib/notifications";
 import { cn } from "@/lib/cn";
+import { cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 
 function NotificationItem({
   item,
@@ -44,7 +45,7 @@ function NotificationItem({
         onClick={() => onRead(item.id)}
         className={cn(
           "block rounded-xl px-4 py-3 transition-colors hover:bg-gray-50",
-          !item.read && "bg-brand-light/20 ring-1 ring-brand/10"
+          !item.read && "bg-sky/5 ring-1 ring-sky/15"
         )}
       >
         {content}
@@ -56,7 +57,7 @@ function NotificationItem({
     <div
       className={cn(
         "rounded-xl px-4 py-3",
-        !item.read && "bg-brand-light/20 ring-1 ring-brand/10"
+        !item.read && "bg-sky/5 ring-1 ring-sky/15"
       )}
     >
       {content}
@@ -90,10 +91,10 @@ export default function ProfileNotifications({ limit }: { limit?: number }) {
   }
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+    <section className={cabinetPanelClass}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-light text-brand">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <Bell className="h-4 w-4" />
           </span>
           <div>
@@ -112,7 +113,7 @@ export default function ProfileNotifications({ limit }: { limit?: number }) {
               markAllNotificationsRead({ userId: user.id, contactEmail: user.email });
               setItems((prev) => prev.map((item) => ({ ...item, read: true })));
             }}
-            className="text-xs font-medium text-brand hover:underline"
+            className={cn(cabinetLinkClass, "text-xs")}
           >
             Прочитать все
           </button>

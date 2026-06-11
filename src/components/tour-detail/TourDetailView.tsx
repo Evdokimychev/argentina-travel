@@ -42,6 +42,8 @@ interface TourDetailViewProps {
   slug: string;
   tour?: TourDetail | null;
   similarTours: TourDetail[];
+  /** SSR snapshot — keeps header/sections in sync on first paint */
+  initialCanonicalTour?: Tour | null;
   previewMode?: boolean;
   previewCanonicalTour?: Tour | null;
   previewEditHref?: string;
@@ -53,6 +55,7 @@ export default function TourDetailView({
   slug,
   tour: initialTour,
   similarTours,
+  initialCanonicalTour = null,
   previewMode = false,
   previewCanonicalTour = null,
   previewEditHref,
@@ -60,7 +63,7 @@ export default function TourDetailView({
   previewPublishBlockingCount = 0,
 }: TourDetailViewProps) {
   const syncedTour = useRepositoryTourDetail(slug, initialTour);
-  const liveCanonicalTour = useCanonicalTour(slug);
+  const liveCanonicalTour = useCanonicalTour(slug, initialCanonicalTour);
   const tour = previewMode ? initialTour ?? null : syncedTour;
   const canonicalTour = previewMode ? previewCanonicalTour : liveCanonicalTour;
 
@@ -150,7 +153,7 @@ export default function TourDetailView({
               {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
             </div>
 
-            <aside className="hidden lg:sticky lg:top-[calc(var(--site-header-height,72px)+var(--tour-section-nav-height,48px)+1rem)] lg:block lg:max-h-[calc(100vh-var(--site-header-height,72px)-var(--tour-section-nav-height,48px)-2rem)] lg:w-full lg:self-start lg:overflow-y-auto">
+            <aside className="hidden lg:sticky lg:top-[calc(var(--site-header-height,72px)+var(--tour-section-nav-height,48px)+1rem)] lg:block lg:h-fit lg:w-full lg:self-start">
               <TourSidebar tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
             </aside>
           </div>

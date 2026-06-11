@@ -1,6 +1,7 @@
 import TourDetailView from "@/components/tour-detail/TourDetailView";
 import TourJsonLd from "@/components/seo/TourJsonLd";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours";
+import { getCanonicalTourBySlug } from "@/lib/tour-repository";
 import { baseTours } from "@/data/tours";
 
 interface TourPageProps {
@@ -34,11 +35,17 @@ export default async function TourDetailPage({ params }: TourPageProps) {
   const { slug } = await params;
   const tour = await fetchTourDetail(slug);
   const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
+  const initialCanonicalTour = getCanonicalTourBySlug(slug) ?? null;
 
   return (
     <>
       {tour ? <TourJsonLd tour={tour} /> : null}
-      <TourDetailView slug={slug} tour={tour} similarTours={similarTours} />
+      <TourDetailView
+        slug={slug}
+        tour={tour}
+        similarTours={similarTours}
+        initialCanonicalTour={initialCanonicalTour}
+      />
     </>
   );
 }

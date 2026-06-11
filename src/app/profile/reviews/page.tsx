@@ -9,6 +9,13 @@ import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
 import { REVIEW_STATUS_LABELS } from "@/data/tourist-dashboard";
 import { formatDateShortWithYear } from "@/lib/utils";
 import { cn } from "@/lib/cn";
+import {
+  cabinetCardClass,
+  cabinetLinkClass,
+  cabinetPageSubtitleClass,
+  cabinetPageTitleClass,
+  cabinetPanelClass,
+} from "@/lib/cabinet-ui";
 import { EmptyState } from "@/components/ui/empty-state";
 
 function RatingStars({ rating }: { rating: number }) {
@@ -46,21 +53,21 @@ export default function ProfileReviewsPage() {
   if (!user) return null;
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 className="font-heading text-xl font-bold text-charcoal">Мои отзывы</h2>
-      <p className="mt-1 text-sm text-slate">
+    <div className={cabinetPanelClass}>
+      <h2 className={cabinetPageTitleClass}>Мои отзывы</h2>
+      <p className={cabinetPageSubtitleClass}>
         Отзывы о турах, которые вы прошли. Публикация — после модерации организатора.
       </p>
 
       {reviews.length > 0 ? (
         <ul className="mt-6 space-y-4">
           {reviews.map((review) => (
-            <li key={review.id} className="rounded-2xl border border-gray-200 p-4 sm:p-5">
+            <li key={review.id} className={cn(cabinetCardClass, "p-4 sm:p-5")}>
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link
                     href={`/tours/${review.tourSlug}`}
-                    className="font-medium text-charcoal hover:text-brand"
+                    className="font-medium text-charcoal transition-colors hover:text-sky"
                   >
                     {review.tourTitle}
                   </Link>
@@ -92,7 +99,7 @@ export default function ProfileReviewsPage() {
                   <button
                     type="button"
                     onClick={() => user && updateReviewStatus(review.id, "published", user)}
-                    className="text-sm font-medium text-brand hover:underline"
+                    className={cabinetLinkClass}
                   >
                     Отправить на публикацию
                   </button>

@@ -19,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
+import { cabinetHeroClass, cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerCabinetBookingStats } from "@/lib/organizer-bookings";
@@ -48,7 +49,7 @@ function DashboardCard({
   className?: string;
 }) {
   return (
-    <Card className={cn("border-gray-200", className)}>
+    <Card className={className}>
       <CardHeader className="p-5 pb-0 sm:p-5 sm:pb-0">
         <CardTitle>{title}</CardTitle>
       </CardHeader>
@@ -74,7 +75,7 @@ function BookingStatCard({
     <Link
       href={href}
       className={cn(
-        "rounded-2xl border bg-white p-4 shadow-sm transition-colors hover:border-brand/30",
+        "rounded-3xl border bg-white p-4 shadow-card transition-colors hover:border-sky/30 hover:shadow-elevated",
         tone
       )}
     >
@@ -83,7 +84,7 @@ function BookingStatCard({
           <p className="text-sm text-slate">{label}</p>
           <p className="mt-2 font-heading text-3xl font-bold text-charcoal">{value}</p>
         </div>
-        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 text-brand">
+        <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/80 text-sky">
           <Icon className="h-5 w-5" strokeWidth={1.75} />
         </span>
       </div>
@@ -145,39 +146,42 @@ export default function OrganizerDashboardView() {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-2xl border border-brand/15 bg-brand-light/50 px-4 py-3 sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+      <div className="rounded-3xl border border-sky/15 bg-gradient-to-r from-sky/8 via-white to-sky/5 px-4 py-3 sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-5">
         <div className="flex items-start gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-brand shadow-sm">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sky shadow-sm">
             <Send className="h-4 w-4" />
           </div>
           <p className="text-sm leading-relaxed text-charcoal">
             Настройте уведомления о новых заявках в мессенджер.{" "}
-            <button type="button" className="font-semibold text-brand hover:underline">
+            <button type="button" className="font-semibold text-sky hover:underline">
               Подключить
             </button>
           </p>
         </div>
       </div>
 
-      <div>
+      <section className={cabinetHeroClass}>
         <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Обзор</h1>
-      </div>
+        <p className="mt-2 text-sm text-slate">
+          Статистика заявок, туров и ключевые действия в кабинете организатора.
+        </p>
+      </section>
 
       {analytics ? (
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4 shadow-sm">
+          <div className="rounded-3xl border border-emerald-100 bg-emerald-50/40 p-4 shadow-card">
             <p className="text-sm text-slate">Выручка (подтверждённые)</p>
             <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
               <FormattedPrice priceUsd={analytics.revenueUsd} />
             </p>
           </div>
-          <div className="rounded-2xl border border-amber-100 bg-amber-50/40 p-4 shadow-sm">
+          <div className="rounded-3xl border border-amber-100 bg-amber-50/40 p-4 shadow-card">
             <p className="text-sm text-slate">Ожидают оплаты</p>
             <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.pendingPaymentsCount}
             </p>
           </div>
-          <div className="rounded-2xl border border-sky/20 bg-sky/5 p-4 shadow-sm">
+          <div className="rounded-3xl border border-sky/20 bg-sky/5 p-4 shadow-card">
             <p className="text-sm text-slate">Туры в каталоге</p>
             <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.publishedToursCount}
@@ -186,7 +190,7 @@ export default function OrganizerDashboardView() {
               </span>
             </p>
           </div>
-          <div className="rounded-2xl border border-violet-100 bg-violet-50/40 p-4 shadow-sm">
+          <div className="rounded-3xl border border-violet-100 bg-violet-50/40 p-4 shadow-card">
             <p className="text-sm text-slate">Конверсия в подтверждение</p>
             <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.conversionRate != null ? `${analytics.conversionRate}%` : "—"}
@@ -195,7 +199,7 @@ export default function OrganizerDashboardView() {
         </section>
       ) : null}
 
-      <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+      <section className={cabinetPanelClass}>
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-heading text-lg font-bold text-charcoal">Заявки</h2>
@@ -203,7 +207,7 @@ export default function OrganizerDashboardView() {
           </div>
           <Link
             href="/organizer/bookings"
-            className="text-sm font-medium text-brand hover:underline"
+            className={cabinetLinkClass}
           >
             Все заявки
           </Link>
@@ -264,7 +268,7 @@ export default function OrganizerDashboardView() {
         </DashboardCard>
 
         <DashboardCard title="Сообщения">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <Headphones className="h-5 w-5" />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate">
@@ -279,7 +283,7 @@ export default function OrganizerDashboardView() {
         </DashboardCard>
 
         <DashboardCard title="Поддержка платформы">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <Wallet className="h-5 w-5" />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate">
@@ -302,7 +306,7 @@ export default function OrganizerDashboardView() {
               href={publicToursUrl}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-brand px-3 text-xs font-semibold text-white transition-colors hover:bg-brand-dark"
+              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-sky px-3 text-xs font-semibold text-white transition-colors hover:bg-sky-dark"
             >
               <ExternalLink className="h-4 w-4" />
               Открыть
@@ -315,7 +319,7 @@ export default function OrganizerDashboardView() {
         </DashboardCard>
 
         <DashboardCard title="Отчётные документы">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <FileText className="h-5 w-5" />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate">
@@ -325,7 +329,7 @@ export default function OrganizerDashboardView() {
         </DashboardCard>
 
         <DashboardCard title="Способ получения выплат">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <Coins className="h-5 w-5" />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate">
@@ -338,16 +342,16 @@ export default function OrganizerDashboardView() {
         </DashboardCard>
 
         <DashboardCard title="Правила работы" className="xl:col-span-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand/10 text-brand">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
             <FileText className="h-5 w-5" />
           </div>
           <p className="mt-3 text-sm leading-relaxed text-slate">
             Ознакомьтесь с{" "}
-            <Link href="/contacts" className="font-medium text-brand hover:underline">
+            <Link href="/contacts" className="font-medium text-sky hover:underline">
               правилами работы
             </Link>{" "}
             на площадке, а также с{" "}
-            <Link href="/join" className="font-medium text-brand hover:underline">
+            <Link href="/join" className="font-medium text-sky hover:underline">
               договором для организаторов
             </Link>
             .

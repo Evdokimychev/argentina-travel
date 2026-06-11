@@ -28,6 +28,8 @@ import {
 import { formatBookingTourDates } from "@/lib/booking-display";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import FormattedPrice from "@/components/FormattedPrice";
+import { cn } from "@/lib/cn";
+import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 
 type StatusFilter = "all" | BookingStatusActive;
 type SortOption = "newest" | "oldest" | "tourDate" | "amountDesc" | "amountAsc";
@@ -101,7 +103,7 @@ export default function OrganizerBookingsView() {
   }, [bookings, search, sort, statusFilter]);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <div className={cn(cabinetCardClass, "overflow-hidden")}>
       <div className="space-y-6 p-4 sm:p-6">
         <div>
           <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Заявки</h1>
@@ -158,9 +160,9 @@ export default function OrganizerBookingsView() {
         </div>
 
         {filtered.length > 0 ? (
-          <div className="overflow-x-auto rounded-2xl border border-gray-200">
+          <div className={cabinetTableWrapClass}>
             <Table className="min-w-[920px] text-left">
-              <TableHeader className="bg-pampas/60">
+              <TableHeader className={cabinetTableHeaderClass}>
                 <TableRow className="hover:bg-transparent">
                   <TableHead>Тур</TableHead>
                   <TableHead>Турист</TableHead>
@@ -192,7 +194,7 @@ export default function OrganizerBookingsView() {
                             sizes="48px"
                           />
                         </div>
-                        <span className="line-clamp-2 font-medium text-charcoal hover:text-brand">
+                        <span className="line-clamp-2 font-medium text-charcoal transition-colors hover:text-sky">
                           {booking.tourTitle}
                         </span>
                       </Link>

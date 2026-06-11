@@ -15,6 +15,14 @@ import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
+import { cn } from "@/lib/cn";
+import {
+  cabinetCardClass,
+  cabinetLinkClass,
+  cabinetPageSubtitleClass,
+  cabinetPageTitleClass,
+  cabinetPanelClass,
+} from "@/lib/cabinet-ui";
 
 export default function ProfileBookingsPage() {
   const { user } = useAuth();
@@ -45,9 +53,9 @@ export default function ProfileBookingsPage() {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
-      <h2 className="font-heading text-xl font-bold text-charcoal">Мои бронирования</h2>
-      <p className="mt-1 text-sm text-slate">Заявки и подтверждённые поездки</p>
+    <div className={cabinetPanelClass}>
+      <h2 className={cabinetPageTitleClass}>Мои бронирования</h2>
+      <p className={cabinetPageSubtitleClass}>Заявки и подтверждённые поездки</p>
 
       {cancelError ? (
         <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -63,7 +71,7 @@ export default function ProfileBookingsPage() {
             return (
               <article
                 key={booking.id}
-                className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm"
+                className={cn(cabinetCardClass, "overflow-hidden")}
               >
                 <div className="flex flex-col sm:flex-row">
                   <div className="relative aspect-[16/9] w-full sm:aspect-auto sm:h-auto sm:w-44 sm:shrink-0">
@@ -80,7 +88,7 @@ export default function ProfileBookingsPage() {
                       <div className="min-w-0">
                         <Link
                           href={`/tours/${booking.tourSlug}`}
-                          className="font-heading text-base font-bold text-charcoal hover:text-brand"
+                          className="font-heading text-base font-bold text-charcoal transition-colors hover:text-sky"
                         >
                           {booking.tourTitle}
                         </Link>
@@ -100,12 +108,12 @@ export default function ProfileBookingsPage() {
                         <BookingReviewCta
                           booking={booking}
                           userId={user.id}
-                          className="text-sm font-medium text-brand hover:underline"
+                          className={cabinetLinkClass}
                         />
                         <button
                           type="button"
                           onClick={() => setExpandedId(expanded ? null : booking.id)}
-                          className="text-sm font-medium text-brand hover:underline"
+                          className={cabinetLinkClass}
                         >
                           {expanded ? "Скрыть детали" : "Подробнее"}
                         </button>
@@ -124,7 +132,7 @@ export default function ProfileBookingsPage() {
                 </div>
 
                 {expanded ? (
-                  <div className="space-y-6 border-t border-gray-100 bg-pampas/30 p-4 sm:p-5">
+                  <div className="space-y-6 border-t border-gray-100 bg-surface-muted/50 p-4 sm:p-5">
                     {booking.touristComment ? (
                       <div className="rounded-xl bg-white px-4 py-3 ring-1 ring-gray-200">
                         <p className="text-xs font-medium uppercase tracking-wide text-slate">
