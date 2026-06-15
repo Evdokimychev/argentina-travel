@@ -4,6 +4,7 @@ import ExcursionJsonLd from "@/components/seo/ExcursionJsonLd";
 import {
   fetchExcursionDetailServer,
   fetchExcursionSlugsServer,
+  fetchSimilarExcursionsServer,
 } from "@/lib/tripster/excursion-server";
 
 type ExcursionPageProps = {
@@ -45,10 +46,16 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
   const excursion = await fetchExcursionDetailServer(slug);
   if (!excursion) notFound();
 
+  const similarExcursions = await fetchSimilarExcursionsServer(
+    excursion.cityId,
+    excursion.id,
+    6
+  );
+
   return (
     <>
       <ExcursionJsonLd excursion={excursion} />
-      <ExcursionDetailView excursion={excursion} />
+      <ExcursionDetailView excursion={excursion} similarExcursions={similarExcursions} />
     </>
   );
 }

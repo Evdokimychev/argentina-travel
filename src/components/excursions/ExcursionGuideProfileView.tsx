@@ -7,6 +7,7 @@ import ExcursionCard from "@/components/excursions/ExcursionCard";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StarRating } from "@/components/ui/star-rating";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { formatGuideSinceDisplay } from "@/lib/excursion-format";
 import { pluralRu } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import type { ExcursionGuideProfile, ExcursionListing } from "@/types/excursion";
@@ -20,7 +21,7 @@ export default function ExcursionGuideProfileView({
   profile,
   excursions,
 }: ExcursionGuideProfileViewProps) {
-  const { t } = useLocaleCurrency();
+  const { t, locale } = useLocaleCurrency();
   const hasReviews = profile.rating != null && (profile.reviewCount ?? 0) > 0;
   const locationLabel = [profile.cityName, profile.countryName].filter(Boolean).join(", ");
   const excursionCount = profile.excursionCount ?? excursions.length;
@@ -93,7 +94,10 @@ export default function ExcursionGuideProfileView({
               <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate">
                 {profile.guideSince ? (
                   <span>
-                    {t("excursions.guide.since").replace("{year}", profile.guideSince)}
+                    {t("excursions.guide.since").replace(
+                      "{date}",
+                      formatGuideSinceDisplay(profile.guideSince, locale)
+                    )}
                   </span>
                 ) : null}
                 {profile.responseTimeLabel ? (

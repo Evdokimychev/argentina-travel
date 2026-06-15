@@ -1,14 +1,21 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { format } from "date-fns";
-import { ru } from "date-fns/locale";
 import GuestCounter from "@/components/tour-detail/GuestCounter";
+import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import ExcursionScheduleDatePicker from "@/components/excursions/ExcursionScheduleDatePicker";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { cn } from "@/lib/cn";
+import { siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
+import { excursionPriceSuffixKey } from "@/lib/excursion-listing-meta";
+import {
+  resolveExcursionPriceUsd,
+  resolveExcursionQuotePriceUsd,
+  resolvePartnerPriceFootnote,
+} from "@/lib/excursion-price-display";
 import type { ExcursionScheduleDate } from "@/lib/excursion-schedule";
 import type { ExcursionDetail } from "@/types/excursion";
 import type { TripsterPriceQuote } from "@/lib/tripster/types";
@@ -18,18 +25,8 @@ type ExcursionBookingPanelProps = {
   className?: string;
 };
 
-function formatDisplayDate(date: string, locale: string): string {
-  try {
-    return format(new Date(`${date}T12:00:00`), "d MMM, EEE", {
-      locale: locale.startsWith("ru") ? ru : undefined,
-    });
-  } catch {
-    return date;
-  }
-}
-
 export default function ExcursionBookingPanel({ excursion, className }: ExcursionBookingPanelProps) {
-  const { t, locale } = useLocaleCurrency();
+  const { t, locale, currency } = useLocaleCurrency();
   const { user, isAuthenticated, openAuth } = useAuth();
 
   const [scheduleDates, setScheduleDates] = useState<ExcursionScheduleDate[]>([]);
@@ -140,12 +137,18 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     };
   }, [excursion.slug, selectedDate, selectedTime, persons]);
 
-  const priceLabel =
-    quote?.value_string ||
-    excursion.priceDisplay ||
-    (excursion.priceValue != null
-      ? `${Math.round(excursion.priceValue)} ${excursion.priceCurrency ?? ""}`.trim()
-      : null);
+  const priceUsd =
+    resolveExcursionQuotePriceUsd(excursion, quote) ?? resolveExcursionPriceUsd(excursion);
+  const priceUnit = excursion.priceUnit ?? "per_excursion";
+  const showFrom = excursion.priceFrom !== false && !quote;
+  const priceSuffix = t(excursionPriceSuffixKey(priceUnit));
+  const partnerPriceFootnote = resolvePartnerPriceFootnote(
+    excursion,
+    quote,
+    priceUsd,
+    currency,
+    t
+  );
 
   const handleSubmit = useCallback(async () => {
     setFormError(null);
@@ -232,30 +235,43 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     user?.id,
   ]);
 
+  const scheduleDateKeys = useMemo(
+    () => scheduleDates.map((entry) => entry.date),
+    [scheduleDates]
+  );
+
   const canBookOnSite = excursion.isBookable !== false;
 
   return (
     <aside
       id="booking"
       className={cn(
-        "rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:sticky lg:top-[calc(var(--site-header-height,72px)+1rem)] lg:self-start",
+        "rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:sticky lg:z-30 lg:self-start lg:overflow-y-auto",
+        siteStickyPanelTopClass,
+        siteStickyPanelMaxHeightClass,
         className
       )}
     >
-      {priceLabel ? (
+      {priceUsd != null ? (
+        <div className={quoteLoading ? "opacity-70 transition-opacity" : undefined}>
+          <TourPriceDisplay
+            priceUsd={priceUsd}
+            size="lg"
+            showFrom={showFrom}
+            suffix={priceSuffix}
+            showDiscountRibbon={false}
+          />
+        </div>
+      ) : quote?.value_string || excursion.priceDisplay ? (
         <p className="font-heading text-2xl font-bold text-charcoal">
-          {quoteLoading ? "…" : priceLabel}
+          {quote?.value_string || excursion.priceDisplay}
         </p>
       ) : (
         <p className="text-sm text-slate">{t("excursions.priceOnPartner")}</p>
       )}
 
-      {excursion.priceDescription ? (
-        <p className="mt-2 text-xs leading-relaxed text-slate">{excursion.priceDescription}</p>
-      ) : null}
-
-      {quote?.price_description ? (
-        <p className="mt-2 text-xs leading-relaxed text-slate">{quote.price_description}</p>
+      {partnerPriceFootnote ? (
+        <p className="mt-2 text-[11px] leading-relaxed text-slate/75">{partnerPriceFootnote}</p>
       ) : null}
 
       {canBookOnSite ? (
@@ -266,26 +282,14 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
             <p className="text-sm text-slate">{t("excursions.booking.scheduleUnavailable")}</p>
           ) : (
             <>
-              <div>
-                <p className="mb-2 text-sm font-medium text-charcoal">{t("excursions.booking.date")}</p>
-                <div className="flex flex-wrap gap-2">
-                  {scheduleDates.slice(0, 14).map((entry) => (
-                    <button
-                      key={entry.date}
-                      type="button"
-                      onClick={() => setSelectedDate(entry.date)}
-                      className={cn(
-                        "rounded-xl border px-3 py-2 text-xs font-medium transition",
-                        selectedDate === entry.date
-                          ? "border-sky bg-sky text-white"
-                          : "border-gray-200 text-charcoal hover:border-sky/40"
-                      )}
-                    >
-                      {formatDisplayDate(entry.date, locale)}
-                    </button>
-                  ))}
-                </div>
-              </div>
+              <ExcursionScheduleDatePicker
+                dates={scheduleDateKeys}
+                selectedDate={selectedDate}
+                onSelect={setSelectedDate}
+                locale={locale}
+                label={t("excursions.booking.date")}
+                placeholder={t("excursions.booking.pickDate")}
+              />
 
               {selectedSlots.length > 0 ? (
                 <div>

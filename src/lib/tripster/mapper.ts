@@ -203,7 +203,7 @@ export function rowToExcursionDetail(
     comfortLevelInfo: parsed.comfortLevelInfo,
     priceIncluded: parsed.priceIncluded,
     priceExcluded: parsed.priceExcluded,
-    priceDescription: parsed.priceDescription ?? listing.priceDisplay,
+    priceDescription: parsed.priceDescription,
     meetingPoint: parsed.meetingPoint,
     finishPoint: parsed.finishPoint,
     guide: parsed.guide,

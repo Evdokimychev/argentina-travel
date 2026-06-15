@@ -5,7 +5,7 @@ import { siteScrollAnchorClass } from "@/lib/site-container";
 type TourSectionProps = {
   id: string;
   title: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   children: ReactNode;
   className?: string;
   /** Skip outer card — for split layouts like included/excluded */
@@ -21,7 +21,7 @@ function TourSectionHeader({
   headerAddon,
 }: {
   title: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   headerAddon?: ReactNode;
 }) {
   return (
@@ -34,7 +34,7 @@ function TourSectionHeader({
       <div className="min-w-0">
         <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
         {subtitle ? (
-          <p className="mt-2 max-w-3xl text-sm leading-relaxed text-slate">{subtitle}</p>
+          <div className="mt-2 max-w-3xl text-sm leading-relaxed text-slate">{subtitle}</div>
         ) : null}
       </div>
       {headerAddon}

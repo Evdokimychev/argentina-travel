@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { MessageSquare } from "lucide-react";
 import { TourReview } from "@/types";
@@ -11,6 +11,18 @@ import { StarRating } from "@/components/ui/star-rating";
 import TourSection from "./TourSection";
 
 const PER_PAGE = 3;
+const FILTER_STARS = [5, 4, 3] as const;
+
+function countReviewsByStar(reviews: TourReview[]): Map<number, number> {
+  const counts = new Map<number, number>();
+  for (const review of reviews) {
+    const stars = Math.round(review.rating);
+    if (stars >= 1 && stars <= 5) {
+      counts.set(stars, (counts.get(stars) ?? 0) + 1);
+    }
+  }
+  return counts;
+}
 
 export default function ReviewsSection({
   reviews,
@@ -23,6 +35,23 @@ export default function ReviewsSection({
 }) {
   const [filter, setFilter] = useState<number | "all">("all");
   const [page, setPage] = useState(1);
+
+  const ratingCounts = useMemo(() => countReviewsByStar(reviews), [reviews]);
+
+  const filterOptions = useMemo(() => {
+    const options: Array<(typeof FILTER_STARS)[number] | "all"> = ["all"];
+    for (const stars of FILTER_STARS) {
+      if ((ratingCounts.get(stars) ?? 0) > 0) options.push(stars);
+    }
+    return options;
+  }, [ratingCounts]);
+
+  useEffect(() => {
+    if (filter !== "all" && (ratingCounts.get(filter) ?? 0) === 0) {
+      setFilter("all");
+      setPage(1);
+    }
+  }, [filter, ratingCounts]);
 
   const filtered = useMemo(() => {
     if (filter === "all") return reviews;
@@ -49,7 +78,7 @@ export default function ReviewsSection({
   return (
     <TourSection id="reviews" title="Отзывы" subtitle={`${rating} · ${formatReviews(reviewCount)}`}>
       <div className="mb-4 flex flex-wrap gap-2">
-        {(["all", 5, 4, 3] as const).map((f) => (
+        {filterOptions.map((f) => (
           <button
             key={String(f)}
             type="button"

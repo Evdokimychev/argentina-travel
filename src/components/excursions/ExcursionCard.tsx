@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import TourCardGallery from "@/components/marketplace/TourCardGallery";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
@@ -109,7 +109,10 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
               <p className="text-xs text-slate">{t("excursions.priceOnPartner")}</p>
             )}
             {durationLabel ? (
-              <p className="shrink-0 self-end text-xs leading-none text-slate">{durationLabel}</p>
+              <p className="inline-flex shrink-0 items-center gap-1 self-end text-xs leading-none text-slate">
+                <Clock className="h-3.5 w-3.5 text-slate/70" aria-hidden />
+                {durationLabel}
+              </p>
             ) : null}
           </div>
 

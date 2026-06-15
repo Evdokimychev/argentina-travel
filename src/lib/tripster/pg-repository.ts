@@ -6,6 +6,7 @@ import {
   rowToExcursionDetail,
   rowToExcursionListing,
 } from "@/lib/tripster/mapper";
+import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
 import type {
   ExcursionCity,
   ExcursionDetail,
@@ -146,18 +147,12 @@ export async function pgFetchExcursionDetailServer(slug: string): Promise<Excurs
 
   const reviewsResult = await withPgClient(async (client) => {
     const { rows } = await client.query(
-      `select id, rating, author_name, review_text, created_at
+      `select id, rating, author_name, review_text, created_at, payload
        from public.tripster_reviews where experience_id = $1
        order by created_at desc nulls last limit 20`,
       [result.id]
     );
-    return rows.map((row) => ({
-      id: row.id,
-      rating: row.rating != null ? Number(row.rating) : undefined,
-      authorName: row.author_name ?? undefined,
-      text: row.review_text ?? undefined,
-      createdAt: row.created_at ?? undefined,
-    }));
+    return rows.map((row) => mapTripsterReviewRow(row));
   });
 
   return { ...result, reviews: reviewsResult ?? [] };
@@ -222,5 +217,49 @@ export async function pgFetchExcursionGuideIds(): Promise<number[]> {
       .map((row) => row.guide_id as number)
       .filter((id) => typeof id === "number" && Number.isFinite(id));
   });
+  return result ?? [];
+}
+
+export async function pgFetchSimilarExcursions(
+  cityId: number,
+  excludeId: number,
+  limit = 6
+): Promise<ExcursionListing[]> {
+  const result = await withPgClient(async (client) => {
+    const cities = (
+      await client.query(
+        `select id, slug, name_ru, name_en, experience_count, cover_image
+         from public.tripster_cities
+         order by experience_count desc`
+      )
+    ).rows.map((row) => rowToExcursionCity(row));
+
+    const { rows } = await client.query(
+      `select id, slug, country_id, city_id, title, tagline, rating, review_count,
+              price_value, price_currency, price_display, duration_minutes, format, cover_image, payload
+       from public.tripster_experiences
+       where city_id = $1 and id <> $2
+       order by review_count desc
+       limit $3`,
+      [cityId, excludeId, limit]
+    );
+
+    const cityMap = new Map(cities.map((city) => [city.id, city]));
+    return rows.map((row) => {
+      const city = cityMap.get(row.city_id);
+      const cityRow = city
+        ? {
+            id: city.id,
+            slug: city.slug,
+            name_ru: city.name,
+            name_en: null,
+            experience_count: city.experienceCount,
+            cover_image: city.coverImage ?? null,
+          }
+        : null;
+      return rowToExcursionListing(row, cityRow);
+    });
+  });
+
   return result ?? [];
 }

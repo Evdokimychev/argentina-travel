@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass } from "@/lib/site-container";
+import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 
 type SectionLink = {
   id: string;
@@ -10,7 +11,10 @@ type SectionLink = {
 };
 
 export default function ExcursionSectionNav({ links }: { links: SectionLink[] }) {
+  const navRef = useRef<HTMLElement>(null);
   const [activeId, setActiveId] = useState(links[0]?.id ?? "");
+
+  useSyncSiteSectionNavHeight(navRef);
 
   useEffect(() => {
     if (links.length === 0) return;
@@ -41,11 +45,11 @@ export default function ExcursionSectionNav({ links }: { links: SectionLink[] })
 
   return (
     <nav
+      ref={navRef}
       className={cn(
-        "sticky z-20 -mx-4 mb-6 overflow-x-auto border-b border-gray-100 bg-white/95 px-4 backdrop-blur-sm sm:-mx-6 sm:px-6 lg:top-[calc(var(--site-header-height,72px)+0.5rem)] lg:mx-0 lg:px-0",
+        "sticky top-[var(--site-header-height,72px)] z-40 -mx-4 mb-6 overflow-x-auto border-b border-gray-100 bg-white/95 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0",
         siteScrollAnchorClass
       )}
-      style={{ top: "calc(var(--site-header-height, 72px) + 0.5rem)" }}
       aria-label="Разделы экскурсии"
     >
       <ul className="flex min-w-max gap-1 py-2">

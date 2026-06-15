@@ -43,33 +43,40 @@ export default function FooterNewsletter() {
 
   if (submitted) {
     return (
-      <p className="mt-6 text-sm text-gray-400">
+      <p className="mt-6 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm text-slate shadow-card">
         Спасибо! Мы отправим новости о турах и советы по Аргентине на ваш email.
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-6 max-w-sm">
-      <p className="flex items-center gap-2 text-sm font-medium text-gray-300">
-        <Mail className="h-4 w-4 text-sun" strokeWidth={1.75} />
+    <form
+      onSubmit={handleSubmit}
+      className="mt-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-card sm:p-5"
+    >
+      <p className="flex items-center gap-2 font-heading text-sm font-semibold text-charcoal">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky/10 text-sky">
+          <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+        </span>
         Подписка на новости
       </p>
-      <p className="mt-1 text-xs text-gray-500">Туры, акции и советы по Аргентине</p>
-      {error ? <p className="mt-2 text-xs text-red-300">{error}</p> : null}
-      <div className="mt-3 flex gap-2">
+      <p className="mt-2 text-xs leading-relaxed text-slate">
+        Туры, акции и советы по Аргентине
+      </p>
+      {error ? <p className="mt-2 text-xs text-error">{error}</p> : null}
+      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <Input
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="email@example.com"
-          className="h-10 border-gray-700 bg-charcoal/50 text-white placeholder:text-gray-500 focus:border-sky"
+          className="h-10 flex-1"
           aria-label="Email для подписки"
           disabled={loading}
           required
         />
-        <Button type="submit" size="sm" className="shrink-0" disabled={loading}>
-          {loading ? "…" : "OK"}
+        <Button type="submit" className="shrink-0 sm:px-5" disabled={loading}>
+          {loading ? "…" : "Подписаться"}
         </Button>
       </div>
     </form>

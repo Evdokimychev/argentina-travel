@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import ExcursionReviewsSection from "@/components/excursions/ExcursionReviewsSection";
+import ExcursionSimilarSection from "@/components/excursions/ExcursionSimilarSection";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
 import ExcursionContentBlocks from "@/components/excursions/ExcursionContentBlocks";
 import ExcursionGuideSection from "@/components/excursions/ExcursionGuideSection";
+import ExcursionBookingConditionsSection from "@/components/excursions/ExcursionBookingConditionsSection";
 import ExcursionMeetingSection from "@/components/excursions/ExcursionMeetingSection";
 import ExcursionIncludedSection from "@/components/excursions/ExcursionIncludedSection";
 import ExcursionMetaBadges from "@/components/excursions/ExcursionMetaBadges";
@@ -12,14 +14,19 @@ import ExcursionSectionNav from "@/components/excursions/ExcursionSectionNav";
 import ExcursionBookingPanel from "@/components/excursions/ExcursionBookingPanel";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
 import { ArrowLeft, Clock, MapPin } from "lucide-react";
-import { StarRating } from "@/components/ui/star-rating";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
 import { formatExcursionDuration } from "@/lib/excursion-format";
 import { siteContainerClass } from "@/lib/site-container";
-import type { ExcursionDetail } from "@/types/excursion";
+import type { ExcursionDetail, ExcursionListing } from "@/types/excursion";
 
-export default function ExcursionDetailView({ excursion }: { excursion: ExcursionDetail }) {
+export default function ExcursionDetailView({
+  excursion,
+  similarExcursions = [],
+}: {
+  excursion: ExcursionDetail;
+  similarExcursions?: ExcursionListing[];
+}) {
   const { t } = useLocaleCurrency();
 
   const galleryImages = (
@@ -80,13 +87,6 @@ export default function ExcursionDetailView({ excursion }: { excursion: Excursio
               ) : null}
 
               <div className="mt-4 flex flex-wrap items-center gap-4">
-                {excursion.rating != null && excursion.reviewCount > 0 ? (
-                  <StarRating
-                    layout="badge"
-                    score={excursion.rating.toFixed(1)}
-                    count={excursion.reviewCount}
-                  />
-                ) : null}
                 <ExcursionFavoriteButton
                   excursion={excursion}
                   className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-charcoal transition hover:border-sky/40 hover:text-sky"
@@ -140,12 +140,24 @@ export default function ExcursionDetailView({ excursion }: { excursion: Excursio
                   />
                 ) : null}
 
-                <ExcursionReviewsSection reviews={excursion.reviews ?? []} />
+                <ExcursionBookingConditionsSection excursion={excursion} />
+
+                <ExcursionReviewsSection
+                  reviews={excursion.reviews ?? []}
+                  rating={excursion.rating}
+                  reviewCount={excursion.reviewCount}
+                  visitorsCount={excursion.visitorsCount}
+                />
               </div>
             </div>
 
             <ExcursionBookingPanel excursion={excursion} />
           </div>
+
+          <ExcursionSimilarSection
+            excursions={similarExcursions}
+            cityName={excursion.cityName}
+          />
         </div>
       </div>
     </div>

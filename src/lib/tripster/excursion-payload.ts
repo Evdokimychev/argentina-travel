@@ -70,7 +70,10 @@ export function parseExcursionPayload(payload: unknown): ParsedExcursionPayload 
     guideRaw && typeof guideRaw.id === "number"
       ? {
           id: guideRaw.id,
-          name: guideRaw.first_name?.trim() || "Гид",
+          name: (() => {
+            const raw = guideRaw.first_name?.trim() || "Гид";
+            return raw.charAt(0).toUpperCase() + raw.slice(1);
+          })(),
           url: guideRaw.url,
           avatar:
             guideRaw.avatar?.medium ||

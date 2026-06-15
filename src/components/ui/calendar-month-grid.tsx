@@ -24,6 +24,8 @@ interface CalendarMonthGridProps {
   maxDate?: Date | null;
   disablePast?: boolean;
   hideTitle?: boolean;
+  /** When set, only days passing this check stay enabled (in addition to min/max/past rules). */
+  isDateSelectable?: (day: Date) => boolean;
   onDayClick: (day: Date) => void;
   className?: string;
 }
@@ -56,6 +58,7 @@ export default function CalendarMonthGrid({
   maxDate,
   disablePast = false,
   hideTitle = false,
+  isDateSelectable,
   onDayClick,
   className,
 }: CalendarMonthGridProps) {
@@ -86,7 +89,9 @@ export default function CalendarMonthGrid({
         {days.map((day) => {
           const isSelected = selected ? isSameDay(day, selected) : false;
           const inRange = isInRange(day, rangeFrom, rangeTo);
-          const disabled = isDayDisabled(day, minDate, maxDate, disablePast);
+          const disabled =
+            isDayDisabled(day, minDate, maxDate, disablePast) ||
+            (isDateSelectable ? !isDateSelectable(day) : false);
 
           return (
             <button

@@ -96,7 +96,7 @@ export function killProjectNextDev(root) {
 export function removeNextCache(root) {
   const nextDir = path.join(root, ".next");
   if (!fs.existsSync(nextDir)) return false;
-  fs.rmSync(nextDir, { recursive: true, force: true });
+  fs.rmSync(nextDir, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
   return true;
 }
 

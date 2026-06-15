@@ -14,6 +14,7 @@ import {
   rowToExcursionDetail,
   rowToExcursionListing,
 } from "@/lib/tripster/mapper";
+import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -194,20 +195,50 @@ export async function fetchExcursionReviews(
 ): Promise<import("@/types/excursion").ExcursionReview[]> {
   const { data, error } = await supabase
     .from("tripster_reviews")
-    .select("id, rating, author_name, review_text, created_at")
+    .select("id, rating, author_name, review_text, created_at, payload")
     .eq("experience_id", experienceId)
     .order("created_at", { ascending: false })
     .limit(20);
 
   if (error || !data) return [];
 
-  return data.map((row) => ({
-    id: row.id,
-    rating: row.rating != null ? Number(row.rating) : undefined,
-    authorName: row.author_name ?? undefined,
-    text: row.review_text ?? undefined,
-    createdAt: row.created_at ?? undefined,
-  }));
+  return data.map((row) => mapTripsterReviewRow(row));
+}
+
+export async function fetchSimilarExcursionListings(
+  supabase: DbClient,
+  input: { cityId: number; excludeId: number; limit?: number }
+): Promise<ExcursionListing[]> {
+  const limit = Math.min(6, Math.max(1, input.limit ?? 6));
+  const cities = await fetchExcursionCities(supabase);
+  const cityMap = new Map(cities.map((city) => [city.id, city]));
+
+  const { data, error } = await supabase
+    .from("tripster_experiences")
+    .select(
+      "id, slug, country_id, city_id, title, tagline, rating, review_count, price_value, price_currency, price_display, duration_minutes, format, cover_image, payload"
+    )
+    .eq("city_id", input.cityId)
+    .neq("id", input.excludeId)
+    .order("review_count", { ascending: false })
+    .limit(limit);
+
+  if (error || !data) return [];
+
+  return data.map((row) => {
+    const city = cityMap.get(row.city_id);
+    const cityRow = city
+      ? {
+          id: city.id,
+          slug: city.slug,
+          name_ru: city.name,
+          name_en: null,
+          experience_count: city.experienceCount,
+          cover_image: city.coverImage ?? null,
+        }
+      : null;
+    return rowToExcursionListing(row, cityRow);
+  });
 }
 
 export async function fetchExcursionBySlug(

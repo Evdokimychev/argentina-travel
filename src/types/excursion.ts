@@ -71,7 +71,7 @@ export type ExcursionListing = {
   guide?: ExcursionGuide;
 };
 
-export type ExcursionDetail = ExcursionListing & {
+export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   annotation?: string;
   description?: string;
   photos: ExcursionPhoto[];
@@ -90,7 +90,7 @@ export type ExcursionDetail = ExcursionListing & {
   priceDescription?: string;
   meetingPoint?: ExcursionLocationPoint;
   finishPoint?: ExcursionLocationPoint;
-  guide?: ExcursionGuide;
+  guide?: ExcursionGuideProfile;
   descriptionBlocks: ExcursionDescriptionBlock[];
   ticketOptions: ExcursionTicketOption[];
   tags: ExcursionTag[];
@@ -101,8 +101,11 @@ export type ExcursionReview = {
   id: number;
   rating?: number;
   authorName?: string;
+  authorAvatar?: string;
   text?: string;
   createdAt?: string;
+  tripDate?: string;
+  photos?: string[];
 };
 
 export type ExcursionCity = {

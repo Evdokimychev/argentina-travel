@@ -152,11 +152,27 @@ export type TripsterReview = {
   id?: number;
   rating?: number;
   text?: string;
+  name?: string;
   created_at?: string;
+  event_date?: string;
+  trip_date?: string;
+  experience_date?: string;
   author?: {
     name?: string;
     avatar?: string;
+    avatar_url?: string;
   };
+  photos?: Array<
+    | string
+    | {
+        thumbnail?: string;
+        medium?: string;
+        original?: string;
+        url?: string;
+      }
+  >;
+  traveler_photos?: TripsterReview["photos"];
+  images?: TripsterReview["photos"];
 };
 
 export type TripsterExperienceListParams = {
