@@ -136,6 +136,7 @@ export default function ExcursionDetailView({ excursion }: { excursion: Excursio
                     guide={excursion.guide}
                     title={t("excursions.section.guide")}
                     profileLabel={t("excursions.guide.profile")}
+                    externalProfileLabel={t("excursions.guide.onTripster")}
                   />
                 ) : null}
 

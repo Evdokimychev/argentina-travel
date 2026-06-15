@@ -1,5 +1,6 @@
 import { slugifyTourTitle } from "@/lib/tour-slug";
 import { parseExcursionPayload } from "@/lib/tripster/excursion-payload";
+import { parseExcursionListingMeta } from "@/lib/excursion-listing-meta";
 import type {
   TripsterCity,
   TripsterCountry,
@@ -139,6 +140,8 @@ export function rowToExcursionListing(
     ? city.name_ru?.trim() || city.name_en?.trim() || "Аргентина"
     : "Аргентина";
 
+  const listingMeta = parseExcursionListingMeta(row.payload);
+
   return {
     id: row.id,
     slug: row.slug,
@@ -153,8 +156,12 @@ export function rowToExcursionListing(
     priceValue: row.price_value != null ? Number(row.price_value) : undefined,
     priceCurrency: row.price_currency ?? undefined,
     priceDisplay: row.price_display ?? undefined,
+    priceFrom: listingMeta.priceFrom,
+    priceUnit: listingMeta.priceUnit,
     durationMinutes: row.duration_minutes ?? undefined,
     format: row.format ?? undefined,
+    formatKind: listingMeta.formatKind,
+    guide: listingMeta.guide,
   };
 }
 

@@ -81,6 +81,12 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
     for (const slug of slugs) {
       paths.push(`/excursions/${slug}`);
     }
+
+    const { fetchGuideIdsServer } = await import("@/lib/tripster/guide-server");
+    const guideIds = await fetchGuideIdsServer();
+    for (const guideId of guideIds) {
+      paths.push(`/excursions/guide/${guideId}`);
+    }
   } catch {
     // static /excursions only
   }

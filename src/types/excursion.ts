@@ -16,6 +16,18 @@ export type ExcursionGuide = {
   avatar?: string;
 };
 
+export type ExcursionGuideProfile = ExcursionGuide & {
+  rating?: number;
+  reviewCount?: number;
+  cityName?: string;
+  countryName?: string;
+  isLicensed?: boolean;
+  guideSince?: string;
+  responseTimeLabel?: string;
+  excursionCount?: number;
+  description?: string;
+};
+
 export type ExcursionLocationPoint = {
   text: string;
 };
@@ -33,6 +45,10 @@ export type ExcursionTag = {
   url?: string;
 };
 
+export type ExcursionPriceUnit = "per_person" | "per_excursion";
+
+export type ExcursionFormatKind = "group" | "individual";
+
 export type ExcursionListing = {
   id: number;
   slug: string;
@@ -47,8 +63,12 @@ export type ExcursionListing = {
   priceValue?: number;
   priceCurrency?: string;
   priceDisplay?: string;
+  priceFrom?: boolean;
+  priceUnit?: ExcursionPriceUnit;
   durationMinutes?: number;
   format?: string;
+  formatKind?: ExcursionFormatKind;
+  guide?: ExcursionGuide;
 };
 
 export type ExcursionDetail = ExcursionListing & {

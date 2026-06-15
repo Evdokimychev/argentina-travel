@@ -63,7 +63,7 @@ export async function fetchExcursionListings(
   let query = supabase
     .from("tripster_experiences")
     .select(
-      "id, slug, country_id, city_id, title, tagline, rating, review_count, price_value, price_currency, price_display, duration_minutes, format, cover_image",
+      "id, slug, country_id, city_id, title, tagline, rating, review_count, price_value, price_currency, price_display, duration_minutes, format, cover_image, payload",
       { count: "exact" }
     );
 
@@ -134,6 +134,58 @@ export async function fetchExcursionSlugs(supabase: DbClient): Promise<string[]>
   const { data, error } = await supabase.from("tripster_experiences").select("slug");
   if (error || !data) return [];
   return data.map((row) => row.slug);
+}
+
+export async function fetchExcursionListingsByGuideId(
+  supabase: DbClient,
+  guideId: number
+): Promise<ExcursionListing[]> {
+  const cities = await fetchExcursionCities(supabase);
+  const cityMap = new Map(cities.map((city) => [city.id, city]));
+
+  const { data, error } = await supabase
+    .from("tripster_experiences")
+    .select(
+      "id, slug, country_id, city_id, title, tagline, rating, review_count, price_value, price_currency, price_display, duration_minutes, format, cover_image, payload"
+    )
+    .filter("payload->guide->>id", "eq", String(guideId))
+    .order("review_count", { ascending: false });
+
+  if (error || !data) return [];
+
+  return data.map((row) => {
+    const city = cityMap.get(row.city_id);
+    const cityRow = city
+      ? {
+          id: city.id,
+          slug: city.slug,
+          name_ru: city.name,
+          name_en: null,
+          experience_count: city.experienceCount,
+          cover_image: city.coverImage ?? null,
+        }
+      : null;
+    return rowToExcursionListing(row, cityRow);
+  });
+}
+
+export async function fetchExcursionGuideIds(supabase: DbClient): Promise<number[]> {
+  const { data, error } = await supabase
+    .from("tripster_experiences")
+    .select("payload");
+
+  if (error || !data) return [];
+
+  const ids = new Set<number>();
+  for (const row of data) {
+    const payload = row.payload as { guide?: { id?: number } } | null;
+    const guideId = payload?.guide?.id;
+    if (typeof guideId === "number" && Number.isFinite(guideId)) {
+      ids.add(guideId);
+    }
+  }
+
+  return [...ids].sort((a, b) => a - b);
 }
 
 export async function fetchExcursionReviews(

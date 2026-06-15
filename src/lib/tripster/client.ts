@@ -12,6 +12,7 @@ import type {
   TripsterCountry,
   TripsterExperience,
   TripsterExperienceListParams,
+  TripsterGuideProfile,
   TripsterPaginated,
   TripsterReview,
 } from "@/lib/tripster/types";
@@ -164,6 +165,14 @@ export async function fetchTripsterExperienceReviews(
 
 export async function fetchTripsterExperienceSchedule(experienceId: number) {
   return tripsterFetch<unknown>(`/experiences/${experienceId}/schedule/`);
+}
+
+export async function fetchTripsterGuide(
+  guideId: number,
+  options?: { detailed?: boolean }
+): Promise<TripsterGuideProfile> {
+  const query = buildQuery({ detailed: options?.detailed ?? true });
+  return tripsterFetch<TripsterGuideProfile>(`/guides/${guideId}${query}`);
 }
 
 export async function fetchAllArgentinaExperiences(): Promise<{

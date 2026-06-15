@@ -77,6 +77,23 @@ export type TripsterGuide = {
   };
 };
 
+export type TripsterGuideProfile = TripsterGuide & {
+  rating?: number;
+  review_count?: number;
+  rate_count?: number;
+  guide_type?: string;
+  is_licensed_guide?: boolean;
+  is_guide_since?: string;
+  description?: string;
+  city?: TripsterCity;
+  avg_reaction_delay_display?: {
+    nominative?: string;
+  };
+  links?: {
+    reviews?: string;
+  };
+};
+
 export type TripsterLocationPoint = {
   text?: string | null;
   address?: string | null;
@@ -93,6 +110,8 @@ export type TripsterExperience = {
   status?: string;
   type?: string;
   format?: string;
+  exp_format?: number;
+  pricing_model?: string;
   movement_type?: string;
   schedule_type?: string;
   instant_booking?: boolean;
