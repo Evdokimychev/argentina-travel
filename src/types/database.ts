@@ -234,6 +234,270 @@ export interface Database {
         };
         Relationships: [];
       };
+      tripster_countries: {
+        Row: {
+          id: number;
+          slug: string | null;
+          name_ru: string | null;
+          name_en: string | null;
+          currency: string | null;
+          experience_count: number;
+          payload: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: number;
+          slug?: string | null;
+          name_ru?: string | null;
+          name_en?: string | null;
+          currency?: string | null;
+          experience_count?: number;
+          payload?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          slug?: string | null;
+          name_ru?: string | null;
+          name_en?: string | null;
+          currency?: string | null;
+          experience_count?: number;
+          payload?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tripster_cities: {
+        Row: {
+          id: number;
+          country_id: number;
+          slug: string;
+          name_ru: string | null;
+          name_en: string | null;
+          experience_count: number;
+          cover_image: string | null;
+          payload: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: number;
+          country_id: number;
+          slug: string;
+          name_ru?: string | null;
+          name_en?: string | null;
+          experience_count?: number;
+          cover_image?: string | null;
+          payload?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          country_id?: number;
+          slug?: string;
+          name_ru?: string | null;
+          name_en?: string | null;
+          experience_count?: number;
+          cover_image?: string | null;
+          payload?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tripster_experiences: {
+        Row: {
+          id: number;
+          slug: string;
+          country_id: number;
+          city_id: number;
+          title: string;
+          tagline: string | null;
+          annotation: string | null;
+          description: string | null;
+          status: string | null;
+          experience_type: string | null;
+          format: string | null;
+          duration_minutes: number | null;
+          rating: number | null;
+          review_count: number;
+          price_value: number | null;
+          price_currency: string | null;
+          price_display: string | null;
+          tripster_url: string;
+          partner_url: string | null;
+          cover_image: string | null;
+          photos: Json;
+          payload: Json;
+          synced_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: number;
+          slug: string;
+          country_id: number;
+          city_id: number;
+          title: string;
+          tagline?: string | null;
+          annotation?: string | null;
+          description?: string | null;
+          status?: string | null;
+          experience_type?: string | null;
+          format?: string | null;
+          duration_minutes?: number | null;
+          rating?: number | null;
+          review_count?: number;
+          price_value?: number | null;
+          price_currency?: string | null;
+          price_display?: string | null;
+          tripster_url: string;
+          partner_url?: string | null;
+          cover_image?: string | null;
+          photos?: Json;
+          payload?: Json;
+          synced_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: number;
+          slug?: string;
+          country_id?: number;
+          city_id?: number;
+          title?: string;
+          tagline?: string | null;
+          annotation?: string | null;
+          description?: string | null;
+          status?: string | null;
+          experience_type?: string | null;
+          format?: string | null;
+          duration_minutes?: number | null;
+          rating?: number | null;
+          review_count?: number;
+          price_value?: number | null;
+          price_currency?: string | null;
+          price_display?: string | null;
+          tripster_url?: string;
+          partner_url?: string | null;
+          cover_image?: string | null;
+          photos?: Json;
+          payload?: Json;
+          synced_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      tripster_reviews: {
+        Row: {
+          id: number;
+          experience_id: number;
+          rating: number | null;
+          author_name: string | null;
+          review_text: string | null;
+          created_at: string | null;
+          payload: Json;
+          synced_at: string;
+        };
+        Insert: {
+          id: number;
+          experience_id: number;
+          rating?: number | null;
+          author_name?: string | null;
+          review_text?: string | null;
+          created_at?: string | null;
+          payload?: Json;
+          synced_at?: string;
+        };
+        Update: {
+          id?: number;
+          experience_id?: number;
+          rating?: number | null;
+          author_name?: string | null;
+          review_text?: string | null;
+          created_at?: string | null;
+          payload?: Json;
+          synced_at?: string;
+        };
+        Relationships: [];
+      };
+      tripster_sync_runs: {
+        Row: {
+          id: string;
+          status: string;
+          started_at: string;
+          finished_at: string | null;
+          cities_synced: number;
+          experiences_synced: number;
+          experiences_created: number;
+          experiences_updated: number;
+          error_message: string | null;
+          log: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          status?: string;
+          started_at?: string;
+          finished_at?: string | null;
+          cities_synced?: number;
+          experiences_synced?: number;
+          experiences_created?: number;
+          experiences_updated?: number;
+          error_message?: string | null;
+          log?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          status?: string;
+          started_at?: string;
+          finished_at?: string | null;
+          cities_synced?: number;
+          experiences_synced?: number;
+          experiences_created?: number;
+          experiences_updated?: number;
+          error_message?: string | null;
+          log?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      affiliate_link_clicks: {
+        Row: {
+          id: string;
+          experience_id: number | null;
+          experience_slug: string;
+          partner_url: string;
+          referer: string | null;
+          user_agent: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          experience_id?: number | null;
+          experience_slug: string;
+          partner_url: string;
+          referer?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          experience_id?: number | null;
+          experience_slug?: string;
+          partner_url?: string;
+          referer?: string | null;
+          user_agent?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;

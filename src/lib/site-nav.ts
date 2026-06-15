@@ -19,9 +19,12 @@ export function resolveNavLabel(
 }
 
 export function isNavHrefActive(pathname: string, href: string): boolean {
-  if (href.startsWith("http") || href.startsWith("/tours?")) {
+  if (href.startsWith("http") || href.startsWith("/tours?") || href.startsWith("/excursions?")) {
     if (href.startsWith("/tours?")) {
       return pathname === "/tours";
+    }
+    if (href.startsWith("/excursions?")) {
+      return pathname === "/excursions";
     }
     return false;
   }

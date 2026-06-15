@@ -1,3 +1,4 @@
+import { EXCURSION_CITY_LINKS, excursionCityHref } from "@/data/excursion-city-links";
 import { blogPosts } from "@/data/blog";
 import { POPULAR_DESTINATIONS, SEARCH_DESTINATIONS } from "@/data/filters";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
@@ -38,6 +39,46 @@ const REGION_LINKS: SiteNavLink[] = [
   { id: "region-salta", label: "Сальта и северо-запад", href: destinationHref("salta") },
   { id: "region-mendoza", label: "Мендоса и винодельни", href: destinationHref("mendoza") },
   { id: "region-tierra", label: "Огненная Земля", href: destinationHref("ushuaia") },
+];
+
+const EXCURSION_SERVICE_LINKS: SiteNavLink[] = [
+  {
+    id: "excursions-catalog",
+    label: "Каталог экскурсий",
+    labelKey: "nav.excursions",
+    href: "/excursions",
+    description: "Городские маршруты и активности",
+  },
+  {
+    id: "excursions-ba",
+    label: EXCURSION_CITY_LINKS.buenosAires.label,
+    href: excursionCityHref(EXCURSION_CITY_LINKS.buenosAires.slug),
+    description: "Пешие маршруты и гастротуры",
+  },
+  {
+    id: "excursions-ushuaia",
+    label: EXCURSION_CITY_LINKS.ushuaia.label,
+    href: excursionCityHref(EXCURSION_CITY_LINKS.ushuaia.slug),
+    description: "Огненная Земля",
+  },
+  {
+    id: "excursions-mendoza",
+    label: EXCURSION_CITY_LINKS.mendoza.label,
+    href: excursionCityHref(EXCURSION_CITY_LINKS.mendoza.slug),
+    description: "Винодельни и горы",
+  },
+  {
+    id: "excursions-iguazu",
+    label: EXCURSION_CITY_LINKS.iguazu.label,
+    href: excursionCityHref(EXCURSION_CITY_LINKS.iguazu.slug),
+    description: "Водопады Игуасу",
+  },
+  {
+    id: "excursions-tours",
+    label: "Авторские туры",
+    href: "/tours",
+    description: "Многодневные маршруты на платформе",
+  },
 ];
 
 const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
@@ -161,6 +202,39 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     ],
   },
   {
+    id: "excursions",
+    label: "Экскурсии",
+    labelKey: "nav.excursions",
+    href: "/excursions",
+    columns: [
+      {
+        id: "excursions-browse",
+        title: "Поиск",
+        titleKey: "nav.columns.search",
+        links: EXCURSION_SERVICE_LINKS,
+      },
+      {
+        id: "excursions-regions",
+        title: "По городам",
+        titleKey: "nav.columns.regions",
+        links: [
+          {
+            id: "excursions-all-cities",
+            label: "Все города",
+            href: "/excursions",
+            description: "Полный каталог экскурсий",
+          },
+          ...POPULAR_DESTINATIONS.slice(0, 5).map((dest) => ({
+            id: `excursions-${dest.id}`,
+            label: dest.name,
+            href: `/excursions?query=${encodeURIComponent(dest.name)}`,
+            description: dest.description,
+          })),
+        ],
+      },
+    ],
+  },
+  {
     id: "guide",
     label: "Путеводитель",
     labelKey: "nav.guide",
@@ -252,7 +326,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
 ];
 
 /** Core conversion sections — visible in the desktop pill bar. */
-export const SITE_NAV_PRIMARY_IDS = ["destinations", "tours", "guide", "immigration"] as const;
+export const SITE_NAV_PRIMARY_IDS = ["destinations", "tours", "excursions", "guide", "immigration"] as const;
 
 export function getSiteNavSection(id: string): SiteNavSection | undefined {
   return SITE_NAV_SECTIONS.find((section) => section.id === id);

@@ -7,6 +7,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import pg from "pg";
+import { resolveSupabaseDatabaseUrl } from "./supabase-resolve-db-url.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -30,7 +31,7 @@ function loadEnvLocal() {
 
 async function main() {
   loadEnvLocal();
-  const connectionString = process.env.DATABASE_URL;
+  const connectionString = process.env.DATABASE_URL?.trim();
   if (!connectionString) {
     throw new Error("DATABASE_URL is missing in .env.local");
   }
@@ -45,8 +46,13 @@ async function main() {
     throw new Error(`No migration files in ${migrationsDir}`);
   }
 
+  const resolvedUrl = await resolveSupabaseDatabaseUrl(connectionString);
+  if (resolvedUrl !== connectionString) {
+    console.log("Using Supabase Session pooler (direct host unreachable)…");
+  }
+
   const client = new pg.Client({
-    connectionString,
+    connectionString: resolvedUrl,
     ssl: { rejectUnauthorized: false },
   });
 
@@ -68,7 +74,9 @@ async function main() {
         'newsletter_subscribers',
         'contact_submissions',
         'profiles',
-        'bookings'
+        'bookings',
+        'tripster_experiences',
+        'tripster_cities'
       )
     order by tablename
   `);

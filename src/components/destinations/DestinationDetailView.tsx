@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import type { DestinationPage } from "@/data/destination-pages";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { destinationCatalogLink, matchToursForDestination } from "@/lib/destinations";
+import { destinationExcursionsHref } from "@/data/excursion-city-links";
 import { siteContainerClass } from "@/lib/site-container";
 import type { TourListing } from "@/types";
 
@@ -23,6 +24,7 @@ export default function DestinationDetailView({
   const tours = useRepositoryTourListings(initialTours);
   const matchedTours = matchToursForDestination(tours, destination);
   const catalogHref = destinationCatalogLink(destination);
+  const excursionsHref = destinationExcursionsHref(destination.id);
 
   return (
     <>
@@ -92,6 +94,14 @@ export default function DestinationDetailView({
                 <ArrowRight className="h-4 w-4" />
               </Button>
             </Link>
+            {excursionsHref ? (
+              <Link href={excursionsHref} className="mt-3 block">
+                <Button variant="outline" className="w-full">
+                  Экскурсии в городе
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+            ) : null}
           </aside>
         </div>
       </section>

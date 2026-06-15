@@ -1,6 +1,7 @@
 import {
   FAVORITES_STORE_KEY,
   FAVORITES_UPDATED_EVENT,
+  type FavoriteKind,
   type FavoriteTour,
 } from "@/types/tourist";
 import { assertPermission, canSaveFavorite } from "@/lib/permissions";
@@ -39,12 +40,23 @@ function assertFavoriteActor(actor: SessionUser | null, userId: string): { ok: t
   return { ok: true };
 }
 
+
 export function getUserFavorites(userId: string): FavoriteTour[] {
   return readStore()[userId] ?? [];
 }
 
 export function isTourFavorite(userId: string, tourSlug: string): boolean {
-  return getUserFavorites(userId).some((item) => item.tourSlug === tourSlug);
+  return isItemFavorite(userId, tourSlug, "tour");
+}
+
+export function isItemFavorite(
+  userId: string,
+  slug: string,
+  kind: FavoriteKind = "tour"
+): boolean {
+  return getUserFavorites(userId).some(
+    (item) => item.tourSlug === slug && (item.kind ?? "tour") === kind
+  );
 }
 
 export function addFavorite(
@@ -58,8 +70,10 @@ export function addFavorite(
   const store = readStore();
   const current = store[userId] ?? [];
 
-  if (current.some((item) => item.tourSlug === tour.tourSlug)) {
-    return current.find((item) => item.tourSlug === tour.tourSlug)!;
+  if (current.some((item) => item.tourSlug === tour.tourSlug && (item.kind ?? "tour") === (tour.kind ?? "tour"))) {
+    return current.find(
+      (item) => item.tourSlug === tour.tourSlug && (item.kind ?? "tour") === (tour.kind ?? "tour")
+    )!;
   }
 
   const next: FavoriteTour = {
@@ -76,14 +90,17 @@ export function addFavorite(
 export function removeFavorite(
   actor: SessionUser | null,
   userId: string,
-  tourSlug: string
+  tourSlug: string,
+  kind: FavoriteKind = "tour"
 ): { ok: true } | { error: string } {
   const gate = assertFavoriteActor(actor, userId);
   if ("error" in gate) return gate;
 
   const store = readStore();
   const current = store[userId] ?? [];
-  store[userId] = current.filter((item) => item.tourSlug !== tourSlug);
+  store[userId] = current.filter(
+    (item) => !(item.tourSlug === tourSlug && (item.kind ?? "tour") === kind)
+  );
   writeStore(store);
   notifyUpdated();
   return { ok: true };
@@ -94,8 +111,9 @@ export function toggleFavorite(
   userId: string,
   tour: Omit<FavoriteTour, "addedAt">
 ): { favorited: boolean } | { error: string } {
-  if (isTourFavorite(userId, tour.tourSlug)) {
-    const result = removeFavorite(actor, userId, tour.tourSlug);
+  const kind = tour.kind ?? "tour";
+  if (isItemFavorite(userId, tour.tourSlug, kind)) {
+    const result = removeFavorite(actor, userId, tour.tourSlug, kind);
     if ("error" in result) return result;
     return { favorited: false };
   }

@@ -4,9 +4,11 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
+import { DestinationsMegaMenuPanel } from "@/components/navigation/DestinationsMegaMenuPanel";
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
 import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
 import { cn } from "@/lib/cn";
 import {
   isNavHrefActive,
@@ -99,6 +101,22 @@ function DrawerSectionColumns({
         />
       ) : section.id === "immigration" ? (
         <ImmigrationMegaMenuPanel
+          columns={section.columns ?? []}
+          t={t}
+          onNavigate={onNavigate}
+          layout="drawer"
+          className="-mx-1"
+        />
+      ) : section.id === "destinations" ? (
+        <DestinationsMegaMenuPanel
+          columns={section.columns ?? []}
+          t={t}
+          onNavigate={onNavigate}
+          layout="drawer"
+          className="-mx-1"
+        />
+      ) : section.id === "tours" ? (
+        <ToursMegaMenuPanel
           columns={section.columns ?? []}
           t={t}
           onNavigate={onNavigate}
@@ -305,8 +323,22 @@ export function SiteNavFullMenu({
                 onNavigate={onNavigate}
                 layout="drawer"
               />
+            ) : section.id === "destinations" ? (
+              <DestinationsMegaMenuPanel
+                columns={section.columns}
+                t={t}
+                onNavigate={onNavigate}
+                layout="drawer"
+              />
+            ) : section.id === "tours" ? (
+              <ToursMegaMenuPanel
+                columns={section.columns}
+                t={t}
+                onNavigate={onNavigate}
+                layout="drawer"
+              />
             ) : (
-              <MegaMenuPanel columns={section.columns} t={t} onNavigate={onNavigate} />
+              <MegaMenuPanel columns={section.columns} t={t} onNavigate={onNavigate} showIcons />
             )
           ) : null}
         </section>

@@ -9,6 +9,7 @@ import {
   FileText,
   Globe,
   HelpCircle,
+  Landmark,
   MapPin,
   Plane,
   Search,
@@ -21,9 +22,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAdaptiveFloatingTone } from "@/hooks/useAdaptiveFloatingTone";
-import { floatingChromeButtonClass } from "@/lib/floating-chrome-button";
+import { floatingChromeButtonClass, floatingChromeInsetClass } from "@/lib/floating-chrome-button";
 import { cn } from "@/lib/cn";
-import { floatingChromeInsetClass } from "@/lib/site-container";
+import { SITE_SEARCH_OPEN_EVENT } from "@/lib/site-search-open";
 import { searchSiteIndex, type SearchResultGroup } from "@/lib/site-search";
 import { getDefaultSearchIndex, loadSearchIndex } from "@/lib/site-search-client";
 import type { SearchIndexItem, SearchResultType } from "@/lib/site-search-index";
@@ -31,6 +32,7 @@ import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
 
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   tour: Plane,
+  excursion: Landmark,
   blog: BookOpen,
   faq: HelpCircle,
   page: Compass,
@@ -57,8 +59,16 @@ export default function SiteSearch() {
       }
     }
 
+    function onOpenRequest() {
+      setOpen(true);
+    }
+
     window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
+    window.addEventListener(SITE_SEARCH_OPEN_EVENT, onOpenRequest);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener(SITE_SEARCH_OPEN_EVENT, onOpenRequest);
+    };
   }, []);
 
   useEffect(() => {
@@ -118,7 +128,7 @@ export default function SiteSearch() {
         data-floating-chrome="true"
         className={floatingChromeButtonClass(
           tone === "dark",
-          cn(floatingChromeInsetClass, "fixed bottom-20 z-[90] sm:bottom-6")
+          cn(floatingChromeInsetClass, "fixed bottom-20 z-[90] hidden sm:bottom-6 sm:flex")
         )}
         aria-label="Поиск по сайту"
       >

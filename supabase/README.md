@@ -205,7 +205,37 @@ npm run supabase:seed-tours
 
 `robots.txt` закрывает `/admin/` от индексации.
 
-## Деплой (Vercel / др.)
+## Phase 5 — Tripster affiliate catalog (`/excursions`)
+
+| Компонент | Файлы | Env |
+|-----------|-------|-----|
+| Tripster API client | `src/lib/tripster/*` | `TRIPSTER_PARTNER`, `TRIPSTER_SECRET` |
+| Affiliate links | `src/lib/travelpayouts/*` | `TRAVELPAYOUTS_*` |
+| Catalog mirror | `tripster_*` tables | `DATABASE_URL` или `SUPABASE_SERVICE_ROLE_KEY` |
+| Sync | `npm run tripster:sync` | все ключи выше |
+| UI | `/excursions`, `/excursions/[slug]` | `DATABASE_URL` достаточно для SSR через pg fallback |
+
+### Миграция Phase 5
+
+**Если `npm run supabase:migrate` не подключается (IPv6):**
+
+1. Supabase Dashboard → **SQL Editor**
+2. Вставить содержимое `supabase/all-migrations.sql` (или файлы из `supabase/migrations/` по порядку)
+3. Run
+
+**Или Session pooler URI:** Dashboard → Database → Connection string → **Session pooler** → заменить `DATABASE_URL` в `.env.local` → `npm run supabase:migrate`
+
+### Проверка и синхронизация
+
+```bash
+npm run tripster:verify   # Travelpayouts + Tripster + города Аргентины
+npm run tripster:sync     # города + экскурсии + affiliate-ссылки
+```
+
+`TRIPSTER_SECRET` для канала Travelpayouts — в [инструкции Travelpayouts](https://support.travelpayouts.com/hc/ru/articles/360028527251-API-от-Tripster) (partner `travelpayoutsapi`).
+
+Для UI также нужны `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Dashboard → API). Без anon key SSR читает каталог через `DATABASE_URL`.
+
 
 Environment variables:
 

@@ -63,6 +63,31 @@ export async function collectTourSitemapPaths(): Promise<string[]> {
   return staticPaths;
 }
 
+export async function collectExcursionSitemapPaths(): Promise<string[]> {
+  const paths = ["/excursions"];
+
+  try {
+    const { fetchExcursionSlugsServer, fetchExcursionsServer } = await import(
+      "@/lib/tripster/excursion-server"
+    );
+    const [{ cities }, slugs] = await Promise.all([
+      fetchExcursionsServer({ pageSize: 1 }),
+      fetchExcursionSlugsServer(),
+    ]);
+
+    for (const city of cities) {
+      paths.push(`/excursions/city/${city.slug}`);
+    }
+    for (const slug of slugs) {
+      paths.push(`/excursions/${slug}`);
+    }
+  } catch {
+    // static /excursions only
+  }
+
+  return uniquePaths(paths);
+}
+
 export async function collectSitemapPaths(): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
@@ -74,6 +99,7 @@ export async function collectSitemapPaths(): Promise<string[]> {
   ].filter(isIndexableInternalPath);
 
   const tourPaths = await collectTourSitemapPaths();
+  const excursionPaths = await collectExcursionSitemapPaths();
   const blogPaths = blogPosts.map((post) => `/blog/${post.slug}`);
   const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
@@ -89,6 +115,7 @@ export async function collectSitemapPaths(): Promise<string[]> {
     ...navPaths,
     ...footerPaths,
     ...tourPaths,
+    ...excursionPaths,
     ...blogPaths,
     ...contentPaths,
     ...guideTopicPaths,

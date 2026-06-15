@@ -3,14 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node scripts/dev.mjs",
     "dev:clean": "node scripts/dev-clean.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "supabase:migrate": "node scripts/supabase-apply-migration.mjs",
+    "supabase:resolve-db": "node scripts/supabase-resolve-db-url.mjs",
     "supabase:verify": "node scripts/supabase-verify.mjs",
-    "supabase:seed-tours": "node scripts/supabase-seed-tours.mjs"
+    "supabase:seed-tours": "node scripts/supabase-seed-tours.mjs",
+    "tripster:verify": "node scripts/tripster-verify.mjs",
+    "tripster:sync": "node scripts/tripster-sync.mjs",
+    "tripster:affiliate-links": "node scripts/tripster-affiliate-links.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.3.4",
@@ -36,6 +40,7 @@
     "@tailwindcss/postcss": "^4.1.8",
     "@types/leaflet": "^1.9.21",
     "@types/node": "^22.15.29",
+    "@types/pg": "^8.20.0",
     "@types/react": "^19.1.6",
     "@types/react-dom": "^19.1.5",
     "eslint": "^9.28.0",

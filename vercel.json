@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/tripster-sync",
+      "schedule": "0 4 * * *"
+    }
+  ]
+}

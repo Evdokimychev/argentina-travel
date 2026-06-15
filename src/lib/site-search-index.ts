@@ -19,6 +19,7 @@ import type { TourListing } from "@/types";
 
 export type SearchResultType =
   | "tour"
+  | "excursion"
   | "blog"
   | "faq"
   | "page"
@@ -38,6 +39,7 @@ export type SearchIndexItem = {
 
 export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
   tour: "Туры",
+  excursion: "Экскурсии",
   blog: "Блог",
   faq: "FAQ",
   page: "Страницы",
@@ -87,6 +89,14 @@ const STATIC_PAGES: SearchIndexItem[] = [
     description: "Все авторские туры по Аргентине с фильтрами и картой.",
     href: "/tours",
     keywords: ["каталог", "маркетплейс", "поиск туров"],
+  },
+  {
+    id: "page-excursions",
+    type: "page",
+    title: "Каталог экскурсий",
+    description: "Городские экскурсии и активности по Аргентине (Tripster).",
+    href: "/excursions",
+    keywords: ["экскурсии", "tripster", "гиды", "активности"],
   },
   {
     id: "page-blog",
@@ -156,12 +166,13 @@ const STATIC_PAGES: SearchIndexItem[] = [
 
 const SEARCH_TYPE_PRIORITY: Record<SearchResultType, number> = {
   tour: 10,
-  blog: 9,
-  guide: 8,
-  immigration: 7,
-  destination: 6,
-  faq: 5,
-  legal: 4,
+  excursion: 9,
+  blog: 8,
+  guide: 7,
+  immigration: 6,
+  destination: 5,
+  faq: 4,
+  legal: 3,
   page: 1,
 };
 

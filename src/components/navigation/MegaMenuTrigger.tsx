@@ -3,15 +3,56 @@
 import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { DestinationsMegaMenuPanel } from "@/components/navigation/DestinationsMegaMenuPanel";
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
 import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
+import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
+import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
+import { ExcursionsMegaMenuPanel } from "@/components/navigation/ExcursionsMegaMenuPanel";
 import { cn } from "@/lib/cn";
 import { navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
 const CLOSE_DELAY_MS = 350;
+
+function megaMenuWidthClass(sectionId: string): string {
+  if (sectionId === "guide" || sectionId === "immigration") {
+    return "w-[min(calc(100vw-2rem),64rem)]";
+  }
+  if (sectionId === "destinations" || sectionId === "tours" || sectionId === "excursions") {
+    return "w-[min(calc(100vw-2rem),56rem)]";
+  }
+  return "w-[min(calc(100vw-2rem),48rem)]";
+}
+
+function MegaMenuPanelContent({
+  section,
+  t,
+  onNavigate,
+}: {
+  section: SiteNavSection;
+  t: NavTranslate;
+  onNavigate: () => void;
+}) {
+  const columns = section.columns ?? [];
+
+  switch (section.id) {
+    case "guide":
+      return <GuideMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    case "immigration":
+      return <ImmigrationMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    case "destinations":
+      return <DestinationsMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    case "tours":
+      return <ToursMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    case "excursions":
+      return <ExcursionsMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    default:
+      return <MegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} showIcons />;
+  }
+}
 
 export function MegaMenuTrigger({
   section,
@@ -29,6 +70,7 @@ export function MegaMenuTrigger({
   onOpenChange: (open: boolean) => void;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const label = navSectionLabel(section, t);
@@ -62,10 +104,11 @@ export function MegaMenuTrigger({
     if (!open) return;
 
     const onPointerDown = (event: PointerEvent) => {
+      const target = event.target as Node;
       const root = rootRef.current;
-      if (root && !root.contains(event.target as Node)) {
-        closeMenu();
-      }
+      const panel = panelRef.current;
+      if (root?.contains(target) || panel?.contains(target)) return;
+      closeMenu();
     };
 
     const onKeyDown = (event: KeyboardEvent) => {
@@ -164,41 +207,16 @@ export function MegaMenuTrigger({
         </button>
       )}
 
-      {open ? (
-        <div
-          className={cn(
-            "absolute left-1/2 top-full z-[110] -translate-x-1/2",
-            section.id === "guide" || section.id === "immigration"
-              ? "w-[min(calc(100vw-2rem),64rem)]"
-              : "w-[min(calc(100vw-2rem),56rem)]"
-          )}
-          onMouseEnter={openMenu}
-          onMouseLeave={scheduleClose}
-        >
-          <div className="h-4 w-full" aria-hidden />
-          <div className="rounded-2xl border border-border-subtle bg-surface-elevated shadow-modal">
-            {section.id === "guide" ? (
-              <GuideMegaMenuPanel
-                columns={section.columns ?? []}
-                t={t}
-                onNavigate={closeMenu}
-              />
-            ) : section.id === "immigration" ? (
-              <ImmigrationMegaMenuPanel
-                columns={section.columns ?? []}
-                t={t}
-                onNavigate={closeMenu}
-              />
-            ) : (
-              <MegaMenuPanel
-                columns={section.columns ?? []}
-                t={t}
-                onNavigate={closeMenu}
-              />
-            )}
-          </div>
-        </div>
-      ) : null}
+      <MegaMenuDropdown
+        open={open}
+        triggerRef={rootRef}
+        panelRef={panelRef}
+        widthClass={megaMenuWidthClass(section.id)}
+        onMouseEnter={openMenu}
+        onMouseLeave={scheduleClose}
+      >
+        <MegaMenuPanelContent section={section} t={t} onNavigate={closeMenu} />
+      </MegaMenuDropdown>
     </div>
   );
 }

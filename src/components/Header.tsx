@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUpRight, Menu, Plane } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Menu, Search } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
 import ProfileMenu from "@/components/auth/ProfileMenu";
@@ -19,6 +19,7 @@ import {
 } from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
 import { cn } from "@/lib/cn";
+import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { isNavSectionActive, resolveNavLabel } from "@/lib/site-nav";
 
@@ -127,6 +128,17 @@ export default function Header() {
   const mobileMenuFooter = (
     <>
       <div className="sm:hidden">
+        <button
+          type="button"
+          onClick={() => {
+            setMenuOpen(false);
+            openSiteSearch();
+          }}
+          className="mb-3 flex w-full items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-charcoal transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+        >
+          <Search className="h-4 w-4 shrink-0 text-sky" strokeWidth={1.75} aria-hidden />
+          Поиск по сайту
+        </button>
         <LocaleCurrencySwitcher />
       </div>
       <div className="mt-3 border-t border-border-subtle pt-3 sm:mt-0 sm:border-t-0 sm:pt-0">
@@ -267,18 +279,6 @@ export default function Header() {
             <div className="hidden sm:block">
               <LocaleCurrencySwitcher variant="header" />
             </div>
-            <Link
-              href="/tours"
-              aria-label={t("nav.chooseTour")}
-              className={cn(
-                "flex h-10 shrink-0 items-center gap-1.5 rounded-full px-2.5 text-sm font-medium transition-colors sm:px-3",
-                "bg-sky/10 text-sky ring-1 ring-sky/20 hover:bg-sky/15 hover:ring-sky/35",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
-              )}
-            >
-              <Plane className="h-4 w-4 shrink-0" strokeWidth={1.75} aria-hidden />
-              <span className="hidden lg:inline">{t("nav.tours")}</span>
-            </Link>
             <ProfileMenu />
           </div>
         </div>

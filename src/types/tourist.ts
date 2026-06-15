@@ -54,6 +54,8 @@ export interface BookingTraveler {
 
 export type TouristReviewStatus = "draft" | "published";
 
+export type FavoriteKind = "tour" | "excursion";
+
 export interface FavoriteTour {
   tourId: string;
   tourSlug: string;
@@ -62,6 +64,9 @@ export interface FavoriteTour {
   region?: string;
   country?: string;
   priceUsd?: number;
+  /** Defaults to tour for legacy entries */
+  kind?: FavoriteKind;
+  cityName?: string;
   addedAt: string;
 }
 

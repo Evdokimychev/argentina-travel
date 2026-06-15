@@ -3,14 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
-  isTourFavorite,
+  isItemFavorite,
   toggleFavorite,
 } from "@/lib/favorites-store";
-import { FAVORITES_UPDATED_EVENT, type FavoriteTour } from "@/types/tourist";
+import { FAVORITES_UPDATED_EVENT, type FavoriteKind, type FavoriteTour } from "@/types/tourist";
 
 export type FavoriteTourInput = Omit<FavoriteTour, "addedAt">;
 
 export function useFavoriteTour(tour: FavoriteTourInput) {
+  const kind: FavoriteKind = tour.kind ?? "tour";
   const { user, isAuthenticated, openAuth } = useAuth();
   const [favorited, setFavorited] = useState(false);
 
@@ -19,8 +20,8 @@ export function useFavoriteTour(tour: FavoriteTourInput) {
       setFavorited(false);
       return;
     }
-    setFavorited(isTourFavorite(user.id, tour.tourSlug));
-  }, [tour.tourSlug, user]);
+    setFavorited(isItemFavorite(user.id, tour.tourSlug, kind));
+  }, [tour.tourSlug, kind, user]);
 
   useEffect(() => {
     sync();
