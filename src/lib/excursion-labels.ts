@@ -30,6 +30,9 @@ export function buildExcursionSectionLinks(excursion: ExcursionDetail) {
   ) {
     links.push({ id: "program", labelKey: "excursions.section.program" });
   }
+  if (excursion.placesToSee) {
+    links.push({ id: "places", labelKey: "excursions.section.places" });
+  }
   if (excursion.meetingPoint || excursion.finishPoint) {
     links.push({ id: "meeting", labelKey: "excursions.section.meeting" });
   }

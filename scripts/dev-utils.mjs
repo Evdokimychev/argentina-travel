@@ -93,48 +93,114 @@ export function killProjectNextDev(root) {
   return killed;
 }
 
+function sleepMs(ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    /* busy wait — dev-utils stays sync */
+  }
+}
+
 export function removeNextCache(root) {
   const nextDir = path.join(root, ".next");
   if (!fs.existsSync(nextDir)) return false;
-  fs.rmSync(nextDir, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
-  return true;
+
+  for (let attempt = 0; attempt < 12; attempt += 1) {
+    try {
+      fs.rmSync(nextDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 });
+      if (!fs.existsSync(nextDir)) return true;
+    } catch {
+      /* retry below */
+    }
+
+    const trashDir = path.join(root, `.next-trash-${Date.now()}-${attempt}`);
+    try {
+      if (fs.existsSync(nextDir)) {
+        fs.renameSync(nextDir, trashDir);
+        fs.rmSync(trashDir, { recursive: true, force: true, maxRetries: 8, retryDelay: 150 });
+        if (!fs.existsSync(nextDir) && !fs.existsSync(trashDir)) return true;
+      }
+    } catch {
+      try {
+        if (fs.existsSync(trashDir)) {
+          fs.rmSync(trashDir, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 });
+        }
+      } catch {
+        /* keep retrying primary dir */
+      }
+    }
+
+    sleepMs(250 + attempt * 100);
+  }
+
+  return !fs.existsSync(nextDir);
 }
 
 const VENDOR_CHUNK_PATTERN = /\.\/vendor-chunks\/([^'"\s]+)/g;
+const NUMERIC_CHUNK_PATTERN = /\.\/(\d+)\.js/g;
 
-/** Detect stale webpack refs like missing vendor-chunks/@supabase.js */
-export function isNextCacheCorrupted(root) {
-  const serverDir = path.join(root, ".next/server");
-  if (!fs.existsSync(serverDir)) return false;
-
-  const vendorDir = path.join(serverDir, "vendor-chunks");
-
-  function referencesMissingVendorChunk(filePath) {
-    let content;
-    try {
-      content = fs.readFileSync(filePath, "utf8");
-    } catch {
-      return false;
-    }
-
-    for (const match of content.matchAll(VENDOR_CHUNK_PATTERN)) {
-      const chunkFile = path.join(vendorDir, match[1]);
-      if (!fs.existsSync(chunkFile)) return true;
-    }
-
+function referencesMissingChunks(filePath, serverDir, vendorDir) {
+  let content;
+  try {
+    content = fs.readFileSync(filePath, "utf8");
+  } catch {
     return false;
   }
 
-  const priorityFiles = [
-    path.join(serverDir, "webpack-runtime.js"),
-    path.join(serverDir, "pages/_document.js"),
-  ];
+  for (const match of content.matchAll(VENDOR_CHUNK_PATTERN)) {
+    const chunkFile = path.join(vendorDir, match[1]);
+    if (!fs.existsSync(chunkFile)) return true;
+  }
 
-  if (priorityFiles.some((file) => fs.existsSync(file) && referencesMissingVendorChunk(file))) {
+  for (const match of content.matchAll(NUMERIC_CHUNK_PATTERN)) {
+    const chunkFile = path.join(serverDir, `${match[1]}.js`);
+    if (!fs.existsSync(chunkFile)) return true;
+  }
+
+  return false;
+}
+
+/** Detect stale webpack refs like missing vendor-chunks or numeric chunk files. */
+export function isNextCacheCorrupted(root) {
+  const nextDir = path.join(root, ".next");
+  const serverDir = path.join(nextDir, "server");
+  if (!fs.existsSync(serverDir)) return false;
+
+  const vendorDir = path.join(serverDir, "vendor-chunks");
+  const webpackRuntime = path.join(serverDir, "webpack-runtime.js");
+
+  if (fs.existsSync(webpackRuntime) && referencesMissingChunks(webpackRuntime, serverDir, vendorDir)) {
     return true;
   }
 
-  let appDir = path.join(serverDir, "app");
+  const prerenderManifest = path.join(nextDir, "prerender-manifest.json");
+  const fallbackManifest = path.join(nextDir, "fallback-build-manifest.json");
+  const manifestFiles = [
+    prerenderManifest,
+    path.join(nextDir, "routes-manifest.json"),
+    path.join(nextDir, "build-manifest.json"),
+    fallbackManifest,
+  ];
+  const hasAnyManifest = manifestFiles.some((file) => fs.existsSync(file));
+  const appDir = path.join(serverDir, "app");
+
+  if (fs.existsSync(appDir) && !hasAnyManifest) {
+    return true;
+  }
+
+  // Dev server still running while .next was partially deleted (e.g. parallel build)
+  if (fs.existsSync(webpackRuntime) && !fs.existsSync(prerenderManifest) && !fs.existsSync(fallbackManifest)) {
+    return true;
+  }
+
+  const priorityFiles = [
+    webpackRuntime,
+    path.join(serverDir, "pages/_document.js"),
+  ];
+
+  if (priorityFiles.some((file) => fs.existsSync(file) && referencesMissingChunks(file, serverDir, vendorDir))) {
+    return true;
+  }
+
   if (!fs.existsSync(appDir)) return false;
 
   const stack = [appDir];
@@ -153,7 +219,7 @@ export function isNextCacheCorrupted(root) {
       if (!entry.name.endsWith(".js")) continue;
 
       checked += 1;
-      if (referencesMissingVendorChunk(fullPath)) return true;
+      if (referencesMissingChunks(fullPath, serverDir, vendorDir)) return true;
       if (checked >= 80) break;
     }
   }

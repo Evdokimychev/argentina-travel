@@ -36,7 +36,7 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
 
   const { items, cities } = await fetchExcursionsServer({
     citySlug,
-    pageSize: 200,
+    pageSize: 500,
   });
 
   return (

@@ -147,7 +147,7 @@ export default function ExcursionsCatalog({
           </button>
           {cities.map((city) => (
             <button
-              key={city.id}
+              key={city.slug}
               type="button"
               onClick={() => {
                 setCitySlug(city.slug);
@@ -194,7 +194,7 @@ export default function ExcursionsCatalog({
             </p>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
               {pageItems.map((excursion) => (
-                <ExcursionCard key={excursion.id} excursion={excursion} />
+                <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
               ))}
             </div>
 
@@ -238,7 +238,7 @@ export default function ExcursionsCatalog({
           <div className="mt-10 flex flex-wrap gap-2 border-t border-gray-100 pt-6">
             {cities.map((city) => (
               <Link
-                key={city.id}
+                key={city.slug}
                 href={`/excursions/city/${city.slug}`}
                 className="inline-flex items-center gap-1 rounded-full bg-charcoal/5 px-3 py-1 text-xs font-medium text-charcoal transition hover:bg-sky/10 hover:text-sky"
               >

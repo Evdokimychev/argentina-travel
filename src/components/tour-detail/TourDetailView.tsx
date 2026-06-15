@@ -7,7 +7,6 @@ import { siteContainerClass } from "@/lib/site-container";
 import TourStatsSection from "./TourStatsSection";
 import DescriptionSection from "./DescriptionSection";
 import ItinerarySection from "./ItinerarySection";
-import GuidesSection from "./GuidesSection";
 import OrganizerSection from "./OrganizerSection";
 import ReviewsSection from "./ReviewsSection";
 import AccommodationsSection from "./AccommodationsSection";
@@ -33,7 +32,6 @@ import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
-import { hasVisibleGuides } from "@/lib/tour-public-display";
 import PlacesSection from "./PlacesSection";
 import type { Tour } from "@/types/tour";
 import { Suspense } from "react";
@@ -121,9 +119,6 @@ export default function TourDetailView({
               <DescriptionSection blocks={tour.descriptionBlocks} extra={tour.descriptionExtra!} />
               <PlacesSection places={tour.places} />
               {tour.itinerary?.length ? <ItinerarySection days={tour.itinerary} /> : null}
-              {canonicalTour && hasVisibleGuides(canonicalTour) ? (
-                <GuidesSection guides={canonicalTour.team.guides} />
-              ) : null}
               <DatesSection tour={tour} canonicalTour={canonicalTour} />
               <IncludedExcludedSection included={tour.included} excluded={tour.excluded} />
               {tourHasAccommodation(tour) ? (
@@ -144,6 +139,7 @@ export default function TourDetailView({
                 organizer={tour.organizer}
                 comment={tour.organizerComment}
                 tourSlug={tour.slug}
+                guides={canonicalTour?.team.guides}
               />
               <ReviewsSection
                 reviews={tour.reviews}

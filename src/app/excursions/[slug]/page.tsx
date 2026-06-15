@@ -49,7 +49,8 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
   const similarExcursions = await fetchSimilarExcursionsServer(
     excursion.cityId,
     excursion.id,
-    6
+    6,
+    excursion.partner
   );
 
   return (

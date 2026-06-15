@@ -11,19 +11,42 @@ interface TourSectionNavProps {
   items: TourSectionLink[];
 }
 
+function scrollNavLinkIntoView(
+  container: HTMLElement | null,
+  sectionId: string,
+  behavior: ScrollBehavior = "instant"
+) {
+  const link = container?.querySelector<HTMLAnchorElement>(`[data-section-id="${sectionId}"]`);
+  if (!link || !container) return;
+
+  const containerRect = container.getBoundingClientRect();
+  const linkRect = link.getBoundingClientRect();
+  const fullyVisible =
+    linkRect.left >= containerRect.left - 2 && linkRect.right <= containerRect.right + 2;
+
+  if (!fullyVisible) {
+    link.scrollIntoView({ behavior, block: "nearest", inline: "center" });
+  }
+}
+
 export default function TourSectionNav({ items }: TourSectionNavProps) {
   const [activeId, setActiveId] = useState(items[0]?.id ?? "");
   const navRef = useRef<HTMLElement>(null);
-  const navHeightRef = useRef(0);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const offsetRef = useRef(0);
   const isClickScrollingRef = useRef(false);
+
+  const refreshOffset = useCallback(() => {
+    offsetRef.current = getSiteScrollAnchorOffset();
+  }, []);
 
   const syncNavHeight = useCallback(() => {
     const height = navRef.current?.offsetHeight ?? 0;
-    navHeightRef.current = height;
     if (height > 0) {
       document.documentElement.style.setProperty("--tour-section-nav-height", `${height}px`);
     }
-  }, []);
+    refreshOffset();
+  }, [refreshOffset]);
 
   const scrollToSection = useCallback((id: string) => {
     if (!document.getElementById(id)) return;
@@ -31,6 +54,9 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     isClickScrollingRef.current = true;
     scrollToSiteAnchor(id);
     setActiveId(id);
+    requestAnimationFrame(() => {
+      scrollNavLinkIntoView(scrollContainerRef.current, id, "smooth");
+    });
 
     window.setTimeout(() => {
       isClickScrollingRef.current = false;
@@ -54,20 +80,26 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
   useEffect(() => {
     if (!items.length) return;
 
-    let frame = 0;
+    refreshOffset();
 
-    const updateActiveSection = () => {
-      frame = 0;
+    const sectionElements = items
+      .map((item) => document.getElementById(item.id))
+      .filter((element): element is HTMLElement => element != null);
+
+    if (!sectionElements.length) return;
+
+    let observer: IntersectionObserver | null = null;
+
+    const pickActiveSection = () => {
       if (isClickScrollingRef.current) return;
 
-      const offset = getSiteScrollAnchorOffset();
+      const offset = offsetRef.current;
       let nextActiveId = items[0].id;
 
       for (const item of items) {
         const section = document.getElementById(item.id);
         if (!section) continue;
-
-        if (section.getBoundingClientRect().top <= offset) {
+        if (section.getBoundingClientRect().top <= offset + 2) {
           nextActiveId = item.id;
         }
       }
@@ -75,28 +107,34 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
       setActiveId((current) => (current === nextActiveId ? current : nextActiveId));
     };
 
-    const scheduleUpdate = () => {
-      if (frame) return;
-      frame = window.requestAnimationFrame(updateActiveSection);
+    const connectObserver = () => {
+      observer?.disconnect();
+      refreshOffset();
+
+      observer = new IntersectionObserver(() => pickActiveSection(), {
+        root: null,
+        rootMargin: `-${offsetRef.current}px 0px -55% 0px`,
+        threshold: 0,
+      });
+
+      sectionElements.forEach((section) => observer!.observe(section));
+      pickActiveSection();
     };
 
-    updateActiveSection();
-    window.addEventListener("scroll", scheduleUpdate, { passive: true });
-    window.addEventListener("resize", scheduleUpdate);
+    connectObserver();
+
+    const onLayoutChange = () => {
+      refreshOffset();
+      connectObserver();
+    };
+
+    window.addEventListener("resize", onLayoutChange);
 
     return () => {
-      window.removeEventListener("scroll", scheduleUpdate);
-      window.removeEventListener("resize", scheduleUpdate);
-      if (frame) window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+      window.removeEventListener("resize", onLayoutChange);
     };
-  }, [items]);
-
-  useEffect(() => {
-    const activeLink = navRef.current?.querySelector<HTMLAnchorElement>(
-      `[data-section-id="${activeId}"]`
-    );
-    activeLink?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-  }, [activeId]);
+  }, [items, refreshOffset]);
 
   if (!items.length) return null;
 
@@ -106,7 +144,10 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
       aria-label="Разделы страницы тура"
       className="sticky top-[var(--site-header-height,72px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
     >
-      <div className={cn(siteContainerClass, "overflow-x-auto py-3")}>
+      <div
+        ref={scrollContainerRef}
+        className={cn(siteContainerClass, "overflow-x-auto overscroll-x-contain py-3")}
+      >
         <ul className="flex min-w-max gap-1.5">
           {items.map((item) => {
             const active = item.id === activeId;

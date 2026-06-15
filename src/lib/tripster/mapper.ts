@@ -143,6 +143,7 @@ export function rowToExcursionListing(
   const listingMeta = parseExcursionListingMeta(row.payload);
 
   return {
+    partner: "tripster",
     id: row.id,
     slug: row.slug,
     title: row.title,
@@ -192,6 +193,7 @@ export function rowToExcursionDetail(
     description: row.description ?? undefined,
     photos,
     tripsterUrl: row.tripster_url ?? "",
+    partnerUrl: (row.partner_url?.trim() || row.tripster_url) ?? "",
     bookingHref: `/api/affiliate/go/${row.slug}`,
     experienceType: row.experience_type ?? undefined,
     maxPersons: payload?.max_persons ?? undefined,

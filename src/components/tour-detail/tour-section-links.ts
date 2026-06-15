@@ -5,7 +5,6 @@ import {
   hasArrivalDepartureLogistics,
   hasTicketRecommendations,
   hasTourPolicies,
-  hasVisibleGuides,
   resolvePackingListItems,
   hasFaqContent,
   hasPlacesContent,
@@ -40,8 +39,8 @@ export function buildTourSectionLinks(
     links.push({ id: "itinerary", label: "Программа" });
   }
 
-  if (canonicalTour && hasVisibleGuides(canonicalTour)) {
-    links.push({ id: "guides", label: "Гиды" });
+  if (hasTourDatesSection(tour)) {
+    links.push({ id: "dates", label: "Даты" });
   }
 
   if (hasTermsListContent(tour.included) || hasTermsListContent(tour.excluded)) {
@@ -65,6 +64,13 @@ export function buildTourSectionLinks(
   }
 
   if (
+    canonicalTour &&
+    (hasTicketRecommendations(canonicalTour) || hasArrivalDepartureLogistics(canonicalTour))
+  ) {
+    links.push({ id: "logistics", label: "Логистика" });
+  }
+
+  if (
     tour.routePoints?.length ||
     tour.arrival ||
     canonicalTour?.program.routeMapImage?.trim()
@@ -77,19 +83,8 @@ export function buildTourSectionLinks(
     });
   }
 
-  if (
-    canonicalTour &&
-    (hasTicketRecommendations(canonicalTour) || hasArrivalDepartureLogistics(canonicalTour))
-  ) {
-    links.push({ id: "logistics", label: "Логистика" });
-  }
-
   if (hasFaqContent(tour.faq)) {
     links.push({ id: "faq", label: "Вопросы" });
-  }
-
-  if (hasTourDatesSection(tour)) {
-    links.push({ id: "dates", label: "Даты" });
   }
 
   links.push(

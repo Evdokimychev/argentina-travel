@@ -99,6 +99,14 @@ export default function ExcursionMetaBadges({
     addBadge("visitors", label, <Badge>{label}</Badge>);
   }
 
+  for (const language of excursion.languages ?? []) {
+    addBadge(`language-${language}`, language, <Badge className="bg-sky/10 text-sky">{language}</Badge>);
+  }
+
+  for (const tag of excursion.tags ?? []) {
+    addBadge(`tag-${tag.id}`, tag.name, <Badge>{tag.name}</Badge>);
+  }
+
   return (
     <div className="flex flex-wrap gap-2">
       {badges.map((badge) => (

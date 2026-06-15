@@ -13,6 +13,10 @@ import { cn } from "@/lib/cn";
 import TourSection from "@/components/tour-detail/TourSection";
 import type { ExcursionGuideProfile } from "@/types/excursion";
 
+function usesExternalProfile(guide: ExcursionGuideProfile): boolean {
+  return Boolean(guide.url && (!guide.id || guide.id <= 0));
+}
+
 export default function ExcursionGuideSection({
   guide,
   title,
@@ -25,7 +29,11 @@ export default function ExcursionGuideSection({
   externalProfileLabel?: string;
 }) {
   const { t, locale } = useLocaleCurrency();
-  const profileHref = buildExcursionGuideHref(guide.id);
+  const externalProfile = usesExternalProfile(guide);
+  const profileHref = externalProfile ? guide.url! : buildExcursionGuideHref(guide.id);
+  const profileLinkProps = externalProfile
+    ? { href: profileHref, target: "_blank" as const, rel: "noopener noreferrer" }
+    : { href: profileHref };
   const hasReviews = guide.rating != null && (guide.reviewCount ?? 0) > 0;
   const locationLabel = [guide.cityName, guide.countryName].filter(Boolean).join(", ");
   const excursionCount = guide.excursionCount;
@@ -43,7 +51,7 @@ export default function ExcursionGuideSection({
     <TourSection id="guide" title={title}>
       <div className="rounded-2xl border border-gray-100 bg-surface-muted/30 p-5 sm:p-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start">
-          <Link href={profileHref} className="shrink-0 self-start">
+          <Link {...profileLinkProps} className="shrink-0 self-start">
             {guide.avatar ? (
               <div className="relative h-20 w-20 overflow-hidden rounded-full bg-white ring-2 ring-sky/15 sm:h-24 sm:w-24">
                 <Image
@@ -63,7 +71,7 @@ export default function ExcursionGuideSection({
 
           <div className="min-w-0 flex-1">
             <Link
-              href={profileHref}
+              {...profileLinkProps}
               className="font-heading text-xl font-bold text-charcoal transition hover:text-sky sm:text-2xl"
             >
               {guide.name}
@@ -125,10 +133,20 @@ export default function ExcursionGuideSection({
             ) : null}
 
             <div className={cn("flex flex-wrap gap-3", guide.description ? "mt-5" : "mt-4")}>
-              <Link href={profileHref}>
-                <Button size="sm">{profileLabel}</Button>
-              </Link>
-              {guide.url && externalProfileLabel ? (
+              {externalProfile ? (
+                <a href={profileHref} target="_blank" rel="noopener noreferrer">
+                  <Button size="sm" type="button">
+                    {externalProfileLabel ?? profileLabel}
+                  </Button>
+                </a>
+              ) : (
+                <Link href={profileHref}>
+                  <Button size="sm" type="button">
+                    {profileLabel}
+                  </Button>
+                </Link>
+              )}
+              {guide.url && externalProfileLabel && !externalProfile ? (
                 <Link
                   href={guide.url}
                   target="_blank"

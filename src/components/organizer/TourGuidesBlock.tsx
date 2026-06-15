@@ -68,8 +68,17 @@ function GuideCard({
   guide: OrganizerTourGuide;
   onRemove: () => void;
 }) {
+  const isAuthor = guide.isTourAuthor === true;
+
   return (
-    <article className="relative rounded-2xl bg-brand-light/45 p-4 sm:p-5">
+    <article
+      className={cn(
+        "relative rounded-2xl p-4 sm:p-5",
+        isAuthor
+          ? "border border-sky/20 bg-gradient-to-br from-sky/5 via-white to-white ring-1 ring-sky/10"
+          : "bg-brand-light/45"
+      )}
+    >
       <button
         type="button"
         onClick={onRemove}
@@ -86,9 +95,25 @@ function GuideCard({
           className="h-16 w-16 sm:h-20 sm:w-20"
         />
         <div className="min-w-0 flex-1 space-y-3">
+          {isAuthor ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-sky/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-sky">
+                Организатор
+              </span>
+              <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+                Гид тура
+              </span>
+            </div>
+          ) : null}
           <h3 className="font-heading text-base font-bold text-charcoal sm:text-lg">
-            {guide.isTourAuthor ? `Автор тура — ${guide.name}` : guide.name}
+            {isAuthor ? guide.name : guide.name}
           </h3>
+          {isAuthor ? (
+            <p className="text-sm text-slate">
+              На странице тура отображается в объединённом блоке «Организатор и гид» вместе с
+              профилем и рекомендациями.
+            </p>
+          ) : null}
           <GuideBio bio={guide.bio} />
         </div>
       </div>
@@ -198,8 +223,13 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
       <div>
-        <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Гиды этого тура</h2>
-        <p className="mt-1 text-sm text-slate">Добавьте гидов, которые будут вести этот тур</p>
+        <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
+          Организатор и гиды тура
+        </h2>
+        <p className="mt-1 text-sm text-slate">
+          Автор тура отображается на странице как организатор и гид. Добавьте других гидов, если
+          тур ведёт команда.
+        </p>
       </div>
 
       <WarningBanner>
@@ -214,7 +244,8 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
         </div>
       ) : (
         <p className="rounded-2xl border border-dashed border-gray-200 px-4 py-6 text-center text-sm text-slate">
-          Пока не добавлен ни один гид. Начните с автора тура или выберите гида из команды.
+          Добавьте себя как автора тура — так путешественники увидят вас организатором и гидом на
+          странице тура.
         </p>
       )}
 

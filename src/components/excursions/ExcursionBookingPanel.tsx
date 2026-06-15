@@ -240,7 +240,24 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     [scheduleDates]
   );
 
-  const canBookOnSite = excursion.isBookable !== false;
+  const partnerDisclaimerKey =
+    excursion.partner === "sputnik8"
+      ? "excursions.partnerDisclaimer.sputnik8"
+      : "excursions.partnerDisclaimer.tripster";
+
+  const prefersAffiliate =
+    excursion.partner === "sputnik8" &&
+    !scheduleLoading &&
+    (scheduleError != null || scheduleDates.length === 0);
+
+  const canBookOnSite = excursion.isBookable !== false && !prefersAffiliate;
+  const listedPriceLabel =
+    quote?.value_string?.trim() ||
+    excursion.priceDisplay?.trim() ||
+    (excursion.priceValue != null
+      ? `${Math.round(excursion.priceValue)}${excursion.priceCurrency ? ` ${excursion.priceCurrency}` : ""}`
+      : null);
+  const hasListedPrice = priceUsd != null || Boolean(listedPriceLabel);
 
   return (
     <aside
@@ -262,10 +279,8 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
             showDiscountRibbon={false}
           />
         </div>
-      ) : quote?.value_string || excursion.priceDisplay ? (
-        <p className="font-heading text-2xl font-bold text-charcoal">
-          {quote?.value_string || excursion.priceDisplay}
-        </p>
+      ) : hasListedPrice && listedPriceLabel ? (
+        <p className="font-heading text-2xl font-bold text-charcoal">{listedPriceLabel}</p>
       ) : (
         <p className="text-sm text-slate">{t("excursions.priceOnPartner")}</p>
       )}
@@ -375,7 +390,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
           >
             {t("excursions.book")}
           </a>
-          <p className="mt-3 text-xs leading-relaxed text-slate">{t("excursions.partnerDisclaimer")}</p>
+          <p className="mt-3 text-xs leading-relaxed text-slate">{t(partnerDisclaimerKey)}</p>
         </>
       )}
     </aside>

@@ -17,6 +17,22 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.tripster.ru",
       },
+      {
+        protocol: "https",
+        hostname: "www.sputnik8.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.sputnik8.com",
+      },
+      {
+        protocol: "https",
+        hostname: "cdn.sputnik8.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.selcdn.net",
+      },
     ],
   },
 };

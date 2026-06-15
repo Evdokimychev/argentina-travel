@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { ArrowUp } from "lucide-react";
 import { getBackgroundToneAt, type BackgroundTone } from "@/lib/background-tone-at-point";
+import { floatingChromeButtonClass } from "@/lib/floating-chrome-button";
+import { floatingChromeInsetClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
 const SHOW_AFTER_PX = 160;
-const TRACK_HEIGHT_PX = 88;
+const TRACK_HEIGHT_PX = 72;
 
 function getScrollProgress(): number {
   const scrollable = document.documentElement.scrollHeight - window.innerHeight;
@@ -84,18 +87,15 @@ export default function ScrollNavigationRail() {
       data-no-custom-cursor
       data-floating-chrome="true"
       className={cn(
-        "group fixed left-3 top-1/2 z-[85] hidden -translate-y-1/2 sm:flex",
-        "flex-col items-center gap-3 transition-colors duration-200",
-        onDark ? "text-white/75 hover:text-white" : "text-slate hover:text-charcoal",
+        "group fixed top-1/2 z-[85] hidden -translate-y-1/2 sm:flex",
+        floatingChromeInsetClass,
+        "flex-col items-center gap-2 transition-opacity duration-200",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
       )}
       aria-label="Прокрутить наверх"
     >
-      <span
-        className="text-[11px] font-medium tracking-[0.18em] uppercase"
-        style={{ writingMode: "vertical-rl", transform: "rotate(180deg)" }}
-      >
-        Прокрутить наверх
+      <span className={floatingChromeButtonClass(onDark)} aria-hidden>
+        <ArrowUp className="h-4 w-4" strokeWidth={2} aria-hidden />
       </span>
 
       <span
@@ -109,7 +109,7 @@ export default function ScrollNavigationRail() {
         <span
           className={cn(
             "absolute left-0 top-0 w-full rounded-full transition-[height,background-color] duration-150",
-            onDark ? "bg-white/90 group-hover:bg-sky" : "bg-charcoal/75 group-hover:bg-sky"
+            onDark ? "bg-white/90 group-hover:bg-sky" : "bg-charcoal/70 group-hover:bg-sky"
           )}
           style={{ height: `${Math.max(progress * 100, 4)}%` }}
         />

@@ -219,18 +219,27 @@ export default function BookingDateSelector({
 
           {showCustomPicker && (
             <div className="space-y-3">
-              <div className="flex gap-3 rounded-xl bg-sky/10 p-3">
-                <Info className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                <div className="text-sm leading-relaxed text-charcoal">
-                  <p className="font-medium">Индивидуальный заезд</p>
-                  {tour.requestDateFrom && tour.requestDateTo && (
-                    <p className="mt-1 text-slate">
-                      Доступны любые даты в период {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
+              <div className="rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.05] via-white to-surface-muted/40 p-3.5">
+                <div className="flex items-start gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky/10 text-sky">
+                    <Info className="h-4 w-4" aria-hidden />
+                  </span>
+                  <div className="min-w-0 space-y-1.5">
+                    <p className="text-sm font-semibold leading-snug text-charcoal">
+                      Индивидуальный заезд
                     </p>
-                  )}
-                  <p className="mt-1 text-slate">
-                    Только ваша группа, даты по согласованию с организатором
-                  </p>
+                    <div className="space-y-1 text-xs leading-relaxed text-slate">
+                      {tour.requestDateFrom && tour.requestDateTo && (
+                        <p>
+                          Любые даты в период{" "}
+                          <span className="font-medium text-charcoal/90">
+                            {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
+                          </span>
+                        </p>
+                      )}
+                      <p>Только ваша группа · даты согласуются с организатором</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 

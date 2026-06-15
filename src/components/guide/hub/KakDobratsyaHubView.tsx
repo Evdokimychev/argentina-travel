@@ -171,9 +171,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                       </ul>
                     </div>
                     <Link
-                      href="https://www.aviasales.ru/?origin=MOW&destination=BUE"
-                      target="_blank"
-                      rel="noopener noreferrer"
+                      href="/flights?origin=MOW&destination=BUE"
                       className={cn(buttonVariants({ variant: "default" }), "rounded-full px-8 py-6 text-base")}
                     >
                       Найти билеты

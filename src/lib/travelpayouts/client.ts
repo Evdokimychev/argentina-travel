@@ -103,4 +103,24 @@ export async function createTripsterAffiliateLink(input: {
   );
 }
 
+/** Wrap a Sputnik8 product URL with Travelpayouts attribution. */
+export async function createSputnik8AffiliateLink(input: {
+  sputnik8Url: string;
+  productId?: string | number;
+  citySlug?: string;
+  shorten?: boolean;
+}): Promise<TravelpayoutsLinkResult> {
+  const subIdParts = ["sputnik8"];
+  if (input.citySlug) subIdParts.push(input.citySlug);
+  if (input.productId != null) subIdParts.push(String(input.productId));
+
+  return createTravelpayoutsPartnerLink(
+    {
+      url: input.sputnik8Url,
+      subId: subIdParts.join(":"),
+    },
+    { shorten: input.shorten }
+  );
+}
+
 export { isTravelpayoutsConfigured };

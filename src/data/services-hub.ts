@@ -31,8 +31,7 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
         slug: "flight-search",
         title: "Сравнить авиабилеты",
         description: "Агрегатор маршрутов в Буэнос-Айрес и региональные хабы.",
-        href: "https://www.google.com/travel/flights",
-        external: true,
+        href: "/flights",
       },
       {
         id: "flights-request",
@@ -49,11 +48,18 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
     description: "Аэропорт, между городами и до отелей в популярных регионах.",
     items: [
       {
+        id: "transfers-search",
+        slug: "transfer-search",
+        title: "Найти трансфер",
+        description: "Аэропорт, отель и между городами — поиск через партнёра Intui.",
+        href: "/transfers",
+      },
+      {
         id: "transfers-airport",
         slug: "airport-transfer",
         title: "Трансфер из аэропорта EZE",
-        description: "Буэнос-Айрес и пригороды — заявка через менеджера.",
-        href: "/contacts?service=airport-transfer",
+        description: "Буэнос-Айрес и пригороды — быстрый поиск из Эсейсы.",
+        href: "/transfers?from=eze&to=ba-center",
       },
       {
         id: "transfers-patagonia",
@@ -83,6 +89,27 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
         title: "Помощь с выбором полиса",
         description: "Расскажите о маршруте — подскажем тип покрытия.",
         href: "/contacts?service=insurance-request",
+      },
+    ],
+  },
+  {
+    id: "connectivity",
+    title: "Связь и интернет",
+    description: "eSIM для поездки — интернет сразу после прилёта без поиска SIM.",
+    items: [
+      {
+        id: "esim-catalog",
+        slug: "esim",
+        title: "eSIM Airalo",
+        description: "Пакеты мобильного интернета для Аргентины и региона.",
+        href: "/esim",
+      },
+      {
+        id: "esim-argentina",
+        slug: "esim-argentina",
+        title: "eSIM для Аргентины",
+        description: "Локальные и региональные пакеты — активация до вылета.",
+        href: "/esim?country=argentina",
       },
     ],
   },

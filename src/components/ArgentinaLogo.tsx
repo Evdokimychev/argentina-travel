@@ -7,8 +7,8 @@ interface ArgentinaLogoProps {
 }
 
 const sizeClass = {
-  sm: "h-9 w-auto sm:h-10",
-  md: "h-10 w-auto sm:h-11",
+  sm: "h-10 w-auto sm:h-11",
+  md: "h-11 w-auto sm:h-12 lg:h-[52px]",
 } as const;
 
 /** Фирменный логотип «Пора в Аргентину» (светлая тема) */

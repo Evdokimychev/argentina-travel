@@ -102,6 +102,27 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
     description: "По email без входа",
   },
   {
+    id: "travel-flights",
+    label: "Авиабилеты",
+    labelKey: "nav.flights",
+    href: "/flights",
+    description: "Поиск перелётов в Аргентину",
+  },
+  {
+    id: "travel-transfers",
+    label: "Трансферы",
+    labelKey: "nav.transfers",
+    href: "/transfers",
+    description: "Аэропорт и между городами",
+  },
+  {
+    id: "travel-esim",
+    label: "eSIM",
+    labelKey: "nav.esim",
+    href: "/esim",
+    description: "Мобильный интернет в поездке",
+  },
+  {
     id: "travel-join",
     label: "Стать организатором",
     href: "/join",

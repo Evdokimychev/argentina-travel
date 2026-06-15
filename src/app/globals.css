@@ -168,6 +168,10 @@ body {
   animation-delay: 0.3s;
 }
 
+.animate-delay-500 {
+  animation-delay: 0.5s;
+}
+
 .route-map-canvas .leaflet-control-zoom {
   border: none !important;
   box-shadow: 0 2px 8px rgba(26, 26, 46, 0.12) !important;

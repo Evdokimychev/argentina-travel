@@ -273,6 +273,7 @@ export async function fetchExcursionListingBySlug(
 
   return {
     id: detail.id,
+    partner: detail.partner,
     slug: detail.slug,
     title: detail.title,
     tagline: detail.tagline,

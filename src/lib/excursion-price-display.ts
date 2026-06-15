@@ -69,7 +69,9 @@ function formatPartnerAmount(amount: number, currency: string): string {
 
 /** Subtle partner price line when site currency differs from Tripster listing currency. */
 export function resolvePartnerPriceFootnote(
-  excursion: Pick<ExcursionListing, "priceCurrency" | "priceDescription" | "priceDisplay">,
+  excursion: Pick<ExcursionListing, "priceCurrency" | "priceDisplay"> & {
+    priceDescription?: string | null;
+  },
   quote: TripsterPriceQuote | null | undefined,
   priceUsd: number | null,
   displayCurrency: CurrencyCode,

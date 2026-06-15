@@ -1,16 +1,18 @@
 import { NextResponse } from "next/server";
+import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { buildDefaultTickets } from "@/lib/excursion-schedule";
+import { fetchExcursionDetailServer } from "@/lib/excursion-server";
 import { fetchTripsterPriceQuote, TripsterBookingError } from "@/lib/tripster/booking-api";
 import { isTripsterConfigured } from "@/lib/tripster/env";
-import { fetchExcursionDetailServer } from "@/lib/tripster/excursion-server";
+import {
+  fetchSputnik8Events,
+  Sputnik8ApiError,
+} from "@/lib/sputnik8/client";
+import { isSputnik8Configured } from "@/lib/sputnik8/env";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
 export async function GET(request: Request, context: RouteContext) {
-  if (!isTripsterConfigured()) {
-    return NextResponse.json({ error: "Tripster is not configured." }, { status: 503 });
-  }
-
   const { slug } = await context.params;
   const excursion = await fetchExcursionDetailServer(slug);
   if (!excursion) {
@@ -24,6 +26,53 @@ export async function GET(request: Request, context: RouteContext) {
 
   if (!date || !time || !Number.isFinite(personsCount) || personsCount < 1) {
     return NextResponse.json({ error: "Invalid query parameters." }, { status: 400 });
+  }
+
+  const parsed = parseExcursionSlug(slug);
+
+  if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {
+    if (!isSputnik8Configured()) {
+      return NextResponse.json({
+        quote: null,
+        affiliateFallback: `/api/affiliate/go/${slug}`,
+      });
+    }
+
+    try {
+      const events = await fetchSputnik8Events(excursion.id);
+      const event = events.find((item) => {
+        const eventDate = item.date ?? item.datetime?.slice(0, 10) ?? item.starts_at?.slice(0, 10);
+        const eventTime = item.time ?? item.datetime?.slice(11, 16) ?? item.starts_at?.slice(11, 16);
+        return eventDate === date && eventTime?.startsWith(time.slice(0, 5));
+      });
+
+      const basePrice = excursion.priceValue ?? 0;
+      const total = basePrice * personsCount;
+      return NextResponse.json({
+        quote: {
+          value: total || undefined,
+          currency: excursion.priceCurrency,
+          value_string: excursion.priceDisplay,
+          event_id: event?.id,
+        },
+      });
+    } catch (error) {
+      const status = error instanceof Sputnik8ApiError ? error.status : 502;
+      if (status === 401 || status === 403 || status === 503) {
+        return NextResponse.json({
+          quote: null,
+          affiliateFallback: `/api/affiliate/go/${slug}`,
+        });
+      }
+      return NextResponse.json(
+        { error: "Failed to calculate price." },
+        { status: status >= 400 && status < 600 ? status : 502 }
+      );
+    }
+  }
+
+  if (!isTripsterConfigured()) {
+    return NextResponse.json({ error: "Tripster is not configured." }, { status: 503 });
   }
 
   const tickets = buildDefaultTickets(excursion.ticketOptions, personsCount);

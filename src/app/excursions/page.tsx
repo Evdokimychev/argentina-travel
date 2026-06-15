@@ -19,7 +19,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ExcursionsPage() {
-  const { items, cities } = await fetchExcursionsServer({ pageSize: 200 });
+  const { items, cities } = await fetchExcursionsServer({ pageSize: 500 });
 
   return (
     <Suspense

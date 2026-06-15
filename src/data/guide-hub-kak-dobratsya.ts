@@ -137,7 +137,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
   heroCtas: [
     {
       label: "✈ Найти авиабилеты",
-      href: "https://www.aviasales.ru/?origin=MOW&destination=BUE",
+      href: "/flights?origin=MOW&destination=BUE",
       variant: "primary",
       external: true,
     },
@@ -725,7 +725,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
       emoji: "✈",
       title: "Авиабилеты",
       description: "Сравнение маршрутов в EZE и региональные хабы",
-      href: "https://www.aviasales.ru/?origin=MOW&destination=BUE",
+      href: "/flights?origin=MOW&destination=BUE",
       external: true,
     },
     {
@@ -738,7 +738,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
       emoji: "📱",
       title: "eSIM",
       description: "Связь с первого дня поездки",
-      href: "/contacts?service=esim",
+      href: "/esim?country=argentina",
     },
     {
       emoji: "🛡",

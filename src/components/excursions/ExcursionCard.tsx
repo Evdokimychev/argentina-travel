@@ -18,7 +18,11 @@ import {
 import { resolveExcursionPriceUsd } from "@/lib/excursion-price-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import { buildExcursionGuideHref } from "@/lib/tripster/guide-mapper";
-import type { ExcursionListing } from "@/types/excursion";
+import type { ExcursionListing, ExcursionPartner } from "@/types/excursion";
+
+function partnerLabelKey(partner: ExcursionPartner): string {
+  return partner === "sputnik8" ? "excursions.partner.sputnik8" : "excursions.partner.tripster";
+}
 
 export default function ExcursionCard({ excursion }: { excursion: ExcursionListing }) {
   const { t } = useLocaleCurrency();
@@ -40,6 +44,10 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
         <div className="relative aspect-[4/3] overflow-hidden">
           <TourCardGallery images={galleryImages} alt={excursion.title} />
+
+          <span className="pointer-events-none absolute left-3 top-3 z-20 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-charcoal shadow-sm backdrop-blur-sm">
+            {t(partnerLabelKey(excursion.partner))}
+          </span>
 
           <ExcursionFavoriteButton
             excursion={excursion}
@@ -75,6 +83,7 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
               <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
               <span className="truncate">{excursion.cityName}</span>
             </span>
+            <div className="flex shrink-0 items-center gap-2">
             {hasReviews ? (
               <StarRating
                 layout="badge"
@@ -85,6 +94,7 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
             ) : (
               <StarRating layout="badge" isNew newLabel={t("excursions.card.new")} size="sm" />
             )}
+            </div>
           </div>
 
           <h3 className="mt-2 line-clamp-2 font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky">

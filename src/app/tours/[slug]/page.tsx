@@ -3,7 +3,6 @@ import TourJsonLd from "@/components/seo/TourJsonLd";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours-server";
 import { getCanonicalTourBySlug } from "@/lib/tour-repository";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
-import { fetchCanonicalTourBySlugServer } from "@/lib/tour-content-server";
 import { baseTours } from "@/data/tours";
 
 interface TourPageProps {
@@ -56,6 +55,7 @@ export default async function TourDetailPage({ params }: TourPageProps) {
 
   if (!initialCanonicalTour && isSupabaseToursEnabled()) {
     try {
+      const { fetchCanonicalTourBySlugServer } = await import("@/lib/tour-content-server");
       initialCanonicalTour = await fetchCanonicalTourBySlugServer(slug);
     } catch {
       // keep null

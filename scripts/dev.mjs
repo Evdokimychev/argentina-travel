@@ -6,6 +6,7 @@
  * - `npm run dev:clean` passes --clean to always wipe .next first
  */
 import { spawn } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -28,7 +29,18 @@ const killedByPort = killPorts(["3000", "3001", "3002", "3003"]);
 const killedPortCount = [...killedByPort.values()].reduce((sum, pids) => sum + pids.length, 0);
 const lockState = readStaleDevLock(root);
 
-const hadConflict = killedNext.length > 0 || killedPortCount > 0;
+let killedLockHolder = false;
+if (lockState && !lockState.stale && lockState.lock?.pid && lockState.lock.pid !== process.pid) {
+  try {
+    process.kill(lockState.lock.pid, "SIGTERM");
+    killedLockHolder = true;
+    console.log(`Stopped dev lock holder pid ${lockState.lock.pid}`);
+  } catch {
+    /* process already gone */
+  }
+}
+
+const hadConflict = killedNext.length > 0 || killedPortCount > 0 || killedLockHolder;
 const staleLock = lockState?.stale === true;
 const cacheCorrupted = isNextCacheCorrupted(root);
 
@@ -50,16 +62,12 @@ if (forceClean || hadConflict || staleLock || cacheCorrupted) {
       : hadConflict
         ? "parallel dev server conflict"
         : cacheCorrupted
-          ? "corrupted .next vendor chunks"
+          ? "corrupted .next cache"
           : "stale dev lock";
     console.log(`Removed .next cache (${reason})`);
+  } else if (fs.existsSync(path.join(root, ".next"))) {
+    console.warn("Warning: could not fully remove .next — stop other dev servers and retry npm run dev:clean");
   }
-}
-
-if (lockState && !lockState.stale && lockState.lock?.pid !== process.pid) {
-  console.warn(
-    `Warning: dev lock held by pid ${lockState.lock.pid} on port ${lockState.lock.port ?? "?"}.`
-  );
 }
 
 removeDevLock(root);

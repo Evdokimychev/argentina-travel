@@ -49,7 +49,10 @@ export type ExcursionPriceUnit = "per_person" | "per_excursion";
 
 export type ExcursionFormatKind = "group" | "individual";
 
+export type ExcursionPartner = "tripster" | "sputnik8";
+
 export type ExcursionListing = {
+  partner: ExcursionPartner;
   id: number;
   slug: string;
   title: string;
@@ -75,7 +78,9 @@ export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   annotation?: string;
   description?: string;
   photos: ExcursionPhoto[];
+  /** @deprecated Use partnerUrl — kept for Tripster backward compatibility */
   tripsterUrl: string;
+  partnerUrl: string;
   bookingHref: string;
   experienceType?: string;
   maxPersons?: number;
@@ -94,6 +99,10 @@ export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   descriptionBlocks: ExcursionDescriptionBlock[];
   ticketOptions: ExcursionTicketOption[];
   tags: ExcursionTag[];
+  placesToSee?: string;
+  languages?: string[];
+  payTypeInText?: string;
+  minimumBookPeriod?: string;
   reviews?: ExcursionReview[];
 };
 

@@ -13,6 +13,7 @@ import ExcursionMetaBadges from "@/components/excursions/ExcursionMetaBadges";
 import ExcursionSectionNav from "@/components/excursions/ExcursionSectionNav";
 import ExcursionBookingPanel from "@/components/excursions/ExcursionBookingPanel";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
+import TourSection from "@/components/tour-detail/TourSection";
 import { ArrowLeft, Clock, MapPin } from "lucide-react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
@@ -115,6 +116,20 @@ export default function ExcursionDetailView({
                   />
                 </div>
 
+                {excursion.placesToSee ? (
+                  <TourSection id="places" title={t("excursions.section.places")}>
+                    <div className="space-y-2 leading-relaxed text-charcoal/90">
+                      {excursion.placesToSee.split("\n").map((line) => {
+                        const text = line.trim();
+                        if (!text) return null;
+                        return (
+                          <p key={text}>{text.startsWith("•") ? text : `• ${text}`}</p>
+                        );
+                      })}
+                    </div>
+                  </TourSection>
+                ) : null}
+
                 <ExcursionMeetingSection
                   meetingPoint={excursion.meetingPoint}
                   finishPoint={excursion.finishPoint}
@@ -136,7 +151,11 @@ export default function ExcursionDetailView({
                     guide={excursion.guide}
                     title={t("excursions.section.guide")}
                     profileLabel={t("excursions.guide.profile")}
-                    externalProfileLabel={t("excursions.guide.onTripster")}
+                    externalProfileLabel={
+                      excursion.partner === "sputnik8"
+                        ? t("excursions.guide.onSputnik8")
+                        : t("excursions.guide.onTripster")
+                    }
                   />
                 ) : null}
 

@@ -141,7 +141,7 @@ export default function ProfileMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+0.5rem)] z-[60] w-[280px] overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
+          className="absolute right-0 top-[calc(100%+0.5rem)] z-[60] w-[min(280px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
         >
           <div className="rounded-xl bg-gray-50 px-3 py-3">
             <div className="flex items-center gap-3">

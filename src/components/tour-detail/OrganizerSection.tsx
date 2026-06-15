@@ -2,19 +2,27 @@ import Image from "next/image";
 import Link from "next/link";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { TourDetail, TourOrganizerDetail } from "@/types";
+import type { OrganizerTourGuide } from "@/types/organizer-tour";
 import { buildTourContactHref } from "@/lib/tour-contact";
 import {
   buildOrganizerCatalogHref,
   buildOrganizerPublicHref,
 } from "@/lib/organizer-public";
-import TourSection from "./TourSection";
 import { resolveOrganizerExperienceStat } from "@/lib/organizer-experience";
 import {
   resolveOrganizerRatingDisplay,
   resolveOrganizerTourCountDisplay,
   resolveOrganizerTravelerCountDisplay,
 } from "@/lib/tour-public-display";
+import {
+  getCompanionGuides,
+  getTourAuthorGuide,
+  resolveTourTeamSectionMeta,
+  shouldShowGuideBio,
+} from "@/lib/tour-team-display";
 import { formatTours } from "@/lib/pluralize";
+import { cn } from "@/lib/cn";
+import TourSection from "./TourSection";
 
 function organizerProfileHref(organizer: TourOrganizerDetail): string | null {
   const slug = organizer.slug ?? organizer.ownerUserId;
@@ -51,6 +59,21 @@ function OrganizerAvatar({
 
   return (
     <UserAvatar name={organizer.name} avatarUrl={null} className={sizeClassName} />
+  );
+}
+
+function RoleBadges({ organizerIsGuide }: { organizerIsGuide: boolean }) {
+  return (
+    <div className="flex flex-wrap items-center gap-2">
+      <span className="rounded-full bg-sky/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-sky">
+        Организатор
+      </span>
+      {organizerIsGuide ? (
+        <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+          Гид тура
+        </span>
+      ) : null}
+    </div>
   );
 }
 
@@ -137,16 +160,22 @@ function OrganizerActions({
 function OrganizerCardBody({
   organizer,
   comment,
+  authorGuide,
 }: {
   organizer: TourOrganizerDetail;
   comment?: TourDetail["organizerComment"];
+  authorGuide: OrganizerTourGuide | null;
 }) {
   const extendedText =
     organizer.extendedDescription?.trim() || comment?.greeting?.trim() || "";
   const recommendations = comment?.recommendations.filter((item) => item.trim()) ?? [];
   const routeNotes = comment?.routeNotes?.trim() || "";
+  const authorBio =
+    authorGuide && shouldShowGuideBio(authorGuide.bio, extendedText)
+      ? authorGuide.bio.trim()
+      : "";
 
-  if (!extendedText && recommendations.length === 0 && !routeNotes) {
+  if (!extendedText && recommendations.length === 0 && !routeNotes && !authorBio) {
     return null;
   }
 
@@ -156,8 +185,17 @@ function OrganizerCardBody({
         <p className="leading-relaxed text-slate">{extendedText}</p>
       ) : null}
 
+      {authorBio ? (
+        <div className={extendedText ? "mt-4 rounded-xl bg-sky/5 px-4 py-3" : undefined}>
+          <p className="text-xs font-semibold uppercase tracking-wide text-sky">
+            О гиде на маршруте
+          </p>
+          <p className="mt-2 text-sm leading-relaxed text-charcoal">{authorBio}</p>
+        </div>
+      ) : null}
+
       {recommendations.length > 0 ? (
-        <div className={extendedText ? "mt-4" : undefined}>
+        <div className={extendedText || authorBio ? "mt-4" : undefined}>
           <h4 className="text-sm font-semibold text-charcoal">Рекомендации</h4>
           <ul className="mt-2 space-y-1.5">
             {recommendations.map((item) => (
@@ -202,20 +240,54 @@ function OrganizerNameLink({
   );
 }
 
+function CompanionGuideCard({ guide }: { guide: OrganizerTourGuide }) {
+  return (
+    <article className="flex gap-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gray-100">
+        {guide.avatar ? (
+          <Image
+            src={guide.avatar}
+            alt={guide.name}
+            fill
+            className="object-cover"
+            sizes="64px"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center text-lg font-bold text-slate">
+            {guide.name.charAt(0)}
+          </div>
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <h3 className="font-semibold text-charcoal">{guide.name}</h3>
+        {guide.bio.trim() ? (
+          <p className="mt-2 text-sm leading-relaxed text-slate">{guide.bio}</p>
+        ) : null}
+      </div>
+    </article>
+  );
+}
+
 export default function OrganizerSection({
   organizer,
   comment,
   tourSlug,
+  guides,
   compact = false,
 }: {
   organizer: TourOrganizerDetail;
   comment?: TourDetail["organizerComment"];
   tourSlug?: string;
+  guides?: OrganizerTourGuide[];
   compact?: boolean;
 }) {
+  const authorGuide = getTourAuthorGuide(guides);
+  const companionGuides = getCompanionGuides(guides, authorGuide);
+  const sectionMeta = resolveTourTeamSectionMeta(guides);
+  const profileHref = organizerProfileHref(organizer);
+
   if (compact) {
     const rating = resolveOrganizerRatingDisplay(organizer);
-    const profileHref = organizerProfileHref(organizer);
 
     return (
       <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -237,6 +309,9 @@ export default function OrganizerSection({
           )}
           <div className="min-w-0">
             <OrganizerNameLink organizer={organizer} className="font-semibold text-charcoal" />
+            {sectionMeta.organizerIsGuide ? (
+              <p className="mt-1 text-xs font-medium text-emerald-700">Организатор и гид тура</p>
+            ) : null}
             {organizer.statusText?.trim() ? (
               <p className="mt-0.5 line-clamp-2 text-xs font-medium text-sky">
                 {organizer.statusText}
@@ -247,9 +322,7 @@ export default function OrganizerSection({
               </p>
             ) : null}
             {organizer.languages.length > 0 ? (
-              <p className="mt-1 text-xs text-slate">
-                {organizer.languages.join(", ")}
-              </p>
+              <p className="mt-1 text-xs text-slate">{organizer.languages.join(", ")}</p>
             ) : null}
             {rating.show ? (
               <p
@@ -257,7 +330,7 @@ export default function OrganizerSection({
               >
                 {!rating.isNew ? (
                   <svg className="h-3.5 w-3.5 text-sun" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00-.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
                 ) : null}
                 {rating.label}
@@ -271,11 +344,22 @@ export default function OrganizerSection({
   }
 
   return (
-    <TourSection id="organizer" title="Организатор">
-      <div className="rounded-2xl border border-gray-100 bg-surface-muted/30 p-6 sm:p-8">
+    <TourSection
+      id="organizer"
+      title={sectionMeta.title}
+      subtitle={sectionMeta.subtitle}
+    >
+      <div
+        className={cn(
+          "rounded-2xl border bg-surface-muted/30 p-6 sm:p-8",
+          sectionMeta.organizerIsGuide
+            ? "border-sky/20 ring-1 ring-sky/10"
+            : "border-gray-100"
+        )}
+      >
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
-          {organizerProfileHref(organizer) ? (
-            <Link href={organizerProfileHref(organizer)!} className="shrink-0">
+          {profileHref ? (
+            <Link href={profileHref} className="shrink-0">
               <OrganizerAvatar
                 organizer={organizer}
                 sizeClassName="h-20 w-20 sm:h-24 sm:w-24"
@@ -290,11 +374,16 @@ export default function OrganizerSection({
             />
           )}
           <div className="min-w-0 flex-1">
+            <RoleBadges organizerIsGuide={sectionMeta.organizerIsGuide} />
             <OrganizerNameLink
               organizer={organizer}
-              className="text-xl font-bold text-charcoal"
+              className="mt-3 block text-xl font-bold text-charcoal"
             />
-            <p className="text-sm text-slate">{organizer.role}</p>
+            <p className="text-sm text-slate">
+              {sectionMeta.organizerIsGuide
+                ? "Организатор путешествий · ведёт тур лично"
+                : organizer.role}
+            </p>
             {organizer.statusText?.trim() ? (
               <p className="mt-2 text-sm font-medium text-sky">{organizer.statusText}</p>
             ) : organizer.shortDescription?.trim() ? (
@@ -304,10 +393,27 @@ export default function OrganizerSection({
           </div>
         </div>
 
-        <OrganizerCardBody organizer={organizer} comment={comment} />
+        <OrganizerCardBody
+          organizer={organizer}
+          comment={comment}
+          authorGuide={authorGuide}
+        />
 
         <OrganizerActions organizer={organizer} tourSlug={tourSlug} />
       </div>
+
+      {companionGuides.length > 0 ? (
+        <div className="mt-6">
+          <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-slate">
+            Также ведут тур
+          </h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {companionGuides.map((guide) => (
+              <CompanionGuideCard key={guide.id} guide={guide} />
+            ))}
+          </div>
+        </div>
+      ) : null}
     </TourSection>
   );
 }
