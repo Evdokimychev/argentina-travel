@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Unbounded } from "next/font/google";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import Providers from "@/components/Providers";
+import SiteChrome from "@/components/SiteChrome";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -31,9 +30,7 @@ export default function RootLayout({
     <html lang="ru" className={unbounded.variable} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased">
         <Providers>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
+          <SiteChrome>{children}</SiteChrome>
         </Providers>
       </body>
     </html>

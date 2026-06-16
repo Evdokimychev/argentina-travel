@@ -120,7 +120,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
   heroCtas: [
     { label: "Районы BA", href: "#bezopasnost-1", variant: "primary" },
     { label: "Что делать если", href: "#bezopasnost-5", variant: "secondary" },
-    { label: "Страховка", href: "/contacts?service=insurance-request", variant: "tertiary" },
+    { label: "Страховка", href: "/insurance", variant: "tertiary" },
   ],
   quickFacts: [
     { label: "Главный риск BA", headline: "Карманники, snatch theft", detail: "Телефон не у проезжей части; сумка cross-body спереди" },
@@ -437,9 +437,8 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
     {
       softIntro: "Нужна страховка под ваш маршрут?",
       title: "Туристическая страховка",
-      description: "Покрытие медицины и эвакуации — World Nomads.",
-      href: "https://www.worldnomads.com",
-      external: true,
+      description: "Покрытие медицины и эвакуации — онлайн через партнёра Travelpayouts.",
+      href: "/insurance",
       ctaLabel: "Выбрать полис",
     },
     {

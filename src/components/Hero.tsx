@@ -43,7 +43,7 @@ export default function Hero({
         />
 
         <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-14", children && "pb-8 md:pb-10")}>
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">
+          <div className="hero-compact-grid grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">
             <div className="min-w-0">
               {eyebrow ? (
                 <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">

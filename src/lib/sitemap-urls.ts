@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/data/blog";
+import { FLIGHT_POPULAR_ROUTES } from "@/data/flight-popular-routes";
 import { marketplaceTours } from "@/data/marketplace-tours";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
 import {
@@ -113,6 +114,7 @@ export async function collectSitemapPaths(): Promise<string[]> {
     (destination) => `/destinations/${destination.id}`
   );
   const legalPaths = Object.values(LEGAL_DOCUMENTS).map((doc) => `/legal/${doc.slug}`);
+  const flightRoutePaths = FLIGHT_POPULAR_ROUTES.map((route) => `/flights/${route.id}`);
   const organizerPaths = SEED_USERS.filter((user) => user.roles?.includes("organizer")).map(
     (user) => `/organizers/${user.id}`
   );
@@ -127,6 +129,7 @@ export async function collectSitemapPaths(): Promise<string[]> {
     ...guideTopicPaths,
     ...destinationPaths,
     ...legalPaths,
+    ...flightRoutePaths,
     ...organizerPaths,
   ]);
 }

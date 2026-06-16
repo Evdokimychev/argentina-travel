@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import ExcursionCard from "@/components/excursions/ExcursionCard";
@@ -21,6 +21,7 @@ type ExcursionsCatalogProps = {
   initialCitySlug?: string;
   title?: string;
   subtitle?: string;
+  flightSidebar?: ReactNode;
 };
 
 function sortExcursions(items: ExcursionListing[], sort: ExcursionSortOption): ExcursionListing[] {
@@ -43,6 +44,7 @@ export default function ExcursionsCatalog({
   initialCitySlug,
   title,
   subtitle,
+  flightSidebar,
 }: ExcursionsCatalogProps) {
   const { t } = useLocaleCurrency();
   const resolvedTitle = title ?? t("excursions.title");
@@ -168,6 +170,8 @@ export default function ExcursionsCatalog({
       </div>
 
       <div className={cn(siteContainerClass, "mt-8")}>
+        <div className={cn(flightSidebar ? "lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8 lg:items-start" : undefined)}>
+          <div className="min-w-0">
         {sorted.length === 0 ? (
           <EmptyState
             icon={MapPin}
@@ -248,6 +252,12 @@ export default function ExcursionsCatalog({
             ))}
           </div>
         ) : null}
+          </div>
+
+          {flightSidebar ? (
+            <aside className="mt-8 lg:mt-0 lg:sticky lg:top-24">{flightSidebar}</aside>
+          ) : null}
+        </div>
       </div>
     </div>
   );

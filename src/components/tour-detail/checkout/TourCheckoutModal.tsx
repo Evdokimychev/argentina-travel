@@ -45,7 +45,6 @@ import {
 import AccommodationStep from "./AccommodationStep";
 import {
   CHECKOUT_ADDONS,
-  calcInsuranceTotal,
   INSURANCE_ADDON,
   TRANSFER_VEHICLE_OPTIONS,
   transferVehicleCount,
@@ -62,6 +61,7 @@ import InsuranceAddonPicker from "./InsuranceAddonPicker";
 import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm } from "./checkout-contact";
 import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
+import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 
 interface TourCheckoutModalProps {
   tour: TourDetail;
@@ -261,10 +261,7 @@ function CheckoutSummary({
             <span className="min-w-0 truncate">
               {INSURANCE_ADDON.title} × {form.insuranceTravelers}
             </span>
-            <FormattedPrice
-              priceUsd={calcInsuranceTotal(form.insuranceTravelers)}
-              className="shrink-0 font-medium text-charcoal"
-            />
+            <span className="shrink-0 text-xs font-medium text-sky">отдельно на /insurance</span>
           </div>
         )}
         {selectedAddons.map((addon) => (
@@ -372,11 +369,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
         : "—";
 
   const roomTotalUsd = calcRoomTotalUsd(form.roomAllocations);
-  const addonsTotalUsd = checkoutAddonsTotal(
-    form.addonIds,
-    form.transferAllocations,
-    form.insuranceTravelers
-  );
+  const addonsTotalUsd = checkoutAddonsTotal(form.addonIds, form.transferAllocations);
   const subtotalUsd = totalPriceUsd;
   const totalUsd = subtotalUsd + roomTotalUsd + addonsTotalUsd;
   const payNowUsd =
@@ -693,6 +686,21 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         Найти заявку
                       </Link>
                     </div>
+                  </div>
+                ) : null}
+                {form.insuranceTravelers > 0 ? (
+                  <div className="mt-4 rounded-xl border border-sky/20 bg-sky/5 px-4 py-4 text-left text-sm">
+                    <p className="font-medium text-charcoal">Оформите страховку для поездки</p>
+                    <p className="mt-1 text-slate">
+                      Полис для {formatTouristsBooking(form.insuranceTravelers)} — на сайте партнёра,
+                      отдельно от оплаты тура.
+                    </p>
+                    <Link
+                      href={buildInsuranceHref({ travelers: form.insuranceTravelers })}
+                      className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-sky px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sky-dark"
+                    >
+                      Перейти к подбору полиса
+                    </Link>
                   </div>
                 ) : null}
                 <Button className="mt-6 w-full" onClick={closeCheckout}>

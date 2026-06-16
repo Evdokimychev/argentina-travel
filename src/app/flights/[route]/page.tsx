@@ -1,0 +1,76 @@
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import FlightRouteLandingView from "@/components/flights/FlightRouteLandingView";
+import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
+import {
+  FLIGHT_POPULAR_ROUTES,
+  getFlightRouteById,
+  getRelatedFlightRoutes,
+} from "@/data/flight-popular-routes";
+import { fetchRouteFlightPriceTeaser } from "@/lib/flights/hub-price-teasers";
+import { getFlightRouteLabels } from "@/lib/flights/route-labels";
+import { getRoutePriceCalendar } from "@/lib/flights/route-price-calendar";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
+
+type PageProps = {
+  params: Promise<{ route: string }>;
+};
+
+export async function generateStaticParams() {
+  return FLIGHT_POPULAR_ROUTES.map((route) => ({ route: route.id }));
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { route: routeId } = await params;
+  const route = getFlightRouteById(routeId);
+  if (!route) return { title: "Маршрут" };
+
+  const locale = "ru" as const;
+  const labels = getFlightRouteLabels(locale);
+  const title = labels.heroTitle
+    .replace("{origin}", route.originLabel)
+    .replace("{destination}", route.destinationLabel);
+  const description = labels.getRouteIntro(route.id, route.originLabel, route.destinationLabel);
+
+  return buildPublicPageMetadata({
+    title: `${title} — авиабилеты | Пора в Аргентину`,
+    description,
+    path: `/flights/${route.id}`,
+  });
+}
+
+export default async function FlightRoutePage({ params }: PageProps) {
+  const { route: routeId } = await params;
+  const route = getFlightRouteById(routeId);
+  if (!route) notFound();
+
+  const locale = "ru" as const;
+  const [teaser, calendarMonths] = await Promise.all([
+    fetchRouteFlightPriceTeaser({
+      routeId: route.id,
+      origin: route.origin,
+      destination: route.destination,
+      originLabel: route.originLabel,
+      destinationLabel: route.destinationLabel,
+      locale,
+    }),
+    getRoutePriceCalendar(route.origin, route.destination, locale),
+  ]);
+
+  const relatedRoutes = getRelatedFlightRoutes(route.id);
+
+  return (
+    <>
+      {teaser ? (
+        <FlightOffersJsonLd teasers={[teaser]} pageUrl={`/flights/${route.id}`} />
+      ) : null}
+      <FlightRouteLandingView
+        route={route}
+        teaser={teaser}
+        calendarMonths={calendarMonths}
+        relatedRoutes={relatedRoutes}
+        locale={locale}
+      />
+    </>
+  );
+}

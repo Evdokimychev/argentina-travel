@@ -8,7 +8,11 @@ import {
 } from "@/data/services-hub";
 import { siteContainerClass } from "@/lib/site-container";
 
-export default function ServicesPageView() {
+type ServicesPageViewProps = {
+  flightsTeaser?: React.ReactNode;
+};
+
+export default function ServicesPageView({ flightsTeaser }: ServicesPageViewProps) {
   return (
     <>
       <Hero
@@ -79,6 +83,10 @@ export default function ServicesPageView() {
                   );
                 })}
               </div>
+
+              {category.id === "flights" && flightsTeaser ? (
+                <div className="mt-6">{flightsTeaser}</div>
+              ) : null}
             </div>
           ))}
         </div>

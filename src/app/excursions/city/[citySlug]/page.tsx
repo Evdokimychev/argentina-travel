@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ExcursionsCatalog from "@/components/excursions/ExcursionsCatalog";
+import ExcursionCityFlightSidebar from "@/components/flights/ExcursionCityFlightSidebar";
+import { getExcursionCityFlightRouteIds } from "@/lib/flights/destination-airports";
 import {
   fetchExcursionCityServer,
   fetchExcursionsServer,
@@ -39,6 +41,11 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
     pageSize: 500,
   });
 
+  const hasFlightRoutes = getExcursionCityFlightRouteIds(citySlug).length > 0;
+  const flightSidebar = hasFlightRoutes ? (
+    <ExcursionCityFlightSidebar citySlug={citySlug} cityName={city.name} />
+  ) : null;
+
   return (
     <ExcursionsCatalog
       excursions={items}
@@ -46,6 +53,7 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
       initialCitySlug={citySlug}
       title={`Экскурсии в ${city.name}`}
       subtitle={`${city.experienceCount} маршрутов и активностей в городе`}
+      flightSidebar={flightSidebar}
     />
   );
 }

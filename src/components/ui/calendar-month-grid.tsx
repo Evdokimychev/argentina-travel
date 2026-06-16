@@ -87,7 +87,10 @@ export default function CalendarMonthGrid({
           <div key={`pad-${i}`} className="h-8" />
         ))}
         {days.map((day) => {
-          const isSelected = selected ? isSameDay(day, selected) : false;
+          const isRangeStart = rangeFrom ? isSameDay(day, rangeFrom) : false;
+          const isRangeEnd = rangeTo ? isSameDay(day, rangeTo) : false;
+          const isSelected =
+            (selected ? isSameDay(day, selected) : false) || isRangeStart || isRangeEnd;
           const inRange = isInRange(day, rangeFrom, rangeTo);
           const disabled =
             isDayDisabled(day, minDate, maxDate, disablePast) ||
@@ -95,7 +98,7 @@ export default function CalendarMonthGrid({
 
           return (
             <button
-              key={day.toISOString()}
+              key={format(day, "yyyy-MM-dd")}
               type="button"
               disabled={disabled}
               onClick={() => onDayClick(day)}

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { addMonths, subMonths, isBefore } from "date-fns";
+import { addDays, addMonths, isBefore, isSameDay, startOfDay, startOfMonth, subMonths } from "date-fns";
 import { Button } from "@/components/ui/button";
 import CalendarMonthGrid from "@/components/ui/calendar-month-grid";
 import { DATE_PRESETS } from "@/data/filters";
@@ -15,22 +15,33 @@ interface DateRangePickerProps {
   onClear: () => void;
 }
 
+function resolvePresetYear(monthIndex: number): number {
+  const now = startOfDay(new Date());
+  const year = now.getFullYear();
+  const monthStart = startOfMonth(new Date(year, monthIndex, 1));
+  return monthStart < startOfMonth(now) ? year + 1 : year;
+}
+
 function getPresetRange(id: string): { from: Date; to: Date } | null {
   const year = new Date().getFullYear();
   switch (id) {
     case "weekend": {
-      const now = new Date();
+      const now = startOfDay(new Date());
       const day = now.getDay();
-      const sat = new Date(now);
-      sat.setDate(now.getDate() + ((6 - day + 7) % 7 || 7));
-      const sun = new Date(sat);
-      sun.setDate(sat.getDate() + 1);
-      return { from: sat, to: sun };
+      if (day === 6) return { from: now, to: addDays(now, 1) };
+      if (day === 0) return { from: addDays(now, -1), to: now };
+      const daysUntilSat = (6 - day + 7) % 7;
+      const sat = addDays(now, daysUntilSat);
+      return { from: sat, to: addDays(sat, 1) };
     }
-    case "july":
-      return { from: new Date(year, 6, 1), to: new Date(year, 6, 31) };
-    case "august":
-      return { from: new Date(year, 7, 1), to: new Date(year, 7, 31) };
+    case "july": {
+      const presetYear = resolvePresetYear(6);
+      return { from: new Date(presetYear, 6, 1), to: new Date(presetYear, 6, 31) };
+    }
+    case "august": {
+      const presetYear = resolvePresetYear(7);
+      return { from: new Date(presetYear, 7, 1), to: new Date(presetYear, 7, 31) };
+    }
     case "spring":
       return { from: new Date(year, 8, 1), to: new Date(year, 10, 30) };
     case "summer":
@@ -59,18 +70,23 @@ export default function DateRangePicker({
   const secondMonth = addMonths(month, 1);
 
   function handleDayClick(day: Date) {
-    if (!from || (from && to)) {
-      onChange(day, null);
-    } else if (isBefore(day, from)) {
-      onChange(day, from);
+    const clicked = startOfDay(day);
+    const rangeStart = from ? startOfDay(from) : null;
+
+    if (!rangeStart || (rangeStart && to)) {
+      onChange(clicked, null);
+    } else if (isBefore(clicked, rangeStart)) {
+      onChange(clicked, rangeStart);
+    } else if (isSameDay(clicked, rangeStart)) {
+      onChange(rangeStart, rangeStart);
     } else {
-      onChange(from, day);
+      onChange(rangeStart, clicked);
     }
   }
 
   return (
     <div className="w-full max-w-[580px]">
-      <div className="flex items-center border-b border-gray-100 py-2">
+      <div className="flex items-start border-b border-gray-100 py-2">
         <button
           type="button"
           onClick={() => setMonth(subMonths(month, 1))}

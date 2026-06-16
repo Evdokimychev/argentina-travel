@@ -33,6 +33,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "**.selcdn.net",
       },
+      {
+        protocol: "https",
+        hostname: "app.wegotrip.com",
+      },
+      {
+        protocol: "https",
+        hostname: "wgt-prod-storage.s3.amazonaws.com",
+      },
     ],
   },
 };

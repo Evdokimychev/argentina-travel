@@ -37,6 +37,7 @@ interface MarketplaceHomeProps {
   blogPosts: BlogPost[];
   testimonials: Testimonial[];
   platformStats: PlatformStats;
+  travelPrepStrip?: React.ReactNode;
 }
 
 function SectionHeader({
@@ -102,6 +103,7 @@ export default function MarketplaceHome({
   blogPosts,
   testimonials,
   platformStats,
+  travelPrepStrip,
 }: MarketplaceHomeProps) {
   const router = useRouter();
   const tours = useRepositoryTourListings(initialTours);
@@ -252,6 +254,8 @@ export default function MarketplaceHome({
           </div>
         </div>
       </section>
+
+      {!hasActiveSearch && travelPrepStrip ? travelPrepStrip : null}
 
       {hasActiveSearch ? (
         <section id="tour-results" className={cn(siteContainerClass, "py-8", siteScrollAnchorClass)}>

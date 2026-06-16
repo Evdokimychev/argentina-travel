@@ -151,14 +151,6 @@ export default function FlightsSearchView() {
     }
   }, [currency, formState, locale, t]);
 
-  function handlePopularRoute(origin: string, destination: string) {
-    setFormState((prev) => ({
-      ...prev,
-      origin: placeFromCode(origin),
-      destination: placeFromCode(destination),
-    }));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
 
   const formLabels = {
     origin: t("flights.form.origin"),
@@ -206,10 +198,7 @@ export default function FlightsSearchView() {
       </Hero>
 
       <section className={siteContainerClass + " py-10 sm:py-14"}>
-        <FlightPopularRoutes
-          title={t("flights.popular.title")}
-          onSelect={handlePopularRoute}
-        />
+        <FlightPopularRoutes title={t("flights.popular.title")} />
 
         {error ? (
           <p className="mt-8 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">

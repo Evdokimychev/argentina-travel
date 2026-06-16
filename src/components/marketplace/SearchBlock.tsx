@@ -244,8 +244,9 @@ export default function SearchBlock({
             )}
           </div>
           <PopoverContent
-            className="w-[calc(100vw-2rem)] max-w-[580px] p-0"
             align="start"
+            collisionPadding={16}
+            className="max-h-[min(90vh,var(--radix-popover-content-available-height))] w-[calc(100vw-2rem)] max-w-[580px] overflow-y-auto p-0"
           >
             <DateRangePicker
               from={draftFrom}

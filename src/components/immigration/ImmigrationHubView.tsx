@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { AlertTriangle, ArrowRight } from "lucide-react";
+import ImmigrationFlightHint from "@/components/flights/ImmigrationFlightHint";
 import HubHero from "@/components/guide/hub/HubHero";
 import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNav";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
@@ -121,6 +122,8 @@ export default function ImmigrationHubView() {
               >
                 <TopicTeaserList topics={hub.hubTopics} />
               </HubSection>
+
+              <ImmigrationFlightHint />
 
               <div className="space-y-3">
                 {hub.warnings.map((warning) => (

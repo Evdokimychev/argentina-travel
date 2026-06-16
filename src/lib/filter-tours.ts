@@ -1,3 +1,4 @@
+import { startOfDay } from "date-fns";
 import {
   TourListing,
   TourFilters,
@@ -42,10 +43,14 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 
 function matchesDateRange(tour: TourListing, from: Date | null, to: Date | null) {
   if (!from && !to) return true;
+
+  const rangeStart = from ? startOfDay(from) : null;
+  const rangeEnd = to ? startOfDay(to) : null;
+
   return tour.availableDates.some((d) => {
-    const start = new Date(d.start);
-    if (from && start < from) return false;
-    if (to && start > to) return false;
+    const start = startOfDay(new Date(d.start));
+    if (rangeStart && start < rangeStart) return false;
+    if (rangeEnd && start > rangeEnd) return false;
     return true;
   });
 }

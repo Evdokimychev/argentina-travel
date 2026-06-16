@@ -34,6 +34,7 @@ import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import PlacesSection from "./PlacesSection";
 import type { Tour } from "@/types/tour";
+import type { ReactNode } from "react";
 import { Suspense } from "react";
 
 interface TourDetailViewProps {
@@ -42,6 +43,8 @@ interface TourDetailViewProps {
   similarTours: TourDetail[];
   /** SSR snapshot — keeps header/sections in sync on first paint */
   initialCanonicalTour?: Tour | null;
+  flightLogisticsSection?: ReactNode;
+  flightLogisticsNavLabel?: string;
   previewMode?: boolean;
   previewCanonicalTour?: Tour | null;
   previewEditHref?: string;
@@ -54,6 +57,8 @@ export default function TourDetailView({
   tour: initialTour,
   similarTours,
   initialCanonicalTour = null,
+  flightLogisticsSection,
+  flightLogisticsNavLabel,
   previewMode = false,
   previewCanonicalTour = null,
   previewEditHref,
@@ -80,6 +85,7 @@ export default function TourDetailView({
   const sectionLinks = buildTourSectionLinks(tour, {
     hasSimilarTours: similarTours.length > 0,
     canonicalTour,
+    flightLogisticsLabel: flightLogisticsNavLabel,
   });
 
   return (
@@ -127,6 +133,7 @@ export default function TourDetailView({
               {canonicalTour ? <PackingListSection tour={canonicalTour} /> : null}
               {canonicalTour ? <TourPoliciesSection tour={canonicalTour} /> : null}
               <ImportantSection items={tour.importantInfo} />
+              {flightLogisticsSection}
               {canonicalTour ? <LogisticsDetailSection tour={canonicalTour} /> : null}
               <RouteMapSection
                 points={tour.routePoints}

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { ExternalLink } from "lucide-react";
+import FlightRoutePriceHint from "@/components/flights/FlightRoutePriceHint";
 import { cn } from "@/lib/cn";
 import {
   ARGENTINA_DOMESTIC_AIRPORTS,
@@ -13,6 +14,8 @@ import {
   getHubRoutes,
   type DomesticRouteFrequency,
 } from "@/data/argentina-domestic-routes";
+import { resolveDomesticRouteLabels } from "@/lib/flights/destination-airports";
+import { buildFlightsSearchHref } from "@/lib/flights/search-href";
 import "leaflet/dist/leaflet.css";
 
 type HubCode = "AEP" | "EZE";
@@ -187,6 +190,11 @@ export default function DomesticRoutesMap() {
       ? "https://www.flightconnections.com/flights-from-aep-buenos-aires-aep"
       : "https://www.flightconnections.com/flights-from-eze-buenos-aires-eze";
 
+  const selectedRoute = selectedCode ? hubRoutes.find((route) => route.to === selectedCode) : null;
+  const selectedLabels = selectedCode
+    ? resolveDomesticRouteLabels(hub, selectedCode)
+    : null;
+
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 px-4 py-3">
@@ -261,6 +269,15 @@ export default function DomesticRoutesMap() {
               );
             })}
           </ul>
+          {selectedRoute && selectedLabels ? (
+            <FlightRoutePriceHint
+              origin={selectedLabels.origin}
+              destination={selectedLabels.destination}
+              originLabel={selectedLabels.originLabel}
+              destinationLabel={selectedLabels.destinationLabel}
+              routeId={`${hub.toLowerCase()}-${selectedRoute.to.toLowerCase()}`}
+            />
+          ) : null}
         </aside>
 
         <div className="relative">
@@ -291,7 +308,21 @@ export default function DomesticRoutesMap() {
 
       <p className="border-t border-gray-100 px-4 py-2.5 text-[11px] leading-relaxed text-slate">
         Данные ориентировочные по типичным маршрутам Aerolíneas Argentinas, JetSMART и Flybondi.
-        Расписание меняется — проверяйте актуальные рейсы на{" "}
+        {selectedLabels ? (
+          <>
+            {" "}
+            Цены на {selectedLabels.originLabel} → {selectedLabels.destinationLabel}:{" "}
+            <a
+              href={buildFlightsSearchHref(selectedLabels.origin, selectedLabels.destination)}
+              className="font-medium text-sky hover:underline"
+            >
+              Aviasales
+            </a>
+            . Расписание — на{" "}
+          </>
+        ) : (
+          <> Расписание меняется — проверяйте актуальные рейсы на </>
+        )}
         <a
           href={flightConnectionsUrl}
           target="_blank"
@@ -300,8 +331,8 @@ export default function DomesticRoutesMap() {
         >
           FlightConnections
           <ExternalLink className="h-3 w-3" aria-hidden />
-        </a>{" "}
-        или сайтах авиакомпаний.
+        </a>
+        {selectedLabels ? null : <> или сайтах авиакомпаний</>}.
       </p>
     </div>
   );

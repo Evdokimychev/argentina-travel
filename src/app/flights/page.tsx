@@ -1,7 +1,8 @@
 import { Suspense } from "react";
-import FlightsSearchView from "@/components/flights/FlightsSearchView";
+import FlightsWhitelabelView from "@/components/flights/FlightsWhitelabelView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { getTravelpayoutsWhitelabelScriptUrl } from "@/lib/travelpayouts/whitelabel/config";
 
 const PAGE_TITLE = "Авиабилеты в Аргентину — Пора в Аргентину";
 const PAGE_DESCRIPTION =
@@ -14,11 +15,13 @@ export const metadata = buildPublicPageMetadata({
 });
 
 export default function FlightsPage() {
+  const scriptUrl = getTravelpayoutsWhitelabelScriptUrl();
+
   return (
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/flights" />
       <Suspense fallback={null}>
-        <FlightsSearchView />
+        <FlightsWhitelabelView scriptUrl={scriptUrl} />
       </Suspense>
     </>
   );

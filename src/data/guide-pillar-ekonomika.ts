@@ -451,9 +451,8 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
     },
     {
       title: "Туристическая страховка",
-      description: "Покрытие медицины и эвакуации — партнёр World Nomads.",
-      href: "https://www.worldnomads.com",
-      external: true,
+      description: "Покрытие медицины и эвакуации — онлайн на /insurance.",
+      href: "/insurance",
       ctaLabel: "Выбрать полис",
     },
     {

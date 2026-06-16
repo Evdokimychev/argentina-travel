@@ -116,11 +116,32 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
     description: "Аэропорт и между городами",
   },
   {
+    id: "travel-insurance",
+    label: "Страховка",
+    labelKey: "nav.insurance",
+    href: "/insurance",
+    description: "Медицинская страховка для поездки",
+  },
+  {
     id: "travel-esim",
     label: "eSIM",
     labelKey: "nav.esim",
     href: "/esim",
     description: "Мобильный интернет в поездке",
+  },
+  {
+    id: "travel-car-rental",
+    label: "Аренда авто",
+    labelKey: "nav.carRental",
+    href: "/car-rental",
+    description: "Прокат для поездок по регионам",
+  },
+  {
+    id: "travel-audio-guides",
+    label: "Аудиогиды",
+    labelKey: "nav.audioGuides",
+    href: "/audio-guides",
+    description: "Аудиоэкскурсии WeGoTrip",
   },
   {
     id: "travel-join",

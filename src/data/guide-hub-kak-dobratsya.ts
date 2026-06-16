@@ -564,7 +564,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
     title: "Страховка для поездки",
     body:
       "С 2025 года медстраховка обязательна для въезда — полис с покрытием в Аргентине на весь срок. Экстренная помощь в госпиталях бесплатна, но страховка нужна для плановых визитов, эвакуации из Patagonia и спокойствия на границе. Типичный полис на 3–4 недели — 30–80 USD; расширенный с эвакуацией — до 150 USD.",
-    href: "/contacts?service=insurance-request",
+    href: "/insurance",
     ctaLabel: "Оформить страховку",
   },
   transferTables: [
@@ -744,7 +744,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
       emoji: "🛡",
       title: "Страховки",
       description: "Медицина и эвакуация",
-      href: "/contacts?service=insurance-request",
+      href: "/insurance",
     },
     {
       emoji: "🏨",

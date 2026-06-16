@@ -20,6 +20,7 @@ export interface TourSectionLink {
 export interface TourSectionNavContext {
   hasSimilarTours: boolean;
   canonicalTour?: Tour | null;
+  flightLogisticsLabel?: string;
 }
 
 export function buildTourSectionLinks(
@@ -28,6 +29,8 @@ export function buildTourSectionLinks(
 ): TourSectionLink[] {
   const hasSimilarTours = typeof context === "boolean" ? context : context.hasSimilarTours;
   const canonicalTour = typeof context === "boolean" ? null : context.canonicalTour;
+  const flightLogisticsLabel =
+    typeof context === "boolean" ? undefined : context.flightLogisticsLabel;
 
   const links: TourSectionLink[] = [{ id: "description", label: "Описание" }];
 
@@ -61,6 +64,10 @@ export function buildTourSectionLinks(
 
   if (tour.importantInfo?.some((item) => item.trim())) {
     links.push({ id: "important", label: "Важно" });
+  }
+
+  if (flightLogisticsLabel) {
+    links.push({ id: "flight-logistics", label: flightLogisticsLabel });
   }
 
   if (

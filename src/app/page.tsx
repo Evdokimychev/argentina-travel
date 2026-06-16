@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import MarketplaceHome from "@/components/marketplace/MarketplaceHome";
+import TravelPrepStrip from "@/components/flights/TravelPrepStrip";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
 import { collectTopVerifiedReviews } from "@/lib/homepage-reviews";
@@ -17,11 +18,14 @@ export default async function HomePage() {
   const platformStats = getPlatformStatsFromRepository();
 
   return (
-    <MarketplaceHome
-      tours={tours}
-      blogPosts={blogPosts}
-      testimonials={testimonials}
-      platformStats={platformStats}
-    />
+    <>
+      <MarketplaceHome
+        tours={tours}
+        blogPosts={blogPosts}
+        testimonials={testimonials}
+        platformStats={platformStats}
+        travelPrepStrip={<TravelPrepStrip />}
+      />
+    </>
   );
 }

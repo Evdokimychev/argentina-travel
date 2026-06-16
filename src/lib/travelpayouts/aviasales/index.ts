@@ -1,5 +1,10 @@
 export { searchAviasalesPlaces, formatPlaceLabel } from "@/lib/travelpayouts/aviasales/autocomplete";
-export { fetchFlightPricesForDates, fetchLatestFlightPrices } from "@/lib/travelpayouts/aviasales/data-api";
+export {
+  fetchFlightPricesForDates,
+  fetchLatestFlightPrices,
+  fetchMonthlyFlightPrices,
+} from "@/lib/travelpayouts/aviasales/data-api";
+export type { MonthlyFlightPrice } from "@/lib/travelpayouts/aviasales/data-api";
 export {
   buildAviasalesSearchPath,
   buildAviasalesSearchUrl,

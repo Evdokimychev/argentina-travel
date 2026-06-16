@@ -1,0 +1,46 @@
+/* Aviasales WL — scoped mount; global reset is stripped in FlightsWhitelabelWidget. */
+.flights-wl-mount {
+  position: relative;
+  isolation: isolate;
+  contain: layout style;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgb(243 244 246);
+  background: #fff;
+}
+
+.flights-wl-mount #tpwl-search,
+.flights-wl-mount #tpwl-tickets {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+.flights-wl-mount #tpwl-modals {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  z-index: 20;
+  pointer-events: none;
+}
+
+.flights-wl-mount #tpwl-modals > * {
+  pointer-events: auto;
+}
+
+.flights-wl-mount .flights-wl-script-mount {
+  display: none;
+}

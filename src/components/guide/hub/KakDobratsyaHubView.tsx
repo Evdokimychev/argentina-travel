@@ -4,7 +4,6 @@ import {
   ArrowRight,
   ExternalLink,
   MapPin,
-  Plane,
   Shield,
 } from "lucide-react";
 import GuideNextTopic from "@/components/guide/GuideNextTopic";
@@ -20,7 +19,9 @@ import AirlineRouteCard from "@/components/guide/hub/AirlineRouteCard";
 import DomesticAirlinesSection from "@/components/guide/hub/DomesticAirlinesSection";
 import DomesticRoutesMapSection from "@/components/guide/hub/DomesticRoutesMapSection";
 import GuideGuidedTransferBlock from "@/components/guide/hub/GuideGuidedTransferBlock";
+import FlightHubAviasalesSection from "@/components/flights/FlightHubAviasalesSection";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
+import { buildAirportFlightsHref } from "@/lib/flights/search-href";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buttonVariants } from "@/components/ui/button";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
@@ -150,35 +151,7 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                 title="Поиск авиабилетов"
                 subtitle="Сравните цены и маршруты до Buenos Aires (EZE) — гибкий календарь помогает сэкономить."
               >
-                <div className="overflow-hidden rounded-3xl border border-sky/20 bg-gradient-to-br from-sky/10 via-white to-sky/5 p-6 sm:p-8">
-                  <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
-                    <div className="max-w-xl">
-                      <div className="flex items-center gap-2 text-sky">
-                        <Plane className="h-6 w-6" aria-hidden />
-                        <span className="font-heading text-lg font-bold text-charcoal">Aviasales</span>
-                      </div>
-                      <p className="mt-3 text-sm leading-relaxed text-slate">
-                        Встроенный поиск маршрутов в Буэнос-Айрес и региональные аэропорты. Сравнивайте
-                        пересадки в Стамбуле, Мадриде, Дохе и Сан-Паулу.
-                      </p>
-                      <ul className="mt-4 space-y-2">
-                        {hub.aviasalesBenefits.map((benefit) => (
-                          <li key={benefit} className="flex items-start gap-2 text-sm text-charcoal">
-                            <span className="text-sky">✔</span>
-                            {benefit}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <Link
-                      href="/flights?origin=MOW&destination=BUE"
-                      className={cn(buttonVariants({ variant: "default" }), "rounded-full px-8 py-6 text-base")}
-                    >
-                      Найти билеты
-                      <ExternalLink className="ml-2 h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
+                <FlightHubAviasalesSection benefits={hub.aviasalesBenefits} />
               </HubSection>
 
               <HubSection
@@ -214,6 +187,13 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
                           </p>
                           <p className="text-xs text-slate">{airport.name}</p>
                           <p className="mt-2 text-sm leading-relaxed text-slate">{airport.description}</p>
+                          <Link
+                            href={buildAirportFlightsHref(airport.code)}
+                            className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
+                          >
+                            Билеты на этот аэропорт
+                            <ArrowRight className="h-3.5 w-3.5" />
+                          </Link>
                         </div>
                       </div>
                     </div>

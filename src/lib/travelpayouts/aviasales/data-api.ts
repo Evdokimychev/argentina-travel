@@ -76,6 +76,87 @@ export async function fetchFlightPricesForDates(input: {
     .filter((offer): offer is FlightPriceOffer => offer != null);
 }
 
+type RawMonthMatrixRow = {
+  origin?: string;
+  destination?: string;
+  depart_date?: string;
+  value?: number;
+  number_of_changes?: number;
+};
+
+export type MonthlyFlightPrice = {
+  month: string;
+  cheapestPrice: number;
+  cheapestDate: string;
+  currency: string;
+};
+
+function monthStartOffsets(count: number): string[] {
+  const now = new Date();
+  return Array.from({ length: count }, (_, index) => {
+    const date = new Date(now.getFullYear(), now.getMonth() + index, 1);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    return `${year}-${month}-01`;
+  });
+}
+
+export async function fetchMonthlyFlightPrices(input: {
+  origin: string;
+  destination: string;
+  currency: string;
+  monthCount?: number;
+}): Promise<MonthlyFlightPrice[]> {
+  const config = getTravelpayoutsConfig();
+  const months = monthStartOffsets(input.monthCount ?? 3);
+  const results: MonthlyFlightPrice[] = [];
+
+  for (const month of months) {
+    const url = new URL(`${DATA_API_BASE}/v2/prices/month-matrix`);
+    url.searchParams.set("origin", input.origin.toUpperCase());
+    url.searchParams.set("destination", input.destination.toUpperCase());
+    url.searchParams.set("currency", input.currency);
+    url.searchParams.set("month", month);
+    url.searchParams.set("show_to_affiliates", "true");
+    url.searchParams.set("token", config.apiKey);
+
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) continue;
+
+    const payload = (await response.json().catch(() => null)) as
+      | { success?: boolean; data?: RawMonthMatrixRow[] }
+      | RawMonthMatrixRow[]
+      | null;
+
+    const rows = Array.isArray(payload)
+      ? payload
+      : Array.isArray(payload?.data)
+        ? payload.data
+        : [];
+
+    if (rows.length === 0) continue;
+
+    let cheapest: RawMonthMatrixRow | null = null;
+    for (const row of rows) {
+      if (row.value == null || !row.depart_date) continue;
+      if (!cheapest || row.value < (cheapest.value ?? Number.MAX_SAFE_INTEGER)) {
+        cheapest = row;
+      }
+    }
+
+    if (!cheapest?.value || !cheapest.depart_date) continue;
+
+    results.push({
+      month: month.slice(0, 7),
+      cheapestPrice: cheapest.value,
+      cheapestDate: cheapest.depart_date,
+      currency: input.currency.toUpperCase(),
+    });
+  }
+
+  return results;
+}
+
 export async function fetchLatestFlightPrices(input: {
   origin: string;
   destination: string;

@@ -1,3 +1,4 @@
+import FlightPriceTeaserGrid from "@/components/flights/FlightPriceTeaserGrid";
 import ServicesPageView from "@/components/services/ServicesPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -12,11 +13,13 @@ export const metadata = buildPublicPageMetadata({
   path: "/services",
 });
 
-export default function ServicesPage() {
+export default async function ServicesPage() {
   return (
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/services" />
-      <ServicesPageView />
+      <ServicesPageView
+        flightsTeaser={<FlightPriceTeaserGrid title="Примеры цен на популярные маршруты" />}
+      />
     </>
   );
 }

@@ -34,8 +34,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         title: "Сравнить авиабилеты",
         description: "Агрегатор маршрутов в Буэнос-Айрес и региональные хабы.",
-        href: "https://www.google.com/travel/flights",
-        external: true,
+        href: "/flights?origin=MOW&destination=BUE",
         ctaLabel: "Найти рейсы",
       },
       {
@@ -765,8 +764,7 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
       {
         title: "Туристическая страховка",
         description: "Покрытие медицины и эвакуации.",
-        href: "https://www.worldnomads.com",
-        external: true,
+        href: "/insurance",
         ctaLabel: "Выбрать полис",
       },
       {

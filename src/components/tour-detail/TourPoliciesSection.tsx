@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Tour } from "@/types/tour";
 import {
   hasTourPolicies,
@@ -32,6 +33,14 @@ export default function TourPoliciesSection({ tour }: TourPoliciesSectionProps) 
             ) : null}
             {insurance.description.trim() ? (
               <p className="mt-2 text-sm leading-relaxed text-slate">{insurance.description}</p>
+            ) : null}
+            {insurance.type === "recommended" || insurance.type === "required_not_included" ? (
+              <Link
+                href="/insurance"
+                className="mt-4 inline-flex text-sm font-semibold text-sky hover:underline"
+              >
+                Подобрать туристическую страховку →
+              </Link>
             ) : null}
           </div>
         </div>

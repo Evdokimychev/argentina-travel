@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, CalendarDays, MapPin } from "lucide-react";
+import DestinationInsuranceTeaser from "@/components/destinations/DestinationInsuranceTeaser";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import { Button } from "@/components/ui/button";
 import type { DestinationPage } from "@/data/destination-pages";
@@ -15,11 +16,13 @@ import type { TourListing } from "@/types";
 interface DestinationDetailViewProps {
   destination: DestinationPage;
   initialTours: TourListing[];
+  flightSidebar?: React.ReactNode;
 }
 
 export default function DestinationDetailView({
   destination,
   initialTours,
+  flightSidebar,
 }: DestinationDetailViewProps) {
   const tours = useRepositoryTourListings(initialTours);
   const matchedTours = matchToursForDestination(tours, destination);
@@ -78,7 +81,10 @@ export default function DestinationDetailView({
             </ul>
           </div>
 
-          <aside className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+          <aside className="space-y-4">
+            {flightSidebar}
+            <DestinationInsuranceTeaser destinationName={destination.name} />
+            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
             {destination.bestSeason ? (
               <div className="flex items-start gap-3">
                 <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
@@ -102,6 +108,7 @@ export default function DestinationDetailView({
                 </Button>
               </Link>
             ) : null}
+            </div>
           </aside>
         </div>
       </section>

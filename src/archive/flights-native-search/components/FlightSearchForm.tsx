@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRightLeft, Minus, Plus, Search } from "lucide-react";
-import AirportCombobox from "@/components/flights/AirportCombobox";
+import AirportCombobox from "./AirportCombobox";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { AviasalesPlace, FlightTripType } from "@/lib/travelpayouts/aviasales/types";
