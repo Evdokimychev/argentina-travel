@@ -1,10 +1,8 @@
 /* Aviasales WL — scoped mount; global reset is stripped in FlightsWhitelabelWidget. */
 .flights-wl-mount {
   position: relative;
-  isolation: isolate;
-  contain: layout style;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
   border-radius: 1rem;
   border: 1px solid rgb(243 244 246);
   background: #fff;
@@ -21,24 +19,26 @@
   min-height: 0 !important;
   margin: 0 !important;
   transform: none !important;
+  overflow: visible !important;
 }
 
-.flights-wl-mount #tpwl-modals {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: auto !important;
-  width: 100% !important;
-  max-width: 100% !important;
+/* Partner attaches popovers/calendars to body — keep them interactive and above site chrome. */
+body:has(.flights-page-root) > #tpwl-modals {
+  position: fixed !important;
+  inset: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
   min-height: 0 !important;
   margin: 0 !important;
+  padding: 0 !important;
   transform: none !important;
-  z-index: 20;
-  pointer-events: none;
+  pointer-events: none !important;
+  z-index: 9999 !important;
 }
 
-.flights-wl-mount #tpwl-modals > * {
-  pointer-events: auto;
+body:has(.flights-page-root) > #tpwl-modals > * {
+  pointer-events: auto !important;
 }
 
 .flights-wl-mount .flights-wl-script-mount {
