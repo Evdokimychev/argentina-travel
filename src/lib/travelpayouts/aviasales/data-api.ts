@@ -65,7 +65,12 @@ export async function fetchFlightPricesForDates(input: {
   url.searchParams.set("direct", "false");
   url.searchParams.set("token", config.apiKey);
 
-  const response = await fetch(url, { cache: "no-store" });
+  let response: Response;
+  try {
+    response = await fetch(url, { cache: "no-store" });
+  } catch {
+    return [];
+  }
   if (!response.ok) return [];
 
   const payload = (await response.json().catch(() => null)) as { data?: RawPriceRow[] } | null;
@@ -120,7 +125,12 @@ export async function fetchMonthlyFlightPrices(input: {
     url.searchParams.set("show_to_affiliates", "true");
     url.searchParams.set("token", config.apiKey);
 
-    const response = await fetch(url, { cache: "no-store" });
+    let response: Response;
+    try {
+      response = await fetch(url, { cache: "no-store" });
+    } catch {
+      continue;
+    }
     if (!response.ok) continue;
 
     const payload = (await response.json().catch(() => null)) as
@@ -171,7 +181,12 @@ export async function fetchLatestFlightPrices(input: {
   url.searchParams.set("limit", String(input.limit ?? 10));
   url.searchParams.set("token", config.apiKey);
 
-  const response = await fetch(url, { cache: "no-store" });
+  let response: Response;
+  try {
+    response = await fetch(url, { cache: "no-store" });
+  } catch {
+    return [];
+  }
   if (!response.ok) return [];
 
   const payload = (await response.json().catch(() => null)) as RawPriceRow[] | null;

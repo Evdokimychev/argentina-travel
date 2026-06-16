@@ -40,12 +40,17 @@ async function fetchFlightPriceTeasersForRoutesUncached(
     const route = FLIGHT_POPULAR_ROUTES.find((entry) => entry.id === routeId);
     if (!route) continue;
 
-    const offers = await fetchLatestFlightPrices({
-      origin: route.origin,
-      destination: route.destination,
-      currency: market.currency,
-      limit: 1,
-    });
+    let offers: Awaited<ReturnType<typeof fetchLatestFlightPrices>>;
+    try {
+      offers = await fetchLatestFlightPrices({
+        origin: route.origin,
+        destination: route.destination,
+        currency: market.currency,
+        limit: 1,
+      });
+    } catch {
+      continue;
+    }
 
     const best = offers[0];
     if (!best) continue;
