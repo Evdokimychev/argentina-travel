@@ -446,6 +446,10 @@ const planPosts = getPublishedPlanPosts(manualSlugs);
 
 export const blogPosts: BlogPost[] = [...manualBlogPosts, ...planPosts];
 
+export function getEditorialBlogPosts(): BlogPost[] {
+  return manualBlogPosts;
+}
+
 export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }
@@ -458,4 +462,4 @@ export function formatDate(dateStr: string): string {
   }).format(new Date(dateStr));
 }
 
-export { getBlogCategories, getBlogTags, filterBlogPosts, sortBlogPostsByDate, computeBlogStats, formatBlogViews, formatBlogReadTime } from "@/lib/blog-utils";
+export { getBlogCategories, getBlogCategoriesWithCounts, getBlogTags, getTopBlogTags, filterBlogPosts, sortBlogPostsByDate, computeBlogStats, formatBlogViews, formatBlogReadTime, pluralizeArticles } from "@/lib/blog-utils";

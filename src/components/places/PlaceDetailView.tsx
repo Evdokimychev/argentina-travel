@@ -18,6 +18,7 @@ import type { PlaceDetail } from "@/types/place";
 import { collectionHref, itineraryHref } from "@/lib/places-repository";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
+import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
@@ -28,13 +29,14 @@ export default function PlaceDetailView({
   place: PlaceDetail;
   knowledgeLinks?: KnowledgeLinksBundle;
 }) {
+  const galleryAlts = getPlaceGalleryAlts(place.slug);
   return (
     <article className="pb-16">
       <div className="relative aspect-[21/9] min-h-[240px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
         {place.coverImage ? (
           <Image
             src={place.coverImage}
-            alt={place.name}
+            alt={getPlaceCoverAlt(place.slug)}
             fill
             priority
             className="object-cover"
@@ -75,7 +77,7 @@ export default function PlaceDetailView({
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {place.gallery.map((src, i) => (
                   <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
-                    <Image src={src} alt={`${place.name} — фото ${i + 1}`} fill className="object-cover" sizes="50vw" />
+                    <Image src={src} alt={galleryAlts[i] ?? `${place.name} — фото ${i + 1}`} fill className="object-cover" sizes="50vw" />
                   </div>
                 ))}
               </div>

@@ -6,6 +6,11 @@ import {
   GroupSizeBucket,
   TourLanguage,
 } from "@/types";
+import {
+  getDestinationGallery,
+  getDestinationImage,
+  getDestinationImageAlt,
+} from "@/lib/media-resolver";
 
 export const SEARCH_DESTINATIONS = [
   { label: "Буэнос-Айрес", type: "city", region: "Буэнос-Айрес" },
@@ -97,13 +102,12 @@ export const GROUP_SIZE_OPTIONS: GroupSizeBucket[] = [
 
 export const PRICE_MAX = 500000;
 
-export const POPULAR_DESTINATIONS = [
+const POPULAR_DESTINATIONS_BASE = [
   {
     id: "ba",
     name: "Буэнос-Айрес",
     region: "Столица",
     description: "Танго, архитектура и гастрономия — идеальный старт маршрута",
-    image: "https://images.unsplash.com/photo-1583783878840-524663b10265?w=1200&q=80",
     keywords: ["буэнос", "ba", "buenos aires", "реколета", "san telmo"],
   },
   {
@@ -111,7 +115,6 @@ export const POPULAR_DESTINATIONS = [
     name: "Барилоче",
     region: "Патагония",
     description: "Озёра Nahuel Huapi, Cerro Catedral и шоколадные fabrikas",
-    image: "https://images.unsplash.com/photo-1610894793319-eb3844684c82?w=1200&q=80",
     keywords: ["барилоче", "bariloche", "nahuel huapi", "catedral"],
   },
   {
@@ -119,7 +122,6 @@ export const POPULAR_DESTINATIONS = [
     name: "Эль-Калафате",
     region: "Патагония",
     description: "Ледник Perito Moreno и ледниковые трекинги",
-    image: "https://images.unsplash.com/photo-1615728512730-840a8da694f4?w=1200&q=80",
     keywords: ["калафате", "calafate", "перито", "perito moreno", "ледник"],
   },
   {
@@ -127,7 +129,6 @@ export const POPULAR_DESTINATIONS = [
     name: "Ушуайя",
     region: "Огненная Земля",
     description: "Самый южный город мира и ворота в Антарктиду",
-    image: "https://images.unsplash.com/photo-1555109302-1f4c7032b3f0?w=1200&q=80",
     keywords: ["ушуайя", "ushuaia", "огненная", "beagle", "антарктида"],
   },
   {
@@ -135,7 +136,6 @@ export const POPULAR_DESTINATIONS = [
     name: "Игуасу",
     region: "Misiones",
     description: "275 водопадов и Garganta del Diablo — UNESCO",
-    image: "https://images.unsplash.com/photo-1520637836862-4cab0cba4342?w=1200&q=80",
     keywords: ["игуасу", "iguazu", "iguazú", "водопад", "misiones"],
   },
   {
@@ -143,7 +143,6 @@ export const POPULAR_DESTINATIONS = [
     name: "Мендоса",
     region: "Анд",
     description: "Malbec, bodegas у подножия Aconcagua",
-    image: "https://images.unsplash.com/photo-1560493676-04071c5e467d?w=1200&q=80",
     keywords: ["мендоса", "mendoza", "malbec", "вино", "aconcagua"],
   },
   {
@@ -151,7 +150,6 @@ export const POPULAR_DESTINATIONS = [
     name: "Сальта",
     region: "Северо-Запад",
     description: "Quebrada de Humahuaca, Cafayate и колониальный центр",
-    image: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=1200&q=80",
     keywords: ["сальта", "salta", "humahuaca", "cafayate", "каньон"],
   },
   {
@@ -159,7 +157,20 @@ export const POPULAR_DESTINATIONS = [
     name: "Патагония",
     region: "Юг",
     description: "Ледники, Fitz Roy и бескрайние степи юга",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
     keywords: ["патагония", "patagonia", "fitz roy", "chaltén", "valdés"],
   },
-];
+] as const satisfies ReadonlyArray<{
+  id: string;
+  name: string;
+  region: string;
+  description: string;
+  keywords: readonly string[];
+}>;
+
+export const POPULAR_DESTINATIONS = POPULAR_DESTINATIONS_BASE.map((dest) => ({
+  ...dest,
+  keywords: [...dest.keywords],
+  image: getDestinationImage(dest.id),
+  imageAlt: getDestinationImageAlt(dest.id),
+  gallery: getDestinationGallery(dest.id),
+}));

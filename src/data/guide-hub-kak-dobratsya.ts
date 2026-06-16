@@ -1,4 +1,5 @@
 import type { TravelHubContent } from "@/types/guide-travel-hub";
+import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 
 const FAQ: TravelHubContent["faq"] = [
   {
@@ -132,8 +133,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
   heroTitle: "Как добраться в Аргентину",
   heroSubtitle:
     "Самолёты, аэропорты, пересадки, трансферы, правила въезда и полезные советы для путешествия в Аргентину.",
-  heroImage:
-    "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80",
+  heroImage: getGuideTopicHeroImage("kak-dobratsya"),
   heroCtas: [
     {
       label: "✈ Найти авиабилеты",

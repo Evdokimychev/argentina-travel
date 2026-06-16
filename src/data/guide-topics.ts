@@ -1,9 +1,10 @@
 import type { GuideTopicPage } from "@/types/guide-topic";
+import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 
 export const GUIDE_INDEX_INTRO =
   "Главная страница «Об Аргентине» — география и маршруты; 14 тем — практика, сервисы и туры. Каждый раздел — отправная точка перед бронированием на платформе.";
 
-export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
+const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
   "kak-dobratsya": {
     id: "kak-dobratsya",
     slug: "kak-dobratsya",
@@ -793,6 +794,13 @@ export const GUIDE_TOPICS: Record<string, GuideTopicPage> = {
     ],
   },
 };
+
+export const GUIDE_TOPICS: Record<string, GuideTopicPage> = Object.fromEntries(
+  Object.entries(GUIDE_TOPICS_RAW).map(([slug, topic]) => [
+    slug,
+    { ...topic, heroImage: getGuideTopicHeroImage(slug) },
+  ]),
+) as Record<string, GuideTopicPage>;
 
 export const GUIDE_TOPIC_LIST: GuideTopicPage[] = Object.values(GUIDE_TOPICS);
 

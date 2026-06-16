@@ -427,6 +427,8 @@ export interface BlogPost {
   tags: string[];
   featured?: boolean;
   cardVariant?: BlogCardVariant;
+  /** Статья прошла полную ручную редакцию */
+  editorialReviewed?: boolean;
   relatedResources?: BlogRelatedResource[];
 }
 
@@ -447,5 +449,7 @@ export interface Destination {
   region: string;
   description: string;
   image: string;
+  imageAlt?: string;
+  gallery?: string[];
   keywords: string[];
 }

@@ -94,3 +94,39 @@ export function sortBlogPostsByDate(posts: BlogPost[]): BlogPost[] {
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 }
+
+export type BlogCategoryWithCount = {
+  category: string;
+  count: number;
+};
+
+export function getBlogCategoriesWithCounts(posts: BlogPost[]): BlogCategoryWithCount[] {
+  const map = new Map<string, number>();
+  for (const post of posts) {
+    map.set(post.category, (map.get(post.category) ?? 0) + 1);
+  }
+  return [...map.entries()]
+    .map(([category, count]) => ({ category, count }))
+    .sort((a, b) => b.count - a.count || a.category.localeCompare(b.category, "ru"));
+}
+
+export function getTopBlogTags(posts: BlogPost[], limit = 16): string[] {
+  const counts = new Map<string, number>();
+  for (const post of posts) {
+    for (const tag of post.tags) {
+      counts.set(tag, (counts.get(tag) ?? 0) + 1);
+    }
+  }
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "ru"))
+    .slice(0, limit)
+    .map(([tag]) => tag);
+}
+
+export function pluralizeArticles(count: number): string {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return `${count} статья`;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${count} статьи`;
+  return `${count} статей`;
+}

@@ -115,6 +115,11 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
         <span className="absolute left-4 top-4 rounded-full border border-white/30 bg-white/90 px-3 py-1 text-xs font-semibold text-charcoal backdrop-blur-sm">
           {post.category}
         </span>
+        {post.editorialReviewed ? (
+          <span className="absolute right-4 top-4 rounded-full bg-emerald-600/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+            Вычитано
+          </span>
+        ) : null}
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
         <MetaRow post={post} />

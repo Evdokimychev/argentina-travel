@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -14,6 +13,7 @@ import {
 import DestinationInsuranceTeaser from "@/components/destinations/DestinationInsuranceTeaser";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
+import { SafeImage } from "@/components/ui/safe-image";
 import { Button } from "@/components/ui/button";
 import type { DestinationPage } from "@/data/destination-pages";
 import { destinationExcursionsHref } from "@/data/excursion-city-links";
@@ -57,13 +57,14 @@ export default function DestinationDetailView({
   return (
     <>
       <section className="relative min-h-[48vh] overflow-hidden sm:min-h-[52vh]">
-        <Image
+        <SafeImage
           src={destination.image}
-          alt={destination.name}
+          alt={destination.imageAlt ?? destination.name}
           fill
           priority
           className="object-cover"
           sizes="100vw"
+          placeholderVariant="generic"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/45 to-charcoal/20" />
         <div className={cn(siteContainerClass, "relative flex min-h-[48vh] flex-col justify-end py-10 sm:min-h-[52vh] sm:py-12")}>
@@ -119,6 +120,26 @@ export default function DestinationDetailView({
                 ))}
               </ul>
             </div>
+
+            {destination.gallery && destination.gallery.length > 1 ? (
+              <div>
+                <h2 className="font-heading text-xl font-bold text-charcoal">Галерея</h2>
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {destination.gallery.map((src, i) => (
+                    <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                      <SafeImage
+                        src={src}
+                        alt={`${destination.imageAlt ?? destination.name} — фото ${i + 1}`}
+                        fill
+                        className="object-cover"
+                        sizes="50vw"
+                        placeholderVariant="generic"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : null}
 
             <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-6 sm:p-8">
               <div className="flex items-start gap-3">

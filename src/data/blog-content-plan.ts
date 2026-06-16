@@ -1,7 +1,9 @@
-/**
- * Контент-план блога — 200+ заготовок статей.
- * Stubs для будущей редакции; не публикуются автоматически.
- */
+import { CATEGORY_TOPICS } from "@/data/blog-content/category-topics";
+import {
+  buildBlogArticleTitle,
+  buildBlogMetaDescription,
+  buildBlogSeoTitle,
+} from "@/data/blog-content/titles";
 
 export type BlogContentCategory =
   | "travel"
@@ -60,7 +62,6 @@ export const BLOG_CATEGORY_LABELS: Record<BlogContentCategory, string> = {
 
 type Template = {
   category: BlogContentCategory;
-  titlePattern: string;
   slugPattern: string;
   guides: string[];
   places: string[];
@@ -68,39 +69,22 @@ type Template = {
 };
 
 const TEMPLATES: Template[] = [
-  { category: "patagonia", titlePattern: "Patagonia: {topic}", slugPattern: "patagonia-{topic}", guides: ["patagoniya-s-chego-nachat", "pogoda-i-sezonnost"], places: ["el-calafate", "perito-moreno-glacier", "el-chalten"], collections: ["best-patagonia"] },
-  { category: "buenos-aires", titlePattern: "Buenos Aires: {topic}", slugPattern: "buenos-aires-{topic}", guides: ["kultura", "kukhnya"], places: ["buenos-aires"], collections: ["week-in-argentina"] },
-  { category: "north", titlePattern: "Северо-запад: {topic}", slugPattern: "northwest-{topic}", guides: ["turistskie-regiony"], places: ["salta", "purmamarca", "cerro-de-los-7-colores"], collections: ["northwest-colors"] },
-  { category: "national-parks", titlePattern: "Нацпарк: {topic}", slugPattern: "national-park-{topic}", guides: ["dostoprimechatelnosti"], places: ["los-glaciares-national-park", "nahuel-huapi-national-park"], collections: ["best-national-parks"] },
-  { category: "trekking", titlePattern: "Треккинг: {topic}", slugPattern: "trekking-{topic}", guides: ["patagoniya-s-chego-nachat"], places: ["el-chalten", "fitz-roy"], collections: ["best-trekking"] },
-  { category: "wineries", titlePattern: "Вино: {topic}", slugPattern: "wine-{topic}", guides: ["kukhnya"], places: ["mendoza"], collections: ["wine-mendoza"] },
-  { category: "wildlife", titlePattern: "Природа: {topic}", slugPattern: "wildlife-{topic}", guides: ["dostoprimechatelnosti"], places: ["valdes-peninsula", "ushuaia"], collections: ["best-patagonia"] },
-  { category: "food", titlePattern: "Кухня: {topic}", slugPattern: "food-{topic}", guides: ["kukhnya"], places: ["buenos-aires"], collections: [] },
-  { category: "transport", titlePattern: "Транспорт: {topic}", slugPattern: "transport-{topic}", guides: ["kak-dobratsya", "transport"], places: ["buenos-aires"], collections: [] },
-  { category: "money", titlePattern: "Деньги: {topic}", slugPattern: "money-{topic}", guides: ["ekonomika-i-dengi"], places: [], collections: [] },
-  { category: "safety", titlePattern: "Безопасность: {topic}", slugPattern: "safety-{topic}", guides: ["bezopasnost"], places: ["buenos-aires"], collections: [] },
-  { category: "internet", titlePattern: "Связь: {topic}", slugPattern: "internet-{topic}", guides: ["svyaz"], places: [], collections: [] },
-  { category: "ba-neighborhoods", titlePattern: "Район BA: {topic}", slugPattern: "ba-district-{topic}", guides: ["gde-zhit"], places: ["buenos-aires"], collections: [] },
-  { category: "relocation", titlePattern: "Релокация: {topic}", slugPattern: "relocation-{topic}", guides: ["ekonomika-i-dengi", "gde-zhit"], places: ["buenos-aires"], collections: [] },
-  { category: "iguazu", titlePattern: "Iguazú: {topic}", slugPattern: "iguazu-{topic}", guides: ["dostoprimechatelnosti"], places: ["iguazu-falls"], collections: ["best-waterfalls"] },
-  { category: "travel", titlePattern: "Маршрут: {topic}", slugPattern: "itinerary-{topic}", guides: ["kak-dobratsya"], places: ["buenos-aires", "el-calafate", "iguazu-falls"], collections: ["week-in-argentina", "two-weeks-argentina"] },
-];
-
-const TOPICS = [
-  "советы-новичкам", "бюджет", "с-ребёнком", "зимой", "весной", "летом", "осенью",
-  "за-3-дня", "за-5-дней", "за-7-дней", "за-10-дней", "за-14-дней",
-  "авиабилеты", "автобусы", "аренда-авто", "поезда",
-  "отели", "хостелы", "airbnb", "camping",
-  "фото", "drone", "рассвет", "закат",
-  "с-гидом", "самостоятельно", "чек-лист", "ошибки",
-  "с-чем-совмещать", "open-jaw", "стоповер",
-  "сезон-дождей", "ветер", "холод", "жара",
-  "страховка", "sim-карта", "наличные", "карты",
-  "palermo", "recoleta", "san-telmo", "microcentro", "puerto-madero",
-  "asado", "empanadas", "mate", "malbec", "bodega-tour",
-  "whale-watching", "penguins", "condors", "guanaco",
-  "laguna-de-los-tres", "mini-trekking", "circuito-chico", "garganta-del-diablo",
-  "visa-free", "90-дней", "продление", "медстраховка",
+  { category: "patagonia", slugPattern: "patagonia-{topic}", guides: ["patagoniya-s-chego-nachat", "pogoda-i-sezonnost"], places: ["el-calafate", "perito-moreno-glacier", "el-chalten"], collections: ["best-patagonia"] },
+  { category: "buenos-aires", slugPattern: "buenos-aires-{topic}", guides: ["kultura", "kukhnya"], places: ["buenos-aires"], collections: ["week-in-argentina"] },
+  { category: "north", slugPattern: "northwest-{topic}", guides: ["turistskie-regiony"], places: ["salta", "purmamarca", "cerro-de-los-7-colores"], collections: ["northwest-colors"] },
+  { category: "national-parks", slugPattern: "national-park-{topic}", guides: ["dostoprimechatelnosti"], places: ["los-glaciares-national-park", "nahuel-huapi-national-park"], collections: ["best-national-parks"] },
+  { category: "trekking", slugPattern: "trekking-{topic}", guides: ["patagoniya-s-chego-nachat"], places: ["el-chalten", "fitz-roy"], collections: ["best-trekking"] },
+  { category: "wineries", slugPattern: "wine-{topic}", guides: ["kukhnya"], places: ["mendoza"], collections: ["wine-mendoza"] },
+  { category: "wildlife", slugPattern: "wildlife-{topic}", guides: ["dostoprimechatelnosti"], places: ["valdes-peninsula", "ushuaia"], collections: ["best-patagonia"] },
+  { category: "food", slugPattern: "food-{topic}", guides: ["kukhnya"], places: ["buenos-aires"], collections: [] },
+  { category: "transport", slugPattern: "transport-{topic}", guides: ["kak-dobratsya", "transport"], places: ["buenos-aires"], collections: [] },
+  { category: "money", slugPattern: "money-{topic}", guides: ["ekonomika-i-dengi"], places: [], collections: [] },
+  { category: "safety", slugPattern: "safety-{topic}", guides: ["bezopasnost"], places: ["buenos-aires"], collections: [] },
+  { category: "internet", slugPattern: "internet-{topic}", guides: ["svyaz"], places: [], collections: [] },
+  { category: "ba-neighborhoods", slugPattern: "ba-district-{topic}", guides: ["gde-zhit"], places: ["buenos-aires"], collections: [] },
+  { category: "relocation", slugPattern: "relocation-{topic}", guides: ["ekonomika-i-dengi", "gde-zhit"], places: ["buenos-aires"], collections: [] },
+  { category: "iguazu", slugPattern: "iguazu-{topic}", guides: ["dostoprimechatelnosti"], places: ["iguazu-falls"], collections: ["best-waterfalls"] },
+  { category: "travel", slugPattern: "itinerary-{topic}", guides: ["kak-dobratsya"], places: ["buenos-aires", "el-calafate", "iguazu-falls"], collections: ["week-in-argentina", "two-weeks-argentina"] },
 ];
 
 function slugify(value: string): string {
@@ -113,17 +97,17 @@ function slugify(value: string): string {
 
 function buildItem(template: Template, topic: string, index: number): BlogContentPlanItem {
   const slug = slugify(template.slugPattern.replace("{topic}", topic));
-  const title = template.titlePattern.replace("{topic}", topic.replace(/-/g, " "));
-  const h1 = title.charAt(0).toUpperCase() + title.slice(1);
+  const title = buildBlogArticleTitle(template.category, topic);
+  const metaDescription = buildBlogMetaDescription(template.category, topic, title);
 
   return {
     slug: slug || `blog-plan-${index}`,
-    title: h1,
+    title,
     category: template.category,
-    seoTitle: `${h1} | Пора в Аргентину`,
-    metaDescription: `Практический гид: ${h1.toLowerCase()}. Советы для русскоязычных путешественников — маршруты, бюджет, сезон.`,
+    seoTitle: buildBlogSeoTitle(title),
+    metaDescription,
     outline: {
-      h1,
+      h1: title,
       h2: ["Кратко", "Когда ехать", "Как добраться", "Что посмотреть", "Бюджет", "FAQ"],
       h3: {
         "Что посмотреть": ["Главные точки", "Рядом", "Сколько времени"],
@@ -143,7 +127,8 @@ function buildBlogContentPlan(): BlogContentPlanItem[] {
   let index = 0;
 
   for (const template of TEMPLATES) {
-    for (const topic of TOPICS) {
+    const topics = CATEGORY_TOPICS[template.category] ?? [];
+    for (const topic of topics) {
       items.push(buildItem(template, topic, index));
       index += 1;
     }

@@ -4,7 +4,7 @@ import {
   GroupSizeBucket,
   ChildrenPolicy,
 } from "@/types";
-import { baseTours } from "./tours";
+import { getTourCoverImage, getTourGallery } from "@/lib/media-resolver";
 
 function durationBucket(days: number): DurationBucket {
   if (days <= 2) return "1–2 дня";
@@ -313,6 +313,7 @@ const rawMarketplaceTours = [
 
 export const marketplaceTours: TourListing[] = rawMarketplaceTours.map((tour) => ({
   ...tour,
-  gallery: baseTours.find((b) => b.slug === tour.slug)?.gallery ?? [tour.image],
+  image: getTourCoverImage(tour.slug),
+  gallery: getTourGallery(tour.slug),
 }));
 

@@ -1,5 +1,6 @@
 import type { GuidePillarFaqItem, GuidePillarHeroCta } from "@/types/guide-pillar";
 import type { TravelHubArticleLink, TravelHubQuickFact, TravelHubTocItem } from "@/types/guide-travel-hub";
+import { getPlaceCoverImage } from "@/lib/media-resolver";
 
 export const GUIDE_ABOUT_ARGENTINA_PATH = "/guide/ob-argentine";
 
@@ -50,7 +51,7 @@ export const GUIDE_ABOUT_ARGENTINA: GuideAboutArgentinaContent = {
   heroTitle: "Об Аргентине",
   heroSubtitle:
     "География, регионы, сезоны и маршруты — всё, что нужно понять о стране перед поездкой или бронированием тура",
-  heroImage: "https://images.unsplash.com/photo-1583783878840-524663b10265?w=1920&q=80",
+  heroImage: getPlaceCoverImage("buenos-aires"),
   heroCtas: [
     { label: "Направления", href: "/destinations", variant: "primary" },
     { label: "Как добраться", href: "/guide/kak-dobratsya", variant: "secondary" },
