@@ -6,6 +6,7 @@
     "dev": "node scripts/dev.mjs",
     "dev:clean": "node scripts/dev-clean.mjs",
     "build": "node scripts/build.mjs",
+    "postinstall": "prisma generate",
     "start": "next start",
     "lint": "next lint",
     "supabase:migrate": "node scripts/supabase-apply-migration.mjs",

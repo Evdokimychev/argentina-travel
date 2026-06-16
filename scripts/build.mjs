@@ -16,9 +16,15 @@ import {
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
+const isCiBuild = Boolean(process.env.VERCEL || process.env.CI);
 
-const killedNext = killProjectNextDev(root);
-const killedByPort = killPorts(["3000", "3001", "3002", "3003"]);
+let killedNext = [];
+let killedByPort = new Map();
+
+if (!isCiBuild) {
+  killedNext = killProjectNextDev(root);
+  killedByPort = killPorts(["3000", "3001", "3002", "3003"]);
+}
 
 if (killedNext.length > 0) {
   console.log(`Stopped Next.js dev process(es) before build: ${killedNext.join(", ")}`);

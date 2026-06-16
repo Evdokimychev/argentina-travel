@@ -4,8 +4,19 @@ import path from "node:path";
 
 const DEFAULT_PORTS = ["3000", "3001", "3002", "3003"];
 
+function hasCommand(name) {
+  try {
+    execSync(`command -v ${name}`, { encoding: "utf8", stdio: "ignore" });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function killPort(targetPort) {
   const killed = [];
+  if (!hasCommand("lsof")) return killed;
+
   try {
     const pids = execSync(`lsof -ti tcp:${targetPort}`, { encoding: "utf8" })
       .trim()
@@ -35,6 +46,8 @@ export function killPorts(ports = DEFAULT_PORTS) {
 }
 
 function processCwd(pid) {
+  if (!hasCommand("lsof")) return null;
+
   try {
     const out = execSync(`lsof -a -p ${pid} -d cwd -Fn`, { encoding: "utf8" }).trim();
     const line = out.split("\n").find((entry) => entry.startsWith("n"));
@@ -56,6 +69,8 @@ function processCommand(pid) {
 export function killProjectNextDev(root) {
   const killed = [];
   let candidates = [];
+
+  if (!hasCommand("pgrep")) return killed;
 
   try {
     candidates = execSync('pgrep -fl "next dev"', { encoding: "utf8" })
