@@ -7,6 +7,7 @@ import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
 import { cn } from "@/lib/cn";
 import { getGuideTopicIcon } from "@/lib/guide-nav-icons";
 import {
+  GUIDE_NAV_ABOUT_HREF,
   GUIDE_NAV_PROMO_INTRO,
   GUIDE_NAV_PROMO_TITLE,
   buildGuideFeaturedLinks,
@@ -53,17 +54,29 @@ function GuidePromoBlock({ onNavigate }: { onNavigate?: () => void }) {
       <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky/15 text-sky">
         <BookOpen className="h-5 w-5" aria-hidden />
       </span>
-      <h3 className="mt-4 font-heading text-base font-bold leading-snug text-charcoal">
+      <Link
+        href={GUIDE_NAV_ABOUT_HREF}
+        onClick={onNavigate}
+        className="mt-4 font-heading text-base font-bold leading-snug text-charcoal transition-colors hover:text-sky"
+      >
         {GUIDE_NAV_PROMO_TITLE}
-      </h3>
+      </Link>
       <p className="mt-2 line-clamp-4 text-sm leading-relaxed text-slate">{GUIDE_NAV_PROMO_INTRO}</p>
       <Link
-        href="/guide"
+        href={GUIDE_NAV_ABOUT_HREF}
         onClick={onNavigate}
         className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky transition-colors hover:text-sky/80"
       >
-        Все темы
+        Об Аргентине
         <ArrowRight className="h-4 w-4" aria-hidden />
+      </Link>
+      <Link
+        href="/guide"
+        onClick={onNavigate}
+        className="mt-2 inline-flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-sky"
+      >
+        Все 14 тем
+        <ArrowRight className="h-3.5 w-3.5" aria-hidden />
       </Link>
     </aside>
   );

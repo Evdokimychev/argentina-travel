@@ -54,7 +54,7 @@ export interface BookingTraveler {
 
 export type TouristReviewStatus = "draft" | "published";
 
-export type FavoriteKind = "tour" | "excursion";
+export type FavoriteKind = "tour" | "excursion" | "place";
 
 export interface FavoriteTour {
   tourId: string;

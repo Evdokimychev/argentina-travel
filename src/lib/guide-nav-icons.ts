@@ -21,6 +21,7 @@ import {
 import type { SiteNavLink } from "@/types/site-nav";
 
 export const GUIDE_HUB_LINK_ID = "guide-all";
+export const GUIDE_ABOUT_LINK_ID = "guide-about-argentina";
 
 export const GUIDE_TOPIC_ICONS: Record<string, LucideIcon> = {
   "kak-dobratsya": Plane,
@@ -51,6 +52,7 @@ export function getGuideTopicIcon(slug: string): LucideIcon {
 }
 
 export function getGuideNavLinkIcon(link: SiteNavLink): LucideIcon {
+  if (link.id === GUIDE_ABOUT_LINK_ID) return Compass;
   if (link.id === GUIDE_HUB_LINK_ID) return LayoutGrid;
   if (link.topicSlug) return getGuideTopicIcon(link.topicSlug);
   return BookOpen;

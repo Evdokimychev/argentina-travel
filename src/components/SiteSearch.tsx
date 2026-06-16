@@ -11,6 +11,7 @@ import {
   HelpCircle,
   Landmark,
   MapPin,
+  Mountain,
   Plane,
   Search,
   Stamp,
@@ -33,6 +34,7 @@ import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   tour: Plane,
   excursion: Landmark,
+  place: Mountain,
   blog: BookOpen,
   faq: HelpCircle,
   page: Compass,

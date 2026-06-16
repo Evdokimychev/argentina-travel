@@ -278,6 +278,38 @@ body {
   box-shadow: 0 4px 12px rgba(90, 143, 196, 0.5);
 }
 
+.places-map-cluster {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  background: var(--color-charcoal);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 10px rgba(26, 26, 46, 0.25);
+  cursor: pointer;
+}
+
+.places-detail-map-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  background: var(--color-slate);
+  box-shadow: 0 2px 6px rgba(26, 26, 46, 0.2);
+}
+
+.places-detail-map-marker--main {
+  width: 22px;
+  height: 22px;
+  background: var(--color-sky);
+  box-shadow: 0 3px 12px rgba(116, 172, 223, 0.55);
+}
+
 .tours-map-popup-shell .leaflet-popup-content-wrapper {
   border-radius: 14px;
   padding: 0;

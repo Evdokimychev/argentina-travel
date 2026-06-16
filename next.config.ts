@@ -3,8 +3,26 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Keep Supabase in Node externals — avoids brittle vendor-chunks/@supabase.js in dev workers.
   serverExternalPackages: ["@supabase/supabase-js", "@supabase/ssr"],
+  async redirects() {
+    return [
+      {
+        source: "/blog/blue-dollar-argentina-2025",
+        destination: "/blog/blue-dollar-argentina-2026",
+        permanent: true,
+      },
+      {
+        source: "/blog/argentina-tourist-visa-2025",
+        destination: "/blog/argentina-tourist-visa-2026",
+        permanent: true,
+      },
+    ];
+  },
   images: {
     remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "upload.wikimedia.org",
+      },
       {
         protocol: "https",
         hostname: "images.unsplash.com",

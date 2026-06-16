@@ -4,6 +4,9 @@ export const EXCURSION_CITY_LINKS = {
   ushuaia: { slug: "Ushuaia", label: "Ушуайя" },
   mendoza: { slug: "Mendoza", label: "Мендоса" },
   iguazu: { slug: "Puerto_Iguazu", label: "Пуэрто-Игуасу" },
+  bariloche: { slug: "Bariloche", label: "Барилоче" },
+  calafate: { slug: "El_Calafate", label: "Эль-Калафате" },
+  salta: { slug: "Salta", label: "Сальта" },
   puertoMadryn: { slug: "Puerto_Madryn", label: "Пуэрто-Мадрин" },
 } as const;
 
@@ -112,6 +115,10 @@ export const DESTINATION_EXCURSION_CITY: Record<string, string> = {
   ushuaia: EXCURSION_CITY_LINKS.ushuaia.slug,
   mendoza: EXCURSION_CITY_LINKS.mendoza.slug,
   iguazu: EXCURSION_CITY_LINKS.iguazu.slug,
+  bariloche: EXCURSION_CITY_LINKS.bariloche.slug,
+  calafate: EXCURSION_CITY_LINKS.calafate.slug,
+  salta: EXCURSION_CITY_LINKS.salta.slug,
+  patagonia: EXCURSION_CITY_LINKS.calafate.slug,
 };
 
 export function destinationExcursionsHref(destinationId: string): string | null {

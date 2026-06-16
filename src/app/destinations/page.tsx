@@ -5,7 +5,7 @@ import { getAllDestinations } from "@/lib/destinations";
 export const metadata: Metadata = {
   title: "Направления — Пора в Аргентину",
   description:
-    "Популярные регионы и города Аргентины: Патагония, Буэнос-Айрес, Игуасу, Мендоса и другие — с турами от организаторов.",
+    "8 направлений Аргентины: Буэнос-Айрес, Патагония, Игуасу, Мендоса, Сальта и другие — сезоны, как добраться и туры от организаторов.",
 };
 
 export default function DestinationsPage() {

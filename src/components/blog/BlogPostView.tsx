@@ -35,6 +35,12 @@ export default function BlogPostView({ post }: BlogPostViewProps) {
     .map((p) => p.trim())
     .filter(Boolean);
 
+  const sectionParagraphs = (body: string) =>
+    body
+      .split(/(?<=[.!?])\s+/)
+      .map((p) => p.trim())
+      .filter(Boolean);
+
   return (
     <>
       <section
@@ -110,9 +116,16 @@ export default function BlogPostView({ post }: BlogPostViewProps) {
             <article className="min-w-0 flex-1">
               <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8 md:p-10">
                 <div className="prose prose-slate max-w-none space-y-4 text-base leading-relaxed text-slate">
-                  {paragraphs.map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
+                  {post.sections?.length
+                    ? post.sections.map((section) => (
+                        <section key={section.title} className="space-y-3">
+                          <h2 className="font-heading text-xl font-bold text-charcoal">{section.title}</h2>
+                          {sectionParagraphs(section.body).map((paragraph, index) => (
+                            <p key={index}>{paragraph}</p>
+                          ))}
+                        </section>
+                      ))
+                    : paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
                 </div>
 
                 {post.relatedResources && post.relatedResources.length > 0 ? (

@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import BlogPostView from "@/components/blog/BlogPostView";
+import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import { getBlogPostBySlug, blogPosts } from "@/data/blog";
 
 interface BlogPostPageProps {
@@ -15,7 +16,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   const post = getBlogPostBySlug(slug);
   if (!post) return { title: "Статья не найдена" };
   return {
-    title: post.title,
+    title: post.seoTitle ?? post.title,
     description: post.excerpt,
   };
 }
@@ -28,5 +29,10 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
-  return <BlogPostView post={post} />;
+  return (
+    <>
+      <ArticleJsonLd post={post} />
+      <BlogPostView post={post} />
+    </>
+  );
 }

@@ -14,6 +14,7 @@ import {
   getAllContentPages,
 } from "@/lib/content-pages";
 import { getAllGuideTopics, guideTopicHref } from "@/lib/guide-topics";
+import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { getAllDestinations } from "@/lib/destinations";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { absoluteUrl } from "@/lib/site-url";
@@ -95,6 +96,35 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
   return uniquePaths(paths);
 }
 
+export async function collectPlacesSitemapPaths(): Promise<string[]> {
+  const paths = ["/places", "/collections", "/itineraries"];
+
+  try {
+    const { fetchPlaceSlugsServer, fetchCollectionsServer, fetchItinerariesServer } = await import(
+      "@/lib/places-repository"
+    );
+    const [placeSlugs, collections, itineraries] = await Promise.all([
+      fetchPlaceSlugsServer(),
+      fetchCollectionsServer(),
+      fetchItinerariesServer(),
+    ]);
+
+    for (const slug of placeSlugs) {
+      paths.push(`/places/${slug}`);
+    }
+    for (const col of collections) {
+      paths.push(`/collections/${col.slug}`);
+    }
+    for (const it of itineraries) {
+      paths.push(`/itineraries/${it.slug}`);
+    }
+  } catch {
+    // static index paths only
+  }
+
+  return uniquePaths(paths);
+}
+
 export async function collectSitemapPaths(): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
@@ -107,6 +137,7 @@ export async function collectSitemapPaths(): Promise<string[]> {
 
   const tourPaths = await collectTourSitemapPaths();
   const excursionPaths = await collectExcursionSitemapPaths();
+  const placesPaths = await collectPlacesSitemapPaths();
   const blogPaths = blogPosts.map((post) => `/blog/${post.slug}`);
   const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
@@ -124,9 +155,11 @@ export async function collectSitemapPaths(): Promise<string[]> {
     ...footerPaths,
     ...tourPaths,
     ...excursionPaths,
+    ...placesPaths,
     ...blogPaths,
     ...contentPaths,
     ...guideTopicPaths,
+    GUIDE_ABOUT_ARGENTINA_PATH,
     ...destinationPaths,
     ...legalPaths,
     ...flightRoutePaths,

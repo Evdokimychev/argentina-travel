@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import DestinationDetailView from "@/components/destinations/DestinationDetailView";
 import DestinationFlightSidebar from "@/components/flights/DestinationFlightSidebar";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
+import TouristDestinationJsonLd from "@/components/seo/TouristDestinationJsonLd";
 import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
+import { resolveKnowledgeLinksForDestination } from "@/lib/knowledge-internal-links";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -34,15 +36,18 @@ export default async function DestinationDetailPage({ params }: PageProps) {
   const tours = await fetchMarketplaceTours();
   const locale = "ru" as const;
   const flightTeasers = await getDestinationFlightTeasers(destination.id, locale);
+  const knowledgeLinks = resolveKnowledgeLinksForDestination(destination.id);
 
   return (
     <>
+      <TouristDestinationJsonLd destination={destination} />
       {flightTeasers.length > 0 ? (
         <FlightOffersJsonLd teasers={flightTeasers} pageUrl={`/destinations/${slug}`} />
       ) : null}
       <DestinationDetailView
         destination={destination}
         initialTours={tours}
+        knowledgeLinks={knowledgeLinks}
         flightSidebar={
           <DestinationFlightSidebar
             destinationId={destination.id}

@@ -401,12 +401,19 @@ export type BlogRelatedResource = {
   description?: string;
 };
 
+export interface BlogPostSection {
+  title: string;
+  body: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
+  seoTitle?: string;
   excerpt: string;
   content: string;
+  sections?: BlogPostSection[];
   author: string;
   authorBio?: string;
   authorAvatar?: string;

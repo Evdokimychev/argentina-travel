@@ -96,9 +96,14 @@ export const GUIDE_HUB: GuideIndexHubContent = {
   heroImage: "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80",
   heroCtas: [
     {
+      label: "🇦🇷 Об Аргентине",
+      href: "/guide/ob-argentine",
+      variant: "primary",
+    },
+    {
       label: "✈️ Как добраться",
       href: "/guide/kak-dobratsya",
-      variant: "primary",
+      variant: "secondary",
     },
     {
       label: "🗺 Регионы",

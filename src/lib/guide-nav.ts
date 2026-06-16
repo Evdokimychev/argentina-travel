@@ -1,5 +1,7 @@
 import { GUIDE_INDEX_INTRO, GUIDE_TOPICS } from "@/data/guide-topics";
+import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { guideTopicHref } from "@/lib/guide-topics";
+import { GUIDE_ABOUT_LINK_ID, GUIDE_HUB_LINK_ID } from "@/lib/guide-nav-icons";
 import type { SiteNavColumn, SiteNavLink } from "@/types/site-nav";
 
 export const GUIDE_NAV_PROMO_TITLE = "Путеводитель по Аргентине";
@@ -13,6 +15,9 @@ export const GUIDE_NAV_FEATURED_SLUGS = [
   "kak-dobratsya",
   "pogoda-i-sezonnost",
 ] as const;
+
+/** First link in mega-menu promo row */
+export const GUIDE_NAV_ABOUT_HREF = GUIDE_ABOUT_ARGENTINA_PATH;
 
 const GUIDE_PRACTICE_SLUGS = [
   "kak-dobratsya",
@@ -57,8 +62,14 @@ export function buildGuideNavColumns(): SiteNavColumn[] {
       titleKey: "nav.columns.guidePractice",
       links: [
         {
-          id: "guide-all",
-          label: "Полный путеводитель",
+          id: GUIDE_ABOUT_LINK_ID,
+          label: "Об Аргентине",
+          href: GUIDE_ABOUT_ARGENTINA_PATH,
+          description: "Страна, регионы, маршруты — главная страница путеводителя",
+        },
+        {
+          id: GUIDE_HUB_LINK_ID,
+          label: "Все темы",
           href: "/guide",
           description: "14 тем: практика, регионы, культура и деньги",
         },

@@ -221,6 +221,52 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     ],
   },
   {
+    id: "places",
+    label: "Места",
+    labelKey: "nav.places",
+    href: "/places",
+    columns: [
+      {
+        id: "places-browse",
+        title: "Справочник",
+        titleKey: "nav.columns.search",
+        links: [
+          {
+            id: "places-catalog",
+            label: "Все места",
+            labelKey: "nav.places",
+            href: "/places",
+            description: "Парки, города, ледники и водопады",
+          },
+          {
+            id: "places-collections",
+            label: "Подборки",
+            href: "/collections",
+            description: "Тематические коллекции",
+          },
+          {
+            id: "places-itineraries",
+            label: "Маршруты",
+            href: "/itineraries",
+            description: "Готовые планы поездок",
+          },
+        ],
+      },
+      {
+        id: "places-popular",
+        title: "Популярное",
+        titleKey: "nav.columns.popular",
+        links: [
+          { id: "place-iguazu", label: "Водопады Игуасу", href: "/places/iguazu-falls" },
+          { id: "place-perito", label: "Perito Moreno", href: "/places/perito-moreno-glacier" },
+          { id: "place-ba", label: "Буэнос-Айрес", href: "/places/buenos-aires" },
+          { id: "place-fitz", label: "Fitz Roy", href: "/places/fitz-roy" },
+          { id: "place-ushuaia", label: "Ушуайя", href: "/places/ushuaia" },
+        ],
+      },
+    ],
+  },
+  {
     id: "tours",
     label: "Туры",
     labelKey: "nav.tours",
@@ -368,7 +414,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
 ];
 
 /** Core conversion sections — visible in the desktop pill bar. */
-export const SITE_NAV_PRIMARY_IDS = ["destinations", "tours", "excursions", "guide", "immigration"] as const;
+export const SITE_NAV_PRIMARY_IDS = ["destinations", "places", "tours", "excursions", "guide", "immigration"] as const;
 
 export function getSiteNavSection(id: string): SiteNavSection | undefined {
   return SITE_NAV_SECTIONS.find((section) => section.id === id);

@@ -8,6 +8,8 @@ import {
   SITE_LEGAL_LINKS,
 } from "@/data/site-links";
 import { DESTINATION_PAGES } from "@/data/destination-pages";
+import { getAllPlaceListings } from "@/data/places-seed";
+import { placeHref } from "@/lib/places-repository";
 import { SHOP_PRODUCTS } from "@/data/shop-products";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
 import { buildContentSearchItems } from "@/lib/content-pages";
@@ -20,6 +22,7 @@ import type { TourListing } from "@/types";
 export type SearchResultType =
   | "tour"
   | "excursion"
+  | "place"
   | "blog"
   | "faq"
   | "page"
@@ -40,6 +43,7 @@ export type SearchIndexItem = {
 export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
   tour: "Туры",
   excursion: "Экскурсии",
+  place: "Места",
   blog: "Блог",
   faq: "FAQ",
   page: "Страницы",
@@ -123,6 +127,14 @@ const STATIC_PAGES: SearchIndexItem[] = [
     keywords: ["регионы", "города", "патагония"],
   },
   {
+    id: "page-guide-about",
+    type: "page",
+    title: "Об Аргентине",
+    description: "География, регионы, маршруты и практика — главная страница путеводителя.",
+    href: "/guide/ob-argentine",
+    keywords: ["аргентина", "страна", "регионы", "маршрут", "факты"],
+  },
+  {
     id: "page-guide",
     type: "page",
     title: "Путеводитель",
@@ -167,12 +179,13 @@ const STATIC_PAGES: SearchIndexItem[] = [
 const SEARCH_TYPE_PRIORITY: Record<SearchResultType, number> = {
   tour: 10,
   excursion: 9,
-  blog: 8,
-  guide: 7,
-  immigration: 6,
-  destination: 5,
-  faq: 4,
-  legal: 3,
+  place: 8,
+  blog: 7,
+  guide: 6,
+  immigration: 5,
+  destination: 4,
+  faq: 3,
+  legal: 2,
   page: 1,
 };
 
@@ -346,6 +359,15 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
       }))
   );
 
+  const placeItems: SearchIndexItem[] = getAllPlaceListings().map((place) => ({
+    id: `place-${place.slug}`,
+    type: "place" as const,
+    title: place.name,
+    description: place.shortDescription,
+    href: placeHref(place.slug),
+    keywords: [place.region, place.province, place.city, ...place.tags].filter(Boolean) as string[],
+  }));
+
   return dedupeSearchIndex([
     ...STATIC_PAGES,
     ...navItems,
@@ -361,6 +383,7 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     ...buildImmigrationTopicSearchItems(),
     ...shopItems,
     ...serviceItems,
+    ...placeItems,
   ]);
 }
 
