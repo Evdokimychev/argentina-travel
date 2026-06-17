@@ -8,6 +8,7 @@ import {
   resolveTourPriceFromPrefix,
   tourShowsReferencePrice,
 } from "@/lib/tour-price-public";
+import { tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
 
 interface TourPublicPriceDisplayProps {
@@ -19,7 +20,7 @@ interface TourPublicPriceDisplayProps {
   size?: "sm" | "lg";
   showFrom?: boolean;
   showDiscountRibbon?: boolean;
-  /** compact — карточки каталога и похожие туры: без длинных подписей */
+  /** compact — карточки каталога; default — страница тура и боковая панель */
   density?: "default" | "compact";
   className?: string;
 }
@@ -42,7 +43,7 @@ export default function TourPublicPriceDisplay({
   const isCompact = density === "compact";
   const labelSizeClass =
     size === "lg" && !isCompact
-      ? "font-heading text-2xl sm:text-3xl"
+      ? "font-heading text-xl font-bold sm:text-2xl"
       : isCompact
         ? "text-sm"
         : "text-lg";
@@ -61,18 +62,30 @@ export default function TourPublicPriceDisplay({
         </div>
 
         {showsReference ? (
-          <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
-            {effectiveShowFrom ? (
-              <span className={cn("text-slate", isCompact ? "text-[11px]" : "text-xs")}>от</span>
-            ) : null}
-            <FormattedPrice
-              priceUsd={priceUsd}
-              className={cn(
-                "font-semibold text-charcoal",
-                isCompact ? "text-sm" : size === "lg" ? "text-xl" : "text-base"
-              )}
-            />
-          </div>
+          isCompact ? (
+            <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
+              {effectiveShowFrom ? (
+                <span className="text-[11px] text-slate">от</span>
+              ) : null}
+              <FormattedPrice
+                priceUsd={priceUsd}
+                className="text-sm font-semibold text-charcoal"
+              />
+            </div>
+          ) : (
+            <div className={cn("mt-2.5", tourDetailInsetMutedClass, "px-3 py-2.5")}>
+              <p className="text-xs font-medium text-slate">Ориентир для расчёта</p>
+              <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
+                {effectiveShowFrom ? (
+                  <span className="text-xs text-slate">от</span>
+                ) : null}
+                <FormattedPrice
+                  priceUsd={priceUsd}
+                  className="text-lg font-semibold text-charcoal"
+                />
+              </div>
+            </div>
+          )
         ) : null}
 
         {!isCompact && suffix ? (
@@ -116,7 +129,7 @@ export function TourPriceCell({
   if (priceOnRequest) {
     return (
       <span className={cn("inline-flex flex-col gap-0.5", className)}>
-        <span className="inline-flex items-center gap-1 text-xs text-violet-900">
+        <span className="inline-flex items-center gap-1 text-xs text-slate">
           {TOUR_PRICE_ON_REQUEST_LABEL}
           <PriceOnRequestInfoButton hasReferencePrice className="h-5 w-5" />
         </span>

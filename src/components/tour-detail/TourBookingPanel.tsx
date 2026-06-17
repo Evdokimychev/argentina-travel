@@ -194,7 +194,7 @@ export default function TourBookingPanel({
         </p>
       )}
       {!priceOnRequest && groupDiscountApplied ? (
-        <p className="mt-1 text-xs font-medium text-violet-800">
+        <p className="mt-1 text-xs font-medium text-sky-dark">
           Групповая скидка −{" "}
           <FormattedPrice priceUsd={groupDiscountSavingsUsd} className="text-xs font-medium" /> на
           заявку
@@ -209,7 +209,12 @@ export default function TourBookingPanel({
       )}
 
       <div className="mt-5 space-y-4 border-t border-gray-100 pt-5">
-        <BookingDateSelector tour={tour} idPrefix="panel" />
+        <BookingDateSelector
+          tour={tour}
+          idPrefix="panel"
+          showDepartureCalendar={false}
+          collapsible={bookingMode === "scheduled" && tour.dates.length > 0}
+        />
 
         <GuestCounter
           value={guests}

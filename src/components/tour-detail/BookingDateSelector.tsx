@@ -18,6 +18,7 @@ import {
   type BookingDateMode,
 } from "@/lib/tour-booking-spots";
 import { useTourBooking } from "./TourBookingContext";
+import { tourDetailInsetClass } from "@/lib/tour-detail-ui";
 
 interface BookingDateSelectorProps {
   tour: TourDetail;
@@ -26,6 +27,8 @@ interface BookingDateSelectorProps {
   className?: string;
   /** Свернуть выбор: показывать только текущие даты и кнопку «Изменить» */
   collapsible?: boolean;
+  /** Календарь отправлений — только в основном блоке «Даты», не в боковой панели */
+  showDepartureCalendar?: boolean;
 }
 
 function formatSelectionSummary(
@@ -71,6 +74,7 @@ export default function BookingDateSelector({
   idPrefix = "booking",
   className,
   collapsible = false,
+  showDepartureCalendar = true,
 }: BookingDateSelectorProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
   const {
@@ -170,17 +174,19 @@ export default function BookingDateSelector({
 
           {showScheduledPicker && tour.dates.length > 0 && (
             <div className="space-y-4">
-              <TourDepartureCalendar
-                dates={tour.dates}
-                selectedDateId={selectedDateId}
-                guests={guests}
-                groupMin={tour.groupMin}
-                onSelect={(date) => setSelectedDateId(date.id)}
-              />
+              {showDepartureCalendar ? (
+                <TourDepartureCalendar
+                  dates={tour.dates}
+                  selectedDateId={selectedDateId}
+                  guests={guests}
+                  groupMin={tour.groupMin}
+                  onSelect={(date) => setSelectedDateId(date.id)}
+                />
+              ) : null}
 
               <div>
                 <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
-                  Или выберите из списка
+                  {showDepartureCalendar ? "Или выберите из списка" : "Дата отправления"}
                 </label>
                 <div className="relative mt-1.5">
                   <select
@@ -235,7 +241,7 @@ export default function BookingDateSelector({
 
           {showCustomPicker && (
             <div className="space-y-3">
-              <div className="rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.05] via-white to-surface-muted/40 p-3.5">
+              <div className={cn(tourDetailInsetClass, "p-3.5")}>
                 <div className="flex items-start gap-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky/10 text-sky">
                     <Info className="h-4 w-4" aria-hidden />

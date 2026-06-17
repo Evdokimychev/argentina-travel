@@ -2,6 +2,10 @@ import { Tag } from "lucide-react";
 import type { Tour } from "@/types/tour";
 import { ORGANIZER_TOUR_DISCOUNT_OPTIONS } from "@/data/tour-discount-defaults";
 import { resolveEnabledDiscountLabels } from "@/lib/tour-public-display";
+import {
+  tourDetailPromoHeadingClass,
+  tourDetailPromoPanelClass,
+} from "@/lib/tour-detail-ui";
 
 interface EarlyBookingDiscountsProps {
   tour: Tour;
@@ -18,8 +22,8 @@ export default function EarlyBookingDiscounts({ tour, compact = false }: EarlyBo
 
   if (compact) {
     return (
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3">
-        <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-emerald-800">
+      <div className={tourDetailPromoPanelClass}>
+        <p className={tourDetailPromoHeadingClass}>
           <Tag className="h-3.5 w-3.5" />
           Скидки за раннее бронирование
         </p>
@@ -35,9 +39,9 @@ export default function EarlyBookingDiscounts({ tour, compact = false }: EarlyBo
   }
 
   return (
-    <div className="rounded-2xl border border-emerald-200 bg-emerald-50/60 p-6">
+    <div className="rounded-2xl border border-sky/20 bg-sky/[0.05] p-6">
       <h3 className="flex items-center gap-2 font-heading text-lg font-bold text-charcoal">
-        <Tag className="h-5 w-5 text-emerald-700" />
+        <Tag className="h-5 w-5 text-sky" />
         Скидки за раннее бронирование
       </h3>
       <ul className="mt-4 space-y-3">

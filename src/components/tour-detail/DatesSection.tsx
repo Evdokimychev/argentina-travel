@@ -114,7 +114,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
             <button
               type="button"
               onClick={openWaitlist}
-              className="rounded-lg border border-violet-200 bg-white px-3 py-1.5 text-xs font-medium text-violet-800 transition-colors hover:border-violet-300"
+              className="rounded-lg border border-sky/20 bg-white px-3 py-1.5 text-xs font-medium text-sky-dark transition-colors hover:border-sky/40"
             >
               Встать в лист ожидания
             </button>

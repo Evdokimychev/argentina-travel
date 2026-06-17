@@ -8,6 +8,11 @@ import TourSection from "./TourSection";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
+import {
+  tourDetailDayBadgeClass,
+  tourDetailInsetMutedClass,
+  tourDetailTimelineClass,
+} from "@/lib/tour-detail-ui";
 import TourItineraryPdfButton from "./TourItineraryPdfButton";
 import type { TourDetail } from "@/types";
 
@@ -28,7 +33,7 @@ function ItineraryExpandToggle({
     <div
       role="group"
       aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
-      className="flex max-w-full items-center gap-3 rounded-xl border border-gray-100 bg-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5"
+      className="flex max-w-full items-center gap-3 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30"
     >
       <button
         type="button"
@@ -90,10 +95,10 @@ function ItineraryDayCard({
         aria-expanded={isOpen}
         className="flex w-full items-start gap-4 text-left"
       >
-        <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-patagonia text-sm font-bold text-white shadow-md sm:h-12 sm:w-12">
+        <span className={cn("relative z-10", tourDetailDayBadgeClass)}>
           {day.dayNumber}
         </span>
-        <div className="flex-1 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5">
+        <div className="flex-1 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:border-sky/20 hover:shadow-md sm:p-5">
           <div className="flex items-center justify-between gap-2">
             <h3 className="font-semibold text-charcoal">
               День {day.dayNumber}. {day.title}
@@ -121,7 +126,7 @@ function ItineraryDayCard({
                 </div>
               )}
               <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl bg-pampas p-3">
+                <div className={cn(tourDetailInsetMutedClass, "p-3")}>
                   <p className="text-xs font-medium text-slate">Активности</p>
                   <ul className="mt-1 space-y-1 text-sm text-charcoal">
                     {activities.map((a) => (
@@ -129,7 +134,7 @@ function ItineraryDayCard({
                     ))}
                   </ul>
                 </div>
-                <div className="rounded-xl bg-pampas p-3">
+                <div className={cn(tourDetailInsetMutedClass, "p-3")}>
                   <p className="text-xs font-medium text-slate">Питание</p>
                   <ul className="mt-1 space-y-1 text-sm text-charcoal">
                     {meals.map((m) => (
@@ -137,7 +142,7 @@ function ItineraryDayCard({
                     ))}
                   </ul>
                 </div>
-                <div className="rounded-xl bg-pampas p-3">
+                <div className={cn(tourDetailInsetMutedClass, "p-3")}>
                   <p className="text-xs font-medium text-slate">Проживание</p>
                   <p className="mt-1 text-sm text-charcoal">{day.accommodation}</p>
                 </div>
@@ -229,7 +234,7 @@ export default function ItinerarySection({
     >
       {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-6" /> : null}
       <div className="relative space-y-0">
-        <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200 sm:left-[23px]" />
+        <div className={cn("absolute left-[19px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
         {itineraryDays.map((day) => (
           <ItineraryDayCard
             key={day.id}

@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass } from "@/lib/site-container";
+import { tourDetailSectionCardClass } from "@/lib/tour-detail-ui";
 
 type TourSectionProps = {
   id: string;
@@ -68,7 +69,7 @@ export default function TourSection({
       id={id}
       className={cn(siteScrollAnchorClass, "tour-section-target", className)}
     >
-      <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8">
+      <div className={tourDetailSectionCardClass}>
         <TourSectionHeader title={title} subtitle={subtitle} headerAddon={headerAddon} />
         {children}
       </div>

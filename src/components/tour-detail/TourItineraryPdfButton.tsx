@@ -4,6 +4,7 @@ import { useState } from "react";
 import { FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { formatTourPdfFilename } from "@/lib/tour-itinerary-pdf/pdf-meta";
+import { tourDetailSecondaryButtonClass, tourDetailAccentTextClass } from "@/lib/tour-detail-ui";
 import { getSiteBrandDomain, SITE_BRAND_NAME } from "@/lib/site-brand";
 import type { TourDetail } from "@/types";
 
@@ -72,14 +73,14 @@ export default function TourItineraryPdfButton({ tour, className }: TourItinerar
         onClick={() => void handleDownload()}
         disabled={loading}
         className={cn(
-          "flex w-full items-center justify-center gap-2.5 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-charcoal transition-colors",
-          "hover:border-sky/30 hover:bg-sky/[0.06] disabled:cursor-wait disabled:opacity-70"
+          "flex w-full items-center justify-center gap-2.5",
+          tourDetailSecondaryButtonClass
         )}
       >
         {loading ? (
-          <Loader2 className="h-4 w-4 animate-spin text-sky" aria-hidden />
+          <Loader2 className={cn("h-4 w-4 animate-spin", tourDetailAccentTextClass)} aria-hidden />
         ) : (
-          <FileText className="h-4 w-4 text-red-600" aria-hidden />
+          <FileText className={cn("h-4 w-4", tourDetailAccentTextClass)} aria-hidden />
         )}
         {loading ? "Формируем PDF…" : "Получить программу тура в PDF"}
       </button>

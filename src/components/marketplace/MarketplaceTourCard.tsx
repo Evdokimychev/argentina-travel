@@ -156,7 +156,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           ) : null}
 
           {groupDiscountHint && !tour.priceOnRequest ? (
-            <p className="mt-1.5 text-[11px] font-medium text-violet-800">
+            <p className="mt-1.5 text-[11px] font-medium text-sky-dark">
               Групповая скидка: {groupDiscountHint}
             </p>
           ) : null}
