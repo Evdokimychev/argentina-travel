@@ -15,9 +15,9 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
           <Link
             key={tour.slug}
             href={`/tours/${tour.slug}`}
-            className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
+            className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
           >
-            <div className="relative h-44">
+            <div className="relative h-44 shrink-0">
               <Image
                 src={tour.image}
                 alt={tour.title}
@@ -26,12 +26,17 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
             </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-charcoal group-hover:text-sky">
+            <div className="flex flex-1 flex-col p-4">
+              <h3 className="line-clamp-2 font-semibold leading-snug text-charcoal group-hover:text-sky">
                 {tour.title}
               </h3>
-              <div className="mt-2 flex items-center justify-between text-sm">
-                <span className="text-slate">
+              {tour.shortDescription ? (
+                <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate">
+                  {tour.shortDescription}
+                </p>
+              ) : null}
+              <div className="mt-auto flex items-end justify-between gap-3 pt-3 text-sm">
+                <span className="shrink-0 text-slate">
                   {formatDurationShort(tour.durationDays, tour.durationNights)}
                 </span>
                 <TourPublicPriceDisplay
@@ -41,6 +46,8 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
                   priceFromPrefix={tour.priceFromPrefix}
                   size="sm"
                   showFrom={false}
+                  density="compact"
+                  className="text-right"
                 />
               </div>
             </div>

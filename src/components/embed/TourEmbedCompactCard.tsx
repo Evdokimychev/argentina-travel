@@ -62,6 +62,7 @@ export default function TourEmbedCompactCard({
               priceFromPrefix={tour.priceFromPrefix}
               size="sm"
               showFrom={false}
+              density="compact"
             />
             {rating.hasReviews ? (
               <span className="text-xs text-slate">{rating.ratingText}</span>
@@ -107,6 +108,7 @@ export default function TourEmbedCompactCard({
             priceFromPrefix={tour.priceFromPrefix}
             size="sm"
             showFrom={false}
+            density="compact"
           />
           <span className="text-xs text-slate">
             {formatDurationShort(tour.durationDays, tour.durationNights)}

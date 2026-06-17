@@ -3,12 +3,25 @@
 import { useState } from "react";
 import { FileText, Loader2 } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { formatTourPdfFilename } from "@/lib/tour-itinerary-pdf/pdf-meta";
 import { getSiteBrandDomain, SITE_BRAND_NAME } from "@/lib/site-brand";
 import type { TourDetail } from "@/types";
 
 interface TourItineraryPdfButtonProps {
   tour: TourDetail;
   className?: string;
+}
+
+async function downloadPdfBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.rel = "noopener";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(url);
 }
 
 export default function TourItineraryPdfButton({ tour, className }: TourItineraryPdfButtonProps) {
@@ -20,14 +33,31 @@ export default function TourItineraryPdfButton({ tour, className }: TourItinerar
 
     setLoading(true);
     setError(null);
+    const filename = formatTourPdfFilename(tour.slug);
 
     try {
-      const { downloadTourItineraryPdfFromTour } = await import(
-        "@/lib/tour-itinerary-pdf/download-tour-itinerary-pdf"
-      );
-      await downloadTourItineraryPdfFromTour(tour);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Не удалось сформировать PDF");
+      const response = await fetch(`/api/tours/${encodeURIComponent(tour.slug)}/program.pdf`);
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(payload?.error ?? "Не удалось сформировать PDF на сервере");
+      }
+      const blob = await response.blob();
+      await downloadPdfBlob(blob, filename);
+    } catch (serverError) {
+      try {
+        const { downloadTourItineraryPdfFromTour } = await import(
+          "@/lib/tour-itinerary-pdf/download-tour-itinerary-pdf"
+        );
+        await downloadTourItineraryPdfFromTour(tour);
+      } catch (clientError) {
+        const message =
+          clientError instanceof Error
+            ? clientError.message
+            : serverError instanceof Error
+              ? serverError.message
+              : "Не удалось сформировать PDF";
+        setError(message);
+      }
     } finally {
       setLoading(false);
     }
@@ -39,7 +69,7 @@ export default function TourItineraryPdfButton({ tour, className }: TourItinerar
     <div className={cn("space-y-2", className)}>
       <button
         type="button"
-        onClick={handleDownload}
+        onClick={() => void handleDownload()}
         disabled={loading}
         className={cn(
           "flex w-full items-center justify-center gap-2.5 rounded-2xl border border-gray-200 bg-gray-50 px-4 py-3.5 text-sm font-medium text-charcoal transition-colors",

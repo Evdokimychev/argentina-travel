@@ -83,6 +83,7 @@ export default function TourMapListItem({
             priceFromPrefix={tour.priceFromPrefix}
             size="sm"
             showFrom={false}
+            density="compact"
           />
           <Link
             href={`/tours/${tour.slug}`}

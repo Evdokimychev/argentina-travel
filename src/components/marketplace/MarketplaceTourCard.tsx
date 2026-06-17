@@ -124,6 +124,12 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             {tour.title}
           </h3>
 
+          {tour.shortDescription ? (
+            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
+              {tour.shortDescription}
+            </p>
+          ) : null}
+
           <div className="mt-3 flex items-center justify-between gap-2">
             <TourPublicPriceDisplay
               priceUsd={tour.priceUsd}
@@ -131,6 +137,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               priceOnRequest={tour.priceOnRequest}
               priceFromPrefix={tour.priceFromPrefix}
               size="sm"
+              density="compact"
             />
             <p className="shrink-0 text-xs leading-none text-slate">
               {formatDurationShort(tour.durationDays, tour.durationNights)}

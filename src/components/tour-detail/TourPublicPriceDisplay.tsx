@@ -2,10 +2,9 @@
 
 import FormattedPrice from "@/components/FormattedPrice";
 import TourPriceDisplay from "./TourPriceDisplay";
+import PriceOnRequestInfoButton from "./PriceOnRequestInfoButton";
 import {
-  TOUR_PRICE_ON_REQUEST_HINT,
   TOUR_PRICE_ON_REQUEST_LABEL,
-  TOUR_PRICE_ON_REQUEST_REFERENCE_HINT,
   resolveTourPriceFromPrefix,
   tourShowsReferencePrice,
 } from "@/lib/tour-price-public";
@@ -20,6 +19,8 @@ interface TourPublicPriceDisplayProps {
   size?: "sm" | "lg";
   showFrom?: boolean;
   showDiscountRibbon?: boolean;
+  /** compact — карточки каталога и похожие туры: без длинных подписей */
+  density?: "default" | "compact";
   className?: string;
 }
 
@@ -32,50 +33,51 @@ export default function TourPublicPriceDisplay({
   size = "lg",
   showFrom,
   showDiscountRibbon = true,
+  density = "default",
   className,
 }: TourPublicPriceDisplayProps) {
   const showsReference = tourShowsReferencePrice({ priceUsd, priceOnRequest, priceFromPrefix });
   const effectiveShowFrom =
     showFrom ?? resolveTourPriceFromPrefix({ priceUsd, priceOnRequest, priceFromPrefix });
+  const isCompact = density === "compact";
+  const labelSizeClass =
+    size === "lg" && !isCompact
+      ? "font-heading text-2xl sm:text-3xl"
+      : isCompact
+        ? "text-sm"
+        : "text-lg";
 
-  if (priceOnRequest && !showsReference) {
+  if (priceOnRequest) {
     return (
-      <div className={cn("relative", className)}>
-        <p
-          className={cn(
-            "font-bold text-charcoal",
-            size === "lg" ? "font-heading text-2xl sm:text-3xl" : "text-lg"
-          )}
-        >
-          {TOUR_PRICE_ON_REQUEST_LABEL}
-        </p>
-        <p className={cn("mt-1 text-slate", size === "lg" ? "text-sm" : "text-xs")}>
-          {TOUR_PRICE_ON_REQUEST_HINT}
-        </p>
-        {suffix ? (
-          <p className={cn("mt-1 text-slate", size === "lg" ? "text-sm" : "text-xs")}>{suffix}</p>
-        ) : null}
-      </div>
-    );
-  }
-
-  if (priceOnRequest && showsReference) {
-    return (
-      <div className={cn("relative", className)}>
-        <p className="text-sm font-medium text-violet-900">{TOUR_PRICE_ON_REQUEST_LABEL}</p>
-        <div className="mt-1">
-          <TourPriceDisplay
-            priceUsd={priceUsd}
-            originalPriceUsd={originalPriceUsd}
-            size={size}
-            showFrom={effectiveShowFrom}
-            showDiscountRibbon={false}
-            suffix={suffix}
+      <div className={cn("relative min-w-0", className)}>
+        <div className="flex flex-wrap items-center gap-1">
+          <p className={cn("font-bold text-charcoal", labelSizeClass)}>
+            {TOUR_PRICE_ON_REQUEST_LABEL}
+          </p>
+          <PriceOnRequestInfoButton
+            hasReferencePrice={showsReference}
+            className={size === "lg" && !isCompact ? "h-7 w-7" : "h-6 w-6"}
           />
         </div>
-        <p className={cn("mt-1 text-slate", size === "lg" ? "text-sm" : "text-xs")}>
-          {TOUR_PRICE_ON_REQUEST_REFERENCE_HINT}
-        </p>
+
+        {showsReference ? (
+          <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
+            {effectiveShowFrom ? (
+              <span className={cn("text-slate", isCompact ? "text-[11px]" : "text-xs")}>от</span>
+            ) : null}
+            <FormattedPrice
+              priceUsd={priceUsd}
+              className={cn(
+                "font-semibold text-charcoal",
+                isCompact ? "text-sm" : size === "lg" ? "text-xl" : "text-base"
+              )}
+            />
+          </div>
+        ) : null}
+
+        {!isCompact && suffix ? (
+          <p className={cn("mt-1 text-slate", size === "lg" ? "text-sm" : "text-xs")}>{suffix}</p>
+        ) : null}
       </div>
     );
   }
@@ -93,7 +95,7 @@ export default function TourPublicPriceDisplay({
   );
 }
 
-/** Компактная подпись для таблиц дат и списков. */
+/** Компактная подпись для таблицы дат. */
 export function TourPriceCell({
   priceUsd,
   priceOnRequest,
@@ -104,12 +106,20 @@ export function TourPriceCell({
   className?: string;
 }) {
   if (priceOnRequest && priceUsd <= 0) {
-    return <span className={cn("text-slate", className)}>{TOUR_PRICE_ON_REQUEST_LABEL}</span>;
+    return (
+      <span className={cn("inline-flex items-center gap-1 text-slate", className)}>
+        {TOUR_PRICE_ON_REQUEST_LABEL}
+        <PriceOnRequestInfoButton className="h-5 w-5" />
+      </span>
+    );
   }
   if (priceOnRequest) {
     return (
-      <span className={className}>
-        <span className="block text-xs text-violet-800">{TOUR_PRICE_ON_REQUEST_LABEL}</span>
+      <span className={cn("inline-flex flex-col gap-0.5", className)}>
+        <span className="inline-flex items-center gap-1 text-xs text-violet-900">
+          {TOUR_PRICE_ON_REQUEST_LABEL}
+          <PriceOnRequestInfoButton hasReferencePrice className="h-5 w-5" />
+        </span>
         <FormattedPrice priceUsd={priceUsd} className="font-semibold text-charcoal" />
       </span>
     );

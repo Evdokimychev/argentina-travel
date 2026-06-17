@@ -145,7 +145,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               <span>{tour.region}</span>
             </p>
 
-            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-slate">
+            <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate">
               {tour.shortDescription}
             </p>
 
@@ -186,6 +186,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               priceFromPrefix={tour.priceFromPrefix}
               size="sm"
               showFrom={false}
+              density="compact"
               className="[&_span.font-bold]:text-2xl [&_span.font-bold]:leading-tight"
             />
           </div>

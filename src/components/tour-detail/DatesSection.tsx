@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { TourDetail, TourDatePrice } from "@/types";
 import { TourPriceCell } from "./TourPublicPriceDisplay";
 import { formatDateShortWithYear } from "@/lib/utils";
@@ -17,6 +17,7 @@ import {
 import TourDepartureCalendar from "./TourDepartureCalendar";
 import TourDepartureCountdown from "./TourDepartureCountdown";
 import TourSection from "./TourSection";
+import { ChevronDown, ChevronUp, CalendarDays } from "lucide-react";
 import { useTourBooking } from "./TourBookingContext";
 import type { Tour } from "@/types/tour";
 import EarlyBookingDiscounts from "./EarlyBookingDiscounts";
@@ -38,6 +39,16 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
 
   const priceSummary = resolveTourDatePriceSummary(dates, tour.priceUsd);
   const priceRangeLabel = formatDatePriceRangeLabel(priceSummary, tour.priceOnRequest);
+  const showCalendar = dates.length > 1;
+  const calendarDefaultOpen = useMemo(
+    () => shouldOpenDepartureCalendarByDefault(dates),
+    [dates]
+  );
+  const [calendarOpen, setCalendarOpen] = useState(calendarDefaultOpen);
+
+  useEffect(() => {
+    setCalendarOpen(calendarDefaultOpen);
+  }, [calendarDefaultOpen, dates.length]);
 
   useEffect(() => {
     setError(null);
@@ -123,13 +134,39 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
         <div className="space-y-4">
           <TourDepartureCountdown tour={tour} />
 
-          <TourDepartureCalendar
-            dates={dates}
-            selectedDateId={selectedDateId}
-            guests={guests}
-            groupMin={tour.groupMin}
-            onSelect={handleSelect}
-          />
+          {showCalendar ? (
+            <div className="rounded-2xl border border-gray-200 bg-white">
+              <button
+                type="button"
+                onClick={() => setCalendarOpen((open) => !open)}
+                className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left"
+                aria-expanded={calendarOpen}
+              >
+                <span className="inline-flex items-center gap-2 text-sm font-medium text-charcoal">
+                  <CalendarDays className="h-4 w-4 text-sky" aria-hidden />
+                  Календарь отправлений
+                  <span className="font-normal text-slate">({dates.length})</span>
+                </span>
+                {calendarOpen ? (
+                  <ChevronUp className="h-4 w-4 shrink-0 text-slate" aria-hidden />
+                ) : (
+                  <ChevronDown className="h-4 w-4 shrink-0 text-slate" aria-hidden />
+                )}
+              </button>
+              {calendarOpen ? (
+                <div className="border-t border-gray-100 px-2 pb-2 pt-1 sm:px-3">
+                  <TourDepartureCalendar
+                    dates={dates}
+                    selectedDateId={selectedDateId}
+                    guests={guests}
+                    groupMin={tour.groupMin}
+                    onSelect={handleSelect}
+                    className="border-0 shadow-none"
+                  />
+                </div>
+              ) : null}
+            </div>
+          ) : null}
 
           <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full min-w-[540px] text-left text-sm">
@@ -208,4 +245,10 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
       )}
     </TourSection>
   );
+}
+
+function shouldOpenDepartureCalendarByDefault(dates: TourDatePrice[]): boolean {
+  if (dates.length <= 3) return false;
+  const months = new Set(dates.map((date) => date.startDate.slice(0, 7)));
+  return months.size > 1;
 }
