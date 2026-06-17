@@ -46,12 +46,19 @@ export type GuidePillarBlogLink = {
   description?: string;
 };
 
-export type GuidePillarWidgetSlotType = "exchange-rates" | "calculator" | "map" | "promo" | "weather-panel";
+export type GuidePillarWidgetSlotType =
+  | "exchange-rates"
+  | "calculator"
+  | "map"
+  | "promo"
+  | "weather-panel"
+  | "tour-embed";
 
 export type GuidePillarWidgetSlot = {
   id: string;
   label: string;
   type: GuidePillarWidgetSlotType;
+  tourEmbed?: import("@/types/tour-embed").TourEmbedConfig;
 };
 
 export type GuidePracticalTips = {

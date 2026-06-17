@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import DestinationInsuranceTeaser from "@/components/destinations/DestinationInsuranceTeaser";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
-import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
+import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { SafeImage } from "@/components/ui/safe-image";
 import { Button } from "@/components/ui/button";
 import type { DestinationPage } from "@/data/destination-pages";
@@ -210,36 +210,41 @@ export default function DestinationDetailView({
 
       <section className="bg-surface-muted py-12 sm:py-16">
         <div className={siteContainerClass}>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры в регионе</h2>
-              <p className="mt-2 text-slate">
-                {matchedTours.length > 0
-                  ? `Найдено ${matchedTours.length} подходящих маршрутов`
-                  : "Пока нет точных совпадений — откройте полный каталог"}
-              </p>
-            </div>
-            <Link href={catalogHref} className="text-sm font-medium text-sky hover:underline">
-              Смотреть все в каталоге →
-            </Link>
-          </div>
-
           {matchedTours.length > 0 ? (
-            <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-              {matchedTours.slice(0, 6).map((tour) => (
-                <MarketplaceTourCard key={tour.id} tour={tour} />
-              ))}
-            </div>
+            <TourEmbedSection
+              config={{
+                variant: "grid",
+                title: "Туры в регионе",
+                subtitle: `Найдено ${matchedTours.length} подходящих маршрутов`,
+                limit: 6,
+                source: { kind: "destination", destinationSlug: destination.id },
+                catalogHref: catalogHref,
+                catalogLabel: "Смотреть все в каталоге",
+                tone: "default",
+              }}
+              initialTours={tours}
+            />
           ) : (
-            <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center">
-              <p className="font-medium text-charcoal">Туры по этому направлению скоро появятся</p>
-              <p className="mx-auto mt-2 max-w-md text-sm text-slate">
-                Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут.
-              </p>
-              <Link href={catalogHref} className="mt-6 inline-block">
-                <Button variant="outline">Перейти в каталог</Button>
-              </Link>
-            </div>
+            <>
+              <div className="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                  <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры в регионе</h2>
+                  <p className="mt-2 text-slate">Пока нет точных совпадений — откройте полный каталог</p>
+                </div>
+                <Link href={catalogHref} className="text-sm font-medium text-sky hover:underline">
+                  Смотреть все в каталоге →
+                </Link>
+              </div>
+              <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center">
+                <p className="font-medium text-charcoal">Туры по этому направлению скоро появятся</p>
+                <p className="mx-auto mt-2 max-w-md text-sm text-slate">
+                  Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут.
+                </p>
+                <Link href={catalogHref} className="mt-6 inline-block">
+                  <Button variant="outline">Перейти в каталог</Button>
+                </Link>
+              </div>
+            </>
           )}
         </div>
       </section>

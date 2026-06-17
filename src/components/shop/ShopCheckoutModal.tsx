@@ -12,6 +12,10 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedPrice from "@/components/FormattedPrice";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 interface ShopCheckoutModalProps {
   product: ShopProduct;
@@ -33,8 +37,9 @@ export default function ShopCheckoutModal({
   const [customerPhone, setCustomerPhone] = useState("");
   const [notes, setNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<SiteFeedbackMessage | null>(null);
   const [order, setOrder] = useState<ShopOrder | null>(null);
+  const feedback = useSiteFeedback();
 
   useEffect(() => {
     if (!open) return;
@@ -62,8 +67,18 @@ export default function ShopCheckoutModal({
       });
       setOrder(created);
       setStep("success");
+      feedback.success({
+        title: "Заказ оформлен",
+        description: "Менеджер свяжется с вами для оплаты и отправки PDF на email.",
+      });
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Не удалось оформить заказ");
+      const normalized = normalizeSiteError(submitError, {
+        title: "Не удалось оформить заказ",
+        steps: ["Проверьте email и телефон", "Попробуйте ещё раз через минуту"],
+        action: { label: "Связаться с нами", href: "/contacts" },
+      });
+      setError(normalized);
+      feedback.showError(normalized);
     } finally {
       setSubmitting(false);
     }
@@ -88,9 +103,13 @@ export default function ShopCheckoutModal({
               </p>
 
               {error ? (
-                <p role="alert" className="rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
-                  {error}
-                </p>
+                <InlineFeedback
+                  variant="error"
+                  title={error.title}
+                  description={error.description}
+                  steps={error.steps}
+                  action={error.action}
+                />
               ) : null}
 
               <div>
@@ -154,8 +173,8 @@ export default function ShopCheckoutModal({
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Отмена
               </Button>
-              <Button type="submit" disabled={submitting}>
-                {submitting ? "Отправка…" : "Оформить заказ"}
+              <Button type="submit" loading={submitting} loadingLabel="Отправка…">
+                Оформить заказ
               </Button>
             </div>
           </form>

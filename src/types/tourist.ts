@@ -8,6 +8,7 @@ import type {
   BookingOrganizerParams,
   BookingPaymentStatus,
 } from "@/types/booking-params";
+import type { BookingSource, TripOperations } from "@/types/trip-operations";
 
 /** Active CRM statuses (Phase D v1 UI). */
 export type BookingStatusActive =
@@ -83,6 +84,8 @@ export interface Booking {
   startDate?: string;
   endDate?: string;
   totalPriceUsd: number;
+  /** Заявка без фиксированной цены — организатор готовит расчёт. */
+  priceQuoteRequest?: boolean;
   contactName: string;
   contactEmail: string;
   contactPhone: string;
@@ -120,6 +123,14 @@ export interface Booking {
   paymentLinkToken?: string;
   /** Denormalized — synced from paymentLink.expiresAt. */
   paymentLinkExpiresAt?: string;
+  /** Источник заявки: сайт или внешняя площадка (Tripster и т.д.). */
+  bookingSource?: BookingSource;
+  /** Номер/ссылка бронирования на внешней площадке. */
+  externalReference?: string;
+  /** Публичный токен для /trip/[token] — личный кабинет поездки. */
+  clientPortalToken?: string;
+  /** Чеклист, ссылки и анкета клиента по поездке. */
+  tripOperations?: TripOperations;
   createdAt: string;
   updatedAt: string;
 }

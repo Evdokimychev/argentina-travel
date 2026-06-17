@@ -6,28 +6,40 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import type { AuthIntent } from "@/types/auth";
-import type { AccountRole, SessionUser } from "@/types/user";
+import type { AuthIntent, FavoriteAuthStep } from "@/types/auth";
+import type { SessionUser, AccountRole } from "@/types/user";
+import type { FavoriteTourInput } from "@/hooks/useFavoriteTour";
 import { splitFullName } from "@/lib/full-name";
 import { getAuthProvider } from "@/lib/auth-provider";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { attachGuestBookingsToUser } from "@/lib/bookings-store";
+import { toggleFavorite } from "@/lib/favorites-store";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
 import AuthQueryHandler from "@/components/auth/AuthQueryHandler";
+import FavoriteAuthPromptModal from "@/components/auth/FavoriteAuthPromptModal";
+import FavoriteAuthSuccessListener from "@/components/auth/FavoriteAuthSuccessListener";
+
+export const FAVORITE_SAVED_AFTER_AUTH_EVENT = "favorite-saved-after-auth";
 
 interface AuthContextValue {
   user: SessionUser | null;
   isAuthenticated: boolean;
   authOpen: boolean;
   authIntent: AuthIntent;
+  favoriteAuthStep: FavoriteAuthStep;
+  favoritePromptOpen: boolean;
   openAuth: (intent?: AuthIntent) => void;
   closeAuth: () => void;
+  openFavoritePrompt: (tour: FavoriteTourInput) => void;
+  closeFavoritePrompt: () => void;
+  openAuthFromFavorite: (step: FavoriteAuthStep) => void;
   loginByPhone: (
     phone: string,
     role: AccountRole
@@ -79,7 +91,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authIntent, setAuthIntent] = useState<AuthIntent>("default");
+  const [favoriteAuthStep, setFavoriteAuthStep] = useState<FavoriteAuthStep>("sign-in");
+  const [favoritePromptOpen, setFavoritePromptOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const pendingFavoriteRef = useRef<FavoriteTourInput | null>(null);
+  const favoriteFlowRef = useRef(false);
 
   const refreshSessionUser = useCallback(async (activeRole?: AccountRole) => {
     const next = await resolveProviderUser(activeRole);
@@ -133,7 +149,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [refreshSessionUser]);
 
   useEffect(() => {
-    if (!authOpen) return;
+    if (!authOpen && !favoritePromptOpen) return;
 
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -141,7 +157,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       document.body.style.overflow = previous;
     };
-  }, [authOpen]);
+  }, [authOpen, favoritePromptOpen]);
 
   const openAuth = useCallback((intent: AuthIntent = "default") => {
     setAuthIntent(intent);
@@ -151,12 +167,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const closeAuth = useCallback(() => {
     setAuthOpen(false);
     setAuthIntent("default");
+    pendingFavoriteRef.current = null;
+    favoriteFlowRef.current = false;
+  }, []);
+
+  const openFavoritePrompt = useCallback((tour: FavoriteTourInput) => {
+    pendingFavoriteRef.current = tour;
+    setFavoritePromptOpen(true);
+  }, []);
+
+  const closeFavoritePrompt = useCallback(() => {
+    setFavoritePromptOpen(false);
+    pendingFavoriteRef.current = null;
+    favoriteFlowRef.current = false;
+  }, []);
+
+  const openAuthFromFavorite = useCallback((step: FavoriteAuthStep) => {
+    setFavoritePromptOpen(false);
+    setFavoriteAuthStep(step);
+    favoriteFlowRef.current = true;
+    setAuthIntent("favorite");
+    setAuthOpen(true);
   }, []);
 
   const afterAuthSuccess = useCallback(async (nextUser: SessionUser) => {
     setUser(nextUser);
     if (nextUser.email) {
       attachGuestBookingsToUser(nextUser.id, nextUser.email);
+    }
+
+    if (favoriteFlowRef.current && pendingFavoriteRef.current) {
+      const pending = pendingFavoriteRef.current;
+      const result = toggleFavorite(nextUser, nextUser.id, pending);
+      pendingFavoriteRef.current = null;
+      favoriteFlowRef.current = false;
+      setAuthIntent("default");
+
+      if (!("error" in result) && result.favorited) {
+        window.dispatchEvent(new CustomEvent(FAVORITE_SAVED_AFTER_AUTH_EVENT));
+      }
     }
   }, []);
 
@@ -317,6 +366,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     setAuthOpen(false);
     setAuthIntent("default");
+    setFavoritePromptOpen(false);
+    pendingFavoriteRef.current = null;
+    favoriteFlowRef.current = false;
   }, []);
 
   const value = useMemo(
@@ -325,8 +377,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAuthenticated: hydrated ? user != null : false,
       authOpen,
       authIntent,
+      favoriteAuthStep,
+      favoritePromptOpen,
       openAuth,
       closeAuth,
+      openFavoritePrompt,
+      closeFavoritePrompt,
+      openAuthFromFavorite,
       loginByPhone,
       loginByEmail,
       loginForOrganizerUpgrade,
@@ -340,13 +397,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authIntent,
       authOpen,
       closeAuth,
+      closeFavoritePrompt,
       connectOrganizerRole,
+      favoriteAuthStep,
+      favoritePromptOpen,
       hydrated,
       loginByEmail,
       loginByPhone,
       loginForOrganizerUpgrade,
       logout,
       openAuth,
+      openAuthFromFavorite,
+      openFavoritePrompt,
       register,
       updateAvatar,
       updateProfile,
@@ -358,6 +420,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     <AuthContext.Provider value={value}>
       {children}
       <AuthQueryHandler />
+      <FavoriteAuthPromptModal />
+      <FavoriteAuthSuccessListener />
       <AuthModal />
     </AuthContext.Provider>
   );

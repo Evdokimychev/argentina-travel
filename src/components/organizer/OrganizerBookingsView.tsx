@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, ClipboardList } from "lucide-react";
+import { Search, ClipboardList, ListOrdered } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import {
@@ -31,6 +31,14 @@ import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "
 import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
+import OrganizerWaitlistView from "@/components/organizer/OrganizerWaitlistView";
+import { getOrganizerCabinetWaitlistStats } from "@/lib/organizer-waitlist";
+import { WAITLIST_UPDATED_EVENT } from "@/types/waitlist";
+import { OrganizerCreateExternalBookingButton } from "@/components/organizer/OrganizerCreateExternalBookingDialog";
+import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
+import { computeTripProgress } from "@/lib/trip-operations";
+
+type InboxTab = "bookings" | "waitlist";
 
 type StatusFilter = "all" | BookingStatusActive;
 type SortOption = "newest" | "oldest" | "tourDate" | "amountDesc" | "amountAsc";
@@ -47,6 +55,10 @@ export default function OrganizerBookingsView() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const initialStatus = (searchParams.get("status") as StatusFilter) || "all";
+  const initialTab = searchParams.get("tab") === "waitlist" ? "waitlist" : "bookings";
+
+  const [inboxTab, setInboxTab] = useState<InboxTab>(initialTab);
+  const [waitlistActiveCount, setWaitlistActiveCount] = useState(0);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [search, setSearch] = useState("");
@@ -73,6 +85,16 @@ export default function OrganizerBookingsView() {
     refresh();
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
+  }, [user]);
+
+  useEffect(() => {
+    if (!user) return;
+    function refreshWaitlistStats() {
+      setWaitlistActiveCount(getOrganizerCabinetWaitlistStats(user!.id).activeCount);
+    }
+    refreshWaitlistStats();
+    window.addEventListener(WAITLIST_UPDATED_EVENT, refreshWaitlistStats);
+    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, refreshWaitlistStats);
   }, [user]);
 
   const filtered = useMemo(() => {
@@ -112,13 +134,56 @@ export default function OrganizerBookingsView() {
   return (
     <div className={cn(cabinetCardClass, "overflow-hidden")}>
       <div className="space-y-6 p-4 sm:p-6">
-        <div>
-          <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Заявки</h1>
-          <p className="mt-1 text-sm text-slate">
-            Входящие бронирования и запросы туристов по вашим турам
-          </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">Заявки</h1>
+            <p className="mt-1 text-sm text-slate">
+              Бронирования и лист ожидания по вашим турам и экскурсиям
+            </p>
+          </div>
+          {inboxTab === "bookings" && !isRemoteBookingsMode() ? (
+            <OrganizerCreateExternalBookingButton />
+          ) : null}
         </div>
 
+        <div className="flex gap-2 rounded-xl bg-gray-100 p-1">
+          <button
+            type="button"
+            onClick={() => setInboxTab("bookings")}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              inboxTab === "bookings"
+                ? "bg-white text-charcoal shadow-sm"
+                : "text-slate hover:text-charcoal"
+            )}
+          >
+            <ClipboardList className="h-4 w-4" aria-hidden />
+            Бронирования
+          </button>
+          <button
+            type="button"
+            onClick={() => setInboxTab("waitlist")}
+            className={cn(
+              "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+              inboxTab === "waitlist"
+                ? "bg-white text-charcoal shadow-sm"
+                : "text-slate hover:text-charcoal"
+            )}
+          >
+            <ListOrdered className="h-4 w-4" aria-hidden />
+            Лист ожидания
+            {waitlistActiveCount > 0 ? (
+              <span className="rounded-full bg-violet-100 px-2 py-0.5 text-xs font-semibold text-violet-800">
+                {waitlistActiveCount}
+              </span>
+            ) : null}
+          </button>
+        </div>
+
+        {inboxTab === "waitlist" ? (
+          <OrganizerWaitlistView />
+        ) : (
+          <>
         <div className="grid gap-3 lg:grid-cols-3">
           <div className="relative lg:col-span-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate" />
@@ -185,6 +250,11 @@ export default function OrganizerBookingsView() {
               <TableBody>
                 {filtered.map((booking) => {
                   const amounts = resolveBookingAmounts(booking);
+                  const tripProgress = computeTripProgress(booking.tripOperations);
+                  const sourceLabel =
+                    booking.bookingSource && booking.bookingSource !== "platform"
+                      ? BOOKING_SOURCE_LABELS[booking.bookingSource]
+                      : null;
                   return (
                   <TableRow key={booking.id}>
                     <TableCell>
@@ -201,8 +271,21 @@ export default function OrganizerBookingsView() {
                             sizes="48px"
                           />
                         </div>
-                        <span className="line-clamp-2 font-medium text-charcoal transition-colors hover:text-sky">
-                          {booking.tourTitle}
+                        <span className="min-w-0">
+                          <span className="line-clamp-2 font-medium text-charcoal transition-colors hover:text-sky">
+                            {booking.tourTitle}
+                          </span>
+                          {sourceLabel ? (
+                            <span className="mt-0.5 block text-xs text-violet-700">
+                              {sourceLabel}
+                              {booking.externalReference ? ` · ${booking.externalReference}` : ""}
+                            </span>
+                          ) : null}
+                          {tripProgress.total > 0 ? (
+                            <span className="mt-0.5 block text-xs text-slate">
+                              Подготовка: {tripProgress.percent}%
+                            </span>
+                          ) : null}
                         </span>
                       </Link>
                     </TableCell>
@@ -248,6 +331,8 @@ export default function OrganizerBookingsView() {
             title="Заявок не найдено"
             description="Измените фильтры или дождитесь новых бронирований с сайта."
           />
+        )}
+          </>
         )}
       </div>
     </div>

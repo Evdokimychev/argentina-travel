@@ -1,16 +1,8 @@
 import type { TransferAllocations } from "./checkout-transfer";
 import { EMPTY_TRANSFER_ALLOCATIONS } from "./checkout-transfer";
 
-export type RoomOptionId =
-  | "single"
-  | "twin"
-  | "double"
-  | "triple"
-  | "upgrade4"
-  | "upgrade5";
-
 export interface RoomOption {
-  id: RoomOptionId;
+  id: string;
   title: string;
   description: string;
   priceUsdPerTraveler: number;
@@ -63,7 +55,7 @@ export const CHECKOUT_ROOM_OPTIONS: RoomOption[] = [
   },
 ];
 
-export type RoomAllocations = Record<RoomOptionId, number>;
+export type RoomAllocations = Record<string, number>;
 
 export type { TransferAllocations };
 
@@ -109,7 +101,15 @@ export interface CheckoutFormState {
   coupon: string;
 }
 
-export function createInitialCheckoutForm(guests: number): CheckoutFormState {
+export function createInitialCheckoutForm(
+  guests: number,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
+): CheckoutFormState {
+  const defaultRoomId =
+    roomOptions.find((room) => room.priceUsdPerTraveler === 0)?.id ?? roomOptions[0]?.id ?? "double";
+  const roomAllocations = Object.fromEntries(roomOptions.map((room) => [room.id, 0]));
+  roomAllocations[defaultRoomId] = guests;
+
   return {
     contactFirstName: "",
     contactLastName: "",
@@ -120,14 +120,7 @@ export function createInitialCheckoutForm(guests: number): CheckoutFormState {
     createAccount: true,
     travelers: Array.from({ length: guests }, () => createEmptyTraveler()),
     fillTravelersLater: false,
-    roomAllocations: {
-      single: 0,
-      twin: 0,
-      double: guests,
-      triple: 0,
-      upgrade4: 0,
-      upgrade5: 0,
-    },
+    roomAllocations,
     addonIds: [],
     insuranceTravelers: 0,
     transferAllocations: { ...EMPTY_TRANSFER_ALLOCATIONS },

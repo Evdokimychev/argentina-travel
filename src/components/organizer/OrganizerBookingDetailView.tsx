@@ -43,11 +43,13 @@ import {
 import { buildOrganizerBookingMessageHref } from "@/lib/messages-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import BookingOrganizerDataPanel from "@/components/booking/BookingOrganizerDataPanel";
+import OrganizerTripOperationsPanel from "@/components/organizer/OrganizerTripOperationsPanel";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { resolveBookingAmounts } from "@/lib/booking-payment-display";
 import { formatBookingCheckoutPaymentOption } from "@/lib/booking-display";
 import { Button } from "@/components/ui/button";
+import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
 import { cn } from "@/lib/cn";
 
 function StatusIcon({ status }: { status: BookingStatusActive }) {
@@ -221,7 +223,11 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
               <h1 className="mt-4 font-display text-2xl font-bold text-charcoal">
                 Заявка №{displayNumber}
               </h1>
-              <p className="mt-1 text-sm text-slate">С маркетплейса «Пора в Аргентину»</p>
+              <p className="mt-1 text-sm text-slate">
+                {booking.bookingSource && booking.bookingSource !== "platform"
+                  ? `Источник: ${BOOKING_SOURCE_LABELS[booking.bookingSource]}${booking.externalReference ? ` · ${booking.externalReference}` : ""}`
+                  : "С маркетплейса «Пора в Аргентину»"}
+              </p>
               <p className="mt-0.5 text-sm text-slate">
                 Создана {formatBookingCreatedAt(booking.createdAt)}
               </p>
@@ -398,6 +404,13 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
               </div>
             ) : null}
           </article>
+
+          {!isRemoteBookingsMode() ? (
+            <OrganizerTripOperationsPanel
+              booking={booking}
+              onUpdated={setBooking}
+            />
+          ) : null}
 
           <BookingTravelersOrganizerSection booking={booking} sectionId="booking-travelers-section" />
         </div>

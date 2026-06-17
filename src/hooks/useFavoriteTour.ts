@@ -12,7 +12,7 @@ export type FavoriteTourInput = Omit<FavoriteTour, "addedAt">;
 
 export function useFavoriteTour(tour: FavoriteTourInput) {
   const kind: FavoriteKind = tour.kind ?? "tour";
-  const { user, isAuthenticated, openAuth } = useAuth();
+  const { user, isAuthenticated, openFavoritePrompt } = useAuth();
   const [favorited, setFavorited] = useState(false);
 
   const sync = useCallback(() => {
@@ -31,7 +31,7 @@ export function useFavoriteTour(tour: FavoriteTourInput) {
 
   function handleToggle() {
     if (!isAuthenticated || !user) {
-      openAuth();
+      openFavoritePrompt(tour);
       return;
     }
 

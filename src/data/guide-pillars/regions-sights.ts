@@ -147,6 +147,21 @@ export const POGODA_PILLAR: GuidePillarContent = {
       title: "Патагония",
       content:
         "Южная Патагонia — прохладный ветреный климат. Лето короткое (ноябрь–март), зима длинная и суровая на тропах.",
+      widgetSlot: {
+        id: "patagonia-tours",
+        label: "Туры в Patagonia",
+        type: "tour-embed",
+        tourEmbed: {
+          variant: "grid",
+          title: "Готовые туры в Patagonia",
+          subtitle: "Ледники, треккинг и комфортные маршруты с гидом",
+          limit: 3,
+          source: { kind: "query", query: "patagon" },
+          catalogHref: "/tours?query=patagonia",
+          catalogLabel: "Все туры Patagonia",
+          tone: "muted",
+        },
+      },
       subsections: [
         {
           title: "El Calafate и Perito Moreno",

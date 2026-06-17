@@ -483,5 +483,19 @@
   "audioGuides.benefits.item1": "Идёте в своём темпе — без группы и расписания",
   "audioGuides.benefits.item2": "Маршрут и навигация в приложении WeGoTrip",
   "audioGuides.benefits.item3": "Подходит для первого знакомства с районом города",
-  "audioGuides.benefits.item4": "Можно начать сразу после покупки — без ожидания гида"
+  "audioGuides.benefits.item4": "Можно начать сразу после покупки — без ожидания гида",
+  "tour.countdown.title": "До ближайшего отправления",
+  "tour.countdown.departureOn": "Отправление {date}",
+  "tour.countdown.days": "дн",
+  "tour.countdown.hours": "ч",
+  "tour.countdown.minutes": "мин",
+  "tour.countdown.seconds": "сек",
+  "tour.countdown.spotsCalm": "{spots} — успейте забронировать",
+  "tour.countdown.spotsUrgent": "{spots} — мало мест, успейте!",
+  "tour.countdown.joinGroup": "Присоединяйтесь к группе: {group}",
+  "tour.countdown.ctaBook": "Забронировать место",
+  "tour.countdown.ctaWaitlist": "Встать в лист ожидания",
+  "tour.countdown.ctaSelect": "Выбрать эту дату",
+  "tour.countdown.badgeHot": "Мало мест",
+  "tour.countdown.started": "Отправление уже началось — выберите дату в таблице ниже"
 }

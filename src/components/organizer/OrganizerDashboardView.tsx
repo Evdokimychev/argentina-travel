@@ -165,6 +165,9 @@ export default function OrganizerDashboardView() {
         <p className="mt-2 text-sm text-slate">
           Статистика заявок, туров и ключевые действия в кабинете организатора.
         </p>
+        <Link href="/organizer/analytics" className={cn(cabinetLinkClass, "mt-3 inline-flex")}>
+          Открыть аналитику →
+        </Link>
       </section>
 
       {analytics ? (

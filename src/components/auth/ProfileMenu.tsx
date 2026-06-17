@@ -97,7 +97,7 @@ export default function ProfileMenu() {
         type="button"
         onClick={() => openAuth()}
         aria-label="Войти в профиль"
-        className="flex h-10 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-sm font-medium text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-3"
+        className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-sm font-medium text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-3"
       >
         <User className="h-4 w-4 shrink-0 text-slate" strokeWidth={1.75} />
         <span className="hidden sm:inline">Войти</span>

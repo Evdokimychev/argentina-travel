@@ -121,12 +121,14 @@ type GuidePillarSectionProps = {
   section: GuidePillarSection;
   showMapPlaceholder?: boolean;
   showImagePlaceholder?: boolean;
+  initialTours?: import("@/types").TourListing[];
 };
 
 export default function GuidePillarSectionBlock({
   section,
   showMapPlaceholder,
   showImagePlaceholder,
+  initialTours,
 }: GuidePillarSectionProps) {
   return (
     <HubSection id={section.id} title={section.title} subtitle={section.content}>
@@ -150,7 +152,7 @@ export default function GuidePillarSectionBlock({
       ) : null}
       {section.widgetSlot ? (
         <div className="mt-5">
-          <GuideWidgetSlot slot={section.widgetSlot} />
+          <GuideWidgetSlot slot={section.widgetSlot} initialTours={initialTours} />
         </div>
       ) : null}
     </HubSection>

@@ -6,6 +6,7 @@ import {
   DEFAULT_FILTERS,
 } from "@/types";
 import { CurrencyCode } from "@/types/locale";
+import { resolveTourFilterPriceUsd } from "@/lib/tour-price-public";
 import { convertFromUsd, getFilterPriceMax } from "@/lib/currency";
 import {
   DURATION_PRESETS,
@@ -106,8 +107,16 @@ export function filterTours(
   let result = tours.filter((tour) => {
     if (!matchesQuery(tour, filters.query)) return false;
     if (!matchesDateRange(tour, filters.dateFrom, filters.dateTo)) return false;
-    const displayPrice = convertFromUsd(tour.priceUsd, currency);
-    if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
+    const filterPrice = resolveTourFilterPriceUsd({
+      priceUsd: tour.priceUsd,
+      priceOnRequest: tour.priceOnRequest,
+    });
+    if (filterPrice == null) {
+      // Туры «цена по запросу» без ориентира не отсекаются фильтром по цене.
+    } else {
+      const displayPrice = convertFromUsd(filterPrice, currency);
+      if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
+    }
 
     if (
       filters.activityTypes.length &&

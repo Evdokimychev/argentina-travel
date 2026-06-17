@@ -48,15 +48,6 @@ export default function TourPriceDisplay({
         {showFrom && size === "sm" && (
           <span className="text-xs text-slate">от</span>
         )}
-        {discounted && originalPriceUsd && (
-          <FormattedPrice
-            priceUsd={originalPriceUsd}
-            className={cn(
-              "text-slate line-through decoration-brand/60",
-              size === "lg" ? "text-sm" : "text-xs"
-            )}
-          />
-        )}
         {size === "lg" ? (
           <PriceOtherCurrenciesPopover
             priceUsd={priceUsd}
@@ -66,6 +57,15 @@ export default function TourPriceDisplay({
           <FormattedPrice
             priceUsd={priceUsd}
             className="font-bold text-charcoal text-lg"
+          />
+        )}
+        {discounted && originalPriceUsd && (
+          <FormattedPrice
+            priceUsd={originalPriceUsd}
+            className={cn(
+              "text-slate line-through decoration-brand/60",
+              size === "lg" ? "text-sm" : "text-xs"
+            )}
           />
         )}
         {discounted && percentOff != null && size === "sm" && (

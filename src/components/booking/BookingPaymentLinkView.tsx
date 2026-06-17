@@ -17,12 +17,25 @@ import {
 import type { Booking } from "@/types/tourist";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { Button } from "@/components/ui/button";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 export default function BookingPaymentLinkView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [acknowledged, setAcknowledged] = useState(false);
-  const [ackError, setAckError] = useState<string | null>(null);
+  const [ackError, setAckErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [ackLoading, setAckLoading] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setAckError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setAckErrorState(null);
+      return;
+    }
+    setAckErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   useEffect(() => {
     function load() {
@@ -73,12 +86,21 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     setAckLoading(false);
 
     if ("error" in result) {
-      setAckError(result.error);
+      const normalized = normalizeSiteError(result.error, {
+        title: "Не удалось подтвердить оплату",
+        steps: ["Обновите страницу", "Свяжитесь с организатором или поддержкой"],
+        action: { label: "Контакты", href: "/contacts" },
+      });
+      setAckError(normalized);
       return;
     }
 
     setAcknowledged(true);
     setBooking(result.booking);
+    feedback.success({
+      title: "Намерение подтверждено",
+      description: "Организатор получит уведомление. Списание средств пока не производится.",
+    });
   }
 
   return (
@@ -159,14 +181,19 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
               type="button"
               className="w-full"
               onClick={handleAcknowledge}
-              disabled={ackLoading}
+              loading={ackLoading}
+              loadingLabel="Сохраняем…"
             >
               Подтвердить намерение оплатить
             </Button>
             {ackError ? (
-              <p role="alert" className="text-sm text-red-600">
-                {ackError}
-              </p>
+              <InlineFeedback
+                variant="error"
+                title={ackError.title}
+                description={ackError.description}
+                steps={ackError.steps}
+                action={ackError.action}
+              />
             ) : null}
             <Link
               href="/contacts"

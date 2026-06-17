@@ -12,10 +12,12 @@ import {
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
-import type { BlogPost } from "@/types";
+import TourEmbedSection from "@/components/embed/TourEmbedSection";
+import type { BlogPost, TourListing } from "@/types";
 
 type BlogPostViewProps = {
   post: BlogPost;
+  initialTours?: TourListing[];
 };
 
 const resourceLabel: Record<string, string> = {
@@ -25,7 +27,7 @@ const resourceLabel: Record<string, string> = {
   blog: "Блог",
 };
 
-export default function BlogPostView({ post }: BlogPostViewProps) {
+export default function BlogPostView({ post, initialTours = [] }: BlogPostViewProps) {
   const freshPosts = sortBlogPostsByDate(blogPosts)
     .filter((p) => p.slug !== post.slug)
     .slice(0, 4);
@@ -128,6 +130,18 @@ export default function BlogPostView({ post }: BlogPostViewProps) {
                     : paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
                 </div>
 
+                {post.tourEmbeds?.length && initialTours.length > 0 ? (
+                  <div className="mt-10 space-y-8 border-t border-gray-100 pt-8">
+                    {post.tourEmbeds.map((embed) => (
+                      <TourEmbedSection
+                        key={embed.id ?? `${embed.variant}-${embed.title}`}
+                        config={{ ...embed, tone: embed.tone ?? "inline" }}
+                        initialTours={initialTours}
+                      />
+                    ))}
+                  </div>
+                ) : null}
+
                 {post.relatedResources && post.relatedResources.length > 0 ? (
                   <section className="mt-10 border-t border-gray-100 pt-8">
                     <h2 className="font-heading text-xl font-bold text-charcoal">Смотрите также</h2>
@@ -165,15 +179,19 @@ export default function BlogPostView({ post }: BlogPostViewProps) {
               <div className="mt-8 rounded-3xl border border-sky/15 bg-gradient-to-br from-sky/[0.06] to-white p-6 text-center shadow-card sm:p-8">
                 <p className="font-heading text-xl font-bold text-charcoal">Планируете поездку?</p>
                 <p className="mt-2 text-sm text-slate">
-                  Соберите маршрут в путеводителе или выберите готовый тур с гидом
+                  {post.tourEmbeds?.length
+                    ? "Дополните маршрут материалами путеводителя или напишите нам"
+                    : "Соберите маршрут в путеводителе или выберите готовый тур с гидом"}
                 </p>
                 <div className="mt-5 flex flex-wrap justify-center gap-3">
                   <Link href="/guide" className={cn(buttonVariants(), "rounded-full px-6")}>
                     Путеводитель
                   </Link>
-                  <Link href="/tours" className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-6")}>
-                    Каталог туров
-                  </Link>
+                  {!post.tourEmbeds?.length ? (
+                    <Link href="/tours" className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-6")}>
+                      Каталог туров
+                    </Link>
+                  ) : null}
                   <Link href="/contacts" className={cn(buttonVariants({ variant: "ghost" }), "rounded-full px-6")}>
                     Контакты
                   </Link>

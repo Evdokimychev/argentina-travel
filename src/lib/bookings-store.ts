@@ -60,6 +60,15 @@ import {
   isGuestUserId,
   normalizeContactEmail,
 } from "@/lib/guest-booking";
+import {
+  buildDefaultTripTasks,
+  ensureTripOperations,
+  normalizeBookingSource,
+  normalizeTripOperations,
+  resolveClientPortalToken,
+} from "@/lib/trip-operations";
+import { buildTripsterIguazuDemoOperations } from "@/data/trip-operations-seeds";
+import type { BookingSource, TripClientRequirements, TripOperations } from "@/types/trip-operations";
 
 function createId(prefix: string): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -206,6 +215,13 @@ export function normalizeBooking(raw: Booking): Booking {
       : undefined,
     paymentLink: raw.paymentLink,
     checkoutPaymentOption: raw.checkoutPaymentOption,
+    bookingSource: normalizeBookingSource(raw.bookingSource),
+    externalReference: raw.externalReference?.trim() || undefined,
+    clientPortalToken: resolveClientPortalToken({
+      id: raw.id,
+      clientPortalToken: raw.clientPortalToken,
+    }),
+    tripOperations: normalizeTripOperations(raw.tripOperations),
   });
 }
 
@@ -381,6 +397,58 @@ function seedDemoBookingsIfEmpty(): Booking[] {
         },
       ],
     },
+    {
+      id: "booking-demo-tripster",
+      userId: guestUserIdFromEmail("anna.k.demo@example.com"),
+      organizerTourId: "org-iguazu",
+      tourId: "4",
+      tourSlug: "iguazu-falls",
+      tourTitle: "Индивидуальный тур: водопады Игуасу (2 дня)",
+      tourImage:
+        "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
+      status: "confirmed",
+      guests: 2,
+      startDate: "2026-09-12",
+      endDate: "2026-09-13",
+      totalPriceUsd: 890,
+      contactName: "Анна и Михаил К.",
+      contactEmail: "anna.k.demo@example.com",
+      contactPhone: "+7 916 555-12-34",
+      touristComment: "Бронирование с Tripster, нужен ранний выезд к парку.",
+      organizerComments: [
+        {
+          id: "comment-tripster-1",
+          text: "Билеты на аргентинскую сторону куплены. Ждём решение по бразильской.",
+          authorName: "Иван Евдокимычев",
+          createdAt: now,
+        },
+      ],
+      statusHistory: [
+        {
+          id: "status-tripster-1",
+          from: null,
+          to: "new",
+          changedAt: "2026-06-08T08:00:00.000Z",
+          changedBy: "system",
+          note: "Импорт с Tripster",
+        },
+        {
+          id: "status-tripster-2",
+          from: "new",
+          to: "confirmed",
+          changedAt: "2026-06-09T11:00:00.000Z",
+          changedBy: "organizer",
+        },
+      ],
+      createdAt: "2026-06-08T08:00:00.000Z",
+      updatedAt: now,
+      bookingSource: "tripster",
+      externalReference: "TS-88421",
+      clientPortalToken: "trip-demo-iguazu",
+      travelersFormToken: "trv-demo-tripster",
+      fillTravelersLater: true,
+      tripOperations: buildTripsterIguazuDemoOperations(now),
+    },
   ];
 
   writeAllBookings(seeded.map(normalizeBooking));
@@ -488,6 +556,7 @@ export function createBooking(input: {
   checkoutPaymentOption?: BookingCheckoutPaymentOption;
   /** Allow checkout without login when contact email is provided. */
   allowGuestRequest?: boolean;
+  priceQuoteRequest?: boolean;
   /** When false, return booking without writing to localStorage (Supabase path). */
   persist?: boolean;
 }): Booking | { error: string } {
@@ -516,6 +585,7 @@ export function createBooking(input: {
     startDate: input.startDate,
     endDate: input.endDate,
     totalPriceUsd: input.totalPriceUsd,
+    priceQuoteRequest: input.priceQuoteRequest ?? false,
     contactName: input.contactName,
     contactEmail: input.contactEmail,
     contactPhone: input.contactPhone,
@@ -688,6 +758,7 @@ export function createBookingFromCheckoutLocal(input: {
   endDate?: string;
   totalPriceUsd: number;
   form: CheckoutFormState;
+  priceQuoteRequest?: boolean;
   persist?: boolean;
 }): Booking | { error: string } {
   const contactEmail = input.form.contactEmail.trim();
@@ -703,7 +774,7 @@ export function createBookingFromCheckoutLocal(input: {
   const fillTravelersLater = input.form.fillTravelersLater;
   const travelers = travelersFromCheckoutForm(input.form);
   const now = new Date().toISOString();
-  const paymentOption = input.form.paymentOption;
+  const paymentOption = input.priceQuoteRequest ? "later" : input.form.paymentOption;
   const organizerParams = normalizeOrganizerParams(undefined);
   const paymentStatus: BookingPaymentStatus =
     paymentOption === "later" ? "pending" : paymentOption === "deposit" ? "partial" : "pending";
@@ -726,6 +797,7 @@ export function createBookingFromCheckoutLocal(input: {
     startDate: input.startDate,
     endDate: input.endDate,
     totalPriceUsd: input.totalPriceUsd,
+    priceQuoteRequest: input.priceQuoteRequest,
     contactName: [input.form.contactFirstName, input.form.contactLastName]
       .map((part) => part.trim())
       .filter(Boolean)
@@ -806,6 +878,7 @@ export async function createBookingFromCheckout(input: {
   endDate?: string;
   totalPriceUsd: number;
   form: CheckoutFormState;
+  priceQuoteRequest?: boolean;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
@@ -1237,4 +1310,178 @@ export function getOrganizerBookingStats(catalogSlugs: string[]): OrganizerBooki
     cancelledCount,
     activeInboxCount: newCount + pendingCount,
   };
+}
+
+export function getBookingByClientPortalToken(token: string): Booking | undefined {
+  const booking = getAllBookings().find((item) => item.clientPortalToken === token);
+  return booking ? normalizeBooking(booking) : undefined;
+}
+
+export function createExternalOrganizerBooking(input: {
+  actor: SessionUser | null;
+  organizerTourId?: string;
+  tourId?: string;
+  tourSlug: string;
+  tourTitle: string;
+  tourImage: string;
+  bookingSource: BookingSource;
+  externalReference?: string;
+  guests: number;
+  startDate?: string;
+  endDate?: string;
+  totalPriceUsd?: number;
+  contactName: string;
+  contactEmail: string;
+  contactPhone?: string;
+  touristComment?: string;
+  status?: BookingStatus;
+}): Booking | { error: string } {
+  if (!input.actor) return { error: "Требуется авторизация организатора" };
+
+  const contactEmail = normalizeContactEmail(input.contactEmail);
+  if (!contactEmail) return { error: "Укажите email клиента" };
+  if (!input.contactName.trim()) return { error: "Укажите имя клиента" };
+  if (input.guests < 1) return { error: "Укажите число гостей" };
+
+  const now = new Date().toISOString();
+  const id = createId("booking");
+  const status = input.status ?? "confirmed";
+  const tripOperations: TripOperations = {
+    tasks: buildDefaultTripTasks(input.tourSlug),
+    resourceLinks: [],
+    updatedAt: now,
+  };
+
+  const booking: Booking = normalizeBooking({
+    id,
+    userId: guestUserIdFromEmail(contactEmail),
+    organizerTourId: input.organizerTourId ?? resolveOrganizerTourId(input.tourSlug),
+    tourId: input.tourId ?? "external",
+    tourSlug: input.tourSlug,
+    tourTitle: input.tourTitle.trim(),
+    tourImage: input.tourImage,
+    status,
+    guests: input.guests,
+    startDate: input.startDate?.trim() || undefined,
+    endDate: input.endDate?.trim() || undefined,
+    totalPriceUsd: input.totalPriceUsd ?? 0,
+    contactName: input.contactName.trim(),
+    contactEmail,
+    contactPhone: input.contactPhone?.trim() || "",
+    touristComment: input.touristComment?.trim() || undefined,
+    organizerComments: [],
+    statusHistory: [
+      createStatusChange({
+        from: null,
+        to: status,
+        changedBy: "organizer",
+        note: `Внешнее бронирование (${input.bookingSource})`,
+      }),
+    ],
+    createdAt: now,
+    updatedAt: now,
+    bookingSource: input.bookingSource,
+    externalReference: input.externalReference?.trim() || undefined,
+    clientPortalToken: resolveClientPortalToken({ id }),
+    fillTravelersLater: true,
+    travelersFormToken: resolveTravelersFormToken({ id }),
+    tripOperations,
+  });
+
+  const all = getAllBookings();
+  all.unshift(booking);
+  writeAllBookings(all);
+  notifyUpdated();
+  return booking;
+}
+
+export function updateTripOperations(input: {
+  bookingId: string;
+  actor: SessionUser | null;
+  tripOperations: TripOperations;
+}): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((item) => item.id === input.bookingId);
+  if (index === -1) return { error: "Заявка не найдена" };
+
+  const current = normalizeBooking(all[index]);
+  const tourOwnerUserId = current.organizerTourId
+    ? getOrganizerTourOwnerId(current.organizerTourId)
+    : undefined;
+
+  const allowed = assertPermission(
+    canManageBooking(input.actor, { tourOwnerUserId })
+  );
+  if ("error" in allowed) return { error: allowed.error };
+
+  const now = new Date().toISOString();
+  const updated: Booking = normalizeBooking({
+    ...current,
+    tripOperations: {
+      ...normalizeTripOperations(input.tripOperations)!,
+      updatedAt: now,
+    },
+    updatedAt: now,
+  });
+
+  persistBookingUpdate(index, updated);
+  return { booking: updated };
+}
+
+export function initTripOperationsForBooking(input: {
+  bookingId: string;
+  actor: SessionUser | null;
+}): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((item) => item.id === input.bookingId);
+  if (index === -1) return { error: "Заявка не найдена" };
+
+  const current = normalizeBooking(all[index]);
+  if (current.tripOperations?.tasks.length) {
+    return { booking: current };
+  }
+
+  return updateTripOperations({
+    bookingId: input.bookingId,
+    actor: input.actor,
+    tripOperations: ensureTripOperations(undefined, current.tourSlug),
+  });
+}
+
+export function submitTripClientRequirements(input: {
+  token: string;
+  requirements: TripClientRequirements;
+}): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.clientPortalToken === input.token);
+  if (index === -1) return { error: "Ссылка недействительна или поездка не найдена" };
+
+  const current = normalizeBooking(all[index]);
+  const now = new Date().toISOString();
+  const requirements: TripClientRequirements = {
+    flightArrival: input.requirements.flightArrival?.trim() || undefined,
+    flightDeparture: input.requirements.flightDeparture?.trim() || undefined,
+    hotelName: input.requirements.hotelName?.trim() || undefined,
+    hotelAddress: input.requirements.hotelAddress?.trim() || undefined,
+    hotelCheckIn: input.requirements.hotelCheckIn?.trim() || undefined,
+    hotelCheckOut: input.requirements.hotelCheckOut?.trim() || undefined,
+    dietaryRestrictions: input.requirements.dietaryRestrictions?.trim() || undefined,
+    mobilityNotes: input.requirements.mobilityNotes?.trim() || undefined,
+    specialRequests: input.requirements.specialRequests?.trim() || undefined,
+    submittedAt: now,
+  };
+
+  const tripOperations = ensureTripOperations(current.tripOperations, current.tourSlug);
+  const updated: Booking = normalizeBooking({
+    ...current,
+    tripOperations: {
+      ...tripOperations,
+      clientRequirements: requirements,
+      updatedAt: now,
+    },
+    updatedAt: now,
+  });
+
+  persistBookingUpdate(index, updated);
+  return { booking: updated };
 }

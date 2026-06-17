@@ -26,6 +26,29 @@ import { normalizeTourDuration } from "@/lib/tour-duration";
 import { textToListItems } from "@/data/tour-terms-defaults";
 import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
 import { getTourRoutePoints } from "@/data/tour-routes";
+import { getGroupDiscountSeedForSlug } from "@/data/tour-group-discount-seeds";
+import { getPriceOnRequestSeedForSlug } from "@/data/tour-price-on-request-seeds";
+import { getPrivateTourSeedForSlug } from "@/data/tour-private-seeds";
+import { getWaitlistSeedForSlug } from "@/data/tour-waitlist-seeds";
+import {
+  getAccommodationSeedForSlug,
+  mergeAccommodationSeedPlaces,
+} from "@/data/tour-accommodation-seeds";
+import {
+  legacyAccommodationToPlace,
+  mapAccommodationPlacesToPublic,
+  mapAccommodationPlaceToPublic,
+} from "@/lib/tour-accommodation-public";
+import { resolveDemoTourDates } from "@/data/tour-date-price-seeds";
+import { getCustomBookingSeedForSlug } from "@/data/tour-custom-booking-seeds";
+import {
+  normalizeCustomBookingLink,
+  toPublicCustomBookingLink,
+} from "@/lib/tour-custom-booking-link";
+import type { TourCustomBookingLink } from "@/types/tour-custom-booking-link";
+import { resolveTourCatalogPriceUsd } from "@/lib/tour-date-pricing";
+import { isTourCatalogVisible, canViewTourDetail } from "@/lib/tour-private-access";
+import { normalizeGroupDiscountSettings, getBestGroupDiscountHint } from "@/lib/group-discount";
 import { getLegacyTourDetail } from "@/lib/tours-legacy";
 
 function buildOrganizerCommentFromDraft(
@@ -84,19 +107,54 @@ function descriptionBlocksFromText(shortDescription: string, longDescription?: s
   return blocks;
 }
 
-function mapAccommodationPlacesToPublic(
-  tour: Tour
-): TourAccommodation[] {
-  if (!tour.accommodation.places.length) return [];
+function resolveTourAccommodationPlaces(
+  slug: string,
+  places: Tour["accommodation"]["places"]
+): Tour["accommodation"]["places"] {
+  return mergeAccommodationSeedPlaces(slug, places);
+}
 
-  return tour.accommodation.places.map((place) => ({
-    id: place.id,
-    name: place.name || "Проживание",
-    description: place.description || tour.accommodation.description || "",
-    comfort: tour.levels.primaryComfort,
-    amenities: [],
-    images: place.images.length ? place.images : tour.accommodation.photos,
-  }));
+function resolveTourAccommodationUpgradesEnabled(
+  slug: string,
+  draftEnabled?: boolean,
+  canonicalEnabled?: boolean
+): boolean {
+  if (typeof draftEnabled === "boolean") return draftEnabled;
+  if (typeof canonicalEnabled === "boolean") return canonicalEnabled;
+  return getAccommodationSeedForSlug(slug)?.upgradesEnabled ?? true;
+}
+
+function resolveTourAccommodationDescription(
+  slug: string,
+  description?: string
+): string | undefined {
+  if (description?.trim()) return description.trim();
+  return getAccommodationSeedForSlug(slug)?.description;
+}
+
+function buildPublicAccommodations(tour: Tour, legacy?: TourDetail | null): TourAccommodation[] {
+  const places = resolveTourAccommodationPlaces(tour.slug, tour.accommodation.places);
+  if (places.length) {
+    return mapAccommodationPlacesToPublic(
+      places,
+      tour.levels.primaryComfort,
+      resolveTourAccommodationDescription(tour.slug, tour.accommodation.description),
+      tour.accommodation.photos
+    );
+  }
+
+  if (legacy?.accommodations.length) {
+    return legacy.accommodations.map((item) =>
+      mapAccommodationPlaceToPublic(
+        legacyAccommodationToPlace(item),
+        tour.levels.primaryComfort,
+        tour.accommodation.description,
+        tour.accommodation.photos
+      )
+    );
+  }
+
+  return [];
 }
 
 function mapProgramDaysToItinerary(days: Tour["program"]["days"]): TourItineraryDay[] {
@@ -175,8 +233,82 @@ function dayMonthToIso(dayMonth: string, year = new Date().getFullYear()): strin
 }
 
 /** Build canonical Tour from marketplace listing + legacy detail page data. */
+function resolveSeedPrivateFields(slug: string) {
+  const seed = getPrivateTourSeedForSlug(slug);
+  if (!seed) {
+    return { isPrivate: false, privateAccessToken: undefined as string | undefined };
+  }
+  return { isPrivate: true, privateAccessToken: seed.privateAccessToken };
+}
+
+function resolveSeedWaitlistFields(slug: string) {
+  const seed = getWaitlistSeedForSlug(slug);
+  return { waitlistEnabled: seed?.waitlistEnabled ?? false };
+}
+
+function applyWaitlistDateOverrides<T extends { id: string; spotsLeft: number }>(
+  slug: string,
+  dates: T[]
+): T[] {
+  const seed = getWaitlistSeedForSlug(slug);
+  if (!seed?.dateSpotsOverrides) return dates;
+  return dates.map((date) => ({
+    ...date,
+    spotsLeft: seed.dateSpotsOverrides![date.id] ?? date.spotsLeft,
+  }));
+}
+
+function resolveCustomBookingLinkForSlug(
+  slug: string,
+  draftLink?: TourCustomBookingLink | null,
+  fallbackLink?: TourCustomBookingLink | null
+): TourCustomBookingLink {
+  const seed = getCustomBookingSeedForSlug(slug);
+  if (draftLink?.enabled) return normalizeCustomBookingLink(draftLink);
+  if (fallbackLink?.enabled) return normalizeCustomBookingLink(fallbackLink);
+  if (seed?.customBookingLink) return normalizeCustomBookingLink(seed.customBookingLink);
+  return normalizeCustomBookingLink(draftLink ?? fallbackLink);
+}
+
+function resolveSeedPriceOnRequest(slug: string, basePriceUsd: number) {
+  const seed = getPriceOnRequestSeedForSlug(slug);
+  if (!seed) {
+    return { priceOnRequest: false, priceFromPrefix: false, basePriceUsd };
+  }
+  return {
+    priceOnRequest: seed.priceOnRequest,
+    priceFromPrefix: seed.priceFromPrefix,
+    basePriceUsd:
+      seed.referencePriceUsd ?? (seed.priceOnRequest ? 0 : basePriceUsd),
+  };
+}
+
 export function listingAndDetailToTour(listing: TourListing, detail: TourDetail): Tour {
   const primaryComfort = listing.comfortLevel;
+  const priceOnRequestFields = resolveSeedPriceOnRequest(listing.slug, listing.priceUsd);
+  const privateFields = resolveSeedPrivateFields(listing.slug);
+  const waitlistFields = resolveSeedWaitlistFields(listing.slug);
+  const detailDates = applyWaitlistDateOverrides(
+    listing.slug,
+    resolveDemoTourDates(
+      listing.slug,
+      detail.dates,
+      listing.priceUsd
+    ).map((date) => ({
+      id: date.id,
+      startDate: date.startDate,
+      endDate: date.endDate,
+      priceUsd: date.priceUsd,
+      totalSeats: detail.groupMax,
+      spotsLeft: date.spotsLeft,
+      fullPaymentDaysBefore: 0,
+      prepaymentAmount: 15,
+      prepaymentType: "percent" as const,
+      applyDiscount: false,
+      notGuaranteed: false,
+      flightIncluded: false,
+    }))
+  );
 
   return {
     id: listing.id,
@@ -208,28 +340,19 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
     durationDays: listing.durationDays,
     durationNights: listing.durationNights,
     pricing: {
-      basePriceUsd: listing.priceUsd,
+      basePriceUsd: priceOnRequestFields.basePriceUsd,
       originalPriceUsd: listing.originalPriceUsd,
       currency: "USD",
-      priceFromPrefix: false,
+      priceFromPrefix: priceOnRequestFields.priceFromPrefix ?? false,
+      priceOnRequest: priceOnRequestFields.priceOnRequest ?? false,
       enabledDiscounts: [],
+      groupDiscount: normalizeGroupDiscountSettings(getGroupDiscountSeedForSlug(listing.slug)),
     },
+    isPrivate: privateFields.isPrivate,
+    privateAccessToken: privateFields.privateAccessToken,
     booking: {
       mode: listing.bookingMode ?? detail.bookingMode ?? "scheduled",
-      groupDates: detail.dates.map((date) => ({
-        id: date.id,
-        startDate: date.startDate,
-        endDate: date.endDate,
-        priceUsd: date.priceUsd,
-        totalSeats: detail.groupMax,
-        spotsLeft: date.spotsLeft,
-        fullPaymentDaysBefore: 0,
-        prepaymentAmount: 15,
-        prepaymentType: "percent",
-        applyDiscount: false,
-        notGuaranteed: false,
-        flightIncluded: false,
-      })),
+      groupDates: detailDates,
       individual:
         listing.bookingMode === "on_request" || listing.bookingMode === "both"
           ? {
@@ -242,6 +365,8 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       advantages: detail.bookingAdvantages ?? listing.bookingAdvantages ?? [],
       autoRollDatesToNextYear: false,
       checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
+      waitlistEnabled: waitlistFields.waitlistEnabled,
+      customBookingLink: resolveCustomBookingLinkForSlug(listing.slug),
     },
     classification: {
       primaryActivity: listing.activityType,
@@ -262,9 +387,15 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       languages: listing.language,
     },
     accommodation: {
-      description: detail.accommodations[0]?.description,
+      description:
+        resolveTourAccommodationDescription(listing.slug, detail.accommodations[0]?.description) ??
+        detail.accommodations[0]?.description,
       photos: detail.accommodations.flatMap((item) => item.images),
-      places: [],
+      places: resolveTourAccommodationPlaces(
+        listing.slug,
+        detail.accommodations.map(legacyAccommodationToPlace)
+      ),
+      upgradesEnabled: resolveTourAccommodationUpgradesEnabled(listing.slug),
     },
     program: {
       routeMapImage: "",
@@ -363,7 +494,9 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       originalPriceUsd: draft.originalPriceUsd ?? undefined,
       currency: draft.priceCurrency,
       priceFromPrefix: draft.priceFromPrefix,
+      priceOnRequest: draft.priceOnRequest,
       enabledDiscounts: draft.enabledDiscounts,
+      groupDiscount: normalizeGroupDiscountSettings(draft.groupDiscount),
     },
     booking: {
       mode: draft.bookingMode,
@@ -380,6 +513,12 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       autoRollDatesToNextYear: draft.autoRollGroupDatesToNextYear,
       checkoutPaymentOptions: normalizeTourCheckoutPaymentOptions(
         draft.checkoutPaymentOptions ?? base.booking.checkoutPaymentOptions
+      ),
+      waitlistEnabled: draft.waitlistEnabled ?? base.booking.waitlistEnabled ?? false,
+      customBookingLink: resolveCustomBookingLinkForSlug(
+        draft.slug ?? base.slug,
+        draft.customBookingLink,
+        base.booking.customBookingLink
       ),
     },
     classification: {
@@ -408,6 +547,11 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       description: draft.accommodationDescriptionText || base.accommodation.description,
       photos: draft.accommodationPhotos,
       places: draft.accommodationPlaces,
+      upgradesEnabled: resolveTourAccommodationUpgradesEnabled(
+        draft.slug ?? base.slug,
+        draft.accommodationUpgradesEnabled,
+        base.accommodation.upgradesEnabled
+      ),
     },
     program: {
       routeMapImage: draft.routeMapImage,
@@ -467,6 +611,8 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
     partnerName: draft.partnerName,
     coverLabel: draft.coverLabel,
     updatedAt: draft.updatedAt,
+    isPrivate: draft.isPrivate ?? false,
+    privateAccessToken: draft.isPrivate ? draft.privateAccessToken : undefined,
   };
 }
 
@@ -507,6 +653,11 @@ export function tourToListing(tour: Tour): TourListing {
     durationBucket: durationBucket(tour.durationDays),
     priceUsd: tour.pricing.basePriceUsd,
     originalPriceUsd: tour.pricing.originalPriceUsd,
+    priceOnRequest: tour.pricing.priceOnRequest,
+    priceFromPrefix: tour.pricing.priceFromPrefix,
+    groupDiscountEnabled: normalizeGroupDiscountSettings(tour.pricing.groupDiscount).enabled,
+    groupDiscountHint:
+      getBestGroupDiscountHint(tour.pricing.groupDiscount, tour.pricing.basePriceUsd) ?? undefined,
     bookingMode: tour.booking.mode,
     requestDateFrom: tour.booking.individual?.periodFrom,
     requestDateTo: tour.booking.individual?.periodTo,
@@ -547,7 +698,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
   const legacy = getLegacyTourDetail(tour.slug);
   const fallbackExtra = enrichment?.descriptionExtra ?? legacy?.descriptionExtra;
 
-  const dates =
+  const rawDates =
     tour.booking.groupDates.filter((date) => date.startDate).length > 0
       ? tour.booking.groupDates
           .filter((date) => date.startDate)
@@ -560,9 +711,15 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
           }))
       : legacy?.dates ?? [];
 
-  const accommodations = mapAccommodationPlacesToPublic(tour);
-  const publicAccommodations =
-    accommodations.length > 0 ? accommodations : legacy?.accommodations ?? [];
+  const dates = applyWaitlistDateOverrides(
+    tour.slug,
+    resolveDemoTourDates(tour.slug, rawDates, tour.pricing.basePriceUsd)
+  );
+
+  const catalogPrice = resolveTourCatalogPriceUsd(dates, tour.pricing.basePriceUsd);
+
+  const accommodations = buildPublicAccommodations(tour, legacy);
+  const publicAccommodations = accommodations;
 
   const { durationDays, durationNights } = normalizeTourDuration(
     tour.durationDays,
@@ -577,7 +734,9 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     region: tour.geography.region,
     durationDays,
     durationNights,
-    priceUsd: tour.pricing.basePriceUsd,
+    priceUsd: tour.pricing.priceOnRequest
+      ? tour.pricing.basePriceUsd
+      : catalogPrice.priceUsd,
     originalPriceUsd: tour.pricing.originalPriceUsd,
     rating: tour.social.rating,
     reviewCount: tour.social.reviewCount,
@@ -618,6 +777,11 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     ),
     reviews: tour.social.reviews,
     accommodations: publicAccommodations,
+    accommodationUpgradesEnabled: resolveTourAccommodationUpgradesEnabled(
+      tour.slug,
+      undefined,
+      tour.accommodation.upgradesEnabled
+    ),
     included: tour.terms.included,
     excluded: tour.terms.excluded,
     arrival: buildArrivalInfo(tour),
@@ -627,16 +791,26 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     tags: tour.classification.tags,
     featured: tour.display.featured,
     checkoutPaymentOptions: tour.booking.checkoutPaymentOptions,
+    groupDiscount: tour.pricing.groupDiscount,
+    priceOnRequest: tour.pricing.priceOnRequest,
+    priceFromPrefix: tour.pricing.priceOnRequest
+      ? tour.pricing.priceFromPrefix
+      : catalogPrice.priceFromPrefix || tour.pricing.priceFromPrefix,
+    isPrivate: tour.isPrivate,
+    waitlistEnabled: tour.booking.waitlistEnabled,
+    customBookingLink: toPublicCustomBookingLink(tour.booking.customBookingLink),
   };
 }
 
 export function isTourPublishedListing(tour: Tour): boolean {
-  return tour.status === "published";
+  return isTourCatalogVisible(tour);
 }
 
 export function isTourPubliclyVisible(tour: Tour): boolean {
-  return tour.status === "published";
+  return isTourCatalogVisible(tour);
 }
+
+export { canViewTourDetail } from "@/lib/tour-private-access";
 
 /** Minimal canonical tour for organizer-created listings without marketplace seed. */
 export function createMinimalTourFromDraft(
@@ -679,7 +853,9 @@ export function createMinimalTourFromDraft(
       originalPriceUsd: draft.originalPriceUsd ?? undefined,
       currency: draft.priceCurrency,
       priceFromPrefix: draft.priceFromPrefix,
+      priceOnRequest: draft.priceOnRequest,
       enabledDiscounts: draft.enabledDiscounts,
+      groupDiscount: normalizeGroupDiscountSettings(draft.groupDiscount),
     },
     booking: {
       mode: draft.bookingMode,
@@ -695,6 +871,8 @@ export function createMinimalTourFromDraft(
       advantages: [],
       autoRollDatesToNextYear: draft.autoRollGroupDatesToNextYear,
       checkoutPaymentOptions: normalizeTourCheckoutPaymentOptions(draft.checkoutPaymentOptions),
+      waitlistEnabled: draft.waitlistEnabled ?? false,
+      customBookingLink: normalizeCustomBookingLink(draft.customBookingLink),
     },
     classification: {
       primaryActivity: draft.activityType,
@@ -722,6 +900,7 @@ export function createMinimalTourFromDraft(
       description: draft.accommodationDescriptionText,
       photos: draft.accommodationPhotos,
       places: draft.accommodationPlaces,
+      upgradesEnabled: draft.accommodationUpgradesEnabled,
     },
     program: {
       routeMapImage: draft.routeMapImage,
@@ -793,6 +972,8 @@ export function createMinimalTourFromDraft(
     partnerName: draft.partnerName,
     coverLabel: draft.coverLabel,
     updatedAt: draft.updatedAt,
+    isPrivate: draft.isPrivate ?? false,
+    privateAccessToken: draft.isPrivate ? draft.privateAccessToken : undefined,
   };
 }
 

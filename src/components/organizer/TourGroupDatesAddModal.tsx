@@ -7,8 +7,8 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import {
-  buildGroupTourDatesFromBatch,
   computeEndDateFromStart,
+  createEmptyGroupTourDate,
   createGroupDateId,
   type OrganizerGroupTourDate,
   type OrganizerPrepaymentType,
@@ -20,6 +20,7 @@ import type { CurrencyCode } from "@/types/locale";
 interface TripRow {
   id: string;
   startDate: string;
+  priceUsd: number;
 }
 
 interface TourGroupDatesAddModalProps {
@@ -158,13 +159,13 @@ function ToggleSwitch({
   );
 }
 
-function createTripRow(): TripRow {
-  return { id: createGroupDateId(), startDate: "" };
+function createTripRow(defaultPriceUsd: number): TripRow {
+  return { id: createGroupDateId(), startDate: "", priceUsd: defaultPriceUsd };
 }
 
 function createInitialForm(defaultPriceUsd: number) {
   return {
-    trips: [createTripRow()],
+    trips: [createTripRow(defaultPriceUsd)],
     repeatDepartures: false,
     priceUsd: defaultPriceUsd,
     fullPaymentDaysBefore: 0,
@@ -196,10 +197,10 @@ export default function TourGroupDatesAddModal({
     setError(null);
   }, [open, defaultPriceUsd]);
 
-  function updateTrip(id: string, startDate: string) {
+  function updateTrip(id: string, patch: Partial<TripRow>) {
     setForm((current) => ({
       ...current,
-      trips: current.trips.map((trip) => (trip.id === id ? { ...trip, startDate } : trip)),
+      trips: current.trips.map((trip) => (trip.id === id ? { ...trip, ...patch } : trip)),
     }));
   }
 
@@ -213,36 +214,38 @@ export default function TourGroupDatesAddModal({
   function addTrip() {
     setForm((current) => ({
       ...current,
-      trips: [...current.trips, createTripRow()],
+      trips: [...current.trips, createTripRow(current.priceUsd || defaultPriceUsd)],
     }));
   }
 
   function handleSubmit() {
-    const startDates = form.trips.map((trip) => trip.startDate).filter(Boolean);
-    if (!startDates.length) {
+    const validTrips = form.trips.filter((trip) => trip.startDate.trim());
+    if (!validTrips.length) {
       setError("Укажите дату начала хотя бы для одного заезда");
       return;
     }
 
-    if (form.priceUsd <= 0) {
-      setError("Укажите стоимость тура за одного туриста");
+    if (validTrips.some((trip) => trip.priceUsd <= 0)) {
+      setError("Укажите стоимость тура за одного туриста для каждого заезда");
       return;
     }
 
     onAdd(
-      buildGroupTourDatesFromBatch({
-        startDates,
-        durationDays,
-        priceUsd: form.priceUsd,
-        totalSeats: form.totalSeats,
-        spotsLeft: form.spotsLeft,
-        fullPaymentDaysBefore: form.fullPaymentDaysBefore,
-        prepaymentAmount: form.prepaymentAmount,
-        prepaymentType: form.prepaymentType,
-        applyDiscount: form.applyDiscount,
-        notGuaranteed: form.notGuaranteed,
-        flightIncluded: form.flightIncluded,
-      })
+      validTrips.map((trip) =>
+        createEmptyGroupTourDate({
+          startDate: trip.startDate,
+          endDate: computeEndDateFromStart(trip.startDate, durationDays),
+          priceUsd: trip.priceUsd,
+          totalSeats: form.totalSeats,
+          spotsLeft: form.spotsLeft,
+          fullPaymentDaysBefore: form.fullPaymentDaysBefore,
+          prepaymentAmount: form.prepaymentAmount,
+          prepaymentType: form.prepaymentType,
+          applyDiscount: form.applyDiscount,
+          notGuaranteed: form.notGuaranteed,
+          flightIncluded: form.flightIncluded,
+        })
+      )
     );
     onClose();
   }
@@ -281,34 +284,46 @@ export default function TourGroupDatesAddModal({
                 const endDate = computeEndDateFromStart(trip.startDate, durationDays);
 
                 return (
-                  <div
-                    key={trip.id}
-                    className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)_auto] sm:gap-3"
-                  >
-                    <span className="text-xs font-semibold tabular-nums text-slate">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <DateInput
-                      id={`trip-start-${trip.id}`}
-                      label="Дата начала"
-                      value={trip.startDate}
-                      onChange={(value) => updateTrip(trip.id, value)}
-                    />
-                    <DateInput
-                      id={`trip-end-${trip.id}`}
-                      label="Дата завершения"
-                      value={endDate}
-                      disabled
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeTrip(trip.id)}
-                      disabled={form.trips.length === 1}
-                      className="inline-flex h-10 w-10 items-center justify-center self-center rounded-lg text-slate transition-colors hover:bg-white hover:text-brand disabled:cursor-not-allowed disabled:opacity-35 sm:h-12"
-                      aria-label="Удалить заезд"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
+                  <div key={trip.id} className="space-y-3 rounded-xl border border-gray-200/80 bg-white p-3">
+                    <div className="grid grid-cols-[2rem_minmax(0,1fr)_auto] items-center gap-2 sm:grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1fr)_minmax(0,120px)_auto] sm:gap-3">
+                      <span className="text-xs font-semibold tabular-nums text-slate">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <DateInput
+                        id={`trip-start-${trip.id}`}
+                        label="Дата начала"
+                        value={trip.startDate}
+                        onChange={(value) => updateTrip(trip.id, { startDate: value })}
+                      />
+                      <DateInput
+                        id={`trip-end-${trip.id}`}
+                        label="Дата завершения"
+                        value={endDate}
+                        disabled
+                      />
+                      <FormField id={`trip-price-${trip.id}`} label={`Цена, ${currencySuffix}`}>
+                        <Input
+                          id={`trip-price-${trip.id}`}
+                          type="number"
+                          min={0}
+                          value={trip.priceUsd || ""}
+                          onChange={(event) =>
+                            updateTrip(trip.id, {
+                              priceUsd: Math.max(0, Number(event.target.value) || 0),
+                            })
+                          }
+                        />
+                      </FormField>
+                      <button
+                        type="button"
+                        onClick={() => removeTrip(trip.id)}
+                        disabled={form.trips.length === 1}
+                        className="inline-flex h-10 w-10 items-center justify-center self-end rounded-lg text-slate transition-colors hover:bg-gray-50 hover:text-brand disabled:cursor-not-allowed disabled:opacity-35 sm:h-12"
+                        aria-label="Удалить заезд"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </div>
                   </div>
                 );
               })}
@@ -338,28 +353,32 @@ export default function TourGroupDatesAddModal({
             <section className="space-y-3 border-t border-gray-100 pt-5">
               <SectionTitle>Стоимость и предоплата</SectionTitle>
               <InfoBanner tone="sky">
-                Настройки применяются ко всем датам. Чтобы изменить конкретный заезд — отредактируйте
-                его после добавления дат.
+                У каждого заезда своя цена в таблице выше. Ниже — общие настройки предоплаты и мест
+                для всех добавляемых дат.
               </InfoBanner>
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <FormField
-                  id="group-batch-price"
-                  label="Стоимость тура за одного туриста"
-                  hint="Согласно политике паритета цен, стоимость тура на сайте не должна быть выше, чем на других площадках"
+                  id="group-batch-default-price"
+                  label="Базовая стоимость для новых заездов"
+                  hint="Подставляется при добавлении следующего заезда"
                 >
                   <div className="relative">
                     <Input
-                      id="group-batch-price"
+                      id="group-batch-default-price"
                       type="number"
                       min={0}
                       value={form.priceUsd || ""}
-                      onChange={(event) =>
+                      onChange={(event) => {
+                        const priceUsd = Math.max(0, Number(event.target.value) || 0);
                         setForm((current) => ({
                           ...current,
-                          priceUsd: Number(event.target.value) || 0,
-                        }))
-                      }
+                          priceUsd,
+                          trips: current.trips.map((trip) =>
+                            trip.priceUsd <= 0 ? { ...trip, priceUsd } : trip
+                          ),
+                        }));
+                      }}
                       className="pr-14"
                     />
                     <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-slate">

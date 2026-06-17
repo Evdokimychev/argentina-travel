@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { TourDetail, TourDatePrice } from "@/types";
-import FormattedPrice from "@/components/FormattedPrice";
+import { TourPriceCell } from "./TourPublicPriceDisplay";
 import { formatDateShortWithYear } from "@/lib/utils";
 import { formatSpots } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
@@ -10,10 +10,19 @@ import {
   dateFitsGuestCount,
   validateGuestsForScheduledBooking,
 } from "@/lib/tour-booking-spots";
+import {
+  formatDatePriceRangeLabel,
+  resolveTourDatePriceSummary,
+} from "@/lib/tour-date-pricing";
+import TourDepartureCalendar from "./TourDepartureCalendar";
+import TourDepartureCountdown from "./TourDepartureCountdown";
 import TourSection from "./TourSection";
 import { useTourBooking } from "./TourBookingContext";
 import type { Tour } from "@/types/tour";
 import EarlyBookingDiscounts from "./EarlyBookingDiscounts";
+import GroupDiscountPanel from "./GroupDiscountPanel";
+import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
+import { isWaitlistFeatureEnabled } from "@/lib/tour-waitlist";
 
 interface DatesSectionProps {
   tour: TourDetail;
@@ -23,8 +32,12 @@ interface DatesSectionProps {
 export default function DatesSection({ tour, canonicalTour }: DatesSectionProps) {
   const { dates } = tour;
   const bookingMode = tour.bookingMode ?? "scheduled";
-  const { guests, selectedDateId, setSelectedDateId } = useTourBooking();
+  const { guests, selectedDateId, setSelectedDateId, canJoinWaitlist, openWaitlist } =
+    useTourBooking();
   const [error, setError] = useState<string | null>(null);
+
+  const priceSummary = resolveTourDatePriceSummary(dates, tour.priceUsd);
+  const priceRangeLabel = formatDatePriceRangeLabel(priceSummary, tour.priceOnRequest);
 
   useEffect(() => {
     setError(null);
@@ -34,6 +47,9 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
     const selectionError = validateGuestsForScheduledBooking(tour, guests, date.id);
     if (selectionError) {
       setError(selectionError);
+      if (isWaitlistFeatureEnabled(tour)) {
+        setSelectedDateId(date.id);
+      }
       return;
     }
 
@@ -55,17 +71,43 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
       subtitle={
         isOnRequestOnly
           ? "Тур проводится индивидуально — выберите удобную дату в блоке бронирования"
-          : "Выберите подходящую дату отправления"
+          : priceRangeLabel
+            ? `Стоимость зависит от даты заезда: ${priceRangeLabel}`
+            : "Выберите подходящую дату отправления"
       }
     >
+      {priceSummary.hasVariedPrices && !tour.priceOnRequest ? (
+        <p className="mb-4 rounded-xl border border-sky/15 bg-sky/5 px-4 py-3 text-sm text-charcoal">
+          На разные даты действуют разные цены — они указаны в календаре и таблице ниже.
+        </p>
+      ) : null}
+
       {canonicalTour ? <EarlyBookingDiscounts tour={canonicalTour} /> : null}
+      {normalizeGroupDiscountSettings(tour.groupDiscount).enabled && !tour.priceOnRequest ? (
+        <div className="mb-4">
+          <GroupDiscountPanel
+            settings={tour.groupDiscount}
+            basePriceUsd={tour.priceUsd}
+            guestCount={guests}
+          />
+        </div>
+      ) : null}
 
       {error ? (
         <div
           role="alert"
-          className="mb-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
+          className="mb-4 space-y-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950"
         >
-          {error}
+          <p>{error}</p>
+          {canJoinWaitlist ? (
+            <button
+              type="button"
+              onClick={openWaitlist}
+              className="rounded-lg border border-violet-200 bg-white px-3 py-1.5 text-xs font-medium text-violet-800 transition-colors hover:border-violet-300"
+            >
+              Встать в лист ожидания
+            </button>
+          ) : null}
         </div>
       ) : null}
 
@@ -78,7 +120,18 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
           </p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
+        <div className="space-y-4">
+          <TourDepartureCountdown tour={tour} />
+
+          <TourDepartureCalendar
+            dates={dates}
+            selectedDateId={selectedDateId}
+            guests={guests}
+            groupMin={tour.groupMin}
+            onSelect={handleSelect}
+          />
+
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
           <table className="w-full min-w-[540px] text-left text-sm">
             <thead>
               <tr className="border-b border-gray-100 bg-surface-muted/50">
@@ -123,9 +176,9 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
                       </span>
                     </td>
                     <td className="px-5 py-4 font-semibold text-charcoal">
-                      <FormattedPrice
+                      <TourPriceCell
                         priceUsd={date.priceUsd}
-                        className="font-semibold text-charcoal"
+                        priceOnRequest={tour.priceOnRequest}
                       />
                     </td>
                     <td className="px-5 py-4">
@@ -142,7 +195,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
                             "border border-gray-200 bg-gray-100 text-slate hover:bg-gray-100"
                         )}
                       >
-                        {selected ? "Выбрано" : "Выбрать"}
+                        {selected ? "Выбрано" : bookable ? "Выбрать" : tour.waitlistEnabled ? "Очередь" : "Нет мест"}
                       </button>
                     </td>
                   </tr>
@@ -150,6 +203,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
               })}
             </tbody>
           </table>
+        </div>
         </div>
       )}
     </TourSection>

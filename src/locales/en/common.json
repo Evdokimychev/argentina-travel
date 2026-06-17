@@ -483,5 +483,19 @@
   "audioGuides.benefits.item1": "Go at your own pace — no group or fixed schedule",
   "audioGuides.benefits.item2": "Route and navigation inside the WeGoTrip app",
   "audioGuides.benefits.item3": "Great for a first look at a neighborhood",
-  "audioGuides.benefits.item4": "Start right after purchase — no waiting for a guide"
+  "audioGuides.benefits.item4": "Start right after purchase — no waiting for a guide",
+  "tour.countdown.title": "Next departure in",
+  "tour.countdown.departureOn": "Departure on {date}",
+  "tour.countdown.days": "days",
+  "tour.countdown.hours": "hrs",
+  "tour.countdown.minutes": "min",
+  "tour.countdown.seconds": "sec",
+  "tour.countdown.spotsCalm": "{spots} — book your place",
+  "tour.countdown.spotsUrgent": "{spots} — almost full!",
+  "tour.countdown.joinGroup": "Join a group of {group}",
+  "tour.countdown.ctaBook": "Book your spot",
+  "tour.countdown.ctaWaitlist": "Join waitlist",
+  "tour.countdown.ctaSelect": "Select this date",
+  "tour.countdown.badgeHot": "Few spots left",
+  "tour.countdown.started": "Departure has started — pick a date in the table below"
 }

@@ -12,11 +12,18 @@ export function useRepositoryTourDetail(
   const [tour, setTour] = useState<TourDetail | null>(initialTour ?? null);
 
   useEffect(() => {
-    const synced = getRepositoryTourDetail(slug);
-    setTour(synced ?? initialTour ?? null);
+    function readAccessToken(): string | null {
+      return new URLSearchParams(window.location.search).get("access");
+    }
+
+    function resolveTour() {
+      return getRepositoryTourDetail(slug, readAccessToken()) ?? initialTour ?? null;
+    }
+
+    setTour(resolveTour());
 
     function refresh() {
-      setTour(getRepositoryTourDetail(slug) ?? initialTour ?? null);
+      setTour(resolveTour());
     }
 
     window.addEventListener(TOURS_REPOSITORY_UPDATED_EVENT, refresh);

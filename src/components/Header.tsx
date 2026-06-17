@@ -8,34 +8,20 @@ import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
 import ProfileMenu from "@/components/auth/ProfileMenu";
 import { MegaMenuTrigger } from "@/components/navigation/MegaMenuTrigger";
+import { NavOverflowMegaMenuTrigger } from "@/components/navigation/NavOverflowMegaMenuTrigger";
 import { SiteNavFullScreenOverlay } from "@/components/navigation/SiteNavDrawer";
 import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
   SITE_NAV_MOBILE_SECTIONS,
-  SITE_NAV_OVERFLOW_SECTIONS,
-  SITE_NAV_PRIMARY_SECTIONS,
   SITE_NAV_UTILITY_LINKS,
 } from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
+import { useSiteNavLayout } from "@/hooks/useSiteNavLayout";
 import { cn } from "@/lib/cn";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { isNavSectionActive, resolveNavLabel } from "@/lib/site-nav";
-
-function useIsLgUp() {
-  const [isLgUp, setIsLgUp] = useState(false);
-
-  useEffect(() => {
-    const media = window.matchMedia("(min-width: 1024px)");
-    const sync = () => setIsLgUp(media.matches);
-    sync();
-    media.addEventListener("change", sync);
-    return () => media.removeEventListener("change", sync);
-  }, []);
-
-  return isLgUp;
-}
 
 const CircleButton = forwardRef<
   HTMLButtonElement,
@@ -81,24 +67,30 @@ export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
   const canGoBack = useCanGoBack();
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMegaMenuId, setOpenMegaMenuId] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement>(null);
   const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null);
-  const desktopMenuTriggerRef = useRef<HTMLButtonElement>(null);
-  const isLgUp = useIsLgUp();
   const { t } = useLocaleCurrency();
   const { isAuthenticated, openAuth } = useAuth();
 
-  const overlaySections = isLgUp ? SITE_NAV_OVERFLOW_SECTIONS : SITE_NAV_MOBILE_SECTIONS;
-  const overlayTitle = isLgUp ? t("nav.more") : t("nav.menu");
-  const menuTriggerRef = isLgUp ? desktopMenuTriggerRef : mobileMenuTriggerRef;
-  const hasOverflowSections = SITE_NAV_OVERFLOW_SECTIONS.length > 0;
+  const { primarySections, overflowSections, showNavIndex, layout: navLayout } =
+    useSiteNavLayout();
+
+  const hasOverflowSections = overflowSections.length > 0;
+  const overflowNavActive = overflowSections.some((section) =>
+    isNavSectionActive(pathname, section)
+  );
+  const navCompact = navLayout === "compact";
 
   useEffect(() => {
-    setMenuOpen(false);
+    setMobileMenuOpen(false);
     setOpenMegaMenuId(null);
   }, [pathname]);
+
+  useEffect(() => {
+    setOpenMegaMenuId(null);
+  }, [navLayout]);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -121,7 +113,7 @@ export default function Header() {
       window.removeEventListener("resize", syncHeaderHeight);
       document.documentElement.style.removeProperty("--site-header-height");
     };
-  }, [menuOpen]);
+  }, [mobileMenuOpen]);
 
   const utilityLinks = SITE_NAV_UTILITY_LINKS;
 
@@ -131,7 +123,7 @@ export default function Header() {
         <button
           type="button"
           onClick={() => {
-            setMenuOpen(false);
+            setMobileMenuOpen(false);
             openSiteSearch();
           }}
           className="mb-3 flex w-full items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-charcoal transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
@@ -145,7 +137,7 @@ export default function Header() {
         {isAuthenticated ? (
           <Link
             href="/profile"
-            onClick={() => setMenuOpen(false)}
+            onClick={() => setMobileMenuOpen(false)}
             className="inline-flex px-3 py-2 text-sm font-medium text-foreground hover:text-sky"
           >
             {t("nav.profile")}
@@ -154,7 +146,7 @@ export default function Header() {
           <button
             type="button"
             onClick={() => {
-              setMenuOpen(false);
+              setMobileMenuOpen(false);
               openAuth();
             }}
             className="inline-flex px-3 py-2 text-sm font-medium text-foreground hover:text-sky"
@@ -220,9 +212,9 @@ export default function Header() {
           <CircleButton
             ref={mobileMenuTriggerRef}
             ariaLabel={t("nav.menu")}
-            ariaExpanded={menuOpen}
+            ariaExpanded={mobileMenuOpen}
             ariaControls="site-nav-overlay"
-            onClick={() => setMenuOpen((open) => !open)}
+            onClick={() => setMobileMenuOpen((open) => !open)}
             className="lg:hidden"
           >
             <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} />
@@ -233,10 +225,10 @@ export default function Header() {
           </Link>
 
           <nav
-            className="hidden min-w-0 flex-1 items-center justify-center gap-2 xl:gap-4 lg:flex"
+            className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-2 2xl:gap-4"
             aria-label={t("nav.main")}
           >
-            {SITE_NAV_PRIMARY_SECTIONS.map((section, index) => (
+            {primarySections.map((section, index) => (
               <MegaMenuTrigger
                 key={section.id}
                 section={section}
@@ -244,6 +236,8 @@ export default function Header() {
                 active={isNavSectionActive(pathname, section)}
                 t={t}
                 open={openMegaMenuId === section.id}
+                showIndex={showNavIndex}
+                compact={navCompact}
                 onOpenChange={(nextOpen) => {
                   if (nextOpen) {
                     setOpenMegaMenuId(section.id);
@@ -254,45 +248,41 @@ export default function Header() {
               />
             ))}
             {hasOverflowSections ? (
-              <button
-                ref={desktopMenuTriggerRef}
-                type="button"
-                id="site-nav-overflow-trigger"
-                aria-expanded={menuOpen}
-                aria-controls="site-nav-overlay"
-                aria-label={t("nav.more")}
-                onClick={() => setMenuOpen((open) => !open)}
-                className={cn(
-                  "inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
-                  menuOpen
-                    ? "bg-sky/10 text-sky ring-1 ring-sky/25"
-                    : "text-foreground/70 hover:bg-charcoal/[0.04] hover:text-sky"
-                )}
-              >
-                {t("nav.more")}
-                <Menu className="h-3.5 w-3.5" strokeWidth={1.75} aria-hidden />
-              </button>
+              <NavOverflowMegaMenuTrigger
+                sections={overflowSections}
+                index={primarySections.length + 1}
+                active={overflowNavActive}
+                t={t}
+                open={openMegaMenuId === "more"}
+                showIndex={showNavIndex}
+                compact={navCompact}
+                onOpenChange={(nextOpen) => {
+                  if (nextOpen) {
+                    setOpenMegaMenuId("more");
+                    return;
+                  }
+                  setOpenMegaMenuId((current) => (current === "more" ? null : current));
+                }}
+              />
             ) : null}
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
-            <div className="hidden sm:block">
-              <LocaleCurrencySwitcher variant="header" />
-            </div>
+            <LocaleCurrencySwitcher variant="header" />
             <ProfileMenu />
           </div>
         </div>
       </div>
 
       <SiteNavFullScreenOverlay
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        title={overlayTitle}
-        sections={overlaySections}
+        open={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        title={t("nav.menu")}
+        sections={SITE_NAV_MOBILE_SECTIONS}
         pathname={pathname}
         t={t}
-        returnFocusRef={menuTriggerRef}
-        footer={isLgUp ? undefined : mobileMenuFooter}
+        returnFocusRef={mobileMenuTriggerRef}
+        footer={mobileMenuFooter}
       />
     </header>
   );

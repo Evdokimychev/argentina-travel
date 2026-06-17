@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import BlogPostView from "@/components/blog/BlogPostView";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getBlogPostBySlug, blogPosts } from "@/data/blog";
 
 interface BlogPostPageProps {
@@ -29,10 +30,12 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  const initialTours = await fetchMarketplaceTours();
+
   return (
     <>
       <ArticleJsonLd post={post} />
-      <BlogPostView post={post} />
+      <BlogPostView post={post} initialTours={initialTours} />
     </>
   );
 }

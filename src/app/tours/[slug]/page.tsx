@@ -13,6 +13,7 @@ import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 
 interface TourPageProps {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ access?: string }>;
 }
 
 export const dynamicParams = true;
@@ -34,28 +35,33 @@ export async function generateStaticParams() {
   return staticSlugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: TourPageProps) {
+export async function generateMetadata({ params, searchParams }: TourPageProps) {
   const { slug } = await params;
-  const tour = await fetchTourDetail(slug);
+  const { access } = await searchParams;
+  const tour = await fetchTourDetail(slug, { accessToken: access });
   if (!tour) return { title: "Тур не найден" };
   return {
     title: `${tour.title} — тур по Аргентине`,
     description: tour.shortDescription,
+    robots: tour.isPrivate ? { index: false, follow: false } : undefined,
     openGraph: {
       title: tour.title,
       description: tour.shortDescription,
       images: tour.gallery.length ? [tour.image] : undefined,
       type: "website",
     },
-    alternates: {
-      canonical: `/tours/${slug}`,
-    },
+    alternates: tour.isPrivate
+      ? undefined
+      : {
+          canonical: `/tours/${slug}`,
+        },
   };
 }
 
-export default async function TourDetailPage({ params }: TourPageProps) {
+export default async function TourDetailPage({ params, searchParams }: TourPageProps) {
   const { slug } = await params;
-  const tour = await fetchTourDetail(slug);
+  const { access } = await searchParams;
+  const tour = await fetchTourDetail(slug, { accessToken: access });
   const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
   let initialCanonicalTour = getCanonicalTourBySlug(slug) ?? null;
 

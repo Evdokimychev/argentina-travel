@@ -13,6 +13,10 @@ import type { AuthUserRole } from "@/types/auth";
 import { DEMO_PASSWORD, normalizePhone } from "@/lib/auth-store";
 import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 type AuthMode = "phone" | "email";
 type AuthStep = "sign-in" | "register";
@@ -43,6 +47,7 @@ export default function AuthModal() {
     isAuthenticated,
     authOpen,
     authIntent,
+    favoriteAuthStep,
     closeAuth,
     loginByPhone,
     loginByEmail,
@@ -54,6 +59,7 @@ export default function AuthModal() {
 
   const hasOrganizerRole = useHasOrganizerRole(user);
   const isOrganizerFlow = authIntent === "organizer";
+  const isFavoriteFlow = authIntent === "favorite";
 
   const [role, setRole] = useState<AuthUserRole>("tourist");
   const [mode, setMode] = useState<AuthMode>("phone");
@@ -66,9 +72,35 @@ export default function AuthModal() {
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [duplicateRegistration, setDuplicateRegistration] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
+
+  function completeAuthSuccess(destination: "/profile" | "/organizer") {
+    if (isFavoriteFlow) {
+      closeAuth();
+      return;
+    }
+
+    const asOrganizer = destination === "/organizer";
+    feedback.success({
+      title: asOrganizer ? "Кабинет организатора открыт" : "Вы вошли",
+      description: asOrganizer
+        ? "Можно размещать туры и управлять бронированиями."
+        : "Добро пожаловать в личный кабинет.",
+    });
+    closeAuth();
+    router.push(destination);
+  }
 
   useEffect(() => {
     if (!authOpen) return;
@@ -76,8 +108,8 @@ export default function AuthModal() {
     setError(null);
     setLoading(false);
     setDuplicateRegistration(false);
-    setStep("sign-in");
-    setOrganizerTab("sign-in");
+    setStep(isFavoriteFlow ? favoriteAuthStep : "sign-in");
+    setOrganizerTab(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setMode("phone");
     setRole(isOrganizerFlow ? "organizer" : "tourist");
     setPhone("");
@@ -87,7 +119,7 @@ export default function AuthModal() {
     setFullName("");
     setShowPassword(false);
     setTermsAccepted(true);
-  }, [authOpen, isOrganizerFlow]);
+  }, [authOpen, isOrganizerFlow, isFavoriteFlow, favoriteAuthStep]);
 
   async function handlePhoneContinue(targetRole = role) {
     if (!termsAccepted) {
@@ -108,7 +140,7 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      closeAuth();
+      completeAuthSuccess(targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile");
       return;
     }
 
@@ -125,7 +157,7 @@ export default function AuthModal() {
       return;
     }
 
-    setError(result.error);
+    setError(normalizeSiteError(result.error));
   }
 
   async function handleEmailContinue(targetRole = role) {
@@ -151,21 +183,21 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      closeAuth();
+      completeAuthSuccess(targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile");
       return;
     }
 
     if (result.roleNotConnected && isOrganizerFlow) {
       const upgrade = await loginForOrganizerUpgrade(email, password);
       if (!upgrade.ok) {
-        setError(upgrade.error);
+        setError(normalizeSiteError(upgrade.error));
         return;
       }
-      setError(null);
+      completeAuthSuccess("/organizer");
       return;
     }
 
-    setError(result.error);
+    setError(normalizeSiteError(result.error));
   }
 
   async function handleOrganizerCredentialLogin() {
@@ -192,7 +224,7 @@ export default function AuthModal() {
       const login = await loginByEmail(credential, password, "organizer");
       if (login.ok) {
         setLoading(false);
-        closeAuth();
+        completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile");
         return;
       }
 
@@ -200,15 +232,15 @@ export default function AuthModal() {
         const upgrade = await loginForOrganizerUpgrade(credential, password);
         setLoading(false);
         if (!upgrade.ok) {
-          setError(upgrade.error);
+          setError(normalizeSiteError(upgrade.error));
           return;
         }
-        setError(null);
+        completeAuthSuccess("/organizer");
         return;
       }
 
       setLoading(false);
-      setError(login.error);
+      setError(normalizeSiteError(login.error));
       return;
     }
 
@@ -223,7 +255,7 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      closeAuth();
+      completeAuthSuccess("/organizer");
       return;
     }
 
@@ -239,12 +271,18 @@ export default function AuthModal() {
       return;
     }
 
-    setError(result.error);
+    setError(normalizeSiteError(result.error));
   }
 
   async function handleRegister() {
     if (!termsAccepted) {
       setError("Примите условия пользовательского соглашения");
+      return;
+    }
+
+    const nextPassword = password.trim() || DEMO_PASSWORD;
+    if (nextPassword.length < 6) {
+      setError("Пароль должен содержать не менее 6 символов");
       return;
     }
 
@@ -257,13 +295,13 @@ export default function AuthModal() {
       fullName,
       phone,
       email,
-      password: isOrganizerFlow ? password || DEMO_PASSWORD : DEMO_PASSWORD,
+      password: nextPassword,
     });
 
     setLoading(false);
 
     if (result.ok) {
-      closeAuth();
+      completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile");
       return;
     }
 
@@ -276,7 +314,7 @@ export default function AuthModal() {
       }
     }
 
-    setError(result.error);
+    setError(normalizeSiteError(result.error));
   }
 
   async function handleConnectOrganizerRole() {
@@ -287,9 +325,15 @@ export default function AuthModal() {
     setLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      setError(normalizeSiteError(result.error));
       return;
     }
+
+    feedback.success({
+      title: "Роль организатора подключена",
+      description: "Теперь можно размещать туры на платформе.",
+      action: { label: "Кабинет организатора", href: "/organizer" },
+    });
   }
 
   function renderAuthenticatedView() {
@@ -316,18 +360,23 @@ export default function AuthModal() {
           </div>
 
           {error ? (
-            <div role="alert" className="rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              {error}
-            </div>
+            <InlineFeedback
+              variant="error"
+              title={error.title}
+              description={error.description}
+              steps={error.steps}
+              action={error.action}
+            />
           ) : null}
 
           <Button
             type="button"
             className="w-full rounded-xl"
-            disabled={loading}
+            loading={loading}
+            loadingLabel="Подключаем…"
             onClick={handleConnectOrganizerRole}
           >
-            {loading ? "Подключаем…" : "Подключить роль организатора"}
+            Подключить роль организатора
           </Button>
 
           <Button type="button" variant="outline" className="w-full" onClick={logout}>
@@ -552,9 +601,13 @@ export default function AuthModal() {
         ) : null}
 
         {error ? (
-          <div role="alert" className="rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-            {error}
-          </div>
+          <InlineFeedback
+            variant="error"
+            title={error.title}
+            description={error.description}
+            steps={error.steps}
+            action={error.action}
+          />
         ) : null}
 
         <label className="flex cursor-pointer items-start gap-3">
@@ -579,18 +632,15 @@ export default function AuthModal() {
         <Button
           type="button"
           className="w-full rounded-xl"
-          disabled={loading}
+          loading={loading}
+          loadingLabel={organizerTab === "sign-in" ? "Проверяем…" : "Создаём аккаунт…"}
           onClick={
             organizerTab === "sign-in"
               ? handleOrganizerCredentialLogin
               : () => handleRegister()
           }
         >
-          {loading
-            ? "Проверяем…"
-            : organizerTab === "sign-in"
-              ? "Войти"
-              : "Зарегистрироваться"}
+          {organizerTab === "sign-in" ? "Войти" : "Зарегистрироваться"}
         </Button>
 
         {organizerTab === "sign-in" ? (
@@ -742,9 +792,13 @@ export default function AuthModal() {
                 )}
 
                 {error ? (
-                  <div role="alert" className="rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-                    {error}
-                  </div>
+                  <InlineFeedback
+                    variant="error"
+                    title={error.title}
+                    description={error.description}
+                    steps={error.steps}
+                    action={error.action}
+                  />
                 ) : null}
 
                 <label className="flex cursor-pointer items-start gap-3">
@@ -765,10 +819,11 @@ export default function AuthModal() {
                 <Button
                   type="button"
                   className="w-full rounded-xl"
-                  disabled={loading}
+                  loading={loading}
+                  loadingLabel="Проверяем…"
                   onClick={mode === "phone" ? () => handlePhoneContinue() : () => handleEmailContinue()}
                 >
-                  {loading ? "Проверяем…" : "Продолжить"}
+                  Продолжить
                 </Button>
 
                 <button
@@ -822,6 +877,26 @@ export default function AuthModal() {
                   />
                 </div>
 
+                <div>
+                  <label htmlFor="auth-register-password" className="mb-2 block text-xs font-medium text-slate">
+                    Пароль
+                  </label>
+                  <Input
+                    id="auth-register-password"
+                    type="password"
+                    autoComplete="new-password"
+                    placeholder="Не менее 6 символов"
+                    value={password}
+                    onChange={(event) => {
+                      setPassword(event.target.value);
+                      setError(null);
+                    }}
+                  />
+                  <p className="mt-1.5 text-xs text-slate">
+                    Пароль нужен для входа по почте. По телефону можно войти с тем же паролем.
+                  </p>
+                </div>
+
                 {duplicateRegistration ? (
                   <div className="rounded-xl border border-amber-200 bg-amber-50 px-3 py-2.5 text-sm text-amber-900">
                     Такой аккаунт уже существует.{" "}
@@ -841,9 +916,13 @@ export default function AuthModal() {
                 ) : null}
 
                 {error ? (
-                  <div role="alert" className="rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-                    {error}
-                  </div>
+                  <InlineFeedback
+                    variant="error"
+                    title={error.title}
+                    description={error.description}
+                    steps={error.steps}
+                    action={error.action}
+                  />
                 ) : null}
 
                 <label className="flex cursor-pointer items-start gap-3">
@@ -861,10 +940,11 @@ export default function AuthModal() {
                 <Button
                   type="button"
                   className="w-full rounded-xl"
-                  disabled={loading}
+                  loading={loading}
+                  loadingLabel="Создаём аккаунт…"
                   onClick={handleRegister}
                 >
-                  {loading ? "Создаём аккаунт…" : "Зарегистрироваться"}
+                  Зарегистрироваться
                 </Button>
 
                 <button

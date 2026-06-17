@@ -16,6 +16,8 @@ import type {
   TourLanguage,
 } from "@/types";
 import type { TourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
+import type { TourCustomBookingLink } from "@/types/tour-custom-booking-link";
+import type { GroupDiscountSettings } from "@/types/group-discount";
 
 export type OrganizerTourType = "tour" | "excursion";
 export type OrganizerTourStatus = "published" | "draft";
@@ -40,6 +42,12 @@ export interface OrganizerTourListing {
   partnerName: string;
   partnerUrl?: string;
   updatedAt?: string;
+  /** Скрыт из каталога — доступ только по приватной ссылке. */
+  isPrivate?: boolean;
+  /** Секрет для параметра ?access= в URL. */
+  privateAccessToken?: string;
+  /** Лист ожидания, если на дату не хватает мест. */
+  waitlistEnabled?: boolean;
 }
 
 export interface OrganizerTourGuide {
@@ -69,7 +77,9 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   originalPriceUsd: number | null;
   priceCurrency: CurrencyCode;
   priceFromPrefix: boolean;
+  priceOnRequest: boolean;
   enabledDiscounts: OrganizerTourDiscountType[];
+  groupDiscount: GroupDiscountSettings;
   individualTourEnabled: boolean;
   individualPeriodFrom: string;
   individualPeriodTo: string;
@@ -87,6 +97,8 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   accommodationDescriptionText: string;
   accommodationPhotos: string[];
   accommodationPlaces: OrganizerTourAccommodationPlace[];
+  /** Разрешить выбор типа номера при бронировании. */
+  accommodationUpgradesEnabled: boolean;
   groupMin: number;
   groupMax: number;
   minimumAge: number;
@@ -120,6 +132,7 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   arrivalTransfersText: string;
   arrivalMeetingPoint: string;
   checkoutPaymentOptions: TourCheckoutPaymentOptions;
+  customBookingLink: TourCustomBookingLink;
   /** Up to 6 tips for participants — shown in organizer card. */
   participantRecommendations: string[];
   /** Route features text — shown in organizer card. */

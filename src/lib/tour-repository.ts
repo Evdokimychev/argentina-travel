@@ -10,7 +10,7 @@ import {
 import {
   buildSeedTourFromSlug,
   createMinimalTourFromDraft,
-  isTourPubliclyVisible,
+  canViewTourDetail,
   isTourPublishedListing,
   organizerDraftToTour,
   tourToDetail,
@@ -18,6 +18,8 @@ import {
 } from "@/lib/tour-mapper";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { normalizeTourDuration } from "@/lib/tour-duration";
+import { getWaitlistSeedForSlug } from "@/data/tour-waitlist-seeds";
+import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
 
 let seedToursCache: Tour[] | null = null;
 
@@ -92,11 +94,72 @@ function ensureSeedToursInStore(store: Record<string, Tour>): Record<string, Tou
       (existing.durationNights >= existing.durationDays &&
         seedNormalized.durationDays > existing.durationDays);
 
-    if (needsDurationFix) {
+    const seedGroupDiscount = normalizeGroupDiscountSettings(seed.pricing.groupDiscount);
+    const existingGroupDiscount = normalizeGroupDiscountSettings(existing.pricing.groupDiscount);
+    const needsGroupDiscount =
+      seedGroupDiscount.enabled && !existingGroupDiscount.enabled;
+
+    const needsPriceOnRequest =
+      seed.pricing.priceOnRequest && !existing.pricing.priceOnRequest;
+
+    const needsPrivate = seed.isPrivate && !existing.isPrivate;
+
+    const needsWaitlist =
+      Boolean(seed.booking.waitlistEnabled) && !existing.booking.waitlistEnabled;
+
+    const waitlistSeed = getWaitlistSeedForSlug(seed.slug);
+    const needsWaitlistDates =
+      Boolean(waitlistSeed?.dateSpotsOverrides) &&
+      seed.booking.groupDates.some((date) => {
+        const override = waitlistSeed!.dateSpotsOverrides![date.id];
+        const existingDate = existing.booking.groupDates.find((item) => item.id === date.id);
+        return override != null && existingDate?.spotsLeft !== override;
+      });
+
+    if (
+      needsDurationFix ||
+      needsGroupDiscount ||
+      needsPriceOnRequest ||
+      needsPrivate ||
+      needsWaitlist ||
+      needsWaitlistDates
+    ) {
       next[seed.slug] = {
         ...existing,
-        durationDays: seedNormalized.durationDays,
-        durationNights: seedNormalized.durationNights,
+        durationDays: needsDurationFix ? seedNormalized.durationDays : existing.durationDays,
+        durationNights: needsDurationFix ? seedNormalized.durationNights : existing.durationNights,
+        isPrivate: needsPrivate ? seed.isPrivate : existing.isPrivate ?? seed.isPrivate,
+        privateAccessToken: needsPrivate
+          ? seed.privateAccessToken
+          : existing.privateAccessToken ?? seed.privateAccessToken,
+        booking: {
+          ...existing.booking,
+          waitlistEnabled: needsWaitlist
+            ? seed.booking.waitlistEnabled
+            : existing.booking.waitlistEnabled ?? seed.booking.waitlistEnabled,
+          groupDates: needsWaitlistDates
+            ? existing.booking.groupDates.map((date) => ({
+                ...date,
+                spotsLeft:
+                  waitlistSeed?.dateSpotsOverrides?.[date.id] ?? date.spotsLeft,
+              }))
+            : existing.booking.groupDates,
+        },
+        pricing: {
+          ...existing.pricing,
+          groupDiscount: needsGroupDiscount
+            ? seed.pricing.groupDiscount
+            : existing.pricing.groupDiscount ?? seed.pricing.groupDiscount,
+          priceOnRequest: needsPriceOnRequest
+            ? seed.pricing.priceOnRequest
+            : existing.pricing.priceOnRequest ?? seed.pricing.priceOnRequest,
+          priceFromPrefix: needsPriceOnRequest
+            ? seed.pricing.priceFromPrefix
+            : existing.pricing.priceFromPrefix,
+          basePriceUsd: needsPriceOnRequest
+            ? seed.pricing.basePriceUsd
+            : existing.pricing.basePriceUsd,
+        },
       };
     }
   }
@@ -138,9 +201,12 @@ export function getMarketplaceListings(): TourListing[] {
     .map(tourToListing);
 }
 
-export function getRepositoryTourDetail(slug: string): TourDetail | undefined {
+export function getRepositoryTourDetail(
+  slug: string,
+  accessToken?: string | null
+): TourDetail | undefined {
   const tour = getCanonicalTourBySlug(slug);
-  if (!tour || !isTourPubliclyVisible(tour)) return undefined;
+  if (!tour || !canViewTourDetail(tour, accessToken)) return undefined;
   return tourToDetail(tour);
 }
 

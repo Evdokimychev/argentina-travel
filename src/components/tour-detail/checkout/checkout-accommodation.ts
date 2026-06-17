@@ -1,69 +1,81 @@
-import { CHECKOUT_ROOM_OPTIONS, type RoomAllocations, type RoomOption, type RoomOptionId } from "./types";
+import { CHECKOUT_ROOM_OPTIONS, type RoomAllocations, type RoomOption } from "./types";
 import { formatWithWord, formatTourists } from "@/lib/pluralize";
 
 export type { RoomAllocations } from "./types";
 
-export const DEFAULT_INCLUDED_ROOM_ID: RoomOptionId = "double";
+export const DEFAULT_INCLUDED_ROOM_ID = "double";
 
-const ROOM_COUNT_LABELS: Record<
-  RoomOptionId,
-  { one: string; few: string; many: string }
-> = {
+const ROOM_COUNT_LABELS: Record<string, { one: string; few: string; many: string }> = {
   single: { one: "одноместный номер", few: "одноместных номера", many: "одноместных номеров" },
-  twin: { one: "номер с двумя кроватями", few: "номера с двумя кроватями", many: "номеров с двумя кроватями" },
+  twin: {
+    one: "номер с двумя кроватями",
+    few: "номера с двумя кроватями",
+    many: "номеров с двумя кроватями",
+  },
   double: { one: "двухместный номер", few: "двухместных номера", many: "двухместных номеров" },
   triple: { one: "трёхместный номер", few: "трёхместных номера", many: "трёхместных номеров" },
   upgrade4: { one: "номер 4★", few: "номера 4★", many: "номеров 4★" },
   upgrade5: { one: "номер 5★", few: "номера 5★", many: "номеров 5★" },
 };
 
+export function resolveDefaultIncludedRoomId(roomOptions: RoomOption[]): string {
+  const included = roomOptions.find((room) => room.priceUsdPerTraveler === 0);
+  return included?.id ?? roomOptions[0]?.id ?? DEFAULT_INCLUDED_ROOM_ID;
+}
+
 export function calcRoomsNeeded(travelers: number, room: Pick<RoomOption, "capacity">): number {
   if (travelers <= 0) return 0;
   return Math.ceil(travelers / room.capacity);
 }
 
-export function formatRoomCount(count: number, roomId: RoomOptionId): string {
+export function formatRoomCount(count: number, roomId: string, roomTitle?: string): string {
   const labels = ROOM_COUNT_LABELS[roomId];
-  return formatWithWord(count, labels.one, labels.few, labels.many);
+  if (labels) return formatWithWord(count, labels.one, labels.few, labels.many);
+  const fallback = roomTitle?.toLowerCase() ?? "номер";
+  return formatWithWord(count, fallback, fallback, fallback);
 }
 
-export function formatRoomAllocationLine(
-  room: RoomOption,
-  travelers: number
-): string {
+export function formatRoomAllocationLine(room: RoomOption, travelers: number): string {
   const rooms = calcRoomsNeeded(travelers, room);
-  return formatRoomCount(rooms, room.id);
+  return formatRoomCount(rooms, room.id, room.title);
 }
 
 export function isDefaultRoomAllocation(
   allocations: RoomAllocations,
-  guests: number
+  guests: number,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
 ): boolean {
-  return (
-    allocations[DEFAULT_INCLUDED_ROOM_ID] === guests &&
-    CHECKOUT_ROOM_OPTIONS.every(
-      (room) => room.id === DEFAULT_INCLUDED_ROOM_ID || allocations[room.id] === 0
-    )
+  const defaultRoomId = resolveDefaultIncludedRoomId(roomOptions);
+  return roomOptions.every(
+    (room) =>
+      room.id === defaultRoomId
+        ? allocations[room.id] === guests
+        : (allocations[room.id] ?? 0) === 0
   );
 }
 
-export function createDefaultRoomAllocations(guests: number): RoomAllocations {
-  return {
-    single: 0,
-    twin: 0,
-    double: guests,
-    triple: 0,
-    upgrade4: 0,
-    upgrade5: 0,
-  };
+export function createDefaultRoomAllocations(
+  guests: number,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
+): RoomAllocations {
+  const defaultRoomId = resolveDefaultIncludedRoomId(roomOptions);
+  const allocations = Object.fromEntries(roomOptions.map((room) => [room.id, 0]));
+  allocations[defaultRoomId] = guests;
+  return allocations;
 }
 
-export function totalRoomAllocated(allocations: RoomAllocations): number {
-  return CHECKOUT_ROOM_OPTIONS.reduce((sum, room) => sum + (allocations[room.id] ?? 0), 0);
+export function totalRoomAllocated(
+  allocations: RoomAllocations,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
+): number {
+  return roomOptions.reduce((sum, room) => sum + (allocations[room.id] ?? 0), 0);
 }
 
-export function calcRoomTotalUsd(allocations: RoomAllocations): number {
-  return CHECKOUT_ROOM_OPTIONS.reduce((sum, room) => {
+export function calcRoomTotalUsd(
+  allocations: RoomAllocations,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
+): number {
+  return roomOptions.reduce((sum, room) => {
     const count = allocations[room.id] ?? 0;
     return sum + count * room.priceUsdPerTraveler;
   }, 0);
@@ -71,9 +83,10 @@ export function calcRoomTotalUsd(allocations: RoomAllocations): number {
 
 export function getRoomAllocationStatus(
   allocations: RoomAllocations,
-  guests: number
+  guests: number,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
 ): "complete" | "under" | "over" {
-  const total = totalRoomAllocated(allocations);
+  const total = totalRoomAllocated(allocations, roomOptions);
   if (total > guests) return "over";
   if (total < guests) return "under";
   return "complete";
@@ -81,9 +94,10 @@ export function getRoomAllocationStatus(
 
 export function roomAllocationWarning(
   allocations: RoomAllocations,
-  guests: number
+  guests: number,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
 ): string | null {
-  const total = totalRoomAllocated(allocations);
+  const total = totalRoomAllocated(allocations, roomOptions);
   if (total > guests) {
     return `Назначено ${formatTourists(total)}, а в группе ${formatTourists(guests)}. Уменьшите количество в одном из полей.`;
   }
@@ -98,9 +112,10 @@ export function roomAllocationWarning(
 
 export function validateRoomAllocations(
   allocations: RoomAllocations,
-  guests: number
+  guests: number,
+  roomOptions: RoomOption[] = CHECKOUT_ROOM_OPTIONS
 ): string | null {
-  const total = totalRoomAllocated(allocations);
+  const total = totalRoomAllocated(allocations, roomOptions);
   if (total === 0) {
     return "Распределите туристов по типам размещения";
   }
@@ -115,7 +130,7 @@ export function validateRoomAllocations(
 
 export function setRoomAllocation(
   allocations: RoomAllocations,
-  roomId: RoomOptionId,
+  roomId: string,
   count: number
 ): RoomAllocations {
   return { ...allocations, [roomId]: Math.max(0, count) };

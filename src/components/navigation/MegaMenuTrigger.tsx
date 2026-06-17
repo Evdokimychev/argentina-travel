@@ -61,6 +61,8 @@ export function MegaMenuTrigger({
   t,
   open,
   onOpenChange,
+  showIndex = true,
+  compact = false,
 }: {
   section: SiteNavSection;
   index: number;
@@ -68,6 +70,8 @@ export function MegaMenuTrigger({
   t: NavTranslate;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  showIndex?: boolean;
+  compact?: boolean;
 }) {
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -75,6 +79,12 @@ export function MegaMenuTrigger({
 
   const label = navSectionLabel(section, t);
   const num = String(index).padStart(2, "0");
+  const indexClassName = cn(
+    "text-[10px] font-normal text-gray-400 group-hover:text-sky/70",
+    compact && "hidden xl:inline"
+  );
+  const triggerTextClassName =
+    "group relative inline-flex max-w-[6.75rem] items-baseline gap-0.5 truncate px-0.5 py-1 font-medium transition-colors lg:text-[13px] xl:max-w-none xl:px-1 xl:text-sm";
 
   const clearCloseTimer = useCallback(() => {
     if (closeTimerRef.current) {
@@ -130,12 +140,13 @@ export function MegaMenuTrigger({
       <Link
         href={section.href}
         className={cn(
-          "group relative inline-flex items-baseline gap-1 px-1 py-1 text-sm font-medium transition-colors",
+          triggerTextClassName,
+          "shrink-0",
           active ? "text-sky" : "text-foreground/70 hover:text-sky"
         )}
       >
-        {label}
-        <sup className="text-[10px] font-normal text-gray-400 group-hover:text-sky/70">{num}</sup>
+        <span className="truncate">{label}</span>
+        {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
       </Link>
     );
   }
@@ -145,23 +156,23 @@ export function MegaMenuTrigger({
   return (
     <div
       ref={rootRef}
-      className="relative"
+      className="relative shrink-0"
       onMouseEnter={openMenu}
       onMouseLeave={scheduleClose}
     >
       {hasHubLink ? (
         <div
           className={cn(
-            "group relative inline-flex items-center gap-0.5 px-1 py-1 text-sm font-medium transition-colors",
+            triggerTextClassName,
             active || open ? "text-sky" : "text-foreground/70"
           )}
         >
           <Link
             href={section.href!}
-            className="inline-flex items-baseline gap-1 transition-colors hover:text-sky"
+            className="inline-flex min-w-0 items-baseline gap-0.5 truncate transition-colors hover:text-sky"
           >
-            {label}
-            <sup className="text-[10px] font-normal text-gray-400 group-hover:text-sky/70">{num}</sup>
+            <span className="truncate">{label}</span>
+            {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
           </Link>
           {section.badge ? <NavBadge badge={section.badge} /> : null}
           <button
@@ -188,22 +199,22 @@ export function MegaMenuTrigger({
           aria-haspopup="true"
           onClick={() => (open ? closeMenu() : openMenu())}
           className={cn(
-            "group relative inline-flex items-center gap-0.5 px-1 py-1 text-sm font-medium transition-colors",
+            triggerTextClassName,
             active || open ? "text-sky" : "text-foreground/70 hover:text-sky"
           )}
         >
-          {label}
+          <span className="truncate">{label}</span>
           {section.badge ? <NavBadge badge={section.badge} /> : null}
           <ChevronDown
             className={cn(
-              "h-3.5 w-3.5 transition-transform duration-200",
+              "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
               open && "rotate-180"
             )}
             aria-hidden
           />
-          <sup className="ml-0.5 text-[10px] font-normal text-gray-400 group-hover:text-sky/70">
-            {num}
-          </sup>
+          {showIndex ? (
+            <sup className={indexClassName}>{num}</sup>
+          ) : null}
         </button>
       )}
 

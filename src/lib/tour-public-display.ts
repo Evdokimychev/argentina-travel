@@ -7,6 +7,7 @@ import {
 } from "@/data/tour-terms-defaults";
 import { buildCancellationTouristPreviewFull } from "@/lib/organizer-cancellation-preview";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
+import type { TourListing } from "@/types";
 import type { Tour } from "@/types/tour";
 
 const DEFAULT_ORGANIZER_USER_ID = "ivan-evdokimychev";
@@ -146,6 +147,37 @@ export function hasPlacesContent(
 
 export function hasTermsListContent(items: string[]): boolean {
   return items.some((item) => item.trim());
+}
+
+export type TourCardScheduleDisplay =
+  | { type: "dates"; start: string; end: string; moreDates: number }
+  | { type: "individual"; label: string };
+
+/** Подпись под ценой в карточке каталога: даты набора или индивидуальный формат. */
+export function resolveTourCardScheduleDisplay(
+  tour: TourListing
+): TourCardScheduleDisplay | null {
+  const mode = tour.bookingMode ?? "scheduled";
+  const nextDate = tour.availableDates[0];
+
+  if (mode === "on_request") {
+    return { type: "individual", label: "Тур проводится индивидуально" };
+  }
+
+  if (nextDate) {
+    return {
+      type: "dates",
+      start: nextDate.start,
+      end: nextDate.end,
+      moreDates: Math.max(0, tour.availableDates.length - 1),
+    };
+  }
+
+  if (mode === "both") {
+    return { type: "individual", label: "Индивидуальные даты" };
+  }
+
+  return null;
 }
 
 /** Теги вида «10 дней (9 ночей)» — длительность уже показана отдельно */

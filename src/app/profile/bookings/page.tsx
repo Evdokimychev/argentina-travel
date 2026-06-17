@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CalendarDays } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { CalendarDays, ListOrdered } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
 import { apiCancelBooking, apiFetchUserBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
@@ -16,6 +17,7 @@ import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
+import ProfileWaitlistSection from "@/components/profile/ProfileWaitlistSection";
 import { cn } from "@/lib/cn";
 import {
   cabinetCardClass,
@@ -27,6 +29,9 @@ import {
 
 export default function ProfileBookingsPage() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get("tab") === "waitlist" ? "waitlist" : "bookings";
+  const [tab, setTab] = useState<"bookings" | "waitlist">(initialTab);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [cancelError, setCancelError] = useState<string | null>(null);
@@ -77,7 +82,37 @@ export default function ProfileBookingsPage() {
   return (
     <div className={cabinetPanelClass}>
       <h2 className={cabinetPageTitleClass}>Мои бронирования</h2>
-      <p className={cabinetPageSubtitleClass}>Заявки и подтверждённые поездки</p>
+      <p className={cabinetPageSubtitleClass}>Заявки, подтверждённые поездки и лист ожидания</p>
+
+      <div className="mt-6 flex gap-2 rounded-xl bg-gray-100 p-1">
+        <button
+          type="button"
+          onClick={() => setTab("bookings")}
+          className={cn(
+            "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            tab === "bookings" ? "bg-white text-charcoal shadow-sm" : "text-slate hover:text-charcoal"
+          )}
+        >
+          <CalendarDays className="h-4 w-4" aria-hidden />
+          Бронирования
+        </button>
+        <button
+          type="button"
+          onClick={() => setTab("waitlist")}
+          className={cn(
+            "flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+            tab === "waitlist" ? "bg-white text-charcoal shadow-sm" : "text-slate hover:text-charcoal"
+          )}
+        >
+          <ListOrdered className="h-4 w-4" aria-hidden />
+          Лист ожидания
+        </button>
+      </div>
+
+      {tab === "waitlist" ? (
+        <ProfileWaitlistSection />
+      ) : (
+        <>
 
       {cancelError ? (
         <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
@@ -189,6 +224,8 @@ export default function ProfileBookingsPage() {
           secondaryAction={{ label: "Найти заявку по email", href: "/booking/find" }}
           className="mt-8"
         />
+      )}
+        </>
       )}
     </div>
   );

@@ -35,11 +35,17 @@ import TourComfortBlock from "@/components/organizer/TourComfortBlock";
 import TourAccommodationDescriptionBlock from "@/components/organizer/TourAccommodationDescriptionBlock";
 import TourAccommodationVariantsBlock from "@/components/organizer/TourAccommodationVariantsBlock";
 import TourAccommodationPlacesBlock from "@/components/organizer/TourAccommodationPlacesBlock";
+import TourAccommodationSettingsBlock from "@/components/organizer/TourAccommodationSettingsBlock";
 import TourCurrencyBlock from "@/components/organizer/TourCurrencyBlock";
 import TourDiscountBlock from "@/components/organizer/TourDiscountBlock";
+import TourPrivateTripsBlock from "@/components/organizer/TourPrivateTripsBlock";
+import TourGroupDiscountBlock from "@/components/organizer/TourGroupDiscountBlock";
+import TourWaitlistBlock from "@/components/organizer/TourWaitlistBlock";
+import { buildPrivateTourHref } from "@/lib/tour-private-access";
 import TourIndividualBlock from "@/components/organizer/TourIndividualBlock";
 import TourGroupDatesBlock from "@/components/organizer/TourGroupDatesBlock";
 import TourCheckoutPaymentOptionsBlock from "@/components/organizer/TourCheckoutPaymentOptionsBlock";
+import TourCustomBookingLinkBlock from "@/components/organizer/TourCustomBookingLinkBlock";
 import TourProgramBlock from "@/components/organizer/TourProgramBlock";
 import TourTermsListBlock from "@/components/organizer/TourTermsListBlock";
 import TourTermsConditionsBlock from "@/components/organizer/TourTermsConditionsBlock";
@@ -435,7 +441,9 @@ function TourEditorSidebar({
   const isPublished = draft.status === "published";
   const platformName = draft.partnerName || "Пора в Аргентину";
   const catalogSlug = getCatalogSlug(draft);
-  const tourUrl = `/tours/${catalogSlug}`;
+  const tourUrl = draft.isPrivate && draft.privateAccessToken
+    ? buildPrivateTourHref(catalogSlug, draft.privateAccessToken)
+    : `/tours/${catalogSlug}`;
   const previewUrl = `/organizer/tours/${draft.id}/preview`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
@@ -472,7 +480,11 @@ function TourEditorSidebar({
             <p className="text-center text-xs text-emerald-700">Изменения сохранены</p>
           ) : null}
 
-          {isPublished ? (
+          {isPublished && draft.isPrivate ? (
+            <div className="rounded-xl bg-amber-50 px-3 py-3 text-sm leading-relaxed text-charcoal">
+              Приватный тур — в каталоге скрыт. Делитесь ссылкой из вкладки «Публикация».
+            </div>
+          ) : isPublished ? (
             <div className="rounded-xl bg-brand-light/70 px-3 py-3 text-sm leading-relaxed text-charcoal">
               Изменения опубликуются на площадках:{" "}
               <Link href={draft.partnerUrl ?? "/tours"} className="font-medium text-sky hover:underline">
@@ -530,7 +542,9 @@ function TourEditorSidebar({
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-heading text-base font-bold text-charcoal">Тур на площадке</h2>
+          <h2 className="font-heading text-base font-bold text-charcoal">
+            {draft.isPrivate ? "Приватная ссылка" : "Тур на площадке"}
+          </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Link
               href={isPublished ? tourUrl : "#"}
@@ -1095,6 +1109,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   />
                 ) : null}
 
+                <TourAccommodationSettingsBlock
+                  upgradesEnabled={draft.accommodationUpgradesEnabled}
+                  onChange={(accommodationUpgradesEnabled) =>
+                    updateDraft({ accommodationUpgradesEnabled })
+                  }
+                />
+
                 <TourAccommodationPlacesBlock
                   places={draft.accommodationPlaces}
                   onChange={(accommodationPlaces) => updateDraft({ accommodationPlaces })}
@@ -1107,14 +1128,32 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               <TourCurrencyBlock
                 currency={draft.priceCurrency}
                 priceFromPrefix={draft.priceFromPrefix}
+                priceOnRequest={draft.priceOnRequest}
+                referencePriceUsd={draft.priceUsd}
                 onCurrencyChange={(priceCurrency) => updateDraft({ priceCurrency })}
                 onPriceFromPrefixChange={(priceFromPrefix) => updateDraft({ priceFromPrefix })}
+                onPriceOnRequestChange={(priceOnRequest) =>
+                  updateDraft({
+                    priceOnRequest,
+                    priceUsd: priceOnRequest ? draft.priceUsd : draft.priceUsd,
+                  })
+                }
+                onReferencePriceChange={(priceUsd) => updateDraft({ priceUsd })}
               />
 
-              <TourDiscountBlock
-                enabledDiscounts={draft.enabledDiscounts}
-                onChange={(enabledDiscounts) => updateDraft({ enabledDiscounts })}
-              />
+              {!draft.priceOnRequest ? (
+                <>
+                  <TourDiscountBlock
+                    enabledDiscounts={draft.enabledDiscounts}
+                    onChange={(enabledDiscounts) => updateDraft({ enabledDiscounts })}
+                  />
+                  <TourGroupDiscountBlock
+                    settings={draft.groupDiscount}
+                    basePriceUsd={draft.priceUsd || draft.individualPriceUsd}
+                    onChange={(groupDiscount) => updateDraft({ groupDiscount })}
+                  />
+                </>
+              ) : null}
 
               <TourIndividualBlock
                 enabled={draft.individualTourEnabled}
@@ -1158,6 +1197,18 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   updateDraft({ autoRollGroupDatesToNextYear })
                 }
               />
+
+              <TourCustomBookingLinkBlock
+                settings={draft.customBookingLink}
+                onChange={(customBookingLink) => updateDraft({ customBookingLink })}
+              />
+
+              {!draft.priceOnRequest && draft.groupTourDates.length > 0 ? (
+                <TourWaitlistBlock
+                  waitlistEnabled={draft.waitlistEnabled ?? false}
+                  onChange={(waitlistEnabled) => updateDraft({ waitlistEnabled })}
+                />
+              ) : null}
 
               <TourCheckoutPaymentOptionsBlock
                 options={draft.checkoutPaymentOptions}
@@ -1275,6 +1326,16 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   />
                   <span className="text-sm text-charcoal">Отправить в архив</span>
                 </label>
+
+                <TourPrivateTripsBlock
+                  isPrivate={draft.isPrivate ?? false}
+                  privateAccessToken={draft.privateAccessToken}
+                  catalogSlug={catalogSlug}
+                  isPublished={draft.status === "published" && !draft.archived}
+                  onChange={({ isPrivate, privateAccessToken }) =>
+                    updateDraft({ isPrivate, privateAccessToken })
+                  }
+                />
               </section>
             ) : null}
 

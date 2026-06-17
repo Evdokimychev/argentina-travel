@@ -7,6 +7,7 @@ import type {
   BookingStatusChange,
   BookingTraveler,
 } from "@/types/tourist";
+import type { BookingSource, TripOperations } from "@/types/trip-operations";
 import { guestUserIdFromEmail, isGuestUserId } from "@/lib/guest-booking";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
@@ -52,6 +53,10 @@ export type BookingPayload = {
   amountPaid?: number;
   paymentLinkToken?: string;
   paymentLinkExpiresAt?: string;
+  bookingSource?: BookingSource;
+  externalReference?: string;
+  clientPortalToken?: string;
+  tripOperations?: TripOperations;
 };
 
 function parsePayload(raw: Json): BookingPayload {
@@ -89,6 +94,10 @@ export function bookingToRow(booking: Booking): Omit<BookingRow, "created_at" | 
     amountPaid: booking.amountPaid,
     paymentLinkToken: booking.paymentLinkToken,
     paymentLinkExpiresAt: booking.paymentLinkExpiresAt,
+    bookingSource: booking.bookingSource,
+    externalReference: booking.externalReference,
+    clientPortalToken: booking.clientPortalToken,
+    tripOperations: booking.tripOperations,
   };
 
   return {
@@ -152,6 +161,10 @@ export function rowToBooking(row: BookingRow): Booking {
     amountPaid: payload.amountPaid,
     paymentLinkToken: payload.paymentLinkToken,
     paymentLinkExpiresAt: payload.paymentLinkExpiresAt,
+    bookingSource: payload.bookingSource,
+    externalReference: payload.externalReference,
+    clientPortalToken: payload.clientPortalToken,
+    tripOperations: payload.tripOperations,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

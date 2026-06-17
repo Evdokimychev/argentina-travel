@@ -214,6 +214,19 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 15890,
     tags: ["Patagonia", "треккинг", "сборы", "одежда", "Perito Moreno"],
+    tourEmbeds: [
+      {
+        id: "patagonia-tours-strip",
+        variant: "strip",
+        title: "Туры в Patagonia",
+        subtitle: "Ледники, треккинг и логистика уже продуманы организатором",
+        limit: 6,
+        source: { kind: "query", query: "patagon" },
+        catalogHref: "/tours?query=patagonia",
+        catalogLabel: "Все туры Patagonia",
+        tone: "inline",
+      },
+    ],
     relatedResources: [
       { label: "Тур: ледники Patagonia", href: "/tours/patagonia-glaciers", type: "tour" },
       { label: "Безопасность на природе", href: "/guide/bezopasnost", type: "guide" },
@@ -372,6 +385,18 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(10),
     views: 10340,
     tags: ["Buenos Aires", "районы", "жильё", "Palermo", "Recoleta"],
+    tourEmbeds: [
+      {
+        id: "ba-tours-compact",
+        variant: "compact-list",
+        title: "Экскурсии по Буэнос-Айресу",
+        subtitle: "Классика города с русскоязычным гидом",
+        limit: 3,
+        source: { kind: "query", query: "buenos" },
+        catalogHref: "/tours?query=buenos",
+        tone: "inline",
+      },
+    ],
     relatedResources: [
       { label: "Где жить", href: "/guide/gde-zhit", type: "guide" },
       { label: "Безопасность", href: "/guide/bezopasnost", type: "guide" },
@@ -427,6 +452,19 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 5680,
     tags: ["Mendoza", "вино", "bodega", "malbec", "Uco Valley"],
+    tourEmbeds: [
+      {
+        id: "mendoza-wine-featured",
+        variant: "featured",
+        title: "Винные туры в Mendoza",
+        subtitle: "Дегустации, трансфер и гид — без аренды машины",
+        limit: 3,
+        source: { kind: "slugs", slugs: ["mendoza-wine"] },
+        catalogHref: "/tours?query=mendoza",
+        catalogLabel: "Туры в Mendoza",
+        tone: "inline",
+      },
+    ],
     relatedResources: [
       { label: "Тур: Mendoza", href: "/tours/mendoza-wine", type: "tour" },
       { label: "Кухня и вино", href: "/guide/kukhnya", type: "guide" },

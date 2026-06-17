@@ -18,7 +18,11 @@ export type AuthResult<T = SessionUser> =
 
 export interface AuthProvider {
   getSessionUser(): SessionUser | null | Promise<SessionUser | null>;
-  loginWithPhone(phone: string, role: AccountRole): AuthResult | Promise<AuthResult>;
+  loginWithPhone: (
+    phone: string,
+    role: AccountRole,
+    password?: string
+  ) => AuthResult | Promise<AuthResult>;
   loginWithEmail(
     email: string,
     password: string,

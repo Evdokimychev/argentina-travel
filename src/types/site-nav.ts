@@ -26,6 +26,8 @@ export type SiteNavSection = {
   labelKey?: string;
   /** Direct navigation when the section has no dropdown. */
   href?: string;
+  /** Short teaser shown in compact mega-menu blocks (e.g. «Ещё»). */
+  description?: string;
   columns?: SiteNavColumn[];
   badge?: SiteNavBadge;
 };

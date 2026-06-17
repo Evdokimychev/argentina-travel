@@ -4,6 +4,7 @@ import PlaceDetailView from "@/components/places/PlaceDetailView";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import PlaceJsonLd from "@/components/seo/PlaceJsonLd";
 import { resolveKnowledgeLinksForPlace } from "@/lib/knowledge-internal-links";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchPlaceBySlugServer, fetchPlaceSlugsServer, placeHref } from "@/lib/places-repository";
 import { buildPlaceMetadata } from "@/lib/places-seo";
 
@@ -29,6 +30,7 @@ export default async function PlaceDetailPage({ params }: PageProps) {
   if (!place) notFound();
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
+  const initialTours = await fetchMarketplaceTours();
 
   return (
     <>
@@ -36,7 +38,7 @@ export default async function PlaceDetailPage({ params }: PageProps) {
       {place.faq && place.faq.length > 0 ? (
         <FAQPageJsonLd questions={place.faq} path={placeHref(slug)} />
       ) : null}
-      <PlaceDetailView place={place} knowledgeLinks={knowledgeLinks} />
+      <PlaceDetailView place={place} knowledgeLinks={knowledgeLinks} initialTours={initialTours} />
     </>
   );
 }

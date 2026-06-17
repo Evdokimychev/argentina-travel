@@ -91,7 +91,14 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
 
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-3">
-          <StatusBadge status={tour.status} />
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={tour.status} />
+            {tour.isPrivate ? (
+              <span className="inline-flex rounded-full bg-charcoal/10 px-2.5 py-1 text-xs font-semibold text-charcoal">
+                Приватный
+              </span>
+            ) : null}
+          </div>
           <h3 className="mt-2 line-clamp-2 font-heading text-sm font-bold leading-snug text-charcoal sm:text-base">
             {tour.title}
           </h3>

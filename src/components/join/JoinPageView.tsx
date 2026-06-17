@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
-  BadgeCheck,
   ChevronDown,
   Map,
   Megaphone,
@@ -18,6 +17,10 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -72,7 +75,8 @@ export default function JoinPageView() {
   const [phone, setPhone] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
+  const feedback = useSiteFeedback();
 
   async function handleContactSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -102,8 +106,19 @@ export default function JoinPageView() {
       }
 
       setSubmitted(true);
+      feedback.success({
+        title: "Заявка отправлена",
+        description: "Мы свяжемся с вами в ближайшее время.",
+        action: { label: "Страница контактов", href: "/contacts" },
+      });
     } catch (error) {
-      setSubmitError(error instanceof Error ? error.message : "Не удалось отправить заявку.");
+      const normalized = normalizeSiteError(error, {
+        title: "Не удалось отправить заявку",
+        steps: ["Проверьте имя и телефон", "Попробуйте ещё раз или напишите в WhatsApp"],
+        action: { label: "Контакты", href: "/contacts" },
+      });
+      setSubmitError(normalized);
+      feedback.showError(normalized);
     } finally {
       setSubmitting(false);
     }
@@ -442,23 +457,13 @@ export default function JoinPageView() {
 
             <div className="bg-white p-8 sm:p-10 lg:p-12">
               {submitted ? (
-                <div className="flex h-full flex-col items-center justify-center py-8 text-center">
-                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-success-muted text-success">
-                    <BadgeCheck className="h-7 w-7" aria-hidden />
-                  </div>
-                  <p className="mt-4 font-heading text-xl font-bold text-charcoal">
-                    Спасибо за заявку!
-                  </p>
-                  <p className="mt-2 text-sm text-slate">
-                    Мы свяжемся с вами в ближайшее время.
-                  </p>
-                  <Link
-                    href="/contacts"
-                    className="mt-4 text-sm font-medium text-sky hover:underline"
-                  >
-                    Или напишите через страницу контактов
-                  </Link>
-                </div>
+                <InlineFeedback
+                  variant="success"
+                  title="Спасибо за заявку!"
+                  description="Мы свяжемся с вами в ближайшее время."
+                  action={{ label: "Страница контактов", href: "/contacts" }}
+                  className="my-8"
+                />
               ) : (
                 <>
                   <h3 className="font-heading text-lg font-bold text-charcoal">
@@ -469,9 +474,13 @@ export default function JoinPageView() {
                   </p>
                   <form onSubmit={handleContactSubmit} className="mt-6 space-y-5">
                     {submitError ? (
-                      <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
-                        {submitError}
-                      </p>
+                      <InlineFeedback
+                        variant="error"
+                        title={submitError.title}
+                        description={submitError.description}
+                        steps={submitError.steps}
+                        action={submitError.action}
+                      />
                     ) : null}
                     <div>
                       <label htmlFor="join-name" className="block text-sm font-medium text-charcoal">
@@ -500,9 +509,10 @@ export default function JoinPageView() {
                       type="submit"
                       size="lg"
                       className="w-full rounded-full"
-                      disabled={submitting}
+                      loading={submitting}
+                      loadingLabel="Отправка…"
                     >
-                      {submitting ? "Отправка…" : "Отправить"}
+                      Отправить
                     </Button>
                   </form>
                 </>

@@ -4,12 +4,17 @@ import { useState } from "react";
 import { Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 export default function FooterNewsletter() {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
+  const feedback = useSiteFeedback();
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -32,10 +37,17 @@ export default function FooterNewsletter() {
       }
 
       setSubmitted(true);
+      feedback.success({
+        title: "Подписка оформлена",
+        description: "Мы будем присылать новости о турах и советы по Аргентине.",
+      });
     } catch (submitError) {
-      setError(
-        submitError instanceof Error ? submitError.message : "Не удалось оформить подписку."
-      );
+      const normalized = normalizeSiteError(submitError, {
+        title: "Не удалось оформить подписку",
+        steps: ["Проверьте правильность email", "Попробуйте ещё раз через минуту"],
+      });
+      setError(normalized);
+      feedback.showError(normalized);
     } finally {
       setLoading(false);
     }
@@ -43,9 +55,12 @@ export default function FooterNewsletter() {
 
   if (submitted) {
     return (
-      <p className="mt-6 rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm text-slate shadow-card">
-        Спасибо! Мы отправим новости о турах и советы по Аргентине на ваш email.
-      </p>
+      <InlineFeedback
+        variant="success"
+        title="Спасибо за подписку!"
+        description="Мы отправим новости о турах и советы по Аргентине на ваш email."
+        className="mt-6"
+      />
     );
   }
 
@@ -63,7 +78,15 @@ export default function FooterNewsletter() {
       <p className="mt-2 text-xs leading-relaxed text-slate">
         Туры, акции и советы по Аргентине
       </p>
-      {error ? <p className="mt-2 text-xs text-error">{error}</p> : null}
+      {error ? (
+        <InlineFeedback
+          variant="error"
+          title={error.title}
+          description={error.description}
+          steps={error.steps}
+          className="mt-3"
+        />
+      ) : null}
       <div className="mt-3 flex flex-col gap-2 sm:flex-row">
         <Input
           type="email"
@@ -75,8 +98,8 @@ export default function FooterNewsletter() {
           disabled={loading}
           required
         />
-        <Button type="submit" className="shrink-0 sm:px-5" disabled={loading}>
-          {loading ? "…" : "Подписаться"}
+        <Button type="submit" className="shrink-0 sm:px-5" loading={loading} loadingLabel="Подписываем…">
+          Подписаться
         </Button>
       </div>
     </form>

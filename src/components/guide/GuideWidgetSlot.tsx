@@ -4,11 +4,14 @@ import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
 import ArgentinaWeatherPanel, {
   ArgentinaWeatherPanelSkeleton,
 } from "@/components/guide/weather/ArgentinaWeatherPanel";
+import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { siteScrollAnchorClass } from "@/lib/site-container";
 import type { GuidePillarWidgetSlot } from "@/types/guide-pillar";
+import type { TourListing } from "@/types";
 
 type GuideWidgetSlotProps = {
   slot: GuidePillarWidgetSlot;
+  initialTours?: TourListing[];
 };
 
 const PLACEHOLDER_MESSAGES: Record<string, string> = {
@@ -17,7 +20,7 @@ const PLACEHOLDER_MESSAGES: Record<string, string> = {
   promo: "Партнёрские предложения — скоро. Скидки на трансферы, страховку и консультации.",
 };
 
-export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
+export default function GuideWidgetSlot({ slot, initialTours = [] }: GuideWidgetSlotProps) {
   if (slot.type === "exchange-rates") {
     return (
       <div id={slot.id} className={siteScrollAnchorClass}>
@@ -36,12 +39,23 @@ export default function GuideWidgetSlot({ slot }: GuideWidgetSlotProps) {
     );
   }
 
+  if (slot.type === "tour-embed" && slot.tourEmbed && initialTours.length > 0) {
+    return (
+      <div id={slot.id} className={siteScrollAnchorClass}>
+        <TourEmbedSection
+          config={{ ...slot.tourEmbed, tone: slot.tourEmbed.tone ?? "muted" }}
+          initialTours={initialTours}
+        />
+      </div>
+    );
+  }
+
   const icons = {
     calculator: Calculator,
     map: MapPin,
     promo: Megaphone,
   };
-  const Icon = icons[slot.type] ?? Sparkles;
+  const Icon = icons[slot.type as keyof typeof icons] ?? Sparkles;
 
   return (
     <div

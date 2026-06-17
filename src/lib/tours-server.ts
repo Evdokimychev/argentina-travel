@@ -3,7 +3,10 @@ import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { getSimilarTourDetails } from "@/lib/tour-recommendations";
 import { getTourDetail, getSimilarTours } from "@/lib/tours";
 
-export async function fetchTourDetail(slug: string): Promise<TourDetail | null> {
+export async function fetchTourDetail(
+  slug: string,
+  opts?: { accessToken?: string | null }
+): Promise<TourDetail | null> {
   if (isSupabaseToursEnabled()) {
     try {
       const { fetchTourDetailBySlugServer } = await import("@/lib/tour-content-server");
@@ -13,7 +16,7 @@ export async function fetchTourDetail(slug: string): Promise<TourDetail | null> 
       // fallback to local repository
     }
   }
-  return getTourDetail(slug) ?? null;
+  return getTourDetail(slug, opts?.accessToken) ?? null;
 }
 
 export async function fetchSimilarTours(slug: string, limit = 3): Promise<TourDetail[]> {

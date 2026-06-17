@@ -14,6 +14,9 @@ import { getTransferLocationById } from "@/data/transfer-locations";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import type { TransferLocation, TransferOffer } from "@/lib/intui/types";
 
 function defaultPickupDate(): string {
@@ -71,8 +74,16 @@ export default function TransfersSearchView() {
   }));
   const [offers, setOffers] = useState<TransferOffer[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [searched, setSearched] = useState(false);
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
   const [source, setSource] = useState<string | null>(null);
   const [affiliateFallbackUrl, setAffiliateFallbackUrl] = useState<string | null>(null);
 
@@ -135,13 +146,23 @@ export default function TransfersSearchView() {
       }
 
       if (payload.error) {
-        setError(payload.error);
+        setError(
+          siteFormError(payload.error, {
+            title: "Поиск трансферов",
+            steps: ["Измените дату или маршрут", "Попробуйте поиск на партнёрской странице"],
+          })
+        );
       }
     } catch (searchError) {
       setOffers([]);
       setSource(null);
       setAffiliateFallbackUrl(null);
-      setError(searchError instanceof Error ? searchError.message : t("transfers.errors.loadFailed"));
+      setError(
+        normalizeSiteError(searchError, {
+          title: "Не удалось найти трансферы",
+          steps: ["Проверьте пункт отправления и назначения", "Выберите другую дату"],
+        })
+      );
     } finally {
       setLoading(false);
     }
@@ -206,9 +227,14 @@ export default function TransfersSearchView() {
         />
 
         {error ? (
-          <p className="mt-8 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
+          <InlineFeedback
+            variant="error"
+            title={error.title}
+            description={error.description}
+            steps={error.steps}
+            action={error.action}
+            className="mt-8"
+          />
         ) : null}
 
         {searched ? (

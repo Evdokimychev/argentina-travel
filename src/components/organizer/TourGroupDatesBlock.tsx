@@ -1,15 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Info, Plus, Trash2 } from "lucide-react";
+import { Info, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SwitchRow } from "@/components/ui/switch";
 import TourGroupDatesAddModal from "@/components/organizer/TourGroupDatesAddModal";
-import { formatDateRange } from "@/lib/utils";
-import {
-  type OrganizerGroupTourDate,
-} from "@/data/tour-booking-defaults";
-import { cn } from "@/lib/cn";
+import GroupDateEditor from "@/components/organizer/GroupDateEditor";
+import { type OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
 import type { CurrencyCode } from "@/types/locale";
 
 interface TourGroupDatesBlockProps {
@@ -23,68 +20,6 @@ interface TourGroupDatesBlockProps {
   onAutoRollChange: (enabled: boolean) => void;
 }
 
-function GroupDateSummary({
-  date,
-  index,
-  onRemove,
-}: {
-  date: OrganizerGroupTourDate;
-  index: number;
-  onRemove: () => void;
-}) {
-  const currencySuffix = "US$";
-
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <p className="text-sm font-semibold text-charcoal">Заезд {index + 1}</p>
-          <p className="mt-1 text-sm text-slate">
-            {date.startDate ? formatDateRange(date.startDate, date.endDate) : "—"}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={onRemove}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate transition-colors hover:text-brand"
-        >
-          <Trash2 className="h-4 w-4" />
-          Удалить
-        </button>
-      </div>
-
-      <dl className="mt-3 grid gap-2 text-xs text-slate sm:grid-cols-2">
-        <div>
-          <dt className="text-slate/80">Стоимость</dt>
-          <dd className="font-medium text-charcoal">
-            {date.priceUsd} {currencySuffix}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-slate/80">Места</dt>
-          <dd className="font-medium text-charcoal">
-            {date.spotsLeft} / {date.totalSeats}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-slate/80">Предоплата</dt>
-          <dd className="font-medium text-charcoal">
-            {date.prepaymentAmount}
-            {date.prepaymentType === "percent" ? "%" : ` ${currencySuffix}`}
-          </dd>
-        </div>
-        <div>
-          <dt className="text-slate/80">Статус</dt>
-          <dd className="font-medium text-charcoal">
-            {date.notGuaranteed ? "Предварительная дата" : "Подтверждено"}
-            {date.flightIncluded ? " · перелёт включён" : ""}
-          </dd>
-        </div>
-      </dl>
-    </div>
-  );
-}
-
 export default function TourGroupDatesBlock({
   dates,
   autoRollToNextYear,
@@ -96,21 +31,41 @@ export default function TourGroupDatesBlock({
   onAutoRollChange,
 }: TourGroupDatesBlockProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const currencySuffix = priceCurrency === "USD" ? "US$" : priceCurrency;
 
   function removeAt(index: number) {
     onDatesChange(dates.filter((_, itemIndex) => itemIndex !== index));
+  }
+
+  function updateAt(index: number, date: OrganizerGroupTourDate) {
+    onDatesChange(dates.map((item, itemIndex) => (itemIndex === index ? date : item)));
   }
 
   function handleAddDates(nextDates: OrganizerGroupTourDate[]) {
     onDatesChange([...dates, ...nextDates]);
   }
 
+  const hasVariedPrices =
+    dates.length > 1 && new Set(dates.map((date) => date.priceUsd)).size > 1;
+
   return (
     <>
       <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-        <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-          Даты группового тура
-        </h2>
+        <div>
+          <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
+            Даты группового тура
+          </h2>
+          <p className="mt-1 text-sm text-slate">
+            Укажите даты заезда и стоимость для каждой — турист увидит цены в календаре на странице
+            тура
+          </p>
+        </div>
+
+        <p className="flex items-start gap-2 rounded-xl border border-sky/15 bg-sky/[0.06] px-3.5 py-2.5 text-sm leading-relaxed text-charcoal">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
+          Разная стоимость на разные даты: задайте цену при добавлении заезда или измените её в
+          карточке даты. В календаре бронирования доступны только указанные здесь даты.
+        </p>
 
         <SwitchRow
           checked={autoRollToNextYear}
@@ -119,13 +74,21 @@ export default function TourGroupDatesBlock({
           labelAddon={<Info className="h-4 w-4 shrink-0 text-sky" aria-hidden />}
         />
 
+        {hasVariedPrices ? (
+          <p className="rounded-xl border border-violet-100 bg-violet-50/80 px-3.5 py-2 text-sm text-violet-950">
+            На странице тура отображается диапазон цен и календарь с суммой на каждую дату заезда.
+          </p>
+        ) : null}
+
         {dates.length ? (
           <div className="space-y-3">
             {dates.map((date, index) => (
-              <GroupDateSummary
+              <GroupDateEditor
                 key={date.id}
                 date={date}
                 index={index}
+                currencySuffix={currencySuffix}
+                onChange={(next) => updateAt(index, next)}
                 onRemove={() => removeAt(index)}
               />
             ))}

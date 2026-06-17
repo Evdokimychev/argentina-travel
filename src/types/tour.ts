@@ -24,6 +24,8 @@ import type {
 } from "@/types";
 import type { OrganizerTourGuide, OrganizerTourType } from "@/types/organizer-tour";
 import type { TourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
+import type { TourCustomBookingLink } from "@/types/tour-custom-booking-link";
+import type { GroupDiscountSettings } from "@/types/group-discount";
 
 export type TourStatus = "draft" | "published" | "archived" | "hidden" | "deleted";
 
@@ -48,7 +50,9 @@ export interface TourPricing {
   originalPriceUsd?: number;
   currency: CurrencyCode;
   priceFromPrefix: boolean;
+  priceOnRequest: boolean;
   enabledDiscounts: OrganizerTourDiscountType[];
+  groupDiscount: GroupDiscountSettings;
 }
 
 export interface TourBooking {
@@ -63,6 +67,10 @@ export interface TourBooking {
   advantages: string[];
   autoRollDatesToNextYear: boolean;
   checkoutPaymentOptions?: TourCheckoutPaymentOptions;
+  /** Лист ожидания при нехватке мест на дату. */
+  waitlistEnabled?: boolean;
+  /** Внешняя ссылка вместо checkout на нашем сайте. */
+  customBookingLink?: TourCustomBookingLink;
 }
 
 export interface TourClassification {
@@ -94,6 +102,8 @@ export interface TourAccommodationContent {
   description?: string;
   photos: string[];
   places: OrganizerTourAccommodationPlace[];
+  /** Разрешить выбор типа номера при бронировании. */
+  upgradesEnabled?: boolean;
 }
 
 export interface TourProgram {
@@ -200,6 +210,8 @@ export interface Tour {
   partnerName?: string;
   coverLabel?: string;
   updatedAt?: string;
+  isPrivate?: boolean;
+  privateAccessToken?: string;
 }
 
 export const TOURS_REPOSITORY_STORE_KEY = "argentina-travel-tour-repository";

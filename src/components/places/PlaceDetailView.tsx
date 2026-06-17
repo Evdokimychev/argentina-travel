@@ -13,8 +13,10 @@ import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
 import PlaceDetailLocationSection from "@/components/places/PlaceDetailLocationSection";
 import RelatedPlacesSection from "@/components/places/RelatedPlacesSection";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
+import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { PLACE_CATEGORY_LABELS } from "@/types/place";
 import type { PlaceDetail } from "@/types/place";
+import type { TourListing } from "@/types";
 import { collectionHref, itineraryHref } from "@/lib/places-repository";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
@@ -25,9 +27,11 @@ import { cn } from "@/lib/cn";
 export default function PlaceDetailView({
   place,
   knowledgeLinks,
+  initialTours = [],
 }: {
   place: PlaceDetail;
   knowledgeLinks?: KnowledgeLinksBundle;
+  initialTours?: TourListing[];
 }) {
   const galleryAlts = getPlaceGalleryAlts(place.slug);
   return (
@@ -85,6 +89,22 @@ export default function PlaceDetailView({
           ) : null}
 
           <PlaceDetailLocationSection place={place} relatedPlaces={place.relatedPlaces} />
+
+          {initialTours.length > 0 ? (
+            <TourEmbedSection
+              config={{
+                variant: "compact-list",
+                title: `Туры рядом с ${place.name}`,
+                subtitle: "Проверенные маршруты с гидом — логистика уже продумана",
+                limit: 3,
+                source: { kind: "query", query: place.name.split(/\s+/)[0] },
+                catalogHref: `/tours?query=${encodeURIComponent(place.region)}`,
+                catalogLabel: "Все туры региона",
+                tone: "muted",
+              }}
+              initialTours={initialTours}
+            />
+          ) : null}
 
           <RelatedPlacesSection places={place.relatedPlaces} />
 

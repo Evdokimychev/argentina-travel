@@ -131,4 +131,4 @@ export function MegaMenuPanel({
   );
 }
 
-export { NavBadge };
+export { NavBadge, MegaMenuLink as NavMenuLink };

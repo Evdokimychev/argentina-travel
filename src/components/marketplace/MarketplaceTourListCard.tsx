@@ -12,7 +12,7 @@ import {
   UserRound,
 } from "lucide-react";
 import { TourListing, TourBadge } from "@/types";
-import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
 import { formatDateRange } from "@/lib/utils";
 import { formatDays, formatNights, formatMoreDates } from "@/lib/pluralize";
@@ -179,9 +179,11 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
         {/* Booking panel */}
         <div className="flex shrink-0 flex-col border-t border-gray-100 p-5 lg:w-60 lg:border-l lg:border-t-0 xl:w-64">
           <div className="relative">
-            <TourPriceDisplay
+            <TourPublicPriceDisplay
               priceUsd={tour.priceUsd}
               originalPriceUsd={tour.originalPriceUsd}
+              priceOnRequest={tour.priceOnRequest}
+              priceFromPrefix={tour.priceFromPrefix}
               size="sm"
               showFrom={false}
               className="[&_span.font-bold]:text-2xl [&_span.font-bold]:leading-tight"

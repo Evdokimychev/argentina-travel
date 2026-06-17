@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
@@ -11,12 +11,22 @@ import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import TourPriceDisplay from "./TourPriceDisplay";
+import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import GuestCounter from "./GuestCounter";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingAdvantages from "./BookingAdvantages";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
 import { useTourBooking } from "./TourBookingContext";
+import {
+  formatDatePriceRangeLabel,
+  resolveTourDatePriceSummary,
+} from "@/lib/tour-date-pricing";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import BookingWaitlistPrompt from "./BookingWaitlistPrompt";
+import ExternalBookingButton from "./ExternalBookingButton";
+import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
+import { siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 interface TourBookingPanelProps {
   tour: TourDetail;
@@ -32,7 +42,15 @@ export default function TourBookingPanel({
   previewMode = false,
 }: TourBookingPanelProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
-  const [bookingError, setBookingError] = useState<string | null>(null);
+  const [bookingError, setBookingErrorState] = useState<SiteFeedbackMessage | null>(null);
+
+  const setBookingError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setBookingErrorState(null);
+      return;
+    }
+    setBookingErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
   const {
     guests,
     setGuests,
@@ -44,9 +62,19 @@ export default function TourBookingPanel({
     originalPricePerPersonUsd,
     totalPriceUsd,
     totalOriginalPriceUsd,
+    groupDiscountApplied,
+    groupDiscountSavingsUsd,
+    priceOnRequest,
+    canJoinWaitlist,
+    openWaitlist,
+    usesExternalBooking,
+    externalBookingLink,
+    externalBookingHref,
   } = useTourBooking();
 
   const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
+  const datePriceSummary = resolveTourDatePriceSummary(tour.dates, tour.priceUsd);
+  const datePriceRangeLabel = formatDatePriceRangeLabel(datePriceSummary, priceOnRequest);
   const guestLimits = getGuestLimits(tour, selectedDate, dateMode);
   const guestHint =
     dateMode === "scheduled" && selectedDate
@@ -65,27 +93,51 @@ export default function TourBookingPanel({
       ? getDiscountPercent(totalOriginalPriceUsd, totalPriceUsd)
       : null;
 
-  const bookLabel =
-    dateMode === "custom" || bookingMode === "on_request"
-      ? "Забронировать индивидуально"
-      : "Забронировать";
+  const bookingValidationError =
+    usesExternalBooking && !externalBookingLink?.passContext
+      ? null
+      : validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
+
+  const externalHint =
+    externalBookingLink?.hint?.trim() || DEFAULT_CUSTOM_BOOKING_HINT;
+
+  const primaryLabel = usesExternalBooking
+    ? externalBookingLink?.label ?? "Забронировать на сайте организатора"
+    : priceOnRequest
+      ? "Запросить расчёт"
+      : canJoinWaitlist && bookingValidationError
+        ? "Встать в лист ожидания"
+        : dateMode === "custom" || bookingMode === "on_request"
+          ? "Забронировать индивидуально"
+          : "Забронировать";
 
   function handleBookClick() {
-    const dateError = validateBookingDates(
-      tour,
-      dateMode,
-      customDate,
-      guests,
-      selectedDateId
-    );
-    if (dateError) {
-      setBookingError(dateError);
+    if (bookingValidationError) {
+      setBookingError(bookingValidationError);
       return;
     }
     setBookingError(null);
     if (!openCheckout()) {
       setBookingError("Не удалось открыть бронирование. Проверьте дату и количество туристов.");
     }
+  }
+
+  function handleExternalBookingClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (bookingValidationError) {
+      event.preventDefault();
+      setBookingError(bookingValidationError);
+      return;
+    }
+    setBookingError(null);
+  }
+
+  function handlePrimaryAction() {
+    if (bookingValidationError && canJoinWaitlist) {
+      setBookingError(bookingValidationError);
+      openWaitlist();
+      return;
+    }
+    handleBookClick();
   }
 
   return (
@@ -103,15 +155,32 @@ export default function TourBookingPanel({
           −{percentOff}%
         </span>
       ) : null}
-      <TourPriceDisplay
-        priceUsd={totalPriceUsd}
-        originalPriceUsd={totalOriginalPriceUsd}
-        suffix={priceSuffix}
-        showFrom={false}
+      <TourPublicPriceDisplay
+        priceUsd={priceOnRequest ? tour.priceUsd : totalPriceUsd}
+        originalPriceUsd={priceOnRequest ? tour.originalPriceUsd : totalOriginalPriceUsd}
+        priceOnRequest={priceOnRequest}
+        priceFromPrefix={
+          priceOnRequest
+            ? tour.priceFromPrefix
+            : dateMode === "scheduled" && !selectedDate
+              ? tour.priceFromPrefix
+              : false
+        }
+        suffix={priceOnRequest ? undefined : priceSuffix}
+        showFrom={priceOnRequest ? false : dateMode === "scheduled" && !selectedDate && tour.priceFromPrefix}
         showDiscountRibbon={false}
-        className={percentOff != null ? "pt-2 pr-[4.75rem] sm:pt-3 sm:pr-20" : undefined}
+        className={!priceOnRequest && percentOff != null ? "pt-2 pr-[4.75rem] sm:pt-3 sm:pr-20" : undefined}
       />
-      {guests > 1 && (
+      {!priceOnRequest && dateMode === "scheduled" && datePriceRangeLabel ? (
+        <p className="mt-1 text-xs text-slate">Диапазон по датам: {datePriceRangeLabel}</p>
+      ) : null}
+      {!priceOnRequest && dateMode === "scheduled" && selectedDate ? (
+        <p className="mt-1 text-xs font-medium text-charcoal">
+          Цена за выбранную дату:{" "}
+          <FormattedPrice priceUsd={selectedDate.priceUsd} className="text-xs font-medium" /> / чел.
+        </p>
+      ) : null}
+      {!priceOnRequest && guests > 1 && (
         <p className="mt-1 text-xs text-slate">
           <FormattedPrice priceUsd={pricePerPersonUsd} className="text-xs text-slate" /> за туриста
           {originalPricePerPersonUsd != null && originalPricePerPersonUsd > pricePerPersonUsd && (
@@ -124,6 +193,13 @@ export default function TourBookingPanel({
           )}
         </p>
       )}
+      {!priceOnRequest && groupDiscountApplied ? (
+        <p className="mt-1 text-xs font-medium text-violet-800">
+          Групповая скидка −{" "}
+          <FormattedPrice priceUsd={groupDiscountSavingsUsd} className="text-xs font-medium" /> на
+          заявку
+        </p>
+      ) : null}
 
       {startLocation && (
         <div className="mt-5 border-t border-gray-100 pt-5">
@@ -143,6 +219,10 @@ export default function TourBookingPanel({
           hint={guestHint}
           onChange={setGuests}
         />
+
+        {!previewMode && !usesExternalBooking && canJoinWaitlist ? (
+          <BookingWaitlistPrompt />
+        ) : null}
       </div>
 
       <BookingAdvantages
@@ -157,13 +237,31 @@ export default function TourBookingPanel({
         </div>
       ) : (
         <>
-          {bookingError && (
-            <p className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">{bookingError}</p>
-          )}
+          {bookingError ? (
+            <InlineFeedback
+              variant="error"
+              title={bookingError.title}
+              description={bookingError.description}
+              steps={bookingError.steps}
+              className="mt-4"
+            />
+          ) : null}
 
-          <Button type="button" onClick={handleBookClick} className="mt-5 w-full">
-            {bookLabel}
-          </Button>
+          {usesExternalBooking && externalBookingHref && externalBookingLink ? (
+            <>
+              <p className="mt-4 text-xs leading-relaxed text-slate">{externalHint}</p>
+              <ExternalBookingButton
+                href={externalBookingHref}
+                link={externalBookingLink}
+                className="mt-3"
+                onClick={handleExternalBookingClick}
+              />
+            </>
+          ) : (
+            <Button type="button" onClick={handlePrimaryAction} className="mt-5 w-full">
+              {primaryLabel}
+            </Button>
+          )}
           <Link
             href={buildTourContactHref(tour.slug)}
             className={cn(buttonVariants({ variant: "outline" }), "mt-2 w-full")}

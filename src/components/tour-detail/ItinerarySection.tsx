@@ -8,6 +8,8 @@ import TourSection from "./TourSection";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
+import TourItineraryPdfButton from "./TourItineraryPdfButton";
+import type { TourDetail } from "@/types";
 
 function ItineraryExpandToggle({
   allExpanded,
@@ -150,9 +152,15 @@ function ItineraryDayCard({
 
 interface ItinerarySectionProps {
   days?: TourItineraryDay[] | null;
+  tour?: TourDetail | null;
+  showPdfDownload?: boolean;
 }
 
-export default function ItinerarySection({ days }: ItinerarySectionProps) {
+export default function ItinerarySection({
+  days,
+  tour,
+  showPdfDownload = true,
+}: ItinerarySectionProps) {
   const itineraryDays = useMemo(() => days ?? [], [days]);
   const firstDayId = itineraryDays[0]?.id;
 
@@ -219,6 +227,7 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
         ) : undefined
       }
     >
+      {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-6" /> : null}
       <div className="relative space-y-0">
         <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200 sm:left-[23px]" />
         {itineraryDays.map((day) => (

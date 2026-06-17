@@ -20,14 +20,27 @@ import {
 import { maxBirthDateIso, minBirthDateIso, participantAgeLabel } from "@/lib/participant-age";
 import type { Booking, BookingTraveler } from "@/types/tourist";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 export default function BookingTravelersFormView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [travelers, setTravelers] = useState<BookingTraveler[]>([]);
   const [consent, setConsent] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   useEffect(() => {
     function load() {
@@ -83,13 +96,22 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
     setLoading(false);
 
     if ("error" in result) {
-      setError(result.error);
+      const normalized = normalizeSiteError(result.error, {
+        title: "Не удалось отправить данные",
+        steps: ["Проверьте ФИО, дату рождения и телефон каждого участника", "Подтвердите согласие на обработку данных"],
+      });
+      setError(normalized);
+      feedback.showError(normalized);
       return;
     }
 
     setBooking(result.booking);
     setTravelers(result.booking.travelers ?? []);
     setSubmitted(true);
+    feedback.success({
+      title: "Данные отправлены",
+      description: "Информация о участниках передана организатору тура.",
+    });
   }
 
   if (submitted && booking.travelersCompletedAt) {
@@ -231,9 +253,13 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
         ))}
 
         {error ? (
-          <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
-          </p>
+          <InlineFeedback
+            variant="error"
+            title={error.title}
+            description={error.description}
+            steps={error.steps}
+            action={error.action}
+          />
         ) : null}
 
         <label className="flex items-start gap-3 rounded-xl bg-gray-50 px-4 py-3 text-sm text-slate">
@@ -251,10 +277,11 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
 
         <Button
           type="submit"
-          disabled={loading}
+          loading={loading}
+          loadingLabel="Отправляем…"
           className="h-12 w-full rounded-2xl bg-brand text-base font-semibold hover:bg-brand-dark"
         >
-          {loading ? "Отправляем…" : "Отправить"}
+          Отправить
         </Button>
       </form>
     </div>

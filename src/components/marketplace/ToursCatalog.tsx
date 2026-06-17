@@ -130,6 +130,7 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
 
         <div className="mt-6 space-y-4">
           <SearchBlock
+            tours={tours}
             query={filters.query}
             dateFrom={filters.dateFrom}
             dateTo={filters.dateTo}

@@ -18,7 +18,10 @@ import GuestCounter from "../GuestCounter";
 import SingleDatePicker from "@/components/ui/single-date-picker";
 import { useTourBooking } from "../TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "../BookingDateSelector";
-import { tourHasAccommodation } from "@/lib/tour-accommodation";
+import {
+  resolveTourCheckoutRoomOptions,
+  tourCheckoutHasRoomSelection,
+} from "@/lib/tour-checkout-accommodation";
 import {
   maxBirthDateIso,
   minBirthDateIso,
@@ -62,6 +65,10 @@ import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm
 import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
 import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 interface TourCheckoutModalProps {
   tour: TourDetail;
@@ -154,6 +161,7 @@ function CheckoutSummary({
   dateModeLabel,
   subtotalUsd,
   roomAllocations,
+  roomOptions,
   totalUsd,
   payNowUsd,
   depositPercent,
@@ -166,6 +174,7 @@ function CheckoutSummary({
   dateModeLabel?: string;
   subtotalUsd: number;
   roomAllocations: CheckoutFormState["roomAllocations"];
+  roomOptions: typeof CHECKOUT_ROOM_OPTIONS;
   totalUsd: number;
   payNowUsd: number;
   depositPercent: number;
@@ -226,7 +235,7 @@ function CheckoutSummary({
           <span>Тур × {guests}</span>
           <FormattedPrice priceUsd={subtotalUsd} className="font-medium text-charcoal" />
         </div>
-        {CHECKOUT_ROOM_OPTIONS.map((room) => {
+        {roomOptions.map((room) => {
           const count = roomAllocations[room.id];
           if (!count || room.priceUsdPerTraveler === 0) return null;
           return (
@@ -316,10 +325,11 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   } = useTourBooking();
   const { user, isAuthenticated, openAuth } = useAuth();
 
-  const hasAccommodation = tourHasAccommodation(tour);
+  const roomOptions = useMemo(() => resolveTourCheckoutRoomOptions(tour), [tour]);
+  const hasAccommodationStep = tourCheckoutHasRoomSelection(tour);
   const visibleSteps = useMemo(
-    () => getVisibleSteps(hasAccommodation),
-    [hasAccommodation]
+    () => getVisibleSteps(hasAccommodationStep),
+    [hasAccommodationStep]
   );
   const checkoutPaymentOptions = useMemo(
     () => resolveTourCheckoutPaymentOptionsFromTour(tour),
@@ -332,7 +342,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
 
   const [stepIndex, setStepIndex] = useState(0);
   const [form, setForm] = useState<CheckoutFormState>(() => {
-    const base = createCheckoutForm(guests, user);
+    const options = resolveTourCheckoutRoomOptions(tour);
+    const base = createCheckoutForm(guests, user, options);
     const paymentOption = ensureValidCheckoutPaymentOption(
       base.paymentOption,
       checkoutPaymentOptions
@@ -342,7 +353,17 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const [submitted, setSubmitted] = useState(false);
   const [savedToProfile, setSavedToProfile] = useState(false);
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   const currentStep = visibleSteps[stepIndex]?.id ?? "travelers";
   const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
@@ -368,7 +389,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
         ? formatCheckoutDate(new Date(selectedDate.endDate))
         : "—";
 
-  const roomTotalUsd = calcRoomTotalUsd(form.roomAllocations);
+  const roomTotalUsd = calcRoomTotalUsd(form.roomAllocations, roomOptions);
   const addonsTotalUsd = checkoutAddonsTotal(form.addonIds, form.transferAllocations);
   const subtotalUsd = totalPriceUsd;
   const totalUsd = subtotalUsd + roomTotalUsd + addonsTotalUsd;
@@ -421,7 +442,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       setSavedToProfile(false);
       setError(null);
       setForm(() => {
-        const base = createCheckoutForm(guests, user);
+        const options = resolveTourCheckoutRoomOptions(tour);
+        const base = createCheckoutForm(guests, user, options);
         const paymentOption = ensureValidCheckoutPaymentOption(
           base.paymentOption,
           checkoutPaymentOptions
@@ -449,7 +471,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
 
       const allocated = Object.values(prev.roomAllocations).reduce((a, b) => a + b, 0);
       const roomAllocations =
-        allocated === guests ? prev.roomAllocations : createDefaultRoomAllocations(guests);
+        allocated === guests ? prev.roomAllocations : createDefaultRoomAllocations(guests, roomOptions);
 
       const transferAllocated = totalTransferAllocated(prev.transferAllocations);
       const transferAllocations =
@@ -464,7 +486,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
 
       return { ...prev, travelers, roomAllocations, transferAllocations, insuranceTravelers };
     });
-  }, [guests]);
+  }, [guests, roomOptions]);
 
   function patchForm(patch: Partial<CheckoutFormState>) {
     setForm((prev) => ({ ...prev, ...patch }));
@@ -501,7 +523,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       return validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
     }
     if (step === "accommodation") {
-      return validateRoomAllocations(form.roomAllocations, guests);
+      return validateRoomAllocations(form.roomAllocations, guests, roomOptions);
     }
     if (step === "addons") {
       return validateTransferAllocations(form.transferAllocations, guests);
@@ -546,6 +568,9 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   }
 
   async function submitCheckout() {
+    setSubmitting(true);
+    setError(null);
+
     const startDate =
       dateMode === "custom" && customDate
         ? customDate.toISOString().slice(0, 10)
@@ -569,7 +594,13 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     });
 
     if ("error" in bookingResult) {
-      setError(bookingResult.error);
+      const normalized = normalizeSiteError(bookingResult.error, {
+        title: "Не удалось отправить заявку",
+        steps: ["Проверьте контактные данные", "Попробуйте ещё раз или свяжитесь с организатором"],
+      });
+      setError(normalized);
+      feedback.showError(normalized);
+      setSubmitting(false);
       return;
     }
 
@@ -578,6 +609,14 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     }
     setCreatedBookingId(bookingResult.id);
     setSubmitted(true);
+    setSubmitting(false);
+    feedback.success({
+      title: "Заявка отправлена",
+      description: savedToProfile || user
+        ? "Заявка сохранена в личном кабинете — следите за статусом в разделе «Бронирования»."
+        : "Организатор свяжется с вами по указанному email.",
+      action: user ? { label: "Мои бронирования", href: "/profile/bookings" } : undefined,
+    });
   }
 
   function goBack() {
@@ -748,6 +787,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   <AccommodationStep
                     guests={guests}
                     allocations={form.roomAllocations}
+                    roomOptions={roomOptions}
                     onChange={(roomAllocations) => patchForm({ roomAllocations })}
                     onViewDetails={() => {
                       closeCheckout();
@@ -764,7 +804,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   <section className="mx-auto max-w-xl space-y-4">
                     <div>
                       <h3 className="font-heading text-lg font-bold text-charcoal">
-                        {hasAccommodation ? "3" : "2"}. Дополнения
+                        {hasAccommodationStep ? "3" : "2"}. Дополнения
                       </h3>
                       <p className="mt-1 text-sm text-slate">Необязательные услуги к туру</p>
                     </div>
@@ -821,7 +861,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   <section className="mx-auto max-w-xl space-y-8">
                     <div>
                       <h3 className="font-heading text-lg font-bold text-charcoal">
-                        {hasAccommodation ? "4" : "3"}. Данные путешественников
+                        {hasAccommodationStep ? "4" : "3"}. Данные путешественников
                       </h3>
                       <p className="mt-1 text-sm text-slate">
                         Контакт для бронирования и данные всех участников
@@ -1116,7 +1156,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   <section className="mx-auto max-w-xl space-y-5">
                     <div>
                       <h3 className="font-heading text-lg font-bold text-charcoal">
-                        {hasAccommodation ? "5" : "4"}. Оплата
+                        {hasAccommodationStep ? "5" : "4"}. Оплата
                       </h3>
                       <p className="mt-1 text-sm text-slate">
                         Оформите заявку — организатор подтвердит детали и пришлёт ссылку на оплату
@@ -1163,11 +1203,16 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   </section>
                 )}
 
-                {error && (
-                  <p className="mx-auto mt-4 max-w-xl rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-                    {error}
-                  </p>
-                )}
+                {error ? (
+                  <InlineFeedback
+                    variant="error"
+                    title={error.title}
+                    description={error.description}
+                    steps={error.steps}
+                    action={error.action}
+                    className="mx-auto mt-4 max-w-xl"
+                  />
+                ) : null}
               </>
             )}
           </div>
@@ -1209,7 +1254,13 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 <ChevronLeft className="h-4 w-4" />
                 Назад
               </Button>
-              <Button type="button" onClick={goNext} className="min-w-[140px]">
+              <Button
+                type="button"
+                onClick={goNext}
+                className="min-w-[140px]"
+                loading={submitting}
+                loadingLabel="Отправка…"
+              >
                 {stepIndex === visibleSteps.length - 1 ? (
                   form.paymentOption === "later" ? "Отправить заявку" : "Забронировать"
                 ) : (
@@ -1234,6 +1285,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             dateModeLabel={dateModeLabel}
             subtotalUsd={subtotalUsd}
             roomAllocations={form.roomAllocations}
+            roomOptions={roomOptions}
             totalUsd={totalUsd}
             payNowUsd={payNowUsd}
             depositPercent={checkoutPaymentOptions.depositPercent}

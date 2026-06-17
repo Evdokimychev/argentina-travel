@@ -2,6 +2,9 @@
 // Maps to `tours` table + related fields
 
 import type { OrganizerProfessionalExperience } from "@/types/organizer-profile";
+import type { GroupDiscountSettings } from "@/types/group-discount";
+import type { TourAccommodation } from "@/types/tour-accommodation";
+import type { TourCustomBookingLinkPublic } from "@/types/tour-custom-booking-link";
 
 export type TourBadge = "hot" | "new" | "hit" | "family" | "expedition";
 
@@ -117,6 +120,14 @@ export interface TourListing {
   priceUsd: number;
   /** Strikethrough price when a discount is active */
   originalPriceUsd?: number;
+  /** Нет фиксированной цены */
+  priceOnRequest?: boolean;
+  /** Показывать «от» перед ориентировочной ценой */
+  priceFromPrefix?: boolean;
+  /** Групповая скидка настроена организатором */
+  groupDiscountEnabled?: boolean;
+  /** Краткая подпись для карточки каталога */
+  groupDiscountHint?: string;
   /** Individual / custom-date booking available */
   bookingMode?: TourBookingMode;
   requestDateFrom?: string;
@@ -286,14 +297,16 @@ export interface TourReview {
   verifiedTrip?: boolean;
 }
 
-export interface TourAccommodation {
-  id: string;
-  name: string;
-  description: string;
-  comfort: ComfortLevel;
-  amenities: string[];
-  images: string[];
-}
+export type {
+  TourAccommodation,
+  TourAccommodationAlternative,
+  TourAccommodationRoomType,
+  AccommodationDisplayMode,
+} from "@/types/tour-accommodation";
+export type {
+  TourCustomBookingLink,
+  TourCustomBookingLinkPublic,
+} from "@/types/tour-custom-booking-link";
 
 export interface TourArrivalInfo {
   airports: string[];
@@ -367,6 +380,17 @@ export interface TourDetail {
   tags: string[];
   featured?: boolean;
   checkoutPaymentOptions?: import("@/types/tour-checkout-payment").TourCheckoutPaymentOptions;
+  groupDiscount?: GroupDiscountSettings;
+  priceOnRequest?: boolean;
+  priceFromPrefix?: boolean;
+  /** Приватный тур — не показывается в каталоге без ?access= */
+  isPrivate?: boolean;
+  /** Лист ожидания при нехватке мест на выбранную дату. */
+  waitlistEnabled?: boolean;
+  /** Разрешить выбор типа номера при бронировании. */
+  accommodationUpgradesEnabled?: boolean;
+  /** Внешняя ссылка на бронирование вместо checkout. */
+  customBookingLink?: TourCustomBookingLinkPublic;
 }
 
 /** @deprecated Use TourListing for marketplace */
@@ -430,6 +454,8 @@ export interface BlogPost {
   /** Статья прошла полную ручную редакцию */
   editorialReviewed?: boolean;
   relatedResources?: BlogRelatedResource[];
+  /** Встраиваемые виджеты туров в теле статьи */
+  tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];
 }
 
 export interface Testimonial {

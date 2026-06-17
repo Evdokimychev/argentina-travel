@@ -1,6 +1,8 @@
 export type AuthUserRole = import("@/types/user").AccountRole;
 
-export type AuthIntent = "default" | "organizer";
+export type AuthIntent = "default" | "organizer" | "favorite";
+
+export type FavoriteAuthStep = "sign-in" | "register";
 
 /** Session user exposed to UI — alias for backward compatibility. */
 export type AuthUser = import("@/types/user").SessionUser;

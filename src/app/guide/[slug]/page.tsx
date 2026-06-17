@@ -12,6 +12,7 @@ import {
   getGuideTopicMetadata,
   isGuideTopicSlug,
 } from "@/lib/guide-topics";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -58,7 +59,8 @@ export default async function GuideSlugPage({ params }: PageProps) {
       return <KakDobratsyaHubView topic={topic} />;
     }
     if (topic.pillarPage) {
-      return <GuidePillarView topic={topic} />;
+      const initialTours = await fetchMarketplaceTours();
+      return <GuidePillarView topic={topic} initialTours={initialTours} />;
     }
     return <GuideTopicView topic={topic} />;
   }

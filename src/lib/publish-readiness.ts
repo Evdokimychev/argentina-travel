@@ -1,4 +1,5 @@
 import type { OrganizerTourDraft } from "@/types/organizer-tour";
+import { isValidCustomBookingUrl } from "@/lib/tour-custom-booking-link";
 
 export type PublishReadinessSeverity = "blocking" | "warning";
 
@@ -18,6 +19,7 @@ export interface PublishReadinessResult {
 }
 
 function hasScheduleOrOnRequest(draft: OrganizerTourDraft): boolean {
+  if (draft.customBookingLink?.enabled) return true;
   if (draft.bookingMode === "on_request") return true;
   if (draft.individualTourEnabled) return true;
   return draft.groupTourDates.some(
@@ -52,10 +54,19 @@ export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishRead
     });
   }
 
-  if (draft.priceUsd <= 0) {
+  if (draft.priceOnRequest) {
+    if (draft.priceUsd <= 0 && !draft.priceFromPrefix) {
+      issues.push({
+        id: "price-reference",
+        label: "Добавьте ориентировочную цену или включите подпись «от» — так проще привлекать заявки",
+        severity: "warning",
+        tabId: "conditions",
+      });
+    }
+  } else if (draft.priceUsd <= 0) {
     issues.push({
       id: "price",
-      label: "Укажите цену тура (больше 0)",
+      label: "Укажите цену тура (больше 0) или включите режим «Цена по запросу»",
       severity: "blocking",
       tabId: "conditions",
     });
@@ -78,6 +89,24 @@ export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishRead
       severity: "blocking",
       tabId: "main",
     });
+  }
+
+  if (draft.customBookingLink?.enabled) {
+    if (!draft.customBookingLink.url.trim()) {
+      issues.push({
+        id: "custom-booking-url",
+        label: "Укажите URL внешней ссылки на бронирование",
+        severity: "blocking",
+        tabId: "conditions",
+      });
+    } else if (!isValidCustomBookingUrl(draft.customBookingLink.url)) {
+      issues.push({
+        id: "custom-booking-url-invalid",
+        label: "Некорректная ссылка на бронирование — нужен адрес http:// или https://",
+        severity: "blocking",
+        tabId: "conditions",
+      });
+    }
   }
 
   if (!hasScheduleOrOnRequest(draft)) {

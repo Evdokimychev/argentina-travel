@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { Flame, MapPin, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import { TourListing, TourBadge } from "@/types";
-import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
 import { formatDateRange } from "@/lib/utils";
 import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
@@ -16,7 +16,7 @@ import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
-import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
@@ -33,9 +33,9 @@ interface MarketplaceTourCardProps {
 
 export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) {
   const router = useRouter();
-  const nextDate = tour.availableDates[0];
-  const moreDates = tour.availableDates.length - 1;
+  const schedule = resolveTourCardScheduleDisplay(tour);
   const ratingDisplay = resolveTourRatingLabel(tour);
+  const groupDiscountHint = tour.groupDiscountHint;
   const comfortLevel = resolveListingComfortLevel(tour);
   const organizerHref =
     tour.organizer.slug ?? tour.organizerOwnerId
@@ -125,9 +125,11 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           </h3>
 
           <div className="mt-3 flex items-center justify-between gap-2">
-            <TourPriceDisplay
+            <TourPublicPriceDisplay
               priceUsd={tour.priceUsd}
               originalPriceUsd={tour.originalPriceUsd}
+              priceOnRequest={tour.priceOnRequest}
+              priceFromPrefix={tour.priceFromPrefix}
               size="sm"
             />
             <p className="shrink-0 text-xs leading-none text-slate">
@@ -135,14 +137,22 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             </p>
           </div>
 
-          {nextDate && tour.bookingMode !== "on_request" && (
+          {schedule?.type === "individual" ? (
+            <p className="mt-2 text-xs text-slate">{schedule.label}</p>
+          ) : schedule?.type === "dates" ? (
             <p className="mt-2 text-xs text-slate">
-              {formatDateRange(nextDate.start, nextDate.end)}
-              {moreDates > 0 && (
-                <span className="ml-1 text-sky">{formatMoreDates(moreDates)}</span>
+              {formatDateRange(schedule.start, schedule.end)}
+              {schedule.moreDates > 0 && (
+                <span className="ml-1 text-sky">{formatMoreDates(schedule.moreDates)}</span>
               )}
             </p>
-          )}
+          ) : null}
+
+          {groupDiscountHint && !tour.priceOnRequest ? (
+            <p className="mt-1.5 text-[11px] font-medium text-violet-800">
+              Групповая скидка: {groupDiscountHint}
+            </p>
+          ) : null}
 
           <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
             {tour.bookingMode === "on_request" && (

@@ -6,7 +6,9 @@ import { TourDetail } from "@/types";
 import { formatDateRange } from "@/lib/utils";
 import { spotsWord } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
+import { formatCompactUsd } from "@/lib/tour-date-pricing";
 import SingleDatePicker from "@/components/ui/single-date-picker";
+import TourDepartureCalendar from "@/components/tour-detail/TourDepartureCalendar";
 import {
   dateFitsGuestCount,
   dateOptionSuffix,
@@ -167,32 +169,46 @@ export default function BookingDateSelector({
           )}
 
           {showScheduledPicker && tour.dates.length > 0 && (
-            <div>
-              <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
-                Даты путешествия
-              </label>
-              <div className="relative mt-1.5">
-                <select
-                  id={selectId}
-                  value={selectedDateId}
-                  onChange={(e) => setSelectedDateId(e.target.value)}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                >
-                  {tour.dates.map((d) => {
-                    const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
-                    return (
-                      <option key={d.id} value={d.id} disabled={!bookable}>
-                        {formatDateRange(d.startDate, d.endDate)} ({d.spotsLeft}{" "}
-                        {spotsWord(d.spotsLeft)})
-                        {dateOptionSuffix(d, guests, tour.groupMin)}
-                      </option>
-                    );
-                  })}
-                </select>
-                <ChevronDown
-                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
-                  aria-hidden
-                />
+            <div className="space-y-4">
+              <TourDepartureCalendar
+                dates={tour.dates}
+                selectedDateId={selectedDateId}
+                guests={guests}
+                groupMin={tour.groupMin}
+                onSelect={(date) => setSelectedDateId(date.id)}
+              />
+
+              <div>
+                <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
+                  Или выберите из списка
+                </label>
+                <div className="relative mt-1.5">
+                  <select
+                    id={selectId}
+                    value={selectedDateId}
+                    onChange={(e) => setSelectedDateId(e.target.value)}
+                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                  >
+                    {tour.dates.map((d) => {
+                      const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
+                      const priceLabel = tour.priceOnRequest
+                        ? ""
+                        : ` · ${formatCompactUsd(d.priceUsd)}`;
+                      return (
+                        <option key={d.id} value={d.id} disabled={!bookable}>
+                          {formatDateRange(d.startDate, d.endDate)} ({d.spotsLeft}{" "}
+                          {spotsWord(d.spotsLeft)})
+                          {priceLabel}
+                          {dateOptionSuffix(d, guests, tour.groupMin)}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <ChevronDown
+                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
+                    aria-hidden
+                  />
+                </div>
               </div>
               {scheduledError && (
                 <div className="mt-2 space-y-2 rounded-xl bg-amber-50 px-3 py-2.5 text-xs text-amber-950">

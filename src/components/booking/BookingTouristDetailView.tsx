@@ -39,11 +39,25 @@ import {
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
 import { cn } from "@/lib/cn";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 export default function BookingTouristDetailView({ bookingId }: { bookingId: string }) {
   const { user } = useAuth();
   const [booking, setBooking] = useState<Booking | null>(null);
-  const [cancelError, setCancelError] = useState<string | null>(null);
+  const [cancelError, setCancelErrorState] = useState<SiteFeedbackMessage | null>(null);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setCancelError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setCancelErrorState(null);
+      return;
+    }
+    setCancelErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   useEffect(() => {
     function refreshLocal() {
@@ -104,14 +118,36 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
 
   function handleCancel() {
     setCancelError(null);
+    setCancelLoading(true);
     if (isRemoteBookingsMode()) {
       void apiCancelBooking(booking!.id)
-        .then(setBooking)
-        .catch((error: Error) => setCancelError(error.message));
+        .then((next) => {
+          setBooking(next);
+          feedback.success({
+            title: "Заявка отменена",
+            description: "Статус бронирования обновлён.",
+          });
+        })
+        .catch((error: Error) => {
+          setCancelError(normalizeSiteError(error, {
+            title: "Не удалось отменить заявку",
+            steps: ["Обновите страницу", "Напишите организатору через сообщения"],
+          }));
+        })
+        .finally(() => setCancelLoading(false));
       return;
     }
     const result = cancelBookingByTourist(booking!.id, user);
-    if ("error" in result) setCancelError(result.error);
+    setCancelLoading(false);
+    if ("error" in result) {
+      setCancelError(normalizeSiteError(result.error));
+      return;
+    }
+    setBooking(result.booking);
+    feedback.success({
+      title: "Заявка отменена",
+      description: "Статус бронирования обновлён.",
+    });
   }
 
   return (
@@ -268,9 +304,14 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
           </div>
 
           {cancelError ? (
-            <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
-              {cancelError}
-            </p>
+            <InlineFeedback
+              variant="error"
+              title={cancelError.title}
+              description={cancelError.description}
+              steps={cancelError.steps}
+              action={cancelError.action}
+              className="mt-4"
+            />
           ) : null}
 
           {canCancel ? (
@@ -278,6 +319,8 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
               type="button"
               variant="outline"
               className="mt-6"
+              loading={cancelLoading}
+              loadingLabel="Отменяем…"
               onClick={handleCancel}
             >
               Отменить заявку

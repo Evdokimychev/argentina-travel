@@ -15,12 +15,17 @@ import { Input } from "@/components/ui/input";
 import { ACCOMMODATION_FILTER_OPTIONS } from "@/data/accommodation-options";
 import {
   ACCOMMODATION_NAME_PRESETS,
+  ACCOMMODATION_AMENITY_PRESETS,
+  DEFAULT_BOOKING_LABEL,
   ORGANIZER_TOUR_ACCOMMODATION_ALTERNATIVES_MAX,
+  ORGANIZER_TOUR_ACCOMMODATION_AMENITIES_MAX,
   ORGANIZER_TOUR_ACCOMMODATION_PHOTOS_MAX,
   ORGANIZER_TOUR_ACCOMMODATION_PLACE_DESCRIPTION_MAX,
   createEmptyAccommodationAlternative,
   type OrganizerTourAccommodationPlace,
 } from "@/data/tour-accommodation-defaults";
+import { isAllowedBookingUrl } from "@/lib/tour-accommodation-public";
+import TourAccommodationRoomTypesEditor from "@/components/organizer/TourAccommodationRoomTypesEditor";
 import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
 import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
 import RichTextEditor from "@/components/editor/RichTextEditor";
@@ -189,6 +194,10 @@ export default function TourAccommodationPlaceEditor({
   onMoveUp,
   onMoveDown,
 }: TourAccommodationPlaceEditorProps) {
+  const [bookingUrlError, setBookingUrlError] = useState<string | null>(null);
+  const isManual = place.displayMode !== "booking_link";
+  const isBookingLink = place.displayMode === "booking_link";
+
   function addAlternative() {
     if (place.alternatives.length >= ORGANIZER_TOUR_ACCOMMODATION_ALTERNATIVES_MAX) return;
     onChange({
@@ -268,14 +277,150 @@ export default function TourAccommodationPlaceEditor({
         </div>
       </div>
 
-      <RichTextEditor
-        id={`accommodation-place-description-${place.id}`}
-        value={place.description}
-        onChange={(description) => onChange({ ...place, description })}
-        maxLength={ORGANIZER_TOUR_ACCOMMODATION_PLACE_DESCRIPTION_MAX}
-        placeholder="Опишите условия проживания…"
-        minHeight={144}
-      />
+      <div className="space-y-3 rounded-2xl border border-gray-200/80 bg-white p-4">
+        <div>
+          <h4 className="text-sm font-bold text-charcoal">Как показывать это место</h4>
+          <p className="mt-1 text-sm text-slate">
+            Описание вручную или ссылка на Booking.com — выберите один вариант
+          </p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() =>
+              onChange({
+                ...place,
+                displayMode: "manual",
+                bookingUrl: undefined,
+              })
+            }
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
+              isManual
+                ? "bg-brand text-white"
+                : "border border-gray-200 bg-white text-charcoal hover:border-brand/40"
+            }`}
+          >
+            Описание вручную
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              onChange({
+                ...place,
+                displayMode: "booking_link",
+                roomTypes: [],
+              })
+            }
+            className={`rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
+              isBookingLink
+                ? "bg-brand text-white"
+                : "border border-gray-200 bg-white text-charcoal hover:border-brand/40"
+            }`}
+          >
+            Ссылка на Booking.com
+          </button>
+        </div>
+
+        {isBookingLink ? (
+          <div className="space-y-3">
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-charcoal">
+                Ссылка на отель на Booking.com
+              </label>
+              <Input
+                value={place.bookingUrl ?? ""}
+                onChange={(event) => {
+                  const bookingUrl = event.target.value;
+                  onChange({ ...place, bookingUrl });
+                  if (bookingUrl.trim() && !isAllowedBookingUrl(bookingUrl)) {
+                    setBookingUrlError("Разрешены только ссылки на booking.com");
+                  } else {
+                    setBookingUrlError(null);
+                  }
+                }}
+                placeholder="https://www.booking.com/hotel/..."
+              />
+              {bookingUrlError ? (
+                <p className="mt-1 text-xs text-red-600">{bookingUrlError}</p>
+              ) : (
+                <p className="mt-1 text-xs text-slate">
+                  Турист увидит краткое описание и кнопку перехода на Booking.com
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-medium text-charcoal">
+                Текст кнопки
+              </label>
+              <Input
+                value={place.bookingLabel ?? DEFAULT_BOOKING_LABEL}
+                onChange={(event) => onChange({ ...place, bookingLabel: event.target.value })}
+              />
+            </div>
+          </div>
+        ) : null}
+      </div>
+
+      {isManual ? (
+        <>
+          <RichTextEditor
+            id={`accommodation-place-description-${place.id}`}
+            value={place.description}
+            onChange={(description) => onChange({ ...place, description })}
+            maxLength={ORGANIZER_TOUR_ACCOMMODATION_PLACE_DESCRIPTION_MAX}
+            placeholder="Опишите условия проживания…"
+            minHeight={144}
+          />
+
+          <div className="space-y-3 rounded-2xl border border-gray-200/80 bg-white p-4">
+            <div>
+              <h4 className="text-sm font-bold text-charcoal">Удобства</h4>
+              <p className="mt-1 text-sm text-slate">Отметьте, что включено в проживание</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {ACCOMMODATION_AMENITY_PRESETS.map((amenity) => {
+                const selected = place.amenities.includes(amenity);
+                return (
+                  <button
+                    key={amenity}
+                    type="button"
+                    disabled={
+                      !selected && place.amenities.length >= ORGANIZER_TOUR_ACCOMMODATION_AMENITIES_MAX
+                    }
+                    onClick={() => {
+                      const amenities = selected
+                        ? place.amenities.filter((item) => item !== amenity)
+                        : [...place.amenities, amenity];
+                      onChange({ ...place, amenities });
+                    }}
+                    className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                      selected
+                        ? "bg-brand text-white"
+                        : "border border-gray-200 bg-white text-charcoal hover:border-brand/40"
+                    }`}
+                  >
+                    {amenity}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <TourAccommodationRoomTypesEditor
+            roomTypes={place.roomTypes}
+            onChange={(roomTypes) => onChange({ ...place, roomTypes })}
+          />
+        </>
+      ) : (
+        <RichTextEditor
+          id={`accommodation-place-description-${place.id}`}
+          value={place.description}
+          onChange={(description) => onChange({ ...place, description })}
+          maxLength={ORGANIZER_TOUR_ACCOMMODATION_PLACE_DESCRIPTION_MAX}
+          placeholder="Кратко опишите место — турист увидит это рядом со ссылкой на Booking.com"
+          minHeight={96}
+        />
+      )}
 
       <PhotoUploadSection
         inputId={`accommodation-place-photos-${place.id}`}

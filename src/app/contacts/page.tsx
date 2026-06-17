@@ -18,6 +18,10 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
 import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 function ContactsForm() {
   const searchParams = useSearchParams();
@@ -38,7 +42,8 @@ function ContactsForm() {
   );
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
+  const feedback = useSiteFeedback();
   const [message, setMessage] = useState(() => {
     if (tour) return `Интересует тур «${tour.title}». `;
     if (product) return `Хочу заказать «${product.title}» (${product.format}). `;
@@ -84,10 +89,17 @@ function ContactsForm() {
       }
 
       setSubmitted(true);
+      feedback.success({
+        title: "Сообщение отправлено",
+        description: "Менеджер свяжется с вами в ближайшее время.",
+      });
     } catch (error) {
-      setSubmitError(
-        error instanceof Error ? error.message : "Не удалось отправить сообщение."
-      );
+      const normalized = normalizeSiteError(error, {
+        title: "Не удалось отправить сообщение",
+        action: { label: "Попробовать позже", href: "/contacts" },
+      });
+      setSubmitError(normalized);
+      feedback.showError(normalized);
     } finally {
       setSubmitting(false);
     }
@@ -118,31 +130,22 @@ function ContactsForm() {
       ) : null}
 
       {submitted ? (
-        <div className="mt-8 rounded-2xl border border-success/20 bg-success-muted p-8 text-center">
-          <svg
-            className="mx-auto h-12 w-12 text-success"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          <p className="mt-4 font-semibold text-charcoal">
-            Спасибо! Мы получили ваше сообщение.
-          </p>
-          <p className="mt-2 text-sm text-slate">
-            Наш менеджер свяжется с вами в ближайшее время.
-          </p>
-        </div>
+        <InlineFeedback
+          variant="success"
+          title="Спасибо! Мы получили ваше сообщение."
+          description="Наш менеджер свяжется с вами в ближайшее время."
+          className="mt-8"
+        />
       ) : (
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           {submitError ? (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">{submitError}</p>
+            <InlineFeedback
+              variant="error"
+              title={submitError.title}
+              description={submitError.description}
+              steps={submitError.steps}
+              action={submitError.action}
+            />
           ) : null}
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-charcoal">
@@ -199,8 +202,13 @@ function ContactsForm() {
               placeholder="Расскажите о ваших планах..."
             />
           </div>
-          <Button type="submit" className="w-full sm:w-auto sm:px-10" disabled={submitting}>
-            {submitting ? "Отправка…" : "Отправить"}
+          <Button
+            type="submit"
+            className="w-full sm:w-auto sm:px-10"
+            loading={submitting}
+            loadingLabel="Отправка…"
+          >
+            Отправить
           </Button>
         </form>
       )}

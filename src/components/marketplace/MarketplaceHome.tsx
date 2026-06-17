@@ -16,6 +16,8 @@ import { destinationHref } from "@/lib/destinations";
 import SearchBlock from "./SearchBlock";
 import FilterBar from "./FilterBar";
 import MarketplaceTourCard from "./MarketplaceTourCard";
+import TourEmbedSection from "@/components/embed/TourEmbedSection";
+import type { TourEmbedConfig } from "@/types/tour-embed";
 import BlogCard from "@/components/BlogCard";
 import TestimonialCard from "@/components/TestimonialCard";
 import { tripsWord, filtersWord } from "@/lib/pluralize";
@@ -77,6 +79,7 @@ function TourGrid({
   id,
   href = "/tours",
   linkLabel = "Все туры",
+  variant = "grid",
 }: {
   title: string;
   subtitle?: string;
@@ -84,17 +87,28 @@ function TourGrid({
   id?: string;
   href?: string;
   linkLabel?: string;
+  variant?: TourEmbedConfig["variant"];
 }) {
   if (!tours.length) return null;
+
+  const config: TourEmbedConfig = {
+    id,
+    variant,
+    title,
+    subtitle,
+    limit: tours.length,
+    source: { kind: "slugs", slugs: tours.map((t) => t.slug) },
+    catalogHref: href,
+    catalogLabel: linkLabel,
+    tone: "default",
+  };
+
   return (
-    <section id={id} className={cn(id && siteScrollAnchorClass)}>
-      <SectionHeader title={title} subtitle={subtitle} href={href} linkLabel={linkLabel} />
-      <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-        {tours.map((t) => (
-          <MarketplaceTourCard key={t.id} tour={t} />
-        ))}
-      </div>
-    </section>
+    <TourEmbedSection
+      config={config}
+      initialTours={tours}
+      className={cn(id && siteScrollAnchorClass)}
+    />
   );
 }
 
@@ -224,6 +238,7 @@ export default function MarketplaceHome({
 
           <div className="mt-8 max-w-4xl lg:max-w-none">
             <SearchBlock
+              tours={tours}
               query={filters.query}
               dateFrom={filters.dateFrom}
               dateTo={filters.dateTo}

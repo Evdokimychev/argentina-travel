@@ -446,5 +446,19 @@
   "audioGuides.benefits.item1": "Va a su ritmo — sin grupo ni horario",
   "audioGuides.benefits.item2": "Ruta y navegación en la app WeGoTrip",
   "audioGuides.benefits.item3": "Ideal para conocer un barrio por primera vez",
-  "audioGuides.benefits.item4": "Puede empezar justo después de comprar"
+  "audioGuides.benefits.item4": "Puede empezar justo después de comprar",
+  "tour.countdown.title": "Próxima salida en",
+  "tour.countdown.departureOn": "Salida el {date}",
+  "tour.countdown.days": "días",
+  "tour.countdown.hours": "hrs",
+  "tour.countdown.minutes": "min",
+  "tour.countdown.seconds": "seg",
+  "tour.countdown.spotsCalm": "{spots} — reserve su lugar",
+  "tour.countdown.spotsUrgent": "{spots} — ¡casi completo!",
+  "tour.countdown.joinGroup": "Únase al grupo: {group}",
+  "tour.countdown.ctaBook": "Reservar lugar",
+  "tour.countdown.ctaWaitlist": "Lista de espera",
+  "tour.countdown.ctaSelect": "Elegir esta fecha",
+  "tour.countdown.badgeHot": "Pocos lugares",
+  "tour.countdown.started": "La salida ya comenzó — elija fecha en la tabla"
 }

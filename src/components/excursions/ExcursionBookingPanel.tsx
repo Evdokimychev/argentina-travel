@@ -19,6 +19,10 @@ import {
 import type { ExcursionScheduleDate } from "@/lib/excursion-schedule";
 import type { ExcursionDetail } from "@/types/excursion";
 import type { TripsterPriceQuote } from "@/lib/tripster/types";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 type ExcursionBookingPanelProps = {
   excursion: ExcursionDetail;
@@ -44,7 +48,16 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
   const [quote, setQuote] = useState<TripsterPriceQuote | null>(null);
   const [quoteLoading, setQuoteLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
+  const [formError, setFormErrorState] = useState<SiteFeedbackMessage | null>(null);
+  const feedback = useSiteFeedback();
+
+  const setFormError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setFormErrorState(null);
+      return;
+    }
+    setFormErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   const maxPersons = scheduleMaxPersons ?? excursion.maxPersons ?? 10;
 
@@ -210,13 +223,28 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
       }
 
       if (data.orderUrl) {
+        feedback.loading({
+          title: "Переход к оформлению",
+          description: "Открываем страницу бронирования…",
+        });
         window.location.href = data.orderUrl;
         return;
       }
 
-      setFormError(t("excursions.booking.failed"));
+      const failed = normalizeSiteError(t("excursions.booking.failed"), {
+        title: "Не удалось забронировать",
+        steps: ["Выберите дату и время", "Проверьте контактные данные"],
+      });
+      setFormError(failed);
+      feedback.showError(failed);
     } catch (error) {
-      setFormError(error instanceof Error ? error.message : t("excursions.booking.failed"));
+      const normalized = normalizeSiteError(error, {
+        title: "Не удалось забронировать экскурсию",
+        steps: ["Проверьте дату, время и контакты", "Попробуйте ещё раз через минуту"],
+        action: { label: "Связаться с нами", href: "/contacts" },
+      });
+      setFormError(normalized);
+      feedback.showError(normalized);
     } finally {
       setSubmitting(false);
     }
@@ -233,6 +261,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     selectedTime,
     t,
     user?.id,
+    feedback,
   ]);
 
   const scheduleDateKeys = useMemo(
@@ -369,15 +398,25 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
             />
           </div>
 
-          {formError ? <p className="text-sm text-red-600">{formError}</p> : null}
+          {formError ? (
+            <InlineFeedback
+              variant="error"
+              title={formError.title}
+              description={formError.description}
+              steps={formError.steps}
+              action={formError.action}
+            />
+          ) : null}
 
           <Button
             type="button"
             className="w-full"
-            disabled={submitting || scheduleLoading}
+            loading={submitting}
+            loadingLabel={t("excursions.booking.submitting")}
+            disabled={scheduleLoading}
             onClick={() => void handleSubmit()}
           >
-            {submitting ? t("excursions.booking.submitting") : t("excursions.booking.submit")}
+            {t("excursions.booking.submit")}
           </Button>
 
           <p className="text-xs leading-relaxed text-slate">{t("excursions.booking.disclaimer")}</p>

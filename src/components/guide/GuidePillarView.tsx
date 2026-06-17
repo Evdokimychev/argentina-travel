@@ -23,9 +23,11 @@ import { cn } from "@/lib/cn";
 import { guideTopicHref } from "@/lib/guide-topics";
 import { siteContainerClass } from "@/lib/site-container";
 import type { GuideTopicPage } from "@/types/guide-topic";
+import type { TourListing } from "@/types";
 
 interface GuidePillarViewProps {
   topic: GuideTopicPage;
+  initialTours?: TourListing[];
 }
 
 function QuickFactsFallback() {
@@ -38,7 +40,7 @@ function QuickFactsFallback() {
   );
 }
 
-export default function GuidePillarView({ topic }: GuidePillarViewProps) {
+export default function GuidePillarView({ topic, initialTours = [] }: GuidePillarViewProps) {
   const pillar = topic.pillarPage;
   if (!pillar) return null;
 
@@ -114,13 +116,17 @@ export default function GuidePillarView({ topic }: GuidePillarViewProps) {
               </HubSection>
 
               {pillar.sections.map((section) => (
-                <GuidePillarSectionBlock key={section.id} section={section} />
+                <GuidePillarSectionBlock
+                  key={section.id}
+                  section={section}
+                  initialTours={initialTours}
+                />
               ))}
 
               {widgetSlots.length > 0 ? (
                 <div className="space-y-8" aria-label="Интерактивные блоки">
                   {widgetSlots.map((slot) => (
-                    <GuideWidgetSlot key={slot.id} slot={slot} />
+                    <GuideWidgetSlot key={slot.id} slot={slot} initialTours={initialTours} />
                   ))}
                 </div>
               ) : null}

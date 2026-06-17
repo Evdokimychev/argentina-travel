@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star, MapPin } from "lucide-react";
 import { TourListing } from "@/types";
-import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { formatDays } from "@/lib/pluralize";
@@ -76,9 +76,11 @@ export default function TourMapListItem({
         </button>
 
         <div className="flex shrink-0 flex-col items-end justify-between gap-2">
-          <TourPriceDisplay
+          <TourPublicPriceDisplay
             priceUsd={tour.priceUsd}
             originalPriceUsd={tour.originalPriceUsd}
+            priceOnRequest={tour.priceOnRequest}
+            priceFromPrefix={tour.priceFromPrefix}
             size="sm"
             showFrom={false}
           />

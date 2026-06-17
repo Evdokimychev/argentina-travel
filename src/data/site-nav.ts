@@ -152,14 +152,15 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
 ];
 
 const ABOUT_LINKS: SiteNavLink[] = [
-  { id: "about-project", label: "О проекте", href: "/about" },
-  { id: "about-faq", label: "Частые вопросы", href: "/faq" },
-  { id: "about-contacts", label: "Контакты", href: "/contacts" },
-  { id: "about-join", label: "Для организаторов", href: "/join" },
+  { id: "about-project", label: "О проекте", href: "/about", description: "Миссия и команда платформы" },
+  { id: "about-faq", label: "Частые вопросы", href: "/faq", description: "Ответы перед поездкой и бронированием" },
+  { id: "about-contacts", label: "Контакты", href: "/contacts", description: "Связаться с командой" },
+  { id: "about-join", label: "Для организаторов", href: "/join", description: "Публикация туров на платформе" },
   ...SITE_LEGAL_LINKS.map((link) => ({
     id: `legal-${link.href}`,
     label: link.label,
     href: link.href,
+    description: "Юридический документ",
   })),
 ];
 
@@ -334,6 +335,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     label: "Галерея",
     labelKey: "nav.gallery",
     href: "/gallery",
+    description: "Фотографии природы, городов и культуры Аргентины",
   },
   {
     id: "immigration",
@@ -347,12 +349,14 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     label: "Магазин",
     labelKey: "nav.shop",
     href: "/shop",
+    description: "Сувениры, гиды и полезные материалы для поездки",
   },
   {
     id: "services",
     label: "Сервисы",
     labelKey: "nav.services",
     href: "/services",
+    description: "Полезные сервисы для путешествия и переезда",
     columns: SERVICE_CATEGORIES.map((category) => ({
       id: `services-${category.id}`,
       title: category.title,
@@ -369,6 +373,8 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     id: "journal",
     label: "Блог",
     labelKey: "nav.blog",
+    href: "/blog",
+    description: "Статьи о путешествиях, жизни и иммиграции",
     columns: [
       {
         id: "journal-recent",
@@ -386,8 +392,8 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         title: "Разделы",
         titleKey: "nav.columns.journalSections",
         links: [
-          { id: "journal-index", label: "Все статьи", href: "/blog" },
-          { id: "journal-tours", label: "Туры по теме", href: "/tours" },
+          { id: "journal-index", label: "Все статьи", href: "/blog", description: "Полный архив публикаций" },
+          { id: "journal-tours", label: "Туры по теме", href: "/tours", description: "Маршруты, связанные с материалами блога" },
         ],
       },
     ],
@@ -396,6 +402,8 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     id: "about",
     label: "О нас",
     labelKey: "nav.about",
+    href: "/about",
+    description: "О платформе, документы и контакты",
     columns: [
       {
         id: "about-company",
@@ -413,8 +421,31 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
   },
 ];
 
-/** Core conversion sections — visible in the desktop pill bar. */
+/** Core conversion sections — visible in the desktop pill bar at xl+. */
 export const SITE_NAV_PRIMARY_IDS = ["destinations", "places", "tours", "excursions", "guide", "immigration"] as const;
+
+/** Shorter desktop bar at lg–xl to avoid overlap with logo and actions. */
+export const SITE_NAV_COMPACT_PRIMARY_IDS = ["destinations", "tours", "guide", "immigration"] as const;
+
+export type SiteNavBarLayout = "wide" | "compact";
+
+export function getSiteNavBarSections(layout: SiteNavBarLayout): {
+  primarySections: SiteNavSection[];
+  overflowSections: SiteNavSection[];
+} {
+  const primaryIds =
+    layout === "wide" ? SITE_NAV_PRIMARY_IDS : SITE_NAV_COMPACT_PRIMARY_IDS;
+
+  const primarySections = SITE_NAV_SECTIONS.filter((section) =>
+    (primaryIds as readonly string[]).includes(section.id)
+  );
+  const overflowSections = SITE_NAV_SECTIONS.filter(
+    (section) =>
+      section.id !== "home" && !(primaryIds as readonly string[]).includes(section.id)
+  );
+
+  return { primarySections, overflowSections };
+}
 
 export function getSiteNavSection(id: string): SiteNavSection | undefined {
   return SITE_NAV_SECTIONS.find((section) => section.id === id);

@@ -13,9 +13,10 @@ export async function POST(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as { phone?: string; role?: AccountRole };
+    const body = (await request.json()) as { phone?: string; role?: AccountRole; password?: string };
     const role = body.role ?? "tourist";
     const normalized = normalizePhone(body.phone ?? "");
+    const password = body.password?.trim() || DEMO_PASSWORD;
 
     if (!normalized) {
       return NextResponse.json({ error: "Введите корректный номер телефона" }, { status: 400 });
@@ -58,14 +59,17 @@ export async function POST(request: Request) {
     const supabase = await createSupabaseServerClient();
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email,
-      password: DEMO_PASSWORD,
+      password,
     });
 
     if (signInError) {
+      const hint =
+        !body.password?.trim()
+          ? "Для этого аккаунта нужен вход по email и паролю или укажите пароль при входе по телефону."
+          : "Неверный пароль. Проверьте данные или войдите по email.";
       return NextResponse.json(
         {
-          error:
-            "Для этого аккаунта нужен вход по email и паролю. Телефонный вход доступен для демо-пароля.",
+          error: hint,
           code: "INVALID_CREDENTIALS",
         },
         { status: 401 }

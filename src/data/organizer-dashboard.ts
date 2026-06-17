@@ -2,6 +2,7 @@ import type { LucideIcon } from "lucide-react";
 
 export type OrganizerNavId =
   | "dashboard"
+  | "analytics"
   | "tours"
   | "bookings"
   | "messages"
@@ -17,6 +18,7 @@ export interface OrganizerNavItem {
 
 export const ORGANIZER_NAV_ITEMS: OrganizerNavItem[] = [
   { id: "dashboard", label: "Обзор", href: "/organizer" },
+  { id: "analytics", label: "Аналитика", href: "/organizer/analytics" },
   { id: "tours", label: "Туры и экскурсии", href: "/organizer/tours" },
   { id: "bookings", label: "Заявки", href: "/organizer/bookings" },
   { id: "messages", label: "Сообщения", href: "/organizer/messages" },

@@ -23,13 +23,17 @@ import PackingListSection from "./PackingListSection";
 import { TourBookingProvider } from "./TourBookingContext";
 import MobileBookingBar from "./MobileBookingBar";
 import TourCheckoutModal from "./checkout/TourCheckoutModal";
+import TourPriceRequestModal from "./TourPriceRequestModal";
+import TourWaitlistModal from "./TourWaitlistModal";
 import TourSectionNav from "./TourSectionNav";
+import PrivateTourBanner from "./PrivateTourBanner";
 import TourPreviewBanner from "./TourPreviewBanner";
 import ReviewPromptBanner from "./ReviewPromptBanner";
 import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
+import { tourUsesExternalBooking } from "@/lib/tour-custom-booking-link";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import PlacesSection from "./PlacesSection";
@@ -74,7 +78,10 @@ export default function TourDetailView({
     return (
       <div className={cn(siteContainerClass, "py-24 text-center")}>
         <h1 className="font-display text-2xl font-bold text-charcoal">Тур не найден</h1>
-        <p className="mt-2 text-slate">Возможно, тур ещё не опубликован или был удалён.</p>
+        <p className="mt-2 text-slate">
+          Возможно, тур ещё не опубликован, скрыт или доступен только по персональной ссылке от
+          организатора.
+        </p>
         <Link href="/tours" className="mt-6 inline-block text-sm font-medium text-brand hover:underline">
           Вернуться в каталог
         </Link>
@@ -87,6 +94,7 @@ export default function TourDetailView({
     canonicalTour,
     flightLogisticsLabel: flightLogisticsNavLabel,
   });
+  const usesExternalBooking = tourUsesExternalBooking(tour);
 
   return (
     <TourBookingProvider tour={tour}>
@@ -108,6 +116,11 @@ export default function TourDetailView({
       </div>
 
       <TourDetailHeader tour={tour} canonicalTour={canonicalTour} />
+      {tour.isPrivate ? (
+        <div className={cn(siteContainerClass, "mt-4")}>
+          <PrivateTourBanner />
+        </div>
+      ) : null}
 
       <TourSectionNav items={sectionLinks} />
 
@@ -124,7 +137,13 @@ export default function TourDetailView({
               />
               <DescriptionSection blocks={tour.descriptionBlocks} extra={tour.descriptionExtra!} />
               <PlacesSection places={tour.places} />
-              {tour.itinerary?.length ? <ItinerarySection days={tour.itinerary} /> : null}
+              {tour.itinerary?.length ? (
+                <ItinerarySection
+                  days={tour.itinerary}
+                  tour={tour}
+                  showPdfDownload={!previewMode}
+                />
+              ) : null}
               <DatesSection tour={tour} canonicalTour={canonicalTour} />
               <IncludedExcludedSection included={tour.included} excluded={tour.excluded} />
               {tourHasAccommodation(tour) ? (
@@ -164,7 +183,18 @@ export default function TourDetailView({
       </div>
 
       {!previewMode ? <MobileBookingBar tour={tour} /> : null}
-      {!previewMode ? <TourCheckoutModal tour={tour} /> : null}
+      {!previewMode && !usesExternalBooking && tour.priceOnRequest ? (
+        <TourPriceRequestModal tour={tour} />
+      ) : null}
+      {!previewMode && !usesExternalBooking && !tour.priceOnRequest ? (
+        <TourCheckoutModal tour={tour} />
+      ) : null}
+      {!previewMode &&
+      !usesExternalBooking &&
+      tour.waitlistEnabled &&
+      !tour.priceOnRequest ? (
+        <TourWaitlistModal tour={tour} />
+      ) : null}
     </TourBookingProvider>
   );
 }

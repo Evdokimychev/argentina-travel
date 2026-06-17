@@ -8,21 +8,21 @@ import FormattedPrice from "@/components/FormattedPrice";
 import { CHECKOUT_ROOM_OPTIONS, type RoomOption } from "./types";
 import {
   calcRoomsNeeded,
-  DEFAULT_INCLUDED_ROOM_ID,
   formatRoomAllocationLine,
   formatRoomCount,
   getRoomAllocationStatus,
   isDefaultRoomAllocation,
+  resolveDefaultIncludedRoomId,
   roomAllocationWarning,
-  RoomAllocations,
   setRoomAllocation,
   totalRoomAllocated,
 } from "./checkout-accommodation";
 
 interface AccommodationStepProps {
   guests: number;
-  allocations: RoomAllocations;
-  onChange: (allocations: RoomAllocations) => void;
+  allocations: Record<string, number>;
+  roomOptions?: RoomOption[];
+  onChange: (allocations: Record<string, number>) => void;
   onViewDetails?: () => void;
   className?: string;
 }
@@ -173,20 +173,22 @@ function RoomOptionRow({
 export default function AccommodationStep({
   guests,
   allocations,
+  roomOptions = CHECKOUT_ROOM_OPTIONS,
   onChange,
   onViewDetails,
   className,
 }: AccommodationStepProps) {
-  const allocated = totalRoomAllocated(allocations);
-  const allocationStatus = getRoomAllocationStatus(allocations, guests);
+  const allocated = totalRoomAllocated(allocations, roomOptions);
+  const allocationStatus = getRoomAllocationStatus(allocations, guests, roomOptions);
   const isComplete = allocationStatus === "complete";
   const isOver = allocationStatus === "over";
-  const isDefault = isDefaultRoomAllocation(allocations, guests);
+  const isDefault = isDefaultRoomAllocation(allocations, guests, roomOptions);
   const [expanded, setExpanded] = useState(false);
-  const warningMessage = expanded ? roomAllocationWarning(allocations, guests) : null;
+  const warningMessage = expanded ? roomAllocationWarning(allocations, guests, roomOptions) : null;
 
   const includedRoom =
-    CHECKOUT_ROOM_OPTIONS.find((room) => room.id === DEFAULT_INCLUDED_ROOM_ID)!;
+    roomOptions.find((room) => room.id === resolveDefaultIncludedRoomId(roomOptions)) ??
+    roomOptions[0]!;
 
   useEffect(() => {
     if (!isDefault) setExpanded(true);
@@ -238,7 +240,7 @@ export default function AccommodationStep({
         />
       ) : (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white">
-          {CHECKOUT_ROOM_OPTIONS.map((room, index) => (
+          {roomOptions.map((room, index) => (
             <RoomOptionRow
               key={room.id}
               room={room}

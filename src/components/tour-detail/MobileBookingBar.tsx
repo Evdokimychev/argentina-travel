@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type MouseEvent } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { TourDetail } from "@/types";
 import { formatDateRange } from "@/lib/utils";
@@ -8,10 +8,15 @@ import { formatTouristsBooking } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
-import TourPriceDisplay from "./TourPriceDisplay";
+import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import GuestCounter from "./GuestCounter";
 import { useTourBooking } from "./TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
+import ExternalBookingButton from "./ExternalBookingButton";
+import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 function formatMobileDateSummary(
   tour: TourDetail,
@@ -47,9 +52,23 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     guests,
     setGuests,
     selectedDateId,
+    canJoinWaitlist,
+    openWaitlist,
+    usesExternalBooking,
+    externalBookingLink,
+    externalBookingHref,
   } = useTourBooking();
+  const priceOnRequest = Boolean(tour.priceOnRequest);
   const [expanded, setExpanded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
   const guestLimits = getGuestLimits(tour, selectedDate, dateMode);
@@ -63,24 +82,54 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     [tour, dateMode, selectedDateId, customDate]
   );
 
+  const bookingValidationError =
+    usesExternalBooking && !externalBookingLink?.passContext
+      ? null
+      : validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
+
+  function handleExternalBookingClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (bookingValidationError) {
+      event.preventDefault();
+      setError(bookingValidationError);
+      setExpanded(true);
+      return;
+    }
+    setError(null);
+  }
+
   function handleBookClick() {
-    const dateError = validateBookingDates(
-      tour,
-      dateMode,
-      customDate,
-      guests,
-      selectedDateId
-    );
-    if (dateError) {
-      setError(dateError);
+    if (bookingValidationError) {
+      setError(bookingValidationError);
       setExpanded(true);
       return;
     }
     setError(null);
     if (!openCheckout()) {
-      setError("Не удалось открыть бронирование. Проверьте дату и количество туристов.");
+      setError(
+        siteFormError("Не удалось открыть бронирование", {
+          steps: ["Выберите дату и количество туристов", "Попробуйте обновить страницу"],
+        })
+      );
     }
   }
+
+  function handlePrimaryAction() {
+    if (usesExternalBooking) return;
+    if (bookingValidationError && canJoinWaitlist) {
+      setError(bookingValidationError);
+      openWaitlist();
+      return;
+    }
+    handleBookClick();
+  }
+
+  const primaryLabel = usesExternalBooking
+    ? externalBookingLink?.label ?? "Забронировать на сайте организатора"
+    : priceOnRequest
+      ? "Запросить расчёт"
+      : canJoinWaitlist && bookingValidationError
+        ? "Лист ожидания"
+        : "Забронировать";
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white shadow-lg lg:hidden">
@@ -120,9 +169,14 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
 
       <div className="p-4">
         <div className="mx-auto flex max-w-7xl flex-col gap-2">
-          {error && (
-            <p className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">{error}</p>
-          )}
+          {error ? (
+            <InlineFeedback
+              variant="error"
+              title={error.title}
+              description={error.description}
+              steps={error.steps}
+            />
+          ) : null}
 
           {!expanded ? (
             <button
@@ -141,19 +195,30 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
           ) : null}
 
           <div className="flex items-center justify-between gap-4">
-            <TourPriceDisplay
-              priceUsd={totalPriceUsd}
-              originalPriceUsd={totalOriginalPriceUsd}
+            <TourPublicPriceDisplay
+              priceUsd={priceOnRequest ? tour.priceUsd : totalPriceUsd}
+              originalPriceUsd={priceOnRequest ? tour.originalPriceUsd : totalOriginalPriceUsd}
+              priceOnRequest={priceOnRequest}
+              priceFromPrefix={tour.priceFromPrefix}
               size="sm"
               showFrom={false}
             />
-            <button
-              type="button"
-              onClick={handleBookClick}
-              className="flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark"
-            >
-              Забронировать
-            </button>
+            {usesExternalBooking && externalBookingHref && externalBookingLink ? (
+              <ExternalBookingButton
+                href={externalBookingHref}
+                link={externalBookingLink}
+                className="flex-1 rounded-xl py-3 text-sm font-semibold"
+                onClick={handleExternalBookingClick}
+              />
+            ) : (
+              <button
+                type="button"
+                onClick={handlePrimaryAction}
+                className="flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark"
+              >
+                {primaryLabel}
+              </button>
+            )}
           </div>
         </div>
       </div>

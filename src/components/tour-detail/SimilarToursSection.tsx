@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { TourDetail } from "@/types";
-import TourPriceDisplay from "./TourPriceDisplay";
+import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import { formatDurationShort } from "@/lib/pluralize";
 import TourSection from "./TourSection";
 
@@ -34,9 +34,11 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
                 <span className="text-slate">
                   {formatDurationShort(tour.durationDays, tour.durationNights)}
                 </span>
-                <TourPriceDisplay
+                <TourPublicPriceDisplay
                   priceUsd={tour.priceUsd}
                   originalPriceUsd={tour.originalPriceUsd}
+                  priceOnRequest={tour.priceOnRequest}
+                  priceFromPrefix={tour.priceFromPrefix}
                   size="sm"
                   showFrom={false}
                 />

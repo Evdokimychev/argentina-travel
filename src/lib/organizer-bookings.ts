@@ -3,6 +3,7 @@ import { getOrganizerTourListingsForUser } from "@/lib/organizer-tour-store";
 import { getOrganizerBookings, getOrganizerBookingStats } from "@/lib/bookings-store";
 import { getUnreadMessagesCount } from "@/lib/messages-store";
 import { ORGANIZER_NAV_ITEMS, type OrganizerNavItem } from "@/data/organizer-dashboard";
+import { getOrganizerCabinetWaitlistStats } from "@/lib/organizer-waitlist";
 import type { Booking } from "@/types/tourist";
 
 export function getOrganizerCatalogSlugs(userId: string): string[] {
@@ -22,8 +23,12 @@ export function getOrganizerNavItemsWithBadges(userId: string): OrganizerNavItem
   const unreadMessages = getUnreadMessagesCount({ userId, role: "organizer" });
 
   return ORGANIZER_NAV_ITEMS.map((item) => {
-    if (item.id === "bookings" && stats.activeInboxCount > 0) {
-      return { ...item, badge: stats.activeInboxCount };
+    if (item.id === "bookings") {
+      const waitlistStats = getOrganizerCabinetWaitlistStats(userId);
+      const badge = stats.activeInboxCount + waitlistStats.activeCount;
+      if (badge > 0) {
+        return { ...item, badge };
+      }
     }
     if (item.id === "messages" && unreadMessages > 0) {
       return { ...item, badge: unreadMessages };

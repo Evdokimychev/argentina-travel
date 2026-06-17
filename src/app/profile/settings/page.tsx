@@ -14,6 +14,10 @@ import { PROFILE_COUNTRIES, getProfileCountryFlag } from "@/data/profile-countri
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
 import { cabinetLinkClass, cabinetPageSubtitleClass, cabinetPageTitleClass, cabinetPanelClass } from "@/lib/cabinet-ui";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 
@@ -116,10 +120,19 @@ export default function ProfileSettingsPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -150,11 +163,17 @@ export default function ProfileSettingsPage() {
     setLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      const normalized = normalizeSiteError(result.error);
+      setError(normalized);
+      feedback.showError(normalized);
       return;
     }
 
     setSaved(true);
+    feedback.success({
+      title: "Профиль обновлён",
+      description: "Изменения сохранены.",
+    });
   }
 
   async function handleAvatarSelect(file: File | null) {
@@ -178,12 +197,17 @@ export default function ProfileSettingsPage() {
       const dataUrl = await readFileAsDataUrl(file);
       const result = await updateAvatar(dataUrl);
       if (!result.ok) {
-        setError(result.error);
+        setError(normalizeSiteError(result.error));
         return;
       }
       setSaved(true);
+      feedback.success({ title: "Фото обновлено", description: "Аватар успешно изменён." });
     } catch {
-      setError("Не удалось загрузить фото");
+      setError(
+        siteFormError("Не удалось загрузить фото", {
+          steps: ["Выберите JPG или PNG до 2 МБ", "Попробуйте другое изображение"],
+        })
+      );
     } finally {
       setAvatarLoading(false);
       if (fileInputRef.current) {
@@ -201,11 +225,12 @@ export default function ProfileSettingsPage() {
     setAvatarLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      setError(normalizeSiteError(result.error));
       return;
     }
 
     setSaved(true);
+    feedback.success({ title: "Фото удалено", description: "Аватар сброшен на стандартный." });
   }
 
   return (
@@ -382,20 +407,28 @@ export default function ProfileSettingsPage() {
             </div>
 
           {error ? (
-            <div role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              {error}
-            </div>
+            <InlineFeedback
+              variant="error"
+              title={error.title}
+              description={error.description}
+              steps={error.steps}
+              action={error.action}
+              className="mt-4"
+            />
           ) : null}
 
           {saved ? (
-            <div className="mt-4 rounded-xl bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800">
-              Изменения успешно сохранены!
-            </div>
+            <InlineFeedback
+              variant="success"
+              title="Изменения сохранены"
+              description="Данные профиля обновлены."
+              className="mt-4"
+            />
           ) : null}
 
           <div className="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <Button type="submit" disabled={loading || avatarLoading}>
-              {loading ? "Сохраняем…" : "Сохранить изменения"}
+            <Button type="submit" loading={loading} loadingLabel="Сохраняем…" disabled={avatarLoading}>
+              Сохранить изменения
             </Button>
             <button
               type="button"

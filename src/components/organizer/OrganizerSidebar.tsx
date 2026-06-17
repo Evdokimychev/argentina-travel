@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BarChart3,
   ChevronLeft,
   ChevronRight,
   Clock3,
@@ -39,6 +40,7 @@ const AUTO_COLLAPSE_MAX_WIDTH = 1279;
 
 const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
   dashboard: LayoutGrid,
+  analytics: BarChart3,
   tours: Compass,
   bookings: Clock3,
   messages: Mail,
