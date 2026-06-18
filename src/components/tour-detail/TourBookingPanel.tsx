@@ -4,16 +4,17 @@ import { useMemo, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
-import { getDiscountPercent, hasDiscount } from "@/lib/discount";
 import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
+import TourBookingPriceSummary from "./TourBookingPriceSummary";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import GuestCounter from "./GuestCounter";
-import FormattedPrice from "@/components/FormattedPrice";
+import DiscountPercentBadge from "./DiscountPercentBadge";
 import BookingAdvantages from "./BookingAdvantages";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
 import { useTourBooking } from "./TourBookingContext";
@@ -27,6 +28,7 @@ import ExternalBookingButton from "./ExternalBookingButton";
 import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
 
 interface TourBookingPanelProps {
   tour: TourDetail;
@@ -58,12 +60,11 @@ export default function TourBookingPanel({
     customDate,
     selectedDateId,
     openCheckout,
-    pricePerPersonUsd,
-    originalPricePerPersonUsd,
     totalPriceUsd,
     totalOriginalPriceUsd,
+    discountPercentOff,
     groupDiscountApplied,
-    groupDiscountSavingsUsd,
+    basePricePerPersonUsd,
     priceOnRequest,
     canJoinWaitlist,
     openWaitlist,
@@ -71,6 +72,10 @@ export default function TourBookingPanel({
     externalBookingLink,
     externalBookingHref,
   } = useTourBooking();
+
+  const bookButtonPulseKey = useRandomAttentionPulse({
+    enabled: !previewMode && !usesExternalBooking,
+  });
 
   const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
   const datePriceSummary = resolveTourDatePriceSummary(tour.dates, tour.priceUsd);
@@ -87,11 +92,11 @@ export default function TourBookingPanel({
     return `${formatTouristsBooking(guests)} за ${formatDays(tour.durationDays)}`;
   }, [tour.durationDays, guests]);
 
-  const discounted = hasDiscount(totalOriginalPriceUsd, totalPriceUsd);
-  const percentOff =
-    discounted && totalOriginalPriceUsd
-      ? getDiscountPercent(totalOriginalPriceUsd, totalPriceUsd)
-      : null;
+  const totalBeforeGroupDiscountUsd = basePricePerPersonUsd * guests;
+  const groupDiscountSettings = normalizeGroupDiscountSettings(tour.groupDiscount);
+  const groupDiscountEnabled =
+    !priceOnRequest &&
+    (tour.groupDiscountEnabled ?? groupDiscountSettings.enabled);
 
   const bookingValidationError =
     usesExternalBooking && !externalBookingLink?.passContext
@@ -147,59 +152,44 @@ export default function TourBookingPanel({
         className
       )}
     >
-      {percentOff != null ? (
-        <span
-          className="pointer-events-none absolute right-0 top-0 rounded-bl-2xl rounded-tr-[1.35rem] bg-brand px-3.5 py-2 text-sm font-bold leading-none tracking-tight text-white shadow-md sm:px-4 sm:py-2.5 sm:text-base"
-          aria-label={`Скидка ${percentOff} процентов`}
-        >
-          −{percentOff}%
-        </span>
+      {discountPercentOff != null ? (
+        <DiscountPercentBadge percent={discountPercentOff} />
       ) : null}
-      <TourPublicPriceDisplay
-        priceUsd={priceOnRequest ? tour.priceUsd : totalPriceUsd}
-        originalPriceUsd={priceOnRequest ? tour.originalPriceUsd : totalOriginalPriceUsd}
-        priceOnRequest={priceOnRequest}
-        priceFromPrefix={
-          priceOnRequest
-            ? tour.priceFromPrefix
-            : dateMode === "scheduled" && !selectedDate
-              ? tour.priceFromPrefix
-              : false
-        }
-        suffix={priceOnRequest ? undefined : priceSuffix}
-        showFrom={priceOnRequest ? false : dateMode === "scheduled" && !selectedDate && tour.priceFromPrefix}
-        showDiscountRibbon={false}
-        className={!priceOnRequest && percentOff != null ? "pt-2 pr-[4.75rem] sm:pt-3 sm:pr-20" : undefined}
-      />
-      {!priceOnRequest && dateMode === "scheduled" && datePriceRangeLabel ? (
-        <p className="mt-1 text-xs text-slate">Диапазон по датам: {datePriceRangeLabel}</p>
-      ) : null}
-      {!priceOnRequest && dateMode === "scheduled" && selectedDate ? (
-        <p className="mt-1 text-xs font-medium text-charcoal">
-          Цена за выбранную дату:{" "}
-          <FormattedPrice priceUsd={selectedDate.priceUsd} className="text-xs font-medium" /> / чел.
-        </p>
-      ) : null}
-      {!priceOnRequest && guests > 1 && (
-        <p className="mt-1 text-xs text-slate">
-          <FormattedPrice priceUsd={pricePerPersonUsd} className="text-xs text-slate" /> за туриста
-          {originalPricePerPersonUsd != null && originalPricePerPersonUsd > pricePerPersonUsd && (
-            <>
-              {" "}
-              <span className="line-through opacity-70">
-                <FormattedPrice priceUsd={originalPricePerPersonUsd} className="text-xs" />
-              </span>
-            </>
-          )}
-        </p>
-      )}
-      {!priceOnRequest && groupDiscountApplied ? (
-        <p className="mt-1 text-xs font-medium text-sky-dark">
-          Групповая скидка −{" "}
-          <FormattedPrice priceUsd={groupDiscountSavingsUsd} className="text-xs font-medium" /> на
-          заявку
-        </p>
-      ) : null}
+      <div
+        className={cn(
+          !priceOnRequest && discountPercentOff != null && "pr-[4.75rem] sm:pr-20"
+        )}
+      >
+        {priceOnRequest ? (
+          <TourPublicPriceDisplay
+            priceUsd={tour.priceUsd}
+            originalPriceUsd={tour.originalPriceUsd}
+            priceOnRequest
+            priceFromPrefix={tour.priceFromPrefix}
+            showDiscountRibbon={false}
+          />
+        ) : (
+          <TourBookingPriceSummary
+            priceUsd={totalPriceUsd}
+            originalPriceUsd={totalOriginalPriceUsd}
+            suffix={priceSuffix}
+            showFrom={
+              dateMode === "scheduled" && !selectedDate && Boolean(tour.priceFromPrefix)
+            }
+            groupDiscountApplied={groupDiscountApplied}
+            groupDiscountEnabled={groupDiscountEnabled}
+            groupDiscountHint={tour.groupDiscountHint}
+            totalBeforeGroupDiscountUsd={totalBeforeGroupDiscountUsd}
+            className={discountPercentOff != null ? "pt-2 sm:pt-3" : undefined}
+          />
+        )}
+
+        {!priceOnRequest && !selectedDate && datePriceRangeLabel ? (
+          <p className="mt-2 text-xs leading-snug text-slate">
+            Диапазон по датам: {datePriceRangeLabel}
+          </p>
+        ) : null}
+      </div>
 
       {startLocation && (
         <div className="mt-5 border-t border-gray-100 pt-5">
@@ -263,7 +253,15 @@ export default function TourBookingPanel({
               />
             </>
           ) : (
-            <Button type="button" onClick={handlePrimaryAction} className="mt-5 w-full">
+            <Button
+              key={bookButtonPulseKey}
+              type="button"
+              onClick={handlePrimaryAction}
+              className={cn(
+                "mt-5 w-full",
+                bookButtonPulseKey > 0 && "animate-book-cta-pulse"
+              )}
+            >
               {primaryLabel}
             </Button>
           )}

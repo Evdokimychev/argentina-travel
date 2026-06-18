@@ -252,12 +252,12 @@ export default function BookingDateSelector({
                     </p>
                     <div className="space-y-1 text-xs leading-relaxed text-slate">
                       {tour.requestDateFrom && tour.requestDateTo && (
-                        <p>
-                          Любые даты в период{" "}
-                          <span className="font-medium text-charcoal/90">
+                        <div className="space-y-0.5">
+                          <p>Любые даты в период</p>
+                          <p className="font-medium text-charcoal/90">
                             {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
-                          </span>
-                        </p>
+                          </p>
+                        </div>
                       )}
                       <p>Только ваша группа · даты согласуются с организатором</p>
                     </div>

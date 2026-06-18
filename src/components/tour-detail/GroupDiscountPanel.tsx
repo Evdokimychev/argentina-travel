@@ -1,7 +1,8 @@
 import { Users } from "lucide-react";
 import type { GroupDiscountSettings } from "@/types/group-discount";
 import {
-  formatGroupDiscountTierLabel,
+  formatGroupDiscountTierGuestRange,
+  formatGroupDiscountTierValueLabel,
   normalizeGroupDiscountSettings,
   resolveGroupDiscountQuote,
 } from "@/lib/group-discount";
@@ -9,6 +10,7 @@ import {
   tourDetailPromoHeadingClass,
   tourDetailPromoPanelClass,
 } from "@/lib/tour-detail-ui";
+import GroupDiscountTierRow from "./GroupDiscountTierRow";
 
 interface GroupDiscountPanelProps {
   settings?: GroupDiscountSettings | null;
@@ -38,18 +40,25 @@ export default function GroupDiscountPanel({
           <Users className="h-3.5 w-3.5" aria-hidden />
           Групповая скидка
         </p>
-        <ul className="mt-2 space-y-1">
+        <ul className="mt-2 space-y-1.5">
           {normalized.tiers.map((tier) => (
-            <li key={tier.id} className="text-sm text-charcoal">
-              {formatGroupDiscountTierLabel(tier, basePriceUsd)}
+            <li key={tier.id}>
+              <GroupDiscountTierRow tier={tier} basePriceUsd={basePriceUsd} className="text-sm" />
             </li>
           ))}
         </ul>
         {activeQuote?.appliedTier ? (
-          <p className="mt-2 text-xs font-medium text-sky-dark">
-            Для вашей группы действует скидка:{" "}
-            {formatGroupDiscountTierLabel(activeQuote.appliedTier, basePriceUsd)}
-          </p>
+          <div className="mt-2 rounded-lg border border-sky/15 bg-white/70 px-3 py-2">
+            <p className="text-[11px] font-medium uppercase tracking-wide text-slate">
+              Для вашей группы
+            </p>
+            <GroupDiscountTierRow
+              tier={activeQuote.appliedTier}
+              basePriceUsd={basePriceUsd}
+              className="mt-1 text-sm"
+              emphasized
+            />
+          </div>
         ) : null}
       </div>
     );
@@ -69,17 +78,24 @@ export default function GroupDiscountPanel({
         {normalized.tiers.map((tier) => (
           <li
             key={tier.id}
-            className="flex items-center justify-between gap-3 rounded-xl bg-white/80 px-4 py-2.5 text-sm"
+            className="rounded-xl bg-white/80 px-4 py-2.5 text-sm"
           >
-            <span className="text-charcoal">{formatGroupDiscountTierLabel(tier, basePriceUsd)}</span>
+            <GroupDiscountTierRow tier={tier} basePriceUsd={basePriceUsd} />
           </li>
         ))}
       </ul>
       {activeQuote?.appliedTier ? (
-        <p className="mt-4 rounded-xl border border-sky/15 bg-white/80 px-4 py-3 text-sm font-medium text-charcoal">
-          Для выбранного количества туристов:{" "}
-          {formatGroupDiscountTierLabel(activeQuote.appliedTier, basePriceUsd)}
-        </p>
+        <div className="mt-4 rounded-xl border border-sky/15 bg-white/80 px-4 py-3">
+          <p className="text-xs font-medium uppercase tracking-wide text-slate">
+            Для выбранного количества туристов
+          </p>
+          <GroupDiscountTierRow
+            tier={activeQuote.appliedTier}
+            basePriceUsd={basePriceUsd}
+            className="mt-2 text-sm"
+            emphasized
+          />
+        </div>
       ) : null}
     </div>
   );

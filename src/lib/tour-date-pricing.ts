@@ -1,4 +1,14 @@
 import type { TourDatePrice } from "@/types";
+import {
+  eachDayOfInterval,
+  format,
+  isAfter,
+  isBefore,
+  isValid,
+  parseISO,
+  startOfDay,
+} from "date-fns";
+import { computeEndDateFromStart } from "@/data/tour-booking-defaults";
 
 export interface TourDatePriceSummary {
   minPriceUsd: number;
@@ -59,6 +69,49 @@ export function buildDepartureCalendarMap(dates: TourDatePrice[]): Map<string, D
     map.set(date.startDate, { date, startKey: date.startDate });
   }
   return map;
+}
+
+export function resolveTourDepartureEndDate(
+  startDate: string,
+  endDate?: string,
+  durationDays?: number
+): string {
+  if (endDate?.trim()) return endDate;
+  if (durationDays != null && durationDays > 0) {
+    return computeEndDateFromStart(startDate, durationDays) || startDate;
+  }
+  return startDate;
+}
+
+export function eachTourDepartureDateKey(
+  startDate: string,
+  endDate?: string,
+  durationDays?: number
+): string[] {
+  const start = parseISO(startDate);
+  const end = parseISO(resolveTourDepartureEndDate(startDate, endDate, durationDays));
+  if (!isValid(start) || !isValid(end)) return startDate ? [startDate] : [];
+
+  const from = isBefore(start, end) ? startOfDay(start) : startOfDay(end);
+  const to = isAfter(start, end) ? startOfDay(start) : startOfDay(end);
+
+  return eachDayOfInterval({ start: from, end: to }).map((day) => format(day, "yyyy-MM-dd"));
+}
+
+export function countTourDepartureDays(
+  startDate: string,
+  endDate?: string,
+  durationDays?: number
+): number {
+  return eachTourDepartureDateKey(startDate, endDate, durationDays).length;
+}
+
+export function countTourDepartureNights(
+  startDate: string,
+  endDate?: string,
+  durationDays?: number
+): number {
+  return Math.max(countTourDepartureDays(startDate, endDate, durationDays) - 1, 0);
 }
 
 export function resolveTourCatalogPriceUsd(

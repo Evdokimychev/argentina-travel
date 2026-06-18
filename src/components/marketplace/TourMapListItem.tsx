@@ -8,6 +8,7 @@ import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisp
 import { cn } from "@/lib/cn";
 import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { formatDays } from "@/lib/pluralize";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourMapListItemProps {
@@ -24,6 +25,7 @@ export default function TourMapListItem({
   listItemRef,
 }: TourMapListItemProps) {
   const ratingDisplay = resolveTourRatingLabel(tour);
+  const cityDisplay = resolveTourCityDisplay(tour);
 
   return (
     <li ref={listItemRef} data-tour-id={tour.id}>
@@ -56,7 +58,7 @@ export default function TourMapListItem({
             </h3>
             <p className="mt-1 flex items-center gap-1 text-xs text-slate">
               <MapPin className="h-3 w-3 shrink-0" aria-hidden />
-              <span className="truncate">{tour.destination}</span>
+              <span className="truncate">{cityDisplay}</span>
             </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate">
               {ratingDisplay.hasReviews ? (

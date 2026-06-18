@@ -31,6 +31,78 @@ function isNetworkError(message: string): boolean {
   );
 }
 
+const KNOWN_MESSAGES: Record<string, SiteFeedbackMessage> = {
+  NOT_FOUND: {
+    title: "Аккаунт не найден",
+    description: "Проверьте номер телефона или зарегистрируйтесь.",
+    steps: ["Убедитесь, что номер введён полностью", "Или создайте новый аккаунт"],
+  },
+  DUPLICATE_EMAIL: {
+    title: "Эта почта уже занята",
+    description: "Войдите в существующий аккаунт или укажите другой email.",
+    steps: [
+      "Нажмите «Войти» и используйте эту почту",
+      "Если забыли пароль — нажмите «Забыли пароль?»",
+    ],
+  },
+  DUPLICATE_PHONE: {
+    title: "Этот номер уже зарегистрирован",
+    description: "Войдите по телефону или email.",
+    steps: ["Попробуйте войти с этим номером", "Или восстановите пароль по почте"],
+  },
+  INVALID_CREDENTIALS: {
+    title: "Неверные данные для входа",
+    description: "Проверьте email и пароль.",
+    steps: [
+      "Убедитесь, что раскладка клавиатуры верная",
+      "Если регистрировались по телефону — используйте тот же пароль при входе по почте",
+      "Нажмите «Забыли пароль?» для восстановления",
+    ],
+  },
+  ROLE_NOT_CONNECTED: {
+    title: "Роль организатора не подключена",
+    description: "Аккаунт найден как турист. Можно подключить роль автора тура без новой регистрации.",
+    steps: ["Войдите как турист и подключите роль", "Или выберите «Я турист» при входе"],
+  },
+  WRONG_ROLE: {
+    title: "Выберите другой тип входа",
+    description: "Этот аккаунт зарегистрирован с другой ролью.",
+    steps: ["Переключите «Я турист» / «Я автор тура»", "Или войдите через кабинет организатора"],
+  },
+  PROFILE_MISSING: {
+    title: "Профиль не синхронизирован",
+    description: "Вход выполнен, но данные профиля не найдены.",
+    steps: ["Напишите в поддержку с указанием email", "Мы восстановим доступ вручную"],
+    action: { label: "Написать в поддержку", href: "/contacts" },
+  },
+};
+
+function matchKnownMessage(raw: string): SiteFeedbackMessage | undefined {
+  if (KNOWN_MESSAGES[raw]) {
+    return KNOWN_MESSAGES[raw];
+  }
+
+  const lower = raw.toLowerCase();
+
+  if (raw.includes("Неверный email или пароль") || raw.includes("Неверный пароль")) {
+    return KNOWN_MESSAGES.INVALID_CREDENTIALS;
+  }
+
+  if (raw.includes("ROLE_NOT_CONNECTED") || raw.includes("роль организатора не подключена")) {
+    return KNOWN_MESSAGES.ROLE_NOT_CONNECTED;
+  }
+
+  if (raw.includes("WRONG_ROLE") || raw.includes("зарегистрирована как автор тура")) {
+    return KNOWN_MESSAGES.WRONG_ROLE;
+  }
+
+  if (lower.includes("profile") && lower.includes("не найден")) {
+    return KNOWN_MESSAGES.PROFILE_MISSING;
+  }
+
+  return undefined;
+}
+
 export function normalizeSiteError(
   error: unknown,
   context?: Partial<SiteFeedbackMessage>
@@ -46,30 +118,7 @@ export function normalizeSiteError(
     return { ...NETWORK_HINT, ...context };
   }
 
-  const known: Record<string, SiteFeedbackMessage> = {
-    NOT_FOUND: {
-      title: "Аккаунт не найден",
-      description: "Проверьте номер телефона или зарегистрируйтесь.",
-      steps: ["Убедитесь, что номер введён полностью", "Или создайте новый аккаунт"],
-    },
-    DUPLICATE_EMAIL: {
-      title: "Эта почта уже занята",
-      description: "Войдите в существующий аккаунт или укажите другой email.",
-      steps: ["Нажмите «Войти» и используйте эту почту", "Или укажите другой адрес при регистрации"],
-    },
-    DUPLICATE_PHONE: {
-      title: "Этот номер уже зарегистрирован",
-      description: "Войдите по телефону или email.",
-      steps: ["Попробуйте войти с этим номером", "Если забыли пароль — войдите по почте"],
-    },
-    INVALID_CREDENTIALS: {
-      title: "Неверные данные для входа",
-      description: "Проверьте email и пароль.",
-      steps: ["Убедитесь, что раскладка клавиатуры верная", "При регистрации используйте тот же пароль"],
-    },
-  };
-
-  const matched = known[raw];
+  const matched = matchKnownMessage(raw);
   if (matched) {
     return { ...matched, ...context };
   }
@@ -114,4 +163,16 @@ export function siteSuccessMessage(
   action?: SiteFeedbackMessage["action"]
 ): SiteFeedbackMessage {
   return { title, description, action };
+}
+
+export function passwordResetSentMessage(email: string): SiteFeedbackMessage {
+  return {
+    title: "Письмо отправлено",
+    description: `Если аккаунт с адресом ${email} зарегистрирован, вы получите ссылку для смены пароля.`,
+    steps: [
+      "Проверьте папку «Спам»",
+      "Ссылка действует ограниченное время",
+      "После смены пароля войдите с новыми данными",
+    ],
+  };
 }

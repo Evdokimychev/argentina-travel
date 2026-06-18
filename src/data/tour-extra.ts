@@ -149,7 +149,7 @@ export const tourExtra: Record<string, TourExtra> = {
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
     },
     comfort: "Средний",
-    startLocation: "Puerto Iguazú, аэропорт Cataratas",
+    startLocation: "Пуэрто-Игуасу, Аргентина, аэропорт Катаратас-дель-Игуасу",
     features: [
       {
         title: "Garganta del Diablo",

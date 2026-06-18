@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatDurationShort } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import TourCardImageVignette from "@/components/marketplace/TourCardImageVignette";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourEmbedSpotlightCardProps {
@@ -18,6 +20,7 @@ interface TourEmbedSpotlightCardProps {
 
 export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpotlightCardProps) {
   const rating = resolveTourRatingLabel(tour);
+  const cityDisplay = resolveTourCityDisplay(tour);
   const href = `/tours/${tour.slug}`;
 
   return (
@@ -38,7 +41,7 @@ export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpo
           className="object-cover transition-transform duration-700 group-hover:scale-105"
           sizes="(max-width: 1024px) 100vw, 55vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 via-transparent to-transparent lg:bg-gradient-to-r lg:from-transparent lg:via-transparent lg:to-charcoal/10" />
+        <TourCardImageVignette />
         {tour.isHot ? (
           <Badge variant="hot" className="absolute left-4 top-4">
             Горящий
@@ -54,7 +57,7 @@ export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpo
         <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-slate">
           <span className="inline-flex items-center gap-1">
             <MapPin className="h-4 w-4 text-sky/70" aria-hidden />
-            {tour.destination}
+            {cityDisplay}
           </span>
           <span aria-hidden>·</span>
           <span>{formatDurationShort(tour.durationDays, tour.durationNights)}</span>

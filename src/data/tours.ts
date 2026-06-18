@@ -167,7 +167,7 @@ export const baseTours: BaseTour[] = [
       "Трансферы",
     ],
     difficulty: "Лёгкий",
-    groupSize: "8–14 человек",
+    groupSize: "1–14 человек",
   },
   {
     id: "5",

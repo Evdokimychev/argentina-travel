@@ -127,6 +127,14 @@ body {
     transform: none;
   }
 
+  .animate-discount-badge-pulse {
+    animation: none;
+  }
+
+  .animate-book-cta-pulse {
+    animation: none;
+  }
+
   .motion-reduce\:transform-none:hover {
     transform: none !important;
   }
@@ -170,6 +178,44 @@ body {
 
 .animate-delay-500 {
   animation-delay: 0.5s;
+}
+
+@keyframes discount-badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.15);
+  }
+  50% {
+    transform: scale(1.1);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--color-brand) 35%, transparent),
+      0 8px 20px -4px rgb(212 83 59 / 0.45);
+  }
+}
+
+.animate-discount-badge-pulse {
+  animation: discount-badge-pulse 0.55s ease-in-out 3;
+  transform-origin: top right;
+}
+
+@keyframes book-cta-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+  50% {
+    transform: scale(1.04);
+    box-shadow:
+      0 0 0 4px color-mix(in srgb, var(--color-sky) 35%, transparent),
+      0 10px 24px -6px color-mix(in srgb, var(--color-sky) 50%, transparent);
+  }
+}
+
+.animate-book-cta-pulse {
+  animation: book-cta-pulse 0.6s ease-in-out 3;
+  transform-origin: center;
 }
 
 .route-map-canvas .leaflet-control-zoom {

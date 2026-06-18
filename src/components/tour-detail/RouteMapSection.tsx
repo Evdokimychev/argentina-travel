@@ -8,7 +8,7 @@ import type { TourArrivalInfo, TourRoutePoint } from "@/types";
 import type { TourLogistics } from "@/types/tour";
 import { cn } from "@/lib/cn";
 import TourSection from "./TourSection";
-import ArrivalDetails, { ArrivalRecommendations } from "./ArrivalDetails";
+import ArrivalDetails, { getArrivalScheduleCities } from "./ArrivalDetails";
 
 const RouteMap = dynamic(() => import("./RouteMap"), {
   ssr: false,
@@ -35,21 +35,17 @@ export default function RouteMapSection({
   const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
   const hasMap = points.length > 0;
   const hasRouteImage = Boolean(routeMapImage?.trim());
-  const hasArrivalRecommendations = Boolean(
-    logistics?.arrivalDepartureEnabled &&
-      logistics.arrivalDepartureCities.some(
-        (city) => city.city.trim() && city.plane.enabled && (city.canArrive || city.canDepart)
-      )
-  );
+  const hasArrivalSchedule = getArrivalScheduleCities(logistics).length > 0;
   const hasArrivalPanel = Boolean(
     arrival &&
-      (arrival.airports.length > 0 ||
+      (hasArrivalSchedule ||
+        arrival.airports.length > 0 ||
         arrival.flights.length > 0 ||
         arrival.transfers.length > 0 ||
         arrival.meetingPoint.trim())
   );
 
-  if (!hasMap && !hasArrivalPanel && !hasArrivalRecommendations && !hasRouteImage) return null;
+  if (!hasMap && !hasArrivalPanel && !hasRouteImage) return null;
 
   return (
     <TourSection id="route-map" title="Маршрут и дорога">
@@ -138,17 +134,11 @@ export default function RouteMapSection({
         <div className={cn("space-y-4", (hasMap || hasRouteImage) && "mt-8")}>
           <div>
             <h3 className="font-heading text-lg font-bold text-charcoal">Как добраться</h3>
-            {hasMap ? (
-              <p className="mt-1 text-sm text-slate">Аэропорты, трансферы и место встречи</p>
-            ) : null}
+            <p className="mt-1 text-sm text-slate">
+              Когда прилетать и вылетать, аэропорты, трансферы и место встречи
+            </p>
           </div>
-          <ArrivalDetails arrival={arrival} />
-        </div>
-      ) : null}
-
-      {logistics && hasArrivalRecommendations ? (
-        <div className="mt-8">
-          <ArrivalRecommendations logistics={logistics} />
+          <ArrivalDetails arrival={arrival} logistics={logistics} />
         </div>
       ) : null}
     </TourSection>

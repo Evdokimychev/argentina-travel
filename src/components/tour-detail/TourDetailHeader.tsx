@@ -11,6 +11,10 @@ import { cn } from "@/lib/cn";
 import { formatReviews } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
+import {
+  resolveArgentinaProvinceName,
+  resolveTourCityDisplay,
+} from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import TourClassificationBar from "./TourClassificationBar";
 import TourDurationInfo from "./TourDurationInfo";
@@ -24,6 +28,14 @@ interface TourDetailHeaderProps {
 export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHeaderProps) {
   const [shared, setShared] = useState(false);
   const ratingDisplay = resolveTourRatingLabel(tour);
+  const cityDisplay = resolveTourCityDisplay({
+    destination: canonicalTour?.geography.destination,
+    mainLocation: canonicalTour?.geography.mainLocation,
+    cities: canonicalTour?.geography.cities,
+    region: tour.region,
+    country: tour.country,
+  });
+  const provinceLabel = resolveArgentinaProvinceName(tour.region);
 
   async function handleShare() {
     const url = window.location.href;
@@ -68,7 +80,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
             Авторские туры
           </Link>
           <span className="mx-2 text-gray-300">/</span>
-          <span className="text-slate">{tour.region}</span>
+          <span className="text-slate">{provinceLabel}</span>
           <span className="mx-2 text-gray-300">/</span>
           <span className="text-charcoal">{tour.title}</span>
         </nav>
@@ -79,7 +91,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
               href="/tours"
               className="group inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky transition-colors hover:border-sky/30 hover:bg-sky/10"
             >
-              {tour.region}, {tour.country}
+              {cityDisplay}
               <ArrowUpRight
                 className="h-3 w-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 aria-hidden
@@ -126,7 +138,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
 
               <p className="inline-flex items-center gap-1.5 text-sm text-slate">
                 <MapPin className="h-4 w-4 shrink-0 text-sky/70" aria-hidden />
-                {tour.region}, {tour.country}
+                {cityDisplay}
               </p>
 
               {ratingDisplay.hasReviews ? (

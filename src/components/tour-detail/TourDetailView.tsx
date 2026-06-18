@@ -147,7 +147,10 @@ export default function TourDetailView({
               <DatesSection tour={tour} canonicalTour={canonicalTour} />
               <IncludedExcludedSection included={tour.included} excluded={tour.excluded} />
               {tourHasAccommodation(tour) ? (
-                <AccommodationsSection accommodations={tour.accommodations} />
+                <AccommodationsSection
+                  accommodations={tour.accommodations}
+                  durationNights={tour.durationNights}
+                />
               ) : null}
               {canonicalTour ? <PackingListSection tour={canonicalTour} /> : null}
               {canonicalTour ? <TourPoliciesSection tour={canonicalTour} /> : null}

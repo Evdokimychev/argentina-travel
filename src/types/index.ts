@@ -363,6 +363,8 @@ export interface TourDetail {
   descriptionBlocks: RichTextBlock[];
   descriptionExtra?: TourDescriptionExtra;
   itinerary: TourItineraryDay[];
+  /** Комментарий организатора в конце блока программы. */
+  itineraryOrganizerComment?: string;
   organizerComment: {
     greeting: string;
     recommendations: string[];

@@ -4,41 +4,53 @@ import { TourDetail } from "@/types";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import { formatDurationShort } from "@/lib/pluralize";
 import TourSection from "./TourSection";
+import { cn } from "@/lib/cn";
+import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import TourCardImageVignette from "@/components/marketplace/TourCardImageVignette";
 
 export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) {
   if (tours.length === 0) return null;
 
   return (
     <TourSection id="similar" title="Похожие путешествия">
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tours.map((tour) => (
           <Link
             key={tour.slug}
             href={`/tours/${tour.slug}`}
-            className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
+            className={cn(
+              "group flex h-full flex-col",
+              tourCardShellClass,
+              tourCardShellInteractiveClass,
+              "hover:border-sky/20"
+            )}
           >
-            <div className="relative h-44 shrink-0">
+            <div className="relative aspect-[4/3] shrink-0 overflow-hidden">
               <Image
                 src={tour.image}
                 alt={tour.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
+              <TourCardImageVignette />
             </div>
-            <div className="flex flex-1 flex-col p-4">
-              <h3 className="line-clamp-2 font-semibold leading-snug text-charcoal group-hover:text-sky">
+
+            <div className="flex min-h-[8.5rem] flex-1 flex-col p-4">
+              <h3 className="line-clamp-2 font-heading text-base font-bold leading-snug text-charcoal group-hover:text-sky">
                 {tour.title}
               </h3>
-              {tour.shortDescription ? (
-                <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-slate">
-                  {tour.shortDescription}
-                </p>
+
+              {tour.region ? (
+                <p className="mt-1.5 line-clamp-1 text-xs text-slate">{tour.region}</p>
+              ) : tour.shortDescription ? (
+                <p className="mt-1.5 line-clamp-1 text-xs text-slate">{tour.shortDescription}</p>
               ) : null}
-              <div className="mt-auto flex items-end justify-between gap-3 pt-3 text-sm">
-                <span className="shrink-0 text-slate">
+
+              <div className="mt-auto space-y-1.5 border-t border-gray-100 pt-3">
+                <p className="text-xs text-slate">
                   {formatDurationShort(tour.durationDays, tour.durationNights)}
-                </span>
+                </p>
                 <TourPublicPriceDisplay
                   priceUsd={tour.priceUsd}
                   originalPriceUsd={tour.originalPriceUsd}
@@ -46,8 +58,9 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
                   priceFromPrefix={tour.priceFromPrefix}
                   size="sm"
                   showFrom={false}
+                  showDiscountRibbon={false}
                   density="compact"
-                  className="text-right"
+                  className="[&_.font-bold]:text-base [&_.line-through]:text-[11px]"
                 />
               </div>
             </div>

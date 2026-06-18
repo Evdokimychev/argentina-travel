@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { SafeImage } from "@/components/ui/safe-image";
+import TourCardImageVignette from "./TourCardImageVignette";
 
 interface TourCardGalleryProps {
   images: string[];
@@ -38,6 +39,8 @@ export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
         className="object-cover transition-transform duration-500 group-hover:scale-105"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
+
+      <TourCardImageVignette />
 
       {hasMultiple && (
         <>

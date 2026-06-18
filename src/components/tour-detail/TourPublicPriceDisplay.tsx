@@ -6,9 +6,7 @@ import PriceOnRequestInfoButton from "./PriceOnRequestInfoButton";
 import {
   TOUR_PRICE_ON_REQUEST_LABEL,
   resolveTourPriceFromPrefix,
-  tourShowsReferencePrice,
 } from "@/lib/tour-price-public";
-import { tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
 
 interface TourPublicPriceDisplayProps {
@@ -37,7 +35,6 @@ export default function TourPublicPriceDisplay({
   density = "default",
   className,
 }: TourPublicPriceDisplayProps) {
-  const showsReference = tourShowsReferencePrice({ priceUsd, priceOnRequest, priceFromPrefix });
   const effectiveShowFrom =
     showFrom ?? resolveTourPriceFromPrefix({ priceUsd, priceOnRequest, priceFromPrefix });
   const isCompact = density === "compact";
@@ -51,42 +48,24 @@ export default function TourPublicPriceDisplay({
   if (priceOnRequest) {
     return (
       <div className={cn("relative min-w-0", className)}>
-        <div className="flex flex-wrap items-center gap-1">
-          <p className={cn("font-bold text-charcoal", labelSizeClass)}>
+        <div
+          className={cn(
+            "flex items-center gap-1",
+            isCompact ? "flex-nowrap" : "flex-wrap"
+          )}
+        >
+          <p
+            className={cn(
+              "font-bold text-charcoal",
+              isCompact ? "text-xs leading-tight" : labelSizeClass
+            )}
+          >
             {TOUR_PRICE_ON_REQUEST_LABEL}
           </p>
           <PriceOnRequestInfoButton
-            hasReferencePrice={showsReference}
-            className={size === "lg" && !isCompact ? "h-7 w-7" : "h-6 w-6"}
+            className={isCompact ? "h-5 w-5" : size === "lg" && !isCompact ? "h-7 w-7" : "h-6 w-6"}
           />
         </div>
-
-        {showsReference ? (
-          isCompact ? (
-            <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
-              {effectiveShowFrom ? (
-                <span className="text-[11px] text-slate">от</span>
-              ) : null}
-              <FormattedPrice
-                priceUsd={priceUsd}
-                className="text-sm font-semibold text-charcoal"
-              />
-            </div>
-          ) : (
-            <div className={cn("mt-2.5", tourDetailInsetMutedClass, "px-3 py-2.5")}>
-              <p className="text-xs font-medium text-slate">Ориентир для расчёта</p>
-              <div className="mt-0.5 flex flex-wrap items-baseline gap-x-1.5">
-                {effectiveShowFrom ? (
-                  <span className="text-xs text-slate">от</span>
-                ) : null}
-                <FormattedPrice
-                  priceUsd={priceUsd}
-                  className="text-lg font-semibold text-charcoal"
-                />
-              </div>
-            </div>
-          )
-        ) : null}
 
         {!isCompact && suffix ? (
           <p className={cn("mt-1 text-slate", size === "lg" ? "text-sm" : "text-xs")}>{suffix}</p>
@@ -118,22 +97,11 @@ export function TourPriceCell({
   priceOnRequest?: boolean;
   className?: string;
 }) {
-  if (priceOnRequest && priceUsd <= 0) {
+  if (priceOnRequest) {
     return (
       <span className={cn("inline-flex items-center gap-1 text-slate", className)}>
         {TOUR_PRICE_ON_REQUEST_LABEL}
         <PriceOnRequestInfoButton className="h-5 w-5" />
-      </span>
-    );
-  }
-  if (priceOnRequest) {
-    return (
-      <span className={cn("inline-flex flex-col gap-0.5", className)}>
-        <span className="inline-flex items-center gap-1 text-xs text-slate">
-          {TOUR_PRICE_ON_REQUEST_LABEL}
-          <PriceOnRequestInfoButton hasReferencePrice className="h-5 w-5" />
-        </span>
-        <FormattedPrice priceUsd={priceUsd} className="font-semibold text-charcoal" />
       </span>
     );
   }

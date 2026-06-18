@@ -25,6 +25,7 @@ export function resolveTourFilterPriceUsd(input: TourPublicPriceInput): number |
   return input.priceUsd;
 }
 
+/** Ориентир хранится в priceUsd, но на сайте не показывается — только для фильтров. */
 export function tourShowsReferencePrice(input: TourPublicPriceInput): boolean {
   return Boolean(input.priceOnRequest && input.priceUsd > 0);
 }

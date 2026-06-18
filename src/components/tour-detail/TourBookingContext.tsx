@@ -17,6 +17,7 @@ import {
   validateGuestsForScheduledBooking,
   type BookingDateMode,
 } from "@/lib/tour-booking-spots";
+import { getDiscountPercent, resolveDiscountReferencePriceUsd } from "@/lib/discount";
 import { resolveGroupDiscountQuote } from "@/lib/group-discount";
 import {
   resolveTourExternalBookingHref,
@@ -52,6 +53,7 @@ interface TourBookingContextValue {
   originalPricePerPersonUsd?: number;
   totalPriceUsd: number;
   totalOriginalPriceUsd?: number;
+  discountPercentOff?: number;
   groupDiscountApplied: boolean;
   groupDiscountSavingsUsd: number;
   waitlistOpen: boolean;
@@ -194,14 +196,17 @@ export function TourBookingProvider({
       : resolveGroupDiscountQuote(basePricePerPersonUsd, guests, tour.groupDiscount);
     const pricePerPersonUsd = quote.pricePerPersonUsd;
 
-    const catalogOriginal = tour.originalPriceUsd;
     const originalPricePerPersonUsd = priceOnRequest
       ? undefined
-      : catalogOriginal != null && catalogOriginal > pricePerPersonUsd
-        ? catalogOriginal
-        : quote.savingsPerPersonUsd > 0
-          ? basePricePerPersonUsd
-          : undefined;
+      : resolveDiscountReferencePriceUsd(
+          pricePerPersonUsd,
+          tour.originalPriceUsd,
+          basePricePerPersonUsd
+        );
+    const discountPercentOff =
+      originalPricePerPersonUsd != null
+        ? getDiscountPercent(originalPricePerPersonUsd, pricePerPersonUsd)
+        : undefined;
 
     return {
       selectedDateId,
@@ -226,6 +231,7 @@ export function TourBookingProvider({
       totalOriginalPriceUsd: originalPricePerPersonUsd
         ? originalPricePerPersonUsd * guests
         : undefined,
+      discountPercentOff,
       groupDiscountApplied: !priceOnRequest && quote.savingsPerPersonUsd > 0,
       groupDiscountSavingsUsd: priceOnRequest ? 0 : quote.savingsPerPersonUsd * guests,
       waitlistOpen,

@@ -55,11 +55,11 @@ export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishRead
   }
 
   if (draft.priceOnRequest) {
-    if (draft.priceUsd <= 0 && !draft.priceFromPrefix) {
+    if (draft.priceUsd <= 0) {
       issues.push({
         id: "price-reference",
-        label: "Добавьте ориентировочную цену или включите подпись «от» — так проще привлекать заявки",
-        severity: "warning",
+        label: "Укажите ориентировочную цену для фильтров каталога",
+        severity: "blocking",
         tabId: "conditions",
       });
     }

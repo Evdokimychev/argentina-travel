@@ -116,18 +116,24 @@ function ensureSeedToursInStore(store: Record<string, Tour>): Record<string, Tou
         return override != null && existingDate?.spotsLeft !== override;
       });
 
+    const needsParticipants =
+      existing.participants.groupMin !== seed.participants.groupMin ||
+      existing.participants.groupMax !== seed.participants.groupMax;
+
     if (
       needsDurationFix ||
       needsGroupDiscount ||
       needsPriceOnRequest ||
       needsPrivate ||
       needsWaitlist ||
-      needsWaitlistDates
+      needsWaitlistDates ||
+      needsParticipants
     ) {
       next[seed.slug] = {
         ...existing,
         durationDays: needsDurationFix ? seedNormalized.durationDays : existing.durationDays,
         durationNights: needsDurationFix ? seedNormalized.durationNights : existing.durationNights,
+        participants: needsParticipants ? seed.participants : existing.participants,
         isPrivate: needsPrivate ? seed.isPrivate : existing.isPrivate ?? seed.isPrivate,
         privateAccessToken: needsPrivate
           ? seed.privateAccessToken

@@ -71,12 +71,13 @@ export default function TourCurrencyBlock({
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-gray-50/60 p-4">
           <div>
             <label htmlFor="tour-reference-price" className="mb-1.5 block text-xs font-medium text-charcoal">
-              Ориентировочная цена, $ (необязательно)
+              Ориентировочная цена, $<span className="text-brand">*</span>
             </label>
             <Input
               id="tour-reference-price"
               type="number"
-              min={0}
+              min={1}
+              required
               value={referencePriceUsd || ""}
               placeholder="Например, 1200"
               onChange={(event) =>
@@ -84,15 +85,10 @@ export default function TourCurrencyBlock({
               }
             />
             <p className="mt-1.5 text-xs leading-relaxed text-slate">
-              Можно показать ориентир «от …», не фиксируя итоговую стоимость.
+              Нужна для фильтров каталога по стоимости. На сайте туристам не показывается — только
+              подпись «Цена по запросу».
             </p>
           </div>
-          <SwitchField
-            checked={priceFromPrefix}
-            onCheckedChange={onPriceFromPrefixChange}
-            label="Выводить ориентир с приставкой «от»"
-            description="Работает только если указана ориентировочная цена."
-          />
         </div>
       ) : (
         <div className="rounded-2xl border border-gray-200 bg-white p-4 transition-colors hover:border-gray-300">

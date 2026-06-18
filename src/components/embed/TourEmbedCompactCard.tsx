@@ -8,6 +8,7 @@ import { SafeImage } from "@/components/ui/safe-image";
 import { formatDurationShort } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourEmbedCompactCardProps {
@@ -22,6 +23,7 @@ export default function TourEmbedCompactCard({
   className,
 }: TourEmbedCompactCardProps) {
   const rating = resolveTourRatingLabel(tour);
+  const cityDisplay = resolveTourCityDisplay(tour);
   const href = `/tours/${tour.slug}`;
 
   if (layout === "horizontal") {
@@ -50,7 +52,7 @@ export default function TourEmbedCompactCard({
           </h3>
           <p className="mt-1 flex items-center gap-1 text-xs text-slate">
             <MapPin className="h-3 w-3 shrink-0" aria-hidden />
-            <span className="truncate">{tour.destination}</span>
+            <span className="truncate">{cityDisplay}</span>
             <span aria-hidden>·</span>
             <span>{formatDurationShort(tour.durationDays, tour.durationNights)}</span>
           </p>
@@ -98,7 +100,7 @@ export default function TourEmbedCompactCard({
         </h3>
         <p className="mt-1.5 flex items-center gap-1 text-xs text-slate">
           <MapPin className="h-3 w-3 shrink-0" aria-hidden />
-          <span className="truncate">{tour.destination}</span>
+          <span className="truncate">{cityDisplay}</span>
         </p>
         <div className="mt-auto flex items-center justify-between gap-2 pt-3">
           <TourPublicPriceDisplay

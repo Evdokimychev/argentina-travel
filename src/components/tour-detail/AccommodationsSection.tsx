@@ -5,17 +5,10 @@ import { ExternalLink } from "lucide-react";
 import { TourAccommodation } from "@/types";
 import { normalizeEditorValue } from "@/lib/rich-text";
 import FormattedPrice from "@/components/FormattedPrice";
+import { formatNights } from "@/lib/pluralize";
 import TourSection from "./TourSection";
 import { tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
-
-function nightsLabel(nights: number): string {
-  const mod10 = nights % 10;
-  const mod100 = nights % 100;
-  if (mod10 === 1 && mod100 !== 11) return `${nights} ночь`;
-  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return `${nights} ночи`;
-  return `${nights} ночей`;
-}
 
 function AccommodationBadges({ acc }: { acc: TourAccommodation }) {
   return (
@@ -27,7 +20,7 @@ function AccommodationBadges({ acc }: { acc: TourAccommodation }) {
       ) : null}
       {acc.nights ? (
         <span className="rounded-full bg-surface-muted px-3 py-1 text-xs font-medium text-slate">
-          {acc.fullPeriod ? "Весь период" : nightsLabel(acc.nights)}
+          {acc.fullPeriod ? "Весь период" : formatNights(acc.nights)}
         </span>
       ) : null}
       {acc.displayMode === "booking_link" ? (
@@ -184,11 +177,26 @@ function AccommodationCard({ acc }: { acc: TourAccommodation }) {
 
 export default function AccommodationsSection({
   accommodations,
+  durationNights,
 }: {
   accommodations: TourAccommodation[];
+  durationNights: number;
 }) {
   return (
-    <TourSection id="accommodations" title="Проживание" subtitle="Варианты размещения по маршруту">
+    <TourSection
+      id="accommodations"
+      title="Проживание"
+      subtitle={
+        durationNights > 0 ? (
+          <>
+            Варианты размещения по маршруту · всего{" "}
+            <span className="font-medium text-charcoal">{formatNights(durationNights)}</span> в туре
+          </>
+        ) : (
+          "Варианты размещения по маршруту"
+        )
+      }
+    >
       <div className="space-y-6">
         {accommodations.map((acc) => (
           <AccommodationCard key={acc.id} acc={acc} />

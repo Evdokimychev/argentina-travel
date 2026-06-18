@@ -44,6 +44,23 @@ function formatDayMonth(date: Date): string {
   }).format(date);
 }
 
+/** Компактный диапазон для модалки заездов: «19 июн. — 1 июл.» */
+export function formatDepartureRangeCompact(startDate: string, endDate?: string): string {
+  if (!endDate || endDate === startDate) {
+    return formatDateShort(startDate);
+  }
+
+  const start = parseDisplayDate(startDate);
+  const end = parseDisplayDate(endDate);
+  return `${formatDayMonth(start)} — ${formatDayMonth(end)}`;
+}
+
+/** Название месяца с заглавной буквы */
+export function formatMonthName(dateStr: string): string {
+  const month = new Intl.DateTimeFormat("ru-RU", { month: "long" }).format(parseDisplayDate(dateStr));
+  return month.charAt(0).toUpperCase() + month.slice(1);
+}
+
 function formatMonthYear(date: Date): string {
   return new Intl.DateTimeFormat("ru-RU", {
     month: "short",

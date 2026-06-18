@@ -47,6 +47,7 @@ import TourGroupDatesBlock from "@/components/organizer/TourGroupDatesBlock";
 import TourCheckoutPaymentOptionsBlock from "@/components/organizer/TourCheckoutPaymentOptionsBlock";
 import TourCustomBookingLinkBlock from "@/components/organizer/TourCustomBookingLinkBlock";
 import TourProgramBlock from "@/components/organizer/TourProgramBlock";
+import TourItineraryFooterBlock from "@/components/organizer/TourItineraryFooterBlock";
 import TourTermsListBlock from "@/components/organizer/TourTermsListBlock";
 import TourTermsConditionsBlock from "@/components/organizer/TourTermsConditionsBlock";
 import TourInsuranceBlock from "@/components/organizer/TourInsuranceBlock";
@@ -1218,15 +1219,25 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "program" ? (
-              <TourProgramBlock
-                routeMapImage={draft.routeMapImage}
-                routePoints={draft.routePoints}
-                programDays={draft.programDays}
-                durationDays={draft.durationDays}
-                onRouteMapChange={(routeMapImage) => updateDraft({ routeMapImage })}
-                onRoutePointsChange={(routePoints) => updateDraft({ routePoints })}
-                onProgramDaysChange={(programDays) => updateDraft({ programDays })}
-              />
+              <>
+                <TourProgramBlock
+                  routeMapImage={draft.routeMapImage}
+                  routePoints={draft.routePoints}
+                  programDays={draft.programDays}
+                  durationDays={draft.durationDays}
+                  onRouteMapChange={(routeMapImage) => updateDraft({ routeMapImage })}
+                  onRoutePointsChange={(routePoints) => updateDraft({ routePoints })}
+                  onProgramDaysChange={(programDays) => updateDraft({ programDays })}
+                />
+                <TourItineraryFooterBlock
+                  difficultyLevel={draft.difficultyLevel}
+                  itineraryOrganizerCommentText={draft.itineraryOrganizerCommentText}
+                  onCommentChange={(itineraryOrganizerCommentText) =>
+                    updateDraft({ itineraryOrganizerCommentText })
+                  }
+                  onOpenMainTab={() => setActiveTab("main")}
+                />
+              </>
             ) : null}
 
             {activeTab === "terms" ? (

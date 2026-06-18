@@ -109,19 +109,34 @@ function formatGuestRange(minGuests: number, maxGuests?: number | null): string 
   return `${minGuests}–${maxGuests} ${peopleWord(maxGuests)}`;
 }
 
+export function formatGroupDiscountTierGuestRange(tier: GroupDiscountTier): string {
+  return formatGuestRange(tier.minGuests, tier.maxGuests);
+}
+
+export function formatGroupDiscountTierValueLabel(
+  tier: GroupDiscountTier,
+  basePriceUsd?: number
+): string {
+  if (tier.discountType === "percent") {
+    return `${Math.round(tier.value)}%`;
+  }
+  const price = `${Math.round(tier.value)} $/чел.`;
+  if (basePriceUsd != null && basePriceUsd > tier.value) {
+    const pct = Math.round(((basePriceUsd - tier.value) / basePriceUsd) * 100);
+    return `${price} (−${pct}%)`;
+  }
+  return price;
+}
+
 export function formatGroupDiscountTierLabel(
   tier: GroupDiscountTier,
   basePriceUsd?: number
 ): string {
-  const range = formatGuestRange(tier.minGuests, tier.maxGuests);
+  const range = formatGroupDiscountTierGuestRange(tier);
   if (tier.discountType === "percent") {
-    return `${range} — −${Math.round(tier.value)}%`;
+    return `${range} · ${Math.round(tier.value)}%`;
   }
-  const savings =
-    basePriceUsd != null && basePriceUsd > tier.value
-      ? ` (−${Math.round(((basePriceUsd - tier.value) / basePriceUsd) * 100)}%)`
-      : "";
-  return `${range} — ${Math.round(tier.value)} $/чел.${savings}`;
+  return `${range} · ${formatGroupDiscountTierValueLabel(tier, basePriceUsd)}`;
 }
 
 export function formatGroupDiscountTierShort(tier: GroupDiscountTier): string {

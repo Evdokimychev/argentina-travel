@@ -6,9 +6,9 @@ import { Input } from "@/components/ui/input";
 import { SwitchRow } from "@/components/ui/switch";
 import {
   createEmptyGroupDiscountTier,
-  formatGroupDiscountTierLabel,
   normalizeGroupDiscountSettings,
 } from "@/lib/group-discount";
+import GroupDiscountTierRow from "@/components/tour-detail/GroupDiscountTierRow";
 import type { GroupDiscountSettings, GroupDiscountTier } from "@/types/group-discount";
 
 interface TourGroupDiscountBlockProps {
@@ -181,12 +181,14 @@ export default function TourGroupDiscountBlock({
                   </div>
 
                   {tier.value > 0 ? (
-                    <p className="text-xs text-slate">
-                      Предпросмотр:{" "}
-                      <span className="font-medium text-charcoal">
-                        {formatGroupDiscountTierLabel(tier, basePriceUsd)}
-                      </span>
-                    </p>
+                    <div className="text-xs text-slate">
+                      <span className="block font-medium text-charcoal">Предпросмотр</span>
+                      <GroupDiscountTierRow
+                        tier={tier}
+                        basePriceUsd={basePriceUsd}
+                        className="mt-1.5 rounded-lg border border-gray-100 bg-white px-3 py-2"
+                      />
+                    </div>
                   ) : null}
                 </div>
               ))
@@ -199,9 +201,11 @@ export default function TourGroupDiscountBlock({
           </Button>
 
           {normalized.enabled && normalized.tiers.length > 0 ? (
-            <ul className="space-y-1 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-sm text-charcoal">
+            <ul className="space-y-2 rounded-xl border border-emerald-200 bg-emerald-50/70 px-4 py-3 text-sm text-charcoal">
               {normalized.tiers.map((tier) => (
-                <li key={tier.id}>{formatGroupDiscountTierLabel(tier, basePriceUsd)}</li>
+                <li key={tier.id}>
+                  <GroupDiscountTierRow tier={tier} basePriceUsd={basePriceUsd} />
+                </li>
               ))}
             </ul>
           ) : null}

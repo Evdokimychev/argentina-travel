@@ -137,6 +137,8 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   participantRecommendations: string[];
   /** Route features text — shown in organizer card. */
   routeFeaturesText: string;
+  /** Комментарий организатора в конце программы на странице тура. */
+  itineraryOrganizerCommentText: string;
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;

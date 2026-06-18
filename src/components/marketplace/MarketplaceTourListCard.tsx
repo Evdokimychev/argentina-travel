@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import {
   Star,
@@ -21,11 +22,13 @@ import { cn } from "@/lib/cn";
 import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import { DIFFICULTY_DOT_COUNT, COMFORT_DOT_COUNT } from "@/data/tour-levels";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { formatMinimumAgeShort } from "@/lib/tour-age";
 import { buttonVariants } from "@/components/ui/button";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
+import TourDepartureDatesModal from "./TourDepartureDatesModal";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -71,6 +74,7 @@ function StatCell({ label, children }: { label: string; children: React.ReactNod
 }
 
 export default function MarketplaceTourListCard({ tour }: { tour: TourListing }) {
+  const [datesModalOpen, setDatesModalOpen] = useState(false);
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
   const ratingDisplay = resolveTourRatingLabel(tour);
@@ -79,6 +83,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const ActivityIcon = activityIcon;
   const isIndividualOnly = tour.bookingMode === "on_request";
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
+  const cityDisplay = resolveTourCityDisplay(tour);
 
   return (
     <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
@@ -142,7 +147,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               )}
               <span aria-hidden>·</span>
               <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>{tour.region}</span>
+              <span>{cityDisplay}</span>
             </p>
 
             <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate">
@@ -230,11 +235,15 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
                 <p className="mt-0.5 text-sm font-medium text-charcoal">
                   {formatDateRange(nextDate.start, nextDate.end)}
                 </p>
-                {moreDates > 0 && (
-                  <span className="mt-1.5 inline-block rounded-md bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
+                {moreDates > 0 ? (
+                  <button
+                    type="button"
+                    className="mt-1.5 inline-flex items-center rounded-full border border-sky/20 bg-sky/5 px-2 py-0.5 text-xs font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
+                    onClick={() => setDatesModalOpen(true)}
+                  >
                     {formatMoreDates(moreDates)}
-                  </span>
-                )}
+                  </button>
+                ) : null}
               </div>
             )
           )}
@@ -259,6 +268,14 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           </div>
         </div>
       </div>
+
+      {moreDates > 0 ? (
+        <TourDepartureDatesModal
+          tour={tour}
+          open={datesModalOpen}
+          onOpenChange={setDatesModalOpen}
+        />
+      ) : null}
     </article>
   );
 }

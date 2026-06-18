@@ -110,6 +110,8 @@ export interface TourProgram {
   routeMapImage?: string;
   routePoints: TourRoutePoint[];
   days: OrganizerProgramDay[];
+  /** Комментарий организатора в конце блока «Программа по дням». */
+  itineraryOrganizerComment?: string;
 }
 
 export interface TourMedia {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { TourDetail, TourDatePrice } from "@/types";
 import { TourPriceCell } from "./TourPublicPriceDisplay";
 import { formatDateShortWithYear } from "@/lib/utils";
@@ -40,15 +40,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
   const priceSummary = resolveTourDatePriceSummary(dates, tour.priceUsd);
   const priceRangeLabel = formatDatePriceRangeLabel(priceSummary, tour.priceOnRequest);
   const showCalendar = dates.length > 1;
-  const calendarDefaultOpen = useMemo(
-    () => shouldOpenDepartureCalendarByDefault(dates),
-    [dates]
-  );
-  const [calendarOpen, setCalendarOpen] = useState(calendarDefaultOpen);
-
-  useEffect(() => {
-    setCalendarOpen(calendarDefaultOpen);
-  }, [calendarDefaultOpen, dates.length]);
+  const [calendarOpen, setCalendarOpen] = useState(false);
 
   useEffect(() => {
     setError(null);
@@ -154,14 +146,16 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
                 )}
               </button>
               {calendarOpen ? (
-                <div className="border-t border-gray-100 px-2 pb-2 pt-1 sm:px-3">
+                <div className="border-t border-gray-100 p-3 sm:p-4">
                   <TourDepartureCalendar
                     dates={dates}
                     selectedDateId={selectedDateId}
                     guests={guests}
                     groupMin={tour.groupMin}
+                    durationDays={tour.durationDays}
+                    priceOnRequest={tour.priceOnRequest}
                     onSelect={handleSelect}
-                    className="border-0 shadow-none"
+                    className="border-0 p-0 shadow-none"
                   />
                 </div>
               ) : null}
@@ -245,10 +239,4 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
       )}
     </TourSection>
   );
-}
-
-function shouldOpenDepartureCalendarByDefault(dates: TourDatePrice[]): boolean {
-  if (dates.length <= 3) return false;
-  const months = new Set(dates.map((date) => date.startDate.slice(0, 7)));
-  return months.size > 1;
 }

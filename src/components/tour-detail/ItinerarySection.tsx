@@ -14,6 +14,7 @@ import {
   tourDetailTimelineClass,
 } from "@/lib/tour-detail-ui";
 import TourItineraryPdfButton from "./TourItineraryPdfButton";
+import ItineraryProgramFooter from "./ItineraryProgramFooter";
 import type { TourDetail } from "@/types";
 
 function ItineraryExpandToggle({
@@ -244,6 +245,14 @@ export default function ItinerarySection({
           />
         ))}
       </div>
+
+      {tour ? (
+        <ItineraryProgramFooter
+          difficulty={tour.difficulty}
+          difficultyDescriptionHtml={tour.descriptionExtra?.difficulty}
+          organizerComment={tour.itineraryOrganizerComment}
+        />
+      ) : null}
     </TourSection>
   );
 }

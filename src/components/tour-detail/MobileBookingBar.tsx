@@ -8,6 +8,7 @@ import { formatTouristsBooking } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
+import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import GuestCounter from "./GuestCounter";
 import { useTourBooking } from "./TourBookingContext";
@@ -59,6 +60,9 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     externalBookingHref,
   } = useTourBooking();
   const priceOnRequest = Boolean(tour.priceOnRequest);
+  const bookButtonPulseKey = useRandomAttentionPulse({
+    enabled: !usesExternalBooking,
+  });
   const [expanded, setExpanded] = useState(false);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
 
@@ -212,9 +216,13 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               />
             ) : (
               <button
+                key={bookButtonPulseKey}
                 type="button"
                 onClick={handlePrimaryAction}
-                className="flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark"
+                className={cn(
+                  "flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark",
+                  bookButtonPulseKey > 0 && "animate-book-cta-pulse"
+                )}
               >
                 {primaryLabel}
               </button>

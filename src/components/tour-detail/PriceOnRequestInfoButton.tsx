@@ -4,24 +4,21 @@ import { HelpCircle } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   TOUR_PRICE_ON_REQUEST_HINT,
-  TOUR_PRICE_ON_REQUEST_REFERENCE_HINT,
 } from "@/lib/tour-price-public";
 import { cn } from "@/lib/cn";
 
 interface PriceOnRequestInfoButtonProps {
-  hasReferencePrice?: boolean;
   className?: string;
 }
 
-export default function PriceOnRequestInfoButton({
-  hasReferencePrice = false,
-  className,
-}: PriceOnRequestInfoButtonProps) {
+export default function PriceOnRequestInfoButton({ className }: PriceOnRequestInfoButtonProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
         <button
           type="button"
+          onClick={(event) => event.stopPropagation()}
+          onPointerDown={(event) => event.stopPropagation()}
           className={cn(
             "inline-flex shrink-0 items-center justify-center rounded-full text-slate/70 transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
             className
@@ -36,7 +33,7 @@ export default function PriceOnRequestInfoButton({
         side="top"
         align="start"
       >
-        {hasReferencePrice ? TOUR_PRICE_ON_REQUEST_REFERENCE_HINT : TOUR_PRICE_ON_REQUEST_HINT}
+        {TOUR_PRICE_ON_REQUEST_HINT}
       </PopoverContent>
     </Popover>
   );

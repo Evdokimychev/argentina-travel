@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { Flame, MapPin, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import { TourListing, TourBadge } from "@/types";
@@ -14,10 +15,12 @@ import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
+import TourDepartureDatesModal from "./TourDepartureDatesModal";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -33,6 +36,7 @@ interface MarketplaceTourCardProps {
 
 export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) {
   const router = useRouter();
+  const [datesModalOpen, setDatesModalOpen] = useState(false);
   const schedule = resolveTourCardScheduleDisplay(tour);
   const ratingDisplay = resolveTourRatingLabel(tour);
   const groupDiscountHint = tour.groupDiscountHint;
@@ -42,6 +46,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
       ? buildOrganizerPublicHref(tour.organizer.slug ?? tour.organizerOwnerId!)
       : null;
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
+  const cityDisplay = resolveTourCityDisplay(tour);
 
   return (
     <article
@@ -106,7 +111,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           <div className="flex items-center justify-between gap-3 text-sm">
             <span className="flex min-w-0 items-center gap-1.5 text-slate">
               <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
-              <span className="truncate">{tour.region}</span>
+              <span className="truncate">{cityDisplay}</span>
             </span>
             {ratingDisplay.hasReviews ? (
               <StarRating
@@ -149,9 +154,19 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           ) : schedule?.type === "dates" ? (
             <p className="mt-2 text-xs text-slate">
               {formatDateRange(schedule.start, schedule.end)}
-              {schedule.moreDates > 0 && (
-                <span className="ml-1 text-sky">{formatMoreDates(schedule.moreDates)}</span>
-              )}
+              {schedule.moreDates > 0 ? (
+                <button
+                  type="button"
+                  className="pointer-events-auto relative z-10 ml-1.5 inline-flex items-center rounded-full border border-sky/20 bg-sky/5 px-2 py-0.5 text-[11px] font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    setDatesModalOpen(true);
+                  }}
+                >
+                  {formatMoreDates(schedule.moreDates)}
+                </button>
+              ) : null}
             </p>
           ) : null}
 
@@ -189,6 +204,14 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
         className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
         aria-label={`Открыть тур: ${tour.title}`}
       />
+
+      {schedule?.type === "dates" && schedule.moreDates > 0 ? (
+        <TourDepartureDatesModal
+          tour={tour}
+          open={datesModalOpen}
+          onOpenChange={setDatesModalOpen}
+        />
+      ) : null}
     </article>
   );
 }

@@ -14,11 +14,14 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
   const showTickets =
     hasTicketRecommendations(tour) && !tour.logistics.arrivalDetailsEnabled;
 
+  const showUnifiedArrivalPanel =
+    tour.logistics.arrivalDetailsEnabled && tour.logistics.arrivalDepartureEnabled;
+
   const nonPlaneCities = tour.logistics.arrivalDepartureCities
     .filter((city) => city.city.trim() && (city.trainEnabled || city.otherEnabled))
     .map(formatArrivalDepartureCity);
 
-  if (!showTickets && nonPlaneCities.length === 0) return null;
+  if (!showTickets && (showUnifiedArrivalPanel || nonPlaneCities.length === 0)) return null;
 
   return (
     <TourSection id="logistics" title="Логистика и перелёт">
@@ -34,7 +37,7 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
         </div>
       ) : null}
 
-      {nonPlaneCities.length > 0 ? (
+      {nonPlaneCities.length > 0 && !showUnifiedArrivalPanel ? (
         <div className={showTickets ? "mt-8" : undefined}>
           <h3 className="font-heading text-lg font-bold text-charcoal">Другие способы добраться</h3>
           <p className="mt-1 text-sm text-slate">Поезд и альтернативный транспорт</p>

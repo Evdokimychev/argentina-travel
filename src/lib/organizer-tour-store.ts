@@ -4,6 +4,7 @@ import { getPrivateTourSeedForSlug } from "@/data/tour-private-seeds";
 import { getWaitlistSeedForSlug } from "@/data/tour-waitlist-seeds";
 import { getPriceOnRequestSeedForSlug } from "@/data/tour-price-on-request-seeds";
 import { getGroupDiscountSeedForSlug } from "@/data/tour-group-discount-seeds";
+import { mergeLogisticsSeed } from "@/data/tour-logistics-seeds";
 import { applyOrganizerSeedOverrides } from "@/data/tour-organizer-seeds";
 import { getTourDetail } from "@/lib/tours";
 import { ORGANIZER_TOUR_GENERAL_DESCRIPTION_MAX } from "@/data/tour-description-defaults";
@@ -60,6 +61,7 @@ import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOpti
 import {
   normalizeParticipantRecommendations,
   normalizeRouteFeaturesText,
+  normalizeItineraryOrganizerComment,
 } from "@/data/tour-organizer-display-defaults";
 import type { TourLanguage } from "@/types";
 import { fireOrganizerTourSync } from "@/lib/tour-content-api";
@@ -235,6 +237,17 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
   const priceOnRequestSeed = resolvePriceOnRequestSeed(catalogSlug);
   const privateSeed = getPrivateTourSeedForSlug(catalogSlug);
   const waitlistSeed = getWaitlistSeedForSlug(catalogSlug);
+  const logisticsSeed = mergeLogisticsSeed(catalogSlug, {
+    arrivalDepartureEnabled: false,
+    arrivalDepartureCities: [],
+  });
+  const hasArrivalDetails = Boolean(
+    detail?.arrival &&
+      (detail.arrival.airports.length > 0 ||
+        detail.arrival.flights.length > 0 ||
+        detail.arrival.transfers.length > 0 ||
+        detail.arrival.meetingPoint.trim())
+  );
 
   const draft: OrganizerTourDraft = {
     ...listing,
@@ -323,14 +336,14 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     insuranceDescription: "",
     useCancellationTemplate: true,
     customCancellationText: "",
-    ticketRecommendationsEnabled: false,
-    ticketRecommendationsText: "",
-    arrivalDepartureEnabled: false,
-    arrivalDepartureCities: [],
-    arrivalDetailsEnabled: false,
-    arrivalAirportsText: "",
-    arrivalTransfersText: "",
-    arrivalMeetingPoint: "",
+    ticketRecommendationsEnabled: detail?.arrival.flights.length ? true : false,
+    ticketRecommendationsText: detail?.arrival.flights.join("\n") ?? "",
+    arrivalDepartureEnabled: logisticsSeed.arrivalDepartureEnabled,
+    arrivalDepartureCities: logisticsSeed.arrivalDepartureCities,
+    arrivalDetailsEnabled: hasArrivalDetails,
+    arrivalAirportsText: detail?.arrival.airports.join("\n") ?? "",
+    arrivalTransfersText: detail?.arrival.transfers.join("\n") ?? "",
+    arrivalMeetingPoint: detail?.arrival.meetingPoint ?? "",
     checkoutPaymentOptions: { ...DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS },
     customBookingLink: normalizeCustomBookingLink(
       getCustomBookingSeedForSlug(catalogSlug)?.customBookingLink ??
@@ -340,6 +353,7 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
       ? [...detail.organizerComment.recommendations]
       : [],
     routeFeaturesText: detail?.organizerComment?.routeNotes ?? "",
+    itineraryOrganizerCommentText: detail?.itineraryOrganizerComment ?? "",
     updatedAt: listing.updatedAt,
   };
 
@@ -429,6 +443,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     customBookingLink: createDefaultCustomBookingLink(),
     participantRecommendations: [],
     routeFeaturesText: "",
+    itineraryOrganizerCommentText: "",
     updatedAt: new Date().toISOString(),
   };
 }
@@ -587,6 +602,11 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
     ),
     routeFeaturesText: normalizeRouteFeaturesText(
       draft.routeFeaturesText?.trim() ? draft.routeFeaturesText : seed.routeFeaturesText
+    ),
+    itineraryOrganizerCommentText: normalizeItineraryOrganizerComment(
+      draft.itineraryOrganizerCommentText?.trim()
+        ? draft.itineraryOrganizerCommentText
+        : seed.itineraryOrganizerCommentText
     ),
     maxWeightEnabled:
       draft.maxWeightEnabled ??

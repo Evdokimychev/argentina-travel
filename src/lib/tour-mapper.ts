@@ -3,6 +3,7 @@ import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOpti
 import {
   normalizeParticipantRecommendations,
   normalizeRouteFeaturesText,
+  normalizeItineraryOrganizerComment,
 } from "@/data/tour-organizer-display-defaults";
 import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
@@ -25,6 +26,7 @@ import { primaryComfortLevel } from "@/data/tour-levels";
 import { normalizeTourDuration } from "@/lib/tour-duration";
 import { textToListItems } from "@/data/tour-terms-defaults";
 import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
+import { mergeLogisticsSeed } from "@/data/tour-logistics-seeds";
 import { getTourRoutePoints } from "@/data/tour-routes";
 import { getGroupDiscountSeedForSlug } from "@/data/tour-group-discount-seeds";
 import { getPriceOnRequestSeedForSlug } from "@/data/tour-price-on-request-seeds";
@@ -407,6 +409,7 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
         description: day.description,
         images: day.images,
       })),
+      itineraryOrganizerComment: detail.itineraryOrganizerComment,
     },
     media: {
       coverImage: listing.image,
@@ -425,16 +428,23 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       importantInfo: detail.importantInfo,
       faq: detail.faq,
     },
-    logistics: {
-      ticketRecommendationsEnabled: detail.arrival.flights.length > 0,
-      ticketRecommendationsText: detail.arrival.flights.join("\n"),
-      arrivalDepartureEnabled: false,
-      arrivalDepartureCities: [],
-      arrivalDetailsEnabled: true,
-      arrivalAirportsText: detail.arrival.airports.join("\n"),
-      arrivalTransfersText: detail.arrival.transfers.join("\n"),
-      arrivalMeetingPoint: detail.arrival.meetingPoint,
-    },
+    logistics: (() => {
+      const merged = mergeLogisticsSeed(listing.slug, {
+        arrivalDepartureEnabled: false,
+        arrivalDepartureCities: [],
+      });
+
+      return {
+        ticketRecommendationsEnabled: detail.arrival.flights.length > 0,
+        ticketRecommendationsText: detail.arrival.flights.join("\n"),
+        arrivalDepartureEnabled: merged.arrivalDepartureEnabled,
+        arrivalDepartureCities: merged.arrivalDepartureCities,
+        arrivalDetailsEnabled: true,
+        arrivalAirportsText: detail.arrival.airports.join("\n"),
+        arrivalTransfersText: detail.arrival.transfers.join("\n"),
+        arrivalMeetingPoint: detail.arrival.meetingPoint,
+      };
+    })(),
     social: {
       rating: listing.rating,
       reviewCount: listing.reviewCount,
@@ -559,6 +569,9 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
         ? draft.routePoints
         : base.program.routePoints,
       days: draft.programDays,
+      itineraryOrganizerComment: normalizeItineraryOrganizerComment(
+        draft.itineraryOrganizerCommentText
+      ) || undefined,
     },
     media: {
       coverImage: draft.image,
@@ -768,6 +781,10 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     itinerary: tour.program.days.length
       ? mapProgramDaysToItinerary(tour.program.days)
       : legacy?.itinerary ?? [],
+    itineraryOrganizerComment:
+      tour.program.itineraryOrganizerComment?.trim() ||
+      legacy?.itineraryOrganizerComment ||
+      undefined,
     organizerComment: tour.team.organizerComment,
     organizer: enrichTourOrganizerDetail(
       tour.team.organizerDetail,
@@ -908,6 +925,9 @@ export function createMinimalTourFromDraft(
         ? draft.routePoints
         : getTourRoutePoints(catalogSlug),
       days: draft.programDays,
+      itineraryOrganizerComment: normalizeItineraryOrganizerComment(
+        draft.itineraryOrganizerCommentText
+      ) || undefined,
     },
     media: {
       coverImage: draft.image,

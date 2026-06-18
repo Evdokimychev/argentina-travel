@@ -11,6 +11,7 @@ import {
   escapeMapHtml,
   getTourMapBounds,
 } from "@/lib/tour-map";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -39,7 +40,7 @@ function buildPopupHtml(tour: TourListing, priceLabel: string): string {
       <img src="${escapeMapHtml(tour.image)}" alt="" class="tours-map-popup__img" />
       <div class="tours-map-popup__body">
         <strong class="tours-map-popup__title">${escapeMapHtml(tour.title)}</strong>
-        <span class="tours-map-popup__meta">${escapeMapHtml(tour.destination)} · ${escapeMapHtml(tour.region)}</span>
+        <span class="tours-map-popup__meta">${escapeMapHtml(resolveTourCityDisplay(tour))} · ${escapeMapHtml(tour.region)}</span>
         <span class="tours-map-popup__price">${escapeMapHtml(priceLabel)}</span>
       </div>
     </a>
