@@ -14,11 +14,19 @@ function parseDisplayDate(dateStr: string): Date {
 }
 
 export function formatDate(dateStr: string): string {
+  const parsed = parseDisplayDate(dateStr);
+  if (Number.isNaN(parsed.getTime())) return "";
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
     month: "long",
     year: "numeric",
-  }).format(parseDisplayDate(dateStr));
+  }).format(parsed);
+}
+
+export function formatDateOptional(dateStr?: string | null): string | null {
+  if (!dateStr?.trim()) return null;
+  const formatted = formatDate(dateStr);
+  return formatted || null;
 }
 
 export function formatDateShort(dateStr: string): string {

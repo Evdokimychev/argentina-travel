@@ -86,21 +86,13 @@ function EmbeddedTravelRisks({ risks }: { risks: TourTravelRisk[] }) {
   );
 }
 
-export default function TourTravelRisksPanel({
+function StandaloneTravelRisks({
   risks,
   className,
-  variant = "standalone",
-}: TourTravelRisksPanelProps) {
-  if (!risks.length) return null;
-
-  if (variant === "embedded") {
-    return (
-      <div className={className}>
-        <EmbeddedTravelRisks risks={risks} />
-      </div>
-    );
-  }
-
+}: {
+  risks: TourTravelRisk[];
+  className?: string;
+}) {
   const [expanded, setExpanded] = useState(false);
   const preview = risks.slice(0, 2);
   const hiddenCount = Math.max(0, risks.length - preview.length);
@@ -146,4 +138,22 @@ export default function TourTravelRisksPanel({
       </div>
     </section>
   );
+}
+
+export default function TourTravelRisksPanel({
+  risks,
+  className,
+  variant = "standalone",
+}: TourTravelRisksPanelProps) {
+  if (!risks.length) return null;
+
+  if (variant === "embedded") {
+    return (
+      <div className={className}>
+        <EmbeddedTravelRisks risks={risks} />
+      </div>
+    );
+  }
+
+  return <StandaloneTravelRisks risks={risks} className={className} />;
 }

@@ -7,6 +7,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { normalizePhone } from "@/lib/auth-store";
 import type { AccountRole, SessionUser } from "@/types/user";
 import { normalizeAccountRoles, userHasAccountRole } from "@/types/user";
+import type { Profile } from "@/types/database";
 
 type BrowserClient = SupabaseClient<Database>;
 
@@ -19,7 +20,7 @@ function getClient(): BrowserClient {
   return cachedClient;
 }
 
-async function fetchProfile(userId: string) {
+async function fetchProfile(userId: string): Promise<Profile | null> {
   const { data, error } = await getClient()
     .from("profiles")
     .select("*")
@@ -30,100 +31,105 @@ async function fetchProfile(userId: string) {
   return data;
 }
 
-async function sessionFromAuthUser(
-  userId: string,
-  activeRole?: AccountRole
-): Promise<SessionUser | null> {
-  for (let attempt = 0; attempt < 8; attempt += 1) {
-    const profile = await fetchProfile(userId);
-    if (profile) {
-      return profileToSessionUser(profile, activeRole);
-    }
-    await new Promise((resolve) => setTimeout(resolve, 150));
-  }
-  return null;
+async function ensureProfileForSession(userId: string): Promise<Profile | null> {
+  const existing = await fetchProfile(userId);
+  if (existing) return existing;
+
+  const response = await fetch("/api/auth/ensure-profile", {
+    method: "POST",
+    credentials: "same-origin",
+  });
+
+  if (!response.ok) return null;
+
+  const body = (await response.json()) as { user?: SessionUser };
+  if (!body.user) return null;
+
+  return fetchProfile(userId);
 }
 
 function rejectLogin(error: string, code?: AuthErrorCode): AuthResult {
   return { error, code };
 }
 
-async function refreshClientSession() {
-  await getClient().auth.getSession();
+function mapSignInError(message: string): AuthResult {
+  const lower = message.toLowerCase();
+  if (
+    lower.includes("invalid login credentials") ||
+    lower.includes("invalid email or password") ||
+    lower.includes("invalid credentials")
+  ) {
+    return rejectLogin("Неверный email или пароль", "INVALID_CREDENTIALS");
+  }
+  if (lower.includes("email not confirmed")) {
+    return rejectLogin(
+      "Подтвердите email — проверьте почту или восстановите пароль.",
+      "INVALID_CREDENTIALS"
+    );
+  }
+  return rejectLogin(message, "INVALID_CREDENTIALS");
 }
 
-async function loginByPhoneApi(
-  phone: string,
-  role: AccountRole,
-  password?: string
-): Promise<AuthResult> {
-  const response = await fetch("/api/auth/login-by-phone", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",
-    body: JSON.stringify({ phone, role, password }),
-  });
-
-  const body = (await response.json()) as {
-    ok?: boolean;
-    error?: string;
-    code?: AuthErrorCode;
+async function finalizeLogin(profile: Profile, role: AccountRole): Promise<AuthResult> {
+  const account = {
+    role: profile.active_role as AccountRole,
+    roles: profile.roles as AccountRole[],
   };
 
-  if (!response.ok) {
-    return rejectLogin(body.error ?? "Ошибка входа", body.code);
+  if (!userHasAccountRole(account, role)) {
+    if (role === "organizer") {
+      return rejectLogin("ROLE_NOT_CONNECTED", "ROLE_NOT_CONNECTED");
+    }
+    await getClient().auth.signOut();
+    return rejectLogin("WRONG_ROLE", "WRONG_ROLE");
   }
 
-  await refreshClientSession();
+  if (profile.active_role !== role) {
+    const { error } = await getClient()
+      .from("profiles")
+      .update({ active_role: role })
+      .eq("id", profile.id);
 
-  const { data: sessionData, error } = await getClient().auth.getSession();
-  if (error || !sessionData.session?.user) {
-    return { error: "Не удалось получить сессию. Попробуйте войти по email и паролю." };
+    if (error) {
+      return { error: error.message };
+    }
   }
 
-  const user = await sessionFromAuthUser(sessionData.session.user.id, role);
-  if (!user) return { error: "Профиль не найден" };
-  return { user };
+  const refreshed = await fetchProfile(profile.id);
+  if (!refreshed) {
+    return { error: "Профиль не найден", code: "PROFILE_MISSING" };
+  }
+
+  return { user: profileToSessionUser({ ...refreshed, active_role: role }, role) };
 }
 
-async function loginByEmailApi(
+/** Единый вход: клиентский signIn + профиль + роль (как при регистрации). */
+async function loginWithCredentials(
   email: string,
   password: string,
   role: AccountRole
 ): Promise<AuthResult> {
   const normalizedEmail = email.trim().toLowerCase();
-  const response = await fetch("/api/auth/login-email", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    credentials: "same-origin",
-    body: JSON.stringify({ email: normalizedEmail, password, role }),
+
+  const { data, error } = await getClient().auth.signInWithPassword({
+    email: normalizedEmail,
+    password,
   });
 
-  const body = (await response.json()) as {
-    ok?: boolean;
-    error?: string;
-    code?: AuthErrorCode;
-    user?: SessionUser;
-  };
-
-  if (!response.ok) {
-    return rejectLogin(body.error ?? "Ошибка входа", body.code);
+  if (error || !data.user) {
+    return mapSignInError(error?.message ?? "Неверный email или пароль");
   }
 
-  await refreshClientSession();
-
-  if (body.user) {
-    return { user: body.user };
+  const profile = await ensureProfileForSession(data.user.id);
+  if (!profile) {
+    await getClient().auth.signOut();
+    return {
+      error: "Профиль не найден. Напишите в поддержку — мы восстановим доступ.",
+      code: "PROFILE_MISSING",
+    };
   }
 
-  const { data: sessionData } = await getClient().auth.getSession();
-  if (!sessionData.session?.user) {
-    return { error: "Не удалось получить сессию" };
-  }
-
-  const user = await sessionFromAuthUser(sessionData.session.user.id, role);
-  if (!user) return { error: "Профиль не найден" };
-  return { user };
+  return finalizeLogin(profile, role);
 }
 
 async function registerByApi(input: {
@@ -155,39 +161,23 @@ async function registerByApi(input: {
     ok?: boolean;
     error?: string;
     code?: AuthErrorCode;
-    userId?: string;
   };
 
   if (!response.ok) {
     return { error: body.error ?? "Не удалось зарегистрироваться", code: body.code };
   }
 
-  const signInResult = await getClient().auth.signInWithPassword({
-    email: normalizedEmail,
-    password,
-  });
-
-  if (signInResult.error || !signInResult.data.user) {
-    const fallback = await loginByEmailApi(normalizedEmail, password, input.role);
-    if ("user" in fallback) {
-      return fallback;
-    }
-    return {
-      error:
-        "Аккаунт создан, но автоматический вход не удался. Войдите по email и паролю.",
-    };
-  }
-
-  const user = await sessionFromAuthUser(signInResult.data.user.id, input.role);
-  if (!user) return { error: "Профиль не найден" };
-  return { user };
+  return loginWithCredentials(normalizedEmail, password, input.role);
 }
 
 export const supabaseAuthProvider: AuthProvider = {
   async getSessionUser() {
     const { data } = await getClient().auth.getSession();
     if (!data.session?.user) return null;
-    return sessionFromAuthUser(data.session.user.id);
+
+    const profile = await ensureProfileForSession(data.session.user.id);
+    if (!profile) return null;
+    return profileToSessionUser(profile);
   },
 
   async loginWithPhone(phone, role, password?) {
@@ -195,20 +185,53 @@ export const supabaseAuthProvider: AuthProvider = {
     if (!normalized) {
       return { error: "Введите корректный номер телефона" };
     }
-    return loginByPhoneApi(normalized, role, password);
+
+    const lookupResponse = await fetch("/api/auth/lookup-phone", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ phone: normalized }),
+    });
+
+    if (lookupResponse.status === 404) {
+      return rejectLogin("NOT_FOUND", "NOT_FOUND");
+    }
+
+    if (!lookupResponse.ok) {
+      const body = (await lookupResponse.json()) as { error?: string };
+      return { error: body.error ?? "Ошибка входа" };
+    }
+
+    const lookup = (await lookupResponse.json()) as { email?: string };
+    if (!lookup.email) {
+      return rejectLogin("NOT_FOUND", "NOT_FOUND");
+    }
+
+    const loginPassword = password?.trim() || DEMO_PASSWORD;
+    const result = await loginWithCredentials(lookup.email, loginPassword, role);
+
+    if ("error" in result && result.code === "INVALID_CREDENTIALS" && !password?.trim()) {
+      return {
+        error:
+          "Неверный пароль. Если вы задавали свой пароль при регистрации — войдите по email или укажите пароль.",
+        code: "INVALID_CREDENTIALS",
+      };
+    }
+
+    return result;
   },
 
   async loginWithEmail(email, password, role) {
     if (!email.trim() || !password.trim()) {
-      return rejectLogin("Неверный email или пароль", "INVALID_CREDENTIALS");
+      return rejectLogin("Введите email и пароль", "INVALID_CREDENTIALS");
     }
-    return loginByEmailApi(email, password, role);
+    return loginWithCredentials(email, password, role);
   },
 
   async loginTouristForOrganizerUpgrade(email, password) {
-    const result = await loginByEmailApi(email, password, "tourist");
+    const result = await loginWithCredentials(email, password, "tourist");
     if ("error" in result) return result;
-    return { user: { ...result.user, role: "tourist" } };
+    return { user: { ...result.user, role: "tourist" as const } };
   },
 
   async register(input) {
@@ -249,8 +272,7 @@ export const supabaseAuthProvider: AuthProvider = {
     });
 
     if (roles.includes("organizer")) {
-      const user = profileToSessionUser(profile, "organizer");
-      return { user };
+      return { user: profileToSessionUser(profile, "organizer") };
     }
 
     const nextRoles: AccountRole[] = [...roles, "organizer"];
@@ -300,6 +322,37 @@ export const supabaseAuthProvider: AuthProvider = {
 
   async logout() {
     await getClient().auth.signOut();
+  },
+
+  async requestPasswordReset(email) {
+    const normalizedEmail = email.trim().toLowerCase();
+    if (!normalizedEmail || !normalizedEmail.includes("@")) {
+      return { error: "Укажите корректный email" };
+    }
+
+    const redirectTo = `${window.location.origin}/auth/callback?next=/auth/reset-password`;
+
+    const clientResult = await getClient().auth.resetPasswordForEmail(normalizedEmail, {
+      redirectTo,
+    });
+
+    if (!clientResult.error) {
+      return { ok: true };
+    }
+
+    const response = await fetch("/api/auth/request-password-reset", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ email: normalizedEmail }),
+    });
+
+    const body = (await response.json()) as { ok?: boolean; error?: string };
+    if (!response.ok) {
+      return { error: body.error ?? clientResult.error.message };
+    }
+
+    return { ok: true };
   },
 };
 

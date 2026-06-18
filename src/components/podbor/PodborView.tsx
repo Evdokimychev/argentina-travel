@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Compass, Sparkles } from "lucide-react";
 import type { TourListing } from "@/types";
 import type { ExcursionListing } from "@/types/excursion";
-import type { PodborAnswers, PodborQuestionId } from "@/types/podbor";
+import type { PodborAnswers, PodborQuestionId, PodborMatchResult } from "@/types/podbor";
 import PodborProgressBar from "./PodborProgressBar";
 import PodborQuestionScreen from "./PodborQuestionScreen";
 import PodborResultsView from "./PodborResultsView";

@@ -34,6 +34,7 @@ import {
   normalizeSectionOrganizerComments,
 } from "@/lib/tour-section-comments";
 import { primaryComfortLevel } from "@/data/tour-levels";
+import { getTourRoutePoints } from "@/data/tour-routes";
 import { getGroupDiscountSeedForSlug } from "@/data/tour-group-discount-seeds";
 import { getPriceOnRequestSeedForSlug } from "@/data/tour-price-on-request-seeds";
 import { getPrivateTourSeedForSlug } from "@/data/tour-private-seeds";
@@ -766,6 +767,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
   );
 
   const catalogPrice = resolveTourCatalogPriceUsd(dates, tour.pricing.basePriceUsd);
+  const groupDiscountEnabled = normalizeGroupDiscountSettings(tour.pricing.groupDiscount).enabled;
 
   const accommodations = buildPublicAccommodations(tour, legacy);
   const publicAccommodations = accommodations;
@@ -861,6 +863,9 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     featured: tour.display.featured,
     checkoutPaymentOptions: tour.booking.checkoutPaymentOptions,
     groupDiscount: tour.pricing.groupDiscount,
+    groupDiscountEnabled,
+    groupDiscountHint:
+      getBestGroupDiscountHint(tour.pricing.groupDiscount, tour.pricing.basePriceUsd) ?? undefined,
     priceOnRequest: tour.pricing.priceOnRequest,
     priceFromPrefix: tour.pricing.priceOnRequest
       ? tour.pricing.priceFromPrefix

@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
-import { siteScrollAnchorClass } from "@/lib/site-container";
+import { siteScrollAnchorClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
 import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 
 type SectionLink = {
@@ -47,7 +47,8 @@ export default function ExcursionSectionNav({ links }: { links: SectionLink[] })
     <nav
       ref={navRef}
       className={cn(
-        "sticky top-[var(--site-header-height,72px)] z-40 -mx-4 mb-6 overflow-x-auto border-b border-gray-100 bg-white/95 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0",
+        "sticky z-40 -mx-4 mb-6 overflow-x-auto border-b border-gray-100 bg-white/95 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0",
+        siteStickyBelowHeaderClass,
         siteScrollAnchorClass
       )}
       aria-label="Разделы экскурсии"

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { getSiteScrollAnchorOffset, scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { getTourSectionIcon } from "@/lib/tour-nav-icons";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteContainerClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
 import type { TourSectionLink } from "./tour-section-links";
 
 interface TourSectionNavProps {
@@ -142,7 +142,10 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     <nav
       ref={navRef}
       aria-label="Разделы страницы тура"
-      className="sticky top-[var(--site-header-height,72px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
+      className={cn(
+        "sticky z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md",
+        siteStickyBelowHeaderClass
+      )}
     >
       <div
         ref={scrollContainerRef}

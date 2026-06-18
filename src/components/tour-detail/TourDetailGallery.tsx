@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { SafeImage } from "@/components/ui/safe-image";
 
 interface TourDetailGalleryProps {
@@ -160,7 +161,7 @@ function MobileGalleryCarousel({
 export default function TourDetailGallery({ images, title }: TourDetailGalleryProps) {
   const [lightbox, setLightbox] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
-  const galleryImages = images.filter(Boolean);
+  const galleryImages = dedupeGalleryImages(images.filter(Boolean));
 
   if (!galleryImages.length) {
     return (

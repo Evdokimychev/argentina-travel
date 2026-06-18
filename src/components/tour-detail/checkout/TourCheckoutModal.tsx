@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Check, ChevronLeft, ChevronRight, Lock, X } from "lucide-react";
 import { TourDetail } from "@/types";
-import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
+import { formatDays, formatForTourists, formatTourists, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
@@ -223,7 +223,7 @@ function CheckoutSummary({
             <div className="flex justify-between gap-3">
               <dt>Туристы</dt>
               <dd className="text-right font-medium text-charcoal">
-                {formatTouristsBooking(guests)}
+                {formatTourists(guests)}
               </dd>
             </div>
           </dl>
@@ -731,7 +731,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   <div className="mt-4 rounded-xl border border-sky/20 bg-sky/5 px-4 py-4 text-left text-sm">
                     <p className="font-medium text-charcoal">Оформите страховку для поездки</p>
                     <p className="mt-1 text-slate">
-                      Полис для {formatTouristsBooking(form.insuranceTravelers)} — на сайте партнёра,
+                      Полис для {formatForTourists(form.insuranceTravelers)} — на сайте партнёра,
                       отдельно от оплаты тура.
                     </p>
                     <Link
@@ -1222,7 +1222,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
               <div className="shrink-0 border-t border-gray-100 bg-gray-50 px-5 py-3 lg:hidden">
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
-                    <p className="text-xs text-slate">Итого за {formatTouristsBooking(guests)}</p>
+                    <p className="text-xs text-slate">Итого за {formatForTourists(guests)}</p>
                     <FormattedPrice
                       priceUsd={totalUsd}
                       className="font-heading text-lg font-bold text-charcoal"

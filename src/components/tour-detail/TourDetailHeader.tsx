@@ -6,6 +6,7 @@ import { ArrowUpRight, MapPin, Share2 } from "lucide-react";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
 import FavoriteButton from "@/components/profile/FavoriteButton";
+import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import { StarRating } from "@/components/ui/star-rating";
 import { cn } from "@/lib/cn";
 import { formatReviews } from "@/lib/pluralize";
@@ -111,10 +112,8 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
                   region={tour.region}
                   country={tour.country}
                   priceUsd={tour.priceUsd}
-                  className={cn(
-                    "flex h-9 w-9 items-center justify-center rounded-full border transition-colors",
-                    "border-gray-200/80 bg-white/90 text-charcoal shadow-sm hover:border-sky/30 hover:bg-white"
-                  )}
+                  className={favoriteHeaderButtonClass}
+                  iconClassName="h-4 w-4"
                 />
                 <button
                   type="button"

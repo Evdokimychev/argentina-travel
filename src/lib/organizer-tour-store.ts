@@ -70,6 +70,7 @@ import {
   mergeSectionOrganizerComments,
   normalizeSectionOrganizerComments,
 } from "@/lib/tour-section-comments";
+import { fireOrganizerTourSync } from "@/lib/tour-content-api";
 import {
   markTourDeletedBySlug,
   upsertTourFromOrganizerDraft,

@@ -14,6 +14,7 @@ import { useAuth } from "@/context/AuthContext";
 import { joinFullName, splitFullName } from "@/lib/full-name";
 import { readOrganizerProfile, updateOrganizerProfile } from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
+import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
 import {
   ORGANIZER_EXTENDED_DESCRIPTION_MAX,
   ORGANIZER_SHORT_DESCRIPTION_MAX,
@@ -573,7 +574,7 @@ export default function OrganizerSettingsView() {
               </div>
 
               <aside className="hidden xl:block">
-                <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+                <div className={cn("sticky rounded-2xl border border-gray-200 bg-white p-5 shadow-sm", siteStickyBelowHeaderInsetClass)}>
                   <h2 className="font-heading text-base font-bold text-charcoal">
                     Настройки автора тура
                   </h2>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import ExcursionReviewsSection from "@/components/excursions/ExcursionReviewsSection";
 import ExcursionSimilarSection from "@/components/excursions/ExcursionSimilarSection";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
+import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import ExcursionContentBlocks from "@/components/excursions/ExcursionContentBlocks";
 import ExcursionGuideSection from "@/components/excursions/ExcursionGuideSection";
 import ExcursionBookingConditionsSection from "@/components/excursions/ExcursionBookingConditionsSection";
@@ -90,7 +91,7 @@ export default function ExcursionDetailView({
               <div className="mt-4 flex flex-wrap items-center gap-4">
                 <ExcursionFavoriteButton
                   excursion={excursion}
-                  className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-3 py-1.5 text-sm font-medium text-charcoal transition hover:border-sky/40 hover:text-sky"
+                  className={favoriteHeaderButtonClass}
                   iconClassName="h-4 w-4"
                 />
               </div>

@@ -3,6 +3,7 @@
 import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { clearAuthNextPath, storeAuthNextPath } from "@/lib/auth-redirect";
 
 function AuthQueryHandlerInner() {
   const searchParams = useSearchParams();
@@ -11,15 +12,22 @@ function AuthQueryHandlerInner() {
 
   useEffect(() => {
     const auth = searchParams.get("auth");
+    const next = searchParams.get("next");
+
+    if (next?.startsWith("/")) {
+      storeAuthNextPath(next);
+    }
+
     if (auth !== "sign-in" || isAuthenticated) return;
 
     const role = searchParams.get("role");
     openAuth(role === "organizer" ? "organizer" : "default");
 
-    const next = new URLSearchParams(searchParams.toString());
-    next.delete("auth");
-    next.delete("role");
-    const query = next.toString();
+    const cleaned = new URLSearchParams(searchParams.toString());
+    cleaned.delete("auth");
+    cleaned.delete("role");
+    cleaned.delete("next");
+    const query = cleaned.toString();
     router.replace(query ? `/?${query}` : "/", { scroll: false });
   }, [isAuthenticated, openAuth, router, searchParams]);
 

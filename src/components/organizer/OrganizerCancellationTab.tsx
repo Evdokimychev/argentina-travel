@@ -27,6 +27,7 @@ import {
 import { buildCancellationTouristPreviewFull } from "@/lib/organizer-cancellation-preview";
 import { readOrganizerProfile, updateOrganizerProfile } from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
+import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
 
 function InfoBox({ children }: { children: React.ReactNode }) {
   return (
@@ -45,7 +46,7 @@ function SaveSidebar({
 }) {
   return (
     <aside className="hidden xl:block">
-      <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div className={cn("sticky rounded-2xl border border-gray-200 bg-white p-5 shadow-sm", siteStickyBelowHeaderInsetClass)}>
         <h2 className="font-heading text-base font-bold text-charcoal">Отмена бронирования</h2>
         {saved ? <p className="mt-2 text-sm text-emerald-700">Изменения сохранены</p> : null}
         <Button type="submit" className="mt-4 w-full" disabled={loading}>

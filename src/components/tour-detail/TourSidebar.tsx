@@ -8,6 +8,7 @@ import EarlyBookingDiscounts from "./EarlyBookingDiscounts";
 import GroupDiscountPanel from "./GroupDiscountPanel";
 import { useTourBooking } from "./TourBookingContext";
 import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
 interface TourSidebarProps {
   tour: TourDetail;
@@ -18,11 +19,12 @@ interface TourSidebarProps {
 export default function TourSidebar({ tour, canonicalTour, previewMode = false }: TourSidebarProps) {
   const { guests } = useTourBooking();
   const basePriceUsd = tour.priceUsd;
+  const isPartnerTour = isPartnerTourDetail(tour);
 
   return (
     <div className="space-y-4">
       <TourBookingPanel tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
-      {normalizeGroupDiscountSettings(tour.groupDiscount).enabled && !tour.priceOnRequest ? (
+      {!isPartnerTour && normalizeGroupDiscountSettings(tour.groupDiscount).enabled && !tour.priceOnRequest ? (
         <GroupDiscountPanel
           settings={tour.groupDiscount}
           basePriceUsd={basePriceUsd}

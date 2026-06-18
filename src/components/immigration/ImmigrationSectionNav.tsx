@@ -9,7 +9,7 @@ import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight
 import { IMMIGRATION_HUB_LINK_ID } from "@/lib/immigration-nav-icons";
 import { cn } from "@/lib/cn";
 import { isNavHrefActive, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteContainerClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
 import type { SiteNavLink } from "@/types/site-nav";
 
 function isImmigrationNavLinkActive(pathname: string, link: SiteNavLink): boolean {
@@ -29,7 +29,10 @@ export default function ImmigrationSectionNav() {
   return (
     <nav
       ref={navRef}
-      className="sticky top-[var(--site-header-height,0px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
+      className={cn(
+        "sticky z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md",
+        siteStickyBelowHeaderClass
+      )}
       aria-label="Разделы иммиграции"
     >
       <div className={cn(siteContainerClass, "overflow-x-auto py-3")}>

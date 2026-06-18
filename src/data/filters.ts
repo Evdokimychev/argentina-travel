@@ -49,11 +49,11 @@ export const SEARCH_DESTINATIONS = [
     keywords: ["ushuaia", "огненная", "beagle", "антарктида"],
   },
   {
-    label: "Игуасу",
+    label: "Пуэрто-Игуасу",
     type: "city",
-    region: "Misiones",
+    region: "Мисионес",
     description: "Водопады, джунгли и пограничный регион с Бразилией",
-    keywords: ["iguazu", "iguazú", "puerto iguazu", "водопад", "misiones"],
+    keywords: ["iguazu", "iguazú", "puerto iguazu", "водопад", "misiones", "игуасу"],
   },
   {
     label: "Сальта",
@@ -111,8 +111,8 @@ export const SEARCH_DESTINATIONS = [
   {
     label: "Национальный парк Иguacu",
     type: "park",
-    region: "Misiones",
-    nearCity: "Игуасу",
+    region: "Мисионес",
+    nearCity: "Пуэрто-Игуасу",
     description: "275 водопадов и тропы к Garganta del Diablo",
     keywords: ["iguacu", "iguazu", "игуасу", "unesco"],
   },
@@ -226,8 +226,8 @@ const POPULAR_DESTINATIONS_BASE = [
   },
   {
     id: "iguazu",
-    name: "Игуасу",
-    region: "Misiones",
+    name: "Пуэрто-Игуасу",
+    region: "Мисионес",
     description: "275 водопадов и Garganta del Diablo — UNESCO",
     keywords: ["игуасу", "iguazu", "iguazú", "водопад", "misiones"],
   },

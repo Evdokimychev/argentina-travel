@@ -38,7 +38,7 @@ export const ARGENTINA_DOMESTIC_AIRPORTS: Record<string, ArgentinaDomesticAirpor
   PMY: { code: "PMY", city: "Пуэрто-Мадрин", lat: -42.7592, lng: -65.1027, region: "PATAGONIA" },
   CRD: { code: "CRD", city: "Комодoro-Ривдавия", lat: -45.7853, lng: -67.4655, region: "PATAGONIA" },
   NQN: { code: "NQN", city: "Неукен", lat: -38.949, lng: -68.1557, region: "PATAGONIA" },
-  IGR: { code: "IGR", city: "Игуасу", lat: -25.7373, lng: -54.4734, region: "NEA" },
+  IGR: { code: "IGR", city: "Пуэрто-Игуасу", lat: -25.7373, lng: -54.4734, region: "NEA" },
   PSS: { code: "PSS", city: "Посadas", lat: -27.3858, lng: -55.9707, region: "NEA" },
   ROS: { code: "ROS", city: "Росарио", lat: -32.9036, lng: -60.785, region: "LITORAL" },
 };

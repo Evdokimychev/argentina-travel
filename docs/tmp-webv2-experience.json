@@ -1,0 +1,266 @@
+{
+  "status": "active",
+  "id": 108535,
+  "title": "По контрастной Аргентине в ритме танго: Буэнос-Айрес, Патагония, водопады Игуасу и Южная Земля",
+  "tagline": "Осмотреть ледник с воды, понаблюдать за пингвинами и фламинго и прокатиться на поезде до края мира",
+  "annotation": "Бывали ли вы на краю света, где максимально ощущается мощь природы? Путешествие туда объединит знаковые места Аргентины — от столичных кварталов Буэнос-Айреса до ледяных панорам Патагонии. Будет возможность пройти по набережным Пуэрто-Мадейро, прочувствовать танго в квартале Ла-Бока и подняться на борт Поезда края света. Колонии пингвинов острова Мартильо и величие ледника Перито-Морено откроют для вас дикую нетронутую природу. В Эль-Чалтене предстоит треккинг к лагуне Капри с видом на гору Фицрой, а в Пуэрто-Игуасу — встреча с водопадами Игуасу и легендарной Глоткой дьявола. Будет возможность и поискать внутренний ритм — полюбоваться фламинго на умиротворяющем озере Аргентино, самостоятельно исследовать столицу и по желанию пролететь на вертолёте. Остановимся в комфортных отелях 4*.",
+  "url": "https://experience.tripster.ru/experience/108535/",
+  "type": "tour",
+  "format": "activity",
+  "grade": null,
+  "movement_type": "car",
+  "schedule_type": "fixed_slots",
+  "exp_status": 3,
+  "is_instant_booking": false,
+  "is_under_sanctions": false,
+  "is_new": false,
+  "show_promotion_badge": false,
+  "max_persons": 12,
+  "duration": 240,
+  "price": {
+    "value": 3490,
+    "currency": "USD",
+    "currency_rate": 75.75,
+    "price_from": false,
+    "unit_string": "за одного",
+    "value_string": "$3490 за одного"
+  },
+  "display_price": null,
+  "rating": 0,
+  "visitors_count": 0,
+  "review_count": 0,
+  "pause_finish_date": null,
+  "pause_reason": null,
+  "cancel_finish_date": null,
+  "cancel_reason": null,
+  "additional_info": "<div><p>После внесения предоплаты на сайте необходимо перевести гиду напрямую ещё 30% от стоимости тура для организации путешествия. Остальная часть — в день старта наличными в долларах. Об условиях возврата этой суммы вы можете уточнить у организатора.</p>\n\n\t<p><strong>Минимальное число участников — 4 человека.</strong></p></div>",
+  "comfort_level_info": "",
+  "price_included_description": "<ul>\n\t\t<li>Проживание</li>\n\t\t<li>Завтраки в отелях</li>\n\t\t<li>Переезды по программе и топливо</li>\n\t\t<li>Трансфер из/до аэропорта</li>\n\t\t<li>Сопровождение турлидером</li>\n\t\t<li>Услуги местных и русскоязычных гидов</li>\n\t\t<li>Билет на самый южный поезд мира</li>\n\t\t<li>Входные билеты в национальные парки</li>\n\t\t<li>Экскурсия по Буэнос-Айресу</li>\n\t\t<li>Лодочная прогулка к водопадам Игуасу</li>\n\t\t<li>Помощь в подборе авиабилетов и оформлении страховки</li>\n\t\t<li>Наша поддержка 24/7</li>\n\t</ul>",
+  "price_not_included_description": "<div><ul>\n\t\t<li>Авиаперелёт до Буэнос-Айреса и обратно в ваш город</li>\n\t\t<li>4 внутренних перелёта — $600-700</li>\n\t\t<li>Остальное питание — $250-600 за тур</li>\n\t\t<li>Доплата за 1-местное размещение — $800</li>\n\t\t<li>Дополнительные активности</li>\n\t\t<li>Страховка</li>\n\t</ul>\n\n\t<p><strong>У тура есть сокращённая версия на 8 дней.</strong></p></div>",
+  "geo_access_level": "all",
+  "geo": {
+    "city": [
+      {
+        "id": 204,
+        "slug": "Buenos_Aires",
+        "name": "Буэнос-Айрес",
+        "name_prepositional": "Буэнос-Айресе",
+        "in_obj_phrase": "в Буэнос-Айресе",
+        "from_obj_phrase": "из Буэнос-Айреса",
+        "across_obj_phrase": "по Буэнос-Айресу",
+        "is_main_city": true,
+        "url": "https://experience.tripster.ru/experience/Buenos_Aires/"
+      },
+      {
+        "id": 1010,
+        "slug": "Ushuaia",
+        "name": "Ушуайя",
+        "name_prepositional": "Ушуайе",
+        "in_obj_phrase": "в Ушуайе",
+        "from_obj_phrase": "из Ушуайи",
+        "across_obj_phrase": "по Ушуайе",
+        "is_main_city": false,
+        "url": "https://experience.tripster.ru/experience/Ushuaia/"
+      },
+      {
+        "id": 1118,
+        "slug": "El_Calafate",
+        "name": "Эль-Калафате",
+        "name_prepositional": "Эль-Калафате",
+        "in_obj_phrase": "в Эль-Калафате",
+        "from_obj_phrase": "из Эль-Калафате",
+        "across_obj_phrase": "по Эль-Калафате",
+        "is_main_city": false,
+        "url": "https://experience.tripster.ru/experience/El_Calafate/"
+      },
+      {
+        "id": 1108,
+        "slug": "Foz_do_Iguacu",
+        "name": "Фос-ду-Игуасу",
+        "name_prepositional": "Фос-ду-Игуасу",
+        "in_obj_phrase": "в Фос-ду-Игуасу",
+        "from_obj_phrase": "из Фос-ду-Игуасу",
+        "across_obj_phrase": "по Фос-ду-Игуасу",
+        "is_main_city": false,
+        "url": "https://experience.tripster.ru/experience/Foz_do_Iguacu/"
+      }
+    ],
+    "country": [
+      {
+        "id": 65,
+        "slug": "argentina",
+        "name": "Аргентина",
+        "name_prepositional": "Аргентине",
+        "in_obj_phrase": "в Аргентине",
+        "from_obj_phrase": "из Аргентины",
+        "across_obj_phrase": "по Аргентине",
+        "is_main_city": false,
+        "url": "https://experience.tripster.ru/destinations/argentina/"
+      },
+      {
+        "id": 86,
+        "slug": "brazil",
+        "name": "Бразилия",
+        "name_prepositional": "Бразилии",
+        "in_obj_phrase": "в Бразилии",
+        "from_obj_phrase": "из Бразилии",
+        "across_obj_phrase": "по Бразилии",
+        "is_main_city": false,
+        "url": "https://experience.tripster.ru/destinations/brazil/"
+      }
+    ]
+  },
+  "guide": {
+    "id": 710517,
+    "first_name": "Андрей",
+    "url": "https://experience.tripster.ru/guide/710517/",
+    "avatar": {
+      "small": "https://resize.tripster.ru/yDWhJ3Pw0MSbyf-NlVnfwEvvvfs=/150x150/filters:no_upscale()/https://cdn.tripster.ru/avatars/edbde23a-135b-4255-adc3-b98c99431408.jpg",
+      "medium": "https://resize.tripster.ru/yDWhJ3Pw0MSbyf-NlVnfwEvvvfs=/150x150/filters:no_upscale()/https://cdn.tripster.ru/avatars/edbde23a-135b-4255-adc3-b98c99431408.jpg",
+      "thumbnail_s": "https://resize.tripster.ru/ATUluBqWwNJfYUs8HPeIKWy-FHg=/24x24/filters:no_upscale()/https://cdn.tripster.ru/avatars/edbde23a-135b-4255-adc3-b98c99431408.jpg",
+      "thumbnail_m": "https://resize.tripster.ru/LAc5Ea0hy3yJyLudhYhJpG3mlhA=/31x31/filters:no_upscale()/https://cdn.tripster.ru/avatars/edbde23a-135b-4255-adc3-b98c99431408.jpg",
+      "thumbnail_l": "https://resize.tripster.ru/xEV-_AB576xsPo3OAQBpp22bi6M=/42x42/filters:no_upscale()/https://cdn.tripster.ru/avatars/edbde23a-135b-4255-adc3-b98c99431408.jpg",
+      "thumbnail_xl": "https://resize.tripster.ru/yDWhJ3Pw0MSbyf-NlVnfwEvvvfs=/150x150/filters:no_upscale()/https://cdn.tripster.ru/avatars/edbde23a-135b-4255-adc3-b98c99431408.jpg"
+    },
+    "rating": 0,
+    "rate_count": 0,
+    "review_count": 0,
+    "avg_reaction_delay": 2479,
+    "avg_reaction_delay_display": {
+      "nominative": "24 часа",
+      "accusative": "24 часа",
+      "genitive": "24 часов"
+    },
+    "type": "guide",
+    "date_start_work": "2024-12-03T09:12:05.939710Z",
+    "date_joined": "2022-02-11T17:44:45.000000Z",
+    "is_licensed": false,
+    "guide_legality_description": "организатор, ИНН 110117870100",
+    "orders_count": 31,
+    "visitors_count": 0,
+    "description": "Всем привет!\nПара слов обо мне. Я путешественник и основатель travel-сообщества, посетил больше 35 стран, организовал порядка 100 туров, проехал свыше 100 000 км за рулём по разным странам, да и в целом передвигался на всех видах транспорта, кроме ракеты! Водил группу на Эльбрус, 100% участников восхождения достигли цели! Сейчас я уже у своей мечты и делаю для вас классные туры по Латинской Америке.\nНаша команда состоит из талантливых ребят, которые любят своё дело и горят путешествиями! Мы умеем работать с VIP-сегментом и высокими чеками и сможем выполнить любой ваш запрос. Сделаем всё возможное, чтобы вам было хорошо за оговоренный бюджет.",
+    "exp_count_published": 7,
+    "number_of_persons_paid": 0
+  },
+  "guide_can_resume": true,
+  "has_non_refundable_part": false,
+  "photos": [
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/jgya79PdndWg1SJ1xQBNYoXM5IA=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/04994862-5ff0-4c01-ad8b-5b22d7ad07f4.jpg",
+      "medium": "https://resize.tripster.ru/aH7R0W5AsAp17JGyGXf-ciDkxqQ=/fit-in/1200x1000/filters:no_upscale()/https://cdn.tripster.ru/photos/04994862-5ff0-4c01-ad8b-5b22d7ad07f4.jpg"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/r8-doU4lS3Lo-4qyqE8e8OX6Lng=/fit-in/600x800/filters:no_upscale()/https://cdn.tripster.ru/photos/24a6ee45-1ed0-4165-893f-2bf3d8768349.png",
+      "medium": "https://resize.tripster.ru/hY9NAPQ6-STIBQaaR3DWo2N53UY=/fit-in/1000x1350/filters:no_upscale()/https://cdn.tripster.ru/photos/24a6ee45-1ed0-4165-893f-2bf3d8768349.png"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/AoAWStZ9VR4qV4iWFpE5wfrBpg0=/fit-in/600x800/filters:no_upscale()/https://cdn.tripster.ru/photos/ae103834-b494-4749-a067-ae3761c785fa.png",
+      "medium": "https://resize.tripster.ru/JqPJV_llbx22zigUc1qU2YUWHOM=/fit-in/1000x1350/filters:no_upscale()/https://cdn.tripster.ru/photos/ae103834-b494-4749-a067-ae3761c785fa.png"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/euFuhX3h-bOXEGtHyqifqjggGFM=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/13cc2c33-e734-4299-9263-eba0d4c9dc45.png",
+      "medium": "https://resize.tripster.ru/01knXL4uICB_b8sycVQxo8J3hoQ=/fit-in/1200x1000/filters:no_upscale()/https://cdn.tripster.ru/photos/13cc2c33-e734-4299-9263-eba0d4c9dc45.png"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/1-FMaVCYFd8sqB3URzXo-lhIZIE=/fit-in/600x800/filters:no_upscale()/https://cdn.tripster.ru/photos/20f2e4cb-82db-4a0c-89d4-b85e0e9a1206.png",
+      "medium": "https://resize.tripster.ru/xul96BqSzM4CSCl-nPwx83HS7_k=/fit-in/1000x1350/filters:no_upscale()/https://cdn.tripster.ru/photos/20f2e4cb-82db-4a0c-89d4-b85e0e9a1206.png"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/Y2WqBxChTvZSW63Q2cAO_OmKjNs=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/13fd9f25-e021-48bb-be16-5a2d8c0463a0.jpg",
+      "medium": "https://resize.tripster.ru/Gu8schWUQlsRKmhxjAr2_UsX_lE=/fit-in/1200x1000/filters:no_upscale()/https://cdn.tripster.ru/photos/13fd9f25-e021-48bb-be16-5a2d8c0463a0.jpg"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/SV8T4mhJsnQuJxl3sXUUFel2f58=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/9d2b95c0-6595-499e-b6f4-2804eeab6f0d.jpg",
+      "medium": "https://resize.tripster.ru/YiP_-BVDWH3ap-Tw6dFLnDWI-dQ=/fit-in/1200x1000/filters:no_upscale()/https://cdn.tripster.ru/photos/9d2b95c0-6595-499e-b6f4-2804eeab6f0d.jpg"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/FYrsh62tTS_xMJrBahuTx5IZKCw=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/1260f162-23ba-472c-8b33-21e46664e6ff.jpg",
+      "medium": "https://resize.tripster.ru/mfc8r92BWq1sZZbI9Xa7dGy67n4=/fit-in/1200x1000/filters:no_upscale()/https://cdn.tripster.ru/photos/1260f162-23ba-472c-8b33-21e46664e6ff.jpg"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/5axfnJl1BELNfbEU9rewZP4VM7s=/fit-in/600x800/filters:no_upscale()/https://cdn.tripster.ru/photos/0afa9cb7-6f06-40d0-9949-700bd7cfdcb8.png",
+      "medium": "https://resize.tripster.ru/ZAx8hXdw40ehK-3Ifw4ModcRkOI=/fit-in/1000x1350/filters:no_upscale()/https://cdn.tripster.ru/photos/0afa9cb7-6f06-40d0-9949-700bd7cfdcb8.png"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/eyrvS9rerPdVrAymdelTUnZr1CE=/fit-in/600x800/filters:no_upscale()/https://cdn.tripster.ru/photos/0a4c4c77-8a5a-41cf-a6e8-47cdcd52e149.jpg",
+      "medium": "https://resize.tripster.ru/OuaGyjsHEPqYxlITc3TIALahzJk=/fit-in/1000x1350/filters:no_upscale()/https://cdn.tripster.ru/photos/0a4c4c77-8a5a-41cf-a6e8-47cdcd52e149.jpg"
+    },
+    {
+      "type": "experience",
+      "thumbnail": "https://resize.tripster.ru/_FmONk-SjlWpTZ93SulH3yglhvA=/fit-in/600x800/filters:no_upscale()/https://cdn.tripster.ru/photos/a79e8960-feaa-423e-8796-d62c0bc33de3.png",
+      "medium": "https://resize.tripster.ru/ZBFDcKCcl-Y9DpjvX8MTC8xQa9Y=/fit-in/1000x1350/filters:no_upscale()/https://cdn.tripster.ru/photos/a79e8960-feaa-423e-8796-d62c0bc33de3.png"
+    }
+  ],
+  "legal_exp_type": "tour",
+  "accommodation": {
+    "paid_separately": false
+  },
+  "child_friendly": false,
+  "children_allowed_age": "not_allowed",
+  "pricing_model": "composite",
+  "minimal_price_info": null,
+  "description": "<h3>Организационные детали</h3>\n<div><p>Мы вам пришлем список вещей, которые нужно взять с собой.</p>\n\n\t<p>Гражданам РФ, прибывающим в Аргентину на срок до 90 дней, виза не требуется.</p>\n\n\t<p>Мы поможем вам подобрать все билеты.</p></div>",
+  "meeting_point": {
+    "text": "центр Буэнос-Айреса, 14:00 (возможно другое время в течение дня по договорённости)"
+  },
+  "finish_point": {
+    "text": "Буэнос-Айрес, 14:00 (возможно другое время по договорённости)"
+  },
+  "video_id": null,
+  "photos_count": 11,
+  "cover_image": "https://resize.tripster.ru/68hSvDCohjdmqeQ0j2YTznF-SCM=/fit-in/1600x900/filters:no_upscale()/https://cdn.tripster.ru/photos/04994862-5ff0-4c01-ad8b-5b22d7ad07f4.jpg",
+  "cover_image_source": "stock",
+  "schedule": {
+    "text": null
+  },
+  "languages": [
+    {
+      "name_ru": "русский",
+      "name_5_ru": "русском",
+      "name_en": "Russian",
+      "country_code": "ru",
+      "language_code": "ru"
+    }
+  ],
+  "legality_description": "",
+  "is_paid_issuance": false,
+  "options": [
+    {
+      "id": "019df9ce-0956-7144-9e55-9fede02873ba",
+      "title": "Участник",
+      "description": null,
+      "category": null,
+      "kind": "per_person_price",
+      "price": {
+        "value": "3490",
+        "currency": "USD"
+      },
+      "price_without_discount": null,
+      "display_price": null,
+      "display_price_without_discount": null,
+      "quantity": {
+        "min": 1,
+        "max": null,
+        "default": 1,
+        "kind": "counter"
+      },
+      "display": {
+        "price_string": "$3490",
+        "price_without_discount_string": "",
+        "unit_string": "/чел",
+        "value_string": "$3490/чел"
+      }
+    }
+  ],
+  "integration": null
+}

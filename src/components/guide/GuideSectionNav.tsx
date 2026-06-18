@@ -15,7 +15,7 @@ import {
 } from "@/lib/guide-nav-icons";
 import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { isNavHrefActive, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteContainerClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
 import type { SiteNavLink } from "@/types/site-nav";
 
 const GUIDE_SITE_NAV = getSiteNavSection("guide")!;
@@ -40,7 +40,10 @@ export default function GuideSectionNav() {
   return (
     <nav
       ref={navRef}
-      className="sticky top-[var(--site-header-height,0px)] z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md"
+      className={cn(
+        "sticky z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md",
+        siteStickyBelowHeaderClass
+      )}
       aria-label="Разделы путеводителя"
     >
       <div className={cn(siteContainerClass, "overflow-x-auto py-3")}>

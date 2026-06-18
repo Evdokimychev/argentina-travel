@@ -12,7 +12,7 @@ export default async function BookingPaymentLinkPage({
 }) {
   const { token } = await params;
   return (
-    <div className="min-h-[calc(100vh-var(--site-header-height,72px))] bg-pampas">
+    <div className="min-h-[calc(100vh-var(--site-header-full-height,72px))] bg-pampas">
       <BookingPaymentLinkView token={token} />
     </div>
   );

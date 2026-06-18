@@ -84,7 +84,7 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
           <OrganizerSidebar userName={user.fullName} avatarUrl={user.avatarUrl} />
 
           <div className="min-w-0 flex-1">
-            <div className="min-h-[calc(100vh-var(--site-header-height,72px)-2rem)] rounded-3xl md:min-h-[calc(100vh-var(--site-header-height,72px)-2.5rem)]">
+            <div className="min-h-[calc(100vh-var(--site-header-full-height,72px)-2rem)] rounded-3xl md:min-h-[calc(100vh-var(--site-header-full-height,72px)-2.5rem)]">
               {children}
             </div>
           </div>

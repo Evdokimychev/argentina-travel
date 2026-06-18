@@ -51,6 +51,7 @@ import { formatBookingCheckoutPaymentOption } from "@/lib/booking-display";
 import { Button } from "@/components/ui/button";
 import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
 import { cn } from "@/lib/cn";
+import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
 
 function StatusIcon({ status }: { status: BookingStatusActive }) {
   const className = "h-5 w-5";
@@ -415,7 +416,7 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
           <BookingTravelersOrganizerSection booking={booking} sectionId="booking-travelers-section" />
         </div>
 
-        <aside className="space-y-4 xl:sticky xl:top-[calc(var(--site-header-height,72px)+1rem)]">
+        <aside className={cn("space-y-4 xl:sticky", siteStickyBelowHeaderInsetClass)}>
           {(primaryAction || secondaryConfirmAction || cancelAction || completeAction) && (
             <article className="rounded-3xl bg-white p-5 shadow-sm ring-1 ring-gray-200/60">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate">

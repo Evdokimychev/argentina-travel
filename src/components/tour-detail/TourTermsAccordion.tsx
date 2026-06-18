@@ -51,7 +51,9 @@ function TermRow({
       <span className="min-w-0 flex-1 pt-0.5">
         <span className="block text-sm font-medium leading-snug text-charcoal">{item.title}</span>
         {hasDetail && isOpen ? (
-          <span className="mt-1.5 block text-xs leading-relaxed text-slate">{item.detail}</span>
+          <span className="mt-1.5 block animate-fade-in-up text-xs leading-relaxed text-slate">
+            {item.detail}
+          </span>
         ) : null}
       </span>
       {hasDetail ? (

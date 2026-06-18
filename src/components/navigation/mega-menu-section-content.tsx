@@ -7,6 +7,7 @@ import { ExcursionsMegaMenuPanel } from "@/components/navigation/ExcursionsMegaM
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
 import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuPanel } from "@/components/navigation/MegaMenuPanel";
+import { PlacesMegaMenuPanel } from "@/components/navigation/PlacesMegaMenuPanel";
 import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
 import { navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
@@ -18,6 +19,7 @@ export function megaMenuWidthClass(sectionId: string): string {
   }
   if (
     sectionId === "destinations" ||
+    sectionId === "places" ||
     sectionId === "tours" ||
     sectionId === "excursions" ||
     sectionId === "services" ||
@@ -83,6 +85,8 @@ export function MegaMenuSectionContent({
       return <ImmigrationMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
     case "destinations":
       return <DestinationsMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    case "places":
+      return <PlacesMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
     case "tours":
       return <ToursMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
     case "excursions":

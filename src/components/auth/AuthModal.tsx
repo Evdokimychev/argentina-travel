@@ -15,11 +15,12 @@ import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
-import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import { normalizeSiteError, passwordResetSentMessage, siteFormError } from "@/lib/site-feedback/normalize-error";
+import { clearAuthNextPath, readAuthNextPath } from "@/lib/auth-redirect";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 type AuthMode = "phone" | "email";
-type AuthStep = "sign-in" | "register";
+type AuthStep = "sign-in" | "register" | "forgot-password";
 type OrganizerTab = "sign-in" | "register";
 
 function RoleBadges({ user }: { user: { roles: AuthUserRole[]; role: AuthUserRole } }) {
@@ -54,6 +55,7 @@ export default function AuthModal() {
     loginForOrganizerUpgrade,
     register,
     addOrganizerRole,
+    requestPasswordReset,
     logout,
   } = useAuth();
 
@@ -75,6 +77,7 @@ export default function AuthModal() {
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [duplicateRegistration, setDuplicateRegistration] = useState(false);
+  const [resetSent, setResetSent] = useState(false);
   const feedback = useSiteFeedback();
 
   const setError = (value: string | SiteFeedbackMessage | null) => {
@@ -91,15 +94,19 @@ export default function AuthModal() {
       return;
     }
 
-    const asOrganizer = destination === "/organizer";
+    const nextPath = readAuthNextPath();
+    const finalDestination = nextPath ?? destination;
+
+    const asOrganizer = finalDestination.startsWith("/organizer");
     feedback.success({
       title: asOrganizer ? "Кабинет организатора открыт" : "Вы вошли",
       description: asOrganizer
         ? "Можно размещать туры и управлять бронированиями."
         : "Добро пожаловать в личный кабинет.",
     });
+    clearAuthNextPath();
     closeAuth();
-    router.push(destination);
+    router.push(finalDestination);
   }
 
   useEffect(() => {
@@ -108,6 +115,7 @@ export default function AuthModal() {
     setError(null);
     setLoading(false);
     setDuplicateRegistration(false);
+    setResetSent(false);
     setStep(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setOrganizerTab(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setMode("phone");
@@ -136,7 +144,7 @@ export default function AuthModal() {
     setLoading(true);
     setError(null);
 
-    const result = await loginByPhone(phone, targetRole);
+    const result = await loginByPhone(phone, targetRole, password.trim() || undefined);
     setLoading(false);
 
     if (result.ok) {
@@ -150,14 +158,50 @@ export default function AuthModal() {
       return;
     }
 
-    if (result.roleNotConnected && isOrganizerFlow) {
+    if (result.roleNotConnected && (isOrganizerFlow || targetRole === "organizer")) {
+      setMode("email");
       setOrganizerTab("sign-in");
       setLoginCredential(formatInternationalPhone(phone));
-      setError("Аккаунт найден. Войдите по email и паролю, чтобы подключить роль организатора.");
+      setError(normalizeSiteError("ROLE_NOT_CONNECTED"));
       return;
     }
 
     setError(normalizeSiteError(result.error));
+  }
+
+  async function handleOrganizerUpgradeFromCredentials(
+    credentialEmail: string,
+    credentialPassword: string
+  ) {
+    const upgrade = await loginForOrganizerUpgrade(credentialEmail, credentialPassword);
+    if (!upgrade.ok) {
+      setError(normalizeSiteError(upgrade.error));
+      return;
+    }
+    completeAuthSuccess("/organizer");
+  }
+
+  async function handleForgotPasswordSubmit() {
+    const targetEmail = email.trim().toLowerCase();
+    if (!targetEmail || !targetEmail.includes("@")) {
+      setError(siteFormError("Укажите email, который использовали при регистрации"));
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    setResetSent(false);
+
+    const result = await requestPasswordReset(targetEmail);
+    setLoading(false);
+
+    if (!result.ok) {
+      setError(normalizeSiteError(result.error));
+      return;
+    }
+
+    setResetSent(true);
+    setError(passwordResetSentMessage(targetEmail));
   }
 
   async function handleEmailContinue(targetRole = role) {
@@ -187,13 +231,13 @@ export default function AuthModal() {
       return;
     }
 
+    if (result.roleNotConnected && targetRole === "organizer") {
+      await handleOrganizerUpgradeFromCredentials(email, password);
+      return;
+    }
+
     if (result.roleNotConnected && isOrganizerFlow) {
-      const upgrade = await loginForOrganizerUpgrade(email, password);
-      if (!upgrade.ok) {
-        setError(normalizeSiteError(upgrade.error));
-        return;
-      }
-      completeAuthSuccess("/organizer");
+      await handleOrganizerUpgradeFromCredentials(email, password);
       return;
     }
 
@@ -229,13 +273,8 @@ export default function AuthModal() {
       }
 
       if (login.roleNotConnected) {
-        const upgrade = await loginForOrganizerUpgrade(credential, password);
         setLoading(false);
-        if (!upgrade.ok) {
-          setError(normalizeSiteError(upgrade.error));
-          return;
-        }
-        completeAuthSuccess("/organizer");
+        await handleOrganizerUpgradeFromCredentials(credential, password);
         return;
       }
 
@@ -251,7 +290,7 @@ export default function AuthModal() {
       return;
     }
 
-    const result = await loginByPhone(credential, "organizer");
+    const result = await loginByPhone(credential, "organizer", password.trim() || undefined);
     setLoading(false);
 
     if (result.ok) {
@@ -516,6 +555,18 @@ export default function AuthModal() {
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setStep("forgot-password");
+                  setEmail(loginCredential.includes("@") ? loginCredential : email);
+                  setError(null);
+                  setResetSent(false);
+                }}
+                className="mt-2 text-xs font-medium text-sky hover:underline"
+              >
+                Забыли пароль?
+              </button>
             </div>
           </>
         ) : (
@@ -677,6 +728,8 @@ export default function AuthModal() {
         ? "Кабинет организатора"
         : "Подключение организатора"
       : "Личный кабинет"
+    : step === "forgot-password"
+      ? "Восстановление пароля"
     : isOrganizerFlow
       ? "Вход для организаторов"
       : step === "register"
@@ -711,6 +764,61 @@ export default function AuthModal() {
 
         {isAuthenticated && user ? (
           renderAuthenticatedView()
+        ) : step === "forgot-password" ? (
+          <div className="space-y-5 px-5 py-5 sm:px-6">
+            <p className="text-sm leading-relaxed text-slate">
+              Укажите email, который использовали при регистрации. Мы отправим ссылку для смены пароля.
+            </p>
+            <div>
+              <label htmlFor="forgot-email" className="mb-2 block text-xs font-medium text-slate">
+                Email
+              </label>
+              <Input
+                id="forgot-email"
+                type="email"
+                autoComplete="email"
+                placeholder="email@example.com"
+                value={email}
+                onChange={(event) => {
+                  setEmail(event.target.value);
+                  setError(null);
+                  setResetSent(false);
+                }}
+              />
+            </div>
+
+            {error ? (
+              <InlineFeedback
+                variant={resetSent ? "success" : "error"}
+                title={error.title}
+                description={error.description}
+                steps={error.steps}
+                action={error.action}
+              />
+            ) : null}
+
+            <Button
+              type="button"
+              className="w-full rounded-xl"
+              loading={loading}
+              loadingLabel="Отправляем…"
+              onClick={() => void handleForgotPasswordSubmit()}
+            >
+              Отправить ссылку
+            </Button>
+
+            <button
+              type="button"
+              onClick={() => {
+                setStep("sign-in");
+                setError(null);
+                setResetSent(false);
+              }}
+              className="w-full text-sm font-medium text-slate transition-colors hover:text-charcoal"
+            >
+              ← Назад ко входу
+            </button>
+          </div>
         ) : isOrganizerFlow ? (
           renderOrganizerAuth()
         ) : (
@@ -744,15 +852,44 @@ export default function AuthModal() {
                 </div>
 
                 {mode === "phone" ? (
-                  <div>
-                    <label className="mb-2 block text-xs font-medium text-slate">Номер телефона</label>
-                    <PhoneCountryInput
-                      value={phone}
-                      onChange={(international) => {
-                        setPhone(international);
-                        setError(null);
-                      }}
-                    />
+                  <div className="space-y-3">
+                    <div>
+                      <label className="mb-2 block text-xs font-medium text-slate">Номер телефона</label>
+                      <PhoneCountryInput
+                        value={phone}
+                        onChange={(international) => {
+                          setPhone(international);
+                          setError(null);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="auth-phone-password" className="mb-2 block text-xs font-medium text-slate">
+                        Пароль <span className="font-normal text-slate">(если задавали при регистрации)</span>
+                      </label>
+                      <div className="relative">
+                        <Input
+                          id="auth-phone-password"
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="current-password"
+                          placeholder="Оставьте пустым, если не задавали"
+                          value={password}
+                          onChange={(event) => {
+                            setPassword(event.target.value);
+                            setError(null);
+                          }}
+                          className="pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((open) => !open)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate transition-colors hover:text-charcoal"
+                          aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -773,20 +910,44 @@ export default function AuthModal() {
                       />
                     </div>
                     <div>
-                      <label htmlFor="auth-password" className="mb-2 block text-xs font-medium text-slate">
-                        Пароль
-                      </label>
-                      <Input
-                        id="auth-password"
-                        type="password"
-                        autoComplete="current-password"
-                        placeholder="Введите пароль"
-                        value={password}
-                        onChange={(event) => {
-                          setPassword(event.target.value);
-                          setError(null);
-                        }}
-                      />
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <label htmlFor="auth-password" className="text-xs font-medium text-slate">
+                          Пароль
+                        </label>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setStep("forgot-password");
+                            setError(null);
+                            setResetSent(false);
+                          }}
+                          className="text-xs font-medium text-sky hover:underline"
+                        >
+                          Забыли пароль?
+                        </button>
+                      </div>
+                      <div className="relative">
+                        <Input
+                          id="auth-password"
+                          type={showPassword ? "text" : "password"}
+                          autoComplete="current-password"
+                          placeholder="Введите пароль"
+                          value={password}
+                          onChange={(event) => {
+                            setPassword(event.target.value);
+                            setError(null);
+                          }}
+                          className="pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword((open) => !open)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate transition-colors hover:text-charcoal"
+                          aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                        >
+                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -881,17 +1042,28 @@ export default function AuthModal() {
                   <label htmlFor="auth-register-password" className="mb-2 block text-xs font-medium text-slate">
                     Пароль
                   </label>
-                  <Input
-                    id="auth-register-password"
-                    type="password"
-                    autoComplete="new-password"
-                    placeholder="Не менее 6 символов"
-                    value={password}
-                    onChange={(event) => {
-                      setPassword(event.target.value);
-                      setError(null);
-                    }}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="auth-register-password"
+                      type={showPassword ? "text" : "password"}
+                      autoComplete="new-password"
+                      placeholder="Не менее 6 символов"
+                      value={password}
+                      onChange={(event) => {
+                        setPassword(event.target.value);
+                        setError(null);
+                      }}
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((open) => !open)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate transition-colors hover:text-charcoal"
+                      aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                   <p className="mt-1.5 text-xs text-slate">
                     Пароль нужен для входа по почте. По телефону можно войти с тем же паролем.
                   </p>

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import type { TourListing } from "@/types";
 import type { TourEmbedConfig } from "@/types/tour-embed";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
@@ -17,9 +18,9 @@ export default function EmbedToursPageClient({
     <div className="min-h-screen bg-white p-4 sm:p-5">
       <TourEmbedSection config={{ ...config, tone: config.tone ?? "inline" }} initialTours={initialTours} />
       <p className="mt-6 text-center text-[11px] text-slate/80">
-        <a href="/" className="hover:text-sky hover:underline">
+        <Link href="/" className="hover:text-sky hover:underline">
           Пора в Аргентину
-        </a>
+        </Link>
       </p>
     </div>
   );

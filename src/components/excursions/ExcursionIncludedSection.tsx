@@ -2,6 +2,20 @@
 
 import { Check, X } from "lucide-react";
 import TourSection from "@/components/tour-detail/TourSection";
+import { isHtmlContent, sanitizeHtml } from "@/lib/rich-text";
+
+function TermsContent({ text }: { text: string }) {
+  if (isHtmlContent(text)) {
+    return (
+      <div
+        className="rich-text-editor-content mt-2 text-sm leading-relaxed text-charcoal/90"
+        dangerouslySetInnerHTML={{ __html: sanitizeHtml(text) }}
+      />
+    );
+  }
+
+  return <p className="mt-2 text-sm leading-relaxed text-charcoal/90">{text}</p>;
+}
 
 export default function ExcursionIncludedSection({
   included,
@@ -27,7 +41,7 @@ export default function ExcursionIncludedSection({
               <Check className="h-4 w-4" aria-hidden />
               {includedLabel}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal/90">{included}</p>
+            <TermsContent text={included} />
           </div>
         ) : null}
         {excluded ? (
@@ -36,7 +50,7 @@ export default function ExcursionIncludedSection({
               <X className="h-4 w-4" aria-hidden />
               {excludedLabel}
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal/90">{excluded}</p>
+            <TermsContent text={excluded} />
           </div>
         ) : null}
       </div>

@@ -1,7 +1,8 @@
+import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
+
 /** Shared layout tokens for tourist & organizer personal cabinets */
 
-export const cabinetShellClass =
-  "min-h-[calc(100vh-var(--site-header-height,72px))] bg-surface-muted";
+export const cabinetShellClass = "min-h-[calc(100vh-var(--site-header-full-height,72px))] bg-surface-muted";
 
 export const cabinetContentGapClass = "flex items-start gap-5 py-5 md:py-6";
 
@@ -18,10 +19,10 @@ export const cabinetLinkClass =
   "font-medium text-sky transition-colors hover:text-sky-dark hover:underline";
 
 export const cabinetSidebarClass =
-  "sticky top-[calc(var(--site-header-height,72px)+1rem)] hidden h-fit shrink-0 flex-col rounded-3xl border border-gray-100 bg-white shadow-card transition-[width] duration-300 ease-out md:flex";
+  `sticky hidden h-fit shrink-0 flex-col rounded-3xl border border-gray-100 bg-white shadow-card transition-[width] duration-300 ease-out md:flex ${siteStickyBelowHeaderInsetClass}`;
 
 export const cabinetSidebarSkeletonClass =
-  "sticky top-[calc(var(--site-header-height,72px)+1rem)] h-fit rounded-3xl border border-gray-100 bg-white shadow-card";
+  `sticky h-fit rounded-3xl border border-gray-100 bg-white shadow-card ${siteStickyBelowHeaderInsetClass}`;
 
 export const cabinetMobileHeaderClass =
   "flex items-center justify-between border-b border-gray-100 bg-white/95 px-4 py-3 backdrop-blur-md md:hidden";

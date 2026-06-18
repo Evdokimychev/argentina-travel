@@ -42,7 +42,8 @@ interface AuthContextValue {
   openAuthFromFavorite: (step: FavoriteAuthStep) => void;
   loginByPhone: (
     phone: string,
-    role: AccountRole
+    role: AccountRole,
+    password?: string
   ) => Promise<
     | { ok: true }
     | { ok: false; error: string; notFound?: boolean; roleNotConnected?: boolean }
@@ -51,7 +52,10 @@ interface AuthContextValue {
     email: string,
     password: string,
     role: AccountRole
-  ) => Promise<{ ok: true } | { ok: false; error: string; roleNotConnected?: boolean }>;
+  ) => Promise<
+    | { ok: true }
+    | { ok: false; error: string; roleNotConnected?: boolean; code?: string }
+  >;
   loginForOrganizerUpgrade: (
     email: string,
     password: string
@@ -67,6 +71,9 @@ interface AuthContextValue {
     | { ok: false; error: string; duplicatePhone?: boolean; duplicateEmail?: boolean }
   >;
   addOrganizerRole: () => Promise<{ ok: true } | { ok: false; error: string }>;
+  requestPasswordReset: (
+    email: string
+  ) => Promise<{ ok: true } | { ok: false; error: string }>;
   updateProfile: (input: {
     fullName: string;
     phone: string;
@@ -209,8 +216,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const loginByPhone = useCallback(async (phone: string, role: AccountRole) => {
-    const result = await getAuthProvider().loginWithPhone(phone, role);
+  const loginByPhone = useCallback(async (phone: string, role: AccountRole, password?: string) => {
+    const result = await getAuthProvider().loginWithPhone(phone, role, password);
     if ("error" in result) {
       if (result.code === "NOT_FOUND" || result.error === "NOT_FOUND") {
         return { ok: false as const, error: "NOT_FOUND", notFound: true };
@@ -232,14 +239,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginByEmail = useCallback(async (email: string, password: string, role: AccountRole) => {
     const result = await getAuthProvider().loginWithEmail(email, password, role);
     if ("error" in result) {
-      if (result.code === "ROLE_NOT_CONNECTED") {
+      if (
+        result.code === "ROLE_NOT_CONNECTED" ||
+        result.error === "ROLE_NOT_CONNECTED"
+      ) {
         return {
           ok: false as const,
-          error: "Аккаунт найден, но роль организатора не подключена.",
+          error: "ROLE_NOT_CONNECTED",
           roleNotConnected: true,
         };
       }
-      return { ok: false as const, error: result.error };
+      return { ok: false as const, error: result.error, code: result.code };
     }
 
     await afterAuthSuccess(result.user);
@@ -247,14 +257,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [afterAuthSuccess]);
 
   const loginForOrganizerUpgrade = useCallback(async (email: string, password: string) => {
-    const result = await getAuthProvider().loginTouristForOrganizerUpgrade(email, password);
+    const provider = getAuthProvider();
+    const result = await provider.loginTouristForOrganizerUpgrade(email, password);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
 
-    setUser(result.user);
+    const connected = await provider.addOrganizerRole(result.user.id);
+    if ("error" in connected) {
+      setUser(result.user);
+      return {
+        ok: false as const,
+        error: connected.error ?? "Не удалось подключить роль организатора",
+      };
+    }
+
+    setUser(connected.user);
+    await afterAuthSuccess(connected.user);
     return { ok: true as const };
-  }, []);
+  }, [afterAuthSuccess]);
 
   const register = useCallback(
     async (input: {
@@ -297,6 +318,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     [afterAuthSuccess]
   );
+
+  const requestPasswordReset = useCallback(async (email: string) => {
+    const result = await getAuthProvider().requestPasswordReset(email);
+    if ("error" in result) {
+      return { ok: false as const, error: result.error };
+    }
+    return { ok: true as const };
+  }, []);
 
   const connectOrganizerRole = useCallback(async () => {
     if (!user) {
@@ -389,6 +418,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loginForOrganizerUpgrade,
       register,
       addOrganizerRole: connectOrganizerRole,
+      requestPasswordReset,
       updateProfile,
       updateAvatar,
       logout,
@@ -410,6 +440,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       openAuthFromFavorite,
       openFavoritePrompt,
       register,
+      requestPasswordReset,
       updateAvatar,
       updateProfile,
       user,

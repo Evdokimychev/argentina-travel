@@ -13,6 +13,7 @@ import { TourBookingMode, TourDetail } from "@/types";
 import {
   dateFitsGuestCount,
   findBookableDates,
+  getGuestLimits,
   pickInitialDateId,
   validateGuestsForScheduledBooking,
   type BookingDateMode,
@@ -125,6 +126,19 @@ export function TourBookingProvider({
       setSelectedDateId(next.id);
     }
   }, [guests, dateMode, requiresManualDate, tour.dates, tour.groupMin, selectedDateId]);
+
+  useEffect(() => {
+    if (dateMode !== "scheduled" || !selectedDateId) return;
+    const selected = tour.dates.find((d) => d.id === selectedDateId);
+    if (!selected) return;
+
+    const limits = getGuestLimits(tour, selected, dateMode);
+    setGuests((current) => {
+      if (current > limits.max) return Math.max(limits.min, limits.max);
+      if (current < limits.min) return limits.min;
+      return current;
+    });
+  }, [selectedDateId, dateMode, tour.dates, tour.groupMin, tour.groupMax]);
 
   const usesExternalBooking = tourUsesExternalBooking(tour);
   const externalBookingLink = tour.customBookingLink ?? null;

@@ -19,6 +19,7 @@ import {
 } from "@/lib/tour-booking-spots";
 import { useTourBooking } from "./TourBookingContext";
 import { tourDetailInsetClass } from "@/lib/tour-detail-ui";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
 interface BookingDateSelectorProps {
   tour: TourDetail;
@@ -55,7 +56,9 @@ function formatSelectionSummary(
     : null;
 
   if (showModeToggle || (tour.bookingMode ?? "scheduled") === "scheduled") {
-    return datesPart ? `Групповой тур · ${datesPart}` : "Групповой тур";
+    return datesPart
+      ? `Групповой тур · ${datesPart}`
+      : "Групповой тур · выберите дату";
   }
 
   return datesPart ?? "Даты не выбраны";
@@ -77,6 +80,8 @@ export default function BookingDateSelector({
   showDepartureCalendar = true,
 }: BookingDateSelectorProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
+  const isPartnerTour = isPartnerTourDetail(tour);
+  const hasScheduledDates = tour.dates.length > 0;
   const {
     selectedDateId,
     setSelectedDateId,
@@ -87,10 +92,17 @@ export default function BookingDateSelector({
     guests,
   } = useTourBooking();
 
-  const [expanded, setExpanded] = useState(!collapsible);
+  const [expanded, setExpanded] = useState(() => !collapsible || !selectedDateId);
+  const showCollapsed = collapsible && !expanded && Boolean(selectedDateId);
   const showModeToggle = bookingMode === "both";
-  const showScheduledPicker = dateMode === "scheduled" && canPickScheduled(bookingMode);
-  const showCustomPicker = dateMode === "custom" && canPickCustom(bookingMode);
+  const showScheduledPicker =
+    dateMode === "scheduled" &&
+    hasScheduledDates &&
+    (canPickScheduled(bookingMode) || isPartnerTour);
+  const showCustomPicker =
+    dateMode === "custom" &&
+    canPickCustom(bookingMode) &&
+    !(isPartnerTour && hasScheduledDates);
   const selectId = `${idPrefix}-date-select`;
   const customDateId = `${idPrefix}-custom-date`;
   const selectionSummary = formatSelectionSummary(
@@ -120,9 +132,15 @@ export default function BookingDateSelector({
     }
   }, [collapsible, scheduledError]);
 
+  useEffect(() => {
+    if (collapsible && !selectedDateId) {
+      setExpanded(true);
+    }
+  }, [collapsible, selectedDateId]);
+
   return (
     <div className={cn("space-y-4", className)}>
-      {collapsible && !expanded ? (
+      {showCollapsed ? (
         <div className="space-y-2">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-charcoal">{selectionSummary}</p>
@@ -186,7 +204,11 @@ export default function BookingDateSelector({
 
               <div>
                 <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
-                  {showDepartureCalendar ? "Или выберите из списка" : "Дата отправления"}
+                  {isPartnerTour
+                    ? "Дата заезда"
+                    : showDepartureCalendar
+                      ? "Или выберите из списка"
+                      : "Дата отправления"}
                 </label>
                 <div className="relative mt-1.5">
                   <select
@@ -195,6 +217,11 @@ export default function BookingDateSelector({
                     onChange={(e) => setSelectedDateId(e.target.value)}
                     className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                   >
+                    {!selectedDateId ? (
+                      <option value="" disabled>
+                        Выберите дату заезда
+                      </option>
+                    ) : null}
                     {tour.dates.map((d) => {
                       const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
                       const priceLabel = tour.priceOnRequest
@@ -282,7 +309,7 @@ export default function BookingDateSelector({
             </div>
           )}
 
-          {collapsible && (
+          {collapsible && selectedDateId ? (
             <button
               type="button"
               onClick={() => setExpanded(false)}
@@ -290,7 +317,7 @@ export default function BookingDateSelector({
             >
               ← Свернуть
             </button>
-          )}
+          ) : null}
         </>
       )}
     </div>

@@ -10,7 +10,8 @@ export type AuthErrorCode =
   | "WRONG_ROLE"
   | "INVALID_CREDENTIALS"
   | "DUPLICATE_PHONE"
-  | "DUPLICATE_EMAIL";
+  | "DUPLICATE_EMAIL"
+  | "PROFILE_MISSING";
 
 export type AuthResult<T = SessionUser> =
   | { user: T }
@@ -53,6 +54,7 @@ export interface AuthProvider {
     }
   ): AuthResult | Promise<AuthResult>;
   updateAvatar(userId: string, avatarUrl: string | null): AuthResult | Promise<AuthResult>;
+  requestPasswordReset(email: string): Promise<{ ok: true } | { error: string }>;
   logout(): void | Promise<void>;
 }
 

@@ -8,6 +8,7 @@ import { DestinationsMegaMenuPanel } from "@/components/navigation/DestinationsM
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
 import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { PlacesMegaMenuPanel } from "@/components/navigation/PlacesMegaMenuPanel";
 import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
 import { cn } from "@/lib/cn";
 import {
@@ -109,6 +110,14 @@ function DrawerSectionColumns({
         />
       ) : section.id === "destinations" ? (
         <DestinationsMegaMenuPanel
+          columns={section.columns ?? []}
+          t={t}
+          onNavigate={onNavigate}
+          layout="drawer"
+          className="-mx-1"
+        />
+      ) : section.id === "places" ? (
+        <PlacesMegaMenuPanel
           columns={section.columns ?? []}
           t={t}
           onNavigate={onNavigate}

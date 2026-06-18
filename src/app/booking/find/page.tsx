@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function BookingFindPage() {
   return (
-    <div className="min-h-[calc(100vh-var(--site-header-height,72px))] bg-pampas">
+    <div className="min-h-[calc(100vh-var(--site-header-full-height,72px))] bg-pampas">
       <Suspense fallback={<div className="px-4 py-16 text-center text-sm text-slate">Загрузка…</div>}>
         <BookingLookupView />
       </Suspense>

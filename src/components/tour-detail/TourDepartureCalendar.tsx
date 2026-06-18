@@ -18,7 +18,7 @@ import type { TourDatePrice } from "@/types";
 import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
 import { formatDateRange } from "@/lib/utils";
-import { formatDays, formatNights, formatSpots, formatTouristsBooking } from "@/lib/pluralize";
+import { formatDays, formatForTourists, formatNights, formatSpots } from "@/lib/pluralize";
 import { dateFitsGuestCount } from "@/lib/tour-booking-spots";
 import {
   buildDepartureCalendarMap,
@@ -94,7 +94,7 @@ export default function TourDepartureCalendar({
   className,
 }: TourDepartureCalendarProps) {
   const departureMap = useMemo(() => buildDepartureCalendarMap(dates), [dates]);
-  const selectedDate = dates.find((item) => item.id === selectedDateId) ?? dates[0];
+  const selectedDate = dates.find((item) => item.id === selectedDateId);
 
   const selectedRange = useMemo(() => {
     if (!selectedDate?.startDate) return null;
@@ -342,7 +342,7 @@ export default function TourDepartureCalendar({
 
                 {!selectedBookable ? (
                   <p className="rounded-lg border border-amber-200/80 bg-amber-50/80 px-3 py-2 text-xs leading-relaxed text-amber-950">
-                    Для {formatTouristsBooking(guests)} мест не хватает — можно встать в лист
+                    Для {formatForTourists(guests)} мест не хватает — можно встать в лист
                     ожидания или уменьшить группу.
                   </p>
                 ) : null}

@@ -19,6 +19,10 @@ import {
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { stageOrganizerTourPreviewDraft } from "@/lib/tour-preview";
 import { cn } from "@/lib/cn";
+import {
+  siteStickyBelowHeaderInset075Class,
+  siteStickyBelowHeaderInsetClass,
+} from "@/lib/site-container";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
 import TourTravelRisksBlock from "@/components/organizer/TourTravelRisksBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
@@ -31,6 +35,7 @@ import TourImpressionsBlock from "@/components/organizer/TourImpressionsBlock";
 import TourGuidesBlock from "@/components/organizer/TourGuidesBlock";
 import TourParticipantRecommendationsBlock from "@/components/organizer/TourParticipantRecommendationsBlock";
 import TourRouteFeaturesBlock from "@/components/organizer/TourRouteFeaturesBlock";
+import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
 import TourComfortBlock from "@/components/organizer/TourComfortBlock";
 import TourAccommodationFooterBlock from "@/components/organizer/TourAccommodationFooterBlock";
 import TourSectionCommentEditor from "@/components/organizer/TourSectionCommentEditor";
@@ -454,7 +459,7 @@ function TourEditorSidebar({
   const statusLabel = isPublished ? "Опубликовано" : "Черновик";
 
   return (
-    <aside className="hidden xl:sticky xl:top-[calc(var(--site-header-height,72px)+1rem)] xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto">
+    <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
       <div className="space-y-4">
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
@@ -819,7 +824,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
       <nav
         aria-label="Разделы редактора тура"
         className={cn(
-          "sticky top-[calc(var(--site-header-height,72px)+0.75rem)] z-30 w-full transition-[max-width] duration-300 ease-out",
+          "sticky z-30 w-full transition-[max-width] duration-300 ease-out",
+          siteStickyBelowHeaderInset075Class,
           navStuck && "xl:max-w-[calc(100%-19rem)]"
         )}
       >

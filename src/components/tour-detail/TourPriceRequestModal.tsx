@@ -10,7 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
-import { formatTouristsBooking } from "@/lib/pluralize";
+import { formatTourists } from "@/lib/pluralize";
 import { formatDateRange } from "@/lib/utils";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -178,7 +178,7 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
               <div className="rounded-xl bg-gray-50 px-4 py-3 text-sm text-charcoal">
                 <p className="font-medium">{tour.title}</p>
                 <p className="mt-1 text-slate">
-                  {formatTouristsBooking(guests)}
+                  {formatTourists(guests)}
                   {selectedDate
                     ? ` · ${formatDateRange(selectedDate.startDate, selectedDate.endDate)}`
                     : customDate

@@ -540,5 +540,19 @@ export const localAuthProvider: AuthProvider = {
   addOrganizerRole,
   updateProfile: updateUserProfile,
   updateAvatar: updateUserAvatar,
+  async requestPasswordReset(email) {
+    const normalized = email.trim().toLowerCase();
+    if (!normalized || !normalized.includes("@")) {
+      return { error: "Укажите корректный email" };
+    }
+    const account = findUserByEmail(normalized);
+    if (!account) {
+      return { ok: true };
+    }
+    return {
+      error:
+        "В локальном демо-режиме письмо не отправляется. Используйте пароль, заданный при регистрации, или очистите localStorage сайта.",
+    };
+  },
   logout: logoutUser,
 };

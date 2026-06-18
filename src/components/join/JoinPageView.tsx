@@ -5,8 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
+  BadgePercent,
   ChevronDown,
+  Globe2,
+  LayoutDashboard,
   Map,
+  MapPin,
   Megaphone,
   MessageCircle,
   ShieldCheck,
@@ -35,9 +39,11 @@ import {
   JOIN_AUTHORS,
   JOIN_BENEFITS,
   JOIN_FAQ,
+  JOIN_HERO_HIGHLIGHTS,
   JOIN_STEPS,
 } from "@/data/join-page";
 import { cn } from "@/lib/cn";
+import { getPlaceCoverAlt, getPlaceCoverImage } from "@/lib/media-resolver";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import { CARD_HOVER } from "@/styles/design-tokens";
 
@@ -68,6 +74,45 @@ const benefitIcons = {
   security: ShieldCheck,
   experience: Handshake,
 } as const;
+
+const heroHighlightIcons = {
+  free: BadgePercent,
+  map: Map,
+  crm: LayoutDashboard,
+  audience: Globe2,
+} as const;
+
+const joinHeroImage = getPlaceCoverImage("perito-moreno-glacier");
+const joinHeroImageAlt = getPlaceCoverAlt("perito-moreno-glacier");
+
+function HeroHighlightCard({
+  label,
+  value,
+  description,
+  icon,
+}: {
+  label: string;
+  value: string;
+  description: string;
+  icon: keyof typeof heroHighlightIcons;
+}) {
+  const Icon = heroHighlightIcons[icon];
+
+  return (
+    <div className="rounded-2xl border border-white/15 bg-white/10 p-4 backdrop-blur-sm">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/15 text-sun">
+          <Icon className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{label}</p>
+          <p className="mt-0.5 font-heading text-base font-bold leading-snug text-white">{value}</p>
+          <p className="mt-1 text-xs leading-relaxed text-white/75">{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function JoinPageView() {
   const { openAuth } = useAuth();
@@ -128,67 +173,109 @@ export default function JoinPageView() {
     <div className="bg-pampas">
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-charcoal via-patagonia to-sky/90 text-white">
-        <div className="pointer-events-none absolute inset-0 opacity-25">
-          <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-sun blur-3xl" />
-          <div className="absolute -bottom-16 left-0 h-56 w-56 rounded-full bg-sky blur-3xl" />
+        <div className="pointer-events-none absolute inset-0" aria-hidden>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_55%_at_15%_0%,rgba(255,255,255,0.14),transparent_55%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_45%_at_100%_100%,rgba(56,189,248,0.22),transparent_60%)]" />
+          <div className="absolute inset-0 opacity-[0.035] [background-image:linear-gradient(to_right,#fff_1px,transparent_1px),linear-gradient(to_bottom,#fff_1px,transparent_1px)] [background-size:3.5rem_3.5rem]" />
+          <div className="absolute -right-24 top-10 h-72 w-72 rounded-full bg-sun/30 blur-3xl" />
+          <div className="absolute -bottom-16 left-0 h-56 w-56 rounded-full bg-sky/30 blur-3xl" />
         </div>
-        <div
-          className={cn(
-            siteContainerClass,
-            "relative grid gap-10 py-16 lg:grid-cols-2 lg:items-center lg:py-24"
-          )}
-        >
-          <div>
-            <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
-              <Sparkles className="h-4 w-4 text-sun" aria-hidden />
-              Если ты автор туров
-            </p>
-            <h1 className="mt-6 font-display text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
-              Зарабатывай на том, что любишь с{" "}
-              <span className="text-sun">Пора в Аргентину</span>!
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
-              Новый канал продаж для ваших туров по Аргентине. Добавляйте маршруты на карте,
-              набирайте участников, дарите эмоции и зарабатывайте.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Button
-                size="lg"
-                className="rounded-full bg-sun text-charcoal hover:bg-sun-dark"
-                onClick={() => openAuth("organizer")}
-              >
-                Присоединиться
-                <ArrowRight className="h-4 w-4" />
-              </Button>
-              <a
-                href="#how-it-works"
-                className={buttonVariants({
-                  variant: "outline",
-                  size: "lg",
-                  className:
-                    "rounded-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white",
-                })}
-              >
-                Как это работает
-              </a>
-            </div>
-          </div>
 
-          <div className="relative mx-auto w-full max-w-lg lg:max-w-none">
-            <div className="overflow-hidden rounded-3xl border border-white/15 shadow-elevated">
-              <Image
-                src="https://images.unsplash.com/photo-1526392060635-9d6019884377?w=900&q=80"
-                alt="Гид с группой туристов в горах Аргентины"
-                width={900}
-                height={640}
-                className="h-[280px] w-full object-cover sm:h-[360px]"
-                priority
-              />
+        <div className={cn(siteContainerClass, "relative py-14 sm:py-16 lg:py-20")}>
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:items-center lg:gap-14 xl:gap-16">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-1.5 text-sm font-medium backdrop-blur-sm">
+                <Sparkles className="h-4 w-4 text-sun" aria-hidden />
+                Для авторов туров
+              </p>
+              <h1 className="mt-6 max-w-2xl font-display text-3xl font-bold leading-tight tracking-tight sm:text-4xl lg:text-[2.75rem] lg:leading-[1.1]">
+                Зарабатывайте на том, что любите, с{" "}
+                <span className="text-sun">Пора в Аргентину</span>
+              </h1>
+              <p className="mt-5 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
+                Новый канал продаж для авторских туров по Аргентине: публикуйте маршрут на карте,
+                принимайте заявки в личном кабинете и находите туристов из России и СНГ — без
+                абонплаты и скрытых сборов.
+              </p>
+
+              <dl className="mt-8 grid gap-3 sm:grid-cols-2">
+                {JOIN_HERO_HIGHLIGHTS.map((item) => (
+                  <HeroHighlightCard
+                    key={item.id}
+                    label={item.label}
+                    value={item.value}
+                    description={item.description}
+                    icon={item.icon}
+                  />
+                ))}
+              </dl>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button
+                  size="lg"
+                  className="rounded-full bg-sun text-charcoal hover:bg-sun-dark"
+                  onClick={() => openAuth("organizer")}
+                >
+                  Присоединиться
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+                <a
+                  href="#how-it-works"
+                  className={buttonVariants({
+                    variant: "outline",
+                    size: "lg",
+                    className:
+                      "rounded-full border-white/30 bg-white/10 text-white hover:bg-white/20 hover:text-white",
+                  })}
+                >
+                  Как это работает
+                </a>
+              </div>
+
+              <p className="mt-5 text-sm text-white/70">
+                Регистрация за пару минут · Размещение бесплатно · Комиссия только за состоявшиеся
+                поездки
+              </p>
             </div>
-            <Card className="absolute -bottom-4 -left-2 border-0 px-4 py-3 shadow-elevated sm:-left-6">
-              <p className="text-xs font-medium text-slate">Размещение туров</p>
-              <p className="font-heading text-lg font-bold text-charcoal">Бесплатно</p>
-            </Card>
+
+            <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
+              <div className="relative overflow-hidden rounded-[1.75rem] border border-white/20 bg-white/5 shadow-elevated backdrop-blur-sm">
+                <Image
+                  src={joinHeroImage}
+                  alt={joinHeroImageAlt}
+                  width={960}
+                  height={720}
+                  className="aspect-[4/3] w-full object-cover"
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
+                <div
+                  className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent"
+                  aria-hidden
+                />
+                <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+                  <p className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-charcoal/45 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-md">
+                    <MapPin className="h-3.5 w-3.5 text-sun" aria-hidden />
+                    Патагония, Аргентина
+                  </p>
+                  <p className="hidden rounded-full border border-white/20 bg-charcoal/45 px-3 py-1.5 text-xs font-medium text-white/90 backdrop-blur-md sm:inline-flex">
+                    {JOIN_STEPS.length} шага до первой заявки
+                  </p>
+                </div>
+              </div>
+
+              <Card className="absolute -bottom-5 -left-3 max-w-[11rem] border-white/20 bg-white/95 px-4 py-3 shadow-elevated backdrop-blur-md sm:-left-5 sm:max-w-none">
+                <p className="text-xs font-medium text-slate">Размещение туров</p>
+                <p className="font-heading text-lg font-bold text-charcoal">Бесплатно</p>
+              </Card>
+
+              <Card className="absolute -right-2 top-6 hidden max-w-[12rem] border-white/20 bg-white/95 px-4 py-3 shadow-elevated backdrop-blur-md sm:block lg:-right-5">
+                <p className="text-xs font-medium text-slate">Редактор тура</p>
+                <p className="font-heading text-sm font-bold leading-snug text-charcoal">
+                  Карта, программа, бронирование
+                </p>
+              </Card>
+            </div>
           </div>
         </div>
       </section>

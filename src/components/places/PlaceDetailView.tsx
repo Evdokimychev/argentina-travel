@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
+import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import PlaceDetailLocationSection from "@/components/places/PlaceDetailLocationSection";
 import RelatedPlacesSection from "@/components/places/RelatedPlacesSection";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
@@ -59,7 +60,8 @@ export default function PlaceDetailView({
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <PlaceFavoriteButton
               place={place}
-              className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-medium text-charcoal shadow-sm backdrop-blur-sm"
+              className={favoriteHeaderButtonClass}
+              iconClassName="h-4 w-4"
             />
           </div>
         </div>
