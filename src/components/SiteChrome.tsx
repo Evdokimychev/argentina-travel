@@ -15,6 +15,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
   return (
     <>
       <Header />
+      <div className="site-header-spacer shrink-0" aria-hidden="true" />
       <main className="flex-1">{children}</main>
       <Footer />
     </>

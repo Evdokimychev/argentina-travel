@@ -1,4 +1,5 @@
 import type { PartnerTourContent } from "@/lib/tripster/partner-tour-content";
+import { partnerContentHasAccommodation } from "@/lib/tripster/partner-tour-accommodation";
 import type { PartnerTourExperienceRow } from "@/lib/tripster/partner-tour-mapper";
 import type { TripsterExperience } from "@/lib/tripster/types";
 import type { TourDetail } from "@/types";
@@ -25,6 +26,7 @@ export type PartnerTourSectionFlags = {
   dates: boolean;
   included: boolean;
   orgDetails: boolean;
+  accommodations: boolean;
   comfort: boolean;
   meeting: boolean;
   important: boolean;
@@ -41,6 +43,10 @@ export function resolvePartnerTourSections(
       content.orgDetailsExtraHtml?.trim()
   );
 
+  const hasAccommodations =
+    partnerContentHasAccommodation(content, tour.durationNights) ||
+    tour.accommodations.length > 0;
+
   return {
     stats: true,
     description: content.blocks.length > 0 || Boolean(content.introHtml?.trim()),
@@ -49,9 +55,12 @@ export function resolvePartnerTourSections(
     dates: tour.dates.length > 0,
     included: Boolean(content.includedHtml?.trim() || content.excludedHtml?.trim()),
     orgDetails: hasOrgDetails,
+    accommodations: hasAccommodations,
     comfort: Boolean(content.comfortHtml?.trim()),
     meeting: Boolean(content.meetingPoint?.trim() || content.finishPoint?.trim()),
-    important: (tour.importantInfo ?? []).some((item) => item.trim()),
+    important:
+      (tour.importantInfo ?? []).some((item) => item.trim()) ||
+      Boolean(content.additionalInfoHtml?.trim()),
     reviews:
       tour.reviews.length > 0 ||
       tour.reviewCount > 0 ||

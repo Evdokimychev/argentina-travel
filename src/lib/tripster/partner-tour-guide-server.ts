@@ -6,6 +6,7 @@ import { fetchTripsterGuide, isTripsterConfigured } from "@/lib/tripster/client"
 import {
   mapTripsterGuideProfile,
   mergeGuideProfileWithListings,
+  resolveTripsterGuideRoleLabel,
 } from "@/lib/tripster/guide-mapper";
 import { mapPartnerTourReviews } from "@/lib/tripster/partner-tour-mapper";
 import { tripsterReviewToRow, type TripsterReviewRow } from "@/lib/tripster/review-mapper";
@@ -48,7 +49,8 @@ async function pgFetchGuideExperienceCount(guideId: number): Promise<number> {
     const { rows } = await client.query(
       `select count(*)::int as count
        from public.tripster_experiences
-       where (payload->'guide'->>'id')::int = $1`,
+       where (payload->'guide'->>'id')::int = $1
+         and (experience_type = 'tour' or payload->>'type' = 'tour')`,
       [guideId]
     );
     return (rows[0]?.count as number | undefined) ?? 0;
@@ -63,7 +65,8 @@ async function supabaseFetchGuideExperienceCount(guideId: number): Promise<numbe
   const { count, error } = await supabase
     .from("tripster_experiences")
     .select("id", { count: "exact", head: true })
-    .filter("payload->guide->>id", "eq", String(guideId));
+    .filter("payload->guide->>id", "eq", String(guideId))
+    .or("experience_type.eq.tour,payload->>type.eq.tour");
 
   if (error || count == null) return 0;
   return count;
@@ -174,14 +177,17 @@ export function applyTripsterGuideToOrganizer(
 ): TourOrganizerDetail {
   const reviewCount = profile.reviewCount ?? organizer.reviewCount ?? 0;
   const rating = profile.rating ?? organizer.rating;
+  const role =
+    profile.roleLabel ??
+    resolveTripsterGuideRoleLabel(profile.guideType, profile.isLicensed);
 
   return {
     ...organizer,
     id: String(profile.id),
     name: profile.name || organizer.name,
     avatar: profile.avatar || organizer.avatar,
-    role: profile.isLicensed ? "Лицензированный гид" : "Гид",
-    shortDescription: undefined,
+    role,
+    shortDescription: profile.tagline?.trim() || organizer.shortDescription,
     extendedDescription: profile.description?.trim() || organizer.extendedDescription,
     rating,
     reviewCount,
@@ -190,5 +196,6 @@ export function applyTripsterGuideToOrganizer(
     platformRegisteredAt: profile.guideSince?.trim() || organizer.platformRegisteredAt,
     experienceYears: 0,
     languages: organizer.languages.length > 0 ? organizer.languages : ["Русский"],
+    slug: organizer.slug ?? `tripster-guide-${profile.id}`,
   };
 }

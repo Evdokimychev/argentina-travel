@@ -110,6 +110,8 @@ export interface TourListing {
   // Filter fields (Supabase columns)
   destination: string;
   region: string;
+  /** Страна старта / основная локация (для партнёрских туров — из Tripster, не только Аргентина). */
+  country?: string;
   activityType: ActivityType;
   durationDays: number;
   durationNights: number;

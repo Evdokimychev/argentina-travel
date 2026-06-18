@@ -17,6 +17,7 @@ import {
   SITE_NAV_UTILITY_LINKS,
 } from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
+import { useSiteHeaderAutoHide } from "@/hooks/useSiteHeaderAutoHide";
 import { useSiteNavLayout } from "@/hooks/useSiteNavLayout";
 import { cn } from "@/lib/cn";
 import { openSiteSearch } from "@/lib/site-search-open";
@@ -82,6 +83,12 @@ export default function Header() {
     isNavSectionActive(pathname, section)
   );
   const navCompact = navLayout === "compact";
+  const headerAutoHideDisabled = mobileMenuOpen || openMegaMenuId !== null;
+
+  const { headerVisible } = useSiteHeaderAutoHide({
+    headerRef,
+    disabled: headerAutoHideDisabled,
+  });
 
   useEffect(() => {
     setMobileMenuOpen(false);
@@ -91,29 +98,6 @@ export default function Header() {
   useEffect(() => {
     setOpenMegaMenuId(null);
   }, [navLayout]);
-
-  useEffect(() => {
-    const header = headerRef.current;
-    if (!header) return;
-
-    const syncHeaderHeight = () => {
-      document.documentElement.style.setProperty(
-        "--site-header-height",
-        `${header.offsetHeight}px`
-      );
-    };
-
-    syncHeaderHeight();
-    const observer = new ResizeObserver(syncHeaderHeight);
-    observer.observe(header);
-    window.addEventListener("resize", syncHeaderHeight);
-
-    return () => {
-      observer.disconnect();
-      window.removeEventListener("resize", syncHeaderHeight);
-      document.documentElement.style.removeProperty("--site-header-height");
-    };
-  }, [mobileMenuOpen]);
 
   const utilityLinks = SITE_NAV_UTILITY_LINKS;
 
@@ -161,36 +145,45 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-50 border-b border-charcoal/[0.06] bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70"
+      className={cn(
+        "site-header fixed inset-x-0 top-0 z-50 border-b border-charcoal/[0.06] bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70",
+        !headerVisible && "-translate-y-full"
+      )}
     >
-      <div className="hidden border-b border-charcoal/[0.04] lg:block">
-        <div
-          className={cn(
-            siteViewportInsetClass,
-            "flex items-center justify-between gap-4 py-2 text-[11px] text-slate"
-          )}
-        >
-          <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="font-medium text-foreground/80">Откройте Аргентину 🇦🇷 вместе с нами</span>
-            <span className="hidden text-charcoal/15 xl:inline">|</span>
-            {utilityLinks.slice(0, 2).map((link) => (
-              <Link
-                key={link.id}
-                href={link.href}
-                className="hidden items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky xl:inline-flex"
-              >
-                {resolveNavLabel(link, t)}
-                <ArrowUpRight className="h-3 w-3" />
-              </Link>
-            ))}
-          </div>
-          <Link
-            href={utilityLinks[2]?.href ?? "/contacts"}
-            className="flex shrink-0 items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky"
+      <div
+        className={cn(
+          "site-header-utility-bar hidden overflow-hidden border-b border-charcoal/[0.04] lg:grid lg:grid-rows-[1fr]"
+        )}
+      >
+        <div className="min-h-0 overflow-hidden">
+          <div
+            className={cn(
+              siteViewportInsetClass,
+              "flex items-center justify-between gap-4 py-2 text-[11px] text-slate"
+            )}
           >
-            {utilityLinks[2] ? resolveNavLabel(utilityLinks[2], t) : t("nav.contacts")}
-            <ArrowUpRight className="h-3 w-3" />
-          </Link>
+            <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
+              <span className="font-medium text-foreground/80">Откройте Аргентину 🇦🇷 вместе с нами</span>
+              <span className="hidden text-charcoal/15 xl:inline">|</span>
+              {utilityLinks.slice(0, 2).map((link) => (
+                <Link
+                  key={link.id}
+                  href={link.href}
+                  className="hidden items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky xl:inline-flex"
+                >
+                  {resolveNavLabel(link, t)}
+                  <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              ))}
+            </div>
+            <Link
+              href={utilityLinks[2]?.href ?? "/contacts"}
+              className="flex shrink-0 items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky"
+            >
+              {utilityLinks[2] ? resolveNavLabel(utilityLinks[2], t) : t("nav.contacts")}
+              <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          </div>
         </div>
       </div>
 

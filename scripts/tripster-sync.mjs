@@ -136,6 +136,117 @@ async function fetchAllExperiences(token, partner, apiBase, cityId) {
   return collected;
 }
 
+/** Tripster web catalog lists cross-border tours under country filters that partner city API omits. */
+async function fetchWebCatalogTours(token, apiBase, countrySlug, experienceType = "tour") {
+  const collected = [];
+  let page = 1;
+  while (page <= 20) {
+    const query = new URLSearchParams({
+      country__slug: countrySlug,
+      type: experienceType,
+      page: String(page),
+      page_size: "100",
+    });
+    const response = await fetch(`${apiBase}/web/v2/experiences/?${query}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const body = await response.json();
+    if (!response.ok) {
+      throw new Error(`Tripster web catalog failed (${response.status})`);
+    }
+    const list = unwrapResults(body);
+    collected.push(...list);
+    if (!body.next) break;
+    page += 1;
+  }
+  return collected;
+}
+
+async function fetchExperienceDetail(token, partner, apiBase, experienceId) {
+  return tripsterGet(token, partner, apiBase, `/experiences/${experienceId}/?detailed=true`);
+}
+
+async function fetchWebExperienceFields(token, apiBase, experienceId) {
+  try {
+    const response = await fetch(`${apiBase}/web/v2/experiences/${experienceId}/`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    });
+    if (!response.ok) return null;
+    return response.json();
+  } catch {
+    return null;
+  }
+}
+
+async function mergeWebExperienceFields(token, apiBase, experience) {
+  const web = await fetchWebExperienceFields(token, apiBase, experience.id);
+  if (!web || web.id !== experience.id) return experience;
+
+  return {
+    ...experience,
+    additional_info: web.additional_info ?? experience.additional_info,
+    comfort_level_info: web.comfort_level_info?.trim() || experience.comfort_level_info,
+    accommodation: web.accommodation ?? experience.accommodation,
+  };
+}
+
+function resolveCityFromExperience(experience, fallbackCountryId) {
+  const city = experience.city;
+  if (!city?.id) return null;
+  return {
+    id: city.id,
+    slug: city.slug?.trim() || `city-${city.id}`,
+    name_ru: city.name_ru ?? null,
+    name_en: city.name_en ?? null,
+    experience_count: city.experience_count ?? 0,
+    country_id: city.country?.id ?? fallbackCountryId,
+    country: city.country ?? null,
+    cover_image: city.image?.cover ?? city.image?.thumbnail ?? null,
+    payload: city,
+  };
+}
+
+function cityToRow(city, fallbackCountryId) {
+  return {
+    id: city.id,
+    country_id: city.country_id ?? city.country?.id ?? fallbackCountryId,
+    slug: city.slug?.trim() || `city-${city.id}`,
+    name_ru: city.name_ru ?? null,
+    name_en: city.name_en ?? null,
+    experience_count: city.experience_count ?? 0,
+    cover_image: city.cover_image ?? city.image?.cover ?? city.image?.thumbnail ?? null,
+    payload: city.payload ?? city,
+  };
+}
+
+function countryToRow(country) {
+  const slugFromUrl =
+    typeof country.url === "string"
+      ? country.url.split("/").filter(Boolean).pop() ?? null
+      : null;
+  return {
+    id: country.id,
+    slug: country.slug?.trim() || slugFromUrl,
+    name_ru: country.name_ru ?? null,
+    name_en: country.name_en ?? null,
+    currency: country.currency ?? null,
+    experience_count: country.experience_count ?? 0,
+    payload: country,
+  };
+}
+
+function countryFromExperienceCity(city) {
+  const country = city?.country ?? city?.payload?.country;
+  if (!country?.id) return null;
+  return countryToRow(country);
+}
+
 async function createPartnerLinksBatch(links) {
   const apiKey = process.env.TRAVELPAYOUTS_API_KEY?.trim();
   const marker = process.env.TRAVELPAYOUTS_MARKER?.trim();
@@ -357,12 +468,111 @@ async function main() {
 
         pendingLinks.push({
           experience,
-          city,
+          city: { ...city, country_id: argentina.id },
+          countryId: argentina.id,
           slug,
           tripsterUrl,
           sub_id: `tripster:${city.slug ?? city.id}:${experience.id}`,
         });
       }
+    }
+
+    const syncWebCatalogTours = process.env.TRIPSTER_SYNC_WEB_CATALOG_TOURS !== "false";
+    if (syncWebCatalogTours) {
+      const countrySlug = argentina.slug?.trim() || "argentina";
+      const syncedIds = new Set(pendingLinks.map((item) => item.experience.id));
+      const knownCityIds = new Set(cityRows.map((row) => row.id));
+      const extraCityRows = [];
+      const extraCountryRows = new Map([[argentina.id, countryToRow(argentina)]]);
+
+      pushLog(`Fetching Tripster web catalog tours for ${countrySlug}…`);
+      try {
+        const catalogTours = await fetchWebCatalogTours(token, apiBase, countrySlug, "tour");
+        pushLog(`  Web catalog: ${catalogTours.length} tours`);
+
+        for (const stub of catalogTours) {
+          if (syncedIds.has(stub.id)) continue;
+
+          const experience = await mergeWebExperienceFields(
+            token,
+            apiBase,
+            await fetchExperienceDetail(token, partner, apiBase, stub.id)
+          );
+          if ((experience.type ?? stub.type) !== "tour") continue;
+
+          const city = resolveCityFromExperience(experience, argentina.id);
+          if (!city) {
+            pushLog(`  Skip tour ${stub.id}: missing city`);
+            continue;
+          }
+
+          if (!knownCityIds.has(city.id)) {
+            extraCityRows.push(cityToRow(city, argentina.id));
+            knownCityIds.add(city.id);
+          }
+
+          const countryRow = countryFromExperienceCity(city);
+          if (countryRow && !extraCountryRows.has(countryRow.id)) {
+            extraCountryRows.set(countryRow.id, countryRow);
+          }
+
+          const slug = generateExperienceSlug(
+            experience.title?.trim() || `excursion-${experience.id}`,
+            experience.id
+          );
+          const tripsterUrl =
+            experience.url?.trim() || `https://experience.tripster.ru/experience/${experience.id}/`;
+
+          pendingLinks.push({
+            experience,
+            city,
+            countryId: city.country_id,
+            slug,
+            tripsterUrl,
+            sub_id: `tripster:catalog:${countrySlug}:${experience.id}`,
+          });
+          syncedIds.add(experience.id);
+          pushLog(`  Added catalog tour ${experience.id}: ${experience.title?.trim()?.slice(0, 60) ?? ""}`);
+          await sleep(120);
+        }
+      } catch (catalogError) {
+        pushLog(`Web catalog sync warning: ${catalogError.message ?? catalogError}`);
+      }
+
+      if (extraCountryRows.size > 1 || extraCityRows.length) {
+        const countryRows = [...extraCountryRows.values()].filter((row) => row.id !== argentina.id);
+        if (countryRows.length) {
+          pushLog(`Upserting ${countryRows.length} catalog countries…`);
+          if (supabase) {
+            await supabase.from("tripster_countries").upsert(countryRows);
+          } else {
+            for (const row of countryRows) {
+              await pgUpsertCountry(pgClient, row);
+            }
+          }
+        }
+      }
+
+      if (extraCityRows.length) {
+        pushLog(`Upserting ${extraCityRows.length} catalog cities…`);
+        if (supabase) {
+          await supabase.from("tripster_cities").upsert(extraCityRows);
+        } else {
+          await pgUpsertCities(pgClient, extraCityRows);
+        }
+      }
+    }
+
+    pushLog("Enriching tours with Tripster web v2 fields…");
+    for (let i = 0; i < pendingLinks.length; i += 1) {
+      const item = pendingLinks[i];
+      const type = item.experience.type ?? item.experience.experience_type;
+      if (type !== "tour") continue;
+      pendingLinks[i] = {
+        ...item,
+        experience: await mergeWebExperienceFields(token, apiBase, item.experience),
+      };
+      await sleep(80);
     }
 
     const skipAffiliateLinks = process.env.TRIPSTER_SKIP_AFFILIATE_LINKS === "true";
@@ -391,7 +601,7 @@ async function main() {
         const partnerUrl = partnerUrlByIndex.get(i) ?? null;
         const row = experienceToRow(
           item.experience,
-          argentina.id,
+          item.countryId ?? argentina.id,
           item.city,
           item.slug,
           partnerUrl
@@ -408,7 +618,13 @@ async function main() {
     } else {
       pushLog("Skipping affiliate link generation (TRIPSTER_SKIP_AFFILIATE_LINKS=true)");
       for (const item of pendingLinks) {
-        const row = experienceToRow(item.experience, argentina.id, item.city, item.slug, null);
+        const row = experienceToRow(
+          item.experience,
+          item.countryId ?? argentina.id,
+          item.city,
+          item.slug,
+          null
+        );
         experienceRows.push(row);
         if (existingById.has(item.experience.id)) experiencesUpdated += 1;
         else experiencesCreated += 1;

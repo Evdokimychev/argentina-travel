@@ -32,6 +32,51 @@ export function isPartnerTourDetail(
   return tour.partnerSource === "tripster" || tour.id.startsWith("tripster-");
 }
 
+const PARTNER_COUNTRY_BY_ID: Record<number, string> = {
+  65: "Аргентина",
+  86: "Бразилия",
+  227: "Парагвай",
+  45: "Чили",
+};
+
+export function resolvePartnerTourCountryName(
+  experience: TripsterExperience,
+  countryId?: number | null
+): string {
+  const fromCity =
+    experience.city?.country?.name_ru?.trim() ||
+    experience.city?.country?.name_en?.trim();
+  if (fromCity) return fromCity;
+
+  if (countryId != null && PARTNER_COUNTRY_BY_ID[countryId]) {
+    return PARTNER_COUNTRY_BY_ID[countryId];
+  }
+
+  return "Аргентина";
+}
+
+export function resolvePartnerTourCityName(
+  city?: {
+    name_ru?: string | null;
+    name_en?: string | null;
+    slug?: string;
+  } | null,
+  experience?: TripsterExperience
+): string {
+  const fromRow = city?.name_ru?.trim() || city?.name_en?.trim() || city?.slug?.trim();
+  if (fromRow) return fromRow;
+
+  const fromExperience =
+    experience?.city?.name_ru?.trim() ||
+    experience?.city?.name_en?.trim();
+  if (fromExperience) return fromExperience;
+
+  const fromGeo = experience?.geo?.city?.[0]?.name?.trim();
+  if (fromGeo) return fromGeo;
+
+  return "Аргентина";
+}
+
 export function mergeMarketplaceTourListings(
   platform: TourListing[],
   partner: TourListing[]

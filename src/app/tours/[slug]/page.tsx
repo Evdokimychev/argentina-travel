@@ -11,6 +11,8 @@ import { resolveTourFlightRouteIds } from "@/lib/flights/destination-airports";
 import { getFlightPriceTeasers } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 
+export const dynamic = "force-dynamic";
+
 interface TourPageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ access?: string }>;

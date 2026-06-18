@@ -12,6 +12,10 @@ import {
   mapTripsterPlanToItinerary,
   resolvePartnerGallery,
 } from "@/lib/tripster/partner-tour-content";
+import {
+  finalizePartnerLodging,
+  mapPartnerAccommodations,
+} from "@/lib/tripster/partner-tour-accommodation";
 import type { TripsterTourPlanDay } from "@/lib/tripster/types";
 import { mapTripsterReviewRow, type TripsterReviewRow } from "@/lib/tripster/review-mapper";
 import type { TripsterExperience } from "@/lib/tripster/types";
@@ -34,7 +38,11 @@ import type {
   TourReview,
   TourBadge,
 } from "@/types";
-import { partnerTourListingId } from "@/lib/tripster/partner-tour-utils";
+import {
+  partnerTourListingId,
+  resolvePartnerTourCityName,
+  resolvePartnerTourCountryName,
+} from "@/lib/tripster/partner-tour-utils";
 
 type PartnerTourCityRow = {
   id: number;
@@ -84,11 +92,6 @@ type TripsterTourProgramDay = {
 };
 
 type ReviewRow = TripsterReviewRow;
-
-function resolvePartnerCityName(city?: PartnerTourCityRow | null): string {
-  if (!city) return "Аргентина";
-  return city.name_ru?.trim() || city.name_en?.trim() || city.slug;
-}
 
 function durationBucket(days: number): DurationBucket {
   if (days <= 2) return "1–2 дня";
@@ -219,7 +222,8 @@ export function partnerTourRowToListing(
 ): TourListing {
   const payload = row.payload as TripsterExperience | undefined;
   const experience = payload ?? ({} as TripsterExperience);
-  const cityName = city ? resolvePartnerCityName(city) : "Аргентина";
+  const cityName = resolvePartnerTourCityName(city, experience);
+  const countryName = resolvePartnerTourCountryName(experience, row.country_id);
   const { durationDays, durationNights } = resolveDurationDays(experience, row.duration_minutes);
   const guide = resolveGuide(experience);
   const groupMax = experience.max_persons ?? 12;
@@ -243,6 +247,7 @@ export function partnerTourRowToListing(
     gallery: gallery.length ? gallery : cover ? [cover] : [],
     destination: cityName,
     region: cityName,
+    country: countryName,
     activityType: (experience.format?.trim() ||
       row.format?.trim() ||
       "Авторские туры") as ActivityType,
@@ -272,6 +277,7 @@ export function partnerTourRowToListing(
       avatar: guide?.avatar ?? "",
       slug: guide?.id ? `tripster-guide-${guide.id}` : undefined,
     },
+    organizerOwnerId: guide?.id ? `tripster-guide-${guide.id}` : undefined,
     badges: experience.is_new ? (["new"] as TourBadge[]) : [],
     featured: false,
     partnerSource: "tripster",
@@ -298,9 +304,11 @@ export function partnerTourRowToDetail(
   const payload = row.payload as TripsterExperience | undefined;
   const experience = payload ?? ({} as TripsterExperience);
   const guide = resolveGuide(experience);
-  const cityName = city ? resolvePartnerCityName(city) : listing.region;
-  const partnerContent = buildPartnerContent(experience);
+  const cityName = resolvePartnerTourCityName(city, experience);
+  const countryName = resolvePartnerTourCountryName(experience, row.country_id);
+  const partnerContentRaw = buildPartnerContent(experience);
   const itinerary = mapItineraryFromProgram(options?.program, experience);
+  const partnerContent = finalizePartnerLodging(partnerContentRaw, experience, itinerary);
   const included = partnerContent.includedHtml ? htmlToBulletItems(partnerContent.includedHtml) : [];
   const excluded = partnerContent.excludedHtml ? htmlToBulletItems(partnerContent.excludedHtml) : [];
   const descriptionBlocks: RichTextBlock[] = partnerContent.summary
@@ -311,7 +319,7 @@ export function partnerTourRowToDetail(
     id: listing.id,
     slug: listing.slug,
     title: listing.title,
-    country: "Аргентина",
+    country: countryName,
     region: cityName,
     durationDays: listing.durationDays,
     durationNights: listing.durationNights,
@@ -366,7 +374,7 @@ export function partnerTourRowToDetail(
       slug: guide?.id ? `tripster-guide-${guide.id}` : undefined,
     },
     reviews: mapReviews(options?.reviews ?? []),
-    accommodations: [],
+    accommodations: mapPartnerAccommodations(partnerContent),
     included,
     excluded,
     arrival: {

@@ -19,6 +19,7 @@ import {
 import { matchesTourFormat } from "@/lib/tour-format";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { resolveListingOwnerUserId } from "@/lib/organizer-public";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -44,6 +45,8 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 
 function matchesDateRange(tour: TourListing, from: Date | null, to: Date | null) {
   if (!from && !to) return true;
+  // Партнёрские туры Tripster не имеют дат заезда в нашей БД — не отсекаем по календарю.
+  if (isPartnerTourListing(tour)) return true;
 
   const rangeStart = from ? startOfDay(from) : null;
   const rangeEnd = to ? startOfDay(to) : null;
@@ -113,7 +116,7 @@ export function filterTours(
     });
     if (filterPrice == null) {
       // Туры «цена по запросу» без ориентира не отсекаются фильтром по цене.
-    } else {
+    } else if (!isPartnerTourListing(tour)) {
       const displayPrice = convertFromUsd(filterPrice, currency);
       if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
     }
@@ -128,24 +131,28 @@ export function filterTours(
 
     if (
       filters.accommodations.length &&
+      !isPartnerTourListing(tour) &&
       !filters.accommodations.includes(tour.accommodationType)
     )
       return false;
 
     if (
       filters.comfortLevels.length &&
+      !isPartnerTourListing(tour) &&
       !filters.comfortLevels.includes(resolveListingComfortLevel(tour))
     )
       return false;
 
     if (
       filters.difficultyLevels.length &&
+      !isPartnerTourListing(tour) &&
       !filters.difficultyLevels.includes(tour.difficultyLevel)
     )
       return false;
 
     if (
       filters.languages.length &&
+      !isPartnerTourListing(tour) &&
       !filters.languages.some((l) => tour.language.includes(l))
     )
       return false;
@@ -163,7 +170,8 @@ export function filterTours(
 
     if (
       filters.organizerSlug.trim() &&
-      resolveListingOwnerUserId(tour) !== filters.organizerSlug.trim()
+      resolveListingOwnerUserId(tour) !== filters.organizerSlug.trim() &&
+      tour.organizer.slug !== filters.organizerSlug.trim()
     ) {
       return false;
     }

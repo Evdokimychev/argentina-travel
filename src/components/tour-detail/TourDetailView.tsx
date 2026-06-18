@@ -34,6 +34,7 @@ import PartnerTourDescriptionSection from "./PartnerTourDescriptionSection";
 import PartnerTourIncludedSection from "./PartnerTourIncludedSection";
 import PartnerTourComfortSection from "./PartnerTourComfortSection";
 import PartnerTourOrgDetailsSection from "./PartnerTourOrgDetailsSection";
+import PartnerTourAccommodationSection from "./PartnerTourAccommodationSection";
 import PartnerTourMeetingSection from "./PartnerTourMeetingSection";
 import PartnerTourDatesSection from "./PartnerTourDatesSection";
 import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
@@ -189,7 +190,17 @@ export default function TourDetailView({
                     <PartnerTourIncludedSection content={partnerContent} />
                   ) : null}
                   {partnerSections.orgDetails ? (
-                    <PartnerTourOrgDetailsSection content={partnerContent} />
+                    <PartnerTourOrgDetailsSection
+                      key={`${tour.slug}-org-details`}
+                      content={partnerContent}
+                    />
+                  ) : null}
+                  {partnerSections.accommodations ? (
+                    <PartnerTourAccommodationSection
+                      tour={tour}
+                      content={partnerContent}
+                      accommodations={tour.accommodations}
+                    />
                   ) : null}
                   {partnerSections.comfort ? (
                     <PartnerTourComfortSection content={partnerContent} />

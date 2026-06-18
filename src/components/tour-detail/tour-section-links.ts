@@ -55,8 +55,11 @@ export function buildTourSectionLinks(
     if (sections.orgDetails) {
       links.push({ id: "org-details", label: "Организация" });
     }
+    if (sections.accommodations) {
+      links.push({ id: "accommodations", label: "Проживание" });
+    }
     if (sections.comfort) {
-      links.push({ id: "accommodations", label: "Комфорт" });
+      links.push({ id: "comfort", label: "Комфорт" });
     }
     if (sections.meeting) {
       links.push({ id: "meeting", label: "Встреча" });

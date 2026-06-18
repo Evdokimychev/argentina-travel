@@ -81,16 +81,26 @@ export type TripsterGuideProfile = TripsterGuide & {
   rating?: number;
   review_count?: number;
   rate_count?: number;
+  /** Сколько туристов уже путешествовали с гидом/агентством. */
+  number_of_persons_paid?: number;
   guide_type?: string;
   is_licensed_guide?: boolean;
   is_guide_since?: string;
   description?: string;
+  /** Краткий статус под именем на Tripster («Гид и организатор…»). */
+  determination?: string;
+  exp_count_published?: number;
+  tours_count_published?: number;
   city?: TripsterCity;
   avg_reaction_delay_display?: {
     nominative?: string;
   };
   links?: {
     reviews?: string;
+  };
+  guide_legal_info?: {
+    legal_name?: string;
+    entity_type?: string;
   };
 };
 
@@ -127,6 +137,7 @@ export type TripsterExperience = {
   visitors_count?: number;
   cover_image?: string;
   comfort_level_info?: string;
+  additional_info?: string;
   price_included_description?: string;
   price_not_included_description?: string;
   description_blocks?: Array<[string, string] | string[]>;
@@ -146,6 +157,10 @@ export type TripsterExperience = {
     city?: Array<{ id: number; slug?: string; name?: string }>;
   };
   schedule?: { text?: string | null };
+  accommodation?: {
+    paid_separately?: boolean;
+    [key: string]: unknown;
+  };
 };
 
 export type TripsterReview = {
@@ -211,6 +226,9 @@ export type TripsterScheduleSlot = {
   time?: string;
   time_start?: string;
   time_end?: string;
+  closes_before?: number;
+  /** Remaining spots for this slot; overrides schedule.defaults.available_persons. */
+  available_persons?: number;
   price?: {
     price_text?: string;
     price_value?: number;

@@ -9,28 +9,34 @@ export function useRepositoryTourDetail(
   slug: string,
   initialTour?: TourDetail | null
 ): TourDetail | null {
-  const [tour, setTour] = useState<TourDetail | null>(initialTour ?? null);
+  const [localOverride, setLocalOverride] = useState<TourDetail | null>(null);
+  const [localSlug, setLocalSlug] = useState(slug);
 
   useEffect(() => {
     function readAccessToken(): string | null {
       return new URLSearchParams(window.location.search).get("access");
     }
 
-    function resolveTour() {
-      const local = getRepositoryTourDetail(slug, readAccessToken());
-      if (local) return local;
-      return initialTour ?? null;
+    function resolveLocal(): TourDetail | null {
+      return getRepositoryTourDetail(slug, readAccessToken()) ?? null;
     }
 
-    setTour(resolveTour());
+    setLocalSlug(slug);
+    setLocalOverride(resolveLocal());
 
     function refresh() {
-      setTour(resolveTour());
+      setLocalOverride(resolveLocal());
     }
 
     window.addEventListener(TOURS_REPOSITORY_UPDATED_EVENT, refresh);
     return () => window.removeEventListener(TOURS_REPOSITORY_UPDATED_EVENT, refresh);
   }, [slug, initialTour]);
 
-  return tour;
+  // При client-side переходе между турами сразу показываем новый SSR-снимок,
+  // не дожидаясь useEffect — иначе на экране остаётся контент предыдущего тура.
+  if (localOverride && localSlug === slug) {
+    return localOverride;
+  }
+
+  return initialTour ?? null;
 }

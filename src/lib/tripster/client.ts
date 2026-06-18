@@ -155,6 +155,34 @@ export async function fetchTripsterExperience(
   return tripsterFetch<TripsterExperience>(`/experiences/${experienceId}${query}`);
 }
 
+/** Web v2 — дополнительные поля (additional_info и др.), недоступные в базовом partner API. */
+export async function fetchTripsterWebExperience(experienceId: number): Promise<TripsterExperience> {
+  const token = await getTripsterAccessToken();
+  const { apiBase } = getTripsterConfig();
+  const response = await fetch(`${apiBase}/web/v2/experiences/${experienceId}/`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new TripsterApiError(
+      `Tripster web v2 request failed (${response.status})`,
+      response.status,
+      `/web/v2/experiences/${experienceId}/`
+    );
+  }
+
+  const body = (await response.json()) as TripsterExperience | null;
+  if (!body) {
+    throw new TripsterApiError("Tripster web v2 returned empty response", response.status, `/web/v2/experiences/${experienceId}/`);
+  }
+
+  return body;
+}
+
 export async function fetchTripsterExperienceReviews(
   experienceId: number,
   page = 1,

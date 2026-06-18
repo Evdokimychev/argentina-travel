@@ -4,6 +4,7 @@ import { mapPhotos } from "@/lib/tripster/mapper";
 import type {
   TripsterExperience,
   TripsterScheduleResponse,
+  TripsterScheduleSlot,
   TripsterTourPlanDay,
   TripsterTourPlanPhoto,
 } from "@/lib/tripster/types";
@@ -14,6 +15,11 @@ import {
   sanitizeHtml,
 } from "@/lib/rich-text";
 import { dedupeGalleryImages, galleryImageIdentityKey } from "@/lib/gallery-images";
+import {
+  isPartnerAccommodationTitle,
+  splitPartnerLodgingFromOrgDetails,
+  type PartnerTourOvernightStop,
+} from "@/lib/tripster/partner-tour-accommodation";
 import type { PartnerTourExperienceRow } from "@/lib/tripster/partner-tour-mapper";
 import type { TourDatePrice, TourItineraryDay } from "@/types";
 
@@ -60,6 +66,12 @@ export type PartnerTourContent = {
   includedHtml?: string;
   excludedHtml?: string;
   comfortHtml?: string;
+  additionalInfoHtml?: string;
+  accommodationIntroHtml?: string;
+  accommodationItems?: PartnerTourOrgDetailItem[];
+  accommodationOvernights?: PartnerTourOvernightStop[];
+  /** Fallback HTML, если нет структурированных вариантов размещения */
+  accommodationHtml?: string;
   movementType?: string;
   meetingPoint?: string;
   finishPoint?: string;
@@ -71,6 +83,13 @@ export type PartnerTourContent = {
 };
 
 const ORG_DETAILS_TITLE_PATTERN = /организационн/i;
+
+const ORG_DETAIL_ITEM_TITLE_PATTERN =
+  /^(питание|транспорт|виза|уровень сложности|возраст участников|проживание|сложность)/i;
+
+function normalizeOrgDetailTitle(raw: string): string {
+  return raw.replace(/[.:]+\s*$/, "").trim();
+}
 
 function normalizePartnerTextKey(text: string): string {
   return text.replace(/\s+/g, " ").trim().toLowerCase();
@@ -87,28 +106,88 @@ function isDuplicatePartnerHtml(candidate: string, existing: string[]): boolean 
   });
 }
 
+function mergeOrgDetailItems(...groups: PartnerTourOrgDetailItem[][]): PartnerTourOrgDetailItem[] {
+  const seen = new Set<string>();
+  const merged: PartnerTourOrgDetailItem[] = [];
+
+  for (const group of groups) {
+    for (const item of group) {
+      const key = normalizePartnerTextKey(item.title);
+      if (!key || seen.has(key)) continue;
+      seen.add(key);
+      merged.push(item);
+    }
+  }
+
+  return merged;
+}
+
+export function isPartnerOrgDetailItemTitle(title: string): boolean {
+  return ORG_DETAIL_ITEM_TITLE_PATTERN.test(title.trim());
+}
+
 export function isPartnerOrgDetailsBlockTitle(title: string): boolean {
   return ORG_DETAILS_TITLE_PATTERN.test(title.trim());
 }
 
-/** Tripster хранит пункты аккордеона «Организационные детали» в comfort_level_info. */
-export function parseComfortLevelOrgDetails(html: string): PartnerTourOrgDetailItem[] {
-  const sanitized = sanitizeHtml(html);
-  const items: PartnerTourOrgDetailItem[] = [];
-  const pattern = /<p>\s*<strong>([^<]+?)<\/strong>\s*([\s\S]*?)<\/p>/gi;
-  let match: RegExpExecArray | null;
+/**
+ * Парсит HTML блока «Организационные детали» / comfort_level_info Tripster:
+ * абзацы с <strong>Заголовок.</strong> → пункты аккордеона, остальное — вводный текст.
+ */
+export function parseOrgDetailsAccordionHtml(html: string): {
+  introHtml?: string;
+  items: PartnerTourOrgDetailItem[];
+} {
+  const sanitized = sanitizeHtml(html).trim();
+  if (!sanitized) return { items: [] };
 
-  while ((match = pattern.exec(sanitized))) {
-    const title = match[1]?.replace(/\.$/, "").trim();
-    const body = match[2]?.trim();
-    if (!title || !body) continue;
-    items.push({
+  const headingPattern =
+    /<p[^>]*>\s*<(?:strong|b)>([^<]+)<\/(?:strong|b)>\s*([\s\S]*?)<\/p>/gi;
+  const matches: Array<{
+    title: string;
+    body: string;
+    start: number;
+    end: number;
+  }> = [];
+
+  let match: RegExpExecArray | null;
+  while ((match = headingPattern.exec(sanitized))) {
+    const title = normalizeOrgDetailTitle(match[1] ?? "");
+    if (!title) continue;
+    matches.push({
       title,
-      html: sanitizeHtml(`<p>${body}</p>`),
+      body: match[2]?.trim() ?? "",
+      start: match.index,
+      end: match.index + match[0].length,
     });
   }
 
-  return items;
+  if (matches.length === 0) {
+    return { introHtml: sanitized, items: [] };
+  }
+
+  const introHtml = sanitized.slice(0, matches[0].start).trim();
+  const items: PartnerTourOrgDetailItem[] = [];
+
+  for (let index = 0; index < matches.length; index += 1) {
+    const current = matches[index];
+    const nextStart = matches[index + 1]?.start ?? sanitized.length;
+    const tail = sanitized.slice(current.end, nextStart).trim();
+    const bodyHtml = current.body ? `<p>${current.body}</p>` : "";
+    const itemHtml = sanitizeHtml(`${bodyHtml}${tail}`);
+    if (!itemHtml) continue;
+    items.push({ title: current.title, html: itemHtml });
+  }
+
+  return {
+    introHtml: introHtml ? sanitizeHtml(introHtml) : undefined,
+    items,
+  };
+}
+
+/** @deprecated Use parseOrgDetailsAccordionHtml */
+export function parseComfortLevelOrgDetails(html: string): PartnerTourOrgDetailItem[] {
+  return parseOrgDetailsAccordionHtml(html).items;
 }
 
 function plainToHtml(text: string): string {
@@ -174,11 +253,30 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
   const parsed = parseExcursionPayload(experience);
   const blocks: PartnerTourContentBlock[] = [];
   let orgDetailsIntroHtml: string | undefined;
+  let orgDetailsItems: PartnerTourOrgDetailItem[] = [];
 
   for (const block of parsed.descriptionBlocks) {
     if (!block.title || !block.html) continue;
+    if (isPartnerAccommodationTitle(block.title)) {
+      orgDetailsItems.push({
+        title: normalizeOrgDetailTitle(block.title),
+        html: block.html,
+      });
+      continue;
+    }
     if (isPartnerOrgDetailsBlockTitle(block.title)) {
-      orgDetailsIntroHtml = block.html;
+      const parsedOrg = parseOrgDetailsAccordionHtml(block.html);
+      if (parsedOrg.introHtml) {
+        orgDetailsIntroHtml = parsedOrg.introHtml;
+      }
+      orgDetailsItems.push(...parsedOrg.items);
+      continue;
+    }
+    if (isPartnerOrgDetailItemTitle(block.title)) {
+      orgDetailsItems.push({
+        title: normalizeOrgDetailTitle(block.title),
+        html: block.html,
+      });
       continue;
     }
     blocks.push({ title: block.title, html: block.html });
@@ -200,11 +298,30 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
   const comfortSanitized = parsed.comfortLevelInfo
     ? sanitizeHtml(parsed.comfortLevelInfo)
     : undefined;
-  const orgDetailsItems = comfortSanitized
-    ? parseComfortLevelOrgDetails(comfortSanitized)
-    : [];
+  const comfortParsed = comfortSanitized
+    ? parseOrgDetailsAccordionHtml(comfortSanitized)
+    : { items: [] as PartnerTourOrgDetailItem[] };
+
+  orgDetailsItems = mergeOrgDetailItems(comfortParsed.items, orgDetailsItems);
+
+  const lodgingSplit = splitPartnerLodgingFromOrgDetails(orgDetailsItems);
+  orgDetailsItems = lodgingSplit.orgDetailsItems;
+  const accommodationItems = lodgingSplit.accommodationItems;
+  let accommodationIntroHtml: string | undefined;
+  if (accommodationItems.length === 1 && accommodationItems[0]?.title === "Общая информация") {
+    accommodationIntroHtml = accommodationItems[0].html;
+  }
+
+  if (!orgDetailsIntroHtml && comfortParsed.introHtml) {
+    orgDetailsIntroHtml = comfortParsed.introHtml;
+  }
+
   const orgDetailsExtraHtml =
-    comfortSanitized && orgDetailsItems.length === 0 ? comfortSanitized : undefined;
+    comfortSanitized && orgDetailsItems.length === 0 && !orgDetailsIntroHtml
+      ? comfortSanitized
+      : undefined;
+
+  const additionalInfo = experience.additional_info?.trim();
 
   return {
     summary: experience.tagline?.trim() || undefined,
@@ -216,7 +333,14 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
     orgDetailsExtraHtml,
     includedHtml: parsed.priceIncluded ? plainToHtml(parsed.priceIncluded) : undefined,
     excludedHtml: parsed.priceExcluded ? plainToHtml(parsed.priceExcluded) : undefined,
-    comfortHtml: orgDetailsItems.length || orgDetailsExtraHtml ? undefined : comfortSanitized,
+    comfortHtml:
+      orgDetailsItems.length || orgDetailsExtraHtml || accommodationItems.length
+        ? undefined
+        : comfortSanitized,
+    additionalInfoHtml: additionalInfo ? plainToHtml(additionalInfo) : undefined,
+    accommodationIntroHtml,
+    accommodationItems:
+      accommodationItems.length && !accommodationIntroHtml ? accommodationItems : undefined,
     movementType: parsed.movementType,
     meetingPoint: parsed.meetingPoint?.text,
     finishPoint: parsed.finishPoint?.text,
@@ -317,6 +441,22 @@ export function mapPartnerItineraryFromContent(
     });
 }
 
+export function resolveScheduleSlotSpotsLeft(
+  slot: TripsterScheduleSlot,
+  defaults?: TripsterScheduleResponse["defaults"]
+): number {
+  if (slot.available_persons != null && Number.isFinite(slot.available_persons) && slot.available_persons >= 0) {
+    return slot.available_persons;
+  }
+
+  const fromDefaults = defaults?.available_persons;
+  if (fromDefaults != null && Number.isFinite(fromDefaults) && fromDefaults >= 0) {
+    return fromDefaults;
+  }
+
+  return 12;
+}
+
 export function mapScheduleToPartnerDates(
   schedule: TripsterScheduleResponse,
   durationDays: number,
@@ -344,7 +484,7 @@ export function mapScheduleToPartnerDates(
         id: `tripster-${startDate}-${time}`,
         startDate,
         endDate,
-        spotsLeft: schedule.defaults?.available_persons ?? 12,
+        spotsLeft: resolveScheduleSlotSpotsLeft(slot, schedule.defaults),
         priceUsd: hasSlotPrice && currency === "USD" ? slotValue : 0,
         partnerPriceValue: hasSlotPrice ? slotValue : undefined,
         partnerPriceCurrency: hasSlotPrice ? currency : undefined,
@@ -364,6 +504,11 @@ export function buildPartnerImportantInfo(content: PartnerTourContent): string[]
 
   if (content.priceDescription?.trim()) {
     items.push(content.priceDescription.trim());
+  }
+
+  if (content.additionalInfoHtml?.trim()) {
+    const plain = htmlToPlainText(content.additionalInfoHtml).trim();
+    if (plain) items.push(plain);
   }
 
   return items;

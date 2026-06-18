@@ -11,7 +11,7 @@ export default function PartnerTourComfortSection({
   if (!content.comfortHtml?.trim()) return null;
 
   return (
-    <TourSection id="accommodations" title="Проживание и комфорт">
+    <TourSection id="comfort" title="Комфорт и условия">
       <div
         className="rich-text-editor-content space-y-4 leading-relaxed text-charcoal/90"
         dangerouslySetInnerHTML={{ __html: content.comfortHtml }}

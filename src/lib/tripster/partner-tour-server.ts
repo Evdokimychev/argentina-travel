@@ -1,9 +1,13 @@
 import "server-only";
 
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { isTripsterConfigured, fetchTripsterTourPlan } from "@/lib/tripster/client";
+import { isTripsterConfigured, fetchTripsterExperience, fetchTripsterTourPlan, fetchTripsterWebExperience } from "@/lib/tripster/client";
 import { fetchTripsterSchedule } from "@/lib/tripster/booking-api";
-import { mapScheduleToPartnerDates, mapTripsterPlanToItinerary } from "@/lib/tripster/partner-tour-content";
+import { buildPartnerContent, mapScheduleToPartnerDates, mapTripsterPlanToItinerary, buildPartnerImportantInfo } from "@/lib/tripster/partner-tour-content";
+import {
+  finalizePartnerLodging,
+  mapPartnerAccommodations,
+} from "@/lib/tripster/partner-tour-accommodation";
 import {
   resolvePartnerTourReviews,
   resolvePartnerGuideReviews,
@@ -21,6 +25,7 @@ import {
 } from "@/lib/tripster/partner-tour-repository";
 import { rankSimilarListings } from "@/lib/tour-recommendations";
 import type { TourDetail, TourListing } from "@/types";
+import type { TripsterExperience } from "@/lib/tripster/types";
 
 function getClient() {
   try {
@@ -34,6 +39,41 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
   if (!tour.partnerExperienceId || !isTripsterConfigured()) return tour;
 
   let enriched = tour;
+  let liveExperience: Awaited<ReturnType<typeof fetchTripsterExperience>> | null = null;
+
+  try {
+    liveExperience = await fetchTripsterExperience(tour.partnerExperienceId, {
+      detailed: true,
+      priceFormat: "detailed",
+    });
+
+    if (liveExperience.id !== tour.partnerExperienceId) {
+      throw new Error("Tripster experience id mismatch");
+    }
+
+    try {
+      const webExperience = await fetchTripsterWebExperience(tour.partnerExperienceId);
+      if (webExperience.id !== tour.partnerExperienceId) {
+        throw new Error("Tripster web experience id mismatch");
+      }
+      liveExperience = {
+        ...liveExperience,
+        additional_info: webExperience.additional_info ?? liveExperience.additional_info,
+        comfort_level_info:
+          webExperience.comfort_level_info?.trim() || liveExperience.comfort_level_info,
+        accommodation: webExperience.accommodation ?? liveExperience.accommodation,
+      };
+    } catch {
+      // web v2 optional
+    }
+
+    enriched = {
+      ...enriched,
+      partnerContent: buildPartnerContent(liveExperience),
+    };
+  } catch {
+    // keep content from DB payload
+  }
 
   try {
     const schedule = await fetchTripsterSchedule(tour.partnerExperienceId);
@@ -115,6 +155,28 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
         // guide reviews optional
       }
     }
+  }
+
+  if (enriched.partnerContent) {
+    const experienceForLodging: TripsterExperience =
+      liveExperience ??
+      ({
+        id: tour.partnerExperienceId ?? 0,
+        price_included_description: enriched.partnerContent.includedHtml,
+        price_not_included_description: enriched.partnerContent.excludedHtml,
+        annotation: enriched.shortDescription,
+      } satisfies TripsterExperience);
+    const partnerContent = finalizePartnerLodging(
+      enriched.partnerContent,
+      experienceForLodging,
+      enriched.itinerary ?? []
+    );
+    enriched = {
+      ...enriched,
+      partnerContent,
+      accommodations: mapPartnerAccommodations(partnerContent),
+      importantInfo: buildPartnerImportantInfo(partnerContent),
+    };
   }
 
   return enriched;

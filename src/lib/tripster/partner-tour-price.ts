@@ -137,27 +137,93 @@ export type PartnerTourBookingPrice = {
   displayFallback?: string;
 };
 
-function resolveQuoteOriginalTotal(quote: TripsterPriceQuote): number | undefined {
-  if (quote.per_ticket?.length) {
-    const original = quote.per_ticket.reduce((sum, ticket) => {
-      const count = ticket.count ?? 1;
-      const price =
-        ticket.price_without_tripster_discount ??
-        ticket.price ??
-        0;
-      return sum + price * count;
-    }, 0);
-    if (original > 0) return original;
+/** Tripster partner discounts are modest; reject bogus quote/listing ratios. */
+const MAX_PARTNER_DISCOUNT_RATIO = 1.5;
+
+function resolveListingPartnerDiscountRatio(
+  tour: Pick<TourDetail | TourListing, "partnerOriginalPriceValue" | "partnerPriceValue">
+): number | undefined {
+  const original = tour.partnerOriginalPriceValue;
+  const current = tour.partnerPriceValue;
+  if (
+    original == null ||
+    current == null ||
+    !Number.isFinite(original) ||
+    !Number.isFinite(current) ||
+    original <= current
+  ) {
+    return undefined;
+  }
+
+  const ratio = original / current;
+  if (ratio <= 1 || ratio > MAX_PARTNER_DISCOUNT_RATIO) return undefined;
+  return ratio;
+}
+
+function resolveQuoteOriginalTotal(
+  quote: TripsterPriceQuote,
+  quoteTotal: number
+): number | undefined {
+  if (!quote.per_ticket?.length || quoteTotal <= 0) return undefined;
+
+  let originalSum = 0;
+  let discountedSum = 0;
+  let hasTicketDiscount = false;
+
+  for (const ticket of quote.per_ticket) {
+    const count = ticket.count ?? 1;
+    const unitPrice = ticket.price ?? 0;
+    const unitOriginal = ticket.price_without_tripster_discount;
+
+    discountedSum += unitPrice * count;
+
+    if (unitOriginal != null && unitOriginal > unitPrice) {
+      hasTicketDiscount = true;
+      originalSum += unitOriginal * count;
+    } else {
+      originalSum += unitPrice * count;
+    }
+  }
+
+  if (!hasTicketDiscount) return undefined;
+  if (originalSum <= quoteTotal) return undefined;
+
+  const ratio = originalSum / quoteTotal;
+  if (ratio <= 1.01 || ratio > MAX_PARTNER_DISCOUNT_RATIO) return undefined;
+
+  // Quote total should match the discounted ticket sum (per-unit prices × count).
+  if (Math.abs(discountedSum - quoteTotal) > Math.max(1, quoteTotal * 0.05)) {
+    return undefined;
+  }
+
+  return originalSum;
+}
+
+function resolvePartnerOriginalTotal(
+  totalValue: number,
+  options: {
+    tour: Pick<
+      TourDetail | TourListing,
+      "partnerOriginalPriceValue" | "partnerPriceValue"
+    >;
+    quote?: TripsterPriceQuote | null;
+  }
+): number | undefined {
+  if (totalValue <= 0) return undefined;
+
+  const fromQuote =
+    options.quote != null ? resolveQuoteOriginalTotal(options.quote, totalValue) : undefined;
+  if (fromQuote != null && fromQuote > totalValue) {
+    return fromQuote;
+  }
+
+  const listingRatio = resolveListingPartnerDiscountRatio(options.tour);
+  if (listingRatio != null) {
+    const fromListing = totalValue * listingRatio;
+    if (fromListing > totalValue) return fromListing;
   }
 
   return undefined;
-}
-
-function resolvePartnerOriginalPerPerson(
-  tour: Pick<TourDetail | TourListing, "partnerOriginalPriceValue">
-): number | undefined {
-  const value = tour.partnerOriginalPriceValue;
-  return value != null && Number.isFinite(value) && value > 0 ? value : undefined;
 }
 
 export function formatPartnerBookingAmount(value: number, currency: string): string {
@@ -197,16 +263,10 @@ export function resolvePartnerTourBookingPrice(options: {
   if (liveQuote) {
     const totalValue = liveQuote.value!;
     const currency = liveQuote.currency!.trim().toUpperCase();
-    let originalTotalValue = resolveQuoteOriginalTotal(liveQuote);
-    if (originalTotalValue == null) {
-      const originalPerPerson = resolvePartnerOriginalPerPerson(options.tour);
-      if (originalPerPerson != null) {
-        originalTotalValue = computePartnerTotal(originalPerPerson, options.guests, unit);
-      }
-    }
-    if (originalTotalValue != null && originalTotalValue <= totalValue) {
-      originalTotalValue = undefined;
-    }
+    const originalTotalValue = resolvePartnerOriginalTotal(totalValue, {
+      tour: options.tour,
+      quote: liveQuote,
+    });
 
     const discountPercent =
       originalTotalValue != null
@@ -250,18 +310,13 @@ export function resolvePartnerTourBookingPrice(options: {
   }
 
   const totalValue = computePartnerTotal(value, options.guests, unit);
-  const originalPerPerson = resolvePartnerOriginalPerPerson(options.tour);
-  const originalTotalValue = originalPerPerson
-    ? computePartnerTotal(originalPerPerson, options.guests, unit)
-    : undefined;
-  const effectiveOriginal =
-    originalTotalValue != null && originalTotalValue > totalValue
-      ? originalTotalValue
-      : undefined;
+  const originalTotalValue = resolvePartnerOriginalTotal(totalValue, {
+    tour: options.tour,
+  });
 
   const discountPercent =
-    effectiveOriginal != null
-      ? getDiscountPercent(effectiveOriginal, totalValue)
+    originalTotalValue != null
+      ? getDiscountPercent(originalTotalValue, totalValue)
       : undefined;
 
   const perPersonLabel =
@@ -271,7 +326,7 @@ export function resolvePartnerTourBookingPrice(options: {
 
   return {
     totalValue,
-    originalTotalValue: effectiveOriginal,
+    originalTotalValue,
     currency,
     showFrom: Boolean(options.tour.priceFromPrefix) && !options.selectedDate,
     discountPercent,

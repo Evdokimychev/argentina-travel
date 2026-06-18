@@ -22,12 +22,17 @@ export type ExcursionGuideProfile = ExcursionGuide & {
   cityName?: string;
   countryName?: string;
   isLicensed?: boolean;
+  guideType?: string;
+  roleLabel?: string;
   guideSince?: string;
   responseTimeLabel?: string;
   excursionCount?: number;
-  /** Число туристов, побывавших с гидом (Tripster rate_count). */
+  /** Число туристов, побывавших с гидом (Tripster number_of_persons_paid). */
   visitorCount?: number;
+  /** Краткий статус под именем («Гид и организатор путешествий…»). */
+  tagline?: string;
   description?: string;
+  descriptionParagraphs?: string[];
 };
 
 export type ExcursionLocationPoint = {
