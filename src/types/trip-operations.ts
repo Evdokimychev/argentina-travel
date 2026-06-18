@@ -57,9 +57,20 @@ export interface TripOperations {
   tasks: TripTask[];
   resourceLinks: TripResourceLink[];
   clientRequirements?: TripClientRequirements;
+  /** Лента обновлений для клиента в портале поездки. */
+  clientUpdates?: TripClientUpdate[];
   /** Внутренние заметки организатора по поездке. */
   organizerNotes?: string;
   updatedAt?: string;
+}
+
+export type TripClientUpdateKind = "task_status" | "organizer_message";
+
+export interface TripClientUpdate {
+  id: string;
+  message: string;
+  createdAt: string;
+  kind: TripClientUpdateKind;
 }
 
 export const BOOKING_SOURCE_LABELS: Record<BookingSource, string> = {

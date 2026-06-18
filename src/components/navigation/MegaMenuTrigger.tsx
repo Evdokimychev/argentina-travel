@@ -3,56 +3,22 @@
 import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
-import { DestinationsMegaMenuPanel } from "@/components/navigation/DestinationsMegaMenuPanel";
-import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
-import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
-import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
-import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
-import { ExcursionsMegaMenuPanel } from "@/components/navigation/ExcursionsMegaMenuPanel";
+import {
+  MegaMenuSectionContent,
+  megaMenuWidthClass,
+} from "@/components/navigation/mega-menu-section-content";
+import { NavBadge } from "@/components/navigation/MegaMenuPanel";
+import {
+  navMegaMenuIndexClassName,
+  navMegaMenuTriggerClassName,
+} from "@/components/navigation/nav-mega-menu-trigger-styles";
 import { cn } from "@/lib/cn";
 import { navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
 const CLOSE_DELAY_MS = 350;
-
-function megaMenuWidthClass(sectionId: string): string {
-  if (sectionId === "guide" || sectionId === "immigration") {
-    return "w-[min(calc(100vw-2rem),64rem)]";
-  }
-  if (sectionId === "destinations" || sectionId === "tours" || sectionId === "excursions") {
-    return "w-[min(calc(100vw-2rem),56rem)]";
-  }
-  return "w-[min(calc(100vw-2rem),48rem)]";
-}
-
-function MegaMenuPanelContent({
-  section,
-  t,
-  onNavigate,
-}: {
-  section: SiteNavSection;
-  t: NavTranslate;
-  onNavigate: () => void;
-}) {
-  const columns = section.columns ?? [];
-
-  switch (section.id) {
-    case "guide":
-      return <GuideMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    case "immigration":
-      return <ImmigrationMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    case "destinations":
-      return <DestinationsMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    case "tours":
-      return <ToursMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    case "excursions":
-      return <ExcursionsMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    default:
-      return <MegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} showIcons />;
-  }
-}
 
 export function MegaMenuTrigger({
   section,
@@ -79,12 +45,7 @@ export function MegaMenuTrigger({
 
   const label = navSectionLabel(section, t);
   const num = String(index).padStart(2, "0");
-  const indexClassName = cn(
-    "text-[10px] font-normal text-gray-400 group-hover:text-sky/70",
-    compact && "hidden xl:inline"
-  );
-  const triggerTextClassName =
-    "group relative inline-flex max-w-[6.75rem] items-baseline gap-0.5 truncate px-0.5 py-1 font-medium transition-colors lg:text-[13px] xl:max-w-none xl:px-1 xl:text-sm";
+  const indexClassName = navMegaMenuIndexClassName(compact);
 
   const clearCloseTimer = useCallback(() => {
     if (closeTimerRef.current) {
@@ -140,7 +101,7 @@ export function MegaMenuTrigger({
       <Link
         href={section.href}
         className={cn(
-          triggerTextClassName,
+          navMegaMenuTriggerClassName,
           "shrink-0",
           active ? "text-sky" : "text-foreground/70 hover:text-sky"
         )}
@@ -163,7 +124,7 @@ export function MegaMenuTrigger({
       {hasHubLink ? (
         <div
           className={cn(
-            triggerTextClassName,
+            navMegaMenuTriggerClassName,
             active || open ? "text-sky" : "text-foreground/70"
           )}
         >
@@ -199,7 +160,7 @@ export function MegaMenuTrigger({
           aria-haspopup="true"
           onClick={() => (open ? closeMenu() : openMenu())}
           className={cn(
-            triggerTextClassName,
+            navMegaMenuTriggerClassName,
             active || open ? "text-sky" : "text-foreground/70 hover:text-sky"
           )}
         >
@@ -212,9 +173,7 @@ export function MegaMenuTrigger({
             )}
             aria-hidden
           />
-          {showIndex ? (
-            <sup className={indexClassName}>{num}</sup>
-          ) : null}
+          {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
         </button>
       )}
 
@@ -226,7 +185,7 @@ export function MegaMenuTrigger({
         onMouseEnter={openMenu}
         onMouseLeave={scheduleClose}
       >
-        <MegaMenuPanelContent section={section} t={t} onNavigate={closeMenu} />
+        <MegaMenuSectionContent section={section} t={t} onNavigate={closeMenu} />
       </MegaMenuDropdown>
     </div>
   );

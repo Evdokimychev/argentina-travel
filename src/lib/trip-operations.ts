@@ -1,11 +1,14 @@
 import type {
   BookingSource,
   TripClientRequirements,
+  TripClientUpdate,
+  TripClientUpdateKind,
   TripOperations,
   TripTask,
   TripTaskCategory,
   TripTaskStatus,
 } from "@/types/trip-operations";
+import { buildDefaultTripTasks } from "@/data/trip-operations-templates";
 
 function createId(prefix: string): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -88,6 +91,22 @@ function normalizeClientRequirements(
   return trimmed;
 }
 
+function normalizeClientUpdates(raw: TripClientUpdate[] | undefined): TripClientUpdate[] {
+  if (!Array.isArray(raw)) return [];
+  const kinds: TripClientUpdateKind[] = ["task_status", "organizer_message"];
+  return raw
+    .map((item) => ({
+      id: item.id || createId("update"),
+      message: item.message?.trim() ?? "",
+      createdAt: item.createdAt || new Date().toISOString(),
+      kind: kinds.includes(item.kind as TripClientUpdateKind)
+        ? (item.kind as TripClientUpdateKind)
+        : "task_status",
+    }))
+    .filter((item) => item.message.length > 0)
+    .slice(0, 30);
+}
+
 export function normalizeTripOperations(raw: TripOperations | undefined): TripOperations | undefined {
   if (!raw) return undefined;
   const tasks = normalizeTasks(raw.tasks);
@@ -103,7 +122,13 @@ export function normalizeTripOperations(raw: TripOperations | undefined): TripOp
         .filter((link) => link.title.length > 0 && link.url.length > 0)
     : [];
 
-  if (tasks.length === 0 && resourceLinks.length === 0 && !raw.organizerNotes?.trim()) {
+  if (
+    tasks.length === 0 &&
+    resourceLinks.length === 0 &&
+    !raw.organizerNotes?.trim() &&
+    !raw.clientRequirements &&
+    !(Array.isArray(raw.clientUpdates) && raw.clientUpdates.length > 0)
+  ) {
     return undefined;
   }
 
@@ -111,6 +136,7 @@ export function normalizeTripOperations(raw: TripOperations | undefined): TripOp
     tasks,
     resourceLinks,
     clientRequirements: normalizeClientRequirements(raw.clientRequirements),
+    clientUpdates: normalizeClientUpdates(raw.clientUpdates),
     organizerNotes: raw.organizerNotes?.trim() || undefined,
     updatedAt: raw.updatedAt || undefined,
   };
@@ -175,80 +201,75 @@ export function normalizeBookingSource(value: unknown): BookingSource {
   return "platform";
 }
 
-export function buildDefaultTripTasks(tourSlug?: string): TripTask[] {
-  const base: Omit<TripTask, "id">[] = [
-    {
-      title: "Подтвердить даты и время с клиентом",
-      category: "communication",
-      status: "pending",
-      clientVisible: false,
-      sortOrder: 0,
-    },
-    {
-      title: "Собрать данные участников (паспорта, контакты)",
-      category: "documents",
-      status: "pending",
-      clientVisible: true,
-      sortOrder: 1,
-    },
-    {
-      title: "Забронировать билеты в парк / на экскурсию",
-      category: "tickets",
-      status: "pending",
-      clientVisible: true,
-      sortOrder: 2,
-    },
-    {
-      title: "Уточнить проживание и точку встречи",
-      category: "accommodation",
-      status: "pending",
-      clientVisible: false,
-      sortOrder: 3,
-    },
-    {
-      title: "Организовать трансфер",
-      category: "transport",
-      status: "pending",
-      clientVisible: true,
-      sortOrder: 4,
-    },
-    {
-      title: "Отправить клиенту инструкции перед выездом",
-      category: "communication",
-      status: "pending",
-      clientVisible: true,
-      sortOrder: 5,
-    },
-  ];
+function taskStatusClientMessage(task: TripTask, status: TripTaskStatus): string | null {
+  if (!task.clientVisible) return null;
+  switch (status) {
+    case "done":
+      return `Готово: ${task.title}`;
+    case "in_progress":
+      return `В работе: ${task.title}`;
+    case "blocked":
+      return `Уточняем детали: ${task.title}`;
+    default:
+      return null;
+  }
+}
 
-  if (tourSlug === "iguazu-falls") {
-    base.splice(2, 0, {
-      title: "Купить билеты в нацпарк (аргентинская сторона)",
-      category: "tickets",
-      status: "pending",
-      clientVisible: true,
-      sortOrder: 2,
-    });
-    base.splice(3, 0, {
-      title: "Оформить разрешение на бразильскую сторону (если нужно)",
-      category: "documents",
-      status: "pending",
-      clientVisible: true,
-      sortOrder: 3,
-    });
-    return base.map((task, index) => ({
-      ...task,
-      id: createTripTaskId(),
-      sortOrder: index,
-    }));
+/** Сообщения для ленты клиента при изменении статусов задач. */
+export function collectClientUpdatesFromTaskChanges(
+  previousTasks: TripTask[],
+  nextTasks: TripTask[]
+): string[] {
+  const previousById = new Map(previousTasks.map((task) => [task.id, task]));
+  const messages: string[] = [];
+
+  for (const task of nextTasks) {
+    const previous = previousById.get(task.id);
+    if (!previous || previous.status === task.status) continue;
+    const message = taskStatusClientMessage(task, task.status);
+    if (message) messages.push(message);
   }
 
-  return base.map((task, index) => ({
-    ...task,
-    id: createTripTaskId(),
-    sortOrder: index,
-  }));
+  return messages;
 }
+
+export function appendTripClientUpdates(
+  operations: TripOperations,
+  messages: string[],
+  kind: TripClientUpdateKind = "task_status"
+): TripOperations {
+  if (messages.length === 0) return operations;
+  const now = new Date().toISOString();
+  const fresh: TripClientUpdate[] = messages.map((message) => ({
+    id: createId("update"),
+    message,
+    createdAt: now,
+    kind,
+  }));
+  const existing = normalizeClientUpdates(operations.clientUpdates);
+  return {
+    ...operations,
+    clientUpdates: [...fresh, ...existing].slice(0, 30),
+  };
+}
+
+export function mergeTripOperationsWithClientUpdates(input: {
+  previous?: TripOperations;
+  next: TripOperations;
+}): TripOperations {
+  const messages = collectClientUpdatesFromTaskChanges(
+    input.previous?.tasks ?? [],
+    input.next.tasks
+  );
+  return appendTripClientUpdates(input.next, messages);
+}
+
+export {
+  buildDefaultTripTasks,
+  buildTripTasksFromTemplate,
+  listTripTaskTemplatesForSlug,
+  resolveTripTaskTemplateForSlug,
+} from "@/data/trip-operations-templates";
 
 export function ensureTripOperations(
   existing: TripOperations | undefined,

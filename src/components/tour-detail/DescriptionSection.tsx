@@ -155,27 +155,27 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
       {visibleTabs.length > 0 ? (
         <div className="-mx-2 mt-8 border-t border-gray-100 pt-6 sm:-mx-4">
           <div
-            className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-gray-100 pb-px"
-              role="tablist"
-              aria-label="Дополнительная информация о туре"
-            >
-              {visibleTabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeTab === tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={cn(
-                    "shrink-0 rounded-t-lg px-3 py-2 text-sm font-medium transition-colors",
-                    activeTab === tab.id
-                      ? "bg-white text-charcoal shadow-sm"
-                      : "text-slate hover:text-charcoal"
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
+            className="scrollbar-hide flex gap-1.5 overflow-x-auto pb-1"
+            role="tablist"
+            aria-label="Дополнительная информация о туре"
+          >
+            {visibleTabs.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={activeTab === tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
+                  activeTab === tab.id
+                    ? "border-sky bg-sky text-white shadow-sm"
+                    : "border-gray-200 bg-white text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
           </div>
           <div className="pt-5" role="tabpanel">
             <ExtraTabContent tabId={activeTab} extra={extra} />

@@ -23,10 +23,14 @@ import {
 } from "@/lib/bookings-store";
 import {
   buildClientPortalUrl,
+  buildTripTasksFromTemplate,
   computeTripProgress,
   createTripLinkId,
   createTripTaskId,
   ensureTripOperations,
+  listTripTaskTemplatesForSlug,
+  resolveTripTaskTemplateForSlug,
+  appendTripClientUpdates,
 } from "@/lib/trip-operations";
 import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
 import {
@@ -38,6 +42,7 @@ import {
   type TripTaskStatus,
 } from "@/types/trip-operations";
 import { cn } from "@/lib/cn";
+import { tourDetailCalloutClass, tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 
 interface OrganizerTripOperationsPanelProps {
   booking: Booking;
@@ -51,7 +56,7 @@ function taskStatusIcon(status: TripTaskStatus) {
 }
 
 function taskStatusClass(status: TripTaskStatus): string {
-  if (status === "done") return "text-emerald-600 bg-emerald-50 ring-emerald-100";
+  if (status === "done") return "text-sky-dark bg-sky/10 ring-sky/20";
   if (status === "in_progress") return "text-sky-700 bg-sky-50 ring-sky-100";
   if (status === "blocked") return "text-amber-700 bg-amber-50 ring-amber-100";
   return "text-slate bg-gray-50 ring-gray-100";
@@ -68,6 +73,11 @@ export default function OrganizerTripOperationsPanel({
   const [newTaskTitle, setNewTaskTitle] = useState("");
   const [newLinkTitle, setNewLinkTitle] = useState("");
   const [newLinkUrl, setNewLinkUrl] = useState("");
+  const [clientMessageDraft, setClientMessageDraft] = useState("");
+  const [showClientMessageForm, setShowClientMessageForm] = useState(false);
+  const templateOptions = listTripTaskTemplatesForSlug(booking.tourSlug);
+  const defaultTemplateId = resolveTripTaskTemplateForSlug(booking.tourSlug).id;
+  const [selectedTemplateId, setSelectedTemplateId] = useState(defaultTemplateId);
 
   useEffect(() => {
     setOperations(booking.tripOperations);
@@ -95,16 +105,6 @@ export default function OrganizerTripOperationsPanel({
     },
     [booking.id, onUpdated, user]
   );
-
-  async function handleInit() {
-    setSaving(true);
-    const result = initTripOperationsForBooking({ bookingId: booking.id, actor: user });
-    setSaving(false);
-    if ("booking" in result) {
-      setOperations(result.booking.tripOperations);
-      onUpdated(result.booking);
-    }
-  }
 
   function patchOperations(patch: Partial<TripOperations>) {
     const base = ensureTripOperations(operations, booking.tourSlug);
@@ -184,23 +184,65 @@ export default function OrganizerTripOperationsPanel({
     }
   }
 
+  function applyTemplate(templateId: string) {
+    setSelectedTemplateId(templateId);
+    const base = ensureTripOperations(operations, booking.tourSlug);
+    void persist({
+      ...base,
+      tasks: buildTripTasksFromTemplate(templateId),
+      updatedAt: new Date().toISOString(),
+    });
+  }
+
+  async function handleInitWithTemplate() {
+    setSaving(true);
+    const result = initTripOperationsForBooking({ bookingId: booking.id, actor: user });
+    setSaving(false);
+    if ("error" in result) return;
+    if (selectedTemplateId !== defaultTemplateId) {
+      applyTemplate(selectedTemplateId);
+      return;
+    }
+    setOperations(result.booking.tripOperations);
+    onUpdated(result.booking);
+  }
+
   if (!operations?.tasks.length) {
     return (
-      <article className="rounded-3xl bg-white px-5 py-5 shadow-sm ring-1 ring-gray-200/60 sm:px-6">
+      <article className={cn(tourDetailCardBorderClass, "px-5 py-5 sm:px-6")}>
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-violet-700">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-sky">
             <ListChecks className="h-5 w-5" />
           </div>
           <div className="min-w-0 flex-1">
             <h2 className="font-heading text-lg font-bold text-charcoal">Организация поездки</h2>
             <p className="mt-1 text-sm leading-relaxed text-slate">
-              Чеклист подготовки, ссылки для клиента и личный кабинет поездки — как в CRM для гида.
+              Чеклист подготовки, ссылки для клиента и личный кабинет поездки.
             </p>
+            {templateOptions.length > 1 ? (
+              <div className="mt-3">
+                <label htmlFor="trip-template" className="text-xs font-medium text-slate">
+                  Шаблон чеклиста
+                </label>
+                <NativeSelect
+                  id="trip-template"
+                  value={selectedTemplateId}
+                  onChange={(event) => setSelectedTemplateId(event.target.value)}
+                  className="mt-1"
+                >
+                  {templateOptions.map((template) => (
+                    <option key={template.id} value={template.id}>
+                      {template.label}
+                    </option>
+                  ))}
+                </NativeSelect>
+              </div>
+            ) : null}
             <Button
               type="button"
               className="mt-4 rounded-2xl"
               disabled={saving}
-              onClick={() => void handleInit()}
+              onClick={() => void handleInitWithTemplate()}
             >
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : null}
               Начать организацию
@@ -214,10 +256,10 @@ export default function OrganizerTripOperationsPanel({
   const requirements = operations.clientRequirements;
 
   return (
-    <article className="rounded-3xl bg-white px-5 py-5 shadow-sm ring-1 ring-gray-200/60 sm:px-6">
+    <article className={cn(tourDetailCardBorderClass, "px-5 py-5 sm:px-6")}>
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-violet-700">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-sky/10 text-sky">
             <ListChecks className="h-5 w-5" />
           </div>
           <div>
@@ -240,13 +282,13 @@ export default function OrganizerTripOperationsPanel({
 
       <div className="mt-4 h-2 overflow-hidden rounded-full bg-gray-100">
         <div
-          className="h-full rounded-full bg-violet-500 transition-all"
+          className="h-full rounded-full bg-sky transition-all"
           style={{ width: `${progress.percent}%` }}
         />
       </div>
 
-      <div className="mt-5 rounded-2xl border border-violet-100 bg-violet-50/50 p-4">
-        <p className="text-xs font-semibold uppercase tracking-wide text-violet-800">
+      <div className={cn("mt-5", tourDetailCalloutClass)}>
+        <p className="text-xs font-semibold uppercase tracking-wide text-sky-dark">
           Личный кабинет клиента
         </p>
         <p className="mt-1 text-sm text-charcoal">
@@ -261,9 +303,93 @@ export default function OrganizerTripOperationsPanel({
         </div>
       </div>
 
-      <div className="mt-6">
-        <h3 className="text-sm font-semibold text-charcoal">Чеклист</h3>
-        <ul className="mt-3 space-y-2">
+      {(operations.clientUpdates?.length ?? 0) > 0 || showClientMessageForm ? (
+        <div className={cn("mt-5", tourDetailInsetMutedClass, "p-4")}>
+          <h3 className="text-sm font-semibold text-charcoal">Сообщения клиенту</h3>
+          <p className="mt-1 text-xs text-slate">
+            Появляются в портале поездки. Статусы задач с «видно клиенту» добавляются автоматически.
+          </p>
+          {operations.clientUpdates && operations.clientUpdates.length > 0 ? (
+            <ul className="mt-3 max-h-40 space-y-2 overflow-y-auto">
+              {operations.clientUpdates.slice(0, 8).map((update) => (
+                <li
+                  key={update.id}
+                  className="rounded-xl border border-gray-100 bg-white px-3 py-2 text-sm"
+                >
+                  <p className="text-charcoal">{update.message}</p>
+                  <p className="mt-0.5 text-xs text-slate">
+                    {new Date(update.createdAt).toLocaleString("ru-RU")}
+                    {update.kind === "organizer_message" ? " · от организатора" : " · статус"}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          ) : null}
+          <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+            <Input
+              value={clientMessageDraft}
+              onChange={(event) => setClientMessageDraft(event.target.value)}
+              placeholder="Сообщение для клиента в портале…"
+              className="bg-white"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              className="shrink-0 rounded-xl"
+              disabled={saving || !clientMessageDraft.trim()}
+              onClick={() => {
+                const text = clientMessageDraft.trim();
+                if (!text) return;
+                const base = ensureTripOperations(operations, booking.tourSlug);
+                const next = appendTripClientUpdates(base, [text], "organizer_message");
+                setClientMessageDraft("");
+                setShowClientMessageForm(true);
+                void persist(next);
+              }}
+            >
+              Отправить
+            </Button>
+          </div>
+        </div>
+      ) : (
+        <div className="mt-5">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="rounded-xl"
+            onClick={() => setShowClientMessageForm(true)}
+          >
+            Написать клиенту
+          </Button>
+        </div>
+      )}
+
+      <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-charcoal">Чеклист</h3>
+        </div>
+        {templateOptions.length > 1 ? (
+          <div className="sm:min-w-[220px]">
+            <label htmlFor="trip-template-active" className="text-xs font-medium text-slate">
+              Шаблон
+            </label>
+            <NativeSelect
+              id="trip-template-active"
+              value={selectedTemplateId}
+              onChange={(event) => applyTemplate(event.target.value)}
+              className="mt-1"
+            >
+              {templateOptions.map((template) => (
+                <option key={template.id} value={template.id}>
+                  {template.label}
+                </option>
+              ))}
+            </NativeSelect>
+          </div>
+        ) : null}
+      </div>
+      <ul className="mt-3 space-y-2">
           {operations.tasks.map((task) => {
             const StatusIcon = taskStatusIcon(task.status);
             return (
@@ -341,7 +467,6 @@ export default function OrganizerTripOperationsPanel({
             <Plus className="h-4 w-4" />
           </Button>
         </div>
-      </div>
 
       <div className="mt-6">
         <h3 className="text-sm font-semibold text-charcoal">Ссылки и материалы</h3>
@@ -399,7 +524,7 @@ export default function OrganizerTripOperationsPanel({
       </div>
 
       {requirements?.submittedAt ? (
-        <div className="mt-6 rounded-2xl border border-emerald-100 bg-emerald-50/40 p-4">
+        <div className={cn("mt-6", tourDetailInsetMutedClass, "p-4")}>
           <h3 className="text-sm font-semibold text-charcoal">Анкета клиента</h3>
           <p className="mt-1 text-xs text-slate">
             Заполнено {new Date(requirements.submittedAt).toLocaleString("ru-RU")}

@@ -23,3 +23,11 @@ export const tourDetailAccentTextClass = "text-sky";
 
 export const tourDetailPromoHeadingClass =
   "flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-sky-dark";
+
+export const tourDetailCalloutClass =
+  "rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/[0.06] to-white p-4";
+
+export const tourDetailBadgeSkyClass =
+  "rounded-full bg-sky/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-sky";
+
+export const tourDetailCardBorderClass = "rounded-2xl border border-gray-100 bg-white shadow-sm";

@@ -12,6 +12,7 @@ import {
   Loader2,
   MapPin,
   Plane,
+  Bell,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,6 +73,7 @@ export default function TripClientPortalView({ token }: { token: string }) {
   const operations = booking.tripOperations;
   const clientTasks = (operations?.tasks ?? []).filter((task) => task.clientVisible);
   const clientLinks = (operations?.resourceLinks ?? []).filter((link) => link.clientVisible);
+  const clientUpdates = operations?.clientUpdates ?? [];
   const progress = computeTripProgress(operations);
   const sourceLabel =
     booking.bookingSource && booking.bookingSource !== "platform"
@@ -119,12 +121,42 @@ export default function TripClientPortalView({ token }: { token: string }) {
               {booking.guests} {booking.guests === 1 ? "гость" : booking.guests < 5 ? "гостя" : "гостей"}
             </span>
             {sourceLabel ? (
-              <span className="rounded-full bg-violet-100 px-3 py-1 text-violet-800">
+              <span className="rounded-full bg-sky/10 px-3 py-1 text-sky-dark">
                 Бронирование: {sourceLabel}
                 {booking.externalReference ? ` · ${booking.externalReference}` : ""}
               </span>
             ) : null}
           </div>
+
+          {clientUpdates.length > 0 ? (
+            <section>
+              <div className="flex items-center gap-2">
+                <Bell className="h-4 w-4 text-sky" aria-hidden />
+                <h2 className="font-heading text-lg font-bold text-charcoal">Обновления</h2>
+              </div>
+              <ul className="mt-3 space-y-2">
+                {clientUpdates.map((update) => (
+                  <li
+                    key={update.id}
+                    className="rounded-2xl border border-sky/15 bg-sky/5 px-4 py-3"
+                  >
+                    <p className="text-sm text-charcoal">{update.message}</p>
+                    <time
+                      dateTime={update.createdAt}
+                      className="mt-1 block text-xs text-slate"
+                    >
+                      {new Date(update.createdAt).toLocaleString("ru-RU", {
+                        day: "numeric",
+                        month: "short",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
 
           {clientTasks.length > 0 ? (
             <section>
@@ -136,7 +168,7 @@ export default function TripClientPortalView({ token }: { token: string }) {
               </div>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-gray-100">
                 <div
-                  className="h-full rounded-full bg-emerald-500 transition-all"
+                  className="h-full rounded-full bg-sky transition-all"
                   style={{ width: `${progress.clientPercent}%` }}
                 />
               </div>
@@ -152,7 +184,7 @@ export default function TripClientPortalView({ token }: { token: string }) {
                         className={cn(
                           "mt-0.5 h-4 w-4 shrink-0",
                           task.status === "done"
-                            ? "text-emerald-600"
+                            ? "text-sky-dark"
                             : task.status === "in_progress"
                               ? "text-sky-600"
                               : "text-slate"
@@ -214,7 +246,7 @@ export default function TripClientPortalView({ token }: { token: string }) {
             </div>
 
             {submitted && requirements.submittedAt ? (
-              <div className="mt-4 rounded-xl bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
+              <div className="mt-4 rounded-xl bg-sky/10 px-4 py-3 text-sm text-sky-dark">
                 Анкета отправлена. При необходимости вы можете обновить данные ниже.
               </div>
             ) : null}

@@ -9,8 +9,8 @@ import type { SiteNavColumn, SiteNavLink } from "@/types/site-nav";
 
 function ExcursionsPromoBlock({ onNavigate }: { onNavigate?: () => void }) {
   return (
-    <aside className="flex flex-col rounded-xl bg-gradient-to-br from-amber-500/10 via-surface-muted/80 to-surface-muted/40 p-4 sm:p-5 lg:min-h-full">
-      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/15 text-amber-700">
+    <aside className="flex flex-col rounded-xl bg-gradient-to-br from-sky/10 via-surface-muted/80 to-surface-muted/40 p-4 sm:p-5 lg:min-h-full">
+      <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-sky/15 text-sky">
         <Landmark className="h-5 w-5" aria-hidden />
       </span>
       <h3 className="mt-4 font-heading text-base font-bold leading-snug text-charcoal">

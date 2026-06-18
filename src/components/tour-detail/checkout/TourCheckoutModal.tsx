@@ -129,7 +129,7 @@ function StepIndicator({
             key={step.id}
             className={cn(
               "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              done && "bg-emerald-50 text-emerald-700",
+              done && "bg-sky/10 text-sky-dark",
               active && "bg-brand text-white",
               !done && !active && "bg-gray-100 text-slate"
             )}
@@ -137,7 +137,7 @@ function StepIndicator({
             <span
               className={cn(
                 "flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold",
-                done && "bg-emerald-600 text-white",
+                done && "bg-sky text-white",
                 active && "bg-white/20 text-white",
                 !done && !active && "bg-white text-slate"
               )}
@@ -660,7 +660,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
           <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
             {submitted ? (
               <div className="mx-auto max-w-md py-8 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sky/10 text-sky">
                   <Check className="h-8 w-8" strokeWidth={2.5} />
                 </div>
                 <h3 className="mt-5 font-heading text-2xl font-bold text-charcoal">
@@ -695,7 +695,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                     : null}
                 </p>
                 {savedToProfile && createdBookingId ? (
-                  <p className="mt-3 text-sm text-emerald-700">
+                  <p className="mt-3 text-sm text-sky-dark">
                     <Link
                       href={`/profile/bookings/${createdBookingId}`}
                       className="font-medium underline"
@@ -976,7 +976,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         )}
 
                         {isAuthenticated && user ? (
-                          <div className="rounded-lg border border-emerald-100 bg-emerald-50/80 px-3 py-2.5 text-xs leading-relaxed text-emerald-800">
+                          <div className="rounded-lg border border-sky/15 bg-sky/5 px-3 py-2.5 text-xs leading-relaxed text-sky-dark">
                             Данные подставлены из вашего профиля — бронирование будет привязано к
                             аккаунту.
                           </div>

@@ -23,6 +23,7 @@ import {
 import { formatTours } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import TourSection from "./TourSection";
+import { tourDetailBadgeSkyClass, tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 
 function organizerProfileHref(organizer: TourOrganizerDetail): string | null {
   const slug = organizer.slug ?? organizer.ownerUserId;
@@ -69,7 +70,7 @@ function RoleBadges({ organizerIsGuide }: { organizerIsGuide: boolean }) {
         Организатор
       </span>
       {organizerIsGuide ? (
-        <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-emerald-700">
+        <span className={tourDetailBadgeSkyClass}>
           Гид тура
         </span>
       ) : null}
@@ -290,7 +291,7 @@ export default function OrganizerSection({
     const rating = resolveOrganizerRatingDisplay(organizer);
 
     return (
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
+      <div className={cn(tourDetailCardBorderClass, "p-5")}>
         <div className="flex items-center gap-3">
           {profileHref ? (
             <Link href={profileHref} className="shrink-0">
@@ -310,7 +311,7 @@ export default function OrganizerSection({
           <div className="min-w-0">
             <OrganizerNameLink organizer={organizer} className="font-semibold text-charcoal" />
             {sectionMeta.organizerIsGuide ? (
-              <p className="mt-1 text-xs font-medium text-emerald-700">Организатор и гид тура</p>
+              <p className="mt-1 text-xs font-medium text-sky-dark">Организатор и гид тура</p>
             ) : null}
             {organizer.statusText?.trim() ? (
               <p className="mt-0.5 line-clamp-2 text-xs font-medium text-sky">

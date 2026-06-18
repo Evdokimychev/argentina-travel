@@ -1,10 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
-import { NavSectionMenuBlock } from "@/components/navigation/NavSectionMenuBlock";
+import {
+  MegaMenuSectionContent,
+  megaMenuWidthClass,
+} from "@/components/navigation/mega-menu-section-content";
+import { NavBadge } from "@/components/navigation/MegaMenuPanel";
+import {
+  navMegaMenuIndexClassName,
+  navMegaMenuTriggerClassName,
+} from "@/components/navigation/nav-mega-menu-trigger-styles";
 import { cn } from "@/lib/cn";
+import { isNavSectionActive, navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
@@ -12,23 +23,60 @@ const CLOSE_DELAY_MS = 350;
 
 function OverflowMegaMenuPanel({
   sections,
+  activeSectionId,
+  onActiveSectionChange,
   t,
   onNavigate,
 }: {
   sections: SiteNavSection[];
+  activeSectionId: string;
+  onActiveSectionChange: (sectionId: string) => void;
   t: NavTranslate;
   onNavigate: () => void;
 }) {
+  const activeSection =
+    sections.find((section) => section.id === activeSectionId) ?? sections[0];
+
+  if (!activeSection) return null;
+
   return (
-    <div className="grid gap-6 p-5 sm:grid-cols-2 xl:grid-cols-3">
-      {sections.map((section) => (
-        <NavSectionMenuBlock
-          key={section.id}
-          section={section}
-          t={t}
-          onNavigate={onNavigate}
-        />
-      ))}
+    <div className="flex min-h-[18rem] flex-col lg:flex-row">
+      <div className="shrink-0 border-b border-border-subtle lg:w-52 lg:border-b-0 lg:border-r">
+        <p className="px-4 pt-4 text-xs font-semibold uppercase tracking-wider text-slate">
+          Разделы
+        </p>
+        <div
+          className="scrollbar-hide flex gap-1 overflow-x-auto p-3 lg:flex-col lg:gap-0.5 lg:overflow-visible"
+          role="tablist"
+          aria-label={t("nav.more")}
+        >
+          {sections.map((section) => {
+            const selected = section.id === activeSection.id;
+            const label = navSectionLabel(section, t);
+            return (
+              <button
+                key={section.id}
+                type="button"
+                role="tab"
+                aria-selected={selected}
+                onClick={() => onActiveSectionChange(section.id)}
+                className={cn(
+                  "shrink-0 rounded-xl px-3 py-2.5 text-left text-sm font-medium transition-colors lg:w-full",
+                  selected
+                    ? "bg-sky text-white shadow-sm"
+                    : "text-charcoal hover:bg-sky/5 hover:text-sky"
+                )}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto" role="tabpanel">
+        <MegaMenuSectionContent section={activeSection} t={t} onNavigate={onNavigate} />
+      </div>
     </div>
   );
 }
@@ -52,12 +100,15 @@ export function NavOverflowMegaMenuTrigger({
   showIndex?: boolean;
   compact?: boolean;
 }) {
+  const pathname = usePathname();
   const rootRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? "");
 
   const label = t("nav.more");
   const num = String(index).padStart(2, "0");
+  const indexClassName = navMegaMenuIndexClassName(compact);
 
   const clearCloseTimer = useCallback(() => {
     if (closeTimerRef.current) {
@@ -82,6 +133,12 @@ export function NavOverflowMegaMenuTrigger({
   }, [clearCloseTimer, onOpenChange]);
 
   useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
+
+  useEffect(() => {
+    if (!open) return;
+    const activeSection = sections.find((section) => isNavSectionActive(pathname, section));
+    setActiveSectionId(activeSection?.id ?? sections[0]?.id ?? "");
+  }, [open, pathname, sections]);
 
   useEffect(() => {
     if (!open) return;
@@ -123,7 +180,7 @@ export function NavOverflowMegaMenuTrigger({
         aria-label={label}
         onClick={() => (open ? closeMenu() : openMenu())}
         className={cn(
-          "group relative inline-flex max-w-[7.5rem] items-center gap-0.5 truncate px-0.5 py-1 font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 lg:text-[13px] xl:max-w-none xl:px-1 xl:text-sm",
+          navMegaMenuTriggerClassName,
           active || open ? "text-sky" : "text-foreground/70 hover:text-sky"
         )}
       >
@@ -135,27 +192,24 @@ export function NavOverflowMegaMenuTrigger({
           )}
           aria-hidden
         />
-        {showIndex ? (
-          <sup
-            className={cn(
-              "ml-0.5 text-[10px] font-normal text-gray-400 group-hover:text-sky/70",
-              compact && "hidden xl:inline"
-            )}
-          >
-            {num}
-          </sup>
-        ) : null}
+        {showIndex ? <sup className={indexClassName}>{num}</sup> : null}
       </button>
 
       <MegaMenuDropdown
         open={open}
         triggerRef={rootRef}
         panelRef={panelRef}
-        widthClass="w-[min(calc(100vw-2rem),56rem)]"
+        widthClass={megaMenuWidthClass(activeSectionId || "more")}
         onMouseEnter={openMenu}
         onMouseLeave={scheduleClose}
       >
-        <OverflowMegaMenuPanel sections={sections} t={t} onNavigate={closeMenu} />
+        <OverflowMegaMenuPanel
+          sections={sections}
+          activeSectionId={activeSectionId}
+          onActiveSectionChange={setActiveSectionId}
+          t={t}
+          onNavigate={closeMenu}
+        />
       </MegaMenuDropdown>
     </div>
   );

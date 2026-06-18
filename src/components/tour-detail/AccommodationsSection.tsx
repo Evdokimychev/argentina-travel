@@ -6,6 +6,8 @@ import { TourAccommodation } from "@/types";
 import { normalizeEditorValue } from "@/lib/rich-text";
 import FormattedPrice from "@/components/FormattedPrice";
 import TourSection from "./TourSection";
+import { tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
+import { cn } from "@/lib/cn";
 
 function nightsLabel(nights: number): string {
   const mod10 = nights % 10;
@@ -44,7 +46,7 @@ function AccommodationCard({ acc }: { acc: TourAccommodation }) {
   const image = acc.images[0];
 
   return (
-    <article className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
+    <article className={cn(tourDetailCardBorderClass, "overflow-hidden")}>
       <div className="grid md:grid-cols-2">
         {image ? (
           <div className="relative h-48 md:h-auto md:min-h-[220px]">
@@ -107,7 +109,7 @@ function AccommodationCard({ acc }: { acc: TourAccommodation }) {
                   {acc.roomTypes.map((room) => (
                     <li
                       key={room.id}
-                      className="rounded-xl border border-gray-100 bg-surface-muted/40 px-3 py-2.5"
+                      className={cn(tourDetailInsetMutedClass, "px-3 py-2.5")}
                     >
                       <div className="flex flex-wrap items-start justify-between gap-2">
                         <div className="min-w-0">
@@ -120,7 +122,7 @@ function AccommodationCard({ acc }: { acc: TourAccommodation }) {
                           </p>
                         </div>
                         {room.priceUsdPerPerson === 0 ? (
-                          <span className="shrink-0 text-xs font-semibold text-emerald-700">
+                          <span className="shrink-0 text-xs font-semibold text-sky-dark">
                             Включено
                           </span>
                         ) : (

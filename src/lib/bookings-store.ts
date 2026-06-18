@@ -66,6 +66,8 @@ import {
   normalizeBookingSource,
   normalizeTripOperations,
   resolveClientPortalToken,
+  mergeTripOperationsWithClientUpdates,
+  appendTripClientUpdates,
 } from "@/lib/trip-operations";
 import { buildTripsterIguazuDemoOperations } from "@/data/trip-operations-seeds";
 import type { BookingSource, TripClientRequirements, TripOperations } from "@/types/trip-operations";
@@ -1415,10 +1417,15 @@ export function updateTripOperations(input: {
   if ("error" in allowed) return { error: allowed.error };
 
   const now = new Date().toISOString();
+  const normalizedNext = normalizeTripOperations(input.tripOperations)!;
+  const mergedOps = mergeTripOperationsWithClientUpdates({
+    previous: current.tripOperations,
+    next: normalizedNext,
+  });
   const updated: Booking = normalizeBooking({
     ...current,
     tripOperations: {
-      ...normalizeTripOperations(input.tripOperations)!,
+      ...mergedOps,
       updatedAt: now,
     },
     updatedAt: now,
@@ -1472,6 +1479,16 @@ export function submitTripClientRequirements(input: {
   };
 
   const tripOperations = ensureTripOperations(current.tripOperations, current.tourSlug);
+  const isUpdate = Boolean(current.tripOperations?.clientRequirements?.submittedAt);
+  const organizerComment = {
+    id: createId("comment"),
+    text: isUpdate
+      ? "Клиент обновил анкету потребностей в портале поездки."
+      : "Клиент заполнил анкету потребностей в портале поездки.",
+    authorName: "Система",
+    createdAt: now,
+  };
+
   const updated: Booking = normalizeBooking({
     ...current,
     tripOperations: {
@@ -1479,6 +1496,7 @@ export function submitTripClientRequirements(input: {
       clientRequirements: requirements,
       updatedAt: now,
     },
+    organizerComments: [organizerComment, ...current.organizerComments],
     updatedAt: now,
   });
 

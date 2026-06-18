@@ -86,5 +86,19 @@ export function buildTripsterIguazuDemoOperations(now: string): TripOperations {
       dietaryRestrictions: "Без глютена у одного участника",
       submittedAt: "2026-06-11T16:20:00.000Z",
     },
+    clientUpdates: [
+      {
+        id: "update-iguazu-1",
+        message: "Готово: Купить билеты в нацпарк (аргентинская сторона)",
+        createdAt: "2026-06-12T14:30:00.000Z",
+        kind: "task_status",
+      },
+      {
+        id: "update-iguazu-2",
+        message: "В работе: Забронировать трансфер аэропорт — отель — парк",
+        createdAt: "2026-06-13T10:00:00.000Z",
+        kind: "task_status",
+      },
+    ],
   };
 }

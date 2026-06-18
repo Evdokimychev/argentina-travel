@@ -20,6 +20,8 @@ import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { contactFieldsFromAuthUser } from "./checkout/checkout-contact";
 import { createInitialCheckoutForm } from "./checkout/types";
 import { WAITLIST_HINT } from "@/lib/tour-waitlist";
+import { tourDetailInsetMutedClass, tourDetailPromoHeadingClass } from "@/lib/tour-detail-ui";
+import { cn } from "@/lib/cn";
 
 interface TourWaitlistModalProps {
   tour: TourDetail;
@@ -126,7 +128,7 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
         <div className="border-b border-gray-100 px-5 py-4">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-violet-800">
+              <p className={tourDetailPromoHeadingClass}>
                 Лист ожидания
               </p>
               <h2 className="font-heading text-xl font-bold text-charcoal">
@@ -147,7 +149,7 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
 
         <div className="space-y-5 px-5 py-5">
           {submitted ? (
-            <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 px-4 py-4 text-sm text-charcoal">
+            <div className={cn(tourDetailInsetMutedClass, "px-4 py-4 text-sm text-charcoal")}>
               Заявка принята. Мы сообщим на{" "}
               <span className="font-medium">{form.contactEmail}</span>, когда организатор сможет
               предложить место.
