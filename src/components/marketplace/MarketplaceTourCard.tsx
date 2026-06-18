@@ -8,8 +8,7 @@ import FavoriteButton from "@/components/profile/FavoriteButton";
 import { TourListing, TourBadge } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
-import { formatDateRange } from "@/lib/utils";
-import { formatDurationShort, formatMoreDates } from "@/lib/pluralize";
+import { formatDurationShort } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -21,6 +20,7 @@ import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
+import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -56,7 +56,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
         <div className="relative aspect-[4/3] overflow-hidden">
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
-          <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+          <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий
@@ -79,10 +79,10 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             tourImage={tour.image}
             region={tour.region}
             priceUsd={tour.priceUsd}
-            className="pointer-events-auto absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+            className="pointer-events-auto absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
           />
 
-          <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
+          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
             <div className="relative h-7 w-7 overflow-hidden rounded-full">
               <SafeImage
                 src={tour.organizer.avatar}
@@ -135,7 +135,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             </p>
           ) : null}
 
-          <div className="mt-3 flex items-center justify-between gap-2">
+          <div className="mt-3 flex items-baseline justify-between gap-2">
             <TourPublicPriceDisplay
               priceUsd={tour.priceUsd}
               originalPriceUsd={tour.originalPriceUsd}
@@ -144,7 +144,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               size="sm"
               density="compact"
             />
-            <p className="shrink-0 text-xs leading-none text-slate">
+            <p className="shrink-0 self-baseline text-xs text-slate">
               {formatDurationShort(tour.durationDays, tour.durationNights)}
             </p>
           </div>
@@ -152,22 +152,13 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           {schedule?.type === "individual" ? (
             <p className="mt-2 text-xs text-slate">{schedule.label}</p>
           ) : schedule?.type === "dates" ? (
-            <p className="mt-2 text-xs text-slate">
-              {formatDateRange(schedule.start, schedule.end)}
-              {schedule.moreDates > 0 ? (
-                <button
-                  type="button"
-                  className="pointer-events-auto relative z-10 ml-1.5 inline-flex items-center rounded-full border border-sky/20 bg-sky/5 px-2 py-0.5 text-[11px] font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
-                  onClick={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    setDatesModalOpen(true);
-                  }}
-                >
-                  {formatMoreDates(schedule.moreDates)}
-                </button>
-              ) : null}
-            </p>
+            <TourCardDepartureSchedule
+              className="mt-2"
+              schedule={schedule}
+              onMoreDatesClick={
+                schedule.moreDates > 0 ? () => setDatesModalOpen(true) : undefined
+              }
+            />
           ) : null}
 
           {groupDiscountHint && !tour.priceOnRequest ? (

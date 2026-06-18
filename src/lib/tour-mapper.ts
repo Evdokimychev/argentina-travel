@@ -632,22 +632,34 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
 export function tourToListing(tour: Tour): TourListing {
   const ownerUserId = resolveTourOwnerUserId(tour);
   const organizerSlug = getOrganizerSlug(ownerUserId);
-  const availableDates: TourDate[] = tour.booking.groupDates
-    .filter((date) => date.startDate && date.endDate)
-    .map((date) => ({
-      start: date.startDate,
-      end: date.endDate,
-      spotsLeft: date.spotsLeft,
-    }));
+  const legacy = getLegacyTourDetail(tour.slug);
 
-  const listingDates =
-    availableDates.length > 0
-      ? availableDates
-      : getLegacyTourDetail(tour.slug)?.dates.map((date) => ({
-          start: date.startDate,
-          end: date.endDate,
-          spotsLeft: date.spotsLeft,
-        })) ?? [];
+  const rawDates =
+    tour.booking.groupDates.filter((date) => date.startDate).length > 0
+      ? tour.booking.groupDates
+          .filter((date) => date.startDate && date.endDate)
+          .map((date) => ({
+            id: date.id,
+            startDate: date.startDate,
+            endDate: date.endDate,
+            spotsLeft: date.spotsLeft,
+            priceUsd: date.priceUsd || tour.pricing.basePriceUsd,
+          }))
+      : legacy?.dates ?? [];
+
+  const datesWithPrices = applyWaitlistDateOverrides(
+    tour.slug,
+    resolveDemoTourDates(tour.slug, rawDates, tour.pricing.basePriceUsd)
+  );
+
+  const listingDates = datesWithPrices.map((date) => ({
+    start: date.startDate,
+    end: date.endDate,
+    spotsLeft: date.spotsLeft,
+  }));
+
+  const catalogPrice = resolveTourCatalogPriceUsd(datesWithPrices, tour.pricing.basePriceUsd);
+  const groupDiscountEnabled = normalizeGroupDiscountSettings(tour.pricing.groupDiscount).enabled;
 
   const coords = tour.geography.coordinates ?? { lat: -34.6, lng: -58.4 };
 
@@ -664,11 +676,13 @@ export function tourToListing(tour: Tour): TourListing {
     durationDays: tour.durationDays,
     durationNights: tour.durationNights,
     durationBucket: durationBucket(tour.durationDays),
-    priceUsd: tour.pricing.basePriceUsd,
+    priceUsd: tour.pricing.priceOnRequest ? tour.pricing.basePriceUsd : catalogPrice.priceUsd,
     originalPriceUsd: tour.pricing.originalPriceUsd,
     priceOnRequest: tour.pricing.priceOnRequest,
-    priceFromPrefix: tour.pricing.priceFromPrefix,
-    groupDiscountEnabled: normalizeGroupDiscountSettings(tour.pricing.groupDiscount).enabled,
+    priceFromPrefix: tour.pricing.priceOnRequest
+      ? tour.pricing.priceFromPrefix
+      : catalogPrice.priceFromPrefix || groupDiscountEnabled || tour.pricing.priceFromPrefix,
+    groupDiscountEnabled,
     groupDiscountHint:
       getBestGroupDiscountHint(tour.pricing.groupDiscount, tour.pricing.basePriceUsd) ?? undefined,
     bookingMode: tour.booking.mode,
@@ -812,7 +826,9 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     priceOnRequest: tour.pricing.priceOnRequest,
     priceFromPrefix: tour.pricing.priceOnRequest
       ? tour.pricing.priceFromPrefix
-      : catalogPrice.priceFromPrefix || tour.pricing.priceFromPrefix,
+      : catalogPrice.priceFromPrefix ||
+        tour.pricing.priceFromPrefix ||
+        normalizeGroupDiscountSettings(tour.pricing.groupDiscount).enabled,
     isPrivate: tour.isPrivate,
     waitlistEnabled: tour.booking.waitlistEnabled,
     customBookingLink: toPublicCustomBookingLink(tour.booking.customBookingLink),

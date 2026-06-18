@@ -34,5 +34,5 @@ export function resolveTourPriceFromPrefix(input: TourPublicPriceInput): boolean
   if (input.priceOnRequest) {
     return tourShowsReferencePrice(input) && Boolean(input.priceFromPrefix);
   }
-  return input.priceFromPrefix ?? true;
+  return Boolean(input.priceFromPrefix);
 }

@@ -7,6 +7,7 @@ import { TOUR_COLLECTION_OPTIONS } from "@/data/tour-collections";
 import { destinationHref } from "@/lib/destinations";
 import { buildGuideNavColumns } from "@/lib/guide-nav";
 import { buildImmigrationNavColumns } from "@/lib/immigration-nav";
+import { buildPopularPlaceNavLinks } from "@/lib/places-nav";
 import { destinationCatalogHref } from "@/lib/site-nav";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 
@@ -88,6 +89,12 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
     labelKey: "nav.tours",
     href: "/tours",
     description: "Все авторские маршруты",
+  },
+  {
+    id: "travel-podbor",
+    label: "Подбор маршрута",
+    href: "/podbor",
+    description: "Персональный подбор за 2 минуты",
   },
   {
     id: "travel-map",
@@ -226,6 +233,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     label: "Места",
     labelKey: "nav.places",
     href: "/places",
+    description: "Парки, города, ледники и водопады Аргентины",
     columns: [
       {
         id: "places-browse",
@@ -257,13 +265,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         id: "places-popular",
         title: "Популярное",
         titleKey: "nav.columns.popular",
-        links: [
-          { id: "place-iguazu", label: "Водопады Игуасу", href: "/places/iguazu-falls" },
-          { id: "place-perito", label: "Perito Moreno", href: "/places/perito-moreno-glacier" },
-          { id: "place-ba", label: "Буэнос-Айрес", href: "/places/buenos-aires" },
-          { id: "place-fitz", label: "Fitz Roy", href: "/places/fitz-roy" },
-          { id: "place-ushuaia", label: "Ушуайя", href: "/places/ushuaia" },
-        ],
+        links: buildPopularPlaceNavLinks(),
       },
     ],
   },

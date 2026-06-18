@@ -40,14 +40,17 @@ export default function TourPriceDisplay({
         </span>
       )}
 
-      {showFrom && size === "lg" && (
-        <p className="text-sm text-slate">от</p>
-      )}
-
-      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-        {showFrom && size === "sm" && (
-          <span className="text-xs text-slate">от</span>
-        )}
+      <div className="flex flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+        {showFrom ? (
+          <span
+            className={cn(
+              "shrink-0 text-slate",
+              size === "lg" ? "text-sm" : "text-xs"
+            )}
+          >
+            от
+          </span>
+        ) : null}
         {size === "lg" ? (
           <PriceOtherCurrenciesPopover
             priceUsd={priceUsd}

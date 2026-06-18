@@ -29,6 +29,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
+import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
+import { isLowAvailability } from "@/lib/tour-departure-countdown";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -95,7 +97,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
         >
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
-          <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+          <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий
@@ -111,7 +113,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               ))}
           </div>
 
-          <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
+          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
             <div className="relative h-7 w-7 overflow-hidden rounded-full">
               <Image
                 src={tour.organizer.avatar}
@@ -190,7 +192,6 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               priceOnRequest={tour.priceOnRequest}
               priceFromPrefix={tour.priceFromPrefix}
               size="sm"
-              showFrom={false}
               density="compact"
               className="[&_span.font-bold]:text-2xl [&_span.font-bold]:leading-tight"
             />
@@ -232,18 +233,34 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             nextDate && (
               <div className="mt-4">
                 <p className="text-[11px] text-slate">Дата набора групп</p>
-                <p className="mt-0.5 text-sm font-medium text-charcoal">
-                  {formatDateRange(nextDate.start, nextDate.end)}
-                </p>
-                {moreDates > 0 ? (
-                  <button
-                    type="button"
-                    className="mt-1.5 inline-flex items-center rounded-full border border-sky/20 bg-sky/5 px-2 py-0.5 text-xs font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
-                    onClick={() => setDatesModalOpen(true)}
-                  >
-                    {formatMoreDates(moreDates)}
-                  </button>
-                ) : null}
+                {isLowAvailability(nextDate.spotsLeft) ? (
+                  <TourCardDepartureSchedule
+                    className="mt-1.5"
+                    schedule={{
+                      type: "dates",
+                      start: nextDate.start,
+                      end: nextDate.end,
+                      moreDates,
+                      spotsLeft: nextDate.spotsLeft,
+                    }}
+                    onMoreDatesClick={moreDates > 0 ? () => setDatesModalOpen(true) : undefined}
+                  />
+                ) : (
+                  <>
+                    <p className="mt-0.5 text-sm font-medium text-charcoal">
+                      {formatDateRange(nextDate.start, nextDate.end)}
+                    </p>
+                    {moreDates > 0 ? (
+                      <button
+                        type="button"
+                        className="mt-1.5 inline-flex items-center rounded-full border border-sky/20 bg-sky/5 px-2 py-0.5 text-xs font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
+                        onClick={() => setDatesModalOpen(true)}
+                      >
+                        {formatMoreDates(moreDates)}
+                      </button>
+                    ) : null}
+                  </>
+                )}
               </div>
             )
           )}

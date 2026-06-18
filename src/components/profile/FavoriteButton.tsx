@@ -34,7 +34,7 @@ export default function FavoriteButton({
       <Heart
         className={cn(
           iconClassName ?? "h-4 w-4",
-          favorited ? "fill-wine text-wine" : "text-charcoal"
+          favorited ? "fill-red-500 text-red-500" : "text-charcoal"
         )}
       />
       {label ? <span>{label}</span> : null}

@@ -150,7 +150,7 @@ export function hasTermsListContent(items: string[]): boolean {
 }
 
 export type TourCardScheduleDisplay =
-  | { type: "dates"; start: string; end: string; moreDates: number }
+  | { type: "dates"; start: string; end: string; moreDates: number; spotsLeft: number }
   | { type: "individual"; label: string };
 
 /** Подпись под ценой в карточке каталога: даты набора или индивидуальный формат. */
@@ -170,6 +170,7 @@ export function resolveTourCardScheduleDisplay(
       start: nextDate.start,
       end: nextDate.end,
       moreDates: Math.max(0, tour.availableDates.length - 1),
+      spotsLeft: nextDate.spotsLeft,
     };
   }
 

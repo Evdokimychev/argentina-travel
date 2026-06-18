@@ -38,32 +38,31 @@ export default function TourPublicPriceDisplay({
   const effectiveShowFrom =
     showFrom ?? resolveTourPriceFromPrefix({ priceUsd, priceOnRequest, priceFromPrefix });
   const isCompact = density === "compact";
-  const labelSizeClass =
+  const priceValueClass =
     size === "lg" && !isCompact
-      ? "font-heading text-xl font-bold sm:text-2xl"
-      : isCompact
-        ? "text-sm"
-        : "text-lg";
+      ? "font-heading text-xl font-bold text-charcoal sm:text-2xl"
+      : "font-bold text-charcoal text-lg";
 
   if (priceOnRequest) {
     return (
       <div className={cn("relative min-w-0", className)}>
         <div
           className={cn(
-            "flex items-center gap-1",
+            "flex items-baseline gap-1",
             isCompact ? "flex-nowrap" : "flex-wrap"
           )}
         >
-          <p
-            className={cn(
-              "font-bold text-charcoal",
-              isCompact ? "text-xs leading-tight" : labelSizeClass
-            )}
-          >
+          <p className={cn(priceValueClass, isCompact && "leading-none")}>
             {TOUR_PRICE_ON_REQUEST_LABEL}
           </p>
           <PriceOnRequestInfoButton
-            className={isCompact ? "h-5 w-5" : size === "lg" && !isCompact ? "h-7 w-7" : "h-6 w-6"}
+            className={
+              isCompact
+                ? "h-5 w-5 shrink-0 translate-y-px"
+                : size === "lg" && !isCompact
+                  ? "h-7 w-7"
+                  : "h-6 w-6"
+            }
           />
         </div>
 

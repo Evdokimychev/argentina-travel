@@ -43,7 +43,7 @@ export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpo
         />
         <TourCardImageVignette />
         {tour.isHot ? (
-          <Badge variant="hot" className="absolute left-4 top-4">
+          <Badge variant="hot" className="absolute left-4 top-4 z-10">
             Горящий
           </Badge>
         ) : null}

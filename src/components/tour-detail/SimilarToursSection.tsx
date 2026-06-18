@@ -57,7 +57,6 @@ export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) 
                   priceOnRequest={tour.priceOnRequest}
                   priceFromPrefix={tour.priceFromPrefix}
                   size="sm"
-                  showFrom={false}
                   showDiscountRibbon={false}
                   density="compact"
                   className="[&_.font-bold]:text-base [&_.line-through]:text-[11px]"

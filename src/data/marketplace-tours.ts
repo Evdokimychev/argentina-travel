@@ -77,7 +77,9 @@ const rawMarketplaceTours = [
     groupSizeMin: 8,
     groupSizeMax: 12,
     groupSizeBucket: groupBucket(8, 12),
-    availableDates: mkDates(12, 11),
+    availableDates: mkDates(12, 11).map((date, index) =>
+      index === 0 ? { ...date, spotsLeft: 2 } : date
+    ),
     latitude: -50.337,
     longitude: -72.265,
     rating: 4.9,
