@@ -1,4 +1,4 @@
-const DEFAULT_SITE_URL = "https://argentina-travel.ru";
+const DEFAULT_SITE_URL = "https://www.goargentina.ru";
 
 /** Canonical public origin for sitemap, robots, and JSON-LD. */
 export function getSiteUrl(): string {

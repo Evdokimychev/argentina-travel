@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import type { AuthProvider, AuthResult, AuthErrorCode } from "@/lib/auth-provider";
-import { DEMO_PASSWORD } from "@/lib/auth-store";
+import { resolvePasswordInput } from "@/lib/auth-store";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { normalizePhone } from "@/lib/auth-store";
@@ -141,7 +141,7 @@ async function registerByApi(input: {
   password?: string;
 }): Promise<AuthResult> {
   const normalizedEmail = input.email.trim().toLowerCase();
-  const password = input.password?.trim() || DEMO_PASSWORD;
+  const password = resolvePasswordInput(input.password);
 
   const response = await fetch("/api/auth/register", {
     method: "POST",
@@ -207,7 +207,7 @@ export const supabaseAuthProvider: AuthProvider = {
       return rejectLogin("NOT_FOUND", "NOT_FOUND");
     }
 
-    const loginPassword = password?.trim() || DEMO_PASSWORD;
+    const loginPassword = resolvePasswordInput(password);
     const result = await loginWithCredentials(lookup.email, loginPassword, role);
 
     if ("error" in result && result.code === "INVALID_CREDENTIALS" && !password?.trim()) {

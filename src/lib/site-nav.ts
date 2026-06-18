@@ -36,6 +36,14 @@ export function isNavHrefActive(pathname: string, href: string): boolean {
 export function isNavSectionActive(pathname: string, section: SiteNavSection): boolean {
   if (section.href && isNavHrefActive(pathname, section.href)) return true;
 
+  if (
+    section.activePathPrefixes?.some(
+      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
+    )
+  ) {
+    return true;
+  }
+
   return (section.columns ?? []).some((column) =>
     column.links.some((link) => isNavHrefActive(pathname, link.href))
   );

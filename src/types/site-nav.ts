@@ -28,6 +28,8 @@ export type SiteNavSection = {
   href?: string;
   /** Short teaser shown in compact mega-menu blocks (e.g. «Ещё»). */
   description?: string;
+  /** Extra path prefixes that mark this section active (e.g. merged geography hub). */
+  activePathPrefixes?: string[];
   columns?: SiteNavColumn[];
   badge?: SiteNavBadge;
 };

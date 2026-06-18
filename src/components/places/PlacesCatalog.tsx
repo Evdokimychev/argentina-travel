@@ -93,6 +93,12 @@ export default function PlacesCatalog({ places, collections = [] }: PlacesCatalo
       <section className="border-b border-gray-100 bg-gradient-to-b from-sky/[0.06] via-white to-white">
         <div className={cn(siteContainerClass, "py-8 sm:py-10")}>
           <div className="max-w-3xl">
+            <Link
+              href="/destinations"
+              className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
+            >
+              ← Регионы и места
+            </Link>
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky">
               {t("places.eyebrow")}
             </p>
@@ -100,6 +106,13 @@ export default function PlacesCatalog({ places, collections = [] }: PlacesCatalo
               {t("places.title")}
             </h1>
             <p className="mt-2 text-base leading-relaxed text-slate">{t("places.subtitle")}</p>
+            <p className="mt-3 text-sm text-slate">
+              {t("places.hubHint")}{" "}
+              <Link href="/destinations" className="font-medium text-sky hover:underline">
+                {t("places.hubHintLink")}
+              </Link>
+              .
+            </p>
           </div>
 
           <PlaceSearchPanel

@@ -4,6 +4,7 @@ import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
 import { AuthProvider } from "@/context/AuthContext";
 import { SiteFeedbackProvider } from "@/context/SiteFeedbackContext";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
+import SiteAnalytics from "@/components/SiteAnalytics";
 import SiteHashScroll from "@/components/SiteHashScroll";
 import CustomCursor from "@/components/CustomCursor";
 import ScrollNavigationRail from "@/components/ScrollNavigationRail";
@@ -23,6 +24,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <ScrollNavigationRail />
           <SiteSearch />
           <CookieConsentBanner />
+          <SiteAnalytics />
           <SiteToastHost />
         </AuthProvider>
       </SiteFeedbackProvider>

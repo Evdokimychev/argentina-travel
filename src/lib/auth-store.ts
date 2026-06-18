@@ -22,6 +22,14 @@ const OVERRIDES_KEY = "argentina-travel-auth-overrides";
 
 export const DEMO_PASSWORD = "demo123";
 
+/** Production requires explicit password; dev may fall back to demo password. */
+export function resolvePasswordInput(input?: string): string {
+  const value = input?.trim();
+  if (value) return value;
+  if (process.env.NODE_ENV === "production") return "";
+  return DEMO_PASSWORD;
+}
+
 export const SEED_USERS: StoredAuthUser[] = [
   {
     id: DEFAULT_ORGANIZER_OWNER_ID,

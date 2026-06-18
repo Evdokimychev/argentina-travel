@@ -6,14 +6,14 @@ import { formatDayActivitiesForPdf } from "@/lib/tour-itinerary-activity";
 import { parseTourTermItem } from "@/lib/tour-terms-items";
 import type { TourItineraryPdfMeta, TourItineraryPdfSource } from "@/lib/tour-itinerary-pdf/types";
 
+import { getSiteUrl } from "@/lib/site-url";
+
 function resolvePdfImageUrl(url: string): string {
   if (!url) return "";
   if (url.startsWith("http://") || url.startsWith("https://")) return url;
   if (url.startsWith("/")) {
     const origin =
-      typeof window !== "undefined"
-        ? window.location.origin
-        : process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://goargentina.ru";
+      typeof window !== "undefined" ? window.location.origin : getSiteUrl();
     return `${origin}${url}`;
   }
   return url;

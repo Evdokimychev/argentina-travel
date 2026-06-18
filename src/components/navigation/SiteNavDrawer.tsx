@@ -4,11 +4,10 @@ import Link from "next/link";
 import { useEffect, useRef, useState, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { ChevronDown, X } from "lucide-react";
-import { DestinationsMegaMenuPanel } from "@/components/navigation/DestinationsMegaMenuPanel";
+import { GeographyMegaMenuPanel } from "@/components/navigation/GeographyMegaMenuPanel";
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
 import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
-import { PlacesMegaMenuPanel } from "@/components/navigation/PlacesMegaMenuPanel";
 import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
 import { cn } from "@/lib/cn";
 import {
@@ -108,16 +107,8 @@ function DrawerSectionColumns({
           layout="drawer"
           className="-mx-1"
         />
-      ) : section.id === "destinations" ? (
-        <DestinationsMegaMenuPanel
-          columns={section.columns ?? []}
-          t={t}
-          onNavigate={onNavigate}
-          layout="drawer"
-          className="-mx-1"
-        />
-      ) : section.id === "places" ? (
-        <PlacesMegaMenuPanel
+      ) : section.id === "geography" ? (
+        <GeographyMegaMenuPanel
           columns={section.columns ?? []}
           t={t}
           onNavigate={onNavigate}
@@ -332,8 +323,8 @@ export function SiteNavFullMenu({
                 onNavigate={onNavigate}
                 layout="drawer"
               />
-            ) : section.id === "destinations" ? (
-              <DestinationsMegaMenuPanel
+            ) : section.id === "geography" ? (
+              <GeographyMegaMenuPanel
                 columns={section.columns}
                 t={t}
                 onNavigate={onNavigate}

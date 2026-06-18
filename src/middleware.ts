@@ -24,6 +24,13 @@ export async function middleware(request: NextRequest) {
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
 
   if (!url || !anonKey) {
+    if (process.env.NODE_ENV === "production") {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/";
+      redirectUrl.searchParams.set("auth", "sign-in");
+      redirectUrl.searchParams.set("error", "auth-unavailable");
+      return NextResponse.redirect(redirectUrl);
+    }
     return response;
   }
 
@@ -54,6 +61,22 @@ export async function middleware(request: NextRequest) {
       redirectUrl.searchParams.set("role", "organizer");
     }
     return NextResponse.redirect(redirectUrl);
+  }
+
+  if (pathname.startsWith("/organizer")) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("roles")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    const roles = profile?.roles ?? [];
+    if (!roles.includes("organizer")) {
+      const redirectUrl = request.nextUrl.clone();
+      redirectUrl.pathname = "/join";
+      redirectUrl.searchParams.set("reason", "organizer-required");
+      return NextResponse.redirect(redirectUrl);
+    }
   }
 
   return response;

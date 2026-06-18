@@ -13,6 +13,7 @@ import { placeHref } from "@/lib/places-repository";
 import { SHOP_PRODUCTS } from "@/data/shop-products";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
 import { buildContentSearchItems } from "@/lib/content-pages";
+import { searchLabelToHref } from "@/lib/geography-links";
 import { buildGuideTopicSearchItems } from "@/lib/guide-topics";
 import { buildImmigrationTopicSearchItems } from "@/lib/immigration-topics";
 import { flattenSiteNavSections } from "@/lib/site-nav";
@@ -48,7 +49,7 @@ export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
   faq: "FAQ",
   page: "Страницы",
   legal: "Документы",
-  destination: "Направления",
+  destination: "Регионы",
   guide: "Путеводитель",
   immigration: "Иммиграция",
 };
@@ -121,10 +122,18 @@ const STATIC_PAGES: SearchIndexItem[] = [
   {
     id: "page-destinations",
     type: "page",
-    title: "Направления",
-    description: "Регионы и города Аргентины с подборкой туров.",
+    title: "Регионы и места",
+    description: "8 регионов для планирования и справочник мест Аргентины.",
     href: "/destinations",
-    keywords: ["регионы", "города", "патагония"],
+    keywords: ["регионы", "города", "места", "патагония"],
+  },
+  {
+    id: "page-places",
+    type: "page",
+    title: "Справочник мест",
+    description: "Парки, города, ледники и водопады — карта, фильтры и подборки.",
+    href: "/places",
+    keywords: ["места", "справочник", "карта", "парки"],
   },
   {
     id: "page-guide-about",
@@ -310,10 +319,10 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     {
       id: "destinations-index",
       type: "destination",
-      title: "Все направления",
-      description: "Регионы и города Аргентины с турами",
+      title: "Регионы и места",
+      description: "Регионы для планирования и справочник мест Аргентины",
       href: "/destinations",
-      keywords: ["направления", "регионы", "города"],
+      keywords: ["направления", "регионы", "города", "места"],
     },
     ...DESTINATION_PAGES.map((page) => ({
       id: `destination-page-${page.id}`,
@@ -325,12 +334,16 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     })),
   ];
 
-  const destinationItems: SearchIndexItem[] = SEARCH_DESTINATIONS.map((dest) => ({
+  const destinationPageNames = new Set(DESTINATION_PAGES.map((page) => page.name));
+
+  const destinationItems: SearchIndexItem[] = SEARCH_DESTINATIONS.filter(
+    (dest) => !destinationPageNames.has(dest.label) && dest.label !== "Аргентина",
+  ).map((dest) => ({
     id: `dest-${dest.label}`,
     type: "destination" as const,
     title: dest.label,
     description: `${dest.type === "city" ? "Город" : dest.type === "region" ? "Регион" : dest.type === "park" ? "Парк" : "Достопримечательность"} · ${dest.region}`,
-    href: `/tours?query=${encodeURIComponent(dest.label)}`,
+    href: searchLabelToHref(dest.label),
     keywords: [dest.region, dest.type],
   }));
 

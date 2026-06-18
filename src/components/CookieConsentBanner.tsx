@@ -4,15 +4,14 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Cookie, X } from "lucide-react";
 import { cn } from "@/lib/cn";
-
-const CONSENT_KEY = "site-cookie-consent";
+import { acceptCookieConsent, hasCookieConsent } from "@/lib/cookie-consent";
 
 export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     try {
-      if (localStorage.getItem(CONSENT_KEY) !== "accepted") {
+      if (!hasCookieConsent()) {
         setVisible(true);
       }
     } catch {
@@ -21,11 +20,7 @@ export default function CookieConsentBanner() {
   }, []);
 
   function accept() {
-    try {
-      localStorage.setItem(CONSENT_KEY, "accepted");
-    } catch {
-      /* ignore */
-    }
+    acceptCookieConsent();
     setVisible(false);
   }
 
@@ -46,7 +41,7 @@ export default function CookieConsentBanner() {
       <p className="min-w-0 flex-1 text-xs leading-snug sm:text-sm">
         <span>Сайт сохраняет cookie на вашем устройстве. </span>
         <Link
-          href="/legal/privacy"
+          href="/legal/cookies"
           className="font-medium text-charcoal/85 underline-offset-2 transition-colors hover:text-charcoal hover:underline"
         >
           Политика cookie

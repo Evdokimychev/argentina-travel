@@ -480,6 +480,84 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       },
     ],
   },
+  cordoba: {
+    history:
+      "Córdoba основана в 1573 году как форпост на пути к Upper Peru. С XVII века Jesuit Block — центр образования и миссий в регионе; комплекс включён в UNESCO в 2000 году. Сегодня город — второй по численности в стране и крупный университетский центр.",
+    interestingFacts: [
+      "Manzana Jesuítica — единый квартал с университетом, церковью и колониальными постройками.",
+      "Villa General Belgrano — немецкое по происхождению поселение, известное Oktoberfest в октябре.",
+      "Alta Gracia — дом-музей Che Guevara и estancia Jesuitica.",
+    ],
+    howToGetThere:
+      "Аэропорт COR — рейсы из Buenos Aires (~1,5 ч). Из столицы — ночной автобус или поезд (~9–10 ч). До гор в Sierras — аренда авто или экскурсии из центра.",
+    nearbyHighlights: [
+      "Alta Gracia и estancias",
+      "Villa General Belgrano",
+      "Los Gigantes — скальные formations",
+    ],
+    faq: [
+      {
+        question: "Сколько дней закладывать?",
+        answer: "1–2 дня на центр и Manzana Jesuítica; +1 день на Alta Gracia или горный маршрут.",
+      },
+      {
+        question: "Нужен ли автомобиль?",
+        answer: "Для центра — нет. Для Sierras и Alta Gracia удобнее аренда или tour на день.",
+      },
+    ],
+  },
+  "estero-ibera": {
+    history:
+      "Влажные лодки Iberá занимают около 13 000 км² — одна из крупнейших freshwater wetland systems в мире. С 1980-х идёт программа rewilding: возвращение yaguareté, giant anteater и других видов под эгидой Fundación Rewilding Argentina.",
+    interestingFacts: [
+      "Capybara — самый заметный «житель» лагун; стаи часто видны с лодки.",
+      "Colonia Carlos Pellegrini — главная туристическая база внутри резервата.",
+      "Ночные сафари дают шанс увидеть caiman и ночных птиц.",
+    ],
+    howToGetThere:
+      "Из Posadas (~4–5 ч) или Corrientes — наземный transfer до Pellegrini (грунтовка, лучше 4×4 в дождь). Некоторые lodges включают трансфер из аэропорта PSS.",
+    nearbyHighlights: [
+      "Posadas — транспортный узел",
+      "San Ignacio Mini (руины Jesuit mission) — по пути из Posadas",
+      "Iguazú — можно совместить в длинном маршруте по северо-востоку",
+    ],
+    faq: [
+      {
+        question: "Когда лучше ехать?",
+        answer: "Апрель–октябрь — меньше дождей и комаров. Лето (декабрь–февраль) жарко и влажно.",
+      },
+      {
+        question: "Нужен ли гид?",
+        answer: "Да — самостоятельный доступ ограничен; экскурсии на лодках и пешие маршруты бронируют через lodges.",
+      },
+    ],
+  },
+  talampaya: {
+    history:
+      "Каньоны Talampaya сформированы эрозией реки Rio Talampaya в красных песчаниках Triassic. С 1997 года — национальный парк; с 2000 года — объект UNESCO вместе с соседним Ischigualasto (Valle de la Luna) в San Juan.",
+    interestingFacts: [
+      "Экскурсии по парку — только с официальными гидами на транспорте парка.",
+      "Petroglyphs на скалах — следы diaguita и других культур.",
+      "Высота каньонов — до 150 м; ландшафт напоминает юго-запад США.",
+    ],
+    howToGetThere:
+      "База — город Villa Unión (La Rioja) или San Juan для связки с Ischigualasto. Из Salta/Córdoba — длинный переезд, обычно включают в tour по NOA/Cuyo.",
+    nearbyHighlights: [
+      "Ischigualasto (Valle de la Luna) — 63 км, UNESCO",
+      "San Juan — винодельни и база для Cuyo",
+      "Salta — если совмещаете с северо-западом",
+    ],
+    faq: [
+      {
+        question: "Можно ли без тура?",
+        answer: "Нет — внутри парка только организованные экскурсии. Билеты лучше бронировать заранее в сезон.",
+      },
+      {
+        question: "Сколько времени нужно?",
+        answer: "Полдня на Talampaya; полный день, если добавить Ischigualasto.",
+      },
+    ],
+  },
 };
 
 export function getPlaceEnrichment(slug: string): PlaceEnrichment | undefined {

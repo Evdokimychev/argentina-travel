@@ -32,7 +32,10 @@ export type KnowledgeRelation = {
   label?: string;
 };
 
-/** Направления каталога ↔ места справочника (разные роли, не дубликаты) */
+/**
+ * Направления каталога ↔ карточка места в справочнике.
+ * Регион «Патагония» не привязан к одному месту — см. PATAGONIA_PLACE_SLUGS.
+ */
 export const DESTINATION_TO_PLACE: Record<string, string> = {
   ba: "buenos-aires",
   bariloche: "bariloche",
@@ -41,9 +44,25 @@ export const DESTINATION_TO_PLACE: Record<string, string> = {
   mendoza: "mendoza",
   salta: "salta",
   iguazu: "iguazu-falls",
-  patagonia: "el-calafate",
 };
 
-export const PLACE_TO_DESTINATION: Record<string, string> = Object.fromEntries(
-  Object.entries(DESTINATION_TO_PLACE).map(([dest, place]) => [place, dest]),
-);
+/** Обратная связь: одно место → одно направление (без patagonia). */
+export const PLACE_TO_DESTINATION: Record<string, string> = {
+  "buenos-aires": "ba",
+  bariloche: "bariloche",
+  "el-calafate": "calafate",
+  ushuaia: "ushuaia",
+  mendoza: "mendoza",
+  salta: "salta",
+  "iguazu-falls": "iguazu",
+};
+
+/** Ключевые места региона «Патагония» для перекрёстных ссылок. */
+export const PATAGONIA_PLACE_SLUGS = [
+  "el-calafate",
+  "el-chalten",
+  "perito-moreno-glacier",
+  "bariloche",
+  "ushuaia",
+  "los-glaciares-national-park",
+] as const;

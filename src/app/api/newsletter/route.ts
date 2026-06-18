@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server";
 import { LeadCaptureError, submitNewsletter } from "@/lib/lead-capture";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
+  const ip = getClientIp(request);
+  const limit = checkRateLimit(`newsletter:ip:${ip}`, 5, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Слишком много запросов. Попробуйте позже." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
+  }
+
   try {
     const body = (await request.json()) as {
       email?: string;

@@ -95,7 +95,7 @@ function BookingStatCard({
 export default function OrganizerDashboardView() {
   const { user } = useAuth();
   const [copied, setCopied] = useState(false);
-  const [publicToursUrl, setPublicToursUrl] = useState("https://argentina-travel.ru/tours");
+  const [publicToursUrl, setPublicToursUrl] = useState("/tours");
   const [bookingStats, setBookingStats] = useState<OrganizerBookingStats>({
     newCount: 0,
     pendingCount: 0,

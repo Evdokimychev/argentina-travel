@@ -87,6 +87,9 @@ export function buildCatalogMetadata(
     alternates: {
       canonical: canonicalQuery ? `/tours?${canonicalQuery}` : "/tours",
     },
+    ...(filterParts.length > 0
+      ? { robots: { index: false, follow: true } }
+      : {}),
     openGraph: {
       title,
       description,

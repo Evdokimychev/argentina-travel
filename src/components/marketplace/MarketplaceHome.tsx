@@ -382,14 +382,14 @@ export default function MarketplaceHome({
 
       <PlatformStatsBlock initialStats={platformStats} />
 
-      {/* Destinations */}
+      {/* Regions & places */}
       <section className="py-12 md:py-14">
         <div className={siteContainerClass}>
           <SectionHeader
-            title="Популярные направления"
-            subtitle="Откройте лучшие уголки страны — от столицы до края света"
+            title="Регионы и места"
+            subtitle="Региональные гиды для планирования и справочник парков, городов и достопримечательностей"
             href="/destinations"
-            linkLabel="Все направления"
+            linkLabel="Обзор регионов"
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {POPULAR_DESTINATIONS.map((dest) => (
@@ -413,6 +413,27 @@ export default function MarketplaceHome({
                 </div>
               </Link>
             ))}
+          </div>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
+            <Link
+              href="/places"
+              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 font-medium text-charcoal hover:border-sky hover:text-sky"
+            >
+              Справочник мест
+              <ArrowRight className="h-4 w-4" aria-hidden />
+            </Link>
+            <Link
+              href="/places?view=map"
+              className="inline-flex items-center gap-1.5 rounded-full border border-sky/25 bg-sky/5 px-4 py-2 font-medium text-sky hover:bg-sky/10"
+            >
+              Карта мест
+            </Link>
+            <Link
+              href="/collections"
+              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-2 font-medium text-slate hover:border-sky hover:text-sky"
+            >
+              Подборки
+            </Link>
           </div>
         </div>
       </section>

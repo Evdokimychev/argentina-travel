@@ -1,8 +1,10 @@
 import { GUIDE_ABOUT_ARGENTINA, GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { blogPosts } from "@/data/blog";
+import { getDestinationPageById } from "@/data/destination-pages";
 import { PLACE_ENRICHMENTS } from "@/data/places-enrichment";
 import {
   DESTINATION_TO_PLACE,
+  PATAGONIA_PLACE_SLUGS,
   PLACE_TO_DESTINATION,
   type KnowledgeEntityRef,
   type KnowledgeEntityType,
@@ -109,15 +111,9 @@ export function resolveKnowledgeLinksForPlace(placeSlug: string): KnowledgeLinks
   ).map((it) => ref("itinerary", it.slug, it.title, itineraryHref(it.slug)));
 
   const destSlug = PLACE_TO_DESTINATION[placeSlug];
-  const destinations = destSlug
-    ? [
-        ref(
-          "destination",
-          destSlug,
-          PLACES_SEED.find((p) => p.slug === placeSlug)?.name ?? destSlug,
-          destinationHref(destSlug),
-        ),
-      ]
+  const destPage = destSlug ? getDestinationPageById(destSlug) : undefined;
+  const destinations = destPage
+    ? [ref("destination", destSlug!, destPage.name, destinationHref(destSlug!))]
     : [];
 
   const guideSlugs = new Set<string>();
@@ -160,6 +156,20 @@ export function resolveKnowledgeLinksForPlace(placeSlug: string): KnowledgeLinks
 }
 
 export function resolveKnowledgeLinksForDestination(destSlug: string): KnowledgeLinksBundle {
+  if (destSlug === "patagonia") {
+    const places = PATAGONIA_PLACE_SLUGS.map((slug) => {
+      const p = PLACES_SEED.find((x) => x.slug === slug);
+      return p ? ref("place", p.slug, p.name, placeHref(p.slug)) : null;
+    }).filter((x): x is KnowledgeEntityRef => x != null);
+
+    const base = resolveKnowledgeLinksForPlace("el-calafate");
+    return {
+      ...base,
+      places: uniqueRefs(places),
+      destinations: [],
+    };
+  }
+
   const placeSlug = DESTINATION_TO_PLACE[destSlug];
   if (!placeSlug) {
     return { places: [], destinations: [], collections: [], itineraries: [], guides: [], blog: [] };

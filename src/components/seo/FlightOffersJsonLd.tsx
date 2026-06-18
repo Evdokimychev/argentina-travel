@@ -1,6 +1,8 @@
 import type { FlightPriceTeaser } from "@/lib/flights/hub-price-teasers";
 
-const SITE_ORIGIN = process.env.NEXT_PUBLIC_SITE_URL ?? "https://goargentina.ru";
+import { absoluteUrl } from "@/lib/site-url";
+
+const SITE_ORIGIN = absoluteUrl("");
 
 type FlightOffersJsonLdProps = {
   teasers: FlightPriceTeaser[];

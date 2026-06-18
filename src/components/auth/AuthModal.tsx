@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
-import { DEMO_PASSWORD, normalizePhone } from "@/lib/auth-store";
+import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
 import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -319,7 +319,7 @@ export default function AuthModal() {
       return;
     }
 
-    const nextPassword = password.trim() || DEMO_PASSWORD;
+    const nextPassword = resolvePasswordInput(password);
     if (nextPassword.length < 6) {
       setError("Пароль должен содержать не менее 6 символов");
       return;

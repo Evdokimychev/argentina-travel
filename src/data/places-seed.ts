@@ -6,10 +6,30 @@ import type {
 } from "@/types/place";
 import { getPlaceCoverImage, getPlaceGallery } from "@/lib/media-resolver";
 
+const MEDIA_FALLBACK = "/logo-light.svg";
+
 function placeMedia(slug: string) {
   return {
     coverImage: getPlaceCoverImage(slug),
     gallery: getPlaceGallery(slug),
+  };
+}
+
+function placeMediaWithFallback(
+  slug: string,
+  fallback: { cover: string; gallery?: string[] },
+) {
+  const cover = getPlaceCoverImage(slug);
+  if (cover === MEDIA_FALLBACK) {
+    return {
+      coverImage: fallback.cover,
+      gallery: fallback.gallery ?? [fallback.cover],
+    };
+  }
+  const gallery = getPlaceGallery(slug);
+  return {
+    coverImage: cover,
+    gallery: gallery.length > 0 ? gallery : [cover],
   };
 }
 
@@ -441,6 +461,80 @@ export const PLACES_SEED: SeedPlace[] = [
     source: "manual",
     popularity: 84,
   },
+  {
+    id: "place-cordoba",
+    slug: "cordoba",
+    name: "Кордова",
+    shortDescription: "Колониальный центр, университетский город и ворота к горам Сьерра.",
+    fullDescription:
+      "Córdoba — второй по значению город страны: Jesuit Block (объект UNESCO), живая студенческая атмосфера и база для поездок в горы Сьерра-де-Кórdoba — Alta Gracia, Villa General Belgrano и горные посёлки. Аэропорт Ingeniero Ambrosio Taravella (COR) принимает рейсы из Буэнос-Айреса и других городов.",
+    category: "city",
+    region: "Центр и Пампа",
+    province: "Córdoba",
+    city: "Córdoba",
+    latitude: -31.4201,
+    longitude: -64.1888,
+    ...placeMediaWithFallback("cordoba", {
+      cover: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=1200&q=80",
+      gallery: [
+        "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=1200&q=80",
+        "https://images.unsplash.com/photo-1555881400-74d7aca8a582?w=1200&q=80",
+      ],
+    }),
+    tags: ["город", "unesco", "горы", "культура"],
+    rating: 4.4,
+    visitDuration: "2–3 дня",
+    season: "Круглый год; в горах комфортнее весна–осень",
+    ticketPrice: "Бесплатно (город)",
+    source: "manual",
+    popularity: 72,
+  },
+  {
+    id: "place-ibera-wetlands",
+    slug: "estero-ibera",
+    name: "Эстерос-дель-Ибера",
+    shortDescription: "Крупнейшие влажные лодки Южной Америки — кайманы, капибары, птицы.",
+    fullDescription:
+      "Заповедник Iberá в провинции Corrientes — один из крупнейших проектов rewilding в мире. Экскурсии на лодках и пешие маршруты по wetlands: capybara, caiman yaguareté (если повезёт), сотни видов птиц. Базы — Colonia Carlos Pellegrini и Posadas как транспортный узел.",
+    category: "wildlife",
+    region: "Северо-восток",
+    province: "Corrientes",
+    latitude: -28.55,
+    longitude: -57.45,
+    ...placeMediaWithFallback("estero-ibera", {
+      cover: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1200&q=80",
+    }),
+    tags: ["природа", "сафари", "птицы", "заповедник"],
+    rating: 4.7,
+    visitDuration: "2–4 дня",
+    season: "Апрель–октябрь — меньше дождей и комаров",
+    ticketPrice: "Экскурсии от ~30 000 ARS (уточняйте на месте)",
+    source: "manual",
+    popularity: 65,
+  },
+  {
+    id: "place-talampaya",
+    slug: "talampaya",
+    name: "Национальный парк Talampaya",
+    shortDescription: "Красные каньоны La Rioja — геология, наскальная живопись и динозавры.",
+    fullDescription:
+      "Parque Nacional Talampaya в провинции La Rioja — часть UNESCO вместе с Ischigualasto («Valle de la Luna»). Экскурсии только с гидом парка по каньонам Talampaya, скалам с петроглифами и пустынным ландшафтом. Обычно совмещают с поездкой из San Juan или как часть маршрута по северо-западу.",
+    category: "national_park",
+    region: "Северо-запад",
+    province: "La Rioja",
+    latitude: -29.85,
+    longitude: -67.95,
+    ...placeMediaWithFallback("talampaya", {
+      cover: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
+    }),
+    tags: ["unesco", "каньоны", "пустыня", "геология"],
+    rating: 4.6,
+    visitDuration: "1–2 дня",
+    season: "Март–май и сентябрь–ноябрь — комфортнее",
+    ticketPrice: "Вход и экскурсия — по тарифам парка",
+    source: "manual",
+    popularity: 58,
+  },
 ];
 
 export type CollectionSeed = Omit<PlaceCollection, "places"> & { placeSlugs: string[] };
@@ -474,7 +568,7 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
       "Маршрут по Jujuy и Salta: цветные горы, колониальные города и высокогорные пейзажи.",
     coverImage: getPlaceCoverImage("cerro-de-los-7-colores"),
     tags: ["северо-запад", "цвета", "культура"],
-    placeSlugs: ["salta", "purmamarca", "cerro-de-los-7-colores", "tren-de-las-nubes"],
+    placeSlugs: ["salta", "purmamarca", "cerro-de-los-7-colores", "tren-de-las-nubes", "talampaya"],
   },
   {
     id: "col-unesco-heritage",
@@ -491,6 +585,8 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
       "valdes-peninsula",
       "cueva-de-las-manos",
       "cerro-de-los-7-colores",
+      "talampaya",
+      "cordoba",
     ],
   },
   {
@@ -563,7 +659,19 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
       "perito-moreno-glacier",
       "iguazu-falls",
       "purmamarca",
+      "talampaya",
     ],
+  },
+  {
+    id: "col-wildlife",
+    slug: "wildlife-argentina",
+    title: "Дикая природа",
+    subtitle: "Киты, кайманы, пингвины",
+    description:
+      "Заповедники и побережья, где можно увидеть китов, кайманов, капибар и пингвинов — с сезонными подсказками.",
+    coverImage: getPlaceCoverImage("valdes-peninsula"),
+    tags: ["животные", "природа", "сафари"],
+    placeSlugs: ["valdes-peninsula", "estero-ibera", "ushuaia", "puerto-madryn"],
   },
   {
     id: "col-week-in-argentina",

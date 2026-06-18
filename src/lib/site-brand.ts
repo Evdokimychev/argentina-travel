@@ -10,7 +10,7 @@ export function getSiteBrandDomain(): string {
   try {
     return new URL(getSiteUrl()).hostname;
   } catch {
-    return "goargentina.ru";
+    return "www.goargentina.ru";
   }
 }
 

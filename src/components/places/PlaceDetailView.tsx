@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import {
+  ArrowRight,
   CalendarDays,
   Clock,
   ExternalLink,
@@ -15,9 +16,12 @@ import PlaceDetailLocationSection from "@/components/places/PlaceDetailLocationS
 import RelatedPlacesSection from "@/components/places/RelatedPlacesSection";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
+import { getDestinationPageById } from "@/data/destination-pages";
 import { PLACE_CATEGORY_LABELS } from "@/types/place";
 import type { PlaceDetail } from "@/types/place";
 import type { TourListing } from "@/types";
+import { destinationHref } from "@/lib/destinations";
+import { pairedDestinationIdForPlace } from "@/lib/geography-links";
 import { collectionHref, itineraryHref } from "@/lib/places-repository";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
@@ -35,6 +39,9 @@ export default function PlaceDetailView({
   initialTours?: TourListing[];
 }) {
   const galleryAlts = getPlaceGalleryAlts(place.slug);
+  const destinationId = pairedDestinationIdForPlace(place.slug);
+  const destinationPage = destinationId ? getDestinationPageById(destinationId) : undefined;
+
   return (
     <article className="pb-16">
       <div className="relative aspect-[21/9] min-h-[240px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
@@ -50,6 +57,21 @@ export default function PlaceDetailView({
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-charcoal/10" />
         <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-8 pt-16")}>
+          <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-white/75">
+            <Link href="/" className="hover:text-white">
+              Главная
+            </Link>
+            <span aria-hidden>–</span>
+            <Link href="/destinations" className="hover:text-white">
+              Регионы и места
+            </Link>
+            <span aria-hidden>–</span>
+            <Link href="/places" className="hover:text-white">
+              Справочник
+            </Link>
+            <span aria-hidden>–</span>
+            <span className="text-white">{place.name}</span>
+          </nav>
           <span className="inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white backdrop-blur-sm">
             {PLACE_CATEGORY_LABELS[place.category]}
           </span>
@@ -114,6 +136,32 @@ export default function PlaceDetailView({
         </div>
 
         <aside className="space-y-6">
+          {destinationPage ? (
+            <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-5 shadow-card">
+              <h2 className="font-heading text-lg font-bold text-charcoal">Регион для планирования</h2>
+              <p className="mt-2 text-sm leading-relaxed text-slate">
+                Сезоны, логистика и туры по направлению «{destinationPage.name}» — в региональном гиде.
+              </p>
+              <Link
+                href={destinationHref(destinationId!)}
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky hover:underline"
+              >
+                Открыть гид региона
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
+            </div>
+          ) : (
+            <div className="rounded-2xl border border-gray-100 bg-surface-muted/60 p-5">
+              <h2 className="font-heading text-sm font-bold text-charcoal">Планирование поездки</h2>
+              <p className="mt-2 text-sm text-slate">
+                Региональные гиды с сезонами и турами — в обзоре направлений.
+              </p>
+              <Link href="/destinations" className="mt-3 inline-flex text-sm font-medium text-sky hover:underline">
+                Регионы и места
+              </Link>
+            </div>
+          )}
+
           <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
             <h2 className="font-heading text-lg font-bold text-charcoal">Практическая информация</h2>
             <dl className="mt-4 space-y-3 text-sm">

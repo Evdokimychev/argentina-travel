@@ -1,4 +1,4 @@
-import { DEMO_PASSWORD, normalizePhone } from "@/lib/auth-store";
+import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import type { AccountRole } from "@/types/user";
@@ -27,7 +27,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
   const normalizedEmail = input.email.trim().toLowerCase();
   const firstName = input.firstName.trim();
   const lastName = input.lastName.trim();
-  const password = input.password?.trim() || DEMO_PASSWORD;
+  const password = resolvePasswordInput(input.password);
 
   if (!normalizedPhone) {
     return validationError("Введите корректный номер телефона");

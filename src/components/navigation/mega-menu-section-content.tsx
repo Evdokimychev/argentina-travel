@@ -2,12 +2,11 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { DestinationsMegaMenuPanel } from "@/components/navigation/DestinationsMegaMenuPanel";
+import { GeographyMegaMenuPanel } from "@/components/navigation/GeographyMegaMenuPanel";
 import { ExcursionsMegaMenuPanel } from "@/components/navigation/ExcursionsMegaMenuPanel";
 import { GuideMegaMenuPanel } from "@/components/navigation/GuideMegaMenuPanel";
 import { ImmigrationMegaMenuPanel } from "@/components/navigation/ImmigrationMegaMenuPanel";
 import { MegaMenuPanel } from "@/components/navigation/MegaMenuPanel";
-import { PlacesMegaMenuPanel } from "@/components/navigation/PlacesMegaMenuPanel";
 import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
 import { navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
@@ -17,9 +16,10 @@ export function megaMenuWidthClass(sectionId: string): string {
   if (sectionId === "guide" || sectionId === "immigration" || sectionId === "more") {
     return "w-[min(calc(100vw-2rem),64rem)]";
   }
+  if (sectionId === "geography") {
+    return "w-[min(calc(100vw-2rem),64rem)]";
+  }
   if (
-    sectionId === "destinations" ||
-    sectionId === "places" ||
     sectionId === "tours" ||
     sectionId === "excursions" ||
     sectionId === "services" ||
@@ -83,10 +83,8 @@ export function MegaMenuSectionContent({
       return <GuideMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
     case "immigration":
       return <ImmigrationMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    case "destinations":
-      return <DestinationsMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
-    case "places":
-      return <PlacesMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
+    case "geography":
+      return <GeographyMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
     case "tours":
       return <ToursMegaMenuPanel columns={columns} t={t} onNavigate={onNavigate} />;
     case "excursions":

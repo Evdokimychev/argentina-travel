@@ -4,6 +4,7 @@ import {
   fetchGuideIdsServer,
   fetchGuidePageServer,
 } from "@/lib/tripster/guide-server";
+import { SITE_BRAND_NAME } from "@/lib/site-brand";
 
 type GuidePageProps = {
   params: Promise<{ guideId: string }>;
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: GuidePageProps) {
   const { profile } = page;
   const description =
     profile.description?.slice(0, 160) ||
-    `Экскурсии с гидом ${profile.name} в Аргентине на GoArgentina.ru`;
+    `Экскурсии с гидом ${profile.name} в Аргентине — ${SITE_BRAND_NAME}`;
 
   return {
     title: `${profile.name} — гид по экскурсиям в Аргентине`,

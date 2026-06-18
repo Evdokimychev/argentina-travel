@@ -16,10 +16,13 @@ import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { SafeImage } from "@/components/ui/safe-image";
 import { Button } from "@/components/ui/button";
 import type { DestinationPage } from "@/data/destination-pages";
+import { getPlaceBySlug } from "@/data/places-seed";
 import { destinationExcursionsHref } from "@/data/excursion-city-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { destinationCatalogLink, matchToursForDestination } from "@/lib/destinations";
+import { pairedPlaceSlugForDestination, placeSlugsForDestination } from "@/lib/geography-links";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
+import { placeHref } from "@/lib/places-repository";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import type { TourListing } from "@/types";
@@ -53,6 +56,9 @@ export default function DestinationDetailView({
   const matchedTours = matchToursForDestination(tours, destination);
   const catalogHref = destinationCatalogLink(destination);
   const excursionsHref = destinationExcursionsHref(destination.id);
+  const linkedPlaceSlugs = placeSlugsForDestination(destination.id);
+  const primaryPlaceSlug = pairedPlaceSlugForDestination(destination.id);
+  const primaryPlace = primaryPlaceSlug ? getPlaceBySlug(primaryPlaceSlug) : undefined;
 
   return (
     <>
@@ -74,7 +80,7 @@ export default function DestinationDetailView({
             </Link>
             <span aria-hidden>–</span>
             <Link href="/destinations" className="hover:text-white">
-              Направления
+              Регионы и места
             </Link>
             <span aria-hidden>–</span>
             <span className="text-white">{destination.name}</span>
@@ -104,6 +110,44 @@ export default function DestinationDetailView({
             <div>
               <h2 className="font-heading text-2xl font-bold text-charcoal">О направлении</h2>
               <p className="mt-4 text-base leading-relaxed text-slate">{destination.intro}</p>
+              {linkedPlaceSlugs.length > 0 ? (
+                <div className="mt-6 rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-5 sm:p-6">
+                  <p className="text-sm font-medium text-charcoal">
+                    {destination.id === "patagonia"
+                      ? "Ключевые места Патагонии в справочнике"
+                      : primaryPlace
+                        ? `Справочник: ${primaryPlace.name}`
+                        : "Связанные места"}
+                  </p>
+                  <p className="mt-1 text-sm text-slate">
+                    {destination.id === "patagonia"
+                      ? "Парки, ледники и города — с картой, практическими деталями и подборками."
+                      : "Практические детали, карта и связанные точки маршрута — без дублирования регионального гида."}
+                  </p>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {linkedPlaceSlugs.slice(0, destination.id === "patagonia" ? 6 : 1).map((slug) => {
+                      const place = getPlaceBySlug(slug);
+                      if (!place) return null;
+                      return (
+                        <Link
+                          key={slug}
+                          href={placeHref(slug)}
+                          className="inline-flex items-center gap-1.5 rounded-full border border-sky/25 bg-white px-3 py-1.5 text-sm font-medium text-sky hover:bg-sky/5"
+                        >
+                          {place.name}
+                          <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+                        </Link>
+                      );
+                    })}
+                    <Link
+                      href={destination.id === "patagonia" ? "/places?region=Патагония" : "/places"}
+                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-slate hover:text-sky"
+                    >
+                      {destination.id === "patagonia" ? "Все места Патагонии" : "Весь справочник"}
+                    </Link>
+                  </div>
+                </div>
+              ) : null}
             </div>
 
             <div>

@@ -3,12 +3,14 @@ export const SITE_LEGAL_LINKS = [
   { href: "/legal/terms", label: "Пользовательское соглашение" },
   { href: "/legal/booking", label: "Условия бронирования" },
   { href: "/legal/refunds", label: "Политика возвратов" },
+  { href: "/legal/cookies", label: "Политика cookie" },
+  { href: "/legal/affiliate", label: "Партнёрские ссылки" },
 ] as const;
 
 /** Primary footer links — synced with `@/data/site-nav` top-level sections. */
 export const SITE_FOOTER_NAV = [
   { href: "/", label: "Главная", labelKey: "nav.home" },
-  { href: "/destinations", label: "Направления", labelKey: "nav.destinations" },
+  { href: "/destinations", label: "Регионы и места", labelKey: "nav.geography" },
   { href: "/tours", label: "Каталог туров", labelKey: "nav.tours" },
   { href: "/guide", label: "Путеводитель", labelKey: "nav.guide" },
   { href: "/immigration", label: "Иммиграция", labelKey: "nav.immigration" },

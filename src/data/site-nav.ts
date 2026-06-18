@@ -8,6 +8,7 @@ import { destinationHref } from "@/lib/destinations";
 import { buildGuideNavColumns } from "@/lib/guide-nav";
 import { buildImmigrationNavColumns } from "@/lib/immigration-nav";
 import { buildPopularPlaceNavLinks } from "@/lib/places-nav";
+import { searchLabelToHref } from "@/lib/geography-links";
 import { destinationCatalogHref } from "@/lib/site-nav";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
 
@@ -183,20 +184,23 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     href: "/",
   },
   {
-    id: "destinations",
-    label: "Направления",
-    labelKey: "nav.destinations",
+    id: "geography",
+    label: "Регионы и места",
+    labelKey: "nav.geography",
+    href: "/destinations",
+    description: "Направления для планирования, справочник мест и готовые маршруты",
+    activePathPrefixes: ["/destinations", "/places", "/collections", "/itineraries"],
     columns: [
       {
-        id: "dest-popular",
-        title: "Популярное",
-        titleKey: "nav.columns.popular",
+        id: "geo-regions",
+        title: "Регионы для поездки",
+        titleKey: "nav.columns.regions",
         links: [
           {
-            id: "dest-all",
-            label: "Все направления",
+            id: "geo-all-regions",
+            label: "Обзор всех регионов",
             href: "/destinations",
-            description: "8 регионов и городов",
+            description: "8 направлений с гидами, сезонами и турами",
           },
           ...POPULAR_DESTINATIONS.map((dest) => ({
             id: `dest-${dest.id}`,
@@ -207,51 +211,30 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         ],
       },
       {
-        id: "dest-more",
-        title: "Регионы и города",
-        titleKey: "nav.columns.regions",
-        links: [
-          ...REGION_LINKS,
-          ...SEARCH_DESTINATIONS.filter(
-            (item) =>
-              !POPULAR_DESTINATIONS.some((pop) => pop.name === item.label) &&
-              !REGION_LINKS.some((region) => region.label.includes(item.label))
-          )
-            .slice(0, 4)
-            .map((item) => ({
-              id: `dest-search-${item.label}`,
-              label: item.label,
-              href: destinationCatalogHref(item.label),
-              description: item.region,
-            })),
-        ],
-      },
-    ],
-  },
-  {
-    id: "places",
-    label: "Места",
-    labelKey: "nav.places",
-    href: "/places",
-    description: "Парки, города, ледники и водопады Аргентины",
-    columns: [
-      {
-        id: "places-browse",
-        title: "Справочник",
-        titleKey: "nav.columns.search",
+        id: "geo-places",
+        title: "Места и достопримечательности",
+        titleKey: "nav.columns.places",
         links: [
           {
             id: "places-catalog",
-            label: "Все места",
-            labelKey: "nav.places",
+            label: "Справочник мест",
+            labelKey: "nav.placesCatalog",
             href: "/places",
-            description: "Парки, города, ледники и водопады",
+            description: "Парки, города, ледники — карта и фильтры",
           },
+          ...buildPopularPlaceNavLinks(),
+        ],
+      },
+      {
+        id: "geo-planning",
+        title: "Планирование",
+        titleKey: "nav.columns.planning",
+        links: [
           {
             id: "places-collections",
             label: "Подборки",
             href: "/collections",
-            description: "Тематические коллекции",
+            description: "Тематические коллекции мест",
           },
           {
             id: "places-itineraries",
@@ -259,13 +242,20 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
             href: "/itineraries",
             description: "Готовые планы поездок",
           },
+          ...REGION_LINKS.slice(0, 4),
+          ...SEARCH_DESTINATIONS.filter(
+            (item) =>
+              !POPULAR_DESTINATIONS.some((pop) => pop.name === item.label) &&
+              !REGION_LINKS.some((region) => region.label.includes(item.label)),
+          )
+            .slice(0, 3)
+            .map((item) => ({
+              id: `geo-search-${item.label}`,
+              label: item.label,
+              href: searchLabelToHref(item.label),
+              description: item.region,
+            })),
         ],
-      },
-      {
-        id: "places-popular",
-        title: "Популярное",
-        titleKey: "nav.columns.popular",
-        links: buildPopularPlaceNavLinks(),
       },
     ],
   },
@@ -424,10 +414,10 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
 ];
 
 /** Core conversion sections — visible in the desktop pill bar at xl+. */
-export const SITE_NAV_PRIMARY_IDS = ["destinations", "places", "tours", "excursions", "guide", "immigration"] as const;
+export const SITE_NAV_PRIMARY_IDS = ["geography", "tours", "excursions", "guide", "immigration"] as const;
 
 /** Shorter desktop bar at lg–xl to avoid overlap with logo and actions. */
-export const SITE_NAV_COMPACT_PRIMARY_IDS = ["destinations", "tours", "guide", "immigration"] as const;
+export const SITE_NAV_COMPACT_PRIMARY_IDS = ["geography", "tours", "guide", "immigration"] as const;
 
 export type SiteNavBarLayout = "wide" | "compact";
 

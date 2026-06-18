@@ -24,5 +24,11 @@ export function buildPublicPageMetadata({
       url: path,
       ...(image ? { images: [{ url: image }] } : {}),
     },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      ...(image ? { images: [image] } : {}),
+    },
   };
 }

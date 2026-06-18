@@ -1,6 +1,7 @@
 import type { TourDetail } from "@/types";
+import { getSiteUrl } from "@/lib/site-url";
 
-export function buildTourProductJsonLd(tour: TourDetail, siteUrl = "https://argentina-travel.ru") {
+export function buildTourProductJsonLd(tour: TourDetail, siteUrl = getSiteUrl()) {
   const url = `${siteUrl}/tours/${tour.slug}`;
 
   return {
