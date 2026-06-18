@@ -23,6 +23,7 @@ import {
   fetchPartnerTourListings,
   fetchPartnerTourSlugs,
 } from "@/lib/tripster/partner-tour-repository";
+import { resolvePartnerTourDuration } from "@/lib/tripster/partner-tour-mapper";
 import { rankSimilarListings } from "@/lib/tour-recommendations";
 import type { TourDetail, TourListing } from "@/types";
 import type { TripsterExperience } from "@/lib/tripster/types";
@@ -75,11 +76,35 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
     // keep content from DB payload
   }
 
+  let resolvedDurationDays = enriched.durationDays;
+
+  try {
+    const plan = await fetchTripsterTourPlan(tour.partnerExperienceId);
+    if (plan.length) {
+      const duration = resolvePartnerTourDuration(
+        liveExperience ?? ({ id: tour.partnerExperienceId, type: "tour" } satisfies TripsterExperience),
+        undefined,
+        { program: plan }
+      );
+      resolvedDurationDays = duration.durationDays;
+      enriched = {
+        ...enriched,
+        durationDays: duration.durationDays,
+        durationNights: duration.durationNights,
+        itinerary: enriched.itinerary?.length
+          ? enriched.itinerary
+          : mapTripsterPlanToItinerary(plan),
+      };
+    }
+  } catch {
+    // program optional
+  }
+
   try {
     const schedule = await fetchTripsterSchedule(tour.partnerExperienceId);
     const dates = mapScheduleToPartnerDates(
       schedule,
-      tour.durationDays,
+      resolvedDurationDays,
       tour.partnerPriceCurrency
     );
     if (dates.length) {
@@ -96,17 +121,6 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
     }
   } catch {
     // reviews optional
-  }
-
-  if (!enriched.itinerary?.length) {
-    try {
-      const plan = await fetchTripsterTourPlan(tour.partnerExperienceId);
-      if (plan.length) {
-        enriched = { ...enriched, itinerary: mapTripsterPlanToItinerary(plan) };
-      }
-    } catch {
-      // program optional
-    }
   }
 
   const guideId = Number.parseInt(enriched.organizer.id, 10);

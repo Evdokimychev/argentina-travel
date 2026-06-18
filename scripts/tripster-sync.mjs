@@ -169,6 +169,15 @@ async function fetchExperienceDetail(token, partner, apiBase, experienceId) {
   return tripsterGet(token, partner, apiBase, `/experiences/${experienceId}/?detailed=true`);
 }
 
+async function fetchExperiencePlan(token, partner, apiBase, experienceId) {
+  try {
+    const data = await tripsterGet(token, partner, apiBase, `/experiences/${experienceId}/plan/`);
+    return unwrapResults(data);
+  } catch {
+    return [];
+  }
+}
+
 async function fetchWebExperienceFields(token, apiBase, experienceId) {
   try {
     const response = await fetch(`${apiBase}/web/v2/experiences/${experienceId}/`, {
@@ -572,6 +581,21 @@ async function main() {
         ...item,
         experience: await mergeWebExperienceFields(token, apiBase, item.experience),
       };
+      await sleep(80);
+    }
+
+    pushLog("Fetching tour program day counts…");
+    for (let i = 0; i < pendingLinks.length; i += 1) {
+      const item = pendingLinks[i];
+      const type = item.experience.type ?? item.experience.experience_type;
+      if (type !== "tour") continue;
+      const plan = await fetchExperiencePlan(token, partner, apiBase, item.experience.id);
+      if (plan.length) {
+        pendingLinks[i] = {
+          ...item,
+          experience: { ...item.experience, plan_days_count: plan.length },
+        };
+      }
       await sleep(80);
     }
 

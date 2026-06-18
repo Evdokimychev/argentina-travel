@@ -42,7 +42,9 @@ import {
   partnerTourListingId,
   resolvePartnerTourCityName,
   resolvePartnerTourCountryName,
+  TRIPSTER_PARTNER_TOUR_TYPE,
 } from "@/lib/tripster/partner-tour-utils";
+import { normalizeTourDuration } from "@/lib/tour-duration";
 
 type PartnerTourCityRow = {
   id: number;
@@ -114,10 +116,24 @@ function childPolicyFromChildFriendly(childFriendly?: boolean): ChildrenPolicy {
   return childFriendly ? "Без ограничений" : "От 12 лет";
 }
 
-function resolveDurationDays(experience: TripsterExperience, durationMinutes?: number | null): {
-  durationDays: number;
-  durationNights: number;
-} {
+export function countTripsterProgramDays(program: unknown): number {
+  if (!program) return 0;
+  if (Array.isArray(program)) return program.length;
+
+  if (typeof program === "object" && program !== null) {
+    const days = (program as { days?: unknown }).days;
+    if (Array.isArray(days)) return days.length;
+    const results = (program as { results?: unknown }).results;
+    if (Array.isArray(results)) return results.length;
+  }
+
+  return 0;
+}
+
+function resolveDurationFromHours(
+  experience: TripsterExperience,
+  durationMinutes?: number | null
+): { durationDays: number; durationNights: number } {
   if (durationMinutes != null && durationMinutes >= 1440) {
     const durationDays = Math.max(1, Math.round(durationMinutes / 1440));
     return { durationDays, durationNights: Math.max(0, durationDays - 1) };
@@ -131,6 +147,34 @@ function resolveDurationDays(experience: TripsterExperience, durationMinutes?: n
   }
 
   return { durationDays: 1, durationNights: 0 };
+}
+
+export function resolvePartnerTourDuration(
+  experience: TripsterExperience,
+  durationMinutes?: number | null,
+  options?: {
+    program?: unknown;
+    itineraryDayCount?: number;
+    experienceType?: string | null;
+  }
+): { durationDays: number; durationNights: number } {
+  const kind =
+    options?.experienceType?.trim().toLowerCase() ||
+    experience.type?.trim().toLowerCase() ||
+    TRIPSTER_PARTNER_TOUR_TYPE;
+
+  const programDayCount = Math.max(
+    experience.plan_days_count ?? 0,
+    countTripsterProgramDays(options?.program),
+    options?.itineraryDayCount ?? 0
+  );
+
+  if (kind === TRIPSTER_PARTNER_TOUR_TYPE && programDayCount > 0) {
+    return normalizeTourDuration(programDayCount, Math.max(0, programDayCount - 1));
+  }
+
+  const fromHours = resolveDurationFromHours(experience, durationMinutes);
+  return normalizeTourDuration(fromHours.durationDays, fromHours.durationNights);
 }
 
 function resolveGuide(experience: TripsterExperience) {
@@ -224,7 +268,11 @@ export function partnerTourRowToListing(
   const experience = payload ?? ({} as TripsterExperience);
   const cityName = resolvePartnerTourCityName(city, experience);
   const countryName = resolvePartnerTourCountryName(experience, row.country_id);
-  const { durationDays, durationNights } = resolveDurationDays(experience, row.duration_minutes);
+  const { durationDays, durationNights } = resolvePartnerTourDuration(
+    experience,
+    row.duration_minutes,
+    { experienceType: row.experience_type }
+  );
   const guide = resolveGuide(experience);
   const groupMax = experience.max_persons ?? 12;
   const groupMin = 1;
@@ -300,7 +348,6 @@ export function partnerTourRowToDetail(
     reviews?: ReviewRow[];
   }
 ): TourDetail {
-  const listing = partnerTourRowToListing(row, city);
   const payload = row.payload as TripsterExperience | undefined;
   const experience = payload ?? ({} as TripsterExperience);
   const guide = resolveGuide(experience);
@@ -308,6 +355,16 @@ export function partnerTourRowToDetail(
   const countryName = resolvePartnerTourCountryName(experience, row.country_id);
   const partnerContentRaw = buildPartnerContent(experience);
   const itinerary = mapItineraryFromProgram(options?.program, experience);
+  const { durationDays, durationNights } = resolvePartnerTourDuration(
+    experience,
+    row.duration_minutes,
+    {
+      program: options?.program,
+      itineraryDayCount: itinerary.length,
+      experienceType: row.experience_type,
+    }
+  );
+  const listing = partnerTourRowToListing(row, city);
   const partnerContent = finalizePartnerLodging(partnerContentRaw, experience, itinerary);
   const included = partnerContent.includedHtml ? htmlToBulletItems(partnerContent.includedHtml) : [];
   const excluded = partnerContent.excludedHtml ? htmlToBulletItems(partnerContent.excludedHtml) : [];
@@ -321,8 +378,8 @@ export function partnerTourRowToDetail(
     title: listing.title,
     country: countryName,
     region: cityName,
-    durationDays: listing.durationDays,
-    durationNights: listing.durationNights,
+    durationDays,
+    durationNights,
     priceUsd: listing.priceUsd,
     priceOnRequest: listing.priceOnRequest,
     priceFromPrefix: listing.priceFromPrefix,

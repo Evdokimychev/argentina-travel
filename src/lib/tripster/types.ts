@@ -128,6 +128,8 @@ export type TripsterExperience = {
   child_friendly?: boolean;
   max_persons?: number;
   duration?: number;
+  /** Количество дней программы (/plan/), сохраняется при sync для корректной длительности туров. */
+  plan_days_count?: number;
   review_count?: number;
   rating?: number;
   popularity?: number;
