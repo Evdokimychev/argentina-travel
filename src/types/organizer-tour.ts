@@ -5,6 +5,7 @@ import type { CurrencyCode } from "@/types/locale";
 import type { OrganizerTourDiscountType } from "@/data/tour-discount-defaults";
 import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
 import type { OrganizerProgramDay } from "@/data/tour-program-defaults";
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
 import type { OrganizerTourFAQ, OrganizerTourInsuranceType } from "@/data/tour-terms-defaults";
 import type { OrganizerArrivalDepartureCity } from "@/data/tour-logistics-defaults";
 import type {
@@ -139,6 +140,8 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   routeFeaturesText: string;
   /** Комментарий организатора в конце программы на странице тура. */
   itineraryOrganizerCommentText: string;
+  /** Предупреждения и факторы маршрута для участников. */
+  travelRisks: TourTravelRisk[];
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;

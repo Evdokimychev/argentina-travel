@@ -12,7 +12,7 @@ import {
   UsersRound,
   type LucideIcon,
 } from "lucide-react";
-import { TourDetail, type TourBookingMode } from "@/types";
+import { TourDetail, type TourBookingMode, type TourLanguage } from "@/types";
 import {
   DIFFICULTY_LEVELS,
   COMFORT_DOT_COUNT,
@@ -30,7 +30,6 @@ import { cn } from "@/lib/cn";
 import { formatTouristsRange } from "@/lib/pluralize";
 import { formatAgeRangeSummary, formatMaxWeightSummary } from "@/lib/tour-age";
 import { filterTourDisplayTags } from "@/lib/tour-public-display";
-import type { TourLanguage } from "@/types";
 
 interface TourStatsSectionProps {
   tour: TourDetail;

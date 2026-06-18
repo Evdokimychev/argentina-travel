@@ -9,6 +9,7 @@ import {
 } from "@/data/tour-program-defaults";
 import OrganizerPhotoUpload from "@/components/organizer/OrganizerPhotoUpload";
 import OrganizerRichTextField from "@/components/organizer/OrganizerRichTextField";
+import TourProgramDayActivitiesEditor from "@/components/organizer/TourProgramDayActivitiesEditor";
 import { formatDays } from "@/lib/pluralize";
 
 interface TourProgramDayEditorProps {
@@ -82,6 +83,16 @@ export default function TourProgramDayEditor({
         images={day.images}
         onChange={(images) => onChange({ ...day, images })}
         maxPhotos={ORGANIZER_TOUR_PROGRAM_DAY_PHOTOS_MAX}
+      />
+
+      <TourProgramDayActivitiesEditor
+        dayId={day.id}
+        activities={day.activities}
+        meals={day.meals}
+        accommodation={day.accommodation}
+        onActivitiesChange={(activities) => onChange({ ...day, activities })}
+        onMealsChange={(meals) => onChange({ ...day, meals })}
+        onAccommodationChange={(accommodation) => onChange({ ...day, accommodation })}
       />
 
       <div className="flex flex-col gap-3 border-t border-gray-200 pt-4 sm:flex-row sm:items-center sm:justify-between">

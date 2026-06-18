@@ -114,7 +114,26 @@ const patagoniaDetail: TourDetail = {
       description:
         "Встреча в аэропорту Ezeiza, трансфер в отель. Свободное время для прогулки по городу. Вечерний брифинг с гидом.",
       images: ["https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=600&q=80"],
-      activities: ["Трансфер из аэропорта", "Брифинг с гидом", "Свободная прогулка"],
+      activities: [
+        {
+          id: "d1-a1",
+          kind: "transfer",
+          title: "Трансфер из аэропорта Ezeiza",
+          durationLabel: "45 мин",
+        },
+        {
+          id: "d1-a2",
+          kind: "briefing",
+          title: "Брифинг с гидом",
+          durationLabel: "1 ч",
+        },
+        {
+          id: "d1-a3",
+          kind: "city_walk",
+          title: "Свободная прогулка по центру",
+          durationLabel: "2–3 ч",
+        },
+      ],
       meals: ["Ужин (по желанию)"],
       accommodation: "Отель 4* в центре Буэнос-Айреса",
     },
@@ -125,7 +144,25 @@ const patagoniaDetail: TourDetail = {
       description:
         "Утренний перелёт в сердце Патагонии. После заселения — прогулка по набережной озера Аргентино с видом на ледники.",
       images: ["https://images.unsplash.com/photo-1589182370481-0de83087320f?w=600&q=80"],
-      activities: ["Перелёт", "Обзорная прогулка", "Заселение"],
+      activities: [
+        {
+          id: "d2-a1",
+          kind: "flight",
+          title: "Перелёт Буэнос-Айрес — Эль-Калафате",
+          durationLabel: "3 ч",
+        },
+        {
+          id: "d2-a2",
+          kind: "check_in",
+          title: "Заселение в отель",
+        },
+        {
+          id: "d2-a3",
+          kind: "city_walk",
+          title: "Прогулка по набережной озера Аргентино",
+          durationLabel: "1,5 ч",
+        },
+      ],
       meals: ["Завтрак", "Обед"],
       accommodation: "Отель 4* в Эль-Калафате",
     },
@@ -139,7 +176,28 @@ const patagoniaDetail: TourDetail = {
         "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=600&q=80",
         "https://images.unsplash.com/photo-1519682337058-a94d51933763?w=600&q=80",
       ],
-      activities: ["Экскурсия по мосткам", "Safari Náutico", "Фотосессия"],
+      activities: [
+        {
+          id: "d3-a1",
+          kind: "glacier",
+          title: "Экскурсия по мосткам Перито-Морено",
+          durationLabel: "3 ч",
+          description: "Наблюдение за откалыванием льда с оборудованных смотровых площадок",
+        },
+        {
+          id: "d3-a2",
+          kind: "boat_cruise",
+          title: "Safari Náutico",
+          durationLabel: "1 ч",
+          description: "Опционально — приближение к ледяной стене на катере",
+        },
+        {
+          id: "d3-a3",
+          kind: "photo",
+          title: "Фотосессия у ледника",
+          durationLabel: "30 мин",
+        },
+      ],
       meals: ["Завтрак", "Обед", "Ужин"],
       accommodation: "Отель 4* в Эль-Калафате",
     },
@@ -150,7 +208,21 @@ const patagoniaDetail: TourDetail = {
       description:
         "Круиз к ледникам Upsala и Spegazzini. Близкое знакомство с ледяными стенами высотой до 80 метров.",
       images: ["https://images.unsplash.com/photo-1519682337058-a94d51933763?w=600&q=80"],
-      activities: ["Круиз 4 часа", "Дегустация ледниковой воды"],
+      activities: [
+        {
+          id: "d4-a1",
+          kind: "boat_cruise",
+          title: "Круиз к ледникам Upsala и Spegazzini",
+          durationMinutes: 240,
+          description: "Ледяные стены высотой до 80 м",
+        },
+        {
+          id: "d4-a2",
+          kind: "food",
+          title: "Дегустация ледниковой воды",
+          durationLabel: "15 мин",
+        },
+      ],
       meals: ["Завтрак", "Обед на борту"],
       accommodation: "Отель 4* в Эль-Калафате",
     },
@@ -161,7 +233,20 @@ const patagoniaDetail: TourDetail = {
       description:
         "Переезд через границу в Чили. Заселение у входа в парк. Вечерняя прогулка к озеру Pehoé.",
       images: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80"],
-      activities: ["Трансфер", "Прогулка к озеру Pehoé"],
+      activities: [
+        {
+          id: "d5-a1",
+          kind: "transfer",
+          title: "Трансфер Эль-Калафате — Torres del Paine",
+          durationLabel: "5 ч",
+        },
+        {
+          id: "d5-a2",
+          kind: "walking",
+          title: "Прогулка к озеру Pehoé",
+          durationLabel: "1 ч",
+        },
+      ],
       meals: ["Завтрак", "Обед", "Ужин"],
       accommodation: "Lodge у входа в парк",
     },
@@ -172,7 +257,24 @@ const patagoniaDetail: TourDetail = {
       description:
         "Классический трек к подножию гранитных башен — 8 часов, набор высоты 800 м. Один из лучших однодневных маршрутов мира.",
       images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80"],
-      activities: ["Треккинг 18 км", "Пикник у лагуны"],
+      activities: [
+        {
+          id: "d6-a1",
+          kind: "trekking",
+          title: "Треккинг Base Torres",
+          durationMinutes: 480,
+          distanceKm: 18,
+          elevationGainM: 800,
+          elevationLossM: 800,
+          description: "Классический однодневный маршрут к подножию гранитных башен",
+        },
+        {
+          id: "d6-a2",
+          kind: "picnic",
+          title: "Пикник у лагуны",
+          durationLabel: "45 мин",
+        },
+      ],
       meals: ["Завтрак", "Ланч-бокс", "Ужин"],
       accommodation: "Lodge у входа в парк",
     },
@@ -285,18 +387,18 @@ const patagoniaDetail: TourDetail = {
     },
   ],
   included: [
-    "Проживание в отелях 4* (9 ночей)",
-    "Завтраки и обеды",
-    "Все трансферы и внутренние перелёты",
-    "Русскоязычный гид",
-    "Входные билеты в парки",
-    "Круиз Safari Náutico",
+    "Проживание в отелях 4* (9 ночей) :: Отели в Буэнос-Айресе, Эль-Калафате и lodge в Торрес-дель-Пайне с завтраками.",
+    "Завтраки и обеды :: Завтраки ежедневно, обеды по программе в дни активностей.",
+    "Все трансферы и внутренние перелёты :: Групповые трансферы и рейс EZE → FTE включены в стоимость.",
+    "Русскоязычный гид :: Сопровождение на всём маршруте, включая национальные парки.",
+    "Входные билеты в парки :: Los Glaciares, Torres del Paine и другие объекты по программе.",
+    "Круиз Safari Náutico :: Катер к ледникам в заливе Упсала с видом на ледяные стены.",
   ],
   excluded: [
-    "Международные авиабилеты",
+    "Международные авиабилеты :: Перелёт до Буэнос-Айреса и обратно участники оформляют самостоятельно.",
     "Ужины (кроме дней в lodge)",
     "Личные расходы и сувениры",
-    "Страховка (рекомендуем оформить)",
+    "Страховка (рекомендуем оформить) :: Медицинский полис с покрытием активного отдыха и эвакуации.",
     "Опциональные экскурсии",
   ],
   arrival: {
@@ -372,6 +474,33 @@ const patagoniaDetail: TourDetail = {
       endDate: "2026-01-19",
       spotsLeft: 10,
       priceUsd: 2540,
+    },
+  ],
+  travelRisks: [
+    {
+      id: "patagonia-risk-altitude",
+      kind: "altitude",
+      title: "Высота до 900 м на треккинге",
+      description:
+        "Трек к Base Torres проходит с набором высоты до 800 м. При чувствительности к высоте двигайтесь в своём темпе и сообщите гиду.",
+    },
+    {
+      id: "patagonia-risk-weather",
+      kind: "weather",
+      description:
+        "В Патагонии ветер и осадки меняются за часы — возьмите непродуваемую куртку и слои одежды.",
+    },
+    {
+      id: "patagonia-risk-wildlife",
+      kind: "wildlife",
+      description:
+        "В парках возможны встречи с дикими животными — не кормите их и держите дистанцию по инструкции гида.",
+    },
+    {
+      id: "patagonia-risk-remote",
+      kind: "remote",
+      description:
+        "На участках в Torres del Paine связь нестабильна — зарядите power bank и сообщите близким о программе.",
     },
   ],
   tags: ["10 дней (9 ночей)", "Пешие туры", "Природа и приключения"],

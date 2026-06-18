@@ -39,7 +39,7 @@ export default function TourProgramBlock({
   onRouteMapChange,
   onRoutePointsChange,
   onProgramDaysChange,
-  designExampleHref = "/tours/iguazu-falls#itinerary",
+  designExampleHref = "/tours/patagonia-glaciers#itinerary",
 }: TourProgramBlockProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [urlInput, setUrlInput] = useState("");

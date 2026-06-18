@@ -2,6 +2,8 @@ import { Document, Image, Page, Text, View } from "@react-pdf/renderer";
 import { formatDurationShort } from "@/lib/pluralize";
 import { pdfStyles } from "@/lib/tour-itinerary-pdf/pdf-styles";
 import { formatPdfGeneratedDate } from "@/lib/tour-itinerary-pdf/pdf-meta";
+import { formatDayActivitiesForPdf } from "@/lib/tour-itinerary-activity";
+import { parseTourTermItem } from "@/lib/tour-terms-items";
 import type { TourItineraryPdfMeta, TourItineraryPdfSource } from "@/lib/tour-itinerary-pdf/types";
 
 function resolvePdfImageUrl(url: string): string {
@@ -24,16 +26,26 @@ function formatTourPrice(source: TourItineraryPdfSource): string {
   return `${prefix}$${formatted} USD`;
 }
 
-function BulletList({ items }: { items: string[] }) {
+function BulletList({ items, withDetails = false }: { items: string[]; withDetails?: boolean }) {
   if (!items.length) return null;
   return (
     <View style={pdfStyles.bulletList}>
-      {items.map((item) => (
-        <View key={item} style={pdfStyles.bulletItem}>
-          <Text style={pdfStyles.bulletDot}>•</Text>
-          <Text style={pdfStyles.bulletText}>{item}</Text>
-        </View>
-      ))}
+      {items.map((item, index) => {
+        const parsed = withDetails ? parseTourTermItem(item) : { title: item };
+        return (
+          <View key={`${parsed.title}-${index}`} style={pdfStyles.bulletItem}>
+            <Text style={pdfStyles.bulletDot}>•</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={pdfStyles.bulletText}>{parsed.title}</Text>
+              {parsed.detail ? (
+                <Text style={[pdfStyles.bulletText, { marginTop: 2, color: "#64748b", fontSize: 9 }]}>
+                  {parsed.detail}
+                </Text>
+              ) : null}
+            </View>
+          </View>
+        );
+      })}
     </View>
   );
 }
@@ -169,7 +181,9 @@ export function TourItineraryPdfDocument({ source, meta }: TourItineraryPdfDocum
                   {day.activities?.length ? (
                     <View style={pdfStyles.dayMetaBox}>
                       <Text style={pdfStyles.dayMetaLabel}>Активности</Text>
-                      <Text style={pdfStyles.dayMetaText}>{day.activities.join(" · ")}</Text>
+                      <Text style={pdfStyles.dayMetaText}>
+                        {formatDayActivitiesForPdf(day.activities)}
+                      </Text>
                     </View>
                   ) : null}
                   {day.meals?.length ? (
@@ -193,11 +207,11 @@ export function TourItineraryPdfDocument({ source, meta }: TourItineraryPdfDocum
         <View style={pdfStyles.twoColumns}>
           <View style={pdfStyles.column}>
             <Text style={pdfStyles.sectionTitle}>Включено</Text>
-            <BulletList items={source.included} />
+            <BulletList items={source.included} withDetails />
           </View>
           <View style={pdfStyles.column}>
             <Text style={pdfStyles.sectionTitle}>Не включено</Text>
-            <BulletList items={source.excluded} />
+            <BulletList items={source.excluded} withDetails />
           </View>
         </View>
 

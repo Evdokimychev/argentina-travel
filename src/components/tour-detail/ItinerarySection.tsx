@@ -10,11 +10,11 @@ import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
 import {
   tourDetailDayBadgeClass,
-  tourDetailInsetMutedClass,
   tourDetailTimelineClass,
 } from "@/lib/tour-detail-ui";
-import TourItineraryPdfButton from "./TourItineraryPdfButton";
+import ItineraryDayDetails from "./ItineraryDayDetails";
 import ItineraryProgramFooter from "./ItineraryProgramFooter";
+import TourItineraryPdfButton from "./TourItineraryPdfButton";
 import type { TourDetail } from "@/types";
 
 function ItineraryExpandToggle({
@@ -100,54 +100,40 @@ function ItineraryDayCard({
           {day.dayNumber}
         </span>
         <div className="flex-1 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:border-sky/20 hover:shadow-md sm:p-5">
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="font-semibold text-charcoal">
-              День {day.dayNumber}. {day.title}
-            </h3>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate/80">
+            День {day.dayNumber}
+          </p>
+          <div className="mt-1 flex items-start justify-between gap-2">
+            <h3 className="text-base font-semibold leading-snug text-charcoal sm:text-lg">{day.title}</h3>
             <ChevronDown
               className={cn(
-                "h-5 w-5 shrink-0 text-slate transition-transform",
+                "mt-0.5 h-5 w-5 shrink-0 text-slate transition-transform",
                 isOpen && "rotate-180"
               )}
             />
           </div>
           {isOpen && (
-            <div className="mt-4 space-y-4 animate-fade-in-up">
-              <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+            <div className="mt-4 space-y-4 border-t border-gray-100 pt-4 animate-fade-in-up">
+              {day.description ? (
+                <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+              ) : null}
               {images.length > 0 && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {images.map((img) => (
                     <div
                       key={img}
-                      className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl"
+                      className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl ring-1 ring-gray-100"
                     >
                       <Image src={img} alt="" fill className="object-cover" sizes="144px" />
                     </div>
                   ))}
                 </div>
               )}
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className={cn(tourDetailInsetMutedClass, "p-3")}>
-                  <p className="text-xs font-medium text-slate">Активности</p>
-                  <ul className="mt-1 space-y-1 text-sm text-charcoal">
-                    {activities.map((a) => (
-                      <li key={a}>• {a}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={cn(tourDetailInsetMutedClass, "p-3")}>
-                  <p className="text-xs font-medium text-slate">Питание</p>
-                  <ul className="mt-1 space-y-1 text-sm text-charcoal">
-                    {meals.map((m) => (
-                      <li key={m}>• {m}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className={cn(tourDetailInsetMutedClass, "p-3")}>
-                  <p className="text-xs font-medium text-slate">Проживание</p>
-                  <p className="mt-1 text-sm text-charcoal">{day.accommodation}</p>
-                </div>
-              </div>
+              <ItineraryDayDetails
+                activities={activities}
+                meals={meals}
+                accommodation={day.accommodation ?? ""}
+              />
             </div>
           )}
         </div>
@@ -251,6 +237,7 @@ export default function ItinerarySection({
           difficulty={tour.difficulty}
           difficultyDescriptionHtml={tour.descriptionExtra?.difficulty}
           organizerComment={tour.itineraryOrganizerComment}
+          travelRisks={tour.travelRisks}
         />
       ) : null}
     </TourSection>

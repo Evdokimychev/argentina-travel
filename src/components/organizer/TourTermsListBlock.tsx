@@ -1,9 +1,18 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { GripVertical, Plus, Trash2 } from "lucide-react";
+import { ChevronDown, GripVertical, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import { ORGANIZER_TOUR_TERMS_ITEMS_MAX, ORGANIZER_TOUR_TERMS_ITEM_MAX } from "@/data/tour-terms-defaults";
+import {
+  ORGANIZER_TOUR_TERMS_ITEMS_MAX,
+  ORGANIZER_TOUR_TERMS_ITEM_MAX,
+} from "@/data/tour-terms-defaults";
+import {
+  ORGANIZER_TOUR_TERMS_ITEM_DETAIL_MAX,
+  parseTourTermItem,
+  serializeTourTermItem,
+  type ParsedTourTermItem,
+} from "@/lib/tour-terms-items";
 import { cn } from "@/lib/cn";
 
 interface TourTermsListBlockProps {
@@ -12,6 +21,7 @@ interface TourTermsListBlockProps {
   items: string[];
   onChange: (items: string[]) => void;
   placeholder?: string;
+  detailPlaceholder?: string;
   addLabel?: string;
   variant?: "standalone" | "embedded";
   maxItems?: number;
@@ -30,19 +40,25 @@ function formatTermsItemCount(count: number): string {
   return `${count} пунктов`;
 }
 
+function toParsedItems(items: string[]): ParsedTourTermItem[] {
+  const parsed = items.map(parseTourTermItem);
+  return parsed.length ? parsed : [{ title: "" }];
+}
+
 export default function TourTermsListBlock({
   title,
   description,
   items,
   onChange,
   placeholder = "Введите пункт",
+  detailPlaceholder = "Краткое пояснение для туриста (необязательно)",
   addLabel = "Добавить пункт",
   variant = "standalone",
   maxItems = ORGANIZER_TOUR_TERMS_ITEMS_MAX,
 }: TourTermsListBlockProps) {
-  const canAdd = items.length < maxItems;
+  const list = toParsedItems(items);
+  const canAdd = list.length < maxItems;
   const embedded = variant === "embedded";
-  const list = items.length ? items : [""];
   const canReorder = list.length > 1;
 
   const keysRef = useRef<string[]>([]);
@@ -53,9 +69,14 @@ export default function TourTermsListBlock({
 
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [overIndex, setOverIndex] = useState<number | null>(null);
+  const [expandedDetails, setExpandedDetails] = useState<Record<number, boolean>>({});
 
-  function updateAt(index: number, value: string) {
-    onChange(list.map((item, itemIndex) => (itemIndex === index ? value : item)));
+  function emit(next: ParsedTourTermItem[]) {
+    onChange(next.map(serializeTourTermItem));
+  }
+
+  function updateAt(index: number, patch: Partial<ParsedTourTermItem>) {
+    emit(list.map((item, itemIndex) => (itemIndex === index ? { ...item, ...patch } : item)));
   }
 
   function reorder(from: number, to: number) {
@@ -69,18 +90,22 @@ export default function TourTermsListBlock({
     nextKeys.splice(to, 0, removedKey);
     keysRef.current = nextKeys;
 
-    onChange(next);
+    emit(next);
   }
 
   function removeAt(index: number) {
     keysRef.current = keysRef.current.filter((_, itemIndex) => itemIndex !== index);
-    onChange(list.filter((_, itemIndex) => itemIndex !== index));
+    emit(list.filter((_, itemIndex) => itemIndex !== index));
   }
 
   function addItem() {
     if (!canAdd) return;
     keysRef.current.push(createRowKey());
-    onChange([...list, ""]);
+    emit([...list, { title: "" }]);
+  }
+
+  function toggleDetail(index: number) {
+    setExpandedDetails((prev) => ({ ...prev, [index]: !prev[index] }));
   }
 
   function handleDragStart(index: number, event: React.DragEvent<HTMLButtonElement>) {
@@ -131,52 +156,78 @@ export default function TourTermsListBlock({
       </div>
 
       <div className="space-y-3">
-        {list.map((item, index) => (
-          <div
-            key={keysRef.current[index]}
-            data-term-row
-            onDragOver={(event) => handleDragOver(index, event)}
-            onDrop={(event) => handleDrop(index, event)}
-            className={cn(
-              "flex items-start gap-1.5 rounded-xl transition-[box-shadow,opacity] duration-150",
-              dragIndex === index && "opacity-50",
-              overIndex === index && dragIndex !== null && dragIndex !== index && "ring-2 ring-brand/25"
-            )}
-          >
-            <button
-              type="button"
-              draggable={canReorder}
-              disabled={!canReorder}
-              onDragStart={(event) => handleDragStart(index, event)}
-              onDragEnd={handleDragEnd}
+        {list.map((item, index) => {
+          const detailOpen = expandedDetails[index] || Boolean(item.detail?.trim());
+          return (
+            <div
+              key={keysRef.current[index]}
+              data-term-row
+              onDragOver={(event) => handleDragOver(index, event)}
+              onDrop={(event) => handleDrop(index, event)}
               className={cn(
-                "mt-0.5 inline-flex h-9 w-7 shrink-0 items-center justify-center rounded-lg text-slate transition-colors",
-                canReorder
-                  ? "cursor-grab touch-none active:cursor-grabbing hover:bg-gray-100 hover:text-charcoal"
-                  : "cursor-default opacity-30"
+                "rounded-xl border border-gray-200/80 bg-white p-2.5 transition-[box-shadow,opacity] duration-150",
+                dragIndex === index && "opacity-50",
+                overIndex === index && dragIndex !== null && dragIndex !== index && "ring-2 ring-brand/25"
               )}
-              aria-label="Перетащите для изменения порядка"
             >
-              <GripVertical className="h-4 w-4" aria-hidden />
-            </button>
-            <Input
-              value={item}
-              maxLength={ORGANIZER_TOUR_TERMS_ITEM_MAX}
-              placeholder={placeholder}
-              onChange={(event) => updateAt(index, event.target.value)}
-              className="min-w-0 flex-1 bg-white"
-            />
-            <button
-              type="button"
-              onClick={() => removeAt(index)}
-              disabled={list.length <= 1 && !item.trim()}
-              className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-red-600 disabled:opacity-40"
-              aria-label="Удалить"
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
-          </div>
-        ))}
+              <div className="flex items-start gap-1.5">
+                <button
+                  type="button"
+                  draggable={canReorder}
+                  disabled={!canReorder}
+                  onDragStart={(event) => handleDragStart(index, event)}
+                  onDragEnd={handleDragEnd}
+                  className={cn(
+                    "mt-0.5 inline-flex h-9 w-7 shrink-0 items-center justify-center rounded-lg text-slate transition-colors",
+                    canReorder
+                      ? "cursor-grab touch-none active:cursor-grabbing hover:bg-gray-100 hover:text-charcoal"
+                      : "cursor-default opacity-30"
+                  )}
+                  aria-label="Перетащите для изменения порядка"
+                >
+                  <GripVertical className="h-4 w-4" aria-hidden />
+                </button>
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Input
+                    value={item.title}
+                    maxLength={ORGANIZER_TOUR_TERMS_ITEM_MAX}
+                    placeholder={placeholder}
+                    onChange={(event) => updateAt(index, { title: event.target.value })}
+                    className="bg-white"
+                  />
+                  {detailOpen ? (
+                    <textarea
+                      value={item.detail ?? ""}
+                      maxLength={ORGANIZER_TOUR_TERMS_ITEM_DETAIL_MAX}
+                      placeholder={detailPlaceholder}
+                      rows={2}
+                      onChange={(event) => updateAt(index, { detail: event.target.value })}
+                      className="w-full resize-y rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                    />
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => toggleDetail(index)}
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-brand hover:text-brand/80"
+                    >
+                      <ChevronDown className="h-3.5 w-3.5" aria-hidden />
+                      Добавить пояснение
+                    </button>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => removeAt(index)}
+                  disabled={list.length <= 1 && !item.title.trim() && !item.detail?.trim()}
+                  className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-red-600 disabled:opacity-40"
+                  aria-label="Удалить"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
 
       {canAdd ? (

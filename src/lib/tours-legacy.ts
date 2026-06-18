@@ -109,7 +109,11 @@ function buildTourDetailFromBase(
       title: `День ${i + 1}`,
       description: base.description.slice(0, 200) + "...",
       images: [base.gallery[i % base.gallery.length]],
-      activities: base.highlights.slice(0, 2),
+      activities: base.highlights.slice(0, 2).map((title, index) => ({
+        id: `legacy-day-${i + 1}-act-${index + 1}`,
+        kind: "custom" as const,
+        title,
+      })),
       meals: ["Завтрак", "Обед"],
       accommodation: "Отель по программе",
     })),

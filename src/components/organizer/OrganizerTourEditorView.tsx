@@ -20,7 +20,7 @@ import { getCatalogSlug } from "@/lib/tour-slug";
 import { stageOrganizerTourPreviewDraft } from "@/lib/tour-preview";
 import { cn } from "@/lib/cn";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
-import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
+import TourTravelRisksBlock from "@/components/organizer/TourTravelRisksBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
 import TourTicketRecommendationsBlock from "@/components/organizer/TourTicketRecommendationsBlock";
 import TourArrivalDepartureBlock from "@/components/organizer/TourArrivalDepartureBlock";
@@ -976,6 +976,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 onDifficultyDescriptionChange={(difficultyDescriptionText) =>
                   updateDraft({ difficultyDescriptionText })
                 }
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourTravelRisksBlock
+                risks={draft.travelRisks ?? []}
+                onChange={(travelRisks) => updateDraft({ travelRisks })}
               />
             ) : null}
 

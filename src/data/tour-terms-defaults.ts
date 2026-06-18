@@ -1,5 +1,10 @@
 import type { TourFAQ } from "@/types";
 import { normalizeEditorValue, trimHtmlToPlainTextLength } from "@/lib/rich-text";
+import {
+  ORGANIZER_TOUR_TERMS_ITEM_DETAIL_MAX,
+  parseTourTermItem,
+  serializeTourTermItem,
+} from "@/lib/tour-terms-items";
 
 export const ORGANIZER_TOUR_TERMS_ITEMS_MAX = 30;
 export const ORGANIZER_TOUR_FAQ_MAX = 20;
@@ -57,7 +62,13 @@ export function listItemsToText(items: string[]): string {
 
 export function normalizeTermsItems(items: string[] | undefined): string[] {
   return (items ?? [])
-    .map((item) => item.trim().slice(0, ORGANIZER_TOUR_TERMS_ITEM_MAX))
+    .map((item) => {
+      const parsed = parseTourTermItem(item);
+      return serializeTourTermItem({
+        title: parsed.title.slice(0, ORGANIZER_TOUR_TERMS_ITEM_MAX),
+        detail: parsed.detail?.slice(0, ORGANIZER_TOUR_TERMS_ITEM_DETAIL_MAX),
+      });
+    })
     .filter(Boolean);
 }
 

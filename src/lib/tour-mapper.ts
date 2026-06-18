@@ -22,7 +22,8 @@ import type {
   TourListing,
 } from "@/types";
 import type { Tour, TourOrganizerComment, TourStatus } from "@/types/tour";
-import { primaryComfortLevel } from "@/data/tour-levels";
+import { mapItineraryToProgramDay } from "@/data/tour-program-defaults";
+import { normalizeTravelRisks } from "@/lib/tour-travel-risk";
 import { normalizeTourDuration } from "@/lib/tour-duration";
 import { textToListItems } from "@/data/tour-terms-defaults";
 import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
@@ -166,9 +167,9 @@ function mapProgramDaysToItinerary(days: Tour["program"]["days"]): TourItinerary
     title: day.title || `День ${day.dayNumber}`,
     description: day.description,
     images: day.images,
-    activities: [],
-    meals: [],
-    accommodation: "",
+    activities: day.activities ?? [],
+    meals: day.meals ?? [],
+    accommodation: day.accommodation ?? "",
   }));
 }
 
@@ -381,6 +382,7 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
       comfortLevels: [primaryComfort],
       primaryComfort,
       accommodationType: listing.accommodationType,
+      travelRisks: normalizeTravelRisks(detail.travelRisks),
     },
     participants: {
       groupMin: listing.groupSizeMin,
@@ -402,13 +404,7 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
     program: {
       routeMapImage: "",
       routePoints: detail.routePoints ?? getTourRoutePoints(listing.slug),
-      days: detail.itinerary.map((day) => ({
-        id: day.id,
-        dayNumber: day.dayNumber,
-        title: day.title,
-        description: day.description,
-        images: day.images,
-      })),
+      days: detail.itinerary.map(mapItineraryToProgramDay),
       itineraryOrganizerComment: detail.itineraryOrganizerComment,
     },
     media: {
@@ -543,6 +539,7 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       comfortLevels: draft.comfortLevels.length ? draft.comfortLevels : [comfort],
       primaryComfort: comfort,
       accommodationType: draft.accommodationType,
+      travelRisks: normalizeTravelRisks(draft.travelRisks),
     },
     participants: {
       groupMin: draft.groupMin,
@@ -832,6 +829,9 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     isPrivate: tour.isPrivate,
     waitlistEnabled: tour.booking.waitlistEnabled,
     customBookingLink: toPublicCustomBookingLink(tour.booking.customBookingLink),
+    travelRisks: tour.levels.travelRisks?.length
+      ? tour.levels.travelRisks
+      : legacy?.travelRisks,
   };
 }
 
@@ -919,6 +919,7 @@ export function createMinimalTourFromDraft(
       comfortLevels: draft.comfortLevels.length ? draft.comfortLevels : [comfort],
       primaryComfort: comfort,
       accommodationType: draft.accommodationType,
+      travelRisks: normalizeTravelRisks(draft.travelRisks),
     },
     participants: {
       groupMin: draft.groupMin,

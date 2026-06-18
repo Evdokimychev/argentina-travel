@@ -230,13 +230,18 @@ export interface TourFeature {
   description: string;
 }
 
+import type { TourDayActivity } from "@/types/tour-itinerary-activity";
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
+
+export type { TourDayActivity } from "@/types/tour-itinerary-activity";
+
 export interface TourItineraryDay {
   id: string;
   dayNumber: number;
   title: string;
   description: string;
   images: string[];
-  activities: string[];
+  activities: TourDayActivity[];
   meals: string[];
   accommodation: string;
 }
@@ -365,6 +370,8 @@ export interface TourDetail {
   itinerary: TourItineraryDay[];
   /** Комментарий организатора в конце блока программы. */
   itineraryOrganizerComment?: string;
+  /** Факторы маршрута, на которые стоит обратить внимание. */
+  travelRisks?: TourTravelRisk[];
   organizerComment: {
     greeting: string;
     recommendations: string[];

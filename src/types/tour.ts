@@ -80,12 +80,17 @@ export interface TourClassification {
   tags: string[];
 }
 
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
+
+export type { TourTravelRisk } from "@/types/tour-travel-risk";
+
 export interface TourLevels {
   difficulty: DifficultyLevel;
   difficultyDescription?: string;
   comfortLevels: ComfortLevel[];
   primaryComfort: ComfortLevel;
   accommodationType: AccommodationType;
+  travelRisks?: TourTravelRisk[];
 }
 
 export interface TourParticipants {

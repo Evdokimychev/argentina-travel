@@ -41,6 +41,7 @@ import {
   normalizeProgramDays,
   renumberProgramDays,
 } from "@/data/tour-program-defaults";
+import { normalizeTravelRisks } from "@/lib/tour-travel-risk";
 import {
   ORGANIZER_TOUR_INSURANCE_DESCRIPTION_MAX,
   ORGANIZER_TOUR_CANCELLATION_TEXT_MAX,
@@ -354,6 +355,7 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
       : [],
     routeFeaturesText: detail?.organizerComment?.routeNotes ?? "",
     itineraryOrganizerCommentText: detail?.itineraryOrganizerComment ?? "",
+    travelRisks: normalizeTravelRisks(detail?.travelRisks),
     updatedAt: listing.updatedAt,
   };
 
@@ -444,6 +446,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     participantRecommendations: [],
     routeFeaturesText: "",
     itineraryOrganizerCommentText: "",
+    travelRisks: [],
     updatedAt: new Date().toISOString(),
   };
 }
@@ -608,6 +611,9 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
         ? draft.itineraryOrganizerCommentText
         : seed.itineraryOrganizerCommentText
     ),
+    travelRisks: normalizeTravelRisks(
+      draft.travelRisks?.length ? draft.travelRisks : seed.travelRisks
+    ),
     maxWeightEnabled:
       draft.maxWeightEnabled ??
       ((draft.maxWeightKg ?? 0) > 0 ? true : seed.maxWeightEnabled),
@@ -748,6 +754,7 @@ export function saveOrganizerTourDraft(
     region: draft.touristRegions[0] ?? draft.region,
     startLocation: draft.mapStartPoint || draft.startLocation,
     customBookingLink: normalizeCustomBookingLink(draft.customBookingLink),
+    travelRisks: normalizeTravelRisks(draft.travelRisks),
     updatedAt: new Date().toISOString(),
   };
 

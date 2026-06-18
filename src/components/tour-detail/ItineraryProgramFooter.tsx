@@ -7,11 +7,14 @@ import { DIFFICULTY_DOT_COUNT, DIFFICULTY_LEVELS } from "@/data/tour-levels";
 import { normalizeEditorValue } from "@/lib/rich-text";
 import { cn } from "@/lib/cn";
 import type { DifficultyLevel } from "@/types";
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
+import TourTravelRisksPanel from "./TourTravelRisksPanel";
 
 interface ItineraryProgramFooterProps {
   difficulty: DifficultyLevel;
   difficultyDescriptionHtml?: string;
   organizerComment?: string;
+  travelRisks?: TourTravelRisk[];
   className?: string;
 }
 
@@ -73,12 +76,14 @@ export default function ItineraryProgramFooter({
   difficulty,
   difficultyDescriptionHtml = "",
   organizerComment = "",
+  travelRisks = [],
   className,
 }: ItineraryProgramFooterProps) {
   const levelMeta = DIFFICULTY_LEVELS.find((item) => item.level === difficulty);
   const extendedDescription = difficultyDescriptionHtml.trim();
   const comment = organizerComment.trim();
   const showComment = comment.length > 0;
+  const showRisks = travelRisks.length > 0;
 
   return (
     <div
@@ -87,7 +92,7 @@ export default function ItineraryProgramFooter({
         className
       )}
     >
-      <div className={cn(showComment && "border-b border-gray-100 pb-5")}>
+      <div>
         <div className="flex items-center gap-1.5">
           <p className="text-sm font-semibold text-charcoal">Сложность</p>
           <DifficultyHelpButton />
@@ -110,8 +115,12 @@ export default function ItineraryProgramFooter({
         ) : null}
       </div>
 
+      {showRisks ? (
+        <TourTravelRisksPanel risks={travelRisks} variant="embedded" />
+      ) : null}
+
       {showComment ? (
-        <div className={cn(levelMeta || extendedDescription ? "pt-5" : "")}>
+        <div className={cn((showRisks || levelMeta || extendedDescription) && "border-t border-gray-100 pt-5 mt-5")}>
           <p className="text-sm font-semibold text-charcoal">Комментарий организатора</p>
           <div className="mt-3">
             <CommentParagraphs text={comment} />
