@@ -31,8 +31,10 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 
-const HOME_HERO_IMAGE =
-  "https://images.unsplash.com/photo-1589903308904-0e0234572c67?w=1200&q=80";
+// Local asset (not a remote Unsplash URL): the previous hero pointed at an
+// Unsplash photo that now 404s, leaving a grey placeholder on the LCP element.
+// A bundled image is reliable and removes an external dependency from the hero.
+const HOME_HERO_IMAGE = "/media/destinations/ba/cover.jpg";
 
 interface MarketplaceHomeProps {
   tours: TourListing[];

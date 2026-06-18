@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isTripsterConfigured, fetchTripsterExperience, fetchTripsterTourPlan, fetchTripsterWebExperience } from "@/lib/tripster/client";
 import { fetchTripsterSchedule } from "@/lib/tripster/booking-api";
@@ -218,7 +220,7 @@ export async function fetchPartnerTourListingsServer(): Promise<TourListing[]> {
   }
 }
 
-export async function fetchPartnerTourDetailServer(slug: string): Promise<TourDetail | null> {
+async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {
   const supabase = getClient();
   let tour: TourDetail | null = null;
 
@@ -227,13 +229,39 @@ export async function fetchPartnerTourDetailServer(slug: string): Promise<TourDe
   }
 
   if (!tour) {
-    const { pgFetchPartnerTourDetail } = await import("@/lib/tripster/partner-tour-pg-repository");
+    const { pgFetchPartnerTourDetail } = await import(
+      "@/lib/tripster/partner-tour-pg-repository"
+    );
     tour = await pgFetchPartnerTourDetail(slug);
   }
 
   if (!tour) return null;
   return enrichPartnerTourDetail(tour);
 }
+
+/**
+ * Cross-request, time-based cache (10 min) for the partner-tour detail. The
+ * enrichment cascade hits the live Tripster API (experience, web v2, plan,
+ * schedule, reviews, guide) and the catalog only changes on the nightly sync,
+ * so serving a slightly stale snapshot is the right trade-off — live price and
+ * availability are still fetched per-request by the booking/price route. The
+ * resolved `TourDetail` is plain JSON, and the cascade reads only env + the
+ * partner API (no cookies/headers), so it is safe inside `unstable_cache`.
+ */
+const cachedPartnerTourDetail = unstable_cache(
+  loadPartnerTourDetail,
+  ["partner-tour-detail"],
+  { revalidate: 600, tags: ["partner-tours"] }
+);
+
+/**
+ * Request-scoped memoization on top of the time-based cache: `generateMetadata`
+ * and the page body resolve the same slug within one render, and similar-tour
+ * ranking can revisit it — `cache()` collapses those into a single lookup.
+ */
+export const fetchPartnerTourDetailServer = cache(
+  (slug: string): Promise<TourDetail | null> => cachedPartnerTourDetail(slug)
+);
 
 export async function fetchPartnerTourSlugsServer(): Promise<string[]> {
   const supabase = getClient();

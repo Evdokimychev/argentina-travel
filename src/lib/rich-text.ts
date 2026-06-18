@@ -182,12 +182,22 @@ function sanitizeNode(node: Node): void {
 
 export function sanitizeHtml(html: string): string {
   if (!html.trim()) return "";
-  if (BLOCKED_TAGS.test(html)) {
-    html = html.replace(BLOCKED_TAGS, "");
-  }
+  // `BLOCKED_TAGS` is a module-level /g regex; `.test()` would carry `lastIndex`
+  // across calls and intermittently miss matches. `.replace()` is unconditional
+  // and idempotent, so just run it every time.
+  html = html.replace(BLOCKED_TAGS, "");
 
   if (typeof document === "undefined") {
-    return html;
+    // Server has no DOM, so the node-level sanitizer can't run. Apply the same
+    // structural normalization the client branch performs after DOM sanitization
+    // (<div> → <p>) so SSR markup and client hydration produce an identical
+    // `dangerouslySetInnerHTML` string. Without this the server kept <div>…</div>
+    // while the client emitted <p>…</p>, causing a React hydration mismatch on
+    // every rich-text block.
+    return html
+      .replace(/<div><br><\/div>/gi, "<br>")
+      .replace(/<div>/gi, "<p>")
+      .replace(/<\/div>/gi, "</p>");
   }
 
   const template = document.createElement("template");

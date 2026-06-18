@@ -33,36 +33,57 @@ export async function fetchTourDetail(
   return fetchPartnerTourDetailServer(slug);
 }
 
-async function resolveSimilarTourDetail(
-  listing: TourListing,
-  opts?: { accessToken?: string | null }
-): Promise<TourDetail | null> {
-  if (isPartnerTourListing(listing)) {
-    return fetchPartnerTourDetailServer(listing.slug);
-  }
-  return fetchNativeTourDetail(listing.slug, opts);
+/**
+ * Minimal shape the "similar tours" card actually renders. Decoupled from both
+ * TourListing and TourDetail so the section can be built from cheap listing data
+ * instead of triggering a full (live, partner-API) detail enrichment per card.
+ */
+export type SimilarTourCard = Pick<
+  TourListing,
+  | "slug"
+  | "title"
+  | "image"
+  | "region"
+  | "shortDescription"
+  | "durationDays"
+  | "durationNights"
+  | "priceUsd"
+  | "originalPriceUsd"
+  | "priceOnRequest"
+  | "priceFromPrefix"
+>;
+
+function toSimilarCard(item: TourListing | TourDetail): SimilarTourCard {
+  return {
+    slug: item.slug,
+    title: item.title,
+    image: item.image,
+    region: item.region,
+    shortDescription: item.shortDescription,
+    durationDays: item.durationDays,
+    durationNights: item.durationNights,
+    priceUsd: item.priceUsd,
+    originalPriceUsd: item.originalPriceUsd,
+    priceOnRequest: item.priceOnRequest,
+    priceFromPrefix: item.priceFromPrefix,
+  };
 }
 
-export async function fetchSimilarTours(slug: string, limit = 3): Promise<TourDetail[]> {
+export async function fetchSimilarTours(slug: string, limit = 3): Promise<SimilarTourCard[]> {
   const listings = await fetchMarketplaceTours();
   if (listings.length === 0) {
-    return getSimilarTours(slug, limit);
+    return getSimilarTours(slug, limit).map(toSimilarCard);
   }
 
   const baseListing = listings.find((item) => item.slug === slug);
   if (!baseListing) {
     const partnerOnly = listings.filter((item) => isPartnerTourListing(item));
     if (partnerOnly.length === 0) {
-      return getSimilarTourDetails(slug, limit, listings);
+      return getSimilarTourDetails(slug, limit, listings).map(toSimilarCard);
     }
     return [];
   }
 
-  const ranked = rankSimilarListings(baseListing, listings, limit);
-  const details: TourDetail[] = [];
-  for (const item of ranked) {
-    const detail = await resolveSimilarTourDetail(item);
-    if (detail) details.push(detail);
-  }
-  return details;
+  // Listing-level data is sufficient for the card — no per-card detail fetch.
+  return rankSimilarListings(baseListing, listings, limit).map(toSimilarCard);
 }

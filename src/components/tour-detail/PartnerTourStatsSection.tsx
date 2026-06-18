@@ -6,6 +6,10 @@ import type { PartnerTourContent } from "@/lib/tripster/partner-tour-content";
 import { formatDurationShort } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { formatTouristsRange } from "@/lib/pluralize";
+import {
+  formatPartnerFormatLabel,
+  formatPartnerMovementLabel,
+} from "@/lib/tripster/partner-tour-labels";
 import { cn } from "@/lib/cn";
 
 function MetaChip({
@@ -51,19 +55,21 @@ export default function PartnerTourStatsSection({
     value: `${formatTouristsRange(tour.groupMin, tour.groupMax)} · ${formatMinimumAgeSummary(tour.minimumAge)}`,
   });
 
-  if (content.format) {
+  const formatLabel = formatPartnerFormatLabel(content.format);
+  if (formatLabel) {
     chips.push({
       icon: Route,
       label: "Формат",
-      value: content.format,
+      value: formatLabel,
     });
   }
 
-  if (content.movementType) {
+  const movementLabel = formatPartnerMovementLabel(content.movementType);
+  if (movementLabel) {
     chips.push({
       icon: MapPin,
       label: "Передвижение",
-      value: content.movementType,
+      value: movementLabel,
     });
   }
 

@@ -106,7 +106,11 @@ export function NavOverflowMegaMenuTrigger({
   const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? "");
 
-  const label = t("nav.more");
+  // Until locale messages hydrate, `t` returns the raw key. Mirror
+  // `resolveNavLabel` and fall back to the default-locale label so the visible
+  // trigger never flashes the raw "nav.more" key during SSR/pre-hydration.
+  const translatedLabel = t("nav.more");
+  const label = translatedLabel === "nav.more" ? "Ещё" : translatedLabel;
   const num = String(index).padStart(2, "0");
   const indexClassName = navMegaMenuIndexClassName(compact);
 

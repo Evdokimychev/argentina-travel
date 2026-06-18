@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { TourDetail } from "@/types";
+import type { SimilarTourCard } from "@/lib/tours-server";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import TourStatsSection from "./TourStatsSection";
@@ -58,7 +59,7 @@ import { Suspense } from "react";
 interface TourDetailViewProps {
   slug: string;
   tour?: TourDetail | null;
-  similarTours: TourDetail[];
+  similarTours: SimilarTourCard[];
   /** SSR snapshot — keeps header/sections in sync on first paint */
   initialCanonicalTour?: Tour | null;
   flightLogisticsSection?: ReactNode;

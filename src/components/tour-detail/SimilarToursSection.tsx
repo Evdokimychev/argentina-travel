@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TourDetail } from "@/types";
+import type { SimilarTourCard } from "@/lib/tours-server";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import { formatDurationShort } from "@/lib/pluralize";
 import TourSection from "./TourSection";
@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 import TourCardImageVignette from "@/components/marketplace/TourCardImageVignette";
 
-export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) {
+export default function SimilarToursSection({ tours }: { tours: SimilarTourCard[] }) {
   if (tours.length === 0) return null;
 
   return (
