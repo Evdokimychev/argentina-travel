@@ -28,9 +28,10 @@ import { isWaitlistFeatureEnabled } from "@/lib/tour-waitlist";
 interface DatesSectionProps {
   tour: TourDetail;
   canonicalTour?: Tour | null;
+  organizerComment?: string;
 }
 
-export default function DatesSection({ tour, canonicalTour }: DatesSectionProps) {
+export default function DatesSection({ tour, canonicalTour, organizerComment }: DatesSectionProps) {
   const { dates } = tour;
   const bookingMode = tour.bookingMode ?? "scheduled";
   const { guests, selectedDateId, setSelectedDateId, canJoinWaitlist, openWaitlist } =
@@ -71,6 +72,7 @@ export default function DatesSection({ tour, canonicalTour }: DatesSectionProps)
     <TourSection
       id="dates"
       title="Даты и цены"
+      organizerComment={organizerComment}
       subtitle={
         isOnRequestOnly
           ? "Тур проводится индивидуально — выберите удобную дату в блоке бронирования"

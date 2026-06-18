@@ -232,6 +232,7 @@ export interface TourFeature {
 
 import type { TourDayActivity } from "@/types/tour-itinerary-activity";
 import type { TourTravelRisk } from "@/types/tour-travel-risk";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
 
 export type { TourDayActivity } from "@/types/tour-itinerary-activity";
 
@@ -354,6 +355,7 @@ export interface TourDetail {
   shortDescription: string;
   difficulty: DifficultyLevel;
   comfort: ComfortLevel;
+  comfortLevels?: ComfortLevel[];
   accommodationType?: AccommodationType;
   groupMin: number;
   groupMax: number;
@@ -370,6 +372,10 @@ export interface TourDetail {
   itinerary: TourItineraryDay[];
   /** Комментарий организатора в конце блока программы. */
   itineraryOrganizerComment?: string;
+  /** Комментарий организатора в конце блока «Проживание». */
+  accommodationOrganizerComment?: string;
+  /** Комментарии организатора в конце секций страницы тура. */
+  sectionOrganizerComments?: TourSectionOrganizerComments;
   /** Факторы маршрута, на которые стоит обратить внимание. */
   travelRisks?: TourTravelRisk[];
   organizerComment: {

@@ -5,14 +5,20 @@ import { TourFAQ } from "@/types";
 import { normalizeEditorValue } from "@/lib/rich-text";
 import TourSection from "./TourSection";
 
-export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
+export default function FAQSection({
+  faq,
+  organizerComment,
+}: {
+  faq: TourFAQ[];
+  organizerComment?: string;
+}) {
   const items = faq.filter((item) => item.question?.trim() && item.answer?.trim());
   const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
 
   if (!items.length) return null;
 
   return (
-    <TourSection id="faq" title="Часто задаваемые вопросы">
+    <TourSection id="faq" title="Часто задаваемые вопросы" organizerComment={organizerComment}>
       <div className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-surface-muted/30">
         {items.map((item) => {
           const isOpen = openId === item.id;

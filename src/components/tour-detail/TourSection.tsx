@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass } from "@/lib/site-container";
 import { tourDetailSectionCardClass } from "@/lib/tour-detail-ui";
+import TourSectionOrganizerNote from "./TourSectionOrganizerNote";
 
 type TourSectionProps = {
   id: string;
@@ -12,6 +13,8 @@ type TourSectionProps = {
   /** Skip outer card — for split layouts like included/excluded */
   bare?: boolean;
   headerAddon?: ReactNode;
+  /** Комментарий организатора в конце секции */
+  organizerComment?: string;
 };
 
 export const tourSectionScrollMtClass = siteScrollAnchorClass;
@@ -51,7 +54,15 @@ export default function TourSection({
   className,
   bare = false,
   headerAddon,
+  organizerComment,
 }: TourSectionProps) {
+  const body = (
+    <>
+      {children}
+      <TourSectionOrganizerNote comment={organizerComment} />
+    </>
+  );
+
   if (bare) {
     return (
       <section
@@ -59,7 +70,7 @@ export default function TourSection({
         className={cn(siteScrollAnchorClass, "tour-section-target", className)}
       >
         <TourSectionHeader title={title} subtitle={subtitle} headerAddon={headerAddon} />
-        {children}
+        {body}
       </section>
     );
   }
@@ -71,7 +82,7 @@ export default function TourSection({
     >
       <div className={tourDetailSectionCardClass}>
         <TourSectionHeader title={title} subtitle={subtitle} headerAddon={headerAddon} />
-        {children}
+        {body}
       </div>
     </section>
   );

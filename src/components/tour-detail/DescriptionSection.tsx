@@ -78,7 +78,11 @@ function ExtraTabContent({
   }
 }
 
-export default function DescriptionSection({ blocks, extra }: DescriptionSectionProps) {
+export default function DescriptionSection({
+  blocks,
+  extra,
+  organizerComment,
+}: DescriptionSectionProps & { organizerComment?: string }) {
   const visibleTabs = useMemo(
     () => DESCRIPTION_EXTRA_TABS.filter((tab) => tabHasContent(tab.id, extra)),
     [extra]
@@ -94,7 +98,7 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
   }, [activeTab, visibleTabs]);
 
   return (
-    <TourSection id="description" title="Описание путешествия">
+    <TourSection id="description" title="Описание путешествия" organizerComment={organizerComment}>
       <div className="space-y-5">
           {blocks.map((block, i) => {
             switch (block.type) {

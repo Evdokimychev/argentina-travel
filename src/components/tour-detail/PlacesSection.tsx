@@ -6,7 +6,13 @@ import { normalizeEditorValue } from "@/lib/rich-text";
 import { hasPlacesContent } from "@/lib/tour-public-display";
 import TourSection from "./TourSection";
 
-export default function PlacesSection({ places }: { places: TourPlace[] }) {
+export default function PlacesSection({
+  places,
+  organizerComment,
+}: {
+  places: TourPlace[];
+  organizerComment?: string;
+}) {
   if (!hasPlacesContent(places)) return null;
 
   return (
@@ -14,6 +20,7 @@ export default function PlacesSection({ places }: { places: TourPlace[] }) {
       id="places"
       title="Главные впечатления"
       subtitle="Уникальные моменты тура"
+      organizerComment={organizerComment}
     >
       <div className="grid gap-4 sm:grid-cols-2">
         {places.map((place) => (

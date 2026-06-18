@@ -39,6 +39,7 @@ interface RouteMapSectionProps {
   arrival?: TourArrivalInfo;
   logistics?: TourLogistics;
   routeMapImage?: string;
+  organizerComment?: string;
 }
 
 const PLAY_MS_PER_SEGMENT = 2200;
@@ -48,6 +49,7 @@ export default function RouteMapSection({
   arrival,
   logistics,
   routeMapImage,
+  organizerComment,
 }: RouteMapSectionProps) {
   const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
   const [progress, setProgress] = useState(0);
@@ -151,7 +153,7 @@ export default function RouteMapSection({
   }
 
   return (
-    <TourSection id="route-map" title="Маршрут и дорога">
+    <TourSection id="route-map" title="Маршрут и дорога" organizerComment={organizerComment}>
       {hasRouteImage ? (
         <div className="space-y-4">
           <h3 className="font-heading text-lg font-bold text-charcoal">Схема маршрута</h3>

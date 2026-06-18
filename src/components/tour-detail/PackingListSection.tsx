@@ -4,14 +4,20 @@ import TourSection from "./TourSection";
 
 interface PackingListSectionProps {
   tour: Tour;
+  organizerComment?: string;
 }
 
-export default function PackingListSection({ tour }: PackingListSectionProps) {
+export default function PackingListSection({ tour, organizerComment }: PackingListSectionProps) {
   const items = resolvePackingListItems(tour);
   if (items.length === 0) return null;
 
   return (
-    <TourSection id="packing" title="Что взять с собой" subtitle="Рекомендации организатора">
+    <TourSection
+      id="packing"
+      title="Что взять с собой"
+      subtitle="Рекомендации организатора"
+      organizerComment={organizerComment}
+    >
       <ul className="grid gap-3 sm:grid-cols-2">
           {items.map((item) => (
             <li key={item} className="flex gap-2 text-sm text-charcoal">

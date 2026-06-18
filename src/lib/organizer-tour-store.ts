@@ -63,9 +63,13 @@ import {
   normalizeParticipantRecommendations,
   normalizeRouteFeaturesText,
   normalizeItineraryOrganizerComment,
+  normalizeAccommodationOrganizerComment,
 } from "@/data/tour-organizer-display-defaults";
 import type { TourLanguage } from "@/types";
-import { fireOrganizerTourSync } from "@/lib/tour-content-api";
+import {
+  mergeSectionOrganizerComments,
+  normalizeSectionOrganizerComments,
+} from "@/lib/tour-section-comments";
 import {
   markTourDeletedBySlug,
   upsertTourFromOrganizerDraft,
@@ -355,6 +359,11 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
       : [],
     routeFeaturesText: detail?.organizerComment?.routeNotes ?? "",
     itineraryOrganizerCommentText: detail?.itineraryOrganizerComment ?? "",
+    accommodationOrganizerCommentText: detail?.accommodationOrganizerComment ?? "",
+    sectionOrganizerComments: mergeSectionOrganizerComments(detail?.sectionOrganizerComments, {
+      itinerary: detail?.itineraryOrganizerComment,
+      accommodations: detail?.accommodationOrganizerComment,
+    }),
     travelRisks: normalizeTravelRisks(detail?.travelRisks),
     updatedAt: listing.updatedAt,
   };
@@ -446,6 +455,8 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     participantRecommendations: [],
     routeFeaturesText: "",
     itineraryOrganizerCommentText: "",
+    accommodationOrganizerCommentText: "",
+    sectionOrganizerComments: {},
     travelRisks: [],
     updatedAt: new Date().toISOString(),
   };
@@ -610,6 +621,24 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
       draft.itineraryOrganizerCommentText?.trim()
         ? draft.itineraryOrganizerCommentText
         : seed.itineraryOrganizerCommentText
+    ),
+    accommodationOrganizerCommentText: normalizeAccommodationOrganizerComment(
+      draft.accommodationOrganizerCommentText?.trim()
+        ? draft.accommodationOrganizerCommentText
+        : seed.accommodationOrganizerCommentText
+    ),
+    sectionOrganizerComments: normalizeSectionOrganizerComments(
+      mergeSectionOrganizerComments(
+        draft.sectionOrganizerComments,
+        seed.sectionOrganizerComments,
+        {
+          itinerary:
+            draft.itineraryOrganizerCommentText?.trim() || seed.itineraryOrganizerCommentText,
+          accommodations:
+            draft.accommodationOrganizerCommentText?.trim() ||
+            seed.accommodationOrganizerCommentText,
+        }
+      )
     ),
     travelRisks: normalizeTravelRisks(
       draft.travelRisks?.length ? draft.travelRisks : seed.travelRisks

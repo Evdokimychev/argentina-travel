@@ -6,6 +6,7 @@ import type { OrganizerTourDiscountType } from "@/data/tour-discount-defaults";
 import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
 import type { OrganizerProgramDay } from "@/data/tour-program-defaults";
 import type { TourTravelRisk } from "@/types/tour-travel-risk";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
 import type { OrganizerTourFAQ, OrganizerTourInsuranceType } from "@/data/tour-terms-defaults";
 import type { OrganizerArrivalDepartureCity } from "@/data/tour-logistics-defaults";
 import type {
@@ -140,6 +141,10 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   routeFeaturesText: string;
   /** Комментарий организатора в конце программы на странице тура. */
   itineraryOrganizerCommentText: string;
+  /** Комментарий организатора в конце блока «Проживание». */
+  accommodationOrganizerCommentText: string;
+  /** Комментарии организатора к секциям страницы тура. */
+  sectionOrganizerComments: TourSectionOrganizerComments;
   /** Предупреждения и факторы маршрута для участников. */
   travelRisks: TourTravelRisk[];
 }

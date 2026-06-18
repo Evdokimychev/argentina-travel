@@ -16,6 +16,7 @@ import ItineraryDayDetails from "./ItineraryDayDetails";
 import ItineraryProgramFooter from "./ItineraryProgramFooter";
 import TourItineraryPdfButton from "./TourItineraryPdfButton";
 import type { TourDetail } from "@/types";
+import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 
 function ItineraryExpandToggle({
   allExpanded,
@@ -186,7 +187,6 @@ export default function ItinerarySection({
     setOpenDays((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
-        if (next.size === 1) return prev;
         next.delete(id);
       } else {
         next.add(id);
@@ -197,7 +197,7 @@ export default function ItinerarySection({
 
   function handleExpandAll() {
     if (allExpanded) {
-      setOpenDays(firstDayId ? new Set([firstDayId]) : new Set());
+      setOpenDays(new Set());
     } else {
       setOpenDays(new Set(itineraryDays.map((d) => d.id)));
     }
@@ -236,7 +236,7 @@ export default function ItinerarySection({
         <ItineraryProgramFooter
           difficulty={tour.difficulty}
           difficultyDescriptionHtml={tour.descriptionExtra?.difficulty}
-          organizerComment={tour.itineraryOrganizerComment}
+          organizerComment={tour ? getTourSectionOrganizerComment(tour, "itinerary") : undefined}
           travelRisks={tour.travelRisks}
         />
       ) : null}

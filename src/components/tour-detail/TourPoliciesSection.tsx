@@ -9,9 +9,10 @@ import TourSection from "./TourSection";
 
 interface TourPoliciesSectionProps {
   tour: Tour;
+  organizerComment?: string;
 }
 
-export default function TourPoliciesSection({ tour }: TourPoliciesSectionProps) {
+export default function TourPoliciesSection({ tour, organizerComment }: TourPoliciesSectionProps) {
   if (!hasTourPolicies(tour)) return null;
 
   const insurance = tour.terms.insurance;
@@ -23,7 +24,7 @@ export default function TourPoliciesSection({ tour }: TourPoliciesSectionProps) 
     (insuranceLabel || insurance.description.trim());
 
   return (
-    <TourSection id="policies" title="Условия и страхование">
+    <TourSection id="policies" title="Условия и страхование" organizerComment={organizerComment}>
       {showInsurance ? (
         <div>
           <h3 className="font-heading text-lg font-bold text-charcoal">Страхование</h3>

@@ -8,9 +8,13 @@ import TourSection from "./TourSection";
 
 interface LogisticsDetailSectionProps {
   tour: Tour;
+  organizerComment?: string;
 }
 
-export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionProps) {
+export default function LogisticsDetailSection({
+  tour,
+  organizerComment,
+}: LogisticsDetailSectionProps) {
   const showTickets =
     hasTicketRecommendations(tour) && !tour.logistics.arrivalDetailsEnabled;
 
@@ -24,7 +28,7 @@ export default function LogisticsDetailSection({ tour }: LogisticsDetailSectionP
   if (!showTickets && (showUnifiedArrivalPanel || nonPlaneCities.length === 0)) return null;
 
   return (
-    <TourSection id="logistics" title="Логистика и перелёт">
+    <TourSection id="logistics" title="Логистика и перелёт" organizerComment={organizerComment}>
       {showTickets && !tour.logistics.arrivalDetailsEnabled ? (
         <div>
           <h3 className="font-heading text-lg font-bold text-charcoal">Рекомендации по перелёту</h3>

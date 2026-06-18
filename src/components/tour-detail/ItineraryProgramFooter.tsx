@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 import type { DifficultyLevel } from "@/types";
 import type { TourTravelRisk } from "@/types/tour-travel-risk";
 import TourTravelRisksPanel from "./TourTravelRisksPanel";
+import TourSectionOrganizerNote from "./TourSectionOrganizerNote";
 
 interface ItineraryProgramFooterProps {
   difficulty: DifficultyLevel;
@@ -46,29 +47,6 @@ function DifficultyHelpButton() {
         </ul>
       </PopoverContent>
     </Popover>
-  );
-}
-
-function CommentParagraphs({ text }: { text: string }) {
-  const paragraphs = text
-    .split(/\n{2,}/)
-    .map((part) => part.trim())
-    .filter(Boolean);
-
-  if (paragraphs.length === 0) {
-    return (
-      <p className="text-sm leading-relaxed text-charcoal whitespace-pre-line">{text.trim()}</p>
-    );
-  }
-
-  return (
-    <div className="space-y-3">
-      {paragraphs.map((paragraph, index) => (
-        <p key={index} className="text-sm leading-relaxed text-charcoal">
-          {paragraph}
-        </p>
-      ))}
-    </div>
   );
 }
 
@@ -120,12 +98,7 @@ export default function ItineraryProgramFooter({
       ) : null}
 
       {showComment ? (
-        <div className={cn((showRisks || levelMeta || extendedDescription) && "border-t border-gray-100 pt-5 mt-5")}>
-          <p className="text-sm font-semibold text-charcoal">Комментарий организатора</p>
-          <div className="mt-3">
-            <CommentParagraphs text={comment} />
-          </div>
-        </div>
+        <TourSectionOrganizerNote comment={comment} embedded />
       ) : null}
     </div>
   );

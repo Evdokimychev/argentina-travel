@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { ExternalLink } from "lucide-react";
-import { TourAccommodation } from "@/types";
+import { TourAccommodation, type ComfortLevel } from "@/types";
 import { normalizeEditorValue } from "@/lib/rich-text";
 import FormattedPrice from "@/components/FormattedPrice";
 import { formatNights } from "@/lib/pluralize";
+import AccommodationsComfortFooter from "./AccommodationsComfortFooter";
 import TourSection from "./TourSection";
 import { tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
@@ -178,14 +179,27 @@ function AccommodationCard({ acc }: { acc: TourAccommodation }) {
 export default function AccommodationsSection({
   accommodations,
   durationNights,
+  comfortLevel,
+  comfortLevels,
+  comfortDescriptionHtml,
+  organizerComment,
 }: {
   accommodations: TourAccommodation[];
   durationNights: number;
+  comfortLevel: ComfortLevel;
+  comfortLevels?: ComfortLevel[];
+  comfortDescriptionHtml?: string;
+  organizerComment?: string;
 }) {
+  const showComfortFooter = Boolean(
+    comfortLevel || comfortDescriptionHtml?.trim()
+  );
+
   return (
     <TourSection
       id="accommodations"
       title="Проживание"
+      organizerComment={organizerComment}
       subtitle={
         durationNights > 0 ? (
           <>
@@ -202,6 +216,14 @@ export default function AccommodationsSection({
           <AccommodationCard key={acc.id} acc={acc} />
         ))}
       </div>
+
+      {showComfortFooter ? (
+        <AccommodationsComfortFooter
+          comfortLevel={comfortLevel}
+          comfortLevels={comfortLevels}
+          comfortDescriptionHtml={comfortDescriptionHtml}
+        />
+      ) : null}
     </TourSection>
   );
 }

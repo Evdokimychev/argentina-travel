@@ -5,9 +5,11 @@ import TourTermsAccordion from "./TourTermsAccordion";
 export default function IncludedExcludedSection({
   included,
   excluded,
+  organizerComment,
 }: {
   included: string[];
   excluded: string[];
+  organizerComment?: string;
 }) {
   const includedItems = included.filter((item) => item.trim());
   const excludedItems = excluded.filter((item) => item.trim());
@@ -17,7 +19,12 @@ export default function IncludedExcludedSection({
   }
 
   return (
-    <TourSection id="included" title="Условия тура" subtitle="Что включено и не включено в стоимость">
+    <TourSection
+      id="included"
+      title="Условия тура"
+      subtitle="Что включено и не включено в стоимость"
+      organizerComment={organizerComment}
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         {hasTermsListContent(includedItems) ? (
           <TourTermsAccordion title="Что включено" items={includedItems} variant="included" />

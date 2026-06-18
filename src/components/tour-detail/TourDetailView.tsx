@@ -33,6 +33,7 @@ import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
+import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 import { tourUsesExternalBooking } from "@/lib/tour-custom-booking-link";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
@@ -135,8 +136,15 @@ export default function TourDetailView({
                 maxWeightKg={canonicalTour?.participants.maxWeightKg}
                 languages={canonicalTour?.participants.languages}
               />
-              <DescriptionSection blocks={tour.descriptionBlocks} extra={tour.descriptionExtra!} />
-              <PlacesSection places={tour.places} />
+              <DescriptionSection
+                blocks={tour.descriptionBlocks}
+                extra={tour.descriptionExtra!}
+                organizerComment={getTourSectionOrganizerComment(tour, "description")}
+              />
+              <PlacesSection
+                places={tour.places}
+                organizerComment={getTourSectionOrganizerComment(tour, "places")}
+              />
               {tour.itinerary?.length ? (
                 <ItinerarySection
                   days={tour.itinerary}
@@ -144,26 +152,60 @@ export default function TourDetailView({
                   showPdfDownload={!previewMode}
                 />
               ) : null}
-              <DatesSection tour={tour} canonicalTour={canonicalTour} />
-              <IncludedExcludedSection included={tour.included} excluded={tour.excluded} />
+              <DatesSection
+                tour={tour}
+                canonicalTour={canonicalTour}
+                organizerComment={getTourSectionOrganizerComment(tour, "dates")}
+              />
+              <IncludedExcludedSection
+                included={tour.included}
+                excluded={tour.excluded}
+                organizerComment={getTourSectionOrganizerComment(tour, "included")}
+              />
               {tourHasAccommodation(tour) ? (
                 <AccommodationsSection
                   accommodations={tour.accommodations}
                   durationNights={tour.durationNights}
+                  comfortLevel={tour.comfort}
+                  comfortLevels={tour.comfortLevels}
+                  comfortDescriptionHtml={tour.descriptionExtra?.comfort}
+                  organizerComment={getTourSectionOrganizerComment(tour, "accommodations")}
                 />
               ) : null}
-              {canonicalTour ? <PackingListSection tour={canonicalTour} /> : null}
-              {canonicalTour ? <TourPoliciesSection tour={canonicalTour} /> : null}
-              <ImportantSection items={tour.importantInfo} />
+              {canonicalTour ? (
+                <PackingListSection
+                  tour={canonicalTour}
+                  organizerComment={getTourSectionOrganizerComment(tour, "packing")}
+                />
+              ) : null}
+              {canonicalTour ? (
+                <TourPoliciesSection
+                  tour={canonicalTour}
+                  organizerComment={getTourSectionOrganizerComment(tour, "policies")}
+                />
+              ) : null}
+              <ImportantSection
+                items={tour.importantInfo}
+                organizerComment={getTourSectionOrganizerComment(tour, "important")}
+              />
               {flightLogisticsSection}
-              {canonicalTour ? <LogisticsDetailSection tour={canonicalTour} /> : null}
+              {canonicalTour ? (
+                <LogisticsDetailSection
+                  tour={canonicalTour}
+                  organizerComment={getTourSectionOrganizerComment(tour, "logistics")}
+                />
+              ) : null}
               <RouteMapSection
                 points={tour.routePoints}
                 arrival={tour.arrival}
                 logistics={canonicalTour?.logistics}
                 routeMapImage={canonicalTour?.program.routeMapImage}
+                organizerComment={getTourSectionOrganizerComment(tour, "routeMap")}
               />
-              <FAQSection faq={tour.faq} />
+              <FAQSection
+                faq={tour.faq}
+                organizerComment={getTourSectionOrganizerComment(tour, "faq")}
+              />
               <OrganizerSection
                 organizer={tour.organizer}
                 comment={tour.organizerComment}

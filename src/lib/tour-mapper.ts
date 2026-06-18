@@ -4,6 +4,7 @@ import {
   normalizeParticipantRecommendations,
   normalizeRouteFeaturesText,
   normalizeItineraryOrganizerComment,
+  normalizeAccommodationOrganizerComment,
 } from "@/data/tour-organizer-display-defaults";
 import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
@@ -28,7 +29,11 @@ import { normalizeTourDuration } from "@/lib/tour-duration";
 import { textToListItems } from "@/data/tour-terms-defaults";
 import { linesToLogisticsList } from "@/data/tour-logistics-defaults";
 import { mergeLogisticsSeed } from "@/data/tour-logistics-seeds";
-import { getTourRoutePoints } from "@/data/tour-routes";
+import {
+  mergeSectionOrganizerComments,
+  normalizeSectionOrganizerComments,
+} from "@/lib/tour-section-comments";
+import { primaryComfortLevel } from "@/data/tour-levels";
 import { getGroupDiscountSeedForSlug } from "@/data/tour-group-discount-seeds";
 import { getPriceOnRequestSeedForSlug } from "@/data/tour-price-on-request-seeds";
 import { getPrivateTourSeedForSlug } from "@/data/tour-private-seeds";
@@ -205,6 +210,20 @@ function buildArrivalInfo(tour: Tour): TourArrivalInfo {
     transfers,
     meetingPoint,
   };
+}
+
+function buildSectionCommentsFromDraft(
+  draft: Pick<
+    OrganizerTourDraft,
+    "sectionOrganizerComments" | "itineraryOrganizerCommentText" | "accommodationOrganizerCommentText"
+  >
+): ReturnType<typeof normalizeSectionOrganizerComments> {
+  return normalizeSectionOrganizerComments(
+    mergeSectionOrganizerComments(draft.sectionOrganizerComments, {
+      itinerary: draft.itineraryOrganizerCommentText,
+      accommodations: draft.accommodationOrganizerCommentText,
+    })
+  );
 }
 
 function buildDescriptionExtra(tour: Tour, fallback?: TourDescriptionExtra): TourDescriptionExtra {
@@ -400,11 +419,16 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
         detail.accommodations.map(legacyAccommodationToPlace)
       ),
       upgradesEnabled: resolveTourAccommodationUpgradesEnabled(listing.slug),
+      organizerComment: detail.accommodationOrganizerComment,
     },
     program: {
       routeMapImage: "",
       routePoints: detail.routePoints ?? getTourRoutePoints(listing.slug),
       days: detail.itinerary.map(mapItineraryToProgramDay),
+      sectionOrganizerComments: mergeSectionOrganizerComments(detail.sectionOrganizerComments, {
+        itinerary: detail.itineraryOrganizerComment,
+        accommodations: detail.accommodationOrganizerComment,
+      }),
       itineraryOrganizerComment: detail.itineraryOrganizerComment,
     },
     media: {
@@ -464,6 +488,7 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
       : base.descriptionBlocks;
 
   const authorGuide = draft.guides.find((guide) => guide.isTourAuthor) ?? draft.guides[0];
+  const sectionComments = buildSectionCommentsFromDraft(draft);
   const { durationDays, durationNights } = normalizeTourDuration(
     draft.durationDays,
     draft.durationNights
@@ -559,6 +584,7 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
         draft.accommodationUpgradesEnabled,
         base.accommodation.upgradesEnabled
       ),
+      organizerComment: sectionComments.accommodations,
     },
     program: {
       routeMapImage: draft.routeMapImage,
@@ -566,9 +592,8 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
         ? draft.routePoints
         : base.program.routePoints,
       days: draft.programDays,
-      itineraryOrganizerComment: normalizeItineraryOrganizerComment(
-        draft.itineraryOrganizerCommentText
-      ) || undefined,
+      sectionOrganizerComments: sectionComments,
+      itineraryOrganizerComment: sectionComments.itinerary,
     },
     media: {
       coverImage: draft.image,
@@ -744,6 +769,16 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
 
   const accommodations = buildPublicAccommodations(tour, legacy);
   const publicAccommodations = accommodations;
+  const sectionOrganizerComments = mergeSectionOrganizerComments(
+    tour.program.sectionOrganizerComments,
+    legacy?.sectionOrganizerComments,
+    {
+      itinerary:
+        tour.program.itineraryOrganizerComment?.trim() || legacy?.itineraryOrganizerComment,
+      accommodations:
+        tour.accommodation.organizerComment?.trim() || legacy?.accommodationOrganizerComment,
+    }
+  );
 
   const { durationDays, durationNights } = normalizeTourDuration(
     tour.durationDays,
@@ -769,6 +804,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     shortDescription: tour.shortDescription,
     difficulty: tour.levels.difficulty,
     comfort: tour.levels.primaryComfort,
+    comfortLevels: tour.levels.comfortLevels,
     accommodationType: tour.levels.accommodationType,
     groupMin: tour.participants.groupMin,
     groupMax: tour.participants.groupMax,
@@ -793,9 +829,14 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
       ? mapProgramDaysToItinerary(tour.program.days)
       : legacy?.itinerary ?? [],
     itineraryOrganizerComment:
-      tour.program.itineraryOrganizerComment?.trim() ||
+      sectionOrganizerComments.itinerary ||
       legacy?.itineraryOrganizerComment ||
       undefined,
+    accommodationOrganizerComment:
+      sectionOrganizerComments.accommodations ||
+      legacy?.accommodationOrganizerComment ||
+      undefined,
+    sectionOrganizerComments,
     organizerComment: tour.team.organizerComment,
     organizer: enrichTourOrganizerDetail(
       tour.team.organizerDetail,
@@ -855,6 +896,7 @@ export function createMinimalTourFromDraft(
   );
   const included = textToListItems(draft.includedText);
   const excluded = textToListItems(draft.excludedText);
+  const sectionComments = buildSectionCommentsFromDraft(draft);
 
   return {
     id: draft.id,
@@ -935,6 +977,7 @@ export function createMinimalTourFromDraft(
       photos: draft.accommodationPhotos,
       places: draft.accommodationPlaces,
       upgradesEnabled: draft.accommodationUpgradesEnabled,
+      organizerComment: sectionComments.accommodations,
     },
     program: {
       routeMapImage: draft.routeMapImage,
@@ -942,9 +985,8 @@ export function createMinimalTourFromDraft(
         ? draft.routePoints
         : getTourRoutePoints(catalogSlug),
       days: draft.programDays,
-      itineraryOrganizerComment: normalizeItineraryOrganizerComment(
-        draft.itineraryOrganizerCommentText
-      ) || undefined,
+      sectionOrganizerComments: sectionComments,
+      itineraryOrganizerComment: sectionComments.itinerary,
     },
     media: {
       coverImage: draft.image,

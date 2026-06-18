@@ -80,7 +80,7 @@ export interface TourClassification {
   tags: string[];
 }
 
-import type { TourTravelRisk } from "@/types/tour-travel-risk";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
 
 export type { TourTravelRisk } from "@/types/tour-travel-risk";
 
@@ -109,6 +109,8 @@ export interface TourAccommodationContent {
   places: OrganizerTourAccommodationPlace[];
   /** Разрешить выбор типа номера при бронировании. */
   upgradesEnabled?: boolean;
+  /** Комментарий организатора в конце блока «Проживание». */
+  organizerComment?: string;
 }
 
 export interface TourProgram {
@@ -117,6 +119,8 @@ export interface TourProgram {
   days: OrganizerProgramDay[];
   /** Комментарий организатора в конце блока «Программа по дням». */
   itineraryOrganizerComment?: string;
+  /** Комментарии организатора в конце секций страницы тура. */
+  sectionOrganizerComments?: TourSectionOrganizerComments;
 }
 
 export interface TourMedia {

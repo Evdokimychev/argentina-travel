@@ -32,6 +32,9 @@ import TourGuidesBlock from "@/components/organizer/TourGuidesBlock";
 import TourParticipantRecommendationsBlock from "@/components/organizer/TourParticipantRecommendationsBlock";
 import TourRouteFeaturesBlock from "@/components/organizer/TourRouteFeaturesBlock";
 import TourComfortBlock from "@/components/organizer/TourComfortBlock";
+import TourAccommodationFooterBlock from "@/components/organizer/TourAccommodationFooterBlock";
+import TourSectionCommentEditor from "@/components/organizer/TourSectionCommentEditor";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
 import TourAccommodationDescriptionBlock from "@/components/organizer/TourAccommodationDescriptionBlock";
 import TourAccommodationVariantsBlock from "@/components/organizer/TourAccommodationVariantsBlock";
 import TourAccommodationPlacesBlock from "@/components/organizer/TourAccommodationPlacesBlock";
@@ -659,6 +662,27 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     markDirty();
   }
 
+  function updateSectionOrganizerComments(
+    sectionOrganizerComments: TourSectionOrganizerComments,
+    legacyPatch?: Partial<
+      Pick<OrganizerTourDraft, "itineraryOrganizerCommentText" | "accommodationOrganizerCommentText">
+    >
+  ) {
+    updateDraft({ sectionOrganizerComments, ...legacyPatch });
+  }
+
+  function sectionCommentValue(sectionId: keyof TourSectionOrganizerComments): string {
+    return (
+      draft?.sectionOrganizerComments?.[sectionId] ??
+      (sectionId === "itinerary"
+        ? draft?.itineraryOrganizerCommentText
+        : sectionId === "accommodations"
+          ? draft?.accommodationOrganizerCommentText
+          : "") ??
+      ""
+    );
+  }
+
   function toggleLanguage(language: TourLanguage) {
     setDraft((prev) => {
       if (!prev) return prev;
@@ -1024,24 +1048,40 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "main" ? (
-              <TourArrivalDepartureBlock
-                enabled={draft.arrivalDepartureEnabled}
-                cities={draft.arrivalDepartureCities}
-                onEnabledChange={(arrivalDepartureEnabled) =>
-                  updateDraft({ arrivalDepartureEnabled })
-                }
-                onChange={(arrivalDepartureCities) => updateDraft({ arrivalDepartureCities })}
-              />
+              <>
+                <TourArrivalDepartureBlock
+                  enabled={draft.arrivalDepartureEnabled}
+                  cities={draft.arrivalDepartureCities}
+                  onEnabledChange={(arrivalDepartureEnabled) =>
+                    updateDraft({ arrivalDepartureEnabled })
+                  }
+                  onChange={(arrivalDepartureCities) => updateDraft({ arrivalDepartureCities })}
+                />
+                <TourSectionCommentEditor
+                  sectionId="logistics"
+                  value={sectionCommentValue("logistics")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
             ) : null}
 
             {activeTab === "main" ? (
-              <TourGeneralDescriptionBlock
-                value={draft.shortDescription}
-                onChange={(shortDescription) => updateDraft({ shortDescription })}
-                variantLabel={variantSync?.variantLabel}
-                variantDiff={variantSync?.shortDescriptionDiff}
-                onApplySync={() => markDirty()}
-              />
+              <>
+                <TourGeneralDescriptionBlock
+                  value={draft.shortDescription}
+                  onChange={(shortDescription) => updateDraft({ shortDescription })}
+                  variantLabel={variantSync?.variantLabel}
+                  variantDiff={variantSync?.shortDescriptionDiff}
+                  onApplySync={() => markDirty()}
+                />
+                <TourSectionCommentEditor
+                  sectionId="description"
+                  value={sectionCommentValue("description")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
             ) : null}
 
             {activeTab === "main" ? (
@@ -1054,10 +1094,18 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "main" ? (
-              <TourImpressionsBlock
-                places={draft.places}
-                onChange={(places) => updateDraft({ places })}
-              />
+              <>
+                <TourImpressionsBlock
+                  places={draft.places}
+                  onChange={(places) => updateDraft({ places })}
+                />
+                <TourSectionCommentEditor
+                  sectionId="places"
+                  value={sectionCommentValue("places")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
             ) : null}
 
             {activeTab === "main" ? (
@@ -1127,6 +1175,20 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 <TourAccommodationPlacesBlock
                   places={draft.accommodationPlaces}
                   onChange={(accommodationPlaces) => updateDraft({ accommodationPlaces })}
+                />
+
+                <TourAccommodationFooterBlock
+                  comfortLevels={draft.comfortLevels}
+                  accommodationOrganizerCommentText={sectionCommentValue("accommodations")}
+                  onCommentChange={(accommodationOrganizerCommentText) =>
+                    updateSectionOrganizerComments(
+                      {
+                        ...draft.sectionOrganizerComments,
+                        accommodations: accommodationOrganizerCommentText,
+                      },
+                      { accommodationOrganizerCommentText }
+                    )
+                  }
                 />
               </>
             ) : null}
@@ -1222,6 +1284,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 options={draft.checkoutPaymentOptions}
                 onChange={(checkoutPaymentOptions) => updateDraft({ checkoutPaymentOptions })}
               />
+
+              <TourSectionCommentEditor
+                sectionId="dates"
+                value={sectionCommentValue("dates")}
+                comments={draft.sectionOrganizerComments}
+                onChange={updateSectionOrganizerComments}
+              />
               </>
             ) : null}
 
@@ -1238,11 +1307,23 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 />
                 <TourItineraryFooterBlock
                   difficultyLevel={draft.difficultyLevel}
-                  itineraryOrganizerCommentText={draft.itineraryOrganizerCommentText}
+                  itineraryOrganizerCommentText={sectionCommentValue("itinerary")}
                   onCommentChange={(itineraryOrganizerCommentText) =>
-                    updateDraft({ itineraryOrganizerCommentText })
+                    updateSectionOrganizerComments(
+                      {
+                        ...draft.sectionOrganizerComments,
+                        itinerary: itineraryOrganizerCommentText,
+                      },
+                      { itineraryOrganizerCommentText }
+                    )
                   }
                   onOpenMainTab={() => setActiveTab("main")}
+                />
+                <TourSectionCommentEditor
+                  sectionId="routeMap"
+                  value={sectionCommentValue("routeMap")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
                 />
               </>
             ) : null}
@@ -1254,6 +1335,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   excludedText={draft.excludedText}
                   onIncludedChange={(includedText) => updateDraft({ includedText })}
                   onExcludedChange={(excludedText) => updateDraft({ excludedText })}
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="included"
+                  value={sectionCommentValue("included")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
                 />
 
                 <TourInsuranceBlock
@@ -1276,12 +1364,26 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   }
                 />
 
+                <TourSectionCommentEditor
+                  sectionId="policies"
+                  value={sectionCommentValue("policies")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+
                 <TourTermsListBlock
                   title="Важно знать"
                   description="Ключевые рекомендации и ограничения для участников тура"
                   items={draft.importantInfo}
                   onChange={(importantInfo) => updateDraft({ importantInfo })}
                   placeholder="Например: возьмите непромокаемую обувь"
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="important"
+                  value={sectionCommentValue("important")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
                 />
 
                 <TourPackingListBlock
@@ -1291,9 +1393,23 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   onChange={(packingListText) => updateDraft({ packingListText })}
                 />
 
+                <TourSectionCommentEditor
+                  sectionId="packing"
+                  value={sectionCommentValue("packing")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+
                 <TourFAQBlock
                   items={draft.faq}
                   onChange={(faq) => updateDraft({ faq })}
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="faq"
+                  value={sectionCommentValue("faq")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
                 />
               </>
             ) : null}
