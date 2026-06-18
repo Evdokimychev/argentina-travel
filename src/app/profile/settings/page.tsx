@@ -239,7 +239,7 @@ export default function ProfileSettingsPage() {
         onSubmit={handleSubmit}
         className={cabinetPanelClass}
       >
-        <h2 className={cabinetPageTitleClass}>Настройки аккаунта</h2>
+        <h1 className={cabinetPageTitleClass}>Настройки аккаунта</h1>
         <p className={cabinetPageSubtitleClass}>Контактные данные и фото профиля</p>
 
         <div className="mt-5 space-y-4">

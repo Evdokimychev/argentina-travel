@@ -2,6 +2,7 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import ToursCatalog from "@/components/marketplace/ToursCatalog";
 import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
+import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { buildCatalogMetadata, getServerCatalogView } from "@/lib/catalog-seo";
 
@@ -23,13 +24,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
   return (
     <>
       <CatalogSeoLinks tours={view.filtered} />
-      <Suspense
-        fallback={
-          <div className="mx-auto max-w-7xl px-4 py-24 text-center text-slate">
-            Загрузка каталога…
-          </div>
-        }
-      >
+      <Suspense fallback={<CatalogLoadingFallback title="Загружаем каталог туров…" />}>
         <ToursCatalog tours={tours} />
       </Suspense>
     </>

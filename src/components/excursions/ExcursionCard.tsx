@@ -6,6 +6,8 @@ import TourCardGallery from "@/components/marketplace/TourCardGallery";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
+import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
@@ -104,7 +106,7 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
           </h3>
 
           {excursion.tagline ? (
-            <p className="mt-1 line-clamp-2 text-xs text-slate">{excursion.tagline}</p>
+            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate">{excursion.tagline}</p>
           ) : null}
 
           <div className="mt-3 flex items-center justify-between gap-2">
@@ -129,12 +131,21 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
           </div>
 
           <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
-            <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
-              {t("excursions.card.kind")}
-            </span>
-            <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
+            <Badge variant="default" className="rounded-md px-2 py-0.5 text-[11px] font-normal">
               {t(excursionFormatLabelKey(formatKind))}
-            </span>
+            </Badge>
+          </div>
+
+          <div className="relative z-20 mt-auto pt-3">
+            <Link
+              href={`/excursions/${excursion.slug}`}
+              className={buttonVariants({
+                variant: "outline",
+                className: "pointer-events-auto h-10 w-full rounded-xl text-sm font-semibold",
+              })}
+            >
+              {t("excursions.card.open")}
+            </Link>
           </div>
         </div>
       </div>

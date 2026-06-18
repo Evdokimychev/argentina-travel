@@ -48,7 +48,7 @@ export default function ProfileFavoritesPage() {
 
   return (
     <div className={cabinetPanelClass}>
-      <h2 className={cabinetPageTitleClass}>{t("profile.favorites.title")}</h2>
+      <h1 className={cabinetPageTitleClass}>{t("profile.favorites.title")}</h1>
       <p className={cabinetPageSubtitleClass}>{t("profile.favorites.subtitle")}</p>
 
       {favorites.length > 0 ? (

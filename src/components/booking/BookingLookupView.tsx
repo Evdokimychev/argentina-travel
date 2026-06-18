@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Loader2, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
@@ -12,6 +12,7 @@ import FormattedPrice from "@/components/FormattedPrice";
 import { formatBookingDisplayNumber, formatBookingTourDates } from "@/lib/booking-display";
 import { resolveTouristPaymentLinkHref } from "@/lib/booking-payment-display";
 import { getBookingsByContactEmail } from "@/lib/bookings-store";
+import { apiLookupBookingsByEmail, isRemoteBookingsMode } from "@/lib/bookings-api";
 import { useAuth } from "@/context/AuthContext";
 import type { Booking } from "@/types/tourist";
 
@@ -22,20 +23,45 @@ export default function BookingLookupView() {
   const [email, setEmail] = useState(initialEmail);
   const [results, setResults] = useState<Booking[] | null>(null);
   const [searched, setSearched] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [searchError, setSearchError] = useState<string | null>(null);
+
+  async function lookupBookings(address: string) {
+    const trimmed = address.trim();
+    if (!trimmed) return;
+
+    setLoading(true);
+    setSearchError(null);
+
+    try {
+      if (isRemoteBookingsMode()) {
+        const remote = await apiLookupBookingsByEmail(trimmed);
+        setResults(remote);
+      } else {
+        setResults(getBookingsByContactEmail(trimmed));
+      }
+      setSearched(true);
+    } catch (error) {
+      setResults([]);
+      setSearched(true);
+      setSearchError(error instanceof Error ? error.message : "Не удалось выполнить поиск");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
     if (!initialEmail.trim()) return;
-    setResults(getBookingsByContactEmail(initialEmail));
-    setSearched(true);
+    void lookupBookings(initialEmail);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only on mount / email param
   }, [initialEmail]);
 
   function handleSearch(event: React.FormEvent) {
     event.preventDefault();
-    const trimmed = email.trim();
-    if (!trimmed) return;
-    setResults(getBookingsByContactEmail(trimmed));
-    setSearched(true);
+    void lookupBookings(email);
   }
+
+  const remoteMode = isRemoteBookingsMode();
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
@@ -43,7 +69,9 @@ export default function BookingLookupView() {
         <h1 className="font-display text-2xl font-bold text-charcoal">Найти заявку</h1>
         <p className="mt-2 text-sm leading-relaxed text-slate">
           Если вы оформили бронирование без входа в аккаунт, введите email, указанный при заявке.
-          Заявки хранятся в браузере до подключения облачной синхронизации.
+          {remoteMode
+            ? " Заявки ищутся в облачной базе платформы."
+            : " Заявки хранятся в браузере до подключения облачной синхронизации."}
         </p>
 
         <form onSubmit={handleSearch} className="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -58,10 +86,23 @@ export default function BookingLookupView() {
               required
             />
           </div>
-          <Button type="submit" className="shrink-0">
-            Найти
+          <Button type="submit" className="shrink-0" disabled={loading}>
+            {loading ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                Ищем…
+              </>
+            ) : (
+              "Найти"
+            )}
           </Button>
         </form>
+
+        {searchError ? (
+          <p role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
+            {searchError}
+          </p>
+        ) : null}
 
         {!user ? (
           <div className="mt-6 rounded-xl border border-brand/20 bg-brand-light/20 px-4 py-4 text-sm text-charcoal">

@@ -22,6 +22,16 @@ function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
+function prefersReducedTransparency() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-reduced-transparency: reduce)").matches;
+}
+
+function prefersHighContrast() {
+  if (typeof window === "undefined") return false;
+  return window.matchMedia("(prefers-contrast: more)").matches;
+}
+
 function isOverInteractive(x: number, y: number): boolean {
   const hit = document.elementFromPoint(x, y);
   if (!hit) return false;
@@ -46,10 +56,16 @@ export default function CustomCursor() {
   const [overTextField, setOverTextField] = useState(false);
 
   useEffect(() => {
-    if (!isFinePointerDevice() || prefersReducedMotion()) return;
+    if (
+      !isFinePointerDevice() ||
+      prefersReducedMotion() ||
+      prefersReducedTransparency() ||
+      prefersHighContrast()
+    ) {
+      return;
+    }
 
     setEnabled(true);
-    document.documentElement.classList.add("custom-cursor-active");
 
     const lerp = (current: number, target: number, amount: number) =>
       current + (target - current) * amount;
@@ -102,7 +118,6 @@ export default function CustomCursor() {
     window.addEventListener("mouseleave", handleLeave);
 
     return () => {
-      document.documentElement.classList.remove("custom-cursor-active");
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("mouseleave", handleLeave);
       if (rafRef.current != null) window.cancelAnimationFrame(rafRef.current);

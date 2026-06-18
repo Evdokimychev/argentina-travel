@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ContactPageJsonLd from "@/components/seo/ContactPageJsonLd";
 
 export const metadata: Metadata = {
   title: "Контакты — Пора в Аргентину",
@@ -8,5 +9,10 @@ export const metadata: Metadata = {
 };
 
 export default function ContactsLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <>
+      <ContactPageJsonLd />
+      {children}
+    </>
+  );
 }

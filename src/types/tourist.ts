@@ -141,6 +141,8 @@ export interface TouristReview {
   tourId: string;
   tourSlug: string;
   tourTitle: string;
+  /** По умолчанию тур; для экскурсий — `excursion`. */
+  listingKind?: "tour" | "excursion";
   bookingId?: string;
   rating: number;
   text: string;

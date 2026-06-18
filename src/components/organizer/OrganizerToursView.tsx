@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ExternalLink,
   Eye,
@@ -11,6 +11,8 @@ import {
   Plus,
   Search,
   Map,
+  Sparkles,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -141,6 +143,8 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
 
 export default function OrganizerToursView() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const showWelcome = searchParams.get("welcome") === "1";
   const { user } = useAuth();
   const [archiveTab, setArchiveTab] = useState<ArchiveTab>("active");
   const [search, setSearch] = useState("");
@@ -174,6 +178,15 @@ export default function OrganizerToursView() {
       ),
     [archiveTab, tours]
   );
+
+  function dismissWelcome() {
+    router.replace("/organizer/tours", { scroll: false });
+  }
+
+  function handleWelcomeCreateTour() {
+    dismissWelcome();
+    handleCreateTour();
+  }
 
   function handleCreateTour() {
     const result = createOrganizerTour(user);
@@ -219,6 +232,42 @@ export default function OrganizerToursView() {
       </div>
 
       <div className="space-y-6 p-4 sm:p-6">
+        {showWelcome ? (
+          <div className="relative rounded-2xl border border-sky/25 bg-gradient-to-br from-sky/10 via-white to-white p-5 sm:p-6">
+            <button
+              type="button"
+              onClick={dismissWelcome}
+              className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+              aria-label="Закрыть подсказку"
+            >
+              <X className="h-4 w-4" />
+            </button>
+            <div className="flex items-start gap-3 pr-8">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/15 text-sky">
+                <Sparkles className="h-5 w-5" aria-hidden />
+              </span>
+              <div>
+                <h2 className="font-heading text-lg font-bold text-charcoal">
+                  Добро пожаловать в кабинет организатора
+                </h2>
+                <p className="mt-1 text-sm leading-relaxed text-slate">
+                  Создайте первый тур или экскурсию — редактор проведёт через программу, цены и
+                  условия бронирования. На публикацию обычно уходит 15–20 минут.
+                </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <Button type="button" className="gap-2" onClick={handleWelcomeCreateTour}>
+                    <Plus className="h-4 w-4" />
+                    Создать первый тур
+                  </Button>
+                  <Button type="button" variant="outline" onClick={dismissWelcome}>
+                    Позже
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <h1 className="font-display text-xl font-bold text-charcoal sm:text-2xl">

@@ -580,16 +580,4 @@ body {
   text-decoration: underline;
 }
 
-/* Custom trailing cursor — desktop pointer devices only */
-html.custom-cursor-active,
-html.custom-cursor-active
-  *:not(input):not(textarea):not(select):not([contenteditable="true"]) {
-  cursor: none !important;
-}
-
-html.custom-cursor-active input,
-html.custom-cursor-active textarea,
-html.custom-cursor-active select,
-html.custom-cursor-active [contenteditable="true"] {
-  cursor: auto !important;
-}
+/* Custom trailing cursor — decorative overlay; system cursor stays visible for accessibility */

@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import ExcursionsCatalog from "@/components/excursions/ExcursionsCatalog";
+import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 
 export const metadata: Metadata = {
@@ -22,13 +23,7 @@ export default async function ExcursionsPage() {
   const { items, cities } = await fetchExcursionsServer({ pageSize: 500 });
 
   return (
-    <Suspense
-      fallback={
-        <div className="mx-auto max-w-7xl px-4 py-24 text-center text-slate">
-          Загрузка каталога…
-        </div>
-      }
-    >
+    <Suspense fallback={<CatalogLoadingFallback title="Загружаем каталог экскурсий…" />}>
       <ExcursionsCatalog excursions={items} cities={cities} />
     </Suspense>
   );

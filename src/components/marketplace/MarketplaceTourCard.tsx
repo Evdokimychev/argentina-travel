@@ -11,6 +11,7 @@ import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisp
 import TourCardGallery from "./TourCardGallery";
 import { formatDurationShort } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
 import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
@@ -202,6 +203,18 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
                 </span>
               </>
             ) : null}
+          </div>
+
+          <div className="pointer-events-auto relative z-20 mt-auto pt-4">
+            <Link
+              href={`/tours/${tour.slug}`}
+              className={buttonVariants({
+                variant: "outline",
+                className: "h-10 w-full rounded-xl text-sm font-semibold",
+              })}
+            >
+              Смотреть тур
+            </Link>
           </div>
         </div>
       </div>

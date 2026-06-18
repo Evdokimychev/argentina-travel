@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Compass } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import FooterNewsletter from "@/components/FooterNewsletter";
+import { buttonVariants } from "@/components/ui/button";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
   SITE_FOOTER_CONTACTS,
@@ -131,6 +132,29 @@ export default function Footer() {
               </div>
             </FooterColumn>
           </div>
+        </div>
+
+        <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/[0.06] via-white to-white p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+          <div className="min-w-0">
+            <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-sky">
+              <Compass className="h-3.5 w-3.5" aria-hidden />
+              Подбор маршрута
+            </p>
+            <h3 className="mt-2 font-heading text-lg font-bold text-charcoal">
+              Не знаете, с чего начать?
+            </h3>
+            <p className="mt-1 max-w-xl text-sm leading-relaxed text-slate">
+              Ответьте на несколько вопросов — подберём туры и регионы под ваши даты, бюджет и
+              интересы.
+            </p>
+          </div>
+          <Link
+            href="/podbor"
+            className={buttonVariants({ className: "shrink-0 self-start sm:self-center" })}
+          >
+            Подобрать поездку
+            <ArrowUpRight className="h-4 w-4" aria-hidden />
+          </Link>
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-gray-200/80 pt-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between">

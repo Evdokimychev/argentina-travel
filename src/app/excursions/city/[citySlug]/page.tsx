@@ -1,7 +1,9 @@
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import ExcursionsCatalog from "@/components/excursions/ExcursionsCatalog";
 import ExcursionCityFlightSidebar from "@/components/flights/ExcursionCityFlightSidebar";
+import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { getExcursionCityFlightRouteIds } from "@/lib/flights/destination-airports";
 import {
   fetchExcursionCityServer,
@@ -47,13 +49,15 @@ export default async function ExcursionCityPage({ params }: CityPageProps) {
   ) : null;
 
   return (
-    <ExcursionsCatalog
-      excursions={items}
-      cities={cities}
-      initialCitySlug={citySlug}
-      title={`Экскурсии в ${city.name}`}
-      subtitle={`${city.experienceCount} маршрутов и активностей в городе`}
-      flightSidebar={flightSidebar}
-    />
+    <Suspense fallback={<CatalogLoadingFallback title="Загружаем экскурсии…" />}>
+      <ExcursionsCatalog
+        excursions={items}
+        cities={cities}
+        initialCitySlug={citySlug}
+        title={`Экскурсии в ${city.name}`}
+        subtitle={`${city.experienceCount} маршрутов и активностей в городе`}
+        flightSidebar={flightSidebar}
+      />
+    </Suspense>
   );
 }

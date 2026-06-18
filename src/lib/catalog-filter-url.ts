@@ -17,6 +17,10 @@ import { getDefaultFilters } from "@/lib/filter-tours";
 import { isPriceFilterActive } from "@/lib/tour-price-bounds";
 import { type TourSortOption } from "@/lib/sort-tours";
 
+export type CatalogViewMode = "grid" | "list" | "map";
+
+const CATALOG_VIEW_MODES: CatalogViewMode[] = ["grid", "list", "map"];
+
 const SORT_OPTIONS: TourSortOption[] = [
   "recommended",
   "price_asc",
@@ -54,6 +58,16 @@ function parseNumber(value: string | null): number | null {
   if (value == null || value === "") return null;
   const n = Number(value);
   return Number.isFinite(n) ? n : null;
+}
+
+export function parseCatalogViewFromSearchParams(
+  params: ReadonlyURLSearchParams
+): CatalogViewMode {
+  const view = params.get("view");
+  if (view && CATALOG_VIEW_MODES.includes(view as CatalogViewMode)) {
+    return view as CatalogViewMode;
+  }
+  return "grid";
 }
 
 export function parseCatalogSortFromSearchParams(
@@ -102,7 +116,8 @@ export function buildCatalogFilterSearchParams(
   filters: TourFilters,
   sort: TourSortOption,
   currency: CurrencyCode,
-  tours: TourListing[]
+  tours: TourListing[],
+  viewMode: CatalogViewMode = "grid"
 ): URLSearchParams {
   const params = new URLSearchParams();
   const defaults = getDefaultFilters(currency, tours);
@@ -163,6 +178,8 @@ export function buildCatalogFilterSearchParams(
 
   if (sort !== "recommended") params.set("sort", sort);
 
+  if (viewMode !== "grid") params.set("view", viewMode);
+
   return params;
 }
 
@@ -170,9 +187,10 @@ export function buildCatalogFilterHref(
   filters: TourFilters,
   sort: TourSortOption = "recommended",
   currency: CurrencyCode,
-  tours: TourListing[]
+  tours: TourListing[],
+  viewMode: CatalogViewMode = "grid"
 ): string {
-  const params = buildCatalogFilterSearchParams(filters, sort, currency, tours);
+  const params = buildCatalogFilterSearchParams(filters, sort, currency, tours, viewMode);
   const qs = params.toString();
   return qs ? `/tours?${qs}` : "/tours";
 }

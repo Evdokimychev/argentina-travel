@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { SwitchField } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import {
   cloneOrganizerTour,
   deleteOrganizerTour,
@@ -81,6 +82,21 @@ import {
 } from "@/types/organizer-tour";
 
 const LANGUAGES: TourLanguage[] = ["Русский", "Испанский", "Английский", "Португальский"];
+
+function normalizeDraftForSave(draft: OrganizerTourDraft): OrganizerTourDraft {
+  return {
+    ...draft,
+    title: draft.title.slice(0, ORGANIZER_TOUR_TITLE_MAX),
+    durationDays: Math.max(1, draft.durationDays),
+    durationNights: Math.max(0, draft.durationNights),
+    priceUsd: Math.max(0, draft.priceUsd),
+    groupMin: Math.max(1, draft.groupMin),
+    groupMax: Math.max(draft.groupMin, draft.groupMax),
+    maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
+    maxWeightEnabled: draft.maxWeightEnabled,
+    gallery: draft.gallery.filter(Boolean),
+  };
+}
 
 function getNavStickyTopPx(): number {
   if (typeof window === "undefined") return 84;
@@ -430,6 +446,7 @@ function TourEditorSidebar({
   draft,
   loading,
   saved,
+  autoSaving,
   onUnpublish,
   onArchive,
   onClone,
@@ -440,6 +457,7 @@ function TourEditorSidebar({
   draft: OrganizerTourDraft;
   loading: boolean;
   saved: boolean;
+  autoSaving: boolean;
   onUnpublish: () => void;
   onArchive: () => void;
   onClone: () => void;
@@ -485,7 +503,9 @@ function TourEditorSidebar({
                 : "Сохранить черновик"}
           </Button>
 
-          {saved ? (
+          {autoSaving ? (
+            <p className="text-center text-xs text-slate">Автосохранение…</p>
+          ) : saved ? (
             <p className="text-center text-xs text-emerald-700">Изменения сохранены</p>
           ) : null}
 
@@ -595,9 +615,12 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const [draft, setDraft] = useState<OrganizerTourDraft | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [autoSaving, setAutoSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [navStuck, setNavStuck] = useState(false);
   const navSentinelRef = useRef<HTMLDivElement>(null);
+  const debouncedDraft = useDebouncedValue(draft, 2000);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -616,7 +639,24 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
       return;
     }
     setDraft(nextDraft);
+    setDirty(false);
+    setSaved(true);
   }, [router, tourId, user]);
+
+  useEffect(() => {
+    if (!debouncedDraft || !dirty || !user || loading) return;
+    if (!debouncedDraft.title.trim()) return;
+
+    setAutoSaving(true);
+    const result = saveOrganizerTourDraft(normalizeDraftForSave(debouncedDraft), user);
+    setAutoSaving(false);
+
+    if ("error" in result) return;
+
+    setDraft(result.draft);
+    setSaved(true);
+    setDirty(false);
+  }, [debouncedDraft, dirty, user, loading]);
 
   useEffect(() => {
     const sentinel = navSentinelRef.current;
@@ -659,6 +699,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
   function markDirty() {
     setSaved(false);
+    setDirty(true);
     setError(null);
   }
 
@@ -708,21 +749,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     setError(null);
     setSaved(false);
 
-    const result = saveOrganizerTourDraft(
-      {
-        ...draft,
-        title: draft.title.slice(0, ORGANIZER_TOUR_TITLE_MAX),
-        durationDays: Math.max(1, draft.durationDays),
-        durationNights: Math.max(0, draft.durationNights),
-        priceUsd: Math.max(0, draft.priceUsd),
-        groupMin: Math.max(1, draft.groupMin),
-        groupMax: Math.max(draft.groupMin, draft.groupMax),
-        maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
-        maxWeightEnabled: draft.maxWeightEnabled,
-        gallery: draft.gallery.filter(Boolean),
-      },
-      user
-    );
+    const result = saveOrganizerTourDraft(normalizeDraftForSave(draft), user);
 
     setLoading(false);
 
@@ -733,6 +760,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
     setDraft(result.draft);
     setSaved(true);
+    setDirty(false);
   }
 
   function handlePreview() {
@@ -1485,7 +1513,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               </div>
             ) : null}
 
-            {saved ? (
+            {autoSaving ? (
+              <div className="rounded-xl bg-gray-50 px-3 py-2.5 text-sm text-slate xl:hidden">
+                Автосохранение…
+              </div>
+            ) : saved ? (
               <div className="rounded-xl bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800 xl:hidden">
                 Изменения сохранены
               </div>
@@ -1495,6 +1527,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           <TourEditorSidebar
             draft={draft}
             saved={saved}
+            autoSaving={autoSaving}
             loading={loading}
             onUnpublish={() => updateDraft({ status: "draft" })}
             onArchive={() => updateDraft({ archived: true, status: "draft" })}

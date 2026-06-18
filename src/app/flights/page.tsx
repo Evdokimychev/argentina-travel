@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import FlightsWhitelabelView from "@/components/flights/FlightsWhitelabelView";
+import FlightsPageSkeleton from "@/components/flights/FlightsPageSkeleton";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getTravelpayoutsWhitelabelScriptUrl } from "@/lib/travelpayouts/whitelabel/config";
@@ -20,7 +21,7 @@ export default function FlightsPage() {
   return (
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/flights" />
-      <Suspense fallback={null}>
+      <Suspense fallback={<FlightsPageSkeleton />}>
         <FlightsWhitelabelView scriptUrl={scriptUrl} />
       </Suspense>
     </>

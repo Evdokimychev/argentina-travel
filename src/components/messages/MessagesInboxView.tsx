@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EmptyState } from "@/components/ui/empty-state";
 import { useAuth } from "@/context/AuthContext";
+import { getUserBookings } from "@/lib/bookings-store";
+import { apiFetchUserBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
+import { formatBookingTourDates } from "@/lib/booking-display";
 import { getTourDetail } from "@/lib/tours";
 import {
   createOrGetThread,
@@ -18,6 +21,7 @@ import {
   sendMessage,
 } from "@/lib/messages-store";
 import { MESSAGES_UPDATED_EVENT, type MessageSenderRole, type MessageThread } from "@/types/messages";
+import type { Booking } from "@/types/tourist";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 
@@ -92,6 +96,8 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
   const [composeError, setComposeError] = useState<string | null>(null);
   const [newTourSlug, setNewTourSlug] = useState("");
   const [newMessage, setNewMessage] = useState("");
+  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [selectedBookingId, setSelectedBookingId] = useState("");
 
   const isNewCompose = searchParams.get("new") === "1";
   const presetTourSlug = searchParams.get("tour")?.trim() ?? "";
@@ -127,6 +133,32 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
     if (presetTourSlug) setNewTourSlug(presetTourSlug);
   }, [presetTourSlug]);
 
+  useEffect(() => {
+    if (presetBookingId) setSelectedBookingId(presetBookingId);
+  }, [presetBookingId]);
+
+  useEffect(() => {
+    if (!user || role !== "tourist") return;
+
+    function refreshBookings() {
+      if (isRemoteBookingsMode()) {
+        void apiFetchUserBookings()
+          .then(setBookings)
+          .catch(() => setBookings([]));
+        return;
+      }
+      setBookings(getUserBookings(user!.id));
+    }
+
+    refreshBookings();
+  }, [user, role]);
+
+  useEffect(() => {
+    if (!selectedBookingId) return;
+    const booking = bookings.find((item) => item.id === selectedBookingId);
+    if (booking) setNewTourSlug(booking.tourSlug);
+  }, [selectedBookingId, bookings]);
+
   const activeThread = useMemo(
     () => threads.find((thread) => thread.id === activeThreadId) ?? null,
     [threads, activeThreadId]
@@ -161,7 +193,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
     const slug = newTourSlug.trim();
     const body = newMessage.trim();
     if (!slug) {
-      setComposeError("Укажите тур или откройте диалог со страницы тура");
+      setComposeError("Выберите бронирование или откройте диалог со страницы тура");
       return;
     }
     if (!body) {
@@ -174,7 +206,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
       touristUserId: user.id,
       touristName: user.fullName,
       touristEmail: user.email,
-      bookingId: presetBookingId,
+      bookingId: selectedBookingId || presetBookingId,
       initialMessage: body,
     });
 
@@ -208,16 +240,35 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
                 {presetTour.title}
               </Link>
             </p>
-          ) : (
+          ) : bookings.length > 0 ? (
             <label className="mt-3 block text-sm text-slate">
-              Slug тура
-              <input
-                value={newTourSlug}
-                onChange={(event) => setNewTourSlug(event.target.value)}
-                className="mt-1 flex h-10 w-full rounded-xl border border-gray-200 px-3 text-sm"
-                placeholder="patagonia-glaciers"
-              />
+              Ваше бронирование
+              <select
+                value={selectedBookingId}
+                onChange={(event) => setSelectedBookingId(event.target.value)}
+                className="mt-1 flex h-10 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-charcoal"
+              >
+                <option value="">Выберите заявку</option>
+                {bookings.map((booking) => (
+                  <option key={booking.id} value={booking.id}>
+                    {booking.tourTitle} ·{" "}
+                    {formatBookingTourDates(booking, "даты по согласованию")}
+                  </option>
+                ))}
+              </select>
             </label>
+          ) : (
+            <p className="mt-3 text-sm text-slate">
+              Бронирований пока нет.{" "}
+              <Link href="/tours" className={cabinetLinkClass}>
+                Выберите тур
+              </Link>{" "}
+              или{" "}
+              <Link href="/booking/find" className={cabinetLinkClass}>
+                найдите заявку по email
+              </Link>
+              .
+            </p>
           )}
           <label className="mt-3 block text-sm text-slate">
             Сообщение

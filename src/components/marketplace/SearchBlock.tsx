@@ -90,6 +90,7 @@ export default function SearchBlock({
   const [draftFrom, setDraftFrom] = useState(dateFrom);
   const [draftTo, setDraftTo] = useState(dateTo);
   const [locating, setLocating] = useState(false);
+  const [geoError, setGeoError] = useState<string | null>(null);
 
   const trimmedQuery = query.trim();
   const isSearching = trimmedQuery.length > 0;
@@ -117,10 +118,15 @@ export default function SearchBlock({
   async function handleNearMe() {
     if (nearMe) {
       onNearMe(null);
+      setGeoError(null);
       return;
     }
-    if (!navigator.geolocation) return;
+    if (!navigator.geolocation) {
+      setGeoError("Геолокация недоступна в этом браузере. Выберите направление вручную.");
+      return;
+    }
     setLocating(true);
+    setGeoError(null);
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         onNearMe({ lat: pos.coords.latitude, lng: pos.coords.longitude });
@@ -128,7 +134,10 @@ export default function SearchBlock({
         setDestOpen(false);
         setLocating(false);
       },
-      () => setLocating(false)
+      () => {
+        setLocating(false);
+        setGeoError("Не удалось определить местоположение. Разрешите доступ или выберите город.");
+      }
     );
   }
 
@@ -346,6 +355,11 @@ export default function SearchBlock({
           Найти путешествия
         </Button>
       </div>
+      {geoError ? (
+        <p className="mt-2 px-1 text-xs leading-relaxed text-amber-800" role="status">
+          {geoError}
+        </p>
+      ) : null}
     </div>
   );
 }

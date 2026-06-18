@@ -4,10 +4,12 @@ export function buildPublicPageMetadata({
   title,
   description,
   path,
+  image,
 }: {
   title: string;
   description: string;
   path: string;
+  image?: string;
 }): Metadata {
   return {
     title,
@@ -20,6 +22,7 @@ export function buildPublicPageMetadata({
       description,
       type: "website",
       url: path,
+      ...(image ? { images: [{ url: image }] } : {}),
     },
   };
 }

@@ -10,8 +10,9 @@ import {
 import { formatToursFound, filtersWord } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import type { CatalogViewMode } from "@/lib/catalog-filter-url";
 
-export type CatalogViewMode = "grid" | "list" | "map";
+export type { CatalogViewMode };
 
 interface CatalogToolbarProps {
   count: number;
@@ -168,7 +169,7 @@ export default function CatalogToolbar({
           <Button
             variant="ghost"
             size="sm"
-            className="hidden h-8 px-2 text-xs sm:inline-flex"
+            className="h-8 shrink-0 px-2 text-xs"
             onClick={onResetFilters}
           >
             Сбросить

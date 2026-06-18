@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import GuestCounter from "@/components/tour-detail/GuestCounter";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionScheduleDatePicker from "@/components/excursions/ExcursionScheduleDatePicker";
+import ExcursionBookingPanelSkeleton from "@/components/excursions/ExcursionBookingPanelSkeleton";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useAuth } from "@/context/AuthContext";
@@ -321,7 +322,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
       {canBookOnSite ? (
         <div className="mt-5 space-y-4">
           {scheduleLoading ? (
-            <p className="text-sm text-slate">{t("excursions.booking.loadingSchedule")}</p>
+            <ExcursionBookingPanelSkeleton />
           ) : scheduleError || scheduleDates.length === 0 ? (
             <p className="text-sm text-slate">{t("excursions.booking.scheduleUnavailable")}</p>
           ) : (

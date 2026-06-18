@@ -22,6 +22,7 @@ import { siteContainerClass } from "@/lib/site-container";
 import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
 import { cn } from "@/lib/cn";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const PAGE_SIZE = 12;
 
@@ -29,6 +30,7 @@ type ExcursionsCatalogProps = {
   excursions: ExcursionListing[];
   cities: ExcursionCity[];
   initialCitySlug?: string;
+  catalogBasePath?: string;
   title?: string;
   subtitle?: string;
   flightSidebar?: ReactNode;
@@ -38,6 +40,7 @@ export default function ExcursionsCatalog({
   excursions,
   cities,
   initialCitySlug,
+  catalogBasePath,
   title,
   subtitle,
   flightSidebar,
@@ -71,14 +74,26 @@ export default function ExcursionsCatalog({
 
   const filtered = useMemo(() => filterExcursions(excursions, filters), [excursions, filters]);
   const sorted = useMemo(() => sortExcursions(filtered, filters.sort), [filtered, filters.sort]);
+  const hiddenByDurationFilter = useMemo(() => {
+    if (filters.durationBuckets.length === 0) return 0;
+    const withoutDuration = filterExcursions(excursions, {
+      ...filters,
+      durationBuckets: [],
+    });
+    return withoutDuration.length - filtered.length;
+  }, [excursions, filters, filtered.length]);
   const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const pageItems = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
 
+  const basePath =
+    catalogBasePath ??
+    (initialCitySlug ? `/excursions/city/${initialCitySlug}` : "/excursions");
+
   const updateUrl = (nextFilters: ExcursionCatalogFilters, nextPage = 1) => {
     const params = excursionFiltersToSearchParams(nextFilters, nextPage);
     const qs = params.toString();
-    router.replace(qs ? `/excursions?${qs}` : "/excursions", { scroll: false });
+    router.replace(qs ? `${basePath}?${qs}` : basePath, { scroll: false });
   };
 
   const applyFilters = (next: ExcursionCatalogFilters) => {
@@ -144,9 +159,32 @@ export default function ExcursionsCatalog({
                     ? t("excursions.emptySoonDescription")
                     : t("excursions.emptyFilterDescription")
                 }
+                action={
+                  excursions.length > 0
+                    ? { label: t("excursions.filters.reset"), onClick: resetFilters }
+                    : undefined
+                }
+                secondaryAction={
+                  excursions.length > 0
+                    ? { label: t("excursions.allCities"), href: "/excursions" }
+                    : undefined
+                }
+                className="mt-4"
               />
             ) : (
               <>
+                {hiddenByDurationFilter > 0 ? (
+                  <p className="mb-4 rounded-xl border border-amber-200/80 bg-amber-50 px-4 py-3 text-sm text-charcoal">
+                    По фильтру длительности скрыто {hiddenByDurationFilter}{" "}
+                    {hiddenByDurationFilter === 1
+                      ? "экскурсия"
+                      : hiddenByDurationFilter < 5
+                        ? "экскурсии"
+                        : "экскурсий"}{" "}
+                    без указанной длительности в каталоге.
+                  </p>
+                ) : null}
+
                 <div className="mb-4 flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-4">
                   <p className="text-sm text-slate">
                     {sorted.length}{" "}
@@ -177,35 +215,37 @@ export default function ExcursionsCatalog({
 
                 {totalPages > 1 ? (
                   <div className="mt-8 flex items-center justify-center gap-3">
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       disabled={currentPage <= 1}
                       onClick={() => {
                         const next = currentPage - 1;
                         setPage(next);
                         updateUrl(filters, next);
                       }}
-                      className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-2 text-sm disabled:opacity-40"
                     >
                       <ChevronLeft className="h-4 w-4" aria-hidden />
                       {t("excursions.prev")}
-                    </button>
+                    </Button>
                     <span className="text-sm text-slate">
                       {currentPage} / {totalPages}
                     </span>
-                    <button
+                    <Button
                       type="button"
+                      variant="outline"
+                      size="sm"
                       disabled={currentPage >= totalPages}
                       onClick={() => {
                         const next = currentPage + 1;
                         setPage(next);
                         updateUrl(filters, next);
                       }}
-                      className="inline-flex items-center gap-1 rounded-xl border border-gray-200 px-3 py-2 text-sm disabled:opacity-40"
                     >
                       {t("excursions.next")}
                       <ChevronRight className="h-4 w-4" aria-hidden />
-                    </button>
+                    </Button>
                   </div>
                 ) : null}
               </>

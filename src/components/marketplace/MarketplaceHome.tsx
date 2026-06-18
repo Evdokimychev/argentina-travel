@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowRight, Search, ShieldCheck, Users, Wallet } from "lucide-react";
+import { ArrowRight, Compass, Search, ShieldCheck, Users, Wallet } from "lucide-react";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { buildCatalogFilterHref } from "@/lib/catalog-filter-url";
@@ -23,11 +23,10 @@ import TestimonialCard from "@/components/TestimonialCard";
 import { tripsWord, filtersWord } from "@/lib/pluralize";
 import PlatformStatsBlock from "./PlatformStatsBlock";
 import type { PlatformStats } from "@/lib/organizer-public";
-import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 
@@ -215,6 +214,26 @@ export default function MarketplaceHome({
               <p className="mt-3 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
                 Маршруты от местных организаторов — от танго Буэнос-Айреса до ледников Патагонии
               </p>
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <Link
+                  href="/podbor"
+                  className={buttonVariants({
+                    variant: "outline",
+                    size: "sm",
+                    className: "rounded-full gap-2",
+                  })}
+                >
+                  <Compass className="h-4 w-4" aria-hidden />
+                  Подобрать маршрут
+                </Link>
+                <Link
+                  href="/podbor"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+                >
+                  Не знаете, с чего начать?
+                  <ArrowRight className="h-4 w-4" aria-hidden />
+                </Link>
+              </div>
             </div>
 
             <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
@@ -257,11 +276,17 @@ export default function MarketplaceHome({
                 }))
               }
               onSearch={() => {
-                if (hasActiveSearch) {
-                  scrollToSiteAnchor("tour-results");
-                } else {
-                  router.push("/tours");
+                const hasCriteria =
+                  filters.query.trim() ||
+                  filters.dateFrom ||
+                  filters.dateTo ||
+                  filters.nearMe ||
+                  activeCount > 0;
+                if (hasCriteria) {
+                  router.push(buildCatalogFilterHref(filters, "recommended", currency, tours));
+                  return;
                 }
+                router.push("/tours");
               }}
             />
           </div>
@@ -325,7 +350,7 @@ export default function MarketplaceHome({
           )}
           {filtered.length > 6 ? (
             <div className="pb-4 text-center">
-              <Link href="/tours">
+              <Link href={buildCatalogFilterHref(filters, "recommended", currency, tours)}>
                 <Button>
                   Смотреть все {filtered.length} {tripsWord(filtered.length)} в каталоге
                 </Button>

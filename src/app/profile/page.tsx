@@ -10,6 +10,7 @@ import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
 import ProfileNotifications from "@/components/profile/ProfileNotifications";
+import { buildTourMessageHref } from "@/lib/messages-store";
 import { EmptyState } from "@/components/ui/empty-state";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import { cn } from "@/lib/cn";
@@ -80,9 +81,9 @@ export default function ProfileDashboardPage() {
   return (
     <div className="space-y-6">
       <section className={cabinetHeroClass}>
-        <h2 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
+        <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
           Добро пожаловать, {user.fullName.split(/\s+/)[0]}!
-        </h2>
+        </h1>
         <p className="mt-2 text-sm text-slate">
           Здесь собраны ваши поездки, избранные туры и заявки на бронирование.
         </p>
@@ -146,6 +147,12 @@ export default function ProfileDashboardPage() {
                     className={cn(cabinetLinkClass, "text-xs")}
                   >
                     Подробнее
+                  </Link>
+                  <Link
+                    href={buildTourMessageHref(booking.tourSlug, booking.id)}
+                    className={cn(cabinetLinkClass, "text-xs")}
+                  >
+                    Сообщение
                   </Link>
                   <BookingReviewCta
                     booking={booking}

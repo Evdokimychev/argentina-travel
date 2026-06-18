@@ -7,16 +7,16 @@ import { useSearchParams } from "next/navigation";
 import { CalendarDays, ListOrdered } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
-import { apiCancelBooking, apiFetchUserBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
+import { apiCancelBooking, apiFetchUserBookings, apiLookupBookingsByEmail, isRemoteBookingsMode } from "@/lib/bookings-api";
+import { buildTourMessageHref } from "@/lib/messages-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
-import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
-import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
 import { formatBookingTourDates } from "@/lib/booking-display";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
+import BookingListSkeleton from "@/components/profile/BookingListSkeleton";
 import ProfileWaitlistSection from "@/components/profile/ProfileWaitlistSection";
 import { cn } from "@/lib/cn";
 import {
@@ -33,20 +33,23 @@ export default function ProfileBookingsPage() {
   const initialTab = searchParams.get("tab") === "waitlist" ? "waitlist" : "bookings";
   const [tab, setTab] = useState<"bookings" | "waitlist">(initialTab);
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [loadingBookings, setLoadingBookings] = useState(true);
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
 
     function refresh() {
+      setLoadingBookings(true);
       if (isRemoteBookingsMode()) {
         void apiFetchUserBookings()
           .then(setBookings)
-          .catch(() => setBookings([]));
+          .catch(() => setBookings([]))
+          .finally(() => setLoadingBookings(false));
         return;
       }
       setBookings(getUserBookings(user!.id));
+      setLoadingBookings(false);
     }
 
     refresh();
@@ -72,16 +75,20 @@ export default function ProfileBookingsPage() {
 
   function refreshBookings() {
     if (!user) return;
+    setLoadingBookings(true);
     if (isRemoteBookingsMode()) {
-      void apiFetchUserBookings().then(setBookings);
+      void apiFetchUserBookings()
+        .then(setBookings)
+        .finally(() => setLoadingBookings(false));
       return;
     }
     setBookings(getUserBookings(user.id));
+    setLoadingBookings(false);
   }
 
   return (
     <div className={cabinetPanelClass}>
-      <h2 className={cabinetPageTitleClass}>Мои бронирования</h2>
+      <h1 className={cabinetPageTitleClass}>Мои бронирования</h1>
       <p className={cabinetPageSubtitleClass}>Заявки, подтверждённые поездки и лист ожидания</p>
 
       <div className="mt-6 flex gap-2 rounded-xl bg-gray-100 p-1">
@@ -120,10 +127,11 @@ export default function ProfileBookingsPage() {
         </p>
       ) : null}
 
-      {bookings.length > 0 ? (
+      {loadingBookings ? (
+        <BookingListSkeleton />
+      ) : bookings.length > 0 ? (
         <div className="mt-6 space-y-4">
           {bookings.map((booking) => {
-            const expanded = expandedId === booking.id;
             const canCancel = booking.status === "new" || booking.status === "pending";
             return (
               <article
@@ -167,13 +175,15 @@ export default function ProfileBookingsPage() {
                           userId={user.id}
                           className={cabinetLinkClass}
                         />
-                        <button
-                          type="button"
-                          onClick={() => setExpandedId(expanded ? null : booking.id)}
+                        <Link href={`/profile/bookings/${booking.id}`} className={cabinetLinkClass}>
+                          Открыть заявку
+                        </Link>
+                        <Link
+                          href={buildTourMessageHref(booking.tourSlug, booking.id)}
                           className={cabinetLinkClass}
                         >
-                          {expanded ? "Скрыть детали" : "Подробнее"}
-                        </button>
+                          Написать организатору
+                        </Link>
                         {canCancel ? (
                           <button
                             type="button"
@@ -187,30 +197,6 @@ export default function ProfileBookingsPage() {
                     </div>
                   </div>
                 </div>
-
-                {expanded ? (
-                  <div className="space-y-6 border-t border-gray-100 bg-surface-muted/50 p-4 sm:p-5">
-                    {booking.touristComment ? (
-                      <div className="rounded-xl bg-white px-4 py-3 ring-1 ring-gray-200">
-                        <p className="text-xs font-medium uppercase tracking-wide text-slate">
-                          Ваш комментарий
-                        </p>
-                        <p className="mt-1 text-sm text-charcoal">{booking.touristComment}</p>
-                      </div>
-                    ) : null}
-
-                    <BookingOrganizerCommentsJournal comments={booking.organizerComments} />
-
-                    <div>
-                      <h3 className="font-heading text-base font-bold text-charcoal">
-                        История статусов
-                      </h3>
-                      <div className="mt-3 rounded-xl bg-white p-4 ring-1 ring-gray-200">
-                        <BookingStatusTimeline history={booking.statusHistory} />
-                      </div>
-                    </div>
-                  </div>
-                ) : null}
               </article>
             );
           })}

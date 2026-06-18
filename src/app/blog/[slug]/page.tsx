@@ -3,6 +3,7 @@ import BlogPostView from "@/components/blog/BlogPostView";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getBlogPostBySlug, blogPosts } from "@/data/blog";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 interface BlogPostPageProps {
   params: Promise<{ slug: string }>;
@@ -16,10 +17,12 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   const { slug } = await params;
   const post = getBlogPostBySlug(slug);
   if (!post) return { title: "Статья не найдена" };
-  return {
+  return buildPublicPageMetadata({
     title: post.seoTitle ?? post.title,
     description: post.excerpt,
-  };
+    path: `/blog/${slug}`,
+    image: post.image,
+  });
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

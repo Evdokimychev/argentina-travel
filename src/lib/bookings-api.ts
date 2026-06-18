@@ -110,3 +110,14 @@ export async function apiPatchBooking(booking: Booking): Promise<Booking> {
 export function isRemoteBookingsMode(): boolean {
   return isSupabaseBookingsEnabled();
 }
+
+export async function apiLookupBookingsByEmail(email: string): Promise<Booking[]> {
+  const data = await parseJson<{ bookings: Booking[] }>(
+    await fetch("/api/bookings/lookup", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    })
+  );
+  return data.bookings;
+}

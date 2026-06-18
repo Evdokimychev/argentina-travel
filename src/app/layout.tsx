@@ -14,11 +14,11 @@ const unbounded = Unbounded({
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "ArgentinaTravel — Путешествия по Аргентине",
-    template: "%s | ArgentinaTravel",
+    default: "Пора в Аргентину — путешествия по Аргентине",
+    template: "%s | Пора в Аргентину",
   },
   description:
-    "Авторские туры по Аргентине: Патагония, Буэнос-Айрес, Мендоса, Игуасу. Русскоязычные гиды, незабываемые впечатления.",
+    "Авторские туры и экскурсии по Аргентине: Патагония, Буэнос-Айрес, Мендоса, Игуасу. Русскоязычные гиды и организаторы.",
 };
 
 export default function RootLayout({

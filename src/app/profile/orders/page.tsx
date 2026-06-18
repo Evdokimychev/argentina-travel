@@ -43,7 +43,7 @@ export default function ProfileOrdersPage() {
 
   return (
     <div className={cabinetPanelClass}>
-      <h2 className={cabinetPageTitleClass}>Мои заказы</h2>
+      <h1 className={cabinetPageTitleClass}>Мои заказы</h1>
       <p className={cabinetPageSubtitleClass}>PDF-гиды и материалы из магазина</p>
 
       {error ? (

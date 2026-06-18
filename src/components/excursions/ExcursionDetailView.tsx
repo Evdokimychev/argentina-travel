@@ -13,6 +13,7 @@ import ExcursionIncludedSection from "@/components/excursions/ExcursionIncludedS
 import ExcursionMetaBadges from "@/components/excursions/ExcursionMetaBadges";
 import ExcursionSectionNav from "@/components/excursions/ExcursionSectionNav";
 import ExcursionBookingPanel from "@/components/excursions/ExcursionBookingPanel";
+import ExcursionMobileBookingBar from "@/components/excursions/ExcursionMobileBookingBar";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
 import TourSection from "@/components/tour-detail/TourSection";
 import { ArrowLeft, Clock, MapPin } from "lucide-react";
@@ -45,8 +46,11 @@ export default function ExcursionDetailView({
     label: t(link.labelKey),
   }));
 
+  const prefersAffiliate =
+    excursion.partner === "sputnik8" && excursion.isBookable !== false;
+
   return (
-    <div className="pb-16">
+    <div className="pb-24 lg:pb-16">
       <div className={siteContainerClass}>
         <Link
           href="/excursions"
@@ -98,6 +102,10 @@ export default function ExcursionDetailView({
 
               <div className="mt-4">
                 <ExcursionMetaBadges excursion={excursion} t={t} />
+              </div>
+
+              <div className="mt-6 lg:hidden">
+                <ExcursionBookingPanel excursion={excursion} />
               </div>
 
               {excursion.comfortLevelInfo ? (
@@ -171,7 +179,9 @@ export default function ExcursionDetailView({
               </div>
             </div>
 
-            <ExcursionBookingPanel excursion={excursion} />
+            <div className="hidden lg:block">
+              <ExcursionBookingPanel excursion={excursion} />
+            </div>
           </div>
 
           <ExcursionSimilarSection
@@ -180,6 +190,8 @@ export default function ExcursionDetailView({
           />
         </div>
       </div>
+
+      <ExcursionMobileBookingBar excursion={excursion} prefersAffiliate={prefersAffiliate} />
     </div>
   );
 }

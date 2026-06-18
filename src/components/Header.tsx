@@ -152,7 +152,7 @@ export default function Header() {
     >
       <div
         className={cn(
-          "site-header-utility-bar hidden overflow-hidden border-b border-charcoal/[0.04] lg:grid lg:grid-rows-[1fr]"
+          "site-header-utility-bar hidden overflow-hidden border-b border-charcoal/[0.04] md:grid md:grid-rows-[1fr]"
         )}
       >
         <div className="min-h-0 overflow-hidden">
@@ -164,12 +164,12 @@ export default function Header() {
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
               <span className="font-medium text-foreground/80">Откройте Аргентину 🇦🇷 вместе с нами</span>
-              <span className="hidden text-charcoal/15 xl:inline">|</span>
+              <span className="hidden text-charcoal/15 md:inline">|</span>
               {utilityLinks.slice(0, 2).map((link) => (
                 <Link
                   key={link.id}
                   href={link.href}
-                  className="hidden items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky xl:inline-flex"
+                  className="hidden items-center gap-1 font-medium text-foreground/70 transition-colors hover:text-sky md:inline-flex"
                 >
                   {resolveNavLabel(link, t)}
                   <ArrowUpRight className="h-3 w-3" />
@@ -261,6 +261,13 @@ export default function Header() {
           </nav>
 
           <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+            <CircleButton
+              ariaLabel="Поиск по сайту"
+              onClick={() => openSiteSearch()}
+              className="lg:hidden"
+            >
+              <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </CircleButton>
             <LocaleCurrencySwitcher variant="header" />
             <ProfileMenu />
           </div>

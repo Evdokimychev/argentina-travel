@@ -73,7 +73,7 @@ export default function AuthModal() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
-  const [termsAccepted, setTermsAccepted] = useState(true);
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [duplicateRegistration, setDuplicateRegistration] = useState(false);
@@ -126,7 +126,7 @@ export default function AuthModal() {
     setPassword("");
     setFullName("");
     setShowPassword(false);
-    setTermsAccepted(true);
+    setTermsAccepted(false);
   }, [authOpen, isOrganizerFlow, isFavoriteFlow, favoriteAuthStep]);
 
   async function handlePhoneContinue(targetRole = role) {

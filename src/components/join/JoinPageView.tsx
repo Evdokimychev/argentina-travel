@@ -19,6 +19,7 @@ import {
   Handshake,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { storeAuthNextPath } from "@/lib/auth-redirect";
 import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -118,6 +119,11 @@ export default function JoinPageView() {
   const { openAuth } = useAuth();
   const [openFaqId, setOpenFaqId] = useState<string | null>(JOIN_FAQ[0]?.id ?? null);
   const [phone, setPhone] = useState("");
+
+  function openOrganizerRegistration() {
+    storeAuthNextPath("/organizer/tours?welcome=1");
+    openAuth("organizer");
+  }
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
@@ -214,7 +220,7 @@ export default function JoinPageView() {
                 <Button
                   size="lg"
                   className="rounded-full bg-sun text-charcoal hover:bg-sun-dark"
-                  onClick={() => openAuth("organizer")}
+                  onClick={openOrganizerRegistration}
                 >
                   Присоединиться
                   <ArrowRight className="h-4 w-4" />
@@ -368,7 +374,7 @@ export default function JoinPageView() {
               <Button
                 size="lg"
                 className="mt-8 rounded-full bg-white text-brand hover:bg-brand-light"
-                onClick={() => openAuth("organizer")}
+                onClick={openOrganizerRegistration}
               >
                 Стать автором
               </Button>
@@ -435,7 +441,7 @@ export default function JoinPageView() {
         </ol>
 
         <div className="mt-10 text-center">
-          <Button size="lg" className="rounded-full px-10" onClick={() => openAuth("organizer")}>
+          <Button size="lg" className="rounded-full px-10" onClick={openOrganizerRegistration}>
             Зарегистрироваться
           </Button>
         </div>

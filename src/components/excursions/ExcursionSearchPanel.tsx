@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { MapPin, Search, SlidersHorizontal, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,8 @@ import {
   countActiveExcursionFilters,
   type ExcursionCatalogFilters,
 } from "@/lib/excursion-catalog-filters";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
+import ExcursionSearchSuggestions from "@/components/excursions/ExcursionSearchSuggestions";
 import { cn } from "@/lib/cn";
 import type { ExcursionCity } from "@/types/excursion";
 
@@ -60,6 +62,19 @@ export default function ExcursionSearchPanel({
 }: ExcursionSearchPanelProps) {
   const [cityOpen, setCityOpen] = useState(false);
   const [cityQuery, setCityQuery] = useState("");
+  const [queryInput, setQueryInput] = useState(filters.query);
+  const debouncedQuery = useDebouncedValue(queryInput, 350);
+
+  useEffect(() => {
+    setQueryInput(filters.query);
+  }, [filters.query]);
+
+  useEffect(() => {
+    if (debouncedQuery === filters.query) return;
+    onChange({ ...filters, query: debouncedQuery });
+    // Only react to debounced text; other filter fields come from latest closure.
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- avoid loop on `onChange` identity
+  }, [debouncedQuery]);
 
   const selectedCity = cities.find((city) => city.slug === filters.citySlug);
   const activeFilterCount = countActiveExcursionFilters(filters);
@@ -81,25 +96,41 @@ export default function ExcursionSearchPanel({
 
   return (
     <div className="mt-6 space-y-4">
-      <div className="rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4">
+      <div className="relative rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
-          <div className="flex min-w-0 flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50">
+          <div className="relative flex min-w-0 flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50">
             <div className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 lg:py-4">
               <Search className="h-5 w-5 shrink-0 text-sky" aria-hidden />
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-medium text-slate">{labels.searchLabel}</p>
                 <Input
                   type="search"
-                  value={filters.query}
-                  onChange={(event) => patch({ query: event.target.value })}
+                  value={queryInput}
+                  onChange={(event) => setQueryInput(event.target.value)}
                   placeholder={labels.searchPlaceholder}
                   className="h-auto border-0 bg-transparent p-0 text-sm font-medium text-charcoal shadow-none placeholder:font-normal placeholder:text-slate focus-visible:ring-0"
                 />
               </div>
-              {filters.query.trim() ? (
-                <ClearButton onClick={() => patch({ query: "" })} label="Очистить поиск" />
+              {queryInput.trim() ? (
+                <ClearButton
+                  onClick={() => {
+                    setQueryInput("");
+                    patch({ query: "" });
+                  }}
+                  label="Очистить поиск"
+                />
               ) : null}
             </div>
+            {queryInput.trim().length >= 2 ? (
+              <ExcursionSearchSuggestions
+                query={queryInput}
+                onSelect={(value) => {
+                  setQueryInput(value);
+                  patch({ query: value });
+                }}
+                className="absolute left-0 right-0 top-full z-20 mt-1"
+              />
+            ) : null}
           </div>
 
           <div className="hidden w-px self-stretch bg-gray-200 lg:block" aria-hidden />

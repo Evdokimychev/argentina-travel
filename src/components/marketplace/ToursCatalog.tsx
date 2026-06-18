@@ -7,6 +7,7 @@ import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import MarketplaceTourListCard from "@/components/marketplace/MarketplaceTourListCard";
 import SearchBlock from "@/components/marketplace/SearchBlock";
 import FilterBar from "@/components/marketplace/FilterBar";
+import CatalogFiltersSheet from "@/components/marketplace/CatalogFiltersSheet";
 import CatalogToolbar, { CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
 import { TourListing, TourFilters } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
@@ -16,6 +17,7 @@ import {
   catalogFilterParamsMatch,
   parseCatalogFiltersFromSearchParams,
   parseCatalogSortFromSearchParams,
+  parseCatalogViewFromSearchParams,
 } from "@/lib/catalog-filter-url";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
@@ -25,6 +27,21 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import PartnerTourDateFilterNotice from "@/components/marketplace/PartnerTourDateFilterNotice";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+
+const CATALOG_VIEW_MODE_KEY = "argentina-travel-catalog-view";
+
+function readStoredViewMode(): CatalogViewMode {
+  if (typeof window === "undefined") return "grid";
+  try {
+    const stored = window.localStorage.getItem(CATALOG_VIEW_MODE_KEY);
+    if (stored === "grid" || stored === "list" || stored === "map") return stored;
+  } catch {
+    // ignore
+  }
+  return "grid";
+}
 
 const CatalogMapView = dynamic(
   () => import("@/components/marketplace/CatalogMapView"),
@@ -53,15 +70,36 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
   const [sort, setSort] = useState<TourSortOption>(() =>
     parseCatalogSortFromSearchParams(searchParams)
   );
-  const [viewMode, setViewMode] = useState<CatalogViewMode>("grid");
+  const [viewMode, setViewMode] = useState<CatalogViewMode>(() =>
+    parseCatalogViewFromSearchParams(searchParams)
+  );
   const skipUrlSyncRef = useRef(false);
+  const viewModeHydratedRef = useRef(false);
 
   useSyncPriceFilters(tours, currency, setFilters);
+
+  useEffect(() => {
+    if (viewModeHydratedRef.current) return;
+    viewModeHydratedRef.current = true;
+    if (searchParams.get("view")) return;
+    const stored = readStoredViewMode();
+    if (stored !== "grid") setViewMode(stored);
+  }, [searchParams]);
+
+  const handleViewModeChange = useCallback((mode: CatalogViewMode) => {
+    setViewMode(mode);
+    try {
+      window.localStorage.setItem(CATALOG_VIEW_MODE_KEY, mode);
+    } catch {
+      // ignore
+    }
+  }, []);
 
   useEffect(() => {
     skipUrlSyncRef.current = true;
     setFilters(parseCatalogFiltersFromSearchParams(searchParams, currency, tours));
     setSort(parseCatalogSortFromSearchParams(searchParams));
+    setViewMode(parseCatalogViewFromSearchParams(searchParams));
   }, [searchParams, currency, tours]);
 
   useEffect(() => {
@@ -70,13 +108,13 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
       return;
     }
 
-    const nextParams = buildCatalogFilterSearchParams(filters, sort, currency, tours);
+    const nextParams = buildCatalogFilterSearchParams(filters, sort, currency, tours, viewMode);
     const currentParams = new URLSearchParams(searchParams.toString());
     if (catalogFilterParamsMatch(nextParams, currentParams)) return;
 
     const qs = nextParams.toString();
     router.replace(qs ? `/tours?${qs}` : "/tours", { scroll: false });
-  }, [filters, sort, currency, tours, router, searchParams]);
+  }, [filters, sort, viewMode, currency, tours, router, searchParams]);
 
   const handleFiltersChange = useCallback((next: TourFilters) => {
     setFilters(next);
@@ -94,10 +132,15 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
     : null;
 
   const resetFilters = () => setFilters(getDefaultFilters(currency, tours));
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
+
+  const hasDateFilter = Boolean(filters.dateFrom || filters.dateTo);
+  const showPartnerDateNotice =
+    hasDateFilter && sorted.some((tour) => isPartnerTourListing(tour));
 
   return (
     <div className="pb-16">
@@ -142,19 +185,33 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
             }
             onSearch={handleSearch}
           />
-          <FilterBar tours={tours} filters={filters} onChange={handleFiltersChange} />
+          <div className="flex flex-col gap-3 lg:block">
+            <div className="flex items-center justify-between gap-3 lg:hidden">
+              <CatalogFiltersSheet
+                tours={tours}
+                filters={filters}
+                onChange={handleFiltersChange}
+                activeFilterCount={activeFilterCount}
+              />
+            </div>
+            <div className="hidden lg:block">
+              <FilterBar tours={tours} filters={filters} onChange={handleFiltersChange} />
+            </div>
+          </div>
         </div>
 
-        <div className="mt-8">
+        <div className="mt-8" ref={resultsRef}>
           <CatalogToolbar
             count={sorted.length}
             sort={sort}
             onSortChange={setSort}
             viewMode={viewMode}
-            onViewModeChange={setViewMode}
+            onViewModeChange={handleViewModeChange}
             activeFilterCount={activeFilterCount}
             onResetFilters={resetFilters}
           />
+
+          {showPartnerDateNotice ? <PartnerTourDateFilterNotice /> : null}
 
           {sorted.length === 0 ? (
             <EmptyState
@@ -165,6 +222,11 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
                 activeFilterCount > 0
                   ? { label: "Сбросить фильтры", onClick: resetFilters, variant: "outline" }
                   : undefined
+              }
+              secondaryAction={
+                activeFilterCount > 0
+                  ? { label: "Весь каталог", href: "/tours" }
+                  : { label: "Экскурсии", href: "/excursions" }
               }
               className="mt-8"
             />

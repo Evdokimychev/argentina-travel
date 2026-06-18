@@ -8,6 +8,7 @@ import { getUserReviews, updateReviewStatus } from "@/lib/reviews-store";
 import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
 import { REVIEW_STATUS_LABELS } from "@/data/tourist-dashboard";
 import { formatDateShortWithYear } from "@/lib/utils";
+import { getReviewListingHref } from "@/lib/review-listing-link";
 import { cn } from "@/lib/cn";
 import {
   cabinetCardClass,
@@ -54,9 +55,9 @@ export default function ProfileReviewsPage() {
 
   return (
     <div className={cabinetPanelClass}>
-      <h2 className={cabinetPageTitleClass}>Мои отзывы</h2>
+      <h1 className={cabinetPageTitleClass}>Мои отзывы</h1>
       <p className={cabinetPageSubtitleClass}>
-        Отзывы о турах, которые вы прошли. Публикация — после модерации организатора.
+        Отзывы о турах и экскурсиях после поездки. Публикация — после модерации организатора.
       </p>
 
       {reviews.length > 0 ? (
@@ -66,7 +67,7 @@ export default function ProfileReviewsPage() {
               <div className="flex flex-wrap items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Link
-                    href={`/tours/${review.tourSlug}`}
+                    href={getReviewListingHref(review)}
                     className="font-medium text-charcoal transition-colors hover:text-sky"
                   >
                     {review.tourTitle}

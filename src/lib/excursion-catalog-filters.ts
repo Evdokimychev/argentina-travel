@@ -135,7 +135,15 @@ export function filterExcursions(
     if (filters.citySlug && item.citySlug !== filters.citySlug) return false;
 
     if (normalizedQuery) {
-      const haystack = [item.title, item.tagline, item.cityName].filter(Boolean).join(" ").toLowerCase();
+      const haystack = [
+        item.title,
+        item.tagline,
+        item.cityName,
+        item.guide?.name,
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
       const terms = normalizedQuery.split(/\s+/).filter(Boolean);
       if (!terms.every((term) => haystack.includes(term))) return false;
     }
@@ -147,10 +155,8 @@ export function filterExcursions(
 
     if (filters.durationBuckets.length > 0) {
       const minutes = item.durationMinutes;
-      if (
-        minutes != null &&
-        !filters.durationBuckets.some((bucket) => matchesDurationBucket(minutes, bucket))
-      ) {
+      if (minutes == null) return false;
+      if (!filters.durationBuckets.some((bucket) => matchesDurationBucket(minutes, bucket))) {
         return false;
       }
     }
@@ -173,6 +179,7 @@ export function filterExcursions(
 
 export function countActiveExcursionFilters(filters: ExcursionCatalogFilters): number {
   let count = 0;
+  if (filters.query.trim()) count += 1;
   if (filters.citySlug) count += 1;
   if (filters.formats.length) count += 1;
   if (filters.durationBuckets.length) count += 1;
