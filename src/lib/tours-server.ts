@@ -1,9 +1,14 @@
-import type { TourDetail } from "@/types";
+import type { TourDetail, TourListing } from "@/types";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
-import { getSimilarTourDetails } from "@/lib/tour-recommendations";
+import { getSimilarTourDetails, rankSimilarListings } from "@/lib/tour-recommendations";
 import { getTourDetail, getSimilarTours } from "@/lib/tours";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import {
+  fetchPartnerTourDetailServer,
+} from "@/lib/tripster/partner-tour-server";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 
-export async function fetchTourDetail(
+async function fetchNativeTourDetail(
   slug: string,
   opts?: { accessToken?: string | null }
 ): Promise<TourDetail | null> {
@@ -19,17 +24,45 @@ export async function fetchTourDetail(
   return getTourDetail(slug, opts?.accessToken) ?? null;
 }
 
-export async function fetchSimilarTours(slug: string, limit = 3): Promise<TourDetail[]> {
-  if (isSupabaseToursEnabled()) {
-    try {
-      const { fetchPublishedListingsServer } = await import("@/lib/tour-content-server");
-      const listings = await fetchPublishedListingsServer();
-      if (listings.length > 0) {
-        return getSimilarTourDetails(slug, limit, listings);
-      }
-    } catch {
-      // fallback
-    }
+export async function fetchTourDetail(
+  slug: string,
+  opts?: { accessToken?: string | null }
+): Promise<TourDetail | null> {
+  const native = await fetchNativeTourDetail(slug, opts);
+  if (native) return native;
+  return fetchPartnerTourDetailServer(slug);
+}
+
+async function resolveSimilarTourDetail(
+  listing: TourListing,
+  opts?: { accessToken?: string | null }
+): Promise<TourDetail | null> {
+  if (isPartnerTourListing(listing)) {
+    return fetchPartnerTourDetailServer(listing.slug);
   }
-  return getSimilarTours(slug, limit);
+  return fetchNativeTourDetail(listing.slug, opts);
+}
+
+export async function fetchSimilarTours(slug: string, limit = 3): Promise<TourDetail[]> {
+  const listings = await fetchMarketplaceTours();
+  if (listings.length === 0) {
+    return getSimilarTours(slug, limit);
+  }
+
+  const baseListing = listings.find((item) => item.slug === slug);
+  if (!baseListing) {
+    const partnerOnly = listings.filter((item) => isPartnerTourListing(item));
+    if (partnerOnly.length === 0) {
+      return getSimilarTourDetails(slug, limit, listings);
+    }
+    return [];
+  }
+
+  const ranked = rankSimilarListings(baseListing, listings, limit);
+  const details: TourDetail[] = [];
+  for (const item of ranked) {
+    const detail = await resolveSimilarTourDetail(item);
+    if (detail) details.push(detail);
+  }
+  return details;
 }

@@ -15,6 +15,7 @@ import {
   rowToExcursionListing,
 } from "@/lib/tripster/mapper";
 import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
+import { isTripsterTourExperience } from "@/lib/tripster/partner-tour-utils";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -107,7 +108,9 @@ export async function fetchExcursionListings(
   }
 
   const cityMap = new Map(cities.map((city) => [city.id, city]));
-  const items = data.map((row) => {
+  const items = data
+    .filter((row) => !isTripsterTourExperience(row))
+    .map((row) => {
     const city = cityMap.get(row.city_id);
     const cityRow = city
       ? {
@@ -132,9 +135,9 @@ export async function fetchExcursionListings(
 }
 
 export async function fetchExcursionSlugs(supabase: DbClient): Promise<string[]> {
-  const { data, error } = await supabase.from("tripster_experiences").select("slug");
+  const { data, error } = await supabase.from("tripster_experiences").select("slug, experience_type, payload");
   if (error || !data) return [];
-  return data.map((row) => row.slug);
+  return data.filter((row) => !isTripsterTourExperience(row)).map((row) => row.slug);
 }
 
 export async function fetchExcursionListingsByGuideId(
@@ -154,7 +157,9 @@ export async function fetchExcursionListingsByGuideId(
 
   if (error || !data) return [];
 
-  return data.map((row) => {
+  return data
+    .filter((row) => !isTripsterTourExperience(row))
+    .map((row) => {
     const city = cityMap.get(row.city_id);
     const cityRow = city
       ? {
@@ -225,7 +230,9 @@ export async function fetchSimilarExcursionListings(
 
   if (error || !data) return [];
 
-  return data.map((row) => {
+  return data
+    .filter((row) => !isTripsterTourExperience(row))
+    .map((row) => {
     const city = cityMap.get(row.city_id);
     const cityRow = city
       ? {
@@ -252,6 +259,7 @@ export async function fetchExcursionBySlug(
     .maybeSingle();
 
   if (error || !data) return null;
+  if (isTripsterTourExperience(data)) return null;
 
   const { data: city } = await supabase
     .from("tripster_cities")

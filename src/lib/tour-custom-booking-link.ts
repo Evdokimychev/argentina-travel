@@ -73,6 +73,8 @@ export interface ExternalBookingContext {
   selectedDateId?: string;
   dates?: TourDetail["dates"];
   customDate?: Date | null;
+  /** Время слота Tripster (HH:mm), если дата из расписания партнёра */
+  slotTime?: string;
 }
 
 export function buildExternalBookingUrl(
@@ -83,29 +85,64 @@ export function buildExternalBookingUrl(
 
   try {
     const url = new URL(link.url);
-    if (context.guests && context.guests > 0) {
-      url.searchParams.set("guests", String(context.guests));
-    }
-    const selected = context.dates?.find((item) => item.id === context.selectedDateId);
-    if (selected?.startDate) {
-      url.searchParams.set("start_date", selected.startDate);
-    } else if (context.customDate) {
-      url.searchParams.set("start_date", context.customDate.toISOString().slice(0, 10));
-    }
+    appendBookingContextSearchParams(url.searchParams, context);
     return url.toString();
   } catch {
     return link.url;
   }
 }
 
+function appendBookingContextSearchParams(
+  params: URLSearchParams,
+  context: ExternalBookingContext
+): void {
+  if (context.guests && context.guests > 0) {
+    params.set("guests", String(context.guests));
+  }
+  const selected = context.dates?.find((item) => item.id === context.selectedDateId);
+  if (selected?.startDate) {
+    params.set("start_date", selected.startDate);
+  } else if (context.customDate) {
+    params.set("start_date", context.customDate.toISOString().slice(0, 10));
+  }
+  if (context.slotTime?.trim()) {
+    params.set("time", context.slotTime.trim());
+  }
+}
+
+export function appendExternalBookingContextToHref(
+  href: string,
+  link: Pick<TourCustomBookingLinkPublic, "passContext">,
+  context?: ExternalBookingContext
+): string {
+  if (!link.passContext || !context) return href;
+
+  const params = new URLSearchParams();
+  appendBookingContextSearchParams(params, context);
+  if ([...params.keys()].length === 0) return href;
+
+  const separator = href.includes("?") ? "&" : "?";
+  return `${href}${separator}${params.toString()}`;
+}
+
 export function resolveTourExternalBookingHref(
   tour: Pick<TourDetail, "customBookingLink" | "dates">,
   context?: ExternalBookingContext
 ): string | null {
-  const publicLink = toPublicCustomBookingLink(tour.customBookingLink as TourCustomBookingLink | undefined);
-  if (!publicLink) return null;
-  return buildExternalBookingUrl(publicLink, {
+  const link = tour.customBookingLink;
+  const url = link?.url?.trim();
+  if (!url || !link) return null;
+
+  const contextPayload = {
     ...context,
     dates: tour.dates,
-  });
+  };
+
+  if (url.startsWith("/")) {
+    return appendExternalBookingContextToHref(url, link, contextPayload);
+  }
+
+  const publicLink = toPublicCustomBookingLink(link as TourCustomBookingLink | undefined);
+  if (!publicLink) return null;
+  return buildExternalBookingUrl(publicLink, contextPayload);
 }

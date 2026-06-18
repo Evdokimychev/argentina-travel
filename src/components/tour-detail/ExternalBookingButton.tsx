@@ -25,7 +25,7 @@ export default function ExternalBookingButton({
       target={link.openInNewTab ? "_blank" : undefined}
       rel={link.openInNewTab ? "noopener noreferrer" : undefined}
       onClick={onClick}
-      className={cn(buttonVariants({ variant: "default" }), "gap-2", className)}
+      className={cn(buttonVariants({ variant: "default" }), "w-full gap-2", className)}
     >
       {link.label}
       <ExternalLink className="h-4 w-4" aria-hidden />

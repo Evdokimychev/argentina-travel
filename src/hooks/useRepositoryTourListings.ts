@@ -15,7 +15,7 @@ export function useRepositoryTourListings(initialTours: TourListing[]): TourList
     setTours(getClientSyncedMarketplaceListings(initialTours));
 
     function refresh() {
-      setTours(getMarketplaceListings());
+      setTours(getClientSyncedMarketplaceListings(initialTours));
     }
 
     window.addEventListener(TOURS_REPOSITORY_UPDATED_EVENT, refresh);

@@ -28,7 +28,12 @@ import {
   resolveWaitlistScenario,
   type WaitlistScenario,
 } from "@/lib/tour-waitlist";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
 import type { TourCustomBookingLinkPublic } from "@/types/tour-custom-booking-link";
+import { usePartnerTourPriceQuote } from "@/hooks/usePartnerTourPriceQuote";
+import { resolvePartnerTourBookingPrice } from "@/lib/tripster/partner-tour-price";
+import type { PartnerTourBookingPrice } from "@/lib/tripster/partner-tour-price";
 
 export type { BookingDateMode } from "@/lib/tour-booking-spots";
 
@@ -64,11 +69,18 @@ interface TourBookingContextValue {
   usesExternalBooking: boolean;
   externalBookingLink: TourCustomBookingLinkPublic | null;
   externalBookingHref: string | null;
+  partnerBookingPrice: PartnerTourBookingPrice | null;
+  partnerPriceLoading: boolean;
+  partnerPriceIsEstimate: boolean;
 }
 
 const TourBookingContext = createContext<TourBookingContextValue | null>(null);
 
-function resolveInitialDateMode(mode: TourBookingMode | undefined): BookingDateMode {
+function resolveInitialDateMode(
+  mode: TourBookingMode | undefined,
+  datesLength: number
+): BookingDateMode {
+  if (datesLength > 0) return "scheduled";
   if (mode === "on_request") return "custom";
   return "scheduled";
 }
@@ -81,13 +93,16 @@ export function TourBookingProvider({
   children: ReactNode;
 }) {
   const bookingMode = tour.bookingMode ?? "scheduled";
+  const requiresManualDate = isPartnerTourDetail(tour);
   const initialGuests = Math.min(tour.groupMax, tour.groupMin);
   const [guests, setGuests] = useState(() => initialGuests);
   const [selectedDateId, setSelectedDateId] = useState(() =>
-    pickInitialDateId(tour.dates, initialGuests, tour.groupMin)
+    requiresManualDate
+      ? ""
+      : pickInitialDateId(tour.dates, initialGuests, tour.groupMin)
   );
   const [dateMode, setDateMode] = useState<BookingDateMode>(() =>
-    resolveInitialDateMode(bookingMode)
+    resolveInitialDateMode(bookingMode, tour.dates.length)
   );
   const [customDate, setCustomDate] = useState<Date | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
@@ -96,22 +111,46 @@ export function TourBookingProvider({
   const priceOnRequest = Boolean(tour.priceOnRequest);
 
   useEffect(() => {
-    if (dateMode !== "scheduled") return;
+    if (tour.dates.length > 0 && dateMode === "custom") {
+      setDateMode("scheduled");
+    }
+  }, [tour.slug, tour.dates.length, dateMode]);
+
+  useEffect(() => {
+    if (dateMode !== "scheduled" || requiresManualDate) return;
     const current = tour.dates.find((d) => d.id === selectedDateId);
     if (current && dateFitsGuestCount(current, guests, tour.groupMin)) return;
     const next = findBookableDates(tour.dates, guests, tour.groupMin)[0];
     if (next && next.id !== selectedDateId) {
       setSelectedDateId(next.id);
     }
-  }, [guests, dateMode, tour.dates, tour.groupMin, selectedDateId]);
+  }, [guests, dateMode, requiresManualDate, tour.dates, tour.groupMin, selectedDateId]);
 
   const usesExternalBooking = tourUsesExternalBooking(tour);
   const externalBookingLink = tour.customBookingLink ?? null;
+  const {
+    quote: partnerQuote,
+    loading: partnerPriceLoading,
+    selectedDate: partnerSelectedDate,
+    isEstimate: partnerPriceIsEstimate,
+  } = usePartnerTourPriceQuote({
+    tour,
+    guests,
+    selectedDateId,
+    dateMode,
+  });
+
+  const partnerSlotTime = useMemo(() => {
+    if (!selectedDateId) return undefined;
+    return parsePartnerTourDateId(selectedDateId)?.time;
+  }, [selectedDateId]);
+
   const externalBookingHref = usesExternalBooking
     ? resolveTourExternalBookingHref(tour, {
         guests,
         selectedDateId,
         customDate,
+        slotTime: partnerSlotTime,
       })
     : null;
 
@@ -185,9 +224,20 @@ export function TourBookingProvider({
 
   const closeCheckout = useCallback(() => setCheckoutOpen(false), []);
 
+  const partnerBookingPrice = useMemo(() => {
+    if (tour.partnerSource !== "tripster") return null;
+    return resolvePartnerTourBookingPrice({
+      tour,
+      guests,
+      selectedDate: partnerSelectedDate,
+      quote: partnerQuote,
+    });
+  }, [tour, guests, partnerSelectedDate, partnerQuote]);
+
   const value = useMemo((): TourBookingContextValue => {
     const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
-    const basePricePerPersonUsd = selectedDate?.priceUsd ?? tour.priceUsd;
+    const datePriceUsd = selectedDate?.priceUsd ?? 0;
+    const basePricePerPersonUsd = datePriceUsd > 0 ? datePriceUsd : tour.priceUsd;
     const quote = priceOnRequest
       ? {
           pricePerPersonUsd: basePricePerPersonUsd,
@@ -242,6 +292,9 @@ export function TourBookingProvider({
       usesExternalBooking,
       externalBookingLink,
       externalBookingHref,
+      partnerBookingPrice,
+      partnerPriceLoading,
+      partnerPriceIsEstimate,
     };
   }, [
     tour,
@@ -264,6 +317,9 @@ export function TourBookingProvider({
     usesExternalBooking,
     externalBookingLink,
     externalBookingHref,
+    partnerBookingPrice,
+    partnerPriceLoading,
+    partnerPriceIsEstimate,
   ]);
 
   return (

@@ -175,6 +175,20 @@ export type TripsterReview = {
   images?: TripsterReview["photos"];
 };
 
+export type TripsterTourPlanPhoto = {
+  thumbnail?: string;
+  medium?: string;
+  scaled?: string;
+  type?: string;
+};
+
+export type TripsterTourPlanDay = {
+  number?: number;
+  title?: string;
+  description?: string;
+  photos?: Array<TripsterTourPlanPhoto | string>;
+};
+
 export type TripsterExperienceListParams = {
   city?: number;
   country?: number;
@@ -194,6 +208,7 @@ export type TripsterObtainTokenResponse = {
 
 export type TripsterScheduleSlot = {
   type?: string;
+  time?: string;
   time_start?: string;
   time_end?: string;
   price?: {

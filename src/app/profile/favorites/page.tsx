@@ -9,6 +9,7 @@ import { getUserFavorites } from "@/lib/favorites-store";
 import { FAVORITES_UPDATED_EVENT, type FavoriteTour } from "@/types/tourist";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
+import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
 import {
@@ -75,7 +76,8 @@ export default function ProfileFavoritesPage() {
                         coverImage: favorite.tourImage,
                         cityName: favorite.cityName ?? "",
                       }}
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-sm"
+                      className={favoriteOverlayButtonClass}
+                      iconClassName="h-4 w-4"
                     />
                   ) : (
                     <FavoriteButton
@@ -86,7 +88,8 @@ export default function ProfileFavoritesPage() {
                       region={favorite.region}
                       country={favorite.country}
                       priceUsd={favorite.priceUsd}
-                      className="flex h-9 w-9 items-center justify-center rounded-full bg-white/95 shadow-sm"
+                      className={favoriteOverlayButtonClass}
+                      iconClassName="h-4 w-4"
                     />
                   )}
                 </div>

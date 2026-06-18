@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
+import { favoriteActionButtonClass } from "@/lib/favorite-button-styles";
 import {
   Star,
   Flame,
@@ -30,6 +31,7 @@ import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { isLowAvailability } from "@/lib/tour-departure-countdown";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
@@ -86,6 +88,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const isIndividualOnly = tour.bookingMode === "on_request";
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
   const cityDisplay = resolveTourCityDisplay(tour);
+  const isPartnerTour = isPartnerTourListing(tour);
 
   return (
     <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
@@ -98,6 +101,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
+            {isPartnerTour ? <Badge variant="new">Tripster</Badge> : null}
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий
@@ -168,18 +172,34 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           </Link>
 
           <div className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 sm:grid-cols-4">
-            <StatCell label="Сложность">
-              <span>{tour.difficultyLevel}</span>
-              <DifficultyDots level={tour.difficultyLevel} />
-            </StatCell>
-            <StatCell label="Комфорт">
-              <span>{comfortLevel}</span>
-              <ComfortDots level={comfortLevel} />
-            </StatCell>
-            <StatCell label="Язык">{tour.language[0]}</StatCell>
-            <StatCell label="Возраст">
-              {formatMinimumAgeShort(tour.minimumAge)}
-            </StatCell>
+            {isPartnerTour ? (
+              <>
+                <StatCell label="Формат">{tour.activityType}</StatCell>
+                <StatCell label="Группа">{tour.groupSizeBucket}</StatCell>
+                <StatCell label="Длительность">
+                  {formatDays(tour.durationDays)}
+                  {tour.durationNights > 0 ? ` · ${formatNights(tour.durationNights)}` : null}
+                </StatCell>
+                <StatCell label="Возраст">
+                  {formatMinimumAgeShort(tour.minimumAge)}
+                </StatCell>
+              </>
+            ) : (
+              <>
+                <StatCell label="Сложность">
+                  <span>{tour.difficultyLevel}</span>
+                  <DifficultyDots level={tour.difficultyLevel} />
+                </StatCell>
+                <StatCell label="Комфорт">
+                  <span>{comfortLevel}</span>
+                  <ComfortDots level={comfortLevel} />
+                </StatCell>
+                <StatCell label="Язык">{tour.language[0]}</StatCell>
+                <StatCell label="Возраст">
+                  {formatMinimumAgeShort(tour.minimumAge)}
+                </StatCell>
+              </>
+            )}
           </div>
         </div>
 
@@ -279,7 +299,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               tourImage={tour.image}
               region={tour.region}
               priceUsd={tour.priceUsd}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white transition-colors hover:bg-gray-50"
+              className={favoriteActionButtonClass}
               iconClassName="h-5 w-5"
             />
           </div>

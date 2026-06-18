@@ -116,7 +116,14 @@ function ItineraryDayCard({
           {isOpen && (
             <div className="mt-4 space-y-4 border-t border-gray-100 pt-4 animate-fade-in-up">
               {day.description ? (
-                <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+                day.descriptionHtml ? (
+                  <div
+                    className="rich-text-editor-content text-sm leading-relaxed text-slate"
+                    dangerouslySetInnerHTML={{ __html: day.descriptionHtml }}
+                  />
+                ) : (
+                  <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+                )
               ) : null}
               {images.length > 0 && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
@@ -147,12 +154,14 @@ interface ItinerarySectionProps {
   days?: TourItineraryDay[] | null;
   tour?: TourDetail | null;
   showPdfDownload?: boolean;
+  hideProgramFooter?: boolean;
 }
 
 export default function ItinerarySection({
   days,
   tour,
   showPdfDownload = true,
+  hideProgramFooter = false,
 }: ItinerarySectionProps) {
   const itineraryDays = useMemo(() => days ?? [], [days]);
   const firstDayId = itineraryDays[0]?.id;
@@ -232,7 +241,7 @@ export default function ItinerarySection({
         ))}
       </div>
 
-      {tour ? (
+      {tour && !hideProgramFooter ? (
         <ItineraryProgramFooter
           difficulty={tour.difficulty}
           difficultyDescriptionHtml={tour.descriptionExtra?.difficulty}

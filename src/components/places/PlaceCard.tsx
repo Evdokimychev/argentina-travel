@@ -7,6 +7,7 @@ import { PLACE_CATEGORY_LABELS } from "@/types/place";
 import type { PlaceListing } from "@/types/place";
 import { placeHref } from "@/lib/places-repository";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
+import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { cn } from "@/lib/cn";
 
 export default function PlaceCard({
@@ -45,7 +46,8 @@ export default function PlaceCard({
         <div className="absolute right-3 top-3">
           <PlaceFavoriteButton
             place={place}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm"
+            className={favoriteOverlayButtonClass}
+            iconClassName="h-4 w-4"
           />
         </div>
         <div className="absolute bottom-0 p-4 text-white">

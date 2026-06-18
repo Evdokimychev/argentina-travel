@@ -1,7 +1,8 @@
 "use client";
 
-import { Heart } from "lucide-react";
+import FavoriteHeartIcon from "@/components/ui/FavoriteHeartIcon";
 import { cn } from "@/lib/cn";
+import { favoriteIconClass } from "@/lib/favorite-button-styles";
 import { useFavoriteTour } from "@/hooks/useFavoriteTour";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import type { PlaceListing } from "@/types/place";
@@ -36,13 +37,11 @@ export default function PlaceFavoriteButton({
       }}
       aria-label={favorited ? t("places.favoriteRemove") : t("places.favoriteAdd")}
       aria-pressed={favorited}
-      className={className}
+      className={cn("group", className, favorited && "text-red-500")}
     >
-      <Heart
-        className={cn(
-          iconClassName ?? "h-4 w-4",
-          favorited ? "fill-red-500 text-red-500" : "text-charcoal",
-        )}
+      <FavoriteHeartIcon
+        filled={favorited}
+        className={favoriteIconClass(favorited, iconClassName ?? "h-[18px] w-[18px]")}
       />
     </button>
   );

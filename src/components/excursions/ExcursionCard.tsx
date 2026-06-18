@@ -5,6 +5,7 @@ import { Clock, MapPin } from "lucide-react";
 import TourCardGallery from "@/components/marketplace/TourCardGallery";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
+import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
@@ -51,7 +52,8 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
 
           <ExcursionFavoriteButton
             excursion={excursion}
-            className="pointer-events-auto absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+            className={cn(favoriteOverlayButtonClass, "absolute right-3 top-3 z-20")}
+            iconClassName="h-4 w-4"
           />
 
           {excursion.guide && guideLabel ? (

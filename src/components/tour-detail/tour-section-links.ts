@@ -1,6 +1,8 @@
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibility";
 import {
   hasArrivalDepartureLogistics,
   hasTicketRecommendations,
@@ -32,7 +34,47 @@ export function buildTourSectionLinks(
   const flightLogisticsLabel =
     typeof context === "boolean" ? undefined : context.flightLogisticsLabel;
 
-  const links: TourSectionLink[] = [{ id: "description", label: "Описание" }];
+  const links: TourSectionLink[] = [];
+  const isPartnerTour = isPartnerTourDetail(tour);
+
+  if (isPartnerTour && tour.partnerContent) {
+    const sections = resolvePartnerTourSections(tour, tour.partnerContent);
+
+    if (sections.description) {
+      links.push({ id: "description", label: "Описание" });
+    }
+    if (sections.itinerary || sections.programNotice) {
+      links.push({ id: "itinerary", label: "Программа" });
+    }
+    if (sections.dates) {
+      links.push({ id: "dates", label: "Даты" });
+    }
+    if (sections.included) {
+      links.push({ id: "included", label: "Условия" });
+    }
+    if (sections.orgDetails) {
+      links.push({ id: "org-details", label: "Организация" });
+    }
+    if (sections.comfort) {
+      links.push({ id: "accommodations", label: "Комфорт" });
+    }
+    if (sections.meeting) {
+      links.push({ id: "meeting", label: "Встреча" });
+    }
+    if (sections.important) {
+      links.push({ id: "important", label: "Важно" });
+    }
+    links.push({ id: "organizer", label: "Организатор" });
+    if (sections.reviews) {
+      links.push({ id: "reviews", label: "Отзывы" });
+    }
+    if (hasSimilarTours) {
+      links.push({ id: "similar", label: "Похожие" });
+    }
+    return links;
+  }
+
+  links.push({ id: "description", label: "Описание" });
 
   if (hasPlacesContent(tour.places)) {
     links.push({ id: "places", label: "Впечатления" });

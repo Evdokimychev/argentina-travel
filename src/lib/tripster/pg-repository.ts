@@ -7,6 +7,7 @@ import {
   rowToExcursionListing,
 } from "@/lib/tripster/mapper";
 import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
+import { TRIPSTER_EXCURSION_WHERE_SQL } from "@/lib/tripster/partner-tour-utils";
 import type {
   ExcursionCity,
   ExcursionDetail,
@@ -79,7 +80,7 @@ export async function pgFetchExcursionsServer(
       where.push(`(title ilike $${params.length} or tagline ilike $${params.length})`);
     }
 
-    const whereSql = where.length ? `where ${where.join(" and ")}` : "";
+    const whereSql = where.length ? `where ${where.join(" and ")} and ${TRIPSTER_EXCURSION_WHERE_SQL}` : `where ${TRIPSTER_EXCURSION_WHERE_SQL}`;
     const orderSql =
       filters.sort === "rating"
         ? "order by rating desc nulls last"
@@ -128,9 +129,10 @@ export async function pgFetchExcursionsServer(
 
 export async function pgFetchExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
   const result = await withPgClient(async (client) => {
-    const experience = await client.query(`select * from public.tripster_experiences where slug = $1 limit 1`, [
-      slug,
-    ]);
+    const experience = await client.query(
+      `select * from public.tripster_experiences where slug = $1 and ${TRIPSTER_EXCURSION_WHERE_SQL} limit 1`,
+      [slug]
+    );
     const row = experience.rows[0];
     if (!row) return null;
 
@@ -160,7 +162,9 @@ export async function pgFetchExcursionDetailServer(slug: string): Promise<Excurs
 
 export async function pgFetchExcursionSlugsServer(): Promise<string[]> {
   const result = await withPgClient(async (client) => {
-    const { rows } = await client.query(`select slug from public.tripster_experiences order by slug`);
+    const { rows } = await client.query(
+      `select slug from public.tripster_experiences where ${TRIPSTER_EXCURSION_WHERE_SQL} order by slug`
+    );
     return rows.map((row) => row.slug as string);
   });
   return result ?? [];
@@ -180,7 +184,7 @@ export async function pgFetchExcursionsByGuideId(guideId: number): Promise<Excur
       `select id, slug, country_id, city_id, title, tagline, rating, review_count,
               price_value, price_currency, price_display, duration_minutes, format, cover_image, payload
        from public.tripster_experiences
-       where (payload->'guide'->>'id')::int = $1
+       where (payload->'guide'->>'id')::int = $1 and ${TRIPSTER_EXCURSION_WHERE_SQL}
        order by review_count desc`,
       [guideId]
     );
@@ -238,7 +242,7 @@ export async function pgFetchSimilarExcursions(
       `select id, slug, country_id, city_id, title, tagline, rating, review_count,
               price_value, price_currency, price_display, duration_minutes, format, cover_image, payload
        from public.tripster_experiences
-       where city_id = $1 and id <> $2
+       where city_id = $1 and id <> $2 and ${TRIPSTER_EXCURSION_WHERE_SQL}
        order by review_count desc
        limit $3`,
       [cityId, excludeId, limit]

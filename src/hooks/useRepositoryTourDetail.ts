@@ -17,7 +17,9 @@ export function useRepositoryTourDetail(
     }
 
     function resolveTour() {
-      return getRepositoryTourDetail(slug, readAccessToken()) ?? initialTour ?? null;
+      const local = getRepositoryTourDetail(slug, readAccessToken());
+      if (local) return local;
+      return initialTour ?? null;
     }
 
     setTour(resolveTour());

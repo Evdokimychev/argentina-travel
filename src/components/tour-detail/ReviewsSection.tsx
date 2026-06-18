@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
 import { MessageSquare } from "lucide-react";
+import { SafeImage } from "@/components/ui/safe-image";
 import { TourReview } from "@/types";
-import { formatDate } from "@/lib/utils";
+import { formatDateOptional } from "@/lib/utils";
 import { formatReviews } from "@/lib/pluralize";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StarRating } from "@/components/ui/star-rating";
@@ -28,10 +28,13 @@ export default function ReviewsSection({
   reviews,
   rating,
   reviewCount,
+  headingNote,
 }: {
   reviews: TourReview[];
   rating: number;
   reviewCount: number;
+  /** Пояснение под заголовком (например, отзывы с других туров гида). */
+  headingNote?: string;
 }) {
   const [filter, setFilter] = useState<number | "all">("all");
   const [page, setPage] = useState(1);
@@ -62,6 +65,20 @@ export default function ReviewsSection({
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
 
   if (reviews.length === 0) {
+    if (reviewCount > 0) {
+      return (
+        <TourSection id="reviews" title="Отзывы" subtitle={`${rating} · ${formatReviews(reviewCount)}`}>
+          <EmptyState
+            icon={MessageSquare}
+            title="Отзывы на Tripster"
+            description="Отзывы есть на странице тура у партнёра — обновите страницу или проверьте подключение к API Tripster."
+            bordered={false}
+            className="px-0"
+          />
+        </TourSection>
+      );
+    }
+
     return (
       <TourSection id="reviews" title="Отзывы">
         <EmptyState
@@ -76,7 +93,15 @@ export default function ReviewsSection({
   }
 
   return (
-    <TourSection id="reviews" title="Отзывы" subtitle={`${rating} · ${formatReviews(reviewCount)}`}>
+    <TourSection
+      id="reviews"
+      title="Отзывы"
+      subtitle={
+        headingNote
+          ? `${rating} · ${formatReviews(reviewCount)} · ${headingNote}`
+          : `${rating} · ${formatReviews(reviewCount)}`
+      }
+    >
       <div className="mb-4 flex flex-wrap gap-2">
         {filterOptions.map((f) => (
           <button
@@ -98,14 +123,28 @@ export default function ReviewsSection({
       </div>
 
       <div className="space-y-4">
-        {paginated.map((review) => (
+        {paginated.map((review) => {
+          const tripDateLabel = formatDateOptional(review.tripDate);
+          const reviewDateLabel = formatDateOptional(review.date);
+          const dateLine = [tripDateLabel ? `Поездка: ${tripDateLabel}` : null, reviewDateLabel ? `Отзыв: ${reviewDateLabel}` : null]
+            .filter(Boolean)
+            .join(" · ");
+
+          return (
           <article
             key={review.id}
             className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
           >
             <div className="flex items-start gap-3">
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                <Image src={review.avatar} alt={review.author} fill className="object-cover" sizes="40px" />
+                <SafeImage
+                  src={review.avatar}
+                  alt={review.author}
+                  fill
+                  placeholderVariant="avatar"
+                  className="object-cover"
+                  sizes="40px"
+                />
               </div>
               <div className="flex-1">
                 <div className="flex flex-wrap items-center justify-between gap-2">
@@ -119,15 +158,17 @@ export default function ReviewsSection({
                   </div>
                   <StarRating stars={review.rating} size="md" />
                 </div>
-                <p className="mt-1 text-xs text-slate">
-                  Поездка: {formatDate(review.tripDate)} · {formatDate(review.date)}
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-slate">{review.text}</p>
+                {dateLine ? (
+                  <p className="mt-1 text-xs text-slate">{dateLine}</p>
+                ) : null}
+                {review.text ? (
+                  <p className="mt-3 text-sm leading-relaxed text-slate">{review.text}</p>
+                ) : null}
                 {review.photos.length > 0 && (
                   <div className="mt-3 flex gap-2">
                     {review.photos.map((photo) => (
                       <div key={photo} className="relative h-20 w-28 overflow-hidden rounded-lg">
-                        <Image src={photo} alt="" fill className="object-cover" sizes="112px" />
+                        <SafeImage src={photo} alt="" fill className="object-cover" sizes="112px" />
                       </div>
                     ))}
                   </div>
@@ -135,7 +176,8 @@ export default function ReviewsSection({
               </div>
             </div>
           </article>
-        ))}
+        );
+        })}
       </div>
 
       {totalPages > 1 && (

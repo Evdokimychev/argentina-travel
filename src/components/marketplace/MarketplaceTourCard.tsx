@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Flame, MapPin, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
+import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { TourListing, TourBadge } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
@@ -18,6 +19,7 @@ import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
@@ -47,6 +49,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
       : null;
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
   const cityDisplay = resolveTourCityDisplay(tour);
+  const isPartnerTour = isPartnerTourListing(tour);
 
   return (
     <article
@@ -57,6 +60,9 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
+            {isPartnerTour ? (
+              <Badge variant="new">Tripster</Badge>
+            ) : null}
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий
@@ -79,7 +85,8 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             tourImage={tour.image}
             region={tour.region}
             priceUsd={tour.priceUsd}
-            className="pointer-events-auto absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/90 shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+            className={cn(favoriteOverlayButtonClass, "absolute right-3 top-3 z-10")}
+            iconClassName="h-4 w-4"
           />
 
           <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
@@ -135,18 +142,23 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             </p>
           ) : null}
 
-          <div className="mt-3 flex items-baseline justify-between gap-2">
-            <TourPublicPriceDisplay
-              priceUsd={tour.priceUsd}
-              originalPriceUsd={tour.originalPriceUsd}
-              priceOnRequest={tour.priceOnRequest}
-              priceFromPrefix={tour.priceFromPrefix}
-              size="sm"
-              density="compact"
-            />
-            <p className="shrink-0 self-baseline text-xs text-slate">
-              {formatDurationShort(tour.durationDays, tour.durationNights)}
-            </p>
+          <div className="mt-3 flex flex-col gap-0.5">
+            <div className="flex items-baseline justify-between gap-2">
+              <TourPublicPriceDisplay
+                priceUsd={tour.priceUsd}
+                originalPriceUsd={tour.originalPriceUsd}
+                priceOnRequest={tour.priceOnRequest}
+                priceFromPrefix={tour.priceFromPrefix}
+                size="sm"
+                density="compact"
+              />
+              <p className="shrink-0 self-baseline text-xs text-slate">
+                {formatDurationShort(tour.durationDays, tour.durationNights)}
+              </p>
+            </div>
+            {tour.partnerPriceDisplay ? (
+              <p className="text-[11px] text-slate">{tour.partnerPriceDisplay}</p>
+            ) : null}
           </div>
 
           {schedule?.type === "individual" ? (
@@ -180,12 +192,16 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
               {tour.groupSizeBucket}
             </span>
-            <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
-              {comfortLevel}
-            </span>
-            <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
-              {tour.difficultyLevel}
-            </span>
+            {!isPartnerTour ? (
+              <>
+                <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
+                  {comfortLevel}
+                </span>
+                <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
+                  {tour.difficultyLevel}
+                </span>
+              </>
+            ) : null}
           </div>
         </div>
       </div>

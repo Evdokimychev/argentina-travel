@@ -1,7 +1,7 @@
 import type { TripsterReview } from "@/lib/tripster/types";
 import type { ExcursionReview } from "@/types/excursion";
 
-type ReviewRow = {
+export type TripsterReviewRow = {
   id: number;
   rating: number | null;
   author_name: string | null;
@@ -57,7 +57,18 @@ function extractAuthorAvatar(payload: TripsterReview & Record<string, unknown>):
   return undefined;
 }
 
-export function mapTripsterReviewRow(row: ReviewRow): ExcursionReview {
+export function tripsterReviewToRow(review: TripsterReview, fallbackId = 0): TripsterReviewRow {
+  return {
+    id: review.id ?? fallbackId,
+    rating: review.rating ?? null,
+    author_name: review.name?.trim() || review.author?.name?.trim() || null,
+    review_text: review.text?.trim() || null,
+    created_at: review.created_at ?? null,
+    payload: review,
+  };
+}
+
+export function mapTripsterReviewRow(row: TripsterReviewRow): ExcursionReview {
   const payload = (row.payload ?? {}) as TripsterReview & Record<string, unknown>;
   const authorName =
     row.author_name?.trim() ||

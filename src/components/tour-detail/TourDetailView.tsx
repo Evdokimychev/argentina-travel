@@ -8,6 +8,7 @@ import TourStatsSection from "./TourStatsSection";
 import DescriptionSection from "./DescriptionSection";
 import ItinerarySection from "./ItinerarySection";
 import OrganizerSection from "./OrganizerSection";
+import PartnerTourOrganizerSection from "./PartnerTourOrganizerSection";
 import ReviewsSection from "./ReviewsSection";
 import AccommodationsSection from "./AccommodationsSection";
 import IncludedExcludedSection from "./IncludedExcludedSection";
@@ -27,6 +28,15 @@ import TourPriceRequestModal from "./TourPriceRequestModal";
 import TourWaitlistModal from "./TourWaitlistModal";
 import TourSectionNav from "./TourSectionNav";
 import PrivateTourBanner from "./PrivateTourBanner";
+import PartnerTourBanner from "./PartnerTourBanner";
+import PartnerTourStatsSection from "./PartnerTourStatsSection";
+import PartnerTourDescriptionSection from "./PartnerTourDescriptionSection";
+import PartnerTourIncludedSection from "./PartnerTourIncludedSection";
+import PartnerTourComfortSection from "./PartnerTourComfortSection";
+import PartnerTourOrgDetailsSection from "./PartnerTourOrgDetailsSection";
+import PartnerTourMeetingSection from "./PartnerTourMeetingSection";
+import PartnerTourDatesSection from "./PartnerTourDatesSection";
+import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
 import TourPreviewBanner from "./TourPreviewBanner";
 import ReviewPromptBanner from "./ReviewPromptBanner";
 import TourDetailHeader from "./TourDetailHeader";
@@ -35,6 +45,8 @@ import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 import { tourUsesExternalBooking } from "@/lib/tour-custom-booking-link";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibility";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import PlacesSection from "./PlacesSection";
@@ -96,6 +108,26 @@ export default function TourDetailView({
     flightLogisticsLabel: flightLogisticsNavLabel,
   });
   const usesExternalBooking = tourUsesExternalBooking(tour);
+  const isPartnerTour = isPartnerTourDetail(tour);
+  const partnerContent = tour.partnerContent;
+  const partnerSections =
+    isPartnerTour && partnerContent
+      ? resolvePartnerTourSections(tour, partnerContent)
+      : null;
+  const partnerBookingHref =
+    tour.customBookingLink?.url ?? `/api/affiliate/go/${tour.slug}`;
+  const partnerDisplayReviews =
+    tour.reviews.length > 0 ? tour.reviews : (tour.partnerGuideReviews ?? []);
+  const partnerDisplayReviewRating =
+    tour.reviews.length > 0 ? tour.rating : tour.organizer.rating;
+  const partnerDisplayReviewCount =
+    tour.reviews.length > 0
+      ? tour.reviewCount
+      : Math.max(tour.organizer.reviewCount ?? 0, tour.partnerGuideReviews?.length ?? 0);
+  const partnerReviewHeadingNote =
+    tour.reviews.length === 0 && (tour.partnerGuideReviews?.length ?? 0) > 0
+      ? "о гиде на других турах Tripster"
+      : undefined;
 
   return (
     <TourBookingProvider tour={tour}>
@@ -122,6 +154,11 @@ export default function TourDetailView({
           <PrivateTourBanner />
         </div>
       ) : null}
+      {isPartnerTour ? (
+        <div className={cn(siteContainerClass, "mt-4")}>
+          <PartnerTourBanner />
+        </div>
+      ) : null}
 
       <TourSectionNav items={sectionLinks} />
 
@@ -129,6 +166,67 @@ export default function TourDetailView({
         <div className={cn(siteContainerClass, "py-8 md:py-10")}>
           <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start xl:gap-10">
             <div className="min-w-0 space-y-8">
+              {isPartnerTour && partnerContent && partnerSections ? (
+                <>
+                  {partnerSections.stats ? (
+                    <PartnerTourStatsSection tour={tour} content={partnerContent} />
+                  ) : null}
+                  {partnerSections.description ? (
+                    <PartnerTourDescriptionSection content={partnerContent} />
+                  ) : null}
+                  {partnerSections.itinerary ? (
+                    <ItinerarySection
+                      days={tour.itinerary}
+                      tour={tour}
+                      showPdfDownload={false}
+                      hideProgramFooter
+                    />
+                  ) : partnerSections.programNotice ? (
+                    <PartnerTourProgramNotice bookingHref={partnerBookingHref} />
+                  ) : null}
+                  {partnerSections.dates ? <PartnerTourDatesSection tour={tour} /> : null}
+                  {partnerSections.included ? (
+                    <PartnerTourIncludedSection content={partnerContent} />
+                  ) : null}
+                  {partnerSections.orgDetails ? (
+                    <PartnerTourOrgDetailsSection content={partnerContent} />
+                  ) : null}
+                  {partnerSections.comfort ? (
+                    <PartnerTourComfortSection content={partnerContent} />
+                  ) : null}
+                  {partnerSections.meeting ? (
+                    <PartnerTourMeetingSection content={partnerContent} />
+                  ) : null}
+                  {partnerSections.important ? (
+                    <ImportantSection
+                      items={tour.importantInfo}
+                      organizerComment={getTourSectionOrganizerComment(tour, "important")}
+                    />
+                  ) : null}
+                  {tour.partnerGuideProfile ? (
+                    <PartnerTourOrganizerSection
+                      guide={tour.partnerGuideProfile}
+                      organizer={tour.organizer}
+                    />
+                  ) : (
+                    <OrganizerSection
+                      organizer={tour.organizer}
+                      comment={tour.organizerComment}
+                      tourSlug={tour.slug}
+                    />
+                  )}
+                  {partnerSections.reviews ? (
+                    <ReviewsSection
+                      reviews={partnerDisplayReviews}
+                      rating={partnerDisplayReviewRating}
+                      reviewCount={partnerDisplayReviewCount}
+                      headingNote={partnerReviewHeadingNote}
+                    />
+                  ) : null}
+                  {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
+                </>
+              ) : (
+                <>
               <TourStatsSection
                 tour={tour}
                 maximumAge={canonicalTour?.participants.maximumAge}
@@ -149,14 +247,16 @@ export default function TourDetailView({
                 <ItinerarySection
                   days={tour.itinerary}
                   tour={tour}
-                  showPdfDownload={!previewMode}
+                  showPdfDownload={!previewMode && !isPartnerTour}
                 />
               ) : null}
-              <DatesSection
-                tour={tour}
-                canonicalTour={canonicalTour}
-                organizerComment={getTourSectionOrganizerComment(tour, "dates")}
-              />
+              {!isPartnerTour ? (
+                <DatesSection
+                  tour={tour}
+                  canonicalTour={canonicalTour}
+                  organizerComment={getTourSectionOrganizerComment(tour, "dates")}
+                />
+              ) : null}
               <IncludedExcludedSection
                 included={tour.included}
                 excluded={tour.excluded}
@@ -172,13 +272,13 @@ export default function TourDetailView({
                   organizerComment={getTourSectionOrganizerComment(tour, "accommodations")}
                 />
               ) : null}
-              {canonicalTour ? (
+              {!isPartnerTour && canonicalTour ? (
                 <PackingListSection
                   tour={canonicalTour}
                   organizerComment={getTourSectionOrganizerComment(tour, "packing")}
                 />
               ) : null}
-              {canonicalTour ? (
+              {!isPartnerTour && canonicalTour ? (
                 <TourPoliciesSection
                   tour={canonicalTour}
                   organizerComment={getTourSectionOrganizerComment(tour, "policies")}
@@ -189,19 +289,21 @@ export default function TourDetailView({
                 organizerComment={getTourSectionOrganizerComment(tour, "important")}
               />
               {flightLogisticsSection}
-              {canonicalTour ? (
+              {!isPartnerTour && canonicalTour ? (
                 <LogisticsDetailSection
                   tour={canonicalTour}
                   organizerComment={getTourSectionOrganizerComment(tour, "logistics")}
                 />
               ) : null}
-              <RouteMapSection
-                points={tour.routePoints}
-                arrival={tour.arrival}
-                logistics={canonicalTour?.logistics}
-                routeMapImage={canonicalTour?.program.routeMapImage}
-                organizerComment={getTourSectionOrganizerComment(tour, "routeMap")}
-              />
+              {!isPartnerTour ? (
+                <RouteMapSection
+                  points={tour.routePoints}
+                  arrival={tour.arrival}
+                  logistics={canonicalTour?.logistics}
+                  routeMapImage={canonicalTour?.program.routeMapImage}
+                  organizerComment={getTourSectionOrganizerComment(tour, "routeMap")}
+                />
+              ) : null}
               <FAQSection
                 faq={tour.faq}
                 organizerComment={getTourSectionOrganizerComment(tour, "faq")}
@@ -218,6 +320,8 @@ export default function TourDetailView({
                 reviewCount={tour.reviewCount}
               />
               {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
+                </>
+              )}
             </div>
 
             <aside className="hidden lg:sticky lg:top-[calc(var(--site-header-height,72px)+var(--tour-section-nav-height,48px)+1rem)] lg:block lg:h-fit lg:w-full lg:self-start">

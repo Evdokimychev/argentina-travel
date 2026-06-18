@@ -15,6 +15,7 @@ import type {
   TripsterGuideProfile,
   TripsterPaginated,
   TripsterReview,
+  TripsterTourPlanDay,
 } from "@/lib/tripster/types";
 
 export class TripsterApiError extends Error {
@@ -167,12 +168,34 @@ export async function fetchTripsterExperienceSchedule(experienceId: number) {
   return tripsterFetch<unknown>(`/experiences/${experienceId}/schedule/`);
 }
 
+export async function fetchTripsterTourPlan(experienceId: number): Promise<TripsterTourPlanDay[]> {
+  const data = await tripsterFetch<TripsterTourPlanDay[] | TripsterPaginated<TripsterTourPlanDay>>(
+    `/experiences/${experienceId}/plan/`
+  );
+  if (Array.isArray(data)) return data;
+  return data.results ?? [];
+}
+
+/** @deprecated Use fetchTripsterTourPlan — Tripster exposes program via `/plan/`. */
+export async function fetchTripsterTourProgram(experienceId: number) {
+  return fetchTripsterTourPlan(experienceId);
+}
+
 export async function fetchTripsterGuide(
   guideId: number,
   options?: { detailed?: boolean }
 ): Promise<TripsterGuideProfile> {
   const query = buildQuery({ detailed: options?.detailed ?? true });
   return tripsterFetch<TripsterGuideProfile>(`/guides/${guideId}${query}`);
+}
+
+export async function fetchTripsterGuideReviews(
+  guideId: number,
+  page = 1,
+  pageSize = 50
+): Promise<TripsterPaginated<TripsterReview>> {
+  const query = buildQuery({ page, page_size: pageSize });
+  return tripsterFetch<TripsterPaginated<TripsterReview>>(`/guides/${guideId}/reviews${query}`);
 }
 
 export async function fetchAllArgentinaExperiences(): Promise<{

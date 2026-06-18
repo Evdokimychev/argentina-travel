@@ -25,6 +25,8 @@ export type ExcursionGuideProfile = ExcursionGuide & {
   guideSince?: string;
   responseTimeLabel?: string;
   excursionCount?: number;
+  /** Число туристов, побывавших с гидом (Tripster rate_count). */
+  visitorCount?: number;
   description?: string;
 };
 

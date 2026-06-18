@@ -13,6 +13,7 @@ import {
   logAffiliateClick,
   updateExperiencePartnerUrl,
 } from "@/lib/tripster/repository";
+import { buildTripsterPartnerBookingUrl } from "@/lib/tripster/partner-tour-utils";
 import {
   fetchSputnik8ProductForAffiliate,
   logSputnik8AffiliateClick,
@@ -98,9 +99,45 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Experience not found" }, { status: 404 });
   }
 
+  const requestUrl = new URL(request.url);
+  const startDate = requestUrl.searchParams.get("start_date");
+  const slotTime = requestUrl.searchParams.get("time");
+  const guestsRaw = requestUrl.searchParams.get("guests");
+  const guests = guestsRaw ? Number.parseInt(guestsRaw, 10) : null;
+  const wantsBookingDeepLink = Boolean(startDate || slotTime || (guests != null && guests > 0));
+
   let partnerUrl = experience.partner_url?.trim() || null;
 
-  if (!partnerUrl) {
+  if (wantsBookingDeepLink) {
+    const bookingTarget = buildTripsterPartnerBookingUrl(experience.id, {
+      startDate,
+      time: slotTime,
+      guests: Number.isFinite(guests) ? guests : null,
+      fallbackUrl: experience.tripster_url,
+    });
+
+    if (isTravelpayoutsConfigured()) {
+      try {
+        const { data: city } = await supabase
+          .from("tripster_cities")
+          .select("slug")
+          .eq("id", experience.city_id)
+          .maybeSingle();
+
+        const link = await createTripsterAffiliateLink({
+          tripsterUrl: bookingTarget,
+          experienceId: experience.id,
+          citySlug: city?.slug,
+        });
+
+        partnerUrl = link.partnerUrl || link.url;
+      } catch {
+        partnerUrl = bookingTarget;
+      }
+    } else {
+      partnerUrl = bookingTarget;
+    }
+  } else if (!partnerUrl) {
     if (!isTravelpayoutsConfigured()) {
       return NextResponse.json({ error: "Affiliate link is not available" }, { status: 503 });
     }

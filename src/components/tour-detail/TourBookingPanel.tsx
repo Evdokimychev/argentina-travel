@@ -4,7 +4,7 @@ import { useMemo, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
-import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
+import { formatTourBookingGuestsDays, formatTourists, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
@@ -29,6 +29,10 @@ import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
+import PartnerTourBookingPriceSummary from "./PartnerTourBookingPriceSummary";
+import PartnerTourBookingContactSection from "./PartnerTourBookingContactSection";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { hasDiscount } from "@/lib/discount";
 
 interface TourBookingPanelProps {
   tour: TourDetail;
@@ -44,6 +48,7 @@ export default function TourBookingPanel({
   previewMode = false,
 }: TourBookingPanelProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
+  const isPartnerTour = isPartnerTourDetail(tour);
   const [bookingError, setBookingErrorState] = useState<SiteFeedbackMessage | null>(null);
 
   const setBookingError = (value: string | SiteFeedbackMessage | null) => {
@@ -71,6 +76,8 @@ export default function TourBookingPanel({
     usesExternalBooking,
     externalBookingLink,
     externalBookingHref,
+    partnerBookingPrice,
+    partnerPriceLoading,
   } = useTourBooking();
 
   const bookButtonPulseKey = useRandomAttentionPulse({
@@ -84,13 +91,24 @@ export default function TourBookingPanel({
   const guestHint =
     dateMode === "scheduled" && selectedDate
       ? `${formatTouristsRange(guestLimits.min, guestLimits.max)}${tour.minimumAge ? `, ${formatMinimumAgeSummary(tour.minimumAge)}` : ""} · на эту дату ${formatSpots(selectedDate.spotsLeft)}`
-      : undefined;
+      : isPartnerTour
+        ? `${formatTouristsRange(guestLimits.min, guestLimits.max)}${tour.minimumAge ? `, ${formatMinimumAgeSummary(tour.minimumAge)}` : ""}`
+        : undefined;
 
   const startLocation = tour.startLocation ?? tour.arrival.meetingPoint;
 
   const priceSuffix = useMemo(() => {
-    return `${formatTouristsBooking(guests)} за ${formatDays(tour.durationDays)}`;
+    return formatTourBookingGuestsDays(guests, tour.durationDays);
   }, [tour.durationDays, guests]);
+
+  const activeDiscountPercent = partnerBookingPrice
+    ? partnerBookingPrice.discountPercent != null &&
+      partnerBookingPrice.discountPercent > 0 &&
+      partnerBookingPrice.originalTotalValue != null &&
+      hasDiscount(partnerBookingPrice.originalTotalValue, partnerBookingPrice.totalValue)
+      ? partnerBookingPrice.discountPercent
+      : undefined
+    : discountPercentOff;
 
   const totalBeforeGroupDiscountUsd = basePricePerPersonUsd * guests;
   const groupDiscountSettings = normalizeGroupDiscountSettings(tour.groupDiscount);
@@ -152,15 +170,22 @@ export default function TourBookingPanel({
         className
       )}
     >
-      {discountPercentOff != null ? (
-        <DiscountPercentBadge percent={discountPercentOff} />
+      {activeDiscountPercent != null ? (
+        <DiscountPercentBadge percent={activeDiscountPercent} />
       ) : null}
       <div
         className={cn(
-          !priceOnRequest && discountPercentOff != null && "pr-[4.75rem] sm:pr-20"
+          activeDiscountPercent != null && "pr-[4.75rem] sm:pr-20"
         )}
       >
-        {priceOnRequest ? (
+        {partnerBookingPrice ? (
+          <PartnerTourBookingPriceSummary
+            price={partnerBookingPrice}
+            suffix={priceSuffix}
+            loading={partnerPriceLoading && Boolean(selectedDate)}
+            className={activeDiscountPercent != null ? "pt-2 sm:pt-3" : undefined}
+          />
+        ) : priceOnRequest ? (
           <TourPublicPriceDisplay
             priceUsd={tour.priceUsd}
             originalPriceUsd={tour.originalPriceUsd}
@@ -180,11 +205,11 @@ export default function TourBookingPanel({
             groupDiscountEnabled={groupDiscountEnabled}
             groupDiscountHint={tour.groupDiscountHint}
             totalBeforeGroupDiscountUsd={totalBeforeGroupDiscountUsd}
-            className={discountPercentOff != null ? "pt-2 sm:pt-3" : undefined}
+            className={activeDiscountPercent != null ? "pt-2 sm:pt-3" : undefined}
           />
         )}
 
-        {!priceOnRequest && !selectedDate && datePriceRangeLabel ? (
+        {!priceOnRequest && !selectedDate && datePriceRangeLabel && !isPartnerTour ? (
           <p className="mt-2 text-xs leading-snug text-slate">
             Диапазон по датам: {datePriceRangeLabel}
           </p>
@@ -203,7 +228,7 @@ export default function TourBookingPanel({
           tour={tour}
           idPrefix="panel"
           showDepartureCalendar={false}
-          collapsible={bookingMode === "scheduled" && tour.dates.length > 0}
+          collapsible={tour.dates.length > 0 && bookingMode === "scheduled"}
         />
 
         <GuestCounter
@@ -217,6 +242,10 @@ export default function TourBookingPanel({
 
         {!previewMode && !usesExternalBooking && canJoinWaitlist ? (
           <BookingWaitlistPrompt />
+        ) : null}
+
+        {isPartnerTour && !previewMode ? (
+          <PartnerTourBookingContactSection tour={tour} />
         ) : null}
       </div>
 
@@ -252,7 +281,7 @@ export default function TourBookingPanel({
                 onClick={handleExternalBookingClick}
               />
             </>
-          ) : (
+          ) : isPartnerTour ? null : (
             <Button
               key={bookButtonPulseKey}
               type="button"

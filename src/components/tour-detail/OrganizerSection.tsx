@@ -23,14 +23,35 @@ import {
 import { formatTours } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import TourSection from "./TourSection";
+import { buildExcursionGuideHref } from "@/lib/tripster/guide-mapper";
 import { tourDetailBadgeSkyClass, tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 
+function resolveTripsterGuideId(organizer: TourOrganizerDetail): number | null {
+  if (organizer.slug?.startsWith("tripster-guide-")) {
+    const id = Number.parseInt(organizer.slug.slice("tripster-guide-".length), 10);
+    return Number.isFinite(id) ? id : null;
+  }
+
+  const directId = Number.parseInt(organizer.id, 10);
+  if (Number.isFinite(directId) && directId > 0 && /гид/i.test(organizer.role)) {
+    return directId;
+  }
+
+  return null;
+}
+
 function organizerProfileHref(organizer: TourOrganizerDetail): string | null {
+  const tripsterGuideId = resolveTripsterGuideId(organizer);
+  if (tripsterGuideId) return buildExcursionGuideHref(tripsterGuideId);
+
   const slug = organizer.slug ?? organizer.ownerUserId;
   return slug ? buildOrganizerPublicHref(slug) : null;
 }
 
 function organizerCatalogHref(organizer: TourOrganizerDetail): string {
+  const tripsterGuideId = resolveTripsterGuideId(organizer);
+  if (tripsterGuideId) return buildExcursionGuideHref(tripsterGuideId);
+
   const slug = organizer.slug ?? organizer.ownerUserId;
   return slug ? buildOrganizerCatalogHref(slug) : "/tours";
 }

@@ -106,7 +106,7 @@ async function fetchExperienceReviews(token, partner, apiBase, experienceId) {
       token,
       partner,
       apiBase,
-      `/experiences/${experienceId}/reviews/?page=1&page_size=5`
+      `/experiences/${experienceId}/reviews/?page=1&page_size=50`
     );
     return unwrapResults(data);
   } catch {
@@ -438,8 +438,8 @@ async function main() {
         if (supabase) {
           await supabase.from("tripster_reviews").delete().eq("experience_id", row.id);
           await supabase.from("tripster_reviews").insert(
-            reviews.map((review) => ({
-              id: review.id,
+            reviews.map((review, index) => ({
+              id: review.id ?? row.id * 100000 + index + 1,
               experience_id: row.id,
               rating: review.rating ?? null,
               author_name: review.name ?? review.author?.name ?? null,
@@ -450,7 +450,7 @@ async function main() {
           );
         } else {
           await pgClient.query(`delete from public.tripster_reviews where experience_id = $1`, [row.id]);
-          for (const review of reviews) {
+          for (const [index, review] of reviews.entries()) {
             await pgClient.query(
               `insert into public.tripster_reviews (id, experience_id, rating, author_name, review_text, created_at, payload)
                values ($1,$2,$3,$4,$5,$6,$7::jsonb)
@@ -462,7 +462,7 @@ async function main() {
                  payload = excluded.payload,
                  synced_at = now()`,
               [
-                review.id,
+                review.id ?? row.id * 100000 + index + 1,
                 row.id,
                 review.rating ?? null,
                 review.name ?? review.author?.name ?? null,

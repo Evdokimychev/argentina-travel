@@ -19,6 +19,7 @@ export function mapTripsterGuideProfile(raw: TripsterGuideProfile): ExcursionGui
     isLicensed: raw.is_licensed_guide ?? undefined,
     guideSince: raw.is_guide_since ?? undefined,
     responseTimeLabel: raw.avg_reaction_delay_display?.nominative,
+    visitorCount: raw.rate_count ?? undefined,
     description: raw.description?.trim() || undefined,
   };
 }

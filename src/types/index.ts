@@ -157,6 +157,17 @@ export interface TourListing {
   isNew?: boolean;
   isBestOfMonth?: boolean;
   featured?: boolean;
+  /** Партнёрский тур (Tripster) — не редактируется в кабинете организатора */
+  partnerSource?: "tripster";
+  /** Отображение цены от Tripster, если валюта не USD */
+  partnerPriceDisplay?: string;
+  /** Числовая цена от Tripster в исходной валюте */
+  partnerPriceValue?: number;
+  partnerPriceCurrency?: string;
+  /** Базовая цена до скидки Tripster (за человека или за тур) */
+  partnerOriginalPriceValue?: number;
+  /** За человека или за группу/тур */
+  partnerPriceUnit?: "per_person" | "per_group";
 }
 
 export interface TourFilters {
@@ -241,6 +252,8 @@ export interface TourItineraryDay {
   dayNumber: number;
   title: string;
   description: string;
+  /** HTML-описание дня (партнёрские туры Tripster) */
+  descriptionHtml?: string;
   images: string[];
   activities: TourDayActivity[];
   meals: string[];
@@ -278,6 +291,8 @@ export interface TourOrganizerDetail {
   slug?: string;
   ownerUserId?: string;
   rating: number;
+  /** Organizer-wide review count (Tripster guide profile for partner tours). */
+  reviewCount?: number;
   tourCount: number;
   travelerCount: number;
   languages: string[];
@@ -334,6 +349,9 @@ export interface TourDatePrice {
   spotsLeft: number;
   /** Base price in USD for this departure */
   priceUsd: number;
+  /** Цена заезда от партнёра (если валюта не USD) */
+  partnerPriceValue?: number;
+  partnerPriceCurrency?: string;
 }
 
 export interface TourDetail {
@@ -396,6 +414,8 @@ export interface TourDetail {
   featured?: boolean;
   checkoutPaymentOptions?: import("@/types/tour-checkout-payment").TourCheckoutPaymentOptions;
   groupDiscount?: GroupDiscountSettings;
+  groupDiscountEnabled?: boolean;
+  groupDiscountHint?: string;
   priceOnRequest?: boolean;
   priceFromPrefix?: boolean;
   /** Приватный тур — не показывается в каталоге без ?access= */
@@ -406,6 +426,20 @@ export interface TourDetail {
   accommodationUpgradesEnabled?: boolean;
   /** Внешняя ссылка на бронирование вместо checkout. */
   customBookingLink?: TourCustomBookingLinkPublic;
+  /** Партнёрский тур Tripster */
+  partnerSource?: "tripster";
+  partnerExperienceId?: number;
+  partnerPriceDisplay?: string;
+  partnerPriceValue?: number;
+  partnerPriceCurrency?: string;
+  partnerOriginalPriceValue?: number;
+  partnerPriceUnit?: "per_person" | "per_group";
+  /** Контент партнёрского тура Tripster (HTML-блоки, условия) */
+  partnerContent?: import("@/lib/tripster/partner-tour-content").PartnerTourContent;
+  /** Профиль гида Tripster (обогащение с API) */
+  partnerGuideProfile?: import("@/types/excursion").ExcursionGuideProfile;
+  /** Отзывы гида с других туров Tripster, если у текущего тура отзывов нет */
+  partnerGuideReviews?: TourReview[];
 }
 
 /** @deprecated Use TourListing for marketplace */

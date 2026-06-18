@@ -1,0 +1,80 @@
+import type { TripsterExperience } from "@/lib/tripster/types";
+import type { TourDetail, TourListing } from "@/types";
+
+export const TRIPSTER_PARTNER_TOUR_TYPE = "tour";
+
+export function resolveTripsterExperienceKind(
+  row: { experience_type?: string | null; payload?: unknown }
+): string | null {
+  const fromColumn = row.experience_type?.trim().toLowerCase();
+  if (fromColumn) return fromColumn;
+
+  const payload = row.payload as TripsterExperience | null | undefined;
+  const fromPayload = payload?.type?.trim().toLowerCase();
+  return fromPayload || null;
+}
+
+export function isTripsterTourExperience(
+  row: { experience_type?: string | null; payload?: unknown }
+): boolean {
+  return resolveTripsterExperienceKind(row) === TRIPSTER_PARTNER_TOUR_TYPE;
+}
+
+export function isPartnerTourListing(
+  tour: Pick<TourListing, "partnerSource" | "id">
+): boolean {
+  return tour.partnerSource === "tripster" || tour.id.startsWith("tripster-");
+}
+
+export function isPartnerTourDetail(
+  tour: Pick<TourDetail, "partnerSource" | "id">
+): boolean {
+  return tour.partnerSource === "tripster" || tour.id.startsWith("tripster-");
+}
+
+export function mergeMarketplaceTourListings(
+  platform: TourListing[],
+  partner: TourListing[]
+): TourListing[] {
+  const platformSlugs = new Set(platform.map((item) => item.slug));
+  const partnerOnly = partner.filter((item) => !platformSlugs.has(item.slug));
+  return [...platform, ...partnerOnly];
+}
+
+/** SQL fragment for Postgres — tours only */
+export const TRIPSTER_TOUR_WHERE_SQL = `(
+  lower(coalesce(experience_type, '')) = 'tour'
+  OR lower(coalesce(payload->>'type', '')) = 'tour'
+)`;
+
+/** SQL fragment for Postgres — exclude tours from excursions */
+export const TRIPSTER_EXCURSION_WHERE_SQL = `NOT ${TRIPSTER_TOUR_WHERE_SQL}`;
+
+export function partnerTourListingId(tripsterId: number): string {
+  return `tripster-${tripsterId}`;
+}
+
+export function buildTripsterPartnerBookingUrl(
+  experienceId: number,
+  options?: {
+    startDate?: string | null;
+    time?: string | null;
+    guests?: number | null;
+    fallbackUrl?: string | null;
+  }
+): string {
+  const fallback = options?.fallbackUrl?.trim();
+  if (!experienceId) return fallback || "https://experience.tripster.ru/";
+
+  try {
+    const url = new URL(`https://experience.tripster.ru/mfs/experience/booking/${experienceId}/`);
+    if (options?.startDate) url.searchParams.set("date", options.startDate);
+    if (options?.time?.trim()) url.searchParams.set("time", options.time.trim());
+    if (options?.guests && options.guests > 0) {
+      url.searchParams.set("persons_count", String(options.guests));
+    }
+    return url.toString();
+  } catch {
+    return fallback || `https://experience.tripster.ru/experience/${experienceId}/`;
+  }
+}

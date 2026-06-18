@@ -21,18 +21,23 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
   const staticSlugs = baseTours.map((tour) => tour.slug);
 
+  const partnerSlugs = await import("@/lib/tripster/partner-tour-server").then((mod) =>
+    mod.fetchPartnerTourSlugsServer().catch(() => [] as string[])
+  );
+
   if (isSupabaseToursEnabled()) {
     try {
       const { fetchPublishedSlugsServer } = await import("@/lib/tour-content-server");
       const dbSlugs = await fetchPublishedSlugsServer();
-      const merged = new Set([...staticSlugs, ...dbSlugs]);
+      const merged = new Set([...staticSlugs, ...dbSlugs, ...partnerSlugs]);
       return Array.from(merged).map((slug) => ({ slug }));
     } catch {
       // use static slugs only
     }
   }
 
-  return staticSlugs.map((slug) => ({ slug }));
+  const merged = new Set([...staticSlugs, ...partnerSlugs]);
+  return Array.from(merged).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params, searchParams }: TourPageProps) {

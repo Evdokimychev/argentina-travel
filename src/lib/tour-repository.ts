@@ -287,7 +287,11 @@ export function getClientSyncedMarketplaceListings(
   serverListings: TourListing[]
 ): TourListing[] {
   if (typeof window === "undefined") return serverListings;
-  return getMarketplaceListings();
+
+  const local = getMarketplaceListings();
+  const localSlugs = new Set(local.map((item) => item.slug));
+  const partnerFromServer = serverListings.filter((item) => item.partnerSource === "tripster");
+  return [...local, ...partnerFromServer.filter((item) => !localSlugs.has(item.slug))];
 }
 
 export function getClientSyncedTourDetail(

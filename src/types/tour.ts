@@ -81,6 +81,7 @@ export interface TourClassification {
 }
 
 import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
 
 export type { TourTravelRisk } from "@/types/tour-travel-risk";
 

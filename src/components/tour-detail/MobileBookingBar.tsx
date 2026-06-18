@@ -4,7 +4,8 @@ import { useMemo, useState, type MouseEvent } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { TourDetail } from "@/types";
 import { formatDateRange } from "@/lib/utils";
-import { formatTouristsBooking } from "@/lib/pluralize";
+import { formatTourists } from "@/lib/pluralize";
+import PartnerTourBookingPriceSummary from "./PartnerTourBookingPriceSummary";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
@@ -58,6 +59,8 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     usesExternalBooking,
     externalBookingLink,
     externalBookingHref,
+    partnerBookingPrice,
+    partnerPriceLoading,
   } = useTourBooking();
   const priceOnRequest = Boolean(tour.priceOnRequest);
   const bookButtonPulseKey = useRandomAttentionPulse({
@@ -78,7 +81,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   const guestLimits = getGuestLimits(tour, selectedDate, dateMode);
   const guestHint =
     dateMode === "scheduled" && selectedDate
-      ? `${formatTouristsBooking(guests)}${tour.minimumAge ? `, ${formatMinimumAgeSummary(tour.minimumAge)}` : ""}`
+      ? `${formatTourists(guests)}${tour.minimumAge ? `, ${formatMinimumAgeSummary(tour.minimumAge)}` : ""}`
       : undefined;
 
   const dateSummary = useMemo(
@@ -192,21 +195,31 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
             >
               <span className="min-w-0 truncate text-xs text-charcoal">
                 <span className="font-medium">{dateSummary}</span>
-                <span className="text-slate"> · {formatTouristsBooking(guests)}</span>
+                <span className="text-slate"> · {formatTourists(guests)}</span>
               </span>
               <ChevronUp className="h-4 w-4 shrink-0 text-slate" aria-hidden />
             </button>
           ) : null}
 
           <div className="flex items-center justify-between gap-4">
-            <TourPublicPriceDisplay
-              priceUsd={priceOnRequest ? tour.priceUsd : totalPriceUsd}
-              originalPriceUsd={priceOnRequest ? tour.originalPriceUsd : totalOriginalPriceUsd}
-              priceOnRequest={priceOnRequest}
-              priceFromPrefix={tour.priceFromPrefix}
-              size="sm"
-              showFrom={false}
-            />
+            {partnerBookingPrice ? (
+              <div className="min-w-0 shrink">
+                <PartnerTourBookingPriceSummary
+                  price={partnerBookingPrice}
+                  loading={partnerPriceLoading}
+                  size="sm"
+                />
+              </div>
+            ) : (
+              <TourPublicPriceDisplay
+                priceUsd={priceOnRequest ? tour.priceUsd : totalPriceUsd}
+                originalPriceUsd={priceOnRequest ? tour.originalPriceUsd : totalOriginalPriceUsd}
+                priceOnRequest={priceOnRequest}
+                priceFromPrefix={tour.priceFromPrefix}
+                size="sm"
+                showFrom={false}
+              />
+            )}
             {usesExternalBooking && externalBookingHref && externalBookingLink ? (
               <ExternalBookingButton
                 href={externalBookingHref}
