@@ -1,10 +1,10 @@
 export const SITE_LEGAL_LINKS = [
-  { href: "/legal/privacy", label: "Политика конфиденциальности" },
-  { href: "/legal/terms", label: "Пользовательское соглашение" },
-  { href: "/legal/booking", label: "Условия бронирования" },
-  { href: "/legal/refunds", label: "Политика возвратов" },
-  { href: "/legal/cookies", label: "Политика cookie" },
-  { href: "/legal/affiliate", label: "Партнёрские ссылки" },
+  { href: "/legal/privacy", label: "Политика конфиденциальности", labelKey: "legal.privacy" },
+  { href: "/legal/terms", label: "Пользовательское соглашение", labelKey: "legal.terms" },
+  { href: "/legal/booking", label: "Условия бронирования", labelKey: "legal.booking" },
+  { href: "/legal/refunds", label: "Политика возвратов", labelKey: "legal.refunds" },
+  { href: "/legal/cookies", label: "Политика cookie", labelKey: "legal.cookies" },
+  { href: "/legal/affiliate", label: "Партнёрские ссылки", labelKey: "legal.affiliate" },
 ] as const;
 
 /** Primary footer links — synced with `@/data/site-nav` top-level sections. */
@@ -18,6 +18,7 @@ export const SITE_FOOTER_NAV = [
   { href: "/shop", label: "Магазин", labelKey: "nav.shop" },
   { href: "/services", label: "Сервисы", labelKey: "nav.services" },
   { href: "/blog", label: "Блог", labelKey: "nav.blog" },
+  { href: "/forum", label: "Форум", labelKey: "nav.forum" },
   { href: "/about", label: "О проекте", labelKey: "nav.about" },
   { href: "/join", label: "Для организаторов", labelKey: "nav.utility.join" },
   { href: "/faq", label: "FAQ", labelKey: "nav.faq" },
@@ -25,9 +26,9 @@ export const SITE_FOOTER_NAV = [
 ] as const;
 
 export const SITE_FOOTER_CONTACTS = [
-  { href: "/contacts", label: "Написать нам" },
-  { href: "/join", label: "Стать организатором" },
-  { href: "/booking/find", label: "Найти заявку" },
+  { href: "/contacts", label: "Написать нам", labelKey: "footer.contact.write" },
+  { href: "/join", label: "Стать организатором", labelKey: "footer.contact.organizer" },
+  { href: "/booking/find", label: "Найти заявку", labelKey: "footer.contact.findBooking" },
 ] as const;
 
 export const SITE_SOCIAL_LINKS = [

@@ -3,6 +3,7 @@
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { motionClass } from "@/lib/motion";
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
@@ -16,7 +17,8 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Overlay
       className={cn(
-        "fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out",
+        "fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm",
+        motionClass.overlay,
         className
       )}
       {...props}
@@ -35,14 +37,17 @@ function DialogContent({
   children,
   bottomSheet = true,
   showClose = false,
+  onOpenAutoFocus,
   ...props
 }: DialogContentProps) {
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Content
+        onOpenAutoFocus={onOpenAutoFocus}
         className={cn(
-          "fixed z-50 bg-surface-elevated shadow-modal outline-none data-[state=open]:animate-in data-[state=closed]:animate-out",
+          "fixed z-50 bg-surface-elevated shadow-modal outline-none",
+          motionClass.modalContent,
           bottomSheet
             ? "inset-x-0 bottom-0 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85vh] sm:w-[calc(100%-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
             : "left-1/2 top-1/2 w-[calc(100%-2rem)] max-h-[85vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl",
@@ -64,20 +69,32 @@ function DialogContent({
   );
 }
 
+/** Единые отступы модального окна: px-5 py-4 sm:px-6 */
+const dialogSectionPaddingClass = "px-5 py-4 sm:px-6";
+
 function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn("flex flex-col gap-1.5 border-b border-border-subtle px-5 py-4 sm:px-6", className)}
+      className={cn(
+        "flex flex-col gap-1.5 border-b border-border-subtle",
+        dialogSectionPaddingClass,
+        className
+      )}
       {...props}
     />
   );
+}
+
+function DialogBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+  return <div className={cn(dialogSectionPaddingClass, className)} {...props} />;
 }
 
 function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       className={cn(
-        "flex flex-col-reverse gap-2 border-t border-border-subtle px-5 py-4 sm:flex-row sm:justify-end sm:px-6",
+        "flex flex-col-reverse gap-2 border-t border-border-subtle sm:flex-row sm:justify-end",
+        dialogSectionPaddingClass,
         className
       )}
       {...props}
@@ -114,6 +131,7 @@ export {
   DialogClose,
   DialogContent,
   DialogHeader,
+  DialogBody,
   DialogFooter,
   DialogTitle,
   DialogDescription,

@@ -17,6 +17,7 @@ const AUTO_COLLAPSE_MAX_WIDTH = 1279;
 type BlogSidebarProps = {
   freshPosts: BlogPost[];
   className?: string;
+  embedded?: boolean;
 };
 
 function readCollapsed(): boolean {
@@ -48,7 +49,7 @@ const hubLinkIcon = (type: string) => {
   }
 };
 
-export default function BlogSidebar({ freshPosts, className }: BlogSidebarProps) {
+export default function BlogSidebar({ freshPosts, className, embedded = false }: BlogSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
 
@@ -76,8 +77,18 @@ export default function BlogSidebar({ freshPosts, className }: BlogSidebarProps)
 
   if (!hydrated) {
     return (
-      <aside className={cn("hidden w-[280px] shrink-0 xl:block", className)}>
-        <div className={cn("h-[420px] rounded-3xl border border-gray-100 bg-white shadow-card", hubTocStickyTopClass)} />
+      <aside
+        className={cn(
+          embedded ? "block w-full" : "hidden w-[280px] shrink-0 xl:block",
+          className
+        )}
+      >
+        <div
+          className={cn(
+            "h-[420px] rounded-3xl border border-gray-100 bg-white shadow-card",
+            !embedded && hubTocStickyTopClass
+          )}
+        />
       </aside>
     );
   }
@@ -85,10 +96,13 @@ export default function BlogSidebar({ freshPosts, className }: BlogSidebarProps)
   return (
     <aside
       className={cn(
-        "sticky hidden h-fit shrink-0 flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-card transition-[width] duration-300 ease-out xl:flex",
-        hubTocStickyTopClass,
-        hubTocStickyMaxHeightClass,
-        collapsed ? "w-[52px]" : "w-[280px]",
+        embedded
+          ? "flex w-full flex-col"
+          : "sticky hidden h-fit shrink-0 flex-col overflow-hidden transition-[width] duration-300 ease-out xl:flex",
+        !embedded && hubTocStickyTopClass,
+        !embedded && hubTocStickyMaxHeightClass,
+        "rounded-3xl border border-gray-100 bg-white shadow-card",
+        !embedded && (collapsed ? "w-[52px]" : "w-[280px]"),
         className
       )}
     >

@@ -115,6 +115,39 @@ export interface OrganizerAdvancedAnalyticsReport {
   };
 }
 
+export interface OrganizerAnalyticsTopTourRow {
+  tourSlug: string;
+  tourTitle: string;
+  bookingsCount: number;
+  confirmedBookingsCount: number;
+  paidBookingsCount: number;
+  revenueUsd: number;
+  conversionRatePct: number | null;
+}
+
+export interface OrganizerAnalyticsServerReport {
+  period: AnalyticsPeriodBounds;
+  generatedAt: string;
+  summary: {
+    bookingsCount: number;
+    confirmedBookingsCount: number;
+    paidBookingsCount: number;
+    revenueUsd: number;
+    averageOrderValueUsd: number | null;
+    uniqueCustomers: number;
+  };
+  funnel: {
+    tourViews: number;
+    bookingStarts: number;
+    confirmedBookings: number;
+    paidBookings: number;
+    viewToStartPct: number | null;
+    startToConfirmedPct: number | null;
+    confirmedToPaidPct: number | null;
+  };
+  topTours: OrganizerAnalyticsTopTourRow[];
+}
+
 export const ANALYTICS_PERIOD_LABELS: Record<AnalyticsPeriod, string> = {
   "7d": "7 дней",
   "30d": "30 дней",

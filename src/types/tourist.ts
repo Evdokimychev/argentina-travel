@@ -1,3 +1,5 @@
+import type { BookingAttribution } from "@/types/booking-attribution";
+import type { BookingMetadata } from "@/lib/payments/checkout-currency";
 import type {
   BookingInvoice,
   BookingPaymentLink,
@@ -53,7 +55,7 @@ export interface BookingTraveler {
   phone?: string;
 }
 
-export type TouristReviewStatus = "draft" | "published";
+export type TouristReviewStatus = "draft" | "pending" | "published" | "rejected";
 
 export type FavoriteKind = "tour" | "excursion" | "place";
 
@@ -131,6 +133,10 @@ export interface Booking {
   clientPortalToken?: string;
   /** Чеклист, ссылки и анкета клиента по поездке. */
   tripOperations?: TripOperations;
+  /** Валюта оформления и снимок курса на момент checkout. */
+  metadata?: BookingMetadata;
+  /** First-touch UTM и реферер на момент оформления заявки. */
+  attribution?: BookingAttribution;
   createdAt: string;
   updatedAt: string;
 }
@@ -149,6 +155,12 @@ export interface TouristReview {
   photos: string[];
   tripDate?: string;
   status: TouristReviewStatus;
+  /** Комментарий модератора при отклонении */
+  moderationNotes?: string;
+  /** Ответ организатора на опубликованный отзыв */
+  organizerReply?: string;
+  organizerRepliedAt?: string;
+  organizerRepliedBy?: string;
   createdAt: string;
   updatedAt: string;
 }

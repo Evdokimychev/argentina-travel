@@ -1,8 +1,58 @@
-import type { TourDetail } from "@/types";
+import type { TourDetail, TourReview } from "@/types";
 import { getSiteUrl } from "@/lib/site-url";
+
+const MAX_JSON_LD_REVIEWS = 10;
+
+function buildSingleReviewJsonLd(review: TourReview, productName: string) {
+  if (!review.text.trim()) return null;
+
+  return {
+    "@type": "Review",
+    author: {
+      "@type": "Person",
+      name: review.author || "Путешественник",
+    },
+    datePublished: review.date || review.tripDate || undefined,
+    reviewBody: review.text.trim(),
+    reviewRating: {
+      "@type": "Rating",
+      ratingValue: review.rating,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    itemReviewed: {
+      "@type": "Product",
+      name: productName,
+    },
+  };
+}
+
+function calculatePlatformAverageRating(reviews: TourReview[]): number {
+  if (!reviews.length) return 0;
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return Math.round((sum / reviews.length) * 10) / 10;
+}
 
 export function buildTourProductJsonLd(tour: TourDetail, siteUrl = getSiteUrl()) {
   const url = `${siteUrl}/tours/${tour.slug}`;
+  const platformOnly = tour.reviews.filter(
+    (review) => review.source === "platform" && review.text.trim()
+  );
+  const platformReviews = platformOnly
+    .slice(0, MAX_JSON_LD_REVIEWS)
+    .map((review) => buildSingleReviewJsonLd(review, tour.title))
+    .filter(Boolean);
+
+  const aggregateRating =
+    platformOnly.length > 0
+      ? {
+          "@type": "AggregateRating",
+          ratingValue: calculatePlatformAverageRating(platformOnly),
+          reviewCount: platformOnly.length,
+          bestRating: 5,
+          worstRating: 1,
+        }
+      : undefined;
 
   return {
     "@context": "https://schema.org",
@@ -22,13 +72,7 @@ export function buildTourProductJsonLd(tour: TourDetail, siteUrl = getSiteUrl())
       availability: "https://schema.org/InStock",
       url,
     },
-    aggregateRating:
-      tour.reviewCount > 0
-        ? {
-            "@type": "AggregateRating",
-            ratingValue: tour.rating,
-            reviewCount: tour.reviewCount,
-          }
-        : undefined,
+    aggregateRating,
+    review: platformReviews.length ? platformReviews : undefined,
   };
 }

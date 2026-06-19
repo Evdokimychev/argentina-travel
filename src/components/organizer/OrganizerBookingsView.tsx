@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, ClipboardList, ListOrdered } from "lucide-react";
+import { Search, ClipboardList, ListOrdered, LayoutGrid, Table2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import {
@@ -29,18 +29,27 @@ import { apiFetchOrganizerBookings, isRemoteBookingsMode } from "@/lib/bookings-
 import { formatBookingTourDates } from "@/lib/booking-display";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import OrganizerWaitlistView from "@/components/organizer/OrganizerWaitlistView";
+import OrganizerBookingsKanban from "@/components/organizer/OrganizerBookingsKanban";
 import { getOrganizerCabinetWaitlistStats } from "@/lib/organizer-waitlist";
 import { WAITLIST_UPDATED_EVENT } from "@/types/waitlist";
 import { OrganizerCreateExternalBookingButton } from "@/components/organizer/OrganizerCreateExternalBookingDialog";
 import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
+import {
+  attributionSourceKey,
+  BOOKING_ATTRIBUTION_DIRECT_KEY,
+  formatAttributionSourceLabel,
+} from "@/types/booking-attribution";
 import { computeTripProgress } from "@/lib/trip-operations";
 
 type InboxTab = "bookings" | "waitlist";
+type ViewMode = "kanban" | "table";
 
 type StatusFilter = "all" | BookingStatusActive;
+type SourceFilter = "all" | string;
 type SortOption = "newest" | "oldest" | "tourDate" | "amountDesc" | "amountAsc";
 
 const SORT_OPTIONS: { id: SortOption; label: string }[] = [
@@ -67,7 +76,9 @@ export default function OrganizerBookingsView() {
       ? (initialStatus as StatusFilter)
       : "all"
   );
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [sort, setSort] = useState<SortOption>("newest");
+  const [viewMode, setViewMode] = useState<ViewMode>("kanban");
 
   useEffect(() => {
     if (!user) return;
@@ -97,11 +108,30 @@ export default function OrganizerBookingsView() {
     return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, refreshWaitlistStats);
   }, [user]);
 
+  const sourceCounts = useMemo(() => {
+    const counts = new Map<string, { label: string; count: number }>();
+    for (const booking of bookings) {
+      const key = attributionSourceKey(booking.attribution);
+      const label =
+        key === BOOKING_ATTRIBUTION_DIRECT_KEY
+          ? "Прямой заход"
+          : formatAttributionSourceLabel(booking.attribution);
+      const existing = counts.get(key);
+      counts.set(key, { label, count: (existing?.count ?? 0) + 1 });
+    }
+    return Array.from(counts.entries())
+      .map(([key, value]) => ({ key, ...value }))
+      .sort((a, b) => b.count - a.count);
+  }, [bookings]);
+
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
 
     let list = bookings.filter((booking) => {
       if (statusFilter !== "all" && booking.status !== statusFilter) return false;
+      if (sourceFilter !== "all" && attributionSourceKey(booking.attribution) !== sourceFilter) {
+        return false;
+      }
       if (!query) return true;
 
       return (
@@ -129,7 +159,7 @@ export default function OrganizerBookingsView() {
     });
 
     return list;
-  }, [bookings, search, sort, statusFilter]);
+  }, [bookings, search, sort, statusFilter, sourceFilter]);
 
   return (
     <div className={cn(cabinetCardClass, "overflow-hidden")}>
@@ -231,7 +261,80 @@ export default function OrganizerBookingsView() {
           </div>
         </div>
 
-        {filtered.length > 0 ? (
+        {sourceCounts.length > 0 ? (
+          <div className="flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={() => setSourceFilter("all")}
+              className={cn(
+                "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                sourceFilter === "all"
+                  ? "bg-violet-100 text-violet-900"
+                  : "bg-gray-100 text-slate hover:text-charcoal"
+              )}
+            >
+              Все источники · {bookings.length}
+            </button>
+            {sourceCounts.map((row) => (
+              <button
+                key={row.key}
+                type="button"
+                onClick={() => setSourceFilter(row.key)}
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs font-medium transition-colors",
+                  sourceFilter === row.key
+                    ? "bg-violet-100 text-violet-900"
+                    : "bg-gray-100 text-slate hover:text-charcoal"
+                )}
+              >
+                {row.label} · {row.count}
+              </button>
+            ))}
+          </div>
+        ) : null}
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-2 rounded-xl bg-gray-100 p-1">
+            <button
+              type="button"
+              onClick={() => setViewMode("kanban")}
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                viewMode === "kanban"
+                  ? "bg-white text-charcoal shadow-sm"
+                  : "text-slate hover:text-charcoal"
+              )}
+            >
+              <LayoutGrid className="h-4 w-4" aria-hidden />
+              Канбан
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("table")}
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                viewMode === "table"
+                  ? "bg-white text-charcoal shadow-sm"
+                  : "text-slate hover:text-charcoal"
+              )}
+            >
+              <Table2 className="h-4 w-4" aria-hidden />
+              Таблица
+            </button>
+          </div>
+        </div>
+
+        {viewMode === "kanban" ? (
+          filtered.length > 0 || bookings.length === 0 ? (
+            <OrganizerBookingsKanban bookings={filtered} showHeader={false} className="border-0 p-0 shadow-none" />
+          ) : (
+            <EmptyState
+              icon={ClipboardList}
+              title="Заявок не найдено"
+              description="Измените фильтры или дождитесь новых бронирований с сайта."
+            />
+          )
+        ) : filtered.length > 0 ? (
           <div className={cabinetTableWrapClass}>
             <Table className="min-w-[920px] text-left">
               <TableHeader className={cabinetTableHeaderClass}>
@@ -255,6 +358,10 @@ export default function OrganizerBookingsView() {
                     booking.bookingSource && booking.bookingSource !== "platform"
                       ? BOOKING_SOURCE_LABELS[booking.bookingSource]
                       : null;
+                  const attributionLabel = formatAttributionSourceLabel(booking.attribution);
+                  const showAttribution =
+                    booking.attribution?.utmSource &&
+                    (!sourceLabel || attributionLabel !== "Прямой заход");
                   return (
                   <TableRow key={booking.id}>
                     <TableCell>
@@ -281,6 +388,11 @@ export default function OrganizerBookingsView() {
                               {booking.externalReference ? ` · ${booking.externalReference}` : ""}
                             </span>
                           ) : null}
+                          {showAttribution ? (
+                            <span className="mt-0.5 block text-xs text-emerald-700">
+                              UTM: {attributionLabel}
+                            </span>
+                          ) : null}
                           {tripProgress.total > 0 ? (
                             <span className="mt-0.5 block text-xs text-slate">
                               Подготовка: {tripProgress.percent}%
@@ -302,15 +414,22 @@ export default function OrganizerBookingsView() {
                     </TableCell>
                     <TableCell className="text-charcoal">{booking.guests}</TableCell>
                     <TableCell>
-                      <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-medium" />
+                      <BookingLedgerAmount
+                        booking={booking}
+                        priceUsd={booking.totalPriceUsd}
+                        compact
+                        className="font-medium"
+                      />
                     </TableCell>
                     <TableCell>
                       <BookingPaymentStatusBadge booking={booking} />
                       {amounts.due > 0 ? (
                         <p className="mt-1 text-xs text-slate">
                           К оплате:{" "}
-                          <FormattedPrice
+                          <BookingLedgerAmount
+                            booking={booking}
                             priceUsd={amounts.due}
+                            compact
                             className="font-medium text-charcoal"
                           />
                         </p>

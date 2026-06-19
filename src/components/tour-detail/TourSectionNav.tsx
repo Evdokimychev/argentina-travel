@@ -5,6 +5,7 @@ import { cn } from "@/lib/cn";
 import { getSiteScrollAnchorOffset, scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { getTourSectionIcon } from "@/lib/tour-nav-icons";
 import { siteContainerClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
+import { dispatchTourSectionExpand } from "./TourSection";
 import type { TourSectionLink } from "./tour-section-links";
 
 interface TourSectionNavProps {
@@ -52,6 +53,7 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     if (!document.getElementById(id)) return;
 
     isClickScrollingRef.current = true;
+    dispatchTourSectionExpand(id);
     scrollToSiteAnchor(id);
     setActiveId(id);
     requestAnimationFrame(() => {
@@ -149,9 +151,9 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     >
       <div
         ref={scrollContainerRef}
-        className={cn(siteContainerClass, "overflow-x-auto overscroll-x-contain py-3")}
+        className={cn(siteContainerClass, "overflow-x-auto overscroll-x-contain py-2.5 sm:py-3")}
       >
-        <ul className="flex min-w-max gap-1.5">
+        <ul className="flex min-w-max gap-1.5 sm:gap-2">
           {items.map((item) => {
             const active = item.id === activeId;
             const Icon = getTourSectionIcon(item.id);
@@ -165,7 +167,7 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
                     scrollToSection(item.id);
                   }}
                   className={cn(
-                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-medium whitespace-nowrap transition-colors",
+                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors sm:min-h-0 sm:py-1.5",
                     active
                       ? "border-sky bg-sky text-white shadow-sm"
                       : "border-gray-200 bg-white text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"

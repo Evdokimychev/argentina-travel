@@ -94,6 +94,8 @@ export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   childFriendly?: boolean;
   instantBooking?: boolean;
   isBookable?: boolean;
+  /** Доступен ли Partner API для native-бронирования в нашем интерфейсе. */
+  tripsterPartnerApiConfigured?: boolean;
   movementType?: string;
   visitorsCount?: number;
   comfortLevelInfo?: string;

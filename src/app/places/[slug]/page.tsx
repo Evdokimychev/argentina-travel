@@ -1,11 +1,16 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import PlaceDetailView from "@/components/places/PlaceDetailView";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import PlaceJsonLd from "@/components/seo/PlaceJsonLd";
 import { resolveKnowledgeLinksForPlace } from "@/lib/knowledge-internal-links";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { fetchPlaceBySlugServer, fetchPlaceSlugsServer, placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-repository";
+import { listPublishedPlaceSlugs, resolvePlacePage } from "@/lib/cms/place-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPlaceMetadata } from "@/lib/places-seo";
 
 type PageProps = {
@@ -13,27 +18,34 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  const slugs = await fetchPlaceSlugsServer();
+  const slugs = await listPublishedPlaceSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const place = await fetchPlaceBySlugServer(slug);
+  const locale = await getServerI18nLocale();
+  const place = await resolvePlacePage(slug, locale);
   if (!place) return { title: "Место не найдено" };
-  return buildPlaceMetadata(place);
+  const alternates = await buildCmsContentHreflangAlternates("place", slug);
+  return { ...buildPlaceMetadata(place), alternates };
 }
 
 export default async function PlaceDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const place = await fetchPlaceBySlugServer(slug);
+  const locale = await getServerI18nLocale();
+  const place = await resolvePlacePage(slug, locale);
   if (!place) notFound();
+  const cmsMetadata = getCmsResolverMetadata(place);
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
   const initialTours = await fetchMarketplaceTours();
 
   return (
     <>
+      {cmsMetadata?.showTranslationBanner ? (
+        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+      ) : null}
       <PlaceJsonLd place={place} />
       {place.faq && place.faq.length > 0 ? (
         <FAQPageJsonLd questions={place.faq} path={placeHref(slug)} />

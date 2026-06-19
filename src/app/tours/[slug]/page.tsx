@@ -4,9 +4,10 @@ import TourJsonLd from "@/components/seo/TourJsonLd";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
 import TourFlightLogisticsSection from "@/components/flights/TourFlightLogisticsSection";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours-server";
-import { getCanonicalTourBySlug } from "@/lib/tour-repository";
-import { isSupabaseToursEnabled } from "@/lib/auth-mode";
-import { baseTours } from "@/data/tours";
+import {
+  fetchCutoverCanonicalTourBySlug,
+  fetchCutoverPublishedTourSlugs,
+} from "@/lib/tours-server-cutover";
 import { resolveTourFlightRouteIds } from "@/lib/flights/destination-airports";
 import { getFlightPriceTeasers } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
@@ -21,24 +22,13 @@ interface TourPageProps {
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-  const staticSlugs = baseTours.map((tour) => tour.slug);
+  const platformSlugs = await fetchCutoverPublishedTourSlugs();
 
   const partnerSlugs = await import("@/lib/tripster/partner-tour-server").then((mod) =>
     mod.fetchPartnerTourSlugsServer().catch(() => [] as string[])
   );
 
-  if (isSupabaseToursEnabled()) {
-    try {
-      const { fetchPublishedSlugsServer } = await import("@/lib/tour-content-server");
-      const dbSlugs = await fetchPublishedSlugsServer();
-      const merged = new Set([...staticSlugs, ...dbSlugs, ...partnerSlugs]);
-      return Array.from(merged).map((slug) => ({ slug }));
-    } catch {
-      // use static slugs only
-    }
-  }
-
-  const merged = new Set([...staticSlugs, ...partnerSlugs]);
+  const merged = new Set([...platformSlugs, ...partnerSlugs]);
   return Array.from(merged).map((slug) => ({ slug }));
 }
 
@@ -70,16 +60,7 @@ export default async function TourDetailPage({ params, searchParams }: TourPageP
   const { access } = await searchParams;
   const tour = await fetchTourDetail(slug, { accessToken: access });
   const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
-  let initialCanonicalTour = getCanonicalTourBySlug(slug) ?? null;
-
-  if (!initialCanonicalTour && isSupabaseToursEnabled()) {
-    try {
-      const { fetchCanonicalTourBySlugServer } = await import("@/lib/tour-content-server");
-      initialCanonicalTour = await fetchCanonicalTourBySlugServer(slug);
-    } catch {
-      // keep null
-    }
-  }
+  const initialCanonicalTour = await fetchCutoverCanonicalTourBySlug(slug);
 
   const locale = "ru" as const;
   const labels = getFlightTeaserLabels(locale);

@@ -3,12 +3,17 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, ExternalLink, MessageCircle } from "lucide-react";
-import { buildTourMessageHref } from "@/lib/messages-store";
+import { ArrowLeft, CreditCard, ExternalLink } from "lucide-react";
+import TripPrepHub from "@/components/trip-prep/TripPrepHub";
+import ConversationPanel from "@/components/messages/ConversationPanel";
 import { useAuth } from "@/context/AuthContext";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
+import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
+import BookingPaymentReceiptSection from "@/components/booking/BookingPaymentReceiptSection";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
+import BookingProgressSteps from "@/components/booking/BookingProgressSteps";
+import BookingPaymentStatusTimeline from "@/components/booking/BookingPaymentStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import FormattedPrice from "@/components/FormattedPrice";
 import { Button } from "@/components/ui/button";
@@ -36,6 +41,7 @@ import {
 import {
   apiCancelBooking,
   apiFetchBookingById,
+  apiFetchBookingPaymentReceipt,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
 import { cn } from "@/lib/cn";
@@ -43,12 +49,14 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import type { PaymentTransactionReceiptView } from "@/types/payment-platform";
 
 export default function BookingTouristDetailView({ bookingId }: { bookingId: string }) {
   const { user } = useAuth();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [cancelError, setCancelErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [paymentReceipt, setPaymentReceipt] = useState<PaymentTransactionReceiptView | null>(null);
   const feedback = useSiteFeedback();
 
   const setCancelError = (value: string | SiteFeedbackMessage | null) => {
@@ -78,6 +86,23 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
   }, [bookingId]);
+
+  useEffect(() => {
+    if (!isRemoteBookingsMode() || !booking) {
+      setPaymentReceipt(null);
+      return;
+    }
+
+    const status = resolveBookingPaymentStatus(booking);
+    if (status !== "paid" && status !== "partial" && status !== "refunded") {
+      setPaymentReceipt(null);
+      return;
+    }
+
+    void apiFetchBookingPaymentReceipt(booking.id)
+      .then((payload) => setPaymentReceipt(payload.receipt))
+      .catch(() => setPaymentReceipt(null));
+  }, [booking]);
 
   if (!user) return null;
 
@@ -197,6 +222,13 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             </div>
           </div>
 
+          <div className="mt-6">
+            <h3 className="font-heading text-base font-bold text-charcoal">Этапы заявки</h3>
+            <div className="mt-3 rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">
+              <BookingProgressSteps booking={booking} />
+            </div>
+          </div>
+
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl bg-gray-50 px-4 py-3">
               <p className="text-xs text-slate">Сумма тура</p>
@@ -221,12 +253,19 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             </p>
           ) : null}
 
+          <div className="mt-6">
+            <h3 className="font-heading text-base font-bold text-charcoal">Ход оплаты</h3>
+            <div className="mt-3 rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">
+              <BookingPaymentStatusTimeline booking={booking} />
+            </div>
+          </div>
+
           {payHref ? (
             <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-sky-200/70 bg-sky-50/50 px-4 py-3">
               <CreditCard className="h-5 w-5 shrink-0 text-sky" />
               <p className="min-w-0 flex-1 text-sm text-charcoal">
-                Доступна ссылка на оплату. Онлайн-оплата через платформу скоро — сейчас вы можете
-                открыть счёт и подтвердить намерение оплатить.
+                Доступна ссылка на оплату через Mercado Pago. После платежа статус обновится
+                автоматически по защищённому уведомлению.
               </p>
               <Link
                 href={payHref}
@@ -241,6 +280,18 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
               Ссылка на оплату появится после подтверждения заявки организатором.
             </p>
           ) : null}
+
+          {paymentReceipt ? (
+            <div className="mt-6">
+              <BookingPaymentReceiptSection receipt={paymentReceipt} />
+            </div>
+          ) : null}
+
+          <BookingRefundRequestSection
+            bookingId={booking.id}
+            paymentStatus={paymentStatus}
+            paidAmountUsd={amounts.paid}
+          />
 
           {nextSteps.length > 0 ? (
             <div className="mt-6">
@@ -279,18 +330,18 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             </div>
           ) : null}
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3">
-            <MessageCircle className="h-5 w-5 shrink-0 text-brand" />
-            <p className="min-w-0 flex-1 text-sm text-slate">
-              Вопросы по туру — в переписке с организатором в личном кабинете.
-            </p>
-            <Link
-              href={buildTourMessageHref(booking.tourSlug, booking.id)}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-            >
-              Написать организатору
-            </Link>
-          </div>
+          {(booking.status === "confirmed" || booking.status === "pending") && booking.startDate ? (
+            <div className="mt-6">
+              <TripPrepHub bookingId={booking.id} compact />
+            </div>
+          ) : null}
+
+          <ConversationPanel
+            className="mt-6"
+            booking={booking}
+            role="tourist"
+            counterpartName="Организатор"
+          />
 
           <div className="mt-6">
             <BookingOrganizerCommentsJournal comments={booking.organizerComments} />

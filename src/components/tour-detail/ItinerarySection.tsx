@@ -9,6 +9,7 @@ import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
 import {
+  tourDetailCardBorderClass,
   tourDetailDayBadgeClass,
   tourDetailTimelineClass,
 } from "@/lib/tour-detail-ui";
@@ -35,7 +36,7 @@ function ItineraryExpandToggle({
     <div
       role="group"
       aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
-      className="flex max-w-full items-center gap-3 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30"
+      className="flex max-w-full min-h-[44px] items-center gap-3 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30 sm:min-h-0"
     >
       <button
         type="button"
@@ -100,7 +101,7 @@ function ItineraryDayCard({
         <span className={cn("relative z-10", tourDetailDayBadgeClass)}>
           {day.dayNumber}
         </span>
-        <div className="flex-1 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:border-sky/20 hover:shadow-md sm:p-5">
+        <div className={cn("flex-1 p-4 transition-shadow sm:p-5", tourDetailCardBorderClass, "hover:border-sky/20 hover:shadow-md")}>
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate/80">
             День {day.dayNumber}
           </p>
@@ -216,6 +217,7 @@ export default function ItinerarySection({
     <TourSection
       id="itinerary"
       title="Программа по дням"
+      defaultMobileExpanded
       headerAddon={
         totalDays > 1 ? (
           <ItineraryExpandToggle
@@ -228,7 +230,7 @@ export default function ItinerarySection({
         ) : undefined
       }
     >
-      {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-6" /> : null}
+      {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-5 sm:mb-6" /> : null}
       <div className="relative space-y-0">
         <div className={cn("absolute left-[19px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
         {itineraryDays.map((day) => (

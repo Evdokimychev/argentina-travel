@@ -1,8 +1,13 @@
 import { notFound } from "next/navigation";
 import BlogPostView from "@/components/blog/BlogPostView";
+import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { getBlogPostBySlug, blogPosts } from "@/data/blog";
+import { blogPosts } from "@/data/blog";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { resolveBlogCatalog, resolveBlogPost } from "@/lib/cms/blog-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 interface BlogPostPageProps {
@@ -10,33 +15,48 @@ interface BlogPostPageProps {
 }
 
 export async function generateStaticParams() {
-  return blogPosts.map((post) => ({ slug: post.slug }));
+  try {
+    const catalog = await resolveBlogCatalog();
+    return catalog.map((post) => ({ slug: post.slug }));
+  } catch {
+    return blogPosts.map((post) => ({ slug: post.slug }));
+  }
 }
 
 export async function generateMetadata({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const locale = await getServerI18nLocale();
+  const post = await resolveBlogPost(slug, locale);
   if (!post) return { title: "Статья не найдена" };
-  return buildPublicPageMetadata({
-    title: post.seoTitle ?? post.title,
-    description: post.excerpt,
-    path: `/blog/${slug}`,
-    image: post.image,
-  });
+  const alternates = await buildCmsContentHreflangAlternates("blog", slug);
+  return {
+    ...buildPublicPageMetadata({
+      title: post.seoTitle ?? post.title,
+      description: post.excerpt,
+      path: `/blog/${slug}`,
+      image: post.image,
+    }),
+    alternates,
+  };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+  const locale = await getServerI18nLocale();
+  const post = await resolveBlogPost(slug, locale);
 
   if (!post) {
     notFound();
   }
+  const cmsMetadata = getCmsResolverMetadata(post);
 
   const initialTours = await fetchMarketplaceTours();
 
   return (
     <>
+      {cmsMetadata?.showTranslationBanner ? (
+        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+      ) : null}
       <ArticleJsonLd post={post} />
       <BlogPostView post={post} initialTours={initialTours} />
     </>

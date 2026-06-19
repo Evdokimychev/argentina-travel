@@ -502,5 +502,15 @@
   "tour.countdown.ctaWaitlist": "Join waitlist",
   "tour.countdown.ctaSelect": "Select this date",
   "tour.countdown.badgeHot": "Few spots left",
-  "tour.countdown.started": "Departure has started — pick a date in the table below"
+  "tour.countdown.started": "Departure has started — pick a date in the table below",
+  "tripPrep.title": "Trip preparation",
+  "tripPrep.progress": "Preparation progress",
+  "tripPrep.openChecklist": "Open checklist",
+  "tripPrep.category.documents": "Documents",
+  "tripPrep.category.connectivity": "Connectivity",
+  "tripPrep.category.money": "Money",
+  "tripPrep.category.health": "Health",
+  "tripPrep.category.luggage": "Luggage",
+  "tripPrep.category.transfer": "Transfer",
+  "tripPrep.category.organizer": "Organizer contacts"
 }

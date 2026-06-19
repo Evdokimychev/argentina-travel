@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { prefersReducedMotion } from "@/lib/motion";
 
 export function useRevealAnimation<T extends HTMLElement = HTMLDivElement>(threshold = 0.12) {
   const ref = useRef<T>(null);
@@ -10,7 +11,7 @@ export function useRevealAnimation<T extends HTMLElement = HTMLDivElement>(thres
     const element = ref.current;
     if (!element) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setRevealed(true);
       return;
     }
@@ -41,7 +42,7 @@ export function useAnimatedValue(target: number, active: boolean, durationMs = 1
       return;
     }
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    if (prefersReducedMotion()) {
       setValue(target);
       return;
     }

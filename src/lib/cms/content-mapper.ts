@@ -16,13 +16,53 @@ function parseBody(value: Json): CmsDocumentBody {
     return { kind: "legal", description: "", sections: [] };
   }
   const record = value as Record<string, unknown>;
+  const stringArray = (input: unknown): string[] | undefined =>
+    Array.isArray(input) ? input.filter((item): item is string => typeof item === "string") : undefined;
   if (record.kind === "blog") {
     return {
       kind: "blog",
       excerpt: typeof record.excerpt === "string" ? record.excerpt : undefined,
       content: typeof record.content === "string" ? record.content : undefined,
+      featured: typeof record.featured === "boolean" ? record.featured : undefined,
       sections: Array.isArray(record.sections)
         ? (record.sections as { title: string; body: string }[])
+        : undefined,
+    };
+  }
+  if (record.kind === "guide") {
+    return {
+      kind: "guide",
+      description: typeof record.description === "string" ? record.description : "",
+      category: typeof record.category === "string" ? record.category : undefined,
+      sections: Array.isArray(record.sections) ? (record.sections as LegalSection[]) : [],
+      relatedLinks: Array.isArray(record.relatedLinks)
+        ? (record.relatedLinks as { label: string; href: string; description?: string }[])
+        : undefined,
+      relatedTourQuery: typeof record.relatedTourQuery === "string" ? record.relatedTourQuery : undefined,
+    };
+  }
+  if (record.kind === "destination") {
+    return {
+      kind: "destination",
+      description: typeof record.description === "string" ? record.description : "",
+      intro: typeof record.intro === "string" ? record.intro : undefined,
+      regionGroup: typeof record.regionGroup === "string" ? record.regionGroup : undefined,
+      bestSeason: typeof record.bestSeason === "string" ? record.bestSeason : undefined,
+      idealDuration: typeof record.idealDuration === "string" ? record.idealDuration : undefined,
+      howToGetThere: typeof record.howToGetThere === "string" ? record.howToGetThere : undefined,
+      highlights: stringArray(record.highlights),
+      travelTips: stringArray(record.travelTips),
+    };
+  }
+  if (record.kind === "place") {
+    return {
+      kind: "place",
+      shortDescription: typeof record.shortDescription === "string" ? record.shortDescription : "",
+      fullDescription: typeof record.fullDescription === "string" ? record.fullDescription : "",
+      howToGetThere: typeof record.howToGetThere === "string" ? record.howToGetThere : undefined,
+      interestingFacts: stringArray(record.interestingFacts),
+      faq: Array.isArray(record.faq)
+        ? (record.faq as { question: string; answer: string }[])
         : undefined,
     };
   }

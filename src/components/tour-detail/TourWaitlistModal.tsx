@@ -85,6 +85,59 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
     setSubmitting(true);
     setError(null);
 
+    const waitlistPayload = {
+      email: form.contactEmail.trim(),
+      contactName: [form.contactFirstName, form.contactLastName]
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .join(" "),
+      contactPhone: form.contactPhone.trim(),
+      slotDate: selectedDate?.startDate,
+      guests,
+      note: form.comments.trim() || undefined,
+    };
+
+    let fallbackToLocalStore = false;
+    try {
+      const response = await fetch(`/api/tours/${encodeURIComponent(tour.slug)}/waitlist`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify(waitlistPayload),
+      });
+      const body = (await response.json()) as { error?: string };
+
+      if (response.ok) {
+        setSubmitted(true);
+        setSubmitting(false);
+        feedback.success({
+          title: "Вы в листе ожидания",
+          description: "Организатор свяжется с вами, если место освободится или наберётся группа.",
+          action: user ? { label: "Мои заявки", href: "/profile/bookings?tab=waitlist" } : undefined,
+        });
+        return;
+      }
+
+      if (response.status === 404 || response.status === 503) {
+        fallbackToLocalStore = true;
+      } else {
+        throw new Error(body.error ?? "Не удалось отправить заявку в лист ожидания");
+      }
+    } catch (apiError) {
+      const normalized = normalizeSiteError(apiError, {
+        title: "Не удалось отправить заявку",
+      });
+      setError(normalized.description ?? normalized.title);
+      feedback.showError(normalized);
+      setSubmitting(false);
+      return;
+    }
+
+    if (!fallbackToLocalStore) {
+      setSubmitting(false);
+      return;
+    }
+
     const result = createWaitlistFromForm({
       actor: user,
       userId: user?.id,

@@ -2,9 +2,22 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
+import { groupCmsDocuments } from "@/lib/cms/cms-locale";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
-import { legalBodyFromTs, type CmsDocType, type CmsDocumentBody } from "@/types/cms-content";
+import { getBlogPostBySlug } from "@/data/blog";
+import { getContentPage } from "@/lib/content-pages";
+import { getDestinationBySlug } from "@/lib/destinations";
+import { fetchPlaceBySlugServer } from "@/lib/places-repository";
+import {
+  legalBodyFromTs,
+  blogBodyFromTs,
+  guideBodyFromTs,
+  destinationBodyFromTs,
+  placeBodyFromTs,
+  type CmsDocType,
+  type CmsDocumentBody,
+} from "@/types/cms-content";
 
 type PostBody = {
   docType?: CmsDocType;
@@ -21,9 +34,14 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const docType = url.searchParams.get("docType") as CmsDocType | null;
+  const grouped = url.searchParams.get("grouped") === "true";
 
   const supabase = createSupabaseAdminClient();
   const documents = await listCmsDocuments(supabase, docType ? { docType } : undefined);
+
+  if (grouped) {
+    return NextResponse.json({ documents, grouped: groupCmsDocuments(documents) });
+  }
 
   return NextResponse.json({ documents });
 }
@@ -50,6 +68,42 @@ export async function POST(request: Request) {
     }
     title = title || source.title;
     cmsBody = legalBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "blog") {
+    const source = getBlogPostBySlug(slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная статья не найдена" }, { status: 404 });
+    }
+    title = title || source.title;
+    cmsBody = blogBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "guide") {
+    const source = getContentPage("guide", slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная страница путеводителя не найдена" }, { status: 404 });
+    }
+    title = title || source.title;
+    cmsBody = guideBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "destination") {
+    const source = getDestinationBySlug(slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная страница направления не найдена" }, { status: 404 });
+    }
+    title = title || source.name;
+    cmsBody = destinationBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "place") {
+    const source = await fetchPlaceBySlugServer(slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная страница места не найдена" }, { status: 404 });
+    }
+    title = title || source.name;
+    cmsBody = placeBodyFromTs(source);
   }
 
   if (!title || !cmsBody) {

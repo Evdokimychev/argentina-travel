@@ -3,6 +3,13 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   // Keep Supabase in Node externals — avoids brittle vendor-chunks/@supabase.js in dev workers.
   serverExternalPackages: ["@supabase/supabase-js", "@supabase/ssr", "@react-pdf/renderer"],
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.geojson$/,
+      type: "json",
+    });
+    return config;
+  },
   async headers() {
     return [
       {
@@ -79,6 +86,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "wgt-prod-storage.s3.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
       },
     ],
   },

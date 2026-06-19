@@ -3,6 +3,7 @@ import type { Database } from "@/types/database";
 import type { AuthProvider, AuthResult, AuthErrorCode } from "@/lib/auth-provider";
 import { resolvePasswordInput } from "@/lib/auth-store";
 import { profileToSessionUser } from "@/lib/profile-mapper";
+import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { normalizePhone } from "@/lib/auth-store";
 import type { AccountRole, SessionUser } from "@/types/user";
@@ -363,7 +364,10 @@ export async function loadSessionUserFromSupabase(
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (!user) return null;
+  if (!user) {
+    setSentryUserContext(null);
+    return null;
+  }
 
   const { data: profile } = await supabase
     .from("profiles")
@@ -372,5 +376,12 @@ export async function loadSessionUserFromSupabase(
     .maybeSingle();
 
   if (!profile) return null;
-  return profileToSessionUser(profile, activeRole);
+  const sessionUser = profileToSessionUser(profile, activeRole);
+  setSentryUserContext({
+    id: sessionUser.id,
+    email: sessionUser.email,
+    role: sessionUser.role,
+    roles: sessionUser.roles,
+  });
+  return sessionUser;
 }

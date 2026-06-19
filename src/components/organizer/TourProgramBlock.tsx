@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Camera, Eye, X } from "lucide-react";
+import { useHtml5ListReorder } from "@/hooks/useHtml5ListReorder";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -51,6 +52,8 @@ export default function TourProgramBlock({
   const expectedDays = Math.max(1, durationDays);
   const filledDays = days.length;
   const daysMatch = filledDays === expectedDays;
+
+  const reorder = useHtml5ListReorder(days, (next) => onProgramDaysChange(renumberProgramDays(next)));
 
   async function uploadFile(file: File) {
     if (!file.type.startsWith("image/")) throw new Error("Выберите файл изображения");
@@ -131,6 +134,9 @@ export default function TourProgramBlock({
               <Link href="/help/tour-program-formatting" className="font-medium text-brand hover:underline">
                 Общие советы по оформлению
               </Link>
+              {reorder.canReorder
+                ? " Перетащите день за ручку, чтобы изменить порядок в программе."
+                : null}
             </p>
           </div>
           <Link
@@ -250,19 +256,29 @@ export default function TourProgramBlock({
         </div>
 
         {days.map((day, index) => (
-          <TourProgramDayEditor
+          <div
             key={day.id}
-            day={day}
-            index={index}
-            total={days.length}
-            expectedDays={expectedDays}
-            canAddDay={canAddDay}
-            onChange={(next) => updateAt(index, next)}
-            onRemove={() => removeAt(index)}
-            onMoveUp={() => moveItem(index, -1)}
-            onMoveDown={() => moveItem(index, 1)}
-            onAddAfter={() => addAfter(index)}
-          />
+            onDragOver={(event) => reorder.onDragOver(index, event)}
+            onDrop={(event) => reorder.onDrop(index, event)}
+            className={cn(reorder.rowClassName(index))}
+          >
+            <TourProgramDayEditor
+              day={day}
+              index={index}
+              total={days.length}
+              expectedDays={expectedDays}
+              canAddDay={canAddDay}
+              canReorder={reorder.canReorder}
+              isDragging={reorder.dragIndex === index}
+              onDragStart={(event) => reorder.onDragStart(index, event)}
+              onDragEnd={reorder.onDragEnd}
+              onChange={(next) => updateAt(index, next)}
+              onRemove={() => removeAt(index)}
+              onMoveUp={() => moveItem(index, -1)}
+              onMoveDown={() => moveItem(index, 1)}
+              onAddAfter={() => addAfter(index)}
+            />
+          </div>
         ))}
       </div>
     </div>

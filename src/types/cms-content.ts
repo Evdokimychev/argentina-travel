@@ -1,7 +1,12 @@
 import type { LegalDocument, LegalSection } from "@/data/legal-content";
+import type { ContentPage, ContentRelatedLink, ContentSection } from "@/types/content-page";
+import type { BlogPost } from "@/types";
+import type { DestinationPage } from "@/data/destination-pages";
+import type { PlaceDetail, PlaceFaqItem } from "@/types/place";
+import { formatBlogReadTime } from "@/lib/blog-utils";
 
-/** Document types supported by CMS v1.2 */
-export type CmsDocType = "legal" | "blog";
+/** Document types supported by CMS v1.3 */
+export type CmsDocType = "legal" | "blog" | "guide" | "destination" | "place";
 
 export type CmsDocumentStatus = "draft" | "published" | "archived";
 
@@ -16,9 +21,45 @@ export type CmsBlogBody = {
   excerpt?: string;
   sections?: { title: string; body: string }[];
   content?: string;
+  featured?: boolean;
 };
 
-export type CmsDocumentBody = CmsLegalBody | CmsBlogBody;
+export type CmsGuideBody = {
+  kind: "guide";
+  description: string;
+  category?: string;
+  sections: ContentSection[];
+  relatedLinks?: ContentRelatedLink[];
+  relatedTourQuery?: string;
+};
+
+export type CmsDestinationBody = {
+  kind: "destination";
+  description: string;
+  intro?: string;
+  regionGroup?: string;
+  bestSeason?: string;
+  idealDuration?: string;
+  howToGetThere?: string;
+  highlights?: string[];
+  travelTips?: string[];
+};
+
+export type CmsPlaceBody = {
+  kind: "place";
+  shortDescription: string;
+  fullDescription: string;
+  howToGetThere?: string;
+  interestingFacts?: string[];
+  faq?: PlaceFaqItem[];
+};
+
+export type CmsDocumentBody =
+  | CmsLegalBody
+  | CmsBlogBody
+  | CmsGuideBody
+  | CmsDestinationBody
+  | CmsPlaceBody;
 
 export type CmsDocumentSeo = {
   description?: string;
@@ -81,5 +122,188 @@ export function legalBodyFromTs(source: LegalDocument): CmsLegalBody {
     kind: "legal",
     description: source.description,
     sections: source.sections,
+  };
+}
+
+export function blogBodyFromTs(source: BlogPost): CmsBlogBody {
+  return {
+    kind: "blog",
+    excerpt: source.excerpt,
+    sections: source.sections,
+    content: source.content,
+    featured: source.featured,
+  };
+}
+
+export function guideBodyFromTs(source: ContentPage): CmsGuideBody {
+  return {
+    kind: "guide",
+    description: source.description,
+    category: source.category,
+    sections: source.sections,
+    relatedLinks: source.relatedLinks,
+    relatedTourQuery: source.relatedTourQuery,
+  };
+}
+
+export function destinationBodyFromTs(source: DestinationPage): CmsDestinationBody {
+  return {
+    kind: "destination",
+    description: source.description,
+    intro: source.intro,
+    regionGroup: source.regionGroup,
+    bestSeason: source.bestSeason,
+    idealDuration: source.idealDuration,
+    howToGetThere: source.howToGetThere,
+    highlights: source.highlights,
+    travelTips: source.travelTips,
+  };
+}
+
+export function placeBodyFromTs(
+  source: Pick<
+    PlaceDetail,
+    "shortDescription" | "fullDescription" | "howToGetThere" | "interestingFacts" | "faq"
+  >
+): CmsPlaceBody {
+  return {
+    kind: "place",
+    shortDescription: source.shortDescription,
+    fullDescription: source.fullDescription,
+    howToGetThere: source.howToGetThere,
+    interestingFacts: source.interestingFacts,
+    faq: source.faq,
+  };
+}
+
+export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost | null {
+  if (doc.body.kind !== "blog") return null;
+
+  const sections = doc.body.sections ?? fallback?.sections;
+  const content =
+    doc.body.content?.trim() ||
+    (sections?.map((s) => `${s.title}\n\n${s.body}`).join("\n\n") ?? "") ||
+    fallback?.content ||
+    "";
+
+  const readTimeMinutes =
+    fallback?.readTimeMinutes ??
+    Math.max(3, Math.ceil(content.split(/\s+/).filter(Boolean).length / 180));
+
+  return {
+    id: fallback?.id ?? doc.id,
+    slug: doc.slug,
+    title: doc.title,
+    seoTitle: doc.seo.title ?? fallback?.seoTitle ?? doc.title,
+    excerpt: doc.body.excerpt ?? fallback?.excerpt ?? "",
+    content,
+    sections,
+    author: fallback?.author ?? "Редакция",
+    authorBio: fallback?.authorBio,
+    authorAvatar: fallback?.authorAvatar,
+    date: doc.publishedAt?.slice(0, 10) ?? fallback?.date ?? doc.updatedAt.slice(0, 10),
+    image: fallback?.image ?? "/logo-light.svg",
+    category: fallback?.category ?? "Статья",
+    readTime: fallback?.readTime ?? formatBlogReadTime(readTimeMinutes),
+    readTimeMinutes,
+    views: fallback?.views ?? 0,
+    tags: fallback?.tags ?? [],
+    featured: doc.body.featured ?? fallback?.featured,
+    editorialReviewed: fallback?.editorialReviewed,
+    relatedResources: fallback?.relatedResources,
+    tourEmbeds: fallback?.tourEmbeds,
+  };
+}
+
+export function guidePageFromCms(doc: CmsDocument, fallback?: ContentPage): ContentPage | null {
+  if (doc.body.kind !== "guide") return null;
+
+  return {
+    slug: doc.slug,
+    section: "guide",
+    title: doc.title,
+    description: doc.body.description || fallback?.description || "",
+    category: doc.body.category || fallback?.category || "Путеводитель",
+    updatedAt: doc.publishedAt?.slice(0, 10) ?? doc.updatedAt.slice(0, 10),
+    sections: doc.body.sections.length ? doc.body.sections : (fallback?.sections ?? []),
+    relatedLinks: doc.body.relatedLinks ?? fallback?.relatedLinks,
+    relatedTourQuery: doc.body.relatedTourQuery ?? fallback?.relatedTourQuery,
+  };
+}
+
+export function destinationPageFromCms(
+  doc: CmsDocument,
+  fallback?: DestinationPage
+): DestinationPage | null {
+  if (doc.body.kind !== "destination") return null;
+
+  const description = doc.body.description || fallback?.description || doc.body.intro || "";
+  const intro = doc.body.intro || fallback?.intro || description;
+  const regionGroup = doc.body.regionGroup || fallback?.regionGroup || fallback?.region || "Аргентина";
+  const keywords = fallback?.keywords?.length
+    ? fallback.keywords
+    : [doc.slug.replace(/-/g, " "), doc.title];
+
+  return {
+    id: doc.slug,
+    name: doc.title,
+    region: fallback?.region ?? regionGroup,
+    description,
+    image: fallback?.image ?? "/logo-light.svg",
+    imageAlt: fallback?.imageAlt,
+    gallery: fallback?.gallery,
+    keywords,
+    intro,
+    highlights: doc.body.highlights ?? fallback?.highlights ?? [],
+    bestSeason: doc.body.bestSeason || fallback?.bestSeason || "Уточняйте перед поездкой",
+    idealDuration: doc.body.idealDuration || fallback?.idealDuration || "3-5 дней",
+    howToGetThere:
+      doc.body.howToGetThere ||
+      fallback?.howToGetThere ||
+      "Уточняйте логистику и трансферы перед поездкой.",
+    travelTips: doc.body.travelTips ?? fallback?.travelTips ?? [],
+    regionGroup,
+  };
+}
+
+export function placeDetailFromCms(doc: CmsDocument, fallback?: PlaceDetail): PlaceDetail | null {
+  if (doc.body.kind !== "place") return null;
+
+  const coverImage = fallback?.coverImage ?? "/logo-light.svg";
+  const gallery = fallback?.gallery?.length ? fallback.gallery : [coverImage];
+  const shortDescription =
+    doc.body.shortDescription || fallback?.shortDescription || doc.body.fullDescription || "";
+  const fullDescription = doc.body.fullDescription || fallback?.fullDescription || shortDescription;
+
+  return {
+    id: fallback?.id ?? `cms-place-${doc.slug}`,
+    slug: doc.slug,
+    name: doc.title,
+    shortDescription,
+    category: fallback?.category ?? "city",
+    region: fallback?.region ?? "Аргентина",
+    province: fallback?.province,
+    city: fallback?.city,
+    latitude: fallback?.latitude ?? -34.6037,
+    longitude: fallback?.longitude ?? -58.3816,
+    coverImage,
+    tags: fallback?.tags ?? [],
+    rating: fallback?.rating,
+    visitDuration: fallback?.visitDuration,
+    season: fallback?.season,
+    ticketPrice: fallback?.ticketPrice,
+    popularity: fallback?.popularity ?? 50,
+    fullDescription,
+    gallery,
+    website: fallback?.website,
+    source: fallback?.source ?? "manual",
+    relatedPlaces: fallback?.relatedPlaces ?? [],
+    collections: fallback?.collections ?? [],
+    itineraryReferences: fallback?.itineraryReferences ?? [],
+    history: fallback?.history,
+    interestingFacts: doc.body.interestingFacts ?? fallback?.interestingFacts,
+    howToGetThere: doc.body.howToGetThere ?? fallback?.howToGetThere,
+    nearbyHighlights: fallback?.nearbyHighlights,
+    faq: doc.body.faq ?? fallback?.faq,
   };
 }

@@ -214,3 +214,13 @@ export function formatToursFound(count: number): string {
     mod10 === 1 && mod100 !== 11 ? "найден" : "найдено";
   return `${count} ${word} ${verb}`;
 }
+
+/** «8 экскурсий найдено», «1 экскурсия найдена», «2 экскурсии найдено» */
+export function formatExcursionsFound(count: number): string {
+  const word = pluralRu(count, "экскурсия", "экскурсии", "экскурсий");
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  const verb =
+    mod10 === 1 && mod100 !== 11 ? "найдена" : "найдено";
+  return `${count} ${word} ${verb}`;
+}

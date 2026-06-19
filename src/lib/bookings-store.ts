@@ -1,3 +1,4 @@
+import type { BookingAttribution } from "@/types/booking-attribution";
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
 import { shouldSeedDemoData } from "@/lib/demo-mode";
@@ -15,6 +16,11 @@ import {
   resolveBookingPaymentStatus,
   resolveOrganizerParams,
 } from "@/lib/booking-params";
+import {
+  buildCheckoutDisplaySnapshot,
+  type CheckoutCurrencyCode,
+} from "@/lib/payments/checkout-currency";
+import type { CurrencyCode } from "@/types/locale";
 import type { BookingCheckoutPaymentOption } from "@/types/booking-params";
 import type { BookingPaymentLinkTarget } from "@/types/booking-payment";
 import { formatBookingDisplayNumber } from "@/lib/booking-display";
@@ -47,6 +53,10 @@ import {
   type OrganizerBookingStats,
 } from "@/types/tourist";
 import type { BookingOrganizerParams, BookingPaymentStatus } from "@/types/booking-params";
+import {
+  notifyBookingCreatedEmail,
+  notifyPaymentReceivedEmail,
+} from "@/lib/bookings-notify-client";
 import {
   notifyBookingCreated,
   notifyPaymentReminder,
@@ -224,6 +234,7 @@ export function normalizeBooking(raw: Booking): Booking {
       clientPortalToken: raw.clientPortalToken,
     }),
     tripOperations: normalizeTripOperations(raw.tripOperations),
+    metadata: raw.metadata,
   });
 }
 
@@ -613,6 +624,16 @@ export function createBooking(input: {
   const normalized = normalizeBooking(booking);
   if (input.persist === false) {
     notifyBookingCreated(normalized);
+    void notifyBookingCreatedEmail({
+      userId: normalized.userId,
+      bookingId: normalized.id,
+      tourTitle: normalized.tourTitle,
+      contactEmail: normalized.contactEmail,
+      contactName: normalized.contactName,
+      guests: normalized.guests,
+      startDate: normalized.startDate,
+      endDate: normalized.endDate,
+    });
     if (normalized.fillTravelersLater) {
       notifyTravelersFormDue(normalized);
     }
@@ -621,6 +642,16 @@ export function createBooking(input: {
   writeAllBookings([normalized, ...all]);
   notifyUpdated();
   notifyBookingCreated(normalized);
+  void notifyBookingCreatedEmail({
+    userId: normalized.userId,
+    bookingId: normalized.id,
+    tourTitle: normalized.tourTitle,
+    contactEmail: normalized.contactEmail,
+    contactName: normalized.contactName,
+    guests: normalized.guests,
+    startDate: normalized.startDate,
+    endDate: normalized.endDate,
+  });
   if (normalized.fillTravelersLater) {
     notifyTravelersFormDue(normalized);
   }
@@ -762,6 +793,12 @@ export function createBookingFromCheckoutLocal(input: {
   form: CheckoutFormState;
   priceQuoteRequest?: boolean;
   persist?: boolean;
+  checkoutCurrency?: CheckoutCurrencyCode;
+  checkoutRates?: Partial<Record<CurrencyCode, number>>;
+  checkoutRatesUpdatedAt?: string;
+  checkoutRatesSource?: "frankfurter" | "fallback";
+  payNowUsd?: number;
+  attribution?: BookingAttribution;
 }): Booking | { error: string } {
   const contactEmail = input.form.contactEmail.trim();
   const userId =
@@ -790,6 +827,24 @@ export function createBookingFromCheckoutLocal(input: {
     paymentSummary.paidAmountUsd = 0;
     paymentSummary.remainingAmountUsd = input.totalPriceUsd;
   }
+
+  const payNowUsd =
+    input.payNowUsd ??
+    (paymentOption === "deposit"
+      ? computePrepaymentAmount(input.totalPriceUsd, organizerParams)
+      : paymentOption === "later"
+        ? 0
+        : input.totalPriceUsd);
+
+  const checkoutCurrency = input.checkoutCurrency ?? "USD";
+  const checkoutDisplay = buildCheckoutDisplaySnapshot({
+    currency: checkoutCurrency,
+    totalUsd: input.totalPriceUsd,
+    payNowUsd,
+    rates: input.checkoutRates,
+    ratesUpdatedAt: input.checkoutRatesUpdatedAt,
+    ratesSource: input.checkoutRatesSource,
+  });
 
   const bookingResult = createBooking({
     actor: input.actor,
@@ -834,6 +889,11 @@ export function createBookingFromCheckoutLocal(input: {
     paymentStatus,
     paymentSummary,
     paymentLink,
+    attribution: input.attribution,
+    metadata: {
+      checkoutCurrency,
+      checkoutDisplay,
+    },
     invoices:
       paymentOption === "later"
         ? [
@@ -881,6 +941,12 @@ export async function createBookingFromCheckout(input: {
   totalPriceUsd: number;
   form: CheckoutFormState;
   priceQuoteRequest?: boolean;
+  checkoutCurrency?: CheckoutCurrencyCode;
+  checkoutRates?: Partial<Record<CurrencyCode, number>>;
+  checkoutRatesUpdatedAt?: string;
+  checkoutRatesSource?: "frankfurter" | "fallback";
+  payNowUsd?: number;
+  attribution?: BookingAttribution;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
@@ -1095,8 +1161,26 @@ export function updateOrganizerBookingDetails(input: {
         draftBooking,
         input.paymentStatus === "paid" ? "paid" : "partial"
       );
+      void notifyPaymentReceivedEmail({
+        userId: draftBooking.userId,
+        bookingId: draftBooking.id,
+        tourTitle: draftBooking.tourTitle,
+        contactEmail: draftBooking.contactEmail,
+        contactName: draftBooking.contactName,
+        amountUsd: draftBooking.paymentSummary?.paidAmountUsd,
+        paymentStatus: input.paymentStatus === "paid" ? "paid" : "partial",
+      });
     } else if (input.paymentStatus === "refunded") {
       notifyPaymentStatusChanged(draftBooking, "refunded");
+      void notifyPaymentReceivedEmail({
+        userId: draftBooking.userId,
+        bookingId: draftBooking.id,
+        tourTitle: draftBooking.tourTitle,
+        contactEmail: draftBooking.contactEmail,
+        contactName: draftBooking.contactName,
+        amountUsd: draftBooking.paymentSummary?.paidAmountUsd,
+        paymentStatus: "refunded",
+      });
     }
   }
 
@@ -1261,6 +1345,17 @@ export function completeBookingPaymentFromLink(input: {
     draft,
     paymentStatus === "paid" ? "paid" : paymentStatus === "partial" ? "partial" : "partial"
   );
+  if (paymentStatus === "paid" || paymentStatus === "partial") {
+    void notifyPaymentReceivedEmail({
+      userId: draft.userId,
+      bookingId: draft.id,
+      tourTitle: draft.tourTitle,
+      contactEmail: draft.contactEmail,
+      contactName: draft.contactName,
+      amountUsd: draft.paymentSummary?.paidAmountUsd,
+      paymentStatus: paymentStatus === "paid" ? "paid" : "partial",
+    });
+  }
   return { booking: draft };
 }
 

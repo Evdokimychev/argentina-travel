@@ -21,6 +21,9 @@ interface PhoneCountryInputProps {
   id?: string;
   placeholder?: string;
   className?: string;
+  "aria-describedby"?: string;
+  "aria-invalid"?: boolean;
+  "aria-required"?: boolean;
 }
 
 function syncFromInternational(international: string) {
@@ -112,6 +115,9 @@ export default function PhoneCountryInput({
   id,
   placeholder = "999 922 65 64",
   className,
+  "aria-describedby": ariaDescribedBy,
+  "aria-invalid": ariaInvalid,
+  "aria-required": ariaRequired,
 }: PhoneCountryInputProps) {
   const rootRef = useRef<HTMLDivElement>(null);
   const nationalInputRef = useRef<HTMLInputElement>(null);
@@ -385,7 +391,10 @@ export default function PhoneCountryInput({
             onFocus={handleNationalFocus}
             onBlur={handleNationalBlur}
             onKeyDown={handleNationalKeyDown}
-            className="min-w-0 flex-1 bg-transparent text-sm text-charcoal outline-none placeholder:text-gray-400"
+            aria-describedby={ariaDescribedBy}
+            aria-invalid={ariaInvalid}
+            aria-required={ariaRequired}
+            className="min-w-0 flex-1 bg-transparent text-sm text-charcoal outline-none placeholder:text-slate/70"
           />
         </div>
       </div>

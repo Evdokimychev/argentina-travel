@@ -31,6 +31,21 @@ type ExcursionAdminStats = {
     createdAt: string;
     referer: string | null;
   }>;
+  tripsterBookingRequestsTotal: number;
+  tripsterBookingRequestsByStatus: Record<string, number>;
+  recentTripsterBookingRequests: Array<{
+    id: string;
+    experienceSlug: string;
+    experienceTitle: string;
+    eventDate: string;
+    eventTime: string;
+    personsCount: number;
+    customerName: string;
+    customerEmail: string;
+    tripsterStatus: string | null;
+    tripsterOrderUrl: string | null;
+    createdAt: string;
+  }>;
 };
 
 type ExcursionsResponse = { stats?: ExcursionAdminStats };
@@ -68,6 +83,7 @@ export default function ExcursionsView() {
                 { label: "Города", value: stats.cities },
                 { label: "Отзывы", value: stats.reviews },
                 { label: "Клики (7 дн.)", value: stats.clicksLast7Days },
+                { label: "Заявки Tripster", value: stats.tripsterBookingRequestsTotal },
               ].map((item) => (
                 <div key={item.label} className={`${cabinetCardClass} p-5`}>
                   <p className="text-xs font-medium uppercase tracking-wide text-slate">{item.label}</p>
@@ -132,6 +148,68 @@ export default function ExcursionsView() {
                         {row.slug}
                       </Link>
                       <span className="font-medium text-charcoal">{row.count}</span>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </section>
+
+            <section className={`${cabinetCardClass} overflow-hidden`}>
+              <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+                Заявки Tripster
+              </h2>
+              {Object.keys(stats.tripsterBookingRequestsByStatus).length > 0 ? (
+                <div className="flex flex-wrap gap-2 border-b border-gray-100 px-5 py-3">
+                  {Object.entries(stats.tripsterBookingRequestsByStatus)
+                    .sort(([left], [right]) => left.localeCompare(right))
+                    .map(([status, count]) => (
+                      <span
+                        key={status}
+                        className="rounded-full bg-sky/10 px-2.5 py-1 text-xs font-medium text-sky"
+                      >
+                        {status}: {count}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
+              <ul className="divide-y divide-gray-100">
+                {stats.recentTripsterBookingRequests.length === 0 ? (
+                  <li className="px-5 py-8 text-sm text-slate">Заявок Tripster пока нет</li>
+                ) : (
+                  stats.recentTripsterBookingRequests.map((request) => (
+                    <li key={request.id} className="space-y-1 px-5 py-3 text-sm">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <Link
+                            href={`/excursions/${request.experienceSlug}`}
+                            className="font-medium text-sky hover:underline"
+                          >
+                            {request.experienceTitle}
+                          </Link>
+                          <p className="text-xs text-slate">
+                            {request.eventDate} · {request.eventTime} · {request.personsCount} чел.
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-charcoal">
+                          {request.tripsterStatus ?? "unknown"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate">
+                        {request.customerName} · {request.customerEmail}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate">
+                        <span>{formatAdminWhen(request.createdAt)}</span>
+                        {request.tripsterOrderUrl ? (
+                          <a
+                            href={request.tripsterOrderUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sky hover:underline"
+                          >
+                            Открыть заказ
+                          </a>
+                        ) : null}
+                      </div>
                     </li>
                   ))
                 )}

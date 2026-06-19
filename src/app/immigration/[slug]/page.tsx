@@ -9,6 +9,7 @@ import {
   getImmigrationTopicMetadata,
   isImmigrationTopicSlug,
 } from "@/lib/immigration-topics";
+import { getImmigrationFreshnessState } from "@/lib/content-freshness-server";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -50,5 +51,6 @@ export default async function ImmigrationArticlePage({ params }: PageProps) {
 
   const page = getContentPage("immigration", slug);
   if (!page) notFound();
-  return <ContentPageView page={page} />;
+  const freshness = await getImmigrationFreshnessState(slug, page.updatedAt);
+  return <ContentPageView page={page} freshness={freshness} />;
 }

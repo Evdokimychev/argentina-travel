@@ -26,7 +26,7 @@ export default function TourRouteFeaturesBlock({ text, onChange }: TourRouteFeat
           rows={6}
           onChange={(event) => onChange(event.target.value.slice(0, TOUR_ROUTE_FEATURES_MAX))}
           placeholder="Маршрут оптимизирован с учётом акклиматизации…"
-          className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+          className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
         <p className="mt-1 text-right text-xs text-slate">
           {text.length} / {TOUR_ROUTE_FEATURES_MAX}

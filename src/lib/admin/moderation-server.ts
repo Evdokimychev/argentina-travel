@@ -1,6 +1,21 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TourContentAdminSummary, TourModerationStatus } from "@/types/tour-content";
+import { sendOrganizerNewReviewEmail } from "@/lib/notifications/email-delivery";
+import { notifyReviewApprovedInApp } from "@/lib/notifications/event-emitters";
+import type { ModerationReviewSummary, ModerationReviewReportSummary } from "@/lib/reviews-db-mapper";
+import {
+  fetchModerationReviewSummaries,
+  fetchModerationReviewReportSummaries,
+  resolveReviewModeration,
+  resolveReviewReportModeration,
+  syncPendingReviewsToQueue,
+} from "@/lib/reviews-server";
+import {
+  fetchForumPostModerationSummaries,
+  resolveForumPostModeration,
+  type ForumPostModerationSummary,
+} from "@/lib/forum/forum-server";
 
 function metadataString(metadata: Json | null, key: string): string | undefined {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return undefined;
@@ -21,6 +36,9 @@ export type ModerationQueueItem = {
   createdAt: string;
   updatedAt: string;
   tour?: TourContentAdminSummary | null;
+  review?: ModerationReviewSummary | null;
+  reviewReport?: ModerationReviewReportSummary | null;
+  forumPost?: ForumPostModerationSummary | null;
 };
 
 export type ModerationResolveAction = "approve" | "reject";
@@ -57,6 +75,7 @@ export async function syncPendingToursToQueue(supabase: DbClient): Promise<numbe
 
 export async function fetchModerationQueue(supabase: DbClient): Promise<ModerationQueueItem[]> {
   await syncPendingToursToQueue(supabase);
+  await syncPendingReviewsToQueue(supabase);
 
   const { data: queueRows, error } = await supabase
     .from("moderation_queue")
@@ -69,7 +88,17 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
   if (error || !queueRows?.length) return [];
 
   const tourIds = queueRows.filter((r) => r.entity_type === "tour").map((r) => r.entity_id);
+  const reviewIds = queueRows.filter((r) => r.entity_type === "review").map((r) => r.entity_id);
+  const reportIds = queueRows
+    .filter((r) => r.entity_type === "review_report")
+    .map((r) => r.entity_id);
+  const forumPostIds = queueRows
+    .filter((r) => r.entity_type === "forum_post")
+    .map((r) => r.entity_id);
   const toursById = new Map<string, TourContentAdminSummary>();
+  const reviewsById = await fetchModerationReviewSummaries(supabase, reviewIds);
+  const reviewReportsById = await fetchModerationReviewReportSummaries(supabase, reportIds);
+  const forumPostsById = await fetchForumPostModerationSummaries(supabase, forumPostIds);
 
   if (tourIds.length) {
     const { data: tours } = await supabase.from("tours").select("*").in("id", tourIds);
@@ -92,7 +121,28 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     tour: row.entity_type === "tour" ? (toursById.get(row.entity_id) ?? null) : null,
+    review: row.entity_type === "review" ? (reviewsById.get(row.entity_id) ?? null) : null,
+    reviewReport:
+      row.entity_type === "review_report" ? (reviewReportsById.get(row.entity_id) ?? null) : null,
+    forumPost:
+      row.entity_type === "forum_post" ? enrichForumPostSummary(row, forumPostsById.get(row.entity_id)) : null,
   }));
+}
+
+function enrichForumPostSummary(
+  row: Database["public"]["Tables"]["moderation_queue"]["Row"],
+  base: ForumPostModerationSummary | undefined
+): ForumPostModerationSummary | null {
+  if (!base) return null;
+
+  const metadata = (row.metadata as Record<string, unknown>) ?? {};
+  return {
+    ...base,
+    reason: typeof metadata.reason === "string" ? metadata.reason : base.reason,
+    reasonLabel:
+      typeof metadata.reasonLabel === "string" ? metadata.reasonLabel : base.reasonLabel,
+    details: typeof metadata.details === "string" ? metadata.details : base.details,
+  };
 }
 
 export async function resolveModerationItem(
@@ -166,6 +216,86 @@ export async function resolveModerationItem(
       entityType: "tour",
       entityTitle: tourRow?.title ?? metadataString(item.metadata, "title") ?? item.entity_id,
       ownerEmail,
+    };
+  }
+
+  if (item.entity_type === "review") {
+    const reviewResult = await resolveReviewModeration(
+      supabase,
+      item.entity_id,
+      action,
+      actorUserId,
+      note
+    );
+
+    if ("error" in reviewResult) return reviewResult;
+
+    if (action === "approve") {
+      try {
+        await sendOrganizerNewReviewEmail({
+          organizerEmail: reviewResult.organizerEmail,
+          organizerName: reviewResult.organizerName,
+          tourTitle: reviewResult.tourTitle,
+          tourSlug: reviewResult.tourSlug,
+          touristName: reviewResult.authorName,
+          rating: reviewResult.rating,
+          reviewText: reviewResult.reviewText,
+          tripDate: reviewResult.tripDate,
+        });
+      } catch {
+        // Non-blocking notification channel.
+      }
+
+      void notifyReviewApprovedInApp({
+        reviewId: item.entity_id,
+        tourTitle: reviewResult.tourTitle,
+        tourSlug: reviewResult.tourSlug,
+        authorUserId: reviewResult.authorUserId ?? null,
+        organizerUserId: reviewResult.organizerUserId ?? null,
+        rating: reviewResult.rating,
+      });
+    }
+
+    return {
+      ok: true,
+      entityType: "review",
+      entityTitle: reviewResult.tourTitle,
+      ownerEmail: reviewResult.authorEmail,
+    };
+  }
+
+  if (item.entity_type === "review_report") {
+    const reportResult = await resolveReviewReportModeration(
+      supabase,
+      item.entity_id,
+      action,
+      actorUserId
+    );
+    if ("error" in reportResult) return reportResult;
+
+    return {
+      ok: true,
+      entityType: "review_report",
+      entityTitle: metadataString(item.metadata, "tourTitle") ?? item.entity_id,
+      ownerEmail: null,
+    };
+  }
+
+  if (item.entity_type === "forum_post") {
+    const forumResult = await resolveForumPostModeration(
+      supabase,
+      item.entity_id,
+      action,
+      actorUserId,
+      (item.metadata as Record<string, unknown>) ?? null
+    );
+    if ("error" in forumResult) return forumResult;
+
+    return {
+      ok: true,
+      entityType: "forum_post",
+      entityTitle: metadataString(item.metadata, "threadTitle") ?? item.entity_id,
+      ownerEmail: null,
     };
   }
 

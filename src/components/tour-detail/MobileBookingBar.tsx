@@ -9,6 +9,7 @@ import PartnerTourBookingPriceSummary from "./PartnerTourBookingPriceSummary";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
+import { tourDetailMobileBarClass } from "@/lib/tour-detail-ui";
 import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import GuestCounter from "./GuestCounter";
@@ -139,7 +140,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
         : "Забронировать";
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white shadow-lg lg:hidden">
+    <div className={tourDetailMobileBarClass}>
       {expanded ? (
         <div className="border-b border-gray-100 px-4 py-3">
           <div className="mx-auto max-w-7xl space-y-3">
@@ -190,7 +191,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               type="button"
               onClick={() => setExpanded(true)}
               className={cn(
-                "flex w-full items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-left transition-colors hover:border-brand/40 hover:bg-white"
+                "flex w-full min-h-[44px] items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-left transition-colors hover:border-brand/40 hover:bg-white"
               )}
             >
               <span className="min-w-0 truncate text-xs text-charcoal">
@@ -233,7 +234,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
                 type="button"
                 onClick={handlePrimaryAction}
                 className={cn(
-                  "flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark",
+                  "min-h-[44px] flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark",
                   bookButtonPulseKey > 0 && "animate-book-cta-pulse"
                 )}
               >

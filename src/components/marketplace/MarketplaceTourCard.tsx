@@ -19,6 +19,7 @@ import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-ca
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
+import { avatarAlt, tourCoverAlt } from "@/lib/media-alt-text";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { formatShortDisplayName } from "@/lib/full-name";
@@ -58,7 +59,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
     >
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
         <div className="relative aspect-[4/3] overflow-hidden">
-          <TourCardGallery images={tour.gallery} alt={tour.title} />
+          <TourCardGallery images={tour.gallery} alt={tourCoverAlt(tour.title)} variant="tour" />
 
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
             {isPartnerTour ? (
@@ -94,9 +95,10 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             <div className="relative h-7 w-7 overflow-hidden rounded-full">
               <SafeImage
                 src={tour.organizer.avatar}
-                alt={organizerLabel}
+                alt={avatarAlt(organizerLabel)}
                 fill
                 placeholderVariant="avatar"
+                placeholderCompact
                 className="object-cover"
                 sizes="28px"
               />

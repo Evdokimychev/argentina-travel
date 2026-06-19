@@ -7,15 +7,18 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  ClipboardCheck,
   Heart,
   LayoutGrid,
   Mail,
   Settings,
   ShoppingBag,
   Star,
+  Users,
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
+import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { cn } from "@/lib/cn";
 import {
   cabinetMobileHeaderClass,
@@ -23,8 +26,12 @@ import {
   cabinetNavBadgeClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
+  cabinetNavLinkClass,
   cabinetSidebarClass,
   cabinetSidebarSkeletonClass,
+  cabinetBorderDividerClass,
+  cabinetMutedSurfaceClass,
+  cabinetSurfaceButtonClass,
 } from "@/lib/cabinet-ui";
 import {
   PROFILE_NAV_ITEMS,
@@ -33,8 +40,15 @@ import {
 } from "@/data/tourist-dashboard";
 import { useAuth } from "@/context/AuthContext";
 import { getProfileNavItemsWithBadges } from "@/lib/tourist-nav";
+import {
+  apiFetchConversationUnreadCount,
+  isRemoteMessagingMode,
+} from "@/lib/conversations-api";
+import { useConversationInboxRealtime } from "@/hooks/useConversationInboxRealtime";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { NOTIFICATIONS_UPDATED_EVENT } from "@/lib/notifications";
+import { NOTIFICATIONS_HUB_UPDATED_EVENT } from "@/lib/notifications/notifications-api";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "profile-sidebar-collapsed";
@@ -44,6 +58,8 @@ const NAV_ICONS: Record<Exclude<ProfileNavId, "settings">, typeof LayoutGrid> = 
   dashboard: LayoutGrid,
   favorites: Heart,
   bookings: CalendarDays,
+  tripPrep: ClipboardCheck,
+  groupTrips: Users,
   orders: ShoppingBag,
   messages: Mail,
   reviews: Star,
@@ -71,12 +87,26 @@ function writeCollapsedPreference(collapsed: boolean) {
   }
 }
 
+async function loadProfileNavItems(userId: string): Promise<ReturnType<typeof getProfileNavItemsWithBadges>> {
+  if (!isRemoteMessagingMode()) {
+    return getProfileNavItemsWithBadges(userId);
+  }
+
+  try {
+    const unreadMessages = await apiFetchConversationUnreadCount("tourist");
+    return getProfileNavItemsWithBadges(userId, { unreadMessages });
+  } catch {
+    return getProfileNavItemsWithBadges(userId);
+  }
+}
+
 export default function ProfileSidebar({
   userName,
   avatarUrl,
   forceCompact = false,
 }: ProfileSidebarProps) {
   const { user } = useAuth();
+  const userId = user?.id ?? null;
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -102,20 +132,27 @@ export default function ProfileSidebar({
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
+    const stableUserId = userId;
 
-    function refreshNavBadges() {
-      setNavItems(getProfileNavItemsWithBadges(user!.id));
+    async function refreshNavBadges() {
+      setNavItems(await loadProfileNavItems(stableUserId));
     }
 
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    void refreshNavBadges();
+    const handler = () => void refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
     return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
     };
-  }, [user]);
+  }, [userId]);
+
+  useConversationInboxRealtime(Boolean(userId && isRemoteMessagingMode()), () => {
+    if (!userId) return;
+    void loadProfileNavItems(userId).then(setNavItems);
+  });
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
@@ -139,13 +176,15 @@ export default function ProfileSidebar({
     >
       <div
         className={cn(
-          "shrink-0 border-b border-gray-100",
+          "shrink-0 border-b",
+          cabinetBorderDividerClass,
           isCompact ? "px-2.5 py-4" : "px-4 py-5"
         )}
       >
         {isCompact ? (
           <div className="flex flex-col items-center gap-3">
             <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-10 w-10 text-sm" />
+            <NotificationsBell scope="tourist" compact />
             <Link
               href={PROFILE_SETTINGS_HREF}
               title="Настройки"
@@ -153,7 +192,7 @@ export default function ProfileSidebar({
                 "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-slate hover:border-gray-300 hover:text-charcoal"
+                  : cn(cabinetMutedSurfaceClass, "text-muted hover:text-foreground")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -163,10 +202,11 @@ export default function ProfileSidebar({
           <>
             <div className="flex items-center gap-3">
               <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-11 w-11 text-sm" />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[11px] text-slate">Турист</p>
-                <p className="truncate text-sm font-semibold text-charcoal">{userName}</p>
+                <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
               </div>
+              <NotificationsBell scope="tourist" />
             </div>
             <Link
               href={PROFILE_SETTINGS_HREF}
@@ -174,7 +214,7 @@ export default function ProfileSidebar({
                 "mt-4 flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-charcoal hover:bg-gray-100"
+                  : cn(cabinetMutedSurfaceClass, "text-foreground hover:bg-surface-muted")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -229,7 +269,7 @@ export default function ProfileSidebar({
       </nav>
 
       {!isCompact ? (
-        <div className="shrink-0 space-y-2 border-t border-gray-100 px-4 py-4 text-[11px] leading-relaxed text-slate">
+        <div className={cn("shrink-0 space-y-2 border-t px-4 py-4 text-[11px] leading-relaxed text-muted", cabinetBorderDividerClass)}>
           <p>© Пора в Аргентину, {new Date().getFullYear()}</p>
           <div className="space-y-1">
             {SITE_LEGAL_LINKS.slice(0, 2).map((link) => (
@@ -249,14 +289,15 @@ export default function ProfileSidebar({
       ) : null}
 
       {!forceCompact ? (
-        <div className={cn("shrink-0 border-t border-gray-100", isCompact ? "p-2" : "px-3 py-3")}>
+        <div className={cn("shrink-0 border-t", cabinetBorderDividerClass, isCompact ? "p-2" : "px-3 py-3")}>
           <button
             type="button"
             onClick={toggleCollapsed}
             aria-expanded={!isCompact}
             aria-label={isCompact ? "Развернуть меню" : "Свернуть меню"}
             className={cn(
-              "flex w-full items-center rounded-xl border border-gray-200 bg-white text-slate transition-colors hover:bg-gray-50 hover:text-charcoal",
+              cabinetSurfaceButtonClass,
+              "flex w-full items-center",
               isCompact ? "justify-center p-2" : "gap-2 px-3 py-2 text-sm font-medium"
             )}
           >
@@ -291,24 +332,32 @@ export function ProfileMobileHeader() {
 
 export function ProfileMobileNav() {
   const { user } = useAuth();
+  const userId = user?.id ?? null;
   const pathname = usePathname();
   const [navItems, setNavItems] = useState(PROFILE_NAV_ITEMS);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
+    const stableUserId = userId;
 
-    function refreshNavBadges() {
-      setNavItems(getProfileNavItemsWithBadges(user!.id));
+    async function refreshNavBadges() {
+      setNavItems(await loadProfileNavItems(stableUserId));
     }
 
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    void refreshNavBadges();
+    const handler = () => void refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
     return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
     };
-  }, [user]);
+  }, [userId]);
+
+  useConversationInboxRealtime(Boolean(userId && isRemoteMessagingMode()), () => {
+    if (!userId) return;
+    void loadProfileNavItems(userId).then(setNavItems);
+  });
 
   return (
     <nav className={cabinetMobileNavClass}>
@@ -324,8 +373,9 @@ export function ProfileMobileNav() {
             key={item.id}
             href={item.href}
             className={cn(
-              "relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-              active ? cabinetNavActiveClass : cabinetNavIdleClass
+              cabinetNavLinkClass,
+              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+              active ? cn(cabinetNavActiveClass, "before:hidden") : cabinetNavIdleClass
             )}
           >
             <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />

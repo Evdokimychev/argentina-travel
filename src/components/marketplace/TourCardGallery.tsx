@@ -3,21 +3,29 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { ImagePlaceholder } from "@/components/ui/image-placeholder";
+import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
+import { ImagePlaceholder, type ImagePlaceholderVariant } from "@/components/ui/image-placeholder";
 import { SafeImage } from "@/components/ui/safe-image";
 import TourCardImageVignette from "./TourCardImageVignette";
 
 interface TourCardGalleryProps {
   images: string[];
   alt: string;
+  variant?: Extract<ImagePlaceholderVariant, "tour" | "excursion">;
 }
 
-export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
+export default function TourCardGallery({
+  images,
+  alt,
+  variant = "tour",
+}: TourCardGalleryProps) {
   const [index, setIndex] = useState(0);
-  const displayImages = images.map((src) => src?.trim()).filter(Boolean);
+  const displayImages = images
+    .map((src) => buildSupabaseCdnUrl(src?.trim() ?? "", { width: 960, quality: 76 }))
+    .filter(Boolean);
 
   if (displayImages.length === 0) {
-    return <ImagePlaceholder variant="tour" className="absolute inset-0" label={alt} />;
+    return <ImagePlaceholder variant={variant} className="absolute inset-0" label={alt} />;
   }
 
   const count = displayImages.length;
@@ -35,7 +43,7 @@ export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
         src={displayImages[index]}
         alt={alt}
         fill
-        placeholderVariant="tour"
+        placeholderVariant={variant}
         className="object-cover transition-transform duration-500 group-hover:scale-105"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
@@ -70,7 +78,7 @@ export default function TourCardGallery({ images, alt }: TourCardGalleryProps) {
                 key={i}
                 className={cn(
                   "rounded-full bg-white transition-all",
-                  i === index ? "h-1.5 w-4 opacity-100" : "h-1.5 w-1.5 opacity-60"
+                  i === index ? "h-1.5 w-4 opacity-100" : "h-1.5 w-1.5 opacity-60",
                 )}
               />
             ))}

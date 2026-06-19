@@ -12,7 +12,7 @@ export async function GET(request: Request) {
   const supabase = createSupabaseAdminClient();
   const dbQuery = supabase
     .from("profiles")
-    .select("id, first_name, last_name, email, phone, roles, active_role, is_blocked, created_at")
+    .select("id, first_name, last_name, email, phone, roles, active_role, is_blocked, admin_notes, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 
@@ -47,6 +47,7 @@ export async function GET(request: Request) {
       roles: user.roles,
       activeRole: user.active_role,
       isBlocked: user.is_blocked ?? false,
+      adminNotes: user.admin_notes ?? null,
       createdAt: user.created_at,
     })),
   });

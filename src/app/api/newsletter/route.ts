@@ -4,7 +4,7 @@ import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`newsletter:ip:${ip}`, 5, 60_000);
+  const limit = await checkRateLimit(`newsletter:ip:${ip}`, 5, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Попробуйте позже." },

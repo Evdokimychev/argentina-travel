@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { registerSupabaseUser } from "@/lib/auth-register-server";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import type { AccountRole } from "@/types/user";
 
-export async function POST(request: Request) {
+async function postRegister(request: Request) {
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json({ error: "Supabase auth disabled" }, { status: 503 });
   }
@@ -57,3 +58,11 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withRateLimit(postRegister, {
+  limit: 5,
+  window: 600_000,
+  keyPrefix: "auth:register",
+  key: (request) => `ip:${getClientIp(request)}`,
+  message: "Слишком много попыток регистрации. Попробуйте позже.",
+});

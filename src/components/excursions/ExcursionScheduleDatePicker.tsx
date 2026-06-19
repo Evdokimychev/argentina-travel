@@ -121,7 +121,7 @@ export default function ExcursionScheduleDatePicker({
             <span
               className={cn(
                 "min-w-0 flex-1 truncate",
-                selectedDate ? "text-charcoal" : "text-gray-400"
+                selectedDate ? "text-charcoal" : "text-slate/70"
               )}
             >
               {displayLabel}

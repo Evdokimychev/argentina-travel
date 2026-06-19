@@ -41,6 +41,15 @@ export interface OrganizerAnalytics {
   draftToursCount: number;
   archivedToursCount: number;
   conversionRate: number | null;
+  conversionFunnel: {
+    started: number;
+    confirmed: number;
+    paid: number;
+    reviewed: number;
+    bookingToConfirmedPct: number | null;
+    bookingToPaidPct: number | null;
+    bookingToReviewPct: number | null;
+  };
 }
 
 interface TourMeta {
@@ -544,6 +553,17 @@ export function getOrganizerAnalytics(userId: string): OrganizerAnalytics {
   const catalogSlugs = getOrganizerCatalogSlugs(userId);
   const bookingStats = getOrganizerBookingStats(catalogSlugs);
   const tours = getOrganizerTourListingsForUser(userId).filter((t) => !t.deleted);
+  const allBookings = getOrganizerBookings(catalogSlugs);
+  const reviewsSummary = getOrganizerReviewsSummary(userId);
+
+  const nonCancelled = allBookings.filter((b) => b.status !== "cancelled");
+  const confirmed = nonCancelled.filter(isRevenueBooking);
+  const paid = nonCancelled.filter(
+    (b) => b.paymentStatus === "paid" || b.paymentStatus === "partial"
+  );
+
+  const pct = (part: number, whole: number) =>
+    whole > 0 ? Math.round((part / whole) * 100) : null;
 
   return {
     bookingStats,
@@ -554,5 +574,14 @@ export function getOrganizerAnalytics(userId: string): OrganizerAnalytics {
     draftToursCount: tours.filter((t) => t.status === "draft" && !t.archived).length,
     archivedToursCount: tours.filter((t) => t.archived).length,
     conversionRate: basic.kpis.conversionRate,
+    conversionFunnel: {
+      started: nonCancelled.length,
+      confirmed: confirmed.length,
+      paid: paid.length,
+      reviewed: reviewsSummary.count,
+      bookingToConfirmedPct: pct(confirmed.length, nonCancelled.length),
+      bookingToPaidPct: pct(paid.length, nonCancelled.length),
+      bookingToReviewPct: pct(reviewsSummary.count, nonCancelled.length),
+    },
   };
 }

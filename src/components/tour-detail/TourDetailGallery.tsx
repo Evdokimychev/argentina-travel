@@ -1,11 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
+import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
+import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
+import {
+  tourDetailGalleryGridClass,
+  tourDetailGalleryMobileAspectClass,
+} from "@/lib/tour-detail-ui";
 
 interface TourDetailGalleryProps {
   images: string[];
@@ -27,18 +32,23 @@ function GalleryTile({
   onClick?: () => void;
   children?: React.ReactNode;
 }) {
+  const cdnSrc = buildSupabaseCdnUrl(src, { width: 1440, quality: 80 });
+
   return (
     <button
       type="button"
       onClick={onClick}
-      className={cn("relative overflow-hidden rounded-2xl bg-gray-100", className)}
+      className={cn(
+        "relative h-full min-h-0 overflow-hidden rounded-2xl bg-gray-100",
+        className
+      )}
     >
       <SafeImage
-        src={src}
+        src={cdnSrc}
         alt={alt}
         fill
         placeholderVariant="tour"
-        className="object-cover transition-transform duration-500 hover:scale-105"
+        className="object-cover transition-transform duration-500 hover:scale-[1.03]"
         sizes="(max-width: 768px) 50vw, 40vw"
         priority={priority}
       />
@@ -86,11 +96,11 @@ function MobileGalleryCarousel({
   }, [activeIndex, images.length, onActiveIndexChange]);
 
   return (
-    <div className="relative md:hidden">
+    <div className={cn("relative md:hidden", tourDetailGalleryMobileAspectClass)}>
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="scrollbar-hide flex h-64 snap-x snap-mandatory overflow-x-auto scroll-smooth sm:h-80"
+        className="scrollbar-hide flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth"
       >
         {images.map((src, index) => (
           <button
@@ -99,10 +109,11 @@ function MobileGalleryCarousel({
             onClick={() => onOpenLightbox(index)}
             className="relative h-full min-w-full shrink-0 snap-center snap-always overflow-hidden rounded-2xl bg-gray-100"
           >
-            <Image
-              src={src}
+            <SafeImage
+              src={buildSupabaseCdnUrl(src, { width: 1280, quality: 80 })}
               alt={index === 0 ? title : `${title} — ${index + 1}`}
               fill
+              placeholderVariant="tour"
               className="object-cover"
               priority={index === 0}
               sizes="100vw"
@@ -117,7 +128,7 @@ function MobileGalleryCarousel({
             type="button"
             onClick={() => scrollToIndex(activeIndex - 1)}
             aria-label="Предыдущее фото"
-            className="absolute left-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm"
+            className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -125,7 +136,7 @@ function MobileGalleryCarousel({
             type="button"
             onClick={() => scrollToIndex(activeIndex + 1)}
             aria-label="Следующее фото"
-            className="absolute right-3 top-1/2 z-10 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm"
+            className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
@@ -150,7 +161,7 @@ function MobileGalleryCarousel({
       <button
         type="button"
         onClick={() => onOpenLightbox(activeIndex)}
-        className="absolute bottom-3 right-3 z-10 rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md"
+        className="absolute bottom-3 right-3 z-10 min-h-[44px] rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md"
       >
         Все фото ({images.length})
       </button>
@@ -165,7 +176,13 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
 
   if (!galleryImages.length) {
     return (
-      <div className="flex h-48 items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50 md:h-[320px]">
+      <div
+        className={cn(
+          "flex items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50",
+          tourDetailGalleryMobileAspectClass,
+          "md:aspect-[16/10] md:max-h-[320px]"
+        )}
+      >
         <p className="text-sm text-slate">Фото тура скоро появятся</p>
       </div>
     );
@@ -179,17 +196,9 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
     setLightbox(true);
   };
 
-  const desktopHeight = "md:h-[480px]";
-
   return (
     <div data-scroll-rail-tone="dark">
-      {/* Desktop */}
-      <div
-        className={cn(
-          "hidden gap-2 md:grid md:grid-cols-4 md:grid-rows-2",
-          desktopHeight
-        )}
-      >
+      <div className={tourDetailGalleryGridClass}>
         <GalleryTile
           src={main}
           alt={title}
@@ -205,7 +214,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
             onClick={() => openLightbox(i + 1)}
           >
             {i === side.length - 1 && galleryImages.length > 5 && (
-              <span className="absolute bottom-3 right-3 flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md">
+              <span className="absolute bottom-3 right-3 flex min-h-[44px] items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md">
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -242,7 +251,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
             <button
               type="button"
               onClick={() => setLightbox(false)}
-              className="rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
+              className="min-h-[44px] rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
             >
               Закрыть
             </button>
@@ -258,7 +267,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                     )
                   }
                   aria-label="Предыдущее фото"
-                  className="absolute left-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:left-6"
+                  className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:left-6"
                 >
                   <ChevronLeft className="h-6 w-6" />
                 </button>
@@ -266,18 +275,19 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                   type="button"
                   onClick={() => setActiveIndex((activeIndex + 1) % galleryImages.length)}
                   aria-label="Следующее фото"
-                  className="absolute right-3 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:right-6"
+                  className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:right-6"
                 >
                   <ChevronRight className="h-6 w-6" />
                 </button>
               </>
             ) : null}
             <Image
-              src={galleryImages[activeIndex]}
+              src={buildSupabaseCdnUrl(galleryImages[activeIndex], { width: 2200, quality: 84 })}
               alt={`${title} — ${activeIndex + 1}`}
               fill
               className="object-contain p-4"
               sizes="100vw"
+              priority
             />
           </div>
           <div className="flex gap-2 overflow-x-auto p-4">
@@ -288,7 +298,14 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                 onClick={() => setActiveIndex(i)}
                 className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg ${i === activeIndex ? "ring-2 ring-sun" : ""}`}
               >
-                <Image src={src} alt="" fill className="object-cover" sizes="96px" />
+                <Image
+                  src={buildSupabaseCdnUrl(src, { width: 320, quality: 72 })}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="96px"
+                  loading="lazy"
+                />
               </button>
             ))}
           </div>

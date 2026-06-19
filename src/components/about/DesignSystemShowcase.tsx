@@ -16,6 +16,7 @@ import { StarRating } from "@/components/ui/star-rating";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
   Dialog,
+  DialogBody,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -23,7 +24,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, StatCard } from "@/components/ui/card";
+import { FormField } from "@/components/ui/form-field";
 import {
+  CabinetTableWrap,
   Table,
   TableBody,
   TableCell,
@@ -129,15 +132,18 @@ export default function DesignSystemShowcase() {
         <div className="mt-16">
           <h3 className="font-heading text-xl font-bold text-charcoal">Кнопки</h3>
           <div className="mt-6 flex flex-wrap items-center gap-3">
-            <Button>Primary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="ghost">Ghost</Button>
+            <Button variant="primary">Основное</Button>
+            <Button variant="secondary">Второстепенное</Button>
+            <Button variant="ghost">Третичное</Button>
             <Button variant="destructive">Удалить</Button>
             <Button variant="link">Ссылка-кнопка</Button>
-            <Button size="sm">Small</Button>
-            <Button size="lg">Large</Button>
+            <Button variant="primary" size="sm">Маленькая</Button>
+            <Button variant="primary" size="lg">Большая</Button>
           </div>
+          <p className="mt-3 text-xs text-slate">
+            Алиасы для совместимости: <code className="text-charcoal">default</code> = primary,{" "}
+            <code className="text-charcoal">outline</code> = secondary.
+          </p>
         </div>
 
         {/* Dialog */}
@@ -148,7 +154,7 @@ export default function DesignSystemShowcase() {
           </p>
           <Dialog>
             <DialogTrigger asChild>
-              <Button variant="outline" className="mt-4">
+              <Button variant="secondary" className="mt-4">
                 Открыть демо-диалог
               </Button>
             </DialogTrigger>
@@ -159,12 +165,12 @@ export default function DesignSystemShowcase() {
                   Используется для авторизации, бронирования, подсказок и форм организатора.
                 </DialogDescription>
               </DialogHeader>
-              <div className="px-5 pb-5 sm:px-6">
+              <DialogBody>
                 <p className="text-sm text-slate">
                   Нажмите вне панели или Esc, чтобы закрыть. z-50, backdrop charcoal/50 + blur.
                 </p>
-                <Button className="mt-4 w-full">Понятно</Button>
-              </div>
+                <Button variant="primary" className="mt-4 w-full">Понятно</Button>
+              </DialogBody>
             </DialogContent>
           </Dialog>
         </div>
@@ -197,7 +203,7 @@ export default function DesignSystemShowcase() {
 
             <StatCard value={12} label="Туров в каталоге" />
 
-            <Card>
+            <Card variant="public">
               <CardHeader className="pb-2">
                 <CardTitle>Заявка #AT-1042</CardTitle>
               </CardHeader>
@@ -206,10 +212,24 @@ export default function DesignSystemShowcase() {
                 <BookingPaymentStatusBadge status="pending" />
               </CardContent>
               <CardFooter className="pt-0">
-                <Link href="/tours" className={cn(buttonVariants({ size: "sm" }), "w-full")}>
+                <Link href="/tours" className={cn(buttonVariants({ variant: "primary", size: "sm" }), "w-full")}>
                   Подробнее
                 </Link>
               </CardFooter>
+            </Card>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-3">
+            <Card variant="cabinet" className="p-4 text-sm text-slate">
+              <p className="font-semibold text-charcoal">variant=&quot;cabinet&quot;</p>
+              <p className="mt-1">Кабинет туриста / организатора, rounded-3xl</p>
+            </Card>
+            <Card variant="admin" className="p-4 text-sm text-slate">
+              <p className="font-semibold text-charcoal">variant=&quot;admin&quot;</p>
+              <p className="mt-1">Админ-панель — те же радиусы</p>
+            </Card>
+            <Card variant="hero" className="p-4 text-sm text-slate">
+              <p className="font-semibold text-charcoal">variant=&quot;hero&quot;</p>
+              <p className="mt-1">Герой-блок с градиентом</p>
             </Card>
           </div>
         </div>
@@ -218,33 +238,23 @@ export default function DesignSystemShowcase() {
         <div className="mt-16">
           <h3 className="font-heading text-xl font-bold text-charcoal">Поля форм</h3>
           <div className="mt-6 max-w-md space-y-5 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-            <div>
-              <label htmlFor="ds-name" className="text-sm font-medium text-charcoal">
-                Имя
-              </label>
-              <Input id="ds-name" placeholder="Ваше имя" className="mt-1" />
-            </div>
-            <div>
-              <label htmlFor="ds-message" className="text-sm font-medium text-charcoal">
-                Сообщение
-              </label>
-              <Textarea
-                id="ds-message"
-                rows={3}
-                placeholder="Расскажите о планах..."
-                className="mt-1"
-              />
-            </div>
-            <div>
-              <label htmlFor="ds-region" className="text-sm font-medium text-charcoal">
-                Регион
-              </label>
-              <NativeSelect id="ds-region" className="mt-1" defaultValue="patagonia">
+            <FormField id="ds-name" label="Имя" required>
+              <Input id="ds-name" placeholder="Ваше имя" />
+            </FormField>
+            <FormField
+              id="ds-message"
+              label="Сообщение"
+              hint="Расскажите о планах поездки — мы ответим в течение суток."
+            >
+              <Textarea id="ds-message" rows={3} placeholder="Расскажите о планах..." />
+            </FormField>
+            <FormField id="ds-region" label="Регион">
+              <NativeSelect id="ds-region" defaultValue="patagonia">
                 <option value="patagonia">Патагония</option>
                 <option value="buenos-aires">Буэнос-Айрес</option>
                 <option value="mendoza">Мендоса</option>
               </NativeSelect>
-            </div>
+            </FormField>
             <SwitchField
               checked={switchOn}
               onCheckedChange={setSwitchOn}
@@ -267,7 +277,7 @@ export default function DesignSystemShowcase() {
         {/* Table */}
         <div className="mt-16">
           <h3 className="font-heading text-xl font-bold text-charcoal">Таблица</h3>
-          <div className="mt-6 overflow-hidden rounded-2xl border border-gray-100">
+          <CabinetTableWrap className="mt-6">
             <Table>
               <TableHeader className="bg-pampas/60">
                 <TableRow className="hover:bg-transparent">
@@ -293,7 +303,7 @@ export default function DesignSystemShowcase() {
                 </TableRow>
               </TableBody>
             </Table>
-          </div>
+          </CabinetTableWrap>
         </div>
 
         {/* Badges */}

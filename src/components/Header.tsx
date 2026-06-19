@@ -6,6 +6,7 @@ import { forwardRef, useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, Menu, Search } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
+import ThemeToggle from "@/components/ThemeToggle";
 import ProfileMenu from "@/components/auth/ProfileMenu";
 import { MegaMenuTrigger } from "@/components/navigation/MegaMenuTrigger";
 import { NavOverflowMegaMenuTrigger } from "@/components/navigation/NavOverflowMegaMenuTrigger";
@@ -20,6 +21,12 @@ import { useCanGoBack } from "@/hooks/useCanGoBack";
 import { useSiteHeaderAutoHide } from "@/hooks/useSiteHeaderAutoHide";
 import { useSiteNavLayout } from "@/hooks/useSiteNavLayout";
 import { cn } from "@/lib/cn";
+import {
+  tokenFocusRingClass,
+  tokenHeaderCircleButtonClass,
+  tokenHeaderNavBarClass,
+  tokenHeaderShellClass,
+} from "@/lib/design-tokens";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { isNavSectionActive, resolveNavLabel } from "@/lib/site-nav";
@@ -39,10 +46,7 @@ const CircleButton = forwardRef<
   { href, onClick, ariaLabel, ariaExpanded, ariaControls, children, className },
   ref
 ) {
-  const cls = cn(
-    "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal/[0.06] text-foreground ring-1 ring-charcoal/10 backdrop-blur-sm transition-colors hover:bg-sky/10 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
-    className
-  );
+  const cls = cn(tokenHeaderCircleButtonClass, tokenFocusRingClass, className);
   const aria = {
     "aria-label": ariaLabel,
     ...(ariaExpanded !== undefined ? { "aria-expanded": ariaExpanded } : {}),
@@ -110,7 +114,7 @@ export default function Header() {
             setMobileMenuOpen(false);
             openSiteSearch();
           }}
-          className="mb-3 flex w-full items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-charcoal transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+          className="mb-3 flex w-full items-center gap-3 rounded-card border border-border-subtle bg-surface-elevated px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky dark:border-border-subtle dark:bg-surface-elevated"
         >
           <Search className="h-4 w-4 shrink-0 text-sky" strokeWidth={1.75} aria-hidden />
           Поиск по сайту
@@ -145,10 +149,7 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className={cn(
-        "site-header fixed inset-x-0 top-0 z-50 border-b border-charcoal/[0.06] bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70",
-        !headerVisible && "-translate-y-full"
-      )}
+      className={cn(tokenHeaderShellClass, !headerVisible && "-translate-y-full")}
     >
       <div
         className={cn(
@@ -159,11 +160,11 @@ export default function Header() {
           <div
             className={cn(
               siteViewportInsetClass,
-              "flex items-center justify-between gap-4 py-2 text-[11px] text-slate"
+              "flex items-center justify-between gap-4 py-2 text-2xs text-slate"
             )}
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="font-medium text-foreground/80">Откройте Аргентину 🇦🇷 вместе с нами</span>
+              <span className="font-medium text-foreground/80">{t("header.tagline")}</span>
               <span className="hidden text-charcoal/15 md:inline">|</span>
               {utilityLinks.slice(0, 2).map((link) => (
                 <Link
@@ -188,14 +189,7 @@ export default function Header() {
       </div>
 
       <div className={cn(siteViewportInsetClass, "pb-2.5 pt-3 sm:pb-3 sm:pt-3.5 lg:pt-4")}>
-        <div
-          className={cn(
-            "flex w-full items-center gap-2 rounded-2xl border border-charcoal/[0.07]",
-            "bg-gradient-to-r from-white via-surface-muted/30 to-white",
-            "px-2 py-2.5 shadow-[0_1px_0_rgba(255,255,255,0.8)_inset,0_8px_24px_-12px_rgba(26,26,46,0.12)]",
-            "sm:gap-3 sm:px-3"
-          )}
-        >
+        <div className={tokenHeaderNavBarClass}>
           {canGoBack ? (
             <CircleButton ariaLabel="Назад" onClick={() => router.back()}>
               <ArrowLeft className="h-[18px] w-[18px]" strokeWidth={1.75} />
@@ -268,6 +262,7 @@ export default function Header() {
             >
               <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </CircleButton>
+            <ThemeToggle />
             <LocaleCurrencySwitcher variant="header" />
             <ProfileMenu />
           </div>

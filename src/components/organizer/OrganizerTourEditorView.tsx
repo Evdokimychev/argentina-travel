@@ -1,14 +1,30 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import PublishReadinessPanel from "@/components/organizer/PublishReadinessPanel";
-import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
+import PublishChecklistModal from "@/components/organizer/PublishChecklistModal";
+import TourEditorLivePreview from "@/components/organizer/TourEditorLivePreview";
+import TourEditorMobileBar, {
+  type TourEditorMobilePanelId,
+} from "@/components/organizer/TourEditorMobileBar";
+import TourProfileProgress from "@/components/organizer/TourProfileProgress";
+import { evaluatePublishReadiness } from "@/lib/publish-readiness";
+import { tourProfileCompletionPercent } from "@/lib/tour-profile-completion";
+import { AlertTriangle, ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { SwitchField } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAuth } from "@/context/AuthContext";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import {
@@ -80,8 +96,21 @@ import {
   type OrganizerTourEditorTabId,
   type OrganizerTourStatus,
 } from "@/types/organizer-tour";
+import { isRemoteToursMode } from "@/lib/tour-content-api";
+import {
+  OrganizerDraftConflictError,
+  fetchOrganizerTourDraftSnapshot,
+  patchOrganizerTourDraftRemote,
+} from "@/lib/organizer-tour-draft-api";
+import {
+  clearOrganizerTourDraftSync,
+  enqueueOrganizerTourDraftSync,
+  flushOrganizerTourDraftSyncQueue,
+  hasQueuedOrganizerTourDraftSync,
+} from "@/lib/organizer-tour-draft-sync";
 
 const LANGUAGES: TourLanguage[] = ["Русский", "Испанский", "Английский", "Португальский"];
+type DraftSyncStatus = "saved" | "saving" | "conflict";
 
 function normalizeDraftForSave(draft: OrganizerTourDraft): OrganizerTourDraft {
   return {
@@ -349,6 +378,92 @@ function formatEditorDate(iso: string | null | undefined): string | null {
   return formatted.replace(/\./g, "").replace(" г", " г.");
 }
 
+function toDateValue(iso: string | null | undefined): number | null {
+  if (!iso) return null;
+  const parsed = Date.parse(iso);
+  return Number.isNaN(parsed) ? null : parsed;
+}
+
+function formatEditorDateTime(iso: string | null | undefined): string | null {
+  if (!iso) return null;
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return null;
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
+}
+
+function DraftSyncStatusBadge({ status }: { status: DraftSyncStatus }) {
+  const styles =
+    status === "conflict"
+      ? "border-amber-200 bg-amber-50 text-amber-700"
+      : status === "saving"
+        ? "border-sky-200 bg-sky-50 text-sky-700"
+        : "border-emerald-200 bg-emerald-50 text-emerald-700";
+  const label =
+    status === "conflict" ? "Конфликт" : status === "saving" ? "Сохранение…" : "Сохранено";
+
+  return (
+    <span
+      className={cn(
+        "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold",
+        styles
+      )}
+    >
+      {label}
+    </span>
+  );
+}
+
+function DraftSyncConflictDialog({
+  open,
+  localUpdatedAt,
+  serverUpdatedAt,
+  onOpenChange,
+  onForceSync,
+}: {
+  open: boolean;
+  localUpdatedAt: string | null;
+  serverUpdatedAt: string | null;
+  onOpenChange: (open: boolean) => void;
+  onForceSync: () => void;
+}) {
+  const localLabel = formatEditorDateTime(localUpdatedAt) ?? "неизвестно";
+  const serverLabel = formatEditorDateTime(serverUpdatedAt) ?? "неизвестно";
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <AlertTriangle className="h-5 w-5 text-amber-600" />
+            Конфликт черновика
+          </DialogTitle>
+          <DialogDescription>
+            Черновик изменён в другом сеансе. Выберите, как продолжить работу.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-2 rounded-xl bg-gray-50 px-4 py-3 text-sm text-charcoal">
+          <p>Локальная версия: {localLabel}</p>
+          <p>Версия на сервере: {serverLabel}</p>
+        </div>
+        <DialogFooter>
+          <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            Закрыть
+          </Button>
+          <Button type="button" onClick={onForceSync}>
+            Перезаписать сервер
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function TourEditorActionsMenu({
   isPublished,
   isArchived,
@@ -445,25 +560,25 @@ function TourEditorActionsMenu({
 function TourEditorSidebar({
   draft,
   loading,
-  saved,
-  autoSaving,
+  syncStatus,
   onUnpublish,
   onArchive,
   onClone,
   onDelete,
   onPreview,
   onTabSelect,
+  onOpenPublishChecklist,
 }: {
   draft: OrganizerTourDraft;
   loading: boolean;
-  saved: boolean;
-  autoSaving: boolean;
+  syncStatus: DraftSyncStatus;
   onUnpublish: () => void;
   onArchive: () => void;
   onClone: () => void;
   onDelete: () => void;
   onPreview: () => void;
   onTabSelect: (tabId: OrganizerTourEditorTabId) => void;
+  onOpenPublishChecklist: () => void;
 }) {
   const isPublished = draft.status === "published";
   const platformName = draft.partnerName || "Пора в Аргентину";
@@ -471,7 +586,6 @@ function TourEditorSidebar({
   const tourUrl = draft.isPrivate && draft.privateAccessToken
     ? buildPrivateTourHref(catalogSlug, draft.privateAccessToken)
     : `/tours/${catalogSlug}`;
-  const previewUrl = `/organizer/tours/${draft.id}/preview`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
   const statusLabel = isPublished ? "Опубликовано" : "Черновик";
@@ -479,6 +593,8 @@ function TourEditorSidebar({
   return (
     <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
       <div className="space-y-4">
+        <TourProfileProgress draft={draft} compact />
+
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
             <h2 className="font-heading text-base font-bold text-charcoal">Редактирование тура</h2>
@@ -494,6 +610,14 @@ function TourEditorSidebar({
 
           <PublishReadinessPanel draft={draft} compact onTabSelect={onTabSelect} />
 
+          <button
+            type="button"
+            onClick={onOpenPublishChecklist}
+            className="w-full rounded-xl border border-dashed border-gray-200 px-3 py-2 text-xs font-medium text-brand transition-colors hover:border-brand/30 hover:bg-brand-light/30"
+          >
+            Открыть чек-лист публикации
+          </button>
+
           <Button type="submit" className="h-12 w-full rounded-2xl text-sm" disabled={loading}>
             <Upload className="h-4 w-4" />
             {loading
@@ -503,11 +627,22 @@ function TourEditorSidebar({
                 : "Сохранить черновик"}
           </Button>
 
-          {autoSaving ? (
-            <p className="text-center text-xs text-slate">Автосохранение…</p>
-          ) : saved ? (
-            <p className="text-center text-xs text-emerald-700">Изменения сохранены</p>
-          ) : null}
+          <p
+            className={cn(
+              "text-center text-xs",
+              syncStatus === "conflict"
+                ? "text-amber-700"
+                : syncStatus === "saving"
+                  ? "text-slate"
+                  : "text-emerald-700"
+            )}
+          >
+            {syncStatus === "conflict"
+              ? "Конфликт черновика"
+              : syncStatus === "saving"
+                ? "Сохранение…"
+                : "Сохранено"}
+          </p>
 
           {isPublished && draft.isPrivate ? (
             <div className="rounded-xl bg-amber-50 px-3 py-3 text-sm leading-relaxed text-charcoal">
@@ -541,34 +676,7 @@ function TourEditorSidebar({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-heading text-base font-bold text-charcoal">Предпросмотр тура</h2>
-          <p className="mt-1.5 line-clamp-2 text-xs text-slate">
-            {draft.title.trim() || "Без названия"}
-          </p>
-          <button
-            type="button"
-            onClick={onPreview}
-            className="mt-3 flex w-full items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3 text-left transition-colors hover:border-brand/30 hover:bg-brand-light/40"
-          >
-            <span className="min-w-0">
-              <span className="block truncate text-sm font-semibold text-charcoal">{platformName}</span>
-              <span className="mt-0.5 block text-xs text-slate">Как увидят туристы</span>
-            </span>
-            <Eye className="h-5 w-5 shrink-0 text-brand" aria-hidden />
-          </button>
-          <p className="mt-2 text-xs leading-relaxed text-slate">
-            Откроется в новой вкладке с учётом текущих изменений из редактора.
-          </p>
-          <Link
-            href={previewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
-          >
-            Открыть сохранённую версию
-          </Link>
-        </div>
+        <TourEditorLivePreview draft={draft} onOpenFullPreview={onPreview} className="2xl:hidden" />
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <h2 className="font-heading text-base font-bold text-charcoal">
@@ -614,13 +722,22 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const [activeTab, setActiveTab] = useState<OrganizerTourEditorTabId>("main");
   const [draft, setDraft] = useState<OrganizerTourDraft | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [saved, setSaved] = useState(false);
   const [dirty, setDirty] = useState(false);
-  const [autoSaving, setAutoSaving] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<DraftSyncStatus>("saved");
+  const [conflictDialogOpen, setConflictDialogOpen] = useState(false);
+  const [conflictLocalUpdatedAt, setConflictLocalUpdatedAt] = useState<string | null>(null);
+  const [conflictServerUpdatedAt, setConflictServerUpdatedAt] = useState<string | null>(null);
   const [navStuck, setNavStuck] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<TourEditorMobilePanelId>("editor");
+  const [publishChecklistOpen, setPublishChecklistOpen] = useState(false);
+  const [pendingPublishSave, setPendingPublishSave] = useState(false);
   const navSentinelRef = useRef<HTMLDivElement>(null);
-  const debouncedDraft = useDebouncedValue(draft, 2000);
+  const debouncedDraft = useDebouncedValue(draft, 3000);
+  const serverUpdatedAtRef = useRef<string | null>(null);
+  const initialRemoteSnapshotTourRef = useRef<string | null>(null);
+  const remoteSyncInFlightRef = useRef(false);
+  const lastPersistedDraftRef = useRef<OrganizerTourDraft | null>(null);
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -639,24 +756,190 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
       return;
     }
     setDraft(nextDraft);
+    lastPersistedDraftRef.current = nextDraft;
     setDirty(false);
-    setSaved(true);
+    setSyncStatus(hasQueuedOrganizerTourDraftSync(tourId) ? "saving" : "saved");
+    initialRemoteSnapshotTourRef.current = null;
   }, [router, tourId, user]);
+
+  const canSyncDraftToRemote = useCallback(
+    (nextDraft: OrganizerTourDraft): boolean => {
+      if (!isRemoteToursMode() || !user) return false;
+      if (nextDraft.ownerUserId && nextDraft.ownerUserId !== user.id) return false;
+      return true;
+    },
+    [user]
+  );
+
+  const syncDraftToRemote = useCallback(
+    async (
+      nextDraft: OrganizerTourDraft,
+      options?: { force?: boolean }
+    ): Promise<"synced" | "queued" | "conflict" | "skipped"> => {
+      if (!canSyncDraftToRemote(nextDraft)) {
+        setSyncStatus("saved");
+        return "skipped";
+      }
+
+      const expectedUpdatedAt = serverUpdatedAtRef.current ?? nextDraft.updatedAt ?? null;
+
+      if (remoteSyncInFlightRef.current) {
+        enqueueOrganizerTourDraftSync({
+          tourId: nextDraft.id,
+          draft: nextDraft,
+          expectedUpdatedAt,
+        });
+        setSyncStatus("saving");
+        return "queued";
+      }
+
+      remoteSyncInFlightRef.current = true;
+      setSyncStatus("saving");
+
+      try {
+        const response = await patchOrganizerTourDraftRemote({
+          tourId: nextDraft.id,
+          draft: nextDraft,
+          expectedUpdatedAt,
+          force: options?.force ?? false,
+        });
+        clearOrganizerTourDraftSync(nextDraft.id);
+        serverUpdatedAtRef.current = response.updatedAt ?? nextDraft.updatedAt ?? null;
+        setSyncStatus("saved");
+        return "synced";
+      } catch (syncError) {
+        if (syncError instanceof OrganizerDraftConflictError) {
+          clearOrganizerTourDraftSync(nextDraft.id);
+          setConflictLocalUpdatedAt(nextDraft.updatedAt ?? null);
+          setConflictServerUpdatedAt(syncError.serverUpdatedAt);
+          setConflictDialogOpen(true);
+          setSyncStatus("conflict");
+          return "conflict";
+        }
+
+        enqueueOrganizerTourDraftSync({
+          tourId: nextDraft.id,
+          draft: nextDraft,
+          expectedUpdatedAt,
+        });
+        setSyncStatus("saving");
+        return "queued";
+      } finally {
+        remoteSyncInFlightRef.current = false;
+      }
+    },
+    [canSyncDraftToRemote]
+  );
+
+  const flushDraftSyncQueue = useCallback(
+    async (onlyTourId?: string) => {
+      if (!user || !isRemoteToursMode()) return;
+
+      const results = await flushOrganizerTourDraftSyncQueue(onlyTourId);
+      for (const result of results) {
+        if (result.tourId !== tourId) continue;
+
+        if (result.status === "synced") {
+          serverUpdatedAtRef.current = result.updatedAt;
+          setSyncStatus("saved");
+          continue;
+        }
+
+        if (result.status === "conflict") {
+          setConflictLocalUpdatedAt(lastPersistedDraftRef.current?.updatedAt ?? null);
+          setConflictServerUpdatedAt(result.serverUpdatedAt);
+          setConflictDialogOpen(true);
+          setSyncStatus("conflict");
+          continue;
+        }
+
+        if (result.status === "failed" && hasQueuedOrganizerTourDraftSync(tourId)) {
+          setSyncStatus("saving");
+        }
+      }
+    },
+    [tourId, user]
+  );
+
+  useEffect(() => {
+    if (!user || !isRemoteToursMode()) return;
+
+    const onOnline = () => {
+      void flushDraftSyncQueue();
+    };
+
+    window.addEventListener("online", onOnline);
+    void flushDraftSyncQueue(tourId);
+
+    return () => {
+      window.removeEventListener("online", onOnline);
+    };
+  }, [flushDraftSyncQueue, tourId, user]);
+
+  useEffect(() => {
+    if (!draft || !canSyncDraftToRemote(draft)) return;
+    if (initialRemoteSnapshotTourRef.current === tourId) return;
+    initialRemoteSnapshotTourRef.current = tourId;
+
+    let active = true;
+
+    void (async () => {
+      try {
+        const snapshot = await fetchOrganizerTourDraftSnapshot(tourId);
+        if (!active) return;
+        serverUpdatedAtRef.current = snapshot.updatedAt;
+
+        const localUpdatedAt = toDateValue(draft.updatedAt);
+        const serverUpdatedAt = toDateValue(snapshot.updatedAt);
+        if (
+          serverUpdatedAt != null &&
+          localUpdatedAt != null &&
+          serverUpdatedAt > localUpdatedAt
+        ) {
+          setConflictLocalUpdatedAt(draft.updatedAt ?? null);
+          setConflictServerUpdatedAt(snapshot.updatedAt);
+          setConflictDialogOpen(true);
+          setSyncStatus("conflict");
+        }
+      } catch {
+        // Keep local mode; queue sync on next save/online event.
+      }
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [canSyncDraftToRemote, draft, tourId]);
 
   useEffect(() => {
     if (!debouncedDraft || !dirty || !user || loading) return;
     if (!debouncedDraft.title.trim()) return;
 
-    setAutoSaving(true);
-    const result = saveOrganizerTourDraft(normalizeDraftForSave(debouncedDraft), user);
-    setAutoSaving(false);
+    let active = true;
 
-    if ("error" in result) return;
+    void (async () => {
+      setSyncStatus("saving");
+      const result = saveOrganizerTourDraft(normalizeDraftForSave(debouncedDraft), user, {
+        skipRemoteSync: true,
+      });
 
-    setDraft(result.draft);
-    setSaved(true);
-    setDirty(false);
-  }, [debouncedDraft, dirty, user, loading]);
+      if (!active) return;
+      if ("error" in result) {
+        setError(result.error);
+        setSyncStatus("saved");
+        return;
+      }
+
+      setDraft(result.draft);
+      lastPersistedDraftRef.current = result.draft;
+      setDirty(false);
+      await syncDraftToRemote(result.draft);
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [debouncedDraft, dirty, loading, syncDraftToRemote, user]);
 
   useEffect(() => {
     const sentinel = navSentinelRef.current;
@@ -698,9 +981,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   }
 
   function markDirty() {
-    setSaved(false);
     setDirty(true);
     setError(null);
+    if (syncStatus !== "conflict") {
+      setSyncStatus("saving");
+    }
   }
 
   function updateDraft(patch: Partial<OrganizerTourDraft>) {
@@ -741,26 +1026,118 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     markDirty();
   }
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    if (!draft) return;
+  async function persistDraft(options?: {
+    forcePublished?: boolean;
+    draftOverride?: OrganizerTourDraft;
+    forceRemoteSync?: boolean;
+  }) {
+    const draftToPersist = options?.draftOverride ?? draft;
+    if (!draftToPersist) return false;
 
     setLoading(true);
     setError(null);
-    setSaved(false);
+    setSyncStatus("saving");
 
-    const result = saveOrganizerTourDraft(normalizeDraftForSave(draft), user);
+    const result = saveOrganizerTourDraft(normalizeDraftForSave(draftToPersist), user, {
+      skipRemoteSync: true,
+    });
 
     setLoading(false);
 
     if ("error" in result) {
       setError(result.error);
-      return;
+      setSyncStatus("saved");
+      return false;
     }
 
     setDraft(result.draft);
-    setSaved(true);
+    lastPersistedDraftRef.current = result.draft;
     setDirty(false);
+    const remoteStatus = await syncDraftToRemote(result.draft, {
+      force: options?.forceRemoteSync,
+    });
+    if (remoteStatus === "conflict") {
+      return false;
+    }
+    setPendingPublishSave(false);
+    if (options?.forcePublished) {
+      setPublishChecklistOpen(false);
+    }
+    return true;
+  }
+
+  function attemptPublishFlow(onProceed: () => void) {
+    if (!draft) return;
+    const readiness = evaluatePublishReadiness(draft);
+    if (!readiness.ready || readiness.warningCount > 0) {
+      setPendingPublishSave(true);
+      setPublishChecklistOpen(true);
+      return;
+    }
+    onProceed();
+  }
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!draft) return;
+
+    const wantsPublish = draft.status === "published" && !draft.archived;
+    if (wantsPublish) {
+      const readiness = evaluatePublishReadiness(draft);
+      if (!readiness.ready) {
+        setPendingPublishSave(true);
+        setPublishChecklistOpen(true);
+        return;
+      }
+      if (readiness.warningCount > 0) {
+        setPendingPublishSave(true);
+        setPublishChecklistOpen(true);
+        return;
+      }
+    }
+
+    await persistDraft();
+  }
+
+  async function handleConfirmPublishFromModal() {
+    if (!draft) return;
+    const readiness = evaluatePublishReadiness(draft);
+    if (!readiness.ready) return;
+
+    const nextDraft: OrganizerTourDraft = {
+      ...draft,
+      status: "published",
+      archived: false,
+    };
+    setDraft(nextDraft);
+    setDirty(true);
+    await persistDraft({ forcePublished: true, draftOverride: nextDraft });
+  }
+
+  async function handleForceSyncAfterConflict() {
+    if (!lastPersistedDraftRef.current) {
+      setConflictDialogOpen(false);
+      return;
+    }
+
+    const result = await syncDraftToRemote(lastPersistedDraftRef.current, {
+      force: true,
+    });
+    if (result !== "conflict") {
+      setConflictDialogOpen(false);
+      if (hasQueuedOrganizerTourDraftSync(lastPersistedDraftRef.current.id)) {
+        setSyncStatus("saving");
+      }
+    }
+  }
+
+  function handleStatusChange(nextStatus: OrganizerTourStatus) {
+    if (!draft) return;
+    if (nextStatus === "published") {
+      attemptPublishFlow(() => updateDraft({ status: nextStatus }));
+      return;
+    }
+    updateDraft({ status: nextStatus });
   }
 
   function handlePreview() {
@@ -794,9 +1171,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
   const variantSync = TOUR_VARIANT_SYNC[draft.id];
   const catalogSlug = getCatalogSlug(draft);
+  const completionPercent = tourProfileCompletionPercent(draft);
+  const showEditorPanels = mobilePanel === "editor";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 pb-24 xl:pb-0">
       <div className="rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
         <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 items-start gap-3">
@@ -814,6 +1193,9 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             <h1 className="font-display text-lg font-bold leading-snug text-charcoal sm:text-xl lg:text-2xl">
               {draft.title}
             </h1>
+            <div className="mt-1.5">
+              <DraftSyncStatusBadge status={syncStatus} />
+            </div>
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-2 lg:pt-1">
@@ -849,6 +1231,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
       <div ref={navSentinelRef} className="h-px" aria-hidden />
 
+      {showEditorPanels ? (
       <nav
         aria-label="Разделы редактора тура"
         className={cn(
@@ -877,8 +1260,41 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           </div>
         </div>
       </nav>
+      ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] 2xl:grid-cols-[minmax(0,1fr)_minmax(260px,300px)_260px] xl:items-start">
+        {mobilePanel === "status" ? (
+          <div className="min-w-0 space-y-4 xl:hidden">
+            <TourProfileProgress draft={draft} />
+            <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+            <button
+              type="button"
+              onClick={() => setPublishChecklistOpen(true)}
+              className="w-full rounded-2xl border border-dashed border-brand/30 bg-brand-light/20 px-4 py-3 text-sm font-medium text-brand"
+            >
+              Чек-лист перед публикацией
+            </button>
+            <Button type="submit" className="h-12 w-full rounded-2xl" disabled={loading}>
+              <Upload className="h-4 w-4" />
+              {loading
+                ? "Сохраняем…"
+                : draft.status === "published"
+                  ? "Сохранить и опубликовать"
+                  : "Сохранить черновик"}
+            </Button>
+            <div className="flex justify-center">
+              <DraftSyncStatusBadge status={syncStatus} />
+            </div>
+          </div>
+        ) : null}
+
+        {mobilePanel === "preview" ? (
+          <div className="min-w-0 xl:hidden">
+            <TourEditorLivePreview draft={draft} onOpenFullPreview={handlePreview} />
+          </div>
+        ) : null}
+
+        {showEditorPanels ? (
         <div className="min-w-0 space-y-6">
             {activeTab === "main" ? (
               <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
@@ -1287,6 +1703,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 durationNights={draft.durationNights}
                 priceCurrency={draft.priceCurrency}
                 defaultPriceUsd={draft.priceUsd || draft.individualPriceUsd}
+                tourId={draft.id}
                 onDatesChange={(groupTourDates) =>
                   updateDraft({
                     groupTourDates,
@@ -1450,7 +1867,16 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "publish" ? (
               <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
+                <TourProfileProgress draft={draft} />
                 <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+
+                <button
+                  type="button"
+                  onClick={() => setPublishChecklistOpen(true)}
+                  className="w-full rounded-xl border border-dashed border-gray-200 px-4 py-3 text-sm font-medium text-brand transition-colors hover:border-brand/30 hover:bg-brand-light/30"
+                >
+                  Открыть чек-лист публикации
+                </button>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
@@ -1459,7 +1885,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                       id="tour-status"
                       value={draft.status}
                       onChange={(event) =>
-                        updateDraft({ status: event.target.value as OrganizerTourStatus })
+                        handleStatusChange(event.target.value as OrganizerTourStatus)
                       }
                       className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     >
@@ -1513,21 +1939,37 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               </div>
             ) : null}
 
-            {autoSaving ? (
-              <div className="rounded-xl bg-gray-50 px-3 py-2.5 text-sm text-slate xl:hidden">
-                Автосохранение…
-              </div>
-            ) : saved ? (
-              <div className="rounded-xl bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800 xl:hidden">
-                Изменения сохранены
-              </div>
-            ) : null}
+            <div
+              className={cn(
+                "rounded-xl px-3 py-2.5 text-sm xl:hidden",
+                syncStatus === "conflict"
+                  ? "bg-amber-50 text-amber-700"
+                  : syncStatus === "saving"
+                    ? "bg-gray-50 text-slate"
+                    : "bg-emerald-50 text-emerald-800"
+              )}
+            >
+              {syncStatus === "conflict"
+                ? "Обнаружен конфликт черновика"
+                : syncStatus === "saving"
+                  ? "Сохранение…"
+                  : "Сохранено"}
+            </div>
           </div>
+        ) : null}
+
+        <aside
+          className={cn(
+            "hidden 2xl:sticky 2xl:block 2xl:h-fit 2xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] 2xl:self-start 2xl:overflow-y-auto",
+            siteStickyBelowHeaderInsetClass
+          )}
+        >
+          <TourEditorLivePreview draft={draft} onOpenFullPreview={handlePreview} />
+        </aside>
 
           <TourEditorSidebar
             draft={draft}
-            saved={saved}
-            autoSaving={autoSaving}
+            syncStatus={syncStatus}
             loading={loading}
             onUnpublish={() => updateDraft({ status: "draft" })}
             onArchive={() => updateDraft({ archived: true, status: "draft" })}
@@ -1535,8 +1977,42 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             onDelete={handleDelete}
             onPreview={handlePreview}
             onTabSelect={setActiveTab}
+            onOpenPublishChecklist={() => setPublishChecklistOpen(true)}
           />
         </div>
+
+      <PublishChecklistModal
+        open={publishChecklistOpen}
+        draft={draft}
+        onOpenChange={(open) => {
+          setPublishChecklistOpen(open);
+          if (!open) setPendingPublishSave(false);
+        }}
+        onTabSelect={(tabId) => {
+          setActiveTab(tabId);
+          setMobilePanel("editor");
+        }}
+        onPublishAnyway={
+          pendingPublishSave && evaluatePublishReadiness(draft).ready
+            ? handleConfirmPublishFromModal
+            : undefined
+        }
+        allowPublishDespiteWarnings
+      />
+
+      <DraftSyncConflictDialog
+        open={conflictDialogOpen}
+        localUpdatedAt={conflictLocalUpdatedAt}
+        serverUpdatedAt={conflictServerUpdatedAt}
+        onOpenChange={setConflictDialogOpen}
+        onForceSync={handleForceSyncAfterConflict}
+      />
+
+      <TourEditorMobileBar
+        active={mobilePanel}
+        onChange={setMobilePanel}
+        completionPercent={completionPercent}
+      />
     </form>
   );
 }

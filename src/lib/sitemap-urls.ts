@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/data/blog";
+import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { FLIGHT_POPULAR_ROUTES } from "@/data/flight-popular-routes";
 import { marketplaceTours } from "@/data/marketplace-tours";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
@@ -12,12 +13,18 @@ import { SEED_USERS } from "@/lib/auth-store";
 import {
   contentPageHref,
   getAllContentPages,
+  getPagesBySection,
 } from "@/lib/content-pages";
+import { listPublishedGuideSlugs } from "@/lib/cms/guide-resolver";
+import { listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { getAllGuideTopics, guideTopicHref } from "@/lib/guide-topics";
 import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
-import { getAllDestinations } from "@/lib/destinations";
+import { listPublishedDestinationSlugs } from "@/lib/cms/destination-resolver";
+import { listPublishedPlaceSlugs } from "@/lib/cms/place-resolver";
 import { flattenSiteNavSections } from "@/lib/site-nav";
+import { expandI18nSitemapPaths } from "@/lib/i18n/sitemap-locales";
 import { absoluteUrl } from "@/lib/site-url";
+import type { BlogPost } from "@/types";
 
 function isIndexableInternalPath(href: string): boolean {
   if (!href.startsWith("/")) return false;
@@ -43,26 +50,23 @@ function toSitemapEntry(
   };
 }
 
-export async function collectTourSitemapPaths(): Promise<string[]> {
-  const staticPaths = marketplaceTours.map((tour) => `/tours/${tour.slug}`);
-
+async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
   try {
-    const { isSupabaseToursEnabled } = await import("@/lib/auth-mode");
-    if (isSupabaseToursEnabled()) {
-      const { fetchPublishedSlugsServer } = await import("@/lib/tour-content-server");
-      const slugs = await fetchPublishedSlugsServer();
-      if (slugs.length > 0) {
-        return uniquePaths([
-          ...staticPaths,
-          ...slugs.map((slug) => `/tours/${slug}`),
-        ]);
-      }
-    }
+    const mergedCatalog = await resolveBlogCatalog();
+    return mergedCatalog.length > 0 ? mergedCatalog : blogPosts;
   } catch {
-    // use static slugs only
+    return blogPosts;
   }
+}
 
-  return staticPaths;
+export async function collectTourSitemapPaths(): Promise<string[]> {
+  try {
+    const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
+    const slugs = await fetchCutoverPublishedTourSlugs();
+    return uniquePaths(slugs.map((slug) => `/tours/${slug}`));
+  } catch {
+    return marketplaceTours.map((tour) => `/tours/${tour.slug}`);
+  }
 }
 
 export async function collectExcursionSitemapPaths(): Promise<string[]> {
@@ -100,11 +104,9 @@ export async function collectPlacesSitemapPaths(): Promise<string[]> {
   const paths = ["/places", "/collections", "/itineraries"];
 
   try {
-    const { fetchPlaceSlugsServer, fetchCollectionsServer, fetchItinerariesServer } = await import(
-      "@/lib/places-repository"
-    );
+    const { fetchCollectionsServer, fetchItinerariesServer } = await import("@/lib/places-repository");
     const [placeSlugs, collections, itineraries] = await Promise.all([
-      fetchPlaceSlugsServer(),
+      listPublishedPlaceSlugs(),
       fetchCollectionsServer(),
       fetchItinerariesServer(),
     ]);
@@ -125,7 +127,7 @@ export async function collectPlacesSitemapPaths(): Promise<string[]> {
   return uniquePaths(paths);
 }
 
-export async function collectSitemapPaths(): Promise<string[]> {
+export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
     .filter(isIndexableInternalPath);
@@ -138,13 +140,13 @@ export async function collectSitemapPaths(): Promise<string[]> {
   const tourPaths = await collectTourSitemapPaths();
   const excursionPaths = await collectExcursionSitemapPaths();
   const placesPaths = await collectPlacesSitemapPaths();
-  const blogPaths = blogPosts.map((post) => `/blog/${post.slug}`);
-  const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
+  const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
+  const blogPaths = blogCatalog.map((post) => `/blog/${post.slug}`);
+  const immigrationPaths = getPagesBySection("immigration").map((page) => contentPageHref(page));
+  const guidePaths = (await listPublishedGuideSlugs()).map((slug) => `/guide/${slug}`);
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
-  const destinationPaths = getAllDestinations().map(
-    (destination) => `/destinations/${destination.id}`
-  );
-  const legalPaths = Object.values(LEGAL_DOCUMENTS).map((doc) => `/legal/${doc.slug}`);
+  const destinationPaths = (await listPublishedDestinationSlugs()).map((slug) => `/destinations/${slug}`);
+  const legalPaths = (await listPublishedLegalSlugs()).map((slug) => `/legal/${slug}`);
   const flightRoutePaths = FLIGHT_POPULAR_ROUTES.map((route) => `/flights/${route.id}`);
   const organizerPaths = SEED_USERS.filter((user) => user.roles?.includes("organizer")).map(
     (user) => `/organizers/${user.id}`
@@ -157,7 +159,8 @@ export async function collectSitemapPaths(): Promise<string[]> {
     ...excursionPaths,
     ...placesPaths,
     ...blogPaths,
-    ...contentPaths,
+    ...immigrationPaths,
+    ...guidePaths,
     ...guideTopicPaths,
     GUIDE_ABOUT_ARGENTINA_PATH,
     ...destinationPaths,
@@ -171,12 +174,13 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const contentUpdatedAt = new Map(
     getAllContentPages().map((page) => [contentPageHref(page), page.updatedAt])
   );
-  const blogUpdatedAt = new Map(blogPosts.map((post) => [`/blog/${post.slug}`, post.date]));
+  const blogCatalog = await collectBlogSitemapCatalog();
+  const blogUpdatedAt = new Map(blogCatalog.map((post) => [`/blog/${post.slug}`, post.date]));
   const legalUpdatedAt = new Map(
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const paths = await collectSitemapPaths();
+  const paths = expandI18nSitemapPaths(await collectSitemapPaths({ blogCatalog }));
 
   return paths.map((path) => {
     const lastModified =

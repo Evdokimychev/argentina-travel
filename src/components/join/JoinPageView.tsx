@@ -21,7 +21,6 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { storeAuthNextPath } from "@/lib/auth-redirect";
 import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
-import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
@@ -29,6 +28,8 @@ import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { FormField } from "@/components/ui/form-field";
 import {
   SITE_EMAIL,
   SITE_PHONES,
@@ -47,6 +48,7 @@ import { cn } from "@/lib/cn";
 import { getPlaceCoverAlt, getPlaceCoverImage } from "@/lib/media-resolver";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import { CARD_HOVER } from "@/styles/design-tokens";
+import { userHasAccountRole } from "@/types/user";
 
 function SectionLabel({
   children,
@@ -116,38 +118,51 @@ function HeroHighlightCard({
 }
 
 export default function JoinPageView() {
-  const { openAuth } = useAuth();
+  const { user, openAuth } = useAuth();
   const [openFaqId, setOpenFaqId] = useState<string | null>(JOIN_FAQ[0]?.id ?? null);
-  const [phone, setPhone] = useState("");
-
-  function openOrganizerRegistration() {
-    storeAuthNextPath("/organizer/tours?welcome=1");
-    openAuth("organizer");
+  function focusApplicationForm() {
+    document.getElementById("join-application")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+  function handleStartApplication() {
+    if (user && userHasAccountRole(user, "organizer")) {
+      window.location.assign("/organizer");
+      return;
+    }
+    if (user) {
+      focusApplicationForm();
+      return;
+    }
+    storeAuthNextPath("/join#join-application");
+    openAuth("default");
   }
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
   const feedback = useSiteFeedback();
 
-  async function handleContactSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleApplicationSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (!user) {
+      storeAuthNextPath("/join#join-application");
+      openAuth("default");
+      return;
+    }
+
     setSubmitting(true);
     setSubmitError(null);
 
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const name = String(formData.get("name") ?? "").trim();
+    const companyName = String(formData.get("companyName") ?? "").trim();
+    const description = String(formData.get("description") ?? "").trim();
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/api/organizer-applications", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name,
-          phone,
-          organizerApplication: true,
-          message: "Заявка со страницы «Стать организатором»",
-          pageUrl: typeof window !== "undefined" ? window.location.href : null,
+          companyName,
+          description,
         }),
       });
 
@@ -159,13 +174,13 @@ export default function JoinPageView() {
       setSubmitted(true);
       feedback.success({
         title: "Заявка отправлена",
-        description: "Мы свяжемся с вами в ближайшее время.",
-        action: { label: "Страница контактов", href: "/contacts" },
+        description: "Мы проверим анкету и пришлём ответ на вашу почту.",
+        action: { label: "Перейти в профиль", href: "/profile" },
       });
     } catch (error) {
       const normalized = normalizeSiteError(error, {
         title: "Не удалось отправить заявку",
-        steps: ["Проверьте имя и телефон", "Попробуйте ещё раз или напишите в WhatsApp"],
+        steps: ["Проверьте поля анкеты", "Попробуйте ещё раз или напишите в WhatsApp"],
         action: { label: "Контакты", href: "/contacts" },
       });
       setSubmitError(normalized);
@@ -220,9 +235,13 @@ export default function JoinPageView() {
                 <Button
                   size="lg"
                   className="rounded-full bg-sun text-charcoal hover:bg-sun-dark"
-                  onClick={openOrganizerRegistration}
+                  onClick={handleStartApplication}
                 >
-                  Присоединиться
+                  {user && userHasAccountRole(user, "organizer")
+                    ? "Открыть кабинет"
+                    : user
+                      ? "Подать заявку"
+                      : "Войти и подать заявку"}
                   <ArrowRight className="h-4 w-4" />
                 </Button>
                 <a
@@ -239,8 +258,7 @@ export default function JoinPageView() {
               </div>
 
               <p className="mt-5 text-sm text-white/70">
-                Регистрация за пару минут · Размещение бесплатно · Комиссия только за состоявшиеся
-                поездки
+                Анкета за пару минут · Размещение бесплатно · Комиссия только за состоявшиеся поездки
               </p>
             </div>
 
@@ -374,9 +392,9 @@ export default function JoinPageView() {
               <Button
                 size="lg"
                 className="mt-8 rounded-full bg-white text-brand hover:bg-brand-light"
-                onClick={openOrganizerRegistration}
+                onClick={handleStartApplication}
               >
-                Стать автором
+                Подать заявку
               </Button>
             </CardContent>
           </Card>
@@ -441,8 +459,8 @@ export default function JoinPageView() {
         </ol>
 
         <div className="mt-10 text-center">
-          <Button size="lg" className="rounded-full px-10" onClick={openOrganizerRegistration}>
-            Зарегистрироваться
+          <Button size="lg" className="rounded-full px-10" onClick={handleStartApplication}>
+            Подать заявку
           </Button>
         </div>
       </section>
@@ -548,24 +566,28 @@ export default function JoinPageView() {
               </a>
             </div>
 
-            <div className="bg-white p-8 sm:p-10 lg:p-12">
+            <div id="join-application" className="bg-white p-8 sm:p-10 lg:p-12">
               {submitted ? (
                 <InlineFeedback
                   variant="success"
-                  title="Спасибо за заявку!"
-                  description="Мы свяжемся с вами в ближайшее время."
-                  action={{ label: "Страница контактов", href: "/contacts" }}
+                  title="Спасибо! Заявка принята"
+                  description="После проверки анкеты мы пришлём результат на вашу почту и откроем доступ к кабинету организатора."
+                  action={{ label: "Перейти в профиль", href: "/profile" }}
                   className="my-8"
                 />
               ) : (
                 <>
                   <h3 className="font-heading text-lg font-bold text-charcoal">
-                    Оставить заявку
+                    Анкета организатора
                   </h3>
                   <p className="mt-1 text-sm text-slate">
-                    Перезвоним или напишем, когда будем на связи
+                    {user && userHasAccountRole(user, "organizer")
+                      ? "Роль организатора уже подключена. Вы можете перейти в кабинет."
+                      : user
+                      ? "Расскажите о вашем проекте. Проверка обычно занимает 1–2 рабочих дня."
+                      : "Войдите в аккаунт туриста, чтобы отправить анкету на проверку."}
                   </p>
-                  <form onSubmit={handleContactSubmit} className="mt-6 space-y-5">
+                  <form onSubmit={handleApplicationSubmit} className="mt-6 space-y-5">
                     {submitError ? (
                       <InlineFeedback
                         variant="error"
@@ -575,37 +597,45 @@ export default function JoinPageView() {
                         action={submitError.action}
                       />
                     ) : null}
-                    <div>
-                      <label htmlFor="join-name" className="block text-sm font-medium text-charcoal">
-                        Имя
-                      </label>
+                    <FormField id="join-company-name" label="Название проекта или компании" required>
                       <Input
-                        id="join-name"
-                        name="name"
+                        name="companyName"
                         required
-                        placeholder="Ваше имя"
-                        className="mt-1.5"
+                        minLength={2}
+                        placeholder="Например: Patagonia Trails"
+                        disabled={!user || userHasAccountRole(user, "organizer") || submitting}
                       />
-                    </div>
-                    <div>
-                      <label htmlFor="join-phone" className="block text-sm font-medium text-charcoal">
-                        Номер телефона
-                      </label>
-                      <PhoneCountryInput
-                        id="join-phone"
-                        value={phone}
-                        onChange={setPhone}
-                        className="mt-1.5"
+                    </FormField>
+                    <FormField id="join-description" label="Опишите ваш опыт и форматы туров" required>
+                      <Textarea
+                        name="description"
+                        required
+                        minLength={30}
+                        rows={5}
+                        placeholder="Какие маршруты вы ведёте, какой у вас опыт и чем ваш формат полезен путешественникам."
+                        disabled={!user || userHasAccountRole(user, "organizer") || submitting}
                       />
-                    </div>
+                    </FormField>
+                    {user ? (
+                      <p className="rounded-xl bg-gray-50 px-3 py-2 text-xs text-slate">
+                        Анкета будет отправлена от аккаунта{" "}
+                        <span className="font-medium text-charcoal">{user.fullName}</span>. Контакты
+                        для связи: {user.email || "email не указан"}.
+                      </p>
+                    ) : null}
                     <Button
                       type="submit"
                       size="lg"
                       className="w-full rounded-full"
                       loading={submitting}
-                      loadingLabel="Отправка…"
+                      loadingLabel="Отправляем…"
+                      disabled={!user || userHasAccountRole(user, "organizer")}
                     >
-                      Отправить
+                      {user && userHasAccountRole(user, "organizer")
+                        ? "У вас уже есть доступ"
+                        : user
+                          ? "Отправить анкету"
+                          : "Войти для отправки"}
                     </Button>
                   </form>
                 </>

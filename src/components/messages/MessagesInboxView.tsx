@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MessageCircle, Send } from "lucide-react";
@@ -11,7 +11,17 @@ import { useAuth } from "@/context/AuthContext";
 import { getUserBookings } from "@/lib/bookings-store";
 import { apiFetchUserBookings, isRemoteBookingsMode } from "@/lib/bookings-api";
 import { formatBookingTourDates } from "@/lib/booking-display";
+import {
+  apiFetchConversationInbox,
+  apiFetchConversationMessages,
+  apiGetConversationByBooking,
+  apiMarkConversationMessagesRead,
+  apiSendConversationMessage,
+  isRemoteMessagingMode,
+} from "@/lib/conversations-api";
 import { getTourDetail } from "@/lib/tours";
+import { useConversationInboxRealtime } from "@/hooks/useConversationInboxRealtime";
+import { useConversationRealtime } from "@/hooks/useConversationRealtime";
 import {
   createOrGetThread,
   getThreadMessages,
@@ -21,6 +31,7 @@ import {
   sendMessage,
 } from "@/lib/messages-store";
 import { MESSAGES_UPDATED_EVENT, type MessageSenderRole, type MessageThread } from "@/types/messages";
+import type { ConversationMessage, ConversationThread } from "@/types/conversations";
 import type { Booking } from "@/types/tourist";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
@@ -29,6 +40,14 @@ interface MessagesInboxViewProps {
   role: MessageSenderRole;
   basePath: "/profile/messages" | "/organizer/messages";
 }
+
+type InboxMessage = {
+  id: string;
+  senderRole: MessageSenderRole;
+  senderUserId: string;
+  body: string;
+  createdAt: string;
+};
 
 function formatMessageTime(iso: string): string {
   const date = new Date(iso);
@@ -90,8 +109,11 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const remoteMode = isRemoteMessagingMode();
   const [threads, setThreads] = useState<MessageThread[]>([]);
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
+  const [messages, setMessages] = useState<InboxMessage[]>([]);
+  const [loadingMessages, setLoadingMessages] = useState(false);
   const [draft, setDraft] = useState("");
   const [composeError, setComposeError] = useState<string | null>(null);
   const [newTourSlug, setNewTourSlug] = useState("");
@@ -104,20 +126,70 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
   const presetBookingId = searchParams.get("booking")?.trim();
   const presetThreadId = searchParams.get("thread")?.trim();
 
-  function refreshThreads() {
-    if (!user) return;
+  const dispatchMessagesUpdated = useCallback(() => {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent(MESSAGES_UPDATED_EVENT));
+    }
+  }, []);
+
+  const refreshThreads = useCallback(async () => {
+    const userId = user?.id;
+    if (!userId) {
+      setThreads([]);
+      return;
+    }
+
+    if (remoteMode) {
+      try {
+        const summary = await apiFetchConversationInbox(role, 50);
+        setThreads(summary.threads);
+        return;
+      } catch {
+        setThreads([]);
+        return;
+      }
+    }
+
     const list =
       role === "organizer"
-        ? getThreadsForOrganizer(user.id)
-        : getThreadsForTourist(user.id);
+        ? getThreadsForOrganizer(userId)
+        : getThreadsForTourist(userId);
     setThreads(list);
-  }
+  }, [remoteMode, role, user]);
+
+  const activeThread = useMemo(
+    () => threads.find((thread) => thread.id === activeThreadId) ?? null,
+    [threads, activeThreadId]
+  );
+
+  const activeRealtimeThread = useMemo<ConversationThread | null>(() => {
+    if (!remoteMode || !activeThread) return null;
+    return {
+      id: activeThread.id,
+      bookingId: activeThread.bookingId ?? null,
+      expertInquiryId: null,
+      touristUserId: activeThread.touristUserId,
+      organizerUserId: activeThread.organizerUserId,
+      createdAt: activeThread.createdAt,
+      updatedAt: activeThread.updatedAt,
+    };
+  }, [remoteMode, activeThread]);
 
   useEffect(() => {
-    refreshThreads();
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshThreads);
-    return () => window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshThreads);
-  }, [user, role]);
+    if (!user) {
+      setThreads([]);
+      return;
+    }
+
+    void refreshThreads();
+
+    const onLocalEvent = () => {
+      void refreshThreads();
+    };
+
+    window.addEventListener(MESSAGES_UPDATED_EVENT, onLocalEvent);
+    return () => window.removeEventListener(MESSAGES_UPDATED_EVENT, onLocalEvent);
+  }, [refreshThreads, user]);
 
   useEffect(() => {
     if (presetThreadId) {
@@ -139,6 +211,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
 
   useEffect(() => {
     if (!user || role !== "tourist") return;
+    const userId = user.id;
 
     function refreshBookings() {
       if (isRemoteBookingsMode()) {
@@ -147,7 +220,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
           .catch(() => setBookings([]));
         return;
       }
-      setBookings(getUserBookings(user!.id));
+      setBookings(getUserBookings(userId));
     }
 
     refreshBookings();
@@ -159,40 +232,150 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
     if (booking) setNewTourSlug(booking.tourSlug);
   }, [selectedBookingId, bookings]);
 
-  const activeThread = useMemo(
-    () => threads.find((thread) => thread.id === activeThreadId) ?? null,
-    [threads, activeThreadId]
-  );
-
-  const messages = activeThread ? getThreadMessages(activeThread.id) : [];
-
   useEffect(() => {
-    if (!user || !activeThread) return;
+    if (!user || !activeThread) {
+      setMessages([]);
+      return;
+    }
+    const userId = user.id;
+
+    if (remoteMode) {
+      setLoadingMessages(true);
+      void apiFetchConversationMessages(activeThread.id)
+        .then((remoteMessages) => {
+          setMessages(
+            remoteMessages.map((message) => ({
+              id: message.id,
+              senderRole: message.senderRole,
+              senderUserId: message.senderId,
+              body: message.body,
+              createdAt: message.createdAt,
+            }))
+          );
+
+          const unreadIds = remoteMessages
+            .filter((message) => message.senderRole !== role)
+            .map((message) => message.id);
+
+          if (unreadIds.length > 0) {
+            void apiMarkConversationMessagesRead(activeThread.id, unreadIds).then(() => {
+              void refreshThreads();
+              dispatchMessagesUpdated();
+            });
+          }
+        })
+        .catch(() => setMessages([]))
+        .finally(() => setLoadingMessages(false));
+      return;
+    }
+
+    setMessages(
+      getThreadMessages(activeThread.id).map((message) => ({
+        id: message.id,
+        senderRole: message.senderRole,
+        senderUserId: message.senderUserId,
+        body: message.body,
+        createdAt: message.createdAt,
+      }))
+    );
+
     markThreadRead({
       threadId: activeThread.id,
       readerRole: role,
-      readerUserId: user.id,
+      readerUserId: userId,
     });
-  }, [activeThread?.id, user, role]);
+  }, [activeThread?.id, dispatchMessagesUpdated, refreshThreads, remoteMode, role, user]);
 
-  function handleSend() {
+  useConversationRealtime(
+    activeRealtimeThread,
+    {
+      onMessage: (message: ConversationMessage) => {
+        setMessages((current) => {
+          if (current.some((entry) => entry.id === message.id)) return current;
+          return [...current, {
+            id: message.id,
+            senderRole: message.senderRole,
+            senderUserId: message.senderId,
+            body: message.body,
+            createdAt: message.createdAt,
+          }].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+        });
+
+        if (message.senderRole !== role && activeRealtimeThread) {
+          void apiMarkConversationMessagesRead(activeRealtimeThread.id, [message.id]).catch(
+            () => undefined
+          );
+        }
+
+        void refreshThreads();
+        dispatchMessagesUpdated();
+      },
+    },
+    user?.id
+  );
+
+  useConversationInboxRealtime(Boolean(user && remoteMode), () => {
+    void refreshThreads();
+    dispatchMessagesUpdated();
+  });
+
+  async function handleSend() {
     if (!user || !activeThread) return;
+    const userId = user.id;
+
+    const body = draft.trim();
+    if (!body) return;
+
+    if (remoteMode) {
+      try {
+        const message = await apiSendConversationMessage(activeThread.id, body);
+        setMessages((current) => [
+          ...current,
+          {
+            id: message.id,
+            senderRole: message.senderRole,
+            senderUserId: message.senderId,
+            body: message.body,
+            createdAt: message.createdAt,
+          },
+        ]);
+        setDraft("");
+        await refreshThreads();
+        dispatchMessagesUpdated();
+      } catch {
+        // Ошибку отдаст API при повторной попытке, UI не блокируем.
+      }
+      return;
+    }
+
     const sent = sendMessage({
       threadId: activeThread.id,
       senderRole: role,
-      senderUserId: user.id,
-      body: draft,
+      senderUserId: userId,
+      body,
     });
     if (!sent) return;
     setDraft("");
-    refreshThreads();
+    setMessages((current) => [
+      ...current,
+      {
+        id: sent.id,
+        senderRole: sent.senderRole,
+        senderUserId: sent.senderUserId,
+        body: sent.body,
+        createdAt: sent.createdAt,
+      },
+    ]);
+    void refreshThreads();
   }
 
-  function handleStartThread() {
+  async function handleStartThread() {
     if (!user) return;
+    const userId = user.id;
+
     const slug = newTourSlug.trim();
     const body = newMessage.trim();
-    if (!slug) {
+    if (!slug && !remoteMode) {
       setComposeError("Выберите бронирование или откройте диалог со страницы тура");
       return;
     }
@@ -201,9 +384,33 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
       return;
     }
 
+    if (remoteMode) {
+      const bookingId = (selectedBookingId || presetBookingId || "").trim();
+      if (!bookingId) {
+        setComposeError("Для переписки нужна заявка. Выберите бронирование ниже.");
+        return;
+      }
+
+      try {
+        const thread = await apiGetConversationByBooking(bookingId);
+        await apiSendConversationMessage(thread.id, body);
+        setComposeError(null);
+        setNewMessage("");
+        await refreshThreads();
+        dispatchMessagesUpdated();
+        setActiveThreadId(thread.id);
+        router.replace(`${basePath}?thread=${thread.id}`);
+      } catch (error) {
+        setComposeError(
+          error instanceof Error ? error.message : "Не удалось начать переписку"
+        );
+      }
+      return;
+    }
+
     const thread = createOrGetThread({
       tourSlug: slug,
-      touristUserId: user.id,
+      touristUserId: userId,
       touristName: user.fullName,
       touristEmail: user.email,
       bookingId: selectedBookingId || presetBookingId,
@@ -212,7 +419,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
 
     setComposeError(null);
     setNewMessage("");
-    refreshThreads();
+    void refreshThreads();
     setActiveThreadId(thread.id);
     router.replace(`${basePath}?thread=${thread.id}`);
   }
@@ -259,15 +466,27 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
             </label>
           ) : (
             <p className="mt-3 text-sm text-slate">
-              Бронирований пока нет.{" "}
-              <Link href="/tours" className={cabinetLinkClass}>
-                Выберите тур
-              </Link>{" "}
-              или{" "}
-              <Link href="/booking/find" className={cabinetLinkClass}>
-                найдите заявку по email
-              </Link>
-              .
+              {remoteMode ? (
+                <>
+                  Чтобы начать переписку, нужно бронирование.{" "}
+                  <Link href="/tours" className={cabinetLinkClass}>
+                    Выберите тур
+                  </Link>{" "}
+                  и отправьте заявку.
+                </>
+              ) : (
+                <>
+                  Бронирований пока нет.{" "}
+                  <Link href="/tours" className={cabinetLinkClass}>
+                    Выберите тур
+                  </Link>{" "}
+                  или{" "}
+                  <Link href="/booking/find" className={cabinetLinkClass}>
+                    найдите заявку по email
+                  </Link>
+                  .
+                </>
+              )}
             </p>
           )}
           <label className="mt-3 block text-sm text-slate">
@@ -319,7 +538,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
           )}
         </div>
 
-        <div className={cn(cabinetCardClass, "flex min-h-[420px] flex-col")}>
+        <div className={cn(cabinetCardClass, "flex min-h-[420px] flex-col overflow-hidden")}>
           {activeThread ? (
             <>
               <div className="border-b border-gray-100 px-4 py-4 sm:px-5">
@@ -338,36 +557,40 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
                 </p>
               </div>
 
-              <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 sm:px-5">
-                {messages.map((message) => {
-                  const own = message.senderRole === role;
-                  return (
-                    <div
-                      key={message.id}
-                      className={cn("flex", own ? "justify-end" : "justify-start")}
-                    >
+              <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 pb-24 sm:px-5 sm:pb-5">
+                {loadingMessages ? (
+                  <p className="text-sm text-slate">Загружаем сообщения…</p>
+                ) : (
+                  messages.map((message) => {
+                    const own = message.senderRole === role;
+                    return (
                       <div
-                        className={cn(
-                          "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
-                          own ? "bg-brand text-white" : "bg-gray-100 text-charcoal"
-                        )}
+                        key={message.id}
+                        className={cn("flex", own ? "justify-end" : "justify-start")}
                       >
-                        <p className="whitespace-pre-wrap">{message.body}</p>
-                        <p
+                        <div
                           className={cn(
-                            "mt-1 text-[10px]",
-                            own ? "text-white/70" : "text-slate"
+                            "max-w-[85%] rounded-2xl px-3 py-2 text-sm",
+                            own ? "bg-brand text-white" : "bg-gray-100 text-charcoal"
                           )}
                         >
-                          {formatMessageTime(message.createdAt)}
-                        </p>
+                          <p className="whitespace-pre-wrap">{message.body}</p>
+                          <p
+                            className={cn(
+                              "mt-1 text-[10px]",
+                              own ? "text-white/70" : "text-slate"
+                            )}
+                          >
+                            {formatMessageTime(message.createdAt)}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
 
-              <div className="border-t border-gray-100 p-4 sm:p-5">
+              <div className="sticky bottom-0 border-t border-gray-100 bg-white/95 p-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] backdrop-blur-md sm:p-5 sm:pb-5">
                 <div className="flex gap-2">
                   <Textarea
                     value={draft}

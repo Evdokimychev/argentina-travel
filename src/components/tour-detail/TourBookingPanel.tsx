@@ -10,6 +10,8 @@ import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
+import { tourDetailStickyPanelClass } from "@/lib/tour-detail-ui";
 import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourBookingPriceSummary from "./TourBookingPriceSummary";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
@@ -165,8 +167,12 @@ export default function TourBookingPanel({
 
   return (
     <div
+      id="booking"
       className={cn(
         "relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6",
+        tourDetailStickyPanelClass,
+        siteStickyPanelTopClass,
+        siteStickyPanelMaxHeightClass,
         className
       )}
     >

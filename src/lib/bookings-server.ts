@@ -1,4 +1,8 @@
+import "server-only";
+
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { insertBookingAttribution } from "@/lib/attribution/attribution-server";
+import { hasAttributionData } from "@/types/booking-attribution";
 import type { Database } from "@/types/database";
 import type { Booking } from "@/types/tourist";
 import type { SessionUser } from "@/types/user";
@@ -130,6 +134,18 @@ export async function insertBooking(
     return { error: error.message };
   }
 
+  if (booking.attribution && hasAttributionData(booking.attribution)) {
+    await insertBookingAttribution(supabase, booking.id, booking.attribution);
+  }
+
+  void import("@/lib/partner-webhooks").then(({ dispatchPartnerBookingWebhookEvent }) =>
+    dispatchPartnerBookingWebhookEvent({
+      organizerId: row.organizer_user_id,
+      event: "booking.created",
+      booking,
+    })
+  );
+
   return { booking: normalizeBooking(booking) };
 }
 
@@ -225,4 +241,21 @@ export function assertBookingMutationAllowed(
   }
 
   return { ok: true };
+}
+
+export async function fetchBookingByPaymentLinkToken(
+  supabase: DbClient,
+  token: string
+): Promise<Booking | null> {
+  const normalizedToken = token.trim();
+  if (!normalizedToken) return null;
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .filter("payload->paymentLink->>token", "eq", normalizedToken)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return normalizeBooking(rowToBooking(data));
 }

@@ -29,6 +29,8 @@ import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
+import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
+import type { ExcursionListing } from "@/types/excursion";
 
 // Local asset (not a remote Unsplash URL): the previous hero pointed at an
 // Unsplash photo that now 404s, leaving a grey placeholder on the LCP element.
@@ -41,6 +43,10 @@ interface MarketplaceHomeProps {
   testimonials: Testimonial[];
   platformStats: PlatformStats;
   travelPrepStrip?: React.ReactNode;
+  showHomepageRecommendationsV2?: boolean;
+  personalizedTours?: TourListing[];
+  personalizedExcursions?: ExcursionListing[];
+  personalizedActive?: boolean;
 }
 
 function SectionHeader({
@@ -119,10 +125,14 @@ export default function MarketplaceHome({
   testimonials,
   platformStats,
   travelPrepStrip,
+  showHomepageRecommendationsV2 = false,
+  personalizedTours = [],
+  personalizedExcursions = [],
+  personalizedActive = false,
 }: MarketplaceHomeProps) {
   const router = useRouter();
   const tours = useRepositoryTourListings(initialTours);
-  const { currency } = useLocaleCurrency();
+  const { currency, t } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
     getDefaultFilters(currency, tours)
   );
@@ -205,14 +215,14 @@ export default function MarketplaceHome({
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">
             <div className="min-w-0">
               <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
-                Авторские туры
+                {t("home.hero.eyebrow")}
               </span>
               <h1 className="mt-4 max-w-2xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.65rem]">
-                Путешествия по{" "}
-                <span className="text-sky">Аргентине</span>
+                {t("home.hero.title")}{" "}
+                <span className="text-sky">{t("home.hero.titleAccent")}</span>
               </h1>
               <p className="mt-3 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
-                Маршруты от местных организаторов — от танго Буэнос-Айреса до ледников Патагонии
+                {t("home.hero.subtitle")}
               </p>
               <div className="mt-5 flex flex-wrap items-center gap-3">
                 <Link
@@ -224,13 +234,13 @@ export default function MarketplaceHome({
                   })}
                 >
                   <Compass className="h-4 w-4" aria-hidden />
-                  Подобрать маршрут
+                  {t("home.hero.ctaRoute")}
                 </Link>
                 <Link
                   href="/podbor"
                   className="inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
                 >
-                  Не знаете, с чего начать?
+                  {t("home.hero.ctaHint")}
                   <ArrowRight className="h-4 w-4" aria-hidden />
                 </Link>
               </div>
@@ -437,6 +447,16 @@ export default function MarketplaceHome({
           </div>
         </div>
       </section>
+
+      {showHomepageRecommendationsV2 ? (
+        <PersonalizedRecommendationsSection
+          initialTours={personalizedTours}
+          initialExcursions={personalizedExcursions}
+          toursPersonalized={personalizedActive}
+          excursionsPersonalized={personalizedActive}
+          variant="homepage"
+        />
+      ) : null}
 
       {/* Tour collections */}
       <section className="border-y border-gray-100 bg-white py-12 md:py-14">

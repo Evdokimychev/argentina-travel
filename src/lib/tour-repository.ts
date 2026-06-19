@@ -20,8 +20,21 @@ import { getCatalogSlug } from "@/lib/tour-slug";
 import { normalizeTourDuration } from "@/lib/tour-duration";
 import { getWaitlistSeedForSlug } from "@/data/tour-waitlist-seeds";
 import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
+import {
+  isSupabaseToursEnabled,
+  shouldUseSupabaseToursAsSourceOfTruth,
+} from "@/lib/auth-mode";
+import { apiFetchPublishedTourListings } from "@/lib/tour-content-api";
 
 let seedToursCache: Tour[] | null = null;
+
+function shouldDisableLocalPublishedOverrides(): boolean {
+  return shouldUseSupabaseToursAsSourceOfTruth();
+}
+
+function shouldSkipLocalPublishedWrite(tour: Tour): boolean {
+  return shouldDisableLocalPublishedOverrides() && tour.status === "published";
+}
 
 function buildSeedTours(): Tour[] {
   if (seedToursCache) return seedToursCache;
@@ -178,6 +191,13 @@ function getTourStore(): Record<string, Tour> {
 
 function saveTour(tour: Tour) {
   const store = getTourStore();
+  if (shouldSkipLocalPublishedWrite(tour)) {
+    if (store[tour.slug]) {
+      delete store[tour.slug];
+      writeTourStore(store);
+    }
+    return;
+  }
   store[tour.slug] = tour;
   writeTourStore(store);
 }
@@ -212,6 +232,9 @@ export function getRepositoryTourDetail(
   accessToken?: string | null
 ): TourDetail | undefined {
   const tour = getCanonicalTourBySlug(slug);
+  if (tour && shouldDisableLocalPublishedOverrides() && tour.status === "published") {
+    return undefined;
+  }
   if (!tour || !canViewTourDetail(tour, accessToken)) return undefined;
   return tourToDetail(tour);
 }
@@ -275,11 +298,30 @@ export function markTourDeletedBySlug(slug: string): void {
 
   if (!tour) return;
 
+  if (shouldDisableLocalPublishedOverrides() && tour.status === "published") {
+    if (store[slug]) {
+      delete store[slug];
+      writeTourStore(store);
+    }
+    notifyToursRepositoryUpdated();
+    return;
+  }
+
   saveTour({ ...tour, status: "deleted" });
   notifyToursRepositoryUpdated();
 }
 
 export async function fetchRepositoryMarketplaceTours(): Promise<TourListing[]> {
+  if (isSupabaseToursEnabled() && typeof window !== "undefined") {
+    try {
+      return await apiFetchPublishedTourListings();
+    } catch {
+      if (shouldDisableLocalPublishedOverrides()) {
+        return [];
+      }
+    }
+  }
+
   return getMarketplaceListings();
 }
 
@@ -287,6 +329,7 @@ export function getClientSyncedMarketplaceListings(
   serverListings: TourListing[]
 ): TourListing[] {
   if (typeof window === "undefined") return serverListings;
+  if (shouldDisableLocalPublishedOverrides()) return serverListings;
 
   const local = getMarketplaceListings();
   const localSlugs = new Set(local.map((item) => item.slug));
@@ -299,6 +342,7 @@ export function getClientSyncedTourDetail(
   serverTour: TourDetail
 ): TourDetail {
   if (typeof window === "undefined") return serverTour;
+  if (shouldDisableLocalPublishedOverrides()) return serverTour;
   return getRepositoryTourDetail(slug) ?? serverTour;
 }
 

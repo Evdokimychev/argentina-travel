@@ -192,6 +192,64 @@ npm run supabase:seed-tours   # напрямую через service role (SUPABA
 - `GET /api/admin/tours` — все туры (Supabase session + `marketplace.tours`)
 - `POST /api/admin/tours/seed` — seed из `marketplace-tours`
 
+## Phase E35 — CMS: миграция с TS seed-файлов
+
+| Компонент | Файлы | Env |
+|-----------|-------|-----|
+| Таблицы CMS | `content_documents`, `content_revisions` | migration `20250620000000_cms_content.sql` |
+| Единый резолвер | `src/lib/cms/content-resolver.ts` | `SUPABASE_SERVICE_ROLE_KEY` |
+| Типы документов | legal, blog, guide, destination, place | — |
+| Админ | `/admin/content`, bulk import | Supabase session + `content.edit` |
+| Публичные страницы | DB override → TS fallback | service role на SSR |
+
+### Аудит: что остаётся только в TS
+
+| Тип | Источник | CMS |
+|-----|----------|-----|
+| legal, blog, guide, destination, place | `src/data/*` | ✅ override в `content_documents` |
+| immigration | `src/data/immigration-content.ts` | ❌ TS-only |
+| guide pillars / topics | `src/data/guide-pillars/*`, `guide-topics.ts` | ❌ TS-only |
+| immigration topics | `src/data/immigration-topics.ts` | ❌ TS-only |
+| blog plan | `src/data/blog-content-plan.ts` | ❌ план, не публикация |
+
+Полный список: `CMS_TS_ONLY_AUDIT` в `src/lib/cms/cms-ts-seed.ts`.
+
+### Миграция CMS
+
+```bash
+npm run supabase:migrate   # content_documents + revisions
+```
+
+### Seed / bulk import из TS
+
+**CLI (идемпотентно, пропускает существующие):**
+
+```bash
+npm run supabase:seed-cms
+# только один тип:
+npm run supabase:seed-cms -- --type=blog,guide
+# черновики вместо published:
+npm run supabase:seed-cms -- --draft
+# перезаписать существующие:
+npm run supabase:seed-cms -- --force
+```
+
+**Админ:** кнопка «Импорт из TS» на `/admin/content` или `POST /api/admin/content/documents/bulk-import` (тело: `{ "publish": true, "skipExisting": true, "docTypes": ["blog"] }`).
+
+Требуется `SUPABASE_SERVICE_ROLE_KEY` для CLI; для API — сессия администратора с `content.edit`.
+
+### Резолверы (DB → TS)
+
+| Тип | Файл | Публичное использование |
+|-----|------|-------------------------|
+| legal | `legal-resolver.ts` | `/legal/[slug]` |
+| blog | `blog-resolver.ts` | `/blog`, `/blog/[slug]` |
+| guide | `guide-resolver.ts` | `/guide/[slug]` |
+| destination | `destination-resolver.ts` | `/destinations`, `/destinations/[slug]` |
+| place | `place-resolver.ts` | `/places/[slug]` |
+
+Sitemap и поиск включают CMS-only slug через `listPublished*Slugs` / `resolve*Catalog`.
+
 ## Phase 1 — быстрые улучшения
 
 | Функция | Где | Env |

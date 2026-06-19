@@ -14,6 +14,14 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedPrice from "@/components/FormattedPrice";
+import CheckoutCurrencySelector from "@/components/booking/CheckoutCurrencySelector";
+import CheckoutPriceDisplay from "@/components/booking/CheckoutPriceDisplay";
+import { useCheckoutCurrencyRates } from "@/hooks/useCheckoutCurrencyRates";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import {
+  resolveDefaultCheckoutCurrency,
+  type CheckoutCurrencyCode,
+} from "@/lib/payments/checkout-currency";
 import GuestCounter from "../GuestCounter";
 import SingleDatePicker from "@/components/ui/single-date-picker";
 import { useTourBooking } from "../TourBookingContext";
@@ -64,8 +72,11 @@ import InsuranceAddonPicker from "./InsuranceAddonPicker";
 import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm } from "./checkout-contact";
 import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
 import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import BookingCheckoutStepper from "@/components/booking/BookingCheckoutStepper";
+import BookingCheckoutProgress from "@/components/booking/BookingCheckoutProgress";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -165,6 +176,8 @@ function CheckoutSummary({
   totalUsd,
   payNowUsd,
   depositPercent,
+  checkoutCurrency,
+  checkoutRates,
 }: {
   tour: TourDetail;
   form: CheckoutFormState;
@@ -178,6 +191,8 @@ function CheckoutSummary({
   totalUsd: number;
   payNowUsd: number;
   depositPercent: number;
+  checkoutCurrency: CheckoutCurrencyCode;
+  checkoutRates: Partial<Record<import("@/types/locale").CurrencyCode, number>>;
 }) {
   const selectedAddons = CHECKOUT_ADDONS.filter((a) => form.addonIds.includes(a.id));
 
@@ -233,7 +248,12 @@ function CheckoutSummary({
       <div className="mt-4 space-y-2 rounded-xl border border-gray-200 bg-white p-4 text-sm">
         <div className="flex justify-between gap-3 text-slate">
           <span>Тур × {guests}</span>
-          <FormattedPrice priceUsd={subtotalUsd} className="font-medium text-charcoal" />
+          <FormattedPrice
+            priceUsd={subtotalUsd}
+            currency={checkoutCurrency}
+            rates={checkoutRates}
+            className="font-medium text-charcoal"
+          />
         </div>
         {roomOptions.map((room) => {
           const count = roomAllocations[room.id];
@@ -245,6 +265,8 @@ function CheckoutSummary({
               </span>
               <FormattedPrice
                 priceUsd={count * room.priceUsdPerTraveler}
+                currency={checkoutCurrency}
+                rates={checkoutRates}
                 className="shrink-0 font-medium text-charcoal"
               />
             </div>
@@ -261,7 +283,12 @@ function CheckoutSummary({
                 Трансфер ({vehicle.title.toLowerCase()}
                 {vehicles > 1 ? ` × ${vehicles}` : ""})
               </span>
-              <FormattedPrice priceUsd={lineTotal} className="shrink-0 font-medium text-charcoal" />
+              <FormattedPrice
+                priceUsd={lineTotal}
+                currency={checkoutCurrency}
+                rates={checkoutRates}
+                className="shrink-0 font-medium text-charcoal"
+              />
             </div>
           );
         })}
@@ -276,17 +303,27 @@ function CheckoutSummary({
         {selectedAddons.map((addon) => (
           <div key={addon.id} className="flex justify-between gap-3 text-slate">
             <span className="min-w-0 truncate">{addon.title}</span>
-            <FormattedPrice priceUsd={addon.priceUsd} className="shrink-0 font-medium text-charcoal" />
+            <FormattedPrice
+              priceUsd={addon.priceUsd}
+              currency={checkoutCurrency}
+              rates={checkoutRates}
+              className="shrink-0 font-medium text-charcoal"
+            />
           </div>
         ))}
         <div className="flex justify-between gap-3 border-t border-gray-100 pt-3 font-heading text-base font-bold text-charcoal">
           <span>Итого</span>
-          <FormattedPrice priceUsd={totalUsd} />
+          <FormattedPrice priceUsd={totalUsd} currency={checkoutCurrency} rates={checkoutRates} />
         </div>
         {form.paymentOption === "deposit" && (
           <div className="flex justify-between gap-3 text-sm text-brand">
             <span>К оплате сейчас ({depositPercent}%)</span>
-            <FormattedPrice priceUsd={payNowUsd} className="font-semibold" />
+            <FormattedPrice
+              priceUsd={payNowUsd}
+              currency={checkoutCurrency}
+              rates={checkoutRates}
+              className="font-semibold"
+            />
           </div>
         )}
         {form.paymentOption === "later" && (
@@ -324,6 +361,11 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     totalPriceUsd,
   } = useTourBooking();
   const { user, isAuthenticated, openAuth } = useAuth();
+  const { currency: localeCurrency } = useLocaleCurrency();
+  const { rates: checkoutRates, ratesUpdatedAt, ratesSource } = useCheckoutCurrencyRates();
+  const [checkoutCurrency, setCheckoutCurrency] = useState<CheckoutCurrencyCode>(() =>
+    resolveDefaultCheckoutCurrency(localeCurrency)
+  );
 
   const roomOptions = useMemo(() => resolveTourCheckoutRoomOptions(tour), [tour]);
   const hasAccommodationStep = tourCheckoutHasRoomSelection(tour);
@@ -441,6 +483,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       setSubmitted(false);
       setSavedToProfile(false);
       setError(null);
+      setCheckoutCurrency(resolveDefaultCheckoutCurrency(localeCurrency));
       setForm(() => {
         const options = resolveTourCheckoutRoomOptions(tour);
         const base = createCheckoutForm(guests, user, options);
@@ -456,7 +499,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [checkoutOpen, guests, user, checkoutPaymentOptions, tour, visibleSteps, dateMode, customDate, selectedDateId]);
+  }, [checkoutOpen, guests, user, checkoutPaymentOptions, tour, visibleSteps, dateMode, customDate, selectedDateId, localeCurrency]);
 
   useEffect(() => {
     if (!checkoutOpen || !user) return;
@@ -591,6 +634,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       endDate,
       totalPriceUsd: totalUsd,
       form,
+      checkoutCurrency,
+      checkoutRates,
+      checkoutRatesUpdatedAt: ratesUpdatedAt,
+      checkoutRatesSource: ratesSource,
+      payNowUsd,
+      attribution: getStoredFirstTouchAttribution() ?? undefined,
     });
 
     if ("error" in bookingResult) {
@@ -642,10 +691,30 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {submitted ? "Заявка отправлена" : "Подтверждение и оплата"}
               </h2>
               {!submitted && (
-                <div className="mt-3">
+                <div className="mt-3 space-y-3">
+                  <BookingCheckoutStepper
+                    currentStep={
+                      currentStep === "details" || currentStep === "payment"
+                        ? "contacts"
+                        : "dates"
+                    }
+                  />
+                  <BookingCheckoutProgress
+                    currentStep={
+                      currentStep === "details" || currentStep === "payment"
+                        ? "contacts"
+                        : "dates"
+                    }
+                  />
                   <StepIndicator steps={visibleSteps} currentIndex={stepIndex} />
                 </div>
               )}
+              {submitted ? (
+                <div className="mt-3 space-y-3">
+                  <BookingCheckoutStepper currentStep="payment" />
+                  <BookingCheckoutProgress currentStep="payment" />
+                </div>
+              ) : null}
             </div>
             <button
               type="button"
@@ -1163,6 +1232,26 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                       </p>
                     </div>
 
+                    <CheckoutCurrencySelector
+                      value={checkoutCurrency}
+                      onChange={setCheckoutCurrency}
+                    />
+
+                    <CheckoutPriceDisplay
+                      amountUsd={totalUsd}
+                      currency={checkoutCurrency}
+                      rates={checkoutRates}
+                      amountClassName="text-2xl"
+                      secondaryAmountUsd={form.paymentOption !== "later" ? payNowUsd : undefined}
+                      secondaryLabel={
+                        form.paymentOption === "deposit"
+                          ? `К оплате сейчас (${checkoutPaymentOptions.depositPercent}%)`
+                          : form.paymentOption === "full"
+                            ? "К оплате сейчас"
+                            : undefined
+                      }
+                    />
+
                     <div className="flex rounded-xl bg-gray-100 p-1">
                       {enabledPaymentOptions.map((opt) => (
                         <button
@@ -1225,6 +1314,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                     <p className="text-xs text-slate">Итого за {formatForTourists(guests)}</p>
                     <FormattedPrice
                       priceUsd={totalUsd}
+                      currency={checkoutCurrency}
+                      rates={checkoutRates}
                       className="font-heading text-lg font-bold text-charcoal"
                     />
                   </div>
@@ -1236,6 +1327,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         К оплате сейчас{" "}
                         <FormattedPrice
                           priceUsd={payNowUsd}
+                          currency={checkoutCurrency}
+                          rates={checkoutRates}
                           className="block font-semibold text-charcoal"
                         />
                       </>
@@ -1289,6 +1382,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             totalUsd={totalUsd}
             payNowUsd={payNowUsd}
             depositPercent={checkoutPaymentOptions.depositPercent}
+            checkoutCurrency={checkoutCurrency}
+            checkoutRates={checkoutRates}
           />
         </aside>
       </DialogContent>

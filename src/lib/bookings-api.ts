@@ -1,4 +1,6 @@
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
+import type { PaymentTransactionReceiptView } from "@/types/payment-platform";
+import type { TripsterBookingRequestView } from "@/types/tripster-booking";
 import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
 
 async function parseJson<T>(response: Response): Promise<T> {
@@ -107,6 +109,64 @@ export async function apiPatchBooking(booking: Booking): Promise<Booking> {
   return data.booking;
 }
 
+export async function apiCreateBookingPaymentPreference(input: {
+  bookingId: string;
+  paymentLinkToken: string;
+}): Promise<{ preferenceId: string; checkoutUrl: string; checkoutSandboxUrl?: string | null }> {
+  return parseJson<{ preferenceId: string; checkoutUrl: string; checkoutSandboxUrl?: string | null }>(
+    await fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}/payment/preference`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentLinkToken: input.paymentLinkToken,
+      }),
+    })
+  );
+}
+
+export async function apiCreateBookingStripeSession(input: {
+  bookingId: string;
+  paymentLinkToken: string;
+}): Promise<{ sessionId: string; checkoutUrl: string }> {
+  return parseJson<{ sessionId: string; checkoutUrl: string }>(
+    await fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}/payment/stripe/session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentLinkToken: input.paymentLinkToken,
+      }),
+    })
+  );
+}
+
+export type PaymentLinkStatusResponse = {
+  bookingId: string;
+  tourTitle: string;
+  contactName: string;
+  paymentStatus: string;
+  linkStatus: string;
+  amountUsd: number;
+  expired: boolean;
+  paidAt: string | null;
+  receipt: PaymentTransactionReceiptView | null;
+};
+
+export async function apiFetchPaymentLinkStatus(token: string): Promise<PaymentLinkStatusResponse> {
+  return parseJson<PaymentLinkStatusResponse>(
+    await fetch(`/api/bookings/payment-link/${encodeURIComponent(token)}`, { cache: "no-store" })
+  );
+}
+
+export async function apiFetchBookingPaymentReceipt(bookingId: string): Promise<{
+  receipt: PaymentTransactionReceiptView | null;
+  paymentStatus: string;
+}> {
+  return parseJson<{
+    receipt: PaymentTransactionReceiptView | null;
+    paymentStatus: string;
+  }>(await fetch(`/api/bookings/${encodeURIComponent(bookingId)}/payment/receipt`, { cache: "no-store" }));
+}
+
 export function isRemoteBookingsMode(): boolean {
   return isSupabaseBookingsEnabled();
 }
@@ -120,4 +180,11 @@ export async function apiLookupBookingsByEmail(email: string): Promise<Booking[]
     })
   );
   return data.bookings;
+}
+
+export async function apiFetchTripsterBookingRequests(): Promise<TripsterBookingRequestView[]> {
+  const data = await parseJson<{ requests: TripsterBookingRequestView[] }>(
+    await fetch("/api/tripster/booking-request", { cache: "no-store" })
+  );
+  return data.requests ?? [];
 }

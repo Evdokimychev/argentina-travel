@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
+import { Map } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdminListSkeleton } from "@/components/ui/skeleton";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
@@ -44,11 +47,19 @@ export default function ToursView() {
           <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
             Туры в базе ({tours.length})
           </h2>
-          <ul className="divide-y divide-gray-100">
-            {tours.length === 0 ? (
-              <li className="px-5 py-8 text-sm text-slate">{loading ? "Загрузка…" : "Пока пусто"}</li>
-            ) : (
-              tours.map((row) => (
+          {loading ? (
+            <AdminListSkeleton rows={5} />
+          ) : tours.length === 0 ? (
+            <EmptyState
+              variant="admin"
+              icon={Map}
+              title="Туров в базе пока нет"
+              description="Опубликованные туры организаторов появятся здесь после синхронизации."
+              action={{ label: "Каталог на сайте", href: "/tours", variant: "outline" }}
+            />
+          ) : (
+            <ul className="divide-y divide-gray-100">
+              {tours.map((row) => (
                 <li key={row.id} className="space-y-1 px-5 py-4 text-sm">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium text-charcoal">{row.title}</span>
@@ -69,9 +80,9 @@ export default function ToursView() {
                     Открыть на сайте
                   </Link>
                 </li>
-              ))
-            )}
-          </ul>
+              ))}
+            </ul>
+          )}
         </section>
       </AdminPageShell>
     </CapabilityGate>

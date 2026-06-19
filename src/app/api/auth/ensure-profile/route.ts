@@ -3,10 +3,11 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { profileToSessionUser } from "@/lib/profile-mapper";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import type { AccountRole } from "@/types/user";
 
 /** Создаёт профиль для текущей auth-сессии, если триггер signup его не создал. */
-export async function POST() {
+async function postEnsureProfile() {
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json({ error: "Supabase auth disabled" }, { status: 503 });
   }
@@ -76,3 +77,11 @@ export async function POST() {
     );
   }
 }
+
+export const POST = withRateLimit(postEnsureProfile, {
+  limit: 30,
+  window: 60_000,
+  keyPrefix: "auth:ensure-profile",
+  key: (request) => `ip:${getClientIp(request)}`,
+  message: "Слишком много запросов. Повторите позже.",
+});

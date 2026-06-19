@@ -26,6 +26,10 @@ export default function ExcursionMobileBookingBar({
     (excursion.priceValue != null
       ? `${Math.round(excursion.priceValue)}${excursion.priceCurrency ? ` ${excursion.priceCurrency}` : ""}`
       : null);
+  const ctaLabel =
+    excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured
+      ? "Забронировать на сайте"
+      : t("excursions.book");
 
   function scrollToBooking() {
     document.getElementById("booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -54,11 +58,11 @@ export default function ExcursionMobileBookingBar({
             href={excursion.bookingHref}
             className={cn(buttonVariants(), "shrink-0 rounded-xl px-5")}
           >
-            {t("excursions.book")}
+            {ctaLabel}
           </a>
         ) : (
           <Button type="button" className="shrink-0 rounded-xl px-5" onClick={scrollToBooking}>
-            {t("excursions.book")}
+            {ctaLabel}
           </Button>
         )}
       </div>

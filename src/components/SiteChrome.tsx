@@ -5,7 +5,18 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipToContentLink from "@/components/SkipToContentLink";
 
-export default function SiteChrome({ children }: { children: React.ReactNode }) {
+export type SiteLegalFooterInfo = {
+  legalLine: string | null;
+  supportEmail: string | null;
+};
+
+export default function SiteChrome({
+  children,
+  siteLegal,
+}: {
+  children: React.ReactNode;
+  siteLegal?: SiteLegalFooterInfo;
+}) {
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
 
@@ -21,7 +32,7 @@ export default function SiteChrome({ children }: { children: React.ReactNode }) 
       <main id="main-content" className="flex-1" tabIndex={-1}>
         {children}
       </main>
-      <Footer />
+      <Footer siteLegal={siteLegal} />
     </>
   );
 }

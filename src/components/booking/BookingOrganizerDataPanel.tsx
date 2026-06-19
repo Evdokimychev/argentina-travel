@@ -23,7 +23,7 @@ import {
   hasCompleteBookingTravelers,
   needsBookingTravelersForm,
 } from "@/lib/booking-travelers";
-import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import BookingOrganizerInvoicesSection from "@/components/booking/BookingOrganizerInvoicesSection";
 import BookingOrganizerEditModal from "@/components/booking/BookingOrganizerEditModal";
 import { shouldShowBookingInvoices } from "@/lib/booking-payment";
@@ -166,8 +166,14 @@ export default function BookingOrganizerDataPanel({
             </DataBlockRow>
 
             <DataBlockRow label="Сумма бронирования">
-              <FormattedPrice priceUsd={booking.totalPriceUsd} className="text-base font-bold" />
+              <BookingLedgerAmount booking={booking} priceUsd={booking.totalPriceUsd} />
             </DataBlockRow>
+
+            {booking.metadata?.checkoutCurrency ? (
+              <DataBlockRow label="Валюта оформления">
+                <span className="font-medium">{booking.metadata.checkoutCurrency}</span>
+              </DataBlockRow>
+            ) : null}
 
             {booking.checkoutPaymentOption ? (
               <DataBlockRow label="Способ оплаты">

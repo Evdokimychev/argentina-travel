@@ -18,6 +18,10 @@ export function buildBookingPaymentLinkPath(token: string): string {
   return `/booking/pay/${token}`;
 }
 
+export function buildBookingPaymentResultPath(token: string, status: "success" | "pending" | "failure"): string {
+  return `/booking/pay/${token}/result?status=${status}`;
+}
+
 export function buildBookingPaymentLinkUrl(token: string, origin?: string): string {
   const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
   return `${base}${buildBookingPaymentLinkPath(token)}`;
@@ -82,6 +86,7 @@ export function createBookingPaymentLinkRecord(input: {
     status: "active",
     target,
     amountUsd,
+    gateway: "manual",
   };
 }
 

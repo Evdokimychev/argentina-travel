@@ -35,7 +35,7 @@ function DetailCell({
       <div
         className={cn(
           "mt-1.5 text-sm leading-relaxed",
-          isEmpty ? "text-gray-400" : "text-gray-700"
+          isEmpty ? "text-slate/70" : "text-gray-700"
         )}
       >
         {children}

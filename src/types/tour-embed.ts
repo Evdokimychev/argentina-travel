@@ -13,9 +13,12 @@ export type TourEmbedSource =
   | { kind: "destination"; destinationSlug: string }
   | { kind: "region"; region: string }
   | { kind: "query"; query: string }
-  | { kind: "preset"; preset: TourEmbedPreset };
+  | { kind: "preset"; preset: TourEmbedPreset }
+  | { kind: "organizer"; organizerSlug: string };
 
 export type TourEmbedTone = "default" | "muted" | "inline";
+
+export type TourEmbedTheme = "light" | "dark";
 
 export interface TourEmbedConfig {
   id?: string;
@@ -27,4 +30,5 @@ export interface TourEmbedConfig {
   catalogHref?: string;
   catalogLabel?: string;
   tone?: TourEmbedTone;
+  theme?: TourEmbedTheme;
 }

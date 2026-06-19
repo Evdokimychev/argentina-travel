@@ -22,6 +22,7 @@ import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
 import { formatExcursionDuration } from "@/lib/excursion-format";
 import { siteContainerClass } from "@/lib/site-container";
 import type { ExcursionDetail, ExcursionListing } from "@/types/excursion";
+import { useTrackEntityView } from "@/hooks/useInteractionTracking";
 
 export default function ExcursionDetailView({
   excursion,
@@ -31,6 +32,7 @@ export default function ExcursionDetailView({
   similarExcursions?: ExcursionListing[];
 }) {
   const { t } = useLocaleCurrency();
+  useTrackEntityView("excursion", excursion.slug);
 
   const galleryImages = (
     excursion.photos.length
@@ -47,7 +49,8 @@ export default function ExcursionDetailView({
   }));
 
   const prefersAffiliate =
-    excursion.partner === "sputnik8" && excursion.isBookable !== false;
+    (excursion.partner === "sputnik8" && excursion.isBookable !== false) ||
+    (excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured === false);
 
   return (
     <div className="pb-24 lg:pb-16">

@@ -1,6 +1,7 @@
 /**
  * Optional email alerts for moderation outcomes (Resend).
  */
+import { absoluteUrl } from "@/lib/site-url";
 
 export async function notifyModerationOutcome(input: {
   entityType: string;
@@ -55,12 +56,21 @@ export async function notifyOrganizerApplicationReview(input: {
 
   const subject =
     input.action === "approve"
-      ? "Заявка организатора одобрена — Пора в Аргентину"
+      ? "Добро пожаловать в кабинет организатора — Пора в Аргентину"
       : "Заявка организатора — требуются уточнения";
+
+  const organizerCabinetUrl = absoluteUrl("/organizer/tours?welcome=1");
 
   const html =
     input.action === "approve"
-      ? `<p>Здравствуйте, ${input.applicantName}!</p><p>Ваша заявка организатора одобрена. Войдите на сайт и подключите роль организатора в личном кабинете.</p>`
+      ? `<p>Здравствуйте, ${input.applicantName}!</p>
+<p>Ваша заявка организатора одобрена.</p>
+<p>Вы уже можете зайти в кабинет и начать публикацию.</p>
+<p><strong>Чек-лист первого шага:</strong></p>
+<ul>
+  <li>Создайте первый тур</li>
+</ul>
+<p><a href="${organizerCabinetUrl}">Открыть кабинет организатора</a></p>`
       : `<p>Здравствуйте, ${input.applicantName}!</p><p>К сожалению, заявку пока нельзя одобрить.${input.note ? ` Причина: ${input.note}` : ""}</p>`;
 
   try {

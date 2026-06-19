@@ -1,14 +1,17 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Search, Check, ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { motionClass } from "@/lib/motion";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
   LANGUAGES,
   CURRENCIES,
   POPULAR_CURRENCIES,
 } from "@/data/locale-config";
+import { addLocalePrefix } from "@/lib/i18n/locale-path";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { CurrencyCode, LocaleCode } from "@/types/locale";
@@ -16,6 +19,8 @@ import { CurrencyCode, LocaleCode } from "@/types/locale";
 type Tab = "language" | "currency";
 
 function SwitcherPanel({ onClose }: { onClose?: () => void }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const { locale, currency, setLocale, setCurrency, t } = useLocaleCurrency();
   const [tab, setTab] = useState<Tab>("language");
   const [search, setSearch] = useState("");
@@ -51,6 +56,7 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
 
   function selectLanguage(code: LocaleCode) {
     setLocale(code);
+    router.push(addLocalePrefix(pathname, code));
     onClose?.();
   }
 
@@ -309,10 +315,18 @@ export default function LocaleCurrencySwitcher({
         {mobileOpen && (
           <>
             <div
-              className="fixed inset-0 z-[60] bg-charcoal/40 backdrop-blur-sm animate-in fade-in duration-200"
+              className={cn(
+                "fixed inset-0 z-[60] bg-charcoal/40 backdrop-blur-sm",
+                motionClass.enterOverlay
+              )}
               onClick={() => setMobileOpen(false)}
             />
-            <div className="fixed inset-x-0 bottom-0 z-[70] max-h-[85vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl animate-in slide-in-from-bottom duration-300">
+            <div
+              className={cn(
+                "fixed inset-x-0 bottom-0 z-[70] max-h-[85vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl",
+                motionClass.enterSheet
+              )}
+            >
               <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                 <p className="font-semibold text-charcoal">{t("locale.title")}</p>
                 <button

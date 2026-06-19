@@ -25,8 +25,8 @@ export default function BlogStartHere({ posts, className }: BlogStartHereProps) 
         </h2>
       </div>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
-        Восьмерка материалов, которые мы обновляем вручную: сезоны, деньги, въезд, районы BA, Patagonia и Mendoza.
-        Остальной каталог — тематические гиды по регионам и задачам.
+        Подборка материалов, с которых удобно начать: сезоны, деньги, въезд, районы BA, Patagonia и Mendoza.
+        Остальной каталог собран по темам, регионам и практическим задачам.
       </p>
 
       <div className="mt-5 space-y-4">

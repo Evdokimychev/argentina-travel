@@ -1,6 +1,6 @@
 /** Общие поверхности и акценты страницы тура — sky / charcoal, как в шапке и каталоге. */
 export const tourDetailSectionCardClass =
-  "rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8";
+  "rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6 md:p-8";
 
 export const tourDetailInsetClass =
   "rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.06] to-white";
@@ -31,3 +31,36 @@ export const tourDetailBadgeSkyClass =
   "rounded-full bg-sky/10 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-sky";
 
 export const tourDetailCardBorderClass = "rounded-2xl border border-gray-100 bg-white shadow-sm";
+
+/** Сетка hero-галереи на десктопе */
+export const tourDetailGalleryGridClass =
+  "hidden gap-2 md:grid md:grid-cols-4 md:grid-rows-2 md:aspect-[16/10] md:max-h-[min(52vw,520px)] md:w-full";
+
+/** Карусель hero-галереи на мобильных */
+export const tourDetailGalleryMobileAspectClass = "aspect-[4/3] sm:aspect-[16/10]";
+
+/** Sticky-панель бронирования (десктоп) */
+export const tourDetailStickyPanelClass =
+  "lg:sticky lg:z-30 lg:self-start lg:overflow-y-auto";
+
+/** Нижняя панель бронирования (мобильные) */
+export const tourDetailMobileBarClass =
+  "fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white/95 shadow-lg backdrop-blur-sm lg:hidden";
+
+/** Вертикальный ритм между секциями страницы */
+export const tourDetailSectionStackClass = "space-y-6 md:space-y-8";
+
+/** Внутренние отступы контента секций (отзывы, программа) */
+export const tourDetailContentStackClass = "space-y-4 sm:space-y-5";
+
+/** Карточка отзыва */
+export const tourDetailReviewCardClass =
+  "rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5";
+
+/** Фильтр / чип в секции отзывов */
+export const tourDetailFilterChipClass =
+  "rounded-full px-4 py-2 text-sm font-medium transition-colors min-h-[44px] sm:min-h-0 sm:py-1.5";
+
+/** Кнопка сворачивания секции на мобильных */
+export const tourDetailSectionToggleClass =
+  "flex min-h-[44px] w-full items-center justify-between gap-3 text-left md:min-h-0 md:cursor-default md:pointer-events-none";

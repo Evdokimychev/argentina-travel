@@ -149,6 +149,7 @@ function buildTourDetailFromBase(
         text: "Отличный тур, всё организовано на высшем уровне. Рекомендую!",
         photos: [],
         verifiedTrip: true,
+        source: "static",
       },
     ],
     accommodations: (() => {

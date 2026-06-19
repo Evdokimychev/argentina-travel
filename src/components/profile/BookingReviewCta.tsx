@@ -1,6 +1,10 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { buildReviewHref, bookingNeedsReview } from "@/lib/tourist-review-cta";
-import type { Booking } from "@/types/tourist";
+import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
+import type { Booking, TouristReview } from "@/types/tourist";
 
 export default function BookingReviewCta({
   booking,
@@ -11,7 +15,35 @@ export default function BookingReviewCta({
   userId: string;
   className?: string;
 }) {
-  if (!bookingNeedsReview(booking, userId)) return null;
+  const [reviews, setReviews] = useState<TouristReview[] | null>(null);
+
+  useEffect(() => {
+    if (!isSupabaseReviewsEnabled()) {
+      setReviews([]);
+      return;
+    }
+
+    let cancelled = false;
+    void fetch("/api/reviews", { cache: "no-store" })
+      .then(async (res) => {
+        if (!res.ok) return [] as TouristReview[];
+        const json = (await res.json()) as { reviews?: TouristReview[] };
+        return json.reviews ?? [];
+      })
+      .then((items) => {
+        if (!cancelled) setReviews(items);
+      })
+      .catch(() => {
+        if (!cancelled) setReviews([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [userId]);
+
+  if (reviews === null) return null;
+  if (!bookingNeedsReview(booking, userId, reviews)) return null;
 
   return (
     <Link

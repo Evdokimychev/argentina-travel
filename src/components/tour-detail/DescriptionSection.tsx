@@ -98,7 +98,12 @@ export default function DescriptionSection({
   }, [activeTab, visibleTabs]);
 
   return (
-    <TourSection id="description" title="Описание путешествия" organizerComment={organizerComment}>
+    <TourSection
+      id="description"
+      title="Описание путешествия"
+      defaultMobileExpanded
+      organizerComment={organizerComment}
+    >
       <div className="space-y-5">
           {blocks.map((block, i) => {
             switch (block.type) {

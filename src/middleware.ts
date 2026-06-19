@@ -1,8 +1,54 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import {
+  buildFirstTouchFromSearchParams,
+  FIRST_TOUCH_COOKIE,
+  parseFirstTouchCookieHeader,
+  serializeFirstTouchAttribution,
+} from "@/lib/attribution/first-touch";
+import { LOCALE_COOKIE_KEY } from "@/lib/i18n/config";
+import { getLocaleFromPathname, stripLocalePrefix } from "@/lib/i18n/locale-path";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import type { Database } from "@/types/database";
+
+const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
+
+function applyFirstTouchAttributionCookie(
+  request: NextRequest,
+  response: NextResponse
+): NextResponse {
+  if (parseFirstTouchCookieHeader(request.headers.get("cookie"))) {
+    return response;
+  }
+
+  const params = request.nextUrl.searchParams;
+  const hasUtm =
+    params.has("utm_source") ||
+    params.has("utm_medium") ||
+    params.has("utm_campaign") ||
+    params.has("api_key_id") ||
+    params.has("partner_key");
+
+  if (!hasUtm) return response;
+
+  const attribution = buildFirstTouchFromSearchParams(
+    params,
+    `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    request.headers.get("referer")
+  );
+
+  if (!attribution) return response;
+
+  response.cookies.set(FIRST_TOUCH_COOKIE, serializeFirstTouchAttribution(attribution), {
+    path: "/",
+    maxAge: FIRST_TOUCH_COOKIE_MAX_AGE,
+    sameSite: "lax",
+  });
+
+  return response;
+}
 
 function createSupabaseMiddlewareClient(request: NextRequest, response: NextResponse) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -49,10 +95,51 @@ function isMaintenanceExempt(pathname: string): boolean {
   return pathname.startsWith("/admin") || pathname.startsWith("/api") || pathname === "/maintenance";
 }
 
+/** Optional /es/ and /en/ prefixes rewrite to unprefixed routes; cookie stores preference. */
+function applyLocalePrefix(request: NextRequest): NextResponse | null {
+  const pathname = request.nextUrl.pathname;
+  const localeFromPath = getLocaleFromPathname(pathname);
+  if (!localeFromPath) return null;
+
+  const rewriteUrl = request.nextUrl.clone();
+  rewriteUrl.pathname = stripLocalePrefix(pathname);
+
+  const response = NextResponse.rewrite(rewriteUrl);
+  response.cookies.set(LOCALE_COOKIE_KEY, localeFromPath, {
+    path: "/",
+    maxAge: 60 * 60 * 24 * 365,
+    sameSite: "lax",
+  });
+  return response;
+}
+
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+  const routePathname = stripLocalePrefix(pathname);
 
-  if (!isMaintenanceExempt(pathname)) {
+  if (request.method === "POST" && pathname.startsWith("/api/webhooks/")) {
+    const ip = getClientIp(request);
+    const limit = await checkRateLimit(`webhooks:ip:${ip}`, 120, 60_000);
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Слишком много webhook-запросов. Повторите позже." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      );
+    }
+  }
+
+  if (request.method === "POST" && routePathname === "/api/ai/tour-match") {
+    const ip = getClientIp(request);
+    const limit = await checkRateLimit(`tour-match:ip:${ip}`, 10, 60_000);
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Слишком много запросов к подборщику туров. Подождите минуту." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      );
+    }
+  }
+
+  if (!isMaintenanceExempt(routePathname)) {
     try {
       const features = await fetchSiteFeatures();
       if (features.maintenanceMode) {
@@ -63,23 +150,29 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  if (!isSupabaseAuthEnabled() || !isProtectedCabinetPath(pathname)) {
-    return NextResponse.next();
+  const localeResponse = applyLocalePrefix(request);
+  const isProtected = isProtectedCabinetPath(routePathname);
+
+  if (!isSupabaseAuthEnabled() || !isProtected) {
+    const response = localeResponse ?? NextResponse.next();
+    return applyFirstTouchAttributionCookie(request, response);
   }
 
-  const isOrganizer = pathname.startsWith("/organizer");
-  const isAdmin = pathname.startsWith("/admin");
+  const isOrganizer = routePathname.startsWith("/organizer");
+  const isAdmin = routePathname.startsWith("/admin");
 
-  const response = NextResponse.next({
-    request: { headers: request.headers },
-  });
+  const response =
+    localeResponse ??
+    NextResponse.next({
+      request: { headers: request.headers },
+    });
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
   const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
 
   if (!url || !anonKey) {
     if (process.env.NODE_ENV === "production") {
-      return redirectToSignIn(request, pathname, { error: "auth-unavailable" });
+      return redirectToSignIn(request, routePathname, { error: "auth-unavailable" });
     }
     return response;
   }
@@ -97,7 +190,7 @@ export async function middleware(request: NextRequest) {
     const extra: Record<string, string> = {};
     if (isOrganizer) extra.role = "organizer";
     if (isAdmin) extra.role = "admin";
-    return redirectToSignIn(request, pathname, extra);
+    return redirectToSignIn(request, routePathname, extra);
   }
 
   const { data: profile, error: profileError } = await supabase
@@ -140,7 +233,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  return response;
+  return applyFirstTouchAttributionCookie(request, response);
 }
 
 export const config = {

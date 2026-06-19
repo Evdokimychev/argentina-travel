@@ -1,0 +1,156 @@
+/**
+ * E49 — Design tokens v2 (source of truth).
+ * Consumed via @theme in globals.css and semantic helpers in src/lib/design-tokens.ts.
+ * Prefix --token-* keeps primitives distinct from Tailwind-generated theme vars.
+ */
+
+:root {
+  /* ── Palette: sky / charcoal / sand ───────────────────────────────────── */
+
+  --token-color-sky-50: #f0f7fc;
+  --token-color-sky-100: #dceef9;
+  --token-color-sky: #74acdf;
+  --token-color-sky-dark: #5a8fc4;
+
+  --token-color-charcoal: #1a1a2e;
+  --token-color-charcoal-90: rgb(26 26 46 / 0.9);
+  --token-color-charcoal-70: rgb(26 26 46 / 0.7);
+  --token-color-charcoal-15: rgb(26 26 46 / 0.15);
+  --token-color-charcoal-10: rgb(26 26 46 / 0.1);
+  --token-color-charcoal-07: rgb(26 26 46 / 0.07);
+  --token-color-charcoal-06: rgb(26 26 46 / 0.06);
+  --token-color-charcoal-04: rgb(26 26 46 / 0.04);
+
+  --token-color-sand: #f5f0e8;
+  --token-color-sand-muted: #f7f8fa;
+  --token-color-slate: #4a5568;
+
+  --token-color-sun: #fcbf49;
+  --token-color-sun-dark: #e5a832;
+
+  --token-color-patagonia: #2d4a3e;
+  --token-color-patagonia-light: #3d6354;
+
+  --token-color-wine: #722f37;
+  --token-color-wine-light: #8b3a44;
+
+  --token-color-brand: #d4533b;
+  --token-color-brand-dark: #b8432e;
+  --token-color-brand-light: #fef3f0;
+
+  --token-color-white: #ffffff;
+  --token-color-nav-pill: #efefef;
+  --token-color-border-subtle: #e5e7eb;
+  --token-color-border-default: #e5e7eb;
+
+  /* ── Semantic colors ──────────────────────────────────────────────────── */
+
+  --token-color-foreground: var(--token-color-charcoal);
+  --token-color-muted: var(--token-color-slate);
+  --token-color-background: var(--token-color-sand-muted);
+  --token-color-surface-elevated: var(--token-color-white);
+  --token-color-surface-muted: var(--token-color-sand-muted);
+  --token-color-primary: var(--token-color-sky);
+  --token-color-primary-dark: var(--token-color-sky-dark);
+  --token-color-accent-earth: var(--token-color-brand);
+
+  --token-color-success: #2f6f4e;
+  --token-color-success-muted: #ecf6f0;
+  --token-color-warning: #9a6700;
+  --token-color-warning-muted: #fdf6e3;
+  --token-color-error: #b42318;
+  --token-color-error-muted: #fef2f1;
+
+  /* ── Typography scale ─────────────────────────────────────────────────── */
+
+  --token-text-2xs: 0.6875rem; /* 11px — utility bar */
+  --token-text-xs: 0.75rem;
+  --token-text-sm: 0.875rem;
+  --token-text-base: 1rem;
+  --token-text-lg: 1.125rem;
+  --token-text-xl: 1.25rem;
+  --token-text-2xl: 1.5rem;
+  --token-text-3xl: 1.875rem;
+  --token-text-4xl: 2.25rem;
+
+  --token-leading-tight: 1.25;
+  --token-leading-snug: 1.375;
+  --token-leading-normal: 1.5;
+  --token-leading-relaxed: 1.625;
+
+  --token-tracking-tight: -0.01em;
+  --token-tracking-normal: 0;
+  --token-tracking-wide: 0.04em;
+
+  --token-font-weight-medium: 500;
+  --token-font-weight-semibold: 600;
+  --token-font-weight-bold: 700;
+
+  /* ── Spacing scale (4px base) ─────────────────────────────────────────── */
+
+  --token-space-0: 0;
+  --token-space-px: 1px;
+  --token-space-0_5: 0.125rem;
+  --token-space-1: 0.25rem;
+  --token-space-1_5: 0.375rem;
+  --token-space-2: 0.5rem;
+  --token-space-2_5: 0.625rem;
+  --token-space-3: 0.75rem;
+  --token-space-3_5: 0.875rem;
+  --token-space-4: 1rem;
+  --token-space-5: 1.25rem;
+  --token-space-6: 1.5rem;
+  --token-space-8: 2rem;
+  --token-space-10: 2.5rem;
+  --token-space-12: 3rem;
+  --token-space-16: 4rem;
+
+  /* ── Radii ────────────────────────────────────────────────────────────── */
+
+  --token-radius-sm: 0.5rem;
+  --token-radius-md: 0.75rem;
+  --token-radius-lg: 1rem;
+  --token-radius-xl: 0.75rem; /* rounded-xl */
+  --token-radius-2xl: 1rem;
+  --token-radius-3xl: 1.5rem;
+  --token-radius-full: 9999px;
+
+  /* Semantic radii */
+  --token-radius-button: var(--token-radius-xl);
+  --token-radius-card: var(--token-radius-2xl);
+  --token-radius-panel: var(--token-radius-3xl);
+  --token-radius-pill: var(--token-radius-full);
+
+  /* ── Shadows ──────────────────────────────────────────────────────────── */
+
+  --token-shadow-sm: 0 1px 2px rgb(26 26 46 / 0.05);
+  --token-shadow-card: 0 1px 3px rgb(26 26 46 / 0.06), 0 1px 2px rgb(26 26 46 / 0.04);
+  --token-shadow-elevated: 0 4px 12px rgb(26 26 46 / 0.08), 0 2px 4px rgb(26 26 46 / 0.04);
+  --token-shadow-modal: 0 12px 40px rgb(26 26 46 / 0.12), 0 4px 12px rgb(26 26 46 / 0.06);
+  --token-shadow-header-bar:
+    0 1px 0 rgb(255 255 255 / 0.8) inset,
+    0 8px 24px -12px rgb(26 26 46 / 0.12);
+
+  /* ── Z-index scale ────────────────────────────────────────────────────── */
+
+  --token-z-base: 0;
+  --token-z-raised: 10;
+  --token-z-dropdown: 40;
+  --token-z-sticky: 50;
+  --token-z-header: 50;
+  --token-z-overlay: 60;
+  --token-z-modal: 70;
+  --token-z-toast: 80;
+
+  /* ── Motion ───────────────────────────────────────────────────────────── */
+
+  --token-transition-fast: 150ms ease;
+  --token-transition-base: 200ms ease;
+  --token-transition-slow: 250ms ease;
+  --token-transition-header: 300ms ease-out;
+
+  /* ── Layout chrome ────────────────────────────────────────────────────── */
+
+  --token-site-header-full-height: 72px;
+  --token-site-header-height: var(--token-site-header-full-height);
+}

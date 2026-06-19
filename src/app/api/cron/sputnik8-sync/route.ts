@@ -2,8 +2,11 @@ import { NextResponse } from "next/server";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import path from "node:path";
+import { authorizeCronRequest } from "@/lib/cron/authorize-cron";
+import { logCronResult } from "@/lib/cron/log-cron-result";
 
 const execFileAsync = promisify(execFile);
+const CRON_ROUTE = "/api/cron/sputnik8-sync";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
@@ -14,13 +17,10 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const secret = process.env.CRON_SECRET?.trim();
-  const authHeader = request.headers.get("authorization");
-  const token = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
-
-  if (!secret || token !== secret) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = authorizeCronRequest(request);
+  if (!auth.ok) return auth.response;
+  const startedAt = Date.now();
+  const ranAt = new Date().toISOString();
 
   const root = process.cwd();
   const scriptPath = path.join(root, "scripts/sputnik8-sync.mjs");
@@ -35,6 +35,18 @@ export async function GET(request: Request) {
       maxBuffer: 10 * 1024 * 1024,
     });
 
+    await logCronResult(CRON_ROUTE, {
+      ok: true,
+      ranAt,
+      message: "Sputnik8 sync completed",
+      statusCode: 200,
+      durationMs: Date.now() - startedAt,
+      details: {
+        stdoutTail: stdout.slice(-1000),
+        stderrTail: stderr.slice(-800),
+      },
+    });
+
     return NextResponse.json({
       ok: true,
       stdout: stdout.slice(-4000),
@@ -42,6 +54,18 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     const err = error as { stdout?: string; stderr?: string; message?: string };
+    await logCronResult(CRON_ROUTE, {
+      ok: false,
+      ranAt,
+      message: err.message ?? "Sync failed",
+      error,
+      statusCode: 500,
+      durationMs: Date.now() - startedAt,
+      details: {
+        stdout: err.stdout?.slice(-4000),
+        stderr: err.stderr?.slice(-2000),
+      },
+    });
     return NextResponse.json(
       {
         ok: false,

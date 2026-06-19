@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Check, Pencil, Send, Trash2 } from "lucide-react";
+import { Check, Pencil, Puzzle, Send, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/auth/UserAvatar";
@@ -23,6 +24,8 @@ import {
   type OrganizerProfile,
 } from "@/types/organizer-profile";
 import { formatPlatformTenure } from "@/lib/organizer-experience";
+import NotificationPreferencesSection from "@/components/notifications/NotificationPreferencesSection";
+import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -31,6 +34,7 @@ const SETTINGS_TABS = [
   { id: "contacts", label: "Контакты и график" },
   { id: "cancellation", label: "Отмена бронирования" },
   { id: "guides", label: "Гиды" },
+  { id: "notifications", label: "Уведомления" },
 ] as const;
 
 type SettingsTabId = (typeof SETTINGS_TABS)[number]["id"];
@@ -286,6 +290,23 @@ export default function OrganizerSettingsView() {
         </div>
       </div>
 
+      <div className="rounded-2xl border border-sky/15 bg-sky/[0.06] px-4 py-3 sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-5">
+        <div className="flex items-start gap-3">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sky shadow-sm">
+            <Puzzle className="h-4 w-4" />
+          </div>
+          <p className="text-sm leading-relaxed text-charcoal">
+            API-ключи, виджет туров и статистика запросов — в разделе интеграций.
+          </p>
+        </div>
+        <Link
+          href="/organizer/integrations"
+          className="mt-3 inline-flex shrink-0 text-sm font-semibold text-sky hover:underline sm:mt-0"
+        >
+          Открыть интеграции
+        </Link>
+      </div>
+
       <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
         <div className="flex gap-1 overflow-x-auto border-b border-gray-200 px-3 scrollbar-hide sm:px-4">
           {SETTINGS_TABS.map((tab) => (
@@ -442,7 +463,7 @@ export default function OrganizerSettingsView() {
                       setExtendedDescription(event.target.value);
                       markDirty();
                     }}
-                    className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                    className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     required
                   />
                   <div className="mt-1 flex items-start justify-between gap-3">
@@ -599,6 +620,11 @@ export default function OrganizerSettingsView() {
           <OrganizerCancellationTab userId={user.id} />
         ) : activeTab === "guides" ? (
           <OrganizerGuidesTab userId={user.id} />
+        ) : activeTab === "notifications" ? (
+          <div className="space-y-6">
+            <ThemeSettingsSection />
+            <NotificationPreferencesSection scope="organizer" />
+          </div>
         ) : null}
       </div>
 

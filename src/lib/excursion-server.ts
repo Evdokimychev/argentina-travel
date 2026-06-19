@@ -18,6 +18,7 @@ import {
   pgFetchSimilarExcursions as pgFetchSimilarTripsterExcursions,
 } from "@/lib/tripster/pg-repository";
 import { fetchGuideProfileServer } from "@/lib/tripster/guide-server";
+import { isTripsterConfigured } from "@/lib/tripster/env";
 import {
   fetchSputnik8ExcursionBySlug,
   fetchSputnik8ExcursionCityBySlug,
@@ -157,7 +158,11 @@ async function fetchTripsterDetail(slug: string): Promise<ExcursionDetail | null
     ? await fetchTripsterExcursionBySlug(supabase, slug)
     : await pgFetchTripsterExcursionDetailServer(slug);
   if (!detail) return null;
-  return enrichTripsterGuideProfile(detail);
+  const enriched = await enrichTripsterGuideProfile(detail);
+  return {
+    ...enriched,
+    tripsterPartnerApiConfigured: isTripsterConfigured(),
+  };
 }
 
 async function fetchSputnik8Detail(slug: string): Promise<ExcursionDetail | null> {

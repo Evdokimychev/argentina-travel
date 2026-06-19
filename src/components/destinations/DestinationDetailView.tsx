@@ -10,21 +10,26 @@ import {
   MapPin,
   Plane,
 } from "lucide-react";
+import ContentReadingLayout from "@/components/content/ContentReadingLayout";
+import SharePageLinkButton from "@/components/content/SharePageLinkButton";
 import DestinationInsuranceTeaser from "@/components/destinations/DestinationInsuranceTeaser";
-import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
+import RelatedContentCards from "@/components/content/RelatedContentCards";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { SafeImage } from "@/components/ui/safe-image";
 import { Button } from "@/components/ui/button";
 import type { DestinationPage } from "@/data/destination-pages";
+import { destinationGalleryAlt, destinationHeroAlt } from "@/lib/media-alt-text";
 import { getPlaceBySlug } from "@/data/places-seed";
 import { destinationExcursionsHref } from "@/data/excursion-city-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { destinationCatalogLink, matchToursForDestination } from "@/lib/destinations";
+import { flattenKnowledgeLinks } from "@/lib/content-related-links";
 import { pairedPlaceSlugForDestination, placeSlugsForDestination } from "@/lib/geography-links";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
 import { placeHref } from "@/lib/places-repository";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
+import type { ContentTocItem } from "@/types/content-reading";
 import type { TourListing } from "@/types";
 
 interface DestinationDetailViewProps {
@@ -46,6 +51,25 @@ function FactPill({ icon: Icon, label, value }: { icon: typeof Clock; label: str
   );
 }
 
+function buildDestinationTocItems(destination: DestinationPage): ContentTocItem[] {
+  const items: ContentTocItem[] = [
+    { id: "about", label: "О направлении", level: 2 },
+    { id: "highlights", label: "Главное в регионе", level: 2 },
+  ];
+
+  if (destination.gallery && destination.gallery.length > 1) {
+    items.push({ id: "gallery", label: "Галерея", level: 2 });
+  }
+
+  items.push({ id: "how-to-get", label: "Как добраться", level: 2 });
+
+  if (destination.travelTips.length > 0) {
+    items.push({ id: "travel-tips", label: "Советы путешественникам", level: 2 });
+  }
+
+  return items;
+}
+
 export default function DestinationDetailView({
   destination,
   initialTours,
@@ -59,18 +83,57 @@ export default function DestinationDetailView({
   const linkedPlaceSlugs = placeSlugsForDestination(destination.id);
   const primaryPlaceSlug = pairedPlaceSlugForDestination(destination.id);
   const primaryPlace = primaryPlaceSlug ? getPlaceBySlug(primaryPlaceSlug) : undefined;
+  const tocItems = buildDestinationTocItems(destination);
+  const relatedItems = knowledgeLinks ? flattenKnowledgeLinks(knowledgeLinks) : [];
+
+  const destinationAside = (
+    <>
+      {flightSidebar}
+      <DestinationInsuranceTeaser destinationName={destination.name} />
+      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+        <div className="flex items-start gap-3">
+          <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
+          <div>
+            <p className="text-sm font-semibold text-charcoal">Лучший сезон</p>
+            <p className="mt-1 text-sm leading-relaxed text-slate">{destination.bestSeason}</p>
+          </div>
+        </div>
+        <div className="mt-4 flex items-start gap-3 border-t border-gray-100 pt-4">
+          <Clock className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
+          <div>
+            <p className="text-sm font-semibold text-charcoal">Рекомендуемый срок</p>
+            <p className="mt-1 text-sm leading-relaxed text-slate">{destination.idealDuration}</p>
+          </div>
+        </div>
+        <Link href={catalogHref} className="mt-5 block">
+          <Button className="w-full">
+            Все туры в каталоге
+            <ArrowRight className="h-4 w-4" />
+          </Button>
+        </Link>
+        {excursionsHref ? (
+          <Link href={excursionsHref} className="mt-3 block">
+            <Button variant="outline" className="w-full">
+              Экскурсии в городе
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        ) : null}
+      </div>
+    </>
+  );
 
   return (
     <>
       <section className="relative min-h-[48vh] overflow-hidden sm:min-h-[52vh]">
         <SafeImage
           src={destination.image}
-          alt={destination.imageAlt ?? destination.name}
+          alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
           fill
           priority
           className="object-cover"
           sizes="100vw"
-          placeholderVariant="generic"
+          placeholderVariant="destination"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/45 to-charcoal/20" />
         <div className={cn(siteContainerClass, "relative flex min-h-[48vh] flex-col justify-end py-10 sm:min-h-[52vh] sm:py-12")}>
@@ -85,17 +148,25 @@ export default function DestinationDetailView({
             <span aria-hidden>–</span>
             <span className="text-white">{destination.name}</span>
           </nav>
-          <span className="inline-flex w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
-            {destination.regionGroup}
-          </span>
-          <p className="mt-3 flex items-center gap-1.5 text-sm text-white/80">
-            <MapPin className="h-4 w-4 shrink-0" aria-hidden />
-            {destination.region}
-          </p>
-          <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
-            {destination.name}
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-white/85 sm:text-lg">{destination.description}</p>
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <span className="inline-flex w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
+                {destination.regionGroup}
+              </span>
+              <p className="mt-3 flex items-center gap-1.5 text-sm text-white/80">
+                <MapPin className="h-4 w-4 shrink-0" aria-hidden />
+                {destination.region}
+              </p>
+              <h1 className="mt-2 max-w-3xl font-display text-3xl font-bold text-white sm:text-4xl lg:text-5xl">
+                {destination.name}
+              </h1>
+              <p className="mt-3 max-w-2xl text-base text-white/85 sm:text-lg">{destination.description}</p>
+            </div>
+            <SharePageLinkButton
+              title={destination.name}
+              className="shrink-0 border-white/20 bg-white/10 text-white hover:border-white/40 hover:bg-white/20 hover:text-white"
+            />
+          </div>
           <div className="mt-6 grid max-w-3xl gap-2 sm:grid-cols-3">
             <FactPill icon={Clock} label="На сколько" value={destination.idealDuration} />
             <FactPill icon={CalendarDays} label="Сезон" value={destination.bestSeason.split(";")[0]} />
@@ -105,11 +176,21 @@ export default function DestinationDetailView({
       </section>
 
       <section className={cn(siteContainerClass, "py-12 sm:py-16")}>
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
+        <ContentReadingLayout
+          tocItems={tocItems}
+          aside={destinationAside}
+          articleClassName="content-reading-prose--wide"
+          relatedItems={[]}
+        >
           <div className="space-y-10">
             <div>
-              <h2 className="font-heading text-2xl font-bold text-charcoal">О направлении</h2>
-              <p className="mt-4 text-base leading-relaxed text-slate">{destination.intro}</p>
+              <h2
+                id="about"
+                className={cn("font-heading text-2xl font-bold text-charcoal", siteScrollAnchorClass)}
+              >
+                О направлении
+              </h2>
+              <p className="mt-4">{destination.intro}</p>
               {linkedPlaceSlugs.length > 0 ? (
                 <div className="mt-6 rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-5 sm:p-6">
                   <p className="text-sm font-medium text-charcoal">
@@ -151,7 +232,12 @@ export default function DestinationDetailView({
             </div>
 
             <div>
-              <h2 className="font-heading text-xl font-bold text-charcoal">Главное в регионе</h2>
+              <h2
+                id="highlights"
+                className={cn("font-heading text-xl font-bold text-charcoal", siteScrollAnchorClass)}
+              >
+                Главное в регионе
+              </h2>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
                 {destination.highlights.map((item) => (
                   <li
@@ -167,17 +253,26 @@ export default function DestinationDetailView({
 
             {destination.gallery && destination.gallery.length > 1 ? (
               <div>
-                <h2 className="font-heading text-xl font-bold text-charcoal">Галерея</h2>
+                <h2
+                  id="gallery"
+                  className={cn("font-heading text-xl font-bold text-charcoal", siteScrollAnchorClass)}
+                >
+                  Галерея
+                </h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {destination.gallery.map((src, i) => (
                     <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
                       <SafeImage
                         src={src}
-                        alt={`${destination.imageAlt ?? destination.name} — фото ${i + 1}`}
+                        alt={destinationGalleryAlt(
+                          destination.name,
+                          i,
+                          destination.gallery?.length,
+                        )}
                         fill
                         className="object-cover"
                         sizes="50vw"
-                        placeholderVariant="generic"
+                        placeholderVariant="destination"
                       />
                     </div>
                   ))}
@@ -185,7 +280,13 @@ export default function DestinationDetailView({
               </div>
             ) : null}
 
-            <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-6 sm:p-8">
+            <div
+              id="how-to-get"
+              className={cn(
+                "rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-6 sm:p-8",
+                siteScrollAnchorClass
+              )}
+            >
               <div className="flex items-start gap-3">
                 <Plane className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
                 <div>
@@ -199,7 +300,12 @@ export default function DestinationDetailView({
               <div>
                 <div className="flex items-center gap-2">
                   <Lightbulb className="h-5 w-5 text-amber-500" aria-hidden />
-                  <h2 className="font-heading text-xl font-bold text-charcoal">Советы путешественникам</h2>
+                  <h2
+                    id="travel-tips"
+                    className={cn("font-heading text-xl font-bold text-charcoal", siteScrollAnchorClass)}
+                  >
+                    Советы путешественникам
+                  </h2>
                 </div>
                 <ul className="mt-4 space-y-3">
                   {destination.travelTips.map((tip) => (
@@ -214,42 +320,7 @@ export default function DestinationDetailView({
               </div>
             ) : null}
           </div>
-
-          <aside className="space-y-4 lg:sticky lg:top-24">
-            {flightSidebar}
-            <DestinationInsuranceTeaser destinationName={destination.name} />
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
-              <div className="flex items-start gap-3">
-                <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">Лучший сезон</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate">{destination.bestSeason}</p>
-                </div>
-              </div>
-              <div className="mt-4 flex items-start gap-3 border-t border-gray-100 pt-4">
-                <Clock className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
-                <div>
-                  <p className="text-sm font-semibold text-charcoal">Рекомендуемый срок</p>
-                  <p className="mt-1 text-sm leading-relaxed text-slate">{destination.idealDuration}</p>
-                </div>
-              </div>
-              <Link href={catalogHref} className="mt-5 block">
-                <Button className="w-full">
-                  Все туры в каталоге
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              {excursionsHref ? (
-                <Link href={excursionsHref} className="mt-3 block">
-                  <Button variant="outline" className="w-full">
-                    Экскурсии в городе
-                    <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-              ) : null}
-            </div>
-          </aside>
-        </div>
+        </ContentReadingLayout>
       </section>
 
       <section className="bg-surface-muted py-12 sm:py-16">
@@ -293,10 +364,10 @@ export default function DestinationDetailView({
         </div>
       </section>
 
-      {knowledgeLinks ? (
+      {relatedItems.length > 0 ? (
         <section className="bg-white py-12 sm:py-16">
           <div className={siteContainerClass}>
-            <RelatedKnowledgeSection links={knowledgeLinks} />
+            <RelatedContentCards title="Связанные материалы" items={relatedItems} />
           </div>
         </section>
       ) : null}

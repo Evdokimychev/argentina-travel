@@ -61,6 +61,8 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
   };
 
   const maxPersons = scheduleMaxPersons ?? excursion.maxPersons ?? 10;
+  const isTripsterPartnerApiConfigured =
+    excursion.partner === "tripster" ? excursion.tripsterPartnerApiConfigured !== false : false;
 
   useEffect(() => {
     if (user) {
@@ -74,6 +76,16 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     let cancelled = false;
 
     async function loadSchedule() {
+      if (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured) {
+        setScheduleDates([]);
+        setScheduleMaxPersons(undefined);
+        setSelectedDate("");
+        setSelectedTime("");
+        setScheduleError(null);
+        setScheduleLoading(false);
+        return;
+      }
+
       setScheduleLoading(true);
       setScheduleError(null);
       try {
@@ -106,7 +118,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     return () => {
       cancelled = true;
     };
-  }, [excursion.slug]);
+  }, [excursion.partner, excursion.slug, isTripsterPartnerApiConfigured]);
 
   const selectedSlots = useMemo(
     () => scheduleDates.find((entry) => entry.date === selectedDate)?.slots ?? [],
@@ -120,6 +132,12 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
   }, [selectedSlots, selectedTime]);
 
   useEffect(() => {
+    if (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured) {
+      setQuote(null);
+      setQuoteLoading(false);
+      return;
+    }
+
     if (!selectedDate || !selectedTime) {
       setQuote(null);
       return;
@@ -149,7 +167,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
       cancelled = true;
       window.clearTimeout(timer);
     };
-  }, [excursion.slug, selectedDate, selectedTime, persons]);
+  }, [excursion.partner, excursion.slug, isTripsterPartnerApiConfigured, selectedDate, selectedTime, persons]);
 
   const priceUsd =
     resolveExcursionQuotePriceUsd(excursion, quote) ?? resolveExcursionPriceUsd(excursion);
@@ -184,10 +202,16 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
 
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/excursions/${excursion.slug}/book`, {
+      const endpoint =
+        excursion.partner === "tripster"
+          ? "/api/tripster/booking-request"
+          : `/api/excursions/${excursion.slug}/book`;
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          slug: excursion.slug,
           date: selectedDate,
           time: selectedTime,
           personsCount: persons,
@@ -276,11 +300,18 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
       : "excursions.partnerDisclaimer.tripster";
 
   const prefersAffiliate =
-    excursion.partner === "sputnik8" &&
-    !scheduleLoading &&
-    (scheduleError != null || scheduleDates.length === 0);
+    (excursion.partner === "sputnik8" &&
+      !scheduleLoading &&
+      (scheduleError != null || scheduleDates.length === 0)) ||
+    (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured);
 
   const canBookOnSite = excursion.isBookable !== false && !prefersAffiliate;
+  const submitButtonLabel =
+    excursion.partner === "tripster" && isTripsterPartnerApiConfigured
+      ? "Забронировать на сайте"
+      : t("excursions.booking.submit");
+  const affiliateButtonLabel =
+    excursion.partner === "tripster" ? "Забронировать на сайте" : t("excursions.book");
   const listedPriceLabel =
     quote?.value_string?.trim() ||
     excursion.priceDisplay?.trim() ||
@@ -417,7 +448,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
             disabled={scheduleLoading}
             onClick={() => void handleSubmit()}
           >
-            {t("excursions.booking.submit")}
+            {submitButtonLabel}
           </Button>
 
           <p className="text-xs leading-relaxed text-slate">{t("excursions.booking.disclaimer")}</p>
@@ -428,7 +459,7 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
             href={excursion.bookingHref}
             className="mt-5 flex w-full items-center justify-center rounded-xl bg-sky px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-sky/90"
           >
-            {t("excursions.book")}
+            {affiliateButtonLabel}
           </a>
           <p className="mt-3 text-xs leading-relaxed text-slate">{t(partnerDisclaimerKey)}</p>
         </>

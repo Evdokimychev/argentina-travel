@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
 import { contactFieldsFromAuthUser, splitFullName } from "@/components/tour-detail/checkout/checkout-contact";
 import { createInitialCheckoutForm } from "@/components/tour-detail/checkout/types";
 import { validateBookingDates } from "@/components/tour-detail/BookingDateSelector";
@@ -145,6 +146,7 @@ export default function PartnerTourBookingContactSection({
         paymentOption: "later",
         fillTravelersLater: true,
       },
+      attribution: getStoredFirstTouchAttribution() ?? undefined,
     });
 
     if ("error" in result) {

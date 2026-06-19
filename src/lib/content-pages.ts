@@ -57,6 +57,44 @@ export function contentPageListItem(page: ContentPage): {
   };
 }
 
+export function buildGuideSearchItems(pages: ContentPage[] = getPagesBySection("guide")): SearchIndexItem[] {
+  return pages.map((page) => ({
+    id: `${page.section}-${page.slug}`,
+    type: contentSearchType(page.section),
+    title: page.title,
+    description: page.description,
+    href: contentPageHref(page),
+    keywords: [
+      page.category,
+      "путеводитель",
+      ...page.sections.flatMap((section) => [
+        section.heading,
+        ...(section.paragraphs ?? []),
+        ...(section.list ?? []),
+      ]),
+    ].filter(Boolean) as string[],
+  }));
+}
+
+export function buildImmigrationSearchItems(): SearchIndexItem[] {
+  return getPagesBySection("immigration").map((page) => ({
+    id: `${page.section}-${page.slug}`,
+    type: contentSearchType(page.section),
+    title: page.title,
+    description: page.description,
+    href: contentPageHref(page),
+    keywords: [
+      page.category,
+      "иммиграция",
+      ...page.sections.flatMap((section) => [
+        section.heading,
+        ...(section.paragraphs ?? []),
+        ...(section.list ?? []),
+      ]),
+    ].filter(Boolean) as string[],
+  }));
+}
+
 export function buildContentSearchItems(): SearchIndexItem[] {
   return getAllContentPages().map((page) => ({
     id: `${page.section}-${page.slug}`,

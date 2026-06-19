@@ -22,6 +22,7 @@ const DEFAULT_FEATURES: SiteFeatures = {
 const CACHE_TTL_MS = 60_000;
 
 let featuresCache: { value: SiteFeatures; at: number } | null = null;
+let legalCache: { value: SiteLegal; at: number } | null = null;
 
 function parseFeatures(value: Json | undefined): SiteFeatures {
   if (!value || typeof value !== "object" || Array.isArray(value)) {
@@ -62,7 +63,17 @@ export function invalidateSiteFeaturesCache(): void {
 }
 
 export async function fetchSiteLegal(): Promise<SiteLegal> {
+  const now = Date.now();
+  if (legalCache && now - legalCache.at < CACHE_TTL_MS) {
+    return legalCache.value;
+  }
   const value = await loadSettingsKey("site.legal");
-  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
-  return value as SiteLegal;
+  const parsed =
+    value && typeof value === "object" && !Array.isArray(value) ? (value as SiteLegal) : {};
+  legalCache = { value: parsed, at: now };
+  return parsed;
+}
+
+export function invalidateSiteLegalCache(): void {
+  legalCache = null;
 }

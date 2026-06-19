@@ -23,8 +23,12 @@ import { formatShortDisplayName } from "@/lib/full-name";
 import { buildExcursionGuideHref } from "@/lib/tripster/guide-mapper";
 import type { ExcursionListing, ExcursionPartner } from "@/types/excursion";
 
-function partnerLabelKey(partner: ExcursionPartner): string {
-  return partner === "sputnik8" ? "excursions.partner.sputnik8" : "excursions.partner.tripster";
+function partnerBadgeVariant(partner: ExcursionPartner): "new" | "hit" {
+  return partner === "tripster" ? "new" : "hit";
+}
+
+function partnerBadgeLabel(partner: ExcursionPartner, t: (key: string) => string): string {
+  return partner === "sputnik8" ? t("excursions.partner.sputnik8") : t("excursions.partner.tripster");
 }
 
 export default function ExcursionCard({ excursion }: { excursion: ExcursionListing }) {
@@ -36,9 +40,7 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
   const formatKind = excursion.formatKind ?? "group";
   const galleryImages = excursion.coverImage ? [excursion.coverImage] : [];
   const hasReviews = excursion.rating != null && excursion.reviewCount > 0;
-  const guideLabel = excursion.guide
-    ? formatShortDisplayName(excursion.guide.name)
-    : null;
+  const guideLabel = excursion.guide ? formatShortDisplayName(excursion.guide.name) : null;
 
   return (
     <article
@@ -48,20 +50,22 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
         <div className="relative aspect-[4/3] overflow-hidden">
           <TourCardGallery images={galleryImages} alt={excursion.title} />
 
-          <span className="pointer-events-none absolute left-3 top-3 z-20 rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-charcoal shadow-sm backdrop-blur-sm">
-            {t(partnerLabelKey(excursion.partner))}
-          </span>
+          <div className="absolute left-3 top-3 z-10">
+            <Badge variant={partnerBadgeVariant(excursion.partner)}>
+              {partnerBadgeLabel(excursion.partner, t)}
+            </Badge>
+          </div>
 
           <ExcursionFavoriteButton
             excursion={excursion}
-            className={cn(favoriteOverlayButtonClass, "absolute right-3 top-3 z-20")}
+            className={cn(favoriteOverlayButtonClass, "absolute right-3 top-3 z-10")}
             iconClassName="h-4 w-4"
           />
 
           {excursion.guide && guideLabel ? (
             <Link
               href={buildExcursionGuideHref(excursion.guide.id)}
-              className="pointer-events-auto absolute bottom-3 left-3 z-20 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm transition hover:bg-charcoal/75"
+              className="pointer-events-auto absolute bottom-3 left-3 z-10 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm transition hover:bg-charcoal/75"
               aria-label={`${t("excursions.guide.profile")}: ${guideLabel}`}
             >
               <div className="relative h-7 w-7 overflow-hidden rounded-full">
@@ -87,7 +91,6 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
               <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
               <span className="truncate">{excursion.cityName}</span>
             </span>
-            <div className="flex shrink-0 items-center gap-2">
             {hasReviews ? (
               <StarRating
                 layout="badge"
@@ -98,7 +101,6 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
             ) : (
               <StarRating layout="badge" isNew newLabel={t("excursions.card.new")} size="sm" />
             )}
-            </div>
           </div>
 
           <h3 className="mt-2 line-clamp-2 font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky">
@@ -106,42 +108,44 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
           </h3>
 
           {excursion.tagline ? (
-            <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate">{excursion.tagline}</p>
+            <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">{excursion.tagline}</p>
           ) : null}
 
-          <div className="mt-3 flex items-center justify-between gap-2">
-            {priceUsd != null ? (
-              <TourPriceDisplay
-                priceUsd={priceUsd}
-                size="sm"
-                showFrom={showFrom}
-                suffix={t(excursionPriceSuffixKey(priceUnit))}
-              />
-            ) : excursion.priceDisplay ? (
-              <p className="text-xs leading-snug text-slate">{excursion.priceDisplay}</p>
-            ) : (
-              <p className="text-xs text-slate">{t("excursions.priceOnPartner")}</p>
-            )}
-            {durationLabel ? (
-              <p className="inline-flex shrink-0 items-center gap-1 self-end text-xs leading-none text-slate">
-                <Clock className="h-3.5 w-3.5 text-slate/70" aria-hidden />
-                {durationLabel}
-              </p>
-            ) : null}
+          <div className="mt-3 flex flex-col gap-0.5">
+            <div className="flex items-baseline justify-between gap-2">
+              {priceUsd != null ? (
+                <TourPriceDisplay
+                  priceUsd={priceUsd}
+                  size="sm"
+                  showFrom={showFrom}
+                  suffix={t(excursionPriceSuffixKey(priceUnit))}
+                />
+              ) : excursion.priceDisplay ? (
+                <p className="text-sm font-semibold text-charcoal">{excursion.priceDisplay}</p>
+              ) : (
+                <p className="text-sm text-slate">{t("excursions.priceOnPartner")}</p>
+              )}
+              {durationLabel ? (
+                <p className="inline-flex shrink-0 items-center gap-1 self-baseline text-xs text-slate">
+                  <Clock className="h-3.5 w-3.5 text-slate/70" aria-hidden />
+                  {durationLabel}
+                </p>
+              ) : null}
+            </div>
           </div>
 
           <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
-            <Badge variant="default" className="rounded-md px-2 py-0.5 text-[11px] font-normal">
+            <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
               {t(excursionFormatLabelKey(formatKind))}
-            </Badge>
+            </span>
           </div>
 
-          <div className="relative z-20 mt-auto pt-3">
+          <div className="pointer-events-auto relative z-20 mt-auto pt-4">
             <Link
               href={`/excursions/${excursion.slug}`}
               className={buttonVariants({
                 variant: "outline",
-                className: "pointer-events-auto h-10 w-full rounded-xl text-sm font-semibold",
+                className: "h-10 w-full rounded-xl text-sm font-semibold",
               })}
             >
               {t("excursions.card.open")}

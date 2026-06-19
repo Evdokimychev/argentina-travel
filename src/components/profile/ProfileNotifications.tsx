@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Bell } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import {
   getNotificationsForUser,
   markAllNotificationsRead,
@@ -11,14 +12,20 @@ import {
   NOTIFICATIONS_UPDATED_EVENT,
   type AppNotification,
 } from "@/lib/notifications";
+import {
+  apiFetchNotifications,
+  apiMarkNotificationRead,
+  NOTIFICATIONS_HUB_UPDATED_EVENT,
+} from "@/lib/notifications/notifications-api";
 import { cn } from "@/lib/cn";
 import { cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
+import type { UnifiedNotificationItem } from "@/types/notifications-hub";
 
 function NotificationItem({
   item,
   onRead,
 }: {
-  item: AppNotification;
+  item: UnifiedNotificationItem;
   onRead: (id: string) => void;
 }) {
   const content = (
@@ -65,33 +72,97 @@ function NotificationItem({
   );
 }
 
+function mapLocalNotification(item: AppNotification): UnifiedNotificationItem {
+  return {
+    id: item.id,
+    source: "system",
+    category: item.category,
+    title: item.title,
+    body: item.body,
+    href: item.href,
+    read: item.read,
+    createdAt: item.createdAt,
+  };
+}
+
 export default function ProfileNotifications({ limit }: { limit?: number }) {
   const { user } = useAuth();
-  const [items, setItems] = useState<AppNotification[]>([]);
+  const [items, setItems] = useState<UnifiedNotificationItem[]>([]);
+  const remoteEnabled = isSupabaseAuthEnabled();
+
+  const refresh = useCallback(async () => {
+    if (!user) return;
+
+    if (remoteEnabled) {
+      try {
+        const data = await apiFetchNotifications("tourist", limit ?? 20);
+        setItems(data.items);
+        return;
+      } catch {
+        // fallback
+      }
+    }
+
+    setItems(
+      getNotificationsForUser({ userId: user.id, contactEmail: user.email, limit }).map(
+        mapLocalNotification
+      )
+    );
+  }, [user, limit, remoteEnabled]);
+
+  useEffect(() => {
+    if (!user) return;
+    void refresh();
+  }, [user, refresh]);
 
   useEffect(() => {
     if (!user) return;
 
-    function refresh() {
-      setItems(getNotificationsForUser({ userId: user!.id, contactEmail: user!.email, limit }));
+    function handleUpdate() {
+      void refresh();
     }
 
-    refresh();
-    window.addEventListener(NOTIFICATIONS_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(NOTIFICATIONS_UPDATED_EVENT, refresh);
-  }, [user, limit]);
+    window.addEventListener(NOTIFICATIONS_UPDATED_EVENT, handleUpdate);
+    window.addEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handleUpdate);
+    return () => {
+      window.removeEventListener(NOTIFICATIONS_UPDATED_EVENT, handleUpdate);
+      window.removeEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handleUpdate);
+    };
+  }, [user, refresh]);
+
+  async function handleRead(id: string) {
+    if (remoteEnabled) {
+      try {
+        await apiMarkNotificationRead({ id, scope: "tourist" });
+      } catch {
+        return;
+      }
+    } else {
+      markNotificationRead(id);
+    }
+    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, read: true } : item)));
+  }
+
+  async function handleReadAll() {
+    if (!user) return;
+    if (remoteEnabled) {
+      try {
+        await apiMarkNotificationRead({ markAll: true, scope: "tourist" });
+      } catch {
+        return;
+      }
+    } else {
+      markAllNotificationsRead({ userId: user.id, contactEmail: user.email });
+    }
+    setItems((prev) => prev.map((item) => ({ ...item, read: true })));
+  }
 
   if (!user) return null;
 
   const unread = items.filter((item) => !item.read).length;
 
-  function handleRead(id: string) {
-    markNotificationRead(id);
-    setItems((prev) => prev.map((item) => (item.id === id ? { ...item, read: true } : item)));
-  }
-
   return (
-    <section className={cabinetPanelClass}>
+    <section id="notifications" className={cabinetPanelClass}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky/10 text-sky">
@@ -107,14 +178,7 @@ export default function ProfileNotifications({ limit }: { limit?: number }) {
           </div>
         </div>
         {unread > 0 ? (
-          <button
-            type="button"
-            onClick={() => {
-              markAllNotificationsRead({ userId: user.id, contactEmail: user.email });
-              setItems((prev) => prev.map((item) => ({ ...item, read: true })));
-            }}
-            className={cn(cabinetLinkClass, "text-xs")}
-          >
+          <button type="button" onClick={() => void handleReadAll()} className={cn(cabinetLinkClass, "text-xs")}>
             Прочитать все
           </button>
         ) : null}
@@ -130,7 +194,7 @@ export default function ProfileNotifications({ limit }: { limit?: number }) {
         </ul>
       ) : (
         <p className="mt-4 text-sm text-slate">
-          Здесь появятся сообщения о заявках, оплате и заполнении данных участников.
+          Здесь появятся сообщения о заявках, оплате, отзывах и заполнении данных участников.
         </p>
       )}
     </section>

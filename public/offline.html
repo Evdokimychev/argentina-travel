@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#74acdf" />
+    <title>Нет сети — Пора в Аргентину</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --sky: #74acdf;
+        --charcoal: #1a1a2e;
+        --slate: #4a5568;
+        --bg: #f7f8fa;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: max(1.5rem, env(safe-area-inset-top))
+          max(1.5rem, env(safe-area-inset-right))
+          max(1.5rem, env(safe-area-inset-bottom))
+          max(1.5rem, env(safe-area-inset-left));
+        font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--charcoal);
+      }
+      main {
+        max-width: 22rem;
+        text-align: center;
+      }
+      img {
+        width: 4.5rem;
+        height: 4.5rem;
+        margin: 0 auto 1rem;
+        display: block;
+      }
+      h1 {
+        font-size: 1.25rem;
+        margin: 0 0 0.5rem;
+      }
+      p {
+        margin: 0 0 1.25rem;
+        color: var(--slate);
+        line-height: 1.5;
+        font-size: 0.95rem;
+      }
+      button {
+        appearance: none;
+        border: 0;
+        border-radius: 999px;
+        padding: 0.75rem 1.25rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: #fff;
+        background: var(--sky);
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <img src="/icons/pwa-icon.svg" width="72" height="72" alt="" />
+      <h1>Нет подключения к сети</h1>
+      <p>Проверьте интернет и попробуйте снова. Ранее открытые страницы могут быть недоступны без сети.</p>
+      <button type="button" onclick="location.reload()">Обновить</button>
+    </main>
+  </body>
+</html>

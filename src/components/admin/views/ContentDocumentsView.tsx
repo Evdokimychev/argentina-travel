@@ -3,14 +3,20 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdminListSkeleton } from "@/components/ui/skeleton";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import type { ContentDocumentItem, ContentInventorySummary } from "@/lib/admin/content-inventory";
+import type { CmsLocaleCoverage, CmsTranslationCoverageByType } from "@/lib/cms/cms-locale";
+import { CMS_LOCALE_LABELS } from "@/lib/cms/cms-locale";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
+import CmsLocaleBadges from "@/components/admin/CmsLocaleBadges";
 
 type LegalEditableRow = {
   slug: string;
@@ -20,11 +26,18 @@ type LegalEditableRow = {
   cmsStatus: string | null;
   hasOverride: boolean;
   publicSource: "cms" | "file";
+  featuredFromCms?: boolean;
+  localeCoverage: CmsLocaleCoverage;
 };
 
 type ContentResponse = ContentInventorySummary & {
   legalEditable?: LegalEditableRow[];
+  blogEditable?: LegalEditableRow[];
+  guideEditable?: LegalEditableRow[];
+  destinationEditable?: LegalEditableRow[];
+  placeEditable?: LegalEditableRow[];
   cmsCount?: number;
+  translationCoverage?: CmsTranslationCoverageByType[];
 };
 
 const TYPE_LABELS: Record<ContentDocumentItem["type"], string> = {
@@ -52,6 +65,7 @@ export default function ContentDocumentsView() {
   const { data, loading, error, refresh } = useAdminApi<ContentResponse>("/api/admin/content");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<ContentDocumentItem["type"] | "all">("all");
+  const [bulkImporting, setBulkImporting] = useState(false);
   const [creatingSlug, setCreatingSlug] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -63,6 +77,40 @@ export default function ContentDocumentsView() {
       return doc.title.toLowerCase().includes(query) || doc.id.toLowerCase().includes(query);
     });
   }, [data?.documents, search, typeFilter]);
+
+  async function bulkImportFromTs(publish = true) {
+    const confirmed = window.confirm(
+      publish
+        ? "Импортировать все TS-документы в CMS и опубликовать? Существующие записи будут пропущены."
+        : "Импортировать все TS-документы как черновики CMS? Существующие записи будут пропущены."
+    );
+    if (!confirmed) return;
+
+    setBulkImporting(true);
+    try {
+      const res = await fetch("/api/admin/content/documents/bulk-import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publish, skipExisting: true }),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        created?: number;
+        skipped?: number;
+        message?: string;
+        error?: string;
+      };
+      if (!res.ok && res.status !== 207) {
+        throw new Error(json.error ?? json.message ?? "Не удалось выполнить импорт");
+      }
+      alert(json.message ?? `Создано: ${json.created ?? 0}, пропущено: ${json.skipped ?? 0}`);
+      await refresh();
+    } catch (importError) {
+      alert(importError instanceof Error ? importError.message : "Ошибка импорта");
+    } finally {
+      setBulkImporting(false);
+    }
+  }
 
   async function createLegalOverride(slug: string) {
     setCreatingSlug(slug);
@@ -86,16 +134,155 @@ export default function ContentDocumentsView() {
     }
   }
 
+  async function createBlogOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "blog", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  async function createGuideOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "guide", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  async function createDestinationOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "destination", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  async function createPlaceOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "place", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  function renderCmsRow(row: LegalEditableRow, createOverride: (slug: string) => void) {
+    return (
+      <li key={row.slug} className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
+        <span className="font-medium text-charcoal">{row.title}</span>
+        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-slate">
+          {row.publicSource === "cms" ? "На сайте: CMS" : "На сайте: файл"}
+        </span>
+        {row.cmsStatus ? (
+          <span className="text-xs text-sky">{CMS_STATUS_LABELS[row.cmsStatus] ?? row.cmsStatus}</span>
+        ) : null}
+        {row.featuredFromCms ? (
+          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-800">
+            Избранное: CMS
+          </span>
+        ) : null}
+        <CmsLocaleBadges locales={row.localeCoverage} compact />
+        <div className="ml-auto flex gap-2">
+          <Link href={row.href} target="_blank" className="text-xs text-sky hover:underline">
+            Просмотр
+          </Link>
+          {row.hasOverride ? (
+            <Link
+              href={`/admin/content/documents/${encodeURIComponent(row.cmsId)}`}
+              className="text-xs font-medium text-charcoal hover:text-sky"
+            >
+              Редактировать
+            </Link>
+          ) : (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={creatingSlug === row.slug}
+              onClick={() => void createOverride(row.slug)}
+            >
+              Создать CMS-версию
+            </Button>
+          )}
+        </div>
+      </li>
+    );
+  }
+
   return (
     <CapabilityGate capability="content.edit">
       <AdminPageShell>
         <AdminPageHeader
           title="Документы контента"
-          subtitle="Файловый контент и CMS-версии legal-документов (v1.2)"
+          subtitle="Файловый контент и CMS-версии документов, статей, путеводителей, направлений и мест"
           actions={
-            <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
-              Обновить
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="default"
+                disabled={bulkImporting || loading}
+                onClick={() => void bulkImportFromTs(true)}
+              >
+                {bulkImporting ? "Импорт…" : "Импорт из TS"}
+              </Button>
+              <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
+                Обновить
+              </Button>
+            </div>
           }
         />
 
@@ -119,47 +306,100 @@ export default function ContentDocumentsView() {
           </section>
         ) : null}
 
+        {data?.translationCoverage?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Покрытие переводов CMS (RU / ES / EN)
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50/80 text-left text-xs uppercase tracking-wide text-slate">
+                    <th className="px-5 py-3 font-medium">Тип</th>
+                    <th className="px-5 py-3 font-medium">Документов</th>
+                    <th className="px-5 py-3 font-medium">RU</th>
+                    <th className="px-5 py-3 font-medium">ES</th>
+                    <th className="px-5 py-3 font-medium">EN</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {data.translationCoverage.map((row) => (
+                    <tr key={row.docType}>
+                      <td className="px-5 py-3 font-medium text-charcoal">{row.label}</td>
+                      <td className="px-5 py-3 text-slate">{row.total}</td>
+                      {row.locales.map((localeStat) => (
+                        <td key={localeStat.locale} className="px-5 py-3">
+                          <span className="font-semibold text-charcoal">{localeStat.percent}%</span>
+                          <span className="ml-1 text-xs text-slate">
+                            ({localeStat.count}/{row.total})
+                          </span>
+                          <span className="ml-2 text-[10px] font-semibold uppercase text-slate/70">
+                            {CMS_LOCALE_LABELS[localeStat.locale]}
+                          </span>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="border-t border-gray-100 px-5 py-3 text-xs text-slate">
+              Процент опубликованных CMS-версий по каждой локали. RU обычно 100% через TS или CMS.
+            </p>
+          </section>
+        ) : null}
+
         {data?.legalEditable?.length ? (
           <section className={`${cabinetCardClass} overflow-hidden`}>
             <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
               Юридические документы (CMS)
             </h2>
             <ul className="divide-y divide-gray-100">
-              {data.legalEditable.map((row) => (
-                <li key={row.slug} className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
-                  <span className="font-medium text-charcoal">{row.title}</span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-slate">
-                    {row.publicSource === "cms" ? "На сайте: CMS" : "На сайте: файл"}
-                  </span>
-                  {row.cmsStatus ? (
-                    <span className="text-xs text-sky">
-                      {CMS_STATUS_LABELS[row.cmsStatus] ?? row.cmsStatus}
-                    </span>
-                  ) : null}
-                  <div className="ml-auto flex gap-2">
-                    <Link href={row.href} target="_blank" className="text-xs text-sky hover:underline">
-                      Просмотр
-                    </Link>
-                    {row.hasOverride ? (
-                      <Link
-                        href={`/admin/content/documents/${encodeURIComponent(row.cmsId)}`}
-                        className="text-xs font-medium text-charcoal hover:text-sky"
-                      >
-                        Редактировать
-                      </Link>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={creatingSlug === row.slug}
-                        onClick={() => void createLegalOverride(row.slug)}
-                      >
-                        Создать CMS-версию
-                      </Button>
-                    )}
-                  </div>
-                </li>
-              ))}
+              {data.legalEditable.map((row) => renderCmsRow(row, createLegalOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.blogEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Статьи (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.blogEditable.map((row) => renderCmsRow(row, createBlogOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.guideEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Путеводитель (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.guideEditable.map((row) => renderCmsRow(row, createGuideOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.destinationEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Направления (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.destinationEditable.map((row) => renderCmsRow(row, createDestinationOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.placeEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Места (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.placeEditable.map((row) => renderCmsRow(row, createPlaceOverride))}
             </ul>
           </section>
         ) : null}
@@ -187,13 +427,26 @@ export default function ContentDocumentsView() {
             </NativeSelect>
           </div>
 
-          <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-100">
-            {filtered.length === 0 ? (
-              <li className="px-4 py-10 text-center text-sm text-slate">
-                {loading ? "Загрузка…" : "Ничего не найдено"}
-              </li>
-            ) : (
-              filtered.slice(0, 100).map((doc) => (
+          {loading ? (
+            <AdminListSkeleton rows={6} className="rounded-2xl border border-gray-100" />
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              variant="admin"
+              icon={FileText}
+              title="Документы не найдены"
+              description="Измените поиск или фильтр типа контента."
+              action={{
+                label: "Сбросить фильтры",
+                onClick: () => {
+                  setSearch("");
+                  setTypeFilter("all");
+                },
+                variant: "outline",
+              }}
+            />
+          ) : (
+            <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-100">
+              {filtered.slice(0, 100).map((doc) => (
                 <li key={`${doc.type}-${doc.id}`} className="flex flex-wrap items-center gap-3 px-4 py-3 text-sm">
                   <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-slate">
                     {TYPE_LABELS[doc.type]}
@@ -204,10 +457,10 @@ export default function ContentDocumentsView() {
                   <span className="text-xs text-slate">{STATUS_LABELS[doc.status]}</span>
                   {doc.category ? <span className="text-xs text-slate">{doc.category}</span> : null}
                 </li>
-              ))
-            )}
-          </ul>
-          {filtered.length > 100 ? (
+              ))}
+            </ul>
+          )}
+          {!loading && filtered.length > 100 ? (
             <p className="text-xs text-slate">Показаны первые 100 из {filtered.length}</p>
           ) : null}
         </section>

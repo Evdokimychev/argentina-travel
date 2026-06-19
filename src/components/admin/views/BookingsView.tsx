@@ -1,20 +1,28 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
+import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
+import { AdminTableState } from "@/components/admin/AdminTableState";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
-import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
+import { cabinetCardClass, cabinetTableHeaderClass } from "@/lib/cabinet-ui";
+import { CabinetTableWrap } from "@/components/ui/table";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import type { AdminBookingSummary, AdminBookingsStats } from "@/lib/admin/bookings-server";
+import { normalizeBookingPaymentStatus } from "@/lib/booking-params";
 import type { Booking, BookingStatusActive } from "@/types/tourist";
+import type { BookingPaymentStatus } from "@/types/booking-params";
 
 type BookingsResponse = {
   bookings?: AdminBookingSummary[];
@@ -24,6 +32,7 @@ type BookingsResponse = {
 type StatusFilter = "all" | BookingStatusActive;
 
 export default function BookingsView() {
+  const searchParams = useSearchParams();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const url =
     statusFilter === "all"
@@ -78,6 +87,12 @@ export default function BookingsView() {
     }
   }
 
+  useEffect(() => {
+    const bookingIdFromQuery = searchParams.get("bookingId");
+    if (!bookingIdFromQuery || bookingIdFromQuery === detailId) return;
+    void openDetail(bookingIdFromQuery);
+  }, [searchParams, detailId]);
+
   return (
     <CapabilityGate capability="operations.bookings">
       <AdminPageShell>
@@ -87,14 +102,14 @@ export default function BookingsView() {
           actions={
             <div className="flex gap-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => {
                   window.location.href = "/api/admin/bookings/export";
                 }}
               >
                 CSV
               </Button>
-              <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
+              <Button variant="secondary" onClick={() => void refresh()} disabled={loading}>
                 Обновить
               </Button>
             </div>
@@ -143,24 +158,30 @@ export default function BookingsView() {
             </NativeSelect>
           </div>
 
-          <div className={cabinetTableWrapClass}>
+          <CabinetTableWrap>
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className={cabinetTableHeaderClass}>
                 <tr>
                   <th className="px-4 py-3 font-medium text-slate">Заявка</th>
                   <th className="px-4 py-3 font-medium text-slate">Турист</th>
                   <th className="px-4 py-3 font-medium text-slate">Статус</th>
+                  <th className="px-4 py-3 font-medium text-slate">Оплата</th>
                   <th className="px-4 py-3 font-medium text-slate">Сумма</th>
                   <th className="px-4 py-3 font-medium text-slate">Действия</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={5} className="px-4 py-10 text-center text-slate">
-                      {loading ? "Загрузка…" : "Заявок не найдено"}
-                    </td>
-                  </tr>
+                {loading || filtered.length === 0 ? (
+                  <AdminTableState
+                    loading={loading}
+                    isEmpty={filtered.length === 0}
+                    colSpan={6}
+                    skeletonColumns={6}
+                    emptyIcon={CalendarDays}
+                    emptyTitle="Заявок не найдено"
+                    emptyDescription="Измените фильтр статуса или поисковый запрос."
+                    emptyAction={{ label: "Все заявки", onClick: () => setStatusFilter("all") }}
+                  />
                 ) : (
                   filtered.map((booking) => (
                     <tr key={booking.id} className="align-top">
@@ -168,6 +189,7 @@ export default function BookingsView() {
                         <p className="font-medium text-charcoal">{booking.tourTitle}</p>
                         <p className="mt-1 text-xs text-slate">
                           {formatAdminWhen(booking.createdAt)} · {booking.guests} гост.
+                          {booking.attributionLabel ? ` · ${booking.attributionLabel}` : ""}
                         </p>
                         <Link
                           href={`/tours/${booking.tourSlug}`}
@@ -185,6 +207,13 @@ export default function BookingsView() {
                       </td>
                       <td className="px-4 py-3">
                         <BookingStatusBadge status={booking.status} />
+                      </td>
+                      <td className="px-4 py-3">
+                        <BookingPaymentStatusBadge
+                          status={normalizeBookingPaymentStatus(
+                            booking.paymentStatus as BookingPaymentStatus | "unpaid" | undefined
+                          )}
+                        />
                       </td>
                       <td className="px-4 py-3">
                         <FormattedPrice priceUsd={booking.totalPriceUsd} />
@@ -215,7 +244,7 @@ export default function BookingsView() {
                 )}
               </tbody>
             </table>
-          </div>
+          </CabinetTableWrap>
         </section>
 
         {detailId && detail ? (
@@ -256,13 +285,34 @@ export default function BookingsView() {
               <div>
                 <dt className="text-xs text-slate">Сумма</dt>
                 <dd>
-                  <FormattedPrice priceUsd={detail.totalPriceUsd} />
+                  <BookingLedgerAmount booking={detail} priceUsd={detail.totalPriceUsd} />
                 </dd>
               </div>
               <div>
                 <dt className="text-xs text-slate">Создана</dt>
                 <dd>{formatAdminWhen(detail.createdAt)}</dd>
               </div>
+              {detail.attribution?.utmSource ||
+              detail.attribution?.utmMedium ||
+              detail.attribution?.utmCampaign ? (
+                <div className="sm:col-span-2">
+                  <dt className="text-xs text-slate">Источник (UTM)</dt>
+                  <dd>
+                    {detail.attribution.utmSource ? (
+                      <span className="block">Источник: {detail.attribution.utmSource}</span>
+                    ) : null}
+                    {detail.attribution.utmMedium ? (
+                      <span className="block">Канал: {detail.attribution.utmMedium}</span>
+                    ) : null}
+                    {detail.attribution.utmCampaign ? (
+                      <span className="block">Кампания: {detail.attribution.utmCampaign}</span>
+                    ) : null}
+                    {detail.attribution.landingPath ? (
+                      <span className="block text-slate">Вход: {detail.attribution.landingPath}</span>
+                    ) : null}
+                  </dd>
+                </div>
+              ) : null}
             </dl>
             {detail.touristComment ? (
               <div>

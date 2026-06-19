@@ -1,6 +1,7 @@
 /**
  * Admin panel capabilities and navigation types (Phase E).
  */
+import type { AnalyticsPeriod, DailyCountPoint } from "@/types/admin-analytics";
 
 /** Wildcard grants all capabilities. */
 export type AdminCapability =
@@ -38,16 +39,27 @@ export type AdminNavSectionId =
 
 export type AdminNavItemId =
   | "dashboard"
+  | "operations-hub"
   | "operations-leads"
   | "operations-bookings"
+  | "operations-privacy"
+  | "operations-payments"
+  | "operations-reconciliation"
   | "operations-shop"
   | "marketplace-tours"
   | "marketplace-excursions"
+  | "marketplace-organizers"
+  | "marketplace-experts"
   | "marketplace-moderation"
   | "content-documents"
+  | "content-translations"
+  | "content-freshness"
   | "users-list"
   | "analytics-overview"
+  | "analytics-funnels"
   | "system-settings"
+  | "system-feature-flags"
+  | "system-api-keys"
   | "system-staff"
   | "system-audit";
 
@@ -77,6 +89,56 @@ export interface AdminDashboardSummary {
   pendingModerationCount: number;
   excursionExperienceCount: number;
   bookingCount: number;
+}
+
+export interface AdminDashboardWidgets {
+  period: AnalyticsPeriod;
+  periodStart: string | null;
+  generatedAt: string;
+  totals: {
+    newBookings: number;
+    newLeads: number;
+    shopOrders: number;
+    pendingModeration: number;
+    bookingRevenueUsd: number;
+  };
+  trends: {
+    bookingsByDay: DailyCountPoint[];
+    leadsByDay: DailyCountPoint[];
+  };
+}
+
+export interface AdminHealthSnippet {
+  ok: boolean;
+  status: "ok" | "degraded";
+  generatedAt: string;
+  checks: {
+    database: boolean;
+    rls: boolean;
+    sync: boolean;
+  };
+}
+
+export interface AdminOperationsSummary {
+  generatedAt: string;
+  moderation: {
+    pendingCount: number;
+    oldestPendingCreatedAt: string | null;
+    oldestPendingAgeMinutes: number | null;
+  };
+  leads: {
+    newLast24h: number;
+  };
+  notifications: {
+    unreadCount: number;
+  };
+  payments: {
+    pendingOrPartialCount: number;
+  };
+  organizerApplications: {
+    pendingCount: number;
+  };
+  health: AdminHealthSnippet;
 }
 
 /** Legacy capability aliases — map to new granular keys in API guards. */

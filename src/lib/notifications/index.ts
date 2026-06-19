@@ -20,3 +20,11 @@ export {
   notifyPayLaterAcknowledged,
   notifyTravelersFormDue,
 } from "@/lib/notifications/booking-notifications";
+
+export {
+  apiFetchNotifications,
+  apiMarkNotificationRead,
+  apiUpdateNotificationPreferences,
+  NOTIFICATIONS_HUB_UPDATED_EVENT,
+  notifyHubUpdated,
+} from "@/lib/notifications/notifications-api";

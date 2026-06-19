@@ -7,6 +7,8 @@ import type {
   BookingStatusChange,
   BookingTraveler,
 } from "@/types/tourist";
+import type { BookingAttribution } from "@/types/booking-attribution";
+import type { BookingMetadata } from "@/lib/payments/checkout-currency";
 import type { BookingSource, TripOperations } from "@/types/trip-operations";
 import { guestUserIdFromEmail, isGuestUserId } from "@/lib/guest-booking";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
@@ -57,6 +59,8 @@ export type BookingPayload = {
   externalReference?: string;
   clientPortalToken?: string;
   tripOperations?: TripOperations;
+  metadata?: BookingMetadata;
+  attribution?: BookingAttribution;
 };
 
 function parsePayload(raw: Json): BookingPayload {
@@ -98,6 +102,8 @@ export function bookingToRow(booking: Booking): Omit<BookingRow, "created_at" | 
     externalReference: booking.externalReference,
     clientPortalToken: booking.clientPortalToken,
     tripOperations: booking.tripOperations,
+    metadata: booking.metadata,
+    attribution: booking.attribution,
   };
 
   return {
@@ -165,6 +171,8 @@ export function rowToBooking(row: BookingRow): Booking {
     externalReference: payload.externalReference,
     clientPortalToken: payload.clientPortalToken,
     tripOperations: payload.tripOperations,
+    metadata: payload.metadata,
+    attribution: payload.attribution,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

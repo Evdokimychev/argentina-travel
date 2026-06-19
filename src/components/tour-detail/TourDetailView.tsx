@@ -5,6 +5,7 @@ import { TourDetail } from "@/types";
 import type { SimilarTourCard } from "@/lib/tours-server";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
+import { tourDetailSectionStackClass } from "@/lib/tour-detail-ui";
 import TourStatsSection from "./TourStatsSection";
 import DescriptionSection from "./DescriptionSection";
 import ItinerarySection from "./ItinerarySection";
@@ -16,6 +17,7 @@ import IncludedExcludedSection from "./IncludedExcludedSection";
 import { ImportantSection } from "./ArrivalSection";
 import FAQSection from "./FAQSection";
 import DatesSection from "./DatesSection";
+import GroupTripsSection from "@/components/group-trips/GroupTripsSection";
 import SimilarToursSection from "./SimilarToursSection";
 import TourSidebar from "./TourSidebar";
 import RouteMapSection from "./RouteMapSection";
@@ -41,6 +43,7 @@ import PartnerTourDatesSection from "./PartnerTourDatesSection";
 import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
 import TourPreviewBanner from "./TourPreviewBanner";
 import ReviewPromptBanner from "./ReviewPromptBanner";
+import TourReviewPanel from "./TourReviewPanel";
 import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
@@ -55,6 +58,7 @@ import PlacesSection from "./PlacesSection";
 import type { Tour } from "@/types/tour";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
+import { useTrackEntityView } from "@/hooks/useInteractionTracking";
 
 interface TourDetailViewProps {
   slug: string;
@@ -84,6 +88,8 @@ export default function TourDetailView({
   previewIsPublished = false,
   previewPublishBlockingCount = 0,
 }: TourDetailViewProps) {
+  useTrackEntityView("tour", previewMode ? null : slug);
+
   const syncedTour = useRepositoryTourDetail(slug, initialTour);
   const liveCanonicalTour = useCanonicalTour(slug, initialCanonicalTour);
   const tour = previewMode ? initialTour ?? null : syncedTour;
@@ -143,7 +149,7 @@ export default function TourDetailView({
       ) : null}
 
       <Suspense fallback={null}>
-        <ReviewPromptBanner />
+        <ReviewPromptBanner tourSlug={tour.slug} isPartnerTour={isPartnerTour} />
       </Suspense>
 
       <div className={cn(siteContainerClass, "pt-4 sm:pt-5 lg:pt-6")}>
@@ -164,10 +170,10 @@ export default function TourDetailView({
 
       <TourSectionNav items={sectionLinks} />
 
-      <div className="bg-surface-muted pb-20">
-        <div className={cn(siteContainerClass, "py-8 md:py-10")}>
-          <div className="grid gap-8 lg:grid-cols-[1fr_360px] lg:items-start xl:gap-10">
-            <div className="min-w-0 space-y-8">
+      <div className="bg-surface-muted pb-24 lg:pb-16">
+        <div className={cn(siteContainerClass, "py-6 md:py-10")}>
+          <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start xl:gap-10">
+            <div className={cn("min-w-0", tourDetailSectionStackClass)}>
               {isPartnerTour && partnerContent && partnerSections ? (
                 <>
                   {partnerSections.stats ? (
@@ -269,6 +275,9 @@ export default function TourDetailView({
                   organizerComment={getTourSectionOrganizerComment(tour, "dates")}
                 />
               ) : null}
+              {!isPartnerTour && !previewMode && tour.dates.length > 0 ? (
+                <GroupTripsSection tour={tour} />
+              ) : null}
               <IncludedExcludedSection
                 included={tour.included}
                 excluded={tour.excluded}
@@ -326,6 +335,9 @@ export default function TourDetailView({
                 tourSlug={tour.slug}
                 guides={canonicalTour?.team.guides}
               />
+              {!previewMode ? (
+                <TourReviewPanel tour={tour} organizerTourId={canonicalTour?.id} />
+              ) : null}
               <ReviewsSection
                 reviews={tour.reviews}
                 rating={tour.rating}
@@ -336,7 +348,7 @@ export default function TourDetailView({
               )}
             </div>
 
-            <aside className="hidden lg:sticky lg:top-[calc(var(--site-header-height,72px)+var(--tour-section-nav-height,48px)+1rem)] lg:block lg:h-fit lg:w-full lg:self-start">
+            <aside className="hidden lg:block lg:w-full lg:self-start">
               <TourSidebar tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
             </aside>
           </div>

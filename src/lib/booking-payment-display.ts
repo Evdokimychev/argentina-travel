@@ -71,7 +71,7 @@ export function getBookingNextSteps(booking: Booking): BookingNextStep[] {
       title: "Оплата",
       description:
         payHref
-          ? "Онлайн-оплата через платформу скоро. Пока откройте ссылку, чтобы увидеть сумму и подтвердить намерение оплатить."
+          ? "Перейдите по ссылке для оплаты через Mercado Pago. После платежа статус обновится автоматически."
           : "После подтверждения заявки организатор пришлёт ссылку на оплату предоплаты или полной суммы.",
       href: payHref,
       tone: payHref ? "action" : "info",
@@ -82,8 +82,9 @@ export function getBookingNextSteps(booking: Booking): BookingNextStep[] {
     steps.push({
       id: "trip-prep",
       title: "Подготовка к поездке",
-      description: "Следите за комментариями организатора и уточняйте детали встречи.",
-      tone: "info",
+      description: "Проверьте чек-лист документов, связи и багажа перед вылетом.",
+      href: `/profile/trip-prep?bookingId=${encodeURIComponent(booking.id)}`,
+      tone: "action",
     });
   }
 

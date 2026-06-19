@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, GripVertical, Trash2 } from "lucide-react";
+import { cn } from "@/lib/cn";
 import { Input } from "@/components/ui/input";
 import { formatDateRange } from "@/lib/utils";
 import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
@@ -12,6 +13,10 @@ interface GroupDateEditorProps {
   currencySuffix: string;
   onChange: (date: OrganizerGroupTourDate) => void;
   onRemove: () => void;
+  canReorder?: boolean;
+  onDragStart?: (event: React.DragEvent<HTMLButtonElement>) => void;
+  onDragEnd?: () => void;
+  isDragging?: boolean;
 }
 
 export default function GroupDateEditor({
@@ -20,12 +25,33 @@ export default function GroupDateEditor({
   currencySuffix,
   onChange,
   onRemove,
+  canReorder = false,
+  onDragStart,
+  onDragEnd,
+  isDragging = false,
 }: GroupDateEditorProps) {
   const [expanded, setExpanded] = useState(false);
 
   return (
-    <article className="rounded-2xl border border-gray-200 bg-white p-4">
+    <article
+      className={cn(
+        "rounded-2xl border border-gray-200 bg-white p-4 transition-[box-shadow,opacity] duration-150",
+        isDragging && "opacity-50"
+      )}
+    >
       <div className="flex flex-wrap items-start justify-between gap-3">
+        {canReorder ? (
+          <button
+            type="button"
+            draggable
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            className="inline-flex h-9 w-7 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-slate active:cursor-grabbing hover:bg-gray-100 hover:text-charcoal"
+            aria-label={`Перетащите заезд ${index + 1} для изменения порядка`}
+          >
+            <GripVertical className="h-4 w-4" aria-hidden />
+          </button>
+        ) : null}
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-charcoal">Заезд {index + 1}</p>
           <p className="mt-1 text-sm text-slate">

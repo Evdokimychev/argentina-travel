@@ -15,6 +15,10 @@ import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
 import { cabinetLinkClass, cabinetPageSubtitleClass, cabinetPageTitleClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import NotificationPreferencesSection from "@/components/notifications/NotificationPreferencesSection";
+import PrivacySettingsSection from "@/components/settings/PrivacySettingsSection";
+import PushNotificationsSection from "@/components/settings/PushNotificationsSection";
+import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -456,6 +460,11 @@ export default function ProfileSettingsPage() {
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </aside>
+
+      <ThemeSettingsSection className="lg:col-span-2" />
+      <NotificationPreferencesSection scope="tourist" className="lg:col-span-2" />
+      <PushNotificationsSection className="lg:col-span-2" />
+      <PrivacySettingsSection className="lg:col-span-2" />
     </div>
   );
 }

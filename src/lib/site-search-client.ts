@@ -25,18 +25,22 @@ export async function loadSearchIndex(): Promise<SearchIndexItem[]> {
   if (typeof window === "undefined") return getDefaultSearchIndex();
 
   try {
-    const [{ getMarketplaceListings }, excursionsRes] = await Promise.all([
+    const [{ getMarketplaceListings }, excursionsRes, staticRes] = await Promise.all([
       import("@/lib/tour-repository"),
       fetch("/api/excursions/search-index").catch(() => null),
+      fetch("/api/site/search-index").catch(() => null),
     ]);
 
     const excursionItems =
       excursionsRes?.ok ? ((await excursionsRes.json()) as SearchIndexItem[]) : [];
+    const staticItems = staticRes?.ok
+      ? ((await staticRes.json()) as SearchIndexItem[])
+      : buildStaticSearchIndex();
 
     return dedupeByHref([
       ...buildTourSearchItems(getMarketplaceListings()),
       ...excursionItems,
-      ...buildStaticSearchIndex(),
+      ...staticItems,
     ]);
   } catch {
     return getDefaultSearchIndex();

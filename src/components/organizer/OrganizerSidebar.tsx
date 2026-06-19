@@ -11,27 +11,47 @@ import {
   Compass,
   LayoutGrid,
   Mail,
+  MoreHorizontal,
   Settings,
   Star,
+  Users,
   Wallet,
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
+import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { cn } from "@/lib/cn";
 import {
   cabinetMobileHeaderClass,
-  cabinetMobileNavClass,
+  cabinetMobileBottomNavClass,
   cabinetNavBadgeClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
+  cabinetNavLinkClass,
   cabinetSidebarClass,
   cabinetSidebarSkeletonClass,
+  cabinetBorderDividerClass,
+  cabinetMutedSurfaceClass,
+  cabinetSurfaceButtonClass,
 } from "@/lib/cabinet-ui";
-import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
+import {
+  ORGANIZER_NAV_ITEMS,
+  type OrganizerNavId,
+  type OrganizerNavItem,
+} from "@/data/organizer-dashboard";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
+import { getLocalOrganizerInboxUnreadCount } from "@/lib/organizer-inbox";
+import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
+import {
+  apiFetchConversationUnreadCount,
+  isRemoteMessagingMode,
+} from "@/lib/conversations-api";
+import { useConversationInboxRealtime } from "@/hooks/useConversationInboxRealtime";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { ORGANIZER_INBOX_UPDATED_EVENT } from "@/types/organizer-inbox";
+import { NOTIFICATIONS_HUB_UPDATED_EVENT } from "@/types/notifications-hub";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "organizer-sidebar-collapsed";
@@ -43,10 +63,17 @@ const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
   analytics: BarChart3,
   tours: Compass,
   bookings: Clock3,
+  groupTrips: Users,
   messages: Mail,
   reviews: Star,
   payments: Wallet,
 };
+
+const MOBILE_PRIMARY_NAV_IDS: OrganizerNavId[] = ["bookings", "messages", "tours"];
+
+function isNavItemActive(pathname: string, href: string): boolean {
+  return href === "/organizer" ? pathname === "/organizer" : pathname.startsWith(href);
+}
 
 interface OrganizerSidebarProps {
   userName?: string;
@@ -71,16 +98,96 @@ function writeCollapsedPreference(collapsed: boolean) {
   }
 }
 
+async function loadOrganizerNavItemsWithBadges(userId: string) {
+  let items = getOrganizerNavItemsWithBadges(userId);
+  const inboxUnread = getLocalOrganizerInboxUnreadCount(userId);
+  let remoteMessagesUnread: number | null = null;
+
+  if (isRemoteMessagingMode()) {
+    try {
+      remoteMessagesUnread = await apiFetchConversationUnreadCount("organizer");
+    } catch {
+      remoteMessagesUnread = null;
+    }
+  }
+
+  if (isSupabaseBookingsEnabled()) {
+    try {
+      const res = await fetch("/api/notifications?scope=organizer&limit=1");
+      if (res.ok) {
+        const json = (await res.json()) as { unreadCount?: number };
+        const hubUnread = json.unreadCount ?? 0;
+        const combinedInboxBadge = inboxUnread + hubUnread;
+        items = items.map((item) => {
+          if (item.id === "dashboard") {
+            return combinedInboxBadge > 0
+              ? { ...item, badge: combinedInboxBadge }
+              : { ...item, badge: undefined };
+          }
+          return item;
+        });
+        return items;
+      }
+    } catch {
+      // local fallback already in getOrganizerNavItemsWithBadges
+    }
+  }
+
+  if (remoteMessagesUnread !== null) {
+    items = items.map((item) => {
+      if (item.id !== "messages") return item;
+      return remoteMessagesUnread > 0
+        ? { ...item, badge: remoteMessagesUnread }
+        : { ...item, badge: undefined };
+    });
+  }
+
+  return items;
+}
+
+function useOrganizerNavBadges() {
+  const { user } = useAuth();
+  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+
+  useEffect(() => {
+    if (!user) return;
+    const userId = user.id;
+
+    async function refreshNavBadges() {
+      setNavItems(await loadOrganizerNavItemsWithBadges(userId));
+    }
+
+    void refreshNavBadges();
+    const handler = () => void refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
+    window.addEventListener(ORGANIZER_INBOX_UPDATED_EVENT, handler);
+    window.addEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handler);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
+      window.removeEventListener(ORGANIZER_INBOX_UPDATED_EVENT, handler);
+      window.removeEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handler);
+    };
+  }, [user]);
+
+  useConversationInboxRealtime(Boolean(user && isRemoteMessagingMode()), () => {
+    if (!user) return;
+    void loadOrganizerNavItemsWithBadges(user.id).then(setNavItems);
+  });
+
+  return navItems;
+}
+
 export default function OrganizerSidebar({
   userName = "Организатор",
   avatarUrl,
   forceCompact = false,
 }: OrganizerSidebarProps) {
-  const { user } = useAuth();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+  const navItems = useOrganizerNavBadges();
   const isSettingsActive = pathname.startsWith("/organizer/settings");
 
   const isCompact = forceCompact || collapsed;
@@ -100,22 +207,6 @@ export default function OrganizerSidebar({
     window.addEventListener("resize", syncCollapsedState, { passive: true });
     return () => window.removeEventListener("resize", syncCollapsedState);
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    function refreshNavBadges() {
-      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
-    }
-
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    };
-  }, [user]);
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
@@ -139,13 +230,15 @@ export default function OrganizerSidebar({
     >
       <div
         className={cn(
-          "shrink-0 border-b border-gray-100",
+          "shrink-0 border-b",
+          cabinetBorderDividerClass,
           isCompact ? "px-2.5 py-4" : "px-4 py-5"
         )}
       >
         {isCompact ? (
           <div className="flex flex-col items-center gap-3">
             <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-10 w-10 text-sm" />
+            <NotificationsBell scope="organizer" compact />
             <Link
               href="/organizer/settings"
               title="Управление"
@@ -153,7 +246,7 @@ export default function OrganizerSidebar({
                 "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-slate hover:border-gray-300 hover:text-charcoal"
+                  : cn(cabinetMutedSurfaceClass, "text-muted hover:text-foreground")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -163,10 +256,11 @@ export default function OrganizerSidebar({
           <>
             <div className="flex items-center gap-3">
               <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-11 w-11 text-sm" />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[11px] text-slate">Автор тура</p>
-                <p className="truncate text-sm font-semibold text-charcoal">{userName}</p>
+                <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
               </div>
+              <NotificationsBell scope="organizer" />
             </div>
             <Link
               href="/organizer/settings"
@@ -174,7 +268,7 @@ export default function OrganizerSidebar({
                 "mt-4 flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-charcoal hover:bg-gray-100"
+                  : cn(cabinetMutedSurfaceClass, "text-foreground hover:bg-surface-muted")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -193,9 +287,7 @@ export default function OrganizerSidebar({
         {navItems.map((item) => {
           const Icon = NAV_ICONS[item.id];
           const active =
-            item.href === "/organizer"
-              ? pathname === "/organizer"
-              : pathname.startsWith(item.href);
+            isNavItemActive(pathname, item.href);
 
           return (
             <Link
@@ -204,7 +296,8 @@ export default function OrganizerSidebar({
               title={isCompact ? item.label : undefined}
               aria-label={item.label}
               className={cn(
-                "relative flex items-center rounded-xl text-sm font-medium transition-colors",
+                cabinetNavLinkClass,
+                "flex items-center rounded-xl text-sm font-medium transition-colors",
                 isCompact ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5",
                 active ? cabinetNavActiveClass : cabinetNavIdleClass
               )}
@@ -229,7 +322,7 @@ export default function OrganizerSidebar({
       </nav>
 
       {!isCompact ? (
-        <div className="shrink-0 space-y-2 border-t border-gray-100 px-4 py-4 text-[11px] leading-relaxed text-slate">
+        <div className={cn("shrink-0 space-y-2 border-t px-4 py-4 text-[11px] leading-relaxed text-muted", cabinetBorderDividerClass)}>
           <p>© Пора в Аргентину, {new Date().getFullYear()}</p>
           <div className="space-y-1">
             {SITE_LEGAL_LINKS.slice(0, 2).map((link) => (
@@ -245,14 +338,15 @@ export default function OrganizerSidebar({
       ) : null}
 
       {!forceCompact ? (
-        <div className={cn("shrink-0 border-t border-gray-100", isCompact ? "p-2" : "px-3 py-3")}>
+        <div className={cn("shrink-0 border-t", cabinetBorderDividerClass, isCompact ? "p-2" : "px-3 py-3")}>
           <button
             type="button"
             onClick={toggleCollapsed}
             aria-expanded={!isCompact}
             aria-label={isCompact ? "Развернуть меню" : "Свернуть меню"}
             className={cn(
-              "flex w-full items-center rounded-xl border border-gray-200 bg-white text-slate transition-colors hover:bg-gray-50 hover:text-charcoal",
+              cabinetSurfaceButtonClass,
+              "flex w-full items-center",
               isCompact ? "justify-center p-2" : "gap-2 px-3 py-2 text-sm font-medium"
             )}
           >
@@ -277,7 +371,7 @@ export function OrganizerMobileHeader() {
       <Link href="/" className="inline-flex">
         <ArgentinaLogo size="sm" />
       </Link>
-      <p className="text-sm font-semibold text-charcoal">Кабинет организатора</p>
+      <p className="text-sm font-semibold text-foreground">Кабинет организатора</p>
       <Link href="/organizer/settings" className="text-xs font-medium text-sky">
         Управление
       </Link>
@@ -286,54 +380,135 @@ export function OrganizerMobileHeader() {
 }
 
 export function OrganizerMobileNav() {
-  const { user } = useAuth();
   const pathname = usePathname();
-  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+  const navItems = useOrganizerNavBadges();
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const primaryItems = navItems.filter((item) => MOBILE_PRIMARY_NAV_IDS.includes(item.id));
+  const moreItems = navItems.filter((item) => !MOBILE_PRIMARY_NAV_IDS.includes(item.id));
+  const hasMoreBadge = moreItems.some((item) => (item.badge ?? 0) > 0);
+  const isMoreActive =
+    pathname.startsWith("/organizer/settings") ||
+    pathname.startsWith("/organizer/integrations") ||
+    moreItems.some((item) => isNavItemActive(pathname, item.href));
 
   useEffect(() => {
-    if (!user) return;
+    setMoreOpen(false);
+  }, [pathname]);
 
-    function refreshNavBadges() {
-      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
-    }
-
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    };
-  }, [user]);
+  function renderPrimaryItem(item: OrganizerNavItem) {
+    const Icon = NAV_ICONS[item.id];
+    const active = isNavItemActive(pathname, item.href);
+    return (
+      <Link
+        key={item.id}
+        href={item.href}
+        className={cn(
+          "relative flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+          active ? "text-sky" : "text-slate hover:text-foreground"
+        )}
+      >
+        <span
+          className={cn(
+            "relative flex h-7 w-7 items-center justify-center rounded-lg transition-colors",
+            active ? "bg-sky/10 text-sky" : "bg-gray-100 text-slate"
+          )}
+        >
+          <Icon className="h-4 w-4" strokeWidth={1.85} />
+          {item.badge ? (
+            <span className={cn(cabinetNavBadgeClass, "absolute -right-1.5 -top-1 h-4 min-w-4 px-1 text-[9px]")}>
+              {item.badge}
+            </span>
+          ) : null}
+        </span>
+        {item.id === "tours" ? "Туры" : item.label}
+      </Link>
+    );
+  }
 
   return (
-    <nav className={cabinetMobileNavClass}>
-      {navItems.map((item) => {
-        const Icon = NAV_ICONS[item.id];
-        const active =
-          item.href === "/organizer"
-            ? pathname === "/organizer"
-            : pathname.startsWith(item.href);
-
-        return (
-          <Link
-            key={item.id}
-            href={item.href}
+    <>
+      <nav className={cn(cabinetMobileBottomNavClass, "grid grid-cols-4 items-center")} aria-label="Навигация кабинета организатора">
+        {primaryItems.map(renderPrimaryItem)}
+        <button
+          type="button"
+          aria-expanded={moreOpen}
+          aria-label="Ещё разделы"
+          onClick={() => setMoreOpen((prev) => !prev)}
+          className={cn(
+            "relative flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+            isMoreActive || moreOpen ? "text-sky" : "text-slate hover:text-foreground"
+          )}
+        >
+          <span
             className={cn(
-              "relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-              active ? cabinetNavActiveClass : cabinetNavIdleClass
+              "relative flex h-7 w-7 items-center justify-center rounded-lg transition-colors",
+              isMoreActive || moreOpen ? "bg-sky/10 text-sky" : "bg-gray-100 text-slate"
             )}
           >
-            <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
-            {item.label}
-            {item.badge ? (
-              <span className={cn(cabinetNavBadgeClass, "ml-0.5 h-4 min-w-4 px-1 text-[9px]")}>
-                {item.badge}
+            <MoreHorizontal className="h-4 w-4" strokeWidth={1.85} />
+            {hasMoreBadge ? (
+              <span className={cn(cabinetNavBadgeClass, "absolute -right-1.5 -top-1 h-4 min-w-4 px-1 text-[9px]")}>
+                •
               </span>
             ) : null}
-          </Link>
-        );
-      })}
-    </nav>
+          </span>
+          Ещё
+        </button>
+      </nav>
+
+      {moreOpen ? (
+        <div className="fixed inset-0 z-30 md:hidden">
+          <button
+            type="button"
+            aria-label="Закрыть дополнительные разделы"
+            onClick={() => setMoreOpen(false)}
+            className="absolute inset-0 bg-black/25"
+          />
+          <div className="absolute inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] rounded-2xl border border-border-subtle bg-surface-elevated p-2 shadow-elevated">
+            <div className="grid grid-cols-2 gap-2">
+              {moreItems.map((item) => {
+                const Icon = NAV_ICONS[item.id];
+                const active = isNavItemActive(pathname, item.href);
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setMoreOpen(false)}
+                    className={cn(
+                      cabinetSurfaceButtonClass,
+                      "flex items-center justify-between gap-2 px-3 py-2.5 text-sm",
+                      active && "border-sky/30 bg-sky/10 text-sky"
+                    )}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      {item.label}
+                    </span>
+                    {item.badge ? (
+                      <span className={cn(cabinetNavBadgeClass, "h-4 min-w-4 px-1 text-[9px]")}>
+                        {item.badge}
+                      </span>
+                    ) : null}
+                  </Link>
+                );
+              })}
+              <Link
+                href="/organizer/settings"
+                onClick={() => setMoreOpen(false)}
+                className={cn(
+                  cabinetSurfaceButtonClass,
+                  "flex items-center gap-2 px-3 py-2.5 text-sm",
+                  pathname.startsWith("/organizer/settings") && "border-sky/30 bg-sky/10 text-sky"
+                )}
+              >
+                <Settings className="h-4 w-4" strokeWidth={1.75} />
+                Управление
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

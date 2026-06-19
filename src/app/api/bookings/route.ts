@@ -2,11 +2,18 @@ import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { insertBooking } from "@/lib/bookings-server";
+import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import {
+  releaseTourSlotReservation,
+  reserveTourSlotForBooking,
+  type SlotReservation,
+} from "@/lib/tour-availability-server";
 import type { Booking } from "@/types/tourist";
 import { normalizeBooking } from "@/lib/bookings-store";
 
-export async function POST(request: Request) {
+async function postBooking(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
     return NextResponse.json({ error: "Bookings API unavailable" }, { status: 503 });
   }
@@ -28,19 +35,73 @@ export async function POST(request: Request) {
       booking = normalizeBooking({ ...booking, userId: authUser.id });
     }
 
-    const result = await insertBooking(supabase, booking);
+    addBookingBreadcrumb("booking.create.requested", {
+      bookingId: booking.id,
+      userId: booking.userId,
+      tourSlug: booking.tourSlug,
+    });
+
+    let slotReservation: SlotReservation | null = null;
+    const reservationResult = await reserveTourSlotForBooking(supabase, {
+      tourId: booking.tourId,
+      tourSlug: booking.tourSlug,
+      startDate: booking.startDate,
+      guests: booking.guests,
+    });
+
+    if ("error" in reservationResult) {
+      addBookingBreadcrumb("booking.create.failed", {
+        bookingId: booking.id,
+        reason: reservationResult.error,
+      });
+      return NextResponse.json(
+        { error: reservationResult.error },
+        { status: reservationResult.status ?? 409 }
+      );
+    }
+
+    slotReservation = reservationResult.reservation;
+    let result: Awaited<ReturnType<typeof insertBooking>>;
+    try {
+      result = await insertBooking(supabase, booking);
+    } catch (insertError) {
+      await releaseTourSlotReservation(supabase, slotReservation);
+      throw insertError;
+    }
     if ("error" in result) {
+      await releaseTourSlotReservation(supabase, slotReservation);
+      addBookingBreadcrumb("booking.create.failed", {
+        bookingId: booking.id,
+        error: result.error,
+      });
       return NextResponse.json({ error: result.error }, { status: 500 });
     }
 
+    addBookingBreadcrumb("booking.created", {
+      bookingId: result.booking.id,
+      userId: result.booking.userId,
+      status: result.booking.status,
+    });
     return NextResponse.json({ booking: result.booking });
   } catch (error) {
+    addBookingBreadcrumb("booking.create.failed", {
+      error: error instanceof Error ? error.message : "Unexpected error",
+    });
+    captureException(error, { tags: { area: "booking", action: "create" } });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unexpected error" },
       { status: 500 }
     );
   }
 }
+
+export const POST = withRateLimit(postBooking, {
+  limit: 10,
+  window: 60_000,
+  keyPrefix: "bookings:create",
+  key: (request) => `ip:${getClientIp(request)}`,
+  message: "Слишком много попыток бронирования. Повторите позже.",
+});
 
 export async function GET() {
   if (!isSupabaseBookingsEnabled()) {

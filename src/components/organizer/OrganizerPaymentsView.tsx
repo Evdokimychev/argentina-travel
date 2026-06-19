@@ -63,8 +63,11 @@ export default function OrganizerPaymentsView() {
       <header className={cabinetHeroClass}>
         <h1 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Платежи</h1>
         <p className="mt-2 max-w-2xl text-sm text-slate">
-          Сводка по заявкам и статусам оплаты. Реальные выплаты на счёт организатора подключатся
-          отдельно — здесь только прозрачная картина по бронированиям.
+          Сводка по заявкам и статусам оплаты. Для заработанных средств и комиссии платформы откройте{" "}
+          <Link href="/organizer/finance" className="font-medium text-sky hover:underline">
+            раздел «Финансы»
+          </Link>
+          .
         </p>
       </header>
 
