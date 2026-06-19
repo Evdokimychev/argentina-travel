@@ -1,9 +1,18 @@
 import { NextResponse } from "next/server";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 /** @deprecated Вход выполняется на клиенте через supabase.auth.signInWithPassword. */
-export async function POST() {
+async function postLoginEmail() {
   return NextResponse.json(
     { error: "Используйте клиентский вход через модальное окно авторизации." },
     { status: 410 }
   );
 }
+
+export const POST = withRateLimit(postLoginEmail, {
+  limit: 12,
+  window: 60_000,
+  keyPrefix: "auth:login-email",
+  key: (request) => `ip:${getClientIp(request)}`,
+  message: "Слишком много попыток входа. Повторите позже.",
+});

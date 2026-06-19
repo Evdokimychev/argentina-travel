@@ -37,6 +37,7 @@ async function main() {
 
   const publish = !process.argv.includes("--draft");
   const force = process.argv.includes("--force");
+  const i18nStubs = process.argv.includes("--i18n-stubs");
   const docTypeArg = process.argv.find((arg) => arg.startsWith("--type="));
   const docTypes = docTypeArg
     ? docTypeArg
@@ -49,7 +50,7 @@ async function main() {
   const { createSupabaseAdminClient } = await import(
     pathToFileURL(path.join(root, "src/lib/supabase/admin.ts")).href
   );
-  const { seedCmsFromTs, buildCmsSeedEntries } = await import(
+  const { seedCmsFromTs, buildCmsSeedEntries, seedCmsI18nEmptyStubs } = await import(
     pathToFileURL(path.join(root, "src/lib/cms/cms-ts-seed.ts")).href
   );
 
@@ -66,6 +67,18 @@ async function main() {
   console.log(
     `Готово: создано ${result.created}, пропущено ${result.skipped}, обновлено ${result.updated} из ${result.total}`
   );
+
+  if (i18nStubs) {
+    console.log("Создание es/en черновиков-заготовок для top-10 slugs…");
+    const stubResult = await seedCmsI18nEmptyStubs(supabase, { skipExisting: !force });
+    console.log(
+      `Заготовки: создано ${stubResult.created}, пропущено ${stubResult.skipped}, обновлено ${stubResult.updated} из ${stubResult.total}`
+    );
+    if (stubResult.errors.length) {
+      console.error("Ошибки заготовок:", stubResult.errors);
+      process.exit(1);
+    }
+  }
 
   if (result.errors.length) {
     console.error("Ошибки:", result.errors);

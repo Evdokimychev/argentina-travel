@@ -22,7 +22,8 @@ export async function POST(
   const result = await approveRefundRequest(supabase, id, auth.actorId, body.adminNotes);
 
   if (!result.ok) {
-    const status = result.code === "MP_NOT_CONFIGURED" ? 503 : 400;
+    const status =
+      result.code === "MP_NOT_CONFIGURED" || result.code === "STRIPE_NOT_CONFIGURED" ? 503 : 400;
     return NextResponse.json({ error: result.error, code: result.code }, { status });
   }
 

@@ -71,6 +71,16 @@ export interface StripeWebhookEvent {
   rawPayload: JsonRecord;
 }
 
+export interface StripeRefundDetails {
+  id: string;
+  status: string;
+  amount: number;
+  currency: string;
+  paymentIntentId?: string;
+  chargeId?: string;
+  reason?: string;
+}
+
 export function isStripeConfigured(): boolean {
   return Boolean(process.env.STRIPE_SECRET_KEY?.trim());
 }
@@ -462,6 +472,73 @@ export async function fetchCharge(input: {
   }
 
   return parseChargePayload(payload, chargeId);
+}
+
+export async function createStripeRefund(input: {
+  secretKey: string;
+  paymentIntentId?: string;
+  chargeId?: string;
+  amount?: number;
+  reason?: "requested_by_customer" | "duplicate" | "fraudulent";
+}): Promise<StripeRefundDetails> {
+  const secretKey = input.secretKey.trim();
+  if (!secretKey) throw new Error("Stripe secret key is missing.");
+
+  const paymentIntentId = input.paymentIntentId?.trim();
+  const chargeId = input.chargeId?.trim();
+  if (!paymentIntentId && !chargeId) {
+    throw new Error("Missing Stripe charge or payment intent id.");
+  }
+
+  const params = new URLSearchParams();
+  if (paymentIntentId) appendFormField(params, "payment_intent", paymentIntentId);
+  if (chargeId) appendFormField(params, "charge", chargeId);
+
+  if (typeof input.amount === "number" && Number.isFinite(input.amount) && input.amount > 0) {
+    appendFormField(params, "amount", majorToCents(input.amount));
+  }
+  if (input.reason) appendFormField(params, "reason", input.reason);
+
+  const { controller, timeout } = createTimeoutController();
+  const response = await fetch(`${STRIPE_API_BASE}/refunds`, {
+    method: "POST",
+    headers: buildAuthHeaders(secretKey, `refund-${paymentIntentId ?? chargeId}-${Date.now()}`),
+    body: params.toString(),
+    signal: controller.signal,
+    cache: "no-store",
+  }).finally(() => clearTimeout(timeout));
+
+  const payload = (await response.json().catch(() => null)) as JsonRecord | null;
+  if (!response.ok || !payload) {
+    const message =
+      payload && typeof payload.error === "object" && payload.error !== null
+        ? String((payload.error as JsonRecord).message ?? "Failed to create Stripe refund.")
+        : "Failed to create Stripe refund.";
+    throw new Error(message);
+  }
+
+  const id = typeof payload.id === "string" ? payload.id.trim() : "";
+  const status = typeof payload.status === "string" ? payload.status.trim() : "";
+  if (!id || !status) {
+    throw new Error("Stripe refund response misses mandatory fields.");
+  }
+
+  const paymentIntentFromPayload =
+    typeof payload.payment_intent === "string"
+      ? payload.payment_intent.trim()
+      : undefined;
+  const chargeFromPayload = typeof payload.charge === "string" ? payload.charge.trim() : undefined;
+
+  return {
+    id,
+    status,
+    amount: typeof payload.amount === "number" ? centsToMajor(payload.amount) : 0,
+    currency:
+      typeof payload.currency === "string" ? payload.currency.trim().toUpperCase() : "USD",
+    paymentIntentId: paymentIntentFromPayload || paymentIntentId,
+    chargeId: chargeFromPayload || chargeId,
+    reason: typeof payload.reason === "string" ? payload.reason.trim() : undefined,
+  };
 }
 
 export async function fetchCheckoutSession(input: {

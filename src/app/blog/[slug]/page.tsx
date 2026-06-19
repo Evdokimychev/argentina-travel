@@ -4,6 +4,7 @@ import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
 import { resolveBlogCatalog, resolveBlogPost } from "@/lib/cms/blog-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
@@ -25,12 +26,16 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   const locale = await getServerI18nLocale();
   const post = await resolveBlogPost(slug, locale);
   if (!post) return { title: "Статья не найдена" };
-  return buildPublicPageMetadata({
-    title: post.seoTitle ?? post.title,
-    description: post.excerpt,
-    path: `/blog/${slug}`,
-    image: post.image,
-  });
+  const alternates = await buildCmsContentHreflangAlternates("blog", slug);
+  return {
+    ...buildPublicPageMetadata({
+      title: post.seoTitle ?? post.title,
+      description: post.excerpt,
+      path: `/blog/${slug}`,
+      image: post.image,
+    }),
+    alternates,
+  };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

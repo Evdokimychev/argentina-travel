@@ -29,6 +29,8 @@ import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
+import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
+import type { ExcursionListing } from "@/types/excursion";
 
 // Local asset (not a remote Unsplash URL): the previous hero pointed at an
 // Unsplash photo that now 404s, leaving a grey placeholder on the LCP element.
@@ -41,6 +43,10 @@ interface MarketplaceHomeProps {
   testimonials: Testimonial[];
   platformStats: PlatformStats;
   travelPrepStrip?: React.ReactNode;
+  showHomepageRecommendationsV2?: boolean;
+  personalizedTours?: TourListing[];
+  personalizedExcursions?: ExcursionListing[];
+  personalizedActive?: boolean;
 }
 
 function SectionHeader({
@@ -119,6 +125,10 @@ export default function MarketplaceHome({
   testimonials,
   platformStats,
   travelPrepStrip,
+  showHomepageRecommendationsV2 = false,
+  personalizedTours = [],
+  personalizedExcursions = [],
+  personalizedActive = false,
 }: MarketplaceHomeProps) {
   const router = useRouter();
   const tours = useRepositoryTourListings(initialTours);
@@ -437,6 +447,16 @@ export default function MarketplaceHome({
           </div>
         </div>
       </section>
+
+      {showHomepageRecommendationsV2 ? (
+        <PersonalizedRecommendationsSection
+          initialTours={personalizedTours}
+          initialExcursions={personalizedExcursions}
+          toursPersonalized={personalizedActive}
+          excursionsPersonalized={personalizedActive}
+          variant="homepage"
+        />
+      ) : null}
 
       {/* Tour collections */}
       <section className="border-y border-gray-100 bg-white py-12 md:py-14">

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import { buildContentInventory } from "@/lib/admin/content-inventory";
+import { fetchTopAttributionSources } from "@/lib/attribution/attribution-server";
 import {
   bucketCreatedAtByDay,
   periodDayKeys,
@@ -117,6 +118,7 @@ export async function fetchAdminAnalytics(
     bookingMetrics,
     shopRevenue,
     contactsByKind,
+    topAttributionSources,
     newsletterTs,
     contactTs,
     shopTs,
@@ -136,6 +138,7 @@ export async function fetchAdminAnalytics(
     fetchBookingMetrics(supabase, since),
     fetchShopRevenue(supabase, since),
     fetchContactsByKind(supabase, since),
+    fetchTopAttributionSources(supabase, since),
     fetchTimestampsSince(supabase, "newsletter_subscribers", since),
     fetchTimestampsSince(supabase, "contact_submissions", since),
     fetchTimestampsSince(supabase, "shop_orders", since),
@@ -170,6 +173,7 @@ export async function fetchAdminAnalytics(
       bookingPipelineUsd: Math.round(bookingMetrics.pipelineUsd),
       shopPaidUsd: Math.round(shopRevenue.paidUsd),
       shopOrderUsd: Math.round(shopRevenue.orderUsd),
+      topAttributionSources,
     },
     marketplace: {
       tourCount,

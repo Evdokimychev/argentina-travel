@@ -3,6 +3,7 @@ import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { fetchBookingById, updateBookingRecord } from "@/lib/bookings-server";
 import { isBookingPaymentLinkExpired } from "@/lib/booking-payment-link";
 import { normalizeBooking } from "@/lib/bookings-store";
+import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createPreference } from "@/lib/payments/mercadopago-client";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -76,6 +77,10 @@ export async function POST(
       baseUrl: new URL(request.url).origin,
       idempotencyKey: `booking-${booking.id}-${Date.now().toString(36)}`,
     });
+    addPaymentBreadcrumb("mercadopago.preference.created", {
+      bookingId: booking.id,
+      preferenceId: preference.preferenceId,
+    });
 
     const now = new Date().toISOString();
     const updatedBooking = normalizeBooking({
@@ -93,6 +98,10 @@ export async function POST(
 
     const updateResult = await updateBookingRecord(supabase, updatedBooking);
     if ("error" in updateResult) {
+      addPaymentBreadcrumb("mercadopago.preference.persist_failed", {
+        bookingId: booking.id,
+        error: updateResult.error,
+      });
       return NextResponse.json({ error: updateResult.error }, { status: 500 });
     }
 
@@ -102,6 +111,14 @@ export async function POST(
       checkoutSandboxUrl: preference.sandboxCheckoutUrl ?? null,
     });
   } catch (error) {
+    addPaymentBreadcrumb("mercadopago.preference.failed", {
+      bookingId: id,
+      error: error instanceof Error ? error.message : "Unexpected error",
+    });
+    captureException(error, {
+      tags: { area: "payments", provider: "mercadopago", action: "create_preference" },
+      extra: { bookingId: id },
+    });
     return NextResponse.json(
       {
         error:

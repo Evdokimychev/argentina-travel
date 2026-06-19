@@ -8,6 +8,7 @@ import {
   listPublishedDestinationSlugs,
   resolveDestinationPage,
 } from "@/lib/cms/destination-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -28,9 +29,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const destination = await resolveDestinationPage(slug, locale);
   if (!destination) return { title: "Направление" };
 
+  const alternates = await buildCmsContentHreflangAlternates("destination", slug);
+
   return {
     title: `${destination.name} — направления Аргентины`,
     description: destination.intro,
+    alternates,
   };
 }
 

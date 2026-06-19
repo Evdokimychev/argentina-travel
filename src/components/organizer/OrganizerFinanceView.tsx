@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { PiggyBank, Wallet } from "lucide-react";
+import { Download, PiggyBank, Wallet } from "lucide-react";
 import {
   CabinetTableWrap,
   Table,
@@ -43,6 +43,34 @@ export default function OrganizerFinanceView() {
   const [summary, setSummary] = useState<OrganizerFinanceSummary | null>(null);
   const [snapshots, setSnapshots] = useState<BookingCommissionSnapshotRow[]>([]);
   const [payouts, setPayouts] = useState<PayoutRecordRow[]>([]);
+  const [statementLoading, setStatementLoading] = useState(false);
+
+  const downloadStatement = useCallback(async () => {
+    setStatementLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`/api/organizer/finance/statement?period=${period}`);
+      if (!res.ok) {
+        const json = (await res.json().catch(() => ({}))) as { error?: string };
+        setError(json.error ?? "Не удалось скачать выписку");
+        return;
+      }
+      const blob = await res.blob();
+      const disposition = res.headers.get("Content-Disposition") ?? "";
+      const match = disposition.match(/filename="([^"]+)"/);
+      const filename = match?.[1] ?? `organizer-statement-${period}.csv`;
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = filename;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      setError("Не удалось скачать выписку");
+    } finally {
+      setStatementLoading(false);
+    }
+  }, [period]);
 
   const loadFinance = useCallback(async () => {
     if (!supabaseMode) {
@@ -112,6 +140,16 @@ export default function OrganizerFinanceView() {
               disabled={loading}
             >
               Обновить
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => void downloadStatement()}
+              disabled={statementLoading || loading}
+            >
+              <Download className="mr-1.5 h-4 w-4" aria-hidden />
+              Скачать выписку CSV
             </Button>
             <Link
               href="/organizer/payments"

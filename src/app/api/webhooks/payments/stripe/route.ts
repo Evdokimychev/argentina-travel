@@ -15,6 +15,8 @@ import {
   stripeAmountToUsd,
   verifyStripeWebhookSignature,
 } from "@/lib/payments/stripe-client";
+import { notifyPaymentReceivedFromWebhook } from "@/lib/bookings-notify";
+import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PaymentWebhookEvent } from "@/types/payment-webhook";
 
@@ -65,6 +67,12 @@ export async function POST(request: Request) {
   if (!HANDLED_EVENT_TYPES.has(event.type)) {
     return NextResponse.json({ ok: true, ignored: true });
   }
+
+  addPaymentBreadcrumb("stripe.webhook.received", {
+    provider: "stripe",
+    eventId: event.id,
+    eventType: event.type,
+  });
 
   const secretKey = process.env.STRIPE_SECRET_KEY?.trim();
   if (!secretKey) {
@@ -190,6 +198,7 @@ export async function POST(request: Request) {
         currency,
         receiptMetadata,
       });
+      void notifyPaymentReceivedFromWebhook(supabase, paymentEvent.bookingId, patch);
     }
 
     console.info("[payments-webhook][stripe] event processed", {
@@ -200,9 +209,33 @@ export async function POST(request: Request) {
       paymentStatus: patch.paymentStatus,
       applied,
     });
+    addPaymentBreadcrumb("stripe.webhook.processed", {
+      provider: "stripe",
+      eventId: event.id,
+      eventType: event.type,
+      bookingId: paymentEvent.bookingId,
+      paymentStatus: patch.paymentStatus,
+      applied,
+    });
 
     return NextResponse.json({ ok: true, applied });
   } catch (error) {
+    addPaymentBreadcrumb("stripe.webhook.failed", {
+      provider: "stripe",
+      eventId: event.id,
+      eventType: event.type,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    captureException(error, {
+      tags: {
+        area: "payments",
+        provider: "stripe",
+        eventType: event.type,
+      },
+      extra: {
+        eventId: event.id,
+      },
+    });
     console.error("[payments-webhook][stripe] processing failed", {
       error: error instanceof Error ? error.message : String(error),
       eventId: event.id,

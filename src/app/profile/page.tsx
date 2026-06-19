@@ -12,6 +12,7 @@ import BookingReviewCta from "@/components/profile/BookingReviewCta";
 import ProfileNotifications from "@/components/profile/ProfileNotifications";
 import ProfileDashboardWidgets from "@/components/profile/ProfileDashboardWidgets";
 import ProfileQuickActions from "@/components/profile/ProfileQuickActions";
+import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
 import { buildTourMessageHref } from "@/lib/messages-store";
 import { EmptyState } from "@/components/ui/empty-state";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
@@ -76,6 +77,10 @@ export default function ProfileDashboardPage() {
       </section>
 
       <ProfileQuickActions />
+
+      <section className={cabinetPanelClass}>
+        <PersonalizedRecommendationsSection variant="profile" fetchOnMount className="space-y-0" />
+      </section>
 
       <ProfileDashboardWidgets />
 

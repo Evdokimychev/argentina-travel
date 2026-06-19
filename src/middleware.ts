@@ -1,11 +1,54 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import {
+  buildFirstTouchFromSearchParams,
+  FIRST_TOUCH_COOKIE,
+  parseFirstTouchCookieHeader,
+  serializeFirstTouchAttribution,
+} from "@/lib/attribution/first-touch";
 import { LOCALE_COOKIE_KEY } from "@/lib/i18n/config";
 import { getLocaleFromPathname, stripLocalePrefix } from "@/lib/i18n/locale-path";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import type { Database } from "@/types/database";
+
+const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
+
+function applyFirstTouchAttributionCookie(
+  request: NextRequest,
+  response: NextResponse
+): NextResponse {
+  if (parseFirstTouchCookieHeader(request.headers.get("cookie"))) {
+    return response;
+  }
+
+  const params = request.nextUrl.searchParams;
+  const hasUtm =
+    params.has("utm_source") ||
+    params.has("utm_medium") ||
+    params.has("utm_campaign") ||
+    params.has("api_key_id") ||
+    params.has("partner_key");
+
+  if (!hasUtm) return response;
+
+  const attribution = buildFirstTouchFromSearchParams(
+    params,
+    `${request.nextUrl.pathname}${request.nextUrl.search}`,
+    request.headers.get("referer")
+  );
+
+  if (!attribution) return response;
+
+  response.cookies.set(FIRST_TOUCH_COOKIE, serializeFirstTouchAttribution(attribution), {
+    path: "/",
+    maxAge: FIRST_TOUCH_COOKIE_MAX_AGE,
+    sameSite: "lax",
+  });
+
+  return response;
+}
 
 function createSupabaseMiddlewareClient(request: NextRequest, response: NextResponse) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
@@ -76,7 +119,7 @@ export async function middleware(request: NextRequest) {
 
   if (request.method === "POST" && pathname.startsWith("/api/webhooks/")) {
     const ip = getClientIp(request);
-    const limit = checkRateLimit(`webhooks:ip:${ip}`, 120, 60_000);
+    const limit = await checkRateLimit(`webhooks:ip:${ip}`, 120, 60_000);
     if (!limit.ok) {
       return NextResponse.json(
         { error: "Слишком много webhook-запросов. Повторите позже." },
@@ -100,7 +143,8 @@ export async function middleware(request: NextRequest) {
   const isProtected = isProtectedCabinetPath(routePathname);
 
   if (!isSupabaseAuthEnabled() || !isProtected) {
-    return localeResponse ?? NextResponse.next();
+    const response = localeResponse ?? NextResponse.next();
+    return applyFirstTouchAttributionCookie(request, response);
   }
 
   const isOrganizer = routePathname.startsWith("/organizer");
@@ -178,7 +222,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  return response;
+  return applyFirstTouchAttributionCookie(request, response);
 }
 
 export const config = {

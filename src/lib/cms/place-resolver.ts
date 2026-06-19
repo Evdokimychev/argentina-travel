@@ -6,7 +6,7 @@ import {
 import type { PlaceDetail, PlaceListing } from "@/types/place";
 import {
   cmsOverrideId,
-  fetchPublishedCmsDocumentsByType,
+  fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   listPublishedCmsSlugs,
   resolveWithPublishedCmsOverride,
@@ -52,7 +52,7 @@ function placeListingFromCms(doc: CmsDocument, fallback?: PlaceListing): PlaceLi
 export async function fetchPublishedPlacesFromCms(locale = "ru"): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
   if (!supabase) return [];
-  return fetchPublishedCmsDocumentsByType(supabase, "place", locale);
+  return fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "place", locale);
 }
 
 /** CMS places override source catalog by slug and can add CMS-only slugs. */
@@ -82,7 +82,7 @@ export async function resolvePlaceCatalog(locale = "ru"): Promise<PlaceListing[]
   const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
 
-  const cmsPlaces = await fetchPublishedCmsDocumentsByType(supabase, "place", locale);
+  const cmsPlaces = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "place", locale);
   if (cmsPlaces.length === 0) return fallback;
 
   return mergePlaceCatalog(fallback, cmsPlaces);

@@ -1,6 +1,7 @@
 import { timingSafeEqual } from "node:crypto";
 import { NextResponse } from "next/server";
 import { hashPublicApiKey, publicApiKeyHasScope } from "@/lib/public-api/keys";
+import { logPublicApiKeyUsage } from "@/lib/public-api/usage-log";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -77,12 +78,18 @@ export async function resolvePublicApiKey(
     };
   }
 
-  const limit = checkRateLimit(
+  const limit = await checkRateLimit(
     `public-api:key:${data.id}`,
     data.rate_limit_per_minute,
     60_000
   );
   if (!limit.ok) {
+    const endpoint = new URL(request.url).pathname;
+    void logPublicApiKeyUsage({
+      keyId: data.id,
+      endpoint,
+      status: 429,
+    });
     return {
       ok: false,
       response: NextResponse.json(

@@ -31,6 +31,12 @@ export const cabinetMobileHeaderClass =
 export const cabinetMobileNavClass =
   "scrollbar-hide flex gap-1 overflow-x-auto border-b border-border-subtle bg-surface-elevated px-3 py-2 md:hidden dark:border-border-subtle dark:bg-surface-elevated";
 
+export const cabinetMobileBottomNavClass =
+  "fixed inset-x-0 bottom-0 z-40 border-t border-border-subtle bg-surface-elevated/95 px-2 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
+
+export const cabinetMobileBottomInsetClass =
+  "pb-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:pb-0";
+
 export const cabinetNavBadgeClass =
   "flex items-center justify-center rounded-full bg-sky font-bold text-white";
 

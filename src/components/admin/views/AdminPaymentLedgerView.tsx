@@ -44,6 +44,17 @@ type TransactionDetailResponse = {
   error?: string;
 };
 
+type CreateRefundResponse = {
+  error?: string;
+  transaction?: PaymentTransactionRow;
+  providerAttempt?: {
+    executed?: boolean;
+    skippedReason?: string | null;
+    code?: string;
+    error?: string;
+  };
+};
+
 const TYPE_FILTER_LABELS: Record<PaymentTransactionType | "all", string> = {
   all: "Все типы",
   ...PAYMENT_TRANSACTION_TYPE_LABELS,
@@ -82,6 +93,9 @@ export function AdminPaymentLedgerPanel() {
   const [provider, setProvider] = useState<PaymentProviderId | "all">("all");
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [createRefundLoading, setCreateRefundLoading] = useState(false);
+  const [createRefundMessage, setCreateRefundMessage] = useState<string | null>(null);
+  const [createRefundError, setCreateRefundError] = useState<string | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [detail, setDetail] = useState<TransactionDetailResponse | null>(null);
   const [detailLoading, setDetailLoading] = useState(false);
@@ -144,6 +158,7 @@ export function AdminPaymentLedgerPanel() {
         if (selectedId === transactionId) {
           await loadDetail(transactionId);
         }
+        setCreateRefundMessage(null);
       } catch {
         setActionError("Не удалось выполнить действие");
       } finally {
@@ -151,6 +166,49 @@ export function AdminPaymentLedgerPanel() {
       }
     },
     [loadDetail, refresh, selectedId]
+  );
+
+  const handleCreateRefund = useCallback(
+    async (row: PaymentTransactionRow) => {
+      setCreateRefundError(null);
+      setCreateRefundMessage(null);
+      setCreateRefundLoading(true);
+      try {
+        const response = await fetch("/api/admin/payments/refund", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            bookingId: row.bookingId,
+            amountUsd: row.amount,
+            reason: `Возврат по операции ${row.id}`,
+          }),
+        });
+        const payload = (await response.json().catch(() => ({}))) as CreateRefundResponse;
+        if (!response.ok || !payload.transaction) {
+          setCreateRefundError(payload.error ?? "Не удалось создать запрос на возврат");
+          return;
+        }
+
+        if (payload.providerAttempt?.executed) {
+          setCreateRefundMessage("Возврат отправлен провайдеру");
+        } else if (payload.providerAttempt?.skippedReason) {
+          setCreateRefundMessage("Запрос создан и ожидает ручной обработки");
+        } else if (payload.providerAttempt?.error) {
+          setCreateRefundMessage("Запрос создан, но провайдер вернул ошибку");
+        } else {
+          setCreateRefundMessage("Запрос на возврат создан");
+        }
+
+        await refresh();
+        setSelectedId(payload.transaction.id);
+        await loadDetail(payload.transaction.id);
+      } catch {
+        setCreateRefundError("Не удалось создать запрос на возврат");
+      } finally {
+        setCreateRefundLoading(false);
+      }
+    },
+    [loadDetail, refresh]
   );
 
   const receiptMeta = detail?.receipt?.receipt ?? null;
@@ -439,6 +497,51 @@ export function AdminPaymentLedgerPanel() {
                   <span className="font-medium text-charcoal">Заметки администратора:</span>{" "}
                   {selected.adminNotes}
                 </p>
+              ) : null}
+
+              {selected.type === "charge" && selected.status === "completed" ? (
+                <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                  <p className="text-sm font-medium text-charcoal">Возврат по операции списания</p>
+                  <p className="mt-1 text-xs text-slate">
+                    Создаётся запрос на полный возврат с последующей попыткой отправки в платёжную
+                    систему.
+                  </p>
+                  {createRefundError ? (
+                    <p className="mt-2 text-sm text-red-600">{createRefundError}</p>
+                  ) : null}
+                  {createRefundMessage ? (
+                    <p className="mt-2 text-sm text-success">{createRefundMessage}</p>
+                  ) : null}
+                  <button
+                    type="button"
+                    disabled={createRefundLoading}
+                    onClick={() => void handleCreateRefund(selected)}
+                    className="mt-3 rounded-xl border border-gray-300 px-3 py-2 text-sm font-medium text-charcoal hover:bg-gray-100 disabled:opacity-60"
+                  >
+                    {createRefundLoading ? "Создаём…" : "Создать запрос на возврат"}
+                  </button>
+                </div>
+              ) : null}
+
+              {selected.type === "refund" && selected.status === "pending" ? (
+                <div className="flex flex-wrap gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4">
+                  <button
+                    type="button"
+                    disabled={actionLoadingId === selected.id}
+                    onClick={() => void handleRefundAction(selected.id, "approve")}
+                    className="rounded-xl border border-emerald-300 px-3 py-2 text-sm font-medium text-emerald-800 hover:bg-emerald-100 disabled:opacity-60"
+                  >
+                    Одобрить возврат
+                  </button>
+                  <button
+                    type="button"
+                    disabled={actionLoadingId === selected.id}
+                    onClick={() => void handleRefundAction(selected.id, "reject")}
+                    className="rounded-xl border border-rose-300 px-3 py-2 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:opacity-60"
+                  >
+                    Отклонить
+                  </button>
+                </div>
               ) : null}
 
               <div className="flex flex-wrap gap-3 pt-2">

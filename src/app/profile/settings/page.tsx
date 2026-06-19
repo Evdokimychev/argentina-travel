@@ -16,6 +16,8 @@ import { cn } from "@/lib/cn";
 import { cabinetLinkClass, cabinetPageSubtitleClass, cabinetPageTitleClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import NotificationPreferencesSection from "@/components/notifications/NotificationPreferencesSection";
+import PrivacySettingsSection from "@/components/settings/PrivacySettingsSection";
+import PushNotificationsSection from "@/components/settings/PushNotificationsSection";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
@@ -461,6 +463,8 @@ export default function ProfileSettingsPage() {
 
       <ThemeSettingsSection className="lg:col-span-2" />
       <NotificationPreferencesSection scope="tourist" className="lg:col-span-2" />
+      <PushNotificationsSection className="lg:col-span-2" />
+      <PrivacySettingsSection className="lg:col-span-2" />
     </div>
   );
 }

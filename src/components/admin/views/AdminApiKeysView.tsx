@@ -7,25 +7,10 @@ import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
-import type { PublicApiScope } from "@/types/public-api";
-
-type ApiKeyRow = {
-  id: string;
-  keyPrefix: string;
-  label: string;
-  partnerName: string | null;
-  organizerId: string | null;
-  scopes: PublicApiScope[];
-  rateLimitPerMinute: number;
-  isActive: boolean;
-  createdAt: string;
-  updatedAt: string;
-  revokedAt: string | null;
-  lastUsedAt: string | null;
-};
+import type { PublicApiKeyWithUsage, PublicApiScope } from "@/types/public-api";
 
 type ApiKeysResponse = {
-  keys?: ApiKeyRow[];
+  keys?: PublicApiKeyWithUsage[];
 };
 
 const SCOPE_OPTIONS: { value: PublicApiScope; label: string }[] = [
@@ -203,6 +188,22 @@ export default function AdminApiKeysView() {
                     {key.lastUsedAt ? (
                       <p className="mt-1 text-xs text-slate">Последний запрос: {key.lastUsedAt}</p>
                     ) : null}
+                    {key.usage.requestsLast7d > 0 ? (
+                      <div className="mt-2 space-y-1 text-xs text-slate">
+                        <p>Запросов за 7 дней: {key.usage.requestsLast7d}</p>
+                        {key.usage.topEndpoints.length > 0 ? (
+                          <ul>
+                            {key.usage.topEndpoints.map((item) => (
+                              <li key={item.endpoint}>
+                                {item.endpoint} — {item.count}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <p className="mt-1 text-xs text-slate">За 7 дней запросов не было</p>
+                    )}
                   </div>
                   <Button
                     variant="outline"

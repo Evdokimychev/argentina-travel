@@ -13,7 +13,8 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { AdminListSkeleton } from "@/components/ui/skeleton";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import type { ContentDocumentItem, ContentInventorySummary } from "@/lib/admin/content-inventory";
-import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
+import type { CmsLocaleCoverage, CmsTranslationCoverageByType } from "@/lib/cms/cms-locale";
+import { CMS_LOCALE_LABELS } from "@/lib/cms/cms-locale";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
 import CmsLocaleBadges from "@/components/admin/CmsLocaleBadges";
 
@@ -36,6 +37,7 @@ type ContentResponse = ContentInventorySummary & {
   destinationEditable?: LegalEditableRow[];
   placeEditable?: LegalEditableRow[];
   cmsCount?: number;
+  translationCoverage?: CmsTranslationCoverageByType[];
 };
 
 const TYPE_LABELS: Record<ContentDocumentItem["type"], string> = {
@@ -301,6 +303,49 @@ export default function ContentDocumentsView() {
                 <p className="mt-2 font-heading text-2xl font-bold text-charcoal">{item.value}</p>
               </div>
             ))}
+          </section>
+        ) : null}
+
+        {data?.translationCoverage?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Покрытие переводов CMS (RU / ES / EN)
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b border-gray-100 bg-gray-50/80 text-left text-xs uppercase tracking-wide text-slate">
+                    <th className="px-5 py-3 font-medium">Тип</th>
+                    <th className="px-5 py-3 font-medium">Документов</th>
+                    <th className="px-5 py-3 font-medium">RU</th>
+                    <th className="px-5 py-3 font-medium">ES</th>
+                    <th className="px-5 py-3 font-medium">EN</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {data.translationCoverage.map((row) => (
+                    <tr key={row.docType}>
+                      <td className="px-5 py-3 font-medium text-charcoal">{row.label}</td>
+                      <td className="px-5 py-3 text-slate">{row.total}</td>
+                      {row.locales.map((localeStat) => (
+                        <td key={localeStat.locale} className="px-5 py-3">
+                          <span className="font-semibold text-charcoal">{localeStat.percent}%</span>
+                          <span className="ml-1 text-xs text-slate">
+                            ({localeStat.count}/{row.total})
+                          </span>
+                          <span className="ml-2 text-[10px] font-semibold uppercase text-slate/70">
+                            {CMS_LOCALE_LABELS[localeStat.locale]}
+                          </span>
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="border-t border-gray-100 px-5 py-3 text-xs text-slate">
+              Процент опубликованных CMS-версий по каждой локали. RU обычно 100% через TS или CMS.
+            </p>
           </section>
         ) : null}
 

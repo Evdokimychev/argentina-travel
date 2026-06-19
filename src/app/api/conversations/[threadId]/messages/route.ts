@@ -55,7 +55,7 @@ export async function POST(
   }
 
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`conversation-msg:ip:${ip}`, 30, 60_000);
+  const limit = await checkRateLimit(`conversation-msg:ip:${ip}`, 30, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много сообщений. Повторите позже." },

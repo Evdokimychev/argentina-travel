@@ -7,6 +7,7 @@ import {
   toggleFavorite,
 } from "@/lib/favorites-store";
 import { FAVORITES_UPDATED_EVENT, type FavoriteKind, type FavoriteTour } from "@/types/tourist";
+import { trackEntityFavorite } from "@/hooks/useInteractionTracking";
 
 export type FavoriteTourInput = Omit<FavoriteTour, "addedAt">;
 
@@ -38,6 +39,9 @@ export function useFavoriteTour(tour: FavoriteTourInput) {
     const result = toggleFavorite(user, user.id, tour);
     if ("error" in result) return;
     setFavorited(result.favorited);
+    if (result.favorited) {
+      trackEntityFavorite(kind === "excursion" ? "excursion" : "tour", tour.tourSlug);
+    }
   }
 
   return { favorited, toggle: handleToggle, isAuthenticated };

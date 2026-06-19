@@ -11,6 +11,8 @@ import {
   parseNotification,
   verifyWebhookSignature,
 } from "@/lib/payments/mercadopago-client";
+import { notifyPaymentReceivedFromWebhook } from "@/lib/bookings-notify";
+import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PaymentWebhookEvent } from "@/types/payment-webhook";
 
@@ -74,6 +76,13 @@ export async function POST(request: Request) {
   if (notification.topic !== "payment") {
     return NextResponse.json({ ok: true, ignored: true });
   }
+
+  addPaymentBreadcrumb("mercadopago.webhook.received", {
+    provider: "mercadopago",
+    notificationId: notification.notificationId,
+    topic: notification.topic,
+    dataId: notification.dataId,
+  });
 
   const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim();
   if (!accessToken) {
@@ -139,6 +148,7 @@ export async function POST(request: Request) {
         currency: payment.currencyId ?? "USD",
         receiptMetadata,
       });
+      void notifyPaymentReceivedFromWebhook(supabase, bookingId, patch);
     }
 
     console.info("[payments-webhook][mercadopago] payment processed", {
@@ -149,9 +159,34 @@ export async function POST(request: Request) {
       paymentStatus: patch.paymentStatus,
       applied,
     });
+    addPaymentBreadcrumb("mercadopago.webhook.processed", {
+      provider: "mercadopago",
+      notificationId: notification.notificationId,
+      paymentId: payment.id,
+      bookingId,
+      paymentStatus: patch.paymentStatus,
+      applied,
+    });
 
     return NextResponse.json({ ok: true, applied });
   } catch (error) {
+    addPaymentBreadcrumb("mercadopago.webhook.failed", {
+      provider: "mercadopago",
+      notificationId: notification.notificationId,
+      dataId: notification.dataId,
+      error: error instanceof Error ? error.message : String(error),
+    });
+    captureException(error, {
+      tags: {
+        area: "payments",
+        provider: "mercadopago",
+        topic: notification.topic,
+      },
+      extra: {
+        notificationId: notification.notificationId ?? null,
+        dataId: notification.dataId ?? null,
+      },
+    });
     console.error("[payments-webhook][mercadopago] processing failed", {
       error: error instanceof Error ? error.message : String(error),
       notificationId: notification.notificationId,

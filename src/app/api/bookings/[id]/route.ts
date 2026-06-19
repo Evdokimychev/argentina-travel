@@ -7,10 +7,16 @@ import {
   fetchBookingById,
   updateBookingRecord,
 } from "@/lib/bookings-server";
+import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { notifyBookingStatusChanged } from "@/lib/bookings-notify";
 import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
 import { normalizeBooking, createStatusChange } from "@/lib/bookings-store";
+import { bookingToRow } from "@/lib/bookings-db-mapper";
+import {
+  dispatchPartnerBookingWebhookEvent,
+  resolvePartnerWebhookEventByStatus,
+} from "@/lib/partner-webhooks";
 
 type PatchBody = {
   action?: "update_status" | "add_comment" | "cancel";
@@ -78,6 +84,10 @@ export async function PATCH(
     }
 
     if (body.booking) {
+      addBookingBreadcrumb("booking.patch.requested", {
+        bookingId: id,
+        action: body.action ?? "replace",
+      });
       const allowed = assertBookingMutationAllowed(
         current,
         sessionUser,
@@ -89,8 +99,18 @@ export async function PATCH(
 
       const result = await updateBookingRecord(supabase, normalizeBooking(body.booking));
       if ("error" in result) {
+        addBookingBreadcrumb("booking.patch.failed", {
+          bookingId: id,
+          action: body.action ?? "replace",
+          error: result.error,
+        });
         return NextResponse.json({ error: result.error }, { status: 500 });
       }
+      addBookingBreadcrumb("booking.patched", {
+        bookingId: id,
+        action: body.action ?? "replace",
+        status: result.booking.status,
+      });
       return NextResponse.json({ booking: result.booking });
     }
 
@@ -120,8 +140,18 @@ export async function PATCH(
 
       const result = await updateBookingRecord(supabase, updated);
       if ("error" in result) {
+        addBookingBreadcrumb("booking.cancel.failed", {
+          bookingId: id,
+          error: result.error,
+        });
         return NextResponse.json({ error: result.error }, { status: 500 });
       }
+
+      addBookingBreadcrumb("booking.cancelled", {
+        bookingId: id,
+        fromStatus: current.status,
+        toStatus: "cancelled",
+      });
 
       void notifyBookingStatusChanged({
         bookingId: updated.id,
@@ -132,6 +162,12 @@ export async function PATCH(
         fromStatus: current.status,
         toStatus: "cancelled",
         changedAt: updated.updatedAt,
+      });
+
+      void dispatchPartnerBookingWebhookEvent({
+        organizerId: bookingToRow(updated).organizer_user_id,
+        event: "booking.cancelled",
+        booking: updated,
       });
 
       return NextResponse.json({ booking: result.booking });
@@ -164,8 +200,20 @@ export async function PATCH(
 
       const result = await updateBookingRecord(supabase, updated);
       if ("error" in result) {
+        addBookingBreadcrumb("booking.status_update.failed", {
+          bookingId: id,
+          fromStatus: current.status,
+          toStatus: body.status,
+          error: result.error,
+        });
         return NextResponse.json({ error: result.error }, { status: 500 });
       }
+
+      addBookingBreadcrumb("booking.status_updated", {
+        bookingId: id,
+        fromStatus: current.status,
+        toStatus: body.status,
+      });
 
       void notifyBookingStatusChanged({
         bookingId: updated.id,
@@ -177,6 +225,15 @@ export async function PATCH(
         toStatus: body.status,
         changedAt: updated.updatedAt,
       });
+
+      const webhookEvent = resolvePartnerWebhookEventByStatus(body.status);
+      if (webhookEvent) {
+        void dispatchPartnerBookingWebhookEvent({
+          organizerId: bookingToRow(updated).organizer_user_id,
+          event: webhookEvent,
+          booking: updated,
+        });
+      }
 
       return NextResponse.json({ booking: result.booking });
     }
@@ -204,13 +261,25 @@ export async function PATCH(
 
       const result = await updateBookingRecord(supabase, updated);
       if ("error" in result) {
+        addBookingBreadcrumb("booking.comment.failed", {
+          bookingId: id,
+          error: result.error,
+        });
         return NextResponse.json({ error: result.error }, { status: 500 });
       }
+      addBookingBreadcrumb("booking.comment_added", {
+        bookingId: id,
+      });
       return NextResponse.json({ booking: result.booking });
     }
 
     return NextResponse.json({ error: "Invalid patch" }, { status: 400 });
   } catch (error) {
+    addBookingBreadcrumb("booking.patch.failed", {
+      bookingId: id,
+      error: error instanceof Error ? error.message : "Unexpected error",
+    });
+    captureException(error, { tags: { area: "booking", action: "patch" }, extra: { bookingId: id } });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unexpected error" },
       { status: 500 }

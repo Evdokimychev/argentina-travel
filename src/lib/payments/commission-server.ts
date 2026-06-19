@@ -26,6 +26,7 @@ function mapRuleRow(
     fixedCurrency: row.fixed_currency,
     isDefault: row.is_default,
     active: row.active,
+    utmSourceMatch: row.utm_source_match,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -66,6 +67,7 @@ export async function getDefaultCommissionRule(supabase: DbClient): Promise<Plat
       .from("platform_commission_rules")
       .select("*")
       .eq("active", true)
+      .is("utm_source_match", null)
       .order("created_at", { ascending: true })
       .limit(1)
       .maybeSingle();
@@ -73,6 +75,31 @@ export async function getDefaultCommissionRule(supabase: DbClient): Promise<Plat
   }
 
   return mapRuleRow(data);
+}
+
+export async function getCommissionRuleForBooking(
+  supabase: DbClient,
+  bookingId: string
+): Promise<PlatformCommissionRuleRow | null> {
+  const { data: attribution } = await supabase
+    .from("booking_attribution")
+    .select("utm_source")
+    .eq("booking_id", bookingId)
+    .maybeSingle();
+
+  const utmSource = attribution?.utm_source?.trim();
+  if (utmSource) {
+    const { data: matched } = await supabase
+      .from("platform_commission_rules")
+      .select("*")
+      .eq("active", true)
+      .ilike("utm_source_match", utmSource)
+      .maybeSingle();
+
+    if (matched) return mapRuleRow(matched);
+  }
+
+  return getDefaultCommissionRule(supabase);
 }
 
 export function calculateCommissionSplit(
@@ -138,7 +165,7 @@ export async function createCommissionSnapshotForCharge(
     return data ? mapSnapshotRow(data) : null;
   }
 
-  const rule = await getDefaultCommissionRule(supabase);
+  const rule = await getCommissionRuleForBooking(supabase, input.bookingId);
   if (!rule) return null;
 
   const split = calculateCommissionSplit(input.grossAmount, rule);

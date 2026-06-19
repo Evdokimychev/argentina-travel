@@ -1,4 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { insertBookingAttribution } from "@/lib/attribution/attribution-server";
+import { hasAttributionData } from "@/types/booking-attribution";
 import type { Database } from "@/types/database";
 import type { Booking } from "@/types/tourist";
 import type { SessionUser } from "@/types/user";
@@ -7,6 +9,7 @@ import { normalizeBooking } from "@/lib/bookings-store";
 import { bookingMatchesContactEmail, isGuestUserId } from "@/lib/guest-booking";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { dispatchPartnerBookingWebhookEvent } from "@/lib/partner-webhooks";
 import { canManageBooking, canCancelOwnBooking } from "@/lib/permissions";
 import { userHasAccountRole } from "@/types/user";
 
@@ -129,6 +132,16 @@ export async function insertBooking(
   if (error) {
     return { error: error.message };
   }
+
+  if (booking.attribution && hasAttributionData(booking.attribution)) {
+    await insertBookingAttribution(supabase, booking.id, booking.attribution);
+  }
+
+  void dispatchPartnerBookingWebhookEvent({
+    organizerId: row.organizer_user_id,
+    event: "booking.created",
+    booking,
+  });
 
   return { booking: normalizeBooking(booking) };
 }

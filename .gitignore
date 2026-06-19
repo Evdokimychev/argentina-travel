@@ -35,6 +35,7 @@ yarn-error.log*
 # ops artifacts (backups local only; audit log may be committed from CI)
 /var/backups/
 /var/ops/backup-last.json
+/var/ops/cron-last.json
 
 # typescript
 *.tsbuildinfo

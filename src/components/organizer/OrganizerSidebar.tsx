@@ -11,6 +11,7 @@ import {
   Compass,
   LayoutGrid,
   Mail,
+  MoreHorizontal,
   Settings,
   Star,
   Wallet,
@@ -21,7 +22,7 @@ import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { cn } from "@/lib/cn";
 import {
   cabinetMobileHeaderClass,
-  cabinetMobileNavClass,
+  cabinetMobileBottomNavClass,
   cabinetNavBadgeClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
@@ -32,7 +33,11 @@ import {
   cabinetMutedSurfaceClass,
   cabinetSurfaceButtonClass,
 } from "@/lib/cabinet-ui";
-import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
+import {
+  ORGANIZER_NAV_ITEMS,
+  type OrganizerNavId,
+  type OrganizerNavItem,
+} from "@/data/organizer-dashboard";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
 import { getLocalOrganizerInboxUnreadCount } from "@/lib/organizer-inbox";
@@ -56,6 +61,12 @@ const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
   reviews: Star,
   payments: Wallet,
 };
+
+const MOBILE_PRIMARY_NAV_IDS: OrganizerNavId[] = ["bookings", "messages", "tours"];
+
+function isNavItemActive(pathname: string, href: string): boolean {
+  return href === "/organizer" ? pathname === "/organizer" : pathname.startsWith(href);
+}
 
 interface OrganizerSidebarProps {
   userName?: string;
@@ -143,7 +154,6 @@ export default function OrganizerSidebar({
   avatarUrl,
   forceCompact = false,
 }: OrganizerSidebarProps) {
-  const { user } = useAuth();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -247,9 +257,7 @@ export default function OrganizerSidebar({
         {navItems.map((item) => {
           const Icon = NAV_ICONS[item.id];
           const active =
-            item.href === "/organizer"
-              ? pathname === "/organizer"
-              : pathname.startsWith(item.href);
+            isNavItemActive(pathname, item.href);
 
           return (
             <Link
@@ -344,36 +352,133 @@ export function OrganizerMobileHeader() {
 export function OrganizerMobileNav() {
   const pathname = usePathname();
   const navItems = useOrganizerNavBadges();
+  const [moreOpen, setMoreOpen] = useState(false);
+
+  const primaryItems = navItems.filter((item) => MOBILE_PRIMARY_NAV_IDS.includes(item.id));
+  const moreItems = navItems.filter((item) => !MOBILE_PRIMARY_NAV_IDS.includes(item.id));
+  const hasMoreBadge = moreItems.some((item) => (item.badge ?? 0) > 0);
+  const isMoreActive =
+    pathname.startsWith("/organizer/settings") ||
+    pathname.startsWith("/organizer/integrations") ||
+    moreItems.some((item) => isNavItemActive(pathname, item.href));
+
+  useEffect(() => {
+    setMoreOpen(false);
+  }, [pathname]);
+
+  function renderPrimaryItem(item: OrganizerNavItem) {
+    const Icon = NAV_ICONS[item.id];
+    const active = isNavItemActive(pathname, item.href);
+    return (
+      <Link
+        key={item.id}
+        href={item.href}
+        className={cn(
+          "relative flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+          active ? "text-sky" : "text-slate hover:text-foreground"
+        )}
+      >
+        <span
+          className={cn(
+            "relative flex h-7 w-7 items-center justify-center rounded-lg transition-colors",
+            active ? "bg-sky/10 text-sky" : "bg-gray-100 text-slate"
+          )}
+        >
+          <Icon className="h-4 w-4" strokeWidth={1.85} />
+          {item.badge ? (
+            <span className={cn(cabinetNavBadgeClass, "absolute -right-1.5 -top-1 h-4 min-w-4 px-1 text-[9px]")}>
+              {item.badge}
+            </span>
+          ) : null}
+        </span>
+        {item.id === "tours" ? "Туры" : item.label}
+      </Link>
+    );
+  }
 
   return (
-    <nav className={cabinetMobileNavClass}>
-      {navItems.map((item) => {
-        const Icon = NAV_ICONS[item.id];
-        const active =
-          item.href === "/organizer"
-            ? pathname === "/organizer"
-            : pathname.startsWith(item.href);
-
-        return (
-          <Link
-            key={item.id}
-            href={item.href}
+    <>
+      <nav className={cn(cabinetMobileBottomNavClass, "grid grid-cols-4 items-center")} aria-label="Навигация кабинета организатора">
+        {primaryItems.map(renderPrimaryItem)}
+        <button
+          type="button"
+          aria-expanded={moreOpen}
+          aria-label="Ещё разделы"
+          onClick={() => setMoreOpen((prev) => !prev)}
+          className={cn(
+            "relative flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+            isMoreActive || moreOpen ? "text-sky" : "text-slate hover:text-foreground"
+          )}
+        >
+          <span
             className={cn(
-              cabinetNavLinkClass,
-              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-              active ? cn(cabinetNavActiveClass, "before:hidden") : cabinetNavIdleClass
+              "relative flex h-7 w-7 items-center justify-center rounded-lg transition-colors",
+              isMoreActive || moreOpen ? "bg-sky/10 text-sky" : "bg-gray-100 text-slate"
             )}
           >
-            <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
-            {item.label}
-            {item.badge ? (
-              <span className={cn(cabinetNavBadgeClass, "ml-0.5 h-4 min-w-4 px-1 text-[9px]")}>
-                {item.badge}
+            <MoreHorizontal className="h-4 w-4" strokeWidth={1.85} />
+            {hasMoreBadge ? (
+              <span className={cn(cabinetNavBadgeClass, "absolute -right-1.5 -top-1 h-4 min-w-4 px-1 text-[9px]")}>
+                •
               </span>
             ) : null}
-          </Link>
-        );
-      })}
-    </nav>
+          </span>
+          Ещё
+        </button>
+      </nav>
+
+      {moreOpen ? (
+        <div className="fixed inset-0 z-30 md:hidden">
+          <button
+            type="button"
+            aria-label="Закрыть дополнительные разделы"
+            onClick={() => setMoreOpen(false)}
+            className="absolute inset-0 bg-black/25"
+          />
+          <div className="absolute inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] rounded-2xl border border-border-subtle bg-surface-elevated p-2 shadow-elevated">
+            <div className="grid grid-cols-2 gap-2">
+              {moreItems.map((item) => {
+                const Icon = NAV_ICONS[item.id];
+                const active = isNavItemActive(pathname, item.href);
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setMoreOpen(false)}
+                    className={cn(
+                      cabinetSurfaceButtonClass,
+                      "flex items-center justify-between gap-2 px-3 py-2.5 text-sm",
+                      active && "border-sky/30 bg-sky/10 text-sky"
+                    )}
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      {item.label}
+                    </span>
+                    {item.badge ? (
+                      <span className={cn(cabinetNavBadgeClass, "h-4 min-w-4 px-1 text-[9px]")}>
+                        {item.badge}
+                      </span>
+                    ) : null}
+                  </Link>
+                );
+              })}
+              <Link
+                href="/organizer/settings"
+                onClick={() => setMoreOpen(false)}
+                className={cn(
+                  cabinetSurfaceButtonClass,
+                  "flex items-center gap-2 px-3 py-2.5 text-sm",
+                  pathname.startsWith("/organizer/settings") && "border-sky/30 bg-sky/10 text-sky"
+                )}
+              >
+                <Settings className="h-4 w-4" strokeWidth={1.75} />
+                Управление
+              </Link>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

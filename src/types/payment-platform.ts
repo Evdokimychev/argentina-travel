@@ -44,7 +44,15 @@ export type PaymentTransactionStatus =
   | "cancelled"
   | "rejected";
 
-export type PayoutRecordStatus = "pending" | "scheduled" | "paid" | "failed" | "cancelled";
+export type PayoutRecordStatus =
+  | "pending"
+  | "approved"
+  | "exported"
+  | "completed"
+  | "scheduled"
+  | "paid"
+  | "failed"
+  | "cancelled";
 
 export type PaymentTransactionRow = {
   id: string;
@@ -76,6 +84,8 @@ export type PayoutRecordRow = {
   currency: string;
   status: PayoutRecordStatus;
   metadata: Record<string, unknown>;
+  exportedAt: string | null;
+  exportFileHash: string | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -134,6 +144,9 @@ export const PAYMENT_TRANSACTION_STATUS_LABELS: Record<PaymentTransactionStatus,
 
 export const PAYOUT_RECORD_STATUS_LABELS: Record<PayoutRecordStatus, string> = {
   pending: "Ожидает",
+  approved: "Одобрено",
+  exported: "Экспортировано",
+  completed: "Завершено",
   scheduled: "Запланировано",
   paid: "Выплачено",
   failed: "Ошибка",

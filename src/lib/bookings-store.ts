@@ -1,3 +1,4 @@
+import type { BookingAttribution } from "@/types/booking-attribution";
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
 import { shouldSeedDemoData } from "@/lib/demo-mode";
@@ -52,6 +53,10 @@ import {
   type OrganizerBookingStats,
 } from "@/types/tourist";
 import type { BookingOrganizerParams, BookingPaymentStatus } from "@/types/booking-params";
+import {
+  notifyBookingCreatedEmail,
+  notifyPaymentReceivedEmail,
+} from "@/lib/bookings-notify";
 import {
   notifyBookingCreated,
   notifyPaymentReminder,
@@ -619,6 +624,16 @@ export function createBooking(input: {
   const normalized = normalizeBooking(booking);
   if (input.persist === false) {
     notifyBookingCreated(normalized);
+    void notifyBookingCreatedEmail({
+      userId: normalized.userId,
+      bookingId: normalized.id,
+      tourTitle: normalized.tourTitle,
+      contactEmail: normalized.contactEmail,
+      contactName: normalized.contactName,
+      guests: normalized.guests,
+      startDate: normalized.startDate,
+      endDate: normalized.endDate,
+    });
     if (normalized.fillTravelersLater) {
       notifyTravelersFormDue(normalized);
     }
@@ -627,6 +642,16 @@ export function createBooking(input: {
   writeAllBookings([normalized, ...all]);
   notifyUpdated();
   notifyBookingCreated(normalized);
+  void notifyBookingCreatedEmail({
+    userId: normalized.userId,
+    bookingId: normalized.id,
+    tourTitle: normalized.tourTitle,
+    contactEmail: normalized.contactEmail,
+    contactName: normalized.contactName,
+    guests: normalized.guests,
+    startDate: normalized.startDate,
+    endDate: normalized.endDate,
+  });
   if (normalized.fillTravelersLater) {
     notifyTravelersFormDue(normalized);
   }
@@ -773,6 +798,7 @@ export function createBookingFromCheckoutLocal(input: {
   checkoutRatesUpdatedAt?: string;
   checkoutRatesSource?: "frankfurter" | "fallback";
   payNowUsd?: number;
+  attribution?: BookingAttribution;
 }): Booking | { error: string } {
   const contactEmail = input.form.contactEmail.trim();
   const userId =
@@ -863,6 +889,7 @@ export function createBookingFromCheckoutLocal(input: {
     paymentStatus,
     paymentSummary,
     paymentLink,
+    attribution: input.attribution,
     metadata: {
       checkoutCurrency,
       checkoutDisplay,
@@ -919,6 +946,7 @@ export async function createBookingFromCheckout(input: {
   checkoutRatesUpdatedAt?: string;
   checkoutRatesSource?: "frankfurter" | "fallback";
   payNowUsd?: number;
+  attribution?: BookingAttribution;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
@@ -1133,8 +1161,26 @@ export function updateOrganizerBookingDetails(input: {
         draftBooking,
         input.paymentStatus === "paid" ? "paid" : "partial"
       );
+      void notifyPaymentReceivedEmail({
+        userId: draftBooking.userId,
+        bookingId: draftBooking.id,
+        tourTitle: draftBooking.tourTitle,
+        contactEmail: draftBooking.contactEmail,
+        contactName: draftBooking.contactName,
+        amountUsd: draftBooking.paymentSummary?.paidAmountUsd,
+        paymentStatus: input.paymentStatus === "paid" ? "paid" : "partial",
+      });
     } else if (input.paymentStatus === "refunded") {
       notifyPaymentStatusChanged(draftBooking, "refunded");
+      void notifyPaymentReceivedEmail({
+        userId: draftBooking.userId,
+        bookingId: draftBooking.id,
+        tourTitle: draftBooking.tourTitle,
+        contactEmail: draftBooking.contactEmail,
+        contactName: draftBooking.contactName,
+        amountUsd: draftBooking.paymentSummary?.paidAmountUsd,
+        paymentStatus: "refunded",
+      });
     }
   }
 
@@ -1299,6 +1345,17 @@ export function completeBookingPaymentFromLink(input: {
     draft,
     paymentStatus === "paid" ? "paid" : paymentStatus === "partial" ? "partial" : "partial"
   );
+  if (paymentStatus === "paid" || paymentStatus === "partial") {
+    void notifyPaymentReceivedEmail({
+      userId: draft.userId,
+      bookingId: draft.id,
+      tourTitle: draft.tourTitle,
+      contactEmail: draft.contactEmail,
+      contactName: draft.contactName,
+      amountUsd: draft.paymentSummary?.paidAmountUsd,
+      paymentStatus: paymentStatus === "paid" ? "paid" : "partial",
+    });
+  }
   return { booking: draft };
 }
 

@@ -15,7 +15,7 @@ const RATE_WINDOW_MS = 60_000;
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`assistant:ip:${ip}`, RATE_LIMIT, RATE_WINDOW_MS);
+  const limit = await checkRateLimit(`assistant:ip:${ip}`, RATE_LIMIT, RATE_WINDOW_MS);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Подождите минуту и попробуйте снова." },

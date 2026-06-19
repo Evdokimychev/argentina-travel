@@ -20,6 +20,7 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { attachGuestBookingsToUser } from "@/lib/bookings-store";
 import { toggleFavorite } from "@/lib/favorites-store";
+import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
 import AuthQueryHandler from "@/components/auth/AuthQueryHandler";
@@ -167,6 +168,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       document.body.style.overflow = previous;
     };
   }, [authOpen, favoritePromptOpen]);
+
+  useEffect(() => {
+    if (!user) {
+      setSentryUserContext(null);
+      return;
+    }
+
+    setSentryUserContext({
+      id: user.id,
+      email: user.email,
+      role: user.role,
+      roles: user.roles,
+    });
+  }, [user]);
 
   const openAuth = useCallback((intent: AuthIntent = "default") => {
     setAuthIntent(intent);

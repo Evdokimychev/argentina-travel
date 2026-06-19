@@ -3,6 +3,7 @@ import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { fetchBookingById, updateBookingRecord } from "@/lib/bookings-server";
 import { isBookingPaymentLinkExpired } from "@/lib/booking-payment-link";
 import { normalizeBooking } from "@/lib/bookings-store";
+import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createCheckoutSession, isStripeConfigured } from "@/lib/payments/stripe-client";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -79,6 +80,10 @@ export async function POST(
       baseUrl: new URL(request.url).origin,
       idempotencyKey: `booking-stripe-${booking.id}-${Date.now().toString(36)}`,
     });
+    addPaymentBreadcrumb("stripe.checkout_session.created", {
+      bookingId: booking.id,
+      sessionId: session.sessionId,
+    });
 
     const now = new Date().toISOString();
     const updatedBooking = normalizeBooking({
@@ -95,6 +100,10 @@ export async function POST(
 
     const updateResult = await updateBookingRecord(supabase, updatedBooking);
     if ("error" in updateResult) {
+      addPaymentBreadcrumb("stripe.checkout_session.persist_failed", {
+        bookingId: booking.id,
+        error: updateResult.error,
+      });
       return NextResponse.json({ error: updateResult.error }, { status: 500 });
     }
 
@@ -103,6 +112,14 @@ export async function POST(
       checkoutUrl: session.checkoutUrl,
     });
   } catch (error) {
+    addPaymentBreadcrumb("stripe.checkout_session.failed", {
+      bookingId: id,
+      error: error instanceof Error ? error.message : "Unexpected error",
+    });
+    captureException(error, {
+      tags: { area: "payments", provider: "stripe", action: "create_checkout_session" },
+      extra: { bookingId: id },
+    });
     return NextResponse.json(
       {
         error:

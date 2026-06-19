@@ -6,6 +6,7 @@ import { getAllDestinations } from "@/lib/destinations";
 import { PLACES_SEED } from "@/data/places-seed";
 import { cmsDocumentToRow } from "@/lib/cms/content-mapper";
 import { buildCmsI18nPilotEntries } from "@/lib/cms/cms-i18n-pilot";
+import { buildCmsI18nRolloutStubEntries } from "@/lib/cms/cms-i18n-rollout";
 import type { Database, Json } from "@/types/database";
 import {
   blogBodyFromTs,
@@ -260,6 +261,146 @@ export async function seedCmsI18nPilot(
 
     const status = publish ? "published" : "draft";
     const publishedAt = publish ? new Date().toISOString() : null;
+
+    if (existing) {
+      const { error } = await supabase
+        .from("content_documents")
+        .update({
+          title: entry.title,
+          body: entry.body as Json,
+          seo: entry.seo as Json,
+          status,
+          published_at: publishedAt,
+          updated_by: actorId,
+        })
+        .eq("id", id);
+
+      if (error) {
+        errors.push(`${id}: ${error.message}`);
+        continue;
+      }
+
+      await appendSeedRevision(supabase, id, entry.title, entry.body, entry.seo, actorId);
+      updated += 1;
+      continue;
+    }
+
+    const row = cmsDocumentToRow({
+      id,
+      docType: entry.docType,
+      slug: entry.slug,
+      locale: entry.locale,
+      title: entry.title,
+      status,
+      body: entry.body,
+      seo: entry.seo,
+      publishedAt,
+      createdBy: actorId,
+      updatedBy: actorId,
+    });
+
+    const { error } = await supabase.from("content_documents").insert(row);
+    if (error) {
+      errors.push(`${id}: ${error.message}`);
+      continue;
+    }
+
+    await appendSeedRevision(supabase, id, entry.title, entry.body, entry.seo, actorId);
+    created += 1;
+  }
+
+  return { created, skipped, updated, total: entries.length, errors };
+}
+
+function resolveRuSourceFromTs(
+  docType: CmsDocType,
+  slug: string
+): { title: string; body: CmsDocumentBody; seoDescription?: string } | null {
+  switch (docType) {
+    case "legal": {
+      const doc = LEGAL_DOCUMENTS[slug];
+      if (!doc) return null;
+      return {
+        title: doc.title,
+        body: legalBodyFromTs(doc),
+        seoDescription: doc.description,
+      };
+    }
+    case "blog": {
+      const post = blogPosts.find((item) => item.slug === slug);
+      if (!post) return null;
+      return {
+        title: post.title,
+        body: blogBodyFromTs(post),
+        seoDescription: post.excerpt,
+      };
+    }
+    case "guide": {
+      const page = getPagesBySection("guide").find((item) => item.slug === slug);
+      if (!page) return null;
+      return {
+        title: page.title,
+        body: guideBodyFromTs(page),
+        seoDescription: page.description,
+      };
+    }
+    case "destination": {
+      const destination = getAllDestinations().find((item) => item.id === slug);
+      if (!destination) return null;
+      return {
+        title: destination.name,
+        body: destinationBodyFromTs(destination),
+        seoDescription: destination.description,
+      };
+    }
+    case "place": {
+      const place = PLACES_SEED.find((item) => item.slug === slug);
+      if (!place) return null;
+      return {
+        title: place.name,
+        body: placeBodyFromTs(place),
+        seoDescription: place.shortDescription,
+      };
+    }
+    default:
+      return null;
+  }
+}
+
+/** E77: seed draft es/en empty stubs for top-10 priority slugs. */
+export async function seedCmsI18nEmptyStubs(
+  supabase: DbClient,
+  options: Pick<CmsSeedOptions, "skipExisting" | "actorId"> = {}
+): Promise<CmsSeedResult> {
+  const skipExisting = options.skipExisting ?? true;
+  const actorId = options.actorId ?? null;
+  const entries = buildCmsI18nRolloutStubEntries(resolveRuSourceFromTs);
+
+  let created = 0;
+  let skipped = 0;
+  let updated = 0;
+  const errors: string[] = [];
+
+  for (const entry of entries) {
+    const id = cmsDocumentId(entry.docType, entry.slug, entry.locale);
+    const { data: existing, error: readError } = await supabase
+      .from("content_documents")
+      .select("id, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (readError) {
+      errors.push(`${id}: ${readError.message}`);
+      continue;
+    }
+
+    if (existing && skipExisting) {
+      skipped += 1;
+      continue;
+    }
+
+    const status = "draft";
+    const publishedAt = null;
 
     if (existing) {
       const { error } = await supabase

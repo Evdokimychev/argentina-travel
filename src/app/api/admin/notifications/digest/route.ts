@@ -27,6 +27,7 @@ export async function POST(request: Request) {
 
     const events = await fetchUserDigestEvents(supabase, userId, sinceIso);
     const sent = await sendDailyDigestEmail({
+      userId,
       recipientEmail: profile?.email ?? null,
       recipientName: [profile?.first_name, profile?.last_name].filter(Boolean).join(" ") || null,
       events,

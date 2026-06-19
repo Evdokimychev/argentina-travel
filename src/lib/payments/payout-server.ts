@@ -5,6 +5,7 @@ import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import type { OrganizerFinanceSummary } from "@/types/platform-commission";
 import type { PayoutRecordRow, PayoutRecordStatus } from "@/types/payment-platform";
 import { listCommissionSnapshotsForOrganizer } from "@/lib/payments/commission-server";
+import { buildPayoutBatchCsv, hashCsvContent } from "@/lib/payments/payout-export";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -32,9 +33,25 @@ function mapPayoutRow(row: Database["public"]["Tables"]["payout_records"]["Row"]
       completedAt: row.completed_at ?? metadata.completedAt,
       adminNotes: row.admin_notes ?? metadata.adminNotes,
     },
+    exportedAt: row.exported_at ?? null,
+    exportFileHash: row.export_file_hash ?? null,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+/** Statuses that reserve organizer balance until bank transfer is confirmed. */
+export function isPayoutInFlight(status: PayoutRecordStatus): boolean {
+  return (
+    status === "pending" ||
+    status === "approved" ||
+    status === "exported" ||
+    status === "scheduled"
+  );
+}
+
+export function isPayoutSettled(status: PayoutRecordStatus): boolean {
+  return status === "completed" || status === "paid";
 }
 
 export function formatPayoutPeriod(date = new Date()): string {
@@ -74,28 +91,37 @@ export async function listPayoutRecords(
 
 export type PayoutSummary = {
   totalPending: number;
-  totalScheduled: number;
-  totalPaid: number;
+  totalApproved: number;
+  totalExported: number;
+  totalCompleted: number;
   recordCount: number;
 };
 
 export function summarizePayoutRecords(rows: PayoutRecordRow[]): PayoutSummary {
   const summary: PayoutSummary = {
     totalPending: 0,
-    totalScheduled: 0,
-    totalPaid: 0,
+    totalApproved: 0,
+    totalExported: 0,
+    totalCompleted: 0,
     recordCount: rows.length,
   };
 
   for (const row of rows) {
-    if (row.status === "pending") summary.totalPending += row.amount;
-    else if (row.status === "scheduled") summary.totalScheduled += row.amount;
-    else if (row.status === "paid") summary.totalPaid += row.amount;
+    if (row.status === "pending" || row.status === "scheduled") {
+      summary.totalPending += row.amount;
+    } else if (row.status === "approved") {
+      summary.totalApproved += row.amount;
+    } else if (row.status === "exported") {
+      summary.totalExported += row.amount;
+    } else if (isPayoutSettled(row.status)) {
+      summary.totalCompleted += row.amount;
+    }
   }
 
   summary.totalPending = roundMoney(summary.totalPending);
-  summary.totalScheduled = roundMoney(summary.totalScheduled);
-  summary.totalPaid = roundMoney(summary.totalPaid);
+  summary.totalApproved = roundMoney(summary.totalApproved);
+  summary.totalExported = roundMoney(summary.totalExported);
+  summary.totalCompleted = roundMoney(summary.totalCompleted);
   return summary;
 }
 
@@ -132,8 +158,9 @@ export async function calculateOrganizerBalance(
 
   for (const row of payouts ?? []) {
     const amount = Number(row.amount);
-    if (row.status === "paid") paidOut += amount;
-    else if (row.status === "pending" || row.status === "scheduled") pendingPayout += amount;
+    const status = row.status as PayoutRecordStatus;
+    if (isPayoutSettled(status)) paidOut += amount;
+    else if (isPayoutInFlight(status)) pendingPayout += amount;
     currency = row.currency ?? currency;
   }
 
@@ -272,7 +299,132 @@ export type MarkPayoutCompletedResult =
   | { ok: false; error: string; code: "NOT_FOUND" | "INVALID_STATE" | "FAILED" };
 
 /**
- * Admin marks payout as completed — records manual settlement, no bank API.
+ * Admin approves payout batch — pending → approved.
+ */
+export async function approvePayoutBatch(
+  supabase: DbClient,
+  payoutId: string,
+  adminUserId: string,
+  adminNotes?: string
+): Promise<MarkPayoutCompletedResult> {
+  const { data: existing, error: fetchError } = await supabase
+    .from("payout_records")
+    .select("*")
+    .eq("id", payoutId)
+    .maybeSingle();
+
+  if (fetchError || !existing) {
+    return { ok: false, error: "Пакет выплаты не найден", code: "NOT_FOUND" };
+  }
+
+  if (existing.status !== "pending" && existing.status !== "scheduled") {
+    return {
+      ok: false,
+      error: "Одобрить можно только пакет со статусом «ожидает»",
+      code: "INVALID_STATE",
+    };
+  }
+
+  const approvedAt = new Date().toISOString();
+  const metadata = asRecord(existing.metadata);
+
+  const { data, error } = await supabase
+    .from("payout_records")
+    .update({
+      status: "approved",
+      approved_by: adminUserId,
+      admin_notes: adminNotes?.trim() || existing.admin_notes,
+      metadata: {
+        ...metadata,
+        approvedAt,
+      },
+      updated_at: approvedAt,
+    })
+    .eq("id", payoutId)
+    .select("*")
+    .single();
+
+  if (error || !data) {
+    return { ok: false, error: error?.message ?? "Не удалось одобрить пакет", code: "FAILED" };
+  }
+
+  return { ok: true, payout: mapPayoutRow(data) };
+}
+
+export type ExportPayoutBatchResult =
+  | { ok: true; payout: PayoutRecordRow; csv: string; fileHash: string; transitioned: boolean }
+  | { ok: false; error: string; code: "NOT_FOUND" | "INVALID_STATE" | "FAILED" };
+
+/**
+ * Export payout batch CSV — approved → exported (first export only).
+ * Re-export on already exported batches returns CSV without status change.
+ */
+export async function exportPayoutBatch(
+  supabase: DbClient,
+  payoutId: string
+): Promise<ExportPayoutBatchResult> {
+  const { data: existing, error: fetchError } = await supabase
+    .from("payout_records")
+    .select("*")
+    .eq("id", payoutId)
+    .maybeSingle();
+
+  if (fetchError || !existing) {
+    return { ok: false, error: "Пакет выплаты не найден", code: "NOT_FOUND" };
+  }
+
+  const status = existing.status as PayoutRecordStatus;
+  if (status !== "approved" && status !== "exported") {
+    return {
+      ok: false,
+      error: "Экспорт доступен только для одобренных или уже экспортированных пакетов",
+      code: "INVALID_STATE",
+    };
+  }
+
+  const payoutRow = mapPayoutRow(existing);
+  const csv = await buildPayoutBatchCsv(supabase, payoutRow);
+  const fileHash = hashCsvContent(csv);
+
+  if (status === "exported") {
+    return { ok: true, payout: payoutRow, csv, fileHash, transitioned: false };
+  }
+
+  const exportedAt = new Date().toISOString();
+  const metadata = asRecord(existing.metadata);
+
+  const { data, error } = await supabase
+    .from("payout_records")
+    .update({
+      status: "exported",
+      exported_at: exportedAt,
+      export_file_hash: fileHash,
+      metadata: {
+        ...metadata,
+        exportedAt,
+        exportFileHash: fileHash,
+      },
+      updated_at: exportedAt,
+    })
+    .eq("id", payoutId)
+    .select("*")
+    .single();
+
+  if (error || !data) {
+    return { ok: false, error: error?.message ?? "Не удалось обновить пакет", code: "FAILED" };
+  }
+
+  return {
+    ok: true,
+    payout: mapPayoutRow(data),
+    csv,
+    fileHash,
+    transitioned: true,
+  };
+}
+
+/**
+ * Admin marks payout as completed after manual bank transfer — exported → completed.
  */
 export async function markPayoutCompleted(
   supabase: DbClient,
@@ -290,8 +442,17 @@ export async function markPayoutCompleted(
     return { ok: false, error: "Пакет выплаты не найден", code: "NOT_FOUND" };
   }
 
-  if (existing.status === "paid" || existing.status === "cancelled") {
+  const status = existing.status as PayoutRecordStatus;
+  if (isPayoutSettled(status) || status === "cancelled") {
     return { ok: false, error: "Пакет уже завершён или отменён", code: "INVALID_STATE" };
+  }
+
+  if (status !== "exported") {
+    return {
+      ok: false,
+      error: "Подтвердить перевод можно только после экспорта пакета",
+      code: "INVALID_STATE",
+    };
   }
 
   const completedAt = new Date().toISOString();
@@ -300,7 +461,7 @@ export async function markPayoutCompleted(
   const { data, error } = await supabase
     .from("payout_records")
     .update({
-      status: "paid",
+      status: "completed",
       approved_by: adminUserId,
       completed_at: completedAt,
       admin_notes: adminNotes?.trim() || existing.admin_notes,
@@ -338,7 +499,7 @@ export async function cancelPayoutBatch(
     return { ok: false, error: "Пакет выплаты не найден", code: "NOT_FOUND" };
   }
 
-  if (existing.status === "paid") {
+  if (isPayoutSettled(existing.status as PayoutRecordStatus)) {
     return { ok: false, error: "Выплаченный пакет не может быть отменён", code: "INVALID_STATE" };
   }
 

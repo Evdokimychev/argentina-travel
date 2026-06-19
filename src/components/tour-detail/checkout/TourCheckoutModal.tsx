@@ -72,6 +72,7 @@ import InsuranceAddonPicker from "./InsuranceAddonPicker";
 import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm } from "./checkout-contact";
 import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
 import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import BookingCheckoutStepper from "@/components/booking/BookingCheckoutStepper";
@@ -638,6 +639,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       checkoutRatesUpdatedAt: ratesUpdatedAt,
       checkoutRatesSource: ratesSource,
       payNowUsd,
+      attribution: getStoredFirstTouchAttribution() ?? undefined,
     });
 
     if ("error" in bookingResult) {

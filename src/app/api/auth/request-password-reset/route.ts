@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
-export async function POST(request: Request) {
+async function postRequestPasswordReset(request: Request) {
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json(
       { error: "Восстановление пароля недоступно в демо-режиме без Supabase." },
@@ -33,3 +34,11 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withRateLimit(postRequestPasswordReset, {
+  limit: 5,
+  window: 300_000,
+  keyPrefix: "auth:request-password-reset",
+  key: (request) => `ip:${getClientIp(request)}`,
+  message: "Слишком много запросов на восстановление пароля. Попробуйте позже.",
+});

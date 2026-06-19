@@ -16,6 +16,10 @@ import {
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
+import {
+  COOKIE_CONSENT_CHANGED_EVENT,
+  hasPersonalizationConsent,
+} from "@/lib/cookie-consent";
 import { isGuideAssistantPath } from "@/lib/guide-assistant-path";
 import type { GuideAssistantResponse, GuideAssistantSource } from "@/types/guide-assistant";
 
@@ -106,6 +110,7 @@ function AssistantMessage({ message }: { message: ChatMessage }) {
 export default function GuideAssistantWidget() {
   const pathname = usePathname();
   const visible = isGuideAssistantPath(pathname);
+  const [personalizationAllowed, setPersonalizationAllowed] = useState(false);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -113,6 +118,13 @@ export default function GuideAssistantWidget() {
   const [error, setError] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
   const textareaId = useId();
+
+  useEffect(() => {
+    const sync = () => setPersonalizationAllowed(hasPersonalizationConsent());
+    sync();
+    window.addEventListener(COOKIE_CONSENT_CHANGED_EVENT, sync);
+    return () => window.removeEventListener(COOKIE_CONSENT_CHANGED_EVENT, sync);
+  }, []);
 
   useEffect(() => {
     if (!open) return;
@@ -169,7 +181,7 @@ export default function GuideAssistantWidget() {
     }
   }, [input, loading]);
 
-  if (!visible) return null;
+  if (!visible || !personalizationAllowed) return null;
 
   return (
     <>

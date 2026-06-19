@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Wallet } from "lucide-react";
+import { Download, Wallet } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
 import { AdminTableState } from "@/components/admin/AdminTableState";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -18,8 +18,9 @@ type PayoutsApiResponse = {
   payouts?: PayoutRecordRow[];
   payoutSummary?: {
     totalPending: number;
-    totalScheduled: number;
-    totalPaid: number;
+    totalApproved: number;
+    totalExported: number;
+    totalCompleted: number;
     recordCount: number;
   };
   commissionReport?: CommissionReportTotals;
@@ -41,7 +42,7 @@ export function AdminPayoutsPanel() {
   const commissionReport = data?.commissionReport;
 
   async function runAction(
-    action: "complete" | "cancel" | "create_batch",
+    action: "approve" | "complete" | "cancel" | "create_batch",
     payoutId?: string
   ) {
     setActionLoading(payoutId ?? action);
@@ -64,15 +65,50 @@ export function AdminPayoutsPanel() {
         return;
       }
       setMessage(
-        action === "complete"
-          ? "Выплата отмечена как завершённая (ручное подтверждение)"
-          : action === "cancel"
-            ? "Пакет выплаты отменён"
-            : "Пакет выплаты создан"
+        action === "approve"
+          ? "Пакет одобрен — можно экспортировать CSV для банковского перевода"
+          : action === "complete"
+            ? "Перевод отмечен как завершённый (ручное подтверждение)"
+            : action === "cancel"
+              ? "Пакет выплаты отменён"
+              : "Пакет выплаты создан"
       );
       await refresh();
     } catch {
       setMessage("Не удалось выполнить действие");
+    } finally {
+      setActionLoading(null);
+    }
+  }
+
+  async function exportBatch(payoutId: string, currentStatus: PayoutRecordRow["status"]) {
+    setActionLoading(`export-${payoutId}`);
+    setMessage(null);
+    try {
+      const response = await fetch(`/api/admin/payments/payouts/${payoutId}/export`);
+      if (!response.ok) {
+        const payload = (await response.json().catch(() => ({}))) as { error?: string };
+        setMessage(payload.error ?? "Не удалось экспортировать пакет");
+        return;
+      }
+      const blob = await response.blob();
+      const disposition = response.headers.get("Content-Disposition") ?? "";
+      const match = disposition.match(/filename="([^"]+)"/);
+      const filename = match?.[1] ?? `payout-${payoutId.slice(0, 8)}.csv`;
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = filename;
+      anchor.click();
+      URL.revokeObjectURL(url);
+      setMessage(
+        currentStatus === "approved"
+          ? "CSV экспортирован — пакет переведён в статус «экспортировано»"
+          : "CSV повторно скачан"
+      );
+      await refresh();
+    } catch {
+      setMessage("Не удалось экспортировать пакет");
     } finally {
       setActionLoading(null);
     }
@@ -99,8 +135,9 @@ export function AdminPayoutsPanel() {
         >
           <option value="all">Все статусы</option>
           <option value="pending">Ожидает</option>
-          <option value="scheduled">Запланировано</option>
-          <option value="paid">Выплачено</option>
+          <option value="approved">Одобрено</option>
+          <option value="exported">Экспортировано</option>
+          <option value="completed">Завершено</option>
           <option value="cancelled">Отменено</option>
         </NativeSelect>
         <button
@@ -145,9 +182,14 @@ export function AdminPayoutsPanel() {
           <h2 className="font-heading text-base font-bold text-charcoal">Сводка выплат</h2>
           <p className="mt-2 text-sm text-slate">
             Записей: {payoutSummary.recordCount}. Ожидают:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalPending} />, запланировано:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalScheduled} />, выплачено:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalPaid} />.
+            <FormattedPrice priceUsd={payoutSummary.totalPending} />, одобрено:{" "}
+            <FormattedPrice priceUsd={payoutSummary.totalApproved} />, экспортировано:{" "}
+            <FormattedPrice priceUsd={payoutSummary.totalExported} />, завершено:{" "}
+            <FormattedPrice priceUsd={payoutSummary.totalCompleted} />.
+          </p>
+          <p className="mt-1 text-xs text-slate">
+            Цепочка: ожидает → одобрено → экспортировано → завершено (банковский перевод вне
+            системы).
           </p>
         </section>
       ) : null}
@@ -180,13 +222,14 @@ export function AdminPayoutsPanel() {
       <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
         <h2 className="font-heading text-base font-bold text-charcoal">Пакеты выплат</h2>
         <CabinetTableWrap>
-          <table className="w-full min-w-[800px] text-left text-sm">
+          <table className="w-full min-w-[960px] text-left text-sm">
             <thead className={cabinetTableHeaderClass}>
               <tr>
                 <th className="px-4 py-3 font-medium text-slate">Период</th>
                 <th className="px-4 py-3 font-medium text-slate">Организатор</th>
                 <th className="px-4 py-3 font-medium text-slate">Статус</th>
                 <th className="px-4 py-3 font-medium text-slate">Сумма</th>
+                <th className="px-4 py-3 font-medium text-slate">Экспорт</th>
                 <th className="px-4 py-3 font-medium text-slate">Действия</th>
               </tr>
             </thead>
@@ -195,8 +238,8 @@ export function AdminPayoutsPanel() {
                 <AdminTableState
                   loading={loading}
                   isEmpty={payouts.length === 0}
-                  colSpan={5}
-                  skeletonColumns={5}
+                  colSpan={6}
+                  skeletonColumns={6}
                   emptyIcon={Wallet}
                   emptyTitle="Пакеты выплат не найдены"
                   emptyDescription="За выбранный период выплат организаторам нет."
@@ -212,29 +255,24 @@ export function AdminPayoutsPanel() {
                     <td className="px-4 py-3 font-medium text-charcoal">
                       <FormattedPrice priceUsd={row.amount} /> {row.currency}
                     </td>
-                    <td className="px-4 py-3">
-                      {row.status === "pending" || row.status === "scheduled" ? (
-                        <div className="flex flex-wrap gap-2">
-                          <button
-                            type="button"
-                            disabled={actionLoading === row.id}
-                            onClick={() => void runAction("complete", row.id)}
-                            className="text-sm font-medium text-sky hover:underline disabled:opacity-60"
-                          >
-                            Подтвердить выплату
-                          </button>
-                          <button
-                            type="button"
-                            disabled={actionLoading === row.id}
-                            onClick={() => void runAction("cancel", row.id)}
-                            className="text-sm font-medium text-slate hover:underline disabled:opacity-60"
-                          >
-                            Отменить
-                          </button>
-                        </div>
+                    <td className="px-4 py-3 text-xs text-slate">
+                      {row.exportedAt ? (
+                        <span title={row.exportFileHash ?? undefined}>
+                          {new Date(row.exportedAt).toLocaleString("ru-RU")}
+                        </span>
                       ) : (
-                        <span className="text-xs text-slate">—</span>
+                        "—"
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <PayoutRowActions
+                        row={row}
+                        actionLoading={actionLoading}
+                        onApprove={() => void runAction("approve", row.id)}
+                        onExport={() => void exportBatch(row.id, row.status)}
+                        onComplete={() => void runAction("complete", row.id)}
+                        onCancel={() => void runAction("cancel", row.id)}
+                      />
                     </td>
                   </tr>
                 ))
@@ -243,6 +281,74 @@ export function AdminPayoutsPanel() {
           </table>
         </CabinetTableWrap>
       </section>
+    </div>
+  );
+}
+
+function PayoutRowActions({
+  row,
+  actionLoading,
+  onApprove,
+  onExport,
+  onComplete,
+  onCancel,
+}: {
+  row: PayoutRecordRow;
+  actionLoading: string | null;
+  onApprove: () => void;
+  onExport: () => void;
+  onComplete: () => void;
+  onCancel: () => void;
+}) {
+  const busy = actionLoading === row.id || actionLoading === `export-${row.id}`;
+
+  if (row.status === "cancelled" || row.status === "completed" || row.status === "paid") {
+    return <span className="text-xs text-slate">—</span>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {(row.status === "pending" || row.status === "scheduled") && (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={onApprove}
+          className="text-sm font-medium text-sky hover:underline disabled:opacity-60"
+        >
+          Одобрить
+        </button>
+      )}
+      {(row.status === "approved" || row.status === "exported") && (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={onExport}
+          className="inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline disabled:opacity-60"
+        >
+          <Download className="h-3.5 w-3.5" aria-hidden />
+          CSV
+        </button>
+      )}
+      {row.status === "exported" && (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={onComplete}
+          className="text-sm font-medium text-success hover:underline disabled:opacity-60"
+        >
+          Подтвердить перевод
+        </button>
+      )}
+      {row.status !== "exported" && (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={onCancel}
+          className="text-sm font-medium text-slate hover:underline disabled:opacity-60"
+        >
+          Отменить
+        </button>
+      )}
     </div>
   );
 }

@@ -10,7 +10,7 @@ export async function POST(request: Request) {
   }
 
   const ip = getClientIp(request);
-  const ipLimit = checkRateLimit(`bookings-lookup:ip:${ip}`, 20, 60_000);
+  const ipLimit = await checkRateLimit(`bookings-lookup:ip:${ip}`, 20, 60_000);
   if (!ipLimit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Попробуйте через минуту." },
@@ -25,7 +25,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Укажите корректный email" }, { status: 400 });
     }
 
-    const emailLimit = checkRateLimit(`bookings-lookup:email:${email}`, 5, 300_000);
+    const emailLimit = await checkRateLimit(`bookings-lookup:email:${email}`, 5, 300_000);
     if (!emailLimit.ok) {
       return NextResponse.json(
         { error: "Превышен лимит запросов для этого email." },

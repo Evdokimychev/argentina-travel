@@ -26,7 +26,7 @@ export async function POST(
   }
 
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`review-report:ip:${ip}`, 5, 60_000);
+  const limit = await checkRateLimit(`review-report:ip:${ip}`, 5, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много жалоб. Повторите позже." },

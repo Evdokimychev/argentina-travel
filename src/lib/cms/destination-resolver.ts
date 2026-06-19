@@ -2,7 +2,7 @@ import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
 import type { DestinationPage } from "@/data/destination-pages";
 import {
   cmsOverrideId,
-  fetchPublishedCmsDocumentsByType,
+  fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   listPublishedCmsSlugs,
   resolveWithPublishedCmsOverride,
@@ -23,7 +23,7 @@ export function destinationOverrideId(slug: string, locale = "ru"): string {
 export async function fetchPublishedDestinationsFromCms(locale = "ru"): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
   if (!supabase) return [];
-  return fetchPublishedCmsDocumentsByType(supabase, "destination", locale);
+  return fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "destination", locale);
 }
 
 /** CMS destinations override TS entries by slug and can add CMS-only slugs. */
@@ -57,7 +57,11 @@ export async function resolveDestinationCatalog(locale = "ru"): Promise<Destinat
   const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
 
-  const cmsDestinations = await fetchPublishedCmsDocumentsByType(supabase, "destination", locale);
+  const cmsDestinations = await fetchPublishedCmsDocumentsMergedByLocaleChain(
+    supabase,
+    "destination",
+    locale
+  );
   if (cmsDestinations.length === 0) return fallback;
 
   return mergeDestinationCatalog(fallback, cmsDestinations);

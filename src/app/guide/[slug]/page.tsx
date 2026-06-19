@@ -6,6 +6,7 @@ import GuidePillarView from "@/components/guide/GuidePillarView";
 import GuideTopicView from "@/components/guide/GuideTopicView";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { listPublishedGuideSlugs, resolveGuidePage } from "@/lib/cms/guide-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import {
   getAllGuideTopics,
   getGuideTopicBySlug,
@@ -44,9 +45,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const page = await resolveGuidePage(slug, await getServerI18nLocale());
   if (!page) return { title: "Путеводитель" };
+  const alternates = await buildCmsContentHreflangAlternates("guide", slug);
   return {
     title: page.title,
     description: page.description,
+    alternates,
   };
 }
 

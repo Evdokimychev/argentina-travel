@@ -1,4 +1,29 @@
+import {
+  escapeHtml,
+  renderBookingConfirmedEmail,
+  renderBookingStatusChangedEmail,
+  renderContentFreshnessReportEmail,
+  renderDigestDailyEmail,
+  renderEmailLayout,
+  renderPaymentReceivedEmail,
+  renderPlainEmail,
+  renderReviewApprovedEmail,
+  shortText,
+  type ContentFreshnessReportItem,
+  type DigestEventItem,
+  type EmailTemplateResult,
+} from "@/lib/notifications/email-templates";
+import {
+  isEmailNotificationEnabled,
+  isPersistableUserId,
+} from "@/lib/notifications/notifications-server";
+import {
+  buildListUnsubscribeHeader,
+  buildUnsubscribeUrl,
+} from "@/lib/notifications/unsubscribe-token";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { absoluteUrl } from "@/lib/site-url";
+import type { NotificationCategory } from "@/types/notifications-hub";
 
 type ReviewModerationAction = "approve" | "reject";
 
@@ -12,6 +37,13 @@ type SendEmailInput = {
   to: string[];
   subject: string;
   html: string;
+  text: string;
+  headers?: Record<string, string>;
+};
+
+type TransactionalSendContext = {
+  userId?: string | null;
+  category: NotificationCategory;
 };
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
@@ -37,25 +69,20 @@ function normalizeRecipients(values: Array<string | null | undefined>): string[]
   return [...unique];
 }
 
-function escapeHtml(value: string): string {
-  return value
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#39;");
+async function shouldSendEmail(context: TransactionalSendContext): Promise<boolean> {
+  if (!isPersistableUserId(context.userId)) return true;
+
+  try {
+    const supabase = createSupabaseAdminClient();
+    return isEmailNotificationEnabled(supabase, context.userId, context.category);
+  } catch {
+    return true;
+  }
 }
 
-function formatName(name?: string | null): string {
-  const normalized = name?.trim();
-  if (!normalized) return "путешественник";
-  return normalized;
-}
-
-function shortReviewText(text: string): string {
-  const normalized = text.trim();
-  if (normalized.length <= 420) return normalized;
-  return `${normalized.slice(0, 420).trimEnd()}...`;
+function resolveUnsubscribeUrl(context: TransactionalSendContext): string | null {
+  if (!isPersistableUserId(context.userId)) return null;
+  return buildUnsubscribeUrl(context.userId, context.category);
 }
 
 async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<void> {
@@ -73,6 +100,8 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<vo
         to: input.to,
         subject: input.subject,
         html: input.html,
+        text: input.text,
+        headers: input.headers,
       }),
       signal: AbortSignal.timeout(10_000),
     });
@@ -81,10 +110,133 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<vo
   }
 }
 
+async function sendTemplateEmail(
+  template: EmailTemplateResult,
+  recipients: string[],
+  context: TransactionalSendContext
+): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config || !recipients.length) return false;
+
+  const allowed = await shouldSendEmail(context);
+  if (!allowed) return false;
+
+  const unsubscribeUrl = resolveUnsubscribeUrl(context);
+
+  await sendEmail(config, {
+    to: recipients,
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+    headers: buildListUnsubscribeHeader(unsubscribeUrl),
+  });
+
+  return true;
+}
+
+export async function sendBookingConfirmedEmail(input: {
+  userId?: string | null;
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  bookingId: string;
+  tourTitle: string;
+  guests?: number;
+  startDate?: string | null;
+  endDate?: string | null;
+}): Promise<boolean> {
+  const recipients = normalizeRecipients([input.recipientEmail]);
+  if (!recipients.length) return false;
+
+  const template = renderBookingConfirmedEmail({
+    recipientName: input.recipientName,
+    bookingId: input.bookingId,
+    tourTitle: input.tourTitle,
+    guests: input.guests,
+    startDate: input.startDate,
+    endDate: input.endDate,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+  });
+
+  return sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "booking",
+  });
+}
+
+export async function sendBookingStatusChangedEmail(input: {
+  userId?: string | null;
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  bookingId: string;
+  tourTitle: string;
+  fromStatus: string | null;
+  toStatus: string;
+  adminCopy?: boolean;
+}): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config) return false;
+
+  const primaryRecipients = normalizeRecipients([
+    input.adminCopy ? config.adminEmail : input.recipientEmail,
+  ]);
+  if (!primaryRecipients.length) return false;
+
+  const template = renderBookingStatusChangedEmail({
+    recipientName: input.recipientName,
+    bookingId: input.bookingId,
+    tourTitle: input.tourTitle,
+    fromStatus: input.fromStatus,
+    toStatus: input.toStatus,
+    adminCopy: input.adminCopy,
+    unsubscribeUrl: input.adminCopy
+      ? null
+      : resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+  });
+
+  return sendTemplateEmail(template, primaryRecipients, {
+    userId: input.adminCopy ? null : input.userId,
+    category: "booking",
+  });
+}
+
+export async function sendPaymentReceivedEmail(input: {
+  userId?: string | null;
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  bookingId: string;
+  tourTitle: string;
+  amountUsd?: number | null;
+  paymentStatus: "paid" | "partial" | "refunded";
+  providerLabel?: string | null;
+}): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config) return false;
+
+  const recipients = normalizeRecipients([input.recipientEmail, config.adminEmail]);
+  if (!recipients.length) return false;
+
+  const template = renderPaymentReceivedEmail({
+    recipientName: input.recipientName,
+    bookingId: input.bookingId,
+    tourTitle: input.tourTitle,
+    amountUsd: input.amountUsd,
+    paymentStatus: input.paymentStatus,
+    providerLabel: input.providerLabel,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "payment" }),
+  });
+
+  return sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "payment",
+  });
+}
+
 export async function sendReviewModerationEmail(input: {
+  userId?: string | null;
   touristEmail: string | null;
   touristName?: string | null;
   tourTitle: string;
+  tourSlug?: string;
   action: ReviewModerationAction;
   note?: string | null;
 }): Promise<void> {
@@ -94,32 +246,18 @@ export async function sendReviewModerationEmail(input: {
   const recipients = normalizeRecipients([input.touristEmail, config.adminEmail]);
   if (!recipients.length) return;
 
-  const approved = input.action === "approve";
-  const subject = approved
-    ? `Ваш отзыв опубликован: ${input.tourTitle}`
-    : `Отзыв по туру «${input.tourTitle}» отклонён`;
-  const noteLine = input.note?.trim()
-    ? `<p><strong>Комментарий модератора:</strong> ${escapeHtml(input.note.trim())}</p>`
-    : "";
-  const greeting = `Здравствуйте, ${escapeHtml(formatName(input.touristName))}!`;
+  const template = renderReviewApprovedEmail({
+    recipientName: input.touristName,
+    tourTitle: input.tourTitle,
+    tourSlug: input.tourSlug ?? "",
+    action: input.action,
+    note: input.note,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "reviews" }),
+  });
 
-  const html = approved
-    ? `
-      <p>${greeting}</p>
-      <p>Ваш отзыв по туру «${escapeHtml(input.tourTitle)}» успешно прошёл модерацию и опубликован.</p>
-      <p>Спасибо, что делитесь опытом — это помогает другим путешественникам.</p>
-    `
-    : `
-      <p>${greeting}</p>
-      <p>Отзыв по туру «${escapeHtml(input.tourTitle)}» пока не опубликован.</p>
-      <p>Вы можете отредактировать текст и отправить отзыв на повторную модерацию.</p>
-      ${noteLine}
-    `;
-
-  await sendEmail(config, {
-    to: recipients,
-    subject,
-    html,
+  await sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "reviews",
   });
 }
 
@@ -139,31 +277,42 @@ export async function sendOrganizerNewReviewEmail(input: {
   const recipients = normalizeRecipients([input.organizerEmail, config.adminEmail]);
   if (!recipients.length) return;
 
-  const subject = `Новый опубликованный отзыв: ${input.tourTitle}`;
-  const greeting = `Здравствуйте, ${escapeHtml(formatName(input.organizerName))}!`;
+  const organizerReviewsUrl = `${absoluteUrl("/organizer/reviews")}?tour=${encodeURIComponent(input.tourSlug)}`;
   const authorLine = input.touristName?.trim()
     ? `Автор: ${escapeHtml(input.touristName.trim())}`
     : "Автор: турист платформы";
-  const tripDateLine = input.tripDate?.trim()
-    ? `<p>Дата поездки: ${escapeHtml(input.tripDate.trim())}</p>`
-    : "";
-  const safeReviewText = shortReviewText(input.reviewText);
-  const organizerReviewsUrl = `${absoluteUrl("/organizer/reviews")}?tour=${encodeURIComponent(input.tourSlug)}`;
+  const safeReviewText = escapeHtml(shortText(input.reviewText));
+  const organizerName = escapeHtml(input.organizerName?.trim() || "организатор");
 
-  const html = `
-    <p>${greeting}</p>
-    <p>По туру «${escapeHtml(input.tourTitle)}» опубликован новый отзыв.</p>
-    <p>${authorLine}</p>
-    <p>Оценка: ${input.rating}/5</p>
-    <p>Текст отзыва: ${escapeHtml(safeReviewText)}</p>
-    ${tripDateLine}
-    <p>Ссылка для работы с отзывами: <a href="${organizerReviewsUrl}">кабинет организатора</a>.</p>
+  const contentHtml = `
+    <p style="margin:0 0 12px;">По туру «${escapeHtml(input.tourTitle)}» опубликован новый отзыв.</p>
+    <p style="margin:0 0 12px;">${authorLine}</p>
+    <p style="margin:0 0 12px;">Оценка: ${input.rating}/5</p>
+    <p style="margin:0 0 12px;">Текст отзыва: ${safeReviewText}</p>
+    ${input.tripDate?.trim() ? `<p style="margin:0 0 12px;">Дата поездки: ${escapeHtml(input.tripDate.trim())}</p>` : ""}
   `;
+
+  const layoutOptions = {
+    greeting: `Здравствуйте, ${organizerName}!`,
+    cta: { label: "Открыть отзывы", href: organizerReviewsUrl },
+  };
 
   await sendEmail(config, {
     to: recipients,
-    subject,
-    html,
+    subject: `Новый опубликованный отзыв: ${input.tourTitle}`,
+    html: renderEmailLayout(contentHtml, layoutOptions),
+    text: renderPlainEmail(
+      [
+        `По туру «${input.tourTitle}» опубликован новый отзыв.`,
+        input.touristName?.trim() ? `Автор: ${input.touristName.trim()}` : "Автор: турист платформы",
+        `Оценка: ${input.rating}/5`,
+        `Текст отзыва: ${shortText(input.reviewText)}`,
+        input.tripDate?.trim() ? `Дата поездки: ${input.tripDate.trim()}` : "",
+      ]
+        .filter(Boolean)
+        .join("\n"),
+      layoutOptions
+    ),
   });
 }
 
@@ -174,14 +323,36 @@ export async function sendAdminUnreadDigestHook(input: {
   // Stub for scheduled digest delivery based on unread admin_notifications count.
 }
 
-type DigestEvent = {
-  title: string;
-  body: string;
+export async function sendContentFreshnessReportEmail(input: {
+  recipientEmails: string[];
+  recipientName?: string | null;
+  items: ContentFreshnessReportItem[];
+  generatedAt?: string;
+  dashboardUrl?: string;
+}): Promise<boolean> {
+  if (input.items.length === 0) return false;
+  const recipients = normalizeRecipients(input.recipientEmails);
+  if (!recipients.length) return false;
+
+  const template = renderContentFreshnessReportEmail({
+    recipientName: input.recipientName,
+    items: input.items,
+    generatedAt: input.generatedAt,
+    dashboardUrl: input.dashboardUrl,
+  });
+
+  return sendTemplateEmail(template, recipients, {
+    category: "system",
+  });
+}
+
+type DigestEvent = DigestEventItem & {
   created_at: string;
   category: string;
 };
 
 export async function sendDailyDigestEmail(input: {
+  userId?: string | null;
   recipientEmail: string | null;
   recipientName?: string | null;
   events: DigestEvent[];
@@ -193,36 +364,15 @@ export async function sendDailyDigestEmail(input: {
   const recipients = normalizeRecipients([input.recipientEmail, config.adminEmail]);
   if (!recipients.length) return false;
 
-  const greeting = `Здравствуйте, ${escapeHtml(formatName(input.recipientName))}!`;
-  const dateLabel = new Intl.DateTimeFormat("ru-RU", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date());
-
-  const itemsHtml =
-    input.events.length > 0
-      ? `<ul>${input.events
-          .slice(0, 20)
-          .map(
-            (event) =>
-              `<li><strong>${escapeHtml(event.title)}</strong> — ${escapeHtml(event.body)}</li>`
-          )
-          .join("")}</ul>`
-      : "<p>За последние 24 часа новых событий не было.</p>";
-
-  const html = `
-    <p>${greeting}</p>
-    <p>Ежедневная сводка уведомлений (${escapeHtml(input.scopeLabel)}) за ${dateLabel}.</p>
-    ${itemsHtml}
-    <p>Это автоматическая рассылка. Настройки уведомлений можно изменить в личном кабинете.</p>
-  `;
-
-  await sendEmail(config, {
-    to: recipients,
-    subject: `Сводка уведомлений — ${dateLabel}`,
-    html,
+  const template = renderDigestDailyEmail({
+    recipientName: input.recipientName,
+    events: input.events,
+    scopeLabel: input.scopeLabel,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "system" }),
   });
 
-  return true;
+  return sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "system",
+  });
 }

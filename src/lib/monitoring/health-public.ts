@@ -1,12 +1,18 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { getAppVersion, getGitSha } from "@/lib/monitoring/build-info";
+import { getDeployEnvironment } from "@/lib/ops/deploy-env";
 import { getLatestMigrationId, getMigrationFileCount } from "@/lib/ops/migrations-version";
 
 export type PublicHealthSnapshot = {
   ok: boolean;
   version: string;
   gitSha: string | null;
+  environment: {
+    nodeEnv: string;
+    deployEnv: string;
+  };
+  migrationVersion: string | null;
   checks: {
     database: {
       ok: boolean;
@@ -76,10 +82,17 @@ export async function fetchPublicHealthSnapshot(options?: {
     searchIndexSkipped = true;
   }
 
+  const environment = getDeployEnvironment();
+
   return {
     ok: databaseSkipped || databaseOk,
     version: getAppVersion(),
     gitSha: getGitSha(),
+    environment: {
+      nodeEnv: environment.nodeEnv,
+      deployEnv: environment.deployEnv,
+    },
+    migrationVersion: getLatestMigrationId(),
     checks: {
       database: {
         ok: databaseOk,

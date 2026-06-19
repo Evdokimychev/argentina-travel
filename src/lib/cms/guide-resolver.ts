@@ -2,7 +2,7 @@ import { getPagesBySection, getContentPage } from "@/lib/content-pages";
 import type { ContentPage } from "@/types/content-page";
 import {
   cmsOverrideId,
-  fetchPublishedCmsDocumentsByType,
+  fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   listPublishedCmsSlugs,
   resolveWithPublishedCmsOverride,
@@ -48,7 +48,7 @@ export async function resolveGuideCatalog(locale = "ru"): Promise<ContentPage[]>
   const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
 
-  const cmsGuides = await fetchPublishedCmsDocumentsByType(supabase, "guide", locale);
+  const cmsGuides = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "guide", locale);
   if (cmsGuides.length === 0) return fallback;
 
   return mergeGuideCatalog(fallback, cmsGuides);

@@ -9,7 +9,11 @@ import {
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { resolveBookingPaymentSummary } from "@/lib/booking-payment";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
-import { createRefundRequest, findPendingRefundForBooking } from "@/lib/payments/transaction-server";
+import {
+  createRefundRequest,
+  findLatestRefundForBooking,
+  findPendingRefundForBooking,
+} from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { BookingPaymentGateway } from "@/types/booking-payment";
 import type { PaymentProviderId } from "@/types/payment-webhook";
@@ -50,8 +54,9 @@ export async function GET(
 
     const admin = createSupabaseAdminClient();
     const pending = await findPendingRefundForBooking(admin, id);
+    const latest = await findLatestRefundForBooking(admin, id);
 
-    return NextResponse.json({ pendingRefund: pending });
+    return NextResponse.json({ pendingRefund: pending, latestRefund: latest });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unexpected error" },
@@ -120,6 +125,9 @@ export async function POST(
       provider: gatewayToProvider(booking.paymentLink?.gateway),
       requestedBy: sessionUser.id,
       reason: body.reason,
+      metadata: {
+        source: isOrganizer ? "organizer_refund_request_legacy" : "tourist_refund_request",
+      },
     });
 
     if ("error" in result) {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { seedCmsFromTs, seedCmsI18nPilot } from "@/lib/cms/cms-ts-seed";
+import { seedCmsFromTs, seedCmsI18nPilot, seedCmsI18nEmptyStubs } from "@/lib/cms/cms-ts-seed";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { CmsDocType } from "@/types/cms-content";
 
@@ -11,6 +11,8 @@ type BulkImportBody = {
   skipExisting?: boolean;
   /** E43: import es/en pilot locale variants */
   includeI18nPilot?: boolean;
+  /** E77: import draft es/en empty stubs for top-10 priority slugs */
+  includeI18nStubs?: boolean;
 };
 
 const ALLOWED_TYPES: CmsDocType[] = ["legal", "blog", "guide", "destination", "place"];
@@ -41,6 +43,14 @@ export async function POST(request: Request) {
     result.skipped += pilotResult.skipped;
     result.updated += pilotResult.updated;
     result.errors.push(...pilotResult.errors);
+  }
+
+  if (body.includeI18nStubs) {
+    const stubResult = await seedCmsI18nEmptyStubs(supabase, seedOptions);
+    result.created += stubResult.created;
+    result.skipped += stubResult.skipped;
+    result.updated += stubResult.updated;
+    result.errors.push(...stubResult.errors);
   }
 
   await writeAdminAuditLog({

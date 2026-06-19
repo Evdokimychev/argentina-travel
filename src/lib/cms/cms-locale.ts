@@ -58,3 +58,65 @@ export const CMS_LOCALE_LABELS: Record<I18nLocale, string> = {
   es: "ES",
   en: "EN",
 };
+
+export type CmsLocaleCoverageRow = {
+  localeCoverage: CmsLocaleCoverage;
+};
+
+export type CmsTranslationCoverageStat = {
+  locale: I18nLocale;
+  count: number;
+  percent: number;
+};
+
+export type CmsTranslationCoverageByType = {
+  docType: CmsDocType;
+  label: string;
+  total: number;
+  locales: CmsTranslationCoverageStat[];
+};
+
+const DOC_TYPE_COVERAGE_LABELS: Record<CmsDocType, string> = {
+  legal: "Юридические",
+  blog: "Статьи",
+  guide: "Путеводитель",
+  destination: "Направления",
+  place: "Места",
+};
+
+function countLocaleCoverage(
+  rows: CmsLocaleCoverageRow[],
+  locale: I18nLocale,
+  mode: "published" | "any"
+): number {
+  if (locale === "ru") {
+    return rows.length;
+  }
+
+  return rows.filter((row) => {
+    const entry = row.localeCoverage[locale];
+    if (!entry) return false;
+    return mode === "published" ? entry.status === "published" : true;
+  }).length;
+}
+
+/** Aggregate RU/ES/EN coverage (% published) per CMS doc type for admin dashboard. */
+export function computeTranslationCoverageByType(
+  groups: Array<{ docType: CmsDocType; rows: CmsLocaleCoverageRow[] }>,
+  mode: "published" | "any" = "published"
+): CmsTranslationCoverageByType[] {
+  return groups.map(({ docType, rows }) => {
+    const total = rows.length;
+    const locales = I18N_LOCALES.map((locale) => {
+      const count = countLocaleCoverage(rows, locale, mode);
+      const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+      return { locale, count, percent };
+    });
+    return {
+      docType,
+      label: DOC_TYPE_COVERAGE_LABELS[docType],
+      total,
+      locales,
+    };
+  });
+}

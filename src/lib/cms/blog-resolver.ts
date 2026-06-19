@@ -3,7 +3,7 @@ import { sortBlogPostsByDate } from "@/lib/blog-utils";
 import type { BlogPost } from "@/types";
 import {
   cmsOverrideId,
-  fetchPublishedCmsDocumentsByType,
+  fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   resolveWithPublishedCmsOverride,
 } from "@/lib/cms/content-resolver";
@@ -24,7 +24,7 @@ export function blogOverrideId(slug: string, locale = "ru"): string {
 export async function fetchPublishedBlogPostsFromCms(locale = "ru"): Promise<CmsDocument[]> {
   const supabase = await getCmsServerClient();
   if (!supabase) return [];
-  return fetchPublishedCmsDocumentsByType(supabase, "blog", locale);
+  return fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "blog", locale);
 }
 
 /** CMS published posts override file posts by slug and can add CMS-only posts. */
@@ -47,7 +47,7 @@ export async function resolveBlogCatalog(locale = "ru"): Promise<BlogPost[]> {
   const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
 
-  const cmsPosts = await fetchPublishedCmsDocumentsByType(supabase, "blog", locale);
+  const cmsPosts = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "blog", locale);
   if (cmsPosts.length === 0) return fallback;
 
   return mergeBlogCatalog(blogPosts, cmsPosts);

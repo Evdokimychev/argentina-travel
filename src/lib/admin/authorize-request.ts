@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { timingSafeEqual } from "node:crypto";
 import { hasAdminCapability } from "@/lib/admin/capabilities";
 import { resolveAdminCapabilitiesFromSession } from "@/lib/admin/staff";
+import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -55,6 +56,7 @@ export async function authorizeAdminRequest(
   const serviceRoleToken = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
   const bearerToken = parseBearerToken(request);
   if (serviceRoleToken && bearerToken && compareSecret(bearerToken, serviceRoleToken)) {
+    setSentryUserContext({ id: "service-role", role: "service_role" });
     return {
       ok: true,
       actorId: "service-role",
@@ -70,6 +72,12 @@ export async function authorizeAdminRequest(
     if (sessionUser) {
       const staff = await resolveAdminCapabilitiesFromSession(sessionUser, supabase);
       if (staff) {
+        setSentryUserContext({
+          id: sessionUser.id,
+          email: sessionUser.email,
+          role: sessionUser.role,
+          roles: sessionUser.roles,
+        });
         if (
           requiredCapability &&
           !hasAdminCapability(staff.capabilities, requiredCapability)

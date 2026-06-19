@@ -22,6 +22,7 @@ import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { listPublishedDestinationSlugs } from "@/lib/cms/destination-resolver";
 import { listPublishedPlaceSlugs } from "@/lib/cms/place-resolver";
 import { flattenSiteNavSections } from "@/lib/site-nav";
+import { expandI18nSitemapPaths } from "@/lib/i18n/sitemap-locales";
 import { absoluteUrl } from "@/lib/site-url";
 import type { BlogPost } from "@/types";
 
@@ -191,7 +192,7 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const paths = await collectSitemapPaths({ blogCatalog });
+  const paths = expandI18nSitemapPaths(await collectSitemapPaths({ blogCatalog }));
 
   return paths.map((path) => {
     const lastModified =

@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -14,6 +15,8 @@ import SiteToastHost from "@/components/feedback/SiteToastHost";
 import RouteProgressBar from "@/components/feedback/RouteProgressBar";
 import PwaShell from "@/components/pwa/PwaShell";
 import GuideAssistantWidget from "@/components/guide/GuideAssistantWidget";
+import FirstTouchAttributionCapture from "@/components/attribution/FirstTouchAttributionCapture";
+import InteractionTrackingProvider from "@/components/personalization/InteractionTrackingProvider";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -21,6 +24,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
       <LocaleCurrencyProvider>
         <SiteFeedbackProvider>
           <AuthProvider>
+            <InteractionTrackingProvider>
             <RouteProgressBar />
             <SiteHashScroll />
             {children}
@@ -29,9 +33,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             <SiteSearch />
           <CookieConsentBanner />
           <PwaShell />
+          <Suspense fallback={null}>
+            <FirstTouchAttributionCapture />
+          </Suspense>
           <GuideAssistantWidget />
           <SiteAnalytics />
             <SiteToastHost />
+            </InteractionTrackingProvider>
           </AuthProvider>
         </SiteFeedbackProvider>
       </LocaleCurrencyProvider>

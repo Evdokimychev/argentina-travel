@@ -19,3 +19,14 @@ export function getMigrationFileCount(rootDir = process.cwd()): number {
   if (!fs.existsSync(migrationsDir)) return 0;
   return fs.readdirSync(migrationsDir).filter((name) => name.endsWith(".sql")).length;
 }
+
+export function getMigrationIds(rootDir = process.cwd()): string[] {
+  const migrationsDir = path.join(rootDir, "supabase/migrations");
+  if (!fs.existsSync(migrationsDir)) return [];
+
+  return fs
+    .readdirSync(migrationsDir)
+    .filter((name) => name.endsWith(".sql"))
+    .sort()
+    .map((name) => name.replace(/\.sql$/, ""));
+}

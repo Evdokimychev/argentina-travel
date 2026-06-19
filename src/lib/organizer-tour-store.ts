@@ -685,7 +685,8 @@ export function readOrganizerTourDraft(
 
 export function saveOrganizerTourDraft(
   draft: OrganizerTourDraft,
-  actor: SessionUser | null
+  actor: SessionUser | null,
+  options?: { skipRemoteSync?: boolean }
 ): { draft: OrganizerTourDraft } | { error: string } {
   const allowed = assertPermission(canEditTour(actor, resolveOwnerUserId(draft)));
   if ("error" in allowed) return { error: allowed.error };
@@ -794,7 +795,9 @@ export function saveOrganizerTourDraft(
 
   saveOrganizerListing(draftToListing(next));
   const canonical = upsertTourFromOrganizerDraft(next);
-  fireOrganizerTourSync(canonical);
+  if (!options?.skipRemoteSync) {
+    fireOrganizerTourSync(canonical);
+  }
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));

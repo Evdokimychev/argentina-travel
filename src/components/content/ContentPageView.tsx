@@ -8,14 +8,28 @@ import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-head
 import { mapContentRelatedLinks } from "@/lib/content-related-links";
 import { getContentHubMeta } from "@/lib/content-pages";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
+import type { ImmigrationFreshnessState } from "@/types/content-freshness";
 import type { ContentPage } from "@/types/content-page";
 
 interface ContentPageViewProps {
   page: ContentPage;
+  freshness?: ImmigrationFreshnessState;
 }
 
-export default function ContentPageView({ page }: ContentPageViewProps) {
+function formatRuDate(value: string): string {
+  return new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(value));
+}
+
+export default function ContentPageView({ page, freshness }: ContentPageViewProps) {
   const hub = getContentHubMeta(page.section);
+  const isImmigration = page.section === "immigration";
+  const freshnessDateLabel = formatRuDate(freshness?.lastVerifiedAt ?? page.updatedAt);
+  const showFreshBadge = isImmigration && freshness?.status === "fresh";
+  const showCriticalWarning = isImmigration && freshness?.status === "critical";
   const usedIds = new Set<string>();
   const sectionsWithIds = page.sections.map((section) => {
     if (!section.heading) return { section, headingId: undefined as string | undefined };
@@ -48,21 +62,29 @@ export default function ContentPageView({ page }: ContentPageViewProps) {
           <header className="mt-6 max-w-3xl">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div className="min-w-0 flex-1">
-                <span className="inline-block rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
-                  {page.category}
-                </span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="inline-block rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
+                    {page.category}
+                  </span>
+                  {showFreshBadge ? (
+                    <span className="inline-block rounded-full bg-emerald-100 px-3 py-1 text-xs font-medium text-emerald-700">
+                      Обновлено {freshnessDateLabel}
+                    </span>
+                  ) : null}
+                </div>
                 <h1 className="mt-4 font-display text-3xl font-bold text-charcoal md:text-4xl">
                   {page.title}
                 </h1>
                 <p className="mt-3 text-base leading-relaxed text-slate">{page.description}</p>
                 <p className="mt-2 text-xs text-slate/80">
-                  Обновлено:{" "}
-                  {new Intl.DateTimeFormat("ru-RU", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  }).format(new Date(page.updatedAt))}
+                  {isImmigration ? "Последняя проверка:" : "Обновлено:"} {freshnessDateLabel}
                 </p>
+                {showCriticalWarning ? (
+                  <div className="mt-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                    Материал не обновлялся более полугода (около {freshness?.ageDays ?? 0} дней). Перед
+                    подачей документов обязательно сверяйте требования с Migraciones и консульством.
+                  </div>
+                ) : null}
               </div>
               <SharePageLinkButton title={page.title} className="shrink-0" />
             </div>

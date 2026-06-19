@@ -5,6 +5,11 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchBookingById, updateBookingRecord } from "@/lib/bookings-server";
 import { notifyBookingStatusChanged } from "@/lib/bookings-notify";
 import { createStatusChange, normalizeBooking } from "@/lib/bookings-store";
+import { bookingToRow } from "@/lib/bookings-db-mapper";
+import {
+  dispatchPartnerBookingWebhookEvent,
+  resolvePartnerWebhookEventByStatus,
+} from "@/lib/partner-webhooks";
 import type { BookingStatus } from "@/types/tourist";
 
 type PatchBody = {
@@ -93,6 +98,15 @@ export async function PATCH(
     toStatus: body.status,
     changedAt: result.booking.updatedAt,
   });
+
+  const webhookEvent = resolvePartnerWebhookEventByStatus(body.status);
+  if (webhookEvent) {
+    void dispatchPartnerBookingWebhookEvent({
+      organizerId: bookingToRow(result.booking).organizer_user_id,
+      event: webhookEvent,
+      booking: result.booking,
+    });
+  }
 
   return NextResponse.json({ booking: result.booking });
 }

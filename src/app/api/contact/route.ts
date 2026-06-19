@@ -10,7 +10,7 @@ import type { ContactSubmissionKind } from "@/types/database";
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`contact:ip:${ip}`, 10, 60_000);
+  const limit = await checkRateLimit(`contact:ip:${ip}`, 10, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Попробуйте позже." },

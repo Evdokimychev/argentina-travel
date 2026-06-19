@@ -36,7 +36,7 @@ export async function POST(request: Request) {
   }
 
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`reviews:ip:${ip}`, 10, 60_000);
+  const limit = await checkRateLimit(`reviews:ip:${ip}`, 10, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Повторите позже." },

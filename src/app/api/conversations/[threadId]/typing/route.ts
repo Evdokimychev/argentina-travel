@@ -56,7 +56,7 @@ export async function POST(
   }
 
   const ip = getClientIp(request);
-  const limit = checkRateLimit(`conversation-typing:ip:${ip}`, 60, 60_000);
+  const limit = await checkRateLimit(`conversation-typing:ip:${ip}`, 60, 60_000);
   if (!limit.ok) {
     return NextResponse.json(
       { error: "Слишком много запросов. Повторите позже." },

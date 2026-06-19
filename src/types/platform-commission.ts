@@ -9,6 +9,8 @@ export type PlatformCommissionRuleRow = {
   fixedCurrency: string;
   isDefault: boolean;
   active: boolean;
+  /** When set, rule applies to bookings with matching utm_source. */
+  utmSourceMatch?: string | null;
   createdAt: string;
   updatedAt: string;
 };

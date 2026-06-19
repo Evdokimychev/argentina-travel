@@ -1,5 +1,11 @@
 export type AnalyticsPeriod = "7d" | "30d" | "90d" | "all";
 
+export type TopAttributionSourceRow = {
+  sourceKey: string;
+  label: string;
+  count: number;
+};
+
 export type DailyCountPoint = {
   date: string;
   count: number;
@@ -18,6 +24,7 @@ export type AdminAnalyticsV2Payload = {
     bookingPipelineUsd: number;
     shopPaidUsd: number;
     shopOrderUsd: number;
+    topAttributionSources: TopAttributionSourceRow[];
   };
   marketplace: {
     tourCount: number;

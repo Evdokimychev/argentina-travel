@@ -4,6 +4,7 @@ import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { parseAnalyticsPeriod } from "@/lib/admin/analytics-period";
 import { buildCommissionReport } from "@/lib/payments/commission-server";
 import {
+  approvePayoutBatch,
   cancelPayoutBatch,
   createPayoutBatch,
   listPayoutRecords,
@@ -16,6 +17,9 @@ import type { PayoutRecordStatus } from "@/types/payment-platform";
 function parseStatus(value: string | null): PayoutRecordStatus | "all" {
   if (
     value === "pending" ||
+    value === "approved" ||
+    value === "exported" ||
+    value === "completed" ||
     value === "scheduled" ||
     value === "paid" ||
     value === "failed" ||
@@ -53,7 +57,7 @@ export async function GET(request: Request) {
 }
 
 type PostBody = {
-  action?: "create_batch" | "complete" | "cancel";
+  action?: "create_batch" | "approve" | "complete" | "cancel";
   organizerUserId?: string;
   payoutId?: string;
   adminNotes?: string;
@@ -97,6 +101,31 @@ export async function POST(request: Request) {
       payout: result.payout,
       snapshotCount: result.snapshotCount,
     });
+  }
+
+  if (body.action === "approve") {
+    const payoutId = body.payoutId?.trim();
+    if (!payoutId) {
+      return NextResponse.json({ error: "Укажите payoutId" }, { status: 400 });
+    }
+
+    const result = await approvePayoutBatch(supabase, payoutId, adminUserId, body.adminNotes);
+
+    if (!result.ok) {
+      const status = result.code === "NOT_FOUND" ? 404 : 400;
+      return NextResponse.json({ error: result.error, code: result.code }, { status });
+    }
+
+    await writeAdminAuditLog({
+      actorUserId: adminUserId,
+      action: "payout.approved",
+      entityType: "payout_record",
+      entityId: payoutId,
+      payload: { amount: result.payout.amount, organizerUserId: result.payout.organizerUserId },
+      ipAddress: clientIpFromRequest(request),
+    });
+
+    return NextResponse.json({ payout: result.payout });
   }
 
   if (body.action === "complete") {

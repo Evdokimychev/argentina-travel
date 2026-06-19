@@ -126,6 +126,31 @@ async function isChannelEnabled(
   return data.enabled;
 }
 
+export async function isEmailNotificationEnabled(
+  supabase: DbClient,
+  userId: string,
+  category: NotificationCategory
+): Promise<boolean> {
+  return isChannelEnabled(supabase, userId, "email", category);
+}
+
+export async function disableEmailNotificationCategory(
+  supabase: DbClient,
+  userId: string,
+  category: NotificationCategory
+): Promise<void> {
+  await supabase.from("notification_preferences").upsert(
+    {
+      user_id: userId,
+      channel: "email",
+      category,
+      enabled: false,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "user_id,channel,category" }
+  );
+}
+
 function rowToUnifiedItem(row: NotificationEventRow): UnifiedNotificationItem {
   return {
     id: row.id,

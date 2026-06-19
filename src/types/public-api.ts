@@ -1,6 +1,11 @@
 /** Scopes for public API v1 keys. Wildcard grants all read scopes. */
 export type PublicApiScope = "tours:read" | "excursions:read" | "*";
 
+export type PublicApiKeyUsageStats = {
+  requestsLast7d: number;
+  topEndpoints: Array<{ endpoint: string; count: number }>;
+};
+
 export type PublicApiKeyRecord = {
   id: string;
   keyPrefix: string;
@@ -14,6 +19,10 @@ export type PublicApiKeyRecord = {
   updatedAt: string;
   revokedAt: string | null;
   lastUsedAt: string | null;
+};
+
+export type PublicApiKeyWithUsage = PublicApiKeyRecord & {
+  usage: PublicApiKeyUsageStats;
 };
 
 export type PublicApiPagination = {

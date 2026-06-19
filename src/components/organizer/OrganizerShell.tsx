@@ -14,6 +14,7 @@ import OrganizerSidebar, {
 import { cn } from "@/lib/cn";
 import {
   cabinetContentGapClass,
+  cabinetMobileBottomInsetClass,
   cabinetPanelClass,
   cabinetShellClass,
 } from "@/lib/cabinet-ui";
@@ -76,7 +77,7 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
 
   return (
     <AccessGate allowed={hasOrganizerAccess} fallback={connectRoleFallback}>
-      <div className={cabinetShellClass}>
+      <div className={cn(cabinetShellClass, cabinetMobileBottomInsetClass)}>
         <OrganizerMobileHeader />
         <OrganizerMobileNav />
 

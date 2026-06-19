@@ -319,7 +319,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
           )}
         </div>
 
-        <div className={cn(cabinetCardClass, "flex min-h-[420px] flex-col")}>
+        <div className={cn(cabinetCardClass, "flex min-h-[420px] flex-col overflow-hidden")}>
           {activeThread ? (
             <>
               <div className="border-b border-gray-100 px-4 py-4 sm:px-5">
@@ -338,7 +338,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
                 </p>
               </div>
 
-              <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 sm:px-5">
+              <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 pb-24 sm:px-5 sm:pb-5">
                 {messages.map((message) => {
                   const own = message.senderRole === role;
                   return (
@@ -367,7 +367,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
                 })}
               </div>
 
-              <div className="border-t border-gray-100 p-4 sm:p-5">
+              <div className="sticky bottom-0 border-t border-gray-100 bg-white/95 p-3 pb-[calc(env(safe-area-inset-bottom,0px)+0.75rem)] backdrop-blur-md sm:p-5 sm:pb-5">
                 <div className="flex gap-2">
                   <Textarea
                     value={draft}

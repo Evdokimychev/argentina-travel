@@ -144,6 +144,54 @@ export interface Database {
         };
         Relationships: [];
       };
+      booking_attribution: {
+        Row: {
+          booking_id: string;
+          utm_source: string | null;
+          utm_medium: string | null;
+          utm_campaign: string | null;
+          referrer: string | null;
+          landing_path: string | null;
+          api_key_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          booking_id: string;
+          utm_source?: string | null;
+          utm_medium?: string | null;
+          utm_campaign?: string | null;
+          referrer?: string | null;
+          landing_path?: string | null;
+          api_key_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          booking_id?: string;
+          utm_source?: string | null;
+          utm_medium?: string | null;
+          utm_campaign?: string | null;
+          referrer?: string | null;
+          landing_path?: string | null;
+          api_key_id?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "booking_attribution_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: true;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "booking_attribution_api_key_id_fkey";
+            columns: ["api_key_id"];
+            isOneToOne: false;
+            referencedRelation: "api_keys";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       conversation_threads: {
         Row: {
           id: string;
@@ -1101,6 +1149,30 @@ export interface Database {
         };
         Relationships: [];
       };
+      push_subscriptions: {
+        Row: {
+          endpoint: string;
+          user_id: string;
+          p256dh: string;
+          auth: string;
+          created_at: string;
+        };
+        Insert: {
+          endpoint: string;
+          user_id: string;
+          p256dh: string;
+          auth: string;
+          created_at?: string;
+        };
+        Update: {
+          endpoint?: string;
+          user_id?: string;
+          p256dh?: string;
+          auth?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;
@@ -1272,6 +1344,121 @@ export interface Database {
         };
         Relationships: [];
       };
+      partner_webhooks: {
+        Row: {
+          id: string;
+          organizer_id: string;
+          url: string;
+          secret: string;
+          events: string[];
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organizer_id: string;
+          url: string;
+          secret: string;
+          events?: string[];
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organizer_id?: string;
+          url?: string;
+          secret?: string;
+          events?: string[];
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_webhooks_organizer_id_fkey";
+            columns: ["organizer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      partner_webhook_deliveries: {
+        Row: {
+          id: string;
+          webhook_id: string;
+          event: string;
+          payload: Json;
+          status: string;
+          attempts: number;
+          last_response_status: number | null;
+          last_error: string | null;
+          delivered_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          webhook_id: string;
+          event: string;
+          payload?: Json;
+          status?: string;
+          attempts?: number;
+          last_response_status?: number | null;
+          last_error?: string | null;
+          delivered_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          webhook_id?: string;
+          event?: string;
+          payload?: Json;
+          status?: string;
+          attempts?: number;
+          last_response_status?: number | null;
+          last_error?: string | null;
+          delivered_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "partner_webhook_deliveries_webhook_id_fkey";
+            columns: ["webhook_id"];
+            isOneToOne: false;
+            referencedRelation: "partner_webhooks";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      api_key_usage_log: {
+        Row: {
+          id: number;
+          key_id: string;
+          endpoint: string;
+          ts: string;
+          status: number;
+        };
+        Insert: {
+          id?: number;
+          key_id: string;
+          endpoint: string;
+          ts?: string;
+          status: number;
+        };
+        Update: {
+          id?: number;
+          key_id?: string;
+          endpoint?: string;
+          ts?: string;
+          status?: number;
+        };
+        Relationships: [];
+      };
       admin_audit_log: {
         Row: {
           id: string;
@@ -1335,6 +1522,36 @@ export interface Database {
           session_id?: string | null;
           metadata?: Json;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+      user_interactions: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          anonymous_id: string | null;
+          entity_type: string;
+          entity_id: string;
+          action: string;
+          ts: string;
+        };
+        Insert: {
+          id?: string;
+          user_id?: string | null;
+          anonymous_id?: string | null;
+          entity_type: string;
+          entity_id: string;
+          action: string;
+          ts?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          anonymous_id?: string | null;
+          entity_type?: string;
+          entity_id?: string;
+          action?: string;
+          ts?: string;
         };
         Relationships: [];
       };
@@ -1440,6 +1657,27 @@ export interface Database {
         };
         Relationships: [];
       };
+      feature_flags: {
+        Row: {
+          key: string;
+          enabled: boolean;
+          rollout_percent: number;
+          metadata: Json;
+        };
+        Insert: {
+          key: string;
+          enabled?: boolean;
+          rollout_percent?: number;
+          metadata?: Json;
+        };
+        Update: {
+          key?: string;
+          enabled?: boolean;
+          rollout_percent?: number;
+          metadata?: Json;
+        };
+        Relationships: [];
+      };
       content_documents: {
         Row: {
           id: string;
@@ -1521,6 +1759,39 @@ export interface Database {
         };
         Relationships: [];
       };
+      content_freshness: {
+        Row: {
+          id: string;
+          doc_slug: string;
+          doc_type: string;
+          last_verified_at: string;
+          next_review_at: string;
+          owner: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          doc_slug: string;
+          doc_type: string;
+          last_verified_at: string;
+          next_review_at: string;
+          owner?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          doc_slug?: string;
+          doc_type?: string;
+          last_verified_at?: string;
+          next_review_at?: string;
+          owner?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       payment_transactions: {
         Row: {
           id: string;
@@ -1590,6 +1861,8 @@ export interface Database {
           approved_by: string | null;
           completed_at: string | null;
           admin_notes: string | null;
+          exported_at: string | null;
+          export_file_hash: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -1604,6 +1877,8 @@ export interface Database {
           approved_by?: string | null;
           completed_at?: string | null;
           admin_notes?: string | null;
+          exported_at?: string | null;
+          export_file_hash?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1618,6 +1893,53 @@ export interface Database {
           approved_by?: string | null;
           completed_at?: string | null;
           admin_notes?: string | null;
+          exported_at?: string | null;
+          export_file_hash?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      privacy_requests: {
+        Row: {
+          id: string;
+          user_id: string;
+          request_type: string;
+          status: string;
+          reason: string | null;
+          metadata: Json;
+          requested_at: string;
+          processed_at: string | null;
+          processed_by: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          request_type?: string;
+          status?: string;
+          reason?: string | null;
+          metadata?: Json;
+          requested_at?: string;
+          processed_at?: string | null;
+          processed_by?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          request_type?: string;
+          status?: string;
+          reason?: string | null;
+          metadata?: Json;
+          requested_at?: string;
+          processed_at?: string | null;
+          processed_by?: string | null;
+          notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1633,6 +1955,7 @@ export interface Database {
           fixed_currency: string;
           is_default: boolean;
           active: boolean;
+          utm_source_match: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -1645,6 +1968,7 @@ export interface Database {
           fixed_currency?: string;
           is_default?: boolean;
           active?: boolean;
+          utm_source_match?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1657,6 +1981,7 @@ export interface Database {
           fixed_currency?: string;
           is_default?: boolean;
           active?: boolean;
+          utm_source_match?: string | null;
           created_at?: string;
           updated_at?: string;
         };

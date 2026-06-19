@@ -6,6 +6,7 @@ import {
   BarChart3,
   BookOpen,
   ClipboardList,
+  Clock3,
   LayoutGrid,
   MapPin,
   Settings,
@@ -25,6 +26,7 @@ import {
 } from "@/lib/cabinet-ui";
 import { siteContainerClass } from "@/lib/site-container";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
+import AdminCronHealthBanner from "@/components/admin/AdminCronHealthBanner";
 import UserAvatar from "@/components/auth/UserAvatar";
 import AdminBreadcrumbs from "@/components/admin/AdminBreadcrumbs";
 import {
@@ -54,9 +56,11 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   "marketplace-excursions": MapPin,
   "marketplace-moderation": Shield,
   "content-documents": BookOpen,
+  "content-freshness": Clock3,
   "users-list": Users,
   "analytics-overview": BarChart3,
   "system-settings": Settings,
+  "system-feature-flags": Settings,
   "system-staff": Shield,
   "system-audit": Shield,
 };
@@ -213,6 +217,7 @@ export function AdminPageShell({ children }: { children: React.ReactNode }) {
   return (
     <div className={cn(siteContainerClass, "pb-10")}>
       <AdminBreadcrumbs className="mb-4" />
+      <AdminCronHealthBanner />
       <div className="space-y-8">{children}</div>
     </div>
   );

@@ -314,6 +314,7 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                     bookingId={booking.id}
                     paymentStatus={paymentStatus}
                     paidAmountUsd={paymentAmounts.paid}
+                    role="organizer"
                   />
                 </DetailRow>
 

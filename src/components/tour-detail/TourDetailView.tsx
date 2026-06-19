@@ -57,6 +57,7 @@ import PlacesSection from "./PlacesSection";
 import type { Tour } from "@/types/tour";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
+import { useTrackEntityView } from "@/hooks/useInteractionTracking";
 
 interface TourDetailViewProps {
   slug: string;
@@ -86,6 +87,8 @@ export default function TourDetailView({
   previewIsPublished = false,
   previewPublishBlockingCount = 0,
 }: TourDetailViewProps) {
+  useTrackEntityView("tour", previewMode ? null : slug);
+
   const syncedTour = useRepositoryTourDetail(slug, initialTour);
   const liveCanonicalTour = useCanonicalTour(slug, initialCanonicalTour);
   const tour = previewMode ? initialTour ?? null : syncedTour;

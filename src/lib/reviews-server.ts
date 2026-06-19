@@ -490,9 +490,11 @@ export async function resolveReviewModeration(
 
   try {
     await sendReviewModerationEmail({
+      userId: row.user_id,
       touristEmail: authorEmail,
       touristName: resolveProfileDisplayName(authorProfile),
       tourTitle: row.tour_title,
+      tourSlug: row.tour_slug,
       action,
       note,
     });

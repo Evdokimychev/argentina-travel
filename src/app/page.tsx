@@ -8,6 +8,12 @@ import { collectTopVerifiedReviewsAsync } from "@/lib/homepage-reviews";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getPlatformStatsFromRepository } from "@/lib/organizer-public";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { getFlag } from "@/lib/feature-flags/server";
+import { resolveInteractionActor } from "@/lib/personalization/interaction-context-server";
+import {
+  getRecommendedExcursions,
+  getRecommendedTours,
+} from "@/lib/personalization/recommendations-server";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
@@ -23,9 +29,25 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const tours = await fetchMarketplaceTours();
-  const testimonials = await collectTopVerifiedReviewsAsync(3);
-  const platformStats = getPlatformStatsFromRepository();
+  const actor = await resolveInteractionActor();
+  const actorId = actor.userId ?? actor.anonymousId ?? null;
+  const homepageRecommendationsV2Enabled = await getFlag(
+    "homepage_recommendations_v2",
+    actorId
+  );
+
+  const [tours, testimonials, platformStats, recommendedTours, recommendedExcursions] =
+    await Promise.all([
+      fetchMarketplaceTours(),
+      collectTopVerifiedReviewsAsync(3),
+      Promise.resolve(getPlatformStatsFromRepository()),
+      homepageRecommendationsV2Enabled
+        ? getRecommendedTours({ ...actor, limit: 6 })
+        : Promise.resolve({ tours: [], personalized: false }),
+      homepageRecommendationsV2Enabled
+        ? getRecommendedExcursions({ ...actor, limit: 6 })
+        : Promise.resolve({ excursions: [], personalized: false }),
+    ]);
 
   return (
     <>
@@ -36,6 +58,12 @@ export default async function HomePage() {
         testimonials={testimonials}
         platformStats={platformStats}
         travelPrepStrip={<TravelPrepStrip />}
+        showHomepageRecommendationsV2={homepageRecommendationsV2Enabled}
+        personalizedTours={recommendedTours.tours}
+        personalizedExcursions={recommendedExcursions.excursions}
+        personalizedActive={
+          recommendedTours.personalized || recommendedExcursions.personalized
+        }
       />
     </>
   );

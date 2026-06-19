@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { buildContentInventory } from "@/lib/admin/content-inventory";
-import { buildCmsLocaleCoverage } from "@/lib/cms/cms-locale";
+import { buildCmsLocaleCoverage, computeTranslationCoverageByType } from "@/lib/cms/cms-locale";
 import { fetchCmsOverrideMap } from "@/lib/cms/content-resolver";
 import { blogOverrideId } from "@/lib/cms/blog-resolver";
 import { guideOverrideId } from "@/lib/cms/guide-resolver";
@@ -129,6 +129,14 @@ export async function GET(request: Request) {
     };
   });
 
+  const translationCoverage = computeTranslationCoverageByType([
+    { docType: "legal", rows: legalEditable },
+    { docType: "blog", rows: blogEditable },
+    { docType: "guide", rows: guideEditable },
+    { docType: "destination", rows: destinationEditable },
+    { docType: "place", rows: placeEditable },
+  ]);
+
   const cmsDocuments = Array.from(cmsMap.values()).map((doc) => ({
     id: doc.id,
     docType: doc.docType,
@@ -148,5 +156,6 @@ export async function GET(request: Request) {
     destinationEditable,
     placeEditable,
     cmsCount: cmsDocuments.length,
+    translationCoverage,
   });
 }

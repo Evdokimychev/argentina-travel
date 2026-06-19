@@ -2,9 +2,10 @@ import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { normalizePhone } from "@/lib/auth-store";
+import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 /** Поиск email по телефону — без входа, только для клиентского signIn. */
-export async function POST(request: Request) {
+async function postLookupPhone(request: Request) {
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json({ error: "Supabase auth disabled" }, { status: 503 });
   }
@@ -41,3 +42,11 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export const POST = withRateLimit(postLookupPhone, {
+  limit: 10,
+  window: 60_000,
+  keyPrefix: "auth:lookup-phone",
+  key: (request) => `ip:${getClientIp(request)}`,
+  message: "Слишком много запросов. Повторите позже.",
+});

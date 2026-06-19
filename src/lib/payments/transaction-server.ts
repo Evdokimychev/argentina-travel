@@ -193,6 +193,7 @@ export type CreateRefundRequestInput = {
   provider?: BookingPaymentWebhookPatch["provider"];
   requestedBy: string;
   reason?: string;
+  metadata?: Record<string, unknown>;
 };
 
 export async function findPendingRefundForBooking(
@@ -232,7 +233,11 @@ export async function createRefundRequest(
       type: "refund",
       requested_by: input.requestedBy,
       request_reason: input.reason?.trim() || null,
-      metadata: { source: "refund_request" } as Json,
+      metadata: {
+        source: "refund_request",
+        requestCreatedAt: new Date().toISOString(),
+        ...(input.metadata ?? {}),
+      } as Json,
     })
     .select("*")
     .single();
@@ -242,6 +247,22 @@ export async function createRefundRequest(
   }
 
   return { transaction: mapTransactionRow(data) };
+}
+
+export async function findLatestRefundForBooking(
+  supabase: DbClient,
+  bookingId: string
+): Promise<PaymentTransactionRow | null> {
+  const { data } = await supabase
+    .from("payment_transactions")
+    .select("*")
+    .eq("booking_id", bookingId)
+    .eq("type", "refund")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  return data ? mapTransactionRow(data) : null;
 }
 
 export async function fetchLatestChargeReceiptForBooking(
@@ -329,7 +350,14 @@ export type ApproveRefundResult =
   | {
       ok: false;
       error: string;
-      code: "NOT_FOUND" | "INVALID_STATE" | "MP_NOT_CONFIGURED" | "MP_FAILED";
+      code:
+        | "NOT_FOUND"
+        | "INVALID_STATE"
+        | "MP_NOT_CONFIGURED"
+        | "MP_FAILED"
+        | "STRIPE_NOT_CONFIGURED"
+        | "STRIPE_FAILED"
+        | "CHARGE_NOT_FOUND";
     };
 
 export function isMercadoPagoRefundConfigured(): boolean {
@@ -338,104 +366,110 @@ export function isMercadoPagoRefundConfigured(): boolean {
   return Boolean(token && enabled === "true");
 }
 
+export function isStripeRefundConfigured(): boolean {
+  return Boolean(process.env.STRIPE_SECRET_KEY?.trim());
+}
+
 async function resolveChargeExternalId(
   supabase: DbClient,
-  bookingId: string
+  bookingId: string,
+  provider?: PaymentTransactionRow["provider"]
 ): Promise<string | null> {
-  const { data } = await supabase
+  let query = supabase
     .from("payment_transactions")
     .select("external_id")
     .eq("booking_id", bookingId)
     .eq("type", "charge")
     .eq("status", "completed")
     .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(1);
+
+  if (provider) {
+    query = query.eq("provider", provider);
+  }
+
+  const { data } = await query.maybeSingle();
 
   return data?.external_id ?? null;
 }
 
-export async function approveRefundRequest(
-  supabase: DbClient,
-  transactionId: string,
-  adminUserId: string,
-  adminNotes?: string
-): Promise<ApproveRefundResult> {
-  const existing = await fetchPaymentTransactionById(supabase, transactionId);
-  if (!existing) {
-    return { ok: false, error: "Транзакция не найдена", code: "NOT_FOUND" };
-  }
+function mapStripeRefundStatus(status: string): PaymentTransactionStatus {
+  const normalized = status.trim().toLowerCase();
+  if (normalized === "succeeded") return "completed";
+  if (normalized === "failed" || normalized === "canceled") return "failed";
+  if (normalized === "pending" || normalized === "requires_action") return "processing";
+  return "processing";
+}
 
-  if (existing.type !== "refund" || existing.status !== "pending") {
-    return { ok: false, error: "Запрос нельзя одобрить в текущем статусе", code: "INVALID_STATE" };
-  }
+function mapMercadoPagoRefundStatus(status: string): PaymentTransactionStatus {
+  const normalized = status.trim().toLowerCase();
+  if (normalized === "approved") return "completed";
+  if (normalized === "cancelled" || normalized === "rejected") return "failed";
+  if (normalized === "pending" || normalized === "in_process") return "processing";
+  return "processing";
+}
 
-  if (existing.provider === "mercadopago" && !isMercadoPagoRefundConfigured()) {
-    return {
-      ok: false,
-      error:
-        "Возврат через Mercado Pago недоступен: задайте MERCADOPAGO_ACCESS_TOKEN и MERCADOPAGO_REFUNDS_ENABLED=true",
-      code: "MP_NOT_CONFIGURED",
+type ExecuteRefundAttemptInput = {
+  transactionId: string;
+  actorUserId?: string;
+  adminNotes?: string;
+  strictProviderConfig: boolean;
+  allowManualCompletion: boolean;
+};
+
+export type ExecuteRefundAttemptResult =
+  | {
+      ok: true;
+      transaction: PaymentTransactionRow;
+      providerExecuted: boolean;
+      skippedReason?: string;
+    }
+  | {
+      ok: false;
+      error: string;
+      code:
+        | "NOT_FOUND"
+        | "INVALID_STATE"
+        | "MP_NOT_CONFIGURED"
+        | "MP_FAILED"
+        | "STRIPE_NOT_CONFIGURED"
+        | "STRIPE_FAILED"
+        | "CHARGE_NOT_FOUND";
     };
+
+async function updateRefundAfterAttempt(
+  supabase: DbClient,
+  existing: PaymentTransactionRow,
+  input: {
+    status: PaymentTransactionStatus;
+    externalId?: string | null;
+    actorUserId?: string;
+    adminNotes?: string;
+    providerAttempt: Record<string, unknown>;
   }
-
-  let providerExecuted = false;
-  let externalId = existing.externalId;
-  let status: PaymentTransactionStatus = "completed";
-
-  if (existing.provider === "mercadopago" && isMercadoPagoRefundConfigured()) {
-    const paymentId = await resolveChargeExternalId(supabase, existing.bookingId);
-    if (!paymentId) {
-      return {
-        ok: false,
-        error: "Не найдено исходное списание для возврата через Mercado Pago",
-        code: "MP_FAILED",
-      };
-    }
-
-    try {
-      const { createMercadoPagoRefund } = await import("@/lib/payments/mercadopago-client");
-      const refund = await createMercadoPagoRefund({
-        paymentId,
-        amount: existing.amount,
-      });
-      externalId = refund.refundId;
-      providerExecuted = true;
-      status = refund.status === "approved" ? "completed" : "processing";
-    } catch (error) {
-      return {
-        ok: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Не удалось выполнить возврат через Mercado Pago",
-        code: "MP_FAILED",
-      };
-    }
-  }
-
+): Promise<{ transaction: PaymentTransactionRow } | { error: string }> {
   const { data, error } = await supabase
     .from("payment_transactions")
     .update({
-      status,
-      approved_by: adminUserId,
-      admin_notes: adminNotes?.trim() || existing.adminNotes,
-      external_id: externalId,
+      status: input.status,
+      approved_by: input.actorUserId ?? existing.approvedBy,
+      admin_notes: input.adminNotes?.trim() || existing.adminNotes,
+      external_id: input.externalId ?? existing.externalId,
+      metadata: {
+        ...existing.metadata,
+        refundAttempt: input.providerAttempt,
+      } as Json,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", transactionId)
+    .eq("id", existing.id)
     .select("*")
     .single();
 
   if (error || !data) {
-    return {
-      ok: false,
-      error: error?.message ?? "Не удалось обновить транзакцию",
-      code: "MP_FAILED",
-    };
+    return { error: error?.message ?? "Не удалось обновить транзакцию" };
   }
 
-  if (status === "completed") {
+  if (input.status === "completed") {
     await supabase
       .from("bookings")
       .update({
@@ -445,7 +479,183 @@ export async function approveRefundRequest(
       .eq("id", existing.bookingId);
   }
 
-  return { ok: true, transaction: mapTransactionRow(data), providerExecuted };
+  return { transaction: mapTransactionRow(data) };
+}
+
+export async function executeRefundAttempt(
+  supabase: DbClient,
+  input: ExecuteRefundAttemptInput
+): Promise<ExecuteRefundAttemptResult> {
+  const existing = await fetchPaymentTransactionById(supabase, input.transactionId);
+  if (!existing) {
+    return { ok: false, error: "Транзакция не найдена", code: "NOT_FOUND" };
+  }
+
+  if (existing.type !== "refund" || existing.status !== "pending") {
+    return { ok: false, error: "Запрос нельзя одобрить в текущем статусе", code: "INVALID_STATE" };
+  }
+
+  if (existing.provider === "manual") {
+    if (!input.allowManualCompletion) {
+      return {
+        ok: true,
+        transaction: existing,
+        providerExecuted: false,
+        skippedReason: "MANUAL_PROVIDER",
+      };
+    }
+    const updated = await updateRefundAfterAttempt(supabase, existing, {
+      status: "completed",
+      actorUserId: input.actorUserId,
+      adminNotes: input.adminNotes,
+      providerAttempt: {
+        provider: "manual",
+        executed: false,
+        skippedReason: "MANUAL_PROVIDER",
+        attemptedAt: new Date().toISOString(),
+      },
+    });
+    if ("error" in updated) {
+      return { ok: false, error: updated.error, code: "MP_FAILED" };
+    }
+    return { ok: true, transaction: updated.transaction, providerExecuted: false };
+  }
+
+  if (existing.provider === "stripe") {
+    if (!isStripeRefundConfigured()) {
+      if (input.strictProviderConfig) {
+        return {
+          ok: false,
+          error: "Возврат через Stripe недоступен: задайте STRIPE_SECRET_KEY",
+          code: "STRIPE_NOT_CONFIGURED",
+        };
+      }
+      return {
+        ok: true,
+        transaction: existing,
+        providerExecuted: false,
+        skippedReason: "STRIPE_NOT_CONFIGURED",
+      };
+    }
+
+    const paymentReference = await resolveChargeExternalId(supabase, existing.bookingId, "stripe");
+    if (!paymentReference) {
+      return {
+        ok: false,
+        error: "Не найдено исходное списание для возврата через Stripe",
+        code: "CHARGE_NOT_FOUND",
+      };
+    }
+
+    try {
+      const { createStripeRefund } = await import("@/lib/payments/stripe-client");
+      const stripeRefund = await createStripeRefund({
+        secretKey: process.env.STRIPE_SECRET_KEY!.trim(),
+        paymentIntentId: paymentReference.startsWith("pi_") ? paymentReference : undefined,
+        chargeId: paymentReference.startsWith("ch_") ? paymentReference : undefined,
+        amount: existing.amount,
+        reason: "requested_by_customer",
+      });
+      const status = mapStripeRefundStatus(stripeRefund.status);
+      const updated = await updateRefundAfterAttempt(supabase, existing, {
+        status,
+        externalId: stripeRefund.id,
+        actorUserId: input.actorUserId,
+        adminNotes: input.adminNotes,
+        providerAttempt: {
+          provider: "stripe",
+          executed: true,
+          providerStatus: stripeRefund.status,
+          providerRefundId: stripeRefund.id,
+          attemptedAt: new Date().toISOString(),
+        },
+      });
+      if ("error" in updated) {
+        return { ok: false, error: updated.error, code: "STRIPE_FAILED" };
+      }
+      return { ok: true, transaction: updated.transaction, providerExecuted: true };
+    } catch (error) {
+      return {
+        ok: false,
+        error: error instanceof Error ? error.message : "Не удалось выполнить возврат через Stripe",
+        code: "STRIPE_FAILED",
+      };
+    }
+  }
+
+  if (!isMercadoPagoRefundConfigured()) {
+    if (input.strictProviderConfig) {
+      return {
+        ok: false,
+        error:
+          "Возврат через Mercado Pago недоступен: задайте MERCADOPAGO_ACCESS_TOKEN и MERCADOPAGO_REFUNDS_ENABLED=true",
+        code: "MP_NOT_CONFIGURED",
+      };
+    }
+    return {
+      ok: true,
+      transaction: existing,
+      providerExecuted: false,
+      skippedReason: "MP_NOT_CONFIGURED",
+    };
+  }
+
+  const paymentId = await resolveChargeExternalId(supabase, existing.bookingId, "mercadopago");
+  if (!paymentId) {
+    return {
+      ok: false,
+      error: "Не найдено исходное списание для возврата через Mercado Pago",
+      code: "CHARGE_NOT_FOUND",
+    };
+  }
+
+  try {
+    const { createMercadoPagoRefund } = await import("@/lib/payments/mercadopago-client");
+    const refund = await createMercadoPagoRefund({
+      paymentId,
+      amount: existing.amount,
+    });
+    const status = mapMercadoPagoRefundStatus(refund.status);
+    const updated = await updateRefundAfterAttempt(supabase, existing, {
+      status,
+      externalId: refund.refundId,
+      actorUserId: input.actorUserId,
+      adminNotes: input.adminNotes,
+      providerAttempt: {
+        provider: "mercadopago",
+        executed: true,
+        providerStatus: refund.status,
+        providerRefundId: refund.refundId,
+        attemptedAt: new Date().toISOString(),
+      },
+    });
+    if ("error" in updated) {
+      return { ok: false, error: updated.error, code: "MP_FAILED" };
+    }
+    return { ok: true, transaction: updated.transaction, providerExecuted: true };
+  } catch (error) {
+    return {
+      ok: false,
+      error:
+        error instanceof Error ? error.message : "Не удалось выполнить возврат через Mercado Pago",
+      code: "MP_FAILED",
+    };
+  }
+}
+
+export async function approveRefundRequest(
+  supabase: DbClient,
+  transactionId: string,
+  adminUserId: string,
+  adminNotes?: string
+): Promise<ApproveRefundResult> {
+  return executeRefundAttempt(supabase, {
+    transactionId,
+    actorUserId: adminUserId,
+    adminNotes,
+    strictProviderConfig: true,
+    allowManualCompletion: true,
+  });
 }
 
 export async function rejectRefundRequest(

@@ -35,6 +35,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "operations.leads",
   },
   {
+    id: "operations-privacy",
+    section: "operations",
+    href: "/admin/operations/privacy-requests",
+    label: "Запросы на удаление",
+    description: "GDPR: очередь удаления данных",
+    capability: "operations.leads",
+  },
+  {
     id: "operations-bookings",
     section: "operations",
     href: "/admin/operations/bookings",
@@ -92,6 +100,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "content.edit",
   },
   {
+    id: "content-freshness",
+    section: "content",
+    href: "/admin/content-freshness",
+    label: "Актуальность",
+    description: "Контроль сроков проверки материалов",
+    capability: "content.edit",
+  },
+  {
     id: "users-list",
     section: "users",
     href: "/admin/users",
@@ -118,6 +134,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     section: "system",
     href: "/admin/system/settings",
     label: "Настройки",
+    capability: "system.settings",
+  },
+  {
+    id: "system-feature-flags",
+    section: "system",
+    href: "/admin/feature-flags",
+    label: "Флаги функций",
+    description: "Rollout и A/B-эксперименты",
     capability: "system.settings",
   },
   {

@@ -20,8 +20,9 @@ type ReconciliationResponse = {
   discrepancies?: ReconciliationDiscrepancy[];
   payoutSummary?: {
     totalPending: number;
-    totalScheduled: number;
-    totalPaid: number;
+    totalApproved: number;
+    totalExported: number;
+    totalCompleted: number;
     recordCount: number;
   };
   payouts?: PayoutRecordRow[];
@@ -128,9 +129,10 @@ export function AdminReconciliationPanel() {
             <h2 className="font-heading text-base font-bold text-charcoal">Выплаты организаторам</h2>
             <p className="mt-2 text-sm text-slate">
               Записей: {payoutSummary.recordCount}. Ожидают:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalPending} />, запланировано:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalScheduled} />, выплачено:{" "}
-              <FormattedPrice priceUsd={payoutSummary.totalPaid} />.
+              <FormattedPrice priceUsd={payoutSummary.totalPending} />, одобрено:{" "}
+              <FormattedPrice priceUsd={payoutSummary.totalApproved} />, экспортировано:{" "}
+              <FormattedPrice priceUsd={payoutSummary.totalExported} />, завершено:{" "}
+              <FormattedPrice priceUsd={payoutSummary.totalCompleted} />.
             </p>
             {payouts.length > 0 ? (
               <ul className="mt-4 space-y-2 text-sm text-charcoal">

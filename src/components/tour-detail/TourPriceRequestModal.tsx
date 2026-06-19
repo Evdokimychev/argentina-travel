@@ -10,6 +10,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
+import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
 import { formatTourists } from "@/lib/pluralize";
 import { formatDateRange } from "@/lib/utils";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
@@ -123,6 +124,7 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
         fillTravelersLater: true,
       },
       priceQuoteRequest: true,
+      attribution: getStoredFirstTouchAttribution() ?? undefined,
     });
 
     if ("error" in result) {

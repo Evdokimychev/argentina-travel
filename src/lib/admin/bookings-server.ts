@@ -3,6 +3,8 @@ import type { Database } from "@/types/database";
 import { rowToBooking, type BookingRow } from "@/lib/bookings-db-mapper";
 import { normalizeBooking } from "@/lib/bookings-store";
 import type { BookingStatus } from "@/types/tourist";
+import type { BookingAttribution } from "@/types/booking-attribution";
+import { formatAttributionSourceLabel } from "@/types/booking-attribution";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -25,6 +27,8 @@ export type AdminBookingSummary = {
   organizerUserId: string | null;
   createdAt: string;
   updatedAt: string;
+  attribution?: BookingAttribution;
+  attributionLabel?: string;
 };
 
 export type AdminBookingsStats = {
@@ -53,6 +57,8 @@ function toSummary(row: BookingRow): AdminBookingSummary {
     organizerUserId: row.organizer_user_id,
     createdAt: booking.createdAt,
     updatedAt: booking.updatedAt,
+    attribution: booking.attribution,
+    attributionLabel: formatAttributionSourceLabel(booking.attribution),
   };
 }
 

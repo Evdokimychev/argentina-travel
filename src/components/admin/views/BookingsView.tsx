@@ -189,6 +189,7 @@ export default function BookingsView() {
                         <p className="font-medium text-charcoal">{booking.tourTitle}</p>
                         <p className="mt-1 text-xs text-slate">
                           {formatAdminWhen(booking.createdAt)} · {booking.guests} гост.
+                          {booking.attributionLabel ? ` · ${booking.attributionLabel}` : ""}
                         </p>
                         <Link
                           href={`/tours/${booking.tourSlug}`}
@@ -291,6 +292,27 @@ export default function BookingsView() {
                 <dt className="text-xs text-slate">Создана</dt>
                 <dd>{formatAdminWhen(detail.createdAt)}</dd>
               </div>
+              {detail.attribution?.utmSource ||
+              detail.attribution?.utmMedium ||
+              detail.attribution?.utmCampaign ? (
+                <div className="sm:col-span-2">
+                  <dt className="text-xs text-slate">Источник (UTM)</dt>
+                  <dd>
+                    {detail.attribution.utmSource ? (
+                      <span className="block">Источник: {detail.attribution.utmSource}</span>
+                    ) : null}
+                    {detail.attribution.utmMedium ? (
+                      <span className="block">Канал: {detail.attribution.utmMedium}</span>
+                    ) : null}
+                    {detail.attribution.utmCampaign ? (
+                      <span className="block">Кампания: {detail.attribution.utmCampaign}</span>
+                    ) : null}
+                    {detail.attribution.landingPath ? (
+                      <span className="block text-slate">Вход: {detail.attribution.landingPath}</span>
+                    ) : null}
+                  </dd>
+                </div>
+              ) : null}
             </dl>
             {detail.touristComment ? (
               <div>

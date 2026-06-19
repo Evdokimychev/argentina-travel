@@ -82,6 +82,16 @@ async function main() {
   assert(typeof health.json.ok === "boolean", "Health response must include boolean 'ok'.");
   assert(typeof health.json.version === "string", "Health response must include 'version'.");
   assert(
+    health.json.environment &&
+      typeof health.json.environment.nodeEnv === "string" &&
+      typeof health.json.environment.deployEnv === "string",
+    "Health response must include environment.nodeEnv and environment.deployEnv."
+  );
+  assert(
+    health.json.migrationVersion === null || typeof health.json.migrationVersion === "string",
+    "Health response must include migrationVersion."
+  );
+  assert(
     health.json.checks?.migrations &&
       (typeof health.json.checks.migrations.latestId === "string" ||
         health.json.checks.migrations.latestId === null),

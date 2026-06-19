@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchAllBookingsAdmin } from "@/lib/admin/bookings-server";
+import { fetchAttributionByBookingIds } from "@/lib/attribution/attribution-server";
 
 function csvEscape(value: string): string {
   if (value.includes(",") || value.includes('"') || value.includes("\n")) {
@@ -16,13 +17,18 @@ export async function GET(request: Request) {
 
   const supabase = createSupabaseAdminClient();
   const bookings = await fetchAllBookingsAdmin(supabase);
+  const attributionMap = await fetchAttributionByBookingIds(
+    supabase,
+    bookings.map((b) => b.id)
+  );
 
   const lines: string[] = [];
   lines.push(
-    "id,tour_title,tour_slug,status,contact_name,contact_email,contact_phone,guests,total_price_usd,created_at"
+    "id,tour_title,tour_slug,status,contact_name,contact_email,contact_phone,guests,total_price_usd,utm_source,utm_medium,utm_campaign,referrer,landing_path,created_at"
   );
 
   for (const row of bookings) {
+    const attribution = attributionMap.get(row.id) ?? row.attribution;
     lines.push(
       [
         csvEscape(row.id),
@@ -34,6 +40,11 @@ export async function GET(request: Request) {
         csvEscape(row.contactPhone),
         String(row.guests),
         String(row.totalPriceUsd),
+        csvEscape(attribution?.utmSource ?? ""),
+        csvEscape(attribution?.utmMedium ?? ""),
+        csvEscape(attribution?.utmCampaign ?? ""),
+        csvEscape(attribution?.referrer ?? ""),
+        csvEscape(attribution?.landingPath ?? ""),
         row.createdAt,
       ].join(",")
     );

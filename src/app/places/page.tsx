@@ -2,17 +2,25 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import PlacesCatalog from "@/components/places/PlacesCatalog";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
-import { fetchCollectionsServer, fetchPlacesServer } from "@/lib/places-repository";
+import { fetchCollectionsServer } from "@/lib/places-repository";
+import { resolvePlaceCatalog } from "@/lib/cms/place-resolver";
+import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPlacesCatalogMetadata } from "@/lib/places-seo";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const places = await fetchPlacesServer();
-  return buildPlacesCatalogMetadata(places.length);
+  const locale = await getServerI18nLocale();
+  const places = await resolvePlaceCatalog(locale);
+  return {
+    ...buildPlacesCatalogMetadata(places.length),
+    alternates: buildHreflangAlternates("/places"),
+  };
 }
 
 export default async function PlacesPage() {
+  const locale = await getServerI18nLocale();
   const [places, collections] = await Promise.all([
-    fetchPlacesServer(),
+    resolvePlaceCatalog(locale),
     fetchCollectionsServer(),
   ]);
 

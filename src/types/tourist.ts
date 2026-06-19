@@ -1,3 +1,4 @@
+import type { BookingAttribution } from "@/types/booking-attribution";
 import type { BookingMetadata } from "@/lib/payments/checkout-currency";
 import type {
   BookingInvoice,
@@ -134,6 +135,8 @@ export interface Booking {
   tripOperations?: TripOperations;
   /** Валюта оформления и снимок курса на момент checkout. */
   metadata?: BookingMetadata;
+  /** First-touch UTM и реферер на момент оформления заявки. */
+  attribution?: BookingAttribution;
   createdAt: string;
   updatedAt: string;
 }

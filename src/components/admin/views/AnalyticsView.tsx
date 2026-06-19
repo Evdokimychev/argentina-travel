@@ -128,6 +128,23 @@ export default function AnalyticsView() {
                 </ul>
               </div>
             ) : null}
+
+            {analytics?.operations.topAttributionSources &&
+            analytics.operations.topAttributionSources.length > 0 ? (
+              <div className={`${cabinetCardClass} mt-4 p-4`}>
+                <h3 className="text-sm font-medium text-charcoal">Топ источников бронирований</h3>
+                <ul className="mt-3 flex flex-wrap gap-2">
+                  {analytics.operations.topAttributionSources.map((row) => (
+                    <li
+                      key={row.sourceKey}
+                      className="rounded-full bg-violet-50 px-3 py-1 text-xs font-medium text-violet-800"
+                    >
+                      {row.label}: {row.count}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </div>
 
           {period !== "all" && analytics?.trends ? (
