@@ -25,6 +25,7 @@ import {
 import { siteContainerClass } from "@/lib/site-container";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
+import AdminNotificationsMenu from "@/components/admin/AdminNotificationsMenu";
 import { useAuth } from "@/context/AuthContext";
 import { useAdminContext } from "@/context/AdminContext";
 import {
@@ -36,6 +37,7 @@ import type { AdminNavItemId } from "@/types/admin";
 
 const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   dashboard: LayoutGrid,
+  "operations-hub": LayoutGrid,
   "operations-leads": ClipboardList,
   "operations-bookings": ClipboardList,
   "operations-payments": Wallet,
@@ -52,7 +54,7 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
 };
 
 function isNavActive(pathname: string, href: string): boolean {
-  if (href === "/admin") return pathname === "/admin";
+  if (href === "/admin" || href === "/admin/operations") return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -113,13 +115,16 @@ export default function AdminSidebar() {
 
   return (
     <aside className={cn(cabinetSidebarClass, "w-64 p-4")} aria-label="Админ-панель">
-      <Link href="/admin" className="mb-6 flex items-center gap-2 px-1">
-        <ArgentinaLogo className="h-8 w-auto" />
-        <div>
-          <p className="font-heading text-sm font-bold text-charcoal">Админ-панель</p>
-          <p className="text-xs text-slate">Пора в Аргентину</p>
-        </div>
-      </Link>
+      <div className="mb-6 flex items-center justify-between gap-2 px-1">
+        <Link href="/admin" className="flex items-center gap-2">
+          <ArgentinaLogo className="h-8 w-auto" />
+          <div>
+            <p className="font-heading text-sm font-bold text-charcoal">Админ-панель</p>
+            <p className="text-xs text-slate">Пора в Аргентину</p>
+          </div>
+        </Link>
+        <AdminNotificationsMenu />
+      </div>
 
       <nav className="flex flex-col gap-5">
         {Array.from(groups.entries()).map(([sectionId, sectionItems]) => (

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchUserReviews, insertReview } from "@/lib/reviews-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { TouristReview } from "@/types/tourist";
@@ -30,6 +31,15 @@ type PostBody = {
 export async function POST(request: Request) {
   if (!isSupabaseReviewsEnabled()) {
     return NextResponse.json({ error: "Reviews API unavailable" }, { status: 503 });
+  }
+
+  const ip = getClientIp(request);
+  const limit = checkRateLimit(`reviews:ip:${ip}`, 10, 60_000);
+  if (!limit.ok) {
+    return NextResponse.json(
+      { error: "Слишком много запросов. Повторите позже." },
+      { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+    );
   }
 
   const supabase = await createSupabaseServerClient();

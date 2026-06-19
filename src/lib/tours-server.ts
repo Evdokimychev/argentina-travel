@@ -1,12 +1,80 @@
-import type { TourDetail, TourListing } from "@/types";
+import type { TourDetail, TourListing, TourReview } from "@/types";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { getSimilarTourDetails, rankSimilarListings } from "@/lib/tour-recommendations";
 import { getTourDetail, getSimilarTours } from "@/lib/tours";
+import { fetchTourPublicReviews } from "@/lib/reviews-server";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import {
   fetchPartnerTourDetailServer,
 } from "@/lib/tripster/partner-tour-server";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+
+function resolveReviewSortTimestamp(review: TourReview): number {
+  const value = review.date || review.tripDate;
+  if (!value) return 0;
+  const timestamp = Date.parse(value);
+  return Number.isNaN(timestamp) ? 0 : timestamp;
+}
+
+function mergeTourReviews(base: TourReview[], fromDatabase: TourReview[]): TourReview[] {
+  if (!fromDatabase.length) return base;
+  const deduped = new Map<string, TourReview>();
+
+  for (const review of [...fromDatabase, ...base]) {
+    const rawId = review.id.trim();
+    const fallbackId = `${review.author}|${review.text}|${review.date}|${review.tripDate}`;
+    const key = rawId || fallbackId;
+    if (!deduped.has(key)) {
+      deduped.set(key, review);
+    }
+  }
+
+  return [...deduped.values()].sort(
+    (a, b) => resolveReviewSortTimestamp(b) - resolveReviewSortTimestamp(a)
+  );
+}
+
+function calculateAverageRating(reviews: TourReview[]): number {
+  if (!reviews.length) return 0;
+  const ratingSum = reviews.reduce((acc, review) => {
+    return acc + (Number.isFinite(review.rating) ? review.rating : 0);
+  }, 0);
+  return Math.round((ratingSum / reviews.length) * 10) / 10;
+}
+
+function applyPublicReviewsToDetail(tour: TourDetail, publicReviews: TourReview[]): TourDetail {
+  if (!publicReviews.length) return tour;
+
+  const mergedReviews = mergeTourReviews(tour.reviews, publicReviews);
+  const nextReviewCount = Math.max(tour.reviewCount, mergedReviews.length);
+
+  if (tour.partnerSource === "tripster") {
+    return {
+      ...tour,
+      reviews: mergedReviews,
+      reviewCount: nextReviewCount,
+    };
+  }
+
+  const mergedRating = calculateAverageRating(mergedReviews);
+  return {
+    ...tour,
+    reviews: mergedReviews,
+    reviewCount: nextReviewCount,
+    rating: mergedRating > 0 ? mergedRating : tour.rating,
+  };
+}
+
+async function enrichTourWithPublicReviews(tour: TourDetail | null): Promise<TourDetail | null> {
+  if (!tour) return null;
+
+  try {
+    const publicReviews = await fetchTourPublicReviews(tour.slug);
+    return applyPublicReviewsToDetail(tour, publicReviews);
+  } catch {
+    return tour;
+  }
+}
 
 async function fetchNativeTourDetail(
   slug: string,
@@ -29,8 +97,9 @@ export async function fetchTourDetail(
   opts?: { accessToken?: string | null }
 ): Promise<TourDetail | null> {
   const native = await fetchNativeTourDetail(slug, opts);
-  if (native) return native;
-  return fetchPartnerTourDetailServer(slug);
+  if (native) return enrichTourWithPublicReviews(native);
+  const partner = await fetchPartnerTourDetailServer(slug);
+  return enrichTourWithPublicReviews(partner);
 }
 
 /**

@@ -14,7 +14,15 @@ import { cabinetCardClass } from "@/lib/cabinet-ui";
 import { buildCmsRevisionDiff } from "@/lib/cms/revision-diff";
 import type { LegalSection } from "@/data/legal-content";
 import type { BlogPostSection } from "@/types";
-import type { CmsDocument, CmsDocumentBody, CmsLegalBody, CmsRevision } from "@/types/cms-content";
+import type {
+  CmsDestinationBody,
+  CmsDocument,
+  CmsDocumentBody,
+  CmsGuideBody,
+  CmsLegalBody,
+  CmsPlaceBody,
+  CmsRevision,
+} from "@/types/cms-content";
 
 type Props = {
   documentId: string;
@@ -48,10 +56,22 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [doc, setDoc] = useState<CmsDocument | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [guideCategory, setGuideCategory] = useState("");
   const [sections, setSections] = useState<LegalSection[]>([]);
   const [excerpt, setExcerpt] = useState("");
   const [blogSections, setBlogSections] = useState<BlogPostSection[]>([]);
   const [blogFeatured, setBlogFeatured] = useState(false);
+  const [destinationIntro, setDestinationIntro] = useState("");
+  const [destinationRegionGroup, setDestinationRegionGroup] = useState("");
+  const [destinationBestSeason, setDestinationBestSeason] = useState("");
+  const [destinationIdealDuration, setDestinationIdealDuration] = useState("");
+  const [destinationHowToGetThere, setDestinationHowToGetThere] = useState("");
+  const [destinationHighlights, setDestinationHighlights] = useState<string[]>([]);
+  const [destinationTravelTips, setDestinationTravelTips] = useState<string[]>([]);
+  const [placeShortDescription, setPlaceShortDescription] = useState("");
+  const [placeFullDescription, setPlaceFullDescription] = useState("");
+  const [placeHowToGetThere, setPlaceHowToGetThere] = useState("");
+  const [placeInterestingFacts, setPlaceInterestingFacts] = useState<string[]>([]);
   const [status, setStatus] = useState<CmsDocument["status"]>("draft");
   const [revisions, setRevisions] = useState<CmsRevisionListItem[]>([]);
   const [selectedRevision, setSelectedRevision] = useState<CmsRevision | null>(null);
@@ -84,10 +104,28 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       if (document.body.kind === "legal") {
         setDescription(document.body.description);
         setSections(document.body.sections);
+      } else if (document.body.kind === "guide") {
+        setDescription(document.body.description);
+        setGuideCategory(document.body.category ?? "");
+        setSections(document.body.sections);
       } else if (document.body.kind === "blog") {
         setExcerpt(document.body.excerpt ?? "");
         setBlogFeatured(document.body.featured ?? false);
         setBlogSections(document.body.sections ?? [{ title: "Основной текст", body: document.body.content ?? "" }]);
+      } else if (document.body.kind === "destination") {
+        setDescription(document.body.description);
+        setDestinationIntro(document.body.intro ?? "");
+        setDestinationRegionGroup(document.body.regionGroup ?? "");
+        setDestinationBestSeason(document.body.bestSeason ?? "");
+        setDestinationIdealDuration(document.body.idealDuration ?? "");
+        setDestinationHowToGetThere(document.body.howToGetThere ?? "");
+        setDestinationHighlights(document.body.highlights ?? []);
+        setDestinationTravelTips(document.body.travelTips ?? []);
+      } else if (document.body.kind === "place") {
+        setPlaceShortDescription(document.body.shortDescription ?? "");
+        setPlaceFullDescription(document.body.fullDescription ?? "");
+        setPlaceHowToGetThere(document.body.howToGetThere ?? "");
+        setPlaceInterestingFacts(document.body.interestingFacts ?? []);
       }
 
       setRevisions(revJson.revisions ?? []);
@@ -113,6 +151,39 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         featured: blogFeatured,
       };
     }
+    if (doc?.body.kind === "guide") {
+      return {
+        kind: "guide",
+        description: description.trim(),
+        category: guideCategory.trim() || undefined,
+        sections,
+        relatedLinks: doc.body.relatedLinks,
+        relatedTourQuery: doc.body.relatedTourQuery,
+      } satisfies CmsGuideBody;
+    }
+    if (doc?.body.kind === "destination") {
+      return {
+        kind: "destination",
+        description: description.trim(),
+        intro: destinationIntro.trim() || undefined,
+        regionGroup: destinationRegionGroup.trim() || undefined,
+        bestSeason: destinationBestSeason.trim() || undefined,
+        idealDuration: destinationIdealDuration.trim() || undefined,
+        howToGetThere: destinationHowToGetThere.trim() || undefined,
+        highlights: destinationHighlights,
+        travelTips: destinationTravelTips,
+      } satisfies CmsDestinationBody;
+    }
+    if (doc?.body.kind === "place") {
+      return {
+        kind: "place",
+        shortDescription: placeShortDescription.trim(),
+        fullDescription: placeFullDescription.trim(),
+        howToGetThere: placeHowToGetThere.trim() || undefined,
+        interestingFacts: placeInterestingFacts,
+        faq: doc.body.faq,
+      } satisfies CmsPlaceBody;
+    }
     return {
       kind: "legal",
       description: description.trim(),
@@ -132,7 +203,27 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         body: selectedRevision.body,
       }
     );
-  }, [blogSections, description, doc, excerpt, sections, selectedRevision, title]);
+  }, [
+    blogSections,
+    description,
+    destinationBestSeason,
+    destinationHighlights,
+    destinationHowToGetThere,
+    destinationIdealDuration,
+    destinationIntro,
+    destinationRegionGroup,
+    destinationTravelTips,
+    doc,
+    excerpt,
+    guideCategory,
+    placeFullDescription,
+    placeHowToGetThere,
+    placeInterestingFacts,
+    placeShortDescription,
+    sections,
+    selectedRevision,
+    title,
+  ]);
 
   async function openRevision(revision: CmsRevisionListItem) {
     if (selectedRevisionMeta?.id === revision.id) {
@@ -293,8 +384,19 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   const isLegal = doc.body.kind === "legal";
+  const isGuide = doc.body.kind === "guide";
   const isBlog = doc.body.kind === "blog";
-  const publicHref = isLegal ? `/legal/${doc.slug}` : `/blog/${doc.slug}`;
+  const isDestination = doc.body.kind === "destination";
+  const isPlace = doc.body.kind === "place";
+  const publicHref = isLegal
+    ? `/legal/${doc.slug}`
+    : isGuide
+      ? `/guide/${doc.slug}`
+      : isBlog
+        ? `/blog/${doc.slug}`
+        : isDestination
+          ? `/destinations/${doc.slug}`
+          : `/places/${doc.slug}`;
 
   return (
     <CapabilityGate capability="content.edit">
@@ -336,11 +438,116 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </label>
 
-            {isLegal ? (
+            {isLegal || isGuide || isDestination ? (
               <label className="block space-y-1 text-sm">
-                <span className="text-slate">Описание</span>
+                <span className="text-slate">
+                  {isDestination ? "Краткое описание (в шапке страницы)" : "Описание страницы"}
+                </span>
                 <Input value={description} onChange={(e) => setDescription(e.target.value)} />
               </label>
+            ) : null}
+
+            {isGuide ? (
+              <label className="block space-y-1 text-sm">
+                <span className="text-slate">Категория</span>
+                <Input value={guideCategory} onChange={(e) => setGuideCategory(e.target.value)} />
+              </label>
+            ) : null}
+
+            {isDestination ? (
+              <>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Подробное введение</span>
+                  <textarea
+                    className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={destinationIntro}
+                    onChange={(e) => setDestinationIntro(e.target.value)}
+                  />
+                </label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block space-y-1 text-sm">
+                    <span className="text-slate">Региональная группа</span>
+                    <Input
+                      value={destinationRegionGroup}
+                      onChange={(e) => setDestinationRegionGroup(e.target.value)}
+                    />
+                  </label>
+                  <label className="block space-y-1 text-sm">
+                    <span className="text-slate">Рекомендуемый срок</span>
+                    <Input
+                      value={destinationIdealDuration}
+                      onChange={(e) => setDestinationIdealDuration(e.target.value)}
+                    />
+                  </label>
+                </div>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Лучший сезон</span>
+                  <Input
+                    value={destinationBestSeason}
+                    onChange={(e) => setDestinationBestSeason(e.target.value)}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Как добраться</span>
+                  <textarea
+                    className="min-h-[100px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={destinationHowToGetThere}
+                    onChange={(e) => setDestinationHowToGetThere(e.target.value)}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Главные точки (по одной на строку)</span>
+                  <textarea
+                    className="min-h-[100px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={listToLines(destinationHighlights)}
+                    onChange={(e) => setDestinationHighlights(linesToList(e.target.value))}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Советы путешественникам (по одному на строку)</span>
+                  <textarea
+                    className="min-h-[100px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={listToLines(destinationTravelTips)}
+                    onChange={(e) => setDestinationTravelTips(linesToList(e.target.value))}
+                  />
+                </label>
+              </>
+            ) : null}
+
+            {isPlace ? (
+              <>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Краткое описание</span>
+                  <Input
+                    value={placeShortDescription}
+                    onChange={(e) => setPlaceShortDescription(e.target.value)}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Подробное описание</span>
+                  <textarea
+                    className="min-h-[140px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={placeFullDescription}
+                    onChange={(e) => setPlaceFullDescription(e.target.value)}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Как добраться</span>
+                  <textarea
+                    className="min-h-[100px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={placeHowToGetThere}
+                    onChange={(e) => setPlaceHowToGetThere(e.target.value)}
+                  />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Интересные факты (по одному на строку)</span>
+                  <textarea
+                    className="min-h-[100px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                    value={listToLines(placeInterestingFacts)}
+                    onChange={(e) => setPlaceInterestingFacts(linesToList(e.target.value))}
+                  />
+                </label>
+              </>
             ) : null}
 
             {isBlog ? (
@@ -374,10 +581,12 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </NativeSelect>
             </label>
 
-            {isLegal ? (
+            {isLegal || isGuide ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-heading text-lg font-bold text-charcoal">Разделы</h2>
+                <h2 className="font-heading text-lg font-bold text-charcoal">
+                  {isGuide ? "Разделы путеводителя" : "Разделы"}
+                </h2>
                 <Button size="sm" variant="outline" onClick={addSection}>
                   Добавить раздел
                 </Button>

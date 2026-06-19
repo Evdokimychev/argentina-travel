@@ -107,6 +107,21 @@ export async function apiPatchBooking(booking: Booking): Promise<Booking> {
   return data.booking;
 }
 
+export async function apiCreateBookingPaymentPreference(input: {
+  bookingId: string;
+  paymentLinkToken: string;
+}): Promise<{ preferenceId: string; checkoutUrl: string; checkoutSandboxUrl?: string | null }> {
+  return parseJson<{ preferenceId: string; checkoutUrl: string; checkoutSandboxUrl?: string | null }>(
+    await fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}/payment/preference`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentLinkToken: input.paymentLinkToken,
+      }),
+    })
+  );
+}
+
 export function isRemoteBookingsMode(): boolean {
   return isSupabaseBookingsEnabled();
 }

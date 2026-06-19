@@ -12,6 +12,7 @@
     "supabase:migrate": "node scripts/supabase-apply-migration.mjs",
     "supabase:resolve-db": "node scripts/supabase-resolve-db-url.mjs",
     "supabase:verify": "node scripts/supabase-verify.mjs",
+    "smoke": "node scripts/smoke-test.mjs",
     "supabase:purge-auth": "node scripts/supabase-purge-auth-users.mjs",
     "supabase:seed-tours": "tsx scripts/supabase-seed-tours.ts",
     "tripster:verify": "node scripts/tripster-verify.mjs",

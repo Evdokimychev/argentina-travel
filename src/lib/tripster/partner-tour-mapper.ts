@@ -209,6 +209,7 @@ function mapReviews(rows: ReviewRow[]): TourReview[] {
       text: mapped.text ?? "",
       photos: mapped.photos ?? [],
       verifiedTrip: true,
+      source: "tripster",
     };
   });
 }

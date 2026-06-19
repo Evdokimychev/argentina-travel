@@ -13,6 +13,27 @@ import TourSection from "./TourSection";
 const PER_PAGE = 3;
 const FILTER_STARS = [5, 4, 3] as const;
 
+type ReviewSourceBadge = {
+  label: string;
+  className: string;
+};
+
+function resolveReviewSourceBadge(source?: TourReview["source"]): ReviewSourceBadge | null {
+  if (source === "platform") {
+    return {
+      label: "Отзыв с платформы",
+      className: "bg-sky/10 text-sky",
+    };
+  }
+  if (source === "tripster") {
+    return {
+      label: "Отзыв партнёра",
+      className: "bg-amber-100 text-amber-800",
+    };
+  }
+  return null;
+}
+
 function countReviewsByStar(reviews: TourReview[]): Map<number, number> {
   const counts = new Map<number, number>();
   for (const review of reviews) {
@@ -126,6 +147,8 @@ export default function ReviewsSection({
         {paginated.map((review) => {
           const tripDateLabel = formatDateOptional(review.tripDate);
           const reviewDateLabel = formatDateOptional(review.date);
+          const organizerRepliedAtLabel = formatDateOptional(review.organizerRepliedAt);
+          const sourceBadge = resolveReviewSourceBadge(review.source);
           const dateLine = [tripDateLabel ? `Поездка: ${tripDateLabel}` : null, reviewDateLabel ? `Отзыв: ${reviewDateLabel}` : null]
             .filter(Boolean)
             .join(" · ");
@@ -152,7 +175,14 @@ export default function ReviewsSection({
                     <p className="font-semibold text-charcoal">{review.author}</p>
                     {review.verifiedTrip ? (
                       <span className="rounded-full bg-sky/10 px-2 py-0.5 text-[11px] font-medium text-sky">
-                        Проверенная поездка
+                        Подтверждённый путешественник
+                      </span>
+                    ) : null}
+                    {sourceBadge ? (
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${sourceBadge.className}`}
+                      >
+                        {sourceBadge.label}
                       </span>
                     ) : null}
                   </div>
@@ -163,6 +193,19 @@ export default function ReviewsSection({
                 ) : null}
                 {review.text ? (
                   <p className="mt-3 text-sm leading-relaxed text-slate">{review.text}</p>
+                ) : null}
+                {review.organizerReply ? (
+                  <div className="mt-3 rounded-xl border border-sky/20 bg-sky/5 p-3">
+                    <p className="text-xs font-semibold uppercase tracking-wide text-sky">
+                      Ответ организатора
+                    </p>
+                    {organizerRepliedAtLabel ? (
+                      <p className="mt-1 text-[11px] text-slate">
+                        Опубликован: {organizerRepliedAtLabel}
+                      </p>
+                    ) : null}
+                    <p className="mt-2 text-sm leading-relaxed text-slate">{review.organizerReply}</p>
+                  </div>
                 ) : null}
                 {review.photos.length > 0 && (
                   <div className="mt-3 flex gap-2">

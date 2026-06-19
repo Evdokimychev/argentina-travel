@@ -39,6 +39,7 @@ export type AdminNavSectionId =
 
 export type AdminNavItemId =
   | "dashboard"
+  | "operations-hub"
   | "operations-leads"
   | "operations-bookings"
   | "operations-payments"
@@ -96,6 +97,39 @@ export interface AdminDashboardWidgets {
     bookingsByDay: DailyCountPoint[];
     leadsByDay: DailyCountPoint[];
   };
+}
+
+export interface AdminHealthSnippet {
+  ok: boolean;
+  status: "ok" | "degraded";
+  generatedAt: string;
+  checks: {
+    database: boolean;
+    rls: boolean;
+    sync: boolean;
+  };
+}
+
+export interface AdminOperationsSummary {
+  generatedAt: string;
+  moderation: {
+    pendingCount: number;
+    oldestPendingCreatedAt: string | null;
+    oldestPendingAgeMinutes: number | null;
+  };
+  leads: {
+    newLast24h: number;
+  };
+  notifications: {
+    unreadCount: number;
+  };
+  payments: {
+    pendingOrPartialCount: number;
+  };
+  organizerApplications: {
+    pendingCount: number;
+  };
+  health: AdminHealthSnippet;
 }
 
 /** Legacy capability aliases — map to new granular keys in API guards. */

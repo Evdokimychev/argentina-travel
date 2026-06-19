@@ -3,9 +3,11 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import LegalPageView from "@/components/legal/LegalPageView";
+import ContentPageView from "@/components/content/ContentPageView";
 import { AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import {
+  guidePageFromCms,
   legalDocumentFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
@@ -41,6 +43,8 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  const guidePreview = doc?.body.kind === "guide" ? guidePageFromCms(doc) : null;
 
   return (
     <CapabilityGate capability="content.edit">
@@ -85,7 +89,9 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
           </article>
         ) : null}
 
-        {doc && doc.body.kind !== "legal" && doc.body.kind !== "blog" ? (
+        {guidePreview ? <ContentPageView page={guidePreview} /> : null}
+
+        {doc && doc.body.kind !== "legal" && doc.body.kind !== "blog" && doc.body.kind !== "guide" ? (
           <p className="text-sm text-slate">Тип документа не поддерживается для предпросмотра.</p>
         ) : null}
       </AdminPageShell>

@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TourContentAdminSummary, TourModerationStatus } from "@/types/tour-content";
+import { sendOrganizerNewReviewEmail } from "@/lib/notifications/email-delivery";
 import type { ModerationReviewSummary } from "@/lib/reviews-db-mapper";
 import {
   fetchModerationReviewSummaries,
@@ -190,6 +191,23 @@ export async function resolveModerationItem(
     );
 
     if ("error" in reviewResult) return reviewResult;
+
+    if (action === "approve") {
+      try {
+        await sendOrganizerNewReviewEmail({
+          organizerEmail: reviewResult.organizerEmail,
+          organizerName: reviewResult.organizerName,
+          tourTitle: reviewResult.tourTitle,
+          tourSlug: reviewResult.tourSlug,
+          touristName: reviewResult.authorName,
+          rating: reviewResult.rating,
+          reviewText: reviewResult.reviewText,
+          tripDate: reviewResult.tripDate,
+        });
+      } catch {
+        // Non-blocking notification channel.
+      }
+    }
 
     return {
       ok: true,

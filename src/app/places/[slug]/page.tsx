@@ -5,7 +5,8 @@ import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import PlaceJsonLd from "@/components/seo/PlaceJsonLd";
 import { resolveKnowledgeLinksForPlace } from "@/lib/knowledge-internal-links";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { fetchPlaceBySlugServer, fetchPlaceSlugsServer, placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-repository";
+import { listPublishedPlaceSlugs, resolvePlacePage } from "@/lib/cms/place-resolver";
 import { buildPlaceMetadata } from "@/lib/places-seo";
 
 type PageProps = {
@@ -13,20 +14,20 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  const slugs = await fetchPlaceSlugsServer();
+  const slugs = await listPublishedPlaceSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const place = await fetchPlaceBySlugServer(slug);
+  const place = await resolvePlacePage(slug);
   if (!place) return { title: "Место не найдено" };
   return buildPlaceMetadata(place);
 }
 
 export default async function PlaceDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const place = await fetchPlaceBySlugServer(slug);
+  const place = await resolvePlacePage(slug);
   if (!place) notFound();
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);

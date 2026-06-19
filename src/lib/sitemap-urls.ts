@@ -16,7 +16,8 @@ import {
 } from "@/lib/content-pages";
 import { getAllGuideTopics, guideTopicHref } from "@/lib/guide-topics";
 import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
-import { getAllDestinations } from "@/lib/destinations";
+import { listPublishedDestinationSlugs } from "@/lib/cms/destination-resolver";
+import { listPublishedPlaceSlugs } from "@/lib/cms/place-resolver";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { absoluteUrl } from "@/lib/site-url";
 import type { BlogPost } from "@/types";
@@ -111,11 +112,9 @@ export async function collectPlacesSitemapPaths(): Promise<string[]> {
   const paths = ["/places", "/collections", "/itineraries"];
 
   try {
-    const { fetchPlaceSlugsServer, fetchCollectionsServer, fetchItinerariesServer } = await import(
-      "@/lib/places-repository"
-    );
+    const { fetchCollectionsServer, fetchItinerariesServer } = await import("@/lib/places-repository");
     const [placeSlugs, collections, itineraries] = await Promise.all([
-      fetchPlaceSlugsServer(),
+      listPublishedPlaceSlugs(),
       fetchCollectionsServer(),
       fetchItinerariesServer(),
     ]);
@@ -153,9 +152,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   const blogPaths = blogCatalog.map((post) => `/blog/${post.slug}`);
   const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
-  const destinationPaths = getAllDestinations().map(
-    (destination) => `/destinations/${destination.id}`
-  );
+  const destinationPaths = (await listPublishedDestinationSlugs()).map((slug) => `/destinations/${slug}`);
   const legalPaths = Object.values(LEGAL_DOCUMENTS).map((doc) => `/legal/${doc.slug}`);
   const flightRoutePaths = FLIGHT_POPULAR_ROUTES.map((route) => `/flights/${route.id}`);
   const organizerPaths = SEED_USERS.filter((user) => user.roles?.includes("organizer")).map(

@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { timingSafeEqual } from "node:crypto";
 import { hasAdminCapability } from "@/lib/admin/capabilities";
 import { resolveAdminCapabilitiesFromSession } from "@/lib/admin/staff";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -11,7 +12,7 @@ export type AdminAuthResult =
       ok: true;
       actorId: string;
       capabilities: AdminCapability[];
-      via: "session";
+      via: "session" | "service_role";
     }
   | { ok: false; response: NextResponse };
 
@@ -23,16 +24,42 @@ function forbidden(message = "Нет доступа") {
   return NextResponse.json({ error: message, code: "FORBIDDEN" }, { status: 403 });
 }
 
+function parseBearerToken(request: Request): string | null {
+  const raw = request.headers.get("authorization")?.trim();
+  if (!raw) return null;
+  const [scheme, ...tokenParts] = raw.split(" ");
+  if (scheme.toLowerCase() !== "bearer") return null;
+  const token = tokenParts.join(" ").trim();
+  return token || null;
+}
+
+function compareSecret(input: string, secret: string): boolean {
+  const left = Buffer.from(input, "utf8");
+  const right = Buffer.from(secret, "utf8");
+  if (left.length !== right.length) return false;
+  return timingSafeEqual(left, right);
+}
+
 /** Authorize admin API request via Supabase session + capabilities. */
 export async function authorizeAdminRequest(
   request: Request,
   requiredCapability?: AdminCapability
 ): Promise<AdminAuthResult> {
-  void request;
   if (!isSupabaseConfigured()) {
     return {
       ok: false,
       response: NextResponse.json({ error: "Supabase is not configured." }, { status: 503 }),
+    };
+  }
+
+  const serviceRoleToken = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  const bearerToken = parseBearerToken(request);
+  if (serviceRoleToken && bearerToken && compareSecret(bearerToken, serviceRoleToken)) {
+    return {
+      ok: true,
+      actorId: "service-role",
+      capabilities: ["*"],
+      via: "service_role",
     };
   }
 

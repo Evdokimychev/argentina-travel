@@ -82,6 +82,7 @@ export function createBookingPaymentLinkRecord(input: {
     status: "active",
     target,
     amountUsd,
+    gateway: "manual",
   };
 }
 

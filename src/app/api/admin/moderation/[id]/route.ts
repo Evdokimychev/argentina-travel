@@ -45,14 +45,16 @@ export async function PATCH(
     ipAddress: clientIpFromRequest(request),
   });
 
-  const { notifyModerationOutcome } = await import("@/lib/admin/moderation-notify");
-  await notifyModerationOutcome({
-    entityType: result.entityType,
-    entityTitle: result.entityTitle,
-    ownerEmail: result.ownerEmail,
-    action: body.action,
-    note: body.note,
-  });
+  if (result.entityType !== "review") {
+    const { notifyModerationOutcome } = await import("@/lib/admin/moderation-notify");
+    await notifyModerationOutcome({
+      entityType: result.entityType,
+      entityTitle: result.entityTitle,
+      ownerEmail: result.ownerEmail,
+      action: body.action,
+      note: body.note,
+    });
+  }
 
   return NextResponse.json({ ok: true });
 }

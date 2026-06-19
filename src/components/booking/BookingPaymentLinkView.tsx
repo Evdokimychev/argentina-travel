@@ -10,7 +10,10 @@ import {
   isBookingPaymentLinkExpired,
 } from "@/lib/booking-payment-link";
 import {
-  acknowledgeBookingPaymentIntent,
+  apiCreateBookingPaymentPreference,
+  isRemoteBookingsMode,
+} from "@/lib/bookings-api";
+import {
   getBookingByPaymentLinkToken,
   markBookingPaymentLinkOpened,
 } from "@/lib/bookings-store";
@@ -18,23 +21,22 @@ import type { Booking } from "@/types/tourist";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { Button } from "@/components/ui/button";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
-import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 export default function BookingPaymentLinkView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
-  const [acknowledged, setAcknowledged] = useState(false);
-  const [ackError, setAckErrorState] = useState<SiteFeedbackMessage | null>(null);
-  const [ackLoading, setAckLoading] = useState(false);
-  const feedback = useSiteFeedback();
+  const [checkoutError, setCheckoutErrorState] = useState<SiteFeedbackMessage | null>(null);
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [redirecting, setRedirecting] = useState(false);
+  const remoteMode = isRemoteBookingsMode();
 
-  const setAckError = (value: string | SiteFeedbackMessage | null) => {
+  const setCheckoutError = (value: string | SiteFeedbackMessage | null) => {
     if (value === null) {
-      setAckErrorState(null);
+      setCheckoutErrorState(null);
       return;
     }
-    setAckErrorState(typeof value === "string" ? siteFormError(value) : value);
+    setCheckoutErrorState(typeof value === "string" ? siteFormError(value) : value);
   };
 
   useEffect(() => {
@@ -50,6 +52,15 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     window.addEventListener(BOOKINGS_UPDATED_EVENT, load);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, load);
   }, [token]);
+
+  useEffect(() => {
+    if (!booking?.paymentLink?.checkoutUrl) return;
+    if (booking.paymentLink.status !== "active") return;
+    if (isBookingPaymentLinkExpired(booking.paymentLink)) return;
+    if (redirecting) return;
+    setRedirecting(true);
+    window.location.assign(booking.paymentLink.checkoutUrl);
+  }, [booking, redirecting]);
 
   if (!booking?.paymentLink) {
     return (
@@ -79,28 +90,59 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
   const expired = isBookingPaymentLinkExpired(link);
   const paid = link.status === "paid";
 
-  async function handleAcknowledge() {
-    setAckLoading(true);
-    setAckError(null);
-    const result = acknowledgeBookingPaymentIntent(token);
-    setAckLoading(false);
-
-    if ("error" in result) {
-      const normalized = normalizeSiteError(result.error, {
-        title: "Не удалось подтвердить оплату",
-        steps: ["Обновите страницу", "Свяжитесь с организатором или поддержкой"],
-        action: { label: "Контакты", href: "/contacts" },
-      });
-      setAckError(normalized);
+  async function handleCheckout() {
+    if (!booking?.paymentLink) return;
+    if (booking.paymentLink.checkoutUrl) {
+      setRedirecting(true);
+      window.location.assign(booking.paymentLink.checkoutUrl);
       return;
     }
 
-    setAcknowledged(true);
-    setBooking(result.booking);
-    feedback.success({
-      title: "Намерение подтверждено",
-      description: "Организатор получит уведомление. Списание средств пока не производится.",
-    });
+    if (!remoteMode) {
+      setCheckoutError(
+        "Онлайн-оплата доступна после подключения серверного режима бронирований и ключей Mercado Pago."
+      );
+      return;
+    }
+
+    setCheckoutError(null);
+    setCheckoutLoading(true);
+    try {
+      const result = await apiCreateBookingPaymentPreference({
+        bookingId: booking.id,
+        paymentLinkToken: token,
+      });
+      const checkoutUrl = result.checkoutUrl?.trim();
+      if (!checkoutUrl) {
+        throw new Error("Mercado Pago не вернул checkout URL.");
+      }
+
+      setBooking((prev) =>
+        prev?.paymentLink
+          ? {
+              ...prev,
+              paymentLink: {
+                ...prev.paymentLink,
+                gateway: "mercadopago",
+                preferenceId: result.preferenceId,
+                checkoutUrl,
+                checkoutSandboxUrl: result.checkoutSandboxUrl ?? undefined,
+              },
+            }
+          : prev
+      );
+      setRedirecting(true);
+      window.location.assign(checkoutUrl);
+    } catch (error) {
+      const normalized = normalizeSiteError(error, {
+        title: "Не удалось открыть оплату",
+        steps: ["Попробуйте снова через минуту", "Если ошибка повторяется — напишите в поддержку"],
+        action: { label: "Контакты", href: "/contacts" },
+      });
+      setCheckoutError(normalized);
+    } finally {
+      setCheckoutLoading(false);
+    }
   }
 
   return (
@@ -158,41 +200,31 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
           <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900">
             Ссылка отменена организатором. Обратитесь к организатору тура для уточнения оплаты.
           </div>
-        ) : acknowledged ? (
-          <div className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-4 text-sm text-emerald-800">
-            <div className="flex items-start gap-2">
-              <Check className="mt-0.5 h-5 w-5 shrink-0" />
-              <p>
-                Вы подтвердили готовность оплатить. Списание средств не произошло — оплата через
-                платформу появится позже. Организатор свяжется с вами для уточнения деталей.
-              </p>
-            </div>
-          </div>
         ) : (
           <div className="mt-6 space-y-4">
             <div className="flex items-start gap-3 rounded-xl border border-sky-200/70 bg-sky-50/60 px-4 py-4 text-sm leading-relaxed text-charcoal">
               <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-sky" />
               <p>
-                Оплата через платформу скоро. Сейчас вы видите сумму и статус счёта — карту вводить
-                не нужно. Подтвердите намерение оплатить или свяжитесь с организатором.
+                Оплата проходит через защищённую страницу Mercado Pago. После нажатия вы будете
+                перенаправлены в платёжный интерфейс.
               </p>
             </div>
             <Button
               type="button"
               className="w-full"
-              onClick={handleAcknowledge}
-              loading={ackLoading}
-              loadingLabel="Сохраняем…"
+              onClick={handleCheckout}
+              loading={checkoutLoading || redirecting}
+              loadingLabel={redirecting ? "Перенаправляем…" : "Готовим оплату…"}
             >
-              Подтвердить намерение оплатить
+              Перейти к оплате в Mercado Pago
             </Button>
-            {ackError ? (
+            {checkoutError ? (
               <InlineFeedback
                 variant="error"
-                title={ackError.title}
-                description={ackError.description}
-                steps={ackError.steps}
-                action={ackError.action}
+                title={checkoutError.title}
+                description={checkoutError.description}
+                steps={checkoutError.steps}
+                action={checkoutError.action}
               />
             ) : null}
             <Link

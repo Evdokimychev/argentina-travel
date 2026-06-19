@@ -6,6 +6,9 @@ export type TouristReviewRow = {
   user_id: string | null;
   organizer_user_id: string | null;
   organizer_tour_id: string | null;
+  organizer_reply: string | null;
+  organizer_replied_at: string | null;
+  organizer_replied_by: string | null;
   tour_id: string;
   tour_slug: string;
   tour_title: string;
@@ -43,6 +46,9 @@ export function rowToReview(row: TouristReviewRow): TouristReview {
     tripDate: row.trip_date ?? undefined,
     status: row.status as TouristReviewStatus,
     moderationNotes: row.moderation_notes ?? undefined,
+    organizerReply: row.organizer_reply ?? undefined,
+    organizerRepliedAt: row.organizer_replied_at ?? undefined,
+    organizerRepliedBy: row.organizer_replied_by ?? undefined,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -65,6 +71,9 @@ export function reviewToRow(
     user_id: review.userId || null,
     organizer_user_id: extras?.organizerUserId ?? null,
     organizer_tour_id: extras?.organizerTourId ?? null,
+    organizer_reply: review.organizerReply ?? null,
+    organizer_replied_at: review.organizerRepliedAt ?? null,
+    organizer_replied_by: review.organizerRepliedBy ?? null,
     tour_id: review.tourId,
     tour_slug: review.tourSlug,
     tour_title: review.tourTitle,

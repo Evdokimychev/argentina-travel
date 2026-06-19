@@ -4,7 +4,10 @@ import DestinationDetailView from "@/components/destinations/DestinationDetailVi
 import DestinationFlightSidebar from "@/components/flights/DestinationFlightSidebar";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
 import TouristDestinationJsonLd from "@/components/seo/TouristDestinationJsonLd";
-import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
+import {
+  listPublishedDestinationSlugs,
+  resolveDestinationPage,
+} from "@/lib/cms/destination-resolver";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { resolveKnowledgeLinksForDestination } from "@/lib/knowledge-internal-links";
@@ -14,12 +17,13 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  return getAllDestinations().map((destination) => ({ slug: destination.id }));
+  const slugs = await listPublishedDestinationSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await resolveDestinationPage(slug);
   if (!destination) return { title: "Направление" };
 
   return {
@@ -30,7 +34,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function DestinationDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const destination = getDestinationBySlug(slug);
+  const destination = await resolveDestinationPage(slug);
   if (!destination) notFound();
 
   const tours = await fetchMarketplaceTours();

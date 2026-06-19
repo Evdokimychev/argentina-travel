@@ -1,26 +1,32 @@
-type Bucket = { count: number; resetAt: number };
+type Bucket = { hits: number[] };
 
 const buckets = new Map<string, Bucket>();
 
-/** In-memory rate limiter for API routes (resets on cold start — pair with edge/WAF in production). */
+/**
+ * In-memory sliding-window limiter for API routes.
+ * State resets on process restart, so keep edge/WAF limits in front for production traffic.
+ */
 export function checkRateLimit(
   key: string,
   limit: number,
   windowMs: number,
 ): { ok: true } | { ok: false; retryAfterSec: number } {
   const now = Date.now();
-  const bucket = buckets.get(key);
+  const windowStart = now - windowMs;
+  const bucket = buckets.get(key) ?? { hits: [] };
 
-  if (!bucket || now >= bucket.resetAt) {
-    buckets.set(key, { count: 1, resetAt: now + windowMs });
-    return { ok: true };
+  bucket.hits = bucket.hits.filter((timestamp) => timestamp > windowStart);
+
+  if (bucket.hits.length >= limit) {
+    const oldestHit = bucket.hits[0] ?? now;
+    return {
+      ok: false,
+      retryAfterSec: Math.max(1, Math.ceil((oldestHit + windowMs - now) / 1000)),
+    };
   }
 
-  if (bucket.count >= limit) {
-    return { ok: false, retryAfterSec: Math.max(1, Math.ceil((bucket.resetAt - now) / 1000)) };
-  }
-
-  bucket.count += 1;
+  bucket.hits.push(now);
+  buckets.set(key, bucket);
   return { ok: true };
 }
 

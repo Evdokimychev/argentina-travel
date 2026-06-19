@@ -151,6 +151,10 @@ export interface TouristReview {
   status: TouristReviewStatus;
   /** Комментарий модератора при отклонении */
   moderationNotes?: string;
+  /** Ответ организатора на опубликованный отзыв */
+  organizerReply?: string;
+  organizerRepliedAt?: string;
+  organizerRepliedBy?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -26,6 +26,9 @@ type LegalEditableRow = {
 type ContentResponse = ContentInventorySummary & {
   legalEditable?: LegalEditableRow[];
   blogEditable?: LegalEditableRow[];
+  guideEditable?: LegalEditableRow[];
+  destinationEditable?: LegalEditableRow[];
+  placeEditable?: LegalEditableRow[];
   cmsCount?: number;
 };
 
@@ -110,6 +113,72 @@ export default function ContentDocumentsView() {
     }
   }
 
+  async function createGuideOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "guide", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  async function createDestinationOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "destination", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  async function createPlaceOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "place", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
   function renderCmsRow(row: LegalEditableRow, createOverride: (slug: string) => void) {
     return (
       <li key={row.slug} className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
@@ -156,7 +225,7 @@ export default function ContentDocumentsView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Документы контента"
-          subtitle="Файловый контент и CMS-версии legal-документов и статей"
+          subtitle="Файловый контент и CMS-версии документов, статей, путеводителей, направлений и мест"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -202,6 +271,39 @@ export default function ContentDocumentsView() {
             </h2>
             <ul className="divide-y divide-gray-100">
               {data.blogEditable.map((row) => renderCmsRow(row, createBlogOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.guideEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Путеводитель (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.guideEditable.map((row) => renderCmsRow(row, createGuideOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.destinationEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Направления (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.destinationEditable.map((row) => renderCmsRow(row, createDestinationOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.placeEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Места (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.placeEditable.map((row) => renderCmsRow(row, createPlaceOverride))}
             </ul>
           </section>
         ) : null}

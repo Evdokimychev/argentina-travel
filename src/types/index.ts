@@ -318,6 +318,12 @@ export interface TourReview {
   photos: string[];
   /** Review from a verified booking / completed trip. */
   verifiedTrip?: boolean;
+  /** Source of the review: platform DB, Tripster partner API, or static seed. */
+  source?: "platform" | "tripster" | "static";
+  /** Organizer reply shown under the tourist review. */
+  organizerReply?: string;
+  /** ISO date when organizer published a reply. */
+  organizerRepliedAt?: string;
 }
 
 export type {

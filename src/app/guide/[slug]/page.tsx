@@ -5,7 +5,7 @@ import KakDobratsyaHubView from "@/components/guide/hub/KakDobratsyaHubView";
 import GuidePillarView from "@/components/guide/GuidePillarView";
 import GuideTopicView from "@/components/guide/GuideTopicView";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
-import { getContentPage, getPagesBySection } from "@/lib/content-pages";
+import { listPublishedGuideSlugs, resolveGuidePage } from "@/lib/cms/guide-resolver";
 import {
   getAllGuideTopics,
   getGuideTopicBySlug,
@@ -19,7 +19,7 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  const articleSlugs = getPagesBySection("guide").map((page) => ({ slug: page.slug }));
+  const articleSlugs = (await listPublishedGuideSlugs()).map((slug) => ({ slug }));
   const topicSlugs = getAllGuideTopics().map((topic) => ({ slug: topic.slug }));
   return [...topicSlugs, ...articleSlugs];
 }
@@ -41,7 +41,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const page = getContentPage("guide", slug);
+  const page = await resolveGuidePage(slug);
   if (!page) return { title: "Путеводитель" };
   return {
     title: page.title,
@@ -65,7 +65,7 @@ export default async function GuideSlugPage({ params }: PageProps) {
     return <GuideTopicView topic={topic} />;
   }
 
-  const page = getContentPage("guide", slug);
+  const page = await resolveGuidePage(slug);
   if (!page) notFound();
   return <ContentPageView page={page} />;
 }

@@ -85,18 +85,17 @@ function diffStringLines(
   }
 }
 
-function diffLegalBody(
+function diffSectionCollection(
   items: CmsRevisionDiffItem[],
-  currentBody: Extract<CmsDocumentBody, { kind: "legal" }>,
-  revisionBody: Extract<CmsDocumentBody, { kind: "legal" }>
+  currentSections: LegalSection[],
+  revisionSections: LegalSection[],
+  sectionLabelPrefix: string
 ): void {
-  pushTextDiff(items, "Описание", currentBody.description, revisionBody.description);
-
-  const max = Math.max(currentBody.sections.length, revisionBody.sections.length);
+  const max = Math.max(currentSections.length, revisionSections.length);
   for (let index = 0; index < max; index += 1) {
-    const currentSection = currentBody.sections[index];
-    const revisionSection = revisionBody.sections[index];
-    const sectionLabel = `Раздел ${index + 1}`;
+    const currentSection = currentSections[index];
+    const revisionSection = revisionSections[index];
+    const sectionLabel = `${sectionLabelPrefix} ${index + 1}`;
 
     if (!currentSection && revisionSection) {
       pushTextDiff(items, `${sectionLabel} · добавлен`, null, formatLegalSection(revisionSection));
@@ -112,6 +111,25 @@ function diffLegalBody(
     diffStringLines(items, `${sectionLabel} · абзацы`, currentSection.paragraphs, revisionSection.paragraphs);
     diffStringLines(items, `${sectionLabel} · список`, currentSection.list, revisionSection.list);
   }
+}
+
+function diffLegalBody(
+  items: CmsRevisionDiffItem[],
+  currentBody: Extract<CmsDocumentBody, { kind: "legal" }>,
+  revisionBody: Extract<CmsDocumentBody, { kind: "legal" }>
+): void {
+  pushTextDiff(items, "Описание", currentBody.description, revisionBody.description);
+  diffSectionCollection(items, currentBody.sections, revisionBody.sections, "Раздел");
+}
+
+function diffGuideBody(
+  items: CmsRevisionDiffItem[],
+  currentBody: Extract<CmsDocumentBody, { kind: "guide" }>,
+  revisionBody: Extract<CmsDocumentBody, { kind: "guide" }>
+): void {
+  pushTextDiff(items, "Описание", currentBody.description, revisionBody.description);
+  pushTextDiff(items, "Категория", currentBody.category ?? "", revisionBody.category ?? "");
+  diffSectionCollection(items, currentBody.sections, revisionBody.sections, "Раздел путеводителя");
 }
 
 function diffBlogBody(
@@ -152,6 +170,53 @@ function diffBlogBody(
   }
 }
 
+function diffDestinationBody(
+  items: CmsRevisionDiffItem[],
+  currentBody: Extract<CmsDocumentBody, { kind: "destination" }>,
+  revisionBody: Extract<CmsDocumentBody, { kind: "destination" }>
+): void {
+  pushTextDiff(items, "Описание", currentBody.description, revisionBody.description);
+  pushTextDiff(items, "Введение", currentBody.intro ?? "", revisionBody.intro ?? "");
+  pushTextDiff(items, "Группа региона", currentBody.regionGroup ?? "", revisionBody.regionGroup ?? "");
+  pushTextDiff(items, "Лучший сезон", currentBody.bestSeason ?? "", revisionBody.bestSeason ?? "");
+  pushTextDiff(
+    items,
+    "Рекомендуемый срок",
+    currentBody.idealDuration ?? "",
+    revisionBody.idealDuration ?? ""
+  );
+  pushTextDiff(
+    items,
+    "Как добраться",
+    currentBody.howToGetThere ?? "",
+    revisionBody.howToGetThere ?? ""
+  );
+  diffStringLines(items, "Главная точка", currentBody.highlights, revisionBody.highlights);
+  diffStringLines(items, "Совет путешественникам", currentBody.travelTips, revisionBody.travelTips);
+}
+
+function diffPlaceBody(
+  items: CmsRevisionDiffItem[],
+  currentBody: Extract<CmsDocumentBody, { kind: "place" }>,
+  revisionBody: Extract<CmsDocumentBody, { kind: "place" }>
+): void {
+  pushTextDiff(items, "Краткое описание", currentBody.shortDescription, revisionBody.shortDescription);
+  pushTextDiff(items, "Подробное описание", currentBody.fullDescription, revisionBody.fullDescription);
+  pushTextDiff(
+    items,
+    "Как добраться",
+    currentBody.howToGetThere ?? "",
+    revisionBody.howToGetThere ?? ""
+  );
+  diffStringLines(items, "Интересный факт", currentBody.interestingFacts, revisionBody.interestingFacts);
+  pushTextDiff(
+    items,
+    "FAQ",
+    JSON.stringify(currentBody.faq ?? []),
+    JSON.stringify(revisionBody.faq ?? [])
+  );
+}
+
 export function buildCmsRevisionDiff(current: CmsSnapshot, revision: CmsSnapshot): CmsRevisionDiffResult {
   const items: CmsRevisionDiffItem[] = [];
 
@@ -159,8 +224,14 @@ export function buildCmsRevisionDiff(current: CmsSnapshot, revision: CmsSnapshot
 
   if (current.body.kind === "legal" && revision.body.kind === "legal") {
     diffLegalBody(items, current.body, revision.body);
+  } else if (current.body.kind === "guide" && revision.body.kind === "guide") {
+    diffGuideBody(items, current.body, revision.body);
   } else if (current.body.kind === "blog" && revision.body.kind === "blog") {
     diffBlogBody(items, current.body, revision.body);
+  } else if (current.body.kind === "destination" && revision.body.kind === "destination") {
+    diffDestinationBody(items, current.body, revision.body);
+  } else if (current.body.kind === "place" && revision.body.kind === "place") {
+    diffPlaceBody(items, current.body, revision.body);
   } else {
     pushTextDiff(items, "Тип документа", current.body.kind, revision.body.kind);
   }

@@ -9,13 +9,15 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
-import type { AdminDashboardWidgets } from "@/types/admin";
+import type { AdminDashboardWidgets, AdminOperationsSummary } from "@/types/admin";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 
 type DashboardResponse = { widgets?: AdminDashboardWidgets };
+type OperationsSummaryResponse = { summary?: AdminOperationsSummary };
 
 const QUICK_LINKS = [
+  { href: "/admin/operations", label: "Центр операций" },
   { href: "/admin/operations/leads", label: "Лиды и заявки" },
   { href: "/admin/operations/bookings", label: "Бронирования" },
   { href: "/admin/operations/shop-orders", label: "Заказы магазина" },
@@ -37,7 +39,17 @@ function formatUsd(value: number): string {
 export default function AdminDashboardPage() {
   const [period, setPeriod] = useState<AnalyticsPeriod>("30d");
   const { data, loading, error } = useAdminApi<DashboardResponse>(`/api/admin/dashboard?period=${period}`);
+  const { data: operationsData, loading: operationsLoading } = useAdminApi<OperationsSummaryResponse>(
+    "/api/admin/operations/summary"
+  );
   const widgets = data?.widgets;
+  const healthStatus = operationsData?.summary?.health.status;
+  const healthChipClass =
+    healthStatus === "ok"
+      ? "bg-success-muted text-success"
+      : healthStatus === "degraded"
+        ? "bg-warning-muted text-warning"
+        : "bg-gray-100 text-slate";
   const periodHint = widgets
     ? widgets.periodStart
       ? `Период: с ${formatAdminWhen(widgets.periodStart)}`
@@ -67,9 +79,17 @@ export default function AdminDashboardPage() {
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {!error && periodHint && widgets ? (
-          <p className="text-sm text-slate">
-            {periodHint} · Обновлено {formatAdminWhen(widgets.generatedAt)}
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="text-sm text-slate">
+              {periodHint} · Обновлено {formatAdminWhen(widgets.generatedAt)}
+            </p>
+            <Link
+              href="/api/admin/health"
+              className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${healthChipClass}`}
+            >
+              Здоровье: {operationsLoading ? "…" : (healthStatus ?? "—")}
+            </Link>
+          </div>
         ) : null}
 
         <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">

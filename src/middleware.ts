@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import type { Database } from "@/types/database";
 
@@ -51,6 +52,17 @@ function isMaintenanceExempt(pathname: string): boolean {
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
+
+  if (request.method === "POST" && pathname.startsWith("/api/webhooks/")) {
+    const ip = getClientIp(request);
+    const limit = checkRateLimit(`webhooks:ip:${ip}`, 120, 60_000);
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Слишком много webhook-запросов. Повторите позже." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      );
+    }
+  }
 
   if (!isMaintenanceExempt(pathname)) {
     try {

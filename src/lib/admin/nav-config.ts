@@ -19,6 +19,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "dashboard.view",
   },
   {
+    id: "operations-hub",
+    section: "operations",
+    href: "/admin/operations",
+    label: "Операции",
+    description: "Командный центр и приоритеты",
+    capability: "dashboard.view",
+  },
+  {
     id: "operations-leads",
     section: "operations",
     href: "/admin/operations/leads",

@@ -1,7 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TouristReview, TouristReviewStatus } from "@/types/tourist";
+import type { TourReview } from "@/types";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
+import { sendReviewModerationEmail } from "@/lib/notifications/email-delivery";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
 import {
   reviewToRow,
@@ -12,6 +15,14 @@ import {
 } from "@/lib/reviews-db-mapper";
 
 type DbClient = SupabaseClient<Database>;
+type ProfilePublicRow = Pick<
+  Database["public"]["Tables"]["profiles"]["Row"],
+  "id" | "first_name" | "last_name" | "avatar_url"
+>;
+type ProfileIdentityRow = Pick<
+  Database["public"]["Tables"]["profiles"]["Row"],
+  "id" | "first_name" | "last_name" | "email"
+>;
 
 function resolveOrganizerUserId(input: {
   organizerTourId?: string;
@@ -88,6 +99,160 @@ export async function fetchPublishedReviewsByTourSlug(
 
   if (error || !data) return [];
   return (data as TouristReviewRow[]).map(rowToReview);
+}
+
+function normalizeReviewDate(value?: string): string {
+  if (!value?.trim()) return "";
+  const trimmed = value.trim();
+  const parsed = new Date(trimmed);
+  if (Number.isNaN(parsed.getTime())) return "";
+  return trimmed;
+}
+
+function resolvePublicAuthorName(profile?: ProfilePublicRow): string {
+  if (!profile) return "Путешественник";
+  const fullName = [profile.first_name, profile.last_name]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+  return fullName || profile.first_name?.trim() || "Путешественник";
+}
+
+function resolveProfileDisplayName(profile?: ProfileIdentityRow | null): string | null {
+  if (!profile) return null;
+  const fullName = [profile.first_name, profile.last_name]
+    .map((part) => part?.trim())
+    .filter(Boolean)
+    .join(" ")
+    .trim();
+
+  if (fullName) return fullName;
+  if (profile.first_name?.trim()) return profile.first_name.trim();
+  if (profile.email?.trim()) return profile.email.trim();
+  return profile.id.slice(0, 8);
+}
+
+function touristReviewToPublicReview(
+  review: TouristReview,
+  profile?: ProfilePublicRow
+): TourReview {
+  return {
+    id: review.id,
+    author: resolvePublicAuthorName(profile),
+    avatar: profile?.avatar_url?.trim() || "",
+    rating: review.rating,
+    date: normalizeReviewDate(review.createdAt),
+    tripDate: normalizeReviewDate(review.tripDate),
+    text: review.text,
+    photos: review.photos,
+    verifiedTrip: Boolean(review.bookingId),
+    source: "platform",
+    organizerReply: review.organizerReply?.trim() || undefined,
+    organizerRepliedAt: normalizeReviewDate(review.organizerRepliedAt) || undefined,
+  };
+}
+
+async function fetchProfilesByUserIds(
+  supabase: DbClient,
+  userIds: string[]
+): Promise<Map<string, ProfilePublicRow>> {
+  const profileMap = new Map<string, ProfilePublicRow>();
+  if (!userIds.length) return profileMap;
+
+  const { data: profiles, error } = await supabase
+    .from("profiles")
+    .select("id, first_name, last_name, avatar_url")
+    .in("id", userIds);
+
+  if (error || !profiles?.length) return profileMap;
+
+  for (const profile of profiles as ProfilePublicRow[]) {
+    profileMap.set(profile.id, profile);
+  }
+
+  return profileMap;
+}
+
+export async function fetchTourPublicReviews(tourSlug: string): Promise<TourReview[]> {
+  const normalizedSlug = tourSlug.trim();
+  if (!normalizedSlug) return [];
+
+  let supabase: DbClient;
+  try {
+    supabase = createSupabaseAdminClient();
+  } catch {
+    return [];
+  }
+
+  const reviews = await fetchPublishedReviewsByTourSlug(supabase, normalizedSlug);
+  if (!reviews.length) return [];
+
+  const userIds = [
+    ...new Set(
+      reviews.map((review) => review.userId).filter((userId): userId is string => Boolean(userId))
+    ),
+  ];
+  const profilesByUserId = await fetchProfilesByUserIds(supabase, userIds);
+
+  return reviews.map((review) =>
+    touristReviewToPublicReview(review, profilesByUserId.get(review.userId))
+  );
+}
+
+export async function updateOrganizerReviewReply(
+  supabase: DbClient,
+  input: {
+    reviewId: string;
+    organizerUserId: string;
+    organizerTourSlugs: string[];
+    replyText: string;
+  }
+): Promise<{ review: TouristReview } | { error: string }> {
+  const reply = input.replyText.trim();
+  if (!reply) {
+    return { error: "Введите текст ответа для туриста" };
+  }
+  if (reply.length > 3000) {
+    return { error: "Ответ слишком длинный (максимум 3000 символов)" };
+  }
+
+  const { data: existing, error: fetchError } = await supabase
+    .from("tourist_reviews")
+    .select("*")
+    .eq("id", input.reviewId)
+    .maybeSingle();
+
+  if (fetchError || !existing) return { error: "Отзыв не найден" };
+
+  const current = existing as TouristReviewRow;
+  if (current.status !== "published") {
+    return { error: "Можно отвечать только на опубликованные отзывы" };
+  }
+
+  const canManageReview =
+    current.organizer_user_id === input.organizerUserId ||
+    input.organizerTourSlugs.includes(current.tour_slug);
+  if (!canManageReview) {
+    return { error: "Нет доступа" };
+  }
+
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("tourist_reviews")
+    .update({
+      organizer_reply: reply,
+      organizer_replied_at: now,
+      organizer_replied_by: input.organizerUserId,
+      updated_at: now,
+    })
+    .eq("id", input.reviewId)
+    .select("*")
+    .maybeSingle();
+
+  if (error || !data) return { error: error?.message ?? "Не удалось сохранить ответ" };
+
+  return { review: rowToReview(data as TouristReviewRow) };
 }
 
 export async function insertReview(
@@ -264,7 +429,19 @@ export async function resolveReviewModeration(
   actorUserId: string,
   note?: string
 ): Promise<
-  | { ok: true; tourTitle: string; authorEmail: string | null }
+  | {
+      ok: true;
+      reviewId: string;
+      tourTitle: string;
+      tourSlug: string;
+      rating: number;
+      reviewText: string;
+      tripDate: string | null;
+      authorEmail: string | null;
+      authorName: string | null;
+      organizerEmail: string | null;
+      organizerName: string | null;
+    }
   | { error: string }
 > {
   const now = new Date().toISOString();
@@ -279,20 +456,58 @@ export async function resolveReviewModeration(
       moderated_at: now,
     })
     .eq("id", reviewId)
-    .select("tour_title, user_id")
+    .select("tour_title, tour_slug, rating, review_text, trip_date, user_id, organizer_user_id")
     .maybeSingle();
 
   if (error || !row) return { error: error?.message ?? "Отзыв не найден" };
 
+  let authorProfile: ProfileIdentityRow | null = null;
   let authorEmail: string | null = null;
   if (row.user_id) {
     const { data: profile } = await supabase
       .from("profiles")
-      .select("email")
+      .select("id, first_name, last_name, email")
       .eq("id", row.user_id)
       .maybeSingle();
-    authorEmail = profile?.email ?? null;
+    authorProfile = (profile as ProfileIdentityRow | null) ?? null;
+    authorEmail = authorProfile?.email ?? null;
   }
 
-  return { ok: true, tourTitle: row.tour_title, authorEmail };
+  let organizerProfile: ProfileIdentityRow | null = null;
+  let organizerEmail: string | null = null;
+  if (row.organizer_user_id) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("id, first_name, last_name, email")
+      .eq("id", row.organizer_user_id)
+      .maybeSingle();
+    organizerProfile = (profile as ProfileIdentityRow | null) ?? null;
+    organizerEmail = organizerProfile?.email ?? null;
+  }
+
+  try {
+    await sendReviewModerationEmail({
+      touristEmail: authorEmail,
+      touristName: resolveProfileDisplayName(authorProfile),
+      tourTitle: row.tour_title,
+      action,
+      note,
+    });
+  } catch {
+    // Non-blocking notification channel.
+  }
+
+  return {
+    ok: true,
+    reviewId,
+    tourTitle: row.tour_title,
+    tourSlug: row.tour_slug,
+    rating: row.rating,
+    reviewText: row.review_text,
+    tripDate: row.trip_date,
+    authorEmail,
+    authorName: resolveProfileDisplayName(authorProfile),
+    organizerEmail,
+    organizerName: resolveProfileDisplayName(organizerProfile),
+  };
 }

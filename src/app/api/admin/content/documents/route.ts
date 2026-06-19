@@ -5,7 +5,18 @@ import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
 import { getBlogPostBySlug } from "@/data/blog";
-import { legalBodyFromTs, blogBodyFromTs, type CmsDocType, type CmsDocumentBody } from "@/types/cms-content";
+import { getContentPage } from "@/lib/content-pages";
+import { getDestinationBySlug } from "@/lib/destinations";
+import { fetchPlaceBySlugServer } from "@/lib/places-repository";
+import {
+  legalBodyFromTs,
+  blogBodyFromTs,
+  guideBodyFromTs,
+  destinationBodyFromTs,
+  placeBodyFromTs,
+  type CmsDocType,
+  type CmsDocumentBody,
+} from "@/types/cms-content";
 
 type PostBody = {
   docType?: CmsDocType;
@@ -60,6 +71,33 @@ export async function POST(request: Request) {
     }
     title = title || source.title;
     cmsBody = blogBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "guide") {
+    const source = getContentPage("guide", slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная страница путеводителя не найдена" }, { status: 404 });
+    }
+    title = title || source.title;
+    cmsBody = guideBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "destination") {
+    const source = getDestinationBySlug(slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная страница направления не найдена" }, { status: 404 });
+    }
+    title = title || source.name;
+    cmsBody = destinationBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "place") {
+    const source = await fetchPlaceBySlugServer(slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная страница места не найдена" }, { status: 404 });
+    }
+    title = title || source.name;
+    cmsBody = placeBodyFromTs(source);
   }
 
   if (!title || !cmsBody) {

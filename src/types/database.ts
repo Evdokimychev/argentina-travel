@@ -150,6 +150,9 @@ export interface Database {
           user_id: string | null;
           organizer_user_id: string | null;
           organizer_tour_id: string | null;
+          organizer_reply: string | null;
+          organizer_replied_at: string | null;
+          organizer_replied_by: string | null;
           tour_id: string;
           tour_slug: string;
           tour_title: string;
@@ -171,6 +174,9 @@ export interface Database {
           user_id?: string | null;
           organizer_user_id?: string | null;
           organizer_tour_id?: string | null;
+          organizer_reply?: string | null;
+          organizer_replied_at?: string | null;
+          organizer_replied_by?: string | null;
           tour_id: string;
           tour_slug: string;
           tour_title: string;
@@ -192,6 +198,9 @@ export interface Database {
           user_id?: string | null;
           organizer_user_id?: string | null;
           organizer_tour_id?: string | null;
+          organizer_reply?: string | null;
+          organizer_replied_at?: string | null;
+          organizer_replied_by?: string | null;
           tour_id?: string;
           tour_slug?: string;
           tour_title?: string;
@@ -1029,6 +1038,39 @@ export interface Database {
           payload?: Json;
           ip_address?: string | null;
           created_at?: string;
+        };
+        Relationships: [];
+      };
+      admin_notifications: {
+        Row: {
+          id: string;
+          type: string;
+          title: string;
+          body: string;
+          href: string | null;
+          read_at: string | null;
+          created_at: string;
+          metadata: Json;
+        };
+        Insert: {
+          id?: string;
+          type: string;
+          title: string;
+          body: string;
+          href?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+          metadata?: Json;
+        };
+        Update: {
+          id?: string;
+          type?: string;
+          title?: string;
+          body?: string;
+          href?: string | null;
+          read_at?: string | null;
+          created_at?: string;
+          metadata?: Json;
         };
         Relationships: [];
       };

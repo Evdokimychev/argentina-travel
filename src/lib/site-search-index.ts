@@ -19,6 +19,8 @@ import { buildImmigrationTopicSearchItems } from "@/lib/immigration-topics";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import type { BlogPost, TourListing } from "@/types";
+import type { DestinationPage } from "@/data/destination-pages";
+import type { PlaceListing } from "@/types/place";
 
 export type SearchResultType =
   | "tour"
@@ -246,7 +248,11 @@ export function buildTourSearchItems(tours: TourListing[]): SearchIndexItem[] {
   }));
 }
 
-export function buildStaticSearchIndex(blogCatalog: BlogPost[] = blogPosts): SearchIndexItem[] {
+export function buildStaticSearchIndex(
+  blogCatalog: BlogPost[] = blogPosts,
+  destinationCatalog: DestinationPage[] = DESTINATION_PAGES,
+  placeCatalog: PlaceListing[] = getAllPlaceListings()
+): SearchIndexItem[] {
   const flatNav = flattenSiteNavSections(SITE_NAV_SECTIONS);
   const seenNav = new Set<string>();
   const navItems: SearchIndexItem[] = flatNav
@@ -324,7 +330,7 @@ export function buildStaticSearchIndex(blogCatalog: BlogPost[] = blogPosts): Sea
       href: "/destinations",
       keywords: ["направления", "регионы", "города", "места"],
     },
-    ...DESTINATION_PAGES.map((page) => ({
+    ...destinationCatalog.map((page) => ({
       id: `destination-page-${page.id}`,
       type: "destination" as const,
       title: page.name,
@@ -334,7 +340,7 @@ export function buildStaticSearchIndex(blogCatalog: BlogPost[] = blogPosts): Sea
     })),
   ];
 
-  const destinationPageNames = new Set(DESTINATION_PAGES.map((page) => page.name));
+  const destinationPageNames = new Set(destinationCatalog.map((page) => page.name));
 
   const destinationItems: SearchIndexItem[] = SEARCH_DESTINATIONS.filter(
     (dest) => !destinationPageNames.has(dest.label) && dest.label !== "Аргентина",
@@ -372,7 +378,7 @@ export function buildStaticSearchIndex(blogCatalog: BlogPost[] = blogPosts): Sea
       }))
   );
 
-  const placeItems: SearchIndexItem[] = getAllPlaceListings().map((place) => ({
+  const placeItems: SearchIndexItem[] = placeCatalog.map((place) => ({
     id: `place-${place.slug}`,
     type: "place" as const,
     title: place.name,
@@ -402,9 +408,24 @@ export function buildStaticSearchIndex(blogCatalog: BlogPost[] = blogPosts): Sea
 
 export async function buildStaticSearchIndexServer(): Promise<SearchIndexItem[]> {
   try {
-    const { resolveBlogCatalog } = await import("@/lib/cms/blog-resolver");
-    const mergedBlogCatalog = await resolveBlogCatalog();
-    return buildStaticSearchIndex(mergedBlogCatalog.length > 0 ? mergedBlogCatalog : blogPosts);
+    const [{ resolveBlogCatalog }, { resolveDestinationCatalog }, { resolvePlaceCatalog }] =
+      await Promise.all([
+        import("@/lib/cms/blog-resolver"),
+        import("@/lib/cms/destination-resolver"),
+        import("@/lib/cms/place-resolver"),
+      ]);
+
+    const [mergedBlogCatalog, mergedDestinationCatalog, mergedPlaceCatalog] = await Promise.all([
+      resolveBlogCatalog(),
+      resolveDestinationCatalog(),
+      resolvePlaceCatalog(),
+    ]);
+
+    return buildStaticSearchIndex(
+      mergedBlogCatalog.length > 0 ? mergedBlogCatalog : blogPosts,
+      mergedDestinationCatalog.length > 0 ? mergedDestinationCatalog : DESTINATION_PAGES,
+      mergedPlaceCatalog.length > 0 ? mergedPlaceCatalog : getAllPlaceListings()
+    );
   } catch {
     return buildStaticSearchIndex();
   }
