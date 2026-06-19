@@ -3,7 +3,7 @@ import AudioGuidesCatalogView from "@/components/audio-guides/AudioGuidesCatalog
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "Аудиогиды по Аргентине — Пора в Аргентину";
+const PAGE_TITLE = "Аудиогиды по Аргентине";
 const PAGE_DESCRIPTION =
   "Аудиоэкскурсии по Буэнос-Айресу и другим городам через партнёра WeGoTrip. Слушайте маршрут в приложении в удобном темпе.";
 

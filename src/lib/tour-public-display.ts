@@ -124,7 +124,7 @@ export function resolveOrganizerTourCountDisplay(tourCount: number): string | nu
 
 export function resolveOrganizerTravelerCountDisplay(travelerCount: number): string | null {
   if (travelerCount <= 0) return null;
-  return `${travelerCount}+ путешественников`;
+  return `${travelerCount.toLocaleString("ru-RU")} путешественников`;
 }
 
 export function hasTourDatesSection(tour: {

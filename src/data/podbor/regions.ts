@@ -34,7 +34,7 @@ export const PODBOR_REGIONS: Record<PodborRegionId, PodborRegionMeta> = {
   },
   bariloche: {
     id: "bariloche",
-    name: "Барилoche и озёра",
+    name: "Барилоче и озёра",
     slug: "bariloche",
     destinationSlug: "bariloche",
     image:

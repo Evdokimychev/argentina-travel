@@ -1,25 +1,4 @@
 import { Testimonial } from "@/types";
 
-export const testimonials: Testimonial[] = [
-  {
-    id: "1",
-    name: "Елена К.",
-    location: "Москва",
-    text: "Тур по Патагонии превзошёл все ожидания. Ледник Перито-Морено — это что-то невероятное! Организация на высшем уровне.",
-    rating: 5,
-  },
-  {
-    id: "2",
-    name: "Дмитрий В.",
-    location: "Санкт-Петербург",
-    text: "Буэнос-Айрес и танго — незабываемый опыт. Гид знает город как свои пять пальцев, а шоу танго в San Telmo — мурашки.",
-    rating: 5,
-  },
-  {
-    id: "3",
-    name: "Анна М.",
-    location: "Казань",
-    text: "Винный тур в Мендосе — мечта сommelier. Bodegas, дегустации, Анд на горизонте. Уже планируем следующую поездку!",
-    rating: 5,
-  },
-];
+/** Legacy static homepage quotes removed — homepage loads reviews from DB or tour seed. */
+export const testimonials: Testimonial[] = [];

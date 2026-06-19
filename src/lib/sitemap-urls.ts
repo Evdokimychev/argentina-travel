@@ -23,6 +23,7 @@ import { listPublishedDestinationSlugs } from "@/lib/cms/destination-resolver";
 import { listPublishedPlaceSlugs } from "@/lib/cms/place-resolver";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { expandI18nSitemapPaths } from "@/lib/i18n/sitemap-locales";
+import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { absoluteUrl } from "@/lib/site-url";
 import type { BlogPost } from "@/types";
 
@@ -141,7 +142,8 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   const excursionPaths = await collectExcursionSitemapPaths();
   const placesPaths = await collectPlacesSitemapPaths();
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
-  const blogPaths = blogCatalog.map((post) => `/blog/${post.slug}`);
+  const indexableBlogPosts = filterIndexableBlogPosts(blogCatalog);
+  const blogPaths = indexableBlogPosts.map((post) => `/blog/${post.slug}`);
   const immigrationPaths = getPagesBySection("immigration").map((page) => contentPageHref(page));
   const guidePaths = (await listPublishedGuideSlugs()).map((slug) => `/guide/${slug}`);
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));

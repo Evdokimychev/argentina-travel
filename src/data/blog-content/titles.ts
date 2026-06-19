@@ -103,5 +103,5 @@ export function buildBlogMetaDescription(
 }
 
 export function buildBlogSeoTitle(title: string): string {
-  return `${title} | Пора в Аргентину`;
+  return title;
 }

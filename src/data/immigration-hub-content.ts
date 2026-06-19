@@ -17,7 +17,7 @@ const FAQ: ImmigrationHubContent["faq"] = [
   {
     question: "Сколько оснований для ВНЖ существует в Аргентине?",
     answer:
-      "15 подкategorий residencia temporaria в ст. 23 Ley 25.871 (incisos a–ñ), включая reunificación familiar с Decreto 366/2025. Nómada digital — transitoria по Disposición 758/2022, не входит в эту таблицу.",
+      "15 подкатегорий residencia temporaria в ст. 23 Ley 25.871 (incisos a–ñ), включая reunificación familiar с Decreto 366/2025. Nómada digital — transitoria по Disposición 758/2022, не входит в эту таблицу.",
   },
   {
     question: "Через сколько лет можно получить гражданство?",
@@ -30,7 +30,7 @@ const FAQ: ImmigrationHubContent["faq"] = [
       "Temporaria — до 3 лет с prórroga. Permanente — без продления по пункту; отмена при ≥1 годе вне AR. Arraigo для ПМЖ: 2–3 года temporaria, ≥50% времени в стране, не более 6 мес. подряд за границей.",
   },
   {
-    question: "Что такое DNU 366/2025 и как он влияет на въезд?",
+    question: "Что такое Decreto 366/2025 и как он влияет на въезд?",
     answer:
       "Декрет 366/2025 ужесточил правила въезда: медстраховка и декларация о цели поездки закреплены в законе, но на практике на границе их пока не всегда проверяют. Для подачи на residencia требования строже.",
   },
@@ -72,7 +72,7 @@ const FAQ: ImmigrationHubContent["faq"] = [
   {
     question: "Даёт ли аргентинский паспорт безвизовый режим?",
     answer:
-      "Да — паспорт Аргентины открывает безвиз или visa on arrival примерно в 170 стран, включая Шенген, Великобританию, Японию и большинство Латинской Америки.",
+      "Да — паспорт Аргентины открывает безвиз или упрощённый въезд (включая визу по прилёте) примерно в 170 стран: Шенген, Япония, большинство Латинской Америки. Для отдельных стран (например, для въезда в Великобританию) может требоваться виза или разрешение — проверяйте перед поездкой.",
   },
   {
     question: "Нужен ли DNI и как его получить?",
@@ -99,12 +99,12 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
   ],
   quickFacts30: [
     { emoji: "🌎", label: "Открытая страна", headline: "15 оснований для ВНЖ", detail: "Temporaria по Ley 25.871 — от rentista до reunificación familiar" },
-    { emoji: "⏱", label: "Путь к гражданству", headline: "~2 года после ПМЖ", detail: "После 2 лет с постоянным видом на жительство — подача на гражданство" },
-    { emoji: "🛂", label: "Турист → резидент", headline: "Смена статуса в стране", detail: "Не обязательно выезжать — подача Radication в Migraciones" },
+    { emoji: "⏱", label: "Путь к гражданству", headline: "~2 года резиденции", detail: "2 года непрерывной легальной резиденции без выездов; ПМЖ заранее не обязателен" },
+    { emoji: "🛂", label: "Турист → резидент", headline: "Смена статуса в стране", detail: "Не обязательно выезжать — подача radicación в Migraciones" },
     { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 стран", detail: "После гражданства — сильный проездной документ" },
-    { emoji: "💻", label: "Цифровой кочевник", headline: "Отдельное основание ВНЖ", detail: "Доказательство удалённого дохода и страховки" },
+    { emoji: "💻", label: "Цифровой кочевник", headline: "Транзитный статус 180+180 дней", detail: "Не ВНЖ; доход удалённой работы и страховка (Disposición 758/2022)" },
     { emoji: "👶", label: "Jus soli", headline: "Гражданство ребёнку при рождении", detail: "Ребёнок, рождённый в AR, — гражданин (с нюансами для родителей)" },
-    { emoji: "⚠️", label: "DNU 366/2025", headline: "Страховка и контроль въезда", detail: "Проверяйте актуальные требования перед поездкой" },
+    { emoji: "⚠️", label: "Decreto 366/2025", headline: "Страховка и контроль въезда", detail: "Проверяйте актуальные требования перед поездкой" },
     { emoji: "🏥", label: "Медицина", headline: "Экстренная помощь бесплатна", detail: "Плановая — через prepaga или частные клиники" },
   ],
   toc: [
@@ -126,7 +126,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "immigration-process",
       emoji: "🛂",
       title: "Процесс иммиграции",
-      description: "Въезд, DNU 366/2025, RADEX и документы",
+      description: "Въезд, Decreto 366/2025, RADEX и документы",
       teaser: IMMIGRATION_PROCESS.intro,
       href: "/immigration/protsess-immigratsii",
     },
@@ -142,7 +142,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "citizenship",
       emoji: "🇦🇷",
       title: "Гражданство",
-      description: "Паспорт, экзамены, сроки и безвизовый режим",
+      description: "Административно (DNM), Decreto 366/2025",
       teaser: IMMIGRATION_CITIZENSHIP.intro,
       href: "/immigration/grazhdanstvo",
     },
@@ -150,7 +150,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "residency",
       emoji: "📋",
       title: "ВНЖ и ПМЖ",
-      description: "ВНЖ, ПМЖ и 14 оснований",
+      description: "ВНЖ, ПМЖ и 15 оснований",
       teaser: IMMIGRATION_RESIDENCY.intro,
       href: "/immigration/vnzh-i-pmzh",
     },
@@ -172,10 +172,10 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
     },
   ],
   warnings: [
-    "Материалы не являются юридической консультацией — перед подачей проконсультируйтесь с licensed abogado migratorio.",
+    "Материалы не являются юридической консультацией — перед подачей проконсультируйтесь с лицензированным миграционным юристом (abogado migratorio).",
     "Не работайте на туристическом статусе — штрафы и депортация.",
     "Следите за сроком туристического штампа: просрочка осложняет легализацию.",
-    "Правила Migraciones и DNU меняются — проверяйте migraciones.gob.ar перед каждым этапом.",
+    "Правила Migraciones и миграционного декрета меняются — проверяйте migraciones.gob.ar перед каждым этапом.",
   ],
   faq: FAQ,
   disclaimer:

@@ -3,16 +3,40 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
-import type { TourDetail } from "@/types";
+import type { TourDetail, TourDatePrice } from "@/types";
 import TourSection from "./TourSection";
 import { formatDateShortWithYear } from "@/lib/utils";
 
 export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) {
-  const dates = tour.dates.filter((item) => item.startDate);
+  const [dates, setDates] = useState<TourDatePrice[]>(() =>
+    tour.dates.filter((item) => item.startDate)
+  );
   const [visibleCount, setVisibleCount] = useState(6);
 
   useEffect(() => {
     setVisibleCount(6);
+    setDates(tour.dates.filter((item) => item.startDate));
+  }, [tour.slug, tour.dates]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadDates() {
+      try {
+        const response = await fetch(`/api/partner-tours/${tour.slug}/schedule`);
+        const data = (await response.json()) as { dates?: TourDatePrice[] };
+        if (!cancelled && data.dates?.length) {
+          setDates(data.dates.filter((item) => item.startDate));
+        }
+      } catch {
+        // keep SSR dates
+      }
+    }
+
+    void loadDates();
+    return () => {
+      cancelled = true;
+    };
   }, [tour.slug]);
 
   if (!dates.length) return null;

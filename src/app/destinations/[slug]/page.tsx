@@ -15,6 +15,7 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveKnowledgeLinksForDestination } from "@/lib/knowledge-internal-links";
+import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -32,11 +33,28 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   if (!destination) return { title: "Направление" };
 
   const alternates = await buildCmsContentHreflangAlternates("destination", slug);
+  const title = `${destination.name} — направления Аргентины`;
+  const description = destination.description ?? destination.intro;
+  const pageUrl = absoluteUrl(`/destinations/${slug}`);
+  const ogImage = resolvePublicUrl(destination.image);
 
   return {
-    title: `${destination.name} — направления Аргентины`,
-    description: destination.intro,
-    alternates,
+    title,
+    description,
+    alternates: { ...alternates, canonical: pageUrl },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      url: pageUrl,
+      images: [{ url: ogImage }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 

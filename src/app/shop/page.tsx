@@ -2,7 +2,7 @@ import ShopPageView from "@/components/shop/ShopPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "Магазин гидов — Пора в Аргентину";
+const PAGE_TITLE = "Магазин гидов";
 const PAGE_DESCRIPTION =
   "PDF-путеводители и чек-листы для подготовки к поездке в Аргентину — заказ на сайте или через менеджера.";
 

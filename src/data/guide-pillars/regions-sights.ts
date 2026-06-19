@@ -8,7 +8,7 @@ const REGIONS_FAQ = [
   { question: "Что такое северо-запад (NOA)?", answer: "Salta, Кафаяте, Quebrada de Humahuaca — горы, виноградники torrontés, колониальная архитектура." },
   { question: "Нужен ли гид в регионах?", answer: "Для треккинга в Chaltén — нет. Для ледника, Iguazú boat tour, estancia — гид или тур удобнее." },
   { question: "Какие регионы для второго визита?", answer: "Кордова, Lake District, Peninsula Valdés (киты), Iberá ( wetlands)." },
-  { question: "Далеко ли Mendoza от BA?", answer: "~1,5 ч перелёта или ~12 ч автобусом. На 3–4 дня — винодельни и Андes." },
+  { question: "Далеко ли Mendoza от BA?", answer: "~1,5 ч перелёта или ~12 ч автобусом. На 3–4 дня — винодельни и Анды." },
   { question: "Есть ли туры сразу по нескольким регионам?", answer: "Да — на платформе комбинированные маршруты BA + Patagonia / Iguazú / Mendoza." },
   { question: "Где смотреть все направления?", answer: "Каталог /destinations — 8 регионов с турами и сезонами." },
   { question: "Нужна ли страховка для Патагонии?", answer: "Да, с покрытием треккинга и эвакуации — см. раздел «Безопасность»." },
@@ -27,12 +27,12 @@ export const TURISTICSKIE_REGIONY_PILLAR: GuidePillarContent = {
     { label: "Регионов в каталоге", headline: "8 направлений", detail: "Туры, сезоны и советы — на платформе" },
     { label: "Патагония — сезон", headline: "Ноябрь–март", detail: "Теплее, открыты тропы; дек–янв — пик цен" },
     { label: "Iguazú из BA", headline: "~2 ч перелёта", detail: "2–3 дня на аргентинской стороне — минимум" },
-    { label: "Mendoza", headline: "Malbec и Андes", detail: "1,5 ч перелёта или ~12 ч автобусом" },
+    { label: "Mendoza", headline: "Malbec и Анды", detail: "1,5 ч перелёта или ~12 ч автобусом" },
     { label: "NOA", headline: "Salta, Humahuaca", detail: "Горы, torrontés, колониальная архитектура" },
     { label: "Классика первой поездки", headline: "BA + 1 регион", detail: "Не пытайтесь объехать всё за 10 дней" },
   ],
   sections: [
-    { id: "turistskie-regiony-1", title: "Патагония и Огненная Земля", content: "Эль-Калафате, El Chaltén, Барилoche, Ушуайя — ледники, треккинг, край света. Сезон ноябрь–март." },
+    { id: "turistskie-regiony-1", title: "Патагония и Огненная Земля", content: "Эль-Калафате, El Chaltén, Барилоче, Ушуайя — ледники, треккинг, край света. Сезон ноябрь–март." },
     { id: "turistskie-regiony-2", title: "Центр и столица", content: "BA — культура, asado, milonga. Mendoza — malbec. Кордова — для второго визита." },
     { id: "turistskie-regiony-3", title: "Север: Salta и Iguazú", content: "Высокогорье, torrontés, Quebrada de Humahuaca. Iguazú — 275 водопадов на границе с Бразилией." },
     { id: "turistskie-regiony-4", title: "Как комбинировать регионы", content: "Не пытайтесь за 10 дней объехать всё — выберите BA + один природный регион. Внутренние перелёты экономят недели." },
@@ -50,7 +50,7 @@ export const TURISTICSKIE_REGIONY_PILLAR: GuidePillarContent = {
 };
 
 const SIGHTS_FAQ = [
-  { question: "Какие must-see в первую поездку?", answer: "Перито-Морено, Iguazú, районы BA (La Boca, Recoleta), винодельня Mendoza." },
+  { question: "Что обязательно увидеть в первую поездку?", answer: "Перито-Морено, Iguazú, районы BA (La Boca, Recoleta), винодельни Mendoza." },
   { question: "Нужно ли бронировать Перито-Морено заранее?", answer: "В высокий сезон — да, онлайн на сайте парка или через тур с трансфером." },
   { question: "Сколько времени на Iguazú?", answer: "Минимум 1 полный день на аргентинской стороне. 2 дня — аргентинская + бразильская." },
   { question: "Можно ли в Chaltén без гида?", answer: "Да, тропы к Fitz Roy и Cerro Torre — самостоятельные. Следите за погодой." },
@@ -60,13 +60,13 @@ const SIGHTS_FAQ = [
   { question: "Есть ли билеты на Teatro Colón?", answer: "Да, экскурсии и иногда спектакли — бронируйте на официальном сайте." },
   { question: "Как добраться до Quebrada de Humahuaca?", answer: "Из Salta — автобус или тур на день. Маршрут 14 — классика." },
   { question: "Опасен ли Caminito?", answer: "Днём в туристической зоне — нормально. Не носите ценности на виду, не ходите в side streets ночью." },
-  { question: "Сколько стоит вход в нацпарки?", answer: "Перито-Морено и Iguazú — оплата картой или песo, иностранцы платят повышенный тариф. Уточняйте на сайте парка." },
+  { question: "Сколько стоит вход в нацпарки?", answer: "Перито-Морено и Iguazú — оплата картой или pesos, иностранцы платят повышенный тариф. Уточняйте на сайте парка." },
   { question: "Можно ли совместить ледник и треккинг?", answer: "Да: 1 день Перито-Морено из Calafate + 2–3 дня Chaltén на тропах." },
 ];
 
 export const DOSTOPRIMECHATELNOSTI_PILLAR: GuidePillarContent = {
   heroSubtitle:
-    "Must-see: ледники, водопады, города и природные парки — что включить в маршрут и как бронировать",
+    "Главное: ледники, водопады, города и природные парки — что включить в маршрут и как бронировать",
   heroCtas: [
     { label: "Экскурсии", href: "/tours", variant: "primary" },
     { label: "Природные иконы", href: "#dostoprimechatelnosti-1", variant: "secondary" },
@@ -76,7 +76,7 @@ export const DOSTOPRIMECHATELNOSTI_PILLAR: GuidePillarContent = {
     { label: "Перито-Морено", headline: "El Calafate", detail: "Бронь онлайн в высокий сезон — или тур с трансфером" },
     { label: "Iguazú", headline: "275 водопадов", detail: "Аргентинская + бразильская стороны — 2 дня идеально" },
     { label: "Fitz Roy", headline: "El Chaltén", detail: "Треккинг без гида; погода меняется за часы" },
-    { label: "BA must-see", headline: "Recoleta, San Telmo", detail: "Teatro Colón или milonga — на вечер" },
+    { label: "Главное в BA", headline: "Recoleta, San Telmo", detail: "Teatro Colón или milonga — на вечер" },
     { label: "Пингвины", headline: "Peninsula Valdés", detail: "Сентябрь–март — сезон размножения" },
     { label: "Экскурсии", headline: "Каталог на платформе", detail: "Русскоязычные гиды — фильтр по языку" },
   ],
@@ -104,7 +104,7 @@ const WEATHER_FAQ = [
   { question: "Нужна ли зимняя одежда в BA?", answer: "Июнь–август мягко (+10…+18), но ветер и сырость — куртка и слои." },
   { question: "Когда сезон дождей в Iguazú?", answer: "Декабрь–февраль — максимум воды и влажности. Март–май — баланс." },
   { question: "Можно ли в Патагонию зимой?", answer: "Bariloche — лыжи. Calafate/Chaltén — многие тропы закрыты, короткий световой день." },
-  { question: "Какая погода в Mendoza?", answer: "Континентальный климат: жаркое лето, прохладная ночь. Винный сезон — март–апril (сбор)." },
+  { question: "Какая погода в Mendoza?", answer: "Континентальный климат: жаркое лето, прохладная ночь. Винный сезон — март–апрель (сбор)." },
   { question: "Ветер в Патагонии — насколько серьёзно?", answer: "Очень. Закладывайте запас дней для треккинга — тропы могут закрыть из-за ветра." },
   { question: "Когда киты в Valdés?", answer: "Июнь–декабрь — сезоны зависят от вида. Пингвины — сентябрь–март." },
   { question: "Есть ли смысл в межсезонье?", answer: "Да — меньше людей, ниже цены. Погода менее предсказуема — гибкий маршрут." },
@@ -146,7 +146,7 @@ export const POGODA_PILLAR: GuidePillarContent = {
       id: "pogoda-1",
       title: "Патагония",
       content:
-        "Южная Патагонia — прохладный ветреный климат. Лето короткое (ноябрь–март), зима длинная и суровая на тропах.",
+        "Южная Патагония — прохладный ветреный климат. Лето короткое (ноябрь–март), зима длинная и суровая на тропах.",
       widgetSlot: {
         id: "patagonia-tours",
         label: "Туры в Patagonia",
@@ -200,7 +200,7 @@ export const POGODA_PILLAR: GuidePillarContent = {
       subsections: [
         {
           title: "Лето (дек–фев)",
-          body: "+28…+35 °C днём, высокая влажность. Жара спадает к вечеру. Кондиционер в жилье — must have.",
+          body: "+28…+35 °C днём, высокая влажность. Жара спадает к вечеру. Кондиционер в жилье обязателен.",
         },
         {
           title: "Осень и весна",
@@ -251,7 +251,7 @@ export const POGODA_PILLAR: GuidePillarContent = {
       subsections: [
         {
           title: "Vendimia (сбор винограда)",
-          body: "Март–апril — фестивали, дегустации, активность на bodegas. Бронируйте туры заранее.",
+          body: "Март–апрель — фестивали, дегустации, активность на bodegas. Бронируйте туры заранее.",
         },
         {
           title: "Лето в винодельнях",

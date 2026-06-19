@@ -2,6 +2,10 @@ import type { TourDetail, TourListing, TourReview } from "@/types";
 import { getSimilarTourDetails, rankSimilarListings } from "@/lib/tour-recommendations";
 import { getSimilarTours } from "@/lib/tours";
 import { fetchTourPublicReviews } from "@/lib/reviews-server";
+import {
+  deriveTourReviewStats,
+  stripStaticSeedReviews,
+} from "@/lib/tour-review-stats";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import {
   fetchPartnerTourDetailServer,
@@ -34,34 +38,18 @@ function mergeTourReviews(base: TourReview[], fromDatabase: TourReview[]): TourR
   );
 }
 
-function calculateAverageRating(reviews: TourReview[]): number {
-  if (!reviews.length) return 0;
-  const ratingSum = reviews.reduce((acc, review) => {
-    return acc + (Number.isFinite(review.rating) ? review.rating : 0);
-  }, 0);
-  return Math.round((ratingSum / reviews.length) * 10) / 10;
-}
-
 function applyPublicReviewsToDetail(tour: TourDetail, publicReviews: TourReview[]): TourDetail {
-  if (!publicReviews.length) return tour;
+  const baseReviews = stripStaticSeedReviews(tour.reviews);
+  const mergedReviews = publicReviews.length
+    ? mergeTourReviews(baseReviews, publicReviews)
+    : baseReviews;
+  const stats = deriveTourReviewStats(mergedReviews);
 
-  const mergedReviews = mergeTourReviews(tour.reviews, publicReviews);
-  const nextReviewCount = Math.max(tour.reviewCount, mergedReviews.length);
-
-  if (tour.partnerSource === "tripster") {
-    return {
-      ...tour,
-      reviews: mergedReviews,
-      reviewCount: nextReviewCount,
-    };
-  }
-
-  const mergedRating = calculateAverageRating(mergedReviews);
   return {
     ...tour,
     reviews: mergedReviews,
-    reviewCount: nextReviewCount,
-    rating: mergedRating > 0 ? mergedRating : tour.rating,
+    reviewCount: stats.reviewCount,
+    rating: stats.rating,
   };
 }
 

@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     ...buildPublicPageMetadata({
-      title: `${category.title} — форум «Пора в Аргентину»`,
+      title: `${category.title} — форум`,
       description: category.description ?? PAGE_FALLBACK_DESCRIPTION,
       path: `/forum/${category.slug}`,
     }),

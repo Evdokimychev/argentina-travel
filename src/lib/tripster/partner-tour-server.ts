@@ -25,7 +25,8 @@ import {
   fetchPartnerTourListings,
   fetchPartnerTourSlugs,
 } from "@/lib/tripster/partner-tour-repository";
-import { resolvePartnerTourDuration } from "@/lib/tripster/partner-tour-mapper";
+import { resolvePartnerTourDuration, resolvePartnerTourScheduleDurationDays } from "@/lib/tripster/partner-tour-mapper";
+import { resolvePartnerTourBookingMode } from "@/lib/tripster/partner-tour-booking";
 import { rankSimilarListings } from "@/lib/tour-recommendations";
 import type { TourDetail, TourListing } from "@/types";
 import type { TripsterExperience } from "@/lib/tripster/types";
@@ -65,6 +66,7 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
         comfort_level_info:
           webExperience.comfort_level_info?.trim() || liveExperience.comfort_level_info,
         accommodation: webExperience.accommodation ?? liveExperience.accommodation,
+        languages: webExperience.languages ?? liveExperience.languages,
       };
     } catch {
       // web v2 optional
@@ -78,7 +80,7 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
     // keep content from DB payload
   }
 
-  let resolvedDurationDays = enriched.durationDays;
+  let scheduleDurationDays = enriched.itinerary?.length ?? enriched.durationDays;
 
   try {
     const plan = await fetchTripsterTourPlan(tour.partnerExperienceId);
@@ -88,7 +90,11 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
         undefined,
         { program: plan }
       );
-      resolvedDurationDays = duration.durationDays;
+      scheduleDurationDays = resolvePartnerTourScheduleDurationDays(
+        liveExperience ?? ({ id: tour.partnerExperienceId, type: "tour" } satisfies TripsterExperience),
+        undefined,
+        { program: plan, itineraryDayCount: plan.length }
+      );
       enriched = {
         ...enriched,
         durationDays: duration.durationDays,
@@ -102,18 +108,32 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
     // program optional
   }
 
+  let scheduleDatesCount = 0;
+
   try {
     const schedule = await fetchTripsterSchedule(tour.partnerExperienceId);
     const dates = mapScheduleToPartnerDates(
       schedule,
-      resolvedDurationDays,
+      scheduleDurationDays,
       tour.partnerPriceCurrency
     );
+    scheduleDatesCount = dates.length;
     if (dates.length) {
-      enriched = { ...enriched, dates, bookingMode: "scheduled" };
+      enriched = {
+        ...enriched,
+        dates,
+        bookingMode: resolvePartnerTourBookingMode(liveExperience ?? undefined, dates.length),
+      };
     }
   } catch {
     // schedule optional
+  }
+
+  if (scheduleDatesCount === 0) {
+    enriched = {
+      ...enriched,
+      bookingMode: resolvePartnerTourBookingMode(liveExperience ?? undefined, enriched.dates.length),
+    };
   }
 
   try {

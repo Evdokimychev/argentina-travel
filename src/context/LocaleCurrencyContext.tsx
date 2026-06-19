@@ -19,10 +19,16 @@ import {
 } from "@/types/locale";
 import { getLanguage, getCurrency } from "@/data/locale-config";
 import { loadMessages, t as translate } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { toI18nLocale } from "@/lib/i18n/config";
 import { getLocaleFromPathname } from "@/lib/i18n/locale-path";
 import { formatCurrencyAmount } from "@/lib/currency";
 import { resolveRateFromUsd } from "@/lib/exchange-rates";
 import type { ExchangeRatesPayload } from "@/lib/exchange-rates";
+import ruCommon from "@/locales/ru/common.json";
+import enCommon from "@/locales/en/common.json";
+import esCommon from "@/locales/es/common.json";
+import ptCommon from "@/locales/pt/common.json";
 
 interface LocaleCurrencyContextValue {
   locale: LocaleCode;
@@ -38,11 +44,26 @@ interface LocaleCurrencyContextValue {
 
 const LocaleCurrencyContext = createContext<LocaleCurrencyContextValue | null>(null);
 
+const COMMON_MESSAGES: Record<LocaleCode, Record<string, string>> = {
+  ru: ruCommon as Record<string, string>,
+  en: enCommon as Record<string, string>,
+  es: esCommon as Record<string, string>,
+  pt: ptCommon as Record<string, string>,
+};
+
+function bootstrapMessages(locale: LocaleCode): Record<string, string> {
+  const common = COMMON_MESSAGES[locale] ?? COMMON_MESSAGES.ru;
+  const chrome = getDictionary(toI18nLocale(locale));
+  return { ...common, ...chrome };
+}
+
 export function LocaleCurrencyProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [locale, setLocaleState] = useState<LocaleCode>(DEFAULT_LOCALE);
   const [currency, setCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY);
-  const [messages, setMessages] = useState<Record<string, string>>({});
+  const [messages, setMessages] = useState<Record<string, string>>(() =>
+    bootstrapMessages(DEFAULT_LOCALE),
+  );
   const [ready, setReady] = useState(false);
   const [liveRates, setLiveRates] = useState<Partial<Record<CurrencyCode, number>>>({});
 
@@ -77,7 +98,8 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
   }, []);
 
   useEffect(() => {
-    loadMessages(locale).then(setMessages);
+    setMessages(bootstrapMessages(locale));
+    void loadMessages(locale).then(setMessages);
     document.documentElement.lang = locale;
   }, [locale]);
 

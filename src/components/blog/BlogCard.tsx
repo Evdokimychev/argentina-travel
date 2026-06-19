@@ -35,7 +35,7 @@ function TagList({ tags, limit = 3 }: { tags: string[]; limit?: number }) {
       {visible.map((tag) => (
         <li
           key={tag}
-          className="rounded-full border border-gray-200/80 bg-white/80 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-slate"
+          className="rounded-full border border-border-subtle bg-surface-elevated/80 px-2 py-0.5 text-2xs font-medium uppercase tracking-wide text-slate"
         >
           {tag}
         </li>
@@ -49,12 +49,12 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group col-span-full grid overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-card transition-shadow hover:shadow-lg md:grid-cols-[1.15fr_1fr]"
+        className="group col-span-full grid overflow-hidden rounded-panel border border-border-subtle bg-surface-elevated shadow-card transition-shadow hover:shadow-elevated motion-reduce:transition-none md:grid-cols-[1.15fr_1fr]"
       >
         <div className="relative min-h-[220px] md:min-h-[320px]">
           <Image
             src={post.image}
-            alt=""
+            alt={post.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
             sizes="(max-width: 768px) 100vw, 60vw"
@@ -82,16 +82,16 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
     return (
       <Link
         href={`/blog/${post.slug}`}
-        className="group flex gap-3 rounded-2xl border border-transparent p-2 transition-colors hover:border-gray-100 hover:bg-white"
+        className="group flex gap-3 rounded-card border border-transparent p-2 transition-colors hover:border-border-subtle hover:bg-surface-elevated"
       >
-        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-gray-100">
-          <Image src={post.image} alt="" fill className="object-cover" sizes="64px" />
+        <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-muted">
+          <Image src={post.image} alt={post.title} fill className="object-cover" sizes="64px" />
         </div>
         <div className="min-w-0 flex-1">
           <p className="line-clamp-2 text-sm font-medium leading-snug text-charcoal group-hover:text-sky">
             {post.title}
           </p>
-          <p className="mt-1 text-[11px] text-slate">
+          <p className="mt-1 text-xs text-slate">
             {post.readTime} · {formatBlogViews(post.views)}
           </p>
         </div>
@@ -102,12 +102,12 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
   return (
     <Link
       href={`/blog/${post.slug}`}
-      className="group flex h-full flex-col overflow-hidden rounded-3xl border border-gray-100 bg-white shadow-card transition-shadow hover:shadow-lg"
+      className="group flex h-full flex-col overflow-hidden rounded-panel border border-border-subtle bg-surface-elevated shadow-card transition-shadow hover:shadow-elevated motion-reduce:transition-none"
     >
       <div className="relative h-48 overflow-hidden sm:h-52">
         <Image
           src={post.image}
-          alt=""
+          alt={post.title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
           sizes="(max-width: 768px) 100vw, 33vw"
@@ -116,7 +116,7 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
           {post.category}
         </span>
         {post.editorialReviewed ? (
-          <span className="absolute right-4 top-4 rounded-full bg-emerald-600/90 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
+          <span className="absolute right-4 top-4 rounded-full bg-success px-2.5 py-1 text-2xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm">
             Вычитано
           </span>
         ) : null}

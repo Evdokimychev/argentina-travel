@@ -25,11 +25,11 @@ export const tokenButtonOutlineClass =
 
 /** Site header shell — fixed chrome with token z-index and borders */
 export const tokenHeaderShellClass =
-  "site-header fixed inset-x-0 top-0 z-header border-b border-charcoal/[0.06] bg-surface-elevated/80 backdrop-blur-xl supports-[backdrop-filter]:bg-surface-elevated/70 dark:border-white/10 dark:bg-surface-elevated/90 dark:supports-[backdrop-filter]:bg-surface-elevated/80";
+  "site-header fixed inset-x-0 top-0 isolate z-header border-b border-charcoal/[0.06] bg-surface-elevated shadow-[0_1px_0_rgba(26,26,46,0.04)] dark:border-white/10 dark:bg-surface-elevated dark:shadow-[0_1px_0_rgba(255,255,255,0.06)]";
 
 /** Header inner navigation bar */
 export const tokenHeaderNavBarClass =
-  "flex w-full items-center gap-2 rounded-panel border border-charcoal/[0.07] bg-gradient-to-r from-surface-elevated via-surface-muted/30 to-surface-elevated px-2 py-2.5 shadow-header-bar dark:border-white/10 dark:from-surface-elevated dark:via-surface-muted/40 dark:to-surface-elevated dark:shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_rgba(0,0,0,0.45)] sm:gap-3 sm:px-3";
+  "flex w-full items-center gap-2 rounded-panel border border-charcoal/[0.07] bg-surface-elevated px-2 py-2.5 shadow-header-bar dark:border-white/10 dark:bg-surface-elevated dark:shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_rgba(0,0,0,0.45)] sm:gap-3 sm:px-3";
 
 /** Circular icon control in header */
 export const tokenHeaderCircleButtonClass =

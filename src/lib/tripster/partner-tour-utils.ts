@@ -106,6 +106,9 @@ export function buildTripsterPartnerBookingUrl(
     time?: string | null;
     guests?: number | null;
     fallbackUrl?: string | null;
+    name?: string | null;
+    email?: string | null;
+    phone?: string | null;
   }
 ): string {
   const fallback = options?.fallbackUrl?.trim();
@@ -118,6 +121,9 @@ export function buildTripsterPartnerBookingUrl(
     if (options?.guests && options.guests > 0) {
       url.searchParams.set("persons_count", String(options.guests));
     }
+    if (options?.name?.trim()) url.searchParams.set("name", options.name.trim());
+    if (options?.email?.trim()) url.searchParams.set("email", options.email.trim());
+    if (options?.phone?.trim()) url.searchParams.set("phone", options.phone.trim());
     return url.toString();
   } catch {
     return fallback || `https://experience.tripster.ru/experience/${experienceId}/`;

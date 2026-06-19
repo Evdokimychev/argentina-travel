@@ -70,7 +70,15 @@
   --shadow-modal: var(--token-shadow-modal);
   --shadow-header-bar: var(--token-shadow-header-bar);
 
-  /* Z-index scale */
+  /* Z-index scale — Tailwind v4 needs the --z-index-* namespace to emit z-* utilities */
+  --z-index-dropdown: var(--token-z-dropdown);
+  --z-index-sticky: var(--token-z-sticky);
+  --z-index-header: var(--token-z-header);
+  --z-index-overlay: var(--token-z-overlay);
+  --z-index-modal: var(--token-z-modal);
+  --z-index-toast: var(--token-z-toast);
+
+  /* Legacy aliases (kept for any direct var() references) */
   --z-dropdown: var(--token-z-dropdown);
   --z-sticky: var(--token-z-sticky);
   --z-header: var(--token-z-header);
@@ -136,6 +144,7 @@ html {
 }
 
 .site-header {
+  z-index: var(--token-z-header, 50);
   padding-top: env(safe-area-inset-top, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
@@ -144,10 +153,14 @@ html {
 }
 
 .site-header-spacer {
-  height: calc(
-    var(--site-header-height, var(--site-header-full-height, 72px)) +
-      env(safe-area-inset-top, 0px)
-  );
+  height: var(--site-header-full-height, var(--site-header-spacer-fallback, 84px));
+  flex-shrink: 0;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --site-header-spacer-fallback: 140px;
+  }
 }
 
 .site-footer-safe-area {
@@ -171,6 +184,10 @@ html {
 }
 
 html[data-site-header="hidden"] .site-header {
+  pointer-events: none;
+}
+
+html[data-site-header="hidden"] .site-header-utility-bar {
   pointer-events: none;
 }
 

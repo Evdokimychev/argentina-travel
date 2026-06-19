@@ -36,7 +36,7 @@ export const LOCAL_EXPERTS_SEED: LocalExpertView[] = [
     id: "seed-lucia-photo",
     slug: "lucia-photo",
     name: "Lucía Martínez",
-    bio: "Фотограф винных регионов и Анд: съёмки для пар, семей и блогеров. Знаю лучшие ракурсы Мендосы и Успallata.",
+    bio: "Фотограф винных регионов и Анд: съёмки для пар, семей и блогеров. Знаю лучшие ракурсы Мендосы и Успальата.",
     city: "Мендоса",
     categories: ["photo", "nature"],
     languages: ["es", "en"],

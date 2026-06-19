@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, Layers } from "lucide-react";
 import type { PlaceCollection } from "@/types/place";
 import { collectionHref } from "@/lib/places-repository";
+import { formatSpots } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 
 type PlacesFeaturedCollectionsProps = {
@@ -68,7 +69,7 @@ export default function PlacesFeaturedCollections({
                 <h3 className="mt-1 font-heading text-lg font-bold leading-snug">{col.title}</h3>
                 <p className="mt-2 line-clamp-2 text-xs text-white/80">{col.description}</p>
                 <span className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky-200">
-                  {col.places.length} мест
+                  {formatSpots(col.places.length)}
                   <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
                 </span>
               </div>

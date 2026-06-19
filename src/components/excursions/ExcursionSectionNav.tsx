@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { siteScrollAnchorClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
+import { sectionNavBarClass, sectionNavLinkClass, sectionNavTrackClass } from "@/lib/section-nav-ui";
 import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 
 type SectionLink = {
@@ -47,29 +48,30 @@ export default function ExcursionSectionNav({ links }: { links: SectionLink[] })
     <nav
       ref={navRef}
       className={cn(
-        "sticky z-40 -mx-4 mb-6 overflow-x-auto border-b border-gray-100 bg-white/95 px-4 backdrop-blur-md sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0",
+        sectionNavBarClass,
+        "-mx-4 mb-6 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0",
         siteStickyBelowHeaderClass,
         siteScrollAnchorClass
       )}
       aria-label="Разделы экскурсии"
     >
-      <ul className="flex min-w-max gap-1 py-2">
-        {links.map((link) => (
-          <li key={link.id}>
-            <a
-              href={`#${link.id}`}
-              className={cn(
-                "inline-flex rounded-full px-3 py-1.5 text-sm font-medium transition",
-                activeId === link.id
-                  ? "bg-sky text-white"
-                  : "text-charcoal hover:bg-charcoal/5"
-              )}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+      <div className="overflow-x-auto py-2.5">
+        <div className={sectionNavTrackClass}>
+          <ul className="flex min-w-max items-center">
+            {links.map((link) => (
+              <li key={link.id}>
+                <a
+                  href={`#${link.id}`}
+                  className={sectionNavLinkClass(activeId === link.id)}
+                  aria-current={activeId === link.id ? "location" : undefined}
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </nav>
   );
 }

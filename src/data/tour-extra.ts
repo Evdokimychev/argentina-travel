@@ -27,8 +27,8 @@ export interface TourExtra {
 
 export const tourExtra: Record<string, TourExtra> = {
   "patagonia-glaciers": {
-    rating: 4.9,
-    reviewCount: 187,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "Мария Г.",
       role: "Организатор путешествия",
@@ -55,7 +55,7 @@ export const tourExtra: Record<string, TourExtra> = {
       {
         title: "Дикая природа",
         description:
-          "Пингвины, condors и guanaco — Патагония полна уникальных животных в их естественной среде.",
+          "Кондоры, гуанако и патагонская фауна — регион полон уникальных животных в их естественной среде.",
       },
     ],
     tags: ["10 дней (9 ночей)", "Пешие туры", "Природа и приключения"],
@@ -63,8 +63,8 @@ export const tourExtra: Record<string, TourExtra> = {
     minimumAge: 12,
   },
   "buenos-aires-tango": {
-    rating: 4.8,
-    reviewCount: 142,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "Карлос Р.",
       role: "Организатор путешествия",
@@ -91,7 +91,7 @@ export const tourExtra: Record<string, TourExtra> = {
       {
         title: "Архитектура",
         description:
-          "Европейский дух столицы: Recoleta, Palermo и кладбище, где покоится Эва Перón.",
+          "Европейский дух столицы: Реколета, Палермо и кладбище, где покоится Эва Перон.",
       },
     ],
     tags: ["5 дней (4 ночи)", "Городские туры", "Культура и гастрономия"],
@@ -107,8 +107,8 @@ export const tourExtra: Record<string, TourExtra> = {
     ],
   },
   "mendoza-wine": {
-    rating: 4.9,
-    reviewCount: 96,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "Ана Л.",
       role: "Организатор путешествия",
@@ -128,7 +128,7 @@ export const tourExtra: Record<string, TourExtra> = {
           "Панорамный вид на высочайшую вершину Америки с смотровой площадки.",
       },
       {
-        title: "Ужин among the vines",
+        title: "Ужин среди виноградников",
         description:
           "Гастрономический ужин прямо среди виноградников под звёздным небом.",
       },
@@ -141,10 +141,10 @@ export const tourExtra: Record<string, TourExtra> = {
     tags: ["7 дней (6 ночей)", "Винные туры", "Гастрономия"],
   },
   "iguazu-falls": {
-    rating: 4.9,
-    reviewCount: 203,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
-      name: "Пабlo М.",
+      name: "Пабло М.",
       role: "Организатор путешествия",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
     },
@@ -157,14 +157,14 @@ export const tourExtra: Record<string, TourExtra> = {
           "Подойдите к самому мощному водопаду — «Глотке Дьявола» — по подвесным мосткам.",
       },
       {
-        title: "280 водопадов",
+        title: "Около 275 водопадов",
         description:
           "Прогулка по обширной системе каскадов на границе Аргентины и Бразилии.",
       },
       {
-        title: "Джунгли Missiones",
+        title: "Джунгли Мисьонес",
         description:
-          "Тропический лес с туканами, бабуинами и бабочками morpho — настоящий рай для натуралистов.",
+          "Тропический лес с туканами, коати и бабочками морфо — настоящий рай для натуралистов.",
       },
       {
         title: "Два ракурса",
@@ -175,8 +175,8 @@ export const tourExtra: Record<string, TourExtra> = {
     tags: ["4 дня (3 ночи)", "Экскурсионные туры", "Природа"],
   },
   "salta-northwest": {
-    rating: 4.7,
-    reviewCount: 78,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "София Т.",
       role: "Организатор путешествия",
@@ -193,12 +193,12 @@ export const tourExtra: Record<string, TourExtra> = {
       {
         title: "Salinas Grandes",
         description:
-          "Бескрайняя соляная равнина на высоте 4000 м — сюрреалистичный пейзаж для фотографий.",
+          "Бескрайняя соляная равнина на высоте около 3450 м — сюрреалистичный пейзаж для фотографий.",
       },
       {
         title: "Колониальная Сальта",
         description:
-          "Испанская архитектура, peñas с folk-музыкой и атмосфера северо-запада.",
+          "Испанская архитектура, peñas с народной музыкой и атмосфера северо-запада.",
       },
       {
         title: "Винодельни Кафаяте",
@@ -209,10 +209,10 @@ export const tourExtra: Record<string, TourExtra> = {
     tags: ["8 дней (7 ночей)", "Экскурсионные туры", "Культура"],
   },
   "ushuaia-end-of-world": {
-    rating: 4.8,
-    reviewCount: 115,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
-      name: "Дiego Ф.",
+      name: "Диего Ф.",
       role: "Организатор путешествия",
       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
     },

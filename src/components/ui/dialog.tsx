@@ -17,7 +17,7 @@ function DialogOverlay({
   return (
     <DialogPrimitive.Overlay
       className={cn(
-        "fixed inset-0 z-50 bg-charcoal/50 backdrop-blur-sm",
+        "fixed inset-0 z-[115] bg-charcoal/50 backdrop-blur-sm",
         motionClass.overlay,
         className
       )}
@@ -46,10 +46,10 @@ function DialogContent({
       <DialogPrimitive.Content
         onOpenAutoFocus={onOpenAutoFocus}
         className={cn(
-          "fixed z-50 bg-surface-elevated shadow-modal outline-none",
+          "fixed z-[115] bg-surface-elevated shadow-modal outline-none",
           motionClass.modalContent,
           bottomSheet
-            ? "inset-x-0 bottom-0 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85vh] sm:w-[calc(100%-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl"
+            ? "inset-x-0 bottom-0 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl pb-[env(safe-area-inset-bottom,0px)] sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85vh] sm:w-[calc(100%-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:pb-0"
             : "left-1/2 top-1/2 w-[calc(100%-2rem)] max-h-[85vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl",
           className
         )}
@@ -58,7 +58,7 @@ function DialogContent({
         {children}
         {showClose ? (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Закрыть"
           >
             <X className="h-4 w-4" />

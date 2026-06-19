@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Compass, Shield, Users } from "lucide-react";
 import PlatformStatsBlock from "@/components/marketplace/PlatformStatsBlock";
-import DesignSystemShowcase from "@/components/about/DesignSystemShowcase";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { siteContainerClass } from "@/lib/site-container";
 import type { PlatformStats } from "@/lib/organizer-public";
@@ -54,11 +53,8 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
             <Link href="/tours" className={buttonVariants({ size: "lg" })}>
               Смотреть туры
             </Link>
-            <Link
-              href="#design-system"
-              className={buttonVariants({ variant: "outline", size: "lg" })}
-            >
-              Design System
+            <Link href="/contacts" className={buttonVariants({ variant: "outline", size: "lg" })}>
+              Связаться с нами
             </Link>
           </div>
         </div>
@@ -75,7 +71,7 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
                 Кто мы и зачем это делаем
               </h2>
               <p className="mt-4 text-base leading-relaxed text-slate">
-                Argentina Travel — русскоязычная площадка для бронирования авторских туров по
+                «Пора в Аргентину» — русскоязычная площадка для бронирования авторских туров по
                 Аргентине. Мы не туроператор: каждый маршрут ведёт независимый организатор со
                 своей программой, ценами и условиями.
               </p>
@@ -110,8 +106,6 @@ export default function AboutPageView({ platformStats }: AboutPageViewProps) {
           </div>
         </div>
       </section>
-
-      <DesignSystemShowcase />
 
       {/* CTA */}
       <section className="border-t border-gray-100 bg-surface-muted py-16">

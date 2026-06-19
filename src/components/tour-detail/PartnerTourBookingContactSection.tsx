@@ -1,19 +1,29 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { CalendarDays, ClipboardCheck, ExternalLink, Pencil, Users, UsersRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
-import { createBookingFromCheckout } from "@/lib/bookings-store";
-import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
 import { contactFieldsFromAuthUser, splitFullName } from "@/components/tour-detail/checkout/checkout-contact";
 import { createInitialCheckoutForm } from "@/components/tour-detail/checkout/types";
+import type { SessionUser } from "@/types/user";
 import { validateBookingDates } from "@/components/tour-detail/BookingDateSelector";
 import { useTourBooking } from "@/components/tour-detail/TourBookingContext";
+import BookingGuestLoginHint from "@/components/booking/BookingGuestLoginHint";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { cn } from "@/lib/cn";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import { formatDateRange } from "@/lib/utils";
+import { formatTourists } from "@/lib/pluralize";
+import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
+import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-contact";
+import {
+  openPartnerBookingUrl,
+  resolveTripsterFallbackDescription,
+} from "@/lib/tripster/open-partner-booking-url";
 import type { TourDetail } from "@/types";
 
 function RequiredMark() {
@@ -23,6 +33,130 @@ function RequiredMark() {
       *
     </span>
   );
+}
+
+
+function PreviewEditButton({ label, onClick }: { label: string; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={label}
+      className="absolute right-1.5 top-1.5 rounded-lg p-1.5 text-slate opacity-0 transition-opacity hover:bg-white/90 hover:text-sky focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 group-hover:opacity-100 group-focus-within:opacity-100"
+    >
+      <Pencil className="h-3.5 w-3.5" aria-hidden />
+    </button>
+  );
+}
+
+function PartnerTourBookingPreviewCard({
+  dateLabel,
+  guestsLabel,
+  spotsLeft,
+  priceLabel,
+  perPersonLabel,
+  onEditDate,
+  onEditGuests,
+}: {
+  dateLabel: string;
+  guestsLabel: string;
+  spotsLeft?: number;
+  priceLabel: string;
+  perPersonLabel?: string;
+  onEditDate?: () => void;
+  onEditGuests?: () => void;
+}) {
+  return (
+    <section
+      aria-label="Предпросмотр заявки"
+      className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card"
+    >
+      <div className="flex items-start gap-3 border-b border-gray-100 bg-gradient-to-r from-sky/[0.06] to-white px-4 py-3.5">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
+          <ClipboardCheck className="h-4 w-4" aria-hidden />
+        </span>
+        <div className="min-w-0">
+          <h3 className="text-sm font-semibold text-charcoal">Предпросмотр заявки</h3>
+          <p className="mt-0.5 text-xs leading-relaxed text-slate">
+            Проверьте дату, состав группы и сумму перед отправкой
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-3 p-4">
+        <div className="group relative flex items-start gap-3 rounded-xl border border-sky/15 bg-sky/[0.04] px-3.5 py-3 pr-10">
+          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sky shadow-sm">
+            <CalendarDays className="h-4 w-4" aria-hidden />
+          </span>
+          <div className="min-w-0">
+            <p className="text-xs text-slate">Дата заезда</p>
+            <p className="mt-0.5 text-sm font-semibold leading-snug text-charcoal">{dateLabel}</p>
+          </div>
+          {onEditDate ? <PreviewEditButton label="Изменить дату заезда" onClick={onEditDate} /> : null}
+        </div>
+
+        <div className="rounded-xl border border-gray-100 bg-surface-muted/35 px-3.5 py-3">
+          <div
+            className={cn(
+              "flex items-stretch",
+              spotsLeft != null && "divide-x divide-gray-200/80"
+            )}
+          >
+            <div className="group relative flex min-w-0 flex-1 items-start gap-2.5 pr-3">
+              <Users className="mt-0.5 h-4 w-4 shrink-0 text-slate" aria-hidden />
+              <div className="min-w-0 pr-6">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-slate">Туристы</p>
+                <p className="mt-0.5 text-sm font-semibold leading-snug text-charcoal">{guestsLabel}</p>
+              </div>
+              {onEditGuests ? (
+                <PreviewEditButton label="Изменить число туристов" onClick={onEditGuests} />
+              ) : null}
+            </div>
+            {spotsLeft != null ? (
+              <div className="flex min-w-0 flex-1 items-start gap-2.5 pl-3">
+                <UsersRound className="mt-0.5 h-4 w-4 shrink-0 text-slate" aria-hidden />
+                <div className="min-w-0">
+                  <p className="text-[11px] font-medium uppercase tracking-wide text-slate">Свободно</p>
+                  <p className="mt-0.5 text-sm font-semibold leading-snug text-charcoal">{spotsLeft}</p>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-end justify-between gap-3 border-t border-gray-100 bg-gray-50/70 px-4 py-3.5">
+        <div>
+          <p className="text-xs font-medium uppercase tracking-wide text-slate">Стоимость</p>
+          {perPersonLabel ? (
+            <p className="mt-1 text-[11px] leading-snug text-slate">{perPersonLabel}</p>
+          ) : null}
+        </div>
+        <p className="text-right font-heading text-xl font-bold leading-none text-charcoal">{priceLabel}</p>
+      </div>
+    </section>
+  );
+}
+
+function createPartnerContactForm(guests: number, user?: SessionUser | null) {
+  const base = createInitialCheckoutForm(guests);
+  const autofill = user ? contactFieldsFromAuthUser(user) : null;
+  const fullName = autofill
+    ? [autofill.contactFirstName, autofill.contactLastName]
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .join(" ")
+    : [base.contactFirstName, base.contactLastName]
+        .map((part) => part.trim())
+        .filter(Boolean)
+        .join(" ");
+
+  return {
+    contactFullName: fullName,
+    contactEmail: autofill?.contactEmail ?? base.contactEmail,
+    contactPhone: autofill?.contactPhone ?? base.contactPhone,
+    comments: "",
+  };
 }
 
 export default function PartnerTourBookingContactSection({
@@ -38,25 +172,54 @@ export default function PartnerTourBookingContactSection({
     customDate,
     selectedDateId,
     partnerBookingPrice,
+    scheduleDates,
+    closePartnerBookingPreview,
+    externalBookingHref,
+    requestPartnerBookingEdit,
   } = useTourBooking();
 
-  const selectedDate = tour.dates.find((date) => date.id === selectedDateId);
+  const availableDates = scheduleDates.length > 0 ? scheduleDates : tour.dates;
+  const selectedDate = availableDates.find((date) => date.id === selectedDateId);
+  const parsedSlot = selectedDateId ? parsePartnerTourDateId(selectedDateId) : null;
+
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [form, setForm] = useState(() => {
-    const base = createInitialCheckoutForm(guests);
-    const fullName = [base.contactFirstName, base.contactLastName]
-      .map((part) => part.trim())
-      .filter(Boolean)
-      .join(" ");
+  const [form, setForm] = useState(() => createPartnerContactForm(guests, user));
+
+  const previewSummary = useMemo(() => {
+    const dateLabel =
+      dateMode === "custom" && customDate
+        ? new Intl.DateTimeFormat("ru-RU", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          }).format(customDate)
+        : selectedDate
+          ? formatDateRange(selectedDate.startDate, selectedDate.endDate)
+          : "—";
+
+    const priceLabel = partnerBookingPrice?.displayFallback
+      ? partnerBookingPrice.displayFallback
+      : partnerBookingPrice?.totalValue
+        ? `${Math.round(partnerBookingPrice.totalValue).toLocaleString("ru-RU")} ${partnerBookingPrice.currency}`
+        : tour.partnerPriceDisplay ?? "Уточняется на Tripster";
+
     return {
-      contactFullName: fullName,
-      contactEmail: base.contactEmail,
-      contactPhone: base.contactPhone,
-      comments: "",
+      dateLabel,
+      guestsLabel: formatTourists(guests),
+      priceLabel,
+      perPersonLabel: partnerBookingPrice?.perPersonLabel,
+      spotsLeft: selectedDate?.spotsLeft,
     };
-  });
+  }, [
+    customDate,
+    dateMode,
+    guests,
+    partnerBookingPrice,
+    selectedDate,
+    tour.partnerPriceDisplay,
+  ]);
 
   useEffect(() => {
     if (!user) return;
@@ -71,121 +234,175 @@ export default function PartnerTourBookingContactSection({
       contactEmail: autofill.contactEmail || prev.contactEmail,
       contactPhone: autofill.contactPhone || prev.contactPhone,
     }));
-  }, [user]);
+  }, [user?.id, user?.phone, user?.country, user?.email, user?.fullName]);
 
-  async function handleSubmit() {
-    const dateError = validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
+  function handleClosePreview() {
+    closePartnerBookingPreview();
+    setError(null);
+  }
+
+  function handleEditDate() {
+    setError(null);
+    requestPartnerBookingEdit("date");
+  }
+
+  function handleEditGuests() {
+    setError(null);
+    requestPartnerBookingEdit("guests");
+  }
+
+  async function handleConfirmBooking() {
+    const bookingTour = { ...tour, dates: availableDates };
+    const dateError = validateBookingDates(
+      bookingTour,
+      dateMode,
+      customDate,
+      guests,
+      selectedDateId
+    );
     if (dateError) {
       setError(dateError);
       return;
     }
 
-    const { firstName, lastName } = splitFullName(form.contactFullName);
+    const { firstName } = splitFullName(form.contactFullName);
     if (!firstName.trim()) {
       setError("Укажите имя и фамилию контактного лица.");
       return;
     }
 
-    if (!form.contactEmail.trim() || !form.contactEmail.includes("@")) {
-      setError("Укажите корректный email — на него придёт подтверждение.");
+    const contact = buildTripsterBookingContactPayload({
+      name: form.contactFullName,
+      email: form.contactEmail,
+      phone: form.contactPhone,
+      messageToGuide: form.comments,
+      profileCountry: user?.country,
+    });
+
+    if ("error" in contact) {
+      setError(contact.error);
       return;
     }
 
-    if (!form.contactPhone.trim()) {
-      setError("Укажите телефон для связи.");
+    const date =
+      dateMode === "custom" && customDate
+        ? customDate.toISOString().slice(0, 10)
+        : parsedSlot?.startDate ?? selectedDate?.startDate;
+    const time = parsedSlot?.time ?? "08:00";
+
+    if (!date) {
+      setError("Выберите дату заезда.");
       return;
     }
 
     setSubmitting(true);
     setError(null);
 
-    const startDate =
-      dateMode === "custom" && customDate
-        ? customDate.toISOString().slice(0, 10)
-        : selectedDate?.startDate;
-    const endDate =
-      dateMode === "custom" && customDate
-        ? new Date(customDate.getTime() + (tour.durationDays - 1) * 86400000)
-            .toISOString()
-            .slice(0, 10)
-        : selectedDate?.endDate;
+    try {
+      const response = await fetch("/api/tripster/booking-request", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slug: tour.slug,
+          date,
+          time,
+          personsCount: guests,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          messageToGuide: contact.messageToGuide,
+          productType: "tour",
+          userId: user?.id,
+        }),
+      });
 
-    const partnerNote = partnerBookingPrice?.displayFallback
-      ? `Ориентир Tripster: ${partnerBookingPrice.displayFallback}`
-      : partnerBookingPrice?.totalValue
-        ? `Ориентир Tripster: ${partnerBookingPrice.totalValue} ${partnerBookingPrice.currency}`
-        : "";
+      const data = (await response.json()) as {
+        ok?: boolean;
+        mode?: string;
+        orderUrl?: string;
+        fallbackUrl?: string;
+        fallbackReason?: string;
+        error?: string;
+        details?: Record<string, string[] | { non_field_errors?: string[] }>;
+      };
 
-    const comments = [form.comments.trim(), partnerNote, "Партнёрский тур Tripster — заявка с сайта."]
-      .filter(Boolean)
-      .join("\n\n");
+      if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
+        const description = resolveTripsterFallbackDescription(data.fallbackReason);
+        feedback.loading({
+          title: "Открываем Tripster",
+          description,
+        });
+        openPartnerBookingUrl(data.fallbackUrl);
+        return;
+      }
 
-    const checkoutForm = createInitialCheckoutForm(guests);
-    const totalPriceUsd =
-      partnerBookingPrice?.currency === "USD" && partnerBookingPrice.totalValue > 0
-        ? partnerBookingPrice.totalValue
-        : tour.priceUsd > 0
-          ? tour.priceUsd * guests
-          : 0;
+      if (!response.ok || !data.ok) {
+        const details = data.details;
+        const firstFieldError =
+          details &&
+          Object.values(details)
+            .flatMap((value) => (Array.isArray(value) ? value : value.non_field_errors ?? []))
+            .find(Boolean);
+        throw new Error(firstFieldError || data.error || "Не удалось отправить заявку");
+      }
 
-    const result = await createBookingFromCheckout({
-      actor: user,
-      userId: user?.id,
-      tour,
-      guests,
-      startDate,
-      endDate,
-      totalPriceUsd,
-      form: {
-        ...checkoutForm,
-        contactFirstName: firstName,
-        contactLastName: lastName,
-        contactEmail: form.contactEmail,
-        contactPhone: form.contactPhone,
-        comments,
-        paymentOption: "later",
-        fillTravelersLater: true,
-      },
-      attribution: getStoredFirstTouchAttribution() ?? undefined,
-    });
+      setSubmitted(true);
+      feedback.success({
+        title: "Заявка отправлена",
+        description: "Переходим к оформлению на Tripster…",
+      });
 
-    if ("error" in result) {
-      const normalized = normalizeSiteError(result.error, {
+      if (data.orderUrl) {
+        openPartnerBookingUrl(data.orderUrl);
+        return;
+      }
+
+      throw new Error("Tripster не вернул ссылку на заказ. Попробуйте ещё раз.");
+    } catch (submitError) {
+      const normalized = normalizeSiteError(submitError, {
         title: "Не удалось отправить заявку",
       });
       setError(normalized.description ?? normalized.title);
       feedback.showError(normalized);
+    } finally {
       setSubmitting(false);
-      return;
     }
-
-    setSubmitted(true);
-    setSubmitting(false);
-    feedback.success({
-      title: "Заявка отправлена",
-      description:
-        "Мы сохранили ваши данные. Для оплаты и подтверждения перейдите на Tripster — кнопка ниже.",
-      action: user ? { label: "Мои заявки", href: "/profile/bookings" } : undefined,
-    });
   }
 
   if (submitted) {
     return (
       <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Заявка принята. Проверьте почту{" "}
-        <span className="font-medium">{form.contactEmail}</span> и оформите бронирование на Tripster.
+        <span className="font-medium">{form.contactEmail}</span> и завершите бронирование на
+        Tripster.
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <div>
-        <h3 className="text-sm font-semibold text-charcoal">Контактные данные</h3>
-        <p className="mt-0.5 text-xs text-slate">
-          Как на Tripster — одно поле для имени, затем можно перейти к бронированию
-        </p>
+      <PartnerTourBookingPreviewCard
+        dateLabel={previewSummary.dateLabel}
+        guestsLabel={previewSummary.guestsLabel}
+        spotsLeft={previewSummary.spotsLeft}
+        priceLabel={previewSummary.priceLabel}
+        perPersonLabel={previewSummary.perPersonLabel}
+        onEditDate={handleEditDate}
+        onEditGuests={handleEditGuests}
+      />
+
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h3 className="text-sm font-semibold text-charcoal">Контактные данные</h3>
+          <p className="mt-0.5 text-xs text-slate">Шаг 2 — заполните форму и подтвердите заявку</p>
+        </div>
+        <span className="shrink-0 rounded-full bg-surface-muted px-2.5 py-1 text-[11px] font-medium text-slate">
+          2 / 2
+        </span>
       </div>
+
+      <BookingGuestLoginHint />
 
       <div>
         <label htmlFor="partner-contact-full-name" className="mb-1.5 block text-xs font-medium text-charcoal">
@@ -248,9 +465,35 @@ export default function PartnerTourBookingContactSection({
         <InlineFeedback variant="error" title="Проверьте форму" description={error} />
       ) : null}
 
-      <Button type="button" className="w-full" loading={submitting} onClick={handleSubmit}>
-        Отправить заявку
-      </Button>
+      <div className="flex flex-col gap-2">
+        <Button type="button" className="w-full gap-2" loading={submitting} onClick={handleConfirmBooking}>
+          Подтвердить и забронировать
+          <ExternalLink className="h-4 w-4" aria-hidden />
+        </Button>
+        {externalBookingHref ? (
+          <p className="text-center text-xs leading-relaxed text-slate">
+            Если автоматическая отправка не сработала, можно{" "}
+            <a
+              href={externalBookingHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sky hover:underline"
+            >
+              открыть Tripster вручную
+            </a>{" "}
+            — дата и число туристов подставятся, контакты нужно будет ввести снова.
+          </p>
+        ) : null}
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
+          disabled={submitting}
+          onClick={handleClosePreview}
+        >
+          Назад
+        </Button>
+      </div>
     </div>
   );
 }

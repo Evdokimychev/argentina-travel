@@ -3,7 +3,11 @@
 import type { ReactNode } from "react";
 import PriceOtherCurrenciesPopover from "./PriceOtherCurrenciesPopover";
 import { hasDiscount } from "@/lib/discount";
-import { formatPartnerBookingAmount } from "@/lib/tripster/partner-tour-price";
+import {
+  formatPartnerBookingAmount,
+  resolvePartnerListedPriceParts,
+} from "@/lib/tripster/partner-tour-price";
+import { PartnerTourPriceAmountLine } from "./PartnerTourListedPrice";
 import type { PartnerTourBookingPrice } from "@/lib/tripster/partner-tour-price";
 import { cn } from "@/lib/cn";
 
@@ -69,7 +73,21 @@ export default function PartnerTourBookingPriceSummary({
       <div className={cn(!hasNumericTotal && "mt-0")}>
         {price.showFrom ? <p className="text-sm text-slate">от</p> : null}
         {price.displayFallback ? (
-          <p className={mainClassName}>{price.displayFallback}</p>
+          (() => {
+            const parts = resolvePartnerListedPriceParts({
+              partnerPriceDisplay: price.displayFallback,
+            });
+            if (!parts) {
+              return <p className={mainClassName}>{price.displayFallback}</p>;
+            }
+            return (
+              <PartnerTourPriceAmountLine
+                amount={parts.amount}
+                unit={parts.unit}
+                className={mainClassName}
+              />
+            );
+          })()
         ) : (
           renderNativeAmount(price.totalValue, price.currency, mainClassName)
         )}

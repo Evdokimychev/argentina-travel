@@ -11,7 +11,7 @@ const LANGUAGE_FAQ = [
   { question: "Путают ли с испанским из Испании?", answer: "Лексика отличается: colectivo (автобус), palta (авокадо), computadora (компьютер)." },
   { question: "Работают ли переводчики offline?", answer: "Google Translate offline полезен. Скачайте испанский пакет до поездки." },
   { question: "Как заказать счёт в ресторане?", answer: "«La cuenta, por favor» — универсально." },
-  { question: "Есть ли португальский на границе с Бrazil?", answer: "В Puerto Iguazú и при границе — иногда, но испанский основной." },
+  { question: "Есть ли португальский на границе с Brazil?", answer: "В Puerto Iguazú и при границе — иногда, но испанский основной." },
   { question: "Помогает ли английский в Mendoza?", answer: "В bodega для туристов — часто да. В локальных parrilla — лучше базовый испанский." },
 ];
 
@@ -27,7 +27,7 @@ export const YAZYK_PILLAR: GuidePillarContent = {
     { label: "Язык", headline: "Испанский rioplatense", detail: "Акцент BA и La Plata — быстрая речь, voseo" },
     { label: "Особенность", headline: "Voseo, «sh» в ll/y", detail: "«¿Vos hablás inglés?» — норма, не ошибка" },
     { label: "Английский", headline: "Частично в туристических зонах", detail: "Отели 3–4*; в провинции — почти не говорят" },
-    { label: "Must-know", headline: "¿Cuánto cuesta?", detail: "La cuenta, por favor — счёт и цена" },
+    { label: "Нужно знать", headline: "¿Cuánto cuesta?", detail: "La cuenta, por favor — счёт и цена" },
     { label: "Русский гид", headline: "Туры на платформе", detail: "Фильтр по языку — для глубокого погружения" },
     { label: "Курсы в BA", headline: "Интенсив от 1 недели", detail: "Palermo, Recoleta — заявка через контакты" },
   ],
@@ -54,7 +54,7 @@ const CULTURE_FAQ = [
   { question: "Что такое mate?", answer: "Социальный ритуал: yerba mate в calabaza, пьют через bombilla по кругу." },
   { question: "Как отказаться от mate?", answer: "Скажите «gracias» при передаче calabaza — значит «хватит»." },
   { question: "Нужно ли знать танго?", answer: "Нет, но один урок и milonga de práctica — лучший культурный опыт." },
-  { question: "Что такое asado?", answer: "Барbecue-ритуал по воскресеньям — семья, мясо, вино. Длится часами." },
+  { question: "Что такое asado?", answer: "барбекю-ритуал по воскресеньям — семья, мясо, вино. Длится часами." },
   { question: "Как здороваться?", answer: "Поцелуй в щёку один раз — даже при первой встрече (m/f)." },
   { question: "Можно ли фотографировать в milonga?", answer: "Спросите разрешения — flash запрещён, уважайте танцоров." },
   { question: "Насколько важен футбол?", answer: "Очень. Boca vs River — не шутите с чужой командой." },
@@ -83,7 +83,7 @@ export const KULTURA_PILLAR: GuidePillarContent = {
   sections: [
     { id: "kultura-1", title: "Танго и milonga", content: "Шоу-ужины для туристов, живые milonga для погружения. Cabeceo — приглашение кивком." },
     { id: "kultura-2", title: "Mate и asado", content: "Mate — круг, bombilla, yerba. Asado — медленный огонь и sociedad." },
-    { id: "kultura-3", title: "Этикет и время", content: "Поздние ужины, поцелуй при встрече, уважение к фútbol." },
+    { id: "kultura-3", title: "Этикет и время", content: "Поздние ужины, поцелуй при встрече, уважение к футбол." },
     { id: "kultura-4", title: "Ferias и calle", content: "San Telmo, Mataderos — рынки и уличная культура." },
     { id: "kultura-5", title: "Культура для детей", content: "Planetario, Museo de los Niños, парки Palermo — семейный BA." },
   ],
@@ -100,7 +100,7 @@ export const KULTURA_PILLAR: GuidePillarContent = {
 
 const HISTORY_FAQ = [
   { question: "Когда независимость Аргентины?", answer: "1816 год — декларация независимости от Испании." },
-  { question: "Кто такие Perón и Eva?", answer: "Juan Perón — президент 1940–50-х, Eva (Evita) — культовая первая леди, социальные программы." },
+  { question: "Кто такие Перон и Эвита?", answer: "Хуан Перон (Juan Perón) — президент 1940–50-х; Эва (Эвита) — культовая первая леди, социальные программы." },
   { question: "Что такое Dirty War?", answer: "1976–1983 — военная диктатура, исчезновения. ESMA — мемориал в BA." },
   { question: "Где могила Evita?", answer: "Recoleta Cemetery — одна из главных точек BA." },
   { question: "Можно ли обсуждать Falklands?", answer: "Тема чувствительная (Malvinas). С местными — осторожно, в музеях — нейтральный контекст." },
@@ -115,7 +115,7 @@ const HISTORY_FAQ = [
 
 export const ISTORIYA_PILLAR: GuidePillarContent = {
   heroSubtitle:
-    "От колонизации до Perón и современности — ключевые вехи, которые помогают понять страну и её людей",
+    "От колонизации до эпохи Перона и современности — ключевые вехи, которые помогают понять страну и её людей",
   heroCtas: [
     { label: "Экскурсии BA", href: "/tours?query=Буэнос-Айрес", variant: "primary" },
     { label: "Ключевые вехи", href: "#istoriya-1", variant: "secondary" },
@@ -123,14 +123,14 @@ export const ISTORIYA_PILLAR: GuidePillarContent = {
   ],
   quickFacts: [
     { label: "Независимость", headline: "1816 год", detail: "Декларация независимости от Испании" },
-    { label: "Perón / Evita", headline: "1940–50-е", detail: "Культурный и политический след до сих пор" },
+    { label: "Перон / Эвита", headline: "1940–50-е", detail: "Культурный и политический след до сих пор" },
     { label: "Демократия с", headline: "1983", detail: "После военной диктатуры — возвращение гражданских прав" },
-    { label: "Must-see", headline: "Plaza de Mayo, Recoleta", detail: "Casa Rosada и могила Evita — за один день" },
+    { label: "Стоит увидеть", headline: "Plaza de Mayo, Recoleta", detail: "Casa Rosada и могила Evita — за один день" },
     { label: "Мемориал", headline: "ESMA", detail: "Dirty War 1976–1983 — важный контекст страны" },
     { label: "Иммиграция", headline: "Италия, Испания", detail: "Европейские корни BA — кухня, язык, архитектура" },
   ],
   sections: [
-    { id: "istoriya-1", title: "Ключевые вехи", content: "Колонизация, независимость, иммиграция, перonизм, диктатуры, возвращение демократии." },
+    { id: "istoriya-1", title: "Ключевые вехи", content: "Колонизация, независимость, иммиграция, перонизм, диктатуры, возвращение демократии." },
     { id: "istoriya-2", title: "Где почувствовать историю", content: "Casa Rosada, Museo Evita, Recoleta, ESMA, Cordoba Jesuit Block." },
     { id: "istoriya-3", title: "Современный контекст", content: "Экономика, инфляция, Malvinas — уважайте чувствительные темы." },
     { id: "istoriya-4", title: "Музеи и маршруты", content: "MALBA — искусство. Museo Nacional de Historia." },
@@ -148,7 +148,7 @@ export const ISTORIYA_PILLAR: GuidePillarContent = {
 };
 
 const KUHNYA_FAQ = [
-  { question: "Что такое asado?", answer: "Барbecue на дровах: vacío, chorizo, morcilla — социальный ритуал." },
+  { question: "Что такое asado?", answer: "Барбекю на дровах: vacío, chorizo, morcilla — социальный ритуал." },
   { question: "Какие стейки заказывать?", answer: "Bife de chorizo, ojo de bife — классика. Порции большие — делитесь." },
   { question: "Что такое empanada?", answer: "Пирожок с мясом, сыром, humita — региональные вариации (Tucumán, Salta)." },
   { question: "Нужно ли бронировать Don Julio?", answer: "Да, за недели. Альтернативы — La Cabrera, El Preferido de Palermo." },
@@ -171,7 +171,7 @@ export const KUHNYA_PILLAR: GuidePillarContent = {
     { label: "Задать вопрос", href: "/contacts?topic=kukhnya", variant: "tertiary" },
   ],
   quickFacts: [
-    { label: "Must-try", headline: "Asado, empanada", detail: "Dulce de leche — в десертах и alfajores" },
+    { label: "Стоит попробовать", headline: "Asado, empanada", detail: "Dulce de leche — в десертах и alfajores" },
     { label: "Вино", headline: "Malbec, Torrontés", detail: "Mendoza — красное; Salta — белое на высоте" },
     { label: "Ужин", headline: "С 21:00", detail: "Топ parrilla — бронь за несколько дней" },
     { label: "Chimichurri", headline: "Соус к мясу", detail: "Петрушка, чеснок, масло — к asado и choripán" },

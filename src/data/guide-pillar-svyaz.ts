@@ -89,7 +89,7 @@ const SVYAZ_FAQ = [
   {
     question: "Как связаться с организатором тура на платформе?",
     answer:
-      "После бронирования — WhatsApp или сообщения в личном кабинете. Сохраните подтверждение offline. На Patagonia-турах гид сообщает время сбора заранее.",
+      "После бронирования — WhatsApp или сообщения в личном кабинете. Сохраните подтверждение offline. На турах Патагонии гид сообщает время сбора заранее.",
   },
   {
     question: "Starlink и спутниковый интернет?",
@@ -337,7 +337,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         {
           title: "Где Wi‑Fi надёжен",
           body:
-            "Отели 3–4*, coworking (Palermo, Microcentro), кафе с laptop-толпой. Аэропорт EZE — есть, но не для банка. Hostel — переменно; уточняйте скорость для remote work.",
+            "Отели 3–4*, coworking (Palermo, Microcentro), кафе с ноутбуком в толпе. Аэропорт EZE — есть, но не для банка. Hostel — переменно; уточняйте скорость для remote work.",
         },
         {
           title: "VPN и банк",
@@ -345,7 +345,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
             "VPN на публичном Wi‑Fi — да. Домашний банк РФ через мобильный интернет AR обычно работает без VPN. Не вводите CVV в подозрительных captive portal.",
         },
         {
-          title: "Телефон и snatch theft",
+          title: "Телефон и уличные кражи",
           body:
             "SIM привязана к паспорту — при краже заблокируйте линию в салоне оператора с копией паспорта. Не демонстрируйте телефон у проезжей части в BA — см. /guide/bezopasnost.",
         },
@@ -358,7 +358,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         "Без набора приложений BA и регионы неудобны. Часть работает только с интернетом; SUBE и Cabify проще с местной SIM.",
       subsections: [
         {
-          title: "Must-have для туриста",
+          title: "Что обязательно взять туристу",
           body:
             "Google Maps (+ offline) · WhatsApp · Cabify / Uber · Google Translate (offline ES) · Aerolíneas / airline app · Подтверждения брони offline · Windy для Patagonia.",
         },
@@ -393,7 +393,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         {
           title: "После бронирования тура",
           body:
-            "Сохраните PDF/скрин с датой, местом сбора и телефоном гида. Напишите в WhatsApp за 24–48 ч до старта. На Patagonia-турах точка сбора может зависеть от погоды.",
+            "Сохраните PDF/скрин с датой, местом сбора и телефоном гида. Напишите в WhatsApp за 24–48 ч до старта. На турах Патагонии точка сбора может зависеть от погоды.",
         },
         {
           title: "Если связь пропала на туре",
@@ -403,7 +403,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         {
           title: "Цифровой кочевник light",
           body:
-            "BA (Palermo, Belgrano) — coworking 20–50 Mbps часто достаточно для Zoom. Patagonia — не место для daily standup. Проверьте upload на speedtest до оплаты жилья.",
+            "BA (Palermo, Belgrano) — коворкинги 20–50 Мбит/с, часто достаточно для видеозвонков. Патагония — не место для ежедневных созвонов. Проверьте скорость отдачи (upload) до оплаты жилья.",
         },
       ],
       infoBoxes: [

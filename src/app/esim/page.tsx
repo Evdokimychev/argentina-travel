@@ -3,7 +3,7 @@ import EsimCatalogView from "@/components/esim/EsimCatalogView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "eSIM для поездки в Аргентину — Пора в Аргентину";
+const PAGE_TITLE = "eSIM для поездки в Аргентину";
 const PAGE_DESCRIPTION =
   "Мобильный интернет через eSIM Airalo: пакеты для Аргентины и соседних стран. Покупка и активация на стороне партнёра.";
 

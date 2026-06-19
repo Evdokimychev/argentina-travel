@@ -22,7 +22,7 @@ const HUB_TOPIC_LINKS: SiteNavLink[] = [
     id: "immigration-process",
     label: "Процесс иммиграции",
     href: "/immigration/protsess-immigratsii",
-    description: "Въезд, RADEX, DNU 366/2025, документы",
+    description: "Въезд, RADEX, Decreto 366/2025, документы",
   },
   {
     id: "immigration-birth",
@@ -34,7 +34,7 @@ const HUB_TOPIC_LINKS: SiteNavLink[] = [
     id: "immigration-citizenship",
     label: "Гражданство",
     href: "/immigration/grazhdanstvo",
-    description: "Паспорт, экзамены, сроки",
+    description: "Административно (DNM), Decreto 366/2025",
   },
   {
     id: "immigration-residency",

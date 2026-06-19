@@ -23,7 +23,7 @@ export function FilterPopover({
   label,
   active,
   children,
-  width = "min-w-[340px]",
+  width = "sm:min-w-[340px]",
 }: FilterPopoverProps) {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
@@ -38,7 +38,7 @@ export function FilterPopover({
               "flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2.5 text-sm font-medium transition-colors",
               active
                 ? "border-brand bg-brand-light text-brand"
-                : "border-gray-200 bg-white text-charcoal hover:border-gray-300"
+                : "border-border-subtle bg-surface-elevated text-charcoal hover:border-slate/40"
             )}
           >
             {label}

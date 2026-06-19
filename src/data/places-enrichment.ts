@@ -44,14 +44,14 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   "perito-moreno-glacier": {
     history:
-      "Ледник назван в честь исследователя Patagonia Francisco Moreno, который в конце XIX века способствовал закреплению аргентинских границ в регионе. С 1937 года ледник и окрестности входят в национальный парк Los Glaciares — один из первых парков страны и объект UNESCO с 1981 года.",
+      "Ледник назван в честь исследователя Патагонии Франсиско Морено (Francisco Moreno), который в конце XIX века способствовал закреплению аргентинских границ в регионе. С 1937 года ледник и окрестности входят в национальный парк Los Glaciares — один из первых парков страны и объект ЮНЕСКО с 1981 года.",
     interestingFacts: [
-      "Ледник Perito Moreno — одно из немногих ледяных тел в мире, которое всё ещё в равновесии или слегка нарастает, вопреки общему таянию ледников Patagonia.",
+      "Ледник Perito Moreno — одно из немногих ледяных тел в мире, остающихся в равновесии, тогда как большинство ледников Патагонии отступают.",
       "Фронт ледника высотой до 70 м периодически «перекрывает» южное плечо Lago Argentino — вода в заливе Rico поднимается и прорывает лёд с грохотом.",
       "Walkways (pasarelas) позволяют обойти ледник с нескольких уровней без специального снаряжения.",
     ],
     howToGetThere:
-      "Из Эль-Калафате — 80 км по RN11, автобусы и экскурсии от всех туроператоров (45–90 мин). Вход в парк оплачивается отдельно; билеты на pasarelas — у кассы или онлайн. Mini-Trekking и Big Ice бронируют заранее в сезон.",
+      "Из Эль-Калафате — 80 км по RP11 (Ruta Provincial 11), автобусы и экскурсии от всех туроператоров (45–90 мин). Вход в парк оплачивается отдельно; билеты на pasarelas — у кассы или онлайн. Mini-Trekking и Big Ice бронируют заранее в сезон.",
     nearbyHighlights: [
       "Эль-Калафате — база, рестораны и вид на Lago Argentino",
       "Круизы к ледникам Upsala и Spegazzini с порта Punta Bandera",
@@ -71,30 +71,30 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       {
         question: "Можно ли увидеть обрушение льда?",
         answer:
-          "Да, calving происходит регулярно. Для «переливa» через ледяную дамбу нужна удача — обычно раз в несколько лет, но следят новости парка.",
+          "Да, calving происходит регулярно. Для «перелива» через ледяную дамбу нужна удача — обычно раз в несколько лет, но следят новости парка.",
       },
     ],
   },
   "iguazu-falls": {
     history:
-      "Водопады известны коренным народам guaraní как «большая вода» (Iguazú). Европейский мир узнал о них благодаря экспедиции Alvar Núñez Cabeza de Vaca (1541), а массовый туризм начался после создания национальных парков в XX веке. С 1984 года аргентинская часть — объект UNESCO.",
+      "Водопады известны коренным народам гуарани как «большая вода» (Iguazú). Считается, что первым из европейцев их увидел испанский конкистадор Альвар Нуньес Кабеса де Вака (Álvar Núñez Cabeza de Vaca) около 1542 года — он назвал их Saltos de Santa María; массовый туризм начался после создания национальных парков в XX веке. С 1984 года аргентинская часть — объект ЮНЕСКО.",
     interestingFacts: [
       "275 отдельных каскадов на ширине около 2,7 км — один из крупнейших водопадных комплексов мира.",
-      "Garganta del Diablo (Утеса Дьявола) — U-образный разлом, куда сходится половина речного потока.",
-      "На территории парка живут coatis — не кормите их и держите рюкзаки закрытыми.",
+      "Garganta del Diablo («Глотка Дьявола») — U-образный разлом, куда сходится половина речного потока.",
+      "На территории парка живут коати (coatis) — не кормите их и держите рюкзаки закрытыми.",
     ],
     howToGetThere:
-      "Аэропорт IGR (Puerto Iguazú) — рейсы из Buenos Aires (AEP/EZE). Из города — автобус или такси до парка (~20 км). Маршрут «нижние + верхние тропы + поезд к Garganta del Diablo» занимает полный день. Бразильская сторона (Foz) — отдельный въезд и виза при необходимости.",
+      "Аэропорт IGR (Puerto Iguazú) — рейсы из Buenos Aires (AEP/EZE). Из города — автобус или такси до парка (~20 км). Маршрут «нижние + верхние тропы + поезд к Garganta del Diablo» занимает полный день. Бразильская сторона (Foz) — отдельный въезд; нужен загранпаспорт, а визовые правила Бразилии для граждан РФ уточняйте перед поездкой.",
     nearbyHighlights: [
-      "Itaipu — одна из крупнейших ГЭС мира (экскурсии с бразильской или аргентинской стороны)",
-      "Wanda — crystal mines на дороге из Posadas",
-      "Triple Frontier — стык границ Аргентины, Бразилии и Парагвая",
+      "Itaipú — одна из крупнейших ГЭС мира (экскурсии с бразильской или аргентинской стороны)",
+      "Wanda — копи полудрагоценных камней на дороге из Posadas",
+      "Стык трёх границ — Аргентины, Бразилии и Парагвая",
     ],
     faq: [
       {
         question: "Аргентинская или бразильская сторона?",
         answer:
-          "Аргентинская — больше троп и близкий контакт с водой; бразильская — панорама всего комплекса. Идеально посетить обе, если есть время и документы.",
+          "Аргентинская — больше троп и близкий контакт с водой; бразильская — панорама всего комплекса. Идеально посетить обе: возьмите загранпаспорт, а визовые правила Бразилии для граждан РФ уточняйте перед поездкой.",
       },
       {
         question: "Сколько времени закладывать?",
@@ -184,11 +184,11 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   "nahuel-huapi-national-park": {
     history:
-      "Первый национальный парк Аргентины (1934), вдохновлённый моделью Yellowstone. Озеро Nahuel Huapi и вулкан Tronador — символы Lake District. Bariloche вырос как туристический центр вокруг парка.",
+      "Первый национальный парк Аргентины (1934), вдохновлённый моделью Йеллоустоуна. Озеро Nahuel Huapi и вулкан Tronador — символы района озёр (Lake District). Bariloche вырос как туристический центр вокруг парка.",
     interestingFacts: [
       "Легенда о Nahuelito — местный «loch ness» — часть фольклора региона.",
       "Circuito Chico — классический автомобильный маршрут ~60 км с остановками у viewpoints.",
-      "Зимой Cerro Catedral — крупнейший ski resort Южного полушария по площади.",
+      "Зимой Cerro Catedral — один из крупнейших горнолыжных курортов Южного полушария.",
     ],
     howToGetThere:
       "Аэропорт BRC (San Carlos de Bariloche). Circuito Chico — аренда авто, такси или guided tour. К Colonia Suiza и Cerro Campanario — автобусы из центра Bariloche.",
@@ -211,7 +211,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     interestingFacts: [
       "С июня по декабрь здесь можно увидеть southern right whales в заливе Puerto Pirámides.",
       "Orcas на пляже Punta Norte охотятся на sea lion pups — редкое зрелище (февраль–апрель).",
-      "Магellan penguins — колонии в Punta Tombo (южнее) и на полуострове.",
+      "Магеллановских penguins — колонии в Punta Tombo (южнее) и на полуострове.",
     ],
     howToGetThere:
       "База — Puerto Madryn (рейсы PMY или автобус из Buenos Aires). До полуострова — ~1,5 ч на авто; экскурсии с гидом обязательны для понимания маршрутов. Puerto Pirámides — единственное поселение на полуострове.",
@@ -232,20 +232,20 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     history:
       "Ушуайя основана в 1884 году как тюремное поселение для повторных преступников — сегодня это туристический город на краю света. С 1940-х развивается как порт для антарктических экспедиций; с 1960-х — как база для рыболовного флота и туризма.",
     interestingFacts: [
-      "Широта 54°48′ — Ushuaia называют «самым южным городом мира» (спорят с Puerto Williams в Chile, но Ushuaia крупнее).",
-      "End of the World Train (Tren del Fin del Mundo) — узкоколейка в национальный парк Tierra del Fuego.",
-      "Зимой дни короткие, но aurora возможна; летом — белые ночи и круизы к островам.",
+      "Широта 54°48′ — Ushuaia называют «самым южным городом мира» (статус оспаривает чилийский Пуэрто-Уильямс, но Ушуайя крупнее).",
+      "«Поезд на край света» (Tren del Fin del Mundo) — узкоколейка в национальный парк Tierra del Fuego.",
+      "Зимой дни короткие; летом — белые ночи и круизы к островам.",
     ],
     howToGetThere:
-      "Аэропорт USH — рейсы из Buenos Aires (AEP/EZE). Из аэропорта — такси 10–15 мин до центра. К парку Tierra del Fuego — автобус или экскурсия. Круизы в Antarctica отправляются из порта (бронирование за месяцы).",
+      "Аэропорт USH — рейсы из Buenos Aires (AEP/EZE). Из аэропорта — такси 10–15 мин до центра. К парку Tierra del Fuego — автобус или экскурсия. Круизы в Антарктиду отправляются из порта (бронирование за месяцы).",
     nearbyHighlights: [
       "Национальный парк Tierra del Fuego",
-      "Beagle Channel — морские лions и птицы",
+      "Beagle Channel — морские львов и птицы",
       "Laguna Esmeralda — треккинг",
     ],
     faq: [
       {
-        question: "Нужна ли одежda для Antarctica cruise?",
+        question: "Нужна ли одежду для Antarctica cruise?",
         answer: "Оператор выдаёт список; базово — непродуваемая куртка, термобельё, водонепроницаемая обувь. Даже летом в канале Beagle прохладно.",
       },
     ],
@@ -274,7 +274,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   bariloche: {
     history:
-      "San Carlos de Bariloche основан в 1902 году; с 1930-х — центр горнолыжного туризма и научных исследований (штамп шоколada, Centro Atómico). Архитектура alpine chalet — наследие европейской иммиграции.",
+      "San Carlos de Bariloche основан в 1902 году; с 1930-х — центр горнолыжного туризма и научных исследований (штамп шоколада, Centro Atómico). Архитектура alpine chalet — наследие европейской иммиграции.",
     interestingFacts: [
       "Ruta de los Siete Lagos — классический road trip к San Martín de los Andes.",
       "Cerro Catedral — один из крупнейших ski resort Южной Америки.",
@@ -290,7 +290,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     faq: [
       {
         question: "Bariloche зимой без лыж?",
-        answer: "Да — chocolate tours, brewery, spa; но основной зимний draw — лыжи и сноубord на Catedral.",
+        answer: "Да — шоколадные мастерские, пивоварни, спа; но основная зимняя причина приехать — лыжи и сноуборд на Catedral.",
       },
     ],
   },
@@ -303,7 +303,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
       "Harvest festival (Fiesta Nacional de la Vendimia) — в марте.",
     ],
     howToGetThere:
-      "Аэропорт MDZ. Maipú — 20 мин на такsi; Uco Valley — 1–1,5 ч. Bodega tours бронируйте заранее; designated driver или van tour если дегustación.",
+      "Аэропорт MDZ. Maipú — 20 мин на такси; Uco Valley — 1–1,5 ч. Bodega tours бронируйте заранее; designated driver или van tour если дегустацию.",
     nearbyHighlights: [
       "Maipú и Luján de Cuyo — bodegas",
       "Potrerillos — dam и outdoor",
@@ -312,7 +312,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     faq: [
       {
         question: "Сколько bodega за день?",
-        answer: "2–3 с дегustación — комфортный темп; больше — только с трансfer и без вождения.",
+        answer: "2–3 с дегустацию — комфортный темп; больше — только с трансфер и без вождения.",
       },
     ],
   },
@@ -384,7 +384,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   "cerro-de-los-7-colores": {
     history:
-      "Геологическое formation из marine и continental sediments, поднятых тектоникой Andes. Для народа omaguaca гора священна; туристическая инфраstructure развилась с ростом потока в Humahuaca.",
+      "Геологическое formation из marine и continental sediments, поднятых тектоникой Andes. Для народа omaguaca гора священна; туристическая инфраструктура развилась с ростом потока в Humahuaca.",
     interestingFacts: [
       "Высота холма ~300 м над Purmamarca — подъём 30–45 мин.",
       "После дождя цвета насыщеннее.",
@@ -402,7 +402,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   "tren-de-las-nubes": {
     history:
-      "Железная дорoga Salta–Antofagasta (Chile) — инженерный подvig начала XX века. «Поезд в облака» — tourist section с viaducts La Polvorilla; после реконструкции ходит с ограничениями по сезону.",
+      "Железная дорога Salta–Antofagasta (Chile) — инженерный подвиг начала XX века. «Поезд в облака» — tourist section с viaducts La Polvorilla; после реконструкции ходит с ограничениями по сезону.",
     interestingFacts: [
       "Максимальная высота маршрута — около 4200 м — возможна altitude sickness.",
       "La Polvorilla — viaduct в форме полукруга без прямых опор в центре.",
@@ -442,7 +442,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
   },
   "mar-del-plata": {
     history:
-      "Курорт вырос с приходом железной дороги из BA в 1880-х; «Biarritz Аргентины» для porteños. Летом — миллионы отдыхающих, зимой — спокойный примorsky город.",
+      "Курорт вырос с приходом железной дороги из BA в 1880-х; «Biarritz Аргентины» для porteños. Летом — миллионы отдыхающих, зимой — спокойный приморский город.",
     interestingFacts: [
       "Playa Bristol — главный пляж; Varese и Punta Mogotes — альтернативы.",
       "Aquarium Mar del Plata — один из крупнейших в стране.",
@@ -458,13 +458,13 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     faq: [
       {
         question: "Когда сезон?",
-        answer: "Декабрь–мarch — пик и цены; shoulder months — прохладнее океан, но меньше людей.",
+        answer: "Декабрь–март — пик и цены; shoulder months — прохладнее океан, но меньше людей.",
       },
     ],
   },
   "tierra-del-fuego-national-park": {
     history:
-      "Создан в 1960 году — единственный арgentинский нацпark с морским coast и subantarctic forest. End of the World Train исторически связан с Ushuaia prison logging.",
+      "Создан в 1960 году — единственный аргентинский национальный парк с морским coast и subantarctic forest. End of the World Train исторически связан с Ushuaia prison logging.",
     interestingFacts: [
       "Bay Lapataia — конец RN3, символический «fin del mundo» на дороге.",
       "Senda Costera — coastal trail 8 km к Zaratiegui.",
@@ -476,7 +476,7 @@ export const PLACE_ENRICHMENTS: Record<string, PlaceEnrichment> = {
     faq: [
       {
         question: "Парк за один день?",
-        answer: "Да — Senda Costera + Lapataia или train + короткие тропы. Полный день с трансfer.",
+        answer: "Да — Senda Costera + Lapataia или train + короткие тропы. Полный день с трансфер.",
       },
     ],
   },

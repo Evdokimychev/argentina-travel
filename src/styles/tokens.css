@@ -151,6 +151,12 @@
 
   /* ── Layout chrome ────────────────────────────────────────────────────── */
 
-  --token-site-header-full-height: 72px;
+  --token-site-header-full-height: 84px;
   --token-site-header-height: var(--token-site-header-full-height);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --token-site-header-full-height: 140px;
+  }
 }

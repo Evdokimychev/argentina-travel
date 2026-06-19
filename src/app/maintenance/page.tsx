@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Техническое обслуживание — Пора в Аргентину",
+  title: "Техническое обслуживание",
   robots: { index: false, follow: false },
 };
 
@@ -14,8 +14,8 @@ export default function MaintenancePage() {
       </h1>
       <p className="mt-4 max-w-md text-slate">
         Мы обновляем сервис. Попробуйте зайти позже или напишите на{" "}
-        <a href="mailto:hello@goargentina.ru" className="text-sky hover:underline">
-          hello@goargentina.ru
+        <a href="mailto:IAEvdokimychev@ya.ru" className="text-sky hover:underline">
+          IAEvdokimychev@ya.ru
         </a>
         .
       </p>

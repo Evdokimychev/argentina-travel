@@ -14,7 +14,7 @@ export const SHADOW_MODAL = "shadow-modal" as const;
 
 /** Card hover — shadow only, no translate */
 export const CARD_HOVER =
-  "transition-shadow duration-200 hover:shadow-md motion-reduce:transition-none" as const;
+  "transition-shadow duration-200 hover:shadow-elevated motion-reduce:transition-none" as const;
 
 /** Primary brand — CTAs, links, active nav */
 export const COLOR_PRIMARY = "sky" as const;

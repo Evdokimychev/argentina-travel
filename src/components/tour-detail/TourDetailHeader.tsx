@@ -17,9 +17,11 @@ import {
   resolveTourCityDisplay,
 } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
 import TourClassificationBar from "./TourClassificationBar";
 import TourDurationInfo from "./TourDurationInfo";
 import { SafeImage } from "@/components/ui/safe-image";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
 interface TourDetailHeaderProps {
   tour: TourDetail;
@@ -28,7 +30,9 @@ interface TourDetailHeaderProps {
 
 export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHeaderProps) {
   const [shared, setShared] = useState(false);
-  const ratingDisplay = resolveTourRatingLabel(tour);
+  const isPartnerTour = isPartnerTourDetail(tour);
+  const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.reviews));
+  const ratingDisplay = resolveTourRatingLabel(reviewStats);
   const cityDisplay = resolveTourCityDisplay({
     destination: canonicalTour?.geography.destination,
     mainLocation: canonicalTour?.geography.mainLocation,
@@ -133,7 +137,11 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
             ) : null}
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <TourDurationInfo days={tour.durationDays} nights={tour.durationNights} />
+              <TourDurationInfo
+                days={tour.durationDays}
+                nights={tour.durationNights}
+                hideNights={isPartnerTour}
+              />
 
               <p className="inline-flex items-center gap-1.5 text-sm text-slate">
                 <MapPin className="h-4 w-4 shrink-0 text-sky/70" aria-hidden />
@@ -154,7 +162,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
                     onClick={scrollToReviews}
                     className="text-sm font-medium text-sky hover:underline"
                   >
-                    {formatReviews(tour.reviewCount)}
+                    {formatReviews(reviewStats.reviewCount)}
                   </button>
                 </>
               ) : (

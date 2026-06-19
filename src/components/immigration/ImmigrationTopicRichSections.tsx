@@ -169,13 +169,20 @@ export default function ImmigrationTopicRichSections({ slug }: ImmigrationTopicR
               ))}
             </ol>
             <p className="mt-5 text-sm text-slate">
-              Электронная почта суда:{" "}
-              <a
-                href={`mailto:${citizenship.submissionEmail}`}
-                className="font-medium text-sky hover:underline"
-              >
-                {citizenship.submissionEmail}
-              </a>
+              Официальные источники:{" "}
+              {citizenship.submissionLinks.map((link, index) => (
+                <span key={link.href}>
+                  {index > 0 ? " · " : null}
+                  <a
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-sky hover:underline"
+                  >
+                    {link.label}
+                  </a>
+                </span>
+              ))}
             </p>
           </HubSection>
 
@@ -425,7 +432,7 @@ export function getImmigrationTopicTocExtras(slug: ImmigrationTopicSlug): { id: 
     case "protsess-immigratsii":
       return [
         { id: "tourist-entry", label: "Въезд туриста" },
-        { id: "dnu", label: "DNU 366/2025" },
+        { id: "dnu", label: "Decreto 366/2025" },
         { id: "radex", label: "RADEX" },
         { id: "documents", label: "Документы" },
       ];

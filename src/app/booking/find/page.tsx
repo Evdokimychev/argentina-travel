@@ -4,7 +4,7 @@ import BookingLookupView from "@/components/booking/BookingLookupView";
 import BookingLookupSkeleton from "@/components/booking/BookingLookupSkeleton";
 
 export const metadata: Metadata = {
-  title: "Найти заявку — Пора в Аргентину",
+  title: "Найти заявку",
 };
 
 export default function BookingFindPage() {

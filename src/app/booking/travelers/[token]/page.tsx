@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import BookingTravelersFormView from "@/components/booking/BookingTravelersFormView";
 
 export const metadata: Metadata = {
-  title: "Данные туристов — Пора в Аргентину",
+  title: "Данные туристов",
 };
 
 export default async function BookingTravelersFormPage({

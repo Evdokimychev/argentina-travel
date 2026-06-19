@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import Link from "next/link";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
@@ -10,8 +10,6 @@ import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { buildTourContactHref } from "@/lib/tour-contact";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
-import { siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
-import { tourDetailStickyPanelClass } from "@/lib/tour-detail-ui";
 import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourBookingPriceSummary from "./TourBookingPriceSummary";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
@@ -32,7 +30,7 @@ import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
 import PartnerTourBookingPriceSummary from "./PartnerTourBookingPriceSummary";
-import PartnerTourBookingContactSection from "./PartnerTourBookingContactSection";
+import PartnerTourListedPrice from "./PartnerTourListedPrice";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 import { hasDiscount } from "@/lib/discount";
 
@@ -80,14 +78,29 @@ export default function TourBookingPanel({
     externalBookingHref,
     partnerBookingPrice,
     partnerPriceLoading,
+    scheduleDates,
+    openPartnerBookingPreview,
+    partnerEditRequest,
   } = useTourBooking();
 
   const bookButtonPulseKey = useRandomAttentionPulse({
     enabled: !previewMode && !usesExternalBooking,
   });
 
-  const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
-  const datePriceSummary = resolveTourDatePriceSummary(tour.dates, tour.priceUsd);
+  useEffect(() => {
+    if (!partnerEditRequest) return;
+    if (window.matchMedia("(max-width: 1023px)").matches) return;
+    const sectionId =
+      partnerEditRequest.target === "date" ? "panel-booking-date" : "panel-booking-guests";
+    const timer = window.setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [partnerEditRequest]);
+
+  const availableDates = isPartnerTour ? scheduleDates : tour.dates;
+  const selectedDate = availableDates.find((d) => d.id === selectedDateId);
+  const datePriceSummary = resolveTourDatePriceSummary(availableDates, tour.priceUsd);
   const datePriceRangeLabel = formatDatePriceRangeLabel(datePriceSummary, priceOnRequest);
   const guestLimits = getGuestLimits(tour, selectedDate, dateMode);
   const guestHint =
@@ -121,7 +134,13 @@ export default function TourBookingPanel({
   const bookingValidationError =
     usesExternalBooking && !externalBookingLink?.passContext
       ? null
-      : validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
+      : validateBookingDates(
+          { ...tour, dates: availableDates },
+          dateMode,
+          customDate,
+          guests,
+          selectedDateId
+        );
 
   const externalHint =
     externalBookingLink?.hint?.trim() || DEFAULT_CUSTOM_BOOKING_HINT;
@@ -148,6 +167,19 @@ export default function TourBookingPanel({
   }
 
   function handleExternalBookingClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (isPartnerTour) {
+      event.preventDefault();
+      if (bookingValidationError) {
+        setBookingError(bookingValidationError);
+        return;
+      }
+      setBookingError(null);
+      if (!openPartnerBookingPreview()) {
+        setBookingError("Выберите дату заезда и проверьте количество туристов.");
+      }
+      return;
+    }
+
     if (bookingValidationError) {
       event.preventDefault();
       setBookingError(bookingValidationError);
@@ -170,9 +202,6 @@ export default function TourBookingPanel({
       id="booking"
       className={cn(
         "relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6",
-        tourDetailStickyPanelClass,
-        siteStickyPanelTopClass,
-        siteStickyPanelMaxHeightClass,
         className
       )}
     >
@@ -184,7 +213,19 @@ export default function TourBookingPanel({
           activeDiscountPercent != null && "pr-[4.75rem] sm:pr-20"
         )}
       >
-        {partnerBookingPrice ? (
+        {isPartnerTour && !selectedDate ? (
+          <div>
+            {tour.partnerPriceDisplay ? (
+              <PartnerTourListedPrice tour={tour} showFrom />
+            ) : (
+              <p className="font-heading text-2xl font-bold text-charcoal">Стоимость по дате</p>
+            )}
+            {priceSuffix ? <p className="mt-1 text-sm text-slate">{priceSuffix}</p> : null}
+            <p className="mt-2 text-xs leading-relaxed text-slate">
+              Точная сумма появится после выбора даты заезда
+            </p>
+          </div>
+        ) : partnerBookingPrice ? (
           <PartnerTourBookingPriceSummary
             price={partnerBookingPrice}
             suffix={priceSuffix}
@@ -230,28 +271,30 @@ export default function TourBookingPanel({
       )}
 
       <div className="mt-5 space-y-4 border-t border-gray-100 pt-5">
-        <BookingDateSelector
-          tour={tour}
-          idPrefix="panel"
-          showDepartureCalendar={false}
-          collapsible={tour.dates.length > 0 && bookingMode === "scheduled"}
-        />
+        <div id="panel-booking-date">
+          <BookingDateSelector
+            tour={tour}
+            idPrefix="panel"
+            showDepartureCalendar={false}
+            collapsible={
+              !isPartnerTour && availableDates.length > 0 && bookingMode === "scheduled"
+            }
+          />
+        </div>
 
-        <GuestCounter
-          value={guests}
-          min={guestLimits.min}
-          max={Math.max(guestLimits.min, guestLimits.max)}
-          minimumAge={tour.minimumAge}
-          hint={guestHint}
-          onChange={setGuests}
-        />
+        <div id="panel-booking-guests">
+          <GuestCounter
+            value={guests}
+            min={guestLimits.min}
+            max={Math.max(guestLimits.min, guestLimits.max)}
+            minimumAge={tour.minimumAge}
+            hint={guestHint}
+            onChange={setGuests}
+          />
+        </div>
 
         {!previewMode && !usesExternalBooking && canJoinWaitlist ? (
           <BookingWaitlistPrompt />
-        ) : null}
-
-        {isPartnerTour && !previewMode ? (
-          <PartnerTourBookingContactSection tour={tour} />
         ) : null}
       </div>
 
@@ -300,12 +343,14 @@ export default function TourBookingPanel({
               {primaryLabel}
             </Button>
           )}
-          <Link
-            href={buildTourContactHref(tour.slug)}
-            className={cn(buttonVariants({ variant: "outline" }), "mt-2 w-full")}
-          >
-            Задать вопрос
-          </Link>
+          {!isPartnerTour ? (
+            <Link
+              href={buildTourContactHref(tour.slug)}
+              className={cn(buttonVariants({ variant: "outline" }), "mt-2 w-full")}
+            >
+              Задать вопрос
+            </Link>
+          ) : null}
         </>
       )}
     </div>

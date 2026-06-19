@@ -77,7 +77,7 @@ export default function PlacesRegionExplorer({
                 {item.coverImage ? (
                   <Image
                     src={item.coverImage}
-                    alt=""
+                    alt={item.region}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="160px"

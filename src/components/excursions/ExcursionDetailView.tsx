@@ -13,6 +13,8 @@ import ExcursionIncludedSection from "@/components/excursions/ExcursionIncludedS
 import ExcursionMetaBadges from "@/components/excursions/ExcursionMetaBadges";
 import ExcursionSectionNav from "@/components/excursions/ExcursionSectionNav";
 import ExcursionBookingPanel from "@/components/excursions/ExcursionBookingPanel";
+import { ExcursionBookingProvider } from "@/components/excursions/ExcursionBookingContext";
+import ExcursionBookingModal from "@/components/excursions/ExcursionBookingModal";
 import ExcursionMobileBookingBar from "@/components/excursions/ExcursionMobileBookingBar";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
 import TourSection from "@/components/tour-detail/TourSection";
@@ -53,6 +55,7 @@ export default function ExcursionDetailView({
     (excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured === false);
 
   return (
+    <ExcursionBookingProvider excursion={excursion}>
     <div className="pb-24 lg:pb-16">
       <div className={siteContainerClass}>
         <Link
@@ -108,7 +111,7 @@ export default function ExcursionDetailView({
               </div>
 
               <div className="mt-6 lg:hidden">
-                <ExcursionBookingPanel excursion={excursion} />
+                <ExcursionBookingPanel />
               </div>
 
               {excursion.comfortLevelInfo ? (
@@ -183,7 +186,7 @@ export default function ExcursionDetailView({
             </div>
 
             <div className="hidden lg:block">
-              <ExcursionBookingPanel excursion={excursion} />
+              <ExcursionBookingPanel />
             </div>
           </div>
 
@@ -194,7 +197,9 @@ export default function ExcursionDetailView({
         </div>
       </div>
 
-      <ExcursionMobileBookingBar excursion={excursion} prefersAffiliate={prefersAffiliate} />
+      <ExcursionMobileBookingBar prefersAffiliate={prefersAffiliate} />
+      <ExcursionBookingModal />
     </div>
+    </ExcursionBookingProvider>
   );
 }

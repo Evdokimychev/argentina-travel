@@ -11,7 +11,7 @@ export interface TourAccommodationSeed {
 export const TOUR_ACCOMMODATION_SEEDS: Record<string, TourAccommodationSeed> = {
   "patagonia-glaciers": {
     description:
-      "По маршруту — отель 4* в Эль-Калафате и lodge у Торрес-дель-Пaine. Стандартное размещение включено; одноместный номер и категория 5★ — за доплату.",
+      "По маршруту — отель 4* в Эль-Калафате и lodge у Торрес-дель-Пайне. Стандартное размещение включено; одноместный номер и категория 5★ — за доплату.",
     upgradesEnabled: true,
     places: [
       {
@@ -128,7 +128,7 @@ export const TOUR_ACCOMMODATION_SEEDS: Record<string, TourAccommodationSeed> = {
           {
             id: "room-mendoza-suite",
             name: "Люкс с террасой",
-            description: "Просторный номер с частной террасой и видом на Андes.",
+            description: "Просторный номер с частной террасой и видом на Анды.",
             capacity: 2,
             priceUsdPerPerson: 140,
             images: [],

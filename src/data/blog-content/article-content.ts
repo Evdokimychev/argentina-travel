@@ -101,7 +101,7 @@ const REGION: Record<BlogContentCategory, RegionContext> = {
   food: {
     name: "аргентинская кухня",
     focus: "asado, empanadas, mate и винные пары",
-    places: "parrilla в BA, рынки, Mendoza, региональные бodega",
+    places: "parrilla в BA, рынки, Mendoza, региональные винодельни",
     seasonPeak: "круглый год",
     seasonLow: "—",
     hubCity: "Buenos Aires или Mendoza",
@@ -179,9 +179,9 @@ function seasonParagraphs(region: RegionContext, topic: string): string[] {
 
   return joinParagraphs(
     `${region.name} ${season} имеет свои плюсы и ограничения. Пик сезона здесь — ${region.seasonPeak}; низкий — ${region.seasonLow}.`,
-    `Для ${region.focus} заранее проверьте часы работы парков, расписание автобусов и погоду на 7–10 дней вперёд — в Patagonia и на высоте прогноз меняется быстро.`,
-    `Одежда по слоям обязательна: даже летом у ледника или на трекке ветер и +5 °C возможны. Солнцезащита (SPF 50, очки, губы) нужна круглый год — озоновая дыра над южной latitud не миф маркетинга.`,
-    `Бронируйте жильё и внутренние перелёты раньше, если попадаете в ${region.seasonPeak}: цены растут, а лучшие hostels и boutique-отели разбирают за 2–3 месяца.`,
+    `Для ${region.focus} заранее проверьте часы работы парков, расписание автобусов и погоду на 7–10 дней вперёд — в Патагонии и на высоте прогноз меняется быстро.`,
+    `Одежда по слоям обязательна: даже летом у ледника или на треке ветер и +5 °C возможны. Солнцезащита (SPF 50, очки, бальзам для губ) нужна круглый год — озоновая дыра над южными широтами не миф маркетинга.`,
+    `Бронируйте жильё и внутренние перелёты раньше, если попадаете в ${region.seasonPeak}: цены растут, а лучшие хостелы и бутик-отели разбирают за 2–3 месяца.`,
   );
 }
 
@@ -210,16 +210,16 @@ function budgetParagraphs(region: RegionContext): string[] {
   return joinParagraphs(
     `Бюджет поездки в ${region.name} складывается из перелётов, жилья, питания, транспорта и экскурсий. Ориентир mid-range: ${region.budgetDaily}.`,
     `Жильё: hostels от 15–25 USD, отели 3* — 50–90 USD, Airbnb выгоден на 5+ ночей. В ${region.seasonPeak} цены выше на 20–40 %.`,
-    `Еда: обед menú del día 8–15 USD, parrilla 25–50 USD, кофе и medialunas — копейки. Вино в супermarkete дешевле, чем в ресторане — для Mendoza закладывайте дегustación от 15 USD.`,
-    `Активности: билет в парк Iguazú, ледниковый кruiz, whale watching — от 30–80 USD. Бронируйте официально; «дешёвые» уличные предложения часто без страховки.`,
-    `Резерв 10–15 % на задержки рейсов, допбагаж и один «лишний» трансfer — особенно в Patagonia.`,
+    `Еда: обед menú del día 8–15 USD, parrilla 25–50 USD, кофе и medialunas — копейки. Вино в супермаркете дешевле, чем в ресторане — для Mendoza закладывайте дегустацию от 15 USD.`,
+    `Активности: билет в парк Iguazú, ледниковый круиз, whale watching — от 30–80 USD. Бронируйте официально; «дешёвые» уличные предложения часто без страховки.`,
+    `Резерв 10–15 % на задержки рейсов, допбагаж и один «лишний» трансфер — особенно в Patagonia.`,
   );
 }
 
 function mistakesParagraphs(region: RegionContext): string[] {
   return joinParagraphs(
     `Ошибка 1: пытаться объехать всю Аргентину за две недели. Лучше два региона глубоко, чем пять на галочку.`,
-    `Ошибка 2: недооценить ветер и холод в ${region.name} даже «летом». Слои, ветровка и перчатки — must have для Patagonia и треккинга.`,
+    `Ошибка 2: недооценить ветер и холод в ${region.name} даже «летом». Слои, ветровка и перчатки обязательны для Патагонии и треккинга.`,
     `Ошибка 3: менять деньги у неофициалов. Риск подделок и проблем на границе при выезде.`,
     `Ошибка 4: не бронировать Perito Moreno, популярные bodega и whale watching в пик — sold out за недели.`,
     `Ошибка 5: показывать телефон на улице в толпе в Microcentro или Retiro — используйте карман и дневные маршруты в безопасных районах.`,
@@ -268,7 +268,7 @@ function topicSpecificParagraphs(
     return {
       sights: joinParagraphs(
         "Malbec — визитная карточка Mendoza: высота 800–1200 м, различие между Maipú (ближе к городу), Luján (классика) и Uco Valley (премиум).",
-        "Дегустación обычно 3–5 вин + вода и хлеб; premium tour включает сыр и olive oil. Designated driver или van tour — если планируете несколько bodega.",
+        "Дегустацию обычно 3–5 вин + вода и хлеб; premium tour включает сыр и olive oil. Designated driver или van tour — если планируете несколько bodega.",
         "Бронируйте онлайн: Catena, Salentein, Trapiche, семейные boutique. Vendimia в марте — пик цен и sold out.",
       ),
     };
@@ -298,7 +298,7 @@ function topicSpecificParagraphs(
     return {
       brief: joinParagraphs(
         "SIM Claro, Personal или Movistar продают в салонах и киосках — нужен паспорт. Пакет 3–5 GB на 7–15 дней — ориентир 5–10 USD.",
-        "eSIM через Airalo/Holafly удобна до landing. Wi‑Fi в отелях и кафе есть, но для maps и такsi лучше мобильные данные.",
+        "eSIM через Airalo/Holafly удобна до landing. Wi‑Fi в отелях и кафе есть, но для maps и такси лучше мобильные данные.",
         "В Patagonia покрытие пропадает на тропах — скачайте offline maps заранее.",
       ),
     };
@@ -377,7 +377,7 @@ export function buildArticleSections(
     specific.transport ??
     joinParagraphs(
       category === "transport" || topic === "авиабилеты" || topic === "автобусы"
-        ? "Международные рейсы — в EZE (Ezeiza) или AEP (Aeroparque). Между EZE и городом — такси фикс, трансfer или shuttle; ночью только официальные."
+        ? "Международные рейсы — в EZE (Ezeiza) или AEP (Aeroparque). Между EZE и городом — такси фикс, трансфер или shuttle; ночью только официальные."
         : `Базовый hub — ${region.hubCity}. Внутренние рейсы экономят дни на длинных плечах; автобусы cama — ночью между BA и Mendoza, Salta, Bariloche.`,
       topic === "аренда-авто"
         ? "Аренда авто: международные права, полная страховка, gravel на south — не берите слишком низкую машину. Заправки и расстояния большие."
@@ -406,15 +406,15 @@ export function buildArticleSections(
       : joinParagraphs(
           `Бюджет для «${label}»: ориентир ${region.budgetDaily}.`,
           "Экономия: menú del día, автобус вместо лишнего перелёта, жильё с кухней, один платный тур вместо трёх «на бегу».",
-          "Страховка, SIM и трансфер из аэропорта — заложите отдельно; не оставляйте последнюю ночь без peso на такsi.",
+          "Страховка, SIM и трансфер из аэропорта — заложите отдельно; не оставляйте последнюю ночь без peso на такси.",
         ));
 
   const faq =
     specific.faq ??
     joinParagraphs(
-      `Нужен ли гид для «${label}»? На популярных тropах (Iguazú, Perito Moreno pasarelas) — можно самому. На Laguna de los Tres, Salinas Grandes, whale watching — гид повышает безопасность и экономит время.`,
+      `Нужен ли гид для «${label}»? На популярных тропах (Iguazú, Perito Moreno pasarelas) — можно самому. На Laguna de los Tres, Salinas Grandes, whale watching — гид повышает безопасность и экономит время.`,
       `Сколько дней минимум? Для одной темы в ${region.name} — 2–4 дня; для региона целиком — 5–10. Не смешивайте Patagonia и север без перелёта через BA.`,
-      "Безопасность: не носите всё наличные, копии паспорта в облаке, официальные taxi/apps. Ночью — в людных районах или трансfer.",
+      "Безопасность: не носите всё наличные, копии паспорта в облаке, официальные taxi/apps. Ночью — в людных районах или трансфер.",
       "Актуальность: проверяйте migraciones, parquesnacionales.gob.ar и сайты авиакомпаний за 2 недели до вылета.",
     );
 

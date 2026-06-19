@@ -10,8 +10,8 @@ const patagoniaDetail: TourDetail = {
   durationNights: 9,
   priceUsd: 2663,
   originalPriceUsd: 3026,
-  rating: 4.9,
-  reviewCount: 187,
+  rating: 0,
+  reviewCount: 0,
   gallery: [
     "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=1200&q=80",
     "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
@@ -44,14 +44,14 @@ const patagoniaDetail: TourDetail = {
       id: "p1",
       title: "Ледник Перито-Морено",
       description:
-        "Один из немногих ледников в мире, который продолжает расти. Зрелище откалывания льда — незабываемо.",
+        "Один из немногих ледников в мире, остающихся в равновесии: он периодически наступает на озеро. Зрелище откалывания льда — незабываемо.",
       image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=600&q=80",
     },
     {
       id: "p2",
       title: "Torres del Paine",
       description:
-        "Гранитные башни, ледниковые озёra и треккинг-маршруты мирового класса в Чили.",
+        "Гранитные башни, ледниковые озёра и треккинг-маршруты мирового класса в Чили.",
       image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80",
     },
     {
@@ -85,7 +85,7 @@ const patagoniaDetail: TourDetail = {
       items: [
         "Круиз к ледникам с расстояния вытянутой руки",
         "Треккинг в Torres del Paine с русскоязычным гидом",
-        "Наблюдение за пингвинами Магеллана",
+        "Круиз по озеру Аргентино к ледникам Upsala и Spegazzini",
         "Малые группы — максимум 12 человек",
       ],
     },
@@ -278,13 +278,104 @@ const patagoniaDetail: TourDetail = {
       meals: ["Завтрак", "Ланч-бокс", "Ужин"],
       accommodation: "Lodge у входа в парк",
     },
+    {
+      id: "d7",
+      dayNumber: 7,
+      title: "Ледник Грей и катамаран",
+      description:
+        "Катамаран по озеру Грей к одноимённому леднику, прогулка по смотровым тропам. Запасной вариант на случай непогоды у башен.",
+      images: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"],
+      activities: [
+        {
+          id: "d7-a1",
+          kind: "boat_cruise",
+          title: "Катамаран к леднику Грей",
+          durationLabel: "3 ч",
+          description: "Подход к ледяной стене ледника Грей по озеру",
+        },
+        {
+          id: "d7-a2",
+          kind: "walking",
+          title: "Смотровые тропы у озера Грей",
+          durationLabel: "1,5 ч",
+        },
+      ],
+      meals: ["Завтрак", "Ланч-бокс", "Ужин"],
+      accommodation: "Lodge у входа в парк",
+    },
+    {
+      id: "d8",
+      dayNumber: 8,
+      title: "Возвращение в Эль-Калафате",
+      description:
+        "Переезд через границу обратно в Аргентину. Свободный вечер в Эль-Калафате — сувениры, музей ледников и патагонская кухня.",
+      images: ["https://images.unsplash.com/photo-1589182370481-0de83087320f?w=600&q=80"],
+      activities: [
+        {
+          id: "d8-a1",
+          kind: "transfer",
+          title: "Трансфер Torres del Paine — Эль-Калафате",
+          durationLabel: "5 ч",
+        },
+        {
+          id: "d8-a2",
+          kind: "city_walk",
+          title: "Свободное время в Эль-Калафате",
+          durationLabel: "2–3 ч",
+        },
+      ],
+      meals: ["Завтрак", "Обед"],
+      accommodation: "Отель 4* в Эль-Калафате",
+    },
+    {
+      id: "d9",
+      dayNumber: 9,
+      title: "Перелёт в Буэнос-Айрес",
+      description:
+        "Утренний перелёт в столицу. Свободное время и прощальный ужин в традиционной parrilla с аргентинским стейком и вином мальбек.",
+      images: ["https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=600&q=80"],
+      activities: [
+        {
+          id: "d9-a1",
+          kind: "flight",
+          title: "Перелёт Эль-Калафате — Буэнос-Айрес",
+          durationLabel: "3 ч",
+        },
+        {
+          id: "d9-a2",
+          kind: "food",
+          title: "Прощальный ужин в parrilla",
+          durationLabel: "2 ч",
+        },
+      ],
+      meals: ["Завтрак", "Ужин"],
+      accommodation: "Отель 4* в центре Буэнос-Айреса",
+    },
+    {
+      id: "d10",
+      dayNumber: 10,
+      title: "Вылет домой",
+      description:
+        "Свободное время до трансфера. Сдача номера и трансфер в аэропорт Ezeiza к обратному рейсу.",
+      images: ["https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=600&q=80"],
+      activities: [
+        {
+          id: "d10-a1",
+          kind: "transfer",
+          title: "Трансфер в аэропорт Ezeiza",
+          durationLabel: "45 мин",
+        },
+      ],
+      meals: ["Завтрак"],
+      accommodation: "—",
+    },
   ],
   organizerComment: {
     greeting:
-      "Привет! Меня зовут Мария, и Патагония — моя страсть уже 12 лет. Я провела здесь более 40 групп и знаю каждый уголок этого региона.",
+      "Привет! Меня зовут Иван, и Патагония — моя страсть уже 12 лет. Я провёл здесь более 40 групп и знаю каждый уголок этого региона.",
     recommendations: [
       "Возьмите непродуваемую куртку — ветер в Патагонии очень сильный",
-      "Зарядите power bank: розетки не везде",
+      "Зарядите внешний аккумулятор: розетки не везде",
       "День 6 — самый интенсивный, начните его с хорошего завтрака",
     ],
     routeNotes:
@@ -314,90 +405,27 @@ const patagoniaDetail: TourDetail = {
     routeMap:
       "Маршрут выстроен по принципу «сначала юг, потом чилийская Патагония»: так проще акклиматизироваться и не возвращаться лишний раз через Буэнос-Айрес.",
     packing:
-      "Не забудьте power bank — в lodge розетки не у каждой кровати. Крем SPF 50+ обязателен: солнце в горах обманчиво, даже в пасмурную погоду.",
+      "Не забудьте внешний аккумулятор — в лодже розетки не у каждой кровати. Крем SPF 50+ обязателен: солнце в горах обманчиво, даже в пасмурную погоду.",
     faq:
       "Если не нашли ответ — напишите нам в WhatsApp. Часто туристы спрашивают про визу в Чили для Torres del Paine: уточняйте актуальные правила за месяц до поездки.",
     policies:
       "При отмене менее чем за 30 дней до заезда удерживается предоплата. Страховку лучше оформить сразу после бронирования — так покрытие начнётся раньше.",
   },
   organizer: {
-    id: "org-1",
-    name: "Мария Гонсалес",
+    id: "ivan-evdokimychev",
+    name: "Иван Евдокимычев",
     role: "Организатор путешествий",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80",
-    rating: 4.9,
-    tourCount: 24,
-    travelerCount: 680,
+    avatar: "",
+    rating: 0,
+    tourCount: 0,
+    travelerCount: 235,
     languages: ["Русский", "Испанский", "Английский"],
-    experienceYears: 12,
-    phone: "+7 (495) 123-45-67",
-    email: "maria@argentina-travel.ru",
+    experienceYears: 0,
+    platformRegisteredAt: "2023-01-01T00:00:00.000Z",
+    phone: "",
+    email: "",
   },
-  reviews: [
-    {
-      id: "r1",
-      author: "Елена К.",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
-      rating: 5,
-      date: "2025-04-12",
-      tripDate: "2025-03-01",
-      text: "Ледник Перито-Морено — это что-то невероятное! Организация на высшем уровне, гид Мария знает каждый камень.",
-      photos: ["https://images.unsplash.com/photo-1558980664-769d59546b3d?w=400&q=80"],
-      verifiedTrip: true,
-      source: "static",
-    },
-    {
-      id: "r2",
-      author: "Дмитрий В.",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
-      rating: 5,
-      date: "2025-03-28",
-      tripDate: "2025-02-15",
-      text: "Трек к Base Torres был сложным, но того стоил. Группа была дружная, все поддерживали друг друга.",
-      photos: [],
-      verifiedTrip: true,
-      source: "static",
-    },
-    {
-      id: "r3",
-      author: "Анна М.",
-      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
-      rating: 5,
-      date: "2025-02-10",
-      tripDate: "2025-01-20",
-      text: "Уже планируем следующую поездку с ArgentinaTravel. Патагония покорила сердце!",
-      photos: [
-        "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=400&q=80",
-        "https://images.unsplash.com/photo-1551632811-561732d1e306?w=400&q=80",
-      ],
-      verifiedTrip: true,
-      source: "static",
-    },
-    {
-      id: "r4",
-      author: "Сергей П.",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
-      rating: 4,
-      date: "2025-01-15",
-      tripDate: "2024-12-10",
-      text: "Отличный тур, единственное — на 6-й день было очень ветрено. Но гид предупреждал заранее.",
-      photos: [],
-      verifiedTrip: false,
-      source: "static",
-    },
-    {
-      id: "r5",
-      author: "Ольга Н.",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&q=80",
-      rating: 5,
-      date: "2024-12-01",
-      tripDate: "2024-11-05",
-      text: "Круиз по озеру Аргентино — отдельная магия. Рекомендую брать тёплые перчатки!",
-      photos: ["https://images.unsplash.com/photo-1519682337058-a94d51933763?w=400&q=80"],
-      verifiedTrip: false,
-      source: "static",
-    },
-  ],
+  reviews: [],
   accommodations: [
     {
       id: "a1",
@@ -447,8 +475,8 @@ const patagoniaDetail: TourDetail = {
     meetingPoint: "Аэропорт Ezeiza, зона прилёта — табличка ArgentinaTravel",
   },
   importantInfo: [
-    "Необходима виза для граждан РФ (электронная AVE или штамп при пересадке)",
-    "Рекомендуем медицинскую страховку с пок покрытием треккинга",
+    "Гражданам РФ для туристического въезда обычно достаточно загранпаспорта (пребывание до 90 дней); правила уточняйте перед поездкой",
+    "Рекомендуем медицинскую страховку с покрытием треккинга",
     "Средняя температура: +5…+15 °C летом, ветрено",
     "Для треккинга нужна трекинговая обувь",
     "Минимальный возраст участников — 14 лет",
@@ -458,7 +486,7 @@ const patagoniaDetail: TourDetail = {
       id: "f1",
       question: "Нужна ли виза в Аргентину?",
       answer:
-        "Для граждан РФ необходима электронная авторизация AVE или транзитная виза. Мы поможем с оформлением.",
+        "Для туристических поездок гражданам РФ виза в Аргентину обычно не требуется (пребывание до 90 дней). Уточняйте актуальные правила перед поездкой; при пересадках проверяйте транзитные требования других стран.",
     },
     {
       id: "f2",
@@ -513,7 +541,7 @@ const patagoniaDetail: TourDetail = {
     {
       id: "patagonia-risk-altitude",
       kind: "altitude",
-      title: "Высота до 900 м на треккинге",
+      title: "Набор высоты до 800 м на треккинге",
       description:
         "Трек к Base Torres проходит с набором высоты до 800 м. При чувствительности к высоте двигайтесь в своём темпе и сообщите гиду.",
     },

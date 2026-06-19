@@ -3,7 +3,7 @@ import TransfersSearchView from "@/components/transfers/TransfersSearchView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "Трансферы в Аргентине — Пора в Аргентину";
+const PAGE_TITLE = "Трансферы в Аргентине";
 const PAGE_DESCRIPTION =
   "Поиск трансферов из аэропортов EZE и AEP в Буэнос-Айрес и регионы. Сравнение вариантов и переход к бронированию у партнёра Intui.";
 

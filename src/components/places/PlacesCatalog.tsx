@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { LayoutGrid, Map as MapIcon, MapPin } from "lucide-react";
 import PlaceCard from "@/components/places/PlaceCard";
@@ -38,29 +38,37 @@ const PlacesCatalogMap = dynamic(() => import("@/components/places/PlacesCatalog
 type PlacesCatalogProps = {
   places: PlaceListing[];
   collections?: PlaceCollection[];
+  initialFilters: PlaceCatalogFilters;
+  initialViewMode: "grid" | "map";
 };
 
-export default function PlacesCatalog({ places, collections = [] }: PlacesCatalogProps) {
+export default function PlacesCatalog({
+  places,
+  collections = [],
+  initialFilters,
+  initialViewMode,
+}: PlacesCatalogProps) {
   const { t } = useLocaleCurrency();
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const regions = useMemo(() => getUniqueRegions(places), [places]);
   const regionSummaries = useMemo(() => getRegionSummaries(places), [places]);
   const provinces = useMemo(() => getUniqueProvinces(places), [places]);
 
-  const [filters, setFilters] = useState<PlaceCatalogFilters>(() =>
-    parsePlaceFiltersFromSearchParams(searchParams),
-  );
-  const [viewMode, setViewMode] = useState<"grid" | "map">(
-    searchParams.get("view") === "map" ? "map" : "grid",
-  );
+  const [filters, setFilters] = useState<PlaceCatalogFilters>(initialFilters);
+  const [viewMode, setViewMode] = useState<"grid" | "map">(initialViewMode);
   const [selectedSlug, setSelectedSlug] = useState<string | null>(null);
 
   useEffect(() => {
-    setFilters(parsePlaceFiltersFromSearchParams(searchParams));
-    setViewMode(searchParams.get("view") === "map" ? "map" : "grid");
-  }, [searchParams]);
+    const syncFromUrl = () => {
+      const params = new URLSearchParams(window.location.search);
+      setFilters(parsePlaceFiltersFromSearchParams(params));
+      setViewMode(params.get("view") === "map" ? "map" : "grid");
+    };
+
+    window.addEventListener("popstate", syncFromUrl);
+    return () => window.removeEventListener("popstate", syncFromUrl);
+  }, []);
 
   const filtered = useMemo(() => filterPlaces(places, filters), [places, filters]);
   const sorted = useMemo(() => sortPlaces(filtered, filters.sort), [filtered, filters.sort]);

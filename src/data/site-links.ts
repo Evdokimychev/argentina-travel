@@ -21,7 +21,7 @@ export const SITE_FOOTER_NAV = [
   { href: "/forum", label: "Форум", labelKey: "nav.forum" },
   { href: "/about", label: "О проекте", labelKey: "nav.about" },
   { href: "/join", label: "Для организаторов", labelKey: "nav.utility.join" },
-  { href: "/faq", label: "FAQ", labelKey: "nav.faq" },
+  { href: "/faq", label: "Частые вопросы", labelKey: "nav.faq" },
   { href: "/contacts", label: "Контакты", labelKey: "nav.contacts" },
 ] as const;
 
@@ -31,9 +31,13 @@ export const SITE_FOOTER_CONTACTS = [
   { href: "/booking/find", label: "Найти заявку", labelKey: "footer.contact.findBooking" },
 ] as const;
 
-export const SITE_SOCIAL_LINKS = [
-  { href: "https://t.me/", label: "Telegram", external: true },
-  { href: "https://instagram.com/", label: "Instagram", external: true },
-] as const;
+export type SiteSocialLink = {
+  href: string;
+  label: string;
+  external: true;
+};
+
+/** Empty until real channel URLs are configured (avoids placeholder t.me/ links). */
+export const SITE_SOCIAL_LINKS: readonly SiteSocialLink[] = [];
 
 /** Primary public navigation lives in `@/data/site-nav`. Footer mirrors main sections. */

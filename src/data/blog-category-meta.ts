@@ -27,10 +27,10 @@ const BLOG_CATEGORY_DESCRIPTIONS: Record<string, Omit<BlogCategoryMeta, "image">
     description: "Fitz Roy, Laguna de los Tres, снаряжение",
   },
   Винодельни: {
-    description: "Mendoza, malbec, bodega и дегустации",
+    description: "Мендоса, мальбек, винодельни и дегустации",
   },
   "Животные Аргентины": {
-    description: "Киты, пингвины, condors и Valdés",
+    description: "Киты, пингвины, кондоры и полуостров Вальдес",
   },
   "Кухня Аргентины": {
     description: "Asado, empanadas, mate и гастрономические туры",

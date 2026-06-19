@@ -3,7 +3,7 @@ import CollectionsIndexView from "@/components/collections/CollectionsIndexView"
 import { fetchCollectionsServer } from "@/lib/places-repository";
 
 export const metadata: Metadata = {
-  title: "Подборки мест — Пора в Аргентину",
+  title: "Подборки мест",
   description: "Тематические коллекции мест Аргентины: Patagonia, UNESCO, винный маршрут и другие.",
   alternates: { canonical: "/collections" },
 };

@@ -13,7 +13,7 @@ function readCssPx(name: string, fallback: number): number {
 /** Offset for scroll targets: header + section nav(s) + gap */
 export function getSiteScrollAnchorOffset(): number {
   return (
-    readCssPx("--site-header-height", 72) +
+    readCssPx("--site-header-height", 80) +
     readCssPx("--site-section-nav-height", 0) +
     readCssPx("--tour-section-nav-height", 0) +
     SITE_SCROLL_ANCHOR_GAP_PX

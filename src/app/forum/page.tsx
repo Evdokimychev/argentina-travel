@@ -6,7 +6,7 @@ import { fetchForumCategories } from "@/lib/forum/forum-server";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const PAGE_TITLE = "Форум — Пора в Аргентину";
+const PAGE_TITLE = "Форум";
 const PAGE_DESCRIPTION =
   "Обсуждения о Буэнос-Айресе, иммиграции, турах и жизни в Аргентине. Открытые разделы доступны без регистрации.";
 

@@ -91,7 +91,7 @@ export default function Hero({
                 <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
                   <Image
                     src={image}
-                    alt=""
+                    alt={title}
                     fill
                     priority
                     sizes="(max-width: 1024px) 100vw, 360px"
@@ -117,7 +117,7 @@ export default function Hero({
       data-scroll-rail-tone="dark"
       className="relative flex h-[85vh] min-h-[500px] items-end overflow-hidden"
     >
-      <Image src={image} alt="" fill priority className="object-cover" sizes="100vw" />
+      <Image src={image} alt={title} fill priority className="object-cover" sizes="100vw" />
       <div
         className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/45 to-charcoal/15"
         aria-hidden

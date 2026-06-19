@@ -67,7 +67,7 @@ export default function BlogTopicHubs({
                 <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
                   <Image
                     src={meta.image}
-                    alt=""
+                    alt={category}
                     fill
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                     sizes="112px"

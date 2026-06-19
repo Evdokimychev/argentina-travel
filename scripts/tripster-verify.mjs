@@ -127,6 +127,30 @@ async function verifyTripster() {
     );
   }
 
+  const orderProbe = await fetch(
+    `${apiBase}/partners/${encodeURIComponent(tripsterPartner)}/external_orders/`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        "Idempotency-Key": "tripster-verify-probe",
+      },
+      body: JSON.stringify({}),
+    }
+  );
+  if (orderProbe.status === 403) {
+    console.log(
+      "External orders API: FORBIDDEN — у партнёра нет доступа к созданию заказов (нужен отдельный доступ у Tripster)"
+    );
+  } else if (orderProbe.status === 400) {
+    console.log("External orders API: ok (доступ есть, валидация сработала как ожидалось)");
+  } else if (orderProbe.status === 401) {
+    console.log("External orders API: unauthorized (401)");
+  } else {
+    console.log(`External orders API: unexpected status ${orderProbe.status}`);
+  }
+
   return true;
 }
 

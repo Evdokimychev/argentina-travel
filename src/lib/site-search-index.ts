@@ -62,7 +62,7 @@ const STATIC_PAGES: SearchIndexItem[] = [
     id: "page-about",
     type: "page",
     title: "О проекте",
-    description: "Миссия, ценности и визуальный язык платформы Argentina Travel.",
+    description: "Миссия, ценности и как устроена платформа «Пора в Аргентину».",
     href: "/about",
     keywords: ["о нас", "миссия", "команда"],
   },

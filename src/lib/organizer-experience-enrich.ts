@@ -1,3 +1,4 @@
+import { getOrganizerCanonicalStats } from "@/data/organizer-canonical-stats";
 import { getUserById } from "@/lib/auth-store";
 import { joinFullName } from "@/lib/full-name";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
@@ -11,8 +12,11 @@ export function enrichTourOrganizerDetail(
 
   const profile = readOrganizerProfile(ownerUserId);
   const user = getUserById(ownerUserId);
+  const canonical = getOrganizerCanonicalStats(ownerUserId);
   const displayName = user ? joinFullName(user.firstName, user.lastName) : organizer.name;
   const avatar = user?.avatar?.trim() || organizer.avatar;
+  const platformRegisteredAt =
+    canonical?.platformRegisteredAt ?? user?.createdAt ?? organizer.platformRegisteredAt;
 
   return {
     ...organizer,
@@ -21,7 +25,10 @@ export function enrichTourOrganizerDetail(
     shortDescription: profile.shortDescription || organizer.shortDescription,
     extendedDescription: profile.extendedDescription || organizer.extendedDescription,
     statusText: profile.statusText.trim() || organizer.statusText,
-    platformRegisteredAt: user?.createdAt,
+    tourCount: canonical?.tourCount ?? organizer.tourCount,
+    travelerCount: canonical?.travelerCount ?? organizer.travelerCount,
+    experienceYears: canonical ? 0 : organizer.experienceYears,
+    platformRegisteredAt,
     professionalExperience: profile.professionalExperience ?? null,
     slug: ownerUserId,
     ownerUserId,

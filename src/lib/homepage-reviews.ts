@@ -5,6 +5,7 @@ import { getAllCanonicalTours } from "@/lib/tour-repository";
 import type { TourReview } from "@/types";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
+import { stripStaticSeedReviews } from "@/lib/tour-review-stats";
 
 function reviewToTestimonial(
   review: TourReview,
@@ -31,7 +32,7 @@ export function collectTopVerifiedReviewsFromSeed(limit = 3): Testimonial[] {
   for (const tour of getAllCanonicalTours()) {
     if (tour.status !== "published") continue;
 
-    for (const review of tour.social.reviews) {
+    for (const review of stripStaticSeedReviews(tour.social.reviews)) {
       if (review.verifiedTrip !== true) continue;
       collected.push(
         reviewToTestimonial(review, tour.slug, tour.title, tour.geography.region)

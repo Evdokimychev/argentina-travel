@@ -36,7 +36,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   return {
     ...buildPublicPageMetadata({
-      title: `${thread.title} — форум «Пора в Аргентину»`,
+      title: `${thread.title} — форум`,
       description,
       path: `/forum/${slug}/${threadId}`,
     }),

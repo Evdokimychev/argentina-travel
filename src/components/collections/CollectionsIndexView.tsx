@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { PlaceCollection } from "@/types/place";
 import { collectionHref } from "@/lib/places-repository";
+import { formatSpots } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
@@ -45,7 +46,7 @@ export default function CollectionsIndexView({
                 {col.subtitle ? <p className="mt-1 text-sm text-white/85">{col.subtitle}</p> : null}
                 <p className="mt-2 line-clamp-2 text-xs text-white/75">{col.description}</p>
                 <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-sky-200">
-                  {col.places.length} мест
+                  {formatSpots(col.places.length)}
                   <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-0.5" aria-hidden />
                 </span>
               </div>

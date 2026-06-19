@@ -8,7 +8,7 @@ import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { fetchCollectionsServer } from "@/lib/places-repository";
 
-const PAGE_TITLE = "Регионы и места — Пора в Аргентину";
+const PAGE_TITLE = "Регионы и места";
 const PAGE_DESCRIPTION =
   "8 регионов для планирования поездки и справочник мест Аргентины: парки, ледники, водопады и города — с картой, подборками и турами.";
 

@@ -20,7 +20,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Когда ехать", p(
         "Пик сезона — январь и февраль: много туристов, дороже жильё, но максимально комфортная погода для треккинга и лодок к ледникам. Ноябрь–декабрь и март — золотая середина: меньше очередей у смотровых Perito Moreno, на тропах El Chaltén ещё или уже не так многолюдно.",
         "Весной (сентябрь–октябрь) и осенью (апрель–май) возможен ветер и переменчивая погода, зато фотографам нравятся низкое солнце и облака у Cerro Fitz Roy. Зимой в El Calafate работает ледник, но автобусы в Chaltén реже, а часть refugio закрыта.",
-        "Если вы ограничены школьными каникулами — бронируйте отели и внутренние перелёты за 2–3 месяца. Для гибких дат смотрите shoulder-сезон: экономия 20–30 % на жилье без потери главных впечатлений.",
+        "Если вы ограничены школьными каникулами — бронируйте отели и внутренние перелёты за 2–3 месяца. Для гибких дат смотрите межсезонье: экономия 20–30 % на жилье без потери главных впечатлений.",
       )),
       section("Как добраться", p(
         "Международные рейсы прилетают в Буэнос-Айрес (EZE или AEP). Дальше — внутренний перелёт в El Calafate (FTE) или Ushuaia (USH); Aerolíneas и Flybondi летают ежедневно в сезон, время в пути около 3 часов.",
@@ -28,7 +28,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
         "Для Puerto Madryn (киты и пингвины) — отдельный перелёт в PMY из Buenos Aires или стыковка через Comodoro Rivadavia. Не смешивайте «ледниковую» и «морскую» Патагонию в один короткий маршрут без запаса дней.",
       )),
       section("Что посмотреть", p(
-        "Perito Moreno в Los Glaciares — must-see: смотровые площадки, прогулка по pasarelas и опционально mini-trekking по льду. В El Chaltén — дневные треки к Laguna Capri, Laguna de los Tres и Mirador Maestri без обязательного ночёвки в походе.",
+        "Perito Moreno в Los Glaciares — обязательно к посещению: смотровые площадки, прогулка по мосткам (pasarelas) и опционально mini-trekking по льду. В El Chaltén — дневные треки к Laguna Capri, Laguna de los Tres и Mirador Maestri без обязательной ночёвки в походе.",
         "Из Ushuaia — парк Tierra del Fuego, поезд End of the World и лодки по Beagle Channel. Для дикой природы в другом углу региона — полуостров Valdés: киты с июня, пингвины Magellanic с сентября.",
         "Не распыляйтесь на Bariloche в той же поездке, если у вас меньше 10 дней: Nahuel Huapi прекрасен, но логистически это отдельный регион. Сначала закройте южную Patagonia, потом планируйте север.",
       )),
@@ -112,7 +112,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("FAQ", p(
         "Коляска на тропах? Только на асфальте Calafate и в парке Tierra del Fuego на коротких участках; на тропах Chaltén — рюкзак-переноска.",
         "Нужен ли гид с детьми? На Perito Moreno и пингвинах — групповая экскурсия снимает логистику; в Chaltén можно самим на лёгких маршрутах.",
-        "Аltitude? Южная Patagonia низкая, проблем с высотой нет.",
+        "Высота? Южная Patagonia низкая, проблем с высотой нет.",
       )),
     ],
   ),
@@ -123,7 +123,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Кратко", p(
         "Зимой в аргентинской Patagonia — короткий день, мороз, ветер и снег на тропах. Главный козырь сезона — El Calafate и Perito Moreno без летних толп, плюс лыжи в Ushuaia и низкие цены на жильё.",
         "El Chaltén в июле частично «засыпает»: многие hostels и кафе закрыты, треккинг к Fitz Roy — только для подготовленных с зимним снаряжением. Puerto Madryn, наоборот, в разгар китового сезона.",
-        "Зимняя поездка — осознанный выбор: меньше «открыточных» троп, больше атмосферы, ледника и, при желании, whale watching.",
+        "Зимняя поездка — осознанный выбор: меньше «открыточных» троп, больше атмосферы, ледника и, при желании, наблюдения за китами.",
       )),
       section("Когда ехать", p(
         "Июнь–август — глубокая зима: температура в Calafate часто около 0 °C днём, ночью −5…−10 °C, ощущается холоднее из-за ветра.",
@@ -138,7 +138,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Что посмотреть", p(
         "Perito Moreno зимой великолепен: голубой лёд на фоне снежных пиков, меньше людей на pasarelas. Лодки и mini-trekking работают не каждый день — проверяйте операторов.",
         "Ushuaia: Cerro Castor для лыж, Museo Maritimo, короткие прогулки по городу; Tierra del Fuego — часть троп скользкая.",
-        "Puerto Madryn / Valdés: южные киты (franciscana и right whale) — зимний highlight; это другой угол Patagonia, 1500 км от Calafate.",
+        "Puerto Madryn / Valdés: южные гладкие киты (southern right whale) — зимняя жемчужина; это другой угол Патагонии, 1500 км от Calafate.",
       )),
       section("Бюджет", p(
         "Жильё в Calafate зимой: 40–70 USD за двойную комнату в mid-range. Экскурсии без летней наценки.",
@@ -148,7 +148,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("FAQ", p(
         "Сколько света зимой? Около 8–9 часов; планируйте активности на середину дня.",
         "Нужны ли шипы на обуви? На pasarelas Perito Moreno обычно достаточно водостойкой обуви; для городских улиц при наледи — полезны.",
-        "Chaltén зимой для обычного туриста? Скорее нет — unless guided winter trek.",
+        "Chaltén зимой для обычного туриста? Скорее нет — разве что в составе зимнего трека с гидом.",
       )),
     ],
   ),
@@ -200,7 +200,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Когда ехать", p(
         "Декабрь: день длинный, ещё не пик новогодних цен до 20-х чисел.",
         "Январь–февраль: максимум людей на тропах; стартуйте на маршруты в 6–7 утра.",
-        "Кarnaval и местные праздники поднимают цены на рейсы — смотрите календарь Аргентины.",
+        "Карнавал и местные праздники поднимают цены на рейсы — смотрите календарь Аргентины.",
       )),
       section("Как добраться", p(
         "Рейсы заполнены: покупайте BA–FTE за 2–3 месяца. Flybondi и Aerolíneas конкурируют по цене.",
@@ -271,8 +271,8 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       )),
       section("Когда ехать", p(
         "В любой сезон гиды работают там, где открыта активность: летом — треки и ледник, зимой — Perito Moreno и киты.",
-        "В пик сезона групповые туры заполняются — бронируйте mini-trekking и whale watching за 3–7 дней.",
-        "На рассветные выходы с фотографом-гидом лучше бронировать в shoulder-сезон, когда свет мягче.",
+        "В пик сезона групповые туры заполняются — бронируйте mini-trekking и наблюдение за китами за 3–7 дней.",
+        "На рассветные выходы с фотографом-гидом лучше бронировать в межсезонье, когда свет мягче.",
       )),
       section("Как добраться", p(
         "Большинство гидов встречают у отеля в Calafate, Ushuaia или Madryn; трансфер включён в цену ледниковых и морских туров.",
@@ -301,7 +301,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
     "Патагония без тура: перелёты, автобусы, треки из El Chaltén и Perito Moreno своими силами — пошаговый план.",
     [
       section("Кратко", p(
-        "Самостоятельная Patagonia — нормальная практика: инфраструктура в Calafate, Chaltén и Ushuaia заточена под independent travelers. Нужны карта offline, брони жилья и понимание, что расстояния большие, а Wi‑Fi на тропах нулевой.",
+        "Самостоятельная Патагония — нормальная практика: инфраструктура в Calafate, Chaltén и Ushuaia рассчитана на самостоятельных путешественников. Нужны офлайн-карта, брони жилья и понимание, что расстояния большие, а Wi‑Fi на тропах нулевой.",
         "Базовый маршрут без гида: BA → El Calafate (2–3 ночи, Perito Moreno) → автобус в El Chaltén (3–4 ночи, треки) → перелёт в Ushuaia (2 ночи) → BA. Так за 8–10 дней закрываете главное.",
         "Эта статья — не реклама туров, а инструкция, как собрать поездку на Aerolíneas, Chaltén Travel и booking.com.",
       )),
@@ -337,9 +337,9 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
     "Что проверить перед поездкой в Патагонию: документы, снаряжение, брони, деньги и приложения — полный список.",
     [
       section("Кратко", p(
-        "Чек-лист для Patagonia отличается от «обычной» поездки: здесь ветер, UV, отсутствие связи на тропах и оплата парков иногда только наличными песo. Пройдитесь по списку за 2 недели и за день до вылета.",
+        "Чек-лист для Patagonia отличается от «обычной» поездки: здесь ветер, UV, отсутствие связи на тропах и оплата парков иногда только наличными pesos. Пройдитесь по списку за 2 недели и за день до вылета.",
         "Разделите вещи на документы, одежду по слоям, электронику и медикаменты. Дубликат паспорта в облаке, бумажная копия страховки.",
-        "Статья не заменяет visa-check, но закрывает практические дыры, из-за которых портят отпуск.",
+        "Статья не заменяет проверку визовых правил, но закрывает практические пробелы, из-за которых портят отпуск.",
       )),
       section("Когда ехать", p(
         "За 6–8 недель: купить перелёты BA–FTE/USH, забронировать жильё в январе–феврале.",
@@ -352,13 +352,13 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
         "Багаж: трекинговые ботинки в ручной клади, если checked теряется — классика длинных стыковок.",
       )),
       section("Что посмотреть", p(
-        "Заранее решите: mini-trekking, лодка, whale watching — и забронируйте слоты.",
+        "Заранее решите: mini-trekking, лодка, наблюдение за китами — и забронируйте слоты.",
         "Parque Nacional Los Glaciares: проверьте правила бронирования часового окна входа.",
         "Списки снаряжения для выбранных треков — на стенде в visitor center Chaltén или на сайте парка.",
       )),
       section("Бюджет", p(
         "Наличные USD (крупные купюры без повреждений) + карта запасная.",
-        "Песo снимите в Calafate/Ushuaia — в Chaltén ATM бывает пустой.",
+        "Pesos снимите в Calafate/Ushuaia — в Chaltén ATM бывает пустой.",
         "Заложите 10 % бюджета на непредвиденное: отмена лодки, дополнительная ночь из-за погоды.",
       )),
       section("FAQ", p(
@@ -378,9 +378,9 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
         "Исправлять план лучше до покупки билетов — после landing дороже.",
       )),
       section("Когда ехать", p(
-        "Ошибка: ехать в Chaltén в июле без проверки жилья. Решение: Calafate или летний/shoulder сезон.",
+        "Ошибка: ехать в Chaltén в июле без проверки жилья. Решение: Calafate или летний и межсезонный (shoulder) сезон.",
         "Ошибка: игнорировать Semana Santa и новогодние цены. Решение: бронировать за 2–3 месяца или сдвинуть даты.",
-        "Ошибка: whale watching в феврале в Calafate. Киты — у Puerto Madryn, другой перелёт.",
+        "Ошибка: ехать за наблюдением за китами в феврале в Calafate. Киты — у Puerto Madryn, другой перелёт.",
       )),
       section("Как добраться", p(
         "Ошибка: tight connection в BA между EZE и AEP без учёта пробок — минимум 4–5 часов между аэропортами.",
@@ -394,7 +394,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       )),
       section("Бюджет", p(
         "Ошибка: менять деньги у случайного менялы — Solution: проверенные cuevas или WU.",
-        "Ошибка: не закладывать парковые и экскursion fees — +100 USD на человека.",
+        "Ошибка: не закладывать парковые сборы и плату за экскурсии — +100 USD на человека.",
         "Ошибка: экономить на обуви — купили кроссовки, не держат на камнях Chaltén.",
       )),
       section("FAQ", p(
@@ -591,7 +591,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Кратко", p(
         "Две недели позволяют не только Calafate–Chaltén–Ushuaia, но и Puerto Madryn (киты/пингвины) или выезд в Torres del Paine через Puerto Natales — с учётом пограничных формальностей.",
         "Базовый план: 3 Calafate, 4 Chaltén, 3 Ushuaia, 3 Madryn — или 4-4-3-3 с буферами.",
-        "Это маршрут «Patagonia deep dive», а не заезд на один ледник.",
+        "Это маршрут «глубокое погружение в Патагонию», а не заезд на один ледник.",
       )),
       section("Когда ехать", p(
         "Сентябрь–март: wildlife и треки не совпадут идеально — планируйте по календарю видов.",
@@ -717,7 +717,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
         "Ushuaia зимой: полная зимняя экипировка для улицы.",
       )),
       section("Бюджет", p(
-        "Купить Patagonia-brand jacket в Calafate — premium price; привезите своё.",
+        "Покупать брендовую куртку (в том числе марки Patagonia) в Calafate дорого; привезите свою.",
         "Аренда sleeping bag −10 °C для camping: 8–12 USD/день.",
         "Hot chocolate в кафе Chaltén после трека — лучшая инвестиция 3 USD.",
       )),
@@ -791,12 +791,12 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Бюджет", p(
         "Каждый extra region +300–600 USD на перелёты и жильё.",
         "BA hostels дешевле Patagonia; еда parrilla 20–40 USD.",
-        "Prioritize: если budget tight — BA + Patagonia only.",
+        "Если бюджет ограничен — оставьте связку Буэнос-Айрес + Патагония.",
       )),
       section("FAQ", p(
         "Сначала BA или Patagonia? Часто BA после Patagonia — мягче re-entry.",
         "Chile Torres? Нужен 4+ день и border crossing.",
-        " Одна visa для AR enough? Да для граждан РФ на tourist stay — verify current rules.",
+        "Достаточно ли одной визы для Аргентины? Для туристического пребывания граждан РФ виза обычно не нужна — уточняйте актуальные правила.",
       )),
     ],
   ),
@@ -807,7 +807,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Кратко", p(
         "В Patagonia летят через Buenos Aires: основные аэропорты El Calafate (FTE), Ushuaia (USH), Puerto Madryn (PMY), иногда Comodoro Rivadavia. Операторы — Aerolíneas Argentinas и Flybondi; JetSMART тоже встречается на некоторых направлениях.",
         "Багаж на Flybondi часто отдельно; сравнивайте total price. Рейс 3 ч, задержки погодой в FTE не редкость.",
-        "Статья про внутренние перелёты именно в южную Patagonia, не про межcontinental.",
+        "Статья про внутренние перелёты именно в южную Patagonia, не про международные.",
       )),
       section("Когда ехать", p(
         "Booking за 6–8 недель в январе–феврале даёт лучшие fares.",
@@ -841,7 +841,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
     "Автобусы в Патагонии: Calafate–Chaltén, дальние рейсы и как покупать билеты без испанского.",
     [
       section("Кратко", p(
-        "Автобус — backbone Patagonia для independent travelers. Главная линия El Calafate–El Chaltén: 3 ч по Ruta 40, Chaltén Travel и Taqsa, несколько рейсов в день в сезон.",
+        "Автобус — основа передвижения по Патагонии для самостоятельных путешественников. Главная линия El Calafate–El Chaltén: 3 ч по Ruta 40, Chaltén Travel и Taqsa, несколько рейсов в день в сезон.",
         "Дальние: BA–Río Gallegos 30+ ч (cama/semi-cama) — hardcore budget. Между Ushuaia и Calafate автобус через Chile долгий; чаще летят.",
         "Статья про практику автобусов на юге, не про Buenos Aires Retiro.",
       )),
@@ -879,7 +879,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Кратко", p(
         "Машина в Patagonia даёт свободу для estancias, смотровых вне shuttle и рассвета у Perito Moreno. Ruta 40 между Calafate и Chaltén асфальт; ответвления на gravel — медленно и осторожно.",
         "Прокат в FTE airport: Hertz, Localiza, regional companies. Полная страховка + нулевая франшиза recommended на gravel.",
-        "Для Calafate–Chaltén–Ushuaia solo traveler автобус+plane часто дешевле и спокойнее.",
+        "Для Calafate–Chaltén–Ushuaia solo traveler автобусом и самолётом часто дешевле и спокойнее.",
       )),
       section("Когда ехать", p(
         "Summer daylight для long drives; не ездите ночью — guanaco на дороге.",
@@ -949,7 +949,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
     "Наблюдение за китами в Патагонии: Puerto Madryn, полуостров Valdés, сезоны и бронирование лодок.",
     [
       section("Кратко", p(
-        "Whale watching в аргентинской Patagonia — это Puerto Madryn и Puerto Pirámides на полуострове Valdés. Южные киты (southern right whale) подходят близко с июня по декабрь; пик — сентябрь–ноябрь.",
+        "Наблюдение за китами в аргентинской Патагонии — это Puerto Madryn и Puerto Pirámides на полуострове Valdés. Южные гладкие киты (southern right whale) подходят близко с июня по декабрь; пик — сентябрь–ноябрь.",
         "Это не Calafate и не Ushuaia — отдельный перелёт PMY из BA или связка через Comodoro. Лодки с лицензией и naturalista; с берега тоже видно, но с лодки ближе.",
         "Статья для wildlife-фокуса, не для ледникового маршрута.",
       )),
@@ -1010,7 +1010,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
         "Park fees included sometimes — read fine print.",
       )),
       section("FAQ", p(
-        "Smell? Yes, strong; you'll survive.",
+        "Запах? Да, сильный, но терпимый.",
         "Kids love it — hold hands on paths.",
         "Calafate penguins? No — must travel Atlantic coast or Ushuaia.",
       )),

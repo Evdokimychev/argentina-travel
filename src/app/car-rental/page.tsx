@@ -3,7 +3,7 @@ import CarRentalView from "@/components/car-rental/CarRentalView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "Аренда авто в Аргентине — Пора в Аргентину";
+const PAGE_TITLE = "Аренда авто в Аргентине";
 const PAGE_DESCRIPTION =
   "Прокат автомобиля для поездок по регионам Аргентины. Поиск и бронирование через партнёра LocalRent — удобно для Патагонии, Мендосы и северо-запада.";
 

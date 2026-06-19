@@ -45,7 +45,7 @@ export const IMMIGRATION_PAGES: Record<string, ContentPage> = {
     relatedLinks: [
       { label: "Документы для въезда", href: "/immigration/dokumenty-dlya-vyezda" },
       { label: "Продление пребывания", href: "/immigration/prodlenie-turisticheskogo-vizita" },
-      { label: "Сезоны и климат", href: "/guide/sezony-i-klimat" },
+      { label: "Сезоны и климат", href: "/guide/pogoda-i-sezonnost" },
     ],
   },
   "obzor-vnzh": {
@@ -85,7 +85,7 @@ export const IMMIGRATION_PAGES: Record<string, ContentPage> = {
       {
         heading: "Nómada digital — не ВНЖ",
         paragraphs: [
-          "Цифровой кочевник оформляется как residencia transitoria до 180 дней (Disposición DNM 758/2022), с одной prórrogой на 180 дней. Это не inciso ст. 23 и не ведёт автоматически к ПМЖ. Для долгой легализации выбирают rentista, trabajo или другое основание temporaria.",
+          "Цифровой кочевник оформляется как residencia transitoria до 180 дней (Disposición DNM 758/2022), с одной prórroga на 180 дней. Это не inciso ст. 23 и не ведёт автоматически к ПМЖ. Для долгой легализации выбирают rentista, trabajo или другое основание temporaria.",
         ],
       },
       {

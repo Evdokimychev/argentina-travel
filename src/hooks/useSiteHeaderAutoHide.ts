@@ -1,11 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-
-const SCROLL_DELTA_PX = 18;
-const MIN_SCROLL_Y_TO_HIDE_PX = 96;
-const TOP_REVEAL_Y_PX = 48;
-const TOGGLE_COOLDOWN_MS = 280;
+import { usePathname } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import {
+  applySiteHeaderChrome,
+  SITE_HEADER_HIDE_DISTANCE_PX,
+  SITE_HEADER_MIN_HIDE_SCROLL_PX,
+  SITE_HEADER_REVEAL_DISTANCE_PX,
+  SITE_HEADER_TOP_REVEAL_PX,
+} from "@/lib/site-header-chrome";
 
 type UseSiteHeaderAutoHideOptions = {
   headerRef: React.RefObject<HTMLElement | null>;
@@ -16,49 +19,16 @@ export type SiteHeaderChromeState = {
   headerVisible: boolean;
 };
 
-type ApplyHeaderOffsetOptions = {
-  compensateScroll?: boolean;
-};
-
-function applyHeaderOffset(
-  fullHeightPx: number,
-  visible: boolean,
-  options?: ApplyHeaderOffsetOptions
-) {
-  const root = document.documentElement;
-  const fullNum = Math.max(0, Math.round(fullHeightPx));
-  const full = `${fullNum}px`;
-  const wasVisible = root.dataset.siteHeader !== "hidden";
-
-  root.style.setProperty("--site-header-full-height", full);
-
-  if (
-    options?.compensateScroll &&
-    wasVisible !== visible &&
-    fullNum > 0 &&
-    typeof window !== "undefined"
-  ) {
-    const currentY = window.scrollY;
-    const nextY = visible
-      ? currentY + fullNum
-      : Math.max(0, currentY - fullNum);
-    window.scrollTo({ top: nextY, left: 0, behavior: "instant" });
-  }
-
-  root.style.setProperty("--site-header-height", visible ? full : "0px");
-  root.dataset.siteHeader = visible ? "visible" : "hidden";
-
-  return window.scrollY;
-}
-
 export function useSiteHeaderAutoHide({
   headerRef,
   disabled = false,
 }: UseSiteHeaderAutoHideOptions): SiteHeaderChromeState {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(true);
   const visibleRef = useRef(true);
   const lastScrollYRef = useRef(0);
-  const lastToggleAtRef = useRef(0);
+  const downAccumRef = useRef(0);
+  const upAccumRef = useRef(0);
 
   useEffect(() => {
     visibleRef.current = visible;
@@ -70,12 +40,28 @@ export function useSiteHeaderAutoHide({
     }
   }, [disabled]);
 
-  useEffect(() => {
+  // Reset to visible on route change before paint (avoids a hidden flash on nav).
+  useLayoutEffect(() => {
+    setVisible(true);
+    downAccumRef.current = 0;
+    upAccumRef.current = 0;
+
+    const header = headerRef.current;
+    if (header) {
+      lastScrollYRef.current = applySiteHeaderChrome(header.offsetHeight, true);
+    } else {
+      document.documentElement.dataset.siteHeader = "visible";
+      lastScrollYRef.current = typeof window !== "undefined" ? window.scrollY : 0;
+    }
+  }, [pathname, headerRef]);
+
+  // Keep the measured full height in sync with the real header element.
+  useLayoutEffect(() => {
     const header = headerRef.current;
     if (!header) return;
 
     const syncFullHeight = () => {
-      applyHeaderOffset(header.offsetHeight, visibleRef.current || disabled);
+      applySiteHeaderChrome(header.offsetHeight, visibleRef.current || disabled);
     };
 
     syncFullHeight();
@@ -90,29 +76,30 @@ export function useSiteHeaderAutoHide({
     };
   }, [disabled, headerRef]);
 
-  useEffect(() => {
+  // Reflect the visible state into CSS vars / data attribute.
+  useLayoutEffect(() => {
     const header = headerRef.current;
     if (!header) return;
 
     const nextVisible = visible || disabled;
-    const nextScrollY = applyHeaderOffset(header.offsetHeight, nextVisible, {
-      compensateScroll: !disabled,
-    });
-    lastScrollYRef.current = nextScrollY;
+    lastScrollYRef.current = applySiteHeaderChrome(header.offsetHeight, nextVisible);
   }, [disabled, headerRef, visible]);
 
+  // Distance-based auto-hide: hide after sustained downward scroll, reveal on the
+  // slightest upward scroll. Predictable and free of timer/flicker artefacts.
   useEffect(() => {
     if (disabled) return;
 
     lastScrollYRef.current = window.scrollY;
+    downAccumRef.current = 0;
+    upAccumRef.current = 0;
     let ticking = false;
 
-    const setVisibleWithCooldown = (next: boolean) => {
-      if (next === visibleRef.current) return;
-      const now = Date.now();
-      if (now - lastToggleAtRef.current < TOGGLE_COOLDOWN_MS) return;
-      lastToggleAtRef.current = now;
-      setVisible(next);
+    const reveal = () => {
+      if (!visibleRef.current) setVisible(true);
+    };
+    const hide = () => {
+      if (visibleRef.current) setVisible(false);
     };
 
     const onScroll = () => {
@@ -122,18 +109,35 @@ export function useSiteHeaderAutoHide({
       requestAnimationFrame(() => {
         ticking = false;
 
-        const currentY = window.scrollY;
+        const currentY = Math.max(0, window.scrollY);
         const delta = currentY - lastScrollYRef.current;
+        lastScrollYRef.current = currentY;
 
-        if (currentY <= TOP_REVEAL_Y_PX) {
-          setVisibleWithCooldown(true);
-        } else if (currentY >= MIN_SCROLL_Y_TO_HIDE_PX && delta > SCROLL_DELTA_PX) {
-          setVisibleWithCooldown(false);
-        } else if (delta < -SCROLL_DELTA_PX) {
-          setVisibleWithCooldown(true);
+        if (currentY <= SITE_HEADER_TOP_REVEAL_PX) {
+          downAccumRef.current = 0;
+          upAccumRef.current = 0;
+          reveal();
+          return;
         }
 
-        lastScrollYRef.current = currentY;
+        if (delta > 0) {
+          downAccumRef.current += delta;
+          upAccumRef.current = 0;
+          if (
+            currentY >= SITE_HEADER_MIN_HIDE_SCROLL_PX &&
+            downAccumRef.current >= SITE_HEADER_HIDE_DISTANCE_PX
+          ) {
+            downAccumRef.current = 0;
+            hide();
+          }
+        } else if (delta < 0) {
+          upAccumRef.current += -delta;
+          downAccumRef.current = 0;
+          if (upAccumRef.current >= SITE_HEADER_REVEAL_DISTANCE_PX) {
+            upAccumRef.current = 0;
+            reveal();
+          }
+        }
       });
     };
 

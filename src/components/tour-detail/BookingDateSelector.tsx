@@ -20,6 +20,7 @@ import {
 import { useTourBooking } from "./TourBookingContext";
 import { tourDetailInsetClass } from "@/lib/tour-detail-ui";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import PartnerTourScheduleDatePicker from "./PartnerTourScheduleDatePicker";
 
 interface BookingDateSelectorProps {
   tour: TourDetail;
@@ -81,7 +82,6 @@ export default function BookingDateSelector({
 }: BookingDateSelectorProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
   const isPartnerTour = isPartnerTourDetail(tour);
-  const hasScheduledDates = tour.dates.length > 0;
   const {
     selectedDateId,
     setSelectedDateId,
@@ -90,23 +90,30 @@ export default function BookingDateSelector({
     customDate,
     setCustomDate,
     guests,
+    scheduleDates,
+    scheduleLoading,
   } = useTourBooking();
+
+  const availableDates = isPartnerTour ? scheduleDates : tour.dates;
+  const effectiveBookingMode =
+    isPartnerTour && availableDates.length > 0 ? "scheduled" : bookingMode;
+  const hasScheduledDates = availableDates.length > 0;
 
   const [expanded, setExpanded] = useState(() => !collapsible || !selectedDateId);
   const showCollapsed = collapsible && !expanded && Boolean(selectedDateId);
-  const showModeToggle = bookingMode === "both";
+  const showModeToggle = effectiveBookingMode === "both";
   const showScheduledPicker =
     dateMode === "scheduled" &&
-    hasScheduledDates &&
-    (canPickScheduled(bookingMode) || isPartnerTour);
+    (hasScheduledDates || (isPartnerTour && scheduleLoading)) &&
+    (canPickScheduled(effectiveBookingMode) || isPartnerTour);
   const showCustomPicker =
     dateMode === "custom" &&
-    canPickCustom(bookingMode) &&
-    !(isPartnerTour && hasScheduledDates);
+    canPickCustom(effectiveBookingMode) &&
+    !(isPartnerTour && (hasScheduledDates || scheduleLoading));
   const selectId = `${idPrefix}-date-select`;
   const customDateId = `${idPrefix}-custom-date`;
   const selectionSummary = formatSelectionSummary(
-    tour,
+    { ...tour, dates: availableDates, bookingMode: effectiveBookingMode },
     dateMode,
     selectedDateId,
     customDate,
@@ -114,16 +121,22 @@ export default function BookingDateSelector({
   );
 
   const scheduledError =
-    showScheduledPicker && tour.dates.length > 0
-      ? validateGuestsForScheduledBooking(tour, guests, selectedDateId)
+    showScheduledPicker && availableDates.length > 0
+      ? isPartnerTour && !selectedDateId
+        ? null
+        : validateGuestsForScheduledBooking(
+            { ...tour, dates: availableDates },
+            guests,
+            selectedDateId
+          )
       : null;
   const bookableAlternatives =
     scheduledError != null
-      ? findBookableDates(tour.dates, guests, tour.groupMin)
+      ? findBookableDates(availableDates, guests, tour.groupMin)
       : [];
   const suggestion =
     scheduledError != null
-      ? suggestBookableDatesMessage(tour.dates, guests, tour.groupMin)
+      ? suggestBookableDatesMessage(availableDates, guests, tour.groupMin)
       : null;
 
   useEffect(() => {
@@ -190,59 +203,68 @@ export default function BookingDateSelector({
             </div>
           )}
 
-          {showScheduledPicker && tour.dates.length > 0 && (
+          {showScheduledPicker && (availableDates.length > 0 || (isPartnerTour && scheduleLoading)) && (
             <div className="space-y-4">
-              {showDepartureCalendar ? (
-                <TourDepartureCalendar
-                  dates={tour.dates}
+              {isPartnerTour ? (
+                <PartnerTourScheduleDatePicker
+                  tour={tour}
+                  dates={availableDates}
                   selectedDateId={selectedDateId}
                   guests={guests}
-                  groupMin={tour.groupMin}
-                  onSelect={(date) => setSelectedDateId(date.id)}
+                  loading={scheduleLoading}
+                  onSelect={setSelectedDateId}
                 />
-              ) : null}
+              ) : (
+                <>
+                  {showDepartureCalendar ? (
+                    <TourDepartureCalendar
+                      dates={availableDates}
+                      selectedDateId={selectedDateId}
+                      guests={guests}
+                      groupMin={tour.groupMin}
+                      onSelect={(date) => setSelectedDateId(date.id)}
+                    />
+                  ) : null}
 
-              <div>
-                <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
-                  {isPartnerTour
-                    ? "Дата заезда"
-                    : showDepartureCalendar
-                      ? "Или выберите из списка"
-                      : "Дата отправления"}
-                </label>
-                <div className="relative mt-1.5">
-                  <select
-                    id={selectId}
-                    value={selectedDateId}
-                    onChange={(e) => setSelectedDateId(e.target.value)}
-                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  >
-                    {!selectedDateId ? (
-                      <option value="" disabled>
-                        Выберите дату заезда
-                      </option>
-                    ) : null}
-                    {tour.dates.map((d) => {
-                      const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
-                      const priceLabel = tour.priceOnRequest
-                        ? ""
-                        : ` · ${formatCompactUsd(d.priceUsd)}`;
-                      return (
-                        <option key={d.id} value={d.id} disabled={!bookable}>
-                          {formatDateRange(d.startDate, d.endDate)} ({d.spotsLeft}{" "}
-                          {spotsWord(d.spotsLeft)})
-                          {priceLabel}
-                          {dateOptionSuffix(d, guests, tour.groupMin)}
-                        </option>
-                      );
-                    })}
-                  </select>
-                  <ChevronDown
-                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
-                    aria-hidden
-                  />
-                </div>
-              </div>
+                  <div>
+                    <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
+                      {showDepartureCalendar ? "Или выберите из списка" : "Дата отправления"}
+                    </label>
+                    <div className="relative mt-1.5">
+                      <select
+                        id={selectId}
+                        value={selectedDateId}
+                        onChange={(e) => setSelectedDateId(e.target.value)}
+                        className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                      >
+                        {!selectedDateId ? (
+                          <option value="" disabled>
+                            Выберите дату заезда
+                          </option>
+                        ) : null}
+                        {availableDates.map((d) => {
+                          const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
+                          const priceLabel = tour.priceOnRequest
+                            ? ""
+                            : ` · ${formatCompactUsd(d.priceUsd)}`;
+                          return (
+                            <option key={d.id} value={d.id} disabled={!bookable}>
+                              {formatDateRange(d.startDate, d.endDate)} ({d.spotsLeft}{" "}
+                              {spotsWord(d.spotsLeft)})
+                              {priceLabel}
+                              {dateOptionSuffix(d, guests, tour.groupMin)}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
+                        aria-hidden
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
               {scheduledError && (
                 <div className="mt-2 space-y-2 rounded-xl bg-amber-50 px-3 py-2.5 text-xs text-amber-950">
                   <p>{scheduledError}</p>

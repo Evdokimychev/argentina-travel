@@ -1,3 +1,4 @@
+import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
 import type {
   TourCustomBookingLink,
   TourCustomBookingLinkPublic,
@@ -92,6 +93,31 @@ export function buildExternalBookingUrl(
   }
 }
 
+function resolveExternalBookingStartDate(context: ExternalBookingContext): string | undefined {
+  const selected = context.dates?.find((item) => item.id === context.selectedDateId);
+  if (selected?.startDate) return selected.startDate;
+
+  const parsedPartnerDate = context.selectedDateId
+    ? parsePartnerTourDateId(context.selectedDateId)
+    : null;
+  if (parsedPartnerDate?.startDate) return parsedPartnerDate.startDate;
+
+  if (context.customDate) {
+    return context.customDate.toISOString().slice(0, 10);
+  }
+
+  return undefined;
+}
+
+function resolveExternalBookingSlotTime(context: ExternalBookingContext): string | undefined {
+  if (context.slotTime?.trim()) return context.slotTime.trim();
+
+  const parsedPartnerDate = context.selectedDateId
+    ? parsePartnerTourDateId(context.selectedDateId)
+    : null;
+  return parsedPartnerDate?.time;
+}
+
 function appendBookingContextSearchParams(
   params: URLSearchParams,
   context: ExternalBookingContext
@@ -99,14 +125,15 @@ function appendBookingContextSearchParams(
   if (context.guests && context.guests > 0) {
     params.set("guests", String(context.guests));
   }
-  const selected = context.dates?.find((item) => item.id === context.selectedDateId);
-  if (selected?.startDate) {
-    params.set("start_date", selected.startDate);
-  } else if (context.customDate) {
-    params.set("start_date", context.customDate.toISOString().slice(0, 10));
+
+  const startDate = resolveExternalBookingStartDate(context);
+  if (startDate) {
+    params.set("start_date", startDate);
   }
-  if (context.slotTime?.trim()) {
-    params.set("time", context.slotTime.trim());
+
+  const slotTime = resolveExternalBookingSlotTime(context);
+  if (slotTime) {
+    params.set("time", slotTime);
   }
 }
 
@@ -135,7 +162,7 @@ export function resolveTourExternalBookingHref(
 
   const contextPayload = {
     ...context,
-    dates: tour.dates,
+    dates: context?.dates?.length ? context.dates : tour.dates,
   };
 
   if (url.startsWith("/")) {

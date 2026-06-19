@@ -24,13 +24,13 @@ export const enDictionary: Record<DictionaryKey, string> = {
   "nav.utility.join": "For organizers",
   "nav.utility.contacts": "Contact us",
 
-  "home.hero.eyebrow": "Curated tours",
-  "home.hero.title": "Travel across",
-  "home.hero.titleAccent": "Argentina",
+  "home.hero.eyebrow": "Curated journeys across Argentina",
+  "home.hero.title": "Argentina — from Patagonian glaciers",
+  "home.hero.titleAccent": "to Buenos Aires tango",
   "home.hero.subtitle":
-    "Routes from local organizers — from Buenos Aires tango to Patagonian glaciers",
+    "Verified routes with Russian-speaking guides, an honest country guide, and relocation help — all in one place.",
   "home.hero.ctaRoute": "Find a route",
-  "home.hero.ctaHint": "Not sure where to start?",
+  "home.hero.ctaHint": "Answer 4 questions — we'll suggest matching tours",
 
   "footer.description":
     "Curated tour marketplace in Argentina: Patagonia, Buenos Aires, wine and tango. Book directly with verified organizers.",

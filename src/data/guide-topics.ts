@@ -28,7 +28,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Из аэропорта в город",
         body:
-          "Из EZE: официальное такси (пре-оплата на стойке), приложения Cabify/ Uber или заранее заказанный трансфер. Автобус Tienda León идёт до Retiro, но с багажом после длинного перелёта удобнее трансфер. В EZE и AEP есть банкоматы и обмен — не меняйте всю сумму сразу, курс в городе часто лучше.",
+          "Из EZE: официальное такси (предоплата на стойке), приложения Cabify/Uber или заранее заказанный трансфер. Автобус Tienda León идёт до Retiro, но с багажом после длинного перелёта удобнее трансфер. В EZE и AEP есть банкоматы и обмен — не меняйте всю сумму сразу, курс в городе часто лучше.",
       },
     ],
     serviceCards: [
@@ -95,7 +95,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Регионы и долгий срок",
         body:
-          "Patagonia — бронь за 2–3 месяца. Garantía — барьер для долгой аренды без резидентства. Nomad — monthly Airbnb в Palermo с проверкой Wi‑Fi. Оплата — /guide/ekonomika-i-dengi.",
+          "Патагония — бронь за 2–3 месяца. Garantía — барьер для долгой аренды без резидентства. Кочевникам — помесячная аренда на Airbnb в Palermo с проверкой Wi‑Fi. Оплата — /guide/ekonomika-i-dengi.",
       },
     ],
     serviceCards: [
@@ -130,7 +130,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         label: "Связь",
         href: "/guide/svyaz",
-        description: "Wi‑Fi для кочевник",
+        description: "Wi‑Fi для кочевника",
       },
       {
         label: "Патагония: с чего начать",
@@ -223,7 +223,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Центр и столица",
         body:
-          "Буэнос-Айрес — культура, asado, milonga. Мендоса — malbec и Андes. Кордова и озёра в центре страны менее туристичны, но интересны для второго визита.",
+          "Буэнос-Айрес — культура, asado, milonga. Мендоса — malbec и Анды. Кордова и озёра в центре страны менее туристичны, но интересны для второго визита.",
       },
       {
         heading: "Север: Salta и Iguazú",
@@ -272,7 +272,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     id: "dostoprimechatelnosti",
     slug: "dostoprimechatelnosti",
     title: "Достопримечательности",
-    shortDescription: "Must-see: ледники, водопады, города и природные парки",
+    shortDescription: "Главное: ледники, водопады, города и природные парки",
     intro:
       "Классика первой поездки: Перито-Морено, Iguazú Falls, район La Boca и Recoleta в BA, винодельни Mendoza, Quebrada de Humahuaca. Многие точки удобнее с гидом или в составе тура.",
     heroImage:
@@ -370,14 +370,14 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     title: "Язык",
     shortDescription: "Испанский, местный акцент и базовые фразы",
     intro:
-      "Официальный язык — испанский с характерным rioplatense-акцентом: «ll» и «y» звучат как «sh», используется voseo (vos вместо tú). В туристических зонах частично понимают английский, но базовый испанский сильно упрощает поездку.",
+      "Официальный язык — испанский с характерным региональным акцентом rioplatense: «ll» и «y» звучат как «sh», используется voseo (vos вместо tú). В туристических зонах частично понимают английский, но базовый испанский сильно упрощает поездку.",
     heroImage:
       "https://images.unsplash.com/photo-1546410531-bb4caa6e4248?w=1920&q=80",
     sections: [
       {
         heading: "Особенности rioplatense",
         body:
-          "В Буэнос-Айресе говорят быстро, с интонацией. «Che» — обращение, «boludo/a» — между друзьями (осторожно с незнакомцами). Lunfardo — сленг из tango-культуры, встречается в быту.",
+          "В Буэнос-Айресе говорят быстро, с интонацией. «Che» — обращение, «boludo/a» — между друзьями (осторожно с незнакомцами). Lunfardo — сленг из культуры танго, встречается в быту.",
       },
       {
         heading: "Фразы для туриста",
@@ -427,7 +427,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     title: "Культура",
     shortDescription: "Танго, традиции, fútbol и повседневный этикет",
     intro:
-      "Аргентинская культура — смесь европейских корней и латиноамерicanской идентичности. Танго, fútbol, mate, asado и поздние ужины формируют ритм жизни, который стоит учитывать в маршруте.",
+      "Аргентинская культура — смесь европейских корней и латиноамериканской идентичности. Танго, fútbol, mate, asado и поздние ужины формируют ритм жизни, который стоит учитывать в маршруте.",
     heroImage:
       "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=80",
     sections: [
@@ -476,7 +476,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     title: "История",
     shortDescription: "От колонизации до современной Аргентины",
     intro:
-      "Понимание истории помогает читать город: европейская застройка BA, память о Perón и Eva, Dirty War 1970–80-х, экономические кризисы — всё это видно в музеях, памятниках и разговорах с местными.",
+      "Понимание истории помогает читать город: европейская застройка BA, память о Пероне и Эвите, «грязная война» 1970–80-х, экономические кризисы — всё это видно в музеях, памятниках и разговорах с местными.",
     heroImage:
       "https://images.unsplash.com/photo-1555881400-74d7aca2598b?w=1920&q=80",
     sections: [
@@ -488,7 +488,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Где почувствовать историю",
         body:
-          "Casa Rosada и Plaza de Mayo, Museo Evita в Palermo, Recoleta Cemetery (могила Eva Perón), ESMA — мемориал Dirty War. В Cordoba — колониальный центр. В Salta — Museo de Arqueología de Alta Montaña (дети Llullaillaco).",
+          "Casa Rosada и Plaza de Mayo, Museo Evita в Palermo, Recoleta Cemetery (могила Эвиты Перон), ESMA — мемориал «грязной войны». В Cordoba — колониальный центр. В Salta — Museo de Arqueología de Alta Montaña (дети Llullaillaco).",
       },
       {
         heading: "Современный контекст",
@@ -519,7 +519,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     title: "Кухня",
     shortDescription: "Asado, empanadas, вино и гастрономические маршруты",
     intro:
-      "Аргентинская кухня — мясо мирового уровня, empanadas, dulce de leche и вина Mendoza. Asado — социальный ритуал; в BA десятки parrilla от neighborhood до Michelin-recommended.",
+      "Аргентинская кухня — мясо мирового уровня, empanadas, dulce de leche и вина Мендосы. Asado — социальный ритуал; в Буэнос-Айресе десятки parrilla — от районных до рекомендованных Michelin.",
     heroImage:
       "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1920&q=80",
     sections: [
@@ -531,7 +531,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Empanadas и уличная еда",
         body:
-          "Empanadas tucumanas — с мясом, сыром, humita. Choripán — сосиска в булке с chimichurri. Helado — итальянское наследие, dulce de leche — must try.",
+          "Empanadas tucumanas — с мясом, сыром, humita. Choripán — сосиска в булке с chimichurri. Helado — итальянское наследие, dulce de leche обязательно попробуйте.",
       },
       {
         heading: "Вино",
@@ -702,7 +702,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Что купить",
         body:
-          "Кожа: куртки, ремни, сумки — Murillo и Sur. Mate calabaza и bombilla — сувенир и практика. Вино malbec — в duty free или bodega (проверьте лимиты ввоза). Alpaca-шерсть и poncho — Salta и Humahuaca.",
+          "Кожа: куртки, ремни, сумки — Murillo и Sur. Mate calabaza и bombilla — сувенир и практика. Вино мальбек — в duty free или на винодельне (проверьте лимиты ввоза). Шерсть альпаки и пончо — Salta и Humahuaca.",
       },
       {
         heading: "Где покупать",
@@ -741,7 +741,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     title: "Безопасность",
     shortDescription: "Районы BA, кражи, транспорт, «что делать если» и страховка",
     intro:
-      "Полный практический справочник: безопасные районы Buenos Aires, snatch theft и карманники, такси и Subte, деньги и ATM, Patagonia и нацпарки, экстренные номера и пошаговые действия при краже телефона или паспорта.",
+      "Полный практический справочник: безопасные районы Буэнос-Айреса, уличные кражи и карманники, такси и Subte, деньги и банкоматы, Патагония и нацпарки, экстренные номера и пошаговые действия при краже телефона или паспорта.",
     heroImage:
       "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80",
     sections: [

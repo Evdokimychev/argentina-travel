@@ -104,6 +104,9 @@ export async function GET(request: Request, context: RouteContext) {
   const slotTime = requestUrl.searchParams.get("time");
   const guestsRaw = requestUrl.searchParams.get("guests");
   const guests = guestsRaw ? Number.parseInt(guestsRaw, 10) : null;
+  const customerName = requestUrl.searchParams.get("name");
+  const customerEmail = requestUrl.searchParams.get("email");
+  const customerPhone = requestUrl.searchParams.get("phone");
   const wantsBookingDeepLink = Boolean(startDate || slotTime || (guests != null && guests > 0));
 
   let partnerUrl = experience.partner_url?.trim() || null;
@@ -114,6 +117,9 @@ export async function GET(request: Request, context: RouteContext) {
       time: slotTime,
       guests: Number.isFinite(guests) ? guests : null,
       fallbackUrl: experience.tripster_url,
+      name: customerName,
+      email: customerEmail,
+      phone: customerPhone,
     });
 
     if (isTravelpayoutsConfigured()) {

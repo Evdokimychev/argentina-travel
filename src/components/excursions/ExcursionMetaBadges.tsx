@@ -5,6 +5,7 @@ import { Baby, Bolt, Users, Footprints } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { excursionFormatLabelKey } from "@/lib/excursion-listing-meta";
 import { formatMovementType } from "@/lib/excursion-labels";
+import { filterExcursionDisplayTags } from "@/lib/excursion-display-tags";
 import type { ExcursionDetail } from "@/types/excursion";
 
 function Badge({
@@ -103,7 +104,12 @@ export default function ExcursionMetaBadges({
     addBadge(`language-${language}`, language, <Badge className="bg-sky/10 text-sky">{language}</Badge>);
   }
 
-  for (const tag of excursion.tags ?? []) {
+  const thematicTags = filterExcursionDisplayTags(excursion.tags ?? [], {
+    existingLabels: badges.map((badge) => badge.label),
+    childFriendly: excursion.childFriendly,
+  });
+
+  for (const tag of thematicTags) {
     addBadge(`tag-${tag.id}`, tag.name, <Badge>{tag.name}</Badge>);
   }
 

@@ -510,6 +510,8 @@ export interface BlogPost {
   cardVariant?: BlogCardVariant;
   /** Статья прошла полную ручную редакцию */
   editorialReviewed?: boolean;
+  /** Шаблонная авто-статья — не индексировать до переработки (класс B) */
+  noIndex?: boolean;
   relatedResources?: BlogRelatedResource[];
   /** Встраиваемые виджеты туров в теле статьи */
   tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];

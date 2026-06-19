@@ -52,7 +52,7 @@ interface AuthContextValue {
     role: AccountRole,
     password?: string
   ) => Promise<
-    | { ok: true }
+    | { ok: true; user: SessionUser }
     | { ok: false; error: string; notFound?: boolean; roleNotConnected?: boolean }
   >;
   loginByEmail: (
@@ -60,13 +60,13 @@ interface AuthContextValue {
     password: string,
     role: AccountRole
   ) => Promise<
-    | { ok: true }
+    | { ok: true; user: SessionUser }
     | { ok: false; error: string; roleNotConnected?: boolean; code?: string }
   >;
   loginForOrganizerUpgrade: (
     email: string,
     password: string
-  ) => Promise<{ ok: true } | { ok: false; error: string }>;
+  ) => Promise<{ ok: true; user: SessionUser } | { ok: false; error: string }>;
   register: (input: {
     role: AccountRole;
     fullName: string;
@@ -74,7 +74,7 @@ interface AuthContextValue {
     email: string;
     password?: string;
   }) => Promise<
-    | { ok: true }
+    | { ok: true; user: SessionUser }
     | { ok: false; error: string; duplicatePhone?: boolean; duplicateEmail?: boolean }
   >;
   addOrganizerRole: () => Promise<{ ok: true } | { ok: false; error: string }>;
@@ -267,7 +267,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     await afterAuthSuccess(result.user);
-    return { ok: true as const };
+    return { ok: true as const, user: result.user };
   }, [afterAuthSuccess]);
 
   const loginByEmail = useCallback(async (email: string, password: string, role: AccountRole) => {
@@ -287,7 +287,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     await afterAuthSuccess(result.user);
-    return { ok: true as const };
+    return { ok: true as const, user: result.user };
   }, [afterAuthSuccess]);
 
   const loginForOrganizerUpgrade = useCallback(async (email: string, password: string) => {
@@ -308,7 +308,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setUser(connected.user);
     await afterAuthSuccess(connected.user);
-    return { ok: true as const };
+    return { ok: true as const, user: connected.user };
   }, [afterAuthSuccess]);
 
   const register = useCallback(
@@ -348,7 +348,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       await afterAuthSuccess(result.user);
-      return { ok: true as const };
+      return { ok: true as const, user: result.user };
     },
     [afterAuthSuccess]
   );

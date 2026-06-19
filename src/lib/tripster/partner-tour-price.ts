@@ -67,6 +67,80 @@ export function resolvePartnerTourListedPrice(
   return tour.partnerPriceDisplay?.trim() || null;
 }
 
+export type PartnerListedPriceParts = {
+  amount: string;
+  unit?: string;
+};
+
+const PARTNER_PRICE_UNIT_LABELS: Record<PartnerTourPriceUnit, string> = {
+  per_person: "за одного",
+  per_group: "за группу",
+};
+
+function extractPartnerPriceUnitSuffix(display?: string | null): string | undefined {
+  const trimmed = display?.trim();
+  if (!trimmed) return undefined;
+  const match = trimmed.match(/\s+(за\s+.+)$/u);
+  return match?.[1];
+}
+
+function resolveCurrencyFromDisplayHint(hint?: string): string | null {
+  if (!hint) return null;
+  if (hint.includes("₽") || /\bRUB\b/i.test(hint)) return "RUB";
+  if (hint.includes("$") || /\bUSD\b/i.test(hint)) return "USD";
+  if (hint.includes("€") || /\bEUR\b/i.test(hint)) return "EUR";
+  return null;
+}
+
+function parsePartnerPriceDisplayString(display: string): PartnerListedPriceParts | null {
+  const trimmed = display.trim();
+  if (!trimmed) return null;
+
+  const unit = extractPartnerPriceUnitSuffix(trimmed);
+  const withoutUnit = unit
+    ? trimmed.slice(0, trimmed.length - unit.length).trim()
+    : trimmed;
+  const match = withoutUnit.match(/^([\d\s.,]+)\s*(.*)$/);
+  if (!match) return { amount: trimmed, unit };
+
+  const value = Number.parseFloat(match[1].replace(/\s/g, "").replace(",", "."));
+  if (!Number.isFinite(value)) return { amount: trimmed, unit };
+
+  const currency = resolveCurrencyFromDisplayHint(match[2]?.trim());
+  const amount = currency
+    ? formatPartnerListedPrice(value, currency)
+    : `${Math.round(value).toLocaleString("ru-RU")}${match[2] ? ` ${match[2].trim()}` : ""}`;
+
+  return { amount, unit };
+}
+
+export function resolvePartnerListedPriceParts(
+  tour: Pick<
+    TourDetail | TourListing,
+    | "partnerPriceValue"
+    | "partnerPriceCurrency"
+    | "partnerPriceDisplay"
+    | "partnerPriceUnit"
+  >
+): PartnerListedPriceParts | null {
+  const value = tour.partnerPriceValue;
+  const currency = tour.partnerPriceCurrency?.trim().toUpperCase();
+  const unitFromDisplay = extractPartnerPriceUnitSuffix(tour.partnerPriceDisplay);
+  const unitFromTour =
+    tour.partnerPriceUnit != null
+      ? PARTNER_PRICE_UNIT_LABELS[tour.partnerPriceUnit]
+      : undefined;
+
+  if (value != null && Number.isFinite(value) && currency) {
+    return {
+      amount: formatPartnerListedPrice(value, currency),
+      unit: unitFromDisplay ?? unitFromTour,
+    };
+  }
+
+  return parsePartnerPriceDisplayString(tour.partnerPriceDisplay?.trim() ?? "");
+}
+
 export function resolvePartnerTourPriceUnit(
   experience: TripsterExperience
 ): PartnerTourPriceUnit {

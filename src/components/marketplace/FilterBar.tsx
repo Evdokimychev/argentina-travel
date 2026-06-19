@@ -143,7 +143,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label="Виды отдыха"
         active={draft.activityTypes.length > 0}
-        width="min-w-[520px] max-w-[560px]"
+        width="sm:min-w-[520px] sm:max-w-[560px]"
       >
         <ActivityTypesFilter
           selected={draft.activityTypes}
@@ -173,7 +173,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label="Продолжительность"
         active={isDurationFilterActive(draft)}
-        width="min-w-[340px]"
+        width="sm:min-w-[340px]"
       >
         <DurationFilter
           durationMin={draft.durationMin}
@@ -198,7 +198,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label="Проживание"
         active={draft.accommodations.length > 0}
-        width="min-w-[360px]"
+        width="sm:min-w-[360px]"
       >
         <AccommodationFilter
           selected={draft.accommodations}
@@ -212,7 +212,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label="Комфорт"
         active={draft.comfortLevels.length > 0}
-        width="min-w-[360px]"
+        width="sm:min-w-[360px]"
       >
         <ComfortFilter
           selected={draft.comfortLevels}
@@ -226,7 +226,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label="Нагрузка"
         active={draft.difficultyLevels.length > 0}
-        width="min-w-[360px]"
+        width="sm:min-w-[360px]"
       >
         <DifficultyFilter
           selected={draft.difficultyLevels}
@@ -240,7 +240,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label="Язык"
         active={draft.languages.length > 0}
-        width="min-w-[360px]"
+        width="sm:min-w-[360px]"
       >
         <LanguageFilter
           selected={draft.languages}
@@ -278,7 +278,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
       <FilterPopover
         label={groupFormatLabel}
         active={groupFormatActive}
-        width="min-w-[400px]"
+        width="sm:min-w-[400px]"
       >
         <GroupFormatFilter
           tours={tours}

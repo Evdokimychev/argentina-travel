@@ -163,6 +163,7 @@ export type TripsterExperience = {
     paid_separately?: boolean;
     [key: string]: unknown;
   };
+  languages?: Array<string | { name?: string | null; code?: string | null }>;
 };
 
 export type TripsterReview = {

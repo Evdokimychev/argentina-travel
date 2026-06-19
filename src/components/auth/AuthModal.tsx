@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mail, X } from "lucide-react";
+import { Eye, EyeOff, Mail, Phone, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
 import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
+import { lookupPhoneAccount, resolveAuthGreeting } from "@/lib/auth-client";
 import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -22,6 +23,7 @@ import type { SiteFeedbackMessage } from "@/types/site-feedback";
 type AuthMode = "phone" | "email";
 type AuthStep = "sign-in" | "register" | "forgot-password";
 type OrganizerTab = "sign-in" | "register";
+type PhoneAuthStep = "phone" | "password";
 
 function RoleBadges({ user }: { user: { roles: AuthUserRole[]; role: AuthUserRole } }) {
   return (
@@ -64,7 +66,8 @@ export default function AuthModal() {
   const isFavoriteFlow = authIntent === "favorite";
 
   const [role, setRole] = useState<AuthUserRole>("tourist");
-  const [mode, setMode] = useState<AuthMode>("phone");
+  const [mode, setMode] = useState<AuthMode>("email");
+  const [phoneAuthStep, setPhoneAuthStep] = useState<PhoneAuthStep>("phone");
   const [step, setStep] = useState<AuthStep>("sign-in");
   const [organizerTab, setOrganizerTab] = useState<OrganizerTab>("sign-in");
   const [phone, setPhone] = useState("");
@@ -88,7 +91,10 @@ export default function AuthModal() {
     setErrorState(typeof value === "string" ? siteFormError(value) : value);
   };
 
-  function completeAuthSuccess(destination: "/profile" | "/organizer") {
+  function completeAuthSuccess(
+    destination: "/profile" | "/organizer",
+    sessionUser?: { fullName?: string | null } | null
+  ) {
     if (isFavoriteFlow) {
       closeAuth();
       return;
@@ -99,10 +105,10 @@ export default function AuthModal() {
 
     const asOrganizer = finalDestination.startsWith("/organizer");
     feedback.success({
-      title: asOrganizer ? "Кабинет организатора открыт" : "Вы вошли",
+      title: resolveAuthGreeting(sessionUser?.fullName),
       description: asOrganizer
-        ? "Можно размещать туры и управлять бронированиями."
-        : "Добро пожаловать в личный кабинет.",
+        ? "Кабинет организатора открыт — можно размещать туры и управлять бронированиями."
+        : "Рады видеть вас снова на «Пора в Аргентину».",
     });
     clearAuthNextPath();
     closeAuth();
@@ -118,7 +124,8 @@ export default function AuthModal() {
     setResetSent(false);
     setStep(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setOrganizerTab(isFavoriteFlow ? favoriteAuthStep : "sign-in");
-    setMode("phone");
+    setMode("email");
+    setPhoneAuthStep("phone");
     setRole(isOrganizerFlow ? "organizer" : "tourist");
     setPhone("");
     setEmail("");
@@ -141,25 +148,52 @@ export default function AuthModal() {
       return;
     }
 
-    setLoading(true);
-    setError(null);
+    if (phoneAuthStep === "phone") {
+      setLoading(true);
+      setError(null);
 
-    const result = await loginByPhone(phone, targetRole, password.trim() || undefined);
-    setLoading(false);
+      const lookup = await lookupPhoneAccount(phone);
+      setLoading(false);
 
-    if (result.ok) {
-      completeAuthSuccess(targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile");
+      if (lookup.status === "error") {
+        setError(lookup.message);
+        return;
+      }
+
+      if (lookup.status === "not_found") {
+        setStep("register");
+        setError(null);
+        return;
+      }
+
+      setPhoneAuthStep("password");
+      setPassword("");
+      setShowPassword(false);
       return;
     }
 
-    if (result.notFound) {
-      setStep("register");
-      setError(null);
+    if (!password.trim()) {
+      setError("Введите пароль");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
+    const result = await loginByPhone(phone, targetRole, password.trim());
+    setLoading(false);
+
+    if (result.ok) {
+      completeAuthSuccess(
+        targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile",
+        result.user
+      );
       return;
     }
 
     if (result.roleNotConnected && (isOrganizerFlow || targetRole === "organizer")) {
       setMode("email");
+      setPhoneAuthStep("phone");
       setOrganizerTab("sign-in");
       setLoginCredential(formatInternationalPhone(phone));
       setError(normalizeSiteError("ROLE_NOT_CONNECTED"));
@@ -178,7 +212,7 @@ export default function AuthModal() {
       setError(normalizeSiteError(upgrade.error));
       return;
     }
-    completeAuthSuccess("/organizer");
+    completeAuthSuccess("/organizer", upgrade.user);
   }
 
   async function handleForgotPasswordSubmit() {
@@ -227,7 +261,10 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      completeAuthSuccess(targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile");
+      completeAuthSuccess(
+        targetRole === "organizer" || isOrganizerFlow ? "/organizer" : "/profile",
+        result.user
+      );
       return;
     }
 
@@ -268,7 +305,7 @@ export default function AuthModal() {
       const login = await loginByEmail(credential, password, "organizer");
       if (login.ok) {
         setLoading(false);
-        completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile");
+        completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile", login.user);
         return;
       }
 
@@ -294,7 +331,7 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      completeAuthSuccess("/organizer");
+      completeAuthSuccess("/organizer", result.user);
       return;
     }
 
@@ -340,7 +377,7 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile");
+      completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile", result.user);
       return;
     }
 
@@ -860,36 +897,61 @@ export default function AuthModal() {
                         onChange={(international) => {
                           setPhone(international);
                           setError(null);
+                          if (phoneAuthStep === "password") {
+                            setPhoneAuthStep("phone");
+                            setPassword("");
+                          }
                         }}
                       />
                     </div>
-                    <div>
-                      <label htmlFor="auth-phone-password" className="mb-2 block text-xs font-medium text-slate">
-                        Пароль <span className="font-normal text-slate">(если задавали при регистрации)</span>
-                      </label>
-                      <div className="relative">
-                        <Input
-                          id="auth-phone-password"
-                          type={showPassword ? "text" : "password"}
-                          autoComplete="current-password"
-                          placeholder="Оставьте пустым, если не задавали"
-                          value={password}
-                          onChange={(event) => {
-                            setPassword(event.target.value);
-                            setError(null);
-                          }}
-                          className="pr-10"
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword((open) => !open)}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 text-slate transition-colors hover:text-charcoal"
-                          aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
-                        >
-                          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                        </button>
-                      </div>
-                    </div>
+                    {phoneAuthStep === "password" ? (
+                      <>
+                        <div className="rounded-xl border border-sky/20 bg-sky/5 px-3 py-2.5 text-sm text-charcoal">
+                          Аккаунт с этим номером найден. Введите пароль, который задавали при регистрации.
+                        </div>
+                        <div>
+                          <label htmlFor="auth-phone-password" className="mb-2 block text-xs font-medium text-slate">
+                            Пароль
+                          </label>
+                          <div className="relative">
+                            <Input
+                              id="auth-phone-password"
+                              type={showPassword ? "text" : "password"}
+                              autoComplete="current-password"
+                              placeholder="Введите пароль"
+                              value={password}
+                              onChange={(event) => {
+                                setPassword(event.target.value);
+                                setError(null);
+                              }}
+                              className="pr-10"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword((open) => !open)}
+                              className="absolute right-3 top-1/2 -translate-y-1/2 text-slate transition-colors hover:text-charcoal"
+                              aria-label={showPassword ? "Скрыть пароль" : "Показать пароль"}
+                            >
+                              {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </button>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMode("email");
+                              setPhoneAuthStep("phone");
+                              setPassword("");
+                              setStep("forgot-password");
+                              setError(null);
+                              setResetSent(false);
+                            }}
+                            className="mt-2 text-xs font-medium text-sky hover:underline"
+                          >
+                            Забыли пароль? Восстановить по почте
+                          </button>
+                        </div>
+                      </>
+                    ) : null}
                   </div>
                 ) : (
                   <div className="space-y-3">
@@ -981,21 +1043,46 @@ export default function AuthModal() {
                   type="button"
                   className="w-full rounded-xl"
                   loading={loading}
-                  loadingLabel="Проверяем…"
+                  loadingLabel={mode === "phone" && phoneAuthStep === "phone" ? "Проверяем…" : "Входим…"}
                   onClick={mode === "phone" ? () => handlePhoneContinue() : () => handleEmailContinue()}
                 >
-                  Продолжить
+                  {mode === "phone"
+                    ? phoneAuthStep === "phone"
+                      ? "Продолжить"
+                      : "Войти"
+                    : "Войти"}
                 </Button>
+
+                {mode === "phone" && phoneAuthStep === "password" ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPhoneAuthStep("phone");
+                      setPassword("");
+                      setError(null);
+                    }}
+                    className="w-full text-sm font-medium text-slate transition-colors hover:text-charcoal"
+                  >
+                    ← Изменить номер телефона
+                  </button>
+                ) : null}
 
                 <button
                   type="button"
                   onClick={() => {
-                    setMode(mode === "phone" ? "email" : "phone");
+                    const nextMode = mode === "phone" ? "email" : "phone";
+                    setMode(nextMode);
+                    setPhoneAuthStep("phone");
+                    setPassword("");
                     setError(null);
                   }}
                   className="flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
                 >
-                  <Mail className="h-4 w-4 text-slate" aria-hidden />
+                  {mode === "phone" ? (
+                    <Mail className="h-4 w-4 text-slate" aria-hidden />
+                  ) : (
+                    <Phone className="h-4 w-4 text-slate" aria-hidden />
+                  )}
                   {mode === "phone" ? "Войти по почте" : "Войти по телефону"}
                 </button>
               </>
@@ -1065,7 +1152,7 @@ export default function AuthModal() {
                     </button>
                   </div>
                   <p className="mt-1.5 text-xs text-slate">
-                    Пароль нужен для входа по почте. По телефону можно войти с тем же паролем.
+                    Пароль нужен для входа по почте и по телефону.
                   </p>
                 </div>
 
@@ -1077,6 +1164,7 @@ export default function AuthModal() {
                       className="font-semibold text-brand hover:underline"
                       onClick={() => {
                         setStep("sign-in");
+                        setPhoneAuthStep("phone");
                         setDuplicateRegistration(false);
                         setError(null);
                       }}
@@ -1123,6 +1211,7 @@ export default function AuthModal() {
                   type="button"
                   onClick={() => {
                     setStep("sign-in");
+                    setPhoneAuthStep("phone");
                     setError(null);
                     setDuplicateRegistration(false);
                   }}

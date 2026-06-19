@@ -424,7 +424,7 @@ export const ARGENTINA_PROVINCE_ALIASES: Record<string, string> = {
   "santa fe": "Санта-Фе",
   catamarca: "Катамарка",
   "la rioja": "Ла-Риоха",
-  "santiago del estero": "Сantiago-del-Estero",
+  "santiago del estero": "Сантьяго-дель-Эстеро",
   corrientes: "Корриентес",
   chaco: "Чако",
   formosa: "Формоса",

@@ -30,6 +30,7 @@ import {
   type WaitlistScenario,
 } from "@/lib/tour-waitlist";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { usePartnerTourSchedule } from "@/hooks/usePartnerTourSchedule";
 import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
 import type { TourCustomBookingLinkPublic } from "@/types/tour-custom-booking-link";
 import { usePartnerTourPriceQuote } from "@/hooks/usePartnerTourPriceQuote";
@@ -73,6 +74,13 @@ interface TourBookingContextValue {
   partnerBookingPrice: PartnerTourBookingPrice | null;
   partnerPriceLoading: boolean;
   partnerPriceIsEstimate: boolean;
+  scheduleDates: TourDetail["dates"];
+  scheduleLoading: boolean;
+  partnerPreviewOpen: boolean;
+  openPartnerBookingPreview: () => boolean;
+  closePartnerBookingPreview: () => void;
+  partnerEditRequest: { target: "date" | "guests"; at: number } | null;
+  requestPartnerBookingEdit: (target: "date" | "guests") => void;
 }
 
 const TourBookingContext = createContext<TourBookingContextValue | null>(null);
@@ -94,42 +102,91 @@ export function TourBookingProvider({
   children: ReactNode;
 }) {
   const bookingMode = tour.bookingMode ?? "scheduled";
-  const requiresManualDate = isPartnerTourDetail(tour);
-  const initialGuests = Math.min(tour.groupMax, tour.groupMin);
+  const isPartnerTour = isPartnerTourDetail(tour);
+  const {
+    dates: scheduleDates,
+    loading: scheduleLoading,
+    maxPersons: scheduleMaxPersons,
+  } = usePartnerTourSchedule(tour);
+  const effectiveDates = scheduleDates.length > 0 ? scheduleDates : tour.dates;
+  const effectiveBookingMode =
+    isPartnerTour && effectiveDates.length > 0 ? "scheduled" : bookingMode;
+  const requiresManualDate = isPartnerTour;
+  const initialGuests = Math.min(
+    scheduleMaxPersons ?? tour.groupMax,
+    tour.groupMax,
+    tour.groupMin
+  );
   const [guests, setGuests] = useState(() => initialGuests);
   const [selectedDateId, setSelectedDateId] = useState(() =>
     requiresManualDate
       ? ""
-      : pickInitialDateId(tour.dates, initialGuests, tour.groupMin)
+      : pickInitialDateId(effectiveDates, initialGuests, tour.groupMin)
   );
   const [dateMode, setDateMode] = useState<BookingDateMode>(() =>
-    resolveInitialDateMode(bookingMode, tour.dates.length)
+    resolveInitialDateMode(effectiveBookingMode, effectiveDates.length)
   );
   const [customDate, setCustomDate] = useState<Date | null>(null);
   const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [priceRequestOpen, setPriceRequestOpen] = useState(false);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [partnerPreviewOpen, setPartnerPreviewOpen] = useState(false);
+  const [partnerEditRequest, setPartnerEditRequest] = useState<{
+    target: "date" | "guests";
+    at: number;
+  } | null>(null);
   const priceOnRequest = Boolean(tour.priceOnRequest);
 
+  const bookingTour = useMemo(
+    (): TourDetail => ({
+      ...tour,
+      dates: effectiveDates,
+      bookingMode: effectiveBookingMode,
+      groupMax: scheduleMaxPersons
+        ? Math.min(tour.groupMax, scheduleMaxPersons)
+        : tour.groupMax,
+    }),
+    [tour, effectiveDates, effectiveBookingMode, scheduleMaxPersons]
+  );
+
   useEffect(() => {
-    if (tour.dates.length > 0 && dateMode === "custom") {
+    if (effectiveDates.length > 0 && dateMode === "custom") {
       setDateMode("scheduled");
     }
-  }, [tour.slug, tour.dates.length, dateMode]);
+  }, [tour.slug, effectiveDates.length, dateMode]);
+
+  useEffect(() => {
+    if (requiresManualDate) {
+      setSelectedDateId("");
+      setCustomDate(null);
+    }
+    setPartnerPreviewOpen(false);
+  }, [tour.slug, requiresManualDate]);
+
+  useEffect(() => {
+    setPartnerEditRequest(null);
+  }, [tour.slug]);
+
+  useEffect(() => {
+    if (requiresManualDate || scheduleLoading || effectiveDates.length === 0) return;
+    if (selectedDateId && effectiveDates.some((date) => date.id === selectedDateId)) return;
+    const next = pickInitialDateId(effectiveDates, guests, tour.groupMin);
+    if (next) setSelectedDateId(next);
+  }, [requiresManualDate, scheduleLoading, effectiveDates, selectedDateId, guests, tour.groupMin]);
 
   useEffect(() => {
     if (dateMode !== "scheduled" || requiresManualDate) return;
-    const current = tour.dates.find((d) => d.id === selectedDateId);
+    const current = effectiveDates.find((d) => d.id === selectedDateId);
     if (current && dateFitsGuestCount(current, guests, tour.groupMin)) return;
-    const next = findBookableDates(tour.dates, guests, tour.groupMin)[0];
+    const next = findBookableDates(effectiveDates, guests, tour.groupMin)[0];
     if (next && next.id !== selectedDateId) {
       setSelectedDateId(next.id);
     }
-  }, [guests, dateMode, requiresManualDate, tour.dates, tour.groupMin, selectedDateId]);
+  }, [guests, dateMode, requiresManualDate, effectiveDates, tour.groupMin, selectedDateId]);
 
   useEffect(() => {
     if (dateMode !== "scheduled" || !selectedDateId) return;
-    const selected = tour.dates.find((d) => d.id === selectedDateId);
+    const selected = effectiveDates.find((d) => d.id === selectedDateId);
     if (!selected) return;
 
     const limits = getGuestLimits(tour, selected, dateMode);
@@ -138,7 +195,7 @@ export function TourBookingProvider({
       if (current < limits.min) return limits.min;
       return current;
     });
-  }, [selectedDateId, dateMode, tour.dates, tour.groupMin, tour.groupMax]);
+  }, [selectedDateId, dateMode, effectiveDates, tour.groupMin, tour.groupMax]);
 
   const usesExternalBooking = tourUsesExternalBooking(tour);
   const externalBookingLink = tour.customBookingLink ?? null;
@@ -148,7 +205,7 @@ export function TourBookingProvider({
     selectedDate: partnerSelectedDate,
     isEstimate: partnerPriceIsEstimate,
   } = usePartnerTourPriceQuote({
-    tour,
+    tour: bookingTour,
     guests,
     selectedDateId,
     dateMode,
@@ -165,37 +222,57 @@ export function TourBookingProvider({
         selectedDateId,
         customDate,
         slotTime: partnerSlotTime,
+        dates: effectiveDates,
       })
     : null;
+
+  const openPartnerBookingPreview = useCallback((): boolean => {
+    if (
+      validateGuestsForScheduledBooking(bookingTour, guests, selectedDateId)
+    ) {
+      return false;
+    }
+    setPartnerPreviewOpen(true);
+    return true;
+  }, [bookingTour, guests, selectedDateId]);
+
+  const closePartnerBookingPreview = useCallback(() => {
+    setPartnerPreviewOpen(false);
+  }, []);
+
+  const requestPartnerBookingEdit = useCallback((target: "date" | "guests") => {
+    setPartnerPreviewOpen(false);
+    setPartnerEditRequest({ target, at: Date.now() });
+  }, []);
 
   const openPriceRequest = useCallback((): boolean => {
     if (usesExternalBooking) return false;
     if (dateMode === "custom" && bookingMode !== "scheduled" && !customDate) {
       return false;
     }
-    if (dateMode === "scheduled" && tour.dates.length === 0 && bookingMode !== "on_request") {
+    if (dateMode === "scheduled" && effectiveDates.length === 0 && effectiveBookingMode !== "on_request") {
       return false;
     }
     if (
       dateMode === "scheduled" &&
-      validateGuestsForScheduledBooking(tour, guests, selectedDateId)
+      validateGuestsForScheduledBooking(bookingTour, guests, selectedDateId)
     ) {
       return false;
     }
     setPriceRequestOpen(true);
     return true;
-  }, [bookingMode, customDate, dateMode, guests, selectedDateId, tour, usesExternalBooking]);
+  }, [effectiveBookingMode, customDate, dateMode, guests, selectedDateId, bookingTour, usesExternalBooking]);
 
   const closePriceRequest = useCallback(() => setPriceRequestOpen(false), []);
 
   const waitlistScenario = useMemo(
-    () => resolveWaitlistScenario(tour, guests, dateMode, selectedDateId),
-    [tour, guests, dateMode, selectedDateId]
+    () => resolveWaitlistScenario(bookingTour, guests, dateMode, selectedDateId),
+    [bookingTour, guests, dateMode, selectedDateId]
   );
 
   const canJoinWaitlist = useMemo(
-    () => canOpenWaitlist(tour, guests, dateMode, selectedDateId),
-    [tour, guests, dateMode, selectedDateId]
+    () => canOpenWaitlist(bookingTour, guests, dateMode, selectedDateId),
+    [bookingTour, guests, dateMode, selectedDateId]
   );
 
   const openWaitlist = useCallback(() => {
@@ -213,26 +290,27 @@ export function TourBookingProvider({
     if (dateMode === "custom" && bookingMode !== "scheduled" && !customDate) {
       return false;
     }
-    if (dateMode === "scheduled" && tour.dates.length === 0 && bookingMode !== "on_request") {
+    if (dateMode === "scheduled" && effectiveDates.length === 0 && effectiveBookingMode !== "on_request") {
       return false;
     }
     if (
       dateMode === "scheduled" &&
-      validateGuestsForScheduledBooking(tour, guests, selectedDateId)
+      validateGuestsForScheduledBooking(bookingTour, guests, selectedDateId)
     ) {
       return false;
     }
     setCheckoutOpen(true);
     return true;
   }, [
-    bookingMode,
+    effectiveBookingMode,
     customDate,
     dateMode,
     guests,
     openPriceRequest,
     priceOnRequest,
     selectedDateId,
-    tour,
+    bookingTour,
+    effectiveDates.length,
     usesExternalBooking,
   ]);
 
@@ -241,15 +319,15 @@ export function TourBookingProvider({
   const partnerBookingPrice = useMemo(() => {
     if (tour.partnerSource !== "tripster") return null;
     return resolvePartnerTourBookingPrice({
-      tour,
+      tour: bookingTour,
       guests,
       selectedDate: partnerSelectedDate,
       quote: partnerQuote,
     });
-  }, [tour, guests, partnerSelectedDate, partnerQuote]);
+  }, [bookingTour, guests, partnerSelectedDate, partnerQuote]);
 
   const value = useMemo((): TourBookingContextValue => {
-    const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
+    const selectedDate = effectiveDates.find((d) => d.id === selectedDateId);
     const datePriceUsd = selectedDate?.priceUsd ?? 0;
     const basePricePerPersonUsd = datePriceUsd > 0 ? datePriceUsd : tour.priceUsd;
     const quote = priceOnRequest
@@ -309,9 +387,18 @@ export function TourBookingProvider({
       partnerBookingPrice,
       partnerPriceLoading,
       partnerPriceIsEstimate,
+      scheduleDates: effectiveDates,
+      scheduleLoading,
+      partnerPreviewOpen,
+      openPartnerBookingPreview,
+      closePartnerBookingPreview,
+      partnerEditRequest,
+      requestPartnerBookingEdit,
     };
   }, [
     tour,
+    effectiveDates,
+    scheduleLoading,
     selectedDateId,
     guests,
     dateMode,
@@ -334,6 +421,11 @@ export function TourBookingProvider({
     partnerBookingPrice,
     partnerPriceLoading,
     partnerPriceIsEstimate,
+    partnerPreviewOpen,
+    openPartnerBookingPreview,
+    closePartnerBookingPreview,
+    partnerEditRequest,
+    requestPartnerBookingEdit,
   ]);
 
   return (

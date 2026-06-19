@@ -3,7 +3,7 @@ import { ArrowUpRight, Plane } from "lucide-react";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import FlightPriceTeaserCard from "@/components/flights/FlightPriceTeaserCard";
-import { buildFlightsSearchHref } from "@/lib/flights/search-href";
+import { buildDestinationFlightsHref, buildFlightsSearchHref } from "@/lib/flights/search-href";
 import { cn } from "@/lib/utils";
 import type { LocaleCode } from "@/types/locale";
 
@@ -23,6 +23,7 @@ export default async function DestinationFlightSidebar({
   const labels = getFlightTeaserLabels(locale);
   const teasers = await getDestinationFlightTeasers(destinationId, locale);
   const primary = teasers[0];
+  const fallbackFlightsHref = buildDestinationFlightsHref(destinationId);
 
   return (
     <div className={cn("rounded-2xl border border-gray-100 bg-white p-5 shadow-card", className)}>
@@ -46,7 +47,7 @@ export default async function DestinationFlightSidebar({
         </ul>
       ) : (
         <Link
-          href="/flights?origin=MOW&destination=BUE"
+          href={fallbackFlightsHref}
           className="mt-4 flex items-center justify-between rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm font-medium text-sky transition-colors hover:bg-sky/10"
         >
           {labels.compareFlights}

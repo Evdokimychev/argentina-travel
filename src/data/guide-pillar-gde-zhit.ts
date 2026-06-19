@@ -74,7 +74,7 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Где жить цифровому кочевнику в BA?",
     answer:
-      "Palermo, Belgrano, Colegiales, Villa Crespo — коворкинги, кафе, транспорт. Апартаменты на 1–3 месяца через Airbnb monthly или temporary rental. Проверьте Wi‑Fi speedtest до оплаты — /guide/svyaz.",
+      "Palermo, Belgrano, Colegiales, Villa Crespo — коворкинги, кафе, транспорт. Апартаменты на 1–3 месяца через помесячную аренду на Airbnb или краткосрочную аренду. Проверьте скорость Wi‑Fi до оплаты — /guide/svyaz.",
   },
   {
     question: "Где жить с семьёй в BA?",
@@ -109,7 +109,7 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Можно ли снять квартиру на 3–6 месяцев без garantía?",
     answer:
-      "Сложно на классическом рынке. Варианты: Airbnb monthly, temporary furnished через агентство, expat-группы с проверенными арендодателями. Для эмиграции — /immigration.",
+      "Сложно на классическом рынке. Варианты: помесячная аренда на Airbnb, меблированное жильё через агентство, группы экспатов с проверенными арендодателями. Для эмиграции — /immigration.",
   },
   {
     question: "Есть ли туристический налог на проживание?",
@@ -124,7 +124,7 @@ const GDE_ZHIT_FAQ = [
   {
     question: "Где жить в Mendoza?",
     answer:
-      "Центр — рестораны и прогулки. Chacras de Coria и Maipú — ближе к bodegas. Estancia — для винного immersion. Аренда авто удобна — см. /guide/transport.",
+      "Центр — рестораны и прогулки. Chacras de Coria и Maipú — ближе к винодельням. Estancia — для полного погружения в винную культуру. Аренда авто удобна — см. /guide/transport.",
   },
   {
     question: "Где жить в Bariloche?",
@@ -223,7 +223,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
       id: "gde-zhit-2",
       title: "Где бронировать: платформы и прямое бронирование",
       content:
-        "Короткая поездка — Booking, отель напрямую, тур на платформе. Долгая — Airbnb monthly, temporary rental, expat-каналы. Каждый канал — свои риски и защита.",
+        "Короткая поездка — Booking, отель напрямую, тур на платформе. Долгая — помесячная аренда на Airbnb, краткосрочная аренда, каналы экспатов. Каждый канал — свои риски и защита.",
       table: {
         headers: ["Канал", "Срок", "Защита", "Совет"],
         rows: [
@@ -231,7 +231,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
           ["Airbnb", "3 ночи – несколько мес.", "AirCover, отзывы", "Проверьте статус суперхоста и район на карте"],
           ["Прямо у отеля", "Любой", "Зависит от договора", "Иногда лучше rate при email/WhatsApp"],
           ["«Пора в Аргентину» туры", "Маршрут целиком", "Платформа + организатор", "Уровень отеля в карточке"],
-          ["Facebook / expat группы", "1+ мес.", "Низкая", "Только с личным осмотром и договором"],
+          ["Facebook / группы экспатов", "1+ мес.", "Низкая", "Только с личным осмотром и договором"],
           ["Inmobiliaria (агентство)", "6+ мес.", "Договор AR", "Garantía — барьер для иностранца"],
         ],
       },
@@ -270,12 +270,12 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
         headers: ["Район", "Атмосфера", "Бюджет", "Кому", "Ночью"],
         rows: [
           ["Palermo Soho", "Кафе, бутики, ночь", "Средний+", "Первый визит, еда", "Обычно ok"],
-          ["Palermo Hollywood", "Парки, спокойнее", "Средний+", "Семьи, кочевникии", "Обычно ok"],
+          ["Palermo Hollywood", "Парки, спокойнее", "Средний+", "Семьи, кочевники", "Обычно спокойно"],
           ["Recoleta", "Классика, музеи", "Выше среднего", "Пара, premium", "Ok"],
           ["Belgrano", "Жилой, зелёный", "Средний", "Семьи, длительное проживание", "Ok"],
           ["Puerto Madero", "Современный", "Высокий", "Бизнес, комфорт", "Ok"],
           ["San Telmo", "Колониальный, feria", "Средний", "Атмосфера", "Осторожно"],
-          ["Villa Crespo / Chacarita", "Локальный, тренд", "Ниже Palermo", "Nomad, бюджет", "Выборочно"],
+          ["Villa Crespo / Chacarita", "Локальный, тренд", "Ниже Palermo", "Кочевник, бюджет", "Выборочно"],
           ["Microcentro", "Деловой", "Разный", "1–2 ночи макс.", "Осторожно"],
           ["La Boca / Once", "—", "Дешёво", "Не для ночёвки", "Избегать"],
         ],
@@ -318,7 +318,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
           ["El Chaltén", "Деревня", "Хостел, lodge", "Рано в янв–фев", "Тропы Fitz Roy"],
           ["Ushuaia", "Центр, Beagle", "Отели, B&B", "Сезон + круизы", "Tierra del Fuego, катамараны"],
           ["Bariloche", "Centro / Llao Llao", "Отели, cabañas", "Лето и зима", "Озёра, Cerro Catedral"],
-          ["Mendoza", "Centro / Chacras", "Отели, estancia", "Урожай — март", "Bodegas, Андes"],
+          ["Mendoza", "Centro / Chacras", "Отели, estancia", "Урожай — март", "Bodegas, Анды"],
           ["Salta / NOA", "Salta ciudad", "Boutique, posada", "Гибче Patagonia", "Cafayate, Humahuaca"],
           ["Iguazú", "Puerto Iguazú", "Отели, lodge в парке", "2+ мес. в сезон", "Водопады AR/BR"],
           ["Побережье", "Mar del Plata, Pinamar", "Курорты", "Январь", "Пляж, BA weekend"],
@@ -541,9 +541,9 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
             "Апартаменты 2 спальни Belgrano/Hollywood, кухня, парк рядом. Отель с breakfast и pool — реже в BA centro. Patagonia — не dorm; отель с отоплением.",
         },
         {
-          title: "Цифровой кочевники",
+          title: "Цифровой кочевник",
           body:
-            "Palermo, Colegiales, Belgrano — monthly Airbnb, coworking. Wi‑Fi 20+ Mbps, backup 4G. Договор на 1–3 мес. без garantía через платформу. Связь — /guide/svyaz.",
+            "Palermo, Colegiales, Belgrano — помесячная аренда на Airbnb, коворкинги. Wi‑Fi 20+ Мбит/с, резервный 4G. Договор на 1–3 мес. без garantía через платформу. Связь — /guide/svyaz.",
         },
         {
           title: "Бюджет и backpacker",
@@ -582,7 +582,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
   blogLinks: [
     { title: "Безопасность", href: "/guide/bezopasnost", description: "Районы BA и вещи" },
     { title: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", description: "Карты и песо" },
-    { title: "Связь", href: "/guide/svyaz", description: "Wi‑Fi и SIM для кочевники" },
+    { title: "Связь", href: "/guide/svyaz", description: "Wi‑Fi и SIM для кочевника" },
     { title: "Патагония: с чего начать", href: "/guide/patagoniya-s-chego-nachat", description: "Логистика и базы" },
     { title: "Погода и сезонность", href: "/guide/pogoda-i-sezonnost", description: "Когда бронировать" },
   ],

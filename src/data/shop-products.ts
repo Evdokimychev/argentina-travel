@@ -18,7 +18,7 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     slug: "patagonia-pdf-guide",
     title: "PDF-путеводитель: Патагония",
     description:
-      "Маршруты, сезоны, снаряжение для треккинга и практические советы по Эль-Калафате, Чалten и Ушуайе.",
+      "Маршруты, сезоны, снаряжение для треккинга и практические советы по Эль-Калафате, Чалтен и Ушуайе.",
     price: 19,
     currency: "USD",
     deliveryType: "digital",
