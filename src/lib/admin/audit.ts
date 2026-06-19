@@ -12,8 +12,6 @@ export type AuditLogInput = {
 
 /** Write admin audit entry via service role (best-effort, non-blocking for callers). */
 export async function writeAdminAuditLog(input: AuditLogInput): Promise<void> {
-  if (input.actorUserId === "legacy-token") return;
-
   try {
     const admin = createSupabaseAdminClient();
     await admin.from("admin_audit_log").insert({

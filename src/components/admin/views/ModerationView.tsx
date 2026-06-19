@@ -12,6 +12,17 @@ import { cabinetCardClass } from "@/lib/cabinet-ui";
 
 type ModerationResponse = { items?: ModerationQueueItem[]; count?: number };
 
+type OrganizerApplication = {
+  id: string;
+  name: string;
+  email: string | null;
+  phone: string | null;
+  message: string;
+  createdAt: string;
+};
+
+type ApplicationsResponse = { applications?: OrganizerApplication[] };
+
 const MODERATION_STATUS_LABELS: Record<string, string> = {
   pending: "Ожидает",
   in_review: "На проверке",
@@ -21,8 +32,36 @@ const MODERATION_STATUS_LABELS: Record<string, string> = {
 
 export default function ModerationView() {
   const { data, loading, error, refresh } = useAdminApi<ModerationResponse>("/api/admin/moderation");
+  const {
+    data: appsData,
+    loading: appsLoading,
+    refresh: refreshApps,
+  } = useAdminApi<ApplicationsResponse>("/api/admin/organizer-applications");
   const items = data?.items ?? [];
+  const applications = appsData?.applications ?? [];
   const [busyId, setBusyId] = useState<string | null>(null);
+
+  async function resolveApplication(id: string, action: "approve" | "reject") {
+    const note =
+      action === "reject"
+        ? window.prompt("Причина отклонения (необязательно):") ?? undefined
+        : undefined;
+    setBusyId(id);
+    try {
+      const res = await fetch(`/api/admin/organizer-applications/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action, note }),
+      });
+      const json = (await res.json()) as { error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Ошибка");
+      await refreshApps();
+    } catch (resolveError) {
+      alert(resolveError instanceof Error ? resolveError.message : "Ошибка");
+    } finally {
+      setBusyId(null);
+    }
+  }
 
   async function resolveItem(id: string, action: "approve" | "reject") {
     const note =
@@ -119,6 +158,49 @@ export default function ModerationView() {
                       variant="outline"
                       disabled={busyId === item.id}
                       onClick={() => void resolveItem(item.id, "reject")}
+                    >
+                      Отклонить
+                    </Button>
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+        </section>
+
+        <section className={`${cabinetCardClass} overflow-hidden`}>
+          <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+            Заявки организаторов ({applications.length})
+          </h2>
+          <ul className="divide-y divide-gray-100">
+            {applications.length === 0 ? (
+              <li className="px-5 py-10 text-sm text-slate">
+                {appsLoading ? "Загрузка…" : "Нет заявок"}
+              </li>
+            ) : (
+              applications.map((app) => (
+                <li key={app.id} className="space-y-2 px-5 py-4 text-sm">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-medium text-charcoal">{app.name}</span>
+                    <span className="text-slate">{formatAdminWhen(app.createdAt)}</span>
+                  </div>
+                  <p className="text-slate">
+                    {[app.email, app.phone].filter(Boolean).join(" · ") || "—"}
+                  </p>
+                  {app.message ? <p className="text-charcoal">{app.message}</p> : null}
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      size="sm"
+                      disabled={busyId === app.id}
+                      onClick={() => void resolveApplication(app.id, "approve")}
+                    >
+                      Одобрить
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={busyId === app.id}
+                      onClick={() => void resolveApplication(app.id, "reject")}
                     >
                       Отклонить
                     </Button>

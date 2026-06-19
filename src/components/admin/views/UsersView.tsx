@@ -22,6 +22,44 @@ type AdminUserRow = {
 
 type UsersResponse = { users?: AdminUserRow[] };
 
+function UserBlockButton({
+  userId,
+  isBlocked,
+  onDone,
+}: {
+  userId: string;
+  isBlocked: boolean;
+  onDone: () => void;
+}) {
+  const [busy, setBusy] = useState(false);
+
+  async function toggle() {
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/admin/users/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isBlocked: !isBlocked }),
+      });
+      if (!res.ok) {
+        const json = (await res.json()) as { error?: string };
+        throw new Error(json.error ?? "Ошибка");
+      }
+      onDone();
+    } catch (toggleError) {
+      alert(toggleError instanceof Error ? toggleError.message : "Ошибка");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <Button size="sm" variant="outline" className="mt-2" disabled={busy} onClick={() => void toggle()}>
+      {isBlocked ? "Разблокировать" : "Заблокировать"}
+    </Button>
+  );
+}
+
 export default function UsersView() {
   const { data, loading, error, refresh } = useAdminApi<UsersResponse>("/api/admin/users");
   const [search, setSearch] = useState("");
@@ -91,7 +129,10 @@ export default function UsersView() {
                       <td className="px-4 py-3 text-slate">
                         {user.roles.join(", ")} · активна: {user.activeRole}
                       </td>
-                      <td className="px-4 py-3 text-slate">{formatAdminWhen(user.createdAt)}</td>
+                      <td className="px-4 py-3">
+                        <p className="text-slate">{formatAdminWhen(user.createdAt)}</p>
+                        <UserBlockButton userId={user.id} isBlocked={user.isBlocked} onDone={() => void refresh()} />
+                      </td>
                     </tr>
                   ))
                 )}

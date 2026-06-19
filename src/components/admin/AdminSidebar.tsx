@@ -45,6 +45,7 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   "users-list": Users,
   "analytics-overview": BarChart3,
   "system-settings": Settings,
+  "system-staff": Shield,
   "system-audit": Shield,
 };
 

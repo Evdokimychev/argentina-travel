@@ -2,6 +2,12 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TourContentAdminSummary, TourModerationStatus } from "@/types/tour-content";
 
+function metadataString(metadata: Json | null, key: string): string | undefined {
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return undefined;
+  const value = metadata[key];
+  return typeof value === "string" ? value : undefined;
+}
+
 type DbClient = SupabaseClient<Database>;
 
 export type ModerationQueueItem = {
@@ -95,7 +101,10 @@ export async function resolveModerationItem(
   action: ModerationResolveAction,
   actorUserId: string,
   note?: string
-): Promise<{ ok: true } | { error: string }> {
+): Promise<
+  | { ok: true; entityType: string; entityTitle: string; ownerEmail: string | null }
+  | { error: string }
+> {
   const { data: item, error } = await supabase
     .from("moderation_queue")
     .select("*")
@@ -133,15 +142,39 @@ export async function resolveModerationItem(
       tourUpdate.status = "draft";
     }
 
-    const { error: tourError } = await supabase
+    const { data: tourRow, error: tourError } = await supabase
       .from("tours")
       .update(tourUpdate)
-      .eq("id", item.entity_id);
+      .eq("id", item.entity_id)
+      .select("title, owner_user_id")
+      .maybeSingle();
 
     if (tourError) return { error: tourError.message };
+
+    let ownerEmail: string | null = null;
+    if (tourRow?.owner_user_id) {
+      const { data: ownerProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", tourRow.owner_user_id)
+        .maybeSingle();
+      ownerEmail = ownerProfile?.email ?? null;
+    }
+
+    return {
+      ok: true,
+      entityType: "tour",
+      entityTitle: tourRow?.title ?? metadataString(item.metadata, "title") ?? item.entity_id,
+      ownerEmail,
+    };
   }
 
-  return { ok: true };
+  return {
+    ok: true,
+    entityType: item.entity_type,
+    entityTitle: metadataString(item.metadata, "title") ?? item.entity_id,
+    ownerEmail: null,
+  };
 }
 
 export async function enqueueTourModeration(

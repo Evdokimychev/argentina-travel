@@ -95,7 +95,7 @@ npm run supabase:verify
 - `POST /api/newsletter` — подписка
 - `POST /api/contact` — все contact/lead формы
 - `GET /api/exchange-rates` — курсы валют (Frankfurter + fallback)
-- `GET /api/admin/leads` — inbox лидов (Bearer `LEADS_ADMIN_TOKEN`, service role)
+- `GET /api/admin/leads` — inbox лидов (Supabase session + capability `operations.leads`)
 
 ## Phase 2 — Auth, profiles, bookings
 
@@ -138,7 +138,7 @@ npm run supabase:migrate   # все файлы в supabase/migrations/ по по
 | Таблица `shop_orders` | migration `20250613000000_shop_orders.sql` | `NEXT_PUBLIC_SUPABASE_*` |
 | Self-serve checkout | `ShopCheckoutModal`, `/shop/[slug]` | `NEXT_PUBLIC_SUPABASE_AUTH` |
 | ЛК туриста | `/profile/orders` | — |
-| Админ заказов | `/admin/leads` → вкладка «Магазин», `/api/admin/shop/orders` | `LEADS_ADMIN_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY` |
+| Админ заказов | `/admin/operations/shop-orders`, `/api/admin/shop/orders` | Supabase session + `operations.shop` |
 | Email при заказе | `shop-order-notify.ts` | `RESEND_API_KEY`, `LEADS_NOTIFY_EMAIL` |
 | Dual mode fallback | без Supabase → `/contacts?product=slug` | `NEXT_PUBLIC_SUPABASE_AUTH=false` |
 
@@ -153,7 +153,7 @@ npm run supabase:migrate   # применит 20250613000000_shop_orders.sql
 - `POST /api/shop/orders` — создать заказ (guest или auth)
 - `GET /api/shop/orders` — заказы авторизованного пользователя
 - `GET /api/shop/orders/[id]` — детали заказа
-- `GET /api/admin/shop/orders` — все заказы (Bearer `LEADS_ADMIN_TOKEN`)
+- `GET /api/admin/shop/orders` — все заказы (Supabase session + `operations.shop`)
 
 Поля `delivery_url` и `storagePath` в каталоге — задел под signed URL из Supabase Storage; оплата вручную менеджером.
 
@@ -165,7 +165,7 @@ npm run supabase:migrate   # применит 20250613000000_shop_orders.sql
 | Публичный каталог | `fetchMarketplaceTours`, `/api/tours` | `NEXT_PUBLIC_SUPABASE_AUTH` |
 | Синхронизация организатора | `organizer-tour-store` → `/api/organizer/tours/sync` | — |
 | Sitemap | `collectTourSitemapPaths` | — |
-| Админ | `/admin/leads` → вкладка «Туры» | `LEADS_ADMIN_TOKEN` |
+| Админ | `/admin/marketplace/tours` | Supabase session + `marketplace.tours` |
 | Dual mode fallback | localStorage + `marketplace-tours` seed | `NEXT_PUBLIC_SUPABASE_TOURS=false` |
 
 Редактор организатора остаётся на localStorage; Supabase — зеркало опубликованного каталога для SSR/SEO.
@@ -179,18 +179,17 @@ npm run supabase:migrate   # применит 20250614000000_tours_content.sql
 ### Seed каталога из статики
 
 ```bash
-npm run dev                # в отдельном терминале
-npm run supabase:seed-tours
+npm run supabase:seed-tours   # напрямую через service role (SUPABASE_SERVICE_ROLE_KEY)
 ```
 
-Или `POST /api/admin/tours/seed` с Bearer `LEADS_ADMIN_TOKEN`.
+Или `POST /api/admin/tours/seed` из браузера под учётной записью администратора.
 
 ### API Phase 4
 
 - `GET /api/tours` — опубликованные листинги
 - `GET /api/tours/[slug]` — детальная страница тура
 - `POST /api/organizer/tours/sync` — upsert после publish (organizer auth)
-- `GET /api/admin/tours` — все туры (Bearer `LEADS_ADMIN_TOKEN`)
+- `GET /api/admin/tours` — все туры (Supabase session + `marketplace.tours`)
 - `POST /api/admin/tours/seed` — seed из `marketplace-tours`
 
 ## Phase 1 — быстрые улучшения
@@ -200,7 +199,7 @@ npm run supabase:seed-tours
 | Live курсы валют | `LocaleCurrencyContext`, `/api/exchange-rates` | — |
 | Demo-seed off в prod | `bookings-store`, `reviews-store` | `NEXT_PUBLIC_ENABLE_DEMO_SEED` |
 | Email при новом лиде | `leads-notify.ts` | `RESEND_API_KEY`, `LEADS_NOTIFY_EMAIL` |
-| Inbox лидов | `/admin/leads` | `LEADS_ADMIN_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY` |
+| Inbox лидов | `/admin/operations/leads` | Supabase session + `operations.leads` |
 | Платежи / отзывы организатора | `/organizer/payments`, `/organizer/reviews` | — |
 
 `robots.txt` закрывает `/admin/` от индексации.

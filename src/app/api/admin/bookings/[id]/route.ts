@@ -11,6 +11,24 @@ type PatchBody = {
   note?: string;
 };
 
+export async function GET(
+  _request: Request,
+  context: { params: Promise<{ id: string }> }
+) {
+  const auth = await authorizeAdminRequest(_request, "operations.bookings");
+  if (!auth.ok) return auth.response;
+
+  const { id } = await context.params;
+  const supabase = createSupabaseAdminClient();
+  const booking = await fetchBookingById(supabase, id);
+
+  if (!booking) {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ booking });
+}
+
 export async function PATCH(
   request: Request,
   context: { params: Promise<{ id: string }> }

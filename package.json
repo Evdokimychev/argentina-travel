@@ -13,7 +13,7 @@
     "supabase:resolve-db": "node scripts/supabase-resolve-db-url.mjs",
     "supabase:verify": "node scripts/supabase-verify.mjs",
     "supabase:purge-auth": "node scripts/supabase-purge-auth-users.mjs",
-    "supabase:seed-tours": "node scripts/supabase-seed-tours.mjs",
+    "supabase:seed-tours": "tsx scripts/supabase-seed-tours.ts",
     "tripster:verify": "node scripts/tripster-verify.mjs",
     "tripster:sync": "node scripts/tripster-sync.mjs",
     "tripster:affiliate-links": "node scripts/tripster-affiliate-links.mjs",

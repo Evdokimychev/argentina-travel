@@ -11,7 +11,7 @@ export type AdminAuthResult =
       ok: true;
       actorId: string;
       capabilities: AdminCapability[];
-      via: "session" | "legacy_token";
+      via: "session";
     }
   | { ok: false; response: NextResponse };
 
@@ -23,26 +23,12 @@ function forbidden(message = "Нет доступа") {
   return NextResponse.json({ error: message, code: "FORBIDDEN" }, { status: 403 });
 }
 
-function getLegacyToken(request: Request): string | null {
-  const header = request.headers.get("authorization");
-  if (header?.startsWith("Bearer ")) return header.slice(7).trim();
-  const url = new URL(request.url);
-  return url.searchParams.get("token");
-}
-
-function isLegacyTokenAuthorized(token: string | null): boolean {
-  const expected = process.env.LEADS_ADMIN_TOKEN?.trim();
-  if (!expected || !token) return false;
-  return token === expected;
-}
-
-/**
- * Authorize admin API request via Supabase session (preferred) or legacy LEADS_ADMIN_TOKEN.
- */
+/** Authorize admin API request via Supabase session + capabilities. */
 export async function authorizeAdminRequest(
   request: Request,
   requiredCapability?: AdminCapability
 ): Promise<AdminAuthResult> {
+  void request;
   if (!isSupabaseConfigured()) {
     return {
       ok: false,
@@ -50,7 +36,6 @@ export async function authorizeAdminRequest(
     };
   }
 
-  // Session auth
   try {
     const supabase = await createSupabaseServerClient();
     const sessionUser = await loadSessionUserFromSupabase(supabase);
@@ -73,18 +58,7 @@ export async function authorizeAdminRequest(
       }
     }
   } catch {
-    // Fall through to legacy token
-  }
-
-  // Legacy token (deprecated — remove after all admins use session auth)
-  const legacyToken = getLegacyToken(request);
-  if (isLegacyTokenAuthorized(legacyToken)) {
-    return {
-      ok: true,
-      actorId: "legacy-token",
-      capabilities: ["*"],
-      via: "legacy_token",
-    };
+    // fall through
   }
 
   return { ok: false, response: unauthorized() };

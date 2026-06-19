@@ -89,7 +89,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     href: "/admin/system/settings",
     label: "Настройки",
     capability: "system.settings",
-    comingSoon: true,
+  },
+  {
+    id: "system-staff",
+    section: "system",
+    href: "/admin/system/staff",
+    label: "Команда",
+    description: "Роли и доступ администраторов",
+    capability: "users.manage",
   },
   {
     id: "system-audit",

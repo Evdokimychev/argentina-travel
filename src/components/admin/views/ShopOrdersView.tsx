@@ -43,9 +43,17 @@ export default function ShopOrdersView() {
           title="Заказы магазина"
           subtitle="Цифровые продукты и доставка ссылок"
           actions={
-            <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
-              Обновить
-            </Button>
+            <div className="flex gap-2">
+              <a
+                href="/api/admin/shop/orders/export"
+                className="inline-flex h-10 items-center rounded-xl border border-gray-200 px-4 text-sm font-medium text-charcoal hover:border-sky/40 hover:text-sky"
+              >
+                CSV
+              </a>
+              <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
+                Обновить
+              </Button>
+            </div>
           }
         />
 

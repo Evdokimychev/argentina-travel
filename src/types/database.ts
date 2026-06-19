@@ -1035,6 +1035,87 @@ export interface Database {
         };
         Relationships: [];
       };
+      content_documents: {
+        Row: {
+          id: string;
+          doc_type: string;
+          slug: string;
+          locale: string;
+          title: string;
+          status: string;
+          body: Json;
+          seo: Json;
+          published_at: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          doc_type: string;
+          slug: string;
+          locale?: string;
+          title: string;
+          status?: string;
+          body?: Json;
+          seo?: Json;
+          published_at?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          doc_type?: string;
+          slug?: string;
+          locale?: string;
+          title?: string;
+          status?: string;
+          body?: Json;
+          seo?: Json;
+          published_at?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      content_revisions: {
+        Row: {
+          id: string;
+          document_id: string;
+          revision_number: number;
+          title: string;
+          body: Json;
+          seo: Json;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          document_id: string;
+          revision_number: number;
+          title: string;
+          body?: Json;
+          seo?: Json;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          document_id?: string;
+          revision_number?: number;
+          title?: string;
+          body?: Json;
+          seo?: Json;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {

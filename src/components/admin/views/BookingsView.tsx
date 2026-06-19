@@ -34,6 +34,8 @@ export default function BookingsView() {
   const stats = data?.stats;
   const [search, setSearch] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [detailId, setDetailId] = useState<string | null>(null);
+  const [detail, setDetail] = useState<Record<string, unknown> | null>(null);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -47,6 +49,14 @@ export default function BookingsView() {
         b.id.toLowerCase().includes(query)
     );
   }, [bookings, search]);
+
+  async function openDetail(bookingId: string) {
+    setDetailId(bookingId);
+    setDetail(null);
+    const res = await fetch(`/api/admin/bookings/${bookingId}`);
+    const json = (await res.json()) as { booking?: Record<string, unknown>; error?: string };
+    if (res.ok && json.booking) setDetail(json.booking);
+  }
 
   async function updateStatus(bookingId: string, status: BookingStatusActive) {
     setUpdatingId(bookingId);
@@ -170,20 +180,25 @@ export default function BookingsView() {
                         <FormattedPrice priceUsd={booking.totalPriceUsd} />
                       </td>
                       <td className="px-4 py-3">
-                        <NativeSelect
-                          value={booking.status}
-                          disabled={updatingId === booking.id}
-                          onChange={(e) =>
-                            void updateStatus(booking.id, e.target.value as BookingStatusActive)
-                          }
-                          className="min-w-[140px] text-xs"
-                        >
-                          {BOOKING_STATUSES_ACTIVE.map((status) => (
-                            <option key={status} value={status}>
-                              {BOOKING_STATUS_LABELS[status]}
-                            </option>
-                          ))}
-                        </NativeSelect>
+                        <div className="flex flex-col gap-2">
+                          <NativeSelect
+                            value={booking.status}
+                            disabled={updatingId === booking.id}
+                            onChange={(e) =>
+                              void updateStatus(booking.id, e.target.value as BookingStatusActive)
+                            }
+                            className="min-w-[140px] text-xs"
+                          >
+                            {BOOKING_STATUSES_ACTIVE.map((status) => (
+                              <option key={status} value={status}>
+                                {BOOKING_STATUS_LABELS[status]}
+                              </option>
+                            ))}
+                          </NativeSelect>
+                          <Button size="sm" variant="ghost" onClick={() => void openDetail(booking.id)}>
+                            Подробнее
+                          </Button>
+                        </div>
                       </td>
                     </tr>
                   ))
@@ -192,6 +207,20 @@ export default function BookingsView() {
             </table>
           </div>
         </section>
+
+        {detailId && detail ? (
+          <section className={`${cabinetCardClass} space-y-2 p-5 text-sm`}>
+            <div className="flex items-center justify-between">
+              <h2 className="font-heading text-lg font-bold text-charcoal">Заявка {detailId}</h2>
+              <Button size="sm" variant="ghost" onClick={() => setDetailId(null)}>
+                Закрыть
+              </Button>
+            </div>
+            <pre className="overflow-x-auto rounded-xl bg-gray-50 p-4 text-xs text-charcoal">
+              {JSON.stringify(detail, null, 2)}
+            </pre>
+          </section>
+        ) : null}
       </AdminPageShell>
     </CapabilityGate>
   );

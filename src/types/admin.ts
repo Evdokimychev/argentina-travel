@@ -48,6 +48,7 @@ export type AdminNavItemId =
   | "users-list"
   | "analytics-overview"
   | "system-settings"
+  | "system-staff"
   | "system-audit";
 
 export interface AdminNavItem {
@@ -65,7 +66,7 @@ export interface AdminSessionPayload {
   userId: string;
   capabilities: AdminCapability[];
   preset: AdminPresetId | null;
-  via: "session" | "legacy_token";
+  via: "session";
 }
 
 export interface AdminDashboardSummary {
