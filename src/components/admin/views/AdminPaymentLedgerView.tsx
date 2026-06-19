@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
+import { Receipt } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
+import AdminStatusChip from "@/components/admin/AdminStatusChip";
+import { AdminTableState } from "@/components/admin/AdminTableState";
 import { NativeSelect } from "@/components/ui/native-select";
 import {
   Dialog,
@@ -12,7 +15,9 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useAdminApi } from "@/hooks/useAdminApi";
+import { useAdminLayoutPrefs } from "@/context/AdminLayoutPrefsContext";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
+import { cn } from "@/lib/cn";
 import {
   MERCADOPAGO_CAPTURE_PHASE_LABELS,
   PAYMENT_PROVIDER_LABELS,
@@ -70,6 +75,7 @@ function formatAdminDateTime(value: string | null | undefined): string {
 }
 
 export function AdminPaymentLedgerPanel() {
+  const { tableClass, thClass, tdClass } = useAdminLayoutPrefs();
   const [period, setPeriod] = useState<AdminPaymentPeriodFilter>("30d");
   const [type, setType] = useState<PaymentTransactionType | "all">("all");
   const [status, setStatus] = useState<PaymentTransactionStatus | "all">("all");
@@ -213,55 +219,59 @@ export function AdminPaymentLedgerPanel() {
 
       <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
         <div className={cabinetTableWrapClass}>
-          <table className="w-full min-w-[1100px] text-left text-sm">
+          <table className={cn("w-full min-w-[1100px] text-left", tableClass)}>
             <thead className={cabinetTableHeaderClass}>
               <tr>
-                <th className="px-4 py-3 font-medium text-slate">Дата</th>
-                <th className="px-4 py-3 font-medium text-slate">Тип</th>
-                <th className="px-4 py-3 font-medium text-slate">Бронирование</th>
-                <th className="px-4 py-3 font-medium text-slate">Провайдер</th>
-                <th className="px-4 py-3 font-medium text-slate">Сумма</th>
-                <th className="px-4 py-3 font-medium text-slate">Статус</th>
-                <th className="px-4 py-3 font-medium text-slate">Действия</th>
+                <th className={thClass}>Дата</th>
+                <th className={thClass}>Тип</th>
+                <th className={thClass}>Бронирование</th>
+                <th className={thClass}>Провайдер</th>
+                <th className={thClass}>Сумма</th>
+                <th className={thClass}>Статус</th>
+                <th className={thClass}>Действия</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {transactions.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-slate">
-                    {loading ? "Загрузка…" : "Операции не найдены"}
-                  </td>
-                </tr>
+              {loading || transactions.length === 0 ? (
+                <AdminTableState
+                  loading={loading}
+                  isEmpty={transactions.length === 0}
+                  colSpan={7}
+                  skeletonColumns={7}
+                  emptyIcon={Receipt}
+                  emptyTitle="Операции не найдены"
+                  emptyDescription="Измените фильтры периода или статуса транзакции."
+                />
               ) : (
                 transactions.map((row) => (
                   <tr key={row.id} className={selectedId === row.id ? "bg-sky/5" : undefined}>
-                    <td className="px-4 py-3 text-slate">
+                    <td className={cn(tdClass, "text-slate")}>
                       {new Date(row.createdAt).toLocaleString("ru-RU")}
                     </td>
-                    <td className="px-4 py-3 text-charcoal">
+                    <td className={cn(tdClass, "text-charcoal")}>
                       {PAYMENT_TRANSACTION_TYPE_LABELS[row.type]}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className={tdClass}>
                       <p className="font-medium text-charcoal">{row.tourTitle ?? row.bookingId}</p>
                       <p className="mt-1 text-xs text-slate">{row.bookingId}</p>
                       {row.requestReason ? (
                         <p className="mt-1 text-xs text-slate">Причина: {row.requestReason}</p>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3 text-charcoal">
+                    <td className={cn(tdClass, "text-charcoal")}>
                       {PAYMENT_PROVIDER_LABELS[row.provider]}
                       {row.externalId ? (
                         <p className="mt-1 text-xs text-slate">ID: {row.externalId}</p>
                       ) : null}
                     </td>
-                    <td className="px-4 py-3 font-medium text-charcoal">
+                    <td className={cn(tdClass, "font-medium text-charcoal")}>
                       <FormattedPrice priceUsd={row.amount} />{" "}
                       <span className="text-xs text-slate">{row.currency}</span>
                     </td>
-                    <td className="px-4 py-3 text-charcoal">
-                      {PAYMENT_TRANSACTION_STATUS_LABELS[row.status]}
+                    <td className={tdClass}>
+                      <AdminStatusChip domain="payment-transaction" value={row.status} />
                     </td>
-                    <td className="px-4 py-3">
+                    <td className={tdClass}>
                       <div className="flex flex-wrap gap-2">
                         <button
                           type="button"
@@ -330,8 +340,8 @@ export function AdminPaymentLedgerPanel() {
                 </div>
                 <div>
                   <dt className="text-slate">Статус журнала</dt>
-                  <dd className="mt-0.5 font-medium text-charcoal">
-                    {PAYMENT_TRANSACTION_STATUS_LABELS[selected.status]}
+                  <dd className="mt-0.5">
+                    <AdminStatusChip domain="payment-transaction" value={selected.status} />
                   </dd>
                 </div>
                 <div>

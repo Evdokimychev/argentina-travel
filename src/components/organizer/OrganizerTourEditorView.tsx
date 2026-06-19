@@ -4,6 +4,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import PublishReadinessPanel from "@/components/organizer/PublishReadinessPanel";
+import PublishChecklistModal from "@/components/organizer/PublishChecklistModal";
+import TourEditorLivePreview from "@/components/organizer/TourEditorLivePreview";
+import TourEditorMobileBar, {
+  type TourEditorMobilePanelId,
+} from "@/components/organizer/TourEditorMobileBar";
+import TourProfileProgress from "@/components/organizer/TourProfileProgress";
+import { evaluatePublishReadiness } from "@/lib/publish-readiness";
+import { tourProfileCompletionPercent } from "@/lib/tour-profile-completion";
 import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -453,6 +461,7 @@ function TourEditorSidebar({
   onDelete,
   onPreview,
   onTabSelect,
+  onOpenPublishChecklist,
 }: {
   draft: OrganizerTourDraft;
   loading: boolean;
@@ -464,6 +473,7 @@ function TourEditorSidebar({
   onDelete: () => void;
   onPreview: () => void;
   onTabSelect: (tabId: OrganizerTourEditorTabId) => void;
+  onOpenPublishChecklist: () => void;
 }) {
   const isPublished = draft.status === "published";
   const platformName = draft.partnerName || "Пора в Аргентину";
@@ -471,7 +481,6 @@ function TourEditorSidebar({
   const tourUrl = draft.isPrivate && draft.privateAccessToken
     ? buildPrivateTourHref(catalogSlug, draft.privateAccessToken)
     : `/tours/${catalogSlug}`;
-  const previewUrl = `/organizer/tours/${draft.id}/preview`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
   const statusLabel = isPublished ? "Опубликовано" : "Черновик";
@@ -479,6 +488,8 @@ function TourEditorSidebar({
   return (
     <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
       <div className="space-y-4">
+        <TourProfileProgress draft={draft} compact />
+
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
             <h2 className="font-heading text-base font-bold text-charcoal">Редактирование тура</h2>
@@ -493,6 +504,14 @@ function TourEditorSidebar({
           </div>
 
           <PublishReadinessPanel draft={draft} compact onTabSelect={onTabSelect} />
+
+          <button
+            type="button"
+            onClick={onOpenPublishChecklist}
+            className="w-full rounded-xl border border-dashed border-gray-200 px-3 py-2 text-xs font-medium text-brand transition-colors hover:border-brand/30 hover:bg-brand-light/30"
+          >
+            Открыть чек-лист публикации
+          </button>
 
           <Button type="submit" className="h-12 w-full rounded-2xl text-sm" disabled={loading}>
             <Upload className="h-4 w-4" />
@@ -541,34 +560,7 @@ function TourEditorSidebar({
           </div>
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-heading text-base font-bold text-charcoal">Предпросмотр тура</h2>
-          <p className="mt-1.5 line-clamp-2 text-xs text-slate">
-            {draft.title.trim() || "Без названия"}
-          </p>
-          <button
-            type="button"
-            onClick={onPreview}
-            className="mt-3 flex w-full items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3 text-left transition-colors hover:border-brand/30 hover:bg-brand-light/40"
-          >
-            <span className="min-w-0">
-              <span className="block truncate text-sm font-semibold text-charcoal">{platformName}</span>
-              <span className="mt-0.5 block text-xs text-slate">Как увидят туристы</span>
-            </span>
-            <Eye className="h-5 w-5 shrink-0 text-brand" aria-hidden />
-          </button>
-          <p className="mt-2 text-xs leading-relaxed text-slate">
-            Откроется в новой вкладке с учётом текущих изменений из редактора.
-          </p>
-          <Link
-            href={previewUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
-          >
-            Открыть сохранённую версию
-          </Link>
-        </div>
+        <TourEditorLivePreview draft={draft} onOpenFullPreview={onPreview} className="2xl:hidden" />
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <h2 className="font-heading text-base font-bold text-charcoal">
@@ -619,6 +611,9 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const [autoSaving, setAutoSaving] = useState(false);
   const [loading, setLoading] = useState(false);
   const [navStuck, setNavStuck] = useState(false);
+  const [mobilePanel, setMobilePanel] = useState<TourEditorMobilePanelId>("editor");
+  const [publishChecklistOpen, setPublishChecklistOpen] = useState(false);
+  const [pendingPublishSave, setPendingPublishSave] = useState(false);
   const navSentinelRef = useRef<HTMLDivElement>(null);
   const debouncedDraft = useDebouncedValue(draft, 2000);
 
@@ -741,9 +736,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     markDirty();
   }
 
-  async function handleSubmit(event: React.FormEvent) {
-    event.preventDefault();
-    if (!draft) return;
+  async function persistDraft(options?: { forcePublished?: boolean }) {
+    if (!draft) return false;
 
     setLoading(true);
     setError(null);
@@ -755,12 +749,92 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
     if ("error" in result) {
       setError(result.error);
+      return false;
+    }
+
+    setDraft(result.draft);
+    setSaved(true);
+    setDirty(false);
+    setPendingPublishSave(false);
+    if (options?.forcePublished) {
+      setPublishChecklistOpen(false);
+    }
+    return true;
+  }
+
+  function attemptPublishFlow(onProceed: () => void) {
+    if (!draft) return;
+    const readiness = evaluatePublishReadiness(draft);
+    if (!readiness.ready || readiness.warningCount > 0) {
+      setPendingPublishSave(true);
+      setPublishChecklistOpen(true);
+      return;
+    }
+    onProceed();
+  }
+
+  async function handleSubmit(event: React.FormEvent) {
+    event.preventDefault();
+    if (!draft) return;
+
+    const wantsPublish = draft.status === "published" && !draft.archived;
+    if (wantsPublish) {
+      const readiness = evaluatePublishReadiness(draft);
+      if (!readiness.ready) {
+        setPendingPublishSave(true);
+        setPublishChecklistOpen(true);
+        return;
+      }
+      if (readiness.warningCount > 0) {
+        setPendingPublishSave(true);
+        setPublishChecklistOpen(true);
+        return;
+      }
+    }
+
+    await persistDraft();
+  }
+
+  async function handleConfirmPublishFromModal() {
+    if (!draft) return;
+    const readiness = evaluatePublishReadiness(draft);
+    if (!readiness.ready) return;
+
+    const nextDraft: OrganizerTourDraft = {
+      ...draft,
+      status: "published",
+      archived: false,
+    };
+    setDraft(nextDraft);
+    setDirty(true);
+
+    setLoading(true);
+    setError(null);
+    setSaved(false);
+
+    const result = saveOrganizerTourDraft(normalizeDraftForSave(nextDraft), user);
+
+    setLoading(false);
+
+    if ("error" in result) {
+      setError(result.error);
       return;
     }
 
     setDraft(result.draft);
     setSaved(true);
     setDirty(false);
+    setPendingPublishSave(false);
+    setPublishChecklistOpen(false);
+  }
+
+  function handleStatusChange(nextStatus: OrganizerTourStatus) {
+    if (!draft) return;
+    if (nextStatus === "published") {
+      attemptPublishFlow(() => updateDraft({ status: nextStatus }));
+      return;
+    }
+    updateDraft({ status: nextStatus });
   }
 
   function handlePreview() {
@@ -794,9 +868,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
   const variantSync = TOUR_VARIANT_SYNC[draft.id];
   const catalogSlug = getCatalogSlug(draft);
+  const completionPercent = tourProfileCompletionPercent(draft);
+  const showEditorPanels = mobilePanel === "editor";
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 pb-24 xl:pb-0">
       <div className="rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
         <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 items-start gap-3">
@@ -849,6 +925,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
       <div ref={navSentinelRef} className="h-px" aria-hidden />
 
+      {showEditorPanels ? (
       <nav
         aria-label="Разделы редактора тура"
         className={cn(
@@ -877,8 +954,43 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           </div>
         </div>
       </nav>
+      ) : null}
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start">
+      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] 2xl:grid-cols-[minmax(0,1fr)_minmax(260px,300px)_260px] xl:items-start">
+        {mobilePanel === "status" ? (
+          <div className="min-w-0 space-y-4 xl:hidden">
+            <TourProfileProgress draft={draft} />
+            <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+            <button
+              type="button"
+              onClick={() => setPublishChecklistOpen(true)}
+              className="w-full rounded-2xl border border-dashed border-brand/30 bg-brand-light/20 px-4 py-3 text-sm font-medium text-brand"
+            >
+              Чек-лист перед публикацией
+            </button>
+            <Button type="submit" className="h-12 w-full rounded-2xl" disabled={loading}>
+              <Upload className="h-4 w-4" />
+              {loading
+                ? "Сохраняем…"
+                : draft.status === "published"
+                  ? "Сохранить и опубликовать"
+                  : "Сохранить черновик"}
+            </Button>
+            {autoSaving ? (
+              <p className="text-center text-xs text-slate">Автосохранение…</p>
+            ) : saved ? (
+              <p className="text-center text-xs text-emerald-700">Изменения сохранены</p>
+            ) : null}
+          </div>
+        ) : null}
+
+        {mobilePanel === "preview" ? (
+          <div className="min-w-0 xl:hidden">
+            <TourEditorLivePreview draft={draft} onOpenFullPreview={handlePreview} />
+          </div>
+        ) : null}
+
+        {showEditorPanels ? (
         <div className="min-w-0 space-y-6">
             {activeTab === "main" ? (
               <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
@@ -1450,7 +1562,16 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "publish" ? (
               <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
+                <TourProfileProgress draft={draft} />
                 <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+
+                <button
+                  type="button"
+                  onClick={() => setPublishChecklistOpen(true)}
+                  className="w-full rounded-xl border border-dashed border-gray-200 px-4 py-3 text-sm font-medium text-brand transition-colors hover:border-brand/30 hover:bg-brand-light/30"
+                >
+                  Открыть чек-лист публикации
+                </button>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
@@ -1459,7 +1580,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                       id="tour-status"
                       value={draft.status}
                       onChange={(event) =>
-                        updateDraft({ status: event.target.value as OrganizerTourStatus })
+                        handleStatusChange(event.target.value as OrganizerTourStatus)
                       }
                       className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     >
@@ -1523,6 +1644,16 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               </div>
             ) : null}
           </div>
+        ) : null}
+
+        <aside
+          className={cn(
+            "hidden 2xl:sticky 2xl:block 2xl:h-fit 2xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] 2xl:self-start 2xl:overflow-y-auto",
+            siteStickyBelowHeaderInsetClass
+          )}
+        >
+          <TourEditorLivePreview draft={draft} onOpenFullPreview={handlePreview} />
+        </aside>
 
           <TourEditorSidebar
             draft={draft}
@@ -1535,8 +1666,34 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             onDelete={handleDelete}
             onPreview={handlePreview}
             onTabSelect={setActiveTab}
+            onOpenPublishChecklist={() => setPublishChecklistOpen(true)}
           />
         </div>
+
+      <PublishChecklistModal
+        open={publishChecklistOpen}
+        draft={draft}
+        onOpenChange={(open) => {
+          setPublishChecklistOpen(open);
+          if (!open) setPendingPublishSave(false);
+        }}
+        onTabSelect={(tabId) => {
+          setActiveTab(tabId);
+          setMobilePanel("editor");
+        }}
+        onPublishAnyway={
+          pendingPublishSave && evaluatePublishReadiness(draft).ready
+            ? handleConfirmPublishFromModal
+            : undefined
+        }
+        allowPublishDespiteWarnings
+      />
+
+      <TourEditorMobileBar
+        active={mobilePanel}
+        onChange={setMobilePanel}
+        completionPercent={completionPercent}
+      />
     </form>
   );
 }

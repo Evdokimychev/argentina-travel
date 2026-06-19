@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -13,9 +12,11 @@ import {
 import Hero from "@/components/Hero";
 import PlaceCard from "@/components/places/PlaceCard";
 import PlacesFeaturedCollections from "@/components/places/PlacesFeaturedCollections";
+import { SafeImage } from "@/components/ui/safe-image";
 import type { DestinationPage } from "@/data/destination-pages";
 import { DESTINATION_REGION_GROUPS } from "@/data/destination-pages";
 import { destinationHref } from "@/lib/destinations";
+import { destinationHeroAlt } from "@/lib/media-alt-text";
 import { siteContainerClass } from "@/lib/site-container";
 import type { PlaceCollection, PlaceListing } from "@/types/place";
 import { cn } from "@/lib/utils";
@@ -42,10 +43,11 @@ function DestinationCard({
       )}
     >
       <div className={cn("relative overflow-hidden", featured ? "aspect-[21/9] sm:aspect-[2.4/1]" : "aspect-[4/3]")}>
-        <Image
+        <SafeImage
           src={dest.image}
-          alt={dest.name}
+          alt={destinationHeroAlt(dest.name)}
           fill
+          placeholderVariant="destination"
           className="object-cover transition-transform duration-700 group-hover:scale-105"
           sizes={featured ? "(max-width: 1280px) 100vw, 50vw" : "(max-width: 768px) 100vw, 25vw"}
         />

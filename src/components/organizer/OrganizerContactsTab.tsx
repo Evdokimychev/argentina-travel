@@ -82,7 +82,7 @@ function IconField({
         placeholder={placeholder}
         onChange={onChange ? (event) => onChange(event.target.value) : undefined}
         className={cn(
-          "min-w-0 flex-1 px-3 py-2.5 text-sm text-charcoal outline-none placeholder:text-gray-400",
+          "min-w-0 flex-1 px-3 py-2.5 text-sm text-charcoal outline-none placeholder:text-slate/70",
           readOnly && "cursor-default bg-gray-50/80 text-slate"
         )}
       />
@@ -140,7 +140,7 @@ function SocialIconField({
           value={value}
           placeholder={placeholder}
           onChange={(event) => onChange(event.target.value)}
-          className="min-w-0 flex-1 px-3 py-2.5 text-sm text-charcoal outline-none placeholder:text-gray-400"
+          className="min-w-0 flex-1 px-3 py-2.5 text-sm text-charcoal outline-none placeholder:text-slate/70"
         />
       </div>
     </div>
@@ -333,7 +333,7 @@ export default function OrganizerContactsTab({ user }: OrganizerContactsTabProps
                 value={contacts.additionalContacts}
                 rows={3}
                 onChange={(event) => updateContacts({ additionalContacts: event.target.value })}
-                className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                 placeholder="WhatsApp, дополнительный телефон, мессенджеры…"
               />
             </div>

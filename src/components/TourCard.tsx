@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Tour } from "@/types";
 import FormattedPrice from "@/components/FormattedPrice";
+import { cn } from "@/lib/cn";
+import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
 
 interface TourCardProps {
   tour: Tour;
@@ -13,7 +15,7 @@ export default function TourCard({ tour }: TourCardProps) {
   return (
     <Link
       href={`/tours/${tour.slug}`}
-      className="group card-hover block overflow-hidden rounded-2xl bg-white shadow-card"
+      className={cn("group block", tourCardShellClass, tourCardShellInteractiveClass)}
     >
       <div className="relative h-52 overflow-hidden">
         <Image
@@ -37,7 +39,7 @@ export default function TourCard({ tour }: TourCardProps) {
           <span>•</span>
           <span>{tour.difficulty}</span>
         </div>
-        <h3 className="mt-2 font-heading text-lg font-bold text-charcoal transition-colors group-hover:text-sky">
+        <h3 className="mt-2 font-heading text-lg font-bold text-foreground transition-colors group-hover:text-sky">
           {tour.title}
         </h3>
         <p className="mt-2 line-clamp-2 text-sm text-slate">

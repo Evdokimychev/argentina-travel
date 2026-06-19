@@ -2,6 +2,7 @@
 
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { evaluatePublishReadiness } from "@/lib/publish-readiness";
+import { tourProfileCompletionPercent } from "@/lib/tour-profile-completion";
 import type {
   OrganizerTourDraft,
   OrganizerTourEditorTabId,
@@ -20,12 +21,15 @@ export default function PublishReadinessPanel({
   onTabSelect,
 }: PublishReadinessPanelProps) {
   const readiness = evaluatePublishReadiness(draft);
+  const completionPercent = tourProfileCompletionPercent(draft);
 
   if (compact && readiness.ready && readiness.warningCount === 0) {
     return (
-      <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-        <CheckCircle2 className="h-4 w-4 shrink-0" />
-        Готов к публикации
+      <div className="space-y-2">
+        <div className="flex items-center gap-2 rounded-xl bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          Готов к публикации · {completionPercent}%
+        </div>
       </div>
     );
   }
@@ -44,16 +48,26 @@ export default function PublishReadinessPanel({
           compact ? "py-2.5" : "sm:px-5"
         )}
       >
-        <p className="text-sm font-semibold text-charcoal">
-          {readiness.ready ? "Тур готов к публикации" : "Публикация заблокирована"}
-        </p>
-        <p className="mt-1 text-xs leading-relaxed text-slate">
-          {readiness.ready
-            ? readiness.warningCount > 0
-              ? `Можно опубликовать. Рекомендуем исправить ${readiness.warningCount} замечаний для лучшей конверсии.`
-              : "Все обязательные поля заполнены — тур появится в каталоге после сохранения."
-            : "Исправьте обязательные пункты ниже. Без них тур не попадёт в каталог."}
-        </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold text-charcoal">
+              {readiness.ready ? "Тур готов к публикации" : "Публикация заблокирована"}
+            </p>
+            <p className="mt-1 text-xs leading-relaxed text-slate">
+              {readiness.ready
+                ? readiness.warningCount > 0
+                  ? `Можно опубликовать. Рекомендуем исправить ${readiness.warningCount} замечаний для лучшей конверсии.`
+                  : "Все обязательные поля заполнены — тур появится в каталоге после сохранения."
+                : "Исправьте обязательные пункты ниже. Без них тур не попадёт в каталог."}
+            </p>
+          </div>
+          <span
+            className="shrink-0 rounded-full bg-white/80 px-2.5 py-1 text-xs font-bold tabular-nums text-charcoal ring-1 ring-gray-200/80"
+            title="Заполнение профиля тура"
+          >
+            {completionPercent}%
+          </span>
+        </div>
       </div>
 
       {readiness.issues.length > 0 ? (

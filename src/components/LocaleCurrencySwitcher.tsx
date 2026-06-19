@@ -4,6 +4,7 @@ import { useState, useMemo, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Search, Check, ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { motionClass } from "@/lib/motion";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
   LANGUAGES,
@@ -314,10 +315,18 @@ export default function LocaleCurrencySwitcher({
         {mobileOpen && (
           <>
             <div
-              className="fixed inset-0 z-[60] bg-charcoal/40 backdrop-blur-sm animate-in fade-in duration-200"
+              className={cn(
+                "fixed inset-0 z-[60] bg-charcoal/40 backdrop-blur-sm",
+                motionClass.enterOverlay
+              )}
               onClick={() => setMobileOpen(false)}
             />
-            <div className="fixed inset-x-0 bottom-0 z-[70] max-h-[85vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl animate-in slide-in-from-bottom duration-300">
+            <div
+              className={cn(
+                "fixed inset-x-0 bottom-0 z-[70] max-h-[85vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl",
+                motionClass.enterSheet
+              )}
+            >
               <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
                 <p className="font-semibold text-charcoal">{t("locale.title")}</p>
                 <button

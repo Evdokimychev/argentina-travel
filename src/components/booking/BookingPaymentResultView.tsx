@@ -4,7 +4,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { AlertCircle, Check, Clock, Loader2, XCircle } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingCheckoutShell from "@/components/booking/BookingCheckoutShell";
+import BookingPaymentErrorRecovery from "@/components/booking/BookingPaymentErrorRecovery";
 import BookingPaymentReceiptSection from "@/components/booking/BookingPaymentReceiptSection";
+import BookingPaymentSuccessCelebration from "@/components/booking/BookingPaymentSuccessCelebration";
 import { buildBookingPaymentLinkPath } from "@/lib/booking-payment-link";
 import {
   apiFetchPaymentLinkStatus,
@@ -133,7 +136,70 @@ export default function BookingPaymentResultView({
     return "Мы проверяем актуальный статус операции.";
   }, [awaitingConfirmation, confirmedFailed, confirmedPaid]);
 
-  const icon = confirmedPaid ? (
+  if (loading && !snapshot) {
+    return (
+      <BookingCheckoutShell
+        currentStep="result"
+        eyebrow="Результат оплаты"
+        title="Проверяем статус"
+        showProgress={false}
+      >
+        <div className="flex items-center justify-center gap-2 py-8 text-sm text-slate">
+          <Loader2 className="h-5 w-5 animate-spin" />
+          Ожидаем ответ платёжной системы…
+        </div>
+      </BookingCheckoutShell>
+    );
+  }
+
+  if (!snapshot && fetchError) {
+    return (
+      <BookingCheckoutShell currentStep="result" eyebrow="Результат оплаты" title="Ошибка загрузки">
+        <BookingPaymentErrorRecovery
+          className="mt-2"
+          title="Не удалось загрузить статус"
+          description={fetchError}
+          steps={["Проверьте подключение к интернету", "Обновите страницу через минуту"]}
+          retryHref={buildBookingPaymentLinkPath(token)}
+          retryLabel="Вернуться к оплате"
+        />
+      </BookingCheckoutShell>
+    );
+  }
+
+  if (!snapshot) {
+    return (
+      <BookingCheckoutShell
+        currentStep="result"
+        eyebrow="Результат оплаты"
+        title="Ссылка не найдена"
+        description="Ссылка на оплату недействительна или заявка была удалена."
+      >
+        <div className="mt-6 flex flex-wrap gap-3">
+          <Link
+            href="/booking/find"
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-gray-200 px-4 text-sm font-semibold text-charcoal hover:bg-gray-50"
+          >
+            Найти заявку
+          </Link>
+          <Link
+            href="/contacts"
+            className="inline-flex h-11 items-center justify-center rounded-xl border border-gray-200 px-4 text-sm font-semibold text-charcoal hover:bg-gray-50"
+          >
+            Поддержка
+          </Link>
+        </div>
+      </BookingCheckoutShell>
+    );
+  }
+
+  const toneClass = confirmedPaid
+    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
+    : confirmedFailed || status === "failure"
+      ? "border-red-200 bg-red-50 text-red-900"
+      : "border-amber-200 bg-amber-50 text-amber-900";
+
+  const statusIcon = confirmedPaid ? (
     <Check className="h-6 w-6 text-emerald-700" />
   ) : confirmedFailed || status === "failure" ? (
     <XCircle className="h-6 w-6 text-red-600" />
@@ -143,102 +209,85 @@ export default function BookingPaymentResultView({
     <AlertCircle className="h-6 w-6 text-sky" />
   );
 
-  const toneClass = confirmedPaid
-    ? "border-emerald-200 bg-emerald-50 text-emerald-900"
-    : confirmedFailed || status === "failure"
-      ? "border-red-200 bg-red-50 text-red-900"
-      : "border-amber-200 bg-amber-50 text-amber-900";
+  return (
+    <BookingCheckoutShell currentStep="result" eyebrow="Результат оплаты" title={title}>
+      {confirmedPaid ? (
+        <>
+          <BookingPaymentSuccessCelebration className="mb-4" />
+          <p className="text-center text-sm leading-relaxed text-slate">{description}</p>
+        </>
+      ) : (
+        <div className={`flex items-start gap-3 rounded-xl border px-4 py-4 ${toneClass}`}>
+          <div className="mt-0.5 shrink-0">{statusIcon}</div>
+          <div>
+            <p className="font-medium">{title}</p>
+            <p className="mt-1 text-sm leading-relaxed">{description}</p>
+          </div>
+        </div>
+      )}
 
-  if (loading && !snapshot) {
-    return (
-      <div className="mx-auto flex max-w-2xl items-center justify-center gap-2 px-4 py-16 text-sm text-slate">
-        <Loader2 className="h-5 w-5 animate-spin" />
-        Проверяем статус оплаты…
+      <div className="mt-6 rounded-xl bg-gray-50 px-4 py-4">
+        <p className="text-sm text-slate">{snapshot.tourTitle}</p>
+        <p className="mt-1 font-heading text-2xl font-bold text-charcoal">
+          <FormattedPrice priceUsd={snapshot.amountUsd} />
+        </p>
+        <p className="mt-2 text-xs text-slate">Заказчик: {snapshot.contactName}</p>
       </div>
-    );
-  }
 
-  if (!snapshot && fetchError) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <p className="font-medium text-charcoal">Не удалось загрузить статус</p>
-        <p className="mt-2 text-sm text-slate">{fetchError}</p>
+      {awaitingConfirmation ? (
+        <div className="mt-4 flex items-center gap-2 text-sm text-slate">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Ожидаем подтверждение от Mercado Pago…
+          {pollAttempt > 0 ? (
+            <span className="text-xs text-slate/80">
+              (попытка {pollAttempt} из {POLL_MAX_ATTEMPTS})
+            </span>
+          ) : null}
+        </div>
+      ) : null}
+
+      {confirmedPaid && snapshot.receipt ? (
+        <div className="mt-6">
+          <BookingPaymentReceiptSection receipt={snapshot.receipt} compact />
+        </div>
+      ) : null}
+
+      {(confirmedFailed || status === "failure") && !snapshot.expired ? (
+        <div className="mt-6">
+          <BookingPaymentErrorRecovery
+            title="Оплата не завершена"
+            description="Платёж не был подтверждён. Деньги не списаны или будут возвращены автоматически — это зависит от банка."
+            steps={[
+              "Повторите оплату по ссылке ниже",
+              "Если списание уже произошло, подождите несколько минут и обновите страницу",
+            ]}
+            retryHref={buildBookingPaymentLinkPath(token)}
+          />
+        </div>
+      ) : null}
+
+      <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:flex-wrap">
+        {!confirmedPaid && !snapshot.expired && !confirmedFailed && status !== "failure" ? (
+          <Link
+            href={buildBookingPaymentLinkPath(token)}
+            className="inline-flex h-11 flex-1 items-center justify-center rounded-xl bg-sky px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-dark sm:flex-none"
+          >
+            Вернуться к оплате
+          </Link>
+        ) : null}
         <Link
-          href={buildBookingPaymentLinkPath(token)}
-          className="mt-6 inline-flex rounded-xl bg-brand px-4 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
+          href="/profile/bookings"
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-gray-200 px-4 text-sm font-semibold text-charcoal hover:bg-gray-50 sm:flex-none"
         >
-          Вернуться к оплате
+          Личный кабинет
+        </Link>
+        <Link
+          href="/contacts"
+          className="inline-flex h-11 flex-1 items-center justify-center rounded-xl border border-gray-200 px-4 text-sm font-semibold text-charcoal hover:bg-gray-50 sm:flex-none"
+        >
+          Поддержка
         </Link>
       </div>
-    );
-  }
-
-  if (!snapshot) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-16 text-center">
-        <p className="font-medium text-charcoal">Ссылка не найдена</p>
-        <p className="mt-2 text-sm text-slate">
-          Ссылка на оплату недействительна или заявка была удалена.
-        </p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mx-auto max-w-2xl px-4 py-10 sm:py-14">
-      <div className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
-        <div className={`flex items-start gap-3 rounded-xl border px-4 py-4 ${toneClass}`}>
-          <div className="mt-0.5 shrink-0">{icon}</div>
-          <div>
-            <h1 className="font-display text-xl font-bold">{title}</h1>
-            <p className="mt-2 text-sm leading-relaxed">{description}</p>
-          </div>
-        </div>
-
-        <div className="mt-6 rounded-xl bg-gray-50 px-4 py-4">
-          <p className="text-sm text-slate">{snapshot.tourTitle}</p>
-          <p className="mt-1 font-heading text-2xl font-bold text-charcoal">
-            <FormattedPrice priceUsd={snapshot.amountUsd} />
-          </p>
-          <p className="mt-2 text-xs text-slate">Заказчик: {snapshot.contactName}</p>
-        </div>
-
-        {awaitingConfirmation ? (
-          <div className="mt-4 flex items-center gap-2 text-sm text-slate">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Ожидаем подтверждение от Mercado Pago…
-          </div>
-        ) : null}
-
-        {confirmedPaid && snapshot.receipt ? (
-          <div className="mt-6">
-            <BookingPaymentReceiptSection receipt={snapshot.receipt} compact />
-          </div>
-        ) : null}
-
-        <div className="mt-6 flex flex-wrap gap-3">
-          {!confirmedPaid && !snapshot.expired ? (
-            <Link
-              href={buildBookingPaymentLinkPath(token)}
-              className="inline-flex h-11 items-center justify-center rounded-xl bg-sky px-5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-sky-dark"
-            >
-              Повторить оплату
-            </Link>
-          ) : null}
-          <Link
-            href="/profile/bookings"
-            className="inline-flex items-center justify-center rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-charcoal hover:bg-gray-50"
-          >
-            Личный кабинет
-          </Link>
-          <Link
-            href="/contacts"
-            className="inline-flex items-center justify-center rounded-xl border border-gray-200 px-4 py-2.5 text-sm font-semibold text-charcoal hover:bg-gray-50"
-          >
-            Поддержка
-          </Link>
-        </div>
-      </div>
-    </div>
+    </BookingCheckoutShell>
   );
 }

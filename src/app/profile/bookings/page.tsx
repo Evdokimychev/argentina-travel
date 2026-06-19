@@ -128,7 +128,7 @@ export default function ProfileBookingsPage() {
       ) : null}
 
       {loadingBookings ? (
-        <BookingListSkeleton />
+        <BookingListSkeleton className="mt-6" />
       ) : bookings.length > 0 ? (
         <div className="mt-6 space-y-4">
           {bookings.map((booking) => {
@@ -203,11 +203,12 @@ export default function ProfileBookingsPage() {
         </div>
       ) : (
         <EmptyState
+          variant="cabinet"
           icon={CalendarDays}
           title="Бронирований пока нет"
           description="Оформите заявку на странице тура или найдите гостевую заявку по email."
-          action={{ label: "Выбрать тур", href: "/tours", variant: "outline" }}
-          secondaryAction={{ label: "Найти заявку по email", href: "/booking/find" }}
+          action={{ label: "Выбрать тур", href: "/tours" }}
+          secondaryAction={{ label: "Найти заявку по email", href: "/booking/find", variant: "outline" }}
           className="mt-8"
         />
       )}

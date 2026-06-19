@@ -162,7 +162,7 @@ export default function ProfileNotifications({ limit }: { limit?: number }) {
   const unread = items.filter((item) => !item.read).length;
 
   return (
-    <section className={cabinetPanelClass}>
+    <section id="notifications" className={cabinetPanelClass}>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-sky/10 text-sky">

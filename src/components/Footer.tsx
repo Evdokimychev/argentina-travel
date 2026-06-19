@@ -28,7 +28,7 @@ function FooterColumn({
 }) {
   return (
     <div className={className}>
-      <h3 className="font-heading text-sm font-semibold text-charcoal">{title}</h3>
+      <h3 className="font-heading text-sm font-semibold text-foreground">{title}</h3>
       <div className="mt-4">{children}</div>
     </div>
   );
@@ -65,7 +65,7 @@ export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo 
 
   return (
     <footer
-      className="border-t border-gray-100 bg-surface-muted"
+      className="site-footer-safe-area border-t border-border-subtle bg-surface-muted dark:border-border-subtle dark:bg-background"
       data-scroll-rail-tone="light"
     >
       <div className={cn(siteContainerClass, "py-14 lg:py-16")}>
@@ -123,7 +123,7 @@ export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo 
                     href={link.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-charcoal shadow-sm transition-colors hover:border-sky/30 hover:text-sky"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-elevated px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:border-sky/30 hover:text-sky dark:border-border-subtle dark:bg-surface-elevated"
                   >
                     {link.label}
                     <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
@@ -134,13 +134,13 @@ export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo 
           </div>
         </div>
 
-        <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/[0.06] via-white to-white p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="mt-10 flex flex-col gap-4 rounded-2xl border border-sky/20 bg-gradient-to-br from-sky/[0.06] via-surface-elevated to-surface-elevated p-6 sm:flex-row sm:items-center sm:justify-between sm:gap-6 dark:from-sky/[0.08] dark:via-surface-elevated dark:to-surface-elevated">
           <div className="min-w-0">
             <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-sky">
               <Compass className="h-3.5 w-3.5" aria-hidden />
               {t("footer.routeEyebrow")}
             </p>
-            <h3 className="mt-2 font-heading text-lg font-bold text-charcoal">
+            <h3 className="mt-2 font-heading text-lg font-bold text-foreground">
               {t("footer.routeTitle")}
             </h3>
             <p className="mt-1 max-w-xl text-sm leading-relaxed text-slate">
@@ -156,7 +156,7 @@ export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo 
           </Link>
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-gray-200/80 pt-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-3 border-t border-border-subtle pt-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between dark:border-border-subtle">
           <div>
             <p>© {new Date().getFullYear()} {t("footer.copyright")}</p>
             {siteLegal?.legalLine ? (

@@ -3,11 +3,14 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdminListSkeleton } from "@/components/ui/skeleton";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import type { ContentDocumentItem, ContentInventorySummary } from "@/lib/admin/content-inventory";
 import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
@@ -379,13 +382,26 @@ export default function ContentDocumentsView() {
             </NativeSelect>
           </div>
 
-          <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-100">
-            {filtered.length === 0 ? (
-              <li className="px-4 py-10 text-center text-sm text-slate">
-                {loading ? "Загрузка…" : "Ничего не найдено"}
-              </li>
-            ) : (
-              filtered.slice(0, 100).map((doc) => (
+          {loading ? (
+            <AdminListSkeleton rows={6} className="rounded-2xl border border-gray-100" />
+          ) : filtered.length === 0 ? (
+            <EmptyState
+              variant="admin"
+              icon={FileText}
+              title="Документы не найдены"
+              description="Измените поиск или фильтр типа контента."
+              action={{
+                label: "Сбросить фильтры",
+                onClick: () => {
+                  setSearch("");
+                  setTypeFilter("all");
+                },
+                variant: "outline",
+              }}
+            />
+          ) : (
+            <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-100">
+              {filtered.slice(0, 100).map((doc) => (
                 <li key={`${doc.type}-${doc.id}`} className="flex flex-wrap items-center gap-3 px-4 py-3 text-sm">
                   <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-slate">
                     {TYPE_LABELS[doc.type]}
@@ -396,10 +412,10 @@ export default function ContentDocumentsView() {
                   <span className="text-xs text-slate">{STATUS_LABELS[doc.status]}</span>
                   {doc.category ? <span className="text-xs text-slate">{doc.category}</span> : null}
                 </li>
-              ))
-            )}
-          </ul>
-          {filtered.length > 100 ? (
+              ))}
+            </ul>
+          )}
+          {!loading && filtered.length > 100 ? (
             <p className="text-xs text-slate">Показаны первые 100 из {filtered.length}</p>
           ) : null}
         </section>

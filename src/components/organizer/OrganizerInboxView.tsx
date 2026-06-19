@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { CabinetInboxListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { cn } from "@/lib/cn";
@@ -221,12 +222,15 @@ export default function OrganizerInboxView({ compact = false }: OrganizerInboxVi
 
       <div className={cn("mt-4", compact ? "max-h-[420px] overflow-y-auto" : "")}>
         {loading ? (
-          <p className="py-8 text-center text-sm text-slate">Загружаем входящие…</p>
+          <CabinetInboxListSkeleton count={compact ? 3 : 4} compact={compact} />
         ) : items.length === 0 ? (
           <EmptyState
+            variant="cabinet"
             icon={Inbox}
-            title="Пока пусто"
+            title="Входящих пока нет"
             description="Здесь появятся новые заявки, отзывы и обновления оплаты."
+            action={{ label: "Создать тур", href: "/organizer/tours" }}
+            secondaryAction={{ label: "Все заявки", href: "/organizer/bookings", variant: "outline" }}
           />
         ) : (
           <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-100">

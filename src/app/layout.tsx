@@ -1,6 +1,7 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Unbounded } from "next/font/google";
 import Providers from "@/components/Providers";
+import ThemeScript from "@/components/ThemeScript";
 import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import { getDefaultOgImageUrl } from "@/components/seo/SiteJsonLd";
@@ -37,8 +38,21 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/logo-light.svg",
-    apple: "/logo-light.svg",
+    apple: "/icons/pwa-icon.svg",
   },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    title: "Пора в Аргентину",
+    statusBarStyle: "default",
+  },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#74acdf",
 };
 
 export default async function RootLayout({
@@ -50,7 +64,8 @@ export default async function RootLayout({
 
   return (
     <html lang="ru" className={unbounded.variable} suppressHydrationWarning>
-      <body className="min-h-screen flex flex-col antialiased">
+      <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
+        <ThemeScript />
         <SiteJsonLd />
         <Providers>
           <SiteChrome siteLegal={siteLegal}>{children}</SiteChrome>

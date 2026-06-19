@@ -7,6 +7,7 @@ import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
+import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 
 type SettingsResponse = {
   settings?: {
@@ -119,8 +120,10 @@ export default function SettingsView() {
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {loading ? <p className="text-sm text-slate">Загрузка…</p> : null}
 
+        <ThemeSettingsSection />
+
         <section className={`${cabinetCardClass} space-y-4 p-5`}>
-          <h2 className="font-heading text-lg font-bold text-charcoal">Эксплуатация</h2>
+          <h2 className="font-heading text-lg font-bold text-foreground">Эксплуатация</h2>
           <p className="text-sm text-slate">
             Подсказки по резервному копированию и последней проверке RLS (CI или{" "}
             <code className="text-xs">npm run rls-audit</code>).

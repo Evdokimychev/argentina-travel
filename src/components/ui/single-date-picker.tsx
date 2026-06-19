@@ -284,7 +284,7 @@ export default function SingleDatePicker({
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-brand/10">
             <Calendar className="h-4 w-4 text-brand" aria-hidden />
           </span>
-          <span className={cn("min-w-0 flex-1 truncate", value ? "text-charcoal" : "text-gray-400")}>
+          <span className={cn("min-w-0 flex-1 truncate", value ? "text-charcoal" : "text-slate/70")}>
             {label}
           </span>
           <ChevronDown

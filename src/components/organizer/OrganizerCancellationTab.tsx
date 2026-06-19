@@ -446,7 +446,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
                   updateSettings({ additionalConditions: event.target.value });
                   pushHistory(event.target.value);
                 }}
-                className="w-full resize-y px-4 py-3 text-sm leading-relaxed text-charcoal outline-none placeholder:text-gray-400"
+                className="w-full resize-y px-4 py-3 text-sm leading-relaxed text-charcoal outline-none placeholder:text-slate/70"
                 placeholder="Дополнительные условия отмены…"
               />
             </div>

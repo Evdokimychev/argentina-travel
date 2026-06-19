@@ -71,7 +71,7 @@ export default function TourAccommodationFooterBlock({
             )
           }
           placeholder="Отели 4* с завтраками, в lodge Wi-Fi может быть слабым. Между городами — перелёты и трансферы включены, багаж перевозим мы."
-          className="mt-3 w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+          className="mt-3 w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
         <p className="mt-1 text-right text-xs text-slate">
           {accommodationOrganizerCommentText.length} / {TOUR_ACCOMMODATION_ORGANIZER_COMMENT_MAX}

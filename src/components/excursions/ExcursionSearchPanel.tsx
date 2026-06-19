@@ -1,16 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { MapPin, Search, SlidersHorizontal, X } from "lucide-react";
+import { MapPin, Search, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import ExcursionFilterBar from "@/components/excursions/ExcursionFilterBar";
-import type { ExcursionSortOption } from "@/lib/excursion-catalog-filters";
-import {
-  countActiveExcursionFilters,
-  type ExcursionCatalogFilters,
-} from "@/lib/excursion-catalog-filters";
+import type { ExcursionCatalogFilters } from "@/lib/excursion-catalog-filters";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import ExcursionSearchSuggestions from "@/components/excursions/ExcursionSearchSuggestions";
 import { cn } from "@/lib/cn";
@@ -19,22 +13,12 @@ import type { ExcursionCity } from "@/types/excursion";
 type ExcursionSearchPanelProps = {
   filters: ExcursionCatalogFilters;
   cities: ExcursionCity[];
-  priceMax: number;
-  hasUsdPrices: boolean;
   onChange: (filters: ExcursionCatalogFilters) => void;
-  onReset: () => void;
   labels: {
     searchLabel: string;
     searchPlaceholder: string;
     cityLabel: string;
     cityAll: string;
-    sortLabel: string;
-    sortPopular: string;
-    sortRating: string;
-    sortPriceAsc: string;
-    sortPriceDesc: string;
-    filtersActive: string;
-    resetFilters: string;
   };
 };
 
@@ -54,10 +38,7 @@ function ClearButton({ onClick, label }: { onClick: () => void; label: string })
 export default function ExcursionSearchPanel({
   filters,
   cities,
-  priceMax,
-  hasUsdPrices,
   onChange,
-  onReset,
   labels,
 }: ExcursionSearchPanelProps) {
   const [cityOpen, setCityOpen] = useState(false);
@@ -72,12 +53,10 @@ export default function ExcursionSearchPanel({
   useEffect(() => {
     if (debouncedQuery === filters.query) return;
     onChange({ ...filters, query: debouncedQuery });
-    // Only react to debounced text; other filter fields come from latest closure.
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- avoid loop on `onChange` identity
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- debounced query only
   }, [debouncedQuery]);
 
   const selectedCity = cities.find((city) => city.slug === filters.citySlug);
-  const activeFilterCount = countActiveExcursionFilters(filters);
 
   const filteredCities = useMemo(() => {
     const q = cityQuery.trim().toLowerCase();
@@ -85,17 +64,10 @@ export default function ExcursionSearchPanel({
     return cities.filter((city) => city.name.toLowerCase().includes(q));
   }, [cities, cityQuery]);
 
-  const sortOptions: { value: ExcursionSortOption; label: string }[] = [
-    { value: "popular", label: labels.sortPopular },
-    { value: "rating", label: labels.sortRating },
-    { value: "price_asc", label: labels.sortPriceAsc },
-    { value: "price_desc", label: labels.sortPriceDesc },
-  ];
-
   const patch = (next: Partial<ExcursionCatalogFilters>) => onChange({ ...filters, ...next });
 
   return (
-    <div className="mt-6 space-y-4">
+    <div className="mt-6">
       <div className="relative rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
           <div className="relative flex min-w-0 flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50">
@@ -136,7 +108,7 @@ export default function ExcursionSearchPanel({
           <div className="hidden w-px self-stretch bg-gray-200 lg:block" aria-hidden />
 
           <Popover open={cityOpen} onOpenChange={setCityOpen}>
-            <div className="flex flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50 lg:max-w-[240px]">
+            <div className="flex flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50 lg:max-w-[280px]">
               <PopoverTrigger asChild>
                 <button
                   type="button"
@@ -207,51 +179,8 @@ export default function ExcursionSearchPanel({
               </ul>
             </PopoverContent>
           </Popover>
-
-          <div className="hidden w-px self-stretch bg-gray-200 lg:block" aria-hidden />
-
-          <div className="flex items-center gap-2 px-2 py-2 lg:min-w-[200px] lg:px-3">
-            <label className="flex min-w-0 flex-1 flex-col gap-1">
-              <span className="text-xs font-medium text-slate">{labels.sortLabel}</span>
-              <select
-                value={filters.sort}
-                onChange={(event) => patch({ sort: event.target.value as ExcursionSortOption })}
-                className="w-full rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-charcoal outline-none focus:border-sky focus:ring-2 focus:ring-sky/30"
-              >
-                {sortOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <ExcursionFilterBar
-          filters={filters}
-          priceMax={priceMax}
-          hasUsdPrices={hasUsdPrices}
-          onChange={onChange}
-        />
-        {activeFilterCount > 0 ? (
-          <Button variant="ghost" size="sm" onClick={onReset} className="shrink-0 self-start sm:self-center">
-            <SlidersHorizontal className="h-4 w-4" aria-hidden />
-            {labels.resetFilters}
-            <span className="ml-1 rounded-full bg-sky/10 px-1.5 py-0.5 text-xs font-semibold text-sky">
-              {activeFilterCount}
-            </span>
-          </Button>
-        ) : null}
-      </div>
-
-      {activeFilterCount > 0 ? (
-        <p className="text-xs text-slate">
-          {labels.filtersActive.replace("{count}", String(activeFilterCount))}
-        </p>
-      ) : null}
     </div>
   );
 }

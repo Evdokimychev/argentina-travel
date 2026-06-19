@@ -29,6 +29,7 @@ import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { FormField } from "@/components/ui/form-field";
 import {
   SITE_EMAIL,
   SITE_PHONES,
@@ -575,29 +576,19 @@ export default function JoinPageView() {
                         action={submitError.action}
                       />
                     ) : null}
-                    <div>
-                      <label htmlFor="join-name" className="block text-sm font-medium text-charcoal">
-                        Имя
-                      </label>
+                    <FormField id="join-name" label="Имя" required>
                       <Input
-                        id="join-name"
                         name="name"
                         required
                         placeholder="Ваше имя"
-                        className="mt-1.5"
                       />
-                    </div>
-                    <div>
-                      <label htmlFor="join-phone" className="block text-sm font-medium text-charcoal">
-                        Номер телефона
-                      </label>
+                    </FormField>
+                    <FormField id="join-phone" label="Номер телефона" required>
                       <PhoneCountryInput
-                        id="join-phone"
                         value={phone}
                         onChange={setPhone}
-                        className="mt-1.5"
                       />
-                    </div>
+                    </FormField>
                     <Button
                       type="submit"
                       size="lg"

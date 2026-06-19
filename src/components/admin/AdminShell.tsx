@@ -6,6 +6,8 @@ import { canAccessAdminPanel } from "@/lib/permissions";
 import { cn } from "@/lib/cn";
 import { cabinetContentGapClass, cabinetPanelClass, cabinetShellClass } from "@/lib/cabinet-ui";
 import { AdminProvider, useAdminContext } from "@/context/AdminContext";
+import { AdminLayoutPrefsProvider } from "@/context/AdminLayoutPrefsContext";
+import AdminCommandPalette from "@/components/admin/AdminCommandPalette";
 import AdminSidebar, { AdminMobileHeader, AdminMobileNav } from "@/components/admin/AdminSidebar";
 
 function AdminAccessGate({
@@ -104,7 +106,10 @@ export default function AdminShell({
 }) {
   return (
     <AdminProvider>
-      <AdminAccessGate buildVersionChip={buildVersionChip}>{children}</AdminAccessGate>
+      <AdminLayoutPrefsProvider>
+        <AdminAccessGate buildVersionChip={buildVersionChip}>{children}</AdminAccessGate>
+        <AdminCommandPalette />
+      </AdminLayoutPrefsProvider>
     </AdminProvider>
   );
 }

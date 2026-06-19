@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdminListSkeleton } from "@/components/ui/skeleton";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
@@ -104,11 +107,19 @@ export default function ShopOrdersView() {
             <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
               Заказы ({orders.length})
             </h2>
-            <ul className="divide-y divide-gray-100">
-              {orders.length === 0 ? (
-                <li className="px-5 py-8 text-sm text-slate">{loading ? "Загрузка…" : "Пока пусто"}</li>
-              ) : (
-                orders.map((row) => (
+            {loading ? (
+              <AdminListSkeleton rows={5} />
+            ) : orders.length === 0 ? (
+              <EmptyState
+                variant="admin"
+                icon={ShoppingBag}
+                title="Заказов пока нет"
+                description="Оформленные заказы магазина появятся в этом списке."
+                bordered={false}
+              />
+            ) : (
+              <ul className="divide-y divide-gray-100">
+                {orders.map((row) => (
                   <li key={row.id}>
                     <button
                       type="button"
@@ -129,9 +140,9 @@ export default function ShopOrdersView() {
                       </p>
                     </button>
                   </li>
-                ))
-              )}
-            </ul>
+                ))}
+              </ul>
+            )}
           </section>
 
           <section className={`${cabinetCardClass} space-y-4 p-5`}>

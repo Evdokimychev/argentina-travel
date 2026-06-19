@@ -1,10 +1,51 @@
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/cn";
+import {
+  uiTableHeaderMutedClass,
+  uiTableWrapCabinetClass,
+  uiTableWrapPublicClass,
+} from "@/lib/ui-surfaces";
+
+const tableWrapVariants = cva("overflow-x-auto border border-gray-100", {
+  variants: {
+    variant: {
+      public: "rounded-2xl",
+      cabinet: "rounded-3xl",
+      admin: "rounded-3xl",
+    },
+  },
+  defaultVariants: { variant: "cabinet" },
+});
+
+export interface TableWrapProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof tableWrapVariants> {}
+
+/** Обёртка таблицы с единым радиусом и рамкой (кабинет / админ / публичная сторона). */
+export function TableWrap({ className, variant, children, ...props }: TableWrapProps) {
+  return (
+    <div className={cn(tableWrapVariants({ variant }), className)} {...props}>
+      {children}
+    </div>
+  );
+}
+
+/** Алиас для кабинета и админки */
+export function CabinetTableWrap({
+  className,
+  children,
+  ...props
+}: Omit<TableWrapProps, "variant">) {
+  return (
+    <TableWrap variant="cabinet" className={className} {...props}>
+      {children}
+    </TableWrap>
+  );
+}
 
 export function Table({ className, ...props }: React.HTMLAttributes<HTMLTableElement>) {
   return (
-    <div className="relative w-full overflow-x-auto">
-      <table className={cn("w-full caption-bottom text-sm", className)} {...props} />
-    </div>
+    <table className={cn("w-full caption-bottom text-sm", className)} {...props} />
   );
 }
 
@@ -45,3 +86,12 @@ export function TableCell({ className, ...props }: React.TdHTMLAttributes<HTMLTa
     <td className={cn("px-4 py-4 align-middle text-sm [&:has([role=checkbox])]:pr-0", className)} {...props} />
   );
 }
+
+/** Класс заголовка строк таблицы в кабинете */
+export const cabinetTableHeaderClass = uiTableHeaderMutedClass;
+
+/** Legacy class strings — совпадают с TableWrap variant */
+export const cabinetTableWrapClass = uiTableWrapCabinetClass;
+export const publicTableWrapClass = uiTableWrapPublicClass;
+
+export { tableWrapVariants };

@@ -182,7 +182,7 @@ function DrawerSection({
         )}
       >
         {label}
-        <sup className="text-[10px] font-normal text-gray-400">{num}</sup>
+        <sup className="text-[10px] font-normal text-slate/70">{num}</sup>
       </Link>
     );
   }
@@ -205,7 +205,7 @@ function DrawerSection({
             )}
           >
             {label}
-            <sup className="text-[10px] font-normal text-gray-400">{num}</sup>
+            <sup className="text-[10px] font-normal text-slate/70">{num}</sup>
             {section.badge ? <NavBadge badge={section.badge} /> : null}
           </Link>
           <button
@@ -240,7 +240,7 @@ function DrawerSection({
       <summary className="flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-3 text-sm font-medium text-foreground marker:content-none">
         <span className="inline-flex items-baseline gap-1">
           <span className={active ? "text-sky" : undefined}>{label}</span>
-          <sup className="text-[10px] font-normal text-gray-400">{num}</sup>
+          <sup className="text-[10px] font-normal text-slate/70">{num}</sup>
           {section.badge ? <NavBadge badge={section.badge} /> : null}
         </span>
         <ChevronDown className="h-4 w-4 shrink-0 text-slate transition-transform group-open/section:rotate-180" />

@@ -38,7 +38,7 @@ export default function TourSectionCommentField({
           onChange(event.target.value.slice(0, TOUR_SECTION_ORGANIZER_COMMENT_MAX))
         }
         placeholder="Например: что важно знать именно про этот раздел тура…"
-        className="mt-3 w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+        className="mt-3 w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
       />
       <p className="mt-1 text-right text-xs text-slate">
         {value.length} / {TOUR_SECTION_ORGANIZER_COMMENT_MAX}

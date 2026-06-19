@@ -10,6 +10,13 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { StarRating } from "@/components/ui/star-rating";
 import TourSection from "./TourSection";
 import ReviewReportButton from "./ReviewReportButton";
+import {
+  tourDetailContentStackClass,
+  tourDetailFilterChipClass,
+  tourDetailReviewCardClass,
+  tourDetailSecondaryButtonClass,
+} from "@/lib/tour-detail-ui";
+import { cn } from "@/lib/cn";
 
 const PER_PAGE = 3;
 const FILTER_STARS = [5, 4, 3] as const;
@@ -118,13 +125,14 @@ export default function ReviewsSection({
     <TourSection
       id="reviews"
       title="Отзывы"
+      collapsibleOnMobile={false}
       subtitle={
         headingNote
           ? `${rating} · ${formatReviews(reviewCount)} · ${headingNote}`
           : `${rating} · ${formatReviews(reviewCount)}`
       }
     >
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-5 flex flex-wrap gap-2">
         {filterOptions.map((f) => (
           <button
             key={String(f)}
@@ -133,18 +141,19 @@ export default function ReviewsSection({
               setFilter(f);
               setPage(1);
             }}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+            className={cn(
+              tourDetailFilterChipClass,
               filter === f
                 ? "bg-sky text-white"
                 : "border border-gray-200 bg-white text-slate hover:border-gray-300"
-            }`}
+            )}
           >
             {f === "all" ? "Все" : `${f} ★`}
           </button>
         ))}
       </div>
 
-      <div className="space-y-4">
+      <div className={tourDetailContentStackClass}>
         {paginated.map((review) => {
           const tripDateLabel = formatDateOptional(review.tripDate);
           const reviewDateLabel = formatDateOptional(review.date);
@@ -155,10 +164,7 @@ export default function ReviewsSection({
             .join(" · ");
 
           return (
-          <article
-            key={review.id}
-            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm"
-          >
+          <article key={review.id} className={tourDetailReviewCardClass}>
             <div className="flex items-start gap-3">
               <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
                 <SafeImage
@@ -233,7 +239,7 @@ export default function ReviewsSection({
             type="button"
             disabled={page === 1}
             onClick={() => setPage(page - 1)}
-            className="rounded-lg border border-gray-200 px-4 py-2 text-sm disabled:opacity-40"
+            className={cn(tourDetailSecondaryButtonClass, "disabled:opacity-40")}
           >
             Назад
           </button>
@@ -244,7 +250,7 @@ export default function ReviewsSection({
             type="button"
             disabled={page === totalPages}
             onClick={() => setPage(page + 1)}
-            className="rounded-lg border border-gray-200 px-4 py-2 text-sm disabled:opacity-40"
+            className={cn(tourDetailSecondaryButtonClass, "disabled:opacity-40")}
           >
             Далее
           </button>

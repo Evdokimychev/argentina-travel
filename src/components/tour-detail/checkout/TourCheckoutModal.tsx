@@ -66,6 +66,8 @@ import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
 import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import BookingCheckoutStepper from "@/components/booking/BookingCheckoutStepper";
+import BookingCheckoutProgress from "@/components/booking/BookingCheckoutProgress";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -642,10 +644,30 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {submitted ? "Заявка отправлена" : "Подтверждение и оплата"}
               </h2>
               {!submitted && (
-                <div className="mt-3">
+                <div className="mt-3 space-y-3">
+                  <BookingCheckoutStepper
+                    currentStep={
+                      currentStep === "details" || currentStep === "payment"
+                        ? "contacts"
+                        : "dates"
+                    }
+                  />
+                  <BookingCheckoutProgress
+                    currentStep={
+                      currentStep === "details" || currentStep === "payment"
+                        ? "contacts"
+                        : "dates"
+                    }
+                  />
                   <StepIndicator steps={visibleSteps} currentIndex={stepIndex} />
                 </div>
               )}
+              {submitted ? (
+                <div className="mt-3 space-y-3">
+                  <BookingCheckoutStepper currentStep="payment" />
+                  <BookingCheckoutProgress currentStep="payment" />
+                </div>
+              ) : null}
             </div>
             <button
               type="button"

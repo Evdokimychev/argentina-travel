@@ -11,6 +11,8 @@ import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatus
 import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
 import BookingPaymentReceiptSection from "@/components/booking/BookingPaymentReceiptSection";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
+import BookingProgressSteps from "@/components/booking/BookingProgressSteps";
+import BookingPaymentStatusTimeline from "@/components/booking/BookingPaymentStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import FormattedPrice from "@/components/FormattedPrice";
 import { Button } from "@/components/ui/button";
@@ -219,6 +221,13 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             </div>
           </div>
 
+          <div className="mt-6">
+            <h3 className="font-heading text-base font-bold text-charcoal">Этапы заявки</h3>
+            <div className="mt-3 rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">
+              <BookingProgressSteps booking={booking} />
+            </div>
+          </div>
+
           <div className="mt-6 grid gap-4 sm:grid-cols-3">
             <div className="rounded-xl bg-gray-50 px-4 py-3">
               <p className="text-xs text-slate">Сумма тура</p>
@@ -242,6 +251,13 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
               </span>
             </p>
           ) : null}
+
+          <div className="mt-6">
+            <h3 className="font-heading text-base font-bold text-charcoal">Ход оплаты</h3>
+            <div className="mt-3 rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">
+              <BookingPaymentStatusTimeline booking={booking} />
+            </div>
+          </div>
 
           {payHref ? (
             <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-sky-200/70 bg-sky-50/50 px-4 py-3">

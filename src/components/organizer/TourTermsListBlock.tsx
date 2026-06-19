@@ -202,7 +202,7 @@ export default function TourTermsListBlock({
                       placeholder={detailPlaceholder}
                       rows={2}
                       onChange={(event) => updateAt(index, { detail: event.target.value })}
-                      className="w-full resize-y rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                      className="w-full resize-y rounded-xl border border-gray-200 bg-white px-3 py-2 text-sm text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     />
                   ) : (
                     <button

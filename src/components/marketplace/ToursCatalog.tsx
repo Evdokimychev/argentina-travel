@@ -9,6 +9,9 @@ import SearchBlock from "@/components/marketplace/SearchBlock";
 import FilterBar from "@/components/marketplace/FilterBar";
 import CatalogFiltersSheet from "@/components/marketplace/CatalogFiltersSheet";
 import CatalogToolbar, { CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
+import CatalogStickyBar from "@/components/marketplace/CatalogStickyBar";
+import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
+import CatalogEmptyResults from "@/components/marketplace/CatalogEmptyResults";
 import { TourListing, TourFilters } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { sortTours, TourSortOption } from "@/lib/sort-tours";
@@ -23,7 +26,8 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
-import { EmptyState } from "@/components/ui/empty-state";
+import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
+import { formatToursFound } from "@/lib/pluralize";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
@@ -63,7 +67,7 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
   const router = useRouter();
   const searchParams = useSearchParams();
   const tours = useRepositoryTourListings(initialTours);
-  const { currency } = useLocaleCurrency();
+  const { currency, locale } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
     parseCatalogFiltersFromSearchParams(searchParams, currency, tours)
   );
@@ -131,7 +135,10 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
     ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
     : null;
 
-  const resetFilters = () => setFilters(getDefaultFilters(currency, tours));
+  const resetFilters = useCallback(
+    () => setFilters(getDefaultFilters(currency, tours)),
+    [currency, tours],
+  );
   const resultsRef = useRef<HTMLDivElement>(null);
 
   const handleSearch = () => {
@@ -141,6 +148,23 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
   const hasDateFilter = Boolean(filters.dateFrom || filters.dateTo);
   const showPartnerDateNotice =
     hasDateFilter && sorted.some((tour) => isPartnerTourListing(tour));
+
+  const filterChips = useMemo(
+    () => buildTourFilterChips(filters, handleFiltersChange, { currency, locale, tours }),
+    [filters, handleFiltersChange, currency, locale, tours],
+  );
+
+  const emptySuggestions = useMemo(() => {
+    const items: { id: string; label: string; href?: string; onClick?: () => void }[] = [];
+    if (activeFilterCount > 0) {
+      items.push({ id: "reset", label: "Сбросить фильтры", onClick: resetFilters });
+    }
+    items.push(
+      { id: "excursions", label: "Экскурсии", href: "/excursions" },
+      { id: "all-tours", label: "Весь каталог туров", href: "/tours" },
+    );
+    return items;
+  }, [activeFilterCount, resetFilters]);
 
   return (
     <div className="pb-16">
@@ -185,24 +209,30 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
             }
             onSearch={handleSearch}
           />
-          <div className="flex flex-col gap-3 lg:block">
-            <div className="flex items-center justify-between gap-3 lg:hidden">
-              <CatalogFiltersSheet
-                tours={tours}
-                filters={filters}
-                onChange={handleFiltersChange}
-                activeFilterCount={activeFilterCount}
+          <CatalogStickyBar>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-start gap-3">
+                <CatalogFiltersSheet
+                  tours={tours}
+                  filters={filters}
+                  onChange={handleFiltersChange}
+                  activeFilterCount={activeFilterCount}
+                />
+                <div className="hidden min-w-0 flex-1 lg:block">
+                  <FilterBar tours={tours} filters={filters} onChange={handleFiltersChange} />
+                </div>
+              </div>
+              <CatalogActiveFilterChips
+                chips={filterChips}
+                onClearAll={activeFilterCount > 1 ? resetFilters : undefined}
               />
             </div>
-            <div className="hidden lg:block">
-              <FilterBar tours={tours} filters={filters} onChange={handleFiltersChange} />
-            </div>
-          </div>
+          </CatalogStickyBar>
         </div>
 
         <div className="mt-8" ref={resultsRef}>
           <CatalogToolbar
-            count={sorted.length}
+            countLabel={formatToursFound(sorted.length)}
             sort={sort}
             onSortChange={setSort}
             viewMode={viewMode}
@@ -214,21 +244,17 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
           {showPartnerDateNotice ? <PartnerTourDateFilterNotice /> : null}
 
           {sorted.length === 0 ? (
-            <EmptyState
+            <CatalogEmptyResults
               icon={MapPin}
               title="Туры не найдены"
-              description="Попробуйте изменить фильтры или сбросить их."
+              description="Попробуйте изменить фильтры или сбросить поиск."
               action={
                 activeFilterCount > 0
-                  ? { label: "Сбросить фильтры", onClick: resetFilters, variant: "outline" }
+                  ? { label: "Сбросить фильтры", onClick: resetFilters }
                   : undefined
               }
-              secondaryAction={
-                activeFilterCount > 0
-                  ? { label: "Весь каталог", href: "/tours" }
-                  : { label: "Экскурсии", href: "/excursions" }
-              }
-              className="mt-8"
+              secondaryAction={{ label: "Смотреть экскурсии", href: "/excursions" }}
+              suggestions={emptySuggestions}
             />
           ) : viewMode === "map" ? (
             <CatalogMapView tours={sorted} />

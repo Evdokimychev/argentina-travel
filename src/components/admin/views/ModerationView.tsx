@@ -2,9 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { ShieldCheck } from "lucide-react";
+import AdminStatusChip from "@/components/admin/AdminStatusChip";
 import { Button } from "@/components/ui/button";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdminListSkeleton } from "@/components/ui/skeleton";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import type { ModerationQueueItem } from "@/lib/admin/moderation-server";
@@ -23,25 +27,12 @@ type OrganizerApplication = {
 
 type ApplicationsResponse = { applications?: OrganizerApplication[] };
 
-const MODERATION_STATUS_LABELS: Record<string, string> = {
-  pending: "Ожидает",
-  in_review: "На проверке",
-  approved: "Одобрено",
-  rejected: "Отклонено",
-};
-
 const REVIEW_REPORT_REASON_LABELS: Record<string, string> = {
   spam: "Спам",
   offensive: "Оскорбления",
   fake: "Подозрение на фальсификацию",
   irrelevant: "Не относится к туру",
   other: "Другое",
-};
-
-const ENTITY_TYPE_LABELS: Record<string, string> = {
-  tour: "Тур",
-  review: "Отзыв",
-  review_report: "Жалоба на отзыв",
 };
 
 export default function ModerationView() {
@@ -119,21 +110,23 @@ export default function ModerationView() {
           <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
             Очередь ({items.length})
           </h2>
-          <ul className="divide-y divide-gray-100">
-            {items.length === 0 ? (
-              <li className="px-5 py-10 text-sm text-slate">
-                {loading ? "Загрузка…" : "Нет элементов на модерации"}
-              </li>
-            ) : (
-              items.map((item) => (
+          {loading ? (
+            <AdminListSkeleton rows={4} />
+          ) : items.length === 0 ? (
+            <EmptyState
+              variant="admin"
+              icon={ShieldCheck}
+              title="Нет элементов на модерации"
+              description="Новые туры, отзывы и заявки организаторов появятся здесь автоматически."
+              action={{ label: "Каталог туров", href: "/admin/tours", variant: "outline" }}
+            />
+          ) : (
+            <ul className="divide-y divide-gray-100">
+              {items.map((item) => (
                 <li key={item.id} className="space-y-3 px-5 py-4 text-sm">
                   <div className="flex flex-wrap items-center gap-2">
-                    <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                      {ENTITY_TYPE_LABELS[item.entityType] ?? item.entityType}
-                    </span>
-                    <span className="rounded-full bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
-                      {MODERATION_STATUS_LABELS[item.status] ?? item.status}
-                    </span>
+                    <AdminStatusChip domain="moderation-entity" value={item.entityType} />
+                    <AdminStatusChip domain="moderation" value={item.status} />
                     <span className="text-slate">{formatAdminWhen(item.createdAt)}</span>
                   </div>
 
@@ -188,8 +181,10 @@ export default function ModerationView() {
                         {item.tour.slug} · организатор {item.tour.ownerUserId}
                       </p>
                       <p className="text-slate">
-                        Статус каталога: {item.tour.status} · модерация:{" "}
-                        {item.tour.moderationStatus}
+                        Статус каталога:{" "}
+                        <AdminStatusChip domain="tour-catalog" value={item.tour.status} className="ml-1" />
+                        · модерация:{" "}
+                        <AdminStatusChip domain="moderation" value={item.tour.moderationStatus} />
                       </p>
                       <Link href={`/tours/${item.tour.slug}`} className="text-sky hover:underline">
                         Открыть на сайте
@@ -221,9 +216,9 @@ export default function ModerationView() {
                     </Button>
                   </div>
                 </li>
-              ))
-            )}
-          </ul>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className={`${cabinetCardClass} overflow-hidden`}>

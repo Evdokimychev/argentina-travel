@@ -114,6 +114,7 @@ export default function ProfileMenu() {
         onClick={() => setOpen((value) => !value)}
         aria-expanded={open}
         aria-haspopup="menu"
+        aria-label={`Профиль: ${firstName}`}
         className={cn(
           "flex h-10 items-center gap-2 rounded-full py-1 pl-1 pr-2 ring-1 transition-[background-color,box-shadow,ring-color] sm:pr-2.5",
           open

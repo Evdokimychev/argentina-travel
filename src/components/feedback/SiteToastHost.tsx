@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AlertCircle, CheckCircle2, Info, Loader2, X } from "lucide-react";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { cn } from "@/lib/cn";
+import { motionClass } from "@/lib/motion";
 import type { SiteFeedbackVariant } from "@/types/site-feedback";
 
 const iconByVariant: Record<
@@ -42,7 +43,8 @@ export default function SiteToastHost() {
             key={toast.id}
             role={toast.variant === "error" ? "alert" : "status"}
             className={cn(
-              "pointer-events-auto w-full max-w-sm rounded-2xl border p-4 shadow-elevated backdrop-blur-sm animate-in slide-in-from-bottom-2 fade-in duration-200",
+              "pointer-events-auto w-full max-w-sm rounded-2xl border p-4 shadow-elevated backdrop-blur-sm",
+              motionClass.toast,
               boxByVariant[toast.variant]
             )}
           >

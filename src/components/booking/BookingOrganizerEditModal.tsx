@@ -5,6 +5,7 @@ import { Calendar, CircleX, Globe2, Info, Save, Users, X } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Textarea } from "@/components/ui/textarea";
@@ -45,33 +46,6 @@ const selectClassName =
 
 function SectionTitle({ children }: { children: ReactNode }) {
   return <h4 className="font-heading text-base font-bold text-charcoal">{children}</h4>;
-}
-
-function FormField({
-  id,
-  label,
-  hint,
-  required,
-  children,
-  className,
-}: {
-  id?: string;
-  label: string;
-  hint?: string;
-  required?: boolean;
-  children: ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={className}>
-      <label htmlFor={id} className="mb-1.5 block text-xs font-medium text-charcoal">
-        {label}
-        {required ? <span className="text-brand"> *</span> : null}
-      </label>
-      {children}
-      {hint ? <p className="mt-1.5 text-[11px] leading-relaxed text-slate">{hint}</p> : null}
-    </div>
-  );
 }
 
 function DateInput({
@@ -309,7 +283,7 @@ export default function BookingOrganizerEditModal({
 
         <div className="overflow-y-auto px-5 py-4 sm:px-6 sm:py-5">
           <div className="space-y-6">
-            <FormField id="booking-payment-status" label="Статус бронирования">
+            <FormField size="sm" id="booking-payment-status" label="Статус бронирования">
               <NativeSelect
                 id="booking-payment-status"
                 value={form.paymentStatus}
@@ -332,7 +306,7 @@ export default function BookingOrganizerEditModal({
 
             <section className="space-y-3">
               <SectionTitle>Информация о заказчике</SectionTitle>
-              <FormField id="booking-contact-name" label="ФИО заказчика" required>
+              <FormField size="sm" id="booking-contact-name" label="ФИО заказчика" required>
                 <Input
                   id="booking-contact-name"
                   value={form.contactName}
@@ -344,7 +318,7 @@ export default function BookingOrganizerEditModal({
 
             <section className="space-y-3">
               <SectionTitle>Туристы</SectionTitle>
-              <FormField id="booking-guests" label="Количество туристов">
+              <FormField size="sm" id="booking-guests" label="Количество туристов">
                 <div className="relative">
                   <Users className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate" />
                   <Input
@@ -373,7 +347,7 @@ export default function BookingOrganizerEditModal({
             <section className="space-y-4">
               <SectionTitle>Информация о туре</SectionTitle>
 
-              <FormField id="booking-tour-select" label="Выбрать тур/экскурсию">
+              <FormField size="sm" id="booking-tour-select" label="Выбрать тур/экскурсию">
                 <div className="relative">
                   <Globe2 className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate" />
                   <NativeSelect
@@ -424,7 +398,7 @@ export default function BookingOrganizerEditModal({
                     suffix={currencySuffix}
                     onChange={handlePricePerGuestChange}
                   />
-                  <FormField id="booking-currency" label="Валюта">
+                  <FormField size="sm" id="booking-currency" label="Валюта">
                     <NativeSelect
                       id="booking-currency"
                       value={form.organizerParams.currency}
@@ -451,7 +425,7 @@ export default function BookingOrganizerEditModal({
                 />
               </div>
 
-              <FormField id="booking-payment-procedure" label="Порядок оплаты">
+              <FormField size="sm" id="booking-payment-procedure" label="Порядок оплаты">
                 <NativeSelect
                   id="booking-payment-procedure"
                   value={form.organizerParams.paymentProcedure}
@@ -472,7 +446,7 @@ export default function BookingOrganizerEditModal({
               </FormField>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <FormField
+                <FormField size="sm"
                   id="booking-prepayment-amount"
                   label="Размер предоплаты на всех туристов"
                 >
@@ -486,7 +460,7 @@ export default function BookingOrganizerEditModal({
                     }
                   />
                 </FormField>
-                <FormField id="booking-prepayment-type" label="Тип предоплаты">
+                <FormField size="sm" id="booking-prepayment-type" label="Тип предоплаты">
                   <NativeSelect
                     id="booking-prepayment-type"
                     value={form.organizerParams.prepaymentType}
@@ -510,7 +484,7 @@ export default function BookingOrganizerEditModal({
               </p>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <FormField
+                <FormField size="sm"
                   id="booking-prepayment-deadline"
                   label="Срок внесения предоплаты"
                   hint="Укажите количество дней с момента подтверждения бронирования."
@@ -527,7 +501,7 @@ export default function BookingOrganizerEditModal({
                     }
                   />
                 </FormField>
-                <FormField
+                <FormField size="sm"
                   id="booking-full-payment-deadline"
                   label="Срок полной оплаты"
                   hint="Укажите количество дней до начала тура. 0 — оплата на месте."
@@ -546,7 +520,7 @@ export default function BookingOrganizerEditModal({
                 </FormField>
               </div>
 
-              <FormField
+              <FormField size="sm"
                 id="booking-accommodation-terms"
                 label="Условия размещения"
                 hint="Необязательное поле. Укажите названия отелей, типы номеров, доплаты за одноместное размещение."

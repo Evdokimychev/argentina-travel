@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { Info, Plus } from "lucide-react";
+import { useHtml5ListReorder } from "@/hooks/useHtml5ListReorder";
+import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
 import { SwitchRow } from "@/components/ui/switch";
 import TourGroupDatesAddModal from "@/components/organizer/TourGroupDatesAddModal";
@@ -48,6 +50,8 @@ export default function TourGroupDatesBlock({
   const hasVariedPrices =
     dates.length > 1 && new Set(dates.map((date) => date.priceUsd)).size > 1;
 
+  const reorder = useHtml5ListReorder(dates, onDatesChange);
+
   return (
     <>
       <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
@@ -57,7 +61,10 @@ export default function TourGroupDatesBlock({
           </h2>
           <p className="mt-1 text-sm text-slate">
             Укажите даты заезда и стоимость для каждой — турист увидит цены в календаре на странице
-            тура
+            тура.
+            {reorder.canReorder
+              ? " Перетащите карточку за ручку слева, чтобы изменить порядок в календаре."
+              : null}
           </p>
         </div>
 
@@ -83,14 +90,24 @@ export default function TourGroupDatesBlock({
         {dates.length ? (
           <div className="space-y-3">
             {dates.map((date, index) => (
-              <GroupDateEditor
+              <div
                 key={date.id}
-                date={date}
-                index={index}
-                currencySuffix={currencySuffix}
-                onChange={(next) => updateAt(index, next)}
-                onRemove={() => removeAt(index)}
-              />
+                onDragOver={(event) => reorder.onDragOver(index, event)}
+                onDrop={(event) => reorder.onDrop(index, event)}
+                className={cn(reorder.rowClassName(index))}
+              >
+                <GroupDateEditor
+                  date={date}
+                  index={index}
+                  currencySuffix={currencySuffix}
+                  onChange={(next) => updateAt(index, next)}
+                  onRemove={() => removeAt(index)}
+                  canReorder={reorder.canReorder}
+                  isDragging={reorder.dragIndex === index}
+                  onDragStart={(event) => reorder.onDragStart(index, event)}
+                  onDragEnd={reorder.onDragEnd}
+                />
+              </div>
             ))}
           </div>
         ) : (

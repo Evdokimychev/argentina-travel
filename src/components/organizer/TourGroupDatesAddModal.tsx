@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Calendar, CircleX, Info, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -56,30 +57,6 @@ function InfoBanner({
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h4 className="font-heading text-base font-bold text-charcoal">{children}</h4>;
-}
-
-function FormField({
-  id,
-  label,
-  hint,
-  children,
-  className,
-}: {
-  id?: string;
-  label: string;
-  hint?: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div className={className}>
-      <label htmlFor={id} className="mb-1.5 block text-xs font-medium text-charcoal">
-        {label}
-      </label>
-      {children}
-      {hint ? <p className="mt-1.5 text-[11px] leading-relaxed text-slate">{hint}</p> : null}
-    </div>
-  );
 }
 
 function DateInput({

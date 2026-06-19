@@ -25,12 +25,17 @@ import {
   cabinetNavBadgeClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
+  cabinetNavLinkClass,
   cabinetSidebarClass,
   cabinetSidebarSkeletonClass,
+  cabinetBorderDividerClass,
+  cabinetMutedSurfaceClass,
+  cabinetSurfaceButtonClass,
 } from "@/lib/cabinet-ui";
 import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
+import { getLocalOrganizerInboxUnreadCount } from "@/lib/organizer-inbox";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
@@ -77,21 +82,30 @@ function writeCollapsedPreference(collapsed: boolean) {
 
 async function loadOrganizerNavItemsWithBadges(userId: string) {
   let items = getOrganizerNavItemsWithBadges(userId);
+  const inboxUnread = getLocalOrganizerInboxUnreadCount(userId);
+
   if (isSupabaseBookingsEnabled()) {
     try {
       const res = await fetch("/api/notifications?scope=organizer&limit=1");
       if (res.ok) {
         const json = (await res.json()) as { unreadCount?: number };
-        const unread = json.unreadCount ?? 0;
+        const hubUnread = json.unreadCount ?? 0;
+        const combinedInboxBadge = inboxUnread + hubUnread;
         items = items.map((item) => {
-          if (item.id !== "dashboard") return item;
-          return unread > 0 ? { ...item, badge: unread } : { ...item, badge: undefined };
+          if (item.id === "dashboard") {
+            return combinedInboxBadge > 0
+              ? { ...item, badge: combinedInboxBadge }
+              : { ...item, badge: undefined };
+          }
+          return item;
         });
+        return items;
       }
     } catch {
       // local fallback already in getOrganizerNavItemsWithBadges
     }
   }
+
   return items;
 }
 
@@ -176,7 +190,8 @@ export default function OrganizerSidebar({
     >
       <div
         className={cn(
-          "shrink-0 border-b border-gray-100",
+          "shrink-0 border-b",
+          cabinetBorderDividerClass,
           isCompact ? "px-2.5 py-4" : "px-4 py-5"
         )}
       >
@@ -191,7 +206,7 @@ export default function OrganizerSidebar({
                 "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-slate hover:border-gray-300 hover:text-charcoal"
+                  : cn(cabinetMutedSurfaceClass, "text-muted hover:text-foreground")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -203,7 +218,7 @@ export default function OrganizerSidebar({
               <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-11 w-11 text-sm" />
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] text-slate">Автор тура</p>
-                <p className="truncate text-sm font-semibold text-charcoal">{userName}</p>
+                <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
               </div>
               <NotificationsBell scope="organizer" />
             </div>
@@ -213,7 +228,7 @@ export default function OrganizerSidebar({
                 "mt-4 flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-charcoal hover:bg-gray-100"
+                  : cn(cabinetMutedSurfaceClass, "text-foreground hover:bg-surface-muted")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -243,7 +258,8 @@ export default function OrganizerSidebar({
               title={isCompact ? item.label : undefined}
               aria-label={item.label}
               className={cn(
-                "relative flex items-center rounded-xl text-sm font-medium transition-colors",
+                cabinetNavLinkClass,
+                "flex items-center rounded-xl text-sm font-medium transition-colors",
                 isCompact ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5",
                 active ? cabinetNavActiveClass : cabinetNavIdleClass
               )}
@@ -268,7 +284,7 @@ export default function OrganizerSidebar({
       </nav>
 
       {!isCompact ? (
-        <div className="shrink-0 space-y-2 border-t border-gray-100 px-4 py-4 text-[11px] leading-relaxed text-slate">
+        <div className={cn("shrink-0 space-y-2 border-t px-4 py-4 text-[11px] leading-relaxed text-muted", cabinetBorderDividerClass)}>
           <p>© Пора в Аргентину, {new Date().getFullYear()}</p>
           <div className="space-y-1">
             {SITE_LEGAL_LINKS.slice(0, 2).map((link) => (
@@ -284,14 +300,15 @@ export default function OrganizerSidebar({
       ) : null}
 
       {!forceCompact ? (
-        <div className={cn("shrink-0 border-t border-gray-100", isCompact ? "p-2" : "px-3 py-3")}>
+        <div className={cn("shrink-0 border-t", cabinetBorderDividerClass, isCompact ? "p-2" : "px-3 py-3")}>
           <button
             type="button"
             onClick={toggleCollapsed}
             aria-expanded={!isCompact}
             aria-label={isCompact ? "Развернуть меню" : "Свернуть меню"}
             className={cn(
-              "flex w-full items-center rounded-xl border border-gray-200 bg-white text-slate transition-colors hover:bg-gray-50 hover:text-charcoal",
+              cabinetSurfaceButtonClass,
+              "flex w-full items-center",
               isCompact ? "justify-center p-2" : "gap-2 px-3 py-2 text-sm font-medium"
             )}
           >
@@ -316,7 +333,7 @@ export function OrganizerMobileHeader() {
       <Link href="/" className="inline-flex">
         <ArgentinaLogo size="sm" />
       </Link>
-      <p className="text-sm font-semibold text-charcoal">Кабинет организатора</p>
+      <p className="text-sm font-semibold text-foreground">Кабинет организатора</p>
       <Link href="/organizer/settings" className="text-xs font-medium text-sky">
         Управление
       </Link>
@@ -342,8 +359,9 @@ export function OrganizerMobileNav() {
             key={item.id}
             href={item.href}
             className={cn(
-              "relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-              active ? cabinetNavActiveClass : cabinetNavIdleClass
+              cabinetNavLinkClass,
+              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+              active ? cn(cabinetNavActiveClass, "before:hidden") : cabinetNavIdleClass
             )}
           >
             <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />

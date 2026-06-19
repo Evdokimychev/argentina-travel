@@ -1,6 +1,6 @@
-/** Shared marketplace tour card surface tokens (grid / list / map). */
-export const tourCardShellClass =
-  "overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card";
+/** Shared marketplace tour card surface tokens (grid / list / map). E49 design tokens. */
+import { tokenCardInteractiveClass, tokenCardSurfaceClass } from "@/lib/design-tokens";
 
-export const tourCardShellInteractiveClass =
-  "transition-shadow duration-200 hover:shadow-md motion-reduce:transition-none";
+export const tourCardShellClass = `overflow-hidden ${tokenCardSurfaceClass}`;
+
+export const tourCardShellInteractiveClass = tokenCardInteractiveClass;

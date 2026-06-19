@@ -4,25 +4,23 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { PiggyBank, Wallet } from "lucide-react";
 import {
+  CabinetTableWrap,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
+  cabinetTableHeaderClass,
 } from "@/components/ui/table";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import FormattedPrice from "@/components/FormattedPrice";
 import { EmptyState } from "@/components/ui/empty-state";
 import { NativeSelect } from "@/components/ui/native-select";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
-import {
-  cabinetCardClass,
-  cabinetHeroClass,
-  cabinetTableHeaderClass,
-  cabinetTableWrapClass,
-} from "@/lib/cabinet-ui";
-import { cn } from "@/lib/cn";
+import { cabinetHeroClass } from "@/lib/cabinet-ui";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import type { OrganizerFinanceSummary, BookingCommissionSnapshotRow } from "@/types/platform-commission";
@@ -106,17 +104,18 @@ export default function OrganizerFinanceView() {
                 </option>
               ))}
             </NativeSelect>
-            <button
+            <Button
               type="button"
+              variant="secondary"
+              size="sm"
               onClick={() => void loadFinance()}
               disabled={loading}
-              className="rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50 disabled:opacity-60"
             >
               Обновить
-            </button>
+            </Button>
             <Link
               href="/organizer/payments"
-              className="rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-sky transition-colors hover:bg-gray-50"
+              className={buttonVariants({ variant: "secondary", size: "sm" })}
             >
               Платежи по заявкам
             </Link>
@@ -126,7 +125,7 @@ export default function OrganizerFinanceView() {
 
           {summary ? (
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              <div className={cn(cabinetCardClass, "p-5")}>
+              <Card variant="cabinet" className="p-5">
                 <p className="text-sm text-slate">Заработано (нетто)</p>
                 <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
                   <FormattedPrice priceUsd={summary.earnedNet} />
@@ -134,20 +133,20 @@ export default function OrganizerFinanceView() {
                 <p className="mt-1 text-xs text-slate">
                   Брутто: <FormattedPrice priceUsd={summary.grossTotal} />
                 </p>
-              </div>
-              <div className={cn(cabinetCardClass, "p-5")}>
+              </Card>
+              <Card variant="cabinet" className="p-5">
                 <p className="text-sm text-slate">Комиссия платформы</p>
                 <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
                   <FormattedPrice priceUsd={summary.commissionTotal} />
                 </p>
-              </div>
-              <div className={cn(cabinetCardClass, "p-5")}>
+              </Card>
+              <Card variant="cabinet" className="p-5">
                 <p className="text-sm text-slate">Ожидает выплаты</p>
                 <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
                   <FormattedPrice priceUsd={summary.pendingPayout} />
                 </p>
-              </div>
-              <div className={cn(cabinetCardClass, "p-5")}>
+              </Card>
+              <Card variant="cabinet" className="p-5">
                 <p className="text-sm text-slate">Доступно для выплаты</p>
                 <p className="mt-2 font-heading text-2xl font-bold text-charcoal">
                   <FormattedPrice priceUsd={summary.availableBalance} />
@@ -155,16 +154,16 @@ export default function OrganizerFinanceView() {
                 <p className="mt-1 text-xs text-slate">
                   Выплачено: <FormattedPrice priceUsd={summary.paidOut} />
                 </p>
-              </div>
+              </Card>
             </div>
           ) : loading ? (
             <p className="text-sm text-slate">Загрузка…</p>
           ) : null}
 
           {payouts.length > 0 ? (
-            <section className={cn(cabinetCardClass, "p-4 sm:p-6")}>
+            <Card variant="cabinet" className="p-4 sm:p-6">
               <h2 className="font-heading text-base font-bold text-charcoal">Пакеты выплат</h2>
-              <div className={cn(cabinetTableWrapClass, "mt-4")}>
+              <CabinetTableWrap className="mt-4">
                 <Table>
                   <TableHeader>
                     <TableRow className={cabinetTableHeaderClass}>
@@ -191,19 +190,19 @@ export default function OrganizerFinanceView() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
-            </section>
+              </CabinetTableWrap>
+            </Card>
           ) : null}
 
           {snapshots.length > 0 ? (
-            <section className={cn(cabinetCardClass, "p-4 sm:p-6")}>
+            <Card variant="cabinet" className="p-4 sm:p-6">
               <h2 className="font-heading text-base font-bold text-charcoal">
                 Начисления по оплатам
               </h2>
               <p className="mt-1 text-sm text-slate">
                 Разбивка комиссии при каждом успешном списании
               </p>
-              <div className={cn(cabinetTableWrapClass, "mt-4")}>
+              <CabinetTableWrap className="mt-4">
                 <Table>
                   <TableHeader>
                     <TableRow className={cabinetTableHeaderClass}>
@@ -247,8 +246,8 @@ export default function OrganizerFinanceView() {
                     ))}
                   </TableBody>
                 </Table>
-              </div>
-            </section>
+              </CabinetTableWrap>
+            </Card>
           ) : !loading ? (
             <EmptyState
               icon={PiggyBank}

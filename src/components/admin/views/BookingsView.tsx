@@ -3,17 +3,20 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { CalendarDays } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
+import { AdminTableState } from "@/components/admin/AdminTableState";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
-import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
+import { cabinetCardClass, cabinetTableHeaderClass } from "@/lib/cabinet-ui";
+import { CabinetTableWrap } from "@/components/ui/table";
 import FormattedPrice from "@/components/FormattedPrice";
 import type { AdminBookingSummary, AdminBookingsStats } from "@/lib/admin/bookings-server";
 import { normalizeBookingPaymentStatus } from "@/lib/booking-params";
@@ -98,14 +101,14 @@ export default function BookingsView() {
           actions={
             <div className="flex gap-2">
               <Button
-                variant="outline"
+                variant="secondary"
                 onClick={() => {
                   window.location.href = "/api/admin/bookings/export";
                 }}
               >
                 CSV
               </Button>
-              <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
+              <Button variant="secondary" onClick={() => void refresh()} disabled={loading}>
                 Обновить
               </Button>
             </div>
@@ -154,7 +157,7 @@ export default function BookingsView() {
             </NativeSelect>
           </div>
 
-          <div className={cabinetTableWrapClass}>
+          <CabinetTableWrap>
             <table className="w-full min-w-[720px] text-left text-sm">
               <thead className={cabinetTableHeaderClass}>
                 <tr>
@@ -167,12 +170,17 @@ export default function BookingsView() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-4 py-10 text-center text-slate">
-                      {loading ? "Загрузка…" : "Заявок не найдено"}
-                    </td>
-                  </tr>
+                {loading || filtered.length === 0 ? (
+                  <AdminTableState
+                    loading={loading}
+                    isEmpty={filtered.length === 0}
+                    colSpan={6}
+                    skeletonColumns={6}
+                    emptyIcon={CalendarDays}
+                    emptyTitle="Заявок не найдено"
+                    emptyDescription="Измените фильтр статуса или поисковый запрос."
+                    emptyAction={{ label: "Все заявки", onClick: () => setStatusFilter("all") }}
+                  />
                 ) : (
                   filtered.map((booking) => (
                     <tr key={booking.id} className="align-top">
@@ -234,7 +242,7 @@ export default function BookingsView() {
                 )}
               </tbody>
             </table>
-          </div>
+          </CabinetTableWrap>
         </section>
 
         {detailId && detail ? (

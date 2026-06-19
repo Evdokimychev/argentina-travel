@@ -24,8 +24,12 @@ import {
   cabinetNavBadgeClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
+  cabinetNavLinkClass,
   cabinetSidebarClass,
   cabinetSidebarSkeletonClass,
+  cabinetBorderDividerClass,
+  cabinetMutedSurfaceClass,
+  cabinetSurfaceButtonClass,
 } from "@/lib/cabinet-ui";
 import {
   PROFILE_NAV_ITEMS,
@@ -36,6 +40,8 @@ import { useAuth } from "@/context/AuthContext";
 import { getProfileNavItemsWithBadges } from "@/lib/tourist-nav";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { NOTIFICATIONS_UPDATED_EVENT } from "@/lib/notifications";
+import { NOTIFICATIONS_HUB_UPDATED_EVENT } from "@/lib/notifications/notifications-api";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "profile-sidebar-collapsed";
@@ -140,7 +146,8 @@ export default function ProfileSidebar({
     >
       <div
         className={cn(
-          "shrink-0 border-b border-gray-100",
+          "shrink-0 border-b",
+          cabinetBorderDividerClass,
           isCompact ? "px-2.5 py-4" : "px-4 py-5"
         )}
       >
@@ -155,7 +162,7 @@ export default function ProfileSidebar({
                 "flex h-9 w-9 items-center justify-center rounded-xl border transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-slate hover:border-gray-300 hover:text-charcoal"
+                  : cn(cabinetMutedSurfaceClass, "text-muted hover:text-foreground")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -167,7 +174,7 @@ export default function ProfileSidebar({
               <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-11 w-11 text-sm" />
               <div className="min-w-0 flex-1">
                 <p className="text-[11px] text-slate">Турист</p>
-                <p className="truncate text-sm font-semibold text-charcoal">{userName}</p>
+                <p className="truncate text-sm font-semibold text-foreground">{userName}</p>
               </div>
               <NotificationsBell scope="tourist" />
             </div>
@@ -177,7 +184,7 @@ export default function ProfileSidebar({
                 "mt-4 flex w-full items-center justify-center gap-2 rounded-xl border px-3 py-2 text-sm font-medium transition-colors",
                 isSettingsActive
                   ? "border-sky/30 bg-sky/10 text-sky"
-                  : "border-gray-200 bg-gray-50 text-charcoal hover:bg-gray-100"
+                  : cn(cabinetMutedSurfaceClass, "text-foreground hover:bg-surface-muted")
               )}
             >
               <Settings className="h-4 w-4" strokeWidth={1.75} />
@@ -232,7 +239,7 @@ export default function ProfileSidebar({
       </nav>
 
       {!isCompact ? (
-        <div className="shrink-0 space-y-2 border-t border-gray-100 px-4 py-4 text-[11px] leading-relaxed text-slate">
+        <div className={cn("shrink-0 space-y-2 border-t px-4 py-4 text-[11px] leading-relaxed text-muted", cabinetBorderDividerClass)}>
           <p>© Пора в Аргентину, {new Date().getFullYear()}</p>
           <div className="space-y-1">
             {SITE_LEGAL_LINKS.slice(0, 2).map((link) => (
@@ -252,14 +259,15 @@ export default function ProfileSidebar({
       ) : null}
 
       {!forceCompact ? (
-        <div className={cn("shrink-0 border-t border-gray-100", isCompact ? "p-2" : "px-3 py-3")}>
+        <div className={cn("shrink-0 border-t", cabinetBorderDividerClass, isCompact ? "p-2" : "px-3 py-3")}>
           <button
             type="button"
             onClick={toggleCollapsed}
             aria-expanded={!isCompact}
             aria-label={isCompact ? "Развернуть меню" : "Свернуть меню"}
             className={cn(
-              "flex w-full items-center rounded-xl border border-gray-200 bg-white text-slate transition-colors hover:bg-gray-50 hover:text-charcoal",
+              cabinetSurfaceButtonClass,
+              "flex w-full items-center",
               isCompact ? "justify-center p-2" : "gap-2 px-3 py-2 text-sm font-medium"
             )}
           >
@@ -327,8 +335,9 @@ export function ProfileMobileNav() {
             key={item.id}
             href={item.href}
             className={cn(
-              "relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-              active ? cabinetNavActiveClass : cabinetNavIdleClass
+              cabinetNavLinkClass,
+              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+              active ? cn(cabinetNavActiveClass, "before:hidden") : cabinetNavIdleClass
             )}
           >
             <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />

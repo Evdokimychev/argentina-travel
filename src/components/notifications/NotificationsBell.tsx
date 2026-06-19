@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { Bell, CheckCheck } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { EmptyState } from "@/components/ui/empty-state";
+import { CabinetInboxListSkeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/context/AuthContext";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { cn } from "@/lib/cn";
@@ -173,11 +175,15 @@ export default function NotificationsBell({
         <button
           type="button"
           className={cn(
-            "relative inline-flex items-center justify-center rounded-xl border border-gray-200 text-slate transition-colors hover:bg-gray-50 hover:text-charcoal",
+            "relative inline-flex items-center justify-center rounded-xl border border-gray-200 text-slate transition-colors hover:bg-gray-50 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
             compact ? "h-9 w-9" : "h-10 w-10",
             className
           )}
-          aria-label="Уведомления"
+          aria-label={
+            unreadCount > 0 ? `Уведомления: ${unreadCount} непрочитанных` : "Уведомления"
+          }
+          aria-expanded={open}
+          aria-haspopup="dialog"
         >
           <Bell className="h-4 w-4" aria-hidden />
           {unreadCount > 0 ? (
@@ -212,7 +218,9 @@ export default function NotificationsBell({
           ) : null}
         </div>
 
-        {items.length > 0 ? (
+        {loading ? (
+          <CabinetInboxListSkeleton count={4} compact className="border-0 rounded-none" />
+        ) : items.length > 0 ? (
           <ul className="max-h-[400px] overflow-y-auto divide-y divide-gray-100">
             {items.map((item) => {
               const content = (
@@ -259,11 +267,23 @@ export default function NotificationsBell({
             })}
           </ul>
         ) : (
-          <p className="px-4 py-6 text-sm text-slate">
-            {scope === "organizer"
-              ? "Здесь появятся заявки, отзывы, оплата и системные сообщения."
-              : "Здесь появятся сообщения о заявках, оплате и отзывах."}
-          </p>
+          <EmptyState
+            variant="cabinet"
+            compact
+            bordered={false}
+            icon={Bell}
+            title="Уведомлений пока нет"
+            description={
+              scope === "organizer"
+                ? "Здесь появятся заявки, отзывы, оплата и системные сообщения."
+                : "Здесь появятся сообщения о заявках, оплате и отзывах."
+            }
+            action={{
+              label: scope === "organizer" ? "Открыть заявки" : "Мои бронирования",
+              href: scope === "organizer" ? "/organizer/bookings" : "/profile/bookings",
+              variant: "outline",
+            }}
+          />
         )}
 
         <div className="border-t border-gray-100 px-4 py-2">

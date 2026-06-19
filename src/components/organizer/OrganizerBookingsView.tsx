@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Search, ClipboardList, ListOrdered } from "lucide-react";
+import { Search, ClipboardList, ListOrdered, LayoutGrid, Table2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import {
@@ -32,6 +32,7 @@ import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import OrganizerWaitlistView from "@/components/organizer/OrganizerWaitlistView";
+import OrganizerBookingsKanban from "@/components/organizer/OrganizerBookingsKanban";
 import { getOrganizerCabinetWaitlistStats } from "@/lib/organizer-waitlist";
 import { WAITLIST_UPDATED_EVENT } from "@/types/waitlist";
 import { OrganizerCreateExternalBookingButton } from "@/components/organizer/OrganizerCreateExternalBookingDialog";
@@ -39,6 +40,7 @@ import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
 import { computeTripProgress } from "@/lib/trip-operations";
 
 type InboxTab = "bookings" | "waitlist";
+type ViewMode = "kanban" | "table";
 
 type StatusFilter = "all" | BookingStatusActive;
 type SortOption = "newest" | "oldest" | "tourDate" | "amountDesc" | "amountAsc";
@@ -68,6 +70,7 @@ export default function OrganizerBookingsView() {
       : "all"
   );
   const [sort, setSort] = useState<SortOption>("newest");
+  const [viewMode, setViewMode] = useState<ViewMode>("kanban");
 
   useEffect(() => {
     if (!user) return;
@@ -231,7 +234,48 @@ export default function OrganizerBookingsView() {
           </div>
         </div>
 
-        {filtered.length > 0 ? (
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex gap-2 rounded-xl bg-gray-100 p-1">
+            <button
+              type="button"
+              onClick={() => setViewMode("kanban")}
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                viewMode === "kanban"
+                  ? "bg-white text-charcoal shadow-sm"
+                  : "text-slate hover:text-charcoal"
+              )}
+            >
+              <LayoutGrid className="h-4 w-4" aria-hidden />
+              Канбан
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("table")}
+              className={cn(
+                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                viewMode === "table"
+                  ? "bg-white text-charcoal shadow-sm"
+                  : "text-slate hover:text-charcoal"
+              )}
+            >
+              <Table2 className="h-4 w-4" aria-hidden />
+              Таблица
+            </button>
+          </div>
+        </div>
+
+        {viewMode === "kanban" ? (
+          filtered.length > 0 || bookings.length === 0 ? (
+            <OrganizerBookingsKanban bookings={filtered} showHeader={false} className="border-0 p-0 shadow-none" />
+          ) : (
+            <EmptyState
+              icon={ClipboardList}
+              title="Заявок не найдено"
+              description="Измените фильтры или дождитесь новых бронирований с сайта."
+            />
+          )
+        ) : filtered.length > 0 ? (
           <div className={cabinetTableWrapClass}>
             <Table className="min-w-[920px] text-left">
               <TableHeader className={cabinetTableHeaderClass}>

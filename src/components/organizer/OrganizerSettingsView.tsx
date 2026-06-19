@@ -24,6 +24,7 @@ import {
 } from "@/types/organizer-profile";
 import { formatPlatformTenure } from "@/lib/organizer-experience";
 import NotificationPreferencesSection from "@/components/notifications/NotificationPreferencesSection";
+import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -444,7 +445,7 @@ export default function OrganizerSettingsView() {
                       setExtendedDescription(event.target.value);
                       markDirty();
                     }}
-                    className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                    className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-slate/70 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     required
                   />
                   <div className="mt-1 flex items-start justify-between gap-3">
@@ -602,7 +603,10 @@ export default function OrganizerSettingsView() {
         ) : activeTab === "guides" ? (
           <OrganizerGuidesTab userId={user.id} />
         ) : activeTab === "notifications" ? (
-          <NotificationPreferencesSection scope="organizer" />
+          <div className="space-y-6">
+            <ThemeSettingsSection />
+            <NotificationPreferencesSection scope="organizer" />
+          </div>
         ) : null}
       </div>
 

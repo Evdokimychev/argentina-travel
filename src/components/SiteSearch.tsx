@@ -362,6 +362,10 @@ export default function SiteSearch() {
           bottomSheet={false}
           showClose
           className="max-w-2xl overflow-hidden p-0 sm:max-w-2xl"
+          onOpenAutoFocus={(event) => {
+            event.preventDefault();
+            inputRef.current?.focus();
+          }}
         >
           <DialogTitle className="sr-only">Поиск по сайту</DialogTitle>
           <DialogDescription className="sr-only">
@@ -378,10 +382,12 @@ export default function SiteSearch() {
                 onChange={(event) => setQuery(event.target.value)}
                 onKeyDown={handleInputKeyDown}
                 placeholder="Туры, статьи, FAQ, направления…"
-                className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-muted"
+                className="min-w-0 flex-1 bg-transparent text-base text-foreground outline-none placeholder:text-slate/70 focus-visible:outline-none"
                 autoComplete="off"
                 spellCheck={false}
                 role="combobox"
+                aria-label="Поиск по сайту"
+                aria-autocomplete="list"
                 aria-expanded={hasQuery && results.length > 0}
                 aria-controls="site-search-results"
                 aria-activedescendant={
@@ -398,6 +404,7 @@ export default function SiteSearch() {
                   key={filter.kind}
                   type="button"
                   onClick={() => setKindFilter(filter.kind)}
+                  aria-pressed={kindFilter === filter.kind}
                   className={cn(
                     "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
                     kindFilter === filter.kind
@@ -458,6 +465,7 @@ export default function SiteSearch() {
                               type="button"
                               onClick={() => handleSelect(item.href)}
                               onMouseEnter={() => setActiveIndex(currentIndex)}
+                              aria-label={`${item.title}, ${group.label}`}
                               className={cn(
                                 "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
                                 isActive ? "bg-sky/12" : "hover:bg-sky/8"

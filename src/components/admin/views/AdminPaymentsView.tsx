@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { CreditCard } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
+import { AdminTableState } from "@/components/admin/AdminTableState";
 import { AdminPaymentLedgerPanel } from "@/components/admin/views/AdminPaymentLedgerView";
 import { AdminPayoutsPanel } from "@/components/admin/views/AdminPayoutsView";
 import { AdminReconciliationPanel } from "@/components/admin/views/AdminReconciliationView";
@@ -174,12 +176,16 @@ export default function AdminPaymentsView({ initialTab = "bookings" }: { initial
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
-                {payments.length === 0 ? (
-                  <tr>
-                    <td colSpan={6} className="px-4 py-10 text-center text-slate">
-                      {loading ? "Загрузка…" : "Платежные данные не найдены"}
-                    </td>
-                  </tr>
+                {loading || payments.length === 0 ? (
+                  <AdminTableState
+                    loading={loading}
+                    isEmpty={payments.length === 0}
+                    colSpan={6}
+                    skeletonColumns={6}
+                    emptyIcon={CreditCard}
+                    emptyTitle="Платежные данные не найдены"
+                    emptyDescription="За выбранный период операций нет или они ещё не синхронизированы."
+                  />
                 ) : (
                   payments.map((row) => (
                     <tr key={row.bookingId}>

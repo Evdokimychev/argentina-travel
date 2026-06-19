@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { Wallet } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
+import { AdminTableState } from "@/components/admin/AdminTableState";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useAdminApi } from "@/hooks/useAdminApi";
-import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
+import { cabinetCardClass, cabinetTableHeaderClass } from "@/lib/cabinet-ui";
+import { CabinetTableWrap } from "@/components/ui/table";
 import type { AdminPaymentPeriodFilter } from "@/types/admin-payments";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import type { CommissionReportTotals } from "@/types/platform-commission";
@@ -176,7 +179,7 @@ export function AdminPayoutsPanel() {
 
       <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
         <h2 className="font-heading text-base font-bold text-charcoal">Пакеты выплат</h2>
-        <div className={cabinetTableWrapClass}>
+        <CabinetTableWrap>
           <table className="w-full min-w-[800px] text-left text-sm">
             <thead className={cabinetTableHeaderClass}>
               <tr>
@@ -188,12 +191,16 @@ export function AdminPayoutsPanel() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {payouts.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-10 text-center text-slate">
-                    {loading ? "Загрузка…" : "Пакеты выплат не найдены"}
-                  </td>
-                </tr>
+              {loading || payouts.length === 0 ? (
+                <AdminTableState
+                  loading={loading}
+                  isEmpty={payouts.length === 0}
+                  colSpan={5}
+                  skeletonColumns={5}
+                  emptyIcon={Wallet}
+                  emptyTitle="Пакеты выплат не найдены"
+                  emptyDescription="За выбранный период выплат организаторам нет."
+                />
               ) : (
                 payouts.map((row) => (
                   <tr key={row.id}>
@@ -234,7 +241,7 @@ export function AdminPayoutsPanel() {
               )}
             </tbody>
           </table>
-        </div>
+        </CabinetTableWrap>
       </section>
     </div>
   );

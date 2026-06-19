@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowDown, ArrowUp, Plus, Trash2 } from "lucide-react";
+import { ArrowDown, ArrowUp, GripVertical, Plus, Trash2 } from "lucide-react";
+import { cn } from "@/lib/cn";
 import { Input } from "@/components/ui/input";
 import {
   ORGANIZER_TOUR_PROGRAM_DAY_DESCRIPTION_MAX,
@@ -23,6 +24,10 @@ interface TourProgramDayEditorProps {
   onMoveDown: () => void;
   onAddAfter: () => void;
   canAddDay: boolean;
+  canReorder?: boolean;
+  onDragStart?: (event: React.DragEvent<HTMLButtonElement>) => void;
+  onDragEnd?: () => void;
+  isDragging?: boolean;
 }
 
 export default function TourProgramDayEditor({
@@ -36,10 +41,31 @@ export default function TourProgramDayEditor({
   onMoveDown,
   onAddAfter,
   canAddDay,
+  canReorder = false,
+  onDragStart,
+  onDragEnd,
+  isDragging = false,
 }: TourProgramDayEditorProps) {
   return (
-    <article className="space-y-5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm sm:p-5">
+    <article
+      className={cn(
+        "space-y-5 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm sm:p-5 transition-opacity duration-150",
+        isDragging && "opacity-50"
+      )}
+    >
       <div className="flex items-center gap-3">
+        {canReorder ? (
+          <button
+            type="button"
+            draggable
+            onDragStart={onDragStart}
+            onDragEnd={onDragEnd}
+            className="inline-flex h-11 w-8 shrink-0 cursor-grab touch-none items-center justify-center rounded-lg text-slate active:cursor-grabbing hover:bg-gray-100 hover:text-charcoal"
+            aria-label={`Перетащите день ${day.dayNumber} для изменения порядка`}
+          >
+            <GripVertical className="h-4 w-4" aria-hidden />
+          </button>
+        ) : null}
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-brand/10 text-lg font-bold text-brand">
           {day.dayNumber}
         </span>
