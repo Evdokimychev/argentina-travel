@@ -4,7 +4,7 @@ import ExpertsCatalog from "@/components/experts/ExpertsCatalog";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchPublishedExperts } from "@/lib/local-experts-server";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClientIfConfigured } from "@/lib/supabase/server";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -16,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function ExpertsPage() {
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseServerClientIfConfigured();
   const experts = await fetchPublishedExperts(supabase);
 
   return (

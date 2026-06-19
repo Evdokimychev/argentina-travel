@@ -4,7 +4,7 @@ import ExpertDetailView from "@/components/experts/ExpertDetailView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { expertHref, fetchExpertBySlug } from "@/lib/local-experts-server";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseServerClientIfConfigured } from "@/lib/supabase/server";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -12,7 +12,7 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseServerClientIfConfigured();
   const expert = await fetchExpertBySlug(supabase, slug);
 
   if (!expert) {
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function ExpertDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const supabase = await createSupabaseServerClient();
+  const supabase = await createSupabaseServerClientIfConfigured();
   const expert = await fetchExpertBySlug(supabase, slug);
 
   if (!expert) notFound();
