@@ -75,7 +75,7 @@ export async function upsertTourFromCanonical(
 
   const { data: existing } = await supabase
     .from("tours")
-    .select("published_at")
+    .select("published_at, moderation_status")
     .eq("slug", tour.slug)
     .maybeSingle();
 
@@ -83,9 +83,31 @@ export async function upsertTourFromCanonical(
     row.published_at = existing.published_at;
   }
 
+  const isPublishing = row.status === "published";
+  const alreadyApproved = existing?.moderation_status === "approved";
+
+  if (isPublishing && !alreadyApproved) {
+    row.moderation_status = "pending";
+    row.moderation_notes = null;
+    row.moderated_by = null;
+    row.moderated_at = null;
+  } else if (existing?.moderation_status) {
+    row.moderation_status = existing.moderation_status;
+  }
+
   const { error } = await supabase.from("tours").upsert(row, { onConflict: "slug" });
 
   if (error) return { error: error.message };
+
+  if (isPublishing && !alreadyApproved) {
+    const { enqueueTourModeration } = await import("@/lib/admin/moderation-server");
+    await enqueueTourModeration(supabase, row.id, {
+      slug: tour.slug,
+      title: tour.title,
+      ownerUserId,
+    });
+  }
+
   return { ok: true };
 }
 

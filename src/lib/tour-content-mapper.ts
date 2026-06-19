@@ -45,6 +45,7 @@ export function rowToTourDetail(row: TourRow) {
 }
 
 export function rowToAdminSummary(row: TourRow): TourContentAdminSummary {
+  const moderationStatus = (row.moderation_status ?? "none") as TourContentAdminSummary["moderationStatus"];
   return {
     id: row.id,
     slug: row.slug,
@@ -53,6 +54,8 @@ export function rowToAdminSummary(row: TourRow): TourContentAdminSummary {
     title: row.title,
     publishedAt: row.published_at,
     updatedAt: row.updated_at,
+    moderationStatus,
+    moderationNotes: row.moderation_notes ?? null,
   };
 }
 
@@ -76,6 +79,10 @@ export function tourToContentRow(
     listing: listing as unknown as Json,
     payload: tour as unknown as Json,
     published_at: status === "published" ? now : null,
+    moderation_status: "none",
+    moderation_notes: null,
+    moderated_by: null,
+    moderated_at: null,
     created_at: tour.updatedAt ?? now,
     updated_at: tour.updatedAt ?? now,
   };

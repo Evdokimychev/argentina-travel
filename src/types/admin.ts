@@ -1,19 +1,87 @@
 /**
- * Admin capabilities — architecture only (Phase E).
- * No admin UI in this phase; used by permissions and future Supabase RLS mapping.
+ * Admin panel capabilities and navigation types (Phase E).
  */
+
+/** Wildcard grants all capabilities. */
 export type AdminCapability =
-  | "moderate_tours"
-  | "moderate_reviews"
-  | "manage_users"
-  | "view_analytics";
+  | "*"
+  | "dashboard.view"
+  | "operations.leads"
+  | "operations.bookings"
+  | "operations.shop"
+  | "marketplace.tours"
+  | "marketplace.excursions"
+  | "marketplace.moderation"
+  | "content.edit"
+  | "content.publish"
+  | "users.view"
+  | "users.manage"
+  | "analytics.view"
+  | "system.settings"
+  | "system.audit";
 
-/** Future admin modules (route ids for Supabase-era admin panel). */
-export type AdminModuleId = "moderation" | "reviews" | "users" | "analytics";
+export type AdminPresetId =
+  | "super_admin"
+  | "operations_manager"
+  | "marketplace_manager"
+  | "content_editor"
+  | "support_agent";
 
-export const ADMIN_CAPABILITIES: Record<AdminModuleId, AdminCapability[]> = {
-  moderation: ["moderate_tours"],
-  reviews: ["moderate_reviews"],
-  users: ["manage_users"],
-  analytics: ["view_analytics"],
+export type AdminNavSectionId =
+  | "dashboard"
+  | "operations"
+  | "marketplace"
+  | "content"
+  | "users"
+  | "analytics"
+  | "system";
+
+export type AdminNavItemId =
+  | "dashboard"
+  | "operations-leads"
+  | "operations-bookings"
+  | "operations-shop"
+  | "marketplace-tours"
+  | "marketplace-excursions"
+  | "marketplace-moderation"
+  | "content-documents"
+  | "users-list"
+  | "analytics-overview"
+  | "system-settings"
+  | "system-audit";
+
+export interface AdminNavItem {
+  id: AdminNavItemId;
+  section: AdminNavSectionId;
+  href: string;
+  label: string;
+  description?: string;
+  capability: AdminCapability;
+  /** Hide until module is implemented */
+  comingSoon?: boolean;
+}
+
+export interface AdminSessionPayload {
+  userId: string;
+  capabilities: AdminCapability[];
+  preset: AdminPresetId | null;
+  via: "session" | "legacy_token";
+}
+
+export interface AdminDashboardSummary {
+  newsletterCount: number;
+  contactCount: number;
+  shopOrderCount: number;
+  tourCount: number;
+  pendingModerationCount: number;
+  excursionExperienceCount: number;
+  bookingCount: number;
+}
+
+/** Legacy capability aliases — map to new granular keys in API guards. */
+export const LEGACY_CAPABILITY_MAP: Record<string, AdminCapability> = {
+  moderate_tours: "marketplace.moderation",
+  moderate_reviews: "marketplace.moderation",
+  manage_users: "users.manage",
+  view_analytics: "analytics.view",
 };

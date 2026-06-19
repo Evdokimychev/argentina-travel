@@ -1,3 +1,4 @@
+import { hasAdminCapability } from "@/lib/admin/capabilities";
 import type { AdminCapability } from "@/types/admin";
 import type { AccountRole, SessionUser, User } from "@/types/user";
 import { isGuest, normalizeAccountRoles, userHasAccountRole } from "@/types/user";
@@ -113,25 +114,31 @@ export function canAccessAdminPanel(user: Actor): boolean {
   return isAdmin(user);
 }
 
-export function canUseAdminCapability(user: Actor, capability: AdminCapability): boolean {
+/** Client-side coarse check; granular capabilities resolved server-side via admin_staff. */
+export function canUseAdminCapability(
+  user: Actor,
+  capability: AdminCapability,
+  granted?: readonly AdminCapability[]
+): boolean {
   if (!isAdmin(user)) return false;
-  return true;
+  if (!granted?.length) return true;
+  return hasAdminCapability(granted, capability);
 }
 
-export function canModerateTours(user: Actor): boolean {
-  return canUseAdminCapability(user, "moderate_tours");
+export function canModerateTours(user: Actor, granted?: readonly AdminCapability[]): boolean {
+  return canUseAdminCapability(user, "marketplace.moderation", granted);
 }
 
-export function canModerateReviews(user: Actor): boolean {
-  return canUseAdminCapability(user, "moderate_reviews");
+export function canModerateReviews(user: Actor, granted?: readonly AdminCapability[]): boolean {
+  return canUseAdminCapability(user, "marketplace.moderation", granted);
 }
 
-export function canManageUsers(user: Actor): boolean {
-  return canUseAdminCapability(user, "manage_users");
+export function canManageUsers(user: Actor, granted?: readonly AdminCapability[]): boolean {
+  return canUseAdminCapability(user, "users.manage", granted);
 }
 
-export function canViewAnalytics(user: Actor): boolean {
-  return canUseAdminCapability(user, "view_analytics");
+export function canViewAnalytics(user: Actor, granted?: readonly AdminCapability[]): boolean {
+  return canUseAdminCapability(user, "analytics.view", granted);
 }
 
 export function assertPermission(

@@ -31,6 +31,8 @@ export const FAVORITE_SAVED_AFTER_AUTH_EVENT = "favorite-saved-after-auth";
 interface AuthContextValue {
   user: SessionUser | null;
   isAuthenticated: boolean;
+  /** True after the initial session/profile hydration attempt finishes. */
+  authHydrated: boolean;
   authOpen: boolean;
   authIntent: AuthIntent;
   favoriteAuthStep: FavoriteAuthStep;
@@ -404,6 +406,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     () => ({
       user: hydrated ? user : null,
       isAuthenticated: hydrated ? user != null : false,
+      authHydrated: hydrated,
       authOpen,
       authIntent,
       favoriteAuthStep,

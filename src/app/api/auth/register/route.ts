@@ -18,8 +18,16 @@ export async function POST(request: Request) {
       password?: string;
     };
 
+    const role = body.role ?? "tourist";
+    if (role === "admin") {
+      return NextResponse.json(
+        { error: "Роль администратора назначается вручную", code: "FORBIDDEN" },
+        { status: 403 }
+      );
+    }
+
     const result = await registerSupabaseUser({
-      role: body.role ?? "tourist",
+      role,
       firstName: body.firstName ?? "",
       lastName: body.lastName ?? "",
       phone: body.phone ?? "",

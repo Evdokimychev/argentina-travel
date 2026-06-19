@@ -41,6 +41,9 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
   if (password.length < 6) {
     return validationError("Пароль должен содержать не менее 6 символов");
   }
+  if (input.role === "admin") {
+    return validationError("Роль администратора назначается вручную");
+  }
 
   if (!process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
     return {

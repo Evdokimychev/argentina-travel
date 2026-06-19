@@ -33,6 +33,9 @@ export interface Database {
           date_of_birth: string | null;
           roles: AccountRoleDb[];
           active_role: AccountRoleDb;
+          is_blocked: boolean;
+          organizer_verified_at: string | null;
+          admin_notes: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -47,6 +50,9 @@ export interface Database {
           date_of_birth?: string | null;
           roles?: AccountRoleDb[];
           active_role?: AccountRoleDb;
+          is_blocked?: boolean;
+          organizer_verified_at?: string | null;
+          admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -61,6 +67,9 @@ export interface Database {
           date_of_birth?: string | null;
           roles?: AccountRoleDb[];
           active_role?: AccountRoleDb;
+          is_blocked?: boolean;
+          organizer_verified_at?: string | null;
+          admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -145,6 +154,10 @@ export interface Database {
           listing: Json | null;
           payload: Json;
           published_at: string | null;
+          moderation_status: string;
+          moderation_notes: string | null;
+          moderated_by: string | null;
+          moderated_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -157,6 +170,10 @@ export interface Database {
           listing?: Json | null;
           payload: Json;
           published_at?: string | null;
+          moderation_status?: string;
+          moderation_notes?: string | null;
+          moderated_by?: string | null;
+          moderated_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -169,6 +186,10 @@ export interface Database {
           listing?: Json | null;
           payload?: Json;
           published_at?: string | null;
+          moderation_status?: string;
+          moderation_notes?: string | null;
+          moderated_by?: string | null;
+          moderated_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -855,9 +876,173 @@ export interface Database {
         };
         Relationships: [];
       };
+      admin_role_presets: {
+        Row: {
+          id: string;
+          label: string;
+          description: string | null;
+          capabilities: string[];
+          created_at: string;
+        };
+        Insert: {
+          id: string;
+          label: string;
+          description?: string | null;
+          capabilities?: string[];
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          label?: string;
+          description?: string | null;
+          capabilities?: string[];
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      admin_staff: {
+        Row: {
+          user_id: string;
+          preset: string | null;
+          capabilities: string[];
+          is_active: boolean;
+          invited_by: string | null;
+          notes: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          preset?: string | null;
+          capabilities?: string[];
+          is_active?: boolean;
+          invited_by?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          preset?: string | null;
+          capabilities?: string[];
+          is_active?: boolean;
+          invited_by?: string | null;
+          notes?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      admin_audit_log: {
+        Row: {
+          id: string;
+          actor_user_id: string | null;
+          action: string;
+          entity_type: string | null;
+          entity_id: string | null;
+          payload: Json;
+          ip_address: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          actor_user_id?: string | null;
+          action: string;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          payload?: Json;
+          ip_address?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          actor_user_id?: string | null;
+          action?: string;
+          entity_type?: string | null;
+          entity_id?: string | null;
+          payload?: Json;
+          ip_address?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      moderation_queue: {
+        Row: {
+          id: string;
+          entity_type: string;
+          entity_id: string;
+          status: string;
+          priority: number;
+          submitted_by: string | null;
+          assigned_to: string | null;
+          reason: string | null;
+          metadata: Json;
+          resolved_at: string | null;
+          resolved_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          entity_type: string;
+          entity_id: string;
+          status?: string;
+          priority?: number;
+          submitted_by?: string | null;
+          assigned_to?: string | null;
+          reason?: string | null;
+          metadata?: Json;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          entity_type?: string;
+          entity_id?: string;
+          status?: string;
+          priority?: number;
+          submitted_by?: string | null;
+          assigned_to?: string | null;
+          reason?: string | null;
+          metadata?: Json;
+          resolved_at?: string | null;
+          resolved_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      site_settings: {
+        Row: {
+          key: string;
+          value: Json;
+          updated_by: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          key: string;
+          value?: Json;
+          updated_by?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          key?: string;
+          value?: Json;
+          updated_by?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
-    Functions: Record<string, never>;
+    Functions: {
+      is_admin_with: {
+        Args: { required_capability: string };
+        Returns: boolean;
+      };
+    };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
   };

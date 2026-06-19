@@ -1,33 +1,13 @@
 import { NextResponse } from "next/server";
+import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
+import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { buildMarketplaceSeedRows } from "@/lib/tour-content-seed";
 import { upsertTourFromCanonical } from "@/lib/tour-content-server";
 
-function unauthorized() {
-  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-}
-
-function getToken(request: Request): string | null {
-  const header = request.headers.get("authorization");
-  if (header?.startsWith("Bearer ")) return header.slice(7).trim();
-  const url = new URL(request.url);
-  return url.searchParams.get("token");
-}
-
-function isAuthorized(token: string | null): boolean {
-  const expected = process.env.LEADS_ADMIN_TOKEN?.trim();
-  if (!expected) return false;
-  return token === expected;
-}
-
 export async function POST(request: Request) {
-  if (!isSupabaseConfigured()) {
-    return NextResponse.json({ error: "Supabase is not configured." }, { status: 503 });
-  }
-
-  const token = getToken(request);
-  if (!isAuthorized(token)) return unauthorized();
+  const auth = await authorizeAdminRequest(request, "marketplace.tours");
+  if (!auth.ok) return auth.response;
 
   const supabase = createSupabaseAdminClient();
   const rows = buildMarketplaceSeedRows();
@@ -42,6 +22,14 @@ export async function POST(request: Request) {
       seeded += 1;
     }
   }
+
+  await writeAdminAuditLog({
+    actorUserId: auth.actorId,
+    action: "tours.seed",
+    entityType: "tours",
+    payload: { seeded, total: rows.length, errorCount: errors.length },
+    ipAddress: clientIpFromRequest(request),
+  });
 
   return NextResponse.json({
     ok: true,
