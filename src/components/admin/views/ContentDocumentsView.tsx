@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -11,7 +12,20 @@ import { useAdminApi } from "@/hooks/useAdminApi";
 import type { ContentDocumentItem, ContentInventorySummary } from "@/lib/admin/content-inventory";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
 
-type ContentResponse = ContentInventorySummary;
+type LegalEditableRow = {
+  slug: string;
+  title: string;
+  href: string;
+  cmsId: string;
+  cmsStatus: string | null;
+  hasOverride: boolean;
+  publicSource: "cms" | "file";
+};
+
+type ContentResponse = ContentInventorySummary & {
+  legalEditable?: LegalEditableRow[];
+  cmsCount?: number;
+};
 
 const TYPE_LABELS: Record<ContentDocumentItem["type"], string> = {
   blog: "Статья",
@@ -27,10 +41,18 @@ const STATUS_LABELS: Record<ContentDocumentItem["status"], string> = {
   planned: "В плане",
 };
 
+const CMS_STATUS_LABELS: Record<string, string> = {
+  draft: "Черновик CMS",
+  published: "Опубликовано CMS",
+  archived: "Архив CMS",
+};
+
 export default function ContentDocumentsView() {
+  const router = useRouter();
   const { data, loading, error, refresh } = useAdminApi<ContentResponse>("/api/admin/content");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<ContentDocumentItem["type"] | "all">("all");
+  const [creatingSlug, setCreatingSlug] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const docs = data?.documents ?? [];
@@ -42,12 +64,34 @@ export default function ContentDocumentsView() {
     });
   }, [data?.documents, search, typeFilter]);
 
+  async function createLegalOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "legal", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
   return (
     <CapabilityGate capability="content.edit">
       <AdminPageShell>
         <AdminPageHeader
           title="Документы контента"
-          subtitle="Обзор статей, путеводителя, направлений и мест (файловый контент до CMS v1.2)"
+          subtitle="Файловый контент и CMS-версии legal-документов (v1.2)"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -58,13 +102,14 @@ export default function ContentDocumentsView() {
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
 
         {data?.counts ? (
-          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
             {[
               { label: "Статьи", value: data.counts.blogPublished },
               { label: "В плане", value: data.counts.blogPlanned },
               { label: "Путеводитель", value: data.counts.guideTopics },
               { label: "Направления", value: data.counts.destinations },
               { label: "Места", value: data.counts.places },
+              { label: "CMS", value: data.cmsCount ?? 0 },
             ].map((item) => (
               <div key={item.label} className={cabinetStatCardClass}>
                 <p className="text-xs font-medium uppercase tracking-wide text-slate">{item.label}</p>
@@ -74,7 +119,53 @@ export default function ContentDocumentsView() {
           </section>
         ) : null}
 
+        {data?.legalEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Юридические документы (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.legalEditable.map((row) => (
+                <li key={row.slug} className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
+                  <span className="font-medium text-charcoal">{row.title}</span>
+                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-slate">
+                    {row.publicSource === "cms" ? "На сайте: CMS" : "На сайте: файл"}
+                  </span>
+                  {row.cmsStatus ? (
+                    <span className="text-xs text-sky">
+                      {CMS_STATUS_LABELS[row.cmsStatus] ?? row.cmsStatus}
+                    </span>
+                  ) : null}
+                  <div className="ml-auto flex gap-2">
+                    <Link href={row.href} target="_blank" className="text-xs text-sky hover:underline">
+                      Просмотр
+                    </Link>
+                    {row.hasOverride ? (
+                      <Link
+                        href={`/admin/content/documents/${encodeURIComponent(row.cmsId)}`}
+                        className="text-xs font-medium text-charcoal hover:text-sky"
+                      >
+                        Редактировать
+                      </Link>
+                    ) : (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={creatingSlug === row.slug}
+                        onClick={() => void createLegalOverride(row.slug)}
+                      >
+                        Создать CMS-версию
+                      </Button>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
+
         <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
+          <h2 className="font-heading text-lg font-bold text-charcoal">Файловый каталог</h2>
           <div className="flex flex-col gap-3 sm:flex-row">
             <Input
               value={search}

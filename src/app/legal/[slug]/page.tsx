@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import LegalPageView from "@/components/legal/LegalPageView";
-import { LEGAL_DOCUMENTS } from "@/data/legal-content";
+import { resolveLegalDocument, listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 type PageProps = {
@@ -9,12 +9,13 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  return Object.keys(LEGAL_DOCUMENTS).map((slug) => ({ slug }));
+  const slugs = await listPublishedLegalSlugs();
+  return slugs.map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const doc = LEGAL_DOCUMENTS[slug];
+  const doc = await resolveLegalDocument(slug);
   if (!doc) return { title: "Документ" };
   return buildPublicPageMetadata({
     title: doc.title,
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function LegalDocumentPage({ params }: PageProps) {
   const { slug } = await params;
-  const doc = LEGAL_DOCUMENTS[slug];
+  const doc = await resolveLegalDocument(slug);
   if (!doc) notFound();
   return <LegalPageView document={doc} />;
 }
