@@ -45,7 +45,7 @@ export const tourDetailStickyPanelClass =
 
 /** Нижняя панель бронирования (мобильные) */
 export const tourDetailMobileBarClass =
-  "fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white/95 shadow-lg backdrop-blur-sm lg:hidden";
+  "fixed bottom-0 left-0 right-0 z-40 border-t border-border-subtle bg-surface-elevated/95 shadow-elevated backdrop-blur-sm pb-[env(safe-area-inset-bottom,0px)] lg:hidden";
 
 /** Вертикальный ритм между секциями страницы */
 export const tourDetailSectionStackClass = "space-y-6 md:space-y-8";
@@ -55,7 +55,7 @@ export const tourDetailContentStackClass = "space-y-4 sm:space-y-5";
 
 /** Карточка отзыва */
 export const tourDetailReviewCardClass =
-  "rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5";
+  "rounded-card border border-border-subtle bg-surface-elevated p-4 shadow-card sm:p-5";
 
 /** Фильтр / чип в секции отзывов */
 export const tourDetailFilterChipClass =

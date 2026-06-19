@@ -72,7 +72,7 @@ export default function TripPrepLandingPage() {
             Полный чек-лист и сохранение прогресса доступны после входа и привязки к бронированию.
           </p>
           <Link
-            href="/login?next=/profile/trip-prep"
+            href="/?auth=sign-in&next=/profile/trip-prep"
             className="mt-4 inline-flex items-center gap-2 rounded-xl bg-brand px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-dark"
           >
             <LogIn className="h-4 w-4" />

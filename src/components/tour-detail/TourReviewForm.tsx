@@ -35,7 +35,7 @@ export default function TourReviewForm({
   onSubmitted,
   className,
 }: TourReviewFormProps) {
-  const { user } = useAuth();
+  const { user, openAuth } = useAuth();
   const [eligibility, setEligibility] = useState<ReviewEligibilityResult | null>(
     initialEligibility ?? null
   );
@@ -231,14 +231,18 @@ export default function TourReviewForm({
 
   if (!user) {
     return (
-      <div className={cn("rounded-2xl border border-gray-200 bg-white p-5 shadow-sm", className)}>
+      <div className={cn("rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card", className)}>
         <p className="font-medium text-charcoal">Оставить отзыв о поездке</p>
         <p className="mt-1 text-sm text-slate">
           Войдите в аккаунт, чтобы поделиться впечатлениями после завершённого тура.
         </p>
-        <Link href="/login" className={cn(buttonVariants({ size: "sm" }), "mt-4 inline-flex")}>
+        <button
+          type="button"
+          onClick={() => openAuth()}
+          className={cn(buttonVariants({ size: "sm" }), "mt-4 inline-flex")}
+        >
           Войти
-        </Link>
+        </button>
       </div>
     );
   }

@@ -118,7 +118,7 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
 
             <div className="relative overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100">
               <div className="relative aspect-[16/10] w-full">
-                <Image src={post.image} alt="" fill priority className="object-cover" sizes="360px" />
+                <Image src={post.image} alt={post.title} fill priority className="object-cover" sizes="360px" />
               </div>
             </div>
           </div>

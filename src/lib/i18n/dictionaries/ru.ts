@@ -11,7 +11,7 @@ export const ruDictionary = {
   "nav.services": "Сервисы",
   "nav.blog": "Блог",
   "nav.about": "О проекте",
-  "nav.faq": "FAQ",
+  "nav.faq": "Частые вопросы",
   "nav.contacts": "Контакты",
   "nav.menu": "Меню",
   "nav.more": "Ещё",
@@ -72,7 +72,7 @@ export const ruDictionary = {
   "locale.currency": "Валюта",
   "locale.search": "Поиск",
   "locale.languageHint": "Выберите язык интерфейса. Переводы будут расширяться.",
-  "locale.currencyHint": "Цены конвертируются по тестовому курсу. Актуальный курс — через API.",
+  "locale.currencyHint": "Цены конвертируются по ориентировочному курсу. Точную стоимость уточняйте при бронировании.",
   "locale.title": "Язык и валюта",
 } as const;
 

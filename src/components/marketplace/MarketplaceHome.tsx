@@ -242,7 +242,7 @@ export default function MarketplaceHome({
                 <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
                   <Image
                     src={HOME_HERO_IMAGE}
-                    alt=""
+                    alt="Путешествия по Аргентине: горы, ледники и города"
                     fill
                     priority
                     sizes="(max-width: 1024px) 100vw, 360px"

@@ -180,15 +180,29 @@ export default function AudioGuidesCatalogView() {
         </div>
 
         {error ? (
-          <p className="mt-8 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <p className="mt-8 rounded-card border border-error/30 bg-error-muted px-4 py-3 text-sm text-error">
             {error}
           </p>
         ) : null}
 
         {loading ? (
-          <p className="mt-10 text-sm text-slate">{t("audioGuides.loading")}</p>
+          <ul className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" aria-busy aria-label={t("audioGuides.loading")}>
+            {Array.from({ length: 6 }).map((_, i) => (
+              <li
+                key={i}
+                className="overflow-hidden rounded-card border border-border-subtle bg-surface-elevated shadow-card"
+              >
+                <div className="aspect-[16/10] animate-pulse bg-surface-muted" />
+                <div className="space-y-2 p-5">
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-surface-muted" />
+                  <div className="h-3 w-1/2 animate-pulse rounded bg-surface-muted" />
+                  <div className="h-3 w-2/3 animate-pulse rounded bg-surface-muted" />
+                </div>
+              </li>
+            ))}
+          </ul>
         ) : products.length === 0 ? (
-          <div className="mt-10 rounded-2xl border border-gray-100 bg-white p-6 text-sm text-slate">
+          <div className="mt-10 rounded-card border border-border-subtle bg-surface-elevated p-6 text-sm text-slate">
             <p>{t("audioGuides.empty")}</p>
           </div>
         ) : (

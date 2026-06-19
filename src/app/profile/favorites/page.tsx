@@ -31,6 +31,7 @@ export default function ProfileFavoritesPage() {
   const { user } = useAuth();
   const { t } = useLocaleCurrency();
   const [favorites, setFavorites] = useState<FavoriteTour[]>([]);
+  const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     if (!user) return;
@@ -44,8 +45,12 @@ export default function ProfileFavoritesPage() {
 
     refresh();
     void (async () => {
-      await refreshRemoteFavorites(user, userId);
-      refresh();
+      try {
+        await refreshRemoteFavorites(user, userId);
+        refresh();
+      } finally {
+        if (active) setLoaded(true);
+      }
     })();
 
     window.addEventListener(FAVORITES_UPDATED_EVENT, refresh);
@@ -62,7 +67,23 @@ export default function ProfileFavoritesPage() {
       <h1 className={cabinetPageTitleClass}>{t("profile.favorites.title")}</h1>
       <p className={cabinetPageSubtitleClass}>{t("profile.favorites.subtitle")}</p>
 
-      {favorites.length > 0 ? (
+      {!loaded && favorites.length === 0 ? (
+        <div className="mt-6 grid gap-4 sm:grid-cols-2" aria-hidden>
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div
+              key={i}
+              className={cn(cabinetCardClass, "overflow-hidden")}
+            >
+              <div className="aspect-[16/10] animate-pulse bg-surface-muted" />
+              <div className="space-y-2 p-4">
+                <div className="h-3 w-20 animate-pulse rounded bg-surface-muted" />
+                <div className="h-4 w-3/4 animate-pulse rounded bg-surface-muted" />
+                <div className="h-3 w-1/2 animate-pulse rounded bg-surface-muted" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : favorites.length > 0 ? (
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
           {favorites.map((favorite) => (
             <article
@@ -139,7 +160,7 @@ export default function ProfileFavoritesPage() {
           ))}
         </div>
       ) : (
-        <div className="mt-8 rounded-3xl border border-dashed border-gray-200 bg-surface-muted/60 px-6 py-12 text-center">
+        <div className="mt-8 rounded-panel border border-dashed border-border-subtle bg-surface-muted/60 px-6 py-12 text-center">
           <Heart className="mx-auto h-10 w-10 text-slate/40" strokeWidth={1.5} />
           <p className="mt-4 font-medium text-charcoal">{t("profile.favorites.emptyTitle")}</p>
           <p className="mt-2 text-sm text-slate">{t("profile.favorites.emptyDescription")}</p>

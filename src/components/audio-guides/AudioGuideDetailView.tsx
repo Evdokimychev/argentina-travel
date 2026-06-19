@@ -68,7 +68,7 @@ export default function AudioGuideDetailView({ productId }: AudioGuideDetailView
           <div>
             <div className="relative aspect-[16/10] overflow-hidden rounded-3xl bg-surface-muted">
               {product.preview ? (
-                <Image src={product.preview} alt="" fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
+                <Image src={product.preview} alt={product.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 66vw" />
               ) : null}
             </div>
 

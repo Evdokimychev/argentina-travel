@@ -50,7 +50,7 @@ export const TURISTICSKIE_REGIONY_PILLAR: GuidePillarContent = {
 };
 
 const SIGHTS_FAQ = [
-  { question: "Какие must-see в первую поездку?", answer: "Перито-Морено, Iguazú, районы BA (La Boca, Recoleta), винодельня Mendoza." },
+  { question: "Что обязательно увидеть в первую поездку?", answer: "Перито-Морено, Iguazú, районы BA (La Boca, Recoleta), винодельни Mendoza." },
   { question: "Нужно ли бронировать Перито-Морено заранее?", answer: "В высокий сезон — да, онлайн на сайте парка или через тур с трансфером." },
   { question: "Сколько времени на Iguazú?", answer: "Минимум 1 полный день на аргентинской стороне. 2 дня — аргентинская + бразильская." },
   { question: "Можно ли в Chaltén без гида?", answer: "Да, тропы к Fitz Roy и Cerro Torre — самостоятельные. Следите за погодой." },
@@ -66,7 +66,7 @@ const SIGHTS_FAQ = [
 
 export const DOSTOPRIMECHATELNOSTI_PILLAR: GuidePillarContent = {
   heroSubtitle:
-    "Must-see: ледники, водопады, города и природные парки — что включить в маршрут и как бронировать",
+    "Главное: ледники, водопады, города и природные парки — что включить в маршрут и как бронировать",
   heroCtas: [
     { label: "Экскурсии", href: "/tours", variant: "primary" },
     { label: "Природные иконы", href: "#dostoprimechatelnosti-1", variant: "secondary" },
@@ -76,7 +76,7 @@ export const DOSTOPRIMECHATELNOSTI_PILLAR: GuidePillarContent = {
     { label: "Перито-Морено", headline: "El Calafate", detail: "Бронь онлайн в высокий сезон — или тур с трансфером" },
     { label: "Iguazú", headline: "275 водопадов", detail: "Аргентинская + бразильская стороны — 2 дня идеально" },
     { label: "Fitz Roy", headline: "El Chaltén", detail: "Треккинг без гида; погода меняется за часы" },
-    { label: "BA must-see", headline: "Recoleta, San Telmo", detail: "Teatro Colón или milonga — на вечер" },
+    { label: "Главное в BA", headline: "Recoleta, San Telmo", detail: "Teatro Colón или milonga — на вечер" },
     { label: "Пингвины", headline: "Peninsula Valdés", detail: "Сентябрь–март — сезон размножения" },
     { label: "Экскурсии", headline: "Каталог на платформе", detail: "Русскоязычные гиды — фильтр по языку" },
   ],
@@ -200,7 +200,7 @@ export const POGODA_PILLAR: GuidePillarContent = {
       subsections: [
         {
           title: "Лето (дек–фев)",
-          body: "+28…+35 °C днём, высокая влажность. Жара спадает к вечеру. Кондиционер в жилье — must have.",
+          body: "+28…+35 °C днём, высокая влажность. Жара спадает к вечеру. Кондиционер в жилье обязателен.",
         },
         {
           title: "Осень и весна",

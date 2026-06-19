@@ -432,7 +432,7 @@ export function getImmigrationTopicTocExtras(slug: ImmigrationTopicSlug): { id: 
     case "protsess-immigratsii":
       return [
         { id: "tourist-entry", label: "Въезд туриста" },
-        { id: "dnu", label: "DNU 366/2025" },
+        { id: "dnu", label: "Decreto 366/2025" },
         { id: "radex", label: "RADEX" },
         { id: "documents", label: "Документы" },
       ];

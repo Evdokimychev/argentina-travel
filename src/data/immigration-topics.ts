@@ -29,7 +29,7 @@ const TOPIC_META: Record<
     id: "immigration-process",
     slug: "protsess-immigratsii",
     title: "Процесс иммиграции",
-    shortDescription: "Въезд, DNU 366/2025, RADEX и документы для ВНЖ",
+    shortDescription: "Въезд, Decreto 366/2025, RADEX и документы для ВНЖ",
     heroImage:
       "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80",
   },
@@ -45,7 +45,7 @@ const TOPIC_META: Record<
     id: "citizenship",
     slug: "grazhdanstvo",
     title: "Гражданство",
-    shortDescription: "Административно (DNM), DNU 366/2025 — 2 года без выезда",
+    shortDescription: "Административно (DNM), Decreto 366/2025 — 2 года без выезда",
     heroImage:
       "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=1920&q=80",
   },

@@ -18,7 +18,7 @@ export const BLOG_HUB_LINKS: BlogRelatedResource[] = [
     label: "Авторские туры",
     href: "/tours",
     type: "tour",
-    description: "Patagonia, BA, Mendoza и др.",
+    description: "Патагония, Буэнос-Айрес, Мендоса и др.",
   },
   {
     label: "Когда ехать",

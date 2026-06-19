@@ -89,7 +89,7 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
     <>
       <HubHero
         title="Блог о путешествиях"
-        subtitle={`${stats.totalPosts.toLocaleString("ru-RU")} материалов по ${stats.categories.length} темам — от Patagonia и Игуасу до денег, виз и районов Buenos Aires. Начните с редакционных гидов или выберите тему ниже.`}
+        subtitle={`${stats.totalPosts.toLocaleString("ru-RU")} материалов по ${stats.categories.length} темам — от Патагонии и Игуасу до денег, виз и районов Буэнос-Айреса. Начните с редакционных материалов или выберите тему ниже.`}
         image="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&q=80"
         eyebrow={{ label: "Журнал", href: "/blog" }}
         ctas={[
@@ -155,7 +155,7 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
                     ))}
                   </ul>
                 ) : (
-                  <p className="mt-8 rounded-3xl border border-dashed border-gray-200 bg-white p-10 text-center text-slate">
+                  <p className="mt-8 rounded-panel border border-dashed border-border-subtle bg-surface-elevated p-10 text-center text-slate">
                     Статей по вашему запросу нет. Попробуйте сбросить фильтры или откройте{" "}
                     <Link href="/guide" className="font-medium text-sky hover:underline">
                       путеводитель

@@ -567,7 +567,7 @@ export const PODBOR_FUTURE_QUESTIONS: Array<{
   {
     id: "first-time",
     title: "Первый раз в Аргентине?",
-    purpose: "Баланс must-see и глубины",
+    purpose: "Баланс главных мест и глубины",
     conversionHint: "Маршрут «классика за 10 дней»",
   },
   {

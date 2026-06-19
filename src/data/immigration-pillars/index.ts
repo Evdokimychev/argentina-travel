@@ -29,7 +29,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { emoji: "🏙", label: "Буэнос-Айрес", headline: "Мегаполис с инфраструктурой", detail: "Palermo, Recoleta, Belgrano — популярны у экспатов" },
       { emoji: "🌡", label: "Климат", headline: "От субтропиков до Патагонии", detail: "Можно выбрать свой микроклимат по всей стране" },
       { emoji: "🏥", label: "Медицина", headline: "Экстренная помощь бесплатна", detail: "Плановая — через prepaga или частные клиники" },
-      { emoji: "🌐", label: "Сообщество", headline: "Активные expat-чаты", detail: "Русско- и англоязычные группы, коворкинги, школы" },
+      { emoji: "🌐", label: "Сообщество", headline: "Активные чаты экспатов", detail: "Русско- и англоязычные группы, коворкинги, школы" },
     ],
     sections: [
       {
@@ -66,8 +66,8 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { label: "Документы для въезда", href: "/immigration/dokumenty-dlya-vyezda", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "🛂", label: "Турист → резидент", headline: "Смена статуса в стране", detail: "Подача Radication в Migraciones без обязательного выезда" },
-      { emoji: "⚠️", label: "DNU 366/2025", headline: "Страховка и контроль въезда", detail: "Проверяйте актуальные требования перед поездкой" },
+      { emoji: "🛂", label: "Турист → резидент", headline: "Смена статуса в стране", detail: "Подача radicación в Migraciones без обязательного выезда" },
+      { emoji: "⚠️", label: "Decreto 366/2025", headline: "Страховка и контроль въезда", detail: "Проверяйте актуальные требования перед поездкой" },
       { emoji: "📋", label: "RADEX", headline: "Онлайн-портал Migraciones", detail: "Запись, подача документов и precaria" },
       { emoji: "📜", label: "Апостиль", headline: "2–8 недель на легализацию", detail: "Закладывайте срок до истечения туристического штампа" },
     ],
@@ -85,7 +85,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
           "Да — большинство оснований для residencia temporaria оформляют уже в стране через RADEX, без консульской визы. Важно легально въехать, не нарушать срок туристического пребывания и собрать пакет по выбранному основанию.",
       },
       {
-        question: "Что такое DNU 366/2025 и как он влияет на въезд?",
+        question: "Что такое Decreto 366/2025 и как он влияет на въезд?",
         answer:
           "Decreto 366/2025 закрепил требование медстраховки и декларации о цели поездки; на границе их пока не всегда проверяют. Для подачи на residencia требования строже.",
       },
@@ -142,7 +142,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     ],
     partnerServices: [],
     blogLinks: [
-      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), DNU 366/2025" },
+      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), Decreto 366/2025" },
       { title: "ВНЖ и ПМЖ", href: topicHref("vnzh-i-pmzh") },
     ],
   },
@@ -155,7 +155,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { label: "Запросить контакты", href: "/contacts", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 направлений", detail: "Шенген, Великобритания, Япония и страны Латинской Америки" },
+      { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 направлений", detail: "Шенген, Япония и большинство стран Латинской Америки" },
       { emoji: "⏱", label: "Резиденция", headline: "2 года без выезда", detail: "Любой выезд обнуляет срок (366/2025)" },
       { emoji: "🏛", label: "Подача", headline: "DNM / Migraciones", detail: "Административно с окт. 2025; не PJN" },
       { emoji: "🗳", label: "Срок дела", headline: "Не фиксирован", detail: "От месяцев до нескольких лет — уточняйте на migraciones.gob.ar" },
@@ -270,7 +270,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     blogLinks: [
       { title: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh" },
       { title: "Процесс иммиграции", href: topicHref("protsess-immigratsii") },
-      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), DNU 366/2025" },
+      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), Decreto 366/2025" },
       { title: "Роды в Аргентине", href: topicHref("rody-v-argentine") },
     ],
   },

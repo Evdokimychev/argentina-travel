@@ -47,15 +47,6 @@ export function buildPlaceProductJsonLd(place: PlaceDetail) {
       addressCountry: "AR",
     },
     url: absoluteUrl(placeHref(place.slug)),
-    aggregateRating:
-      place.rating != null
-        ? {
-            "@type": "AggregateRating",
-            ratingValue: place.rating,
-            bestRating: 5,
-            ratingCount: Math.max(10, place.popularity),
-          }
-        : undefined,
   };
 }
 

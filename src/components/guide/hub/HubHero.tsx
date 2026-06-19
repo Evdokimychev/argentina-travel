@@ -103,7 +103,7 @@ export default function HubHero({ title, subtitle, image, eyebrow, ctas }: HubHe
               <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
                 <Image
                   src={image}
-                  alt=""
+                  alt={title}
                   fill
                   priority
                   sizes="(max-width: 1024px) 100vw, 360px"

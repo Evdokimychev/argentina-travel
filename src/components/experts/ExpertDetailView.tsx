@@ -31,7 +31,7 @@ function ExpertInquiryForm({ expert }: ExpertInquiryFormProps) {
     setSuccess(null);
 
     if (!user) {
-      router.push(`/auth/login?next=/experts/${expert.slug}`);
+      router.push(`/?auth=sign-in&next=/experts/${expert.slug}`);
       return;
     }
 
@@ -73,7 +73,7 @@ function ExpertInquiryForm({ expert }: ExpertInquiryFormProps) {
 
       {!user ? (
         <div className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-sm text-slate">
-          <Link href={`/auth/login?next=/experts/${expert.slug}`} className="font-medium text-sky hover:underline">
+          <Link href={`/?auth=sign-in&next=/experts/${expert.slug}`} className="font-medium text-sky hover:underline">
             Войдите
           </Link>
           , чтобы отправить сообщение.

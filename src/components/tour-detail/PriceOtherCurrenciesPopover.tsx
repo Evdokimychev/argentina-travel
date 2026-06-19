@@ -52,7 +52,7 @@ export default function PriceOtherCurrenciesPopover({
       <PopoverContent align="start" className="w-auto min-w-[220px] max-w-[280px] p-3">
         <p className="text-xs font-semibold text-charcoal">Цена в других валютах</p>
         <p className="mt-0.5 text-[11px] leading-relaxed text-slate">
-          Ориентировочно по тестовому курсу
+          Ориентировочно по текущему курсу
         </p>
         <ul className="mt-3 max-h-52 space-y-1 overflow-y-auto">
           {ordered.map((code) => {

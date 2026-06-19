@@ -345,7 +345,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
             "VPN на публичном Wi‑Fi — да. Домашний банк РФ через мобильный интернет AR обычно работает без VPN. Не вводите CVV в подозрительных captive portal.",
         },
         {
-          title: "Телефон и snatch theft",
+          title: "Телефон и уличные кражи",
           body:
             "SIM привязана к паспорту — при краже заблокируйте линию в салоне оператора с копией паспорта. Не демонстрируйте телефон у проезжей части в BA — см. /guide/bezopasnost.",
         },
@@ -358,7 +358,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         "Без набора приложений BA и регионы неудобны. Часть работает только с интернетом; SUBE и Cabify проще с местной SIM.",
       subsections: [
         {
-          title: "Must-have для туриста",
+          title: "Что обязательно взять туристу",
           body:
             "Google Maps (+ offline) · WhatsApp · Cabify / Uber · Google Translate (offline ES) · Aerolíneas / airline app · Подтверждения брони offline · Windy для Patagonia.",
         },
@@ -403,7 +403,7 @@ export const SVYAZ_PILLAR: GuidePillarContent = {
         {
           title: "Цифровой кочевник light",
           body:
-            "BA (Palermo, Belgrano) — coworking 20–50 Mbps часто достаточно для Zoom. Patagonia — не место для daily standup. Проверьте upload на speedtest до оплаты жилья.",
+            "BA (Palermo, Belgrano) — коворкинги 20–50 Мбит/с, часто достаточно для видеозвонков. Патагония — не место для ежедневных созвонов. Проверьте скорость отдачи (upload) до оплаты жилья.",
         },
       ],
       infoBoxes: [

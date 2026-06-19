@@ -141,7 +141,7 @@ export const IMMIGRATION_LIFE_IN_COUNTRY: ImmigrationLifeInCountryContent = {
     {
       emoji: "🥩",
       title: "Продукты и кухня",
-      body: "Мясо, вино, овощи и фрукты мирового уровня. Рынки и супермеркадов доступны в каждом крупном городе.",
+      body: "Мясо, вино, овощи и фрукты мирового уровня. Рынки и супермаркеты есть в каждом крупном городе.",
       href: "/guide/kukhnya",
       linkLabel: "Кухня",
     },
@@ -179,7 +179,7 @@ export const IMMIGRATION_PROCESS: ImmigrationProcessContent = {
   ],
   statusChangeNote:
     "После въезда можно сменить статус: собрать пакет по выбранному основанию, записаться в RADEX и подать на residencia temporaria, не нарушая правил пребывания.",
-  dnuTitle: "DNU 366/2025 — что изменилось",
+  dnuTitle: "Decreto 366/2025 — что изменилось",
   dnuChanges: [
     "Decreto 366/2025 закрепил требование медстраховки и декларации о цели визита; порядок проверки на границе уточняйте перед поездкой",
     "Более детальная проверка цели визита, билетов и подтверждения жилья",
@@ -236,14 +236,14 @@ export const IMMIGRATION_PROCESS: ImmigrationProcessContent = {
     },
   ],
   apostilleNote:
-    "Документы из РФ и большинства стран СНГ легализуют через апостиль и certified translation. Закладывайте 2–8 недель до истечения туристического срока.",
+    "Документы из РФ и большинства стран СНГ легализуют через апостиль и заверенный перевод (certified translation). Закладывайте 2–8 недель до истечения туристического срока.",
   entryDocsHref: "/guide/kak-dobratsya#entry-docs",
   entryDocsLabel: "Документы на границе — в путеводителе",
 };
 
 export const IMMIGRATION_BIRTH: ImmigrationBirthContent = {
   intro:
-    "Аргентина применяет jus soli: ребёнок, рождённый на её территории, получает гражданство независимо от гражданства родителей. Родители могут оформить residencia по основанию padre/madre de argentino.",
+    "Аргентина применяет jus soli: ребёнок, рождённый на её территории, как правило получает гражданство независимо от гражданства родителей (исключения — дети аккредитованных дипломатов). Родители могут оформить residencia по основанию padre/madre de argentino.",
   cards: [
     {
       emoji: "🇦🇷",
@@ -271,7 +271,7 @@ export const IMMIGRATION_BIRTH: ImmigrationBirthContent = {
     {
       step: 1,
       title: "Выбор клиники и подготовка",
-      body: "Договор с частной или план в public hospital; страховка и prenatal care.",
+      body: "Договор с частной клиникой или прикрепление к государственной больнице; страховка и дородовое наблюдение.",
       duration: "За 3–9 месяцев",
     },
     {
@@ -307,7 +307,7 @@ export const IMMIGRATION_CITIZENSHIP: ImmigrationCitizenshipContent = {
     {
       emoji: "📘",
       title: "Сильный паспорт",
-      body: "Безвиз или упрощённый въезд примерно в ~170 направлений — Шенген, Великобритания, Япония, большинство Латинской Америки. Список меняется; перед поездкой проверяйте требования страны назначения.",
+      body: "Безвиз или упрощённый въезд примерно в 170 направлений — Шенген, Япония, большинство Латинской Америки. Для отдельных стран (например, для въезда в Великобританию) может требоваться виза. Список меняется; перед поездкой проверяйте требования страны назначения.",
     },
     {
       emoji: "⏱",
@@ -562,7 +562,7 @@ export const IMMIGRATION_RESIDENCY: ImmigrationResidencyContent = {
       ["Срок", "До 3 лет (зависит от основания)", "Бессрочно при соблюдении условий"],
       ["Продление", "Prórroga по тому же или новому основанию", "Не требует ежегодного продления по пункту"],
       ["DNI", "Выдаёт Renaper после одобрения", "DNI резидента permanente"],
-      ["Работа", "По категории (rentista — без local employment)", "Без миграционных ограничений по статусу"],
+      ["Работа", "По категории (rentista — без работы в Аргентине)", "Без миграционных ограничений по статусу"],
       ["Путь к ПМЖ", "Arraigo 2–3 года temporaria", "—"],
       ["Отсутствие за границей", "Отмена при ≥6 мес. подряд (ст. 62)", "Отмена при ≥1 года (ст. 62)"],
       ["Гражданство", "2 года непрерывно без выезда (Ley 346, после 366/2025)", "Тот же критерий"],
@@ -787,7 +787,7 @@ export const IMMIGRATION_RESIDENCY: ImmigrationResidencyContent = {
     {
       step: 2,
       title: "Обновление пакета",
-      body: "Domiciilio, доход, antecedentes AR. Новая справка из РФ — если выезжали в страну гражданства.",
+      body: "Domicilio (адрес проживания), доход, antecedentes (справка о несудимости) AR. Новая справка из РФ — если выезжали в страну гражданства.",
       duration: "1–3 нед.",
     },
     {
@@ -935,8 +935,8 @@ export const IMMIGRATION_RESIDENCY: ImmigrationResidencyContent = {
     },
   ],
   crossLinks: [
-    { title: "Процесс иммиграции", href: "/immigration/protsess-immigratsii", description: "RADEX, DNU 366/2025, въезд" },
-    { title: "Гражданство", href: "/immigration/grazhdanstvo", description: "Административно (DNM), DNU 366/2025" },
+    { title: "Процесс иммиграции", href: "/immigration/protsess-immigratsii", description: "RADEX, Decreto 366/2025, въезд" },
+    { title: "Гражданство", href: "/immigration/grazhdanstvo", description: "Административно (DNM), Decreto 366/2025" },
     { title: "Возможности", href: "/immigration/vozmozhnosti", description: "Rentista, семья, выбор основания" },
     { title: "Роды в Аргентине", href: "/immigration/rody-v-argentine", description: "Jus soli, reunificación familiar" },
     { title: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh", description: "Краткий справочник оснований" },
@@ -1002,7 +1002,7 @@ export const IMMIGRATION_OPPORTUNITIES: ImmigrationOpportunitiesContent = {
     {
       emoji: "🇵🇾",
       title: "Парагвай",
-      body: "Territorial tax, относительно простой ВНЖ — «план Б» в Латинской Америке.",
+      body: "Территориальное налогообложение, относительно простой ВНЖ — «план Б» в Латинской Америке.",
     },
     {
       emoji: "🇺🇾",

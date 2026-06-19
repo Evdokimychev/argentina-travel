@@ -85,7 +85,7 @@ export default function DesignSystemShowcase() {
             Визуальный язык платформы
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate">
-            Argentina Travel — светлый премиальный маркетплейс с аргентинской идентичностью:
+            «Пора в Аргентину» — светлый премиальный маркетплейс с аргентинской идентичностью:
             небесно-голубой primary, тёплые нейтрали и сдержанные семантические акценты.
           </p>
         </div>

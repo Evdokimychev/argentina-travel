@@ -77,7 +77,7 @@ export default function EsimOfferCard({ offer, countryId, locale, labels }: Esim
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={offer.imageUrl}
-            alt=""
+            alt={displayTitle}
             className="h-full w-full object-contain p-4"
             loading="lazy"
           />
@@ -88,7 +88,7 @@ export default function EsimOfferCard({ offer, countryId, locale, labels }: Esim
         )}
         {offer.inStock === false ? (
           <span className="absolute left-3 top-3 rounded-full bg-charcoal/70 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-white">
-            Out of stock
+            Нет в наличии
           </span>
         ) : null}
       </div>

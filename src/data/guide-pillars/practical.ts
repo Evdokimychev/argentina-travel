@@ -24,7 +24,7 @@ export const SHOPPING_PILLAR: GuidePillarContent = {
     { label: "Задать вопрос", href: "/contacts?topic=shopping", variant: "tertiary" },
   ],
   quickFacts: [
-    { label: "Must-buy", headline: "Кожа, mate, malbec", detail: "Dulce de leche и alfajores — классические подарки" },
+    { label: "Что купить", headline: "Кожа, мате, мальбек", detail: "Dulce de leche и альфахорес — классические подарки" },
     { label: "Feria", headline: "San Telmo — воскресенье", detail: "Антиквариат, сувениры; приходите утром" },
     { label: "Tax free", headline: "Global Blue", detail: "Partner-магазины — возврат IVA при вывозе, чеки и паспорт" },
     { label: "Кожа BA", headline: "Murillo, Sur", detail: "Куртки и сумки — сравнивайте качество и цену" },

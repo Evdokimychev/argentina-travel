@@ -25,7 +25,7 @@ export default function BlogStartHere({ posts, className }: BlogStartHereProps) 
         </h2>
       </div>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
-        Подборка материалов, с которых удобно начать: сезоны, деньги, въезд, районы BA, Patagonia и Mendoza.
+        Подборка материалов, с которых удобно начать: сезоны, деньги, въезд, районы Буэнос-Айреса, Патагония и Мендоса.
         Остальной каталог собран по темам, регионам и практическим задачам.
       </p>
 

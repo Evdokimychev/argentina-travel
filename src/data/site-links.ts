@@ -21,7 +21,7 @@ export const SITE_FOOTER_NAV = [
   { href: "/forum", label: "Форум", labelKey: "nav.forum" },
   { href: "/about", label: "О проекте", labelKey: "nav.about" },
   { href: "/join", label: "Для организаторов", labelKey: "nav.utility.join" },
-  { href: "/faq", label: "FAQ", labelKey: "nav.faq" },
+  { href: "/faq", label: "Частые вопросы", labelKey: "nav.faq" },
   { href: "/contacts", label: "Контакты", labelKey: "nav.contacts" },
 ] as const;
 
