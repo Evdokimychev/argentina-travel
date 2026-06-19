@@ -1,4 +1,4 @@
-import { normalizeScheduleTime } from "@/lib/excursion-schedule";
+import { normalizeScheduleTime, parseExcursionSchedule } from "@/lib/excursion-schedule";
 import type { TripsterPriceQuote, TripsterScheduleResponse } from "@/lib/tripster/types";
 
 export const TRIPSTER_BEST_PRICE_URL = "https://tripster.ru/about/guarantee/";
@@ -26,19 +26,12 @@ export type ExcursionBookingConditions = {
 export function pickFirstScheduleSlot(
   schedule: TripsterScheduleResponse
 ): { date: string; time: string } | null {
-  const scheduleMap = schedule.schedule ?? {};
-  const dates = Object.keys(scheduleMap).sort();
+  const parsed = parseExcursionSchedule(schedule);
+  const firstDate = parsed.dates[0];
+  const firstSlot = firstDate?.slots[0];
+  if (!firstDate || !firstSlot) return null;
 
-  for (const date of dates) {
-    for (const slot of scheduleMap[date] ?? []) {
-      const rawTime = slot.time_start?.trim();
-      if (rawTime) {
-        return { date, time: normalizeScheduleTime(rawTime) };
-      }
-    }
-  }
-
-  return null;
+  return { date: firstDate.date, time: normalizeScheduleTime(firstSlot.time) };
 }
 
 export function computePrepaymentPercents(

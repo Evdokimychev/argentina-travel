@@ -7,7 +7,7 @@ import {
   normalizeAccountRoles,
   userHasAccountRole,
 } from "@/types/user";
-import { DEFAULT_PROFILE_COUNTRY } from "@/data/profile-countries";
+import { DEFAULT_PROFILE_COUNTRY, resolvePhoneCountryIsoFromProfile } from "@/data/profile-countries";
 import {
   DEFAULT_PHONE_COUNTRY,
   buildInternationalPhone,
@@ -461,7 +461,10 @@ export function updateUserProfile(
 ): AuthResult {
   const firstName = input.firstName.trim();
   const lastName = input.lastName.trim();
-  const normalizedPhone = normalizePhone(input.phone);
+  const normalizedPhone = normalizePhone(
+    input.phone,
+    resolvePhoneCountryIsoFromProfile(input.country)
+  );
   const normalizedEmail = input.email.trim().toLowerCase();
 
   if (!firstName) {

@@ -5,20 +5,25 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { excursionPriceSuffixKey } from "@/lib/excursion-listing-meta";
-import { resolveExcursionPriceUsd } from "@/lib/excursion-price-display";
-import type { ExcursionDetail } from "@/types/excursion";
+import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
 
 type ExcursionMobileBookingBarProps = {
-  excursion: ExcursionDetail;
   prefersAffiliate: boolean;
 };
 
 export default function ExcursionMobileBookingBar({
-  excursion,
   prefersAffiliate,
 }: ExcursionMobileBookingBarProps) {
   const { t } = useLocaleCurrency();
-  const priceUsd = resolveExcursionPriceUsd(excursion);
+  const {
+    excursion,
+    priceUsd,
+    selectedDate,
+    selectedTime,
+    openBookingPreview,
+    submitButtonLabel,
+  } = useExcursionBooking();
+
   const showFrom = excursion.priceFrom !== false;
   const priceUnit = excursion.priceUnit ?? "per_person";
   const listedPriceLabel =
@@ -33,6 +38,14 @@ export default function ExcursionMobileBookingBar({
 
   function scrollToBooking() {
     document.getElementById("booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function handleMobileBookClick() {
+    if (selectedDate && selectedTime) {
+      openBookingPreview();
+      return;
+    }
+    scrollToBooking();
   }
 
   return (
@@ -61,8 +74,8 @@ export default function ExcursionMobileBookingBar({
             {ctaLabel}
           </a>
         ) : (
-          <Button type="button" className="shrink-0 rounded-xl px-5" onClick={scrollToBooking}>
-            {ctaLabel}
+          <Button type="button" className="shrink-0 rounded-xl px-5" onClick={handleMobileBookClick}>
+            {submitButtonLabel}
           </Button>
         )}
       </div>

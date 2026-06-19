@@ -21,6 +21,7 @@ import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review
 import TourClassificationBar from "./TourClassificationBar";
 import TourDurationInfo from "./TourDurationInfo";
 import { SafeImage } from "@/components/ui/safe-image";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
 interface TourDetailHeaderProps {
   tour: TourDetail;
@@ -29,6 +30,7 @@ interface TourDetailHeaderProps {
 
 export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHeaderProps) {
   const [shared, setShared] = useState(false);
+  const isPartnerTour = isPartnerTourDetail(tour);
   const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.reviews));
   const ratingDisplay = resolveTourRatingLabel(reviewStats);
   const cityDisplay = resolveTourCityDisplay({
@@ -135,7 +137,11 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
             ) : null}
 
             <div className="mt-5 flex flex-wrap items-center gap-3">
-              <TourDurationInfo days={tour.durationDays} nights={tour.durationNights} />
+              <TourDurationInfo
+                days={tour.durationDays}
+                nights={tour.durationNights}
+                hideNights={isPartnerTour}
+              />
 
               <p className="inline-flex items-center gap-1.5 text-sm text-slate">
                 <MapPin className="h-4 w-4 shrink-0 text-sky/70" aria-hidden />

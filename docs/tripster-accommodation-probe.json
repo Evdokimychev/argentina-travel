@@ -1,7 +1,7 @@
 {
-  "id": 109207,
+  "id": 92278,
   "paths": {
-    "/experiences/109207/?detailed=true&price_format=detailed": {
+    "/experiences/92278/?detailed=true&price_format=detailed": {
       "status": 200,
       "ok": true,
       "keys": [
@@ -47,9 +47,9 @@
         "price_included_description",
         "price_not_included_description"
       ],
-      "sample": "{\"id\":109207,\"title\":\"От Буэнос-Айреса до края света: большой фототур по знаковым локациям Аргентины и Чили в мини-группе\",\"tagline\":\"Посетить водопады Игуасу и Ушуайю, прогуляться по Каналу Бигля и увидеть разных животных\",\"url\":\"https://experience.tripster.ru/experience/109207/\",\"type\":\"tour\",\"format\":\"activity\",\"grade\":null,\"movement_type\":\"car\",\"schedule_type\":\"fixed_slots\",\"instant_booking\":false,\"status\":\"active\",\"is_bookable\":true,\"is_visible\":true,\"is_new\":false,\"child_friendly\":false,\"max_persons\":8,\"duration\":264,\"meeting_point\":{\"text\":\"Буэнос-Айрес, точное место — по договорённости, 13:00 (или любое время в течение дня)\"},\"finish_point\":{\"text\":\"Игуасу, 13:00\"},\"price\":{\"currency\":\"USD\",\"currency_rate\":75.75,\"onsite_payment\":0.15,\"per_person\":[{\"id\":3917702062,\"title\":\"Участник\",\"is_default\":true,\"value\":4905,\"option_id\":\"019df9cf-11d0-764e-bf7e-899906c1d967\",\"without_discount\":5450}],\"discount\":{\"value\":0.1,\"expiration\":\"2028-02-01\"},\"value\":4905,\"value_string\":\"$4905 за одного\",\"unit_string\":\"за одного\",\"price_description\":\"$4905 за одного\",\"total_commission_rate\":15},\"review_count\":0,\"rating\":0,\"rating20\":0,\"popularity\":53232,\"city\":{\"id\":204,\"name_ru\":\"Буэнос-Айрес\",\"name_1_ru\":\"Буэнос-Айреса\",\"name_5_ru\":\"Буэнос-Айресе\",\"name_en\":\"Buenos Aires\",\"iata\":\"BAI\",\"country\":{\"id\":65,\"name_ru\":\"Аргентина\",\"name_2_ru\":\"Аргентине\",\"name_5_ru\":\"Аргентине\",\"name_en\":\"Argentina\",\"currency\":\"USD\",\"in_obj_phrase\":\"в Аргентине\",\"about_obj_phrase\":\"об Аргентине\",\"across_obj_phrase\":\"по Аргентине\",\"experience_count\":68,\"tours_count\":11,\"guides_count\":28,\"url\":\"https://experience.tripster.ru/destinations/argentina/\",\"tours_url\":\"https://experience.tripster.ru/tours/argentina/\",\"region\":\"AM\"},\"experience_count\":52,\"tours_count\":4,\"excursions_count\":48,\"about_obj_phrase\":\"о Буэнос-Айресе\",\"in_obj_phrase\":\"в Буэнос-Айресе\",\"from_obj_phrase\":\"из Буэнос-Айреса\",\"across_obj_phrase\":\"по Буэнос-Айресу\",\"name_prepositional\":\"Буэнос-Айресе\",\"url\":\"https://experience.tripster.ru/experience/Buenos_Aires/\",\"image\":{\"cover\":\"https://resize.tripster.ru/S-BjdT3PuKoUgcLN5dxDAeybYPY=/1920x320/filters:no_upscale()/https://cdn.tripster.ru/photos/3d566f44-dc39-404e-bea8-be60887c4f43.jpg\",\"thumbnail\":\"https://resize.tripster.ru/w-PvKynUB-z7yUadZMOzO_jVAFQ=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/9d26e1ad-f0d7-46c4-b36c-f72e0c655afc.jpg\"},\"utc_offset\":-10800,\"guides_count\":23,\"slug\":\"Buenos_Aires\"},\"guide\":{\"id\":1052403,\"first_name\":\"Евгений\",\"url\":\"http"
+      "sample": "{\"id\":92278,\"title\":\"Влюбиться в природу Южной Америки: большое активное путешествие в Патагонию с треккингами и круизом\",\"tagline\":\"Увидеть магеллановых пингвинов, дойти до лагуны Эсмеральда и подняться к башням Торрес\",\"url\":\"https://experience.tripster.ru/experience/92278/\",\"type\":\"tour\",\"format\":\"activity\",\"grade\":null,\"movement_type\":\"other\",\"schedule_type\":\"fixed_slots\",\"instant_booking\":false,\"status\":\"active\",\"is_bookable\":true,\"is_visible\":true,\"is_new\":false,\"child_friendly\":false,\"max_persons\":12,\"duration\":312,\"meeting_point\":{\"text\":\"аэропорт Буэнос-Айреса, время зависит от времени вашего прибытия\"},\"finish_point\":{\"text\":\"аэропорт Буэнос-Айреса, время зависит от времени вашего обратного рейса\"},\"price\":{\"currency\":\"RUB\",\"currency_rate\":1,\"onsite_payment\":0.15,\"per_person\":[{\"id\":3917702062,\"title\":\"Участник\",\"is_default\":true,\"value\":373099,\"option_id\":\"019df9b6-d3d5-734c-b684-2b2d45e0760e\"}],\"value\":373099,\"value_string\":\"373099 ₽ за одного\",\"unit_string\":\"за одного\",\"price_description\":\"373099 ₽ за одного\",\"total_commission_rate\":15},\"review_count\":1,\"rating\":5,\"rating20\":4.88,\"popularity\":53230,\"city\":{\"id\":204,\"name_ru\":\"Буэнос-Айрес\",\"name_1_ru\":\"Буэнос-Айреса\",\"name_5_ru\":\"Буэнос-Айресе\",\"name_en\":\"Buenos Aires\",\"iata\":\"BAI\",\"country\":{\"id\":65,\"name_ru\":\"Аргентина\",\"name_2_ru\":\"Аргентине\",\"name_5_ru\":\"Аргентине\",\"name_en\":\"Argentina\",\"currency\":\"USD\",\"in_obj_phrase\":\"в Аргентине\",\"about_obj_phrase\":\"об Аргентине\",\"across_obj_phrase\":\"по Аргентине\",\"experience_count\":68,\"tours_count\":11,\"guides_count\":28,\"url\":\"https://experience.tripster.ru/destinations/argentina/\",\"tours_url\":\"https://experience.tripster.ru/tours/argentina/\",\"region\":\"AM\"},\"experience_count\":52,\"tours_count\":4,\"excursions_count\":48,\"about_obj_phrase\":\"о Буэнос-Айресе\",\"in_obj_phrase\":\"в Буэнос-Айресе\",\"from_obj_phrase\":\"из Буэнос-Айреса\",\"across_obj_phrase\":\"по Буэнос-Айресу\",\"name_prepositional\":\"Буэнос-Айресе\",\"url\":\"https://experience.tripster.ru/experience/Buenos_Aires/\",\"image\":{\"cover\":\"https://resize.tripster.ru/S-BjdT3PuKoUgcLN5dxDAeybYPY=/1920x320/filters:no_upscale()/https://cdn.tripster.ru/photos/3d566f44-dc39-404e-bea8-be60887c4f43.jpg\",\"thumbnail\":\"https://resize.tripster.ru/w-PvKynUB-z7yUadZMOzO_jVAFQ=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/9d26e1ad-f0d7-46c4-b36c-f72e0c655afc.jpg\"},\"utc_offset\":-10800,\"guides_count\":23,\"slug\":\"Buenos_Aires\"},\"guide\":{\"id\":951628,\"first_name\":\"Динар\",\"url\":\"https://experience.tripster.ru/guide/"
     },
-    "/experiences/109207/plan/": {
+    "/experiences/92278/plan/": {
       "status": 200,
       "ok": true,
       "keys": [
@@ -64,11 +64,12 @@
         "8",
         "9",
         "10",
-        "11"
+        "11",
+        "12"
       ],
-      "sample": "[{\"number\":1,\"title\":\"Привет, Буэнос-Айрес\",\"description\":\"<div><p>Добро пожаловать в Аргентину! Нас встречает Буэнос-Айрес — город, где величие старинных кварталов соседствует с блеском современных небоскрёбов.</p>\\n\\n\\t<p>Вечером запланирован общий ужин (за доплату), за которым вы попробуюте настоящее аргентинское мясо на гриле и отправитесь на вечер танго. Яркое шоу с живой музыкой и страстными танцами погружает в атмосферу Буэнос-Айреса уже в первый вечер.</p>\\n\\n\\t<p>Ночёвка в Буэнос-Айресе.</p></div>\",\"photos\":[{\"thumbnail\":\"https://resize.tripster.ru/Vn8DirBfVEbglpq7EBM6yxBupo4=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/5dc449d0-949c-4b32-9b83-e6f7d808a64c.jpg\",\"medium\":\"https://resize.tripster.ru/nTOpt2romCKGdjfmjx0bG4OIGh4=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/5dc449d0-949c-4b32-9b83-e6f7d808a64c.jpg\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/EfG1Vk5Vyyw4nn0zv7DIVTirRgg=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/5dc449d0-949c-4b32-9b83-e6f7d808a64c.jpg\"},{\"thumbnail\":\"https://resize.tripster.ru/PB32fyCcQ-62KA1BmCVYzzB05uk=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/e60bc888-8927-476f-adce-577b14aa9a61.jpg\",\"medium\":\"https://resize.tripster.ru/q9lsto_n4Uxf8sCjVKVPaNQKxT4=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/e60bc888-8927-476f-adce-577b14aa9a61.jpg\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/4xhxAxcDPuObDwAyB76EDeTyDbI=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/e60bc888-8927-476f-adce-577b14aa9a61.jpg\"}]},{\"number\":2,\"title\":\"Вкус и ритм Буэнос-Айреса, Ушуайя\",\"description\":\"<div><p>Утро пройдёт в спокойном ритме — аромат кофе и первые впечатления от города. Прогулка по Сан-Тельмо подарит встречу с антикварными лавками и уличными кафе, где пахнет жареным мясом с рынка Меркадо Сан-Тельмо. Атмосфера старого Буэнос-Айреса здесь особенно ощутима.</p>\\n\\n\\t<p>Далее маршрут ведёт в Ла-Боку — квартал, где пёстрые дома, уличные музыканты и танцоры превращают улицы в живую сцену.</p>\\n\\n\\t<p>Затем состоится мастер-класс аргентинской кухни: приготовление эмпанадас, альфахорес и традиционного мате. Всё созданное можно будет продегустировать.</p>\\n\\n\\t<p>К вечеру запланирован перелёт в Ушуайю — жару сменит прохлада, а городской шум — тишина и свежий воздух южных широт. Ужин у воды с блюдами из свежей рыбы и вечерняя прогулка по набережной завершат день.</p>\\n\\n\\t<p>Ночёвка в Ушуайе.</p></div"
+      "sample": "[{\"number\":1,\"title\":\"Прибытие в Аргентину\",\"description\":\"<p>Добро пожаловать в столицу Аргентины. Вас встретят в аэропорту и доставят в отель, где будет возможность отдохнуть. При желании можно совершить первую прогулку по городу и познакомиться с аргентинской кухней в одном из местных ресторанов.</p>\",\"photos\":[{\"thumbnail\":\"https://resize.tripster.ru/U3BZTROErhVTzjpFjrdJMVvV5J8=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/5a7cfd0a-5b0c-4a7c-966b-3cb6bc2c195b.png\",\"medium\":\"https://resize.tripster.ru/xTwtvwuOT0wKcL3zX31hvlGd6SE=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/5a7cfd0a-5b0c-4a7c-966b-3cb6bc2c195b.png\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/nFUSu6LrEWnc4-o5ynFdpTGoa0Y=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/5a7cfd0a-5b0c-4a7c-966b-3cb6bc2c195b.png\"}]},{\"number\":2,\"title\":\"Ушуая и Огненная Земля — край света\",\"description\":\"<p>Утром отправимся в Ушуаю — самый южный город на планете. До Антарктиды отсюда менее 900 км по воде. Заселившись в отель, направимся в национальный парк Огненной Земли — «Тьерра-дель-Фуэго». Прогуляемся 5 км вдоль живописного канала Бигль, где можно встретить тюленей, пингвинов, а особо смелые смогут искупаться в ледяной воде.</p>\",\"photos\":[{\"thumbnail\":\"https://resize.tripster.ru/6Cc0asrj_eaPM4Pa6BtwJOAAyuA=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/32ba1c6b-f1f1-4ed8-a253-848262ea0530.jpg\",\"medium\":\"https://resize.tripster.ru/_IyIxhI8-dQQ1z9L6OdKWCS-1jw=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/32ba1c6b-f1f1-4ed8-a253-848262ea0530.jpg\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/7BF63IESEt7fWQApXNU0lphxF3s=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/32ba1c6b-f1f1-4ed8-a253-848262ea0530.jpg\"},{\"thumbnail\":\"https://resize.tripster.ru/1BjB9YfX6ccDZ0OKDOuWaCKHZng=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/35e6014c-ce42-4231-b343-bc11cb3b3b80.jpg\",\"medium\":\"https://resize.tripster.ru/uTr9OD_vomWpVC86j8KuiVncRzA=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/35e6014c-ce42-4231-b343-bc11cb3b3b80.jpg\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/jnuFsGZv0ohJ08X7-LxZ75bVi8o=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/35e6014c-ce42-4231-b343-bc11cb3b3b80.jpg\"},{\"thumbnail\":\"https://resize.tripster.ru/jur_poO1N6_gWAPL0oW1xL1IvVk=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/9c1fdd1"
     },
-    "/experiences/109207/accommodation/": {
+    "/experiences/92278/accommodation/": {
       "status": 404,
       "ok": false,
       "keys": [
@@ -76,7 +77,7 @@
       ],
       "sample": "{\"detail\":\"Not Found\"}"
     },
-    "/experiences/109207/accommodations/": {
+    "/experiences/92278/accommodations/": {
       "status": 404,
       "ok": false,
       "keys": [
@@ -84,7 +85,7 @@
       ],
       "sample": "{\"detail\":\"Not Found\"}"
     },
-    "/experiences/109207/lodging/": {
+    "/experiences/92278/lodging/": {
       "status": 404,
       "ok": false,
       "keys": [
@@ -92,7 +93,7 @@
       ],
       "sample": "{\"detail\":\"Not Found\"}"
     },
-    "/experiences/109207/comfort/": {
+    "/experiences/92278/comfort/": {
       "status": 404,
       "ok": false,
       "keys": [
@@ -100,7 +101,7 @@
       ],
       "sample": "{\"detail\":\"Not Found\"}"
     },
-    "/experiences/109207/comfort_level/": {
+    "/experiences/92278/comfort_level/": {
       "status": 404,
       "ok": false,
       "keys": [
@@ -108,7 +109,7 @@
       ],
       "sample": "{\"detail\":\"Not Found\"}"
     },
-    "/experiences/109207/hotels/": {
+    "/experiences/92278/hotels/": {
       "status": 404,
       "ok": false,
       "keys": [
@@ -118,7 +119,7 @@
     }
   },
   "accommodationRelated": {
-    "comfort_level_info": ""
+    "comfort_level_info": "<div><p><strong>Питание.</strong> В стоимость входят завтраки в некоторых отелях. Остальное питание — за доплату.</p>\n\n\t<p><strong>Транспорт.</strong> Минивэн, такси, лодки, корабли, паромы. В какие-то дни будем передвигаться на автобусе (с нами будут другие люди).</p>\n\n\t<p><strong>Возраст участников.</strong> 18–75.</p>\n\n\t<p><strong>Виза.</strong> Не нужна для граждан РФ.</p>\n\n\t<p><strong>Уровень сложности.</strong> Это трекинговый маршрут, поэтому важно иметь комфортную одежду и хорошую физическую форму. В программе запланированы несколько продолжительных треккингов: <br>\n— Трек к Лагуне Эсмеральда протяжённостью около 10 км с незначительным перепадом высот; — Маршрут к башням Торрес — один из самых сложных, составляет 21 км в обе стороны с набором высоты до 900 метров;<br>\n— Подъём к подножью горы Фицрой — около 22 км с суммарным перепадом до 750 метров; —— — Маршрут к Серро-Торре — около 20 км с умеренным подъёмом. <br>\nВсе треккинги проходят по горной или пересечённой местности: лесные тропы, болота, каменистые участки. Тур не подходит людям с заболеваниями суставов, сердечно-сосудистой системы и тем, кто не готов к длительным нагрузкам.</p></div>"
   },
   "descriptionBlockTitles": [
     "Организационные детали"
@@ -126,14 +127,14 @@
   "descriptionBlocks": [
     {
       "title": "Организационные детали",
-      "htmlLength": 40,
-      "htmlPreview": "<p>Тур проводится без участия детей.</p>"
+      "htmlLength": 576,
+      "htmlPreview": "<p>Для поездки в Патагонию виза и прививки не нужны; достаточно заграничного паспорта и удобной одежды для разных погодных условий.</p><p>Это треккинговый маршрут, поэтому важно иметь комфортную одежду и хорошую физическую форму. </p><p>Стоимость тура включает багаж на внутренних перелётах, но за превышение веса (более 15 кг + 5 кг ручной клади) может потребоваться доплата.</p><p>Автобусы для пере"
     }
   ],
-  "priceIncludedPreview": "<ul>\n\t\t<li>Проживание</li>\n\t\t<li>Трансфер по маршруту, включая внутренние перелёты</li>\n\t\t<li>Услуги гида</li>\n\t\t<li>Конная прогулка</li>\n\t\t<li>Посещение платных национальных парков по маршруту</li>\n\t\t<li>Посещение платных смотровых площадок и водопадов</li>\n\t\t<li>Морская прогулка по каналу Бигля</li>\n\t\t<li>Кулинарный мастер-класс в Буэнос-Айресе</li>\n\t\t<li>Билет на теплоход к подножию ледника Перито-Морено</li>\n\t\t<li>Фотосопровождение</li>\n\t</ul>",
-  "priceExcludedPreview": "<ul>\n\t\t<li>Авиабилеты до Аргентины и обратно (от $1300)</li>\n\t\t<li>Питание (примерно $35 в день)</li>\n\t\t<li>1-местное размещение</li>\n\t\t<li>Медицинская страховка</li>\n\t</ul>",
+  "priceIncludedPreview": "<ul>\n\t\t<li>Проживание</li>\n\t\t<li>Завтраки (в некоторых отелях)</li>\n\t\t<li>Трансфер из/до аэропорта</li>\n\t\t<li>Трансфер по маршруту</li>\n\t\t<li>3 внутренних перелёта с багажом 15 кг; с посещением водопадов Игуасу — 5 перелётов с багажом 15 кг</li>\n\t\t<li>Услуги гида</li>\n\t\t<li>Экскурсии и входные билеты</li>\n\t\t<li>Морской круиз</li>\n\t</ul>",
+  "priceExcludedPreview": "<ul>\n\t\t<li>Перелёт до Буэнос-Айреса и обратно</li>\n\t\t<li>Остальное питание (около $50 в день)</li>\n\t\t<li>Доп. экскурсии, развлечения и активности (в том числе на водопады Игуасу)</li>\n\t\t<li>Страховка</li>\n\t</ul>",
   "webPaths": {
-    "https://experience.tripster.ru/api/web/v2/experiences/109207/": {
+    "https://experience.tripster.ru/api/web/v2/experiences/92278/": {
       "status": 200,
       "ok": true,
       "keys": [
@@ -197,16 +198,19 @@
       "accommodation": {
         "paid_separately": false
       },
-      "comfortLen": 0
+      "comfortLen": 1170,
+      "descriptionLen": 627,
+      "descriptionPreview": "<h3>Организационные детали</h3>\n<div><p>Для поездки в Патагонию виза и прививки не нужны; достаточно заграничного паспорта и удобной одежды для разных погодных условий.</p>\n\n\t<p>Это треккинговый маршрут, поэтому важно иметь комфортную одежду и хорошую физическую форму. </p>\n\n\t<p>Стоимость тура включает багаж на внутренних перелётах, но за превышение веса (более 15 кг + 5 кг ручной клади) может пот"
     },
-    "https://experience.tripster.ru/api/web/v2/experiences/109207/accommodation/": {
+    "https://experience.tripster.ru/api/web/v2/experiences/92278/accommodation/": {
       "status": 404,
       "ok": false,
       "keys": [
         "_raw"
       ],
       "accommodation": null,
-      "comfortLen": 0
+      "comfortLen": 0,
+      "descriptionLen": 0
     }
   }
 }

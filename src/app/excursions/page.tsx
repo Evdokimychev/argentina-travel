@@ -32,7 +32,12 @@ export default async function ExcursionsPage() {
         ]}
       />
       <Suspense fallback={<CatalogLoadingFallback title="Загружаем каталог экскурсий…" />}>
-        <ExcursionsCatalog excursions={items} cities={cities} />
+        <ExcursionsCatalog
+          excursions={items}
+          cities={cities}
+          title="Экскурсии"
+          subtitle="Городские маршруты и активности по Аргентине"
+        />
       </Suspense>
     </>
   );

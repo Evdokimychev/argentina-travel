@@ -1,4 +1,5 @@
 import {
+  DARK_THEME_ENABLED,
   THEME_COOKIE_MAX_AGE,
   THEME_COOKIE_NAME,
   THEME_STORAGE_KEY,
@@ -7,6 +8,7 @@ import {
 } from "@/types/theme";
 
 export function getSystemTheme(): ResolvedTheme {
+  if (!DARK_THEME_ENABLED) return "light";
   if (typeof window === "undefined") return "light";
   return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 }
@@ -39,6 +41,7 @@ export function readStoredThemePreference(): ThemePreference | null {
 }
 
 export function resolveTheme(preference: ThemePreference | null): ResolvedTheme {
+  if (!DARK_THEME_ENABLED) return "light";
   return preference ?? getSystemTheme();
 }
 
@@ -78,4 +81,6 @@ export function clearThemePreference(): void {
 }
 
 /** Inline bootstrap script — prevents flash of wrong theme before hydration */
-export const THEME_BOOTSTRAP_SCRIPT = `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var c=${JSON.stringify(THEME_COOKIE_NAME)};var s=localStorage.getItem(k);var m=document.cookie.match(new RegExp('(?:^|; )'+c+'=([^;]*)'));var p=s||(m?decodeURIComponent(m[1]):null);var d=p==='dark'||(p!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.style.colorScheme=d?'dark':'light';}catch(e){}})();`;
+export const THEME_BOOTSTRAP_SCRIPT = DARK_THEME_ENABLED
+  ? `(function(){try{var k=${JSON.stringify(THEME_STORAGE_KEY)};var c=${JSON.stringify(THEME_COOKIE_NAME)};var s=localStorage.getItem(k);var m=document.cookie.match(new RegExp('(?:^|; )'+c+'=([^;]*)'));var p=s||(m?decodeURIComponent(m[1]):null);var d=p==='dark'||(p!=='light'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.classList.toggle('dark',d);document.documentElement.dataset.theme=d?'dark':'light';document.documentElement.style.colorScheme=d?'dark':'light';}catch(e){}})();`
+  : `(function(){try{document.documentElement.classList.remove('dark');document.documentElement.dataset.theme='light';document.documentElement.style.colorScheme='light';}catch(e){}})();`;

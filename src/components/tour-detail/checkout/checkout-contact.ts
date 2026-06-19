@@ -1,6 +1,8 @@
 import { isValid, parseISO } from "date-fns";
 import type { AuthUser } from "@/types/auth";
-import { formatInternationalPhone } from "@/lib/phone-countries";
+import { normalizePhone } from "@/lib/auth-store";
+import { resolvePhoneCountryIsoFromProfile } from "@/data/profile-countries";
+import { formatInternationalPhone, parseInternationalPhone } from "@/lib/phone-countries";
 import type { CheckoutFormState, TravelerForm } from "./types";
 import { createInitialCheckoutForm } from "./types";
 
@@ -15,6 +17,27 @@ function parseStoredDate(value: string | null | undefined): Date | null {
   if (!value) return null;
   const parsed = parseISO(value);
   return isValid(parsed) ? parsed : null;
+}
+
+/** Форматирует телефон пользователя с кодом страны для полей бронирования. */
+export function formatAuthUserPhone(user: Pick<AuthUser, "phone" | "country">): string {
+  const trimmed = user.phone?.trim() ?? "";
+  if (!trimmed) return "";
+
+  if (parseInternationalPhone(trimmed)) {
+    return formatInternationalPhone(trimmed);
+  }
+
+  const countryIso = resolvePhoneCountryIsoFromProfile(user.country);
+  const normalized =
+    normalizePhone(trimmed, countryIso) ??
+    (trimmed.startsWith("+") ? normalizePhone(trimmed) : null);
+
+  if (normalized) {
+    return formatInternationalPhone(normalized);
+  }
+
+  return formatInternationalPhone(trimmed) || trimmed;
 }
 
 export function contactFieldsFromAuthUser(
@@ -34,7 +57,7 @@ export function contactFieldsFromAuthUser(
     contactFirstName: firstName,
     contactLastName: lastName,
     contactEmail: user.email,
-    contactPhone: formatInternationalPhone(user.phone),
+    contactPhone: formatAuthUserPhone(user),
     contactDateOfBirth: parseStoredDate(user.dateOfBirth),
     createAccount: false,
   };

@@ -1,6 +1,6 @@
 import type { SiteLegal } from "@/lib/site-settings-server";
 
-export const DEFAULT_SUPPORT_EMAIL = "hello@goargentina.ru";
+export const DEFAULT_SUPPORT_EMAIL = "IAEvdokimychev@ya.ru";
 
 export function formatSiteLegalLine(legal: SiteLegal): string | null {
   const parts: string[] = [];

@@ -45,6 +45,7 @@ import {
   TRIPSTER_PARTNER_TOUR_TYPE,
 } from "@/lib/tripster/partner-tour-utils";
 import { normalizeTourDuration } from "@/lib/tour-duration";
+import { resolvePartnerTourBookingMode } from "@/lib/tripster/partner-tour-booking";
 
 type PartnerTourCityRow = {
   id: number;
@@ -130,6 +131,66 @@ export function countTripsterProgramDays(program: unknown): number {
   return 0;
 }
 
+export function countTripsterProgramMaxDayNumber(program: unknown): number {
+  if (!Array.isArray(program)) return 0;
+
+  let max = 0;
+  for (const day of program) {
+    if (!day || typeof day !== "object") continue;
+    const number = (day as { number?: unknown }).number;
+    if (typeof number === "number" && Number.isFinite(number) && number > max) {
+      max = number;
+    }
+  }
+
+  return max;
+}
+
+/** Длительность на витрине Tripster: поле duration в часах (312 ч → «14 дней»). */
+export function resolveTripsterPartnerCatalogDurationDays(
+  experience: Pick<TripsterExperience, "duration">,
+  durationMinutes?: number | null
+): number {
+  const hours = experience.duration ?? (durationMinutes != null ? durationMinutes / 60 : 0);
+  if (hours < 24) return 0;
+
+  const wholeDays = Math.max(1, Math.round(hours / 24));
+  if (hours % 24 === 0) {
+    return wholeDays + 1;
+  }
+
+  return wholeDays;
+}
+
+/** Дней программы для расчёта дат заезда (без +1 витрины Tripster). */
+export function resolvePartnerTourScheduleDurationDays(
+  experience: TripsterExperience,
+  durationMinutes?: number | null,
+  options?: {
+    program?: unknown;
+    itineraryDayCount?: number;
+    experienceType?: string | null;
+  }
+): number {
+  const kind =
+    options?.experienceType?.trim().toLowerCase() ||
+    experience.type?.trim().toLowerCase() ||
+    TRIPSTER_PARTNER_TOUR_TYPE;
+
+  const programDayCount = Math.max(
+    experience.plan_days_count ?? 0,
+    countTripsterProgramDays(options?.program),
+    countTripsterProgramMaxDayNumber(options?.program),
+    options?.itineraryDayCount ?? 0
+  );
+
+  if (kind === TRIPSTER_PARTNER_TOUR_TYPE && programDayCount > 0) {
+    return programDayCount;
+  }
+
+  return resolvePartnerTourDuration(experience, durationMinutes, options).durationDays;
+}
+
 function resolveDurationFromHours(
   experience: TripsterExperience,
   durationMinutes?: number | null
@@ -166,11 +227,20 @@ export function resolvePartnerTourDuration(
   const programDayCount = Math.max(
     experience.plan_days_count ?? 0,
     countTripsterProgramDays(options?.program),
+    countTripsterProgramMaxDayNumber(options?.program),
     options?.itineraryDayCount ?? 0
   );
 
-  if (kind === TRIPSTER_PARTNER_TOUR_TYPE && programDayCount > 0) {
-    return normalizeTourDuration(programDayCount, Math.max(0, programDayCount - 1));
+  const catalogDurationDays = resolveTripsterPartnerCatalogDurationDays(
+    experience,
+    durationMinutes
+  );
+
+  if (kind === TRIPSTER_PARTNER_TOUR_TYPE) {
+    const durationDays = Math.max(programDayCount, catalogDurationDays);
+    if (durationDays > 0) {
+      return normalizeTourDuration(durationDays, Math.max(0, durationDays - 1));
+    }
   }
 
   const fromHours = resolveDurationFromHours(experience, durationMinutes);
@@ -306,7 +376,7 @@ export function partnerTourRowToListing(
     priceUsd: price.priceUsd,
     priceOnRequest: price.priceOnRequest,
     priceFromPrefix: price.priceFromPrefix,
-    bookingMode: "on_request",
+    bookingMode: resolvePartnerTourBookingMode(experience, 0),
     accommodationType: "Отель" as AccommodationType,
     comfortLevel: "Стандарт" as ComfortLevel,
     difficultyLevel: "Умеренная" as DifficultyLevel,
@@ -394,7 +464,7 @@ export function partnerTourRowToDetail(
     groupMin: listing.groupSizeMin,
     groupMax: listing.groupSizeMax,
     minimumAge: listing.minimumAge,
-    bookingMode: "on_request",
+    bookingMode: resolvePartnerTourBookingMode(experience, 0),
     startLocation: partnerContent.meetingPoint,
     places: [],
     routePoints: [],
@@ -450,7 +520,7 @@ export function partnerTourRowToDetail(
       label: "Забронировать на Tripster",
       openInNewTab: true,
       passContext: true,
-      hint: "Вы перейдёте на Tripster с выбранной датой заезда и числом туристов. Оплата и подтверждение происходят там.",
+      hint: "Выберите дату и число туристов, нажмите «Забронировать на Tripster» — мы передадим данные заявки на Tripster.",
     },
     partnerSource: "tripster",
     partnerExperienceId: row.id,

@@ -50,5 +50,39 @@ export function formatPartnerFormatLabel(value: string | undefined): string | un
 }
 
 export function formatPartnerMovementLabel(value: string | undefined): string | undefined {
+  const raw = value?.trim().toLowerCase();
+  if (!raw || raw === "other") return undefined;
   return resolveLabel(value, MOVEMENT_LABELS);
+}
+
+import { peopleWord } from "@/lib/pluralize";
+
+/** «До 12 человек» — как на карточке тура Tripster. */
+export function formatPartnerMaxGroupLabel(maxPersons: number): string {
+  const max = Math.max(1, Math.floor(maxPersons));
+  return `До ${max.toLocaleString("ru-RU")} ${peopleWord(max)}`;
+}
+
+/** Политика по детям с витрины Tripster (`child_friendly`). */
+export function formatPartnerChildrenSummary(childFriendly?: boolean): string {
+  return childFriendly ? "Можно с детьми" : "Нельзя с детьми";
+}
+
+/** Язык проведения — «На русском языке» и т.п. */
+export function formatPartnerLanguageSummary(languages?: string[]): string {
+  const primary = languages?.[0]?.trim();
+  if (!primary) return "На русском языке";
+
+  const lower = primary.toLowerCase();
+  if (lower.includes("рус") || lower === "ru" || lower === "russian") {
+    return "На русском языке";
+  }
+  if (lower.includes("англ") || lower === "en" || lower === "english") {
+    return "На английском языке";
+  }
+  if (lower.includes("исп") || lower === "es" || lower === "spanish") {
+    return "На испанском языке";
+  }
+
+  return `На ${primary.toLowerCase()} языке`;
 }

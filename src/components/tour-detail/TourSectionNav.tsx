@@ -5,6 +5,8 @@ import { cn } from "@/lib/cn";
 import { getSiteScrollAnchorOffset, scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { getTourSectionIcon } from "@/lib/tour-nav-icons";
 import { siteContainerClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
+import { sectionNavBarClass, sectionNavLinkClass, sectionNavTrackClass } from "@/lib/section-nav-ui";
+import { SITE_HEADER_CHROME_CHANGE_EVENT } from "@/lib/site-header-chrome";
 import { dispatchTourSectionExpand } from "./TourSection";
 import type { TourSectionLink } from "./tour-section-links";
 
@@ -131,10 +133,12 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     };
 
     window.addEventListener("resize", onLayoutChange);
+    window.addEventListener(SITE_HEADER_CHROME_CHANGE_EVENT, onLayoutChange);
 
     return () => {
       observer?.disconnect();
       window.removeEventListener("resize", onLayoutChange);
+      window.removeEventListener(SITE_HEADER_CHROME_CHANGE_EVENT, onLayoutChange);
     };
   }, [items, refreshOffset]);
 
@@ -144,43 +148,37 @@ export default function TourSectionNav({ items }: TourSectionNavProps) {
     <nav
       ref={navRef}
       aria-label="Разделы страницы тура"
-      className={cn(
-        "sticky z-40 w-full border-b border-gray-100 bg-white/95 backdrop-blur-md",
-        siteStickyBelowHeaderClass
-      )}
+      className={cn(sectionNavBarClass, siteStickyBelowHeaderClass)}
     >
       <div
         ref={scrollContainerRef}
         className={cn(siteContainerClass, "overflow-x-auto overscroll-x-contain py-2.5 sm:py-3")}
       >
-        <ul className="flex min-w-max gap-1.5 sm:gap-2">
-          {items.map((item) => {
-            const active = item.id === activeId;
-            const Icon = getTourSectionIcon(item.id);
-            return (
-              <li key={item.id} className="shrink-0">
-                <a
-                  href={`#${item.id}`}
-                  data-section-id={item.id}
-                  onClick={(event) => {
-                    event.preventDefault();
-                    scrollToSection(item.id);
-                  }}
-                  className={cn(
-                    "inline-flex min-h-[44px] items-center gap-1.5 rounded-full border px-3.5 py-2 text-sm font-medium whitespace-nowrap transition-colors sm:min-h-0 sm:py-1.5",
-                    active
-                      ? "border-sky bg-sky text-white shadow-sm"
-                      : "border-gray-200 bg-white text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
-                  )}
-                  aria-current={active ? "location" : undefined}
-                >
-                  <Icon className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
-                  {item.label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
+        <div className={sectionNavTrackClass}>
+          <ul className="flex min-w-max items-center">
+            {items.map((item) => {
+              const active = item.id === activeId;
+              const Icon = getTourSectionIcon(item.id);
+              return (
+                <li key={item.id} className="shrink-0">
+                  <a
+                    href={`#${item.id}`}
+                    data-section-id={item.id}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      scrollToSection(item.id);
+                    }}
+                    className={cn(sectionNavLinkClass(active, true))}
+                    aria-current={active ? "location" : undefined}
+                  >
+                    <Icon className="h-3.5 w-3.5 shrink-0 opacity-80" aria-hidden />
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
       </div>
     </nav>
   );

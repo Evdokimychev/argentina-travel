@@ -63,7 +63,14 @@ export default async function RootLayout({
   const siteLegal = await loadSiteLegalForFooter();
 
   return (
-    <html lang="ru" className={unbounded.variable} suppressHydrationWarning>
+    <html lang="ru" className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var h=w?140:84;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <ThemeScript />
         <SiteJsonLd />

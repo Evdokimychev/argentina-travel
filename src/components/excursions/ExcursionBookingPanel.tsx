@@ -1,56 +1,26 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
 import GuestCounter from "@/components/tour-detail/GuestCounter";
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionScheduleDatePicker from "@/components/excursions/ExcursionScheduleDatePicker";
 import ExcursionBookingPanelSkeleton from "@/components/excursions/ExcursionBookingPanelSkeleton";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { cn } from "@/lib/cn";
 import { siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
-import { excursionPriceSuffixKey } from "@/lib/excursion-listing-meta";
-import {
-  resolveExcursionPriceUsd,
-  resolveExcursionQuotePriceUsd,
-  resolvePartnerPriceFootnote,
-} from "@/lib/excursion-price-display";
-import type { ExcursionScheduleDate } from "@/lib/excursion-schedule";
-import type { ExcursionDetail } from "@/types/excursion";
-import type { TripsterPriceQuote } from "@/lib/tripster/types";
+import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
-import { useSiteFeedback } from "@/context/SiteFeedbackContext";
-import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { useState } from "react";
 
 type ExcursionBookingPanelProps = {
-  excursion: ExcursionDetail;
   className?: string;
 };
 
-export default function ExcursionBookingPanel({ excursion, className }: ExcursionBookingPanelProps) {
-  const { t, locale, currency } = useLocaleCurrency();
-  const { user, isAuthenticated, openAuth } = useAuth();
-
-  const [scheduleDates, setScheduleDates] = useState<ExcursionScheduleDate[]>([]);
-  const [scheduleMaxPersons, setScheduleMaxPersons] = useState<number | undefined>();
-  const [scheduleLoading, setScheduleLoading] = useState(true);
-  const [scheduleError, setScheduleError] = useState<string | null>(null);
-
-  const [selectedDate, setSelectedDate] = useState<string>("");
-  const [selectedTime, setSelectedTime] = useState<string>("");
-  const [persons, setPersons] = useState(1);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [message, setMessage] = useState("");
-  const [quote, setQuote] = useState<TripsterPriceQuote | null>(null);
-  const [quoteLoading, setQuoteLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+export default function ExcursionBookingPanel({ className }: ExcursionBookingPanelProps) {
+  const { t, locale } = useLocaleCurrency();
   const [formError, setFormErrorState] = useState<SiteFeedbackMessage | null>(null);
-  const feedback = useSiteFeedback();
 
   const setFormError = (value: string | SiteFeedbackMessage | null) => {
     if (value === null) {
@@ -60,265 +30,49 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
     setFormErrorState(typeof value === "string" ? siteFormError(value) : value);
   };
 
-  const maxPersons = scheduleMaxPersons ?? excursion.maxPersons ?? 10;
-  const isTripsterPartnerApiConfigured =
-    excursion.partner === "tripster" ? excursion.tripsterPartnerApiConfigured !== false : false;
-
-  useEffect(() => {
-    if (user) {
-      setName((current) => current || user.fullName || "");
-      setEmail((current) => current || user.email || "");
-      setPhone((current) => current || user.phone || "");
-    }
-  }, [user]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadSchedule() {
-      if (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured) {
-        setScheduleDates([]);
-        setScheduleMaxPersons(undefined);
-        setSelectedDate("");
-        setSelectedTime("");
-        setScheduleError(null);
-        setScheduleLoading(false);
-        return;
-      }
-
-      setScheduleLoading(true);
-      setScheduleError(null);
-      try {
-        const response = await fetch(`/api/excursions/${excursion.slug}/schedule`);
-        const data = (await response.json()) as {
-          error?: string;
-          dates?: ExcursionScheduleDate[];
-          maxPersons?: number;
-        };
-        if (!response.ok) throw new Error(data.error ?? "Schedule unavailable");
-        if (cancelled) return;
-
-        const dates = data.dates ?? [];
-        setScheduleDates(dates);
-        setScheduleMaxPersons(data.maxPersons);
-        if (dates[0]) {
-          setSelectedDate(dates[0].date);
-          setSelectedTime(dates[0].slots[0]?.time ?? "");
-        }
-      } catch (error) {
-        if (!cancelled) {
-          setScheduleError(error instanceof Error ? error.message : "Schedule unavailable");
-        }
-      } finally {
-        if (!cancelled) setScheduleLoading(false);
-      }
-    }
-
-    void loadSchedule();
-    return () => {
-      cancelled = true;
-    };
-  }, [excursion.partner, excursion.slug, isTripsterPartnerApiConfigured]);
-
-  const selectedSlots = useMemo(
-    () => scheduleDates.find((entry) => entry.date === selectedDate)?.slots ?? [],
-    [scheduleDates, selectedDate]
-  );
-
-  useEffect(() => {
-    if (selectedSlots.length > 0 && !selectedSlots.some((slot) => slot.time === selectedTime)) {
-      setSelectedTime(selectedSlots[0]?.time ?? "");
-    }
-  }, [selectedSlots, selectedTime]);
-
-  useEffect(() => {
-    if (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured) {
-      setQuote(null);
-      setQuoteLoading(false);
-      return;
-    }
-
-    if (!selectedDate || !selectedTime) {
-      setQuote(null);
-      return;
-    }
-
-    let cancelled = false;
-    const timer = window.setTimeout(async () => {
-      setQuoteLoading(true);
-      try {
-        const params = new URLSearchParams({
-          date: selectedDate,
-          time: selectedTime,
-          persons: String(persons),
-        });
-        const response = await fetch(`/api/excursions/${excursion.slug}/price?${params}`);
-        const data = (await response.json()) as { quote?: TripsterPriceQuote; error?: string };
-        if (!response.ok) throw new Error(data.error ?? "Price unavailable");
-        if (!cancelled) setQuote(data.quote ?? null);
-      } catch {
-        if (!cancelled) setQuote(null);
-      } finally {
-        if (!cancelled) setQuoteLoading(false);
-      }
-    }, 250);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
-  }, [excursion.partner, excursion.slug, isTripsterPartnerApiConfigured, selectedDate, selectedTime, persons]);
-
-  const priceUsd =
-    resolveExcursionQuotePriceUsd(excursion, quote) ?? resolveExcursionPriceUsd(excursion);
-  const priceUnit = excursion.priceUnit ?? "per_excursion";
-  const showFrom = excursion.priceFrom !== false && !quote;
-  const priceSuffix = t(excursionPriceSuffixKey(priceUnit));
-  const partnerPriceFootnote = resolvePartnerPriceFootnote(
+  const {
     excursion,
-    quote,
-    priceUsd,
-    currency,
-    t
-  );
-
-  const handleSubmit = useCallback(async () => {
-    setFormError(null);
-
-    if (!isAuthenticated) {
-      openAuth();
-      return;
-    }
-
-    if (!selectedDate || !selectedTime) {
-      setFormError(t("excursions.booking.pickDateTime"));
-      return;
-    }
-
-    if (!name.trim() || !email.trim() || !phone.trim()) {
-      setFormError(t("excursions.booking.fillContacts"));
-      return;
-    }
-
-    setSubmitting(true);
-    try {
-      const endpoint =
-        excursion.partner === "tripster"
-          ? "/api/tripster/booking-request"
-          : `/api/excursions/${excursion.slug}/book`;
-
-      const response = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: excursion.slug,
-          date: selectedDate,
-          time: selectedTime,
-          personsCount: persons,
-          name: name.trim(),
-          email: email.trim(),
-          phone: phone.trim(),
-          messageToGuide: message.trim() || undefined,
-          userId: user?.id,
-        }),
-      });
-
-      const data = (await response.json()) as {
-        ok?: boolean;
-        mode?: string;
-        orderUrl?: string;
-        fallbackUrl?: string;
-        error?: string;
-        details?: Record<string, string[] | { non_field_errors?: string[] }>;
-      };
-
-      if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
-        window.location.href = data.fallbackUrl;
-        return;
-      }
-
-      if (!response.ok || !data.ok) {
-        const details = data.details;
-        const firstFieldError =
-          details &&
-          Object.values(details)
-            .flatMap((value) => (Array.isArray(value) ? value : value.non_field_errors ?? []))
-            .find(Boolean);
-        throw new Error(firstFieldError || data.error || t("excursions.booking.failed"));
-      }
-
-      if (data.orderUrl) {
-        feedback.loading({
-          title: "Переход к оформлению",
-          description: "Открываем страницу бронирования…",
-        });
-        window.location.href = data.orderUrl;
-        return;
-      }
-
-      const failed = normalizeSiteError(t("excursions.booking.failed"), {
-        title: "Не удалось забронировать",
-        steps: ["Выберите дату и время", "Проверьте контактные данные"],
-      });
-      setFormError(failed);
-      feedback.showError(failed);
-    } catch (error) {
-      const normalized = normalizeSiteError(error, {
-        title: "Не удалось забронировать экскурсию",
-        steps: ["Проверьте дату, время и контакты", "Попробуйте ещё раз через минуту"],
-        action: { label: "Связаться с нами", href: "/contacts" },
-      });
-      setFormError(normalized);
-      feedback.showError(normalized);
-    } finally {
-      setSubmitting(false);
-    }
-  }, [
-    email,
-    excursion.slug,
-    isAuthenticated,
-    message,
-    name,
-    openAuth,
-    persons,
-    phone,
+    scheduleDates,
+    scheduleLoading,
+    scheduleError,
     selectedDate,
+    setSelectedDate,
     selectedTime,
-    t,
-    user?.id,
-    feedback,
-  ]);
+    setSelectedTime,
+    selectedSlots,
+    persons,
+    setPersons,
+    maxPersons,
+    quoteLoading,
+    priceUsd,
+    priceSuffix,
+    partnerPriceFootnote,
+    showFrom,
+    listedPriceLabel,
+    hasListedPrice,
+    canBookOnSite,
+    submitButtonLabel,
+    openBookingPreview,
+  } = useExcursionBooking();
 
-  const scheduleDateKeys = useMemo(
-    () => scheduleDates.map((entry) => entry.date),
-    [scheduleDates]
-  );
+  const scheduleDateKeys = scheduleDates.map((entry) => entry.date);
 
   const partnerDisclaimerKey =
     excursion.partner === "sputnik8"
       ? "excursions.partnerDisclaimer.sputnik8"
       : "excursions.partnerDisclaimer.tripster";
 
-  const prefersAffiliate =
-    (excursion.partner === "sputnik8" &&
-      !scheduleLoading &&
-      (scheduleError != null || scheduleDates.length === 0)) ||
-    (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured);
-
-  const canBookOnSite = excursion.isBookable !== false && !prefersAffiliate;
-  const submitButtonLabel =
-    excursion.partner === "tripster" && isTripsterPartnerApiConfigured
-      ? "Забронировать на сайте"
-      : t("excursions.booking.submit");
   const affiliateButtonLabel =
     excursion.partner === "tripster" ? "Забронировать на сайте" : t("excursions.book");
-  const listedPriceLabel =
-    quote?.value_string?.trim() ||
-    excursion.priceDisplay?.trim() ||
-    (excursion.priceValue != null
-      ? `${Math.round(excursion.priceValue)}${excursion.priceCurrency ? ` ${excursion.priceCurrency}` : ""}`
-      : null);
-  const hasListedPrice = priceUsd != null || Boolean(listedPriceLabel);
+
+  function handleOpenPreview() {
+    setFormError(null);
+    if (!openBookingPreview()) {
+      if (!selectedDate || !selectedTime) {
+        setFormError(t("excursions.booking.pickDateTime"));
+      }
+    }
+  }
 
   return (
     <aside
@@ -361,19 +115,25 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
               <ExcursionScheduleDatePicker
                 dates={scheduleDateKeys}
                 selectedDate={selectedDate}
-                onSelect={setSelectedDate}
+                onSelect={(date) => {
+                  setSelectedDate(date);
+                  setSelectedTime("");
+                }}
                 locale={locale}
                 label={t("excursions.booking.date")}
                 placeholder={t("excursions.booking.pickDate")}
               />
 
-              {selectedSlots.length > 0 ? (
+              {selectedDate && selectedSlots.length > 0 ? (
                 <div>
                   <p className="mb-2 text-sm font-medium text-charcoal">{t("excursions.booking.time")}</p>
-                  <div className="flex flex-wrap gap-2">
+                  {!selectedTime ? (
+                    <p className="mb-2 text-xs text-slate">{t("excursions.booking.pickTime")}</p>
+                  ) : null}
+                  <div className="flex max-h-40 flex-wrap gap-2 overflow-y-auto">
                     {selectedSlots.map((slot) => (
                       <button
-                        key={`${slot.time}-${slot.timeEnd ?? ""}`}
+                        key={slot.time}
                         type="button"
                         onClick={() => setSelectedTime(slot.time)}
                         className={cn(
@@ -391,44 +151,9 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
                 </div>
               ) : null}
 
-              <GuestCounter
-                value={persons}
-                min={1}
-                max={maxPersons}
-                onChange={setPersons}
-              />
+              <GuestCounter value={persons} min={1} max={maxPersons} onChange={setPersons} />
             </>
           )}
-
-          <div className="space-y-3 border-t border-gray-100 pt-4">
-            <Input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder={t("excursions.booking.name")}
-              autoComplete="name"
-            />
-            <Input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder={t("excursions.booking.email")}
-              autoComplete="email"
-            />
-            <Input
-              type="tel"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              placeholder={t("excursions.booking.phone")}
-              autoComplete="tel"
-            />
-            <textarea
-              value={message}
-              onChange={(event) => setMessage(event.target.value)}
-              placeholder={t("excursions.booking.message")}
-              rows={3}
-              className="w-full rounded-xl border border-gray-200 px-3 py-2 text-sm outline-none ring-sky/30 focus:border-sky focus:ring-2"
-            />
-          </div>
 
           {formError ? (
             <InlineFeedback
@@ -443,10 +168,8 @@ export default function ExcursionBookingPanel({ excursion, className }: Excursio
           <Button
             type="button"
             className="w-full"
-            loading={submitting}
-            loadingLabel={t("excursions.booking.submitting")}
             disabled={scheduleLoading}
-            onClick={() => void handleSubmit()}
+            onClick={handleOpenPreview}
           >
             {submitButtonLabel}
           </Button>

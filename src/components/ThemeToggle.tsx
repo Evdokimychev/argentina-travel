@@ -3,6 +3,7 @@
 import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useTheme } from "@/context/ThemeContext";
+import { DARK_THEME_ENABLED } from "@/types/theme";
 
 type ThemeToggleVariant = "header" | "settings";
 
@@ -13,6 +14,9 @@ interface ThemeToggleProps {
 
 export default function ThemeToggle({ variant = "header", className }: ThemeToggleProps) {
   const { resolvedTheme, setTheme, toggleTheme, ready } = useTheme();
+
+  if (!DARK_THEME_ENABLED) return null;
+
   const isDark = resolvedTheme === "dark";
 
   if (variant === "header") {

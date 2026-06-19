@@ -4,8 +4,8 @@ import Link from "next/link";
 import { TourDetail } from "@/types";
 import type { SimilarTourCard } from "@/lib/tours-server";
 import { cn } from "@/lib/cn";
-import { siteContainerClass } from "@/lib/site-container";
-import { tourDetailSectionStackClass } from "@/lib/tour-detail-ui";
+import { siteContainerClass, siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
+import { tourDetailSectionStackClass, tourDetailStickyPanelClass } from "@/lib/tour-detail-ui";
 import TourStatsSection from "./TourStatsSection";
 import DescriptionSection from "./DescriptionSection";
 import ItinerarySection from "./ItinerarySection";
@@ -29,6 +29,7 @@ import MobileBookingBar from "./MobileBookingBar";
 import TourCheckoutModal from "./checkout/TourCheckoutModal";
 import TourPriceRequestModal from "./TourPriceRequestModal";
 import TourWaitlistModal from "./TourWaitlistModal";
+import PartnerTourBookingModal from "./PartnerTourBookingModal";
 import TourSectionNav from "./TourSectionNav";
 import PrivateTourBanner from "./PrivateTourBanner";
 import PartnerTourBanner from "./PartnerTourBanner";
@@ -166,7 +167,7 @@ export default function TourDetailView({
 
       <div className="bg-surface-muted pb-24 lg:pb-16">
         <div className={cn(siteContainerClass, "py-6 md:py-10")}>
-          <div className="grid gap-6 lg:grid-cols-[1fr_360px] lg:items-start xl:gap-10">
+          <div className="grid gap-6 lg:grid-cols-[1fr_360px] xl:gap-10">
             <div className={cn("min-w-0", tourDetailSectionStackClass)}>
               {isPartnerTour && partnerContent && partnerSections ? (
                 <>
@@ -186,7 +187,9 @@ export default function TourDetailView({
                   ) : partnerSections.programNotice ? (
                     <PartnerTourProgramNotice bookingHref={partnerBookingHref} />
                   ) : null}
-                  {partnerSections.dates ? <PartnerTourDatesSection tour={tour} /> : null}
+                  {(partnerSections.dates || isPartnerTour) ? (
+                    <PartnerTourDatesSection tour={tour} />
+                  ) : null}
                   {partnerSections.included ? (
                     <PartnerTourIncludedSection content={partnerContent} />
                   ) : null}
@@ -336,14 +339,25 @@ export default function TourDetailView({
               )}
             </div>
 
-            <aside className="hidden lg:block lg:w-full lg:self-start">
-              <TourSidebar tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
+            <aside className="hidden lg:block lg:w-full">
+              <div
+                className={cn(
+                  tourDetailStickyPanelClass,
+                  siteStickyPanelTopClass,
+                  siteStickyPanelMaxHeightClass
+                )}
+              >
+                <TourSidebar tour={tour} canonicalTour={canonicalTour} previewMode={previewMode} />
+              </div>
             </aside>
           </div>
         </div>
       </div>
 
       {!previewMode ? <MobileBookingBar tour={tour} /> : null}
+      {!previewMode && usesExternalBooking && isPartnerTour ? (
+        <PartnerTourBookingModal tour={tour} />
+      ) : null}
       {!previewMode && !usesExternalBooking && tour.priceOnRequest ? (
         <TourPriceRequestModal tour={tour} />
       ) : null}

@@ -80,6 +80,8 @@ export type PartnerTourContent = {
   instantBooking?: boolean;
   isBookable?: boolean;
   visitorsCount?: number;
+  childFriendly?: boolean;
+  languages?: string[];
 };
 
 const ORG_DETAILS_TITLE_PATTERN = /организационн/i;
@@ -128,6 +130,15 @@ export function isPartnerOrgDetailItemTitle(title: string): boolean {
 
 export function isPartnerOrgDetailsBlockTitle(title: string): boolean {
   return ORG_DETAILS_TITLE_PATTERN.test(title.trim());
+}
+
+/**
+ * Tripster partner API отдаёт «Организационные детали» и comfort_level_info,
+ * но на публичной странице многодневного тура (type === "tour") эти блоки
+ * не выводятся — программа строится из /plan/, условия из included/excluded.
+ */
+export function shouldIncludePartnerOrgDetails(experience: TripsterExperience): boolean {
+  return experience.type != null && experience.type !== "tour";
 }
 
 /**
@@ -249,22 +260,42 @@ export function resolvePartnerGallery(
   return dedupeGalleryImages(collected);
 }
 
+function parseTripsterLanguages(experience: TripsterExperience): string[] {
+  const raw = experience.languages;
+  if (!Array.isArray(raw) || raw.length === 0) {
+    return ["Русский"];
+  }
+
+  const parsed = raw
+    .map((item) => {
+      if (typeof item === "string") return item.trim();
+      if (item && typeof item === "object") {
+        return item.name?.trim() || item.code?.trim() || "";
+      }
+      return "";
+    })
+    .filter(Boolean);
+
+  return parsed.length ? parsed : ["Русский"];
+}
+
 export function buildPartnerContent(experience: TripsterExperience): PartnerTourContent {
   const parsed = parseExcursionPayload(experience);
+  const includeOrgDetails = shouldIncludePartnerOrgDetails(experience);
   const blocks: PartnerTourContentBlock[] = [];
   let orgDetailsIntroHtml: string | undefined;
   let orgDetailsItems: PartnerTourOrgDetailItem[] = [];
 
   for (const block of parsed.descriptionBlocks) {
     if (!block.title || !block.html) continue;
-    if (isPartnerAccommodationTitle(block.title)) {
+    if (includeOrgDetails && isPartnerAccommodationTitle(block.title)) {
       orgDetailsItems.push({
         title: normalizeOrgDetailTitle(block.title),
         html: block.html,
       });
       continue;
     }
-    if (isPartnerOrgDetailsBlockTitle(block.title)) {
+    if (includeOrgDetails && isPartnerOrgDetailsBlockTitle(block.title)) {
       const parsedOrg = parseOrgDetailsAccordionHtml(block.html);
       if (parsedOrg.introHtml) {
         orgDetailsIntroHtml = parsedOrg.introHtml;
@@ -272,11 +303,19 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
       orgDetailsItems.push(...parsedOrg.items);
       continue;
     }
-    if (isPartnerOrgDetailItemTitle(block.title)) {
+    if (includeOrgDetails && isPartnerOrgDetailItemTitle(block.title)) {
       orgDetailsItems.push({
         title: normalizeOrgDetailTitle(block.title),
         html: block.html,
       });
+      continue;
+    }
+    if (
+      !includeOrgDetails &&
+      (isPartnerOrgDetailsBlockTitle(block.title) ||
+        isPartnerOrgDetailItemTitle(block.title) ||
+        isPartnerAccommodationTitle(block.title))
+    ) {
       continue;
     }
     blocks.push({ title: block.title, html: block.html });
@@ -295,16 +334,21 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
     }
   }
 
-  const comfortSanitized = parsed.comfortLevelInfo
-    ? sanitizeHtml(parsed.comfortLevelInfo)
-    : undefined;
+  const comfortSanitized =
+    includeOrgDetails && parsed.comfortLevelInfo
+      ? sanitizeHtml(parsed.comfortLevelInfo)
+      : undefined;
   const comfortParsed = comfortSanitized
     ? parseOrgDetailsAccordionHtml(comfortSanitized)
     : { items: [] as PartnerTourOrgDetailItem[] };
 
-  orgDetailsItems = mergeOrgDetailItems(comfortParsed.items, orgDetailsItems);
+  if (includeOrgDetails) {
+    orgDetailsItems = mergeOrgDetailItems(comfortParsed.items, orgDetailsItems);
+  }
 
-  const lodgingSplit = splitPartnerLodgingFromOrgDetails(orgDetailsItems);
+  const lodgingSplit = includeOrgDetails
+    ? splitPartnerLodgingFromOrgDetails(orgDetailsItems)
+    : { orgDetailsItems: [] as PartnerTourOrgDetailItem[], accommodationItems: [] as PartnerTourOrgDetailItem[] };
   orgDetailsItems = lodgingSplit.orgDetailsItems;
   const accommodationItems = lodgingSplit.accommodationItems;
   let accommodationIntroHtml: string | undefined;
@@ -312,12 +356,15 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
     accommodationIntroHtml = accommodationItems[0].html;
   }
 
-  if (!orgDetailsIntroHtml && comfortParsed.introHtml) {
+  if (includeOrgDetails && !orgDetailsIntroHtml && comfortParsed.introHtml) {
     orgDetailsIntroHtml = comfortParsed.introHtml;
   }
 
   const orgDetailsExtraHtml =
-    comfortSanitized && orgDetailsItems.length === 0 && !orgDetailsIntroHtml
+    includeOrgDetails &&
+    comfortSanitized &&
+    orgDetailsItems.length === 0 &&
+    !orgDetailsIntroHtml
       ? comfortSanitized
       : undefined;
 
@@ -349,6 +396,8 @@ export function buildPartnerContent(experience: TripsterExperience): PartnerTour
     instantBooking: experience.instant_booking,
     isBookable: parsed.isBookable,
     visitorsCount: parsed.visitorsCount,
+    childFriendly: experience.child_friendly,
+    languages: parseTripsterLanguages(experience),
   };
 }
 

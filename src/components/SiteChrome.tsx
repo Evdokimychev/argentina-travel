@@ -29,7 +29,7 @@ export default function SiteChrome({
       <SkipToContentLink />
       <Header />
       <div className="site-header-spacer shrink-0" aria-hidden="true" />
-      <main id="main-content" className="flex-1" tabIndex={-1}>
+      <main id="main-content" className="relative z-0 flex-1" tabIndex={-1}>
         {children}
       </main>
       <Footer siteLegal={siteLegal} />

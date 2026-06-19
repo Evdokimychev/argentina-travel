@@ -4,16 +4,23 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { fetchExcursionDetailServer } from "@/lib/excursion-server";
+import { fetchPartnerTourDetailServer } from "@/lib/tripster/partner-tour-server";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 import { buildDefaultTickets } from "@/lib/excursion-schedule";
 import {
   createTripsterExternalOrder,
   TripsterBookingError,
 } from "@/lib/tripster/booking-api";
+import { fetchTripsterExperience } from "@/lib/tripster/client";
+import { parseExcursionPayload } from "@/lib/tripster/excursion-payload";
 import { isTripsterConfigured } from "@/lib/tripster/env";
 import {
   fetchTripsterBookingRequestsForUser,
   insertTripsterBookingRequest,
 } from "@/lib/tripster/booking-requests-server";
+import {
+  buildTripsterBookingContactPayload,
+} from "@/lib/tripster/booking-contact";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 type BookingRequestBody = {
@@ -25,6 +32,8 @@ type BookingRequestBody = {
   email?: string;
   phone?: string;
   messageToGuide?: string;
+  productType?: "excursion" | "tour";
+  userId?: string;
 };
 
 function normalizeTimeForApi(time: string): string {
@@ -32,22 +41,52 @@ function normalizeTimeForApi(time: string): string {
   return normalized.length === 5 ? `${normalized}:00` : normalized;
 }
 
+async function resolveBookingTicketOptions(input: {
+  excursionTicketOptions?: Array<{ id: number; isDefault?: boolean }>;
+  experienceId: number;
+}): Promise<Array<{ id: number; isDefault?: boolean }>> {
+  if (input.excursionTicketOptions?.length) {
+    return input.excursionTicketOptions;
+  }
+
+  try {
+    const experience = await fetchTripsterExperience(input.experienceId, {
+      priceFormat: "detailed",
+    });
+    return parseExcursionPayload(experience).ticketOptions;
+  } catch {
+    return [];
+  }
+}
+
 function buildAffiliateFallbackUrl(input: {
   slug: string;
   date: string;
   time: string;
   personsCount: number;
+  name?: string;
+  email?: string;
+  phone?: string;
 }): string {
   const search = new URLSearchParams({
     start_date: input.date,
     time: input.time,
     guests: String(input.personsCount),
   });
+  if (input.name) search.set("name", input.name);
+  if (input.email) search.set("email", input.email);
+  if (input.phone) search.set("phone", input.phone);
   return `/api/affiliate/go/${input.slug}?${search.toString()}`;
 }
 
+function resolveAffiliateFallbackReason(status?: number): string {
+  if (status === 403) return "external_orders_forbidden";
+  if (status === 401) return "external_orders_unauthorized";
+  return "api_unavailable";
+}
+
 async function persistTripsterRequest(
-  input: BookingRequestBody & {
+  input: Omit<BookingRequestBody, "userId"> & {
     slug: string;
     experienceId: number;
     userId: string | null;
@@ -99,12 +138,9 @@ async function postTripsterBookingRequest(request: Request) {
   const date = body.date?.trim();
   const time = body.time?.trim();
   const personsCount = body.personsCount ?? 1;
-  const name = body.name?.trim();
-  const email = body.email?.trim().toLowerCase();
-  const phone = body.phone?.trim();
   const messageToGuide = body.messageToGuide?.trim();
 
-  if (!slug || !date || !time || !name || !email || !phone || personsCount < 1) {
+  if (!slug || !date || !time || personsCount < 1) {
     return NextResponse.json({ error: "Missing required booking fields." }, { status: 400 });
   }
 
@@ -113,27 +149,71 @@ async function postTripsterBookingRequest(request: Request) {
     data: { user: authUser },
   } = await supabase.auth.getUser();
 
-  if (!authUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const userId = authUser?.id ?? body.userId?.trim() ?? null;
+  let profileCountry: string | null = null;
+
+  if (authUser) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("country")
+      .eq("id", authUser.id)
+      .maybeSingle();
+    profileCountry = profile?.country ?? null;
   }
+
+  const contact = buildTripsterBookingContactPayload({
+    name: body.name ?? "",
+    email: body.email ?? "",
+    phone: body.phone ?? "",
+    messageToGuide,
+    profileCountry,
+  });
+
+  if ("error" in contact) {
+    return NextResponse.json({ error: contact.error }, { status: 400 });
+  }
+
+  const { name, email, phone } = contact;
 
   const excursion = await fetchExcursionDetailServer(slug);
-  if (!excursion) {
-    return NextResponse.json({ error: "Excursion not found." }, { status: 404 });
-  }
-  if (excursion.partner !== "tripster") {
-    return NextResponse.json({ error: "Tripster booking is not supported for this excursion." }, { status: 400 });
+  const partnerTour =
+    !excursion || excursion.partner !== "tripster"
+      ? await fetchPartnerTourDetailServer(slug)
+      : null;
+
+  let experienceId: number | null = null;
+
+  if (excursion?.partner === "tripster") {
+    experienceId = excursion.id;
+  } else if (partnerTour && isPartnerTourDetail(partnerTour) && partnerTour.partnerExperienceId) {
+    experienceId = partnerTour.partnerExperienceId;
   }
 
-  const fallbackUrl = buildAffiliateFallbackUrl({ slug, date, time, personsCount });
-  const tickets = buildDefaultTickets(excursion.ticketOptions, personsCount);
+  if (!experienceId) {
+    return NextResponse.json({ error: "Tripster product not found." }, { status: 404 });
+  }
+
+  const fallbackUrl = buildAffiliateFallbackUrl({
+    slug,
+    date,
+    time,
+    personsCount,
+    name,
+    email,
+    phone,
+  });
+  const ticketOptions = await resolveBookingTicketOptions({
+    excursionTicketOptions: excursion?.ticketOptions,
+    experienceId,
+  });
+  const tickets = buildDefaultTickets(ticketOptions, personsCount);
 
   if (!isTripsterConfigured()) {
     await persistTripsterRequest({
       ...body,
       slug,
-      experienceId: excursion.id,
-      userId: authUser.id,
+      experienceId,
+      userId: authUser?.id ?? userId,
       date,
       time,
       personsCount,
@@ -147,7 +227,9 @@ async function postTripsterBookingRequest(request: Request) {
       ok: false,
       mode: "affiliate_fallback",
       fallbackUrl,
-      error: "Tripster API unavailable. Redirecting to partner site.",
+      fallbackReason: "api_not_configured",
+      error:
+        "Сервис бронирования Tripster сейчас недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
     });
   }
 
@@ -156,7 +238,7 @@ async function postTripsterBookingRequest(request: Request) {
   try {
     const order = await createTripsterExternalOrder(
       {
-        experience: excursion.id,
+        experience: experienceId,
         persons_count: personsCount,
         date,
         time: normalizeTimeForApi(time),
@@ -172,8 +254,8 @@ async function postTripsterBookingRequest(request: Request) {
     await persistTripsterRequest({
       ...body,
       slug,
-      experienceId: excursion.id,
-      userId: authUser.id,
+      experienceId,
+      userId: authUser?.id ?? userId,
       date,
       time,
       personsCount,
@@ -201,8 +283,8 @@ async function postTripsterBookingRequest(request: Request) {
         await persistTripsterRequest({
           ...body,
           slug,
-          experienceId: excursion.id,
-          userId: authUser.id,
+          experienceId,
+          userId: authUser?.id ?? userId,
           date,
           time,
           personsCount,
@@ -217,15 +299,20 @@ async function postTripsterBookingRequest(request: Request) {
           ok: false,
           mode: "affiliate_fallback",
           fallbackUrl,
-          error: "External booking API unavailable. Redirecting to partner site.",
+          fallbackReason: resolveAffiliateFallbackReason(error.status),
+          tripsterStatus: error.status,
+          error:
+            error.status === 403
+              ? "API создания заказов Tripster не подключён к партнёрскому аккаунту."
+              : "Сервис бронирования Tripster временно недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
         });
       }
 
       await persistTripsterRequest({
         ...body,
         slug,
-        experienceId: excursion.id,
-        userId: authUser.id,
+        experienceId,
+        userId: authUser?.id ?? userId,
         date,
         time,
         personsCount,
@@ -250,8 +337,8 @@ async function postTripsterBookingRequest(request: Request) {
     await persistTripsterRequest({
       ...body,
       slug,
-      experienceId: excursion.id,
-      userId: authUser.id,
+      experienceId,
+      userId: authUser?.id ?? userId,
       date,
       time,
       personsCount,

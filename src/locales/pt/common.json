@@ -128,6 +128,7 @@
   "excursions.movement.bike": "De bicicleta",
   "excursions.booking.date": "Data",
   "excursions.booking.pickDate": "Selecionar data",
+  "excursions.booking.pickTime": "Selecionar horário",
   "excursions.booking.time": "Horário",
   "excursions.booking.name": "Nome",
   "excursions.booking.email": "Email",

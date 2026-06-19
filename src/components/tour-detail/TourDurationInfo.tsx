@@ -5,11 +5,17 @@ import { cn } from "@/lib/cn";
 interface TourDurationInfoProps {
   days: number;
   nights: number;
+  hideNights?: boolean;
   className?: string;
 }
 
-export default function TourDurationInfo({ days, nights, className }: TourDurationInfoProps) {
-  const showNights = nights > 0;
+export default function TourDurationInfo({
+  days,
+  nights,
+  hideNights = false,
+  className,
+}: TourDurationInfoProps) {
+  const showNights = !hideNights && nights > 0;
 
   return (
     <div

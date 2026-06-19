@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { TourDetail } from "@/types";
 import { formatDateRange } from "@/lib/utils";
@@ -20,9 +20,10 @@ import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
 function formatMobileDateSummary(
-  tour: TourDetail,
+  dates: TourDetail["dates"],
   dateMode: ReturnType<typeof useTourBooking>["dateMode"],
   selectedDateId: string,
   customDate: Date | null
@@ -37,15 +38,16 @@ function formatMobileDateSummary(
     return "Выберите дату";
   }
 
-  const selected = tour.dates.find((d) => d.id === selectedDateId);
+  const selected = dates.find((d) => d.id === selectedDateId);
   if (selected) {
     return formatDateRange(selected.startDate, selected.endDate);
   }
 
-  return tour.dates.length > 0 ? "Выберите дату" : "Даты по запросу";
+  return dates.length > 0 ? "Выберите дату" : "Даты по запросу";
 }
 
 export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
+  const isPartnerTour = isPartnerTourDetail(tour);
   const {
     totalPriceUsd,
     totalOriginalPriceUsd,
@@ -62,6 +64,10 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     externalBookingHref,
     partnerBookingPrice,
     partnerPriceLoading,
+    scheduleDates,
+    partnerPreviewOpen,
+    openPartnerBookingPreview,
+    partnerEditRequest,
   } = useTourBooking();
   const priceOnRequest = Boolean(tour.priceOnRequest);
   const bookButtonPulseKey = useRandomAttentionPulse({
@@ -78,7 +84,28 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     setErrorState(typeof value === "string" ? siteFormError(value) : value);
   };
 
-  const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
+  useEffect(() => {
+    if (partnerPreviewOpen) {
+      setExpanded(false);
+    }
+  }, [partnerPreviewOpen]);
+
+  useEffect(() => {
+    if (!partnerEditRequest) return;
+    if (!window.matchMedia("(max-width: 1023px)").matches) return;
+    setExpanded(true);
+    const sectionId =
+      partnerEditRequest.target === "date"
+        ? "mobile-bar-booking-date"
+        : "mobile-bar-booking-guests";
+    const timer = window.setTimeout(() => {
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 200);
+    return () => window.clearTimeout(timer);
+  }, [partnerEditRequest]);
+
+  const availableDates = isPartnerTour ? scheduleDates : tour.dates;
+  const selectedDate = availableDates.find((d) => d.id === selectedDateId);
   const guestLimits = getGuestLimits(tour, selectedDate, dateMode);
   const guestHint =
     dateMode === "scheduled" && selectedDate
@@ -86,16 +113,38 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       : undefined;
 
   const dateSummary = useMemo(
-    () => formatMobileDateSummary(tour, dateMode, selectedDateId, customDate),
-    [tour, dateMode, selectedDateId, customDate]
+    () => formatMobileDateSummary(availableDates, dateMode, selectedDateId, customDate),
+    [availableDates, dateMode, selectedDateId, customDate]
   );
 
   const bookingValidationError =
     usesExternalBooking && !externalBookingLink?.passContext
       ? null
-      : validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
+      : validateBookingDates(
+          { ...tour, dates: availableDates },
+          dateMode,
+          customDate,
+          guests,
+          selectedDateId
+        );
 
   function handleExternalBookingClick(event: MouseEvent<HTMLAnchorElement>) {
+    if (isPartnerTour) {
+      event.preventDefault();
+      if (bookingValidationError) {
+        setError(bookingValidationError);
+        setExpanded(true);
+        return;
+      }
+      setError(null);
+      setExpanded(false);
+      if (!openPartnerBookingPreview()) {
+        setError("Выберите дату заезда и проверьте количество туристов.");
+        setExpanded(true);
+      }
+      return;
+    }
+
     if (bookingValidationError) {
       event.preventDefault();
       setError(bookingValidationError);
@@ -155,22 +204,28 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
                 <ChevronDown className="h-4 w-4" aria-hidden />
               </button>
             </div>
-            <BookingDateSelector tour={tour} idPrefix="mobile-bar" />
-            <GuestCounter
-              value={guests}
-              min={guestLimits.min}
-              max={Math.max(guestLimits.min, guestLimits.max)}
-              minimumAge={tour.minimumAge}
-              hint={guestHint}
-              onChange={setGuests}
-            />
-            <a
-              href="#dates"
-              onClick={() => setExpanded(false)}
-              className="block text-center text-xs font-medium text-sky hover:underline"
-            >
-              Все даты тура
-            </a>
+            <div id="mobile-bar-booking-date">
+              <BookingDateSelector tour={tour} idPrefix="mobile-bar" />
+            </div>
+            <div id="mobile-bar-booking-guests">
+              <GuestCounter
+                value={guests}
+                min={guestLimits.min}
+                max={Math.max(guestLimits.min, guestLimits.max)}
+                minimumAge={tour.minimumAge}
+                hint={guestHint}
+                onChange={setGuests}
+              />
+            </div>
+            {!isPartnerTour ? (
+              <a
+                href="#dates"
+                onClick={() => setExpanded(false)}
+                className="block text-center text-xs font-medium text-sky hover:underline"
+              >
+                Все даты тура
+              </a>
+            ) : null}
           </div>
         </div>
       ) : null}

@@ -293,7 +293,12 @@ export const supabaseAuthProvider: AuthProvider = {
 
   async updateProfile(userId, input) {
     const { sessionUserToProfileUpdate } = await import("@/lib/profile-mapper");
-    const patch = sessionUserToProfileUpdate(input);
+    const { normalizePhone } = await import("@/lib/auth-store");
+    const { resolvePhoneCountryIsoFromProfile } = await import("@/data/profile-countries");
+    const normalizedPhone =
+      normalizePhone(input.phone, resolvePhoneCountryIsoFromProfile(input.country)) ??
+      input.phone.trim();
+    const patch = sessionUserToProfileUpdate({ ...input, phone: normalizedPhone });
     const { error } = await getClient().from("profiles").update(patch).eq("id", userId);
 
     if (error) {

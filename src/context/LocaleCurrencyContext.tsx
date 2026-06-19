@@ -25,6 +25,10 @@ import { getLocaleFromPathname } from "@/lib/i18n/locale-path";
 import { formatCurrencyAmount } from "@/lib/currency";
 import { resolveRateFromUsd } from "@/lib/exchange-rates";
 import type { ExchangeRatesPayload } from "@/lib/exchange-rates";
+import ruCommon from "@/locales/ru/common.json";
+import enCommon from "@/locales/en/common.json";
+import esCommon from "@/locales/es/common.json";
+import ptCommon from "@/locales/pt/common.json";
 
 interface LocaleCurrencyContextValue {
   locale: LocaleCode;
@@ -40,8 +44,17 @@ interface LocaleCurrencyContextValue {
 
 const LocaleCurrencyContext = createContext<LocaleCurrencyContextValue | null>(null);
 
+const COMMON_MESSAGES: Record<LocaleCode, Record<string, string>> = {
+  ru: ruCommon as Record<string, string>,
+  en: enCommon as Record<string, string>,
+  es: esCommon as Record<string, string>,
+  pt: ptCommon as Record<string, string>,
+};
+
 function bootstrapMessages(locale: LocaleCode): Record<string, string> {
-  return { ...getDictionary(toI18nLocale(locale)) };
+  const common = COMMON_MESSAGES[locale] ?? COMMON_MESSAGES.ru;
+  const chrome = getDictionary(toI18nLocale(locale));
+  return { ...common, ...chrome };
 }
 
 export function LocaleCurrencyProvider({ children }: { children: React.ReactNode }) {

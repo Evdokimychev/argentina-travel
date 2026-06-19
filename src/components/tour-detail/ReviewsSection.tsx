@@ -165,9 +165,9 @@ export default function ReviewsSection({
                   sizes="40px"
                 />
               </div>
-              <div className="flex-1">
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex flex-wrap items-center gap-2">
+              <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
+                  <div className="flex min-w-0 flex-wrap items-center gap-2">
                     <p className="font-semibold text-charcoal">{review.author}</p>
                     {review.verifiedTrip ? (
                       <span className="rounded-full bg-sky/10 px-2 py-0.5 text-[11px] font-medium text-sky">
@@ -185,10 +185,10 @@ export default function ReviewsSection({
                   <StarRating stars={review.rating} size="md" />
                 </div>
                 {dateLine ? (
-                  <p className="mt-1 text-xs text-slate">{dateLine}</p>
+                  <p className="mt-1 break-words text-xs text-slate">{dateLine}</p>
                 ) : null}
                 {review.text ? (
-                  <p className="mt-3 text-sm leading-relaxed text-slate">{review.text}</p>
+                  <p className="mt-3 break-words text-sm leading-relaxed text-slate">{review.text}</p>
                 ) : null}
                 {review.organizerReply ? (
                   <div className="mt-3 rounded-xl border border-sky/20 bg-sky/5 p-3">
@@ -200,11 +200,11 @@ export default function ReviewsSection({
                         Опубликован: {organizerRepliedAtLabel}
                       </p>
                     ) : null}
-                    <p className="mt-2 text-sm leading-relaxed text-slate">{review.organizerReply}</p>
+                    <p className="mt-2 break-words text-sm leading-relaxed text-slate">{review.organizerReply}</p>
                   </div>
                 ) : null}
                 {review.photos.length > 0 && (
-                  <div className="mt-3 flex gap-2">
+                  <div className="mt-3 flex min-w-0 flex-wrap gap-2">
                     {review.photos.map((photo) => (
                       <div key={photo} className="relative h-20 w-28 overflow-hidden rounded-lg">
                         <SafeImage src={photo} alt="" fill className="object-cover" sizes="112px" />

@@ -10,12 +10,13 @@ import {
 } from "react";
 import {
   applyThemeToDocument,
+  clearThemePreference,
   getSystemTheme,
   persistThemePreference,
   readStoredThemePreference,
   resolveTheme,
 } from "@/lib/theme-storage";
-import type { ResolvedTheme, ThemePreference } from "@/types/theme";
+import { DARK_THEME_ENABLED, type ResolvedTheme, type ThemePreference } from "@/types/theme";
 
 interface ThemeContextValue {
   /** Saved preference; null when following system default */
@@ -34,6 +35,15 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    if (!DARK_THEME_ENABLED) {
+      clearThemePreference();
+      setPreference(null);
+      setResolvedTheme("light");
+      applyThemeToDocument("light");
+      setReady(true);
+      return;
+    }
+
     const stored = readStoredThemePreference();
     const resolved = resolveTheme(stored);
     setPreference(stored);
@@ -43,7 +53,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    if (preference !== null) return;
+    if (!DARK_THEME_ENABLED || preference !== null) return;
 
     const media = window.matchMedia("(prefers-color-scheme: dark)");
     function syncSystemTheme() {
@@ -58,6 +68,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, [preference]);
 
   const setTheme = useCallback((theme: ThemePreference) => {
+    if (!DARK_THEME_ENABLED) {
+      applyThemeToDocument("light");
+      return;
+    }
     setPreference(theme);
     setResolvedTheme(theme);
     persistThemePreference(theme);
@@ -65,6 +79,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleTheme = useCallback(() => {
+    if (!DARK_THEME_ENABLED) return;
     setTheme(resolvedTheme === "dark" ? "light" : "dark");
   }, [resolvedTheme, setTheme]);
 

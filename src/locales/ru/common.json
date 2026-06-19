@@ -169,6 +169,7 @@
   "excursions.movement.bike": "На велосипеде",
   "excursions.booking.date": "Дата",
   "excursions.booking.pickDate": "Выберите дату",
+  "excursions.booking.pickTime": "Выберите время",
   "excursions.booking.time": "Время",
   "excursions.booking.name": "Имя",
   "excursions.booking.email": "Email",
