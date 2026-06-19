@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const query = url.searchParams.get("q")?.trim().toLowerCase() ?? "";
 
   const supabase = createSupabaseAdminClient();
-  let dbQuery = supabase
+  const dbQuery = supabase
     .from("profiles")
     .select("id, first_name, last_name, email, phone, roles, active_role, is_blocked, created_at")
     .order("created_at", { ascending: false })
