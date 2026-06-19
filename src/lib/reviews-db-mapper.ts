@@ -104,6 +104,20 @@ export type ModerationReviewSummary = {
   createdAt: string;
 };
 
+export type ModerationReviewReportSummary = {
+  id: string;
+  reviewId: string;
+  reason: string;
+  details: string | null;
+  reporterUserId: string | null;
+  reporterName: string | null;
+  reviewTourTitle: string;
+  reviewTourSlug: string;
+  reviewRating: number;
+  reviewText: string;
+  createdAt: string;
+};
+
 export function rowToModerationReviewSummary(
   row: TouristReviewRow,
   authorName?: string | null

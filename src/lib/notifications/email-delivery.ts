@@ -173,3 +173,56 @@ export async function sendAdminUnreadDigestHook(input: {
   if (input.unreadCount <= 0) return;
   // Stub for scheduled digest delivery based on unread admin_notifications count.
 }
+
+type DigestEvent = {
+  title: string;
+  body: string;
+  created_at: string;
+  category: string;
+};
+
+export async function sendDailyDigestEmail(input: {
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  events: DigestEvent[];
+  scopeLabel: string;
+}): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config) return false;
+
+  const recipients = normalizeRecipients([input.recipientEmail, config.adminEmail]);
+  if (!recipients.length) return false;
+
+  const greeting = `Здравствуйте, ${escapeHtml(formatName(input.recipientName))}!`;
+  const dateLabel = new Intl.DateTimeFormat("ru-RU", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(new Date());
+
+  const itemsHtml =
+    input.events.length > 0
+      ? `<ul>${input.events
+          .slice(0, 20)
+          .map(
+            (event) =>
+              `<li><strong>${escapeHtml(event.title)}</strong> — ${escapeHtml(event.body)}</li>`
+          )
+          .join("")}</ul>`
+      : "<p>За последние 24 часа новых событий не было.</p>";
+
+  const html = `
+    <p>${greeting}</p>
+    <p>Ежедневная сводка уведомлений (${escapeHtml(input.scopeLabel)}) за ${dateLabel}.</p>
+    ${itemsHtml}
+    <p>Это автоматическая рассылка. Настройки уведомлений можно изменить в личном кабинете.</p>
+  `;
+
+  await sendEmail(config, {
+    to: recipients,
+    subject: `Сводка уведомлений — ${dateLabel}`,
+    html,
+  });
+
+  return true;
+}

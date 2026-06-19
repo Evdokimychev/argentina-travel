@@ -1,15 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FormattedPrice from "@/components/FormattedPrice";
 import { NativeSelect } from "@/components/ui/native-select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import {
+  MERCADOPAGO_CAPTURE_PHASE_LABELS,
   PAYMENT_PROVIDER_LABELS,
   PAYMENT_TRANSACTION_STATUS_LABELS,
   PAYMENT_TRANSACTION_TYPE_LABELS,
+  type MercadoPagoCapturePhase,
+  type PaymentTransactionReceiptView,
   type PaymentTransactionRow,
   type PaymentTransactionStatus,
   type PaymentTransactionType,
@@ -20,6 +30,13 @@ import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 
 type LedgerResponse = {
   transactions?: PaymentTransactionRow[];
+};
+
+type TransactionDetailResponse = {
+  transaction?: PaymentTransactionRow;
+  receipt?: PaymentTransactionReceiptView;
+  livePayment?: Record<string, unknown> | null;
+  error?: string;
 };
 
 const TYPE_FILTER_LABELS: Record<PaymentTransactionType | "all", string> = {
@@ -37,6 +54,21 @@ const PROVIDER_FILTER_LABELS: Record<PaymentProviderId | "all", string> = {
   ...PAYMENT_PROVIDER_LABELS,
 };
 
+function formatCapturePhaseLabel(value: unknown): string {
+  if (typeof value !== "string") return "—";
+  if (value in MERCADOPAGO_CAPTURE_PHASE_LABELS) {
+    return MERCADOPAGO_CAPTURE_PHASE_LABELS[value as MercadoPagoCapturePhase];
+  }
+  return value;
+}
+
+function formatAdminDateTime(value: string | null | undefined): string {
+  if (!value) return "—";
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) return "—";
+  return parsed.toLocaleString("ru-RU");
+}
+
 export function AdminPaymentLedgerPanel() {
   const [period, setPeriod] = useState<AdminPaymentPeriodFilter>("30d");
   const [type, setType] = useState<PaymentTransactionType | "all">("all");
@@ -44,11 +76,48 @@ export function AdminPaymentLedgerPanel() {
   const [provider, setProvider] = useState<PaymentProviderId | "all">("all");
   const [actionError, setActionError] = useState<string | null>(null);
   const [actionLoadingId, setActionLoadingId] = useState<string | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [detail, setDetail] = useState<TransactionDetailResponse | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
+  const [detailError, setDetailError] = useState<string | null>(null);
 
   const query = `/api/admin/payments/transactions?period=${period}&type=${type}&status=${status}&provider=${provider}`;
   const { data, loading, error, refresh } = useAdminApi<LedgerResponse>(query);
 
   const transactions = data?.transactions ?? [];
+  const selected = transactions.find((row) => row.id === selectedId) ?? detail?.transaction ?? null;
+
+  const loadDetail = useCallback(async (transactionId: string) => {
+    setDetailLoading(true);
+    setDetailError(null);
+    try {
+      const response = await fetch(
+        `/api/admin/payments/transactions/${encodeURIComponent(transactionId)}?live=1`
+      );
+      const payload = (await response.json().catch(() => ({}))) as TransactionDetailResponse & {
+        error?: string;
+      };
+      if (!response.ok) {
+        setDetailError(payload.error ?? "Не удалось загрузить детали операции");
+        setDetail(null);
+        return;
+      }
+      setDetail(payload);
+    } catch {
+      setDetailError("Не удалось загрузить детали операции");
+      setDetail(null);
+    } finally {
+      setDetailLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!selectedId) {
+      setDetail(null);
+      return;
+    }
+    void loadDetail(selectedId);
+  }, [loadDetail, selectedId]);
 
   const handleRefundAction = useCallback(
     async (transactionId: string, action: "approve" | "reject") => {
@@ -66,14 +135,19 @@ export function AdminPaymentLedgerPanel() {
           return;
         }
         await refresh();
+        if (selectedId === transactionId) {
+          await loadDetail(transactionId);
+        }
       } catch {
         setActionError("Не удалось выполнить действие");
       } finally {
         setActionLoadingId(null);
       }
     },
-    [refresh]
+    [loadDetail, refresh, selectedId]
   );
+
+  const receiptMeta = detail?.receipt?.receipt ?? null;
 
   return (
     <>
@@ -138,92 +212,236 @@ export function AdminPaymentLedgerPanel() {
       {actionError ? <p className="text-sm text-red-600">{actionError}</p> : null}
 
       <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
-          <div className={cabinetTableWrapClass}>
-            <table className="w-full min-w-[1100px] text-left text-sm">
-              <thead className={cabinetTableHeaderClass}>
+        <div className={cabinetTableWrapClass}>
+          <table className="w-full min-w-[1100px] text-left text-sm">
+            <thead className={cabinetTableHeaderClass}>
+              <tr>
+                <th className="px-4 py-3 font-medium text-slate">Дата</th>
+                <th className="px-4 py-3 font-medium text-slate">Тип</th>
+                <th className="px-4 py-3 font-medium text-slate">Бронирование</th>
+                <th className="px-4 py-3 font-medium text-slate">Провайдер</th>
+                <th className="px-4 py-3 font-medium text-slate">Сумма</th>
+                <th className="px-4 py-3 font-medium text-slate">Статус</th>
+                <th className="px-4 py-3 font-medium text-slate">Действия</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-gray-100">
+              {transactions.length === 0 ? (
                 <tr>
-                  <th className="px-4 py-3 font-medium text-slate">Дата</th>
-                  <th className="px-4 py-3 font-medium text-slate">Тип</th>
-                  <th className="px-4 py-3 font-medium text-slate">Бронирование</th>
-                  <th className="px-4 py-3 font-medium text-slate">Провайдер</th>
-                  <th className="px-4 py-3 font-medium text-slate">Сумма</th>
-                  <th className="px-4 py-3 font-medium text-slate">Статус</th>
-                  <th className="px-4 py-3 font-medium text-slate">Действия</th>
+                  <td colSpan={7} className="px-4 py-10 text-center text-slate">
+                    {loading ? "Загрузка…" : "Операции не найдены"}
+                  </td>
                 </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
-                {transactions.length === 0 ? (
-                  <tr>
-                    <td colSpan={7} className="px-4 py-10 text-center text-slate">
-                      {loading ? "Загрузка…" : "Операции не найдены"}
+              ) : (
+                transactions.map((row) => (
+                  <tr key={row.id} className={selectedId === row.id ? "bg-sky/5" : undefined}>
+                    <td className="px-4 py-3 text-slate">
+                      {new Date(row.createdAt).toLocaleString("ru-RU")}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal">
+                      {PAYMENT_TRANSACTION_TYPE_LABELS[row.type]}
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-charcoal">{row.tourTitle ?? row.bookingId}</p>
+                      <p className="mt-1 text-xs text-slate">{row.bookingId}</p>
+                      {row.requestReason ? (
+                        <p className="mt-1 text-xs text-slate">Причина: {row.requestReason}</p>
+                      ) : null}
+                    </td>
+                    <td className="px-4 py-3 text-charcoal">
+                      {PAYMENT_PROVIDER_LABELS[row.provider]}
+                      {row.externalId ? (
+                        <p className="mt-1 text-xs text-slate">ID: {row.externalId}</p>
+                      ) : null}
+                    </td>
+                    <td className="px-4 py-3 font-medium text-charcoal">
+                      <FormattedPrice priceUsd={row.amount} />{" "}
+                      <span className="text-xs text-slate">{row.currency}</span>
+                    </td>
+                    <td className="px-4 py-3 text-charcoal">
+                      {PAYMENT_TRANSACTION_STATUS_LABELS[row.status]}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          type="button"
+                          onClick={() => setSelectedId(row.id)}
+                          className="text-sm font-medium text-brand hover:underline"
+                        >
+                          Детали
+                        </button>
+                        <Link
+                          href={`/admin/operations/bookings?bookingId=${encodeURIComponent(row.bookingId)}`}
+                          className="text-sm font-medium text-sky hover:underline"
+                        >
+                          Заявка
+                        </Link>
+                        {row.type === "refund" && row.status === "pending" ? (
+                          <>
+                            <button
+                              type="button"
+                              disabled={actionLoadingId === row.id}
+                              onClick={() => void handleRefundAction(row.id, "approve")}
+                              className="text-sm font-medium text-success hover:underline disabled:opacity-60"
+                            >
+                              Одобрить
+                            </button>
+                            <button
+                              type="button"
+                              disabled={actionLoadingId === row.id}
+                              onClick={() => void handleRefundAction(row.id, "reject")}
+                              className="text-sm font-medium text-red-600 hover:underline disabled:opacity-60"
+                            >
+                              Отклонить
+                            </button>
+                          </>
+                        ) : null}
+                      </div>
                     </td>
                   </tr>
-                ) : (
-                  transactions.map((row) => (
-                    <tr key={row.id}>
-                      <td className="px-4 py-3 text-slate">
-                        {new Date(row.createdAt).toLocaleString("ru-RU")}
-                      </td>
-                      <td className="px-4 py-3 text-charcoal">
-                        {PAYMENT_TRANSACTION_TYPE_LABELS[row.type]}
-                      </td>
-                      <td className="px-4 py-3">
-                        <p className="font-medium text-charcoal">{row.tourTitle ?? row.bookingId}</p>
-                        <p className="mt-1 text-xs text-slate">{row.bookingId}</p>
-                        {row.requestReason ? (
-                          <p className="mt-1 text-xs text-slate">Причина: {row.requestReason}</p>
-                        ) : null}
-                      </td>
-                      <td className="px-4 py-3 text-charcoal">
-                        {PAYMENT_PROVIDER_LABELS[row.provider]}
-                        {row.externalId ? (
-                          <p className="mt-1 text-xs text-slate">ID: {row.externalId}</p>
-                        ) : null}
-                      </td>
-                      <td className="px-4 py-3 font-medium text-charcoal">
-                        <FormattedPrice priceUsd={row.amount} />{" "}
-                        <span className="text-xs text-slate">{row.currency}</span>
-                      </td>
-                      <td className="px-4 py-3 text-charcoal">
-                        {PAYMENT_TRANSACTION_STATUS_LABELS[row.status]}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex flex-wrap gap-2">
-                          <Link
-                            href={`/admin/operations/bookings?bookingId=${encodeURIComponent(row.bookingId)}`}
-                            className="text-sm font-medium text-sky hover:underline"
-                          >
-                            Заявка
-                          </Link>
-                          {row.type === "refund" && row.status === "pending" ? (
-                            <>
-                              <button
-                                type="button"
-                                disabled={actionLoadingId === row.id}
-                                onClick={() => void handleRefundAction(row.id, "approve")}
-                                className="text-sm font-medium text-success hover:underline disabled:opacity-60"
-                              >
-                                Одобрить
-                              </button>
-                              <button
-                                type="button"
-                                disabled={actionLoadingId === row.id}
-                                onClick={() => void handleRefundAction(row.id, "reject")}
-                                className="text-sm font-medium text-red-600 hover:underline disabled:opacity-60"
-                              >
-                                Отклонить
-                              </button>
-                            </>
-                          ) : null}
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-        </section>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <Dialog open={Boolean(selectedId)} onOpenChange={(open) => !open && setSelectedId(null)}>
+        <DialogContent className="max-w-2xl" showClose>
+          <DialogHeader>
+            <DialogTitle>Детали платёжной операции</DialogTitle>
+            <DialogDescription>
+              {selected ? `${PAYMENT_TRANSACTION_TYPE_LABELS[selected.type]} · ${selected.id}` : ""}
+            </DialogDescription>
+          </DialogHeader>
+
+          {detailLoading ? (
+            <p className="px-5 py-8 text-sm text-slate sm:px-6">Загрузка…</p>
+          ) : detailError ? (
+            <p className="px-5 py-8 text-sm text-red-600 sm:px-6">{detailError}</p>
+          ) : selected ? (
+            <div className="space-y-4 px-5 pb-6 sm:px-6">
+              <dl className="grid gap-3 text-sm sm:grid-cols-2">
+                <div>
+                  <dt className="text-slate">Сумма</dt>
+                  <dd className="mt-0.5 font-medium text-charcoal">
+                    <FormattedPrice priceUsd={selected.amount} /> {selected.currency}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate">Статус журнала</dt>
+                  <dd className="mt-0.5 font-medium text-charcoal">
+                    {PAYMENT_TRANSACTION_STATUS_LABELS[selected.status]}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate">Провайдер</dt>
+                  <dd className="mt-0.5 font-medium text-charcoal">
+                    {PAYMENT_PROVIDER_LABELS[selected.provider]}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-slate">Создано</dt>
+                  <dd className="mt-0.5 font-medium text-charcoal">
+                    {formatAdminDateTime(selected.createdAt)}
+                  </dd>
+                </div>
+                {selected.externalId ? (
+                  <div className="sm:col-span-2">
+                    <dt className="text-slate">ID провайдера</dt>
+                    <dd className="mt-0.5 break-all font-mono text-charcoal">{selected.externalId}</dd>
+                  </div>
+                ) : null}
+                {receiptMeta?.capturePhase ? (
+                  <div>
+                    <dt className="text-slate">Фаза списания</dt>
+                    <dd className="mt-0.5 font-medium text-charcoal">
+                      {MERCADOPAGO_CAPTURE_PHASE_LABELS[receiptMeta.capturePhase]}
+                    </dd>
+                  </div>
+                ) : null}
+              </dl>
+
+              {detail?.livePayment ? (
+                <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                  <p className="text-xs font-medium uppercase tracking-wide text-slate">
+                    Данные Mercado Pago (live)
+                  </p>
+                  {"error" in detail.livePayment ? (
+                    <p className="mt-2 text-sm text-red-600">
+                      {String(detail.livePayment.error)}
+                    </p>
+                  ) : (
+                    <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
+                      <div>
+                        <dt className="text-slate">Статус MP</dt>
+                        <dd className="font-medium text-charcoal">
+                          {String(detail.livePayment.status ?? "—")}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-slate">Фаза</dt>
+                        <dd className="font-medium text-charcoal">
+                          {formatCapturePhaseLabel(detail.livePayment.capturePhase)}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-slate">Подтверждено</dt>
+                        <dd className="font-medium text-charcoal">
+                          {formatAdminDateTime(
+                            typeof detail.livePayment.dateApproved === "string"
+                              ? detail.livePayment.dateApproved
+                              : null
+                          )}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt className="text-slate">Создано в MP</dt>
+                        <dd className="font-medium text-charcoal">
+                          {formatAdminDateTime(
+                            typeof detail.livePayment.dateCreated === "string"
+                              ? detail.livePayment.dateCreated
+                              : null
+                          )}
+                        </dd>
+                      </div>
+                    </dl>
+                  )}
+                </div>
+              ) : null}
+
+              {selected.requestReason ? (
+                <p className="text-sm text-slate">
+                  <span className="font-medium text-charcoal">Причина запроса:</span>{" "}
+                  {selected.requestReason}
+                </p>
+              ) : null}
+              {selected.adminNotes ? (
+                <p className="text-sm text-slate">
+                  <span className="font-medium text-charcoal">Заметки администратора:</span>{" "}
+                  {selected.adminNotes}
+                </p>
+              ) : null}
+
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Link
+                  href={`/admin/operations/bookings?bookingId=${encodeURIComponent(selected.bookingId)}`}
+                  className="text-sm font-medium text-sky hover:underline"
+                >
+                  Открыть заявку
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => selectedId && void loadDetail(selectedId)}
+                  className="text-sm font-medium text-charcoal hover:underline"
+                >
+                  Обновить данные MP
+                </button>
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

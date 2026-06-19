@@ -19,6 +19,7 @@ export async function POST(request: Request) {
       ok: result.ok,
       indexed: result.indexed,
       removed: result.removed,
+      meilisearch: result.meilisearch,
       error: result.error,
     },
     ipAddress: clientIpFromRequest(request),
@@ -35,5 +36,6 @@ export async function POST(request: Request) {
     ok: true,
     indexed: result.indexed,
     removed: result.removed,
+    meilisearch: result.meilisearch,
   });
 }

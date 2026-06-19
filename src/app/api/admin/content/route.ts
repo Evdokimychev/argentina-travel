@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { buildContentInventory } from "@/lib/admin/content-inventory";
-import { fetchCmsOverrideMap, legalOverrideId } from "@/lib/cms/legal-resolver";
+import { buildCmsLocaleCoverage } from "@/lib/cms/cms-locale";
+import { fetchCmsOverrideMap } from "@/lib/cms/content-resolver";
 import { blogOverrideId } from "@/lib/cms/blog-resolver";
 import { guideOverrideId } from "@/lib/cms/guide-resolver";
 import {
@@ -9,6 +10,7 @@ import {
   resolveDestinationCatalog,
 } from "@/lib/cms/destination-resolver";
 import { placeOverrideId, resolvePlaceCatalog } from "@/lib/cms/place-resolver";
+import { legalOverrideId } from "@/lib/cms/legal-resolver";
 import { getPagesBySection } from "@/lib/content-pages";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
@@ -25,8 +27,9 @@ export async function GET(request: Request) {
   const cmsMap = await fetchCmsOverrideMap(supabase);
 
   const legalEditable = Object.values(LEGAL_DOCUMENTS).map((doc) => {
-    const cmsId = legalOverrideId("legal", doc.slug);
+    const cmsId = legalOverrideId(doc.slug);
     const override = cmsMap.get(cmsId);
+    const localeCoverage = buildCmsLocaleCoverage("legal", doc.slug, cmsMap);
     return {
       slug: doc.slug,
       title: doc.title,
@@ -35,14 +38,16 @@ export async function GET(request: Request) {
       cmsStatus: override?.status ?? null,
       hasOverride: Boolean(override),
       publicSource: override?.status === "published" ? "cms" : "file",
+      localeCoverage,
     };
   });
 
   const blogEditable = getEditorialBlogPosts().slice(0, 80).map((post) => {
-    const cmsId = blogOverrideId("blog", post.slug);
+    const cmsId = blogOverrideId(post.slug);
     const override = cmsMap.get(cmsId);
     const featuredFromCms =
       override?.status === "published" && override.body.kind === "blog" && override.body.featured === true;
+    const localeCoverage = buildCmsLocaleCoverage("blog", post.slug, cmsMap);
     return {
       slug: post.slug,
       title: post.title,
@@ -52,12 +57,14 @@ export async function GET(request: Request) {
       hasOverride: Boolean(override),
       publicSource: override?.status === "published" ? "cms" : "file",
       featuredFromCms,
+      localeCoverage,
     };
   });
 
   const guideEditable = getPagesBySection("guide").map((page) => {
-    const cmsId = guideOverrideId("guide", page.slug);
+    const cmsId = guideOverrideId(page.slug);
     const override = cmsMap.get(cmsId);
+    const localeCoverage = buildCmsLocaleCoverage("guide", page.slug, cmsMap);
     return {
       slug: page.slug,
       title: page.title,
@@ -66,15 +73,17 @@ export async function GET(request: Request) {
       cmsStatus: override?.status ?? null,
       hasOverride: Boolean(override),
       publicSource: override?.status === "published" ? "cms" : "file",
+      localeCoverage,
     };
   });
 
   const destinationSourceSlugs = new Set(getAllDestinations().map((destination) => destination.id));
   const destinationCatalog = await resolveDestinationCatalog();
   const destinationEditable = destinationCatalog.map((destination) => {
-    const cmsId = destinationOverrideId("destination", destination.id);
+    const cmsId = destinationOverrideId(destination.id);
     const override = cmsMap.get(cmsId);
     const hasFileSource = destinationSourceSlugs.has(destination.id);
+    const localeCoverage = buildCmsLocaleCoverage("destination", destination.id, cmsMap);
     return {
       slug: destination.id,
       title: destination.name,
@@ -90,15 +99,17 @@ export async function GET(request: Request) {
             : override
               ? "cms"
               : "file",
+      localeCoverage,
     };
   });
 
   const placeSourceSlugs = new Set(await fetchPlaceSlugsServer());
   const placeCatalog = await resolvePlaceCatalog();
   const placeEditable = placeCatalog.map((place) => {
-    const cmsId = placeOverrideId("place", place.slug);
+    const cmsId = placeOverrideId(place.slug);
     const override = cmsMap.get(cmsId);
     const hasFileSource = placeSourceSlugs.has(place.slug);
+    const localeCoverage = buildCmsLocaleCoverage("place", place.slug, cmsMap);
     return {
       slug: place.slug,
       title: place.name,
@@ -114,6 +125,7 @@ export async function GET(request: Request) {
             : override
               ? "cms"
               : "file",
+      localeCoverage,
     };
   });
 
@@ -121,6 +133,7 @@ export async function GET(request: Request) {
     id: doc.id,
     docType: doc.docType,
     slug: doc.slug,
+    locale: doc.locale,
     title: doc.title,
     status: doc.status,
     updatedAt: doc.updatedAt,

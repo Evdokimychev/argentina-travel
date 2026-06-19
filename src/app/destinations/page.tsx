@@ -3,6 +3,7 @@ import GeographyHubView from "@/components/destinations/GeographyHubView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { resolveDestinationCatalog } from "@/lib/cms/destination-resolver";
 import { resolvePlaceCatalog } from "@/lib/cms/place-resolver";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { fetchCollectionsServer } from "@/lib/places-repository";
 
@@ -18,10 +19,11 @@ export const metadata: Metadata = buildPublicPageMetadata({
 });
 
 export default async function DestinationsPage() {
+  const locale = await getServerI18nLocale();
   const [collections, destinations, places] = await Promise.all([
     fetchCollectionsServer(),
-    resolveDestinationCatalog(),
-    resolvePlaceCatalog(),
+    resolveDestinationCatalog(locale),
+    resolvePlaceCatalog(locale),
   ]);
 
   return (

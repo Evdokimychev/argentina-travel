@@ -198,6 +198,12 @@ export default function AnalyticsView() {
             <Link href="/admin/content/documents" className="mt-4 inline-block text-sm text-sky hover:underline">
               Каталог документов →
             </Link>
+            <Link
+              href="/admin/analytics/funnels"
+              className="ml-4 mt-4 inline-block text-sm text-sky hover:underline"
+            >
+              Воронки и экспорт →
+            </Link>
           </div>
         </section>
       </AdminPageShell>

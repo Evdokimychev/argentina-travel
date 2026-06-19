@@ -26,6 +26,7 @@ const QUICK_LINKS = [
   { href: "/admin/marketplace/excursions", label: "Экскурсии" },
   { href: "/admin/content/documents", label: "Контент" },
   { href: "/admin/analytics", label: "Аналитика" },
+  { href: "/admin/analytics/funnels", label: "Воронки" },
 ];
 
 function formatUsd(value: number): string {

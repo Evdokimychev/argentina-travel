@@ -9,6 +9,7 @@ type PatchBody = {
   rating?: number;
   text?: string;
   tripDate?: string;
+  photos?: string[];
   status?: TouristReviewStatus;
 };
 
@@ -41,6 +42,7 @@ export async function PATCH(
       rating: body.rating,
       text: body.text,
       tripDate: body.tripDate,
+      photos: body.photos,
       status: body.action === "submit" ? "pending" : nextStatus,
     },
     user.id

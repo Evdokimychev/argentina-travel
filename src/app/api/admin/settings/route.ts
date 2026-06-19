@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { readOpsStatusSnapshot } from "@/lib/ops/ops-status";
 import { invalidateSiteFeaturesCache, invalidateSiteLegalCache } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/types/database";
@@ -23,7 +24,7 @@ export async function GET(request: Request) {
     settings[row.key] = row.value;
   }
 
-  return NextResponse.json({ settings });
+  return NextResponse.json({ settings, ops: readOpsStatusSnapshot() });
 }
 
 export async function PATCH(request: Request) {

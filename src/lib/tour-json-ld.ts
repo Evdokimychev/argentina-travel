@@ -27,20 +27,28 @@ function buildSingleReviewJsonLd(review: TourReview, productName: string) {
   };
 }
 
+function calculatePlatformAverageRating(reviews: TourReview[]): number {
+  if (!reviews.length) return 0;
+  const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+  return Math.round((sum / reviews.length) * 10) / 10;
+}
+
 export function buildTourProductJsonLd(tour: TourDetail, siteUrl = getSiteUrl()) {
   const url = `${siteUrl}/tours/${tour.slug}`;
-  const platformReviews = tour.reviews
-    .filter((review) => review.source === "platform" && review.text.trim())
+  const platformOnly = tour.reviews.filter(
+    (review) => review.source === "platform" && review.text.trim()
+  );
+  const platformReviews = platformOnly
     .slice(0, MAX_JSON_LD_REVIEWS)
     .map((review) => buildSingleReviewJsonLd(review, tour.title))
     .filter(Boolean);
 
   const aggregateRating =
-    tour.reviewCount > 0
+    platformOnly.length > 0
       ? {
           "@type": "AggregateRating",
-          ratingValue: tour.rating,
-          reviewCount: tour.reviewCount,
+          ratingValue: calculatePlatformAverageRating(platformOnly),
+          reviewCount: platformOnly.length,
           bestRating: 5,
           worstRating: 1,
         }

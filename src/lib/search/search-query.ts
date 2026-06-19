@@ -6,6 +6,10 @@ import {
 } from "@/lib/site-search-index";
 import { searchSiteIndex } from "@/lib/site-search";
 import { collectSearchIndexItems } from "@/lib/search/search-indexer";
+import {
+  isMeilisearchConfigured,
+  searchMeilisearchDocuments,
+} from "@/lib/search/meilisearch-client";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import type { Database } from "@/types/database";
@@ -92,6 +96,15 @@ async function searchStatic(query: string, kind: string | undefined, limit: numb
   return flattenStaticResults(filtered, query, limit);
 }
 
+async function searchMeilisearch(
+  query: string,
+  kind: string | undefined,
+  limit: number
+): Promise<SearchHit[]> {
+  if (!isMeilisearchConfigured()) return [];
+  return searchMeilisearchDocuments(query, kind, limit);
+}
+
 export async function executeSiteSearch(
   query: string,
   options?: { kind?: string; limit?: number }
@@ -101,7 +114,17 @@ export async function executeSiteSearch(
   const limit = Math.min(Math.max(options?.limit ?? MAX_LIMIT, 1), MAX_LIMIT);
 
   if (!trimmed) {
-    return { results: [], source: isSupabaseConfigured() ? "postgres" : "static", query: trimmed, kind };
+    const defaultSource = isMeilisearchConfigured()
+      ? "meilisearch"
+      : isSupabaseConfigured()
+        ? "postgres"
+        : "static";
+    return { results: [], source: defaultSource, query: trimmed, kind };
+  }
+
+  const meiliResults = await searchMeilisearch(trimmed, kind, limit);
+  if (meiliResults.length > 0) {
+    return { results: meiliResults, source: "meilisearch", query: trimmed, kind };
   }
 
   if (!isSupabaseConfigured()) {
@@ -123,6 +146,13 @@ export async function executeSiteSearch(
         const { reindexSearchDocuments } = await import("@/lib/search/search-indexer");
         await reindexSearchDocuments(supabase);
         results = await searchPostgres(supabase, trimmed, kind, limit);
+
+        if (results.length === 0 && isMeilisearchConfigured()) {
+          const retryMeili = await searchMeilisearch(trimmed, kind, limit);
+          if (retryMeili.length > 0) {
+            return { results: retryMeili, source: "meilisearch", query: trimmed, kind };
+          }
+        }
       }
     }
 

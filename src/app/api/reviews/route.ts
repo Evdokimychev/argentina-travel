@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchReviewEligibilityForUser } from "@/lib/review-eligibility";
+import { isPartnerTourId, isPartnerTourSlugServer } from "@/lib/partner-tour-slug-server";
 import { fetchUserReviews, insertReview } from "@/lib/reviews-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { TouristReview } from "@/types/tourist";
@@ -57,6 +58,13 @@ export async function POST(request: Request) {
 
   if (!review?.tourId || !review.tourSlug || !review.tourTitle) {
     return NextResponse.json({ error: "Некорректные данные отзыва" }, { status: 400 });
+  }
+
+  if (isPartnerTourId(review.tourId) || (await isPartnerTourSlugServer(supabase, review.tourSlug))) {
+    return NextResponse.json(
+      { error: "Отзывы на партнёрские туры оставляются на стороне организатора." },
+      { status: 403 }
+    );
   }
 
   const rating = Math.min(5, Math.max(1, Math.round(review.rating)));

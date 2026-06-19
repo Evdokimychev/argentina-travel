@@ -40,3 +40,51 @@ export function bucketCreatedAtByDay(
   }
   return dayKeys.map((date) => ({ date, count: counts.get(date) ?? 0 }));
 }
+
+const MONTH_LABELS = [
+  "янв",
+  "фев",
+  "мар",
+  "апр",
+  "май",
+  "июн",
+  "июл",
+  "авг",
+  "сен",
+  "окт",
+  "ноя",
+  "дек",
+];
+
+export function formatMonthLabel(monthKey: string): string {
+  const [year, month] = monthKey.split("-");
+  const index = Number(month) - 1;
+  if (!year || index < 0 || index > 11) return monthKey;
+  return `${MONTH_LABELS[index]} ${year}`;
+}
+
+export function periodMonthKeys(period: AnalyticsPeriod): string[] {
+  const now = new Date();
+  const count =
+    period === "7d" ? 1 : period === "30d" ? 2 : period === "90d" ? 4 : 12;
+  const keys: string[] = [];
+  const cursor = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+  for (let i = count - 1; i >= 0; i -= 1) {
+    const d = new Date(Date.UTC(cursor.getUTCFullYear(), cursor.getUTCMonth() - i, 1));
+    keys.push(`${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`);
+  }
+  return keys;
+}
+
+export function bucketCreatedAtByMonth(
+  timestamps: string[],
+  monthKeys: string[]
+): { month: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const key of monthKeys) counts.set(key, 0);
+  for (const ts of timestamps) {
+    const month = ts.slice(0, 7);
+    if (counts.has(month)) counts.set(month, (counts.get(month) ?? 0) + 1);
+  }
+  return monthKeys.map((month) => ({ month, count: counts.get(month) ?? 0 }));
+}

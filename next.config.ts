@@ -80,6 +80,10 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "wgt-prod-storage.s3.amazonaws.com",
       },
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+      },
     ],
   },
 };

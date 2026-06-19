@@ -270,6 +270,45 @@ export interface Database {
         };
         Relationships: [];
       };
+      review_reports: {
+        Row: {
+          id: string;
+          review_id: string;
+          reporter_user_id: string | null;
+          reason: string;
+          details: string | null;
+          status: string;
+          resolved_by: string | null;
+          resolved_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          review_id: string;
+          reporter_user_id?: string | null;
+          reason: string;
+          details?: string | null;
+          status?: string;
+          resolved_by?: string | null;
+          resolved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          review_id?: string;
+          reporter_user_id?: string | null;
+          reason?: string;
+          details?: string | null;
+          status?: string;
+          resolved_by?: string | null;
+          resolved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       tours: {
         Row: {
           id: string;
@@ -957,6 +996,75 @@ export interface Database {
         };
         Relationships: [];
       };
+      notification_preferences: {
+        Row: {
+          user_id: string;
+          channel: string;
+          category: string;
+          enabled: boolean;
+          updated_at: string;
+        };
+        Insert: {
+          user_id: string;
+          channel: string;
+          category: string;
+          enabled?: boolean;
+          updated_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          channel?: string;
+          category?: string;
+          enabled?: boolean;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      notification_events: {
+        Row: {
+          id: string;
+          user_id: string;
+          dedupe_key: string;
+          event_type: string;
+          category: string;
+          channel: string;
+          title: string;
+          body: string;
+          href: string | null;
+          read_at: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          dedupe_key: string;
+          event_type: string;
+          category: string;
+          channel: string;
+          title: string;
+          body: string;
+          href?: string | null;
+          read_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          dedupe_key?: string;
+          event_type?: string;
+          category?: string;
+          channel?: string;
+          title?: string;
+          body?: string;
+          href?: string | null;
+          read_at?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;
@@ -1106,6 +1214,39 @@ export interface Database {
           entity_id?: string | null;
           payload?: Json;
           ip_address?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      analytics_events: {
+        Row: {
+          id: string;
+          event_type: string;
+          tour_slug: string | null;
+          tour_id: string | null;
+          user_id: string | null;
+          session_id: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          event_type: string;
+          tour_slug?: string | null;
+          tour_id?: string | null;
+          user_id?: string | null;
+          session_id?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          event_type?: string;
+          tour_slug?: string | null;
+          tour_id?: string | null;
+          user_id?: string | null;
+          session_id?: string | null;
+          metadata?: Json;
           created_at?: string;
         };
         Relationships: [];
@@ -1359,6 +1500,9 @@ export interface Database {
           currency: string;
           status: string;
           metadata: Json;
+          approved_by: string | null;
+          completed_at: string | null;
+          admin_notes: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -1370,6 +1514,9 @@ export interface Database {
           currency?: string;
           status?: string;
           metadata?: Json;
+          approved_by?: string | null;
+          completed_at?: string | null;
+          admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1381,8 +1528,98 @@ export interface Database {
           currency?: string;
           status?: string;
           metadata?: Json;
+          approved_by?: string | null;
+          completed_at?: string | null;
+          admin_notes?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      platform_commission_rules: {
+        Row: {
+          id: string;
+          name: string;
+          rule_type: string;
+          percent_value: number | null;
+          fixed_amount: number | null;
+          fixed_currency: string;
+          is_default: boolean;
+          active: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          rule_type: string;
+          percent_value?: number | null;
+          fixed_amount?: number | null;
+          fixed_currency?: string;
+          is_default?: boolean;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          rule_type?: string;
+          percent_value?: number | null;
+          fixed_amount?: number | null;
+          fixed_currency?: string;
+          is_default?: boolean;
+          active?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      booking_commission_snapshots: {
+        Row: {
+          id: string;
+          booking_id: string;
+          payment_transaction_id: string;
+          organizer_user_id: string;
+          gross_amount: number;
+          commission_amount: number;
+          organizer_net_amount: number;
+          commission_rule_id: string | null;
+          commission_percent: number | null;
+          commission_fixed: number | null;
+          currency: string;
+          payout_record_id: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          payment_transaction_id: string;
+          organizer_user_id: string;
+          gross_amount: number;
+          commission_amount: number;
+          organizer_net_amount: number;
+          commission_rule_id?: string | null;
+          commission_percent?: number | null;
+          commission_fixed?: number | null;
+          currency?: string;
+          payout_record_id?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          payment_transaction_id?: string;
+          organizer_user_id?: string;
+          gross_amount?: number;
+          commission_amount?: number;
+          organizer_net_amount?: number;
+          commission_rule_id?: string | null;
+          commission_percent?: number | null;
+          commission_fixed?: number | null;
+          currency?: string;
+          payout_record_id?: string | null;
+          created_at?: string;
         };
         Relationships: [];
       };

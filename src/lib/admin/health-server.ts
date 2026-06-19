@@ -30,6 +30,8 @@ export type AdminHealthSnapshot = {
       ok: boolean;
       publicTableCount: number;
       tablesWithoutRls: string[];
+      tablesMissingPolicies: string[];
+      criticalIssueCount: number;
       error: string | null;
     };
     sync: {
@@ -124,6 +126,10 @@ export async function fetchAdminHealthSnapshot(supabase: DbClient): Promise<Admi
 
   const databaseOk = !databasePing.error;
   const rlsMissing = rlsAudit.tables.filter((table) => !table.rlsEnabled).map((table) => table.table);
+  const rlsMissingPolicies =
+    rlsAudit.criticalIssues?.filter((issue) => issue.kind === "missing_policies").map((issue) => issue.table) ??
+    [];
+  const criticalIssueCount = rlsAudit.criticalIssues?.length ?? rlsMissing.length + rlsMissingPolicies.length;
   const syncOk = tripsterSync.ok && sputnik8Sync.ok;
 
   const checks = {
@@ -135,6 +141,8 @@ export async function fetchAdminHealthSnapshot(supabase: DbClient): Promise<Admi
       ok: rlsAudit.ok,
       publicTableCount: rlsAudit.tables.length,
       tablesWithoutRls: rlsMissing,
+      tablesMissingPolicies: rlsMissingPolicies,
+      criticalIssueCount,
       error: rlsAudit.error,
     },
     sync: {

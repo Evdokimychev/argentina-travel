@@ -13,6 +13,7 @@ import {
   isGuideTopicSlug,
 } from "@/lib/guide-topics";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -41,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const page = await resolveGuidePage(slug);
+  const page = await resolveGuidePage(slug, await getServerI18nLocale());
   if (!page) return { title: "Путеводитель" };
   return {
     title: page.title,
@@ -65,7 +66,7 @@ export default async function GuideSlugPage({ params }: PageProps) {
     return <GuideTopicView topic={topic} />;
   }
 
-  const page = await resolveGuidePage(slug);
+  const page = await resolveGuidePage(slug, await getServerI18nLocale());
   if (!page) notFound();
   return <ContentPageView page={page} />;
 }

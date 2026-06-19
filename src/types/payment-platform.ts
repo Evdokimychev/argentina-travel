@@ -1,5 +1,38 @@
+import type { BookingPaymentStatus } from "@/types/booking-params";
 import type { PaymentProviderId } from "@/types/payment-webhook";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
+
+/** Mercado Pago capture lifecycle — maps MP statuses to platform phases. */
+export type MercadoPagoCapturePhase =
+  | "authorized"
+  | "captured"
+  | "refunded"
+  | "pending"
+  | "failed";
+
+export type PaymentReceiptMetadata = {
+  providerStatus: string;
+  capturePhase: MercadoPagoCapturePhase;
+  statusDetail?: string;
+  dateCreated?: string;
+  dateApproved?: string;
+  paymentMethodId?: string;
+  authorizationCode?: string;
+  providerPaymentId: string;
+};
+
+export type PaymentTransactionReceiptView = {
+  transactionId: string;
+  bookingId: string;
+  provider: PaymentProviderId;
+  externalId: string | null;
+  amount: number;
+  currency: string;
+  status: PaymentTransactionStatus;
+  type: PaymentTransactionType;
+  paidAt: string | null;
+  receipt: PaymentReceiptMetadata | null;
+};
 
 export type PaymentTransactionType = "charge" | "refund" | "payout";
 
@@ -111,4 +144,19 @@ export const PAYMENT_PROVIDER_LABELS: Record<PaymentProviderId, string> = {
   mercadopago: "Mercado Pago",
   stripe: "Stripe",
   manual: "Вручную",
+};
+
+export const MERCADOPAGO_CAPTURE_PHASE_LABELS: Record<MercadoPagoCapturePhase, string> = {
+  authorized: "Авторизовано",
+  captured: "Списано",
+  refunded: "Возвращено",
+  pending: "В обработке",
+  failed: "Отклонено",
+};
+
+export const BOOKING_PAYMENT_STATUS_LABELS: Record<BookingPaymentStatus, string> = {
+  pending: "Не оплачено",
+  partial: "Частично оплачено",
+  paid: "Оплачено",
+  refunded: "Возвращено",
 };

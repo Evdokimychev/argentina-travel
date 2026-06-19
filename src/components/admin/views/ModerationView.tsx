@@ -30,9 +30,18 @@ const MODERATION_STATUS_LABELS: Record<string, string> = {
   rejected: "Отклонено",
 };
 
+const REVIEW_REPORT_REASON_LABELS: Record<string, string> = {
+  spam: "Спам",
+  offensive: "Оскорбления",
+  fake: "Подозрение на фальсификацию",
+  irrelevant: "Не относится к туру",
+  other: "Другое",
+};
+
 const ENTITY_TYPE_LABELS: Record<string, string> = {
   tour: "Тур",
   review: "Отзыв",
+  review_report: "Жалоба на отзыв",
 };
 
 export default function ModerationView() {
@@ -128,7 +137,36 @@ export default function ModerationView() {
                     <span className="text-slate">{formatAdminWhen(item.createdAt)}</span>
                   </div>
 
-                  {item.review ? (
+                  {item.reviewReport ? (
+                    <>
+                      <p className="font-medium text-charcoal">{item.reviewReport.reviewTourTitle}</p>
+                      <p className="text-slate">
+                        {item.reviewReport.reviewTourSlug} · оценка {item.reviewReport.reviewRating}/5
+                        {item.reviewReport.reporterName
+                          ? ` · жалоба от ${item.reviewReport.reporterName}`
+                          : ""}
+                      </p>
+                      <p className="text-slate">
+                        Причина:{" "}
+                        {REVIEW_REPORT_REASON_LABELS[item.reviewReport.reason] ??
+                          item.reviewReport.reason}
+                      </p>
+                      {item.reviewReport.details ? (
+                        <p className="rounded-xl bg-gray-50 p-3 text-charcoal">
+                          {item.reviewReport.details}
+                        </p>
+                      ) : null}
+                      <p className="rounded-xl bg-gray-50 p-3 text-charcoal">
+                        {item.reviewReport.reviewText}
+                      </p>
+                      <Link
+                        href={`/tours/${item.reviewReport.reviewTourSlug}#reviews`}
+                        className="text-sky hover:underline"
+                      >
+                        Отзыв на странице тура
+                      </Link>
+                    </>
+                  ) : item.review ? (
                     <>
                       <p className="font-medium text-charcoal">{item.review.tourTitle}</p>
                       <p className="text-slate">
@@ -171,7 +209,7 @@ export default function ModerationView() {
                       disabled={busyId === item.id}
                       onClick={() => void resolveItem(item.id, "approve")}
                     >
-                      Одобрить
+                      {item.entityType === "review_report" ? "Скрыть отзыв" : "Одобрить"}
                     </Button>
                     <Button
                       size="sm"
@@ -179,7 +217,7 @@ export default function ModerationView() {
                       disabled={busyId === item.id}
                       onClick={() => void resolveItem(item.id, "reject")}
                     >
-                      Отклонить
+                      {item.entityType === "review_report" ? "Отклонить жалобу" : "Отклонить"}
                     </Button>
                   </div>
                 </li>

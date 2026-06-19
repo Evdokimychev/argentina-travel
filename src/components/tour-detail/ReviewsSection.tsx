@@ -9,6 +9,7 @@ import { formatReviews } from "@/lib/pluralize";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StarRating } from "@/components/ui/star-rating";
 import TourSection from "./TourSection";
+import ReviewReportButton from "./ReviewReportButton";
 
 const PER_PAGE = 3;
 const FILTER_STARS = [5, 4, 3] as const;
@@ -216,6 +217,9 @@ export default function ReviewsSection({
                     ))}
                   </div>
                 )}
+                {review.source === "platform" ? (
+                  <ReviewReportButton reviewId={review.id} />
+                ) : null}
               </div>
             </div>
           </article>

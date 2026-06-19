@@ -81,6 +81,12 @@ async function main() {
   assert(health.json && typeof health.json === "object", "Health response must be a JSON object.");
   assert(typeof health.json.ok === "boolean", "Health response must include boolean 'ok'.");
   assert(typeof health.json.version === "string", "Health response must include 'version'.");
+  assert(
+    health.json.checks?.migrations &&
+      (typeof health.json.checks.migrations.latestId === "string" ||
+        health.json.checks.migrations.latestId === null),
+    "Health response must include checks.migrations.latestId."
+  );
   console.log("✓ GET /api/health");
 
   const index = await get("/api/site/search-index", "json");

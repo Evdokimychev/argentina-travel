@@ -1,4 +1,5 @@
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
+import type { PaymentTransactionReceiptView } from "@/types/payment-platform";
 import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
 
 async function parseJson<T>(response: Response): Promise<T> {
@@ -120,6 +121,34 @@ export async function apiCreateBookingPaymentPreference(input: {
       }),
     })
   );
+}
+
+export type PaymentLinkStatusResponse = {
+  bookingId: string;
+  tourTitle: string;
+  contactName: string;
+  paymentStatus: string;
+  linkStatus: string;
+  amountUsd: number;
+  expired: boolean;
+  paidAt: string | null;
+  receipt: PaymentTransactionReceiptView | null;
+};
+
+export async function apiFetchPaymentLinkStatus(token: string): Promise<PaymentLinkStatusResponse> {
+  return parseJson<PaymentLinkStatusResponse>(
+    await fetch(`/api/bookings/payment-link/${encodeURIComponent(token)}`, { cache: "no-store" })
+  );
+}
+
+export async function apiFetchBookingPaymentReceipt(bookingId: string): Promise<{
+  receipt: PaymentTransactionReceiptView | null;
+  paymentStatus: string;
+}> {
+  return parseJson<{
+    receipt: PaymentTransactionReceiptView | null;
+    paymentStatus: string;
+  }>(await fetch(`/api/bookings/${encodeURIComponent(bookingId)}/payment/receipt`, { cache: "no-store" }));
 }
 
 export function isRemoteBookingsMode(): boolean {

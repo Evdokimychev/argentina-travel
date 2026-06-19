@@ -204,6 +204,60 @@ export default function OrganizerDashboardView() {
             <p className="mt-2 font-heading text-3xl font-bold text-charcoal">
               {analytics.conversionRate != null ? `${analytics.conversionRate}%` : "—"}
             </p>
+            <p className="mt-1 text-xs text-slate">
+              {analytics.conversionFunnel.started > 0
+                ? `${analytics.conversionFunnel.confirmed} из ${analytics.conversionFunnel.started} заявок`
+                : "Нет заявок"}
+            </p>
+          </div>
+        </section>
+      ) : null}
+
+      {analytics && analytics.conversionFunnel.started > 0 ? (
+        <section className={cabinetPanelClass}>
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 className="font-heading text-lg font-bold text-charcoal">Мини-воронка</h2>
+              <p className="mt-1 text-sm text-slate">Конверсия по вашим заявкам (без отменённых)</p>
+            </div>
+            <Link href="/organizer/analytics" className={cabinetLinkClass}>
+              Подробная аналитика →
+            </Link>
+          </div>
+          <div className="mt-4 grid gap-2 sm:grid-cols-4">
+            {[
+              {
+                label: "Заявки",
+                value: analytics.conversionFunnel.started,
+                pct: null,
+              },
+              {
+                label: "Подтверждены",
+                value: analytics.conversionFunnel.confirmed,
+                pct: analytics.conversionFunnel.bookingToConfirmedPct,
+              },
+              {
+                label: "Оплачены",
+                value: analytics.conversionFunnel.paid,
+                pct: analytics.conversionFunnel.bookingToPaidPct,
+              },
+              {
+                label: "Отзывы",
+                value: analytics.conversionFunnel.reviewed,
+                pct: analytics.conversionFunnel.bookingToReviewPct,
+              },
+            ].map((step) => (
+              <div
+                key={step.label}
+                className="rounded-2xl border border-gray-100 bg-white px-3 py-3 text-center shadow-sm"
+              >
+                <p className="text-xs text-slate">{step.label}</p>
+                <p className="mt-1 font-heading text-xl font-bold text-charcoal">{step.value}</p>
+                {step.pct != null ? (
+                  <p className="mt-0.5 text-xs font-medium text-sky">{step.pct}% от заявок</p>
+                ) : null}
+              </div>
+            ))}
           </div>
         </section>
       ) : null}

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
+import { groupCmsDocuments } from "@/lib/cms/cms-locale";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
 import { getBlogPostBySlug } from "@/data/blog";
@@ -33,9 +34,14 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const docType = url.searchParams.get("docType") as CmsDocType | null;
+  const grouped = url.searchParams.get("grouped") === "true";
 
   const supabase = createSupabaseAdminClient();
   const documents = await listCmsDocuments(supabase, docType ? { docType } : undefined);
+
+  if (grouped) {
+    return NextResponse.json({ documents, grouped: groupCmsDocuments(documents) });
+  }
 
   return NextResponse.json({ documents });
 }

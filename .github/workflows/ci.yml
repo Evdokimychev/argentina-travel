@@ -34,6 +34,9 @@ jobs:
       - name: Lint
         run: npm run lint
 
+      - name: RLS audit
+        run: node scripts/rls-audit.mjs
+
       - name: Public smoke checks
         continue-on-error: true
         run: node scripts/smoke-public.mjs

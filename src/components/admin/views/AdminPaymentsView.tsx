@@ -6,6 +6,7 @@ import FormattedPrice from "@/components/FormattedPrice";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import { AdminPaymentLedgerPanel } from "@/components/admin/views/AdminPaymentLedgerView";
+import { AdminPayoutsPanel } from "@/components/admin/views/AdminPayoutsView";
 import { AdminReconciliationPanel } from "@/components/admin/views/AdminReconciliationView";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -35,12 +36,13 @@ const PAYMENT_LINK_STATUS_LABELS: Record<BookingPaymentOverview["paymentLinkStat
   none: "Ссылки нет",
 };
 
-type AdminPaymentsTab = "bookings" | "ledger" | "reconciliation";
+type AdminPaymentsTab = "bookings" | "ledger" | "reconciliation" | "payouts";
 
 const TAB_LABELS: Record<AdminPaymentsTab, string> = {
   bookings: "Бронирования",
   ledger: "Журнал операций",
   reconciliation: "Сверка",
+  payouts: "Выплаты и комиссии",
 };
 
 export default function AdminPaymentsView({ initialTab = "bookings" }: { initialTab?: AdminPaymentsTab }) {
@@ -59,7 +61,9 @@ export default function AdminPaymentsView({ initialTab = "bookings" }: { initial
       ? "Сводка по оплатам без проведения списаний и интеграции с платёжным шлюзом"
       : tab === "ledger"
         ? "Read-only реестр списаний, возвратов и выплат"
-        : "Сводка по списаниям, возвратам и выплатам организаторам";
+        : tab === "payouts"
+          ? "Пакеты выплат организаторам и отчёт по комиссиям платформы"
+          : "Сводка по списаниям, возвратам и выплатам организаторам";
 
   return (
     <CapabilityGate capability="operations.bookings">
@@ -127,6 +131,7 @@ export default function AdminPaymentsView({ initialTab = "bookings" }: { initial
 
         {tab === "ledger" ? <AdminPaymentLedgerPanel /> : null}
         {tab === "reconciliation" ? <AdminReconciliationPanel /> : null}
+        {tab === "payouts" ? <AdminPayoutsPanel /> : null}
 
         {tab === "bookings" ? (
           <>

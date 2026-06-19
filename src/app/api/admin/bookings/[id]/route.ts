@@ -85,11 +85,13 @@ export async function PATCH(
 
   void notifyBookingStatusChanged({
     bookingId: id,
+    userId: result.booking.userId,
     tourTitle: result.booking.tourTitle,
     contactEmail: result.booking.contactEmail,
     contactName: result.booking.contactName,
     fromStatus: current.status,
     toStatus: body.status,
+    changedAt: result.booking.updatedAt,
   });
 
   return NextResponse.json({ booking: result.booking });

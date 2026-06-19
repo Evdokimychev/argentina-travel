@@ -11,6 +11,7 @@ import {
   rowToModerationReviewSummary,
   rowToReview,
   type ModerationReviewSummary,
+  type ModerationReviewReportSummary,
   type TouristReviewRow,
 } from "@/lib/reviews-db-mapper";
 
@@ -439,8 +440,10 @@ export async function resolveReviewModeration(
       tripDate: string | null;
       authorEmail: string | null;
       authorName: string | null;
+      authorUserId: string | null;
       organizerEmail: string | null;
       organizerName: string | null;
+      organizerUserId: string | null;
     }
   | { error: string }
 > {
@@ -507,7 +510,197 @@ export async function resolveReviewModeration(
     tripDate: row.trip_date,
     authorEmail,
     authorName: resolveProfileDisplayName(authorProfile),
+    authorUserId: row.user_id,
     organizerEmail,
     organizerName: resolveProfileDisplayName(organizerProfile),
+    organizerUserId: row.organizer_user_id,
   };
+}
+
+const REVIEW_REPORT_REASON_LABELS: Record<string, string> = {
+  spam: "Спам",
+  offensive: "Оскорбления",
+  fake: "Подозрение на фальсификацию",
+  irrelevant: "Не относится к туру",
+  other: "Другое",
+};
+
+type ReviewReportRow = Database["public"]["Tables"]["review_reports"]["Row"];
+
+export async function submitReviewReport(
+  supabase: DbClient,
+  input: {
+    reviewId: string;
+    reporterUserId: string;
+    reason: string;
+    details?: string;
+  }
+): Promise<{ reportId: string } | { error: string }> {
+  const { data: review, error: reviewError } = await supabase
+    .from("tourist_reviews")
+    .select("id, status, tour_title, tour_slug, rating, review_text")
+    .eq("id", input.reviewId)
+    .maybeSingle();
+
+  if (reviewError || !review) return { error: "Отзыв не найден" };
+  if (review.status !== "published") {
+    return { error: "Пожаловаться можно только на опубликованный отзыв" };
+  }
+
+  const { data: existing } = await supabase
+    .from("review_reports")
+    .select("id")
+    .eq("review_id", input.reviewId)
+    .eq("reporter_user_id", input.reporterUserId)
+    .eq("status", "pending")
+    .maybeSingle();
+
+  if (existing) {
+    return { error: "Вы уже отправили жалобу на этот отзыв" };
+  }
+
+  const { data: report, error: insertError } = await supabase
+    .from("review_reports")
+    .insert({
+      review_id: input.reviewId,
+      reporter_user_id: input.reporterUserId,
+      reason: input.reason,
+      details: input.details?.trim() || null,
+      status: "pending",
+    })
+    .select("id")
+    .maybeSingle();
+
+  if (insertError || !report) {
+    return { error: insertError?.message ?? "Не удалось отправить жалобу" };
+  }
+
+  const reasonLabel = REVIEW_REPORT_REASON_LABELS[input.reason] ?? input.reason;
+  await supabase.from("moderation_queue").upsert(
+    {
+      entity_type: "review_report",
+      entity_id: report.id,
+      status: "pending",
+      reason: `Жалоба на отзыв: ${reasonLabel}`,
+      submitted_by: input.reporterUserId,
+      metadata: {
+        reviewId: input.reviewId,
+        tourTitle: review.tour_title,
+        tourSlug: review.tour_slug,
+        rating: review.rating,
+        reason: input.reason,
+        reasonLabel,
+        details: input.details?.trim() || null,
+      } as Json,
+    },
+    { onConflict: "entity_type,entity_id" }
+  );
+
+  return { reportId: report.id };
+}
+
+export async function fetchModerationReviewReportSummaries(
+  supabase: DbClient,
+  reportIds: string[]
+): Promise<Map<string, ModerationReviewReportSummary>> {
+  const map = new Map<string, ModerationReviewReportSummary>();
+  if (!reportIds.length) return map;
+
+  const { data: rows, error } = await supabase
+    .from("review_reports")
+    .select("*")
+    .in("id", reportIds);
+
+  if (error || !rows?.length) return map;
+
+  const reviewIds = [...new Set((rows as ReviewReportRow[]).map((row) => row.review_id))];
+  const reporterIds = [
+    ...new Set(
+      (rows as ReviewReportRow[])
+        .map((row) => row.reporter_user_id)
+        .filter((id): id is string => Boolean(id))
+    ),
+  ];
+
+  const reviewsById = new Map<string, TouristReviewRow>();
+  if (reviewIds.length) {
+    const { data: reviewRows } = await supabase
+      .from("tourist_reviews")
+      .select("*")
+      .in("id", reviewIds);
+    for (const row of reviewRows ?? []) {
+      reviewsById.set(row.id, row as TouristReviewRow);
+    }
+  }
+
+  const namesByUserId = new Map<string, string>();
+  if (reporterIds.length) {
+    const { data: profiles } = await supabase
+      .from("profiles")
+      .select("id, first_name, last_name, email")
+      .in("id", reporterIds);
+    for (const profile of profiles ?? []) {
+      const label =
+        [profile.first_name, profile.last_name].filter(Boolean).join(" ").trim() ||
+        profile.email?.trim() ||
+        profile.id.slice(0, 8);
+      namesByUserId.set(profile.id, label);
+    }
+  }
+
+  for (const row of rows as ReviewReportRow[]) {
+    const review = reviewsById.get(row.review_id);
+    map.set(row.id, {
+      id: row.id,
+      reviewId: row.review_id,
+      reason: row.reason,
+      details: row.details,
+      reporterUserId: row.reporter_user_id,
+      reporterName: row.reporter_user_id ? namesByUserId.get(row.reporter_user_id) ?? null : null,
+      reviewTourTitle: review?.tour_title ?? "",
+      reviewTourSlug: review?.tour_slug ?? "",
+      reviewRating: review?.rating ?? 0,
+      reviewText: review?.review_text ?? "",
+      createdAt: row.created_at,
+    });
+  }
+
+  return map;
+}
+
+export async function resolveReviewReportModeration(
+  supabase: DbClient,
+  reportId: string,
+  action: "approve" | "reject",
+  actorUserId: string
+): Promise<{ ok: true } | { error: string }> {
+  const nextStatus = action === "approve" ? "resolved" : "dismissed";
+  const now = new Date().toISOString();
+
+  const { data: report, error } = await supabase
+    .from("review_reports")
+    .update({
+      status: nextStatus,
+      resolved_by: actorUserId,
+      resolved_at: now,
+    })
+    .eq("id", reportId)
+    .select("review_id")
+    .maybeSingle();
+
+  if (error || !report) return { error: error?.message ?? "Жалоба не найдена" };
+
+  if (action === "approve") {
+    await supabase
+      .from("tourist_reviews")
+      .update({
+        status: "rejected",
+        moderation_notes: "Скрыт по жалобе пользователя",
+        moderated_by: actorUserId,
+        moderated_at: now,
+      })
+      .eq("id", report.review_id);
+  }
+
+  return { ok: true };
 }

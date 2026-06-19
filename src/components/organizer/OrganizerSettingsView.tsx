@@ -23,6 +23,7 @@ import {
   type OrganizerProfile,
 } from "@/types/organizer-profile";
 import { formatPlatformTenure } from "@/lib/organizer-experience";
+import NotificationPreferencesSection from "@/components/notifications/NotificationPreferencesSection";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -31,6 +32,7 @@ const SETTINGS_TABS = [
   { id: "contacts", label: "Контакты и график" },
   { id: "cancellation", label: "Отмена бронирования" },
   { id: "guides", label: "Гиды" },
+  { id: "notifications", label: "Уведомления" },
 ] as const;
 
 type SettingsTabId = (typeof SETTINGS_TABS)[number]["id"];
@@ -599,6 +601,8 @@ export default function OrganizerSettingsView() {
           <OrganizerCancellationTab userId={user.id} />
         ) : activeTab === "guides" ? (
           <OrganizerGuidesTab userId={user.id} />
+        ) : activeTab === "notifications" ? (
+          <NotificationPreferencesSection scope="organizer" />
         ) : null}
       </div>
 

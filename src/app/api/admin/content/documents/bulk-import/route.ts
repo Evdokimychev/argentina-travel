@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { seedCmsFromTs } from "@/lib/cms/cms-ts-seed";
+import { seedCmsFromTs, seedCmsI18nPilot } from "@/lib/cms/cms-ts-seed";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { CmsDocType } from "@/types/cms-content";
 
@@ -9,6 +9,8 @@ type BulkImportBody = {
   docTypes?: CmsDocType[];
   publish?: boolean;
   skipExisting?: boolean;
+  /** E43: import es/en pilot locale variants */
+  includeI18nPilot?: boolean;
 };
 
 const ALLOWED_TYPES: CmsDocType[] = ["legal", "blog", "guide", "destination", "place"];
@@ -23,12 +25,23 @@ export async function POST(request: Request) {
     : undefined;
 
   const supabase = createSupabaseAdminClient();
-  const result = await seedCmsFromTs(supabase, {
+  const seedOptions = {
     docTypes,
     publish: body.publish ?? true,
     skipExisting: body.skipExisting ?? true,
     actorId: auth.actorId,
-  });
+  };
+
+  const result = await seedCmsFromTs(supabase, seedOptions);
+
+  let pilotResult = { created: 0, skipped: 0, updated: 0, total: 0, errors: [] as string[] };
+  if (body.includeI18nPilot) {
+    pilotResult = await seedCmsI18nPilot(supabase, seedOptions);
+    result.created += pilotResult.created;
+    result.skipped += pilotResult.skipped;
+    result.updated += pilotResult.updated;
+    result.errors.push(...pilotResult.errors);
+  }
 
   await writeAdminAuditLog({
     actorUserId: auth.actorId,

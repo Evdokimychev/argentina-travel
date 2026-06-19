@@ -1,13 +1,15 @@
 import { NextResponse } from "next/server";
 import {
+  applyPaymentWebhookPatch,
   mapWebhookToBookingPaymentUpdate,
   parseAndValidateWebhook,
+  persistWebhookChargeTransaction,
 } from "@/lib/payments/webhook-handler";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request: Request) {
   const payload = await request.json().catch(() => null);
   const signatureHeader = request.headers.get("stripe-signature");
-  // If set, STRIPE_WEBHOOK_SECRET enables signature verification for this endpoint.
   const secret = process.env.STRIPE_WEBHOOK_SECRET?.trim();
 
   const parsed = parseAndValidateWebhook({
@@ -34,5 +36,32 @@ export async function POST(request: Request) {
     paymentStatus: patch.paymentStatus,
   });
 
-  return NextResponse.json({ ok: true });
+  if (!parsed.verified) {
+    return NextResponse.json({ ok: true });
+  }
+
+  const supabase = createSupabaseAdminClient();
+  const applied = await applyPaymentWebhookPatch(supabase, parsed.event.bookingId, patch);
+
+  if (applied && (patch.paymentStatus === "paid" || patch.paymentStatus === "partial")) {
+    const externalId =
+      parsed.event.rawPayload &&
+      typeof parsed.event.rawPayload === "object" &&
+      !Array.isArray(parsed.event.rawPayload)
+        ? String(
+            (parsed.event.rawPayload as Record<string, unknown>).id ??
+              parsed.event.eventId
+          )
+        : parsed.event.eventId;
+
+    await persistWebhookChargeTransaction(supabase, {
+      bookingId: parsed.event.bookingId,
+      patch,
+      externalId,
+      amount: patch.paymentSummary.paidAmountUsd,
+      currency: "USD",
+    });
+  }
+
+  return NextResponse.json({ ok: true, applied });
 }

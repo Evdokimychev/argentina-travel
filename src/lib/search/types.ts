@@ -17,13 +17,30 @@ export type SearchHit = {
   kindLabel: string;
   title: string;
   description?: string;
+  titleHighlight?: string;
+  descriptionHighlight?: string;
   url: string;
   score: number;
 };
 
+export type SearchSource = "meilisearch" | "postgres" | "static";
+
 export type SearchResponse = {
   results: SearchHit[];
-  source: "postgres" | "static";
+  source: SearchSource;
   query: string;
   kind?: string;
+};
+
+export type ReindexResult = {
+  ok: boolean;
+  indexed: number;
+  removed: number;
+  meilisearch?: {
+    ok: boolean;
+    synced: number;
+    removed: number;
+    error?: string;
+  };
+  error?: string;
 };

@@ -22,6 +22,19 @@ type SettingsResponse = {
       allowOrganizerSignup?: boolean;
     };
   };
+  ops?: {
+    rlsAudit: {
+      ok: boolean;
+      source: string;
+      ranAt: string;
+      criticalIssueCount: number;
+    } | null;
+    backup: {
+      lastBackupAt: string | null;
+      lastBackupFile: string | null;
+      hint: string;
+    };
+  };
 };
 
 export default function SettingsView() {
@@ -105,6 +118,42 @@ export default function SettingsView() {
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {loading ? <p className="text-sm text-slate">Загрузка…</p> : null}
+
+        <section className={`${cabinetCardClass} space-y-4 p-5`}>
+          <h2 className="font-heading text-lg font-bold text-charcoal">Эксплуатация</h2>
+          <p className="text-sm text-slate">
+            Подсказки по резервному копированию и последней проверке RLS (CI или{" "}
+            <code className="text-xs">npm run rls-audit</code>).
+          </p>
+          <dl className="grid gap-3 text-sm sm:grid-cols-2">
+            <div>
+              <dt className="text-slate">Резервная копия схемы</dt>
+              <dd className="mt-1 font-medium text-charcoal">
+                {data?.ops?.backup.hint ?? "Нет данных"}
+              </dd>
+            </div>
+            <div>
+              <dt className="text-slate">Последний RLS-аудит</dt>
+              <dd className="mt-1 font-medium text-charcoal">
+                {data?.ops?.rlsAudit ? (
+                  <>
+                    {data.ops.rlsAudit.ranAt} —{" "}
+                    {data.ops.rlsAudit.ok ? (
+                      <span className="text-emerald-700">OK</span>
+                    ) : (
+                      <span className="text-red-600">
+                        {data.ops.rlsAudit.criticalIssueCount} критичных проблем
+                      </span>
+                    )}{" "}
+                    ({data.ops.rlsAudit.source})
+                  </>
+                ) : (
+                  "Аудит ещё не запускался"
+                )}
+              </dd>
+            </div>
+          </dl>
+        </section>
 
         <section className={`${cabinetCardClass} space-y-4 p-5`}>
           <h2 className="font-heading text-lg font-bold text-charcoal">Юридическая информация</h2>

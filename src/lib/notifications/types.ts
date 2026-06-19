@@ -1,4 +1,10 @@
-export type NotificationCategory = "booking" | "payment" | "travelers" | "system";
+export type NotificationCategory =
+  | "booking"
+  | "payment"
+  | "travelers"
+  | "reviews"
+  | "moderation"
+  | "system";
 
 export interface AppNotification {
   id: string;

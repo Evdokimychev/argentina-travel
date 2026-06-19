@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
+import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { cn } from "@/lib/cn";
 import {
   cabinetMobileHeaderClass,
@@ -34,6 +35,7 @@ import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 import { ORGANIZER_INBOX_UPDATED_EVENT } from "@/types/organizer-inbox";
+import { NOTIFICATIONS_HUB_UPDATED_EVENT } from "@/types/notifications-hub";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "organizer-sidebar-collapsed";
@@ -77,7 +79,7 @@ async function loadOrganizerNavItemsWithBadges(userId: string) {
   let items = getOrganizerNavItemsWithBadges(userId);
   if (isSupabaseBookingsEnabled()) {
     try {
-      const res = await fetch("/api/organizer/inbox?filter=unread");
+      const res = await fetch("/api/notifications?scope=organizer&limit=1");
       if (res.ok) {
         const json = (await res.json()) as { unreadCount?: number };
         const unread = json.unreadCount ?? 0;
@@ -110,10 +112,12 @@ function useOrganizerNavBadges() {
     window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
     window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
     window.addEventListener(ORGANIZER_INBOX_UPDATED_EVENT, handler);
+    window.addEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handler);
     return () => {
       window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
       window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
       window.removeEventListener(ORGANIZER_INBOX_UPDATED_EVENT, handler);
+      window.removeEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handler);
     };
   }, [user]);
 
@@ -179,6 +183,7 @@ export default function OrganizerSidebar({
         {isCompact ? (
           <div className="flex flex-col items-center gap-3">
             <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-10 w-10 text-sm" />
+            <NotificationsBell scope="organizer" compact />
             <Link
               href="/organizer/settings"
               title="Управление"
@@ -196,10 +201,11 @@ export default function OrganizerSidebar({
           <>
             <div className="flex items-center gap-3">
               <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-11 w-11 text-sm" />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[11px] text-slate">Автор тура</p>
                 <p className="truncate text-sm font-semibold text-charcoal">{userName}</p>
               </div>
+              <NotificationsBell scope="organizer" />
             </div>
             <Link
               href="/organizer/settings"

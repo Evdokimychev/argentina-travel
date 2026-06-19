@@ -73,6 +73,12 @@ export async function listPublishedCmsSlugs(
  * DB-first resolution: published CMS document merged with TS/static fallback.
  * Returns fallback unchanged when Supabase is unavailable or no published override exists.
  */
+/** Locales to try when resolving published CMS content: requested → ru. */
+export function cmsLocaleFallbackChain(locale: string): string[] {
+  if (locale === "ru") return ["ru"];
+  return [locale, "ru"];
+}
+
 export async function resolveWithPublishedCmsOverride<T>(options: {
   docType: CmsDocType;
   slug: string;
@@ -84,10 +90,14 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
   const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
 
-  const override = await fetchPublishedCmsDocument(supabase, docType, slug, locale);
-  if (!override) return fallback;
+  for (const tryLocale of cmsLocaleFallbackChain(locale)) {
+    const override = await fetchPublishedCmsDocument(supabase, docType, slug, tryLocale);
+    if (override) {
+      return merge(override, fallback ?? undefined) ?? fallback;
+    }
+  }
 
-  return merge(override, fallback ?? undefined) ?? fallback;
+  return fallback;
 }
 
 /** All CMS documents (any status) keyed by id — used in admin inventory. */

@@ -4,9 +4,11 @@ import type { Database, Json, PaymentTransactionDbRow } from "@/types/database";
 import type { BookingPaymentWebhookPatch } from "@/types/payment-webhook";
 import type {
   PaymentTransactionFilters,
+  PaymentTransactionReceiptView,
   PaymentTransactionRow,
   PaymentTransactionStatus,
   PaymentTransactionType,
+  PaymentReceiptMetadata,
 } from "@/types/payment-platform";
 
 type DbClient = SupabaseClient<Database>;
@@ -43,11 +45,70 @@ function mapTransactionRow(
 }
 
 function resolveChargeStatus(
-  paymentStatus: BookingPaymentWebhookPatch["paymentStatus"]
+  paymentStatus: BookingPaymentWebhookPatch["paymentStatus"],
+  capturePhase?: string
 ): PaymentTransactionStatus {
+  if (capturePhase === "authorized") return "processing";
+  if (capturePhase === "failed") return "failed";
   if (paymentStatus === "paid" || paymentStatus === "partial") return "completed";
   if (paymentStatus === "refunded") return "completed";
   return "pending";
+}
+
+function parseReceiptMetadata(metadata: Record<string, unknown>): PaymentReceiptMetadata | null {
+  const receipt = metadata.receipt;
+  if (!receipt || typeof receipt !== "object" || Array.isArray(receipt)) return null;
+  const record = receipt as Record<string, unknown>;
+  const providerPaymentId =
+    typeof record.providerPaymentId === "string" ? record.providerPaymentId.trim() : "";
+  const providerStatus =
+    typeof record.providerStatus === "string" ? record.providerStatus.trim() : "";
+  const capturePhase = record.capturePhase;
+  if (!providerPaymentId || !providerStatus) return null;
+  if (
+    capturePhase !== "authorized" &&
+    capturePhase !== "captured" &&
+    capturePhase !== "refunded" &&
+    capturePhase !== "pending" &&
+    capturePhase !== "failed"
+  ) {
+    return null;
+  }
+
+  return {
+    providerPaymentId,
+    providerStatus,
+    capturePhase,
+    statusDetail:
+      typeof record.statusDetail === "string" ? record.statusDetail.trim() : undefined,
+    dateCreated: typeof record.dateCreated === "string" ? record.dateCreated : undefined,
+    dateApproved: typeof record.dateApproved === "string" ? record.dateApproved : undefined,
+    paymentMethodId:
+      typeof record.paymentMethodId === "string" ? record.paymentMethodId.trim() : undefined,
+    authorizationCode:
+      typeof record.authorizationCode === "string"
+        ? record.authorizationCode.trim()
+        : undefined,
+  };
+}
+
+export function mapTransactionToReceiptView(row: PaymentTransactionRow): PaymentTransactionReceiptView {
+  const receipt = parseReceiptMetadata(row.metadata);
+  const occurredAt =
+    typeof row.metadata.occurredAt === "string" ? row.metadata.occurredAt : null;
+
+  return {
+    transactionId: row.id,
+    bookingId: row.bookingId,
+    provider: row.provider,
+    externalId: row.externalId,
+    amount: row.amount,
+    currency: row.currency,
+    status: row.status,
+    type: row.type,
+    paidAt: receipt?.dateApproved ?? occurredAt ?? (row.status === "completed" ? row.updatedAt : null),
+    receipt,
+  };
 }
 
 export type UpsertChargeFromWebhookInput = {
@@ -57,6 +118,7 @@ export type UpsertChargeFromWebhookInput = {
   amount: number;
   currency?: string;
   patch: BookingPaymentWebhookPatch;
+  receiptMetadata?: Record<string, unknown>;
 };
 
 /** Idempotent insert/update of charge row keyed by provider + external_id. */
@@ -67,7 +129,11 @@ export async function upsertChargeFromWebhook(
   const externalId = input.externalId.trim();
   if (!externalId) return null;
 
-  const status = resolveChargeStatus(input.patch.paymentStatus);
+  const capturePhase =
+    typeof input.receiptMetadata?.capturePhase === "string"
+      ? input.receiptMetadata.capturePhase
+      : undefined;
+  const status = resolveChargeStatus(input.patch.paymentStatus, capturePhase);
   const payload: Database["public"]["Tables"]["payment_transactions"]["Insert"] = {
     booking_id: input.bookingId,
     provider: input.provider,
@@ -81,6 +147,7 @@ export async function upsertChargeFromWebhook(
       paymentStatus: input.patch.paymentStatus,
       occurredAt: input.patch.occurredAt,
       paymentSummary: input.patch.paymentSummary,
+      ...(input.receiptMetadata ? { receipt: input.receiptMetadata } : {}),
     } as unknown as Json,
   };
 
@@ -175,6 +242,24 @@ export async function createRefundRequest(
   }
 
   return { transaction: mapTransactionRow(data) };
+}
+
+export async function fetchLatestChargeReceiptForBooking(
+  supabase: DbClient,
+  bookingId: string
+): Promise<PaymentTransactionReceiptView | null> {
+  const { data } = await supabase
+    .from("payment_transactions")
+    .select("*")
+    .eq("booking_id", bookingId)
+    .eq("type", "charge")
+    .in("status", ["completed", "processing"])
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+  return mapTransactionToReceiptView(mapTransactionRow(data));
 }
 
 export async function fetchPaymentTransactionById(

@@ -145,13 +145,16 @@ function normalizeSummary(raw: unknown, fallbackTotal: number): SafePaymentSumma
 }
 
 /**
- * Booking payment state machine (E28, production baseline):
- * pending -> partial -> paid.
- *
- * We do not support automatic refund transitions from payment webhooks yet.
+ * Booking payment state machine (E28/E41):
+ * pending -> partial -> paid; paid/partial -> refunded via webhook or admin.
  */
 function normalizeStateMachineStatus(status: unknown): BookingPaymentStatus {
-  if (status === "paid" || status === "partial" || status === "pending") {
+  if (
+    status === "paid" ||
+    status === "partial" ||
+    status === "pending" ||
+    status === "refunded"
+  ) {
     return status;
   }
   return "pending";
@@ -161,6 +164,8 @@ function resolveNextPaymentStatus(
   currentStatus: BookingPaymentStatus,
   incomingStatus: BookingPaymentStatus
 ): BookingPaymentStatus {
+  if (incomingStatus === "refunded") return "refunded";
+  if (currentStatus === "refunded") return "refunded";
   if (currentStatus === "paid") return "paid";
   if (currentStatus === "partial") {
     return incomingStatus === "paid" ? "paid" : "partial";
@@ -349,7 +354,12 @@ export async function applyPaymentWebhookPatch(
           status: "paid",
           paidAt: patch.occurredAt,
         } as JsonRecord)
-      : payload.paymentLink;
+      : currentPaymentLink && nextPaymentStatus === "refunded"
+        ? ({
+            ...currentPaymentLink,
+            status: "cancelled",
+          } as JsonRecord)
+        : payload.paymentLink;
 
   const nextPayload: Record<string, unknown> = {
     ...payload,
@@ -383,6 +393,7 @@ export type PersistWebhookTransactionInput = {
   externalId: string;
   amount: number;
   currency?: string;
+  receiptMetadata?: Record<string, unknown>;
 };
 
 /** Persist charge row after webhook patch — idempotent on provider + external_id. */
@@ -394,14 +405,35 @@ export async function persistWebhookChargeTransaction(
 
   try {
     const { upsertChargeFromWebhook } = await import("@/lib/payments/transaction-server");
-    await upsertChargeFromWebhook(supabase, {
+    const transaction = await upsertChargeFromWebhook(supabase, {
       bookingId: input.bookingId,
       provider: input.patch.provider,
       externalId: input.externalId,
       amount: input.amount,
       currency: input.currency,
       patch: input.patch,
+      receiptMetadata: input.receiptMetadata,
     });
+
+    if (transaction?.status === "completed" && transaction.type === "charge") {
+      const { data: booking } = await supabase
+        .from("bookings")
+        .select("organizer_user_id")
+        .eq("id", input.bookingId)
+        .maybeSingle();
+
+      const organizerUserId = booking?.organizer_user_id?.trim();
+      if (organizerUserId) {
+        const { createCommissionSnapshotForCharge } = await import("@/lib/payments/commission-server");
+        await createCommissionSnapshotForCharge(supabase, {
+          bookingId: input.bookingId,
+          paymentTransactionId: transaction.id,
+          organizerUserId,
+          grossAmount: transaction.amount,
+          currency: transaction.currency,
+        });
+      }
+    }
   } catch {
     // Ledger persistence must not break webhook processing
   }

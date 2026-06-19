@@ -5,6 +5,7 @@ import { getPagesBySection } from "@/lib/content-pages";
 import { getAllDestinations } from "@/lib/destinations";
 import { PLACES_SEED } from "@/data/places-seed";
 import { cmsDocumentToRow } from "@/lib/cms/content-mapper";
+import { buildCmsI18nPilotEntries } from "@/lib/cms/cms-i18n-pilot";
 import type { Database, Json } from "@/types/database";
 import {
   blogBodyFromTs,
@@ -147,6 +148,92 @@ export async function seedCmsFromTs(
   const entries = buildCmsSeedEntries(locale).filter(
     (entry) => !allowedTypes || allowedTypes.has(entry.docType)
   );
+
+  let created = 0;
+  let skipped = 0;
+  let updated = 0;
+  const errors: string[] = [];
+
+  for (const entry of entries) {
+    const id = cmsDocumentId(entry.docType, entry.slug, entry.locale);
+    const { data: existing, error: readError } = await supabase
+      .from("content_documents")
+      .select("id, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (readError) {
+      errors.push(`${id}: ${readError.message}`);
+      continue;
+    }
+
+    if (existing && skipExisting) {
+      skipped += 1;
+      continue;
+    }
+
+    const status = publish ? "published" : "draft";
+    const publishedAt = publish ? new Date().toISOString() : null;
+
+    if (existing) {
+      const { error } = await supabase
+        .from("content_documents")
+        .update({
+          title: entry.title,
+          body: entry.body as Json,
+          seo: entry.seo as Json,
+          status,
+          published_at: publishedAt,
+          updated_by: actorId,
+        })
+        .eq("id", id);
+
+      if (error) {
+        errors.push(`${id}: ${error.message}`);
+        continue;
+      }
+
+      await appendSeedRevision(supabase, id, entry.title, entry.body, entry.seo, actorId);
+      updated += 1;
+      continue;
+    }
+
+    const row = cmsDocumentToRow({
+      id,
+      docType: entry.docType,
+      slug: entry.slug,
+      locale: entry.locale,
+      title: entry.title,
+      status,
+      body: entry.body,
+      seo: entry.seo,
+      publishedAt,
+      createdBy: actorId,
+      updatedBy: actorId,
+    });
+
+    const { error } = await supabase.from("content_documents").insert(row);
+    if (error) {
+      errors.push(`${id}: ${error.message}`);
+      continue;
+    }
+
+    await appendSeedRevision(supabase, id, entry.title, entry.body, entry.seo, actorId);
+    created += 1;
+  }
+
+  return { created, skipped, updated, total: entries.length, errors };
+}
+
+/** E43 pilot: seed es/en variants for privacy + best-time blog post. */
+export async function seedCmsI18nPilot(
+  supabase: DbClient,
+  options: Pick<CmsSeedOptions, "publish" | "skipExisting" | "actorId"> = {}
+): Promise<CmsSeedResult> {
+  const publish = options.publish ?? true;
+  const skipExisting = options.skipExisting ?? true;
+  const actorId = options.actorId ?? null;
+  const entries = buildCmsI18nPilotEntries();
 
   let created = 0;
   let skipped = 0;

@@ -106,6 +106,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "analytics.view",
   },
   {
+    id: "analytics-funnels",
+    section: "analytics",
+    href: "/admin/analytics/funnels",
+    label: "Воронки",
+    description: "Воронка, когорты и экспорт",
+    capability: "analytics.view",
+  },
+  {
     id: "system-settings",
     section: "system",
     href: "/admin/system/settings",

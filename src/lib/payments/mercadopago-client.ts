@@ -1,6 +1,11 @@
 import { createHmac, timingSafeEqual } from "crypto";
 import { resolveOrganizerParams } from "@/lib/booking-params";
 import { absoluteUrl } from "@/lib/site-url";
+import type { BookingPaymentStatus } from "@/types/booking-params";
+import type {
+  MercadoPagoCapturePhase,
+  PaymentReceiptMetadata,
+} from "@/types/payment-platform";
 import type { Booking } from "@/types/tourist";
 
 const MERCADOPAGO_API_BASE = "https://api.mercadopago.com";
@@ -33,6 +38,86 @@ export interface MercadoPagoPaymentDetails {
   metadata: JsonRecord;
   dateCreated?: string;
   dateApproved?: string;
+  paymentMethodId?: string;
+  authorizationCode?: string;
+}
+
+export function isMercadoPagoConfigured(): boolean {
+  return Boolean(process.env.MERCADOPAGO_ACCESS_TOKEN?.trim());
+}
+
+export function resolveMercadoPagoPublicKey(): string | null {
+  const fromPublic = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY?.trim();
+  if (fromPublic) return fromPublic;
+  return process.env.MERCADOPAGO_PUBLIC_KEY?.trim() || null;
+}
+
+/** Maps raw Mercado Pago payment status to platform capture phase. */
+export function mapMercadoPagoCapturePhase(
+  status: string,
+  statusDetail?: string
+): MercadoPagoCapturePhase {
+  const normalized = status.trim().toLowerCase();
+  const detail = statusDetail?.trim().toLowerCase();
+
+  if (normalized === "approved") return "captured";
+  if (normalized === "authorized") return "authorized";
+  if (normalized === "partially_refunded") return "captured";
+  if (normalized === "refunded") return "refunded";
+
+  if (
+    normalized === "rejected" ||
+    normalized === "cancelled" ||
+    normalized === "charged_back"
+  ) {
+    return "failed";
+  }
+
+  if (
+    normalized === "pending" ||
+    normalized === "in_process" ||
+    normalized === "in_mediation" ||
+    normalized === "process"
+  ) {
+    return detail === "partially_paid" ? "captured" : "pending";
+  }
+
+  return "pending";
+}
+
+/** Maps capture phase to booking payment status — never marks paid without capture. */
+export function mapMercadoPagoToBookingPaymentStatus(
+  status: string,
+  statusDetail?: string
+): BookingPaymentStatus {
+  const phase = mapMercadoPagoCapturePhase(status, statusDetail);
+
+  if (phase === "captured") {
+    const normalized = status.trim().toLowerCase();
+    if (normalized === "partially_refunded" || statusDetail?.trim().toLowerCase() === "partially_paid") {
+      return "partial";
+    }
+    return "paid";
+  }
+
+  if (phase === "refunded") return "refunded";
+  if (phase === "authorized" || phase === "pending") return "pending";
+  return "pending";
+}
+
+export function buildPaymentReceiptMetadata(
+  payment: MercadoPagoPaymentDetails
+): PaymentReceiptMetadata {
+  return {
+    providerStatus: payment.status,
+    capturePhase: mapMercadoPagoCapturePhase(payment.status, payment.statusDetail),
+    statusDetail: payment.statusDetail,
+    dateCreated: payment.dateCreated,
+    dateApproved: payment.dateApproved,
+    paymentMethodId: payment.paymentMethodId,
+    authorizationCode: payment.authorizationCode,
+    providerPaymentId: payment.id,
+  };
 }
 
 function asRecord(value: unknown): JsonRecord | null {
@@ -85,7 +170,9 @@ export async function createPreference(
     return absoluteUrl(normalizedPath);
   };
   const returnPath = link?.token ? `/booking/pay/${link.token}` : "/profile/bookings";
+  const resultBase = link?.token ? `${returnPath}/result` : returnPath;
   const returnUrl = toAbsoluteUrl(returnPath);
+  const resultUrl = toAbsoluteUrl(resultBase);
 
   const body = {
     items: [
@@ -109,9 +196,9 @@ export async function createPreference(
     external_reference: booking.id,
     notification_url: input.notificationUrl ?? toAbsoluteUrl("/api/webhooks/payments/mercadopago"),
     back_urls: {
-      success: `${returnUrl}?payment=success`,
-      pending: `${returnUrl}?payment=pending`,
-      failure: `${returnUrl}?payment=failure`,
+      success: `${resultUrl}?status=success`,
+      pending: `${resultUrl}?status=pending`,
+      failure: `${resultUrl}?status=failure`,
     },
     auto_return: "approved" as const,
   };
@@ -266,6 +353,8 @@ export async function fetchPaymentDetails(input: {
         metadata?: JsonRecord;
         date_created?: string;
         date_approved?: string;
+        payment_method_id?: string;
+        authorization_code?: string;
         message?: string;
       }
     | null;
@@ -298,6 +387,8 @@ export async function fetchPaymentDetails(input: {
     metadata: asRecord(payload.metadata) ?? {},
     dateCreated: payload.date_created?.trim() || undefined,
     dateApproved: payload.date_approved?.trim() || undefined,
+    paymentMethodId: payload.payment_method_id?.trim() || undefined,
+    authorizationCode: payload.authorization_code?.trim() || undefined,
   };
 }
 

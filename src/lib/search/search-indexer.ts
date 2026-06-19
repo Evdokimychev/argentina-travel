@@ -10,16 +10,10 @@ import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
 import type { Database } from "@/types/database";
-import type { SearchDocumentRow } from "@/lib/search/types";
+import { syncSearchDocumentsToMeilisearch } from "@/lib/search/meilisearch-client";
+import type { ReindexResult, SearchDocumentRow } from "@/lib/search/types";
 
 type DbClient = SupabaseClient<Database>;
-
-export type ReindexResult = {
-  ok: boolean;
-  indexed: number;
-  removed: number;
-  error?: string;
-};
 
 function slugFromItem(item: SearchIndexItem): string {
   const fromHref = item.href.replace(/^\/+/, "").split("/").pop();
@@ -122,7 +116,9 @@ export async function reindexSearchDocuments(
       }
     }
 
-    return { ok: true, indexed: rows.length, removed };
+    const meilisearch = await syncSearchDocumentsToMeilisearch(rows, staleIds);
+
+    return { ok: true, indexed: rows.length, removed, meilisearch };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Reindex failed";
     return { ok: false, indexed: 0, removed: 0, error: message };

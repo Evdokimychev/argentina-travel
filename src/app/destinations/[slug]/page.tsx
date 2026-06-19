@@ -10,6 +10,7 @@ import {
 } from "@/lib/cms/destination-resolver";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveKnowledgeLinksForDestination } from "@/lib/knowledge-internal-links";
 
 type PageProps = {
@@ -23,7 +24,8 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const destination = await resolveDestinationPage(slug);
+  const locale = await getServerI18nLocale();
+  const destination = await resolveDestinationPage(slug, locale);
   if (!destination) return { title: "Направление" };
 
   return {
@@ -34,11 +36,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function DestinationDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const destination = await resolveDestinationPage(slug);
+  const locale = await getServerI18nLocale();
+  const destination = await resolveDestinationPage(slug, locale);
   if (!destination) notFound();
 
   const tours = await fetchMarketplaceTours();
-  const locale = "ru" as const;
   const flightTeasers = await getDestinationFlightTeasers(destination.id, locale);
   const knowledgeLinks = resolveKnowledgeLinksForDestination(destination.id);
 

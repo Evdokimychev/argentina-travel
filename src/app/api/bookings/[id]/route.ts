@@ -125,11 +125,13 @@ export async function PATCH(
 
       void notifyBookingStatusChanged({
         bookingId: updated.id,
+        userId: updated.userId,
         tourTitle: updated.tourTitle,
         contactEmail: updated.contactEmail,
         contactName: updated.contactName,
         fromStatus: current.status,
         toStatus: "cancelled",
+        changedAt: updated.updatedAt,
       });
 
       return NextResponse.json({ booking: result.booking });
@@ -167,11 +169,13 @@ export async function PATCH(
 
       void notifyBookingStatusChanged({
         bookingId: updated.id,
+        userId: updated.userId,
         tourTitle: updated.tourTitle,
         contactEmail: updated.contactEmail,
         contactName: updated.contactName,
         fromStatus: current.status,
         toStatus: body.status,
+        changedAt: updated.updatedAt,
       });
 
       return NextResponse.json({ booking: result.booking });

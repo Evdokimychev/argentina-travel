@@ -5,7 +5,9 @@ import {
   persistWebhookChargeTransaction,
 } from "@/lib/payments/webhook-handler";
 import {
+  buildPaymentReceiptMetadata,
   fetchPaymentDetails,
+  mapMercadoPagoToBookingPaymentStatus,
   parseNotification,
   verifyWebhookSignature,
 } from "@/lib/payments/mercadopago-client";
@@ -28,31 +30,6 @@ function resolveBookingId(payment: {
     }
   }
   return null;
-}
-
-function toPaymentStatus(status: string, statusDetail?: string): PaymentWebhookEvent["paymentStatus"] {
-  const normalized = status.trim().toLowerCase();
-  const detail = statusDetail?.trim().toLowerCase();
-
-  if (normalized === "approved") {
-    return "paid";
-  }
-
-  if (normalized === "partially_refunded") {
-    return "partial";
-  }
-
-  if (
-    normalized === "pending" ||
-    normalized === "in_process" ||
-    normalized === "in_mediation" ||
-    normalized === "authorized" ||
-    normalized === "process"
-  ) {
-    return detail === "partially_paid" ? "partial" : "pending";
-  }
-
-  return "pending";
 }
 
 export async function POST(request: Request) {
@@ -132,12 +109,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ ok: true, ignored: true });
     }
 
+    const receiptMetadata = buildPaymentReceiptMetadata(payment);
+
     const event: PaymentWebhookEvent = {
       provider: "mercadopago",
       eventId: notification.notificationId ?? `mp-payment-${payment.id}`,
       eventType: notification.action ?? "payment.updated",
       bookingId,
-      paymentStatus: toPaymentStatus(payment.status, payment.statusDetail),
+      paymentStatus: mapMercadoPagoToBookingPaymentStatus(payment.status, payment.statusDetail),
       amountPaidUsd: payment.transactionAmount,
       amountTotalUsd: payment.transactionAmount,
       occurredAt: payment.dateApproved ?? payment.dateCreated ?? new Date().toISOString(),
@@ -158,6 +137,7 @@ export async function POST(request: Request) {
         externalId: payment.id,
         amount: payment.transactionAmount,
         currency: payment.currencyId ?? "USD",
+        receiptMetadata,
       });
     }
 
@@ -165,6 +145,7 @@ export async function POST(request: Request) {
       bookingId,
       paymentId: payment.id,
       status: payment.status,
+      capturePhase: receiptMetadata.capturePhase,
       paymentStatus: patch.paymentStatus,
       applied,
     });
@@ -178,5 +159,4 @@ export async function POST(request: Request) {
     });
     return NextResponse.json({ ok: false, error: "Failed to process Mercado Pago webhook." }, { status: 500 });
   }
-
 }

@@ -226,3 +226,20 @@ export function assertBookingMutationAllowed(
 
   return { ok: true };
 }
+
+export async function fetchBookingByPaymentLinkToken(
+  supabase: DbClient,
+  token: string
+): Promise<Booking | null> {
+  const normalizedToken = token.trim();
+  if (!normalizedToken) return null;
+
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .filter("payload->paymentLink->>token", "eq", normalizedToken)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return normalizeBooking(rowToBooking(data));
+}

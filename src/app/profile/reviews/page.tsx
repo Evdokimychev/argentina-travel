@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Star, MessageSquare } from "lucide-react";
+import { SafeImage } from "@/components/ui/safe-image";
 import { useAuth } from "@/context/AuthContext";
 import { getUserReviews, submitReviewForModeration } from "@/lib/reviews-store";
 import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
@@ -138,6 +139,19 @@ export default function ProfileReviewsPage() {
               </div>
 
               <p className="mt-3 text-sm leading-relaxed text-slate">{review.text}</p>
+
+              {review.photos.length > 0 ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {review.photos.map((photo) => (
+                    <div
+                      key={photo}
+                      className="relative h-20 w-28 overflow-hidden rounded-lg border border-gray-100"
+                    >
+                      <SafeImage src={photo} alt="" fill className="object-cover" sizes="112px" />
+                    </div>
+                  ))}
+                </div>
+              ) : null}
 
               {review.status === "rejected" && review.moderationNotes ? (
                 <p className="mt-2 text-xs text-red-600">

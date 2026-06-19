@@ -9,6 +9,7 @@ import { useAuth } from "@/context/AuthContext";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
+import BookingPaymentReceiptSection from "@/components/booking/BookingPaymentReceiptSection";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import FormattedPrice from "@/components/FormattedPrice";
@@ -37,6 +38,7 @@ import {
 import {
   apiCancelBooking,
   apiFetchBookingById,
+  apiFetchBookingPaymentReceipt,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
 import { cn } from "@/lib/cn";
@@ -44,12 +46,14 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import type { PaymentTransactionReceiptView } from "@/types/payment-platform";
 
 export default function BookingTouristDetailView({ bookingId }: { bookingId: string }) {
   const { user } = useAuth();
   const [booking, setBooking] = useState<Booking | null>(null);
   const [cancelError, setCancelErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [cancelLoading, setCancelLoading] = useState(false);
+  const [paymentReceipt, setPaymentReceipt] = useState<PaymentTransactionReceiptView | null>(null);
   const feedback = useSiteFeedback();
 
   const setCancelError = (value: string | SiteFeedbackMessage | null) => {
@@ -79,6 +83,23 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refresh);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, refresh);
   }, [bookingId]);
+
+  useEffect(() => {
+    if (!isRemoteBookingsMode() || !booking) {
+      setPaymentReceipt(null);
+      return;
+    }
+
+    const status = resolveBookingPaymentStatus(booking);
+    if (status !== "paid" && status !== "partial" && status !== "refunded") {
+      setPaymentReceipt(null);
+      return;
+    }
+
+    void apiFetchBookingPaymentReceipt(booking.id)
+      .then((payload) => setPaymentReceipt(payload.receipt))
+      .catch(() => setPaymentReceipt(null));
+  }, [booking]);
 
   if (!user) return null;
 
@@ -226,8 +247,8 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             <div className="mt-4 flex flex-wrap items-center gap-3 rounded-xl border border-sky-200/70 bg-sky-50/50 px-4 py-3">
               <CreditCard className="h-5 w-5 shrink-0 text-sky" />
               <p className="min-w-0 flex-1 text-sm text-charcoal">
-                Доступна ссылка на оплату. Онлайн-оплата через платформу скоро — сейчас вы можете
-                открыть счёт и подтвердить намерение оплатить.
+                Доступна ссылка на оплату через Mercado Pago. После платежа статус обновится
+                автоматически по защищённому уведомлению.
               </p>
               <Link
                 href={payHref}
@@ -241,6 +262,12 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             <p className="mt-4 rounded-xl bg-gray-50 px-4 py-3 text-sm text-slate">
               Ссылка на оплату появится после подтверждения заявки организатором.
             </p>
+          ) : null}
+
+          {paymentReceipt ? (
+            <div className="mt-6">
+              <BookingPaymentReceiptSection receipt={paymentReceipt} />
+            </div>
           ) : null}
 
           <BookingRefundRequestSection

@@ -14,6 +14,7 @@ import { getUserBookings } from "@/lib/bookings-store";
 import { getUserReviews } from "@/lib/reviews-store";
 import type { TouristReview } from "@/types/tourist";
 import { StarRatingInput } from "@/components/ui/star-rating-input";
+import ReviewPhotoUpload from "@/components/tour-detail/ReviewPhotoUpload";
 
 type TourReviewFormProps = {
   tourId: string;
@@ -41,6 +42,7 @@ export default function TourReviewForm({
   const [loadingEligibility, setLoadingEligibility] = useState(!initialEligibility);
   const [rating, setRating] = useState(initialEligibility?.existingReview?.rating ?? 5);
   const [text, setText] = useState(initialEligibility?.existingReview?.text ?? "");
+  const [photos, setPhotos] = useState<string[]>(initialEligibility?.existingReview?.photos ?? []);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
@@ -66,6 +68,7 @@ export default function TourReviewForm({
             if (json.eligibility.existingReview) {
               setRating(json.eligibility.existingReview.rating);
               setText(json.eligibility.existingReview.text);
+              setPhotos(json.eligibility.existingReview.photos ?? []);
             }
             return;
           }
@@ -86,6 +89,7 @@ export default function TourReviewForm({
     if (localEligibility.existingReview) {
       setRating(localEligibility.existingReview.rating);
       setText(localEligibility.existingReview.text);
+      setPhotos(localEligibility.existingReview.photos ?? []);
     }
     setLoadingEligibility(false);
   }, [tourSlug, user]);
@@ -101,6 +105,7 @@ export default function TourReviewForm({
       if (initialEligibility.existingReview) {
         setRating(initialEligibility.existingReview.rating);
         setText(initialEligibility.existingReview.text);
+        setPhotos(initialEligibility.existingReview.photos ?? []);
       }
     }
   }, [initialEligibility]);
@@ -122,7 +127,7 @@ export default function TourReviewForm({
       bookingId: eligibility.bookingId ?? eligibility.existingReview?.bookingId,
       rating,
       text: trimmed,
-      photos: eligibility.existingReview?.photos ?? [],
+      photos,
       tripDate: eligibility.tripDate ?? eligibility.existingReview?.tripDate,
       status: "draft",
       createdAt: eligibility.existingReview?.createdAt ?? new Date().toISOString(),
@@ -143,7 +148,13 @@ export default function TourReviewForm({
         const submitRes = await fetch(`/api/reviews/${encodeURIComponent(json.review.id)}`, {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: "submit", rating, text: trimmed, tripDate: payload.tripDate }),
+          body: JSON.stringify({
+            action: "submit",
+            rating,
+            text: trimmed,
+            tripDate: payload.tripDate,
+            photos,
+          }),
         });
         const submitJson = (await submitRes.json()) as { review?: TouristReview; error?: string };
         if (!submitRes.ok) return { error: submitJson.error ?? "Не удалось отправить на модерацию" };
@@ -164,6 +175,7 @@ export default function TourReviewForm({
         bookingId: payload.bookingId,
         rating,
         text: trimmed,
+        photos,
         tripDate: payload.tripDate,
         status: "draft",
       });
@@ -293,6 +305,16 @@ export default function TourReviewForm({
           className="mt-2 w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal outline-none ring-sky/30 focus:ring-2"
         />
       </div>
+
+      {user ? (
+        <ReviewPhotoUpload
+          userId={user.id}
+          photos={photos}
+          onChange={setPhotos}
+          disabled={submitting}
+          className="mt-4"
+        />
+      ) : null}
 
       {error ? <p className="mt-3 text-sm text-red-600">{error}</p> : null}
       {success ? <p className="mt-3 text-sm text-emerald-700">{success}</p> : null}

@@ -2,10 +2,13 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TourContentAdminSummary, TourModerationStatus } from "@/types/tour-content";
 import { sendOrganizerNewReviewEmail } from "@/lib/notifications/email-delivery";
-import type { ModerationReviewSummary } from "@/lib/reviews-db-mapper";
+import { notifyReviewApprovedInApp } from "@/lib/notifications/event-emitters";
+import type { ModerationReviewSummary, ModerationReviewReportSummary } from "@/lib/reviews-db-mapper";
 import {
   fetchModerationReviewSummaries,
+  fetchModerationReviewReportSummaries,
   resolveReviewModeration,
+  resolveReviewReportModeration,
   syncPendingReviewsToQueue,
 } from "@/lib/reviews-server";
 
@@ -29,6 +32,7 @@ export type ModerationQueueItem = {
   updatedAt: string;
   tour?: TourContentAdminSummary | null;
   review?: ModerationReviewSummary | null;
+  reviewReport?: ModerationReviewReportSummary | null;
 };
 
 export type ModerationResolveAction = "approve" | "reject";
@@ -79,8 +83,12 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
 
   const tourIds = queueRows.filter((r) => r.entity_type === "tour").map((r) => r.entity_id);
   const reviewIds = queueRows.filter((r) => r.entity_type === "review").map((r) => r.entity_id);
+  const reportIds = queueRows
+    .filter((r) => r.entity_type === "review_report")
+    .map((r) => r.entity_id);
   const toursById = new Map<string, TourContentAdminSummary>();
   const reviewsById = await fetchModerationReviewSummaries(supabase, reviewIds);
+  const reviewReportsById = await fetchModerationReviewReportSummaries(supabase, reportIds);
 
   if (tourIds.length) {
     const { data: tours } = await supabase.from("tours").select("*").in("id", tourIds);
@@ -104,6 +112,8 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
     updatedAt: row.updated_at,
     tour: row.entity_type === "tour" ? (toursById.get(row.entity_id) ?? null) : null,
     review: row.entity_type === "review" ? (reviewsById.get(row.entity_id) ?? null) : null,
+    reviewReport:
+      row.entity_type === "review_report" ? (reviewReportsById.get(row.entity_id) ?? null) : null,
   }));
 }
 
@@ -207,6 +217,15 @@ export async function resolveModerationItem(
       } catch {
         // Non-blocking notification channel.
       }
+
+      void notifyReviewApprovedInApp({
+        reviewId: item.entity_id,
+        tourTitle: reviewResult.tourTitle,
+        tourSlug: reviewResult.tourSlug,
+        authorUserId: reviewResult.authorUserId ?? null,
+        organizerUserId: reviewResult.organizerUserId ?? null,
+        rating: reviewResult.rating,
+      });
     }
 
     return {
@@ -214,6 +233,23 @@ export async function resolveModerationItem(
       entityType: "review",
       entityTitle: reviewResult.tourTitle,
       ownerEmail: reviewResult.authorEmail,
+    };
+  }
+
+  if (item.entity_type === "review_report") {
+    const reportResult = await resolveReviewReportModeration(
+      supabase,
+      item.entity_id,
+      action,
+      actorUserId
+    );
+    if ("error" in reportResult) return reportResult;
+
+    return {
+      ok: true,
+      entityType: "review_report",
+      entityTitle: metadataString(item.metadata, "tourTitle") ?? item.entity_id,
+      ownerEmail: null,
     };
   }
 

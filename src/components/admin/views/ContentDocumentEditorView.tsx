@@ -8,10 +8,13 @@ import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import CmsLocaleTabs, { buildEmptyLocaleCoverage } from "@/components/admin/CmsLocaleTabs";
 import { useAdminContext } from "@/context/AdminContext";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import { buildCmsRevisionDiff } from "@/lib/cms/revision-diff";
+import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
+import { isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
 import type { LegalSection } from "@/data/legal-content";
 import type { BlogPostSection } from "@/types";
 import type {
@@ -23,6 +26,7 @@ import type {
   CmsPlaceBody,
   CmsRevision,
 } from "@/types/cms-content";
+import { parseCmsDocumentId } from "@/types/cms-content";
 
 type Props = {
   documentId: string;
@@ -33,6 +37,13 @@ type CmsRevisionListItem = CmsRevision & { authorName?: string | null };
 type RevisionsResponse = { revisions?: CmsRevisionListItem[]; error?: string };
 type RevisionResponse = { revision?: CmsRevision; error?: string };
 type RestoreResponse = { document?: CmsDocument; error?: string };
+type GroupedDocumentsResponse = {
+  grouped?: Array<{
+    docType: CmsDocument["docType"];
+    slug: string;
+    locales: CmsLocaleCoverage;
+  }>;
+};
 
 function linesToList(text: string): string[] {
   return text
@@ -78,8 +89,27 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [selectedRevisionMeta, setSelectedRevisionMeta] = useState<CmsRevisionListItem | null>(null);
   const [revisionLoadingId, setRevisionLoadingId] = useState<string | null>(null);
   const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(null);
+  const [localeCoverage, setLocaleCoverage] = useState<CmsLocaleCoverage>(buildEmptyLocaleCoverage());
+  const [creatingLocale, setCreatingLocale] = useState<I18nLocale | null>(null);
+
+  const parsedId = useMemo(() => parseCmsDocumentId(documentId), [documentId]);
+  const currentLocale: I18nLocale =
+    parsedId?.locale && isI18nLocale(parsedId.locale) ? parsedId.locale : "ru";
 
   const encodedId = encodeURIComponent(documentId);
+
+  const loadLocaleCoverage = useCallback(async (docType: CmsDocument["docType"], slug: string) => {
+    try {
+      const res = await fetch(
+        `/api/admin/content/documents?grouped=true&docType=${encodeURIComponent(docType)}`
+      );
+      const json = (await res.json()) as GroupedDocumentsResponse;
+      const group = json.grouped?.find((item) => item.slug === slug);
+      setLocaleCoverage(group?.locales ?? buildEmptyLocaleCoverage());
+    } catch {
+      setLocaleCoverage(buildEmptyLocaleCoverage());
+    }
+  }, []);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -131,16 +161,43 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       setRevisions(revJson.revisions ?? []);
       setSelectedRevision(null);
       setSelectedRevisionMeta(null);
+      await loadLocaleCoverage(document.docType, document.slug);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Ошибка загрузки");
     } finally {
       setLoading(false);
     }
-  }, [encodedId]);
+  }, [encodedId, loadLocaleCoverage]);
 
   useEffect(() => {
     void load();
   }, [load]);
+
+  async function createLocaleVariant(locale: I18nLocale) {
+    if (!doc) return;
+    setCreatingLocale(locale);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          docType: doc.docType,
+          slug: doc.slug,
+          locale,
+          importFromSource: true,
+        }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать перевод");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingLocale(null);
+    }
+  }
 
   function buildBody(): CmsDocumentBody {
     if (doc?.body.kind === "blog") {
@@ -403,7 +460,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       <AdminPageShell>
         <AdminPageHeader
           title={title || doc.title}
-          subtitle={`CMS · ${doc.docType} · ${doc.slug} · ${status}`}
+          subtitle={`CMS · ${doc.docType} · ${doc.slug} · ${currentLocale} · ${status}`}
           actions={
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" disabled={saving} onClick={() => void saveDraft()}>
@@ -429,6 +486,15 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </Link>
             </div>
           }
+        />
+
+        <CmsLocaleTabs
+          docType={doc.docType}
+          slug={doc.slug}
+          currentLocale={currentLocale}
+          locales={localeCoverage}
+          onCreateLocale={(locale) => void createLocaleVariant(locale)}
+          creatingLocale={creatingLocale}
         />
 
         <div className="grid gap-6 lg:grid-cols-[1fr_280px]">

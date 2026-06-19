@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
+import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { cn } from "@/lib/cn";
 import {
   cabinetMobileHeaderClass,
@@ -146,6 +147,7 @@ export default function ProfileSidebar({
         {isCompact ? (
           <div className="flex flex-col items-center gap-3">
             <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-10 w-10 text-sm" />
+            <NotificationsBell scope="tourist" compact />
             <Link
               href={PROFILE_SETTINGS_HREF}
               title="Настройки"
@@ -163,10 +165,11 @@ export default function ProfileSidebar({
           <>
             <div className="flex items-center gap-3">
               <UserAvatar name={userName} avatarUrl={avatarUrl} className="h-11 w-11 text-sm" />
-              <div className="min-w-0">
+              <div className="min-w-0 flex-1">
                 <p className="text-[11px] text-slate">Турист</p>
                 <p className="truncate text-sm font-semibold text-charcoal">{userName}</p>
               </div>
+              <NotificationsBell scope="tourist" />
             </div>
             <Link
               href={PROFILE_SETTINGS_HREF}

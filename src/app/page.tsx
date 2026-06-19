@@ -4,7 +4,7 @@ import TravelPrepStrip from "@/components/flights/TravelPrepStrip";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
-import { collectTopVerifiedReviews } from "@/lib/homepage-reviews";
+import { collectTopVerifiedReviewsAsync } from "@/lib/homepage-reviews";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getPlatformStatsFromRepository } from "@/lib/organizer-public";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const tours = await fetchMarketplaceTours();
-  const testimonials = collectTopVerifiedReviews(3);
+  const testimonials = await collectTopVerifiedReviewsAsync(3);
   const platformStats = getPlatformStatsFromRepository();
 
   return (

@@ -1,6 +1,6 @@
-import type { SearchHit, SearchResponse } from "@/lib/search/types";
+import type { SearchHit, SearchResponse, SearchSource } from "@/lib/search/types";
 
-const SEARCH_DEBOUNCE_MS = 280;
+const SEARCH_DEBOUNCE_MS = 200;
 
 export async function fetchSiteSearch(
   query: string,
@@ -38,4 +38,4 @@ export function debounce<T extends (...args: never[]) => void>(
 }
 
 export { SEARCH_DEBOUNCE_MS };
-export type { SearchHit, SearchResponse };
+export type { SearchHit, SearchResponse, SearchSource };

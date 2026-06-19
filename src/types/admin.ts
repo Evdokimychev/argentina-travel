@@ -51,6 +51,7 @@ export type AdminNavItemId =
   | "content-documents"
   | "users-list"
   | "analytics-overview"
+  | "analytics-funnels"
   | "system-settings"
   | "system-staff"
   | "system-audit";

@@ -10,7 +10,9 @@ import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import type { ContentDocumentItem, ContentInventorySummary } from "@/lib/admin/content-inventory";
+import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
+import CmsLocaleBadges from "@/components/admin/CmsLocaleBadges";
 
 type LegalEditableRow = {
   slug: string;
@@ -21,6 +23,7 @@ type LegalEditableRow = {
   hasOverride: boolean;
   publicSource: "cms" | "file";
   featuredFromCms?: boolean;
+  localeCoverage: CmsLocaleCoverage;
 };
 
 type ContentResponse = ContentInventorySummary & {
@@ -229,6 +232,7 @@ export default function ContentDocumentsView() {
             Избранное: CMS
           </span>
         ) : null}
+        <CmsLocaleBadges locales={row.localeCoverage} compact />
         <div className="ml-auto flex gap-2">
           <Link href={row.href} target="_blank" className="text-xs text-sky hover:underline">
             Просмотр
