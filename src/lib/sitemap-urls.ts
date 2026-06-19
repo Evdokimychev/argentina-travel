@@ -13,7 +13,10 @@ import { SEED_USERS } from "@/lib/auth-store";
 import {
   contentPageHref,
   getAllContentPages,
+  getPagesBySection,
 } from "@/lib/content-pages";
+import { listPublishedGuideSlugs } from "@/lib/cms/guide-resolver";
+import { listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { getAllGuideTopics, guideTopicHref } from "@/lib/guide-topics";
 import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { listPublishedDestinationSlugs } from "@/lib/cms/destination-resolver";
@@ -150,10 +153,11 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   const placesPaths = await collectPlacesSitemapPaths();
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
   const blogPaths = blogCatalog.map((post) => `/blog/${post.slug}`);
-  const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
+  const immigrationPaths = getPagesBySection("immigration").map((page) => contentPageHref(page));
+  const guidePaths = (await listPublishedGuideSlugs()).map((slug) => `/guide/${slug}`);
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
   const destinationPaths = (await listPublishedDestinationSlugs()).map((slug) => `/destinations/${slug}`);
-  const legalPaths = Object.values(LEGAL_DOCUMENTS).map((doc) => `/legal/${doc.slug}`);
+  const legalPaths = (await listPublishedLegalSlugs()).map((slug) => `/legal/${slug}`);
   const flightRoutePaths = FLIGHT_POPULAR_ROUTES.map((route) => `/flights/${route.id}`);
   const organizerPaths = SEED_USERS.filter((user) => user.roles?.includes("organizer")).map(
     (user) => `/organizers/${user.id}`
@@ -166,7 +170,8 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...excursionPaths,
     ...placesPaths,
     ...blogPaths,
-    ...contentPaths,
+    ...immigrationPaths,
+    ...guidePaths,
     ...guideTopicPaths,
     GUIDE_ABOUT_ARGENTINA_PATH,
     ...destinationPaths,

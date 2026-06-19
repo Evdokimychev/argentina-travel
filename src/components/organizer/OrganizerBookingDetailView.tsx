@@ -12,7 +12,6 @@ import {
   Clock3,
   Inbox,
   Mail,
-  MessageCircle,
   Phone,
   X,
 } from "lucide-react";
@@ -40,13 +39,15 @@ import {
   apiUpdateBookingStatus,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
-import { buildOrganizerBookingMessageHref } from "@/lib/messages-store";
+import ConversationPanel from "@/components/messages/ConversationPanel";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import BookingOrganizerDataPanel from "@/components/booking/BookingOrganizerDataPanel";
 import OrganizerTripOperationsPanel from "@/components/organizer/OrganizerTripOperationsPanel";
 import FormattedPrice from "@/components/FormattedPrice";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
+import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
 import { resolveBookingAmounts } from "@/lib/booking-payment-display";
+import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { formatBookingCheckoutPaymentOption } from "@/lib/booking-display";
 import { Button } from "@/components/ui/button";
 import { BOOKING_SOURCE_LABELS } from "@/types/trip-operations";
@@ -142,6 +143,8 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
   const displayNumber = formatBookingDisplayNumber(booking.id);
   const showContacts = canOrganizerSeeContactDetails(booking.status);
   const alerts = getOrganizerBookingAlerts(currentStatus, Boolean(booking.startDate));
+  const paymentStatus = resolveBookingPaymentStatus(booking);
+  const paymentAmounts = resolveBookingAmounts(booking);
 
   const primaryAction: BookingStatusActive | null =
     currentStatus === "new" && nextStatuses.includes("pending")
@@ -303,6 +306,14 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                   </div>
                 </DetailRow>
 
+                <DetailRow label="Возврат">
+                  <BookingRefundRequestSection
+                    bookingId={booking.id}
+                    paymentStatus={paymentStatus}
+                    paidAmountUsd={paymentAmounts.paid}
+                  />
+                </DetailRow>
+
                 <DetailRow label="Даты">{formatBookingTourDates(booking)}</DetailRow>
 
                 <DetailRow label="Контактное лицо">{booking.contactName}</DetailRow>
@@ -345,28 +356,28 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
               </dl>
 
               {showContacts ? (
-                <div className="flex flex-wrap gap-2 border-t border-gray-100 pt-4">
-                  <Link
-                    href={buildOrganizerBookingMessageHref(booking.id)}
-                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
-                  >
-                    <MessageCircle className="h-4 w-4 text-slate" />
-                    Сообщения в кабинете
-                  </Link>
-                  <a
-                    href={`mailto:${booking.contactEmail}`}
-                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
-                  >
-                    <Mail className="h-4 w-4 text-slate" />
-                    Email
-                  </a>
-                  <a
-                    href={`tel:${booking.contactPhone}`}
-                    className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
-                  >
-                    <Phone className="h-4 w-4 text-slate" />
-                    Позвонить
-                  </a>
+                <div className="space-y-4 border-t border-gray-100 pt-4">
+                  <ConversationPanel
+                    booking={booking}
+                    role="organizer"
+                    counterpartName={booking.contactName}
+                  />
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={`mailto:${booking.contactEmail}`}
+                      className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
+                    >
+                      <Mail className="h-4 w-4 text-slate" />
+                      Email
+                    </a>
+                    <a
+                      href={`tel:${booking.contactPhone}`}
+                      className="inline-flex items-center gap-2 rounded-xl border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
+                    >
+                      <Phone className="h-4 w-4 text-slate" />
+                      Позвонить
+                    </a>
+                  </div>
                 </div>
               ) : null}
 

@@ -30,8 +30,10 @@ import {
 import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
 import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
+import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { ORGANIZER_INBOX_UPDATED_EVENT } from "@/types/organizer-inbox";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "organizer-sidebar-collapsed";
@@ -71,6 +73,53 @@ function writeCollapsedPreference(collapsed: boolean) {
   }
 }
 
+async function loadOrganizerNavItemsWithBadges(userId: string) {
+  let items = getOrganizerNavItemsWithBadges(userId);
+  if (isSupabaseBookingsEnabled()) {
+    try {
+      const res = await fetch("/api/organizer/inbox?filter=unread");
+      if (res.ok) {
+        const json = (await res.json()) as { unreadCount?: number };
+        const unread = json.unreadCount ?? 0;
+        items = items.map((item) => {
+          if (item.id !== "dashboard") return item;
+          return unread > 0 ? { ...item, badge: unread } : { ...item, badge: undefined };
+        });
+      }
+    } catch {
+      // local fallback already in getOrganizerNavItemsWithBadges
+    }
+  }
+  return items;
+}
+
+function useOrganizerNavBadges() {
+  const { user } = useAuth();
+  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+
+  useEffect(() => {
+    if (!user) return;
+    const userId = user.id;
+
+    async function refreshNavBadges() {
+      setNavItems(await loadOrganizerNavItemsWithBadges(userId));
+    }
+
+    void refreshNavBadges();
+    const handler = () => void refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
+    window.addEventListener(ORGANIZER_INBOX_UPDATED_EVENT, handler);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
+      window.removeEventListener(ORGANIZER_INBOX_UPDATED_EVENT, handler);
+    };
+  }, [user]);
+
+  return navItems;
+}
+
 export default function OrganizerSidebar({
   userName = "Организатор",
   avatarUrl,
@@ -80,7 +129,7 @@ export default function OrganizerSidebar({
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
-  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+  const navItems = useOrganizerNavBadges();
   const isSettingsActive = pathname.startsWith("/organizer/settings");
 
   const isCompact = forceCompact || collapsed;
@@ -100,22 +149,6 @@ export default function OrganizerSidebar({
     window.addEventListener("resize", syncCollapsedState, { passive: true });
     return () => window.removeEventListener("resize", syncCollapsedState);
   }, []);
-
-  useEffect(() => {
-    if (!user) return;
-
-    function refreshNavBadges() {
-      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
-    }
-
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    };
-  }, [user]);
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
@@ -286,25 +319,8 @@ export function OrganizerMobileHeader() {
 }
 
 export function OrganizerMobileNav() {
-  const { user } = useAuth();
   const pathname = usePathname();
-  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
-
-  useEffect(() => {
-    if (!user) return;
-
-    function refreshNavBadges() {
-      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
-    }
-
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
-    };
-  }, [user]);
+  const navItems = useOrganizerNavBadges();
 
   return (
     <nav className={cabinetMobileNavClass}>

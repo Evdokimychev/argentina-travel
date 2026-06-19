@@ -1,61 +1,29 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
-import { rowToCmsDocument } from "@/lib/cms/content-mapper";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { Database } from "@/types/database";
 import type { DestinationPage } from "@/data/destination-pages";
 import {
-  cmsDocumentId,
+  cmsOverrideId,
+  fetchPublishedCmsDocumentsByType,
+  getCmsServerClient,
+  listPublishedCmsSlugs,
+  resolveWithPublishedCmsOverride,
+} from "@/lib/cms/content-resolver";
+import {
   destinationPageFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
 
-type DbClient = SupabaseClient<Database>;
+export {
+  fetchPublishedCmsDocument as fetchPublishedDestinationOverride,
+} from "@/lib/cms/content-resolver";
 
-async function getServerClient(): Promise<DbClient | null> {
-  try {
-    return createSupabaseAdminClient();
-  } catch {
-    return null;
-  }
-}
-
-export async function fetchPublishedDestinationOverride(
-  supabase: DbClient,
-  slug: string,
-  locale = "ru"
-): Promise<CmsDocument | null> {
-  const id = cmsDocumentId("destination", slug, locale);
-  const { data, error } = await supabase
-    .from("content_documents")
-    .select("*")
-    .eq("id", id)
-    .eq("status", "published")
-    .maybeSingle();
-
-  if (error || !data) return null;
-  return rowToCmsDocument(data);
-}
-
-async function fetchPublishedDestinationsFromCmsWithClient(
-  supabase: DbClient,
-  locale = "ru"
-): Promise<CmsDocument[]> {
-  const { data, error } = await supabase
-    .from("content_documents")
-    .select("*")
-    .eq("doc_type", "destination")
-    .eq("locale", locale)
-    .eq("status", "published");
-
-  if (error || !data) return [];
-  return data.map(rowToCmsDocument).filter((doc) => doc.body.kind === "destination");
+export function destinationOverrideId(slug: string, locale = "ru"): string {
+  return cmsOverrideId("destination", slug, locale);
 }
 
 export async function fetchPublishedDestinationsFromCms(locale = "ru"): Promise<CmsDocument[]> {
-  const supabase = await getServerClient();
+  const supabase = await getCmsServerClient();
   if (!supabase) return [];
-  return fetchPublishedDestinationsFromCmsWithClient(supabase, locale);
+  return fetchPublishedCmsDocumentsByType(supabase, "destination", locale);
 }
 
 /** CMS destinations override TS entries by slug and can add CMS-only slugs. */
@@ -86,10 +54,10 @@ export function mergeDestinationCatalog(
 
 export async function resolveDestinationCatalog(locale = "ru"): Promise<DestinationPage[]> {
   const fallback = getAllDestinations();
-  const supabase = await getServerClient();
+  const supabase = await getCmsServerClient();
   if (!supabase) return fallback;
 
-  const cmsDestinations = await fetchPublishedDestinationsFromCmsWithClient(supabase, locale);
+  const cmsDestinations = await fetchPublishedCmsDocumentsByType(supabase, "destination", locale);
   if (cmsDestinations.length === 0) return fallback;
 
   return mergeDestinationCatalog(fallback, cmsDestinations);
@@ -101,31 +69,17 @@ export async function resolveDestinationPage(
   locale = "ru"
 ): Promise<DestinationPage | null> {
   const fallback = getDestinationBySlug(slug) ?? null;
-  const supabase = await getServerClient();
-  if (!supabase) return fallback;
 
-  const override = await fetchPublishedDestinationOverride(supabase, slug, locale);
-  if (!override) return fallback;
-
-  return destinationPageFromCms(override, fallback ?? undefined) ?? fallback;
+  return resolveWithPublishedCmsOverride({
+    docType: "destination",
+    slug,
+    locale,
+    fallback,
+    merge: (doc, fb) => destinationPageFromCms(doc, fb),
+  });
 }
 
 export async function listPublishedDestinationSlugs(locale = "ru"): Promise<string[]> {
   const fallbackSlugs = getAllDestinations().map((destination) => destination.id);
-  const supabase = await getServerClient();
-  if (!supabase) return fallbackSlugs;
-
-  const { data } = await supabase
-    .from("content_documents")
-    .select("slug")
-    .eq("doc_type", "destination")
-    .eq("locale", locale)
-    .eq("status", "published");
-
-  const cmsSlugs = new Set((data ?? []).map((row) => row.slug));
-  return Array.from(new Set([...fallbackSlugs, ...cmsSlugs]));
-}
-
-export function destinationOverrideId(slug: string, locale = "ru"): string {
-  return cmsDocumentId("destination", slug, locale);
+  return listPublishedCmsSlugs("destination", fallbackSlugs, locale);
 }

@@ -15,6 +15,7 @@
     "smoke": "node scripts/smoke-test.mjs",
     "supabase:purge-auth": "node scripts/supabase-purge-auth-users.mjs",
     "supabase:seed-tours": "tsx scripts/supabase-seed-tours.ts",
+    "supabase:seed-cms": "tsx scripts/seed-cms-from-ts.mjs",
     "tripster:verify": "node scripts/tripster-verify.mjs",
     "tripster:sync": "node scripts/tripster-sync.mjs",
     "tripster:affiliate-links": "node scripts/tripster-affiliate-links.mjs",

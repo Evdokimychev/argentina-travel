@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Star } from "lucide-react";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Textarea } from "@/components/ui/textarea";
@@ -43,6 +44,8 @@ function RatingStars({ rating }: { rating: number }) {
 
 export default function OrganizerReviewsView() {
   const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const highlightReviewId = searchParams.get("review");
   const [summary, setSummary] = useState({ count: 0, averageRating: null as number | null });
   const [reviews, setReviews] = useState<TouristReview[]>([]);
   const [replyDrafts, setReplyDrafts] = useState<Record<string, string>>({});
@@ -91,6 +94,12 @@ export default function OrganizerReviewsView() {
     window.addEventListener(REVIEWS_UPDATED_EVENT, onUpdated);
     return () => window.removeEventListener(REVIEWS_UPDATED_EVENT, onUpdated);
   }, [user, reviewsApiEnabled]);
+
+  useEffect(() => {
+    if (!highlightReviewId) return;
+    const element = document.getElementById(`organizer-review-${highlightReviewId}`);
+    element?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [highlightReviewId, reviews]);
 
   const hasReviews = reviews.length > 0;
 
@@ -184,7 +193,15 @@ export default function OrganizerReviewsView() {
             const canSaveReply = draftReply.trim().length > 0 && draftReply.trim() !== currentReply;
 
             return (
-              <li key={review.id} className={cn(cabinetCardClass, "p-5")}>
+              <li
+                key={review.id}
+                id={`organizer-review-${review.id}`}
+                className={cn(
+                  cabinetCardClass,
+                  "p-5",
+                  highlightReviewId === review.id && "ring-2 ring-sky/30"
+                )}
+              >
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0 space-y-1">
                     <Link

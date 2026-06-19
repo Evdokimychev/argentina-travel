@@ -1,70 +1,73 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { getPagesBySection, getContentPage } from "@/lib/content-pages";
-import { rowToCmsDocument } from "@/lib/cms/content-mapper";
-import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { Database } from "@/types/database";
 import type { ContentPage } from "@/types/content-page";
 import {
-  cmsDocumentId,
+  cmsOverrideId,
+  fetchPublishedCmsDocumentsByType,
+  getCmsServerClient,
+  listPublishedCmsSlugs,
+  resolveWithPublishedCmsOverride,
+} from "@/lib/cms/content-resolver";
+import {
   guidePageFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
 
-type DbClient = SupabaseClient<Database>;
+export {
+  fetchPublishedCmsDocument as fetchPublishedGuideOverride,
+} from "@/lib/cms/content-resolver";
 
-async function getServerClient(): Promise<DbClient | null> {
-  try {
-    return createSupabaseAdminClient();
-  } catch {
-    return null;
-  }
+export function guideOverrideId(slug: string, locale = "ru"): string {
+  return cmsOverrideId("guide", slug, locale);
 }
 
-export async function fetchPublishedGuideOverride(
-  supabase: DbClient,
-  slug: string,
-  locale = "ru"
-): Promise<CmsDocument | null> {
-  const id = cmsDocumentId("guide", slug, locale);
-  const { data, error } = await supabase
-    .from("content_documents")
-    .select("*")
-    .eq("id", id)
-    .eq("status", "published")
-    .maybeSingle();
+/** CMS guide pages override TS entries by slug and can add CMS-only slugs. */
+export function mergeGuideCatalog(filePages: ContentPage[], cmsDocs: CmsDocument[]): ContentPage[] {
+  const mergedBySlug = new Map(filePages.map((page) => [page.slug, page] as const));
+  const sourceOrder = filePages.map((page) => page.slug);
+  const sourceSet = new Set(sourceOrder);
 
-  if (error || !data) return null;
-  return rowToCmsDocument(data);
+  for (const cmsDoc of cmsDocs) {
+    if (cmsDoc.body.kind !== "guide") continue;
+    const fallback = mergedBySlug.get(cmsDoc.slug);
+    const merged = guidePageFromCms(cmsDoc, fallback);
+    if (merged) mergedBySlug.set(merged.slug, merged);
+  }
+
+  const ordered = sourceOrder
+    .map((slug) => mergedBySlug.get(slug))
+    .filter((page): page is ContentPage => Boolean(page));
+  const cmsOnly = [...mergedBySlug.values()]
+    .filter((page) => !sourceSet.has(page.slug))
+    .sort((a, b) => a.title.localeCompare(b.title, "ru"));
+
+  return [...ordered, ...cmsOnly];
+}
+
+export async function resolveGuideCatalog(locale = "ru"): Promise<ContentPage[]> {
+  const fallback = getPagesBySection("guide");
+  const supabase = await getCmsServerClient();
+  if (!supabase) return fallback;
+
+  const cmsGuides = await fetchPublishedCmsDocumentsByType(supabase, "guide", locale);
+  if (cmsGuides.length === 0) return fallback;
+
+  return mergeGuideCatalog(fallback, cmsGuides);
 }
 
 /** Published DB override takes precedence over TS file. */
 export async function resolveGuidePage(slug: string, locale = "ru"): Promise<ContentPage | null> {
   const fallback = getContentPage("guide", slug) ?? null;
-  const supabase = await getServerClient();
-  if (!supabase) return fallback;
 
-  const override = await fetchPublishedGuideOverride(supabase, slug, locale);
-  if (!override) return fallback;
-
-  return guidePageFromCms(override, fallback ?? undefined) ?? fallback;
+  return resolveWithPublishedCmsOverride({
+    docType: "guide",
+    slug,
+    locale,
+    fallback,
+    merge: (doc, fb) => guidePageFromCms(doc, fb),
+  });
 }
 
 export async function listPublishedGuideSlugs(locale = "ru"): Promise<string[]> {
   const fallbackSlugs = getPagesBySection("guide").map((page) => page.slug);
-  const supabase = await getServerClient();
-  if (!supabase) return fallbackSlugs;
-
-  const { data } = await supabase
-    .from("content_documents")
-    .select("slug")
-    .eq("doc_type", "guide")
-    .eq("locale", locale)
-    .eq("status", "published");
-
-  const cmsSlugs = new Set((data ?? []).map((row) => row.slug));
-  return Array.from(new Set([...fallbackSlugs, ...cmsSlugs]));
-}
-
-export function guideOverrideId(slug: string, locale = "ru"): string {
-  return cmsDocumentId("guide", slug, locale);
+  return listPublishedCmsSlugs("guide", fallbackSlugs, locale);
 }

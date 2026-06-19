@@ -43,6 +43,7 @@ export type AdminNavItemId =
   | "operations-leads"
   | "operations-bookings"
   | "operations-payments"
+  | "operations-reconciliation"
   | "operations-shop"
   | "marketplace-tours"
   | "marketplace-excursions"

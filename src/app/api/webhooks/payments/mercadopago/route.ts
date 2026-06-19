@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   applyPaymentWebhookPatch,
   mapWebhookToBookingPaymentUpdate,
+  persistWebhookChargeTransaction,
 } from "@/lib/payments/webhook-handler";
 import {
   fetchPaymentDetails,
@@ -149,6 +150,16 @@ export async function POST(request: Request) {
     const patch = mapWebhookToBookingPaymentUpdate(event, verified);
     const supabase = createSupabaseAdminClient();
     const applied = await applyPaymentWebhookPatch(supabase, bookingId, patch);
+
+    if (applied) {
+      await persistWebhookChargeTransaction(supabase, {
+        bookingId,
+        patch,
+        externalId: payment.id,
+        amount: payment.transactionAmount,
+        currency: payment.currencyId ?? "USD",
+      });
+    }
 
     console.info("[payments-webhook][mercadopago] payment processed", {
       bookingId,

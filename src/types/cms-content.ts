@@ -160,7 +160,12 @@ export function destinationBodyFromTs(source: DestinationPage): CmsDestinationBo
   };
 }
 
-export function placeBodyFromTs(source: PlaceDetail): CmsPlaceBody {
+export function placeBodyFromTs(
+  source: Pick<
+    PlaceDetail,
+    "shortDescription" | "fullDescription" | "howToGetThere" | "interestingFacts" | "faq"
+  >
+): CmsPlaceBody {
   return {
     kind: "place",
     shortDescription: source.shortDescription,

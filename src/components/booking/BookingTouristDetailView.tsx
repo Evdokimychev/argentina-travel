@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, CreditCard, ExternalLink, MessageCircle } from "lucide-react";
-import { buildTourMessageHref } from "@/lib/messages-store";
+import { ArrowLeft, CreditCard, ExternalLink } from "lucide-react";
+import ConversationPanel from "@/components/messages/ConversationPanel";
 import { useAuth } from "@/context/AuthContext";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
+import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import FormattedPrice from "@/components/FormattedPrice";
@@ -242,6 +243,12 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             </p>
           ) : null}
 
+          <BookingRefundRequestSection
+            bookingId={booking.id}
+            paymentStatus={paymentStatus}
+            paidAmountUsd={amounts.paid}
+          />
+
           {nextSteps.length > 0 ? (
             <div className="mt-6">
               <h3 className="font-heading text-base font-bold text-charcoal">Следующие шаги</h3>
@@ -279,18 +286,12 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             </div>
           ) : null}
 
-          <div className="mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-gray-200 bg-white px-4 py-3">
-            <MessageCircle className="h-5 w-5 shrink-0 text-brand" />
-            <p className="min-w-0 flex-1 text-sm text-slate">
-              Вопросы по туру — в переписке с организатором в личном кабинете.
-            </p>
-            <Link
-              href={buildTourMessageHref(booking.tourSlug, booking.id)}
-              className="inline-flex items-center gap-1.5 rounded-xl bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
-            >
-              Написать организатору
-            </Link>
-          </div>
+          <ConversationPanel
+            className="mt-6"
+            booking={booking}
+            role="tourist"
+            counterpartName="Организатор"
+          />
 
           <div className="mt-6">
             <BookingOrganizerCommentsJournal comments={booking.organizerComments} />

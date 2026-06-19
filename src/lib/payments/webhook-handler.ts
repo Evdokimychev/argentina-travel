@@ -376,3 +376,33 @@ export async function applyPaymentWebhookPatch(
 
   return !updateError;
 }
+
+export type PersistWebhookTransactionInput = {
+  bookingId: string;
+  patch: BookingPaymentWebhookPatch;
+  externalId: string;
+  amount: number;
+  currency?: string;
+};
+
+/** Persist charge row after webhook patch — idempotent on provider + external_id. */
+export async function persistWebhookChargeTransaction(
+  supabase: DbClient,
+  input: PersistWebhookTransactionInput
+): Promise<void> {
+  if (!input.patch.verified || !input.externalId.trim()) return;
+
+  try {
+    const { upsertChargeFromWebhook } = await import("@/lib/payments/transaction-server");
+    await upsertChargeFromWebhook(supabase, {
+      bookingId: input.bookingId,
+      provider: input.patch.provider,
+      externalId: input.externalId,
+      amount: input.amount,
+      currency: input.currency,
+      patch: input.patch,
+    });
+  } catch {
+    // Ledger persistence must not break webhook processing
+  }
+}

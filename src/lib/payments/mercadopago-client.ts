@@ -300,3 +300,66 @@ export async function fetchPaymentDetails(input: {
     dateApproved: payload.date_approved?.trim() || undefined,
   };
 }
+
+export type MercadoPagoRefundResult = {
+  refundId: string;
+  status: string;
+};
+
+/** Real MP refund — only when MERCADOPAGO_ACCESS_TOKEN and MERCADOPAGO_REFUNDS_ENABLED=true. */
+export async function createMercadoPagoRefund(input: {
+  paymentId: string;
+  amount?: number;
+}): Promise<MercadoPagoRefundResult> {
+  const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim();
+  const refundsEnabled = process.env.MERCADOPAGO_REFUNDS_ENABLED?.trim().toLowerCase();
+  if (!accessToken || refundsEnabled !== "true") {
+    throw new Error(
+      "Возврат через Mercado Pago недоступен: задайте MERCADOPAGO_ACCESS_TOKEN и MERCADOPAGO_REFUNDS_ENABLED=true"
+    );
+  }
+
+  const paymentId = input.paymentId.trim();
+  if (!paymentId) throw new Error("Missing Mercado Pago payment id.");
+
+  const body: Record<string, unknown> = {};
+  if (typeof input.amount === "number" && Number.isFinite(input.amount) && input.amount > 0) {
+    body.amount = input.amount;
+  }
+
+  const { controller, timeout } = createTimeoutController();
+  const response = await fetch(
+    `${MERCADOPAGO_API_BASE}/v1/payments/${encodeURIComponent(paymentId)}/refunds`,
+    {
+      method: "POST",
+      headers: buildAuthHeaders(accessToken, `refund-${paymentId}-${Date.now()}`),
+      body: JSON.stringify(body),
+      signal: controller.signal,
+      cache: "no-store",
+    }
+  ).finally(() => clearTimeout(timeout));
+
+  const payload = (await response.json().catch(() => null)) as
+    | { id?: number | string; status?: string; message?: string }
+    | null;
+
+  if (!response.ok || !payload) {
+    throw new Error(payload?.message ?? "Failed to create Mercado Pago refund.");
+  }
+
+  const refundId =
+    typeof payload.id === "number"
+      ? String(payload.id)
+      : typeof payload.id === "string"
+        ? payload.id.trim()
+        : "";
+
+  if (!refundId) {
+    throw new Error("Mercado Pago refund response misses id.");
+  }
+
+  return {
+    refundId,
+    status: typeof payload.status === "string" ? payload.status.trim() : "pending",
+  };
+}

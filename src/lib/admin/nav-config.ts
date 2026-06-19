@@ -49,6 +49,13 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "operations.bookings",
   },
   {
+    id: "operations-reconciliation",
+    section: "operations",
+    href: "/admin/operations/reconciliation",
+    label: "Сверка платежей",
+    capability: "operations.bookings",
+  },
+  {
     id: "operations-shop",
     section: "operations",
     href: "/admin/operations/shop-orders",

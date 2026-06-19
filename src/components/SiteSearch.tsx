@@ -10,6 +10,7 @@ import {
   Globe,
   HelpCircle,
   Landmark,
+  Loader2,
   MapPin,
   Mountain,
   Plane,
@@ -27,8 +28,17 @@ import { floatingChromeButtonClass, floatingChromeInsetClass } from "@/lib/float
 import { cn } from "@/lib/cn";
 import { SITE_SEARCH_OPEN_EVENT } from "@/lib/site-search-open";
 import { searchSiteIndex, type SearchResultGroup } from "@/lib/site-search";
+import {
+  SEARCH_DEBOUNCE_MS,
+  fetchSiteSearch,
+  type SearchHit,
+} from "@/lib/search/search-client";
 import { getDefaultSearchIndex, loadSearchIndex } from "@/lib/site-search-client";
-import type { SearchIndexItem, SearchResultType } from "@/lib/site-search-index";
+import {
+  SEARCH_TYPE_LABELS,
+  type SearchIndexItem,
+  type SearchResultType,
+} from "@/lib/site-search-index";
 import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
 
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
@@ -44,13 +54,70 @@ const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   immigration: Stamp,
 };
 
+const KIND_FILTERS: Array<{ kind: SearchResultType | "all"; label: string }> = [
+  { kind: "all", label: "Все" },
+  { kind: "tour", label: SEARCH_TYPE_LABELS.tour },
+  { kind: "excursion", label: SEARCH_TYPE_LABELS.excursion },
+  { kind: "place", label: SEARCH_TYPE_LABELS.place },
+  { kind: "blog", label: SEARCH_TYPE_LABELS.blog },
+  { kind: "guide", label: SEARCH_TYPE_LABELS.guide },
+  { kind: "destination", label: SEARCH_TYPE_LABELS.destination },
+];
+
+function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
+  const groups = new Map<SearchResultType, SearchResultGroup>();
+
+  for (const hit of hits) {
+    const existing = groups.get(hit.kind);
+    const item = {
+      id: hit.id,
+      type: hit.kind,
+      title: hit.title,
+      description: hit.description,
+      href: hit.url,
+      score: hit.score,
+    };
+
+    if (existing) {
+      existing.items.push(item);
+      continue;
+    }
+
+    groups.set(hit.kind, {
+      type: hit.kind,
+      label: hit.kindLabel,
+      items: [item],
+    });
+  }
+
+  const order: SearchResultType[] = [
+    "tour",
+    "excursion",
+    "place",
+    "blog",
+    "guide",
+    "destination",
+    "immigration",
+    "page",
+    "faq",
+    "legal",
+  ];
+
+  return order.filter((type) => groups.has(type)).map((type) => groups.get(type)!);
+}
+
 export default function SiteSearch() {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [kindFilter, setKindFilter] = useState<SearchResultType | "all">("all");
   const [indexVersion, setIndexVersion] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [apiHits, setApiHits] = useState<SearchHit[] | null>(null);
+  const [searchSource, setSearchSource] = useState<"postgres" | "static" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
+  const abortRef = useRef<AbortController | null>(null);
   const tone = useAdaptiveFloatingTone(buttonRef);
 
   useEffect(() => {
@@ -102,23 +169,80 @@ export default function SiteSearch() {
     };
   }, [indexVersion]);
 
-  const results: SearchResultGroup[] = useMemo(
-    () => searchSiteIndex(searchIndex, query),
-    [searchIndex, query]
-  );
+  const trimmedQuery = query.trim();
+  const hasQuery = trimmedQuery.length > 0;
+
+  useEffect(() => {
+    if (!hasQuery) {
+      abortRef.current?.abort();
+      setApiHits(null);
+      setSearchSource(null);
+      setLoading(false);
+      return;
+    }
+
+    const timer = window.setTimeout(() => {
+      abortRef.current?.abort();
+      const controller = new AbortController();
+      abortRef.current = controller;
+      setLoading(true);
+
+      void fetchSiteSearch(trimmedQuery, {
+        kind: kindFilter === "all" ? undefined : kindFilter,
+        signal: controller.signal,
+      })
+        .then((payload) => {
+          if (controller.signal.aborted) return;
+          setApiHits(payload.results);
+          setSearchSource(payload.source);
+        })
+        .catch(() => {
+          if (controller.signal.aborted) return;
+          setApiHits(null);
+          setSearchSource("static");
+        })
+        .finally(() => {
+          if (!controller.signal.aborted) setLoading(false);
+        });
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [trimmedQuery, kindFilter, hasQuery]);
+
+  const fallbackResults: SearchResultGroup[] = useMemo(() => {
+    if (!hasQuery) return [];
+    const filtered =
+      kindFilter === "all"
+        ? searchIndex
+        : searchIndex.filter((item) => item.type === kindFilter);
+    return searchSiteIndex(filtered, trimmedQuery);
+  }, [searchIndex, trimmedQuery, kindFilter, hasQuery]);
+
+  const results: SearchResultGroup[] = useMemo(() => {
+    if (!hasQuery) return [];
+    if (apiHits !== null) return groupHitsByKind(apiHits);
+    return fallbackResults;
+  }, [apiHits, fallbackResults, hasQuery]);
 
   const handleOpenChange = useCallback((next: boolean) => {
     setOpen(next);
-    if (!next) setQuery("");
+    if (!next) {
+      setQuery("");
+      setKindFilter("all");
+      setApiHits(null);
+      setSearchSource(null);
+    }
   }, []);
 
   function handleSelect(href: string) {
     setOpen(false);
     setQuery("");
+    setKindFilter("all");
+    setApiHits(null);
     router.push(href);
   }
-
-  const hasQuery = query.trim().length > 0;
 
   return (
     <>
@@ -161,6 +285,26 @@ export default function SiteSearch() {
                 autoComplete="off"
                 spellCheck={false}
               />
+              {loading ? (
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin text-muted" aria-hidden />
+              ) : null}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {KIND_FILTERS.map((filter) => (
+                <button
+                  key={filter.kind}
+                  type="button"
+                  onClick={() => setKindFilter(filter.kind)}
+                  className={cn(
+                    "rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors",
+                    kindFilter === filter.kind
+                      ? "bg-sky/15 text-sky"
+                      : "bg-muted/10 text-muted hover:bg-muted/20 hover:text-foreground"
+                  )}
+                >
+                  {filter.label}
+                </button>
+              ))}
             </div>
             <p className="mt-2 text-xs text-muted">
               <kbd className="rounded border border-border-subtle px-1">⌘</kbd>
@@ -175,9 +319,11 @@ export default function SiteSearch() {
               <div className="px-3 py-8 text-center text-sm text-muted">
                 Начните вводить запрос — туры, блог, FAQ, документы и направления
               </div>
+            ) : loading && results.length === 0 ? (
+              <div className="px-3 py-8 text-center text-sm text-muted">Ищем…</div>
             ) : results.length === 0 ? (
               <div className="px-3 py-8 text-center text-sm text-muted">
-                Ничего не найдено по запросу «{query.trim()}»
+                Ничего не найдено по запросу «{trimmedQuery}»
               </div>
             ) : (
               <div className="space-y-4 pb-2">
@@ -200,8 +346,13 @@ export default function SiteSearch() {
                                 <Icon className="h-4 w-4" strokeWidth={1.75} />
                               </span>
                               <span className="min-w-0 flex-1">
-                                <span className="block truncate text-sm font-medium text-foreground">
-                                  {item.title}
+                                <span className="flex items-center gap-2">
+                                  <span className="block truncate text-sm font-medium text-foreground">
+                                    {item.title}
+                                  </span>
+                                  <span className="shrink-0 rounded-full bg-muted/15 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-muted">
+                                    {group.label}
+                                  </span>
                                 </span>
                                 {item.description ? (
                                   <span className="mt-0.5 line-clamp-2 text-xs text-muted">
@@ -222,8 +373,11 @@ export default function SiteSearch() {
 
           {hasQuery && results.length > 0 ? (
             <div className="border-t border-border-subtle px-4 py-2.5 text-center text-xs text-muted sm:px-5">
+              {searchSource === "static" ? (
+                <span className="mr-2 text-muted">Локальный индекс</span>
+              ) : null}
               <Link
-                href={`/tours?query=${encodeURIComponent(query.trim())}`}
+                href={`/tours?query=${encodeURIComponent(trimmedQuery)}`}
                 onClick={() => handleOpenChange(false)}
                 className="font-medium text-sky hover:underline"
               >

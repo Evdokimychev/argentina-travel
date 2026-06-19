@@ -57,6 +57,7 @@ export default function ContentDocumentsView() {
   const { data, loading, error, refresh } = useAdminApi<ContentResponse>("/api/admin/content");
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState<ContentDocumentItem["type"] | "all">("all");
+  const [bulkImporting, setBulkImporting] = useState(false);
   const [creatingSlug, setCreatingSlug] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
@@ -68,6 +69,40 @@ export default function ContentDocumentsView() {
       return doc.title.toLowerCase().includes(query) || doc.id.toLowerCase().includes(query);
     });
   }, [data?.documents, search, typeFilter]);
+
+  async function bulkImportFromTs(publish = true) {
+    const confirmed = window.confirm(
+      publish
+        ? "Импортировать все TS-документы в CMS и опубликовать? Существующие записи будут пропущены."
+        : "Импортировать все TS-документы как черновики CMS? Существующие записи будут пропущены."
+    );
+    if (!confirmed) return;
+
+    setBulkImporting(true);
+    try {
+      const res = await fetch("/api/admin/content/documents/bulk-import", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ publish, skipExisting: true }),
+      });
+      const json = (await res.json()) as {
+        ok?: boolean;
+        created?: number;
+        skipped?: number;
+        message?: string;
+        error?: string;
+      };
+      if (!res.ok && res.status !== 207) {
+        throw new Error(json.error ?? json.message ?? "Не удалось выполнить импорт");
+      }
+      alert(json.message ?? `Создано: ${json.created ?? 0}, пропущено: ${json.skipped ?? 0}`);
+      await refresh();
+    } catch (importError) {
+      alert(importError instanceof Error ? importError.message : "Ошибка импорта");
+    } finally {
+      setBulkImporting(false);
+    }
+  }
 
   async function createLegalOverride(slug: string) {
     setCreatingSlug(slug);
@@ -227,9 +262,18 @@ export default function ContentDocumentsView() {
           title="Документы контента"
           subtitle="Файловый контент и CMS-версии документов, статей, путеводителей, направлений и мест"
           actions={
-            <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
-              Обновить
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <Button
+                variant="default"
+                disabled={bulkImporting || loading}
+                onClick={() => void bulkImportFromTs(true)}
+              >
+                {bulkImporting ? "Импорт…" : "Импорт из TS"}
+              </Button>
+              <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
+                Обновить
+              </Button>
+            </div>
           }
         />
 

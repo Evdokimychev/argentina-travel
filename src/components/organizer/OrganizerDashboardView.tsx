@@ -25,10 +25,12 @@ import { useAuth } from "@/context/AuthContext";
 import { getOrganizerCabinetBookingStats } from "@/lib/organizer-bookings";
 import { getOrganizerAnalytics, type OrganizerAnalytics } from "@/lib/organizer-analytics";
 import FormattedPrice from "@/components/FormattedPrice";
+import OrganizerInboxView from "@/components/organizer/OrganizerInboxView";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import type { OrganizerBookingStats } from "@/types/tourist";
 import { ORGANIZER_TOURS_UPDATED_EVENT } from "@/types/organizer-tour";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { ORGANIZER_INBOX_UPDATED_EVENT } from "@/types/organizer-inbox";
 
 function StatusBadge({ label }: { label: string }) {
   return (
@@ -122,10 +124,12 @@ export default function OrganizerDashboardView() {
     window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
     window.addEventListener(ORGANIZER_TOURS_UPDATED_EVENT, refreshStats);
     window.addEventListener(MESSAGES_UPDATED_EVENT, refreshStats);
+    window.addEventListener(ORGANIZER_INBOX_UPDATED_EVENT, refreshStats);
     return () => {
       window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshStats);
       window.removeEventListener(ORGANIZER_TOURS_UPDATED_EVENT, refreshStats);
       window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshStats);
+      window.removeEventListener(ORGANIZER_INBOX_UPDATED_EVENT, refreshStats);
     };
   }, [user]);
 
@@ -169,6 +173,8 @@ export default function OrganizerDashboardView() {
           Открыть аналитику →
         </Link>
       </section>
+
+      <OrganizerInboxView compact />
 
       {analytics ? (
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

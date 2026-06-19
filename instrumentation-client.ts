@@ -1,13 +1,5 @@
-import * as Sentry from "@sentry/nextjs";
+import { captureRouterTransitionStart, initSentry } from "@/lib/monitoring/sentry";
 
-const dsn = process.env.NEXT_PUBLIC_SENTRY_DSN ?? process.env.SENTRY_DSN;
+void initSentry();
 
-Sentry.init({
-  dsn,
-  enabled: Boolean(dsn),
-  environment: process.env.NEXT_PUBLIC_VERCEL_ENV ?? process.env.NODE_ENV,
-  tracesSampleRate: process.env.NODE_ENV === "production" ? 0.1 : 1,
-  sendDefaultPii: false,
-});
-
-export const onRouterTransitionStart = Sentry.captureRouterTransitionStart;
+export { captureRouterTransitionStart as onRouterTransitionStart };

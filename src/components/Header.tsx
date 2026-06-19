@@ -163,7 +163,7 @@ export default function Header() {
             )}
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="font-medium text-foreground/80">Откройте Аргентину 🇦🇷 вместе с нами</span>
+              <span className="font-medium text-foreground/80">{t("header.tagline")}</span>
               <span className="hidden text-charcoal/15 md:inline">|</span>
               {utilityLinks.slice(0, 2).map((link) => (
                 <Link

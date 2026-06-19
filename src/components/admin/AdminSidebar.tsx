@@ -79,13 +79,14 @@ function AdminNavLink({ item, compact }: { item: { href: string; label: string; 
   );
 }
 
-export function AdminMobileHeader() {
+export function AdminMobileHeader({ buildVersionChip }: { buildVersionChip?: React.ReactNode }) {
   const { user } = useAuth();
   return (
     <header className={cabinetMobileHeaderClass}>
       <Link href="/admin" className="flex items-center gap-2">
         <ArgentinaLogo className="h-7 w-auto" />
         <span className="font-heading text-sm font-bold text-charcoal">Админ</span>
+        {buildVersionChip}
       </Link>
       {user ? (
         <UserAvatar name={user.fullName} avatarUrl={user.avatarUrl} className="h-9 w-9 text-sm" />
@@ -107,7 +108,7 @@ export function AdminMobileNav() {
   );
 }
 
-export default function AdminSidebar() {
+export default function AdminSidebar({ buildVersionChip }: { buildVersionChip?: React.ReactNode }) {
   const { user } = useAuth();
   const { capabilities } = useAdminContext();
   const items = filterAdminNavItems(capabilities);
@@ -120,7 +121,10 @@ export default function AdminSidebar() {
           <ArgentinaLogo className="h-8 w-auto" />
           <div>
             <p className="font-heading text-sm font-bold text-charcoal">Админ-панель</p>
-            <p className="text-xs text-slate">Пора в Аргентину</p>
+            <div className="flex items-center gap-2">
+              <p className="text-xs text-slate">Пора в Аргентину</p>
+              {buildVersionChip}
+            </div>
           </div>
         </Link>
         <AdminNotificationsMenu />

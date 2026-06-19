@@ -25,7 +25,7 @@ export async function GET(request: Request) {
   const cmsMap = await fetchCmsOverrideMap(supabase);
 
   const legalEditable = Object.values(LEGAL_DOCUMENTS).map((doc) => {
-    const cmsId = legalOverrideId(doc.slug);
+    const cmsId = legalOverrideId("legal", doc.slug);
     const override = cmsMap.get(cmsId);
     return {
       slug: doc.slug,
@@ -39,7 +39,7 @@ export async function GET(request: Request) {
   });
 
   const blogEditable = getEditorialBlogPosts().slice(0, 80).map((post) => {
-    const cmsId = blogOverrideId(post.slug);
+    const cmsId = blogOverrideId("blog", post.slug);
     const override = cmsMap.get(cmsId);
     const featuredFromCms =
       override?.status === "published" && override.body.kind === "blog" && override.body.featured === true;
@@ -56,7 +56,7 @@ export async function GET(request: Request) {
   });
 
   const guideEditable = getPagesBySection("guide").map((page) => {
-    const cmsId = guideOverrideId(page.slug);
+    const cmsId = guideOverrideId("guide", page.slug);
     const override = cmsMap.get(cmsId);
     return {
       slug: page.slug,
@@ -72,7 +72,7 @@ export async function GET(request: Request) {
   const destinationSourceSlugs = new Set(getAllDestinations().map((destination) => destination.id));
   const destinationCatalog = await resolveDestinationCatalog();
   const destinationEditable = destinationCatalog.map((destination) => {
-    const cmsId = destinationOverrideId(destination.id);
+    const cmsId = destinationOverrideId("destination", destination.id);
     const override = cmsMap.get(cmsId);
     const hasFileSource = destinationSourceSlugs.has(destination.id);
     return {
@@ -96,7 +96,7 @@ export async function GET(request: Request) {
   const placeSourceSlugs = new Set(await fetchPlaceSlugsServer());
   const placeCatalog = await resolvePlaceCatalog();
   const placeEditable = placeCatalog.map((place) => {
-    const cmsId = placeOverrideId(place.slug);
+    const cmsId = placeOverrideId("place", place.slug);
     const override = cmsMap.get(cmsId);
     const hasFileSource = placeSourceSlugs.has(place.slug);
     return {

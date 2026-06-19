@@ -7,6 +7,7 @@ import {
   parseCatalogFiltersFromSearchParams,
   parseCatalogSortFromSearchParams,
 } from "@/lib/catalog-filter-url";
+import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
 
 const DEFAULT_CURRENCY = "RUB" as const;
@@ -80,12 +81,14 @@ export function buildCatalogMetadata(
       : `${count} авторских туров и экскурсий по Аргентине — от Буэнос-Айреса до Патагонии. Фильтры по датам, цене, формату и региону.`;
 
   const canonicalQuery = params.toString();
+  const canonicalPath = canonicalQuery ? `/tours?${canonicalQuery}` : "/tours";
 
   return {
     title,
     description,
     alternates: {
-      canonical: canonicalQuery ? `/tours?${canonicalQuery}` : "/tours",
+      ...buildHreflangAlternates("/tours"),
+      canonical: canonicalPath,
     },
     ...(filterParts.length > 0
       ? { robots: { index: false, follow: true } }

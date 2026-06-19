@@ -18,3 +18,7 @@ export function isSupabaseToursEnabled(): boolean {
   if (!isSupabaseAuthEnabled()) return false;
   return process.env.NEXT_PUBLIC_SUPABASE_TOURS !== "false";
 }
+
+export function isSupabaseMessagingEnabled(): boolean {
+  return isSupabaseAuthEnabled();
+}

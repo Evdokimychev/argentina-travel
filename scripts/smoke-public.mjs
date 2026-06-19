@@ -76,6 +76,13 @@ async function main() {
   assert(legal.json && typeof legal.json === "object", "Legal response must be a JSON object.");
   console.log("✓ GET /api/site/legal");
 
+  const health = await get("/api/health", "json");
+  assert(health.status === 200 || health.status === 503, `GET /api/health returned ${health.status}`);
+  assert(health.json && typeof health.json === "object", "Health response must be a JSON object.");
+  assert(typeof health.json.ok === "boolean", "Health response must include boolean 'ok'.");
+  assert(typeof health.json.version === "string", "Health response must include 'version'.");
+  console.log("✓ GET /api/health");
+
   const index = await get("/api/site/search-index", "json");
   assert(
     index.status === 200,

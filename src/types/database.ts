@@ -144,6 +144,57 @@ export interface Database {
         };
         Relationships: [];
       };
+      conversation_threads: {
+        Row: {
+          id: string;
+          booking_id: string;
+          tourist_user_id: string;
+          organizer_user_id: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          tourist_user_id: string;
+          organizer_user_id: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          tourist_user_id?: string;
+          organizer_user_id?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      conversation_messages: {
+        Row: {
+          id: string;
+          thread_id: string;
+          sender_id: string;
+          body: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          thread_id: string;
+          sender_id: string;
+          body: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          thread_id?: string;
+          sender_id?: string;
+          body?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       tourist_reviews: {
         Row: {
           id: string;
@@ -888,6 +939,24 @@ export interface Database {
         };
         Relationships: [];
       };
+      organizer_inbox_reads: {
+        Row: {
+          user_id: string;
+          item_key: string;
+          read_at: string;
+        };
+        Insert: {
+          user_id: string;
+          item_key: string;
+          read_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          item_key?: string;
+          read_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;
@@ -1224,12 +1293,191 @@ export interface Database {
         };
         Relationships: [];
       };
+      payment_transactions: {
+        Row: {
+          id: string;
+          booking_id: string;
+          provider: string;
+          external_id: string | null;
+          amount: number;
+          currency: string;
+          status: string;
+          type: string;
+          source_event_id: string | null;
+          requested_by: string | null;
+          approved_by: string | null;
+          request_reason: string | null;
+          admin_notes: string | null;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          provider: string;
+          external_id?: string | null;
+          amount: number;
+          currency?: string;
+          status?: string;
+          type: string;
+          source_event_id?: string | null;
+          requested_by?: string | null;
+          approved_by?: string | null;
+          request_reason?: string | null;
+          admin_notes?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          provider?: string;
+          external_id?: string | null;
+          amount?: number;
+          currency?: string;
+          status?: string;
+          type?: string;
+          source_event_id?: string | null;
+          requested_by?: string | null;
+          approved_by?: string | null;
+          request_reason?: string | null;
+          admin_notes?: string | null;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      payout_records: {
+        Row: {
+          id: string;
+          organizer_user_id: string;
+          period: string;
+          amount: number;
+          currency: string;
+          status: string;
+          metadata: Json;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          organizer_user_id: string;
+          period: string;
+          amount: number;
+          currency?: string;
+          status?: string;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          organizer_user_id?: string;
+          period?: string;
+          amount?: number;
+          currency?: string;
+          status?: string;
+          metadata?: Json;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      payment_audit_log: {
+        Row: {
+          id: string;
+          snapshot_date: string;
+          period: string | null;
+          totals: Json;
+          discrepancies: Json;
+          notes: string | null;
+          created_by: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          snapshot_date?: string;
+          period?: string | null;
+          totals?: Json;
+          discrepancies?: Json;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          snapshot_date?: string;
+          period?: string | null;
+          totals?: Json;
+          discrepancies?: Json;
+          notes?: string | null;
+          created_by?: string | null;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      search_documents: {
+        Row: {
+          id: string;
+          slug: string;
+          kind: string;
+          title: string;
+          description: string | null;
+          body_text: string;
+          url: string;
+          published_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          slug: string;
+          kind: string;
+          title: string;
+          description?: string | null;
+          body_text?: string;
+          url: string;
+          published_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          kind?: string;
+          title?: string;
+          description?: string | null;
+          body_text?: string;
+          url?: string;
+          published_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: Record<string, never>;
     Functions: {
       is_admin_with: {
         Args: { required_capability: string };
         Returns: boolean;
+      };
+      search_site_documents: {
+        Args: {
+          query_text: string;
+          filter_kind?: string | null;
+          result_limit?: number;
+        };
+        Returns: {
+          id: string;
+          slug: string;
+          kind: string;
+          title: string;
+          description: string | null;
+          url: string;
+          published_at: string | null;
+          rank: number;
+        }[];
       };
     };
     Enums: Record<string, never>;
@@ -1243,12 +1491,30 @@ export type ProfileUpdate = Database["public"]["Tables"]["profiles"]["Update"];
 export type BookingRow = Database["public"]["Tables"]["bookings"]["Row"];
 export type BookingInsert = Database["public"]["Tables"]["bookings"]["Insert"];
 export type BookingUpdate = Database["public"]["Tables"]["bookings"]["Update"];
+export type ConversationThreadRow =
+  Database["public"]["Tables"]["conversation_threads"]["Row"];
+export type ConversationThreadInsert =
+  Database["public"]["Tables"]["conversation_threads"]["Insert"];
+export type ConversationMessageRow =
+  Database["public"]["Tables"]["conversation_messages"]["Row"];
+export type ConversationMessageInsert =
+  Database["public"]["Tables"]["conversation_messages"]["Insert"];
 export type TourRow = Database["public"]["Tables"]["tours"]["Row"];
 export type TourInsert = Database["public"]["Tables"]["tours"]["Insert"];
 export type TourUpdate = Database["public"]["Tables"]["tours"]["Update"];
 export type ShopOrderRow = Database["public"]["Tables"]["shop_orders"]["Row"];
 export type ShopOrderInsert = Database["public"]["Tables"]["shop_orders"]["Insert"];
 export type ShopOrderUpdate = Database["public"]["Tables"]["shop_orders"]["Update"];
+export type PaymentTransactionDbRow =
+  Database["public"]["Tables"]["payment_transactions"]["Row"];
+export type PaymentTransactionInsert =
+  Database["public"]["Tables"]["payment_transactions"]["Insert"];
+export type PaymentTransactionUpdate =
+  Database["public"]["Tables"]["payment_transactions"]["Update"];
+export type PayoutRecordDbRow = Database["public"]["Tables"]["payout_records"]["Row"];
+export type PayoutRecordInsert = Database["public"]["Tables"]["payout_records"]["Insert"];
+export type PaymentAuditLogRow = Database["public"]["Tables"]["payment_audit_log"]["Row"];
+export type PaymentAuditLogInsert = Database["public"]["Tables"]["payment_audit_log"]["Insert"];
 
 export type NewsletterSubscriber =
   Database["public"]["Tables"]["newsletter_subscribers"]["Row"];

@@ -8,6 +8,7 @@ import {
   useMemo,
   useState,
 } from "react";
+import { usePathname } from "next/navigation";
 import {
   CurrencyCode,
   LocaleCode,
@@ -18,6 +19,7 @@ import {
 } from "@/types/locale";
 import { getLanguage, getCurrency } from "@/data/locale-config";
 import { loadMessages, t as translate } from "@/lib/i18n";
+import { getLocaleFromPathname } from "@/lib/i18n/locale-path";
 import { formatCurrencyAmount } from "@/lib/currency";
 import { resolveRateFromUsd } from "@/lib/exchange-rates";
 import type { ExchangeRatesPayload } from "@/lib/exchange-rates";
@@ -37,6 +39,7 @@ interface LocaleCurrencyContextValue {
 const LocaleCurrencyContext = createContext<LocaleCurrencyContextValue | null>(null);
 
 export function LocaleCurrencyProvider({ children }: { children: React.ReactNode }) {
+  const pathname = usePathname();
   const [locale, setLocaleState] = useState<LocaleCode>(DEFAULT_LOCALE);
   const [currency, setCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY);
   const [messages, setMessages] = useState<Record<string, string>>({});
@@ -44,12 +47,25 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
   const [liveRates, setLiveRates] = useState<Partial<Record<CurrencyCode, number>>>({});
 
   useEffect(() => {
+    const fromPath = getLocaleFromPathname(pathname);
     const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as LocaleCode | null;
     const savedCurrency = localStorage.getItem(CURRENCY_STORAGE_KEY) as CurrencyCode | null;
-    if (savedLocale) setLocaleState(savedLocale);
+    if (fromPath) {
+      setLocaleState(fromPath);
+    } else if (savedLocale) {
+      setLocaleState(savedLocale);
+    }
     if (savedCurrency) setCurrencyState(savedCurrency);
     setReady(true);
   }, []);
+
+  useEffect(() => {
+    const fromPath = getLocaleFromPathname(pathname);
+    if (fromPath) {
+      setLocaleState(fromPath);
+      localStorage.setItem(LOCALE_STORAGE_KEY, fromPath);
+    }
+  }, [pathname]);
 
   useEffect(() => {
     fetch("/api/exchange-rates")

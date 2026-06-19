@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import { Search, Check, ChevronDown, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
@@ -9,6 +10,7 @@ import {
   CURRENCIES,
   POPULAR_CURRENCIES,
 } from "@/data/locale-config";
+import { addLocalePrefix } from "@/lib/i18n/locale-path";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { CurrencyCode, LocaleCode } from "@/types/locale";
@@ -16,6 +18,8 @@ import { CurrencyCode, LocaleCode } from "@/types/locale";
 type Tab = "language" | "currency";
 
 function SwitcherPanel({ onClose }: { onClose?: () => void }) {
+  const router = useRouter();
+  const pathname = usePathname();
   const { locale, currency, setLocale, setCurrency, t } = useLocaleCurrency();
   const [tab, setTab] = useState<Tab>("language");
   const [search, setSearch] = useState("");
@@ -51,6 +55,7 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
 
   function selectLanguage(code: LocaleCode) {
     setLocale(code);
+    router.push(addLocalePrefix(pathname, code));
     onClose?.();
   }
 

@@ -12,7 +12,7 @@ import { getAllPlaceListings } from "@/data/places-seed";
 import { placeHref } from "@/lib/places-repository";
 import { SHOP_PRODUCTS } from "@/data/shop-products";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
-import { buildContentSearchItems } from "@/lib/content-pages";
+import { buildContentSearchItems, buildGuideSearchItems, buildImmigrationSearchItems } from "@/lib/content-pages";
 import { searchLabelToHref } from "@/lib/geography-links";
 import { buildGuideTopicSearchItems } from "@/lib/guide-topics";
 import { buildImmigrationTopicSearchItems } from "@/lib/immigration-topics";
@@ -21,6 +21,7 @@ import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import type { BlogPost, TourListing } from "@/types";
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceListing } from "@/types/place";
+import type { ContentPage } from "@/types/content-page";
 
 export type SearchResultType =
   | "tour"
@@ -251,7 +252,8 @@ export function buildTourSearchItems(tours: TourListing[]): SearchIndexItem[] {
 export function buildStaticSearchIndex(
   blogCatalog: BlogPost[] = blogPosts,
   destinationCatalog: DestinationPage[] = DESTINATION_PAGES,
-  placeCatalog: PlaceListing[] = getAllPlaceListings()
+  placeCatalog: PlaceListing[] = getAllPlaceListings(),
+  guidePages?: ContentPage[]
 ): SearchIndexItem[] {
   const flatNav = flattenSiteNavSections(SITE_NAV_SECTIONS);
   const seenNav = new Set<string>();
@@ -353,7 +355,9 @@ export function buildStaticSearchIndex(
     keywords: [dest.region, dest.type],
   }));
 
-  const contentItems = buildContentSearchItems();
+  const contentItems = guidePages
+    ? [...buildGuideSearchItems(guidePages), ...buildImmigrationSearchItems()]
+    : buildContentSearchItems();
   const guideTopicItems = buildGuideTopicSearchItems();
 
   const shopItems: SearchIndexItem[] = SHOP_PRODUCTS.map((product) => ({
@@ -408,23 +412,27 @@ export function buildStaticSearchIndex(
 
 export async function buildStaticSearchIndexServer(): Promise<SearchIndexItem[]> {
   try {
-    const [{ resolveBlogCatalog }, { resolveDestinationCatalog }, { resolvePlaceCatalog }] =
+    const [{ resolveBlogCatalog }, { resolveDestinationCatalog }, { resolvePlaceCatalog }, { resolveGuideCatalog }] =
       await Promise.all([
         import("@/lib/cms/blog-resolver"),
         import("@/lib/cms/destination-resolver"),
         import("@/lib/cms/place-resolver"),
+        import("@/lib/cms/guide-resolver"),
       ]);
 
-    const [mergedBlogCatalog, mergedDestinationCatalog, mergedPlaceCatalog] = await Promise.all([
-      resolveBlogCatalog(),
-      resolveDestinationCatalog(),
-      resolvePlaceCatalog(),
-    ]);
+    const [mergedBlogCatalog, mergedDestinationCatalog, mergedPlaceCatalog, mergedGuideCatalog] =
+      await Promise.all([
+        resolveBlogCatalog(),
+        resolveDestinationCatalog(),
+        resolvePlaceCatalog(),
+        resolveGuideCatalog(),
+      ]);
 
     return buildStaticSearchIndex(
       mergedBlogCatalog.length > 0 ? mergedBlogCatalog : blogPosts,
       mergedDestinationCatalog.length > 0 ? mergedDestinationCatalog : DESTINATION_PAGES,
-      mergedPlaceCatalog.length > 0 ? mergedPlaceCatalog : getAllPlaceListings()
+      mergedPlaceCatalog.length > 0 ? mergedPlaceCatalog : getAllPlaceListings(),
+      mergedGuideCatalog
     );
   } catch {
     return buildStaticSearchIndex();
