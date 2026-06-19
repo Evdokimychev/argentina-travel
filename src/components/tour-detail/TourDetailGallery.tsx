@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
+import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
 import {
   tourDetailGalleryGridClass,
@@ -31,6 +32,8 @@ function GalleryTile({
   onClick?: () => void;
   children?: React.ReactNode;
 }) {
+  const cdnSrc = buildSupabaseCdnUrl(src, { width: 1440, quality: 80 });
+
   return (
     <button
       type="button"
@@ -41,7 +44,7 @@ function GalleryTile({
       )}
     >
       <SafeImage
-        src={src}
+        src={cdnSrc}
         alt={alt}
         fill
         placeholderVariant="tour"
@@ -107,7 +110,7 @@ function MobileGalleryCarousel({
             className="relative h-full min-w-full shrink-0 snap-center snap-always overflow-hidden rounded-2xl bg-gray-100"
           >
             <SafeImage
-              src={src}
+              src={buildSupabaseCdnUrl(src, { width: 1280, quality: 80 })}
               alt={index === 0 ? title : `${title} — ${index + 1}`}
               fill
               placeholderVariant="tour"
@@ -279,7 +282,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
               </>
             ) : null}
             <Image
-              src={galleryImages[activeIndex]}
+              src={buildSupabaseCdnUrl(galleryImages[activeIndex], { width: 2200, quality: 84 })}
               alt={`${title} — ${activeIndex + 1}`}
               fill
               className="object-contain p-4"
@@ -295,7 +298,14 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                 onClick={() => setActiveIndex(i)}
                 className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg ${i === activeIndex ? "ring-2 ring-sun" : ""}`}
               >
-                <Image src={src} alt="" fill className="object-cover" sizes="96px" loading="lazy" />
+                <Image
+                  src={buildSupabaseCdnUrl(src, { width: 320, quality: 72 })}
+                  alt=""
+                  fill
+                  className="object-cover"
+                  sizes="96px"
+                  loading="lazy"
+                />
               </button>
             ))}
           </div>

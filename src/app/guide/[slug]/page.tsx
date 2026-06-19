@@ -4,9 +4,11 @@ import ContentPageView from "@/components/content/ContentPageView";
 import KakDobratsyaHubView from "@/components/guide/hub/KakDobratsyaHubView";
 import GuidePillarView from "@/components/guide/GuidePillarView";
 import GuideTopicView from "@/components/guide/GuideTopicView";
+import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { listPublishedGuideSlugs, resolveGuidePage } from "@/lib/cms/guide-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import {
   getAllGuideTopics,
   getGuideTopicBySlug,
@@ -71,5 +73,13 @@ export default async function GuideSlugPage({ params }: PageProps) {
 
   const page = await resolveGuidePage(slug, await getServerI18nLocale());
   if (!page) notFound();
-  return <ContentPageView page={page} />;
+  const cmsMetadata = getCmsResolverMetadata(page);
+  return (
+    <>
+      {cmsMetadata?.showTranslationBanner ? (
+        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+      ) : null}
+      <ContentPageView page={page} />
+    </>
+  );
 }

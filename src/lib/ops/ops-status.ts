@@ -19,7 +19,12 @@ export type OpsBackupHint = {
   hint: string;
 };
 
-export type CronJobId = "digest" | "cleanupTyping" | "backupHint" | "contentFreshness";
+export type CronJobId =
+  | "digest"
+  | "cleanupTyping"
+  | "backupHint"
+  | "contentFreshness"
+  | "privacyProcess";
 
 export type CronRunEntry = {
   ranAt: string;
@@ -69,6 +74,7 @@ const EMPTY_CRON_STATUS: OpsCronStatus = {
   cleanupTyping: null,
   backupHint: null,
   contentFreshness: null,
+  privacyProcess: null,
 };
 
 const cronRouteRingBuffer: CronRouteRunEntry[] = [];
@@ -117,6 +123,7 @@ function readCronStatus(): OpsCronStatus {
     cleanupTyping: raw.cleanupTyping ?? null,
     backupHint: raw.backupHint ?? null,
     contentFreshness: raw.contentFreshness ?? null,
+    privacyProcess: raw.privacyProcess ?? null,
   };
 }
 

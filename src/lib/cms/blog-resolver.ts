@@ -2,11 +2,15 @@ import { blogPosts, getBlogPostBySlug } from "@/data/blog";
 import { sortBlogPostsByDate } from "@/lib/blog-utils";
 import type { BlogPost } from "@/types";
 import {
+  attachCmsResolverMetadata,
+  buildCmsResolverMetadata,
   cmsOverrideId,
+  fetchCmsTranslationStatusForSlug,
   fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   resolveWithPublishedCmsOverride,
 } from "@/lib/cms/content-resolver";
+import { buildDefaultTranslationStatus, isCmsDocumentComplete } from "@/lib/cms/translation-status";
 import {
   blogPostFromCms,
   type CmsDocument,
@@ -32,7 +36,7 @@ export function mergeBlogCatalog(filePosts: BlogPost[], cmsPosts: CmsDocument[])
   const mergedBySlug = new Map(filePosts.map((post) => [post.slug, post] as const));
 
   for (const cmsPost of cmsPosts) {
-    if (cmsPost.body.kind !== "blog") continue;
+    if (cmsPost.body.kind !== "blog" || !isCmsDocumentComplete(cmsPost)) continue;
     const fallback = mergedBySlug.get(cmsPost.slug);
     const merged = blogPostFromCms(cmsPost, fallback);
     if (merged) mergedBySlug.set(merged.slug, merged);
@@ -56,6 +60,12 @@ export async function resolveBlogCatalog(locale = "ru"): Promise<BlogPost[]> {
 /** Published CMS override merged with TS defaults for missing media/metadata. */
 export async function resolveBlogPost(slug: string, locale = "ru"): Promise<BlogPost | undefined> {
   const fallback = getBlogPostBySlug(slug);
+  const supabase = await getCmsServerClient();
+  const translationStatus = supabase
+    ? await fetchCmsTranslationStatusForSlug(supabase, "blog", slug, {
+        ruFallbackComplete: Boolean(fallback),
+      })
+    : buildDefaultTranslationStatus(Boolean(fallback));
 
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "blog",
@@ -63,7 +73,10 @@ export async function resolveBlogPost(slug: string, locale = "ru"): Promise<Blog
     locale,
     fallback: fallback ?? null,
     merge: (doc, fb) => blogPostFromCms(doc, fb),
+    supabase,
+    isUsable: isCmsDocumentComplete,
   });
 
-  return resolved ?? undefined;
+  if (!resolved) return undefined;
+  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
 }

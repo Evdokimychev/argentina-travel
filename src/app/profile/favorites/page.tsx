@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { getUserFavorites } from "@/lib/favorites-store";
+import { getUserFavorites, refreshRemoteFavorites } from "@/lib/favorites-store";
 import { FAVORITES_UPDATED_EVENT, type FavoriteTour } from "@/types/tourist";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
@@ -34,14 +34,25 @@ export default function ProfileFavoritesPage() {
 
   useEffect(() => {
     if (!user) return;
+    const userId = user.id;
+    let active = true;
 
     function refresh() {
-      setFavorites(getUserFavorites(user!.id));
+      if (!active) return;
+      setFavorites(getUserFavorites(userId));
     }
 
     refresh();
+    void (async () => {
+      await refreshRemoteFavorites(user, userId);
+      refresh();
+    })();
+
     window.addEventListener(FAVORITES_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(FAVORITES_UPDATED_EVENT, refresh);
+    return () => {
+      active = false;
+      window.removeEventListener(FAVORITES_UPDATED_EVENT, refresh);
+    };
   }, [user]);
 
   if (!user) return null;

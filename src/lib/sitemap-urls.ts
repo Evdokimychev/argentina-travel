@@ -60,25 +60,13 @@ async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
 }
 
 export async function collectTourSitemapPaths(): Promise<string[]> {
-  const staticPaths = marketplaceTours.map((tour) => `/tours/${tour.slug}`);
-
   try {
-    const { isSupabaseToursEnabled } = await import("@/lib/auth-mode");
-    if (isSupabaseToursEnabled()) {
-      const { fetchPublishedSlugsServer } = await import("@/lib/tour-content-server");
-      const slugs = await fetchPublishedSlugsServer();
-      if (slugs.length > 0) {
-        return uniquePaths([
-          ...staticPaths,
-          ...slugs.map((slug) => `/tours/${slug}`),
-        ]);
-      }
-    }
+    const { fetchCutoverPublishedTourSlugs } = await import("@/lib/tours-server-cutover");
+    const slugs = await fetchCutoverPublishedTourSlugs();
+    return uniquePaths(slugs.map((slug) => `/tours/${slug}`));
   } catch {
-    // use static slugs only
+    return marketplaceTours.map((tour) => `/tours/${tour.slug}`);
   }
-
-  return staticPaths;
 }
 
 export async function collectExcursionSitemapPaths(): Promise<string[]> {

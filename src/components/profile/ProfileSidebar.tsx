@@ -38,6 +38,11 @@ import {
 } from "@/data/tourist-dashboard";
 import { useAuth } from "@/context/AuthContext";
 import { getProfileNavItemsWithBadges } from "@/lib/tourist-nav";
+import {
+  apiFetchConversationUnreadCount,
+  isRemoteMessagingMode,
+} from "@/lib/conversations-api";
+import { useConversationInboxRealtime } from "@/hooks/useConversationInboxRealtime";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 import { NOTIFICATIONS_UPDATED_EVENT } from "@/lib/notifications";
@@ -78,12 +83,26 @@ function writeCollapsedPreference(collapsed: boolean) {
   }
 }
 
+async function loadProfileNavItems(userId: string): Promise<ReturnType<typeof getProfileNavItemsWithBadges>> {
+  if (!isRemoteMessagingMode()) {
+    return getProfileNavItemsWithBadges(userId);
+  }
+
+  try {
+    const unreadMessages = await apiFetchConversationUnreadCount("tourist");
+    return getProfileNavItemsWithBadges(userId, { unreadMessages });
+  } catch {
+    return getProfileNavItemsWithBadges(userId);
+  }
+}
+
 export default function ProfileSidebar({
   userName,
   avatarUrl,
   forceCompact = false,
 }: ProfileSidebarProps) {
   const { user } = useAuth();
+  const userId = user?.id ?? null;
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -109,20 +128,27 @@ export default function ProfileSidebar({
   }, []);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
+    const stableUserId = userId;
 
-    function refreshNavBadges() {
-      setNavItems(getProfileNavItemsWithBadges(user!.id));
+    async function refreshNavBadges() {
+      setNavItems(await loadProfileNavItems(stableUserId));
     }
 
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    void refreshNavBadges();
+    const handler = () => void refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
     return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
     };
-  }, [user]);
+  }, [userId]);
+
+  useConversationInboxRealtime(Boolean(userId && isRemoteMessagingMode()), () => {
+    if (!userId) return;
+    void loadProfileNavItems(userId).then(setNavItems);
+  });
 
   function toggleCollapsed() {
     setCollapsed((prev) => {
@@ -302,24 +328,32 @@ export function ProfileMobileHeader() {
 
 export function ProfileMobileNav() {
   const { user } = useAuth();
+  const userId = user?.id ?? null;
   const pathname = usePathname();
   const [navItems, setNavItems] = useState(PROFILE_NAV_ITEMS);
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
+    const stableUserId = userId;
 
-    function refreshNavBadges() {
-      setNavItems(getProfileNavItemsWithBadges(user!.id));
+    async function refreshNavBadges() {
+      setNavItems(await loadProfileNavItems(stableUserId));
     }
 
-    refreshNavBadges();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    void refreshNavBadges();
+    const handler = () => void refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, handler);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, handler);
     return () => {
-      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
-      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, handler);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, handler);
     };
-  }, [user]);
+  }, [userId]);
+
+  useConversationInboxRealtime(Boolean(userId && isRemoteMessagingMode()), () => {
+    if (!userId) return;
+    void loadProfileNavItems(userId).then(setNavItems);
+  });
 
   return (
     <nav className={cabinetMobileNavClass}>

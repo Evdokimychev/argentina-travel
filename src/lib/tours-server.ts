@@ -1,13 +1,13 @@
 import type { TourDetail, TourListing, TourReview } from "@/types";
-import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { getSimilarTourDetails, rankSimilarListings } from "@/lib/tour-recommendations";
-import { getTourDetail, getSimilarTours } from "@/lib/tours";
+import { getSimilarTours } from "@/lib/tours";
 import { fetchTourPublicReviews } from "@/lib/reviews-server";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import {
   fetchPartnerTourDetailServer,
 } from "@/lib/tripster/partner-tour-server";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { fetchCutoverTourDetailBySlug } from "@/lib/tours-server-cutover";
 
 function resolveReviewSortTimestamp(review: TourReview): number {
   const value = review.date || review.tripDate;
@@ -80,16 +80,7 @@ async function fetchNativeTourDetail(
   slug: string,
   opts?: { accessToken?: string | null }
 ): Promise<TourDetail | null> {
-  if (isSupabaseToursEnabled()) {
-    try {
-      const { fetchTourDetailBySlugServer } = await import("@/lib/tour-content-server");
-      const fromDb = await fetchTourDetailBySlugServer(slug);
-      if (fromDb) return fromDb;
-    } catch {
-      // fallback to local repository
-    }
-  }
-  return getTourDetail(slug, opts?.accessToken) ?? null;
+  return fetchCutoverTourDetailBySlug(slug, opts);
 }
 
 export async function fetchTourDetail(

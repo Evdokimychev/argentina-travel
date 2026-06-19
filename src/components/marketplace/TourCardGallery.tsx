@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { ImagePlaceholder, type ImagePlaceholderVariant } from "@/components/ui/image-placeholder";
 import { SafeImage } from "@/components/ui/safe-image";
 import TourCardImageVignette from "./TourCardImageVignette";
@@ -19,7 +20,9 @@ export default function TourCardGallery({
   variant = "tour",
 }: TourCardGalleryProps) {
   const [index, setIndex] = useState(0);
-  const displayImages = images.map((src) => src?.trim()).filter(Boolean);
+  const displayImages = images
+    .map((src) => buildSupabaseCdnUrl(src?.trim() ?? "", { width: 960, quality: 76 }))
+    .filter(Boolean);
 
   if (displayImages.length === 0) {
     return <ImagePlaceholder variant={variant} className="absolute inset-0" label={alt} />;

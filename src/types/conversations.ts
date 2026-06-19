@@ -1,4 +1,4 @@
-import type { MessageSenderRole } from "@/types/messages";
+import type { MessageSenderRole, MessageThread } from "@/types/messages";
 
 export interface ConversationThread {
   id: string;
@@ -23,4 +23,9 @@ export interface ConversationMessage {
 export interface ConversationTypingState {
   userId: string;
   updatedAt: string;
+}
+
+export interface ConversationInboxSummary {
+  threads: MessageThread[];
+  unreadCount: number;
 }

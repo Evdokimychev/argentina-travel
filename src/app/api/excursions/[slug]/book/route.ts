@@ -180,7 +180,12 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   if (!isTripsterConfigured()) {
-    return NextResponse.json({ error: "Tripster is not configured." }, { status: 503 });
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl: `/api/affiliate/go/${slug}`,
+      error: "Tripster booking API unavailable. Redirecting to partner site.",
+    });
   }
 
   const tickets = buildDefaultTickets(excursion.ticketOptions, personsCount);

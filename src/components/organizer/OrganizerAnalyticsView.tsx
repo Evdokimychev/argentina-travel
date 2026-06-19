@@ -18,6 +18,7 @@ import FormattedPrice from "@/components/FormattedPrice";
 import { NativeSelect } from "@/components/ui/native-select";
 import { cn } from "@/lib/cn";
 import { cabinetHeroClass, cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
+import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import {
   getOrganizerAdvancedAnalyticsReport,
   getOrganizerBasicAnalyticsReport,
@@ -47,6 +48,7 @@ import AnalyticsUpgradePanel, {
   AnalyticsLockedSection,
 } from "@/components/organizer/analytics/AnalyticsUpgradePanel";
 import { shouldSeedDemoData } from "@/lib/demo-mode";
+import OrganizerAnalyticsRemoteView from "@/components/organizer/OrganizerAnalyticsRemoteView";
 
 function GrowthBadge({ value }: { value: number | null }) {
   if (value == null) {
@@ -152,7 +154,7 @@ function TourPerformanceTable({ rows }: { rows: TourPerformanceRow[] }) {
   );
 }
 
-export default function OrganizerAnalyticsView() {
+function OrganizerAnalyticsLocalView() {
   const { user } = useAuth();
   const [period, setPeriod] = useState<AnalyticsPeriod>("30d");
   const [planTier, setPlanTier] = useState<OrganizerPlanTier>("starter");
@@ -575,4 +577,12 @@ export default function OrganizerAnalyticsView() {
       ) : null}
     </div>
   );
+}
+
+export default function OrganizerAnalyticsView() {
+  if (isSupabaseBookingsEnabled()) {
+    return <OrganizerAnalyticsRemoteView />;
+  }
+
+  return <OrganizerAnalyticsLocalView />;
 }

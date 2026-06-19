@@ -5,6 +5,11 @@ import { insertBooking } from "@/lib/bookings-server";
 import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
+import {
+  releaseTourSlotReservation,
+  reserveTourSlotForBooking,
+  type SlotReservation,
+} from "@/lib/tour-availability-server";
 import type { Booking } from "@/types/tourist";
 import { normalizeBooking } from "@/lib/bookings-store";
 
@@ -36,8 +41,35 @@ async function postBooking(request: Request) {
       tourSlug: booking.tourSlug,
     });
 
-    const result = await insertBooking(supabase, booking);
+    let slotReservation: SlotReservation | null = null;
+    const reservationResult = await reserveTourSlotForBooking(supabase, {
+      tourId: booking.tourId,
+      tourSlug: booking.tourSlug,
+      startDate: booking.startDate,
+      guests: booking.guests,
+    });
+
+    if ("error" in reservationResult) {
+      addBookingBreadcrumb("booking.create.failed", {
+        bookingId: booking.id,
+        reason: reservationResult.error,
+      });
+      return NextResponse.json(
+        { error: reservationResult.error },
+        { status: reservationResult.status ?? 409 }
+      );
+    }
+
+    slotReservation = reservationResult.reservation;
+    let result: Awaited<ReturnType<typeof insertBooking>>;
+    try {
+      result = await insertBooking(supabase, booking);
+    } catch (insertError) {
+      await releaseTourSlotReservation(supabase, slotReservation);
+      throw insertError;
+    }
     if ("error" in result) {
+      await releaseTourSlotReservation(supabase, slotReservation);
       addBookingBreadcrumb("booking.create.failed", {
         bookingId: booking.id,
         error: result.error,

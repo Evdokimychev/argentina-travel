@@ -49,6 +49,7 @@ type SettingsResponse = {
       cleanupTyping: CronRunEntry | null;
       backupHint: CronRunEntry | null;
       contentFreshness: CronRunEntry | null;
+      privacyProcess: CronRunEntry | null;
     };
   };
   productionReadiness?: ProductionReadinessSnapshot;
@@ -221,6 +222,12 @@ export default function SettingsView() {
               <dt className="text-slate">Cron: актуальность контента</dt>
               <dd className="mt-1 font-medium text-charcoal">
                 {formatCronRun(data?.ops?.cron?.contentFreshness ?? null)}
+              </dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-slate">Cron: GDPR soft delete</dt>
+              <dd className="mt-1 font-medium text-charcoal">
+                {formatCronRun(data?.ops?.cron?.privacyProcess ?? null)}
               </dd>
             </div>
           </dl>

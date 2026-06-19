@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import type { Booking } from "@/types/tourist";
 import type { SessionUser } from "@/types/user";
+import type { MessageSenderRole, MessageThread } from "@/types/messages";
 import { bookingMatchesContactEmail } from "@/lib/guest-booking";
 import {
   canAccessBooking,
@@ -22,6 +23,14 @@ type DbClient = SupabaseClient<Database>;
 type ConversationThreadRow = Database["public"]["Tables"]["conversation_threads"]["Row"];
 type ConversationMessageRow = Database["public"]["Tables"]["conversation_messages"]["Row"];
 type MessageReadRow = Database["public"]["Tables"]["message_reads"]["Row"];
+type ProfileRow = Pick<
+  Database["public"]["Tables"]["profiles"]["Row"],
+  "id" | "first_name" | "last_name" | "email"
+>;
+type BookingMetaRow = Pick<
+  Database["public"]["Tables"]["bookings"]["Row"],
+  "id" | "tour_slug" | "tour_title" | "contact_name" | "contact_email"
+>;
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -271,6 +280,169 @@ export async function fetchConversationMessages(
         : undefined
     )
   );
+}
+
+function formatProfileName(profile: ProfileRow | undefined, fallback: string): string {
+  if (!profile) return fallback;
+  const firstName = profile.first_name.trim();
+  const lastName = profile.last_name.trim();
+  const fullName = [firstName, lastName].filter(Boolean).join(" ").trim();
+  return fullName || fallback;
+}
+
+async function fetchUnreadByThread(
+  supabase: DbClient,
+  userId: string,
+  threadIds: string[]
+): Promise<Map<string, number>> {
+  const result = new Map<string, number>();
+  if (threadIds.length === 0) return result;
+
+  const { data: incomingMessages, error: incomingError } = await supabase
+    .from("conversation_messages")
+    .select("id, thread_id")
+    .in("thread_id", threadIds)
+    .neq("sender_id", userId);
+
+  if (incomingError || !incomingMessages?.length) {
+    return result;
+  }
+
+  const messageIds = incomingMessages.map((message) => message.id);
+  const { data: reads, error: readsError } = await supabase
+    .from("message_reads")
+    .select("message_id")
+    .eq("user_id", userId)
+    .in("message_id", messageIds);
+
+  if (readsError) {
+    return result;
+  }
+
+  const readSet = new Set((reads ?? []).map((row) => row.message_id));
+  for (const message of incomingMessages) {
+    if (readSet.has(message.id)) continue;
+    result.set(message.thread_id, (result.get(message.thread_id) ?? 0) + 1);
+  }
+
+  return result;
+}
+
+export async function countConversationUnreadMessages(
+  supabase: DbClient,
+  userId: string,
+  role: MessageSenderRole
+): Promise<number> {
+  const participantColumn = role === "organizer" ? "organizer_user_id" : "tourist_user_id";
+  const { data: threadRows, error } = await supabase
+    .from("conversation_threads")
+    .select("id")
+    .eq(participantColumn, userId);
+
+  if (error || !threadRows?.length) return 0;
+
+  const unreadByThread = await fetchUnreadByThread(
+    supabase,
+    userId,
+    threadRows.map((thread) => thread.id)
+  );
+
+  return [...unreadByThread.values()].reduce((sum, count) => sum + count, 0);
+}
+
+export async function fetchConversationInboxSummary(
+  supabase: DbClient,
+  userId: string,
+  role: MessageSenderRole,
+  options?: { limit?: number }
+): Promise<{ threads: MessageThread[]; unreadCount: number }> {
+  const limit = options?.limit ?? 50;
+  const participantColumn = role === "organizer" ? "organizer_user_id" : "tourist_user_id";
+
+  const { data: threadRows, error: threadsError } = await supabase
+    .from("conversation_threads")
+    .select("*")
+    .eq(participantColumn, userId)
+    .order("updated_at", { ascending: false })
+    .limit(limit);
+
+  if (threadsError || !threadRows?.length) {
+    return { threads: [], unreadCount: 0 };
+  }
+
+  const threadIds = threadRows.map((thread) => thread.id);
+  const bookingIds = [...new Set(threadRows.map((thread) => thread.booking_id))];
+  const participantIds = [
+    ...new Set(
+      threadRows.flatMap((thread) => [thread.tourist_user_id, thread.organizer_user_id])
+    ),
+  ];
+
+  const [bookingsResult, profilesResult, latestMessagesResult, unreadByThread, unreadCount] =
+    await Promise.all([
+      supabase
+        .from("bookings")
+        .select("id, tour_slug, tour_title, contact_name, contact_email")
+        .in("id", bookingIds),
+      supabase
+        .from("profiles")
+        .select("id, first_name, last_name, email")
+        .in("id", participantIds),
+      supabase
+        .from("conversation_messages")
+        .select("thread_id, body, created_at")
+        .in("thread_id", threadIds)
+        .order("created_at", { ascending: false }),
+      fetchUnreadByThread(supabase, userId, threadIds),
+      countConversationUnreadMessages(supabase, userId, role),
+    ]);
+
+  const bookingById = new Map<string, BookingMetaRow>(
+    (bookingsResult.data ?? []).map((booking) => [booking.id, booking])
+  );
+  const profileById = new Map<string, ProfileRow>(
+    (profilesResult.data ?? []).map((profile) => [profile.id, profile])
+  );
+
+  const latestMessageByThread = new Map<
+    string,
+    Pick<ConversationMessageRow, "thread_id" | "body" | "created_at">
+  >();
+  for (const message of latestMessagesResult.data ?? []) {
+    if (!latestMessageByThread.has(message.thread_id)) {
+      latestMessageByThread.set(message.thread_id, message);
+    }
+  }
+
+  const threads: MessageThread[] = threadRows.map((thread) => {
+    const booking = bookingById.get(thread.booking_id);
+    const organizerProfile = profileById.get(thread.organizer_user_id);
+    const touristProfile = profileById.get(thread.tourist_user_id);
+    const latestMessage = latestMessageByThread.get(thread.id);
+    const unreadForCurrentUser = unreadByThread.get(thread.id) ?? 0;
+
+    return {
+      id: thread.id,
+      bookingId: thread.booking_id,
+      tourSlug: booking?.tour_slug ?? "",
+      tourTitle: booking?.tour_title ?? "Тур",
+      organizerUserId: thread.organizer_user_id,
+      organizerName: formatProfileName(organizerProfile, "Организатор"),
+      touristUserId: thread.tourist_user_id,
+      touristName: formatProfileName(
+        touristProfile,
+        booking?.contact_name?.trim() || "Турист"
+      ),
+      touristEmail: booking?.contact_email ?? touristProfile?.email ?? undefined,
+      createdAt: thread.created_at,
+      updatedAt: thread.updated_at,
+      lastMessagePreview: latestMessage?.body?.trim().slice(0, 140) ?? "",
+      organizerUnread: role === "organizer" ? unreadForCurrentUser : 0,
+      touristUnread: role === "tourist" ? unreadForCurrentUser : 0,
+    };
+  });
+
+  return { threads, unreadCount };
 }
 
 export async function insertConversationMessage(

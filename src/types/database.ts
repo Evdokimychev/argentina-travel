@@ -36,6 +36,8 @@ export interface Database {
           is_blocked: boolean;
           organizer_verified_at: string | null;
           admin_notes: string | null;
+          deleted_at: string | null;
+          anonymized_at: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -53,6 +55,8 @@ export interface Database {
           is_blocked?: boolean;
           organizer_verified_at?: string | null;
           admin_notes?: string | null;
+          deleted_at?: string | null;
+          anonymized_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -70,6 +74,8 @@ export interface Database {
           is_blocked?: boolean;
           organizer_verified_at?: string | null;
           admin_notes?: string | null;
+          deleted_at?: string | null;
+          anonymized_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -1173,6 +1179,30 @@ export interface Database {
         };
         Relationships: [];
       };
+      user_favorites: {
+        Row: {
+          user_id: string;
+          item_type: string;
+          item_id: string;
+          item_slug: string;
+          created_at: string;
+        };
+        Insert: {
+          user_id: string;
+          item_type: string;
+          item_id: string;
+          item_slug: string;
+          created_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          item_type?: string;
+          item_id?: string;
+          item_slug?: string;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;
@@ -1235,6 +1265,60 @@ export interface Database {
           created_at?: string;
         };
         Relationships: [];
+      };
+      organizer_applications: {
+        Row: {
+          id: string;
+          user_id: string;
+          company_name: string;
+          description: string;
+          status: "pending" | "approved" | "rejected";
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          review_note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          company_name: string;
+          description?: string;
+          status?: "pending" | "approved" | "rejected";
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          review_note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          company_name?: string;
+          description?: string;
+          status?: "pending" | "approved" | "rejected";
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          review_note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "organizer_applications_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "organizer_applications_reviewed_by_fkey";
+            columns: ["reviewed_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       admin_role_presets: {
         Row: {
@@ -1792,6 +1876,103 @@ export interface Database {
         };
         Relationships: [];
       };
+      tour_availability_slots: {
+        Row: {
+          id: string;
+          tour_id: string;
+          date: string;
+          capacity: number;
+          booked_count: number;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tour_id: string;
+          date: string;
+          capacity?: number;
+          booked_count?: number;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tour_id?: string;
+          date?: string;
+          capacity?: number;
+          booked_count?: number;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tour_availability_slots_tour_id_fkey";
+            columns: ["tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      tour_waitlist_entries: {
+        Row: {
+          id: string;
+          tour_id: string;
+          user_id: string | null;
+          email: string | null;
+          contact_name: string | null;
+          contact_phone: string | null;
+          slot_date: string | null;
+          guests: number;
+          status: string;
+          source: string;
+          note: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tour_id: string;
+          user_id?: string | null;
+          email?: string | null;
+          contact_name?: string | null;
+          contact_phone?: string | null;
+          slot_date?: string | null;
+          guests?: number;
+          status?: string;
+          source?: string;
+          note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tour_id?: string;
+          user_id?: string | null;
+          email?: string | null;
+          contact_name?: string | null;
+          contact_phone?: string | null;
+          slot_date?: string | null;
+          guests?: number;
+          status?: string;
+          source?: string;
+          note?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "tour_waitlist_entries_tour_id_fkey";
+            columns: ["tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       payment_transactions: {
         Row: {
           id: string;
@@ -2170,5 +2351,11 @@ export type NewsletterSubscriber =
 export type ContactSubmission = Database["public"]["Tables"]["contact_submissions"]["Row"];
 export type ContactSubmissionInsert =
   Database["public"]["Tables"]["contact_submissions"]["Insert"];
+export type OrganizerApplicationRow =
+  Database["public"]["Tables"]["organizer_applications"]["Row"];
+export type OrganizerApplicationInsert =
+  Database["public"]["Tables"]["organizer_applications"]["Insert"];
+export type OrganizerApplicationUpdate =
+  Database["public"]["Tables"]["organizer_applications"]["Update"];
 export type NewsletterSubscriberInsert =
   Database["public"]["Tables"]["newsletter_subscribers"]["Insert"];

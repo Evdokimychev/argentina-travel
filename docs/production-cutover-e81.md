@@ -34,6 +34,8 @@ npm run production-readiness
 - [ ] `GET /api/health` на staging возвращает корректный `migrationVersion`
 - [ ] В админке (`/admin/settings`) панель готовности без блокеров
 - [ ] Есть актуальная резервная копия схемы (`npm run backup:schema`) и копия сохранена вне репозитория
+- [ ] E100 smoke: `PLAYWRIGHT_BASE_URL=<staging-url> npm run test:e2e:smoke` проходит без падений
+- [ ] Подготовлен API-ключ `tours:read` для post-deploy load-прогона `/api/v1/tours`
 
 ## 2) Порядок выполнения в релизном окне
 
@@ -79,6 +81,7 @@ npm run supabase:migrate
 
 ```bash
 SMOKE_BASE_URL=https://www.goargentina.ru npm run production-smoke
+PLAYWRIGHT_BASE_URL=https://www.goargentina.ru npm run test:e2e:smoke
 ```
 
 Проверяемые URL:
@@ -95,14 +98,25 @@ SMOKE_BASE_URL=https://www.goargentina.ru npm run production-smoke
 
 - [ ] В админке открыть `/admin/settings` и проверить панель «Чеклист cutover»
 - [ ] Убедиться, что общий статус панели не красный
+- [ ] Выполнить короткий load scaffold `/api/v1/tours`:
+
+```bash
+LOAD_BASE_URL=https://www.goargentina.ru \
+LOAD_PUBLIC_API_KEY=<public_api_key> \
+LOAD_DURATION_SEC=30 \
+LOAD_RPS=5 \
+node scripts/load-test-public-api.mjs
+```
 
 ## 4) Критерии успешного завершения cutover
 
 - [ ] `production-smoke` завершился без ошибок
+- [ ] `test:e2e:smoke` завершился без ошибок
 - [ ] `GET /api/health` возвращает `ok: true` или контролируемый `ok: false` без критичных ошибок БД
 - [ ] `environment.deployEnv` в `/api/health` равен `production`
 - [ ] `migrationVersion` совпадает с ожидаемой последней миграцией
 - [ ] Нет блокеров в админских панелях готовности
+- [ ] Load scaffold `/api/v1/tours` не показывает системных 5xx/сетевых ошибок
 
 ## 5) План отката (rollback)
 
@@ -143,4 +157,10 @@ npm run supabase:migrate
 
 # 3) Post-deploy smoke
 SMOKE_BASE_URL=https://www.goargentina.ru npm run production-smoke
+PLAYWRIGHT_BASE_URL=https://www.goargentina.ru npm run test:e2e:smoke
+
+# 4) Public API load scaffold
+LOAD_BASE_URL=https://www.goargentina.ru \
+LOAD_PUBLIC_API_KEY=<public_api_key> \
+node scripts/load-test-public-api.mjs
 ```

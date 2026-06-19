@@ -49,7 +49,8 @@ export default function ExcursionDetailView({
   }));
 
   const prefersAffiliate =
-    excursion.partner === "sputnik8" && excursion.isBookable !== false;
+    (excursion.partner === "sputnik8" && excursion.isBookable !== false) ||
+    (excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured === false);
 
   return (
     <div className="pb-24 lg:pb-16">

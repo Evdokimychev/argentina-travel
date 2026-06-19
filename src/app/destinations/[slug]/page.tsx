@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DestinationDetailView from "@/components/destinations/DestinationDetailView";
 import DestinationFlightSidebar from "@/components/flights/DestinationFlightSidebar";
+import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
 import TouristDestinationJsonLd from "@/components/seo/TouristDestinationJsonLd";
 import {
@@ -9,6 +10,7 @@ import {
   resolveDestinationPage,
 } from "@/lib/cms/destination-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -43,6 +45,7 @@ export default async function DestinationDetailPage({ params }: PageProps) {
   const locale = await getServerI18nLocale();
   const destination = await resolveDestinationPage(slug, locale);
   if (!destination) notFound();
+  const cmsMetadata = getCmsResolverMetadata(destination);
 
   const tours = await fetchMarketplaceTours();
   const flightTeasers = await getDestinationFlightTeasers(destination.id, locale);
@@ -50,6 +53,9 @@ export default async function DestinationDetailPage({ params }: PageProps) {
 
   return (
     <>
+      {cmsMetadata?.showTranslationBanner ? (
+        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+      ) : null}
       <TouristDestinationJsonLd destination={destination} />
       {flightTeasers.length > 0 ? (
         <FlightOffersJsonLd teasers={flightTeasers} pageUrl={`/destinations/${slug}`} />

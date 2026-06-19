@@ -1,12 +1,16 @@
 import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
 import type { DestinationPage } from "@/data/destination-pages";
 import {
+  attachCmsResolverMetadata,
+  buildCmsResolverMetadata,
   cmsOverrideId,
+  fetchCmsTranslationStatusForSlug,
   fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   listPublishedCmsSlugs,
   resolveWithPublishedCmsOverride,
 } from "@/lib/cms/content-resolver";
+import { buildDefaultTranslationStatus, isCmsDocumentComplete } from "@/lib/cms/translation-status";
 import {
   destinationPageFromCms,
   type CmsDocument,
@@ -36,7 +40,7 @@ export function mergeDestinationCatalog(
   const sourceSet = new Set(sourceOrder);
 
   for (const cmsDoc of cmsDestinations) {
-    if (cmsDoc.body.kind !== "destination") continue;
+    if (cmsDoc.body.kind !== "destination" || !isCmsDocumentComplete(cmsDoc)) continue;
     const fallback = mergedBySlug.get(cmsDoc.slug);
     const merged = destinationPageFromCms(cmsDoc, fallback);
     if (merged) mergedBySlug.set(merged.id, merged);
@@ -73,14 +77,24 @@ export async function resolveDestinationPage(
   locale = "ru"
 ): Promise<DestinationPage | null> {
   const fallback = getDestinationBySlug(slug) ?? null;
+  const supabase = await getCmsServerClient();
+  const translationStatus = supabase
+    ? await fetchCmsTranslationStatusForSlug(supabase, "destination", slug, {
+        ruFallbackComplete: Boolean(fallback),
+      })
+    : buildDefaultTranslationStatus(Boolean(fallback));
 
-  return resolveWithPublishedCmsOverride({
+  const resolved = await resolveWithPublishedCmsOverride({
     docType: "destination",
     slug,
     locale,
     fallback,
     merge: (doc, fb) => destinationPageFromCms(doc, fb),
+    supabase,
+    isUsable: isCmsDocumentComplete,
   });
+  if (!resolved) return null;
+  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
 }
 
 export async function listPublishedDestinationSlugs(locale = "ru"): Promise<string[]> {

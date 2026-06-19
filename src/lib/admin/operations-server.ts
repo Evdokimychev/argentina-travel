@@ -52,7 +52,7 @@ async function fetchModerationSummary(
 
 async function countLeadsLast24Hours(supabase: DbClient): Promise<number> {
   const since = new Date(Date.now() - ONE_DAY_MS).toISOString();
-  const [newsletterRes, contactsRes] = await Promise.all([
+  const [newsletterRes, contactsRes, organizerApplicationsRes] = await Promise.all([
     supabase
       .from("newsletter_subscribers")
       .select("id", { count: "exact", head: true })
@@ -61,8 +61,12 @@ async function countLeadsLast24Hours(supabase: DbClient): Promise<number> {
       .from("contact_submissions")
       .select("id", { count: "exact", head: true })
       .gte("created_at", since),
+    supabase
+      .from("organizer_applications")
+      .select("id", { count: "exact", head: true })
+      .gte("created_at", since),
   ]);
-  return (newsletterRes.count ?? 0) + (contactsRes.count ?? 0);
+  return (newsletterRes.count ?? 0) + (contactsRes.count ?? 0) + (organizerApplicationsRes.count ?? 0);
 }
 
 async function countPendingOrPartialPayments(supabase: DbClient): Promise<number> {

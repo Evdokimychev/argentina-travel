@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
 import BlogPostView from "@/components/blog/BlogPostView";
+import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveBlogCatalog, resolveBlogPost } from "@/lib/cms/blog-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -46,11 +48,15 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   if (!post) {
     notFound();
   }
+  const cmsMetadata = getCmsResolverMetadata(post);
 
   const initialTours = await fetchMarketplaceTours();
 
   return (
     <>
+      {cmsMetadata?.showTranslationBanner ? (
+        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+      ) : null}
       <ArticleJsonLd post={post} />
       <BlogPostView post={post} initialTours={initialTours} />
     </>

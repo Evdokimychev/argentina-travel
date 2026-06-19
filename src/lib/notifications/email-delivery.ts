@@ -1,10 +1,13 @@
 import {
   escapeHtml,
+  renderBookingReminder24hEmail,
   renderBookingConfirmedEmail,
+  renderNewMessageEmail,
   renderBookingStatusChangedEmail,
   renderContentFreshnessReportEmail,
   renderDigestDailyEmail,
   renderEmailLayout,
+  renderPrivacyDeleteCompletedEmail,
   renderPaymentReceivedEmail,
   renderPlainEmail,
   renderReviewApprovedEmail,
@@ -231,6 +234,62 @@ export async function sendPaymentReceivedEmail(input: {
   });
 }
 
+export async function sendConversationNewMessageEmail(input: {
+  userId?: string | null;
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  senderName: string;
+  tourTitle: string;
+  bookingId: string;
+  messageBody: string;
+  messageHref: string;
+}): Promise<boolean> {
+  const recipients = normalizeRecipients([input.recipientEmail]);
+  if (!recipients.length) return false;
+
+  const template = renderNewMessageEmail({
+    recipientName: input.recipientName,
+    senderName: input.senderName,
+    tourTitle: input.tourTitle,
+    bookingId: input.bookingId,
+    messageBody: input.messageBody,
+    messageHref: input.messageHref,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+  });
+
+  return sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "booking",
+  });
+}
+
+export async function sendBookingReminder24hEmail(input: {
+  userId?: string | null;
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  bookingId: string;
+  tourTitle: string;
+  startDate: string;
+  detailsHref: string;
+}): Promise<boolean> {
+  const recipients = normalizeRecipients([input.recipientEmail]);
+  if (!recipients.length) return false;
+
+  const template = renderBookingReminder24hEmail({
+    recipientName: input.recipientName,
+    bookingId: input.bookingId,
+    tourTitle: input.tourTitle,
+    startDate: input.startDate,
+    detailsHref: input.detailsHref,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+  });
+
+  return sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "booking",
+  });
+}
+
 export async function sendReviewModerationEmail(input: {
   userId?: string | null;
   touristEmail: string | null;
@@ -259,6 +318,35 @@ export async function sendReviewModerationEmail(input: {
     userId: input.userId,
     category: "reviews",
   });
+}
+
+export async function sendPrivacyDeleteCompletedEmail(input: {
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  requestId: string;
+  completedAt?: string;
+}): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config) return false;
+
+  const recipients = normalizeRecipients([input.recipientEmail]);
+  if (!recipients.length) return false;
+
+  const template = renderPrivacyDeleteCompletedEmail({
+    recipientName: input.recipientName,
+    requestId: input.requestId,
+    completedAt: input.completedAt,
+    supportEmail: config.adminEmail,
+  });
+
+  await sendEmail(config, {
+    to: recipients,
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+  });
+
+  return true;
 }
 
 export async function sendOrganizerNewReviewEmail(input: {

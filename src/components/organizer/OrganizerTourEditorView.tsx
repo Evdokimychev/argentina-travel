@@ -1703,6 +1703,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 durationNights={draft.durationNights}
                 priceCurrency={draft.priceCurrency}
                 defaultPriceUsd={draft.priceUsd || draft.individualPriceUsd}
+                tourId={draft.id}
                 onDatesChange={(groupTourDates) =>
                   updateDraft({
                     groupTourDates,

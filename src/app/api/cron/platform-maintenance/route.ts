@@ -8,7 +8,8 @@ const CRON_ROUTE = "/api/cron/platform-maintenance";
 
 /**
  * Orchestrator for Hobby Vercel plans (2-cron limit): typing cleanup every tick;
- * freshness report at 07:00 UTC; digest at 08:00 UTC; backup hint on Sunday 03:00 UTC.
+ * booking reminders every hour; freshness report at 07:00 UTC;
+ * digest at 08:00 UTC; backup hint on Sunday 03:00 UTC.
  * Individual routes remain for manual POST triggers.
  */
 export async function GET(request: Request) {
@@ -32,6 +33,10 @@ export async function GET(request: Request) {
     results.typing = await typingRes.json();
     checks.push(typingRes.ok);
 
+    const privacyRes = await fetch(`${origin}/api/cron/privacy/process`, { headers });
+    results.privacyProcess = await privacyRes.json();
+    checks.push(privacyRes.ok);
+
     if (hour === 8 && minute < 5) {
       const digestRes = await fetch(`${origin}/api/cron/notifications/digest`, { headers });
       results.digest = await digestRes.json();
@@ -42,6 +47,15 @@ export async function GET(request: Request) {
       const freshnessRes = await fetch(`${origin}/api/cron/content-freshness`, { headers });
       results.contentFreshness = await freshnessRes.json();
       checks.push(freshnessRes.ok);
+    }
+
+    if (minute < 5) {
+      const reminderRes = await fetch(
+        `${origin}/api/cron/messaging/booking-reminder-24h`,
+        { headers }
+      );
+      results.bookingReminder24h = await reminderRes.json();
+      checks.push(reminderRes.ok);
     }
 
     if (isSunday && hour === 3 && minute < 5) {

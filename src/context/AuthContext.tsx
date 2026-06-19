@@ -19,7 +19,11 @@ import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { attachGuestBookingsToUser } from "@/lib/bookings-store";
-import { toggleFavorite } from "@/lib/favorites-store";
+import {
+  flushFavoriteSyncQueue,
+  syncFavoritesOnLogin,
+  toggleFavoriteWithServerSync,
+} from "@/lib/favorites-store";
 import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
@@ -183,6 +187,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   }, [user]);
 
+  useEffect(() => {
+    if (!user) return;
+
+    void syncFavoritesOnLogin(user, user.id);
+
+    const onOnline = () => {
+      void flushFavoriteSyncQueue(user, user.id);
+    };
+
+    window.addEventListener("online", onOnline);
+    return () => window.removeEventListener("online", onOnline);
+  }, [user]);
+
   const openAuth = useCallback((intent: AuthIntent = "default") => {
     setAuthIntent(intent);
     setAuthOpen(true);
@@ -222,7 +239,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     if (favoriteFlowRef.current && pendingFavoriteRef.current) {
       const pending = pendingFavoriteRef.current;
-      const result = toggleFavorite(nextUser, nextUser.id, pending);
+      const result = await toggleFavoriteWithServerSync(nextUser, nextUser.id, pending);
       pendingFavoriteRef.current = null;
       favoriteFlowRef.current = false;
       setAuthIntent("default");

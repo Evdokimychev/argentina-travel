@@ -42,6 +42,11 @@ import { useAuth } from "@/context/AuthContext";
 import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
 import { getLocalOrganizerInboxUnreadCount } from "@/lib/organizer-inbox";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
+import {
+  apiFetchConversationUnreadCount,
+  isRemoteMessagingMode,
+} from "@/lib/conversations-api";
+import { useConversationInboxRealtime } from "@/hooks/useConversationInboxRealtime";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 import { ORGANIZER_INBOX_UPDATED_EVENT } from "@/types/organizer-inbox";
@@ -94,6 +99,15 @@ function writeCollapsedPreference(collapsed: boolean) {
 async function loadOrganizerNavItemsWithBadges(userId: string) {
   let items = getOrganizerNavItemsWithBadges(userId);
   const inboxUnread = getLocalOrganizerInboxUnreadCount(userId);
+  let remoteMessagesUnread: number | null = null;
+
+  if (isRemoteMessagingMode()) {
+    try {
+      remoteMessagesUnread = await apiFetchConversationUnreadCount("organizer");
+    } catch {
+      remoteMessagesUnread = null;
+    }
+  }
 
   if (isSupabaseBookingsEnabled()) {
     try {
@@ -115,6 +129,15 @@ async function loadOrganizerNavItemsWithBadges(userId: string) {
     } catch {
       // local fallback already in getOrganizerNavItemsWithBadges
     }
+  }
+
+  if (remoteMessagesUnread !== null) {
+    items = items.map((item) => {
+      if (item.id !== "messages") return item;
+      return remoteMessagesUnread > 0
+        ? { ...item, badge: remoteMessagesUnread }
+        : { ...item, badge: undefined };
+    });
   }
 
   return items;
@@ -145,6 +168,11 @@ function useOrganizerNavBadges() {
       window.removeEventListener(NOTIFICATIONS_HUB_UPDATED_EVENT, handler);
     };
   }, [user]);
+
+  useConversationInboxRealtime(Boolean(user && isRemoteMessagingMode()), () => {
+    if (!user) return;
+    void loadOrganizerNavItemsWithBadges(user.id).then(setNavItems);
+  });
 
   return navItems;
 }

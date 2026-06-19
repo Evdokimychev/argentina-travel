@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       .select("id, status")
       .eq("user_id", sessionUser.id)
       .eq("request_type", "delete")
-      .in("status", ["pending", "in_review"])
+      .in("status", ["pending", "approved", "processing", "failed"])
       .maybeSingle();
 
     if (existing) {

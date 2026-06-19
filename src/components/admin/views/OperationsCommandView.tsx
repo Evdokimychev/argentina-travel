@@ -109,7 +109,7 @@ export default function OperationsCommandView() {
               {loading ? "…" : (summary?.organizerApplications.pendingCount ?? 0)}
             </p>
             <p className="mt-1 text-sm text-slate">Ожидают решения модератора</p>
-            <Link href="/admin/marketplace/moderation" className="mt-3 inline-block text-sm text-sky hover:underline">
+            <Link href="/admin/marketplace/organizers" className="mt-3 inline-block text-sm text-sky hover:underline">
               Открыть раздел
             </Link>
           </article>
@@ -142,6 +142,12 @@ export default function OperationsCommandView() {
               className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
             >
               Модерация
+            </Link>
+            <Link
+              href="/admin/marketplace/organizers"
+              className="inline-flex rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal transition-colors hover:border-sky/40 hover:text-sky"
+            >
+              Организаторы
             </Link>
             <Link
               href="/admin/operations/bookings"

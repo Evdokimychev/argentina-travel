@@ -6,6 +6,7 @@ import {
   fetchConversationMessages,
   insertConversationMessage,
 } from "@/lib/messaging/conversation-server";
+import { notifyConversationMessageCreated } from "@/lib/notifications/messaging-notify";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 
@@ -89,6 +90,11 @@ export async function POST(
     if ("error" in result) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
+
+    void notifyConversationMessageCreated({
+      thread: access.thread,
+      message: result.message,
+    });
 
     return NextResponse.json({ message: result.message });
   } catch (error) {

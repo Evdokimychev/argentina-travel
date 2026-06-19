@@ -1,11 +1,68 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { rowToCmsDocument } from "@/lib/cms/content-mapper";
+import {
+  buildDefaultTranslationStatus,
+  isCmsDocumentComplete,
+  isPublishedTranslationComplete,
+  toLocaleTranslationStatus,
+  type CmsTranslationStatus,
+} from "@/lib/cms/translation-status";
 import { I18N_LOCALES, isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
 import { cmsDocumentId, type CmsDocType, type CmsDocument } from "@/types/cms-content";
 
 export type CmsDbClient = SupabaseClient<Database>;
+
+export type CmsResolverMetadata = {
+  requestedLocale: I18nLocale;
+  translationStatus: CmsTranslationStatus;
+  showTranslationBanner: boolean;
+};
+
+export type CmsContentWithMetadata<T extends object> = T & {
+  cmsMetadata: CmsResolverMetadata;
+};
+
+type ResolverLocaleStatusKey = keyof Pick<CmsTranslationStatus, "es_status" | "en_status">;
+
+function normalizeRequestedLocale(locale: string): I18nLocale {
+  return isI18nLocale(locale) ? locale : "ru";
+}
+
+function getRequestedLocaleStatus(
+  locale: I18nLocale,
+  translationStatus: CmsTranslationStatus
+): boolean {
+  if (locale === "ru") return translationStatus.ru_complete;
+  const key = `${locale}_status` as ResolverLocaleStatusKey;
+  return isPublishedTranslationComplete(translationStatus[key]);
+}
+
+export function buildCmsResolverMetadata(
+  requestedLocale: string,
+  translationStatus: CmsTranslationStatus
+): CmsResolverMetadata {
+  const locale = normalizeRequestedLocale(requestedLocale);
+  return {
+    requestedLocale: locale,
+    translationStatus,
+    showTranslationBanner: locale !== "ru" && !getRequestedLocaleStatus(locale, translationStatus),
+  };
+}
+
+export function attachCmsResolverMetadata<T extends object>(
+  value: T,
+  metadata: CmsResolverMetadata
+): CmsContentWithMetadata<T> {
+  return { ...value, cmsMetadata: metadata };
+}
+
+export function getCmsResolverMetadata(value: unknown): CmsResolverMetadata | null {
+  if (!value || typeof value !== "object" || !("cmsMetadata" in value)) return null;
+  const metadata = (value as { cmsMetadata?: CmsResolverMetadata }).cmsMetadata;
+  return metadata ?? null;
+}
 
 /** Admin/service-role client; null when Supabase is not configured. */
 export async function getCmsServerClient(): Promise<CmsDbClient | null> {
@@ -112,6 +169,33 @@ export async function fetchCmsLocalesForSlug(
   return result;
 }
 
+export async function fetchCmsTranslationStatusForSlug(
+  supabase: CmsDbClient,
+  docType: CmsDocType,
+  slug: string,
+  options?: { ruFallbackComplete?: boolean }
+): Promise<CmsTranslationStatus> {
+  const ids = I18N_LOCALES.map((locale) => cmsDocumentId(docType, slug, locale));
+  const { data, error } = await supabase.from("content_documents").select("*").in("id", ids);
+  if (error) {
+    return buildDefaultTranslationStatus(options?.ruFallbackComplete ?? false);
+  }
+
+  const byLocale: Partial<Record<I18nLocale, CmsDocument>> = {};
+  for (const row of data ?? []) {
+    const mapped = rowToCmsDocument(row);
+    if (isI18nLocale(mapped.locale)) {
+      byLocale[mapped.locale] = mapped;
+    }
+  }
+
+  return {
+    ru_complete: byLocale.ru ? isCmsDocumentComplete(byLocale.ru) : (options?.ruFallbackComplete ?? false),
+    es_status: toLocaleTranslationStatus(byLocale.es),
+    en_status: toLocaleTranslationStatus(byLocale.en),
+  };
+}
+
 /** Union of fallback slugs and published CMS slugs for a doc type. */
 export async function listPublishedCmsSlugs(
   docType: CmsDocType,
@@ -148,14 +232,17 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
   locale?: string;
   fallback: T | null;
   merge: (doc: CmsDocument, fallback: T | undefined) => T | null;
+  supabase?: CmsDbClient | null;
+  isUsable?: (doc: CmsDocument) => boolean;
 }): Promise<T | null> {
-  const { docType, slug, locale = "ru", fallback, merge } = options;
-  const supabase = await getCmsServerClient();
+  const { docType, slug, locale = "ru", fallback, merge, isUsable } = options;
+  const supabase = options.supabase === undefined ? await getCmsServerClient() : options.supabase;
   if (!supabase) return fallback;
 
   for (const tryLocale of cmsLocaleFallbackChain(locale)) {
     const override = await fetchPublishedCmsDocument(supabase, docType, slug, tryLocale);
     if (override) {
+      if (isUsable && !isUsable(override)) continue;
       return merge(override, fallback ?? undefined) ?? fallback;
     }
   }

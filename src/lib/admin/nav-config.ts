@@ -86,6 +86,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "marketplace.excursions",
   },
   {
+    id: "marketplace-organizers",
+    section: "marketplace",
+    href: "/admin/marketplace/organizers",
+    label: "Организаторы",
+    description: "Анкеты и допуск в кабинет",
+    capability: "marketplace.moderation",
+  },
+  {
     id: "marketplace-moderation",
     section: "marketplace",
     href: "/admin/marketplace/moderation",
@@ -97,6 +105,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     section: "content",
     href: "/admin/content/documents",
     label: "Документы",
+    capability: "content.edit",
+  },
+  {
+    id: "content-translations",
+    section: "content",
+    href: "/admin/content/translations",
+    label: "Переводы",
+    description: "Покрытие ES/EN и очереди перевода",
     capability: "content.edit",
   },
   {

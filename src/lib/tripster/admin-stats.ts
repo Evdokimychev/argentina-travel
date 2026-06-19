@@ -2,6 +2,11 @@ import "server-only";
 
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
+import type { TripsterBookingRequestView } from "@/types/tripster-booking";
+import {
+  fetchTripsterBookingRequestsAdmin,
+  fetchTripsterBookingRequestsStatusStats,
+} from "@/lib/tripster/booking-requests-server";
 
 export type ExcursionAdminStats = {
   experiences: number;
@@ -26,6 +31,9 @@ export type ExcursionAdminStats = {
     createdAt: string;
     referer: string | null;
   }>;
+  tripsterBookingRequestsTotal: number;
+  tripsterBookingRequestsByStatus: Record<string, number>;
+  recentTripsterBookingRequests: TripsterBookingRequestView[];
 };
 
 export async function fetchExcursionAdminStats(
@@ -42,6 +50,8 @@ export async function fetchExcursionAdminStats(
     partnerUrlRes,
     lastSyncRes,
     recentClicksRes,
+    tripsterRequestStats,
+    recentTripsterRequests,
   ] = await Promise.all([
     supabase.from("tripster_experiences").select("id", { count: "exact", head: true }),
     supabase.from("tripster_cities").select("id", { count: "exact", head: true }),
@@ -68,6 +78,8 @@ export async function fetchExcursionAdminStats(
       .select("id, experience_slug, created_at, referer")
       .order("created_at", { ascending: false })
       .limit(20),
+    fetchTripsterBookingRequestsStatusStats(supabase),
+    fetchTripsterBookingRequestsAdmin(supabase, { limit: 40 }),
   ]);
 
   const { data: clickRows } = await supabase.from("affiliate_link_clicks").select("experience_slug");
@@ -107,5 +119,8 @@ export async function fetchExcursionAdminStats(
       createdAt: row.created_at,
       referer: row.referer,
     })),
+    tripsterBookingRequestsTotal: tripsterRequestStats.total,
+    tripsterBookingRequestsByStatus: tripsterRequestStats.byStatus,
+    recentTripsterBookingRequests: recentTripsterRequests,
   };
 }

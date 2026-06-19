@@ -40,21 +40,24 @@ UI: раздел «Конфиденциальность» в `/profile/settings`
 
 Создаёт запись в `privacy_requests` со статусом `pending`. Повторный активный запрос → **409**.
 
-Удаление выполняется вручную операторами (soft delete request, не автоматическое стирание).
+Начиная с E95, удаление обрабатывается через автоматический cron-пайплайн после подтверждения администратором (soft delete + обезличивание, без удаления финансовых записей).
 
 ## База данных
 
-Миграция: `supabase/migrations/20250625000003_privacy_requests.sql`
+Миграции:
+
+- `supabase/migrations/20250625000006_privacy_requests.sql`
+- `supabase/migrations/20250626000013_gdpr_automation_soft_delete.sql`
 
 Таблица `privacy_requests`:
 
 - `request_type`: `delete`
-- `status`: `pending` | `in_review` | `completed` | `rejected`
+- `status`: `pending` | `approved` | `processing` | `completed` | `rejected` | `failed`
 - RLS: пользователь видит и создаёт только свои записи; service role — полный доступ
 
 ## Админка
 
-`/admin/operations/privacy-requests` — `PrivacyRequestsView`
+`/admin/operations/privacy-requests` — `PrivacyRequestsView` (approve/reject + журнал действий)
 
 Capability: `operations.leads`
 

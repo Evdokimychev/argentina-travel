@@ -17,6 +17,10 @@ export const CMS_I18N_ROLLOUT_TOP_SLUGS: ReadonlyArray<{ docType: CmsDocType; sl
 
 const EMPTY_STUB_LOCALES = ["es", "en"] as const;
 
+function cloneBody(body: CmsDocumentBody): CmsDocumentBody {
+  return JSON.parse(JSON.stringify(body)) as CmsDocumentBody;
+}
+
 function emptyBodyFromSource(body: CmsDocumentBody): CmsDocumentBody {
   switch (body.kind) {
     case "legal":
@@ -84,6 +88,43 @@ export function buildCmsI18nRolloutStubEntries(
     const ru = resolveRuSource(docType, slug);
     if (!ru) continue;
     entries.push(...buildCmsI18nEmptyStubEntries({ docType, slug, ...ru }));
+  }
+
+  return entries;
+}
+
+/** Build draft es/en placeholders copied from ru source (for translator workflow). */
+export function buildCmsI18nPlaceholderEntriesFromRu(source: {
+  docType: CmsDocType;
+  slug: string;
+  title: string;
+  body: CmsDocumentBody;
+  seoDescription?: string;
+}): CmsSeedEntry[] {
+  return EMPTY_STUB_LOCALES.map((locale) => ({
+    docType: source.docType,
+    slug: source.slug,
+    locale,
+    title: source.title,
+    body: cloneBody(source.body),
+    seo: { description: source.seoDescription ?? "" },
+  }));
+}
+
+/** Resolve rollout priority slugs to draft placeholders copied from ru source. */
+export function buildCmsI18nRolloutPlaceholderEntries(
+  resolveRuSource: (docType: CmsDocType, slug: string) => {
+    title: string;
+    body: CmsDocumentBody;
+    seoDescription?: string;
+  } | null
+): CmsSeedEntry[] {
+  const entries: CmsSeedEntry[] = [];
+
+  for (const { docType, slug } of CMS_I18N_ROLLOUT_TOP_SLUGS) {
+    const ru = resolveRuSource(docType, slug);
+    if (!ru) continue;
+    entries.push(...buildCmsI18nPlaceholderEntriesFromRu({ docType, slug, ...ru }));
   }
 
   return entries;

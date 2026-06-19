@@ -5,12 +5,16 @@ import {
 } from "@/lib/places-repository";
 import type { PlaceDetail, PlaceListing } from "@/types/place";
 import {
+  attachCmsResolverMetadata,
+  buildCmsResolverMetadata,
   cmsOverrideId,
+  fetchCmsTranslationStatusForSlug,
   fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
   listPublishedCmsSlugs,
   resolveWithPublishedCmsOverride,
 } from "@/lib/cms/content-resolver";
+import { buildDefaultTranslationStatus, isCmsDocumentComplete } from "@/lib/cms/translation-status";
 import {
   placeDetailFromCms,
   type CmsDocument,
@@ -62,6 +66,7 @@ export function mergePlaceCatalog(filePlaces: PlaceListing[], cmsPlaces: CmsDocu
   const sourceSet = new Set(sourceOrder);
 
   for (const cmsDoc of cmsPlaces) {
+    if (!isCmsDocumentComplete(cmsDoc)) continue;
     const fallback = mergedBySlug.get(cmsDoc.slug);
     const merged = placeListingFromCms(cmsDoc, fallback);
     if (merged) mergedBySlug.set(merged.slug, merged);
@@ -91,14 +96,24 @@ export async function resolvePlaceCatalog(locale = "ru"): Promise<PlaceListing[]
 /** Published CMS override merged with source place data by slug. */
 export async function resolvePlacePage(slug: string, locale = "ru"): Promise<PlaceDetail | null> {
   const fallback = await fetchPlaceBySlugServer(slug);
+  const supabase = await getCmsServerClient();
+  const translationStatus = supabase
+    ? await fetchCmsTranslationStatusForSlug(supabase, "place", slug, {
+        ruFallbackComplete: Boolean(fallback),
+      })
+    : buildDefaultTranslationStatus(Boolean(fallback));
 
-  return resolveWithPublishedCmsOverride({
+  const resolved = await resolveWithPublishedCmsOverride({
     docType: "place",
     slug,
     locale,
     fallback,
     merge: (doc, fb) => placeDetailFromCms(doc, fb),
+    supabase,
+    isUsable: isCmsDocumentComplete,
   });
+  if (!resolved) return null;
+  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
 }
 
 export async function listPublishedPlaceSlugs(locale = "ru"): Promise<string[]> {

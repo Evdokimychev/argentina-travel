@@ -9,6 +9,7 @@ import {
   ExternalLink,
   FileText,
   Headphones,
+  ListChecks,
   Mail,
   Send,
   Wallet,
@@ -79,6 +80,8 @@ export default function OrganizerDashboardView() {
   const [loading, setLoading] = useState(true);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [unreadMessages, setUnreadMessages] = useState(0);
+  const hasAnyTours = (analytics?.publishedToursCount ?? 0) + (analytics?.draftToursCount ?? 0) > 0;
+  const showOnboardingEmptyState = !hasAnyTours && bookings.length === 0;
 
   useEffect(() => {
     setPublicToursUrl(`${window.location.origin}/tours`);
@@ -183,10 +186,39 @@ export default function OrganizerDashboardView() {
         </div>
       </section>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-        <OrganizerInboxView />
-        <OrganizerBookingsKanban bookings={bookings} limitPerColumn={3} />
-      </div>
+      {showOnboardingEmptyState ? (
+        <section className={cn(cabinetPanelClass, "border-sky/20 bg-sky/5")}>
+          <div className="flex items-start gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-sky shadow-sm">
+              <ListChecks className="h-5 w-5" />
+            </span>
+            <div className="min-w-0">
+              <h2 className="font-heading text-xl font-bold text-charcoal">С чего начать</h2>
+              <p className="mt-1 text-sm text-slate">
+                Кабинет готов. Пройдите три шага, чтобы получить первую заявку.
+              </p>
+              <ol className="mt-4 space-y-2 text-sm text-charcoal">
+                <li>1. Заполните профиль организатора и контакты.</li>
+                <li>2. Создайте первый тур в редакторе.</li>
+                <li>3. Опубликуйте тур и дождитесь первого бронирования.</li>
+              </ol>
+              <div className="mt-4 flex flex-wrap gap-2">
+                <Link href="/organizer/tours?welcome=1" className={cn(cabinetLinkClass, "inline-flex")}>
+                  Открыть пошаговый мастер →
+                </Link>
+                <Link href="/organizer/settings" className={cn(cabinetLinkClass, "inline-flex")}>
+                  Настроить профиль →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+          <OrganizerInboxView />
+          <OrganizerBookingsKanban bookings={bookings} limitPerColumn={3} />
+        </div>
+      )}
 
       {analytics ? (
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import PlaceDetailView from "@/components/places/PlaceDetailView";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import PlaceJsonLd from "@/components/seo/PlaceJsonLd";
@@ -8,6 +9,7 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { placeHref } from "@/lib/places-repository";
 import { listPublishedPlaceSlugs, resolvePlacePage } from "@/lib/cms/place-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPlaceMetadata } from "@/lib/places-seo";
 
@@ -34,12 +36,16 @@ export default async function PlaceDetailPage({ params }: PageProps) {
   const locale = await getServerI18nLocale();
   const place = await resolvePlacePage(slug, locale);
   if (!place) notFound();
+  const cmsMetadata = getCmsResolverMetadata(place);
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
   const initialTours = await fetchMarketplaceTours();
 
   return (
     <>
+      {cmsMetadata?.showTranslationBanner ? (
+        <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
+      ) : null}
       <PlaceJsonLd place={place} />
       {place.faq && place.faq.length > 0 ? (
         <FAQPageJsonLd questions={place.faq} path={placeHref(slug)} />

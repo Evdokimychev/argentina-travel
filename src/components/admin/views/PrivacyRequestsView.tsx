@@ -8,6 +8,15 @@ import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { PrivacyRequestStatus } from "@/types/privacy";
 
+type PrivacyAuditEntry = {
+  id: string;
+  action: string;
+  actorUserId: string | null;
+  actorLabel: string;
+  payload: Record<string, unknown>;
+  createdAt: string;
+};
+
 type PrivacyRequestItem = {
   id: string;
   user_id: string;
@@ -19,6 +28,7 @@ type PrivacyRequestItem = {
   requested_at: string;
   processed_at: string | null;
   notes: string | null;
+  auditLog?: PrivacyAuditEntry[];
 };
 
 type PrivacyRequestsResponse = {
@@ -27,9 +37,11 @@ type PrivacyRequestsResponse = {
 
 const STATUS_LABELS: Record<PrivacyRequestStatus, string> = {
   pending: "Ожидает",
-  in_review: "На проверке",
+  approved: "Одобрен",
+  processing: "Обработка",
   completed: "Выполнен",
   rejected: "Отклонён",
+  failed: "Ошибка",
 };
 
 export default function PrivacyRequestsView() {
@@ -38,16 +50,17 @@ export default function PrivacyRequestsView() {
   );
   const items = data?.items ?? [];
 
-  async function updateStatus(id: string, status: PrivacyRequestStatus) {
-    const notes =
-      status === "rejected"
-        ? window.prompt("Комментарий для отклонения (необязательно)") ?? undefined
-        : undefined;
+  async function updateAction(id: string, action: "approve" | "reject") {
+    const notes = window.prompt(
+      action === "reject"
+        ? "Комментарий для отклонения (необязательно)"
+        : "Комментарий для запуска автоматической обработки (необязательно)"
+    );
 
     const response = await fetch("/api/admin/privacy-requests", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id, status, notes }),
+      body: JSON.stringify({ id, action, notes: notes ?? undefined }),
     });
 
     if (!response.ok) {
@@ -64,7 +77,7 @@ export default function PrivacyRequestsView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Запросы на удаление данных"
-          subtitle="Очередь GDPR: пользователи запрашивают удаление аккаунта"
+          subtitle="GDPR soft delete: подтверждение заявок и автоматическая обработка через cron"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -112,30 +125,43 @@ export default function PrivacyRequestsView() {
                     </p>
                   ) : null}
 
-                  {item.status === "pending" || item.status === "in_review" ? (
+                  {item.processed_at ? (
+                    <p className="text-xs text-slate">
+                      Завершено: {formatAdminWhen(item.processed_at)}
+                    </p>
+                  ) : null}
+
+                  {item.status === "pending" || item.status === "failed" ? (
                     <div className="flex flex-wrap gap-2">
-                      {item.status === "pending" ? (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => void updateStatus(item.id, "in_review")}
-                        >
-                          Взять в работу
-                        </Button>
-                      ) : null}
                       <Button
                         size="sm"
-                        onClick={() => void updateStatus(item.id, "completed")}
+                        onClick={() => void updateAction(item.id, "approve")}
                       >
-                        Выполнено
+                        Одобрить удаление
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => void updateStatus(item.id, "rejected")}
+                        onClick={() => void updateAction(item.id, "reject")}
                       >
                         Отклонить
                       </Button>
+                    </div>
+                  ) : null}
+
+                  {(item.auditLog ?? []).length > 0 ? (
+                    <div className="rounded-lg border border-gray-100 bg-surface-muted/40 p-3">
+                      <p className="text-xs font-medium uppercase tracking-wide text-slate">
+                        Журнал действий
+                      </p>
+                      <ul className="mt-2 space-y-1.5 text-xs text-slate">
+                        {(item.auditLog ?? []).slice(0, 6).map((entry) => (
+                          <li key={entry.id}>
+                            <span className="font-medium text-charcoal">{entry.actorLabel}</span>{" "}
+                            — {entry.action} ({formatAdminWhen(entry.createdAt)})
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   ) : null}
                 </li>

@@ -7,9 +7,16 @@ import { useSearchParams } from "next/navigation";
 import { CalendarDays, ListOrdered } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
-import { apiCancelBooking, apiFetchUserBookings, apiLookupBookingsByEmail, isRemoteBookingsMode } from "@/lib/bookings-api";
+import {
+  apiCancelBooking,
+  apiFetchTripsterBookingRequests,
+  apiFetchUserBookings,
+  apiLookupBookingsByEmail,
+  isRemoteBookingsMode,
+} from "@/lib/bookings-api";
 import { buildTourMessageHref } from "@/lib/messages-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
+import type { TripsterBookingRequestView } from "@/types/tripster-booking";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
@@ -27,13 +34,30 @@ import {
   cabinetPanelClass,
 } from "@/lib/cabinet-ui";
 
+const TRIPSTER_STATUS_LABELS: Record<string, string> = {
+  pending: "В обработке",
+  confirmed: "Подтверждена",
+  cancelled: "Отменена",
+  completed: "Завершена",
+  affiliate_fallback: "Перенаправлена на сайт",
+  failed: "Ошибка отправки",
+  unknown: "Статус уточняется",
+};
+
+function formatTripsterStatus(status: string | null): string {
+  const key = status?.trim().toLowerCase() || "unknown";
+  return TRIPSTER_STATUS_LABELS[key] ?? status ?? TRIPSTER_STATUS_LABELS.unknown;
+}
+
 export default function ProfileBookingsPage() {
   const { user } = useAuth();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get("tab") === "waitlist" ? "waitlist" : "bookings";
   const [tab, setTab] = useState<"bookings" | "waitlist">(initialTab);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [tripsterRequests, setTripsterRequests] = useState<TripsterBookingRequestView[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
+  const [loadingTripsterRequests, setLoadingTripsterRequests] = useState(true);
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,15 +65,27 @@ export default function ProfileBookingsPage() {
 
     function refresh() {
       setLoadingBookings(true);
+      setLoadingTripsterRequests(true);
       if (isRemoteBookingsMode()) {
-        void apiFetchUserBookings()
-          .then(setBookings)
-          .catch(() => setBookings([]))
-          .finally(() => setLoadingBookings(false));
+        void Promise.all([apiFetchUserBookings(), apiFetchTripsterBookingRequests()])
+          .then(([nextBookings, nextTripster]) => {
+            setBookings(nextBookings);
+            setTripsterRequests(nextTripster);
+          })
+          .catch(() => {
+            setBookings([]);
+            setTripsterRequests([]);
+          })
+          .finally(() => {
+            setLoadingBookings(false);
+            setLoadingTripsterRequests(false);
+          });
         return;
       }
       setBookings(getUserBookings(user!.id));
+      setTripsterRequests([]);
       setLoadingBookings(false);
+      setLoadingTripsterRequests(false);
     }
 
     refresh();
@@ -76,14 +112,23 @@ export default function ProfileBookingsPage() {
   function refreshBookings() {
     if (!user) return;
     setLoadingBookings(true);
+    setLoadingTripsterRequests(true);
     if (isRemoteBookingsMode()) {
-      void apiFetchUserBookings()
-        .then(setBookings)
-        .finally(() => setLoadingBookings(false));
+      void Promise.all([apiFetchUserBookings(), apiFetchTripsterBookingRequests()])
+        .then(([nextBookings, nextTripster]) => {
+          setBookings(nextBookings);
+          setTripsterRequests(nextTripster);
+        })
+        .finally(() => {
+          setLoadingBookings(false);
+          setLoadingTripsterRequests(false);
+        });
       return;
     }
     setBookings(getUserBookings(user.id));
+    setTripsterRequests([]);
     setLoadingBookings(false);
+    setLoadingTripsterRequests(false);
   }
 
   return (
@@ -212,6 +257,65 @@ export default function ProfileBookingsPage() {
           className="mt-8"
         />
       )}
+
+      <section className={cn(cabinetCardClass, "mt-6 p-4 sm:p-5")}>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-heading text-lg font-bold text-charcoal">Заявки в Tripster</h2>
+          {!loadingTripsterRequests ? (
+            <span className="text-xs text-slate">Всего: {tripsterRequests.length}</span>
+          ) : null}
+        </div>
+
+        {loadingTripsterRequests ? (
+          <p className="mt-3 text-sm text-slate">Загружаем статусы заявок…</p>
+        ) : tripsterRequests.length === 0 ? (
+          <p className="mt-3 text-sm text-slate">
+            Пока нет заявок Tripster. После отправки формы на экскурсии они появятся здесь.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {tripsterRequests.map((request) => (
+              <article key={request.id} className="rounded-2xl border border-gray-100 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <Link
+                      href={`/excursions/${request.experienceSlug}`}
+                      className="font-medium text-charcoal transition-colors hover:text-sky"
+                    >
+                      {request.experienceTitle}
+                    </Link>
+                    <p className="mt-1 text-sm text-slate">
+                      {request.eventDate} · {request.eventTime} · {request.personsCount} чел.
+                    </p>
+                    <p className="mt-1 text-xs text-slate">
+                      Отправлено {formatBookingCreatedAt(request.createdAt)}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
+                    {formatTripsterStatus(request.tripsterStatus)}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <Link href={`/excursions/${request.experienceSlug}`} className={cabinetLinkClass}>
+                    К экскурсии
+                  </Link>
+                  {request.tripsterOrderUrl ? (
+                    <a
+                      href={request.tripsterOrderUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={cabinetLinkClass}
+                    >
+                      Открыть заказ на сайте
+                    </a>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
         </>
       )}
     </div>

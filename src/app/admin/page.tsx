@@ -22,9 +22,11 @@ const QUICK_LINKS = [
   { href: "/admin/operations/bookings", label: "Бронирования" },
   { href: "/admin/operations/shop-orders", label: "Заказы магазина" },
   { href: "/admin/marketplace/tours", label: "Туры" },
+  { href: "/admin/marketplace/organizers", label: "Организаторы" },
   { href: "/admin/marketplace/moderation", label: "Модерация" },
   { href: "/admin/marketplace/excursions", label: "Экскурсии" },
   { href: "/admin/content/documents", label: "Контент" },
+  { href: "/admin/content/translations", label: "Переводы контента" },
   { href: "/admin/analytics", label: "Аналитика" },
   { href: "/admin/analytics/funnels", label: "Воронки" },
 ];

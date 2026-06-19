@@ -1,4 +1,10 @@
-export type PrivacyRequestStatus = "pending" | "in_review" | "completed" | "rejected";
+export type PrivacyRequestStatus =
+  | "pending"
+  | "approved"
+  | "processing"
+  | "completed"
+  | "rejected"
+  | "failed";
 
 export type PrivacyRequestType = "delete";
 

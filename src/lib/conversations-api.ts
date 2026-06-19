@@ -1,5 +1,7 @@
 import { isSupabaseMessagingEnabled } from "@/lib/auth-mode";
+import type { MessageSenderRole } from "@/types/messages";
 import type {
+  ConversationInboxSummary,
   ConversationMessage,
   ConversationThread,
 } from "@/types/conversations";
@@ -82,4 +84,30 @@ export async function apiFetchConversationTyping(
     typing: { userId: string; updatedAt: string }[];
   }>(await fetch(`/api/conversations/${encodeURIComponent(threadId)}/typing`));
   return data.typing;
+}
+
+export async function apiFetchConversationInbox(
+  role: MessageSenderRole,
+  limit = 50
+): Promise<ConversationInboxSummary> {
+  const params = new URLSearchParams({
+    role,
+    limit: String(limit),
+  });
+  return parseJson<ConversationInboxSummary>(
+    await fetch(`/api/conversations/inbox?${params.toString()}`)
+  );
+}
+
+export async function apiFetchConversationUnreadCount(
+  role: MessageSenderRole
+): Promise<number> {
+  const params = new URLSearchParams({
+    role,
+    summary: "1",
+  });
+  const data = await parseJson<{ unreadCount?: number }>(
+    await fetch(`/api/conversations/inbox?${params.toString()}`)
+  );
+  return data.unreadCount ?? 0;
 }

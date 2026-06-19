@@ -2,7 +2,10 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { notifyOrganizerApplicationReview } from "@/lib/admin/moderation-notify";
+import { fetchOrganizerApplicationById } from "@/lib/admin/organizer-applications-server";
+import { emitNotificationEvent } from "@/lib/notifications/notifications-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { Json } from "@/types/database";
 
 type PatchBody = {
   action?: "approve" | "reject";
@@ -24,45 +27,40 @@ export async function PATCH(
   }
 
   const supabase = createSupabaseAdminClient();
-  const { data: application, error } = await supabase
-    .from("contact_submissions")
-    .select("id, name, email, phone, message, context")
-    .eq("id", id)
-    .eq("kind", "organizer_application")
-    .maybeSingle();
-
-  if (error || !application) {
+  const application = await fetchOrganizerApplicationById(supabase, id);
+  if (!application) {
     return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
   }
+  if (application.status !== "pending") {
+    return NextResponse.json(
+      { error: "Заявка уже рассмотрена. Обновите страницу." },
+      { status: 409 }
+    );
+  }
 
-  const existingContext =
-    application.context && typeof application.context === "object" && !Array.isArray(application.context)
-      ? (application.context as Record<string, unknown>)
-      : {};
-
+  const reviewedAt = new Date().toISOString();
   const reviewStatus = body.action === "approve" ? "approved" : "rejected";
-  const nextContext = {
-    ...existingContext,
-    reviewStatus,
-    reviewedAt: new Date().toISOString(),
-    reviewNote: body.note?.trim() || null,
-    reviewedBy: auth.actorId,
-  };
+  const reviewNote = body.note?.trim() || null;
 
   const { error: updateError } = await supabase
-    .from("contact_submissions")
-    .update({ context: nextContext })
+    .from("organizer_applications")
+    .update({
+      status: reviewStatus,
+      reviewed_at: reviewedAt,
+      reviewed_by: auth.actorId,
+      review_note: reviewNote,
+    })
     .eq("id", id);
 
   if (updateError) {
     return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
-  if (body.action === "approve" && application.email) {
+  if (body.action === "approve") {
     const { data: profile } = await supabase
       .from("profiles")
       .select("id, roles")
-      .ilike("email", application.email)
+      .eq("id", application.userId)
       .maybeSingle();
 
     if (profile) {
@@ -72,24 +70,43 @@ export async function PATCH(
         : [...roles, "organizer" as const];
       await supabase
         .from("profiles")
-        .update({ roles: nextRoles, active_role: "organizer" })
+        .update({
+          roles: nextRoles,
+          active_role: "organizer",
+          organizer_verified_at: reviewedAt,
+        })
         .eq("id", profile.id);
+
+      await emitNotificationEvent(supabase, {
+        userId: profile.id,
+        dedupeKey: `organizer:application-approved:${application.id}`,
+        eventType: "organizer_application_approved",
+        category: "system",
+        title: "Заявка организатора одобрена",
+        body: "Чек-лист: Создайте первый тур и отправьте его на модерацию.",
+        href: "/organizer/tours?welcome=1",
+        metadata: {
+          application_id: application.id,
+          checklist: ["Создайте первый тур"],
+        } as Json,
+        channels: ["in_app"],
+      });
     }
   }
 
   await notifyOrganizerApplicationReview({
-    applicantEmail: application.email ?? "",
-    applicantName: application.name,
+    applicantEmail: application.applicantEmail ?? "",
+    applicantName: application.applicantName,
     action: body.action,
-    note: body.note,
+    note: reviewNote ?? undefined,
   });
 
   await writeAdminAuditLog({
     actorUserId: auth.actorId,
     action: `organizer_application.${body.action}`,
-    entityType: "contact_submission",
+    entityType: "organizer_application",
     entityId: id,
-    payload: { note: body.note ?? null },
+    payload: { note: reviewNote },
     ipAddress: clientIpFromRequest(request),
   });
 

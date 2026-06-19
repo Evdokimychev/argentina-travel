@@ -28,6 +28,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   leads: "Лиды",
   "privacy-requests": "Удаление данных",
   moderation: "Модерация",
+  organizers: "Организаторы",
   tours: "Туры",
   excursions: "Экскурсии",
   settings: "Настройки",

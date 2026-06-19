@@ -55,7 +55,7 @@ export default function PrivacySettingsSection({ className }: PrivacySettingsSec
 
   async function handleDeleteRequest() {
     const confirmed = window.confirm(
-      "Отправить запрос на удаление аккаунта и персональных данных? Это действие обрабатывается вручную командой поддержки."
+      "Отправить запрос на удаление аккаунта и персональных данных? После подтверждения заявка автоматически обрабатывается в защищённом GDPR-пайплайне."
     );
     if (!confirmed) return;
 
@@ -74,7 +74,7 @@ export default function PrivacySettingsSection({ className }: PrivacySettingsSec
       setReason("");
       setMessage({
         type: "success",
-        text: "Запрос принят. Мы свяжемся с вами после проверки.",
+        text: "Запрос принят. После подтверждения администратором мы автоматически завершим обезличивание и отправим уведомление на email.",
       });
     } catch (error) {
       setMessage({

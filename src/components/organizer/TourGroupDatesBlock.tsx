@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Info, Plus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Database, Info, Plus, RefreshCw } from "lucide-react";
 import { useHtml5ListReorder } from "@/hooks/useHtml5ListReorder";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,7 @@ interface TourGroupDatesBlockProps {
   durationNights: number;
   priceCurrency: CurrencyCode;
   defaultPriceUsd: number;
+  tourId?: string;
   onDatesChange: (dates: OrganizerGroupTourDate[]) => void;
   onAutoRollChange: (enabled: boolean) => void;
 }
@@ -29,10 +30,16 @@ export default function TourGroupDatesBlock({
   durationNights,
   priceCurrency,
   defaultPriceUsd,
+  tourId,
   onDatesChange,
   onAutoRollChange,
 }: TourGroupDatesBlockProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const [syncLoading, setSyncLoading] = useState(false);
+  const [syncRefreshing, setSyncRefreshing] = useState(false);
+  const [syncMessage, setSyncMessage] = useState<string | null>(null);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [dbSlotsCount, setDbSlotsCount] = useState<number | null>(null);
   const currencySuffix = priceCurrency === "USD" ? "US$" : priceCurrency;
 
   function removeAt(index: number) {
@@ -51,6 +58,81 @@ export default function TourGroupDatesBlock({
     dates.length > 1 && new Set(dates.map((date) => date.priceUsd)).size > 1;
 
   const reorder = useHtml5ListReorder(dates, onDatesChange);
+  const canSyncInventory = Boolean(tourId);
+
+  async function refreshInventory() {
+    if (!tourId) return;
+    setSyncRefreshing(true);
+    setSyncError(null);
+
+    try {
+      const response = await fetch(`/api/organizer/tours/${encodeURIComponent(tourId)}/availability`, {
+        method: "GET",
+        credentials: "same-origin",
+      });
+      const body = (await response.json()) as { slots?: unknown[]; error?: string };
+      if (!response.ok) {
+        throw new Error(body.error ?? "Не удалось загрузить слоты из базы");
+      }
+      setDbSlotsCount(Array.isArray(body.slots) ? body.slots.length : 0);
+      setSyncMessage(
+        Array.isArray(body.slots) && body.slots.length > 0
+          ? `В базе сохранено ${body.slots.length} слотов.`
+          : "В базе пока нет слотов — используются даты из черновика."
+      );
+    } catch (error) {
+      setSyncError(error instanceof Error ? error.message : "Не удалось загрузить слоты");
+    } finally {
+      setSyncRefreshing(false);
+    }
+  }
+
+  async function syncInventoryToDb() {
+    if (!tourId) return;
+    setSyncLoading(true);
+    setSyncError(null);
+
+    try {
+      const slots = dates
+        .filter((date) => Boolean(date.startDate))
+        .map((date) => {
+          const normalizedCapacity = Math.max(0, date.totalSeats || date.spotsLeft || 0);
+          const normalizedLeft = Math.max(0, date.spotsLeft || 0);
+          const bookedCount =
+            normalizedCapacity > 0 ? Math.max(normalizedCapacity - normalizedLeft, 0) : 0;
+          return {
+            date: date.startDate,
+            capacity: normalizedCapacity,
+            bookedCount,
+            status: normalizedLeft <= 0 ? "sold_out" : "open",
+          };
+        });
+
+      const response = await fetch(`/api/organizer/tours/${encodeURIComponent(tourId)}/availability`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        credentials: "same-origin",
+        body: JSON.stringify({ slots }),
+      });
+      const body = (await response.json()) as { slots?: unknown[]; error?: string };
+      if (!response.ok) {
+        throw new Error(body.error ?? "Не удалось сохранить слоты в базе");
+      }
+
+      const total = Array.isArray(body.slots) ? body.slots.length : slots.length;
+      setDbSlotsCount(total);
+      setSyncMessage(`Слоты сохранены в базе: ${total}.`);
+    } catch (error) {
+      setSyncError(error instanceof Error ? error.message : "Ошибка сохранения слотов");
+    } finally {
+      setSyncLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (!tourId) return;
+    void refreshInventory();
+  }, [tourId]);
 
   return (
     <>
@@ -115,6 +197,43 @@ export default function TourGroupDatesBlock({
             Групповые даты не заполнены
           </div>
         )}
+
+        {canSyncInventory ? (
+          <div className="rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-semibold text-charcoal">Инвентарь в базе</p>
+                <p className="mt-1 text-xs text-slate">
+                  Слоты для checkout и листа ожидания.
+                  {dbSlotsCount != null ? ` Сейчас в базе: ${dbSlotsCount}.` : ""}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="h-9 gap-1.5 text-xs"
+                  onClick={() => void refreshInventory()}
+                  disabled={syncRefreshing}
+                >
+                  <RefreshCw className={cn("h-3.5 w-3.5", syncRefreshing && "animate-spin")} />
+                  Обновить
+                </Button>
+                <Button
+                  type="button"
+                  className="h-9 gap-1.5 text-xs"
+                  onClick={() => void syncInventoryToDb()}
+                  disabled={syncLoading}
+                >
+                  <Database className="h-3.5 w-3.5" />
+                  {syncLoading ? "Сохраняем…" : "Сохранить слоты"}
+                </Button>
+              </div>
+            </div>
+            {syncError ? <p className="mt-2 text-xs text-red-600">{syncError}</p> : null}
+            {!syncError && syncMessage ? <p className="mt-2 text-xs text-slate">{syncMessage}</p> : null}
+          </div>
+        ) : null}
 
         <div className="flex justify-end">
           <Button type="button" onClick={() => setModalOpen(true)} className="gap-1.5">
