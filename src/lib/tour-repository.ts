@@ -312,12 +312,8 @@ export function markTourDeletedBySlug(slug: string): void {
 }
 
 export async function fetchRepositoryMarketplaceTours(): Promise<TourListing[]> {
-  if (isSupabaseToursEnabled()) {
+  if (isSupabaseToursEnabled() && typeof window !== "undefined") {
     try {
-      if (typeof window === "undefined") {
-        const { fetchPublishedListingsServer } = await import("@/lib/tour-content-server");
-        return await fetchPublishedListingsServer();
-      }
       return await apiFetchPublishedTourListings();
     } catch {
       if (shouldDisableLocalPublishedOverrides()) {

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
-import { fetchReviewEligibilityForUser } from "@/lib/review-eligibility";
+import { fetchReviewEligibilityForUser } from "@/lib/review-eligibility-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export async function GET(request: Request) {

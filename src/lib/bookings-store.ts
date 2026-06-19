@@ -56,7 +56,7 @@ import type { BookingOrganizerParams, BookingPaymentStatus } from "@/types/booki
 import {
   notifyBookingCreatedEmail,
   notifyPaymentReceivedEmail,
-} from "@/lib/bookings-notify";
+} from "@/lib/bookings-notify-client";
 import {
   notifyBookingCreated,
   notifyPaymentReminder,

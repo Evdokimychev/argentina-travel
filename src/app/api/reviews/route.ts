@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchReviewEligibilityForUser } from "@/lib/review-eligibility";
+import { fetchReviewEligibilityForUser } from "@/lib/review-eligibility-server";
 import { isPartnerTourId, isPartnerTourSlugServer } from "@/lib/partner-tour-slug-server";
 import { fetchUserReviews, insertReview } from "@/lib/reviews-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";

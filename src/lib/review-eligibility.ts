@@ -1,10 +1,4 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "@/types/database";
 import type { Booking, TouristReview } from "@/types/tourist";
-import { fetchUserBookings } from "@/lib/bookings-server";
-import { fetchUserReviews } from "@/lib/reviews-server";
-
-type DbClient = SupabaseClient<Database>;
 
 export type ReviewEligibilityReason =
   | "not_logged_in"
@@ -113,25 +107,6 @@ export function resolveReviewEligibility(input: {
     bookingId: booking.id,
     tripDate: booking.endDate ?? booking.startDate,
   };
-}
-
-export async function fetchReviewEligibilityForUser(
-  supabase: DbClient,
-  userId: string,
-  tourSlug: string,
-  options?: { isPartnerTour?: boolean }
-): Promise<ReviewEligibilityResult> {
-  const [bookings, reviews] = await Promise.all([
-    fetchUserBookings(supabase, userId),
-    fetchUserReviews(supabase, userId),
-  ]);
-
-  return resolveReviewEligibility({
-    tourSlug,
-    bookings,
-    reviews,
-    isPartnerTour: options?.isPartnerTour,
-  });
 }
 
 export function bookingNeedsReviewFromData(

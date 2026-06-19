@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { BOOKING_PAYMENT_STATUS_LABELS } from "@/lib/booking-params";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
-import { fetchOrganizerBookings } from "@/lib/bookings-server";
 import { fetchOrganizerPublishedReviews } from "@/lib/reviews-server";
 import type { Database } from "@/types/database";
 import type {
@@ -234,7 +233,9 @@ export async function fetchOrganizerInbox(
 
   const [readMap, bookings, reviews, moderationRows] = await Promise.all([
     fetchReadMap(supabase, organizerUserId),
-    fetchOrganizerBookings(supabase, organizerUserId, tourSlugs),
+    import("@/lib/bookings-server").then(({ fetchOrganizerBookings }) =>
+      fetchOrganizerBookings(supabase, organizerUserId, tourSlugs)
+    ),
     fetchOrganizerPublishedReviews(supabase, organizerUserId, tourSlugs),
     fetchOrganizerModerationQueue(supabase),
   ]);

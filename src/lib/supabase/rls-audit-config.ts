@@ -1,5 +1,6 @@
 /** Public tables that may have RLS enabled without any policies (service role only). */
 export const SERVICE_ROLE_ONLY_TABLES = [
+  "api_key_usage_log",
   "affiliate_link_clicks",
   "booking_commission_snapshots",
   "payment_audit_log",

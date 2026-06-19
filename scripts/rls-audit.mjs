@@ -22,6 +22,7 @@ const opsDir = path.join(root, "var/ops");
 const auditFile = path.join(opsDir, "rls-audit-last.json");
 
 const SERVICE_ROLE_ONLY_TABLES = new Set([
+  "api_key_usage_log",
   "affiliate_link_clicks",
   "booking_commission_snapshots",
   "payment_audit_log",
