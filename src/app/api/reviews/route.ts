@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { fetchReviewEligibilityForUser } from "@/lib/review-eligibility";
 import { fetchUserReviews, insertReview } from "@/lib/reviews-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { TouristReview } from "@/types/tourist";
@@ -58,13 +59,38 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Некорректные данные отзыва" }, { status: 400 });
   }
 
+  const rating = Math.min(5, Math.max(1, Math.round(review.rating)));
+  const text = review.text?.trim() ?? "";
+  if (!text) {
+    return NextResponse.json({ error: "Напишите текст отзыва" }, { status: 400 });
+  }
+
+  const eligibility = await fetchReviewEligibilityForUser(supabase, user.id, review.tourSlug);
+  if (!eligibility.eligible && !eligibility.existingReview) {
+    return NextResponse.json({ error: eligibility.message }, { status: 403 });
+  }
+
+  if (
+    eligibility.existingReview?.status === "published" ||
+    eligibility.existingReview?.status === "pending"
+  ) {
+    return NextResponse.json({ error: eligibility.message }, { status: 409 });
+  }
+
+  const reviewId = eligibility.existingReview?.id ?? review.id ?? `review-${crypto.randomUUID().slice(0, 8)}`;
+  const bookingId = review.bookingId ?? eligibility.bookingId ?? eligibility.existingReview?.bookingId;
+
   const normalized: TouristReview = {
     ...review,
-    id: review.id || `review-${crypto.randomUUID().slice(0, 8)}`,
+    id: reviewId,
     userId: user.id,
-    status: review.status === "draft" ? "draft" : "draft",
+    bookingId,
+    rating,
+    text,
+    status: "draft",
     photos: review.photos ?? [],
-    createdAt: review.createdAt || new Date().toISOString(),
+    tripDate: review.tripDate ?? eligibility.tripDate ?? eligibility.existingReview?.tripDate,
+    createdAt: eligibility.existingReview?.createdAt ?? review.createdAt ?? new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   };
 

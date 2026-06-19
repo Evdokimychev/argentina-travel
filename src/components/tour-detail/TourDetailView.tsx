@@ -41,6 +41,7 @@ import PartnerTourDatesSection from "./PartnerTourDatesSection";
 import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
 import TourPreviewBanner from "./TourPreviewBanner";
 import ReviewPromptBanner from "./ReviewPromptBanner";
+import TourReviewPanel from "./TourReviewPanel";
 import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
@@ -143,7 +144,7 @@ export default function TourDetailView({
       ) : null}
 
       <Suspense fallback={null}>
-        <ReviewPromptBanner />
+        <ReviewPromptBanner tourSlug={tour.slug} isPartnerTour={isPartnerTour} />
       </Suspense>
 
       <div className={cn(siteContainerClass, "pt-4 sm:pt-5 lg:pt-6")}>
@@ -326,6 +327,9 @@ export default function TourDetailView({
                 tourSlug={tour.slug}
                 guides={canonicalTour?.team.guides}
               />
+              {!previewMode ? (
+                <TourReviewPanel tour={tour} organizerTourId={canonicalTour?.id} />
+              ) : null}
               <ReviewsSection
                 reviews={tour.reviews}
                 rating={tour.rating}

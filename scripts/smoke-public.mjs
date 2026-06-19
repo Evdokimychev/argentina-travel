@@ -84,6 +84,13 @@ async function main() {
   assert(Array.isArray(index.json), "Search index response must be an array.");
   console.log("✓ GET /api/site/search-index");
 
+  const reviewEligibility = await get("/api/reviews/eligibility?tourSlug=patagonia", "json");
+  assert(
+    reviewEligibility.status === 401 || reviewEligibility.status === 503,
+    `GET /api/reviews/eligibility must require auth or be disabled, got ${reviewEligibility.status}`
+  );
+  console.log("✓ GET /api/reviews/eligibility (auth gate)");
+
   console.log("Public smoke checks passed.");
 }
 
