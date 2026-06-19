@@ -128,6 +128,17 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  if (request.method === "POST" && routePathname === "/api/ai/tour-match") {
+    const ip = getClientIp(request);
+    const limit = await checkRateLimit(`tour-match:ip:${ip}`, 10, 60_000);
+    if (!limit.ok) {
+      return NextResponse.json(
+        { error: "Слишком много запросов к подборщику туров. Подождите минуту." },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      );
+    }
+  }
+
   if (!isMaintenanceExempt(routePathname)) {
     try {
       const features = await fetchSiteFeatures();

@@ -70,12 +70,24 @@ export async function notifyConversationMessageCreated(input: {
 
   try {
     const supabase = createSupabaseAdminClient();
-    const [{ data: booking }, { data: profiles }] = await Promise.all([
-      supabase
-        .from("bookings")
-        .select("id, tour_title, tour_slug, contact_name, contact_email, start_date")
-        .eq("id", input.thread.bookingId)
-        .maybeSingle(),
+    const isExpertThread = Boolean(input.thread.expertInquiryId);
+    const bookingId = input.thread.bookingId;
+
+    const [{ data: booking }, expertMeta, { data: profiles }] = await Promise.all([
+      bookingId
+        ? supabase
+            .from("bookings")
+            .select("id, tour_title, tour_slug, contact_name, contact_email, start_date")
+            .eq("id", bookingId)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
+      isExpertThread
+        ? supabase
+            .from("expert_inquiries")
+            .select("id, local_experts ( name )")
+            .eq("id", input.thread.expertInquiryId!)
+            .maybeSingle()
+        : Promise.resolve({ data: null, error: null }),
       supabase
         .from("profiles")
         .select("id, first_name, last_name, email")
@@ -83,6 +95,8 @@ export async function notifyConversationMessageCreated(input: {
     ]);
 
     const bookingRow = booking as BookingRow | null;
+    const expertName =
+      (expertMeta.data?.local_experts as { name: string } | null)?.name ?? "локальный эксперт";
     const profileById = new Map<string, ProfileRow>(
       ((profiles ?? []) as ProfileRow[]).map((row) => [row.id, row])
     );
@@ -95,20 +109,26 @@ export async function notifyConversationMessageCreated(input: {
     const recipientEmail =
       recipientProfile?.email ??
       (recipientRole === "tourist" ? bookingRow?.contact_email ?? null : null);
-    const tourTitle = bookingRow?.tour_title ?? "Тур";
+    const tourTitle = bookingRow?.tour_title ?? (isExpertThread ? expertName : "Тур");
     const dedupeKey = `conversation:message:${input.message.id}:recipient:${recipientId}`;
+    const notificationTitle = isExpertThread
+      ? "Новое сообщение эксперту"
+      : "Новое сообщение по заявке";
 
     await emitNotificationEvent(supabase, {
       userId: recipientId,
       dedupeKey,
       eventType: "conversation_message_new",
       category: "booking",
-      title: "Новое сообщение по заявке",
-      body: `«${tourTitle}» · ${senderName}: ${shortText(input.message.body, 96)}`,
+      title: notificationTitle,
+      body: isExpertThread
+        ? `${senderName}: ${shortText(input.message.body, 96)}`
+        : `«${tourTitle}» · ${senderName}: ${shortText(input.message.body, 96)}`,
       href,
       metadata: {
         thread_id: input.thread.id,
-        booking_id: input.thread.bookingId,
+        booking_id: bookingId,
+        expert_inquiry_id: input.thread.expertInquiryId,
         sender_id: senderId,
       },
       channels: ["in_app"],
@@ -116,13 +136,13 @@ export async function notifyConversationMessageCreated(input: {
 
     await Promise.allSettled([
       sendPushToUser(recipientId, {
-        title: "Новое сообщение по заявке",
+        title: notificationTitle,
         body: `${senderName}: ${shortText(input.message.body, 90)}`,
         href,
         tag: `msg-${input.thread.id}`,
         data: {
           threadId: input.thread.id,
-          bookingId: input.thread.bookingId,
+          bookingId: bookingId ?? undefined,
         },
       }),
       sendConversationNewMessageEmail({
@@ -131,7 +151,7 @@ export async function notifyConversationMessageCreated(input: {
         recipientName,
         senderName,
         tourTitle,
-        bookingId: input.thread.bookingId,
+        bookingId: bookingId ?? undefined,
         messageBody: input.message.body,
         messageHref: href,
       }),

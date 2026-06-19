@@ -38,7 +38,7 @@ export interface PrivacyExportPayload {
   reviews: unknown[];
   messages: Array<{
     threadId: string;
-    bookingId: string;
+    bookingId: string | null;
     role: "tourist" | "organizer";
     messages: unknown[];
   }>;

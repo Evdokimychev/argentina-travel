@@ -49,6 +49,7 @@ export type AdminNavItemId =
   | "marketplace-tours"
   | "marketplace-excursions"
   | "marketplace-organizers"
+  | "marketplace-experts"
   | "marketplace-moderation"
   | "content-documents"
   | "content-translations"

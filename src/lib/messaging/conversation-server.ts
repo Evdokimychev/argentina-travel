@@ -39,15 +39,20 @@ function isUuid(value: string): boolean {
   return UUID_RE.test(value.trim());
 }
 
-function rowToThread(row: ConversationThreadRow): ConversationThread {
+export function rowToThreadFromDb(row: ConversationThreadRow): ConversationThread {
   return {
     id: row.id,
     bookingId: row.booking_id,
+    expertInquiryId: row.expert_inquiry_id,
     touristUserId: row.tourist_user_id,
     organizerUserId: row.organizer_user_id,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+function rowToThread(row: ConversationThreadRow): ConversationThread {
+  return rowToThreadFromDb(row);
 }
 
 function resolveSenderRole(
@@ -371,35 +376,70 @@ export async function fetchConversationInboxSummary(
   }
 
   const threadIds = threadRows.map((thread) => thread.id);
-  const bookingIds = [...new Set(threadRows.map((thread) => thread.booking_id))];
+  const bookingIds = [
+    ...new Set(
+      threadRows.map((thread) => thread.booking_id).filter((id): id is string => Boolean(id))
+    ),
+  ];
+  const expertInquiryIds = [
+    ...new Set(
+      threadRows
+        .map((thread) => thread.expert_inquiry_id)
+        .filter((id): id is string => Boolean(id))
+    ),
+  ];
   const participantIds = [
     ...new Set(
       threadRows.flatMap((thread) => [thread.tourist_user_id, thread.organizer_user_id])
     ),
   ];
 
-  const [bookingsResult, profilesResult, latestMessagesResult, unreadByThread, unreadCount] =
-    await Promise.all([
-      supabase
-        .from("bookings")
-        .select("id, tour_slug, tour_title, contact_name, contact_email")
-        .in("id", bookingIds),
-      supabase
-        .from("profiles")
-        .select("id, first_name, last_name, email")
-        .in("id", participantIds),
-      supabase
-        .from("conversation_messages")
-        .select("thread_id, body, created_at")
-        .in("thread_id", threadIds)
-        .order("created_at", { ascending: false }),
-      fetchUnreadByThread(supabase, userId, threadIds),
-      countConversationUnreadMessages(supabase, userId, role),
-    ]);
+  const [
+    bookingsResult,
+    expertInquiriesResult,
+    profilesResult,
+    latestMessagesResult,
+    unreadByThread,
+    unreadCount,
+  ] = await Promise.all([
+    bookingIds.length
+      ? supabase
+          .from("bookings")
+          .select("id, tour_slug, tour_title, contact_name, contact_email")
+          .in("id", bookingIds)
+      : Promise.resolve({ data: [] as BookingMetaRow[], error: null }),
+    expertInquiryIds.length
+      ? supabase
+          .from("expert_inquiries")
+          .select("id, local_experts ( slug, name )")
+          .in("id", expertInquiryIds)
+      : Promise.resolve({ data: [], error: null }),
+    supabase
+      .from("profiles")
+      .select("id, first_name, last_name, email")
+      .in("id", participantIds),
+    supabase
+      .from("conversation_messages")
+      .select("thread_id, body, created_at")
+      .in("thread_id", threadIds)
+      .order("created_at", { ascending: false }),
+    fetchUnreadByThread(supabase, userId, threadIds),
+    countConversationUnreadMessages(supabase, userId, role),
+  ]);
 
   const bookingById = new Map<string, BookingMetaRow>(
     (bookingsResult.data ?? []).map((booking) => [booking.id, booking])
   );
+  const expertByInquiryId = new Map<
+    string,
+    { slug: string; name: string }
+  >();
+  for (const row of expertInquiriesResult.data ?? []) {
+    const expert = row.local_experts as { slug: string; name: string } | null;
+    if (expert) {
+      expertByInquiryId.set(row.id, expert);
+    }
+  }
   const profileById = new Map<string, ProfileRow>(
     (profilesResult.data ?? []).map((profile) => [profile.id, profile])
   );
@@ -415,7 +455,10 @@ export async function fetchConversationInboxSummary(
   }
 
   const threads: MessageThread[] = threadRows.map((thread) => {
-    const booking = bookingById.get(thread.booking_id);
+    const booking = thread.booking_id ? bookingById.get(thread.booking_id) : undefined;
+    const expert = thread.expert_inquiry_id
+      ? expertByInquiryId.get(thread.expert_inquiry_id)
+      : undefined;
     const organizerProfile = profileById.get(thread.organizer_user_id);
     const touristProfile = profileById.get(thread.tourist_user_id);
     const latestMessage = latestMessageByThread.get(thread.id);
@@ -423,9 +466,9 @@ export async function fetchConversationInboxSummary(
 
     return {
       id: thread.id,
-      bookingId: thread.booking_id,
-      tourSlug: booking?.tour_slug ?? "",
-      tourTitle: booking?.tour_title ?? "Тур",
+      bookingId: thread.booking_id ?? undefined,
+      tourSlug: booking?.tour_slug ?? expert?.slug ?? "",
+      tourTitle: booking?.tour_title ?? (expert ? `Эксперт: ${expert.name}` : "Тур"),
       organizerUserId: thread.organizer_user_id,
       organizerName: formatProfileName(organizerProfile, "Организатор"),
       touristUserId: thread.tourist_user_id,

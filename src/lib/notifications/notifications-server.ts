@@ -392,6 +392,63 @@ export async function emitReviewApprovedNotifications(
   }
 }
 
+export async function emitGroupTripMinReachedNotifications(
+  supabase: DbClient,
+  input: {
+    listingId: string;
+    tourTitle: string;
+    slotDate: string;
+    organizerUserId: string;
+    memberUserIds: string[];
+    memberCount: number;
+    minParticipants: number;
+  }
+): Promise<void> {
+  const dateLabel = input.slotDate;
+  const body = `«${input.tourTitle}» · ${dateLabel} · ${input.memberCount} из ${input.minParticipants} участников`;
+  const organizerHref = `/organizer/group-trips?listing=${encodeURIComponent(input.listingId)}`;
+  const touristHref = `/profile/group-trips?listing=${encodeURIComponent(input.listingId)}`;
+
+  if (isPersistableUserId(input.organizerUserId)) {
+    await emitNotificationEvent(supabase, {
+      userId: input.organizerUserId,
+      dedupeKey: `group_trip:min_reached:organizer:${input.listingId}`,
+      eventType: "group_trip_min_reached",
+      category: "booking",
+      title: "Минимальный состав группы набран",
+      body,
+      href: organizerHref,
+      metadata: {
+        listing_id: input.listingId,
+        slot_date: input.slotDate,
+        member_count: input.memberCount,
+        min_participants: input.minParticipants,
+      } as Json,
+      channels: ["in_app", "email"],
+    });
+  }
+
+  for (const userId of input.memberUserIds) {
+    if (!isPersistableUserId(userId)) continue;
+    await emitNotificationEvent(supabase, {
+      userId,
+      dedupeKey: `group_trip:min_reached:member:${input.listingId}:${userId}`,
+      eventType: "group_trip_min_reached",
+      category: "booking",
+      title: "Группа набрала минимальный состав",
+      body,
+      href: touristHref,
+      metadata: {
+        listing_id: input.listingId,
+        slot_date: input.slotDate,
+        member_count: input.memberCount,
+        min_participants: input.minParticipants,
+      } as Json,
+      channels: ["in_app"],
+    });
+  }
+}
+
 export async function fetchRecentDigestEvents(
   supabase: DbClient,
   sinceIso: string,

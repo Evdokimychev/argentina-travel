@@ -462,5 +462,15 @@
   "tour.countdown.ctaWaitlist": "Lista de espera",
   "tour.countdown.ctaSelect": "Elegir esta fecha",
   "tour.countdown.badgeHot": "Pocos lugares",
-  "tour.countdown.started": "La salida ya comenzó — elija fecha en la tabla"
+  "tour.countdown.started": "La salida ya comenzó — elija fecha en la tabla",
+  "tripPrep.title": "Preparación del viaje",
+  "tripPrep.progress": "Progreso de preparación",
+  "tripPrep.openChecklist": "Abrir lista",
+  "tripPrep.category.documents": "Documentos",
+  "tripPrep.category.connectivity": "Conectividad",
+  "tripPrep.category.money": "Dinero",
+  "tripPrep.category.health": "Salud",
+  "tripPrep.category.luggage": "Equipaje",
+  "tripPrep.category.transfer": "Traslado",
+  "tripPrep.category.organizer": "Contactos del organizador"
 }

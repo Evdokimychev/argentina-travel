@@ -17,6 +17,7 @@ import IncludedExcludedSection from "./IncludedExcludedSection";
 import { ImportantSection } from "./ArrivalSection";
 import FAQSection from "./FAQSection";
 import DatesSection from "./DatesSection";
+import GroupTripsSection from "@/components/group-trips/GroupTripsSection";
 import SimilarToursSection from "./SimilarToursSection";
 import TourSidebar from "./TourSidebar";
 import RouteMapSection from "./RouteMapSection";
@@ -273,6 +274,9 @@ export default function TourDetailView({
                   canonicalTour={canonicalTour}
                   organizerComment={getTourSectionOrganizerComment(tour, "dates")}
                 />
+              ) : null}
+              {!isPartnerTour && !previewMode && tour.dates.length > 0 ? (
+                <GroupTripsSection tour={tour} />
               ) : null}
               <IncludedExcludedSection
                 included={tour.included}

@@ -1,0 +1,323 @@
+import type { FeatureCollection } from "geojson";
+
+/** Упрощённые границы провинций — зеркало `argentina-regions.geojson` для bundler. */
+export const ARGENTINA_REGIONS_GEOJSON: FeatureCollection = {
+  type: "FeatureCollection",
+  features: [
+    {
+      type: "Feature",
+      properties: {
+        id: "caba",
+        slug: "caba",
+        nameRu: "Автономный город Буэнос-Айрес",
+        macroRegionRu: "Пампа",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-58.53, -34.71],
+            [-58.32, -34.71],
+            [-58.32, -34.52],
+            [-58.53, -34.52],
+            [-58.53, -34.71],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "buenos-aires",
+        slug: "buenos-aires",
+        nameRu: "Провинция Буэнос-Айрес",
+        macroRegionRu: "Пампа",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-63.0, -41.2],
+            [-56.5, -41.2],
+            [-56.5, -33.5],
+            [-63.0, -33.5],
+            [-63.0, -41.2],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "santa-fe",
+        slug: "santa-fe",
+        nameRu: "Провинция Санта-Фе",
+        macroRegionRu: "Litoral",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-62.8, -34.5],
+            [-59.5, -34.5],
+            [-59.5, -28.0],
+            [-62.8, -28.0],
+            [-62.8, -34.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "entre-rios",
+        slug: "entre-rios",
+        nameRu: "Провинция Энтре-Риос",
+        macroRegionRu: "Litoral",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-60.8, -34.0],
+            [-57.5, -34.0],
+            [-57.5, -30.0],
+            [-60.8, -30.0],
+            [-60.8, -34.0],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "cordoba",
+        slug: "cordoba",
+        nameRu: "Провинция Кордоба",
+        macroRegionRu: "Центр",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-65.5, -35.5],
+            [-61.5, -35.5],
+            [-61.5, -29.5],
+            [-65.5, -29.5],
+            [-65.5, -35.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "mendoza",
+        slug: "mendoza",
+        nameRu: "Провинция Мендоса",
+        macroRegionRu: "Куйо",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-70.5, -37.5],
+            [-66.5, -37.5],
+            [-66.5, -32.0],
+            [-70.5, -32.0],
+            [-70.5, -37.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "salta",
+        slug: "salta",
+        nameRu: "Провинция Сальта",
+        macroRegionRu: "Северо-Запад",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-68.5, -26.5],
+            [-62.0, -26.5],
+            [-62.0, -22.0],
+            [-68.5, -22.0],
+            [-68.5, -26.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "jujuy",
+        slug: "jujuy",
+        nameRu: "Провинция Хухуй",
+        macroRegionRu: "Северо-Запад",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-66.8, -24.5],
+            [-64.0, -24.5],
+            [-64.0, -21.8],
+            [-66.8, -21.8],
+            [-66.8, -24.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "misiones",
+        slug: "misiones",
+        nameRu: "Провинция Мисионес",
+        macroRegionRu: "Месопотамия",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-56.0, -28.5],
+            [-53.5, -28.5],
+            [-53.5, -25.5],
+            [-56.0, -25.5],
+            [-56.0, -28.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "neuquen",
+        slug: "neuquen",
+        nameRu: "Провинция Неукен",
+        macroRegionRu: "Патагония",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-71.5, -41.0],
+            [-68.0, -41.0],
+            [-68.0, -36.5],
+            [-71.5, -36.5],
+            [-71.5, -41.0],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "rio-negro",
+        slug: "rio-negro",
+        nameRu: "Провинция Рио-Негро",
+        macroRegionRu: "Патагония",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-71.0, -42.5],
+            [-62.5, -42.5],
+            [-62.5, -37.5],
+            [-71.0, -37.5],
+            [-71.0, -42.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "chubut",
+        slug: "chubut",
+        nameRu: "Провинция Чубут",
+        macroRegionRu: "Патагония",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-72.0, -46.0],
+            [-63.5, -46.0],
+            [-63.5, -42.0],
+            [-72.0, -42.0],
+            [-72.0, -46.0],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "santa-cruz",
+        slug: "santa-cruz",
+        nameRu: "Провинция Санта-Крус",
+        macroRegionRu: "Патагония",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-73.5, -52.5],
+            [-65.5, -52.5],
+            [-65.5, -46.0],
+            [-73.5, -46.0],
+            [-73.5, -52.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "tierra-del-fuego",
+        slug: "tierra-del-fuego",
+        nameRu: "Провинция Огненная Земля",
+        macroRegionRu: "Патагония",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-68.5, -55.5],
+            [-63.5, -55.5],
+            [-63.5, -52.0],
+            [-68.5, -52.0],
+            [-68.5, -55.5],
+          ],
+        ],
+      },
+    },
+    {
+      type: "Feature",
+      properties: {
+        id: "patagonia",
+        slug: "patagonia",
+        nameRu: "Патагония",
+        macroRegionRu: "Патагония",
+      },
+      geometry: {
+        type: "Polygon",
+        coordinates: [
+          [
+            [-74.0, -55.5],
+            [-62.0, -55.5],
+            [-62.0, -36.0],
+            [-74.0, -36.0],
+            [-74.0, -55.5],
+          ],
+        ],
+      },
+    },
+  ],
+} as const satisfies FeatureCollection;

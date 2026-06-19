@@ -9,6 +9,7 @@ export const SERVICE_ROLE_ONLY_TABLES = [
   "platform_commission_rules",
   "sputnik8_booking_requests",
   "sputnik8_sync_runs",
+  "trip_prep_reminders_sent",
   "tripster_booking_requests",
   "tripster_sync_runs",
 ] as const;

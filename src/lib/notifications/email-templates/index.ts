@@ -30,6 +30,10 @@ export {
   type BookingReminder24hTemplateInput,
 } from "./booking-reminder-24h";
 export {
+  renderTripPrepReminderEmail,
+  type TripPrepReminderTemplateInput,
+} from "./trip-prep-reminder";
+export {
   renderReviewApprovedEmail,
   type ReviewApprovedTemplateInput,
 } from "./review-approved";

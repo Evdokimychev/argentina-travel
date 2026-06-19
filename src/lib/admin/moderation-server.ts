@@ -11,6 +11,11 @@ import {
   resolveReviewReportModeration,
   syncPendingReviewsToQueue,
 } from "@/lib/reviews-server";
+import {
+  fetchForumPostModerationSummaries,
+  resolveForumPostModeration,
+  type ForumPostModerationSummary,
+} from "@/lib/forum/forum-server";
 
 function metadataString(metadata: Json | null, key: string): string | undefined {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return undefined;
@@ -33,6 +38,7 @@ export type ModerationQueueItem = {
   tour?: TourContentAdminSummary | null;
   review?: ModerationReviewSummary | null;
   reviewReport?: ModerationReviewReportSummary | null;
+  forumPost?: ForumPostModerationSummary | null;
 };
 
 export type ModerationResolveAction = "approve" | "reject";
@@ -86,9 +92,13 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
   const reportIds = queueRows
     .filter((r) => r.entity_type === "review_report")
     .map((r) => r.entity_id);
+  const forumPostIds = queueRows
+    .filter((r) => r.entity_type === "forum_post")
+    .map((r) => r.entity_id);
   const toursById = new Map<string, TourContentAdminSummary>();
   const reviewsById = await fetchModerationReviewSummaries(supabase, reviewIds);
   const reviewReportsById = await fetchModerationReviewReportSummaries(supabase, reportIds);
+  const forumPostsById = await fetchForumPostModerationSummaries(supabase, forumPostIds);
 
   if (tourIds.length) {
     const { data: tours } = await supabase.from("tours").select("*").in("id", tourIds);
@@ -114,7 +124,25 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
     review: row.entity_type === "review" ? (reviewsById.get(row.entity_id) ?? null) : null,
     reviewReport:
       row.entity_type === "review_report" ? (reviewReportsById.get(row.entity_id) ?? null) : null,
+    forumPost:
+      row.entity_type === "forum_post" ? enrichForumPostSummary(row, forumPostsById.get(row.entity_id)) : null,
   }));
+}
+
+function enrichForumPostSummary(
+  row: Database["public"]["Tables"]["moderation_queue"]["Row"],
+  base: ForumPostModerationSummary | undefined
+): ForumPostModerationSummary | null {
+  if (!base) return null;
+
+  const metadata = (row.metadata as Record<string, unknown>) ?? {};
+  return {
+    ...base,
+    reason: typeof metadata.reason === "string" ? metadata.reason : base.reason,
+    reasonLabel:
+      typeof metadata.reasonLabel === "string" ? metadata.reasonLabel : base.reasonLabel,
+    details: typeof metadata.details === "string" ? metadata.details : base.details,
+  };
 }
 
 export async function resolveModerationItem(
@@ -249,6 +277,24 @@ export async function resolveModerationItem(
       ok: true,
       entityType: "review_report",
       entityTitle: metadataString(item.metadata, "tourTitle") ?? item.entity_id,
+      ownerEmail: null,
+    };
+  }
+
+  if (item.entity_type === "forum_post") {
+    const forumResult = await resolveForumPostModeration(
+      supabase,
+      item.entity_id,
+      action,
+      actorUserId,
+      (item.metadata as Record<string, unknown>) ?? null
+    );
+    if ("error" in forumResult) return forumResult;
+
+    return {
+      ok: true,
+      entityType: "forum_post",
+      entityTitle: metadataString(item.metadata, "threadTitle") ?? item.entity_id,
       ownerEmail: null,
     };
   }

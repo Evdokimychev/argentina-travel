@@ -57,7 +57,7 @@ export default function ModerationView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Модерация"
-          subtitle="Очередь проверки туров и отзывов перед публикацией"
+          subtitle="Очередь проверки туров, отзывов и сообщений форума"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -135,6 +135,29 @@ export default function ModerationView() {
                         Страница тура
                       </Link>
                     </>
+                  ) : item.forumPost ? (
+                    <>
+                      <p className="font-medium text-charcoal">{item.forumPost.threadTitle}</p>
+                      <p className="text-slate">
+                        {item.forumPost.categoryTitle}
+                        {item.forumPost.authorName ? ` · ${item.forumPost.authorName}` : ""}
+                      </p>
+                      {item.forumPost.reasonLabel ? (
+                        <p className="text-slate">Причина: {item.forumPost.reasonLabel}</p>
+                      ) : null}
+                      {item.forumPost.details ? (
+                        <p className="rounded-xl bg-gray-50 p-3 text-charcoal">{item.forumPost.details}</p>
+                      ) : null}
+                      <p className="rounded-xl bg-gray-50 p-3 text-charcoal">{item.forumPost.body}</p>
+                      {item.forumPost.categorySlug ? (
+                        <Link
+                          href={`/forum/${item.forumPost.categorySlug}`}
+                          className="text-sky hover:underline"
+                        >
+                          Раздел форума
+                        </Link>
+                      ) : null}
+                    </>
                   ) : item.tour ? (
                     <>
                       <p className="font-medium text-charcoal">{item.tour.title}</p>
@@ -165,7 +188,11 @@ export default function ModerationView() {
                       disabled={busyId === item.id}
                       onClick={() => void resolveItem(item.id, "approve")}
                     >
-                      {item.entityType === "review_report" ? "Скрыть отзыв" : "Одобрить"}
+                      {item.entityType === "review_report"
+                        ? "Скрыть отзыв"
+                        : item.entityType === "forum_post"
+                          ? "Скрыть сообщение"
+                          : "Одобрить"}
                     </Button>
                     <Button
                       size="sm"
@@ -173,7 +200,9 @@ export default function ModerationView() {
                       disabled={busyId === item.id}
                       onClick={() => void resolveItem(item.id, "reject")}
                     >
-                      {item.entityType === "review_report" ? "Отклонить жалобу" : "Отклонить"}
+                      {item.entityType === "review_report" || item.entityType === "forum_post"
+                        ? "Отклонить жалобу"
+                        : "Отклонить"}
                     </Button>
                   </div>
                 </li>

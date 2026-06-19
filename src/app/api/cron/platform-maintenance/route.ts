@@ -56,6 +56,10 @@ export async function GET(request: Request) {
       );
       results.bookingReminder24h = await reminderRes.json();
       checks.push(reminderRes.ok);
+
+      const tripPrepRes = await fetch(`${origin}/api/cron/trip-prep/reminders`, { headers });
+      results.tripPrepReminders = await tripPrepRes.json();
+      checks.push(tripPrepRes.ok);
     }
 
     if (isSunday && hour === 3 && minute < 5) {

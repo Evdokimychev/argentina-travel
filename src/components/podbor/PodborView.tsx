@@ -9,6 +9,7 @@ import type { PodborAnswers, PodborQuestionId, PodborMatchResult } from "@/types
 import PodborProgressBar from "./PodborProgressBar";
 import PodborQuestionScreen from "./PodborQuestionScreen";
 import PodborResultsView from "./PodborResultsView";
+import PodborTourMatchChat from "./PodborTourMatchChat";
 import { Button } from "@/components/ui/button";
 import {
   buildPodborFlow,
@@ -140,7 +141,14 @@ export default function PodborView({ tours }: PodborViewProps) {
   }
 
   if (phase === "results" && result) {
-    return <PodborResultsView result={result} onRestart={handleRestart} />;
+    return (
+      <div>
+        <PodborResultsView result={result} onRestart={handleRestart} />
+        <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+          <PodborTourMatchChat className="mt-8" />
+        </div>
+      </div>
+    );
   }
 
   if (phase === "intro") {
@@ -151,7 +159,7 @@ export default function PodborView({ tours }: PodborViewProps) {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="relative mx-auto flex min-h-[70vh] max-w-3xl flex-col justify-center px-4 py-16 sm:px-6"
+          className="relative mx-auto flex min-h-[70vh] max-w-6xl flex-col justify-center px-4 py-16 sm:px-6"
         >
           <p className="inline-flex items-center gap-2 text-sm font-semibold text-sky">
             <Sparkles className="h-4 w-4" aria-hidden />
@@ -174,6 +182,10 @@ export default function PodborView({ tours }: PodborViewProps) {
                 Продолжить с сохранённого
               </Button>
             ) : null}
+          </div>
+
+          <div className="mt-12">
+            <PodborTourMatchChat />
           </div>
         </motion.div>
       </div>
@@ -201,6 +213,10 @@ export default function PodborView({ tours }: PodborViewProps) {
           />
         ) : null}
       </AnimatePresence>
+
+      <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
+        <PodborTourMatchChat compact className="mt-6" />
+      </div>
     </div>
   );
 }

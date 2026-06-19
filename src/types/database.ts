@@ -201,7 +201,8 @@ export interface Database {
       conversation_threads: {
         Row: {
           id: string;
-          booking_id: string;
+          booking_id: string | null;
+          expert_inquiry_id: string | null;
           tourist_user_id: string;
           organizer_user_id: string;
           created_at: string;
@@ -209,7 +210,8 @@ export interface Database {
         };
         Insert: {
           id?: string;
-          booking_id: string;
+          booking_id?: string | null;
+          expert_inquiry_id?: string | null;
           tourist_user_id: string;
           organizer_user_id: string;
           created_at?: string;
@@ -217,13 +219,100 @@ export interface Database {
         };
         Update: {
           id?: string;
-          booking_id?: string;
+          booking_id?: string | null;
+          expert_inquiry_id?: string | null;
           tourist_user_id?: string;
           organizer_user_id?: string;
           created_at?: string;
           updated_at?: string;
         };
         Relationships: [];
+      };
+      local_experts: {
+        Row: {
+          id: string;
+          slug: string;
+          name: string;
+          bio: string;
+          city: string;
+          categories: string[];
+          languages: string[];
+          avatar_url: string | null;
+          contact_mode: string;
+          user_id: string | null;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          name: string;
+          bio?: string;
+          city: string;
+          categories?: string[];
+          languages?: string[];
+          avatar_url?: string | null;
+          contact_mode?: string;
+          user_id?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          name?: string;
+          bio?: string;
+          city?: string;
+          categories?: string[];
+          languages?: string[];
+          avatar_url?: string | null;
+          contact_mode?: string;
+          user_id?: string | null;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      expert_inquiries: {
+        Row: {
+          id: string;
+          expert_id: string;
+          user_id: string;
+          message: string;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          expert_id: string;
+          user_id: string;
+          message: string;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          expert_id?: string;
+          user_id?: string;
+          message?: string;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "expert_inquiries_expert_id_fkey";
+            columns: ["expert_id"];
+            isOneToOne: false;
+            referencedRelation: "local_experts";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       conversation_messages: {
         Row: {
@@ -1672,6 +1761,57 @@ export interface Database {
         };
         Relationships: [];
       };
+      ai_match_events: {
+        Row: {
+          id: string;
+          session_id: string | null;
+          event_type: string;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          session_id?: string | null;
+          event_type: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          session_id?: string | null;
+          event_type?: string;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      ai_match_sessions: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          messages: Json;
+          expires_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          user_id?: string | null;
+          messages?: Json;
+          expires_at: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          messages?: Json;
+          expires_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       moderation_queue: {
         Row: {
           id: string;
@@ -1761,6 +1901,186 @@ export interface Database {
           metadata?: Json;
         };
         Relationships: [];
+      };
+      forum_categories: {
+        Row: {
+          id: string;
+          slug: string;
+          title: string;
+          description: string | null;
+          public_read: boolean;
+          sort_order: number;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          slug: string;
+          title: string;
+          description?: string | null;
+          public_read?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          slug?: string;
+          title?: string;
+          description?: string | null;
+          public_read?: boolean;
+          sort_order?: number;
+          created_at?: string;
+        };
+        Relationships: [];
+      };
+      forum_threads: {
+        Row: {
+          id: string;
+          category_id: string;
+          author_id: string | null;
+          title: string;
+          pinned: boolean;
+          locked: boolean;
+          last_post_at: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          category_id: string;
+          author_id?: string | null;
+          title: string;
+          pinned?: boolean;
+          locked?: boolean;
+          last_post_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          category_id?: string;
+          author_id?: string | null;
+          title?: string;
+          pinned?: boolean;
+          locked?: boolean;
+          last_post_at?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "forum_threads_category_id_fkey";
+            columns: ["category_id"];
+            isOneToOne: false;
+            referencedRelation: "forum_categories";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "forum_threads_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      forum_posts: {
+        Row: {
+          id: string;
+          thread_id: string;
+          author_id: string | null;
+          body: string;
+          status: string;
+          edited_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          thread_id: string;
+          author_id?: string | null;
+          body: string;
+          status?: string;
+          edited_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          thread_id?: string;
+          author_id?: string | null;
+          body?: string;
+          status?: string;
+          edited_at?: string | null;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "forum_posts_thread_id_fkey";
+            columns: ["thread_id"];
+            isOneToOne: false;
+            referencedRelation: "forum_threads";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "forum_posts_author_id_fkey";
+            columns: ["author_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      forum_post_reports: {
+        Row: {
+          id: string;
+          post_id: string;
+          reporter_user_id: string | null;
+          reason: string;
+          details: string | null;
+          status: string;
+          resolved_by: string | null;
+          resolved_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          post_id: string;
+          reporter_user_id?: string | null;
+          reason: string;
+          details?: string | null;
+          status?: string;
+          resolved_by?: string | null;
+          resolved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          post_id?: string;
+          reporter_user_id?: string | null;
+          reason?: string;
+          details?: string | null;
+          status?: string;
+          resolved_by?: string | null;
+          resolved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "forum_post_reports_post_id_fkey";
+            columns: ["post_id"];
+            isOneToOne: false;
+            referencedRelation: "forum_posts";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "forum_post_reports_reporter_user_id_fkey";
+            columns: ["reporter_user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       content_documents: {
         Row: {
@@ -1875,6 +2195,267 @@ export interface Database {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      group_trip_listings: {
+        Row: {
+          id: string;
+          tour_id: string;
+          organizer_id: string;
+          creator_user_id: string;
+          slot_date: string;
+          availability_slot_id: string | null;
+          min_participants: number;
+          max_participants: number;
+          status: string;
+          description: string | null;
+          min_reached_notified_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          tour_id: string;
+          organizer_id: string;
+          creator_user_id: string;
+          slot_date: string;
+          availability_slot_id?: string | null;
+          min_participants?: number;
+          max_participants: number;
+          status?: string;
+          description?: string | null;
+          min_reached_notified_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          tour_id?: string;
+          organizer_id?: string;
+          creator_user_id?: string;
+          slot_date?: string;
+          availability_slot_id?: string | null;
+          min_participants?: number;
+          max_participants?: number;
+          status?: string;
+          description?: string | null;
+          min_reached_notified_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_trip_listings_tour_id_fkey";
+            columns: ["tour_id"];
+            isOneToOne: false;
+            referencedRelation: "tours";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_trip_listings_organizer_id_fkey";
+            columns: ["organizer_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_trip_listings_creator_user_id_fkey";
+            columns: ["creator_user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_trip_listings_availability_slot_id_fkey";
+            columns: ["availability_slot_id"];
+            isOneToOne: false;
+            referencedRelation: "tour_availability_slots";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      group_trip_members: {
+        Row: {
+          id: string;
+          listing_id: string;
+          user_id: string;
+          status: string;
+          joined_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          listing_id: string;
+          user_id: string;
+          status?: string;
+          joined_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          listing_id?: string;
+          user_id?: string;
+          status?: string;
+          joined_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "group_trip_members_listing_id_fkey";
+            columns: ["listing_id"];
+            isOneToOne: false;
+            referencedRelation: "group_trip_listings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "group_trip_members_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      trip_prep_templates: {
+        Row: {
+          id: string;
+          name: string;
+          tour_type: string;
+          is_default: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          name: string;
+          tour_type?: string;
+          is_default?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          name?: string;
+          tour_type?: string;
+          is_default?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      trip_prep_items: {
+        Row: {
+          id: string;
+          template_id: string;
+          category: string;
+          title: string;
+          description: string | null;
+          sort_order: number;
+          required: boolean;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          template_id: string;
+          category: string;
+          title: string;
+          description?: string | null;
+          sort_order?: number;
+          required?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          template_id?: string;
+          category?: string;
+          title?: string;
+          description?: string | null;
+          sort_order?: number;
+          required?: boolean;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trip_prep_items_template_id_fkey";
+            columns: ["template_id"];
+            isOneToOne: false;
+            referencedRelation: "trip_prep_templates";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      trip_prep_progress: {
+        Row: {
+          id: string;
+          booking_id: string;
+          user_id: string;
+          item_id: string;
+          checked_at: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          user_id: string;
+          item_id: string;
+          checked_at?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          user_id?: string;
+          item_id?: string;
+          checked_at?: string;
+          created_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trip_prep_progress_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "trip_prep_progress_item_id_fkey";
+            columns: ["item_id"];
+            isOneToOne: false;
+            referencedRelation: "trip_prep_items";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      trip_prep_reminders_sent: {
+        Row: {
+          id: string;
+          booking_id: string;
+          kind: string;
+          sent_at: string;
+        };
+        Insert: {
+          id?: string;
+          booking_id: string;
+          kind: string;
+          sent_at?: string;
+        };
+        Update: {
+          id?: string;
+          booking_id?: string;
+          kind?: string;
+          sent_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "trip_prep_reminders_sent_booking_id_fkey";
+            columns: ["booking_id"];
+            isOneToOne: false;
+            referencedRelation: "bookings";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       tour_availability_slots: {
         Row: {
@@ -2357,5 +2938,11 @@ export type OrganizerApplicationInsert =
   Database["public"]["Tables"]["organizer_applications"]["Insert"];
 export type OrganizerApplicationUpdate =
   Database["public"]["Tables"]["organizer_applications"]["Update"];
+export type LocalExpertRow = Database["public"]["Tables"]["local_experts"]["Row"];
+export type LocalExpertInsert = Database["public"]["Tables"]["local_experts"]["Insert"];
+export type LocalExpertUpdate = Database["public"]["Tables"]["local_experts"]["Update"];
+export type ExpertInquiryRow = Database["public"]["Tables"]["expert_inquiries"]["Row"];
+export type ExpertInquiryInsert = Database["public"]["Tables"]["expert_inquiries"]["Insert"];
+export type ExpertInquiryUpdate = Database["public"]["Tables"]["expert_inquiries"]["Update"];
 export type NewsletterSubscriberInsert =
   Database["public"]["Tables"]["newsletter_subscribers"]["Insert"];

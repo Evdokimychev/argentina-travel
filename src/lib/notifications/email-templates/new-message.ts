@@ -7,20 +7,25 @@ export type NewMessageTemplateInput = {
   recipientName?: string | null;
   senderName: string;
   tourTitle: string;
-  bookingId: string;
+  bookingId?: string | null;
   messageBody: string;
   messageHref: string;
   unsubscribeUrl?: string | null;
 };
 
 export function renderNewMessageEmail(input: NewMessageTemplateInput): EmailTemplateResult {
-  const displayBookingId = formatBookingDisplayNumber(input.bookingId);
+  const displayBookingId = input.bookingId
+    ? formatBookingDisplayNumber(input.bookingId)
+    : null;
   const senderName = input.senderName.trim() || "Собеседник";
   const preview = shortText(input.messageBody, 220);
+  const contextLine = displayBookingId
+    ? `По заявке №${escapeHtml(displayBookingId)} («${escapeHtml(input.tourTitle)}») пришло новое сообщение.`
+    : `По обращению к эксперту «${escapeHtml(input.tourTitle)}» пришло новое сообщение.`;
 
   const contentHtml = `
     <p style="margin:0 0 12px;">
-      По заявке №${escapeHtml(displayBookingId)} («${escapeHtml(input.tourTitle)}») пришло новое сообщение.
+      ${contextLine}
     </p>
     <p style="margin:0 0 8px;">Отправитель: <strong>${escapeHtml(senderName)}</strong></p>
     <p style="margin:0;padding:12px 14px;border-radius:10px;background:#f1f5f9;color:#0f172a;">
@@ -36,7 +41,9 @@ export function renderNewMessageEmail(input: NewMessageTemplateInput): EmailTemp
   };
 
   const plainBody = [
-    `По заявке №${displayBookingId} («${input.tourTitle}») пришло новое сообщение.`,
+    displayBookingId
+      ? `По заявке №${displayBookingId} («${input.tourTitle}») пришло новое сообщение.`
+      : `По обращению к эксперту «${input.tourTitle}» пришло новое сообщение.`,
     `Отправитель: ${senderName}`,
     "",
     preview,

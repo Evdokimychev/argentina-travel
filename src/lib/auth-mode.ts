@@ -33,3 +33,7 @@ export function shouldUseSupabaseToursAsSourceOfTruth(): boolean {
 export function isSupabaseMessagingEnabled(): boolean {
   return isSupabaseAuthEnabled();
 }
+
+export function isSupabaseForumEnabled(): boolean {
+  return isSupabaseAuthEnabled();
+}

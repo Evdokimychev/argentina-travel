@@ -94,6 +94,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "marketplace.moderation",
   },
   {
+    id: "marketplace-experts",
+    section: "marketplace",
+    href: "/admin/marketplace/experts",
+    label: "Эксперты",
+    description: "Локальные гиды и консультанты",
+    capability: "marketplace.moderation",
+  },
+  {
     id: "marketplace-moderation",
     section: "marketplace",
     href: "/admin/marketplace/moderation",

@@ -82,8 +82,9 @@ export function getBookingNextSteps(booking: Booking): BookingNextStep[] {
     steps.push({
       id: "trip-prep",
       title: "Подготовка к поездке",
-      description: "Следите за комментариями организатора и уточняйте детали встречи.",
-      tone: "info",
+      description: "Проверьте чек-лист документов, связи и багажа перед вылетом.",
+      href: `/profile/trip-prep?bookingId=${encodeURIComponent(booking.id)}`,
+      tone: "action",
     });
   }
 

@@ -39,6 +39,7 @@ import {
   apiUpdateBookingStatus,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
+import OrganizerTripPrepSummaryCard from "@/components/trip-prep/OrganizerTripPrepSummaryCard";
 import ConversationPanel from "@/components/messages/ConversationPanel";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import BookingOrganizerDataPanel from "@/components/booking/BookingOrganizerDataPanel";
@@ -252,6 +253,10 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                   {alert.text}
                 </div>
               ))}
+
+              {(currentStatus === "confirmed" || currentStatus === "pending") && booking.startDate ? (
+                <OrganizerTripPrepSummaryCard bookingId={booking.id} />
+              ) : null}
 
               <dl>
                 <DetailRow label="Тур">

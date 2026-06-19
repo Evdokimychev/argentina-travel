@@ -1,6 +1,7 @@
 import {
   escapeHtml,
   renderBookingReminder24hEmail,
+  renderTripPrepReminderEmail,
   renderBookingConfirmedEmail,
   renderNewMessageEmail,
   renderBookingStatusChangedEmail,
@@ -240,7 +241,7 @@ export async function sendConversationNewMessageEmail(input: {
   recipientName?: string | null;
   senderName: string;
   tourTitle: string;
-  bookingId: string;
+  bookingId?: string | null;
   messageBody: string;
   messageHref: string;
 }): Promise<boolean> {
@@ -281,6 +282,35 @@ export async function sendBookingReminder24hEmail(input: {
     tourTitle: input.tourTitle,
     startDate: input.startDate,
     detailsHref: input.detailsHref,
+    unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
+  });
+
+  return sendTemplateEmail(template, recipients, {
+    userId: input.userId,
+    category: "booking",
+  });
+}
+
+export async function sendTripPrepReminderEmail(input: {
+  userId?: string | null;
+  recipientEmail: string | null;
+  recipientName?: string | null;
+  bookingId: string;
+  tourTitle: string;
+  startDate: string;
+  daysBefore: 7 | 3 | 1;
+  prepHref: string;
+}): Promise<boolean> {
+  const recipients = normalizeRecipients([input.recipientEmail]);
+  if (!recipients.length) return false;
+
+  const template = renderTripPrepReminderEmail({
+    recipientName: input.recipientName,
+    bookingId: input.bookingId,
+    tourTitle: input.tourTitle,
+    startDate: input.startDate,
+    daysBefore: input.daysBefore,
+    prepHref: input.prepHref,
     unsubscribeUrl: resolveUnsubscribeUrl({ userId: input.userId, category: "booking" }),
   });
 

@@ -7,12 +7,14 @@ import {
   CalendarDays,
   ChevronLeft,
   ChevronRight,
+  ClipboardCheck,
   Heart,
   LayoutGrid,
   Mail,
   Settings,
   ShoppingBag,
   Star,
+  Users,
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
@@ -56,6 +58,8 @@ const NAV_ICONS: Record<Exclude<ProfileNavId, "settings">, typeof LayoutGrid> = 
   dashboard: LayoutGrid,
   favorites: Heart,
   bookings: CalendarDays,
+  tripPrep: ClipboardCheck,
+  groupTrips: Users,
   orders: ShoppingBag,
   messages: Mail,
   reviews: Star,

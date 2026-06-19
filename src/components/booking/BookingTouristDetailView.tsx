@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, CreditCard, ExternalLink } from "lucide-react";
+import TripPrepHub from "@/components/trip-prep/TripPrepHub";
 import ConversationPanel from "@/components/messages/ConversationPanel";
 import { useAuth } from "@/context/AuthContext";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
@@ -326,6 +327,12 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
             <div className="mt-6 rounded-xl bg-gray-50 px-4 py-3 ring-1 ring-gray-200">
               <p className="text-xs font-medium uppercase tracking-wide text-slate">Ваш комментарий</p>
               <p className="mt-1 text-sm text-charcoal">{booking.touristComment}</p>
+            </div>
+          ) : null}
+
+          {(booking.status === "confirmed" || booking.status === "pending") && booking.startDate ? (
+            <div className="mt-6">
+              <TripPrepHub bookingId={booking.id} compact />
             </div>
           ) : null}
 

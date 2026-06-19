@@ -5,6 +5,7 @@
   "nav.about": "О нас",
   "nav.faq": "FAQ",
   "nav.blog": "Блог",
+  "nav.forum": "Форум",
   "nav.contacts": "Контакты",
   "nav.destinations": "Направления",
   "nav.geography": "Регионы и места",
@@ -502,5 +503,15 @@
   "tour.countdown.ctaWaitlist": "Встать в лист ожидания",
   "tour.countdown.ctaSelect": "Выбрать эту дату",
   "tour.countdown.badgeHot": "Мало мест",
-  "tour.countdown.started": "Отправление уже началось — выберите дату в таблице ниже"
+  "tour.countdown.started": "Отправление уже началось — выберите дату в таблице ниже",
+  "tripPrep.title": "Подготовка к поездке",
+  "tripPrep.progress": "Прогресс подготовки",
+  "tripPrep.openChecklist": "Открыть чек-лист",
+  "tripPrep.category.documents": "Документы",
+  "tripPrep.category.connectivity": "Связь",
+  "tripPrep.category.money": "Деньги",
+  "tripPrep.category.health": "Здоровье",
+  "tripPrep.category.luggage": "Багаж",
+  "tripPrep.category.transfer": "Трансфер",
+  "tripPrep.category.organizer": "Контакты организатора"
 }

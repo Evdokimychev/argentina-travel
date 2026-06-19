@@ -15,6 +15,7 @@ function rowToThread(row: ThreadRow): ConversationThread {
   return {
     id: row.id,
     bookingId: row.booking_id,
+    expertInquiryId: row.expert_inquiry_id,
     touristUserId: row.tourist_user_id,
     organizerUserId: row.organizer_user_id,
     createdAt: row.created_at,

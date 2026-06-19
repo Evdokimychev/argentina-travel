@@ -89,6 +89,9 @@ export function buildTourSectionLinks(
 
   if (hasTourDatesSection(tour)) {
     links.push({ id: "dates", label: "Даты" });
+    if (!isPartnerTour) {
+      links.push({ id: "group-trips", label: "Попутчики" });
+    }
   }
 
   if (hasTermsListContent(tour.included) || hasTermsListContent(tour.excluded)) {

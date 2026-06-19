@@ -14,6 +14,7 @@ import {
   MoreHorizontal,
   Settings,
   Star,
+  Users,
   Wallet,
 } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
@@ -62,6 +63,7 @@ const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
   analytics: BarChart3,
   tours: Compass,
   bookings: Clock3,
+  groupTrips: Users,
   messages: Mail,
   reviews: Star,
   payments: Wallet,

@@ -163,10 +163,11 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
   );
 
   const activeRealtimeThread = useMemo<ConversationThread | null>(() => {
-    if (!remoteMode || !activeThread?.bookingId) return null;
+    if (!remoteMode || !activeThread) return null;
     return {
       id: activeThread.id,
-      bookingId: activeThread.bookingId,
+      bookingId: activeThread.bookingId ?? null,
+      expertInquiryId: null,
       touristUserId: activeThread.touristUserId,
       organizerUserId: activeThread.organizerUserId,
       createdAt: activeThread.createdAt,

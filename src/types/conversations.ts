@@ -2,7 +2,8 @@ import type { MessageSenderRole, MessageThread } from "@/types/messages";
 
 export interface ConversationThread {
   id: string;
-  bookingId: string;
+  bookingId: string | null;
+  expertInquiryId: string | null;
   touristUserId: string;
   organizerUserId: string;
   createdAt: string;
