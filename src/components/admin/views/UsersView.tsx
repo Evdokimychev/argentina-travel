@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { useAdminContext } from "@/context/AdminContext";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
@@ -61,6 +62,8 @@ function UserBlockButton({
 }
 
 export default function UsersView() {
+  const { hasCapability } = useAdminContext();
+  const canManage = hasCapability("users.manage");
   const { data, loading, error, refresh } = useAdminApi<UsersResponse>("/api/admin/users");
   const [search, setSearch] = useState("");
 
@@ -131,7 +134,13 @@ export default function UsersView() {
                       </td>
                       <td className="px-4 py-3">
                         <p className="text-slate">{formatAdminWhen(user.createdAt)}</p>
-                        <UserBlockButton userId={user.id} isBlocked={user.isBlocked} onDone={() => void refresh()} />
+                        {canManage ? (
+                          <UserBlockButton
+                            userId={user.id}
+                            isBlocked={user.isBlocked}
+                            onDone={() => void refresh()}
+                          />
+                        ) : null}
                       </td>
                     </tr>
                   ))

@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import type { Database } from "@/types/database";
 
 function createSupabaseMiddlewareClient(request: NextRequest, response: NextResponse) {
@@ -36,19 +37,38 @@ function redirectToSignIn(request: NextRequest, pathname: string, extra?: Record
   return NextResponse.redirect(redirectUrl);
 }
 
+function isProtectedCabinetPath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/organizer") ||
+    pathname.startsWith("/admin")
+  );
+}
+
+function isMaintenanceExempt(pathname: string): boolean {
+  return pathname.startsWith("/admin") || pathname.startsWith("/api") || pathname === "/maintenance";
+}
+
 export async function middleware(request: NextRequest) {
-  if (!isSupabaseAuthEnabled()) {
+  const pathname = request.nextUrl.pathname;
+
+  if (!isMaintenanceExempt(pathname)) {
+    try {
+      const features = await fetchSiteFeatures();
+      if (features.maintenanceMode) {
+        return NextResponse.redirect(new URL("/maintenance", request.url));
+      }
+    } catch {
+      // Settings unavailable — do not block public site
+    }
+  }
+
+  if (!isSupabaseAuthEnabled() || !isProtectedCabinetPath(pathname)) {
     return NextResponse.next();
   }
 
-  const pathname = request.nextUrl.pathname;
-  const isProfile = pathname.startsWith("/profile");
   const isOrganizer = pathname.startsWith("/organizer");
   const isAdmin = pathname.startsWith("/admin");
-
-  if (!isProfile && !isOrganizer && !isAdmin) {
-    return NextResponse.next();
-  }
 
   const response = NextResponse.next({
     request: { headers: request.headers },
@@ -124,5 +144,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/profile/:path*", "/organizer/:path*", "/admin/:path*"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+  ],
 };

@@ -47,12 +47,14 @@ export default function LeadsView() {
           subtitle="Подписки на рассылку и обращения с сайта"
           actions={
             <div className="flex gap-2">
-              <a
-                href="/api/admin/leads/export"
-                className="inline-flex h-10 items-center rounded-xl border border-gray-200 px-4 text-sm font-medium text-charcoal hover:border-sky/40 hover:text-sky"
+              <Button
+                variant="outline"
+                onClick={() => {
+                  window.location.href = "/api/admin/leads/export";
+                }}
               >
                 CSV
-              </a>
+              </Button>
               <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
                 Обновить
               </Button>

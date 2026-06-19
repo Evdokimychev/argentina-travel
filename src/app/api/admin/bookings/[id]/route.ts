@@ -3,6 +3,7 @@ import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchBookingById, updateBookingRecord } from "@/lib/bookings-server";
+import { notifyBookingStatusChanged } from "@/lib/bookings-notify";
 import { createStatusChange, normalizeBooking } from "@/lib/bookings-store";
 import type { BookingStatus } from "@/types/tourist";
 
@@ -80,6 +81,15 @@ export async function PATCH(
     entityId: id,
     payload: { from: current.status, to: body.status },
     ipAddress: clientIpFromRequest(request),
+  });
+
+  void notifyBookingStatusChanged({
+    bookingId: id,
+    tourTitle: result.booking.tourTitle,
+    contactEmail: result.booking.contactEmail,
+    contactName: result.booking.contactName,
+    fromStatus: current.status,
+    toStatus: body.status,
   });
 
   return NextResponse.json({ booking: result.booking });
