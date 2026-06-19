@@ -1,5 +1,9 @@
 import { createHmac, timingSafeEqual } from "crypto";
-import { resolveOrganizerParams } from "@/lib/booking-params";
+import { fetchLiveExchangeRates, resolveRateFromUsd } from "@/lib/exchange-rates";
+import {
+  convertUsdToDisplayCurrency,
+  resolveChargeCurrency,
+} from "@/lib/payments/checkout-currency";
 import { absoluteUrl } from "@/lib/site-url";
 import type { BookingPaymentStatus } from "@/types/booking-params";
 import type {
@@ -157,9 +161,15 @@ export async function createPreference(
   }
 
   const link = booking.paymentLink;
-  const amount = Math.max(0, Number(link?.amountUsd ?? booking.totalPriceUsd));
-  const currencyId = resolveOrganizerParams(booking).currency || "ARS";
-  const safeAmount = Number(amount.toFixed(2));
+  const amountUsd = Math.max(0, Number(link?.amountUsd ?? booking.totalPriceUsd));
+  const displayCurrency = booking.metadata?.checkoutCurrency ?? "USD";
+  const chargeCurrency = resolveChargeCurrency("mercadopago", displayCurrency);
+  const ratesPayload = await fetchLiveExchangeRates();
+  const chargeAmount =
+    chargeCurrency === "USD"
+      ? amountUsd
+      : convertUsdToDisplayCurrency(amountUsd, chargeCurrency, ratesPayload.rates);
+  const safeAmount = Number(chargeAmount.toFixed(chargeCurrency === "ARS" ? 0 : 2));
   if (!(safeAmount > 0)) {
     throw new Error("Booking amount must be greater than zero to create Mercado Pago preference.");
   }
@@ -181,7 +191,7 @@ export async function createPreference(
         title: `Оплата бронирования ${booking.tourTitle}`,
         description: `Бронирование ${booking.id}`,
         quantity: 1,
-        currency_id: currencyId,
+        currency_id: chargeCurrency,
         unit_price: safeAmount,
       },
     ],
@@ -192,6 +202,9 @@ export async function createPreference(
     metadata: {
       bookingId: booking.id,
       paymentLinkToken: link?.token ?? null,
+      displayCurrency,
+      amountUsd,
+      rateFromUsd: resolveRateFromUsd(chargeCurrency, ratesPayload.rates),
     },
     external_reference: booking.id,
     notification_url: input.notificationUrl ?? toAbsoluteUrl("/api/webhooks/payments/mercadopago"),

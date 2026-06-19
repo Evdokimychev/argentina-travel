@@ -29,6 +29,7 @@ import { apiFetchOrganizerBookings, isRemoteBookingsMode } from "@/lib/bookings-
 import { formatBookingTourDates } from "@/lib/booking-display";
 import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "@/types/tourist";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import OrganizerWaitlistView from "@/components/organizer/OrganizerWaitlistView";
@@ -346,15 +347,22 @@ export default function OrganizerBookingsView() {
                     </TableCell>
                     <TableCell className="text-charcoal">{booking.guests}</TableCell>
                     <TableCell>
-                      <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-medium" />
+                      <BookingLedgerAmount
+                        booking={booking}
+                        priceUsd={booking.totalPriceUsd}
+                        compact
+                        className="font-medium"
+                      />
                     </TableCell>
                     <TableCell>
                       <BookingPaymentStatusBadge booking={booking} />
                       {amounts.due > 0 ? (
                         <p className="mt-1 text-xs text-slate">
                           К оплате:{" "}
-                          <FormattedPrice
+                          <BookingLedgerAmount
+                            booking={booking}
                             priceUsd={amounts.due}
+                            compact
                             className="font-medium text-charcoal"
                           />
                         </p>

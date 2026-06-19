@@ -123,6 +123,21 @@ export async function apiCreateBookingPaymentPreference(input: {
   );
 }
 
+export async function apiCreateBookingStripeSession(input: {
+  bookingId: string;
+  paymentLinkToken: string;
+}): Promise<{ sessionId: string; checkoutUrl: string }> {
+  return parseJson<{ sessionId: string; checkoutUrl: string }>(
+    await fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}/payment/stripe/session`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        paymentLinkToken: input.paymentLinkToken,
+      }),
+    })
+  );
+}
+
 export type PaymentLinkStatusResponse = {
   bookingId: string;
   tourTitle: string;

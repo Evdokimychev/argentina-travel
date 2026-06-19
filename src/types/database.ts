@@ -195,6 +195,42 @@ export interface Database {
         };
         Relationships: [];
       };
+      message_reads: {
+        Row: {
+          user_id: string;
+          message_id: string;
+          read_at: string;
+        };
+        Insert: {
+          user_id: string;
+          message_id: string;
+          read_at?: string;
+        };
+        Update: {
+          user_id?: string;
+          message_id?: string;
+          read_at?: string;
+        };
+        Relationships: [];
+      };
+      typing_presence: {
+        Row: {
+          thread_id: string;
+          user_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          thread_id: string;
+          user_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          thread_id?: string;
+          user_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       tourist_reviews: {
         Row: {
           id: string;
@@ -1182,6 +1218,57 @@ export interface Database {
           notes?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      api_keys: {
+        Row: {
+          id: string;
+          key_hash: string;
+          key_prefix: string;
+          label: string;
+          partner_name: string | null;
+          organizer_id: string | null;
+          scopes: string[];
+          rate_limit_per_minute: number;
+          is_active: boolean;
+          created_by: string | null;
+          created_at: string;
+          updated_at: string;
+          revoked_at: string | null;
+          last_used_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          key_hash: string;
+          key_prefix: string;
+          label: string;
+          partner_name?: string | null;
+          organizer_id?: string | null;
+          scopes?: string[];
+          rate_limit_per_minute?: number;
+          is_active?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          revoked_at?: string | null;
+          last_used_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          key_hash?: string;
+          key_prefix?: string;
+          label?: string;
+          partner_name?: string | null;
+          organizer_id?: string | null;
+          scopes?: string[];
+          rate_limit_per_minute?: number;
+          is_active?: boolean;
+          created_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+          revoked_at?: string | null;
+          last_used_at?: string | null;
         };
         Relationships: [];
       };

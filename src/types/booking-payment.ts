@@ -5,7 +5,7 @@ export type BookingInvoiceStatus = "pending" | "paid" | "partial" | "cancelled";
 export type BookingInvoiceType = "prepayment" | "balance" | "full";
 
 export type BookingPaymentChannel = "platform" | "organizer";
-export type BookingPaymentGateway = "manual" | "mercadopago";
+export type BookingPaymentGateway = "manual" | "mercadopago" | "stripe";
 
 export interface BookingInvoice {
   id: string;
@@ -48,4 +48,7 @@ export interface BookingPaymentLink {
   checkoutSandboxUrl?: string;
   preferenceId?: string;
   preferenceCreatedAt?: string;
+  /** Stripe Checkout Session id. */
+  sessionId?: string;
+  sessionCreatedAt?: string;
 }

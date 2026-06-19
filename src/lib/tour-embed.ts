@@ -1,5 +1,6 @@
 import { getDestinationBySlug } from "@/lib/destinations";
 import { matchToursForDestination } from "@/lib/destinations";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import type { TourListing } from "@/types";
 import type {
@@ -64,6 +65,12 @@ export function resolveTourEmbedListings(
       return tours.filter((tour) => matchesTourEmbedQuery(tour, source.query));
     case "preset":
       return resolvePresetListings(tours, source.preset);
+    case "organizer":
+      return tours.filter(
+        (tour) =>
+          resolveListingOwnerUserId(tour) === source.organizerSlug ||
+          tour.organizer.slug === source.organizerSlug
+      );
     default:
       return [];
   }
@@ -107,10 +114,13 @@ export function parseTourEmbedSearchParams(
   const region = readParam(params, "region");
   const query = readParam(params, "query");
   const preset = readParam(params, "preset") as TourEmbedPreset | undefined;
+  const organizer = readParam(params, "organizer");
 
   let source: TourEmbedSource | null = null;
   if (slugs) {
     source = { kind: "slugs", slugs: slugs.split(",").map((s) => s.trim()).filter(Boolean) };
+  } else if (organizer) {
+    source = { kind: "organizer", organizerSlug: organizer };
   } else if (destination) {
     source = { kind: "destination", destinationSlug: destination };
   } else if (region) {
@@ -123,6 +133,12 @@ export function parseTourEmbedSearchParams(
     source = { kind: "preset", preset: "recommended" };
   }
 
+  const themeParam = readParam(params, "theme");
+  const theme =
+    themeParam === "dark" || themeParam === "light"
+      ? themeParam
+      : undefined;
+
   return {
     variant,
     title,
@@ -132,6 +148,7 @@ export function parseTourEmbedSearchParams(
     catalogHref: readParam(params, "catalog") ?? "/tours",
     catalogLabel: readParam(params, "catalogLabel") ?? "Все туры",
     tone: (readParam(params, "tone") as TourEmbedConfig["tone"]) ?? "inline",
+    theme,
   };
 }
 

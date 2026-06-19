@@ -53,6 +53,7 @@ export type AdminNavItemId =
   | "analytics-overview"
   | "analytics-funnels"
   | "system-settings"
+  | "system-api-keys"
   | "system-staff"
   | "system-audit";
 

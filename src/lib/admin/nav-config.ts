@@ -121,6 +121,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "system.settings",
   },
   {
+    id: "system-api-keys",
+    section: "system",
+    href: "/admin/system/api-keys",
+    label: "API-ключи",
+    description: "Публичное API v1 для партнёров",
+    capability: "system.settings",
+  },
+  {
     id: "system-staff",
     section: "system",
     href: "/admin/system/staff",

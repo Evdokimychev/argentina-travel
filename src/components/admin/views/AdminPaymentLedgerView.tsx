@@ -375,7 +375,9 @@ export function AdminPaymentLedgerPanel() {
               {detail?.livePayment ? (
                 <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
                   <p className="text-xs font-medium uppercase tracking-wide text-slate">
-                    Данные Mercado Pago (live)
+                    {detail.livePayment.provider === "stripe"
+                      ? "Данные Stripe (live)"
+                      : "Данные Mercado Pago (live)"}
                   </p>
                   {"error" in detail.livePayment ? (
                     <p className="mt-2 text-sm text-red-600">
@@ -384,7 +386,9 @@ export function AdminPaymentLedgerPanel() {
                   ) : (
                     <dl className="mt-3 grid gap-2 text-sm sm:grid-cols-2">
                       <div>
-                        <dt className="text-slate">Статус MP</dt>
+                        <dt className="text-slate">
+                          {detail.livePayment.provider === "stripe" ? "Статус Stripe" : "Статус MP"}
+                        </dt>
                         <dd className="font-medium text-charcoal">
                           {String(detail.livePayment.status ?? "—")}
                         </dd>
@@ -406,7 +410,11 @@ export function AdminPaymentLedgerPanel() {
                         </dd>
                       </div>
                       <div>
-                        <dt className="text-slate">Создано в MP</dt>
+                        <dt className="text-slate">
+                          {detail.livePayment.provider === "stripe"
+                            ? "Создано в Stripe"
+                            : "Создано в MP"}
+                        </dt>
                         <dd className="font-medium text-charcoal">
                           {formatAdminDateTime(
                             typeof detail.livePayment.dateCreated === "string"
@@ -445,7 +453,9 @@ export function AdminPaymentLedgerPanel() {
                   onClick={() => selectedId && void loadDetail(selectedId)}
                   className="text-sm font-medium text-charcoal hover:underline"
                 >
-                  Обновить данные MP
+                  {selected?.provider === "stripe"
+                    ? "Обновить данные Stripe"
+                    : "Обновить данные MP"}
                 </button>
               </div>
             </div>

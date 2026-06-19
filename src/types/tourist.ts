@@ -1,3 +1,4 @@
+import type { BookingMetadata } from "@/lib/payments/checkout-currency";
 import type {
   BookingInvoice,
   BookingPaymentLink,
@@ -131,6 +132,8 @@ export interface Booking {
   clientPortalToken?: string;
   /** Чеклист, ссылки и анкета клиента по поездке. */
   tripOperations?: TripOperations;
+  /** Валюта оформления и снимок курса на момент checkout. */
+  metadata?: BookingMetadata;
   createdAt: string;
   updatedAt: string;
 }

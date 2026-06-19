@@ -28,7 +28,11 @@ export async function GET(
       return NextResponse.json({ error: access.error }, { status: access.status });
     }
 
-    const messages = await fetchConversationMessages(supabase, access.thread);
+    const messages = await fetchConversationMessages(
+      supabase,
+      access.thread,
+      sessionUser?.id
+    );
     return NextResponse.json({ messages });
   } catch (error) {
     return NextResponse.json(

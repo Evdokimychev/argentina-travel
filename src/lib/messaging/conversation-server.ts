@@ -10,15 +10,18 @@ import {
 } from "@/lib/bookings-server";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getOrganizerCatalogSlugs } from "@/lib/organizer-bookings";
+import { TYPING_PRESENCE_TTL_SECONDS } from "@/lib/messaging/constants";
 import type {
   ConversationMessage,
   ConversationThread,
+  ConversationTypingState,
 } from "@/types/conversations";
 
 type DbClient = SupabaseClient<Database>;
 
 type ConversationThreadRow = Database["public"]["Tables"]["conversation_threads"]["Row"];
 type ConversationMessageRow = Database["public"]["Tables"]["conversation_messages"]["Row"];
+type MessageReadRow = Database["public"]["Tables"]["message_reads"]["Row"];
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -49,7 +52,8 @@ function resolveSenderRole(
 
 function rowToMessage(
   thread: ConversationThread,
-  row: ConversationMessageRow
+  row: ConversationMessageRow,
+  readByCounterpartAt?: string | null
 ): ConversationMessage {
   return {
     id: row.id,
@@ -58,8 +62,20 @@ function rowToMessage(
     senderRole: resolveSenderRole(thread, row.sender_id),
     body: row.body,
     createdAt: row.created_at,
+    readByCounterpartAt,
   };
 }
+
+export function getCounterpartUserId(
+  thread: ConversationThread,
+  userId: string
+): string | null {
+  if (userId === thread.touristUserId) return thread.organizerUserId;
+  if (userId === thread.organizerUserId) return thread.touristUserId;
+  return null;
+}
+
+export { TYPING_PRESENCE_TTL_SECONDS } from "@/lib/messaging/constants";
 
 export function resolveOrganizerUserIdForBooking(
   booking: Booking,
@@ -215,7 +231,8 @@ export async function getOrCreateConversationThreadForBooking(
 
 export async function fetchConversationMessages(
   supabase: DbClient,
-  thread: ConversationThread
+  thread: ConversationThread,
+  viewerId?: string | null
 ): Promise<ConversationMessage[]> {
   const { data, error } = await supabase
     .from("conversation_messages")
@@ -224,7 +241,36 @@ export async function fetchConversationMessages(
     .order("created_at", { ascending: true });
 
   if (error || !data) return [];
-  return data.map((row) => rowToMessage(thread, row));
+
+  const readByCounterpart = new Map<string, string>();
+  if (viewerId) {
+    const counterpartId = getCounterpartUserId(thread, viewerId);
+    const ownMessageIds = data
+      .filter((row) => row.sender_id === viewerId)
+      .map((row) => row.id);
+
+    if (counterpartId && ownMessageIds.length > 0) {
+      const { data: reads } = await supabase
+        .from("message_reads")
+        .select("message_id, read_at")
+        .eq("user_id", counterpartId)
+        .in("message_id", ownMessageIds);
+
+      for (const read of reads ?? []) {
+        readByCounterpart.set(read.message_id, read.read_at);
+      }
+    }
+  }
+
+  return data.map((row) =>
+    rowToMessage(
+      thread,
+      row,
+      viewerId && row.sender_id === viewerId
+        ? readByCounterpart.get(row.id) ?? null
+        : undefined
+    )
+  );
 }
 
 export async function insertConversationMessage(
@@ -263,6 +309,109 @@ export async function insertConversationMessage(
   }
 
   return { message: rowToMessage(thread, data) };
+}
+
+export async function markConversationMessagesRead(
+  supabase: DbClient,
+  thread: ConversationThread,
+  readerId: string,
+  messageIds: string[]
+): Promise<{ marked: number } | { error: string }> {
+  const uniqueIds = [...new Set(messageIds.map((id) => id.trim()).filter(Boolean))];
+  if (uniqueIds.length === 0) {
+    return { marked: 0 };
+  }
+
+  const { data: eligible, error: fetchError } = await supabase
+    .from("conversation_messages")
+    .select("id")
+    .eq("thread_id", thread.id)
+    .in("id", uniqueIds)
+    .neq("sender_id", readerId);
+
+  if (fetchError) {
+    return { error: fetchError.message };
+  }
+
+  if (!eligible?.length) {
+    return { marked: 0 };
+  }
+
+  const now = new Date().toISOString();
+  const rows: MessageReadRow[] = eligible.map((message) => ({
+    user_id: readerId,
+    message_id: message.id,
+    read_at: now,
+  }));
+
+  const { error } = await supabase
+    .from("message_reads")
+    .upsert(rows, { onConflict: "user_id,message_id" });
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { marked: rows.length };
+}
+
+export async function setTypingPresence(
+  supabase: DbClient,
+  threadId: string,
+  userId: string,
+  typing: boolean
+): Promise<{ ok: true } | { error: string }> {
+  if (!typing) {
+    const { error } = await supabase
+      .from("typing_presence")
+      .delete()
+      .eq("thread_id", threadId)
+      .eq("user_id", userId);
+
+    if (error) {
+      return { error: error.message };
+    }
+    return { ok: true };
+  }
+
+  const { error } = await supabase.from("typing_presence").upsert(
+    {
+      thread_id: threadId,
+      user_id: userId,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "thread_id,user_id" }
+  );
+
+  if (error) {
+    return { error: error.message };
+  }
+
+  return { ok: true };
+}
+
+export async function fetchActiveTypingUsers(
+  supabase: DbClient,
+  threadId: string,
+  excludeUserId?: string | null,
+  ttlSeconds: number = TYPING_PRESENCE_TTL_SECONDS
+): Promise<ConversationTypingState[]> {
+  const cutoff = new Date(Date.now() - ttlSeconds * 1000).toISOString();
+
+  const { data, error } = await supabase
+    .from("typing_presence")
+    .select("user_id, updated_at")
+    .eq("thread_id", threadId)
+    .gte("updated_at", cutoff);
+
+  if (error || !data) return [];
+
+  return data
+    .filter((row) => row.user_id !== excludeUserId)
+    .map((row) => ({
+      userId: row.user_id,
+      updatedAt: row.updated_at,
+    }));
 }
 
 export async function assertThreadAccess(

@@ -18,6 +18,7 @@ import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-s
 import { cabinetCardClass, cabinetTableHeaderClass } from "@/lib/cabinet-ui";
 import { CabinetTableWrap } from "@/components/ui/table";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import type { AdminBookingSummary, AdminBookingsStats } from "@/lib/admin/bookings-server";
 import { normalizeBookingPaymentStatus } from "@/lib/booking-params";
 import type { Booking, BookingStatusActive } from "@/types/tourist";
@@ -283,7 +284,7 @@ export default function BookingsView() {
               <div>
                 <dt className="text-xs text-slate">Сумма</dt>
                 <dd>
-                  <FormattedPrice priceUsd={detail.totalPriceUsd} />
+                  <BookingLedgerAmount booking={detail} priceUsd={detail.totalPriceUsd} />
                 </dd>
               </div>
               <div>

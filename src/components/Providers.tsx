@@ -13,6 +13,7 @@ import SiteSearch from "@/components/SiteSearch";
 import SiteToastHost from "@/components/feedback/SiteToastHost";
 import RouteProgressBar from "@/components/feedback/RouteProgressBar";
 import PwaShell from "@/components/pwa/PwaShell";
+import GuideAssistantWidget from "@/components/guide/GuideAssistantWidget";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -28,6 +29,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             <SiteSearch />
           <CookieConsentBanner />
           <PwaShell />
+          <GuideAssistantWidget />
           <SiteAnalytics />
             <SiteToastHost />
           </AuthProvider>

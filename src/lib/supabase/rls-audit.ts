@@ -23,11 +23,15 @@ function getDatabaseUrl(): string | null {
   return process.env.DATABASE_URL?.trim() ?? null;
 }
 
+type SupabaseSchemaClient = SupabaseClient<Database> & {
+  schema: (schema: string) => SupabaseClient<Database>;
+};
+
 async function fetchViaSupabaseCatalog(
   supabase: SupabaseClient<Database>
 ): Promise<{ tables: RlsAuditTable[]; error: string | null }> {
   try {
-    const schemaClient = (supabase as any).schema("pg_catalog");
+    const schemaClient = (supabase as SupabaseSchemaClient).schema("pg_catalog");
 
     const { data: tablesData, error: tablesError } = (await schemaClient
       .from("pg_tables")

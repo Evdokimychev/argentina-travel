@@ -15,6 +15,11 @@ import {
   resolveBookingPaymentStatus,
   resolveOrganizerParams,
 } from "@/lib/booking-params";
+import {
+  buildCheckoutDisplaySnapshot,
+  type CheckoutCurrencyCode,
+} from "@/lib/payments/checkout-currency";
+import type { CurrencyCode } from "@/types/locale";
 import type { BookingCheckoutPaymentOption } from "@/types/booking-params";
 import type { BookingPaymentLinkTarget } from "@/types/booking-payment";
 import { formatBookingDisplayNumber } from "@/lib/booking-display";
@@ -224,6 +229,7 @@ export function normalizeBooking(raw: Booking): Booking {
       clientPortalToken: raw.clientPortalToken,
     }),
     tripOperations: normalizeTripOperations(raw.tripOperations),
+    metadata: raw.metadata,
   });
 }
 
@@ -762,6 +768,11 @@ export function createBookingFromCheckoutLocal(input: {
   form: CheckoutFormState;
   priceQuoteRequest?: boolean;
   persist?: boolean;
+  checkoutCurrency?: CheckoutCurrencyCode;
+  checkoutRates?: Partial<Record<CurrencyCode, number>>;
+  checkoutRatesUpdatedAt?: string;
+  checkoutRatesSource?: "frankfurter" | "fallback";
+  payNowUsd?: number;
 }): Booking | { error: string } {
   const contactEmail = input.form.contactEmail.trim();
   const userId =
@@ -790,6 +801,24 @@ export function createBookingFromCheckoutLocal(input: {
     paymentSummary.paidAmountUsd = 0;
     paymentSummary.remainingAmountUsd = input.totalPriceUsd;
   }
+
+  const payNowUsd =
+    input.payNowUsd ??
+    (paymentOption === "deposit"
+      ? computePrepaymentAmount(input.totalPriceUsd, organizerParams)
+      : paymentOption === "later"
+        ? 0
+        : input.totalPriceUsd);
+
+  const checkoutCurrency = input.checkoutCurrency ?? "USD";
+  const checkoutDisplay = buildCheckoutDisplaySnapshot({
+    currency: checkoutCurrency,
+    totalUsd: input.totalPriceUsd,
+    payNowUsd,
+    rates: input.checkoutRates,
+    ratesUpdatedAt: input.checkoutRatesUpdatedAt,
+    ratesSource: input.checkoutRatesSource,
+  });
 
   const bookingResult = createBooking({
     actor: input.actor,
@@ -834,6 +863,10 @@ export function createBookingFromCheckoutLocal(input: {
     paymentStatus,
     paymentSummary,
     paymentLink,
+    metadata: {
+      checkoutCurrency,
+      checkoutDisplay,
+    },
     invoices:
       paymentOption === "later"
         ? [
@@ -881,6 +914,11 @@ export async function createBookingFromCheckout(input: {
   totalPriceUsd: number;
   form: CheckoutFormState;
   priceQuoteRequest?: boolean;
+  checkoutCurrency?: CheckoutCurrencyCode;
+  checkoutRates?: Partial<Record<CurrencyCode, number>>;
+  checkoutRatesUpdatedAt?: string;
+  checkoutRatesSource?: "frankfurter" | "fallback";
+  payNowUsd?: number;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);

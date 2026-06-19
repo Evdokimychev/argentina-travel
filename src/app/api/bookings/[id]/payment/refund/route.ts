@@ -21,6 +21,7 @@ type PostBody = {
 
 function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
   if (gateway === "mercadopago") return "mercadopago";
+  if (gateway === "stripe") return "stripe";
   return "manual";
 }
 

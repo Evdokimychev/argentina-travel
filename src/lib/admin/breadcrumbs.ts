@@ -29,6 +29,7 @@ const SEGMENT_LABELS: Record<string, string> = {
   tours: "Туры",
   excursions: "Экскурсии",
   settings: "Настройки",
+  "api-keys": "API-ключи",
   staff: "Команда",
   audit: "Журнал",
   funnels: "Воронки",

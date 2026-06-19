@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,10 +8,13 @@ import { useAuth } from "@/context/AuthContext";
 import {
   apiFetchConversationMessages,
   apiGetConversationByBooking,
+  apiMarkConversationMessagesRead,
   apiSendConversationMessage,
   isRemoteMessagingMode,
 } from "@/lib/conversations-api";
 import { useConversationRealtime } from "@/hooks/useConversationRealtime";
+import { useConversationTyping } from "@/hooks/useConversationTyping";
+import { useMessageReadOnView } from "@/hooks/useMessageReadOnView";
 import {
   createOrGetThread,
   getThreadMessages,
@@ -43,8 +46,27 @@ function formatMessageTime(iso: string): string {
   }).format(date);
 }
 
-function messageKey(message: { id: string; createdAt: string }): string {
-  return message.id;
+function MessageReadStatus({
+  readByCounterpartAt,
+  isOwn,
+}: {
+  readByCounterpartAt?: string | null;
+  isOwn: boolean;
+}) {
+  if (!isOwn) return null;
+
+  const isRead = Boolean(readByCounterpartAt);
+  const label = isRead ? "Прочитано" : "Доставлено";
+
+  return (
+    <span
+      className="ml-1 inline-block text-[10px] leading-none"
+      aria-label={label}
+      title={label}
+    >
+      {isRead ? "✓✓" : "✓"}
+    </span>
+  );
 }
 
 export default function ConversationPanel({
@@ -55,6 +77,7 @@ export default function ConversationPanel({
 }: ConversationPanelProps) {
   const { user } = useAuth();
   const remoteMode = isRemoteMessagingMode();
+  const scrollRootRef = useRef<HTMLDivElement>(null);
 
   const [threadId, setThreadId] = useState<string | null>(null);
   const [remoteThread, setRemoteThread] = useState<ConversationThread | null>(null);
@@ -63,6 +86,7 @@ export default function ConversationPanel({
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [counterpartTyping, setCounterpartTyping] = useState(false);
 
   const appendMessage = useCallback((message: ConversationMessage) => {
     setMessages((current) => {
@@ -72,6 +96,46 @@ export default function ConversationPanel({
       );
     });
   }, []);
+
+  const applyReadReceipt = useCallback((messageId: string, readAt: string) => {
+    setMessages((current) =>
+      current.map((message) =>
+        message.id === messageId
+          ? { ...message, readByCounterpartAt: readAt }
+          : message
+      )
+    );
+  }, []);
+
+  const handleCounterpartTyping = useCallback((typing: boolean) => {
+    setCounterpartTyping(typing);
+  }, []);
+
+  const { realtimeActive } = useConversationRealtime(
+    remoteThread,
+    {
+      onMessage: appendMessage,
+      onReadReceipt: ({ messageId, readAt }) => applyReadReceipt(messageId, readAt),
+      onTypingChange: ({ updatedAt }) => handleCounterpartTyping(Boolean(updatedAt)),
+    },
+    user?.id
+  );
+
+  useConversationTyping(
+    threadId,
+    draft,
+    remoteMode && Boolean(threadId),
+    realtimeActive,
+    handleCounterpartTyping
+  );
+
+  const { setMessageElement } = useMessageReadOnView(
+    threadId,
+    messages,
+    role,
+    remoteMode && Boolean(threadId),
+    scrollRootRef
+  );
 
   const loadLocalMessages = useCallback(() => {
     if (!user) return;
@@ -113,6 +177,16 @@ export default function ConversationPanel({
 
       const remoteMessages = await apiFetchConversationMessages(thread.id);
       setMessages(remoteMessages);
+
+      const unreadIds = remoteMessages
+        .filter((message) => message.senderRole !== role)
+        .map((message) => message.id);
+
+      if (unreadIds.length > 0) {
+        void apiMarkConversationMessagesRead(thread.id, unreadIds).catch(() => {
+          // Запасной вариант: отметка при открытии, если Realtime недоступен
+        });
+      }
     } catch (loadError) {
       setError(
         loadError instanceof Error
@@ -125,13 +199,14 @@ export default function ConversationPanel({
     } finally {
       setLoading(false);
     }
-  }, [booking.id, user]);
+  }, [booking.id, user, role]);
 
   useEffect(() => {
     if (!user) {
       setThreadId(null);
       setRemoteThread(null);
       setMessages([]);
+      setCounterpartTyping(false);
       return;
     }
 
@@ -149,8 +224,6 @@ export default function ConversationPanel({
     window.addEventListener(MESSAGES_UPDATED_EVENT, onLocalUpdate);
     return () => window.removeEventListener(MESSAGES_UPDATED_EVENT, onLocalUpdate);
   }, [user, remoteMode, loadLocalMessages, loadRemoteConversation]);
-
-  useConversationRealtime(remoteThread, appendMessage);
 
   const canSend = Boolean(user && threadId && draft.trim() && !sending);
 
@@ -205,6 +278,11 @@ export default function ConversationPanel({
     return "Задайте вопрос организатору — ответ появится в этой переписке.";
   }, [role]);
 
+  const typingLabel = useMemo(() => {
+    const name = counterpartName.trim() || "Собеседник";
+    return `${name} печатает…`;
+  }, [counterpartName]);
+
   if (!user) {
     return (
       <div
@@ -234,7 +312,10 @@ export default function ConversationPanel({
         </div>
       </div>
 
-      <div className="flex max-h-72 min-h-40 flex-col gap-3 overflow-y-auto px-4 py-3">
+      <div
+        ref={scrollRootRef}
+        className="flex max-h-72 min-h-40 flex-col gap-3 overflow-y-auto px-4 py-3"
+      >
         {loading ? (
           <p className="text-sm text-slate">Загружаем сообщения…</p>
         ) : messages.length === 0 ? (
@@ -244,7 +325,8 @@ export default function ConversationPanel({
             const isOwn = message.senderRole === role;
             return (
               <div
-                key={messageKey(message)}
+                key={message.id}
+                ref={(element) => setMessageElement(message.id, element)}
                 className={cn("flex", isOwn ? "justify-end" : "justify-start")}
               >
                 <div
@@ -258,17 +340,31 @@ export default function ConversationPanel({
                   <p className="whitespace-pre-wrap break-words">{message.body}</p>
                   <p
                     className={cn(
-                      "mt-1 text-[10px]",
+                      "mt-1 flex items-center justify-end text-[10px]",
                       isOwn ? "text-white/80" : "text-slate"
                     )}
                   >
-                    {formatMessageTime(message.createdAt)}
+                    <span>{formatMessageTime(message.createdAt)}</span>
+                    <MessageReadStatus
+                      isOwn={isOwn}
+                      readByCounterpartAt={message.readByCounterpartAt}
+                    />
                   </p>
                 </div>
               </div>
             );
           })
         )}
+
+        {counterpartTyping && remoteMode ? (
+          <p
+            className="text-xs italic text-slate motion-safe:animate-pulse"
+            role="status"
+            aria-live="polite"
+          >
+            {typingLabel}
+          </p>
+        ) : null}
       </div>
 
       {error ? (

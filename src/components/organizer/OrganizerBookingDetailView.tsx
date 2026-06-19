@@ -44,6 +44,7 @@ import { BOOKINGS_UPDATED_EVENT, type Booking, type BookingStatusActive } from "
 import BookingOrganizerDataPanel from "@/components/booking/BookingOrganizerDataPanel";
 import OrganizerTripOperationsPanel from "@/components/organizer/OrganizerTripOperationsPanel";
 import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
 import { resolveBookingAmounts } from "@/lib/booking-payment-display";
@@ -280,7 +281,7 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                 </DetailRow>
 
                 <DetailRow label="Стоимость">
-                  <FormattedPrice priceUsd={booking.totalPriceUsd} className="font-semibold" />
+                  <BookingLedgerAmount booking={booking} priceUsd={booking.totalPriceUsd} />
                 </DetailRow>
 
                 <DetailRow label="Оплата">
@@ -288,14 +289,16 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                     <BookingPaymentStatusBadge booking={booking} />
                     <p className="text-xs font-normal text-slate">
                       Оплачено:{" "}
-                      <FormattedPrice
+                      <BookingLedgerAmount
+                        booking={booking}
                         priceUsd={resolveBookingAmounts(booking).paid}
-                        className="font-medium text-charcoal"
+                        compact
                       />
                       {" · "}К оплате:{" "}
-                      <FormattedPrice
+                      <BookingLedgerAmount
+                        booking={booking}
                         priceUsd={resolveBookingAmounts(booking).due}
-                        className="font-medium text-charcoal"
+                        compact
                       />
                     </p>
                     {booking.checkoutPaymentOption ? (

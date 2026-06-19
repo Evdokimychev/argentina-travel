@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Check, ExternalLink, Loader2, Mail, MessageSquare } from "lucide-react";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
-import FormattedPrice from "@/components/FormattedPrice";
+import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
   ORGANIZER_BOOKING_TRANSITIONS,
@@ -128,7 +128,7 @@ export default function OrganizerBookingCard({
                   {booking.guests === 1 ? "гость" : booking.guests < 5 ? "гостя" : "гостей"}
                 </p>
                 <p className="mt-1 text-xs font-medium text-charcoal">
-                  <FormattedPrice priceUsd={booking.totalPriceUsd} />
+                  <BookingLedgerAmount booking={booking} priceUsd={booking.totalPriceUsd} compact />
                 </p>
               </>
             ) : null}

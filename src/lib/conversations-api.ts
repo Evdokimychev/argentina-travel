@@ -47,3 +47,39 @@ export async function apiSendConversationMessage(
   );
   return data.message;
 }
+
+export async function apiMarkConversationMessagesRead(
+  threadId: string,
+  messageIds: string[]
+): Promise<number> {
+  const data = await parseJson<{ marked: number }>(
+    await fetch(`/api/conversations/${encodeURIComponent(threadId)}/read`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ messageIds }),
+    })
+  );
+  return data.marked;
+}
+
+export async function apiSetConversationTyping(
+  threadId: string,
+  typing: boolean
+): Promise<void> {
+  await parseJson<{ ok: true }>(
+    await fetch(`/api/conversations/${encodeURIComponent(threadId)}/typing`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ typing }),
+    })
+  );
+}
+
+export async function apiFetchConversationTyping(
+  threadId: string
+): Promise<{ userId: string; updatedAt: string }[]> {
+  const data = await parseJson<{
+    typing: { userId: string; updatedAt: string }[];
+  }>(await fetch(`/api/conversations/${encodeURIComponent(threadId)}/typing`));
+  return data.typing;
+}

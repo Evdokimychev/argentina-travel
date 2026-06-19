@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Check, CreditCard } from "lucide-react";
-import FormattedPrice from "@/components/FormattedPrice";
+import CheckoutCurrencySelector from "@/components/booking/CheckoutCurrencySelector";
+import CheckoutPriceDisplay from "@/components/booking/CheckoutPriceDisplay";
 import BookingCheckoutShell from "@/components/booking/BookingCheckoutShell";
 import BookingPaymentErrorRecovery from "@/components/booking/BookingPaymentErrorRecovery";
 import { formatBookingDisplayNumber } from "@/lib/booking-display";
@@ -13,8 +14,15 @@ import {
 } from "@/lib/booking-payment-link";
 import {
   apiCreateBookingPaymentPreference,
+  apiCreateBookingStripeSession,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
+import {
+  PAYMENT_GATEWAY_LABELS,
+  resolveClientPaymentProviders,
+  resolveDefaultPaymentProvider,
+  type OnlinePaymentGateway,
+} from "@/lib/payments/payment-providers-client";
 import {
   getBookingByPaymentLinkToken,
   markBookingPaymentLinkOpened,
@@ -24,13 +32,27 @@ import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { Button } from "@/components/ui/button";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { useCheckoutCurrencyRates } from "@/hooks/useCheckoutCurrencyRates";
+import {
+  resolveDefaultCheckoutCurrency,
+  type CheckoutCurrencyCode,
+} from "@/lib/payments/checkout-currency";
 
 export default function BookingPaymentLinkView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [checkoutError, setCheckoutErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
+  const [selectedGateway, setSelectedGateway] = useState<OnlinePaymentGateway | null>(null);
   const remoteMode = isRemoteBookingsMode();
+  const availableProviders = resolveClientPaymentProviders();
+  const defaultProvider = resolveDefaultPaymentProvider();
+  const { currency: localeCurrency } = useLocaleCurrency();
+  const { rates: checkoutRates } = useCheckoutCurrencyRates();
+  const [checkoutCurrency, setCheckoutCurrency] = useState<CheckoutCurrencyCode>(() =>
+    resolveDefaultCheckoutCurrency(localeCurrency)
+  );
 
   const setCheckoutError = (value: string | SiteFeedbackMessage | null) => {
     if (value === null) {
@@ -53,6 +75,25 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     window.addEventListener(BOOKINGS_UPDATED_EVENT, load);
     return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, load);
   }, [token]);
+
+  useEffect(() => {
+    if (booking?.metadata?.checkoutCurrency) {
+      setCheckoutCurrency(booking.metadata.checkoutCurrency);
+    } else {
+      setCheckoutCurrency(resolveDefaultCheckoutCurrency(localeCurrency));
+    }
+  }, [booking?.id, booking?.metadata?.checkoutCurrency, localeCurrency]);
+
+  useEffect(() => {
+    if (selectedGateway) return;
+    if (booking?.paymentLink?.gateway === "mercadopago" || booking?.paymentLink?.gateway === "stripe") {
+      setSelectedGateway(booking.paymentLink.gateway);
+      return;
+    }
+    if (defaultProvider) {
+      setSelectedGateway(defaultProvider);
+    }
+  }, [booking?.paymentLink?.gateway, defaultProvider, selectedGateway]);
 
   useEffect(() => {
     if (!booking?.paymentLink?.checkoutUrl) return;
@@ -93,10 +134,20 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
   const displayNumber = formatBookingDisplayNumber(booking.id);
   const expired = isBookingPaymentLinkExpired(link);
   const paid = link.status === "paid";
+  const paymentProvider =
+    selectedGateway === "stripe" ? "stripe" : selectedGateway === "mercadopago" ? "mercadopago" : undefined;
 
   async function handleCheckout() {
     if (!booking?.paymentLink) return;
-    if (booking.paymentLink.checkoutUrl) {
+    const gateway = selectedGateway ?? defaultProvider;
+    if (!gateway) {
+      setCheckoutError(
+        "Онлайн-оплата недоступна: не настроены платёжные провайдеры. Обратитесь в поддержку."
+      );
+      return;
+    }
+
+    if (booking.paymentLink.gateway === gateway && booking.paymentLink.checkoutUrl) {
       setRedirecting(true);
       window.location.assign(booking.paymentLink.checkoutUrl);
       return;
@@ -104,7 +155,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
 
     if (!remoteMode) {
       setCheckoutError(
-        "Онлайн-оплата доступна после подключения серверного режима бронирований и ключей Mercado Pago."
+        "Онлайн-оплата доступна после подключения серверного режима бронирований и ключей платёжных провайдеров."
       );
       return;
     }
@@ -112,6 +163,34 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     setCheckoutError(null);
     setCheckoutLoading(true);
     try {
+      if (gateway === "stripe") {
+        const result = await apiCreateBookingStripeSession({
+          bookingId: booking.id,
+          paymentLinkToken: token,
+        });
+        const checkoutUrl = result.checkoutUrl?.trim();
+        if (!checkoutUrl) {
+          throw new Error("Stripe не вернул checkout URL.");
+        }
+
+        setBooking((prev) =>
+          prev?.paymentLink
+            ? {
+                ...prev,
+                paymentLink: {
+                  ...prev.paymentLink,
+                  gateway: "stripe",
+                  sessionId: result.sessionId,
+                  checkoutUrl,
+                },
+              }
+            : prev
+        );
+        setRedirecting(true);
+        window.location.assign(checkoutUrl);
+        return;
+      }
+
       const result = await apiCreateBookingPaymentPreference({
         bookingId: booking.id,
         paymentLinkToken: token,
@@ -156,12 +235,18 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
       title={`Заявка №${displayNumber}`}
       description={booking.tourTitle}
     >
-      <div className="mt-6 rounded-xl bg-gray-50 px-4 py-4">
-        <p className="text-sm text-slate">К оплате</p>
-        <p className="mt-1 font-heading text-3xl font-bold text-charcoal">
-          <FormattedPrice priceUsd={link.amountUsd} />
-        </p>
-        <p className="mt-2 text-xs text-slate">{formatBookingPaymentLinkStatus(link)}</p>
+      <div className="mt-6 space-y-4">
+        <CheckoutCurrencySelector value={checkoutCurrency} onChange={setCheckoutCurrency} />
+        <div className="rounded-xl bg-gray-50 px-4 py-4">
+          <p className="text-sm text-slate">К оплате</p>
+          <CheckoutPriceDisplay
+            amountUsd={link.amountUsd}
+            currency={checkoutCurrency}
+            rates={checkoutRates}
+            provider={paymentProvider}
+            className="mt-2"
+          />
+          <p className="mt-2 text-xs text-slate">{formatBookingPaymentLinkStatus(link)}</p>
         {link.expiresAt && !paid && !expired ? (
           <p className="mt-1 text-xs text-slate">
             Действует до{" "}
@@ -172,6 +257,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
             }).format(new Date(link.expiresAt))}
           </p>
         ) : null}
+        </div>
       </div>
 
       {paid ? (
@@ -211,11 +297,39 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
         </div>
       ) : (
         <div className="mt-6 space-y-4">
+          {availableProviders.length > 1 ? (
+            <fieldset className="space-y-2">
+              <legend className="text-sm font-medium text-charcoal">Способ оплаты</legend>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {availableProviders.map((provider) => (
+                  <label
+                    key={provider}
+                    className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3 text-sm transition-colors ${
+                      selectedGateway === provider
+                        ? "border-sky bg-sky/5 text-charcoal"
+                        : "border-gray-200 bg-white text-charcoal hover:bg-gray-50"
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="payment-gateway"
+                      value={provider}
+                      checked={selectedGateway === provider}
+                      onChange={() => setSelectedGateway(provider)}
+                      className="h-4 w-4 accent-sky"
+                    />
+                    <span className="font-medium">{PAYMENT_GATEWAY_LABELS[provider]}</span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+          ) : null}
           <div className="flex items-start gap-3 rounded-xl border border-sky-200/70 bg-sky-50/60 px-4 py-4 text-sm leading-relaxed text-charcoal">
             <CreditCard className="mt-0.5 h-5 w-5 shrink-0 text-sky" />
             <p>
-              Оплата проходит через защищённую страницу Mercado Pago. После нажатия вы будете
-              перенаправлены в платёжный интерфейс.
+              {selectedGateway === "stripe"
+                ? "Оплата проходит через защищённую страницу Stripe. После нажатия вы будете перенаправлены для ввода данных карты."
+                : "Оплата проходит через защищённую страницу Mercado Pago. После нажатия вы будете перенаправлены в платёжный интерфейс."}
             </p>
           </div>
           <Button
@@ -225,7 +339,9 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
             loading={checkoutLoading || redirecting}
             loadingLabel={redirecting ? "Перенаправляем…" : "Готовим оплату…"}
           >
-            Перейти к оплате в Mercado Pago
+            {selectedGateway === "stripe"
+              ? "Перейти к оплате через Stripe"
+              : "Перейти к оплате в Mercado Pago"}
           </Button>
           {checkoutError ? (
             <BookingPaymentErrorRecovery

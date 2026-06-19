@@ -16,4 +16,11 @@ export interface ConversationMessage {
   senderRole: MessageSenderRole;
   body: string;
   createdAt: string;
+  /** When the counterpart read this message (only set for own outgoing messages). */
+  readByCounterpartAt?: string | null;
+}
+
+export interface ConversationTypingState {
+  userId: string;
+  updatedAt: string;
 }

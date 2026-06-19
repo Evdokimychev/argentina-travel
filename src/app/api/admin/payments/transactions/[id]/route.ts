@@ -6,6 +6,12 @@ import {
   mapMercadoPagoCapturePhase,
 } from "@/lib/payments/mercadopago-client";
 import {
+  fetchCharge,
+  fetchPaymentIntent,
+  isStripeConfigured,
+  mapStripeCapturePhase,
+} from "@/lib/payments/stripe-client";
+import {
   fetchPaymentTransactionById,
   mapTransactionToReceiptView,
 } from "@/lib/payments/transaction-server";
@@ -43,6 +49,7 @@ export async function GET(
         accessToken,
       });
       livePayment = {
+        provider: "mercadopago",
         id: payment.id,
         status: payment.status,
         statusDetail: payment.statusDetail,
@@ -56,8 +63,72 @@ export async function GET(
       };
     } catch (error) {
       livePayment = {
+        provider: "mercadopago",
         error: error instanceof Error ? error.message : "Не удалось загрузить данные Mercado Pago",
       };
+    }
+  }
+
+  if (
+    includeLive &&
+    transaction.provider === "stripe" &&
+    transaction.externalId &&
+    isStripeConfigured()
+  ) {
+    try {
+      const secretKey = process.env.STRIPE_SECRET_KEY!.trim();
+      const payment = await fetchPaymentIntent({
+        paymentIntentId: transaction.externalId,
+        secretKey,
+      });
+      livePayment = {
+        provider: "stripe",
+        id: payment.id,
+        status: payment.status,
+        capturePhase: mapStripeCapturePhase({
+          status: payment.status,
+          amount: payment.amount,
+        }),
+        transactionAmount: payment.amount / 100,
+        currencyId: payment.currency,
+        dateCreated: payment.created ? new Date(payment.created * 1000).toISOString() : undefined,
+        dateApproved:
+          payment.status === "succeeded" && payment.created
+            ? new Date(payment.created * 1000).toISOString()
+            : undefined,
+        paymentMethodId: payment.paymentMethodId,
+      };
+    } catch {
+      try {
+        const secretKey = process.env.STRIPE_SECRET_KEY!.trim();
+        const charge = await fetchCharge({
+          chargeId: transaction.externalId,
+          secretKey,
+        });
+        livePayment = {
+          provider: "stripe",
+          id: charge.id,
+          status: charge.status,
+          capturePhase: mapStripeCapturePhase({
+            status: charge.status,
+            amount: charge.amount,
+            amountRefunded: charge.amountRefunded,
+            refunded: charge.refunded,
+          }),
+          transactionAmount: charge.amount / 100,
+          currencyId: charge.currency,
+          dateCreated: charge.created ? new Date(charge.created * 1000).toISOString() : undefined,
+          dateApproved:
+            charge.paid && charge.created
+              ? new Date(charge.created * 1000).toISOString()
+              : undefined,
+        };
+      } catch (error) {
+        livePayment = {
+          provider: "stripe",
+          error: error instanceof Error ? error.message : "Не удалось загрузить данные Stripe",
+        };
+      }
     }
   }
 

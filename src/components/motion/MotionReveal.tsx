@@ -24,9 +24,12 @@ export function MotionReveal({
 }: MotionRevealProps) {
   const { ref, revealed } = useRevealAnimation<HTMLElement>();
 
-  return createElement(Tag, {
-    ref,
-    className: cn(!revealed && "opacity-0", revealed && motionRevealClass(delay), className),
-    children,
-  });
+  return createElement(
+    Tag,
+    {
+      ref,
+      className: cn(!revealed && "opacity-0", revealed && motionRevealClass(delay), className),
+    },
+    children
+  );
 }
