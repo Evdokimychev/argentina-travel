@@ -18,7 +18,7 @@ import { buildGuideTopicSearchItems } from "@/lib/guide-topics";
 import { buildImmigrationTopicSearchItems } from "@/lib/immigration-topics";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
-import type { TourListing } from "@/types";
+import type { BlogPost, TourListing } from "@/types";
 
 export type SearchResultType =
   | "tour"
@@ -246,7 +246,7 @@ export function buildTourSearchItems(tours: TourListing[]): SearchIndexItem[] {
   }));
 }
 
-export function buildStaticSearchIndex(): SearchIndexItem[] {
+export function buildStaticSearchIndex(blogCatalog: BlogPost[] = blogPosts): SearchIndexItem[] {
   const flatNav = flattenSiteNavSections(SITE_NAV_SECTIONS);
   const seenNav = new Set<string>();
   const navItems: SearchIndexItem[] = flatNav
@@ -278,7 +278,7 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
     href: link.href,
   }));
 
-  const blogItems: SearchIndexItem[] = blogPosts.map((post) => ({
+  const blogItems: SearchIndexItem[] = blogCatalog.map((post) => ({
     id: `blog-${post.slug}`,
     type: "blog" as const,
     title: post.title,
@@ -400,9 +400,20 @@ export function buildStaticSearchIndex(): SearchIndexItem[] {
   ]);
 }
 
+export async function buildStaticSearchIndexServer(): Promise<SearchIndexItem[]> {
+  try {
+    const { resolveBlogCatalog } = await import("@/lib/cms/blog-resolver");
+    const mergedBlogCatalog = await resolveBlogCatalog();
+    return buildStaticSearchIndex(mergedBlogCatalog.length > 0 ? mergedBlogCatalog : blogPosts);
+  } catch {
+    return buildStaticSearchIndex();
+  }
+}
+
 export function buildFullSearchIndex(tours: TourListing[]): SearchIndexItem[] {
   return [...buildTourSearchItems(tours), ...buildStaticSearchIndex()];
 }
 
 /** Alias for static/content index without tours. */
 export const buildSiteSearchIndex = buildStaticSearchIndex;
+export const buildSiteSearchIndexServer = buildStaticSearchIndexServer;

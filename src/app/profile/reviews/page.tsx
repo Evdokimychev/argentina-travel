@@ -4,11 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Star, MessageSquare } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
-import { getUserReviews, updateReviewStatus } from "@/lib/reviews-store";
+import { getUserReviews, submitReviewForModeration } from "@/lib/reviews-store";
 import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
 import { REVIEW_STATUS_LABELS } from "@/data/tourist-dashboard";
 import { formatDateShortWithYear } from "@/lib/utils";
 import { getReviewListingHref } from "@/lib/review-listing-link";
+import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
 import { cn } from "@/lib/cn";
 import {
   cabinetCardClass,
@@ -35,21 +36,71 @@ function RatingStars({ rating }: { rating: number }) {
   );
 }
 
+function statusBadgeClass(status: TouristReview["status"]): string {
+  switch (status) {
+    case "published":
+      return "bg-emerald-50 text-emerald-800";
+    case "pending":
+      return "bg-amber-50 text-amber-800";
+    case "rejected":
+      return "bg-red-50 text-red-700";
+    default:
+      return "bg-gray-100 text-slate";
+  }
+}
+
 export default function ProfileReviewsPage() {
   const { user } = useAuth();
   const [reviews, setReviews] = useState<TouristReview[]>([]);
+  const [submittingId, setSubmittingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
 
-    function refresh() {
+    async function refresh() {
+      if (isSupabaseReviewsEnabled()) {
+        try {
+          const res = await fetch("/api/reviews");
+          if (res.ok) {
+            const json = (await res.json()) as { reviews?: TouristReview[] };
+            if (json.reviews?.length) {
+              setReviews(json.reviews);
+              return;
+            }
+          }
+        } catch {
+          // fallback below
+        }
+      }
       setReviews(getUserReviews(user!.id));
     }
 
-    refresh();
-    window.addEventListener(REVIEWS_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(REVIEWS_UPDATED_EVENT, refresh);
+    void refresh();
+    function onUpdated() {
+      void refresh();
+    }
+    window.addEventListener(REVIEWS_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(REVIEWS_UPDATED_EVENT, onUpdated);
   }, [user]);
+
+  async function handleSubmit(reviewId: string) {
+    if (!user) return;
+    setSubmittingId(reviewId);
+    try {
+      await submitReviewForModeration(reviewId, user);
+      if (isSupabaseReviewsEnabled()) {
+        const res = await fetch("/api/reviews");
+        if (res.ok) {
+          const json = (await res.json()) as { reviews?: TouristReview[] };
+          setReviews(json.reviews ?? []);
+          return;
+        }
+      }
+      setReviews(getUserReviews(user.id));
+    } finally {
+      setSubmittingId(null);
+    }
+  }
 
   if (!user) return null;
 
@@ -57,7 +108,7 @@ export default function ProfileReviewsPage() {
     <div className={cabinetPanelClass}>
       <h1 className={cabinetPageTitleClass}>Мои отзывы</h1>
       <p className={cabinetPageSubtitleClass}>
-        Отзывы о турах и экскурсиях после поездки. Публикация — после модерации организатора.
+        Отзывы о турах после поездки. Перед публикацией на сайте отзыв проходит модерацию.
       </p>
 
       {reviews.length > 0 ? (
@@ -79,9 +130,7 @@ export default function ProfileReviewsPage() {
                 <span
                   className={cn(
                     "rounded-full px-2.5 py-1 text-xs font-semibold",
-                    review.status === "published"
-                      ? "bg-emerald-50 text-emerald-800"
-                      : "bg-gray-100 text-slate"
+                    statusBadgeClass(review.status)
                   )}
                 >
                   {REVIEW_STATUS_LABELS[review.status]}
@@ -90,19 +139,26 @@ export default function ProfileReviewsPage() {
 
               <p className="mt-3 text-sm leading-relaxed text-slate">{review.text}</p>
 
+              {review.status === "rejected" && review.moderationNotes ? (
+                <p className="mt-2 text-xs text-red-600">
+                  Комментарий модератора: {review.moderationNotes}
+                </p>
+              ) : null}
+
               <div className="mt-3 flex flex-wrap items-center justify-between gap-3 text-xs text-slate">
                 <span>
                   {review.tripDate
                     ? `Поездка: ${formatDateShortWithYear(review.tripDate)}`
                     : `Создан: ${formatDateShortWithYear(review.createdAt.slice(0, 10))}`}
                 </span>
-                {review.status === "draft" ? (
+                {review.status === "draft" || review.status === "rejected" ? (
                   <button
                     type="button"
-                    onClick={() => user && updateReviewStatus(review.id, "published", user)}
+                    disabled={submittingId === review.id}
+                    onClick={() => void handleSubmit(review.id)}
                     className={cabinetLinkClass}
                   >
-                    Отправить на публикацию
+                    {submittingId === review.id ? "Отправка…" : "Отправить на модерацию"}
                   </button>
                 ) : null}
               </div>

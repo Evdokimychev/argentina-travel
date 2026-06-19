@@ -21,6 +21,7 @@ function parseBody(value: Json): CmsDocumentBody {
       kind: "blog",
       excerpt: typeof record.excerpt === "string" ? record.excerpt : undefined,
       content: typeof record.content === "string" ? record.content : undefined,
+      featured: typeof record.featured === "boolean" ? record.featured : undefined,
       sections: Array.isArray(record.sections)
         ? (record.sections as { title: string; body: string }[])
         : undefined,

@@ -144,6 +144,72 @@ export interface Database {
         };
         Relationships: [];
       };
+      tourist_reviews: {
+        Row: {
+          id: string;
+          user_id: string | null;
+          organizer_user_id: string | null;
+          organizer_tour_id: string | null;
+          tour_id: string;
+          tour_slug: string;
+          tour_title: string;
+          booking_id: string | null;
+          listing_kind: string;
+          rating: number;
+          review_text: string;
+          photos: Json;
+          trip_date: string | null;
+          status: string;
+          moderation_notes: string | null;
+          moderated_by: string | null;
+          moderated_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          user_id?: string | null;
+          organizer_user_id?: string | null;
+          organizer_tour_id?: string | null;
+          tour_id: string;
+          tour_slug: string;
+          tour_title: string;
+          booking_id?: string | null;
+          listing_kind?: string;
+          rating: number;
+          review_text?: string;
+          photos?: Json;
+          trip_date?: string | null;
+          status?: string;
+          moderation_notes?: string | null;
+          moderated_by?: string | null;
+          moderated_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string | null;
+          organizer_user_id?: string | null;
+          organizer_tour_id?: string | null;
+          tour_id?: string;
+          tour_slug?: string;
+          tour_title?: string;
+          booking_id?: string | null;
+          listing_kind?: string;
+          rating?: number;
+          review_text?: string;
+          photos?: Json;
+          trip_date?: string | null;
+          status?: string;
+          moderation_notes?: string | null;
+          moderated_by?: string | null;
+          moderated_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       tours: {
         Row: {
           id: string;

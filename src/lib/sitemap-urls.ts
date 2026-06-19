@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/data/blog";
+import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { FLIGHT_POPULAR_ROUTES } from "@/data/flight-popular-routes";
 import { marketplaceTours } from "@/data/marketplace-tours";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
@@ -18,6 +19,7 @@ import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
 import { getAllDestinations } from "@/lib/destinations";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { absoluteUrl } from "@/lib/site-url";
+import type { BlogPost } from "@/types";
 
 function isIndexableInternalPath(href: string): boolean {
   if (!href.startsWith("/")) return false;
@@ -41,6 +43,15 @@ function toSitemapEntry(
     url: absoluteUrl(path),
     lastModified: lastModified ? new Date(lastModified) : new Date(),
   };
+}
+
+async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
+  try {
+    const mergedCatalog = await resolveBlogCatalog();
+    return mergedCatalog.length > 0 ? mergedCatalog : blogPosts;
+  } catch {
+    return blogPosts;
+  }
 }
 
 export async function collectTourSitemapPaths(): Promise<string[]> {
@@ -125,7 +136,7 @@ export async function collectPlacesSitemapPaths(): Promise<string[]> {
   return uniquePaths(paths);
 }
 
-export async function collectSitemapPaths(): Promise<string[]> {
+export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
     .filter(isIndexableInternalPath);
@@ -138,7 +149,8 @@ export async function collectSitemapPaths(): Promise<string[]> {
   const tourPaths = await collectTourSitemapPaths();
   const excursionPaths = await collectExcursionSitemapPaths();
   const placesPaths = await collectPlacesSitemapPaths();
-  const blogPaths = blogPosts.map((post) => `/blog/${post.slug}`);
+  const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
+  const blogPaths = blogCatalog.map((post) => `/blog/${post.slug}`);
   const contentPaths = getAllContentPages().map((page) => contentPageHref(page));
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
   const destinationPaths = getAllDestinations().map(
@@ -171,12 +183,13 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const contentUpdatedAt = new Map(
     getAllContentPages().map((page) => [contentPageHref(page), page.updatedAt])
   );
-  const blogUpdatedAt = new Map(blogPosts.map((post) => [`/blog/${post.slug}`, post.date]));
+  const blogCatalog = await collectBlogSitemapCatalog();
+  const blogUpdatedAt = new Map(blogCatalog.map((post) => [`/blog/${post.slug}`, post.date]));
   const legalUpdatedAt = new Map(
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
 
-  const paths = await collectSitemapPaths();
+  const paths = await collectSitemapPaths({ blogCatalog });
 
   return paths.map((path) => {
     const lastModified =

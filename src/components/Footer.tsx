@@ -15,6 +15,7 @@ import {
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
+import type { SiteLegalFooterInfo } from "@/components/SiteChrome";
 
 function FooterColumn({
   title,
@@ -56,7 +57,7 @@ function FooterLinkList({
   );
 }
 
-export default function Footer() {
+export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo }) {
   const { t } = useLocaleCurrency();
   const navMid = Math.ceil(SITE_FOOTER_NAV.length / 2);
   const navPrimary = SITE_FOOTER_NAV.slice(0, navMid);
@@ -158,9 +159,23 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 flex flex-col gap-3 border-t border-gray-200/80 pt-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} Пора в Аргентину. Все права защищены.</p>
+          <div>
+            <p>© {new Date().getFullYear()} Пора в Аргентину. Все права защищены.</p>
+            {siteLegal?.legalLine ? (
+              <p className="mt-1 text-xs text-slate/80">{siteLegal.legalLine}</p>
+            ) : null}
+          </div>
           <p className="text-xs text-slate/70">
-            Демо-платформа · данные в браузере до подключения облака
+            {siteLegal?.supportEmail ? (
+              <>
+                Поддержка:{" "}
+                <a href={`mailto:${siteLegal.supportEmail}`} className="text-sky hover:underline">
+                  {siteLegal.supportEmail}
+                </a>
+              </>
+            ) : (
+              "Маркетплейс авторских туров"
+            )}
           </p>
         </div>
       </div>

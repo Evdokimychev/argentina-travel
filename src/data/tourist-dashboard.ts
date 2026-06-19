@@ -33,5 +33,7 @@ export const REVIEW_STATUS_LABELS: Record<
   string
 > = {
   draft: "Черновик",
+  pending: "На модерации",
   published: "Опубликован",
+  rejected: "Отклонён",
 };

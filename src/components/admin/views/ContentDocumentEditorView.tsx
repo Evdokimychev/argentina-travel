@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -11,15 +11,20 @@ import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminContext } from "@/context/AdminContext";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
+import { buildCmsRevisionDiff } from "@/lib/cms/revision-diff";
 import type { LegalSection } from "@/data/legal-content";
-import type { CmsDocument, CmsLegalBody, CmsRevision } from "@/types/cms-content";
+import type { BlogPostSection } from "@/types";
+import type { CmsDocument, CmsDocumentBody, CmsLegalBody, CmsRevision } from "@/types/cms-content";
 
 type Props = {
   documentId: string;
 };
 
 type DocumentResponse = { document?: CmsDocument; error?: string };
-type RevisionsResponse = { revisions?: CmsRevision[] };
+type CmsRevisionListItem = CmsRevision & { authorName?: string | null };
+type RevisionsResponse = { revisions?: CmsRevisionListItem[]; error?: string };
+type RevisionResponse = { revision?: CmsRevision; error?: string };
+type RestoreResponse = { document?: CmsDocument; error?: string };
 
 function linesToList(text: string): string[] {
   return text
@@ -44,8 +49,15 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [sections, setSections] = useState<LegalSection[]>([]);
+  const [excerpt, setExcerpt] = useState("");
+  const [blogSections, setBlogSections] = useState<BlogPostSection[]>([]);
+  const [blogFeatured, setBlogFeatured] = useState(false);
   const [status, setStatus] = useState<CmsDocument["status"]>("draft");
-  const [revisions, setRevisions] = useState<CmsRevision[]>([]);
+  const [revisions, setRevisions] = useState<CmsRevisionListItem[]>([]);
+  const [selectedRevision, setSelectedRevision] = useState<CmsRevision | null>(null);
+  const [selectedRevisionMeta, setSelectedRevisionMeta] = useState<CmsRevisionListItem | null>(null);
+  const [revisionLoadingId, setRevisionLoadingId] = useState<string | null>(null);
+  const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(null);
 
   const encodedId = encodeURIComponent(documentId);
 
@@ -72,9 +84,15 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       if (document.body.kind === "legal") {
         setDescription(document.body.description);
         setSections(document.body.sections);
+      } else if (document.body.kind === "blog") {
+        setExcerpt(document.body.excerpt ?? "");
+        setBlogFeatured(document.body.featured ?? false);
+        setBlogSections(document.body.sections ?? [{ title: "Основной текст", body: document.body.content ?? "" }]);
       }
 
       setRevisions(revJson.revisions ?? []);
+      setSelectedRevision(null);
+      setSelectedRevisionMeta(null);
     } catch (loadError) {
       setError(loadError instanceof Error ? loadError.message : "Ошибка загрузки");
     } finally {
@@ -86,12 +104,89 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     void load();
   }, [load]);
 
-  function buildBody(): CmsLegalBody {
+  function buildBody(): CmsDocumentBody {
+    if (doc?.body.kind === "blog") {
+      return {
+        kind: "blog",
+        excerpt: excerpt.trim(),
+        sections: blogSections,
+        featured: blogFeatured,
+      };
+    }
     return {
       kind: "legal",
       description: description.trim(),
       sections,
-    };
+    } satisfies CmsLegalBody;
+  }
+
+  const revisionDiff = useMemo(() => {
+    if (!selectedRevision || !doc) return null;
+    return buildCmsRevisionDiff(
+      {
+        title: title.trim(),
+        body: buildBody(),
+      },
+      {
+        title: selectedRevision.title,
+        body: selectedRevision.body,
+      }
+    );
+  }, [blogSections, description, doc, excerpt, sections, selectedRevision, title]);
+
+  async function openRevision(revision: CmsRevisionListItem) {
+    if (selectedRevisionMeta?.id === revision.id) {
+      setSelectedRevision(null);
+      setSelectedRevisionMeta(null);
+      return;
+    }
+
+    setSelectedRevisionMeta(revision);
+    setRevisionLoadingId(revision.id);
+    try {
+      const revisionId = encodeURIComponent(revision.id);
+      const res = await fetch(`/api/admin/content/documents/${encodedId}/revisions/${revisionId}`);
+      const json = (await res.json()) as RevisionResponse;
+      if (!res.ok || !json.revision) {
+        throw new Error(json.error ?? "Не удалось загрузить ревизию");
+      }
+      setSelectedRevision(json.revision);
+    } catch (revisionError) {
+      setSelectedRevision(null);
+      setSelectedRevisionMeta(null);
+      alert(revisionError instanceof Error ? revisionError.message : "Ошибка");
+    } finally {
+      setRevisionLoadingId(null);
+    }
+  }
+
+  async function restoreRevision(revision: CmsRevisionListItem, publish = false) {
+    const message = publish
+      ? "Восстановить эту ревизию и сразу опубликовать?"
+      : "Восстановить эту ревизию как черновик?";
+    if (!window.confirm(message)) return;
+
+    setSaving(true);
+    setRestoringRevisionId(revision.id);
+    try {
+      const revisionId = encodeURIComponent(revision.id);
+      const res = await fetch(
+        `/api/admin/content/documents/${encodedId}/revisions/${revisionId}/restore`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ publish }),
+        }
+      );
+      const json = (await res.json()) as RestoreResponse;
+      if (!res.ok) throw new Error(json.error ?? "Не удалось восстановить ревизию");
+      await load();
+    } catch (restoreError) {
+      alert(restoreError instanceof Error ? restoreError.message : "Ошибка");
+    } finally {
+      setRestoringRevisionId(null);
+      setSaving(false);
+    }
   }
 
   async function saveDraft() {
@@ -162,6 +257,18 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     setSections((prev) => prev.filter((_, i) => i !== index));
   }
 
+  function removeBlogSection(index: number) {
+    setBlogSections((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  function updateBlogSection(index: number, patch: Partial<BlogPostSection>) {
+    setBlogSections((prev) => prev.map((section, i) => (i === index ? { ...section, ...patch } : section)));
+  }
+
+  function addBlogSection() {
+    setBlogSections((prev) => [...prev, { title: "", body: "" }]);
+  }
+
   if (loading) {
     return (
       <CapabilityGate capability="content.edit">
@@ -185,15 +292,9 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     );
   }
 
-  if (doc.body.kind !== "legal") {
-    return (
-      <CapabilityGate capability="content.edit">
-        <AdminPageShell>
-          <p className="text-sm text-slate">Редактор v1.2 поддерживает только legal-документы.</p>
-        </AdminPageShell>
-      </CapabilityGate>
-    );
-  }
+  const isLegal = doc.body.kind === "legal";
+  const isBlog = doc.body.kind === "blog";
+  const publicHref = isLegal ? `/legal/${doc.slug}` : `/blog/${doc.slug}`;
 
   return (
     <CapabilityGate capability="content.edit">
@@ -212,11 +313,17 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 </Button>
               ) : null}
               <Link
-                href={`/legal/${doc.slug}`}
+                href={`/admin/content/documents/${encodedId}/preview`}
+                className="inline-flex h-10 items-center rounded-xl border border-gray-200 px-4 text-sm font-medium text-charcoal hover:border-sky/40 hover:text-sky"
+              >
+                Предпросмотр
+              </Link>
+              <Link
+                href={publicHref}
                 target="_blank"
                 className="inline-flex h-10 items-center rounded-xl border border-gray-200 px-4 text-sm font-medium text-charcoal hover:border-sky/40 hover:text-sky"
               >
-                Просмотр
+                На сайте
               </Link>
             </div>
           }
@@ -229,10 +336,30 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               <Input value={title} onChange={(e) => setTitle(e.target.value)} />
             </label>
 
-            <label className="block space-y-1 text-sm">
-              <span className="text-slate">Описание</span>
-              <Input value={description} onChange={(e) => setDescription(e.target.value)} />
-            </label>
+            {isLegal ? (
+              <label className="block space-y-1 text-sm">
+                <span className="text-slate">Описание</span>
+                <Input value={description} onChange={(e) => setDescription(e.target.value)} />
+              </label>
+            ) : null}
+
+            {isBlog ? (
+              <label className="block space-y-1 text-sm">
+                <span className="text-slate">Анонс</span>
+                <Input value={excerpt} onChange={(e) => setExcerpt(e.target.value)} />
+              </label>
+            ) : null}
+
+            {isBlog ? (
+              <label className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal">
+                <input
+                  type="checkbox"
+                  checked={blogFeatured}
+                  onChange={(e) => setBlogFeatured(e.target.checked)}
+                />
+                Показывать как избранную статью в каталоге
+              </label>
+            ) : null}
 
             <label className="block space-y-1 text-sm">
               <span className="text-slate">Статус</span>
@@ -247,6 +374,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </NativeSelect>
             </label>
 
+            {isLegal ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="font-heading text-lg font-bold text-charcoal">Разделы</h2>
@@ -288,6 +416,40 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 </div>
               ))}
             </div>
+            ) : null}
+
+            {isBlog ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h2 className="font-heading text-lg font-bold text-charcoal">Разделы статьи</h2>
+                <Button size="sm" variant="outline" onClick={addBlogSection}>
+                  Добавить раздел
+                </Button>
+              </div>
+              {blogSections.map((section, index) => (
+                <div key={index} className="space-y-2 rounded-2xl border border-gray-100 p-4">
+                  <div className="flex items-center justify-between gap-2">
+                    <Input
+                      value={section.title}
+                      onChange={(e) => updateBlogSection(index, { title: e.target.value })}
+                      placeholder="Заголовок раздела"
+                    />
+                    <Button size="sm" variant="ghost" onClick={() => removeBlogSection(index)}>
+                      Удалить
+                    </Button>
+                  </div>
+                  <label className="block space-y-1 text-xs text-slate">
+                    Текст
+                    <textarea
+                      className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
+                      value={section.body}
+                      onChange={(e) => updateBlogSection(index, { body: e.target.value })}
+                    />
+                  </label>
+                </div>
+              ))}
+            </div>
+            ) : null}
           </section>
 
           <aside className="space-y-4">
@@ -324,11 +486,87 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 ) : (
                   revisions.map((rev) => (
                     <li key={rev.id}>
-                      #{rev.revisionNumber} · {formatAdminWhen(rev.createdAt)}
+                      <button
+                        type="button"
+                        className={`w-full rounded-xl border px-3 py-2 text-left transition ${
+                          selectedRevisionMeta?.id === rev.id
+                            ? "border-sky/40 bg-sky/5 text-charcoal"
+                            : "border-gray-100 hover:border-sky/30 hover:bg-gray-50"
+                        }`}
+                        onClick={() => void openRevision(rev)}
+                        disabled={revisionLoadingId === rev.id || saving}
+                      >
+                        <p className="font-medium text-charcoal">
+                          #{rev.revisionNumber} · {formatAdminWhen(rev.createdAt)}
+                        </p>
+                        <p className="mt-1 text-[11px] text-slate">
+                          Автор: {rev.authorName || rev.createdBy?.slice(0, 8) || "не указан"}
+                        </p>
+                      </button>
                     </li>
                   ))
                 )}
               </ul>
+
+              {selectedRevisionMeta ? (
+                <div className="mt-4 space-y-3 rounded-2xl border border-gray-100 p-3 text-xs">
+                  <p className="font-medium text-charcoal">
+                    Сравнение с текущей версией · #{selectedRevisionMeta.revisionNumber}
+                  </p>
+
+                  {revisionLoadingId === selectedRevisionMeta.id && !selectedRevision ? (
+                    <p className="text-slate">Загрузка ревизии…</p>
+                  ) : null}
+
+                  {selectedRevision && revisionDiff ? (
+                    revisionDiff.hasChanges ? (
+                      <ul className="max-h-64 space-y-2 overflow-y-auto pr-1">
+                        {revisionDiff.items.map((item, index) => (
+                          <li key={`${item.label}-${index}`} className="rounded-xl border border-gray-100 p-2">
+                            <p className="font-medium text-charcoal">{item.label}</p>
+                            <p className="mt-1 text-[11px] text-slate">
+                              Текущее:{" "}
+                              <span className="whitespace-pre-wrap text-charcoal">
+                                {item.currentValue || "—"}
+                              </span>
+                            </p>
+                            <p className="mt-1 text-[11px] text-slate">
+                              В ревизии:{" "}
+                              <span className="whitespace-pre-wrap text-charcoal">
+                                {item.revisionValue || "—"}
+                              </span>
+                            </p>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-slate">Отличий от текущей версии нет.</p>
+                    )
+                  ) : null}
+
+                  <div className="flex flex-wrap gap-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={!selectedRevision || saving}
+                      onClick={() => void restoreRevision(selectedRevisionMeta)}
+                    >
+                      {restoringRevisionId === selectedRevisionMeta.id ? "Восстановление…" : "Восстановить"}
+                    </Button>
+                    {canPublish ? (
+                      <Button
+                        size="sm"
+                        disabled={!selectedRevision || saving}
+                        onClick={() => void restoreRevision(selectedRevisionMeta, true)}
+                      >
+                        {restoringRevisionId === selectedRevisionMeta.id
+                          ? "Публикация…"
+                          : "Восстановить и опубликовать"}
+                      </Button>
+                    ) : null}
+                  </div>
+                </div>
+              ) : null}
             </section>
           </aside>
         </div>

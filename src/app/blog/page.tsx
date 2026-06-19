@@ -1,4 +1,5 @@
 import BlogIndexView from "@/components/blog/BlogIndexView";
+import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 const PAGE_TITLE = "Блог — советы и маршруты по Аргентине";
@@ -11,6 +12,7 @@ export const metadata = buildPublicPageMetadata({
   path: "/blog",
 });
 
-export default function BlogPage() {
-  return <BlogIndexView />;
+export default async function BlogPage() {
+  const posts = await resolveBlogCatalog();
+  return <BlogIndexView posts={posts} />;
 }

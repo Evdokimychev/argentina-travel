@@ -1,6 +1,7 @@
 /**
  * Admin panel capabilities and navigation types (Phase E).
  */
+import type { AnalyticsPeriod, DailyCountPoint } from "@/types/admin-analytics";
 
 /** Wildcard grants all capabilities. */
 export type AdminCapability =
@@ -40,6 +41,7 @@ export type AdminNavItemId =
   | "dashboard"
   | "operations-leads"
   | "operations-bookings"
+  | "operations-payments"
   | "operations-shop"
   | "marketplace-tours"
   | "marketplace-excursions"
@@ -77,6 +79,23 @@ export interface AdminDashboardSummary {
   pendingModerationCount: number;
   excursionExperienceCount: number;
   bookingCount: number;
+}
+
+export interface AdminDashboardWidgets {
+  period: AnalyticsPeriod;
+  periodStart: string | null;
+  generatedAt: string;
+  totals: {
+    newBookings: number;
+    newLeads: number;
+    shopOrders: number;
+    pendingModeration: number;
+    bookingRevenueUsd: number;
+  };
+  trends: {
+    bookingsByDay: DailyCountPoint[];
+    leadsByDay: DailyCountPoint[];
+  };
 }
 
 /** Legacy capability aliases — map to new granular keys in API guards. */

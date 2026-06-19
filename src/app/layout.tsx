@@ -4,6 +4,7 @@ import Providers from "@/components/Providers";
 import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import { getDefaultOgImageUrl } from "@/components/seo/SiteJsonLd";
+import { loadSiteLegalForFooter } from "@/lib/site-legal-display";
 import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -40,17 +41,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteLegal = await loadSiteLegalForFooter();
+
   return (
     <html lang="ru" className={unbounded.variable} suppressHydrationWarning>
       <body className="min-h-screen flex flex-col antialiased">
         <SiteJsonLd />
         <Providers>
-          <SiteChrome>{children}</SiteChrome>
+          <SiteChrome siteLegal={siteLegal}>{children}</SiteChrome>
         </Providers>
       </body>
     </html>

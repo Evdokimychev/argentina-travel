@@ -152,8 +152,19 @@ export function updateReviewStatus(
     return { error: "Нет доступа" };
   }
 
+  const current = all[index];
+  if (status === "published") {
+    status = "pending";
+  }
+  if (!["draft", "pending", "rejected"].includes(status)) {
+    return { error: "Недопустимый статус" };
+  }
+  if (current.status === "published") {
+    return { error: "Опубликованный отзыв нельзя изменить" };
+  }
+
   const updated: TouristReview = {
-    ...all[index],
+    ...current,
     status,
     updatedAt: new Date().toISOString(),
   };
@@ -161,6 +172,56 @@ export function updateReviewStatus(
   writeAllReviews(all);
   notifyUpdated();
   return { review: updated };
+}
+
+export async function submitReviewForModeration(
+  reviewId: string,
+  actor: SessionUser | null
+): Promise<{ review: TouristReview } | { error: string }> {
+  const all = getAllReviews();
+  const existing = all.find((review) => review.id === reviewId);
+  if (!existing) return { error: "Отзыв не найден" };
+
+  const localResult = updateReviewStatus(reviewId, "pending", actor);
+  if ("error" in localResult) return localResult;
+
+  if (typeof window !== "undefined") {
+    try {
+      const { isSupabaseReviewsEnabled } = await import("@/lib/auth-mode");
+      if (isSupabaseReviewsEnabled()) {
+        await syncReviewToServer({ ...localResult.review, status: "pending" });
+        const res = await fetch(`/api/reviews/${encodeURIComponent(reviewId)}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "submit" }),
+        });
+        if (res.ok) {
+          const json = (await res.json()) as { review?: TouristReview };
+          if (json.review) return { review: json.review };
+        }
+      }
+    } catch {
+      // localStorage fallback already applied
+    }
+  }
+
+  return localResult;
+}
+
+export async function syncReviewToServer(
+  review: TouristReview,
+  organizerTourId?: string
+): Promise<void> {
+  if (typeof window === "undefined") return;
+  try {
+    await fetch("/api/reviews", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ review, organizerTourId }),
+    });
+  } catch {
+    // non-blocking
+  }
 }
 
 export function getUserReviewsCount(userId: string): number {

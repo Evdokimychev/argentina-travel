@@ -4,7 +4,8 @@ import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createCmsDocument, listCmsDocuments } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
-import { legalBodyFromTs, type CmsDocType, type CmsDocumentBody } from "@/types/cms-content";
+import { getBlogPostBySlug } from "@/data/blog";
+import { legalBodyFromTs, blogBodyFromTs, type CmsDocType, type CmsDocumentBody } from "@/types/cms-content";
 
 type PostBody = {
   docType?: CmsDocType;
@@ -50,6 +51,15 @@ export async function POST(request: Request) {
     }
     title = title || source.title;
     cmsBody = legalBodyFromTs(source);
+  }
+
+  if (body.importFromSource && docType === "blog") {
+    const source = getBlogPostBySlug(slug);
+    if (!source) {
+      return NextResponse.json({ error: "Исходная статья не найдена" }, { status: 404 });
+    }
+    title = title || source.title;
+    cmsBody = blogBodyFromTs(source);
   }
 
   if (!title || !cmsBody) {

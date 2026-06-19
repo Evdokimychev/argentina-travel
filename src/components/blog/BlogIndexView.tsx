@@ -22,35 +22,48 @@ import { getEditorialProgress } from "@/data/blog-editorial";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
+import type { BlogPost } from "@/types";
 
 const PAGE_SIZE = 12;
 
-export default function BlogIndexView() {
+type BlogIndexViewProps = {
+  posts?: BlogPost[];
+};
+
+export default function BlogIndexView({ posts }: BlogIndexViewProps) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const catalogRef = useRef<HTMLElement>(null);
 
-  const editorialPosts = useMemo(() => sortBlogPostsByDate(getEditorialBlogPosts()), []);
-  const categoriesWithCounts = useMemo(() => getBlogCategoriesWithCounts(blogPosts), []);
-  const tags = useMemo(() => getTopBlogTags(blogPosts, 14), []);
-  const stats = useMemo(() => computeBlogStats(blogPosts), []);
+  const catalogPosts = useMemo(
+    () => sortBlogPostsByDate(posts?.length ? posts : blogPosts),
+    [posts],
+  );
+  const editorialPosts = useMemo(() => {
+    if (!posts?.length) return sortBlogPostsByDate(getEditorialBlogPosts());
+    const featuredPosts = sortBlogPostsByDate(catalogPosts.filter((post) => post.featured)).slice(0, 8);
+    return featuredPosts.length > 0 ? featuredPosts : sortBlogPostsByDate(getEditorialBlogPosts());
+  }, [posts, catalogPosts]);
+  const categoriesWithCounts = useMemo(() => getBlogCategoriesWithCounts(catalogPosts), [catalogPosts]);
+  const tags = useMemo(() => getTopBlogTags(catalogPosts, 14), [catalogPosts]);
+  const stats = useMemo(() => computeBlogStats(catalogPosts), [catalogPosts]);
   const editorialProgress = useMemo(() => getEditorialProgress(), []);
-  const freshPosts = useMemo(() => sortBlogPostsByDate(blogPosts).slice(0, 4), []);
+  const freshPosts = useMemo(() => catalogPosts.slice(0, 4), [catalogPosts]);
 
   const hasActiveFilters = Boolean(query.trim() || activeCategory !== "Все" || activeTag);
 
   const filteredPosts = useMemo(
     () =>
       sortBlogPostsByDate(
-        filterBlogPosts(blogPosts, {
+        filterBlogPosts(catalogPosts, {
           query,
           category: activeCategory,
           tag: activeTag,
         }),
       ),
-    [query, activeCategory, activeTag],
+    [catalogPosts, query, activeCategory, activeTag],
   );
 
   const displayedPosts = filteredPosts.slice(0, visibleCount);

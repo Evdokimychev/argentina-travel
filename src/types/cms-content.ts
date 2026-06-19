@@ -1,4 +1,6 @@
 import type { LegalDocument, LegalSection } from "@/data/legal-content";
+import type { BlogPost } from "@/types";
+import { formatBlogReadTime } from "@/lib/blog-utils";
 
 /** Document types supported by CMS v1.2 */
 export type CmsDocType = "legal" | "blog";
@@ -16,6 +18,7 @@ export type CmsBlogBody = {
   excerpt?: string;
   sections?: { title: string; body: string }[];
   content?: string;
+  featured?: boolean;
 };
 
 export type CmsDocumentBody = CmsLegalBody | CmsBlogBody;
@@ -81,5 +84,54 @@ export function legalBodyFromTs(source: LegalDocument): CmsLegalBody {
     kind: "legal",
     description: source.description,
     sections: source.sections,
+  };
+}
+
+export function blogBodyFromTs(source: BlogPost): CmsBlogBody {
+  return {
+    kind: "blog",
+    excerpt: source.excerpt,
+    sections: source.sections,
+    content: source.content,
+    featured: source.featured,
+  };
+}
+
+export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost | null {
+  if (doc.body.kind !== "blog") return null;
+
+  const sections = doc.body.sections ?? fallback?.sections;
+  const content =
+    doc.body.content?.trim() ||
+    (sections?.map((s) => `${s.title}\n\n${s.body}`).join("\n\n") ?? "") ||
+    fallback?.content ||
+    "";
+
+  const readTimeMinutes =
+    fallback?.readTimeMinutes ??
+    Math.max(3, Math.ceil(content.split(/\s+/).filter(Boolean).length / 180));
+
+  return {
+    id: fallback?.id ?? doc.id,
+    slug: doc.slug,
+    title: doc.title,
+    seoTitle: doc.seo.title ?? fallback?.seoTitle ?? doc.title,
+    excerpt: doc.body.excerpt ?? fallback?.excerpt ?? "",
+    content,
+    sections,
+    author: fallback?.author ?? "Редакция",
+    authorBio: fallback?.authorBio,
+    authorAvatar: fallback?.authorAvatar,
+    date: doc.publishedAt?.slice(0, 10) ?? fallback?.date ?? doc.updatedAt.slice(0, 10),
+    image: fallback?.image ?? "/logo-light.svg",
+    category: fallback?.category ?? "Статья",
+    readTime: fallback?.readTime ?? formatBlogReadTime(readTimeMinutes),
+    readTimeMinutes,
+    views: fallback?.views ?? 0,
+    tags: fallback?.tags ?? [],
+    featured: doc.body.featured ?? fallback?.featured,
+    editorialReviewed: fallback?.editorialReviewed,
+    relatedResources: fallback?.relatedResources,
+    tourEmbeds: fallback?.tourEmbeds,
   };
 }

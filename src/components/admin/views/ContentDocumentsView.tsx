@@ -20,10 +20,12 @@ type LegalEditableRow = {
   cmsStatus: string | null;
   hasOverride: boolean;
   publicSource: "cms" | "file";
+  featuredFromCms?: boolean;
 };
 
 type ContentResponse = ContentInventorySummary & {
   legalEditable?: LegalEditableRow[];
+  blogEditable?: LegalEditableRow[];
   cmsCount?: number;
 };
 
@@ -86,12 +88,75 @@ export default function ContentDocumentsView() {
     }
   }
 
+  async function createBlogOverride(slug: string) {
+    setCreatingSlug(slug);
+    try {
+      const res = await fetch("/api/admin/content/documents", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ docType: "blog", slug, importFromSource: true }),
+      });
+      const json = (await res.json()) as { document?: { id: string }; error?: string };
+      if (!res.ok) throw new Error(json.error ?? "Не удалось создать документ");
+      if (json.document?.id) {
+        router.push(`/admin/content/documents/${encodeURIComponent(json.document.id)}`);
+      } else {
+        await refresh();
+      }
+    } catch (createError) {
+      alert(createError instanceof Error ? createError.message : "Ошибка");
+    } finally {
+      setCreatingSlug(null);
+    }
+  }
+
+  function renderCmsRow(row: LegalEditableRow, createOverride: (slug: string) => void) {
+    return (
+      <li key={row.slug} className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
+        <span className="font-medium text-charcoal">{row.title}</span>
+        <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-slate">
+          {row.publicSource === "cms" ? "На сайте: CMS" : "На сайте: файл"}
+        </span>
+        {row.cmsStatus ? (
+          <span className="text-xs text-sky">{CMS_STATUS_LABELS[row.cmsStatus] ?? row.cmsStatus}</span>
+        ) : null}
+        {row.featuredFromCms ? (
+          <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs text-amber-800">
+            Избранное: CMS
+          </span>
+        ) : null}
+        <div className="ml-auto flex gap-2">
+          <Link href={row.href} target="_blank" className="text-xs text-sky hover:underline">
+            Просмотр
+          </Link>
+          {row.hasOverride ? (
+            <Link
+              href={`/admin/content/documents/${encodeURIComponent(row.cmsId)}`}
+              className="text-xs font-medium text-charcoal hover:text-sky"
+            >
+              Редактировать
+            </Link>
+          ) : (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={creatingSlug === row.slug}
+              onClick={() => void createOverride(row.slug)}
+            >
+              Создать CMS-версию
+            </Button>
+          )}
+        </div>
+      </li>
+    );
+  }
+
   return (
     <CapabilityGate capability="content.edit">
       <AdminPageShell>
         <AdminPageHeader
           title="Документы контента"
-          subtitle="Файловый контент и CMS-версии legal-документов (v1.2)"
+          subtitle="Файловый контент и CMS-версии legal-документов и статей"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -125,41 +190,18 @@ export default function ContentDocumentsView() {
               Юридические документы (CMS)
             </h2>
             <ul className="divide-y divide-gray-100">
-              {data.legalEditable.map((row) => (
-                <li key={row.slug} className="flex flex-wrap items-center gap-3 px-5 py-4 text-sm">
-                  <span className="font-medium text-charcoal">{row.title}</span>
-                  <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-slate">
-                    {row.publicSource === "cms" ? "На сайте: CMS" : "На сайте: файл"}
-                  </span>
-                  {row.cmsStatus ? (
-                    <span className="text-xs text-sky">
-                      {CMS_STATUS_LABELS[row.cmsStatus] ?? row.cmsStatus}
-                    </span>
-                  ) : null}
-                  <div className="ml-auto flex gap-2">
-                    <Link href={row.href} target="_blank" className="text-xs text-sky hover:underline">
-                      Просмотр
-                    </Link>
-                    {row.hasOverride ? (
-                      <Link
-                        href={`/admin/content/documents/${encodeURIComponent(row.cmsId)}`}
-                        className="text-xs font-medium text-charcoal hover:text-sky"
-                      >
-                        Редактировать
-                      </Link>
-                    ) : (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        disabled={creatingSlug === row.slug}
-                        onClick={() => void createLegalOverride(row.slug)}
-                      >
-                        Создать CMS-версию
-                      </Button>
-                    )}
-                  </div>
-                </li>
-              ))}
+              {data.legalEditable.map((row) => renderCmsRow(row, createLegalOverride))}
+            </ul>
+          </section>
+        ) : null}
+
+        {data?.blogEditable?.length ? (
+          <section className={`${cabinetCardClass} overflow-hidden`}>
+            <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+              Статьи (CMS)
+            </h2>
+            <ul className="divide-y divide-gray-100">
+              {data.blogEditable.map((row) => renderCmsRow(row, createBlogOverride))}
             </ul>
           </section>
         ) : null}

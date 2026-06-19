@@ -53,7 +53,7 @@ export interface BookingTraveler {
   phone?: string;
 }
 
-export type TouristReviewStatus = "draft" | "published";
+export type TouristReviewStatus = "draft" | "pending" | "published" | "rejected";
 
 export type FavoriteKind = "tour" | "excursion" | "place";
 
@@ -149,6 +149,8 @@ export interface TouristReview {
   photos: string[];
   tripDate?: string;
   status: TouristReviewStatus;
+  /** Комментарий модератора при отклонении */
+  moderationNotes?: string;
   createdAt: string;
   updatedAt: string;
 }

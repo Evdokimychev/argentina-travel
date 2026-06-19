@@ -12,6 +12,7 @@ import {
   ShoppingBag,
   Shield,
   Users,
+  Wallet,
 } from "lucide-react";
 import { cn } from "@/lib/cn";
 import {
@@ -37,6 +38,7 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   dashboard: LayoutGrid,
   "operations-leads": ClipboardList,
   "operations-bookings": ClipboardList,
+  "operations-payments": Wallet,
   "operations-shop": ShoppingBag,
   "marketplace-tours": MapPin,
   "marketplace-excursions": MapPin,

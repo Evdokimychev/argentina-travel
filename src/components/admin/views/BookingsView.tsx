@@ -1,11 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
+import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
@@ -14,7 +16,9 @@ import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-s
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import FormattedPrice from "@/components/FormattedPrice";
 import type { AdminBookingSummary, AdminBookingsStats } from "@/lib/admin/bookings-server";
+import { normalizeBookingPaymentStatus } from "@/lib/booking-params";
 import type { Booking, BookingStatusActive } from "@/types/tourist";
+import type { BookingPaymentStatus } from "@/types/booking-params";
 
 type BookingsResponse = {
   bookings?: AdminBookingSummary[];
@@ -24,6 +28,7 @@ type BookingsResponse = {
 type StatusFilter = "all" | BookingStatusActive;
 
 export default function BookingsView() {
+  const searchParams = useSearchParams();
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const url =
     statusFilter === "all"
@@ -77,6 +82,12 @@ export default function BookingsView() {
       setUpdatingId(null);
     }
   }
+
+  useEffect(() => {
+    const bookingIdFromQuery = searchParams.get("bookingId");
+    if (!bookingIdFromQuery || bookingIdFromQuery === detailId) return;
+    void openDetail(bookingIdFromQuery);
+  }, [searchParams, detailId]);
 
   return (
     <CapabilityGate capability="operations.bookings">
@@ -150,6 +161,7 @@ export default function BookingsView() {
                   <th className="px-4 py-3 font-medium text-slate">Заявка</th>
                   <th className="px-4 py-3 font-medium text-slate">Турист</th>
                   <th className="px-4 py-3 font-medium text-slate">Статус</th>
+                  <th className="px-4 py-3 font-medium text-slate">Оплата</th>
                   <th className="px-4 py-3 font-medium text-slate">Сумма</th>
                   <th className="px-4 py-3 font-medium text-slate">Действия</th>
                 </tr>
@@ -157,7 +169,7 @@ export default function BookingsView() {
               <tbody className="divide-y divide-gray-100">
                 {filtered.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="px-4 py-10 text-center text-slate">
+                    <td colSpan={6} className="px-4 py-10 text-center text-slate">
                       {loading ? "Загрузка…" : "Заявок не найдено"}
                     </td>
                   </tr>
@@ -185,6 +197,13 @@ export default function BookingsView() {
                       </td>
                       <td className="px-4 py-3">
                         <BookingStatusBadge status={booking.status} />
+                      </td>
+                      <td className="px-4 py-3">
+                        <BookingPaymentStatusBadge
+                          status={normalizeBookingPaymentStatus(
+                            booking.paymentStatus as BookingPaymentStatus | "unpaid" | undefined
+                          )}
+                        />
                       </td>
                       <td className="px-4 py-3">
                         <FormattedPrice priceUsd={booking.totalPriceUsd} />

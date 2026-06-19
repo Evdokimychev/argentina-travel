@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
-import { invalidateSiteFeaturesCache } from "@/lib/site-settings-server";
+import { invalidateSiteFeaturesCache, invalidateSiteLegalCache } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Json } from "@/types/database";
 
@@ -52,6 +52,9 @@ export async function PATCH(request: Request) {
 
   if (key === "site.features") {
     invalidateSiteFeaturesCache();
+  }
+  if (key === "site.legal") {
+    invalidateSiteLegalCache();
   }
 
   await writeAdminAuditLog({

@@ -182,3 +182,43 @@ export async function listCmsRevisions(
   if (error || !data) return [];
   return data.map(rowToCmsRevision);
 }
+
+export async function getCmsRevisionById(
+  supabase: DbClient,
+  documentId: string,
+  revisionId: string
+): Promise<CmsRevision | null> {
+  const { data, error } = await supabase
+    .from("content_revisions")
+    .select("*")
+    .eq("document_id", documentId)
+    .eq("id", revisionId)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  return rowToCmsRevision(data);
+}
+
+export async function restoreCmsDocumentFromRevision(
+  supabase: DbClient,
+  documentId: string,
+  revisionId: string,
+  input: {
+    actorId: string;
+    publish?: boolean;
+  }
+): Promise<{ document: CmsDocument; restoredRevision: CmsRevision } | { error: string }> {
+  const revision = await getCmsRevisionById(supabase, documentId, revisionId);
+  if (!revision) return { error: "Ревизия не найдена" };
+
+  const result = await updateCmsDocument(supabase, documentId, {
+    title: revision.title,
+    body: revision.body,
+    seo: revision.seo,
+    status: input.publish ? "published" : "draft",
+    actorId: input.actorId,
+  });
+
+  if ("error" in result) return result;
+  return { document: result.document, restoredRevision: revision };
+}

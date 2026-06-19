@@ -30,6 +30,11 @@ const MODERATION_STATUS_LABELS: Record<string, string> = {
   rejected: "Отклонено",
 };
 
+const ENTITY_TYPE_LABELS: Record<string, string> = {
+  tour: "Тур",
+  review: "Отзыв",
+};
+
 export default function ModerationView() {
   const { data, loading, error, refresh } = useAdminApi<ModerationResponse>("/api/admin/moderation");
   const {
@@ -91,7 +96,7 @@ export default function ModerationView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Модерация"
-          subtitle="Очередь проверки туров перед публикацией"
+          subtitle="Очередь проверки туров и отзывов перед публикацией"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -115,7 +120,7 @@ export default function ModerationView() {
                 <li key={item.id} className="space-y-3 px-5 py-4 text-sm">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-800">
-                      {item.entityType}
+                      {ENTITY_TYPE_LABELS[item.entityType] ?? item.entityType}
                     </span>
                     <span className="rounded-full bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
                       {MODERATION_STATUS_LABELS[item.status] ?? item.status}
@@ -123,7 +128,22 @@ export default function ModerationView() {
                     <span className="text-slate">{formatAdminWhen(item.createdAt)}</span>
                   </div>
 
-                  {item.tour ? (
+                  {item.review ? (
+                    <>
+                      <p className="font-medium text-charcoal">{item.review.tourTitle}</p>
+                      <p className="text-slate">
+                        {item.review.tourSlug} · оценка {item.review.rating}/5
+                        {item.review.authorName ? ` · ${item.review.authorName}` : ""}
+                      </p>
+                      <p className="rounded-xl bg-gray-50 p-3 text-charcoal">{item.review.text}</p>
+                      <Link
+                        href={`/tours/${item.review.tourSlug}`}
+                        className="text-sky hover:underline"
+                      >
+                        Страница тура
+                      </Link>
+                    </>
+                  ) : item.tour ? (
                     <>
                       <p className="font-medium text-charcoal">{item.tour.title}</p>
                       <p className="text-slate">
@@ -169,9 +189,14 @@ export default function ModerationView() {
         </section>
 
         <section className={`${cabinetCardClass} overflow-hidden`}>
-          <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
-            Заявки организаторов ({applications.length})
-          </h2>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 px-5 py-4">
+            <h2 className="font-heading text-lg font-bold text-charcoal">
+              Заявки организаторов ({applications.length})
+            </h2>
+            <Button variant="outline" size="sm" onClick={() => void refreshApps()} disabled={appsLoading}>
+              Обновить
+            </Button>
+          </div>
           <ul className="divide-y divide-gray-100">
             {applications.length === 0 ? (
               <li className="px-5 py-10 text-sm text-slate">

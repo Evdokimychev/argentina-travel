@@ -1,6 +1,12 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TourContentAdminSummary, TourModerationStatus } from "@/types/tour-content";
+import type { ModerationReviewSummary } from "@/lib/reviews-db-mapper";
+import {
+  fetchModerationReviewSummaries,
+  resolveReviewModeration,
+  syncPendingReviewsToQueue,
+} from "@/lib/reviews-server";
 
 function metadataString(metadata: Json | null, key: string): string | undefined {
   if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return undefined;
@@ -21,6 +27,7 @@ export type ModerationQueueItem = {
   createdAt: string;
   updatedAt: string;
   tour?: TourContentAdminSummary | null;
+  review?: ModerationReviewSummary | null;
 };
 
 export type ModerationResolveAction = "approve" | "reject";
@@ -57,6 +64,7 @@ export async function syncPendingToursToQueue(supabase: DbClient): Promise<numbe
 
 export async function fetchModerationQueue(supabase: DbClient): Promise<ModerationQueueItem[]> {
   await syncPendingToursToQueue(supabase);
+  await syncPendingReviewsToQueue(supabase);
 
   const { data: queueRows, error } = await supabase
     .from("moderation_queue")
@@ -69,7 +77,9 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
   if (error || !queueRows?.length) return [];
 
   const tourIds = queueRows.filter((r) => r.entity_type === "tour").map((r) => r.entity_id);
+  const reviewIds = queueRows.filter((r) => r.entity_type === "review").map((r) => r.entity_id);
   const toursById = new Map<string, TourContentAdminSummary>();
+  const reviewsById = await fetchModerationReviewSummaries(supabase, reviewIds);
 
   if (tourIds.length) {
     const { data: tours } = await supabase.from("tours").select("*").in("id", tourIds);
@@ -92,6 +102,7 @@ export async function fetchModerationQueue(supabase: DbClient): Promise<Moderati
     createdAt: row.created_at,
     updatedAt: row.updated_at,
     tour: row.entity_type === "tour" ? (toursById.get(row.entity_id) ?? null) : null,
+    review: row.entity_type === "review" ? (reviewsById.get(row.entity_id) ?? null) : null,
   }));
 }
 
@@ -166,6 +177,25 @@ export async function resolveModerationItem(
       entityType: "tour",
       entityTitle: tourRow?.title ?? metadataString(item.metadata, "title") ?? item.entity_id,
       ownerEmail,
+    };
+  }
+
+  if (item.entity_type === "review") {
+    const reviewResult = await resolveReviewModeration(
+      supabase,
+      item.entity_id,
+      action,
+      actorUserId,
+      note
+    );
+
+    if ("error" in reviewResult) return reviewResult;
+
+    return {
+      ok: true,
+      entityType: "review",
+      entityTitle: reviewResult.tourTitle,
+      ownerEmail: reviewResult.authorEmail,
     };
   }
 

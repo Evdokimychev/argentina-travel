@@ -1,13 +1,19 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import AdminTrendChart from "@/components/admin/AdminTrendChart";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import { NativeSelect } from "@/components/ui/native-select";
 import { useAdminApi } from "@/hooks/useAdminApi";
+import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
-import type { AdminDashboardSummary } from "@/types/admin";
+import type { AdminDashboardWidgets } from "@/types/admin";
+import type { AnalyticsPeriod } from "@/types/admin-analytics";
+import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 
-type SummaryResponse = { summary?: AdminDashboardSummary };
+type DashboardResponse = { widgets?: AdminDashboardWidgets };
 
 const QUICK_LINKS = [
   { href: "/admin/operations/leads", label: "Лиды и заявки" },
@@ -20,32 +26,70 @@ const QUICK_LINKS = [
   { href: "/admin/analytics", label: "Аналитика" },
 ];
 
+function formatUsd(value: number): string {
+  return new Intl.NumberFormat("ru-RU", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
 export default function AdminDashboardPage() {
-  const { data, loading, error } = useAdminApi<SummaryResponse>("/api/admin/summary");
-  const summary = data?.summary;
+  const [period, setPeriod] = useState<AnalyticsPeriod>("30d");
+  const { data, loading, error } = useAdminApi<DashboardResponse>(`/api/admin/dashboard?period=${period}`);
+  const widgets = data?.widgets;
+  const periodHint = widgets
+    ? widgets.periodStart
+      ? `Период: с ${formatAdminWhen(widgets.periodStart)}`
+      : "Период: всё время"
+    : null;
 
   return (
     <CapabilityGate capability="dashboard.view">
       <AdminPageShell>
         <AdminPageHeader
           title="Панель управления"
-          subtitle="Сводка по операциям и маркетплейсу"
+          subtitle="Ключевые показатели по операциям"
+          actions={
+            <NativeSelect
+              value={period}
+              onChange={(event) => setPeriod(event.target.value as AnalyticsPeriod)}
+              className="w-40"
+            >
+              {(Object.keys(ANALYTICS_PERIOD_LABELS) as AnalyticsPeriod[]).map((key) => (
+                <option key={key} value={key}>
+                  {ANALYTICS_PERIOD_LABELS[key]}
+                </option>
+              ))}
+            </NativeSelect>
+          }
         />
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {!error && periodHint && widgets ? (
+          <p className="text-sm text-slate">
+            {periodHint} · Обновлено {formatAdminWhen(widgets.generatedAt)}
+          </p>
+        ) : null}
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {[
-            { label: "Подписки", value: summary?.newsletterCount, href: "/admin/operations/leads" },
-            { label: "Заявки с сайта", value: summary?.contactCount, href: "/admin/operations/leads" },
-            { label: "Заказы магазина", value: summary?.shopOrderCount, href: "/admin/operations/shop-orders" },
-            { label: "Бронирования", value: summary?.bookingCount, href: "/admin/operations/bookings" },
-            { label: "Туры в базе", value: summary?.tourCount, href: "/admin/marketplace/tours" },
-            { label: "Экскурсии", value: summary?.excursionExperienceCount, href: "/admin/marketplace/excursions" },
+            { label: "Новые лиды", value: widgets?.totals.newLeads, href: "/admin/operations/leads" },
+            {
+              label: "Новые бронирования",
+              value: widgets?.totals.newBookings,
+              href: "/admin/operations/bookings",
+            },
+            { label: "Заказы магазина", value: widgets?.totals.shopOrders, href: "/admin/operations/shop-orders" },
             {
               label: "Очередь модерации",
-              value: summary?.pendingModerationCount,
+              value: widgets?.totals.pendingModeration,
               href: "/admin/marketplace/moderation",
+            },
+            {
+              label: "Оценка выручки",
+              value: widgets ? formatUsd(widgets.totals.bookingRevenueUsd) : "0",
+              href: "/admin/operations/bookings",
             },
           ].map((item) => (
             <div key={item.label} className={cabinetStatCardClass}>
@@ -61,6 +105,17 @@ export default function AdminDashboardPage() {
             </div>
           ))}
         </section>
+
+        {period !== "all" ? (
+          <section className="grid gap-4 lg:grid-cols-2">
+            <AdminTrendChart title="Бронирования по дням" points={widgets?.trends.bookingsByDay ?? []} />
+            <AdminTrendChart title="Лиды по дням" points={widgets?.trends.leadsByDay ?? []} />
+          </section>
+        ) : (
+          <section className={`${cabinetCardClass} p-4 text-sm text-slate`}>
+            Для режима «Всё время» графики по дням не строятся.
+          </section>
+        )}
 
         <section className={`${cabinetCardClass} p-5`}>
           <h2 className="font-heading text-lg font-bold text-charcoal">Быстрые ссылки</h2>

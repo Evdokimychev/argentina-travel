@@ -9,7 +9,8 @@ import {
   getOrganizerReviewsForCabinet,
   getOrganizerReviewsSummary,
 } from "@/lib/organizer-reviews";
-import { REVIEWS_UPDATED_EVENT } from "@/types/tourist";
+import { isSupabaseReviewsEnabled } from "@/lib/auth-mode";
+import { REVIEWS_UPDATED_EVENT, type TouristReview } from "@/types/tourist";
 import { cabinetCardClass, cabinetHeroClass } from "@/lib/cabinet-ui";
 import { cn } from "@/lib/cn";
 
@@ -41,19 +42,39 @@ function RatingStars({ rating }: { rating: number }) {
 export default function OrganizerReviewsView() {
   const { user } = useAuth();
   const [summary, setSummary] = useState({ count: 0, averageRating: null as number | null });
-  const [reviews, setReviews] = useState<ReturnType<typeof getOrganizerReviewsForCabinet>>([]);
+  const [reviews, setReviews] = useState<TouristReview[]>([]);
 
   useEffect(() => {
     if (!user) return;
 
-    function refresh() {
+    async function refresh() {
+      if (isSupabaseReviewsEnabled()) {
+        try {
+          const res = await fetch("/api/organizer/reviews");
+          if (res.ok) {
+            const json = (await res.json()) as {
+              reviews?: TouristReview[];
+              summary?: { count: number; averageRating: number | null };
+            };
+            setReviews(json.reviews ?? []);
+            setSummary(json.summary ?? { count: 0, averageRating: null });
+            return;
+          }
+        } catch {
+          // fallback
+        }
+      }
+
       setReviews(getOrganizerReviewsForCabinet(user!.id));
       setSummary(getOrganizerReviewsSummary(user!.id));
     }
 
-    refresh();
-    window.addEventListener(REVIEWS_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(REVIEWS_UPDATED_EVENT, refresh);
+    void refresh();
+    function onUpdated() {
+      void refresh();
+    }
+    window.addEventListener(REVIEWS_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(REVIEWS_UPDATED_EVENT, onUpdated);
   }, [user]);
 
   const hasReviews = reviews.length > 0;
@@ -72,8 +93,7 @@ export default function OrganizerReviewsView() {
         <h1 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Отзывы</h1>
         <p className="mt-2 max-w-2xl text-sm text-slate">{heroText}</p>
         <p className="mt-3 text-xs text-slate">
-          Отзывы публикуются участниками после поездки. Модерация и ответы — в следующих версиях
-          платформы.
+          Показаны только опубликованные отзывы после модерации платформы.
         </p>
       </header>
 
@@ -81,7 +101,7 @@ export default function OrganizerReviewsView() {
         <EmptyState
           icon={Star}
           title="Отзывов пока нет"
-          description="Когда туристы оставят отзывы на ваши туры, они появятся здесь."
+          description="Когда туристы оставят отзывы на ваши туры, они появятся здесь после проверки."
         />
       ) : (
         <ul className="space-y-4">
