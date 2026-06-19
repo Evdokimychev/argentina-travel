@@ -11,8 +11,8 @@ create table if not exists public.content_documents (
   body jsonb not null default '{}',
   seo jsonb not null default '{}',
   published_at timestamptz,
-  created_by text references public.profiles (id) on delete set null,
-  updated_by text references public.profiles (id) on delete set null,
+  created_by uuid references public.profiles (id) on delete set null,
+  updated_by uuid references public.profiles (id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint content_documents_status_check check (
@@ -36,7 +36,7 @@ create table if not exists public.content_revisions (
   title text not null,
   body jsonb not null default '{}',
   seo jsonb not null default '{}',
-  created_by text references public.profiles (id) on delete set null,
+  created_by uuid references public.profiles (id) on delete set null,
   created_at timestamptz not null default now(),
   constraint content_revisions_doc_rev_unique unique (document_id, revision_number)
 );

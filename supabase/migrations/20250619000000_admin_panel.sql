@@ -53,11 +53,11 @@ on conflict (id) do update set
 -- Staff assignments (granular capabilities per admin user)
 -- ---------------------------------------------------------------------------
 create table if not exists public.admin_staff (
-  user_id text primary key references public.profiles (id) on delete cascade,
+  user_id uuid primary key references public.profiles (id) on delete cascade,
   preset text references public.admin_role_presets (id),
   capabilities text[] not null default '{}',
   is_active boolean not null default true,
-  invited_by text references public.profiles (id) on delete set null,
+  invited_by uuid references public.profiles (id) on delete set null,
   notes text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
@@ -76,7 +76,7 @@ create trigger admin_staff_set_updated_at
 -- ---------------------------------------------------------------------------
 create table if not exists public.admin_audit_log (
   id uuid primary key default gen_random_uuid(),
-  actor_user_id text references public.profiles (id) on delete set null,
+  actor_user_id uuid references public.profiles (id) on delete set null,
   action text not null,
   entity_type text,
   entity_id text,
@@ -98,12 +98,12 @@ create table if not exists public.moderation_queue (
   entity_id text not null,
   status text not null default 'pending',
   priority smallint not null default 0,
-  submitted_by text references public.profiles (id) on delete set null,
-  assigned_to text references public.profiles (id) on delete set null,
+  submitted_by uuid references public.profiles (id) on delete set null,
+  assigned_to uuid references public.profiles (id) on delete set null,
   reason text,
   metadata jsonb not null default '{}',
   resolved_at timestamptz,
-  resolved_by text references public.profiles (id) on delete set null,
+  resolved_by uuid references public.profiles (id) on delete set null,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint moderation_queue_status_check check (
@@ -126,7 +126,7 @@ create trigger moderation_queue_set_updated_at
 create table if not exists public.site_settings (
   key text primary key,
   value jsonb not null default '{}',
-  updated_by text references public.profiles (id) on delete set null,
+  updated_by uuid references public.profiles (id) on delete set null,
   updated_at timestamptz not null default now()
 );
 
@@ -149,7 +149,7 @@ alter table public.profiles
 alter table public.tours
   add column if not exists moderation_status text not null default 'none',
   add column if not exists moderation_notes text,
-  add column if not exists moderated_by text,
+  add column if not exists moderated_by uuid,
   add column if not exists moderated_at timestamptz;
 
 alter table public.tours drop constraint if exists tours_moderation_status_check;
@@ -174,7 +174,7 @@ as $$
     select 1
     from public.admin_staff s
     join public.profiles p on p.id = s.user_id
-    where s.user_id = auth.uid()::text
+    where s.user_id = auth.uid()
       and s.is_active = true
       and p.roles @> array['admin']::text[]
       and not coalesce(p.is_blocked, false)
@@ -186,7 +186,7 @@ as $$
   or exists (
     select 1
     from public.profiles p
-    where p.id = auth.uid()::text
+    where p.id = auth.uid()
       and p.roles @> array['admin']::text[]
       and not coalesce(p.is_blocked, false)
       and not exists (
@@ -215,7 +215,7 @@ create policy "admin_staff_select_self_or_super"
   on public.admin_staff for select
   to authenticated
   using (
-    user_id = auth.uid()::text
+    user_id = auth.uid()
     or public.is_admin_with('*')
   );
 
