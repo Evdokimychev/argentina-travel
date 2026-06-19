@@ -4,6 +4,7 @@ import {
   resolveContactKind,
   submitContact,
 } from "@/lib/lead-capture";
+import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import type { ContactSubmissionKind } from "@/types/database";
 
@@ -44,6 +45,16 @@ export async function POST(request: Request) {
         serviceSlug: body.serviceSlug,
         organizerApplication: body.organizerApplication,
       });
+
+    if (kind === "organizer_application") {
+      const features = await fetchSiteFeatures();
+      if (!features.allowOrganizerSignup) {
+        return NextResponse.json(
+          { error: "Приём заявок организаторов временно приостановлен." },
+          { status: 403 }
+        );
+      }
+    }
 
     const context = {
       ...(body.context ?? {}),

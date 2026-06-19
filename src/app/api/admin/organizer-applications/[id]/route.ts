@@ -26,13 +26,36 @@ export async function PATCH(
   const supabase = createSupabaseAdminClient();
   const { data: application, error } = await supabase
     .from("contact_submissions")
-    .select("id, name, email, phone, message")
+    .select("id, name, email, phone, message, context")
     .eq("id", id)
     .eq("kind", "organizer_application")
     .maybeSingle();
 
   if (error || !application) {
     return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
+  }
+
+  const existingContext =
+    application.context && typeof application.context === "object" && !Array.isArray(application.context)
+      ? (application.context as Record<string, unknown>)
+      : {};
+
+  const reviewStatus = body.action === "approve" ? "approved" : "rejected";
+  const nextContext = {
+    ...existingContext,
+    reviewStatus,
+    reviewedAt: new Date().toISOString(),
+    reviewNote: body.note?.trim() || null,
+    reviewedBy: auth.actorId,
+  };
+
+  const { error: updateError } = await supabase
+    .from("contact_submissions")
+    .update({ context: nextContext })
+    .eq("id", id);
+
+  if (updateError) {
+    return NextResponse.json({ error: updateError.message }, { status: 500 });
   }
 
   if (body.action === "approve" && application.email) {

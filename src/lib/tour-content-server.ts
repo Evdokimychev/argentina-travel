@@ -10,6 +10,7 @@ import {
   rowToTourListing,
   tourToContentRow,
 } from "@/lib/tour-content-mapper";
+import { PUBLIC_TOUR_MODERATION_STATUSES } from "@/lib/tour-content-visibility";
 type DbClient = SupabaseClient<Database>;
 
 export async function fetchPublishedListings(supabase: DbClient): Promise<TourListing[]> {
@@ -17,6 +18,7 @@ export async function fetchPublishedListings(supabase: DbClient): Promise<TourLi
     .from("tours")
     .select("*")
     .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
     .order("published_at", { ascending: false, nullsFirst: false });
 
   if (error || !data) return [];
@@ -30,7 +32,8 @@ export async function fetchPublishedSlugs(supabase: DbClient): Promise<string[]>
   const { data, error } = await supabase
     .from("tours")
     .select("slug")
-    .eq("status", "published");
+    .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES]);
 
   if (error || !data) return [];
   return data.map((row) => row.slug);
@@ -45,6 +48,7 @@ export async function fetchTourBySlug(
     .select("*")
     .eq("slug", slug)
     .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
     .maybeSingle();
 
   if (error || !data) return null;
@@ -60,6 +64,7 @@ export async function fetchTourDetailBySlug(
     .select("*")
     .eq("slug", slug)
     .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
     .maybeSingle();
 
   if (error || !data) return null;

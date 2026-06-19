@@ -14,7 +14,7 @@ import { BOOKING_STATUSES_ACTIVE, BOOKING_STATUS_LABELS } from "@/data/booking-s
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import FormattedPrice from "@/components/FormattedPrice";
 import type { AdminBookingSummary, AdminBookingsStats } from "@/lib/admin/bookings-server";
-import type { BookingStatusActive } from "@/types/tourist";
+import type { Booking, BookingStatusActive } from "@/types/tourist";
 
 type BookingsResponse = {
   bookings?: AdminBookingSummary[];
@@ -35,7 +35,7 @@ export default function BookingsView() {
   const [search, setSearch] = useState("");
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [detailId, setDetailId] = useState<string | null>(null);
-  const [detail, setDetail] = useState<Record<string, unknown> | null>(null);
+  const [detail, setDetail] = useState<Booking | null>(null);
 
   const filtered = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -54,7 +54,7 @@ export default function BookingsView() {
     setDetailId(bookingId);
     setDetail(null);
     const res = await fetch(`/api/admin/bookings/${bookingId}`);
-    const json = (await res.json()) as { booking?: Record<string, unknown>; error?: string };
+    const json = (await res.json()) as { booking?: Booking; error?: string };
     if (res.ok && json.booking) setDetail(json.booking);
   }
 
@@ -85,9 +85,19 @@ export default function BookingsView() {
           title="Бронирования"
           subtitle="Все заявки на туры платформы"
           actions={
-            <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
-              Обновить
-            </Button>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  window.location.href = "/api/admin/bookings/export";
+                }}
+              >
+                CSV
+              </Button>
+              <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
+                Обновить
+              </Button>
+            </div>
           }
         />
 
@@ -209,16 +219,72 @@ export default function BookingsView() {
         </section>
 
         {detailId && detail ? (
-          <section className={`${cabinetCardClass} space-y-2 p-5 text-sm`}>
+          <section className={`${cabinetCardClass} space-y-4 p-5 text-sm`}>
             <div className="flex items-center justify-between">
-              <h2 className="font-heading text-lg font-bold text-charcoal">Заявка {detailId}</h2>
+              <h2 className="font-heading text-lg font-bold text-charcoal">{detail.tourTitle}</h2>
               <Button size="sm" variant="ghost" onClick={() => setDetailId(null)}>
                 Закрыть
               </Button>
             </div>
-            <pre className="overflow-x-auto rounded-xl bg-gray-50 p-4 text-xs text-charcoal">
-              {JSON.stringify(detail, null, 2)}
-            </pre>
+            <dl className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <dt className="text-xs text-slate">Заявка</dt>
+                <dd className="font-medium text-charcoal">{detail.id}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate">Статус</dt>
+                <dd>{BOOKING_STATUS_LABELS[detail.status as BookingStatusActive] ?? detail.status}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate">Турист</dt>
+                <dd>
+                  {detail.contactName}
+                  <br />
+                  {detail.contactEmail}
+                  {detail.contactPhone ? ` · ${detail.contactPhone}` : ""}
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate">Даты / гости</dt>
+                <dd>
+                  {detail.startDate ?? "—"}
+                  {detail.endDate ? ` → ${detail.endDate}` : ""}
+                  <br />
+                  {detail.guests} гост.
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate">Сумма</dt>
+                <dd>
+                  <FormattedPrice priceUsd={detail.totalPriceUsd} />
+                </dd>
+              </div>
+              <div>
+                <dt className="text-xs text-slate">Создана</dt>
+                <dd>{formatAdminWhen(detail.createdAt)}</dd>
+              </div>
+            </dl>
+            {detail.touristComment ? (
+              <div>
+                <p className="text-xs text-slate">Комментарий туриста</p>
+                <p className="mt-1 text-charcoal">{detail.touristComment}</p>
+              </div>
+            ) : null}
+            {detail.statusHistory.length ? (
+              <div>
+                <p className="text-xs font-medium text-slate">История статусов</p>
+                <ul className="mt-2 space-y-1 text-xs text-charcoal">
+                  {detail.statusHistory.map((entry) => (
+                    <li key={entry.id}>
+                      {formatAdminWhen(entry.changedAt)} —{" "}
+                      {entry.from ? BOOKING_STATUS_LABELS[entry.from as BookingStatusActive] ?? entry.from : "—"}{" "}
+                      → {BOOKING_STATUS_LABELS[entry.to as BookingStatusActive] ?? entry.to}
+                      {entry.note ? ` (${entry.note})` : ""}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
           </section>
         ) : null}
       </AdminPageShell>
