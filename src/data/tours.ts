@@ -1,4 +1,5 @@
 import { Tour } from "@/types";
+import { getTourCoverImage, getTourGallery } from "@/lib/media-resolver";
 import { tourExtra } from "./tour-extra";
 
 type BaseTour = Omit<
@@ -166,7 +167,7 @@ export const baseTours: BaseTour[] = [
       "Трансферы",
     ],
     difficulty: "Лёгкий",
-    groupSize: "8–14 человек",
+    groupSize: "1–14 человек",
   },
   {
     id: "5",
@@ -250,6 +251,8 @@ export const tours: Tour[] = baseTours.map((t) => {
   const extra = tourExtra[t.slug];
   return {
     ...t,
+    image: getTourCoverImage(t.slug),
+    gallery: getTourGallery(t.slug),
     rating: extra?.rating ?? 4.8,
     reviewCount: extra?.reviewCount ?? 0,
     tags: extra?.tags ?? [],

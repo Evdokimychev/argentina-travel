@@ -1,5 +1,14 @@
 import type { TourCollection } from "@/data/tour-collections";
-import type { TourPlace } from "@/types";
+import type { OrganizerTourAccommodationPlace } from "@/data/tour-accommodation-defaults";
+import type { TourPlace, TourRoutePoint } from "@/types";
+import type { CurrencyCode } from "@/types/locale";
+import type { OrganizerTourDiscountType } from "@/data/tour-discount-defaults";
+import type { OrganizerGroupTourDate } from "@/data/tour-booking-defaults";
+import type { OrganizerProgramDay } from "@/data/tour-program-defaults";
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
+import type { OrganizerTourFAQ, OrganizerTourInsuranceType } from "@/data/tour-terms-defaults";
+import type { OrganizerArrivalDepartureCity } from "@/data/tour-logistics-defaults";
 import type {
   AccommodationType,
   ActivityType,
@@ -8,13 +17,21 @@ import type {
   TourBookingMode,
   TourLanguage,
 } from "@/types";
+import type { TourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
+import type { TourCustomBookingLink } from "@/types/tour-custom-booking-link";
+import type { GroupDiscountSettings } from "@/types/group-discount";
 
 export type OrganizerTourType = "tour" | "excursion";
 export type OrganizerTourStatus = "published" | "draft";
 
 export interface OrganizerTourListing {
   id: string;
+  /** Owner organizer account id. */
+  ownerUserId?: string;
+  /** Internal slug; defaults to catalogSlug for new tours. */
   slug: string;
+  /** Public catalog slug used in /tours/[slug]. Falls back to slug when omitted. */
+  catalogSlug?: string;
   title: string;
   image: string;
   coverLabel?: string;
@@ -22,10 +39,17 @@ export interface OrganizerTourListing {
   type: OrganizerTourType;
   status: OrganizerTourStatus;
   archived: boolean;
+  deleted?: boolean;
   isPreliminaryProgram?: boolean;
   partnerName: string;
   partnerUrl?: string;
   updatedAt?: string;
+  /** Скрыт из каталога — доступ только по приватной ссылке. */
+  isPrivate?: boolean;
+  /** Секрет для параметра ?access= в URL. */
+  privateAccessToken?: string;
+  /** Лист ожидания, если на дату не хватает мест. */
+  waitlistEnabled?: boolean;
 }
 
 export interface OrganizerTourGuide {
@@ -53,17 +77,35 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   durationNights: number;
   priceUsd: number;
   originalPriceUsd: number | null;
+  priceCurrency: CurrencyCode;
+  priceFromPrefix: boolean;
+  priceOnRequest: boolean;
+  enabledDiscounts: OrganizerTourDiscountType[];
+  groupDiscount: GroupDiscountSettings;
+  individualTourEnabled: boolean;
+  individualPeriodFrom: string;
+  individualPeriodTo: string;
+  individualPriceUsd: number;
+  autoRollGroupDatesToNextYear: boolean;
+  groupTourDates: OrganizerGroupTourDate[];
   activityType: ActivityType;
   tourActivities: ActivityType[];
   collections: TourCollection[];
   difficultyLevel: DifficultyLevel;
   difficultyDescriptionText: string;
   comfortLevel: ComfortLevel;
+  comfortLevels: ComfortLevel[];
   accommodationType: AccommodationType;
+  accommodationDescriptionText: string;
+  accommodationPhotos: string[];
+  accommodationPlaces: OrganizerTourAccommodationPlace[];
+  /** Разрешить выбор типа номера при бронировании. */
+  accommodationUpgradesEnabled: boolean;
   groupMin: number;
   groupMax: number;
   minimumAge: number;
   maximumAge: number | null;
+  maxWeightEnabled: boolean;
   maxWeightKg: number | null;
   languages: TourLanguage[];
   includedText: string;
@@ -72,6 +114,39 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   gallery: string[];
   places: TourPlace[];
   guides: OrganizerTourGuide[];
+  routeMapImage: string;
+  routePoints: TourRoutePoint[];
+  programDays: OrganizerProgramDay[];
+  importantInfo: string[];
+  faq: OrganizerTourFAQ[];
+  packingListEnabled: boolean;
+  packingListText: string;
+  insuranceType: OrganizerTourInsuranceType;
+  insuranceDescription: string;
+  useCancellationTemplate: boolean;
+  customCancellationText: string;
+  ticketRecommendationsEnabled: boolean;
+  ticketRecommendationsText: string;
+  arrivalDepartureEnabled: boolean;
+  arrivalDepartureCities: OrganizerArrivalDepartureCity[];
+  arrivalDetailsEnabled: boolean;
+  arrivalAirportsText: string;
+  arrivalTransfersText: string;
+  arrivalMeetingPoint: string;
+  checkoutPaymentOptions: TourCheckoutPaymentOptions;
+  customBookingLink: TourCustomBookingLink;
+  /** Up to 6 tips for participants — shown in organizer card. */
+  participantRecommendations: string[];
+  /** Route features text — shown in organizer card. */
+  routeFeaturesText: string;
+  /** Комментарий организатора в конце программы на странице тура. */
+  itineraryOrganizerCommentText: string;
+  /** Комментарий организатора в конце блока «Проживание». */
+  accommodationOrganizerCommentText: string;
+  /** Комментарии организатора к секциям страницы тура. */
+  sectionOrganizerComments: TourSectionOrganizerComments;
+  /** Предупреждения и факторы маршрута для участников. */
+  travelRisks: TourTravelRisk[];
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;
@@ -79,8 +154,9 @@ export const ORGANIZER_TOUR_TITLE_MAX = 120;
 export const ORGANIZER_TOUR_EDITOR_TABS = [
   { id: "main", label: "Основное" },
   { id: "description", label: "Жильё и комфорт" },
-  { id: "conditions", label: "Условия и цена" },
+  { id: "conditions", label: "Цены и даты" },
   { id: "program", label: "Программа" },
+  { id: "terms", label: "Условия и FAQ" },
   { id: "publish", label: "Публикация" },
 ] as const;
 

@@ -1,8 +1,14 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  ClearFieldButton,
+  FieldFloatingLabel,
+  PopoverFieldTrigger,
+  SelectionChip,
+} from "@/components/organizer/OrganizerSelectFieldParts";
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import { TOUR_COLLECTION_OPTIONS, type TourCollection } from "@/data/tour-collections";
 import { cn } from "@/lib/cn";
@@ -10,28 +16,6 @@ import type { ActivityType } from "@/types";
 
 function toggleItem<T>(items: T[], item: T): T[] {
   return items.includes(item) ? items.filter((value) => value !== item) : [...items, item];
-}
-
-function Chip({
-  label,
-  onRemove,
-}: {
-  label: string;
-  onRemove: () => void;
-}) {
-  return (
-    <span className="inline-flex max-w-full items-center gap-1 rounded-lg bg-gray-100 px-2 py-1 text-xs font-medium text-charcoal">
-      <span className="truncate">{label}</span>
-      <button
-        type="button"
-        onClick={onRemove}
-        className="text-slate transition-colors hover:text-charcoal"
-        aria-label={`Убрать ${label}`}
-      >
-        <X className="h-3 w-3" />
-      </button>
-    </span>
-  );
 }
 
 function ActivityOptionList({
@@ -142,92 +126,61 @@ export default function TourLeisureTypesBlock({
 
   return (
     <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-      <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">Виды отдыха</h2>
+      <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">Виды отдыха</h2>
 
       <div className="max-w-md">
-          <Popover open={mainOpen} onOpenChange={setMainOpen}>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                className="relative flex min-h-14 w-full items-center justify-between gap-2 rounded-2xl border border-gray-200 bg-white px-3 pb-2.5 pt-6 text-left transition-colors hover:border-gray-300"
-              >
-                <span className="absolute left-3 top-2 text-[11px] font-medium text-slate">
-                  Основной тип тура
-                </span>
-                <span className="truncate pt-0.5 text-sm text-charcoal">{activityType}</span>
-                <div className="flex shrink-0 items-center gap-1">
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onActivityTypeChange(mainOptions[0]);
+        <Popover open={mainOpen} onOpenChange={setMainOpen}>
+          <PopoverTrigger asChild>
+            <PopoverFieldTrigger>
+              <FieldFloatingLabel>Основной тип тура</FieldFloatingLabel>
+              <span className="truncate pt-0.5 text-sm text-charcoal">{activityType}</span>
+              <div className="flex shrink-0 items-center gap-1">
+                <ClearFieldButton onClear={() => onActivityTypeChange(mainOptions[0])} />
+                <ChevronDown
+                  className={cn("h-4 w-4 text-slate transition-transform", mainOpen && "rotate-180")}
+                />
+              </div>
+            </PopoverFieldTrigger>
+          </PopoverTrigger>
+          <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
+            <ul className="max-h-72 overflow-y-auto p-1">
+              {ACTIVITY_TYPE_OPTIONS.map(({ type, icon: Icon }) => (
+                <li key={type}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onActivityTypeChange(type);
+                      setMainOpen(false);
                     }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        onActivityTypeChange(mainOptions[0]);
-                      }
-                    }}
-                    className="rounded p-0.5 text-slate transition-colors hover:text-charcoal"
-                    aria-label="Очистить"
-                  >
-                    <X className="h-4 w-4" />
-                  </span>
-                  <ChevronDown
                     className={cn(
-                      "h-4 w-4 text-slate transition-transform",
-                      mainOpen && "rotate-180"
+                      "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left text-sm transition-colors",
+                      activityType === type
+                        ? "bg-gray-100 font-medium text-charcoal"
+                        : "hover:bg-gray-50 text-charcoal"
                     )}
-                  />
-                </div>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
-              <ul className="max-h-72 overflow-y-auto p-1">
-                {ACTIVITY_TYPE_OPTIONS.map(({ type, icon: Icon }) => (
-                  <li key={type}>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        onActivityTypeChange(type);
-                        setMainOpen(false);
-                      }}
-                      className={cn(
-                        "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left text-sm transition-colors",
-                        activityType === type
-                          ? "bg-gray-100 font-medium text-charcoal"
-                          : "hover:bg-gray-50 text-charcoal"
-                      )}
-                    >
-                      <Icon className="h-[18px] w-[18px] shrink-0 stroke-[1.75]" aria-hidden />
-                      {type}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </PopoverContent>
-          </Popover>
-          <p className="mt-1.5 text-xs leading-relaxed text-slate">
-            Отображается в карточке тура в каталоге
-          </p>
-        </div>
+                  >
+                    <Icon className="h-[18px] w-[18px] shrink-0 stroke-[1.75]" aria-hidden />
+                    {type}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </PopoverContent>
+        </Popover>
+        <p className="mt-1.5 text-xs leading-relaxed text-slate">
+          Отображается в карточке тура в каталоге
+        </p>
+      </div>
 
       <div className="relative">
         <Popover open={activitiesOpen} onOpenChange={setActivitiesOpen}>
           <PopoverTrigger asChild>
-            <button
-              type="button"
-              className="relative flex min-h-14 w-full items-start justify-between gap-2 rounded-2xl border border-gray-200 bg-white px-3 pb-2.5 pt-6 text-left transition-colors hover:border-gray-300"
-            >
-              <span className="absolute left-3 top-2 text-[11px] font-medium text-slate">
-                Активности в туре
-              </span>
+            <PopoverFieldTrigger align="start">
+              <FieldFloatingLabel>Активности в туре</FieldFloatingLabel>
               <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 pt-0.5">
                 {tourActivities.length ? (
                   tourActivities.map((activity) => (
-                    <Chip
+                    <SelectionChip
                       key={activity}
                       label={activity}
                       onRemove={() =>
@@ -241,25 +194,7 @@ export default function TourLeisureTypesBlock({
               </div>
               <div className="flex shrink-0 items-center gap-1 self-center">
                 {tourActivities.length ? (
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onTourActivitiesChange([]);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        onTourActivitiesChange([]);
-                      }
-                    }}
-                    className="rounded p-0.5 text-slate transition-colors hover:text-charcoal"
-                    aria-label="Очистить"
-                  >
-                    <X className="h-4 w-4" />
-                  </span>
+                  <ClearFieldButton onClear={() => onTourActivitiesChange([])} />
                 ) : null}
                 <ChevronDown
                   className={cn(
@@ -268,7 +203,7 @@ export default function TourLeisureTypesBlock({
                   )}
                 />
               </div>
-            </button>
+            </PopoverFieldTrigger>
           </PopoverTrigger>
           <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
             <ActivityOptionList
@@ -283,17 +218,12 @@ export default function TourLeisureTypesBlock({
       <div className="relative">
         <Popover open={collectionsOpen} onOpenChange={setCollectionsOpen}>
           <PopoverTrigger asChild>
-            <button
-              type="button"
-              className="relative flex min-h-14 w-full items-start justify-between gap-2 rounded-2xl border border-gray-200 bg-white px-3 pb-2.5 pt-6 text-left transition-colors hover:border-gray-300"
-            >
-              <span className="absolute left-3 top-2 text-[11px] font-medium text-slate">
-                Подборки
-              </span>
+            <PopoverFieldTrigger align="start">
+              <FieldFloatingLabel>Подборки</FieldFloatingLabel>
               <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5 pt-0.5">
                 {collections.length ? (
                   collections.map((collection) => (
-                    <Chip
+                    <SelectionChip
                       key={collection}
                       label={collection}
                       onRemove={() =>
@@ -307,25 +237,7 @@ export default function TourLeisureTypesBlock({
               </div>
               <div className="flex shrink-0 items-center gap-1 self-center">
                 {collections.length ? (
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={(event) => {
-                      event.stopPropagation();
-                      onCollectionsChange([]);
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Enter" || event.key === " ") {
-                        event.preventDefault();
-                        event.stopPropagation();
-                        onCollectionsChange([]);
-                      }
-                    }}
-                    className="rounded p-0.5 text-slate transition-colors hover:text-charcoal"
-                    aria-label="Очистить"
-                  >
-                    <X className="h-4 w-4" />
-                  </span>
+                  <ClearFieldButton onClear={() => onCollectionsChange([])} />
                 ) : null}
                 <ChevronDown
                   className={cn(
@@ -334,7 +246,7 @@ export default function TourLeisureTypesBlock({
                   )}
                 />
               </div>
-            </button>
+            </PopoverFieldTrigger>
           </PopoverTrigger>
           <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
             <CollectionOptionList

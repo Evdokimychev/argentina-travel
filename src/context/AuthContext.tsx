@@ -6,34 +6,46 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from "react";
-import type { AuthIntent, AuthUser, AuthUserRole } from "@/types/auth";
-import { userHasRole } from "@/types/auth";
-import {
-  addOrganizerRole,
-  loginTouristForOrganizerUpgrade,
-  loginWithEmail,
-  loginWithPhone,
-  logoutUser,
-  readSessionUser,
-  registerUser,
-  updateUserAvatar,
-  updateUserProfile,
-} from "@/lib/auth-store";
+import type { AuthIntent, FavoriteAuthStep } from "@/types/auth";
+import type { SessionUser, AccountRole } from "@/types/user";
+import type { FavoriteTourInput } from "@/hooks/useFavoriteTour";
+import { splitFullName } from "@/lib/full-name";
+import { getAuthProvider } from "@/lib/auth-provider";
+import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { createSupabaseBrowserClient } from "@/lib/supabase/client";
+import { profileToSessionUser } from "@/lib/profile-mapper";
+import { attachGuestBookingsToUser } from "@/lib/bookings-store";
+import { toggleFavorite } from "@/lib/favorites-store";
+import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
+import AuthQueryHandler from "@/components/auth/AuthQueryHandler";
+import FavoriteAuthPromptModal from "@/components/auth/FavoriteAuthPromptModal";
+import FavoriteAuthSuccessListener from "@/components/auth/FavoriteAuthSuccessListener";
+
+export const FAVORITE_SAVED_AFTER_AUTH_EVENT = "favorite-saved-after-auth";
 
 interface AuthContextValue {
-  user: AuthUser | null;
+  user: SessionUser | null;
   isAuthenticated: boolean;
+  /** True after the initial session/profile hydration attempt finishes. */
+  authHydrated: boolean;
   authOpen: boolean;
   authIntent: AuthIntent;
+  favoriteAuthStep: FavoriteAuthStep;
+  favoritePromptOpen: boolean;
   openAuth: (intent?: AuthIntent) => void;
   closeAuth: () => void;
+  openFavoritePrompt: (tour: FavoriteTourInput) => void;
+  closeFavoritePrompt: () => void;
+  openAuthFromFavorite: (step: FavoriteAuthStep) => void;
   loginByPhone: (
     phone: string,
-    role: AuthUserRole
+    role: AccountRole,
+    password?: string
   ) => Promise<
     | { ok: true }
     | { ok: false; error: string; notFound?: boolean; roleNotConnected?: boolean }
@@ -41,17 +53,17 @@ interface AuthContextValue {
   loginByEmail: (
     email: string,
     password: string,
-    role: AuthUserRole
+    role: AccountRole
   ) => Promise<
     | { ok: true }
-    | { ok: false; error: string; roleNotConnected?: boolean }
+    | { ok: false; error: string; roleNotConnected?: boolean; code?: string }
   >;
   loginForOrganizerUpgrade: (
     email: string,
     password: string
   ) => Promise<{ ok: true } | { ok: false; error: string }>;
   register: (input: {
-    role: AuthUserRole;
+    role: AccountRole;
     fullName: string;
     phone: string;
     email: string;
@@ -61,6 +73,9 @@ interface AuthContextValue {
     | { ok: false; error: string; duplicatePhone?: boolean; duplicateEmail?: boolean }
   >;
   addOrganizerRole: () => Promise<{ ok: true } | { ok: false; error: string }>;
+  requestPasswordReset: (
+    email: string
+  ) => Promise<{ ok: true } | { ok: false; error: string }>;
   updateProfile: (input: {
     fullName: string;
     phone: string;
@@ -74,19 +89,76 @@ interface AuthContextValue {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
+async function resolveProviderUser(activeRole?: AccountRole): Promise<SessionUser | null> {
+  const provider = getAuthProvider();
+  const user = await provider.getSessionUser();
+  if (!user || !activeRole || user.role === activeRole) return user;
+  return { ...user, role: activeRole };
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authIntent, setAuthIntent] = useState<AuthIntent>("default");
+  const [favoriteAuthStep, setFavoriteAuthStep] = useState<FavoriteAuthStep>("sign-in");
+  const [favoritePromptOpen, setFavoritePromptOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const pendingFavoriteRef = useRef<FavoriteTourInput | null>(null);
+  const favoriteFlowRef = useRef(false);
 
-  useEffect(() => {
-    setUser(readSessionUser());
-    setHydrated(true);
+  const refreshSessionUser = useCallback(async (activeRole?: AccountRole) => {
+    const next = await resolveProviderUser(activeRole);
+    setUser(next);
+    return next;
   }, []);
 
   useEffect(() => {
-    if (!authOpen) return;
+    if (!isSupabaseAuthEnabled()) {
+      void refreshSessionUser().finally(() => setHydrated(true));
+      return;
+    }
+
+    const supabase = createSupabaseBrowserClient();
+
+    async function loadProfile(userId: string) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .maybeSingle();
+      if (profile) {
+        setUser(profileToSessionUser(profile));
+      } else {
+        setUser(null);
+      }
+      setHydrated(true);
+    }
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        void loadProfile(session.user.id);
+      } else {
+        setUser(null);
+        setHydrated(true);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        void loadProfile(session.user.id);
+      } else {
+        setUser(null);
+        setHydrated(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [refreshSessionUser]);
+
+  useEffect(() => {
+    if (!authOpen && !favoritePromptOpen) return;
 
     const previous = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -94,7 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => {
       document.body.style.overflow = previous;
     };
-  }, [authOpen]);
+  }, [authOpen, favoritePromptOpen]);
 
   const openAuth = useCallback((intent: AuthIntent = "default") => {
     setAuthIntent(intent);
@@ -104,12 +176,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const closeAuth = useCallback(() => {
     setAuthOpen(false);
     setAuthIntent("default");
+    pendingFavoriteRef.current = null;
+    favoriteFlowRef.current = false;
   }, []);
 
-  const loginByPhone = useCallback(async (phone: string, role: AuthUserRole) => {
-    const result = loginWithPhone(phone, role);
+  const openFavoritePrompt = useCallback((tour: FavoriteTourInput) => {
+    pendingFavoriteRef.current = tour;
+    setFavoritePromptOpen(true);
+  }, []);
+
+  const closeFavoritePrompt = useCallback(() => {
+    setFavoritePromptOpen(false);
+    pendingFavoriteRef.current = null;
+    favoriteFlowRef.current = false;
+  }, []);
+
+  const openAuthFromFavorite = useCallback((step: FavoriteAuthStep) => {
+    setFavoritePromptOpen(false);
+    setFavoriteAuthStep(step);
+    favoriteFlowRef.current = true;
+    setAuthIntent("favorite");
+    setAuthOpen(true);
+  }, []);
+
+  const afterAuthSuccess = useCallback(async (nextUser: SessionUser) => {
+    setUser(nextUser);
+    if (nextUser.email) {
+      attachGuestBookingsToUser(nextUser.id, nextUser.email);
+    }
+
+    if (favoriteFlowRef.current && pendingFavoriteRef.current) {
+      const pending = pendingFavoriteRef.current;
+      const result = toggleFavorite(nextUser, nextUser.id, pending);
+      pendingFavoriteRef.current = null;
+      favoriteFlowRef.current = false;
+      setAuthIntent("default");
+
+      if (!("error" in result) && result.favorited) {
+        window.dispatchEvent(new CustomEvent(FAVORITE_SAVED_AFTER_AUTH_EVENT));
+      }
+    }
+  }, []);
+
+  const loginByPhone = useCallback(async (phone: string, role: AccountRole, password?: string) => {
+    const result = await getAuthProvider().loginWithPhone(phone, role, password);
     if ("error" in result) {
-      if (result.code === "NOT_FOUND") {
+      if (result.code === "NOT_FOUND" || result.error === "NOT_FOUND") {
         return { ok: false as const, error: "NOT_FOUND", notFound: true };
       }
       if (result.code === "ROLE_NOT_CONNECTED") {
@@ -122,55 +234,78 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return { ok: false as const, error: result.error };
     }
 
-    setUser(result.user);
+    await afterAuthSuccess(result.user);
     return { ok: true as const };
-  }, []);
+  }, [afterAuthSuccess]);
 
-  const loginByEmail = useCallback(async (email: string, password: string, role: AuthUserRole) => {
-    const result = loginWithEmail(email, password, role);
+  const loginByEmail = useCallback(async (email: string, password: string, role: AccountRole) => {
+    const result = await getAuthProvider().loginWithEmail(email, password, role);
     if ("error" in result) {
-      if (result.code === "ROLE_NOT_CONNECTED") {
+      if (
+        result.code === "ROLE_NOT_CONNECTED" ||
+        result.error === "ROLE_NOT_CONNECTED"
+      ) {
         return {
           ok: false as const,
-          error: "Аккаунт найден, но роль организатора не подключена.",
+          error: "ROLE_NOT_CONNECTED",
           roleNotConnected: true,
         };
       }
-      return { ok: false as const, error: result.error };
+      return { ok: false as const, error: result.error, code: result.code };
     }
 
-    setUser(result.user);
+    await afterAuthSuccess(result.user);
     return { ok: true as const };
-  }, []);
+  }, [afterAuthSuccess]);
 
   const loginForOrganizerUpgrade = useCallback(async (email: string, password: string) => {
-    const result = loginTouristForOrganizerUpgrade(email, password);
+    const provider = getAuthProvider();
+    const result = await provider.loginTouristForOrganizerUpgrade(email, password);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
 
-    setUser(result.user);
+    const connected = await provider.addOrganizerRole(result.user.id);
+    if ("error" in connected) {
+      setUser(result.user);
+      return {
+        ok: false as const,
+        error: connected.error ?? "Не удалось подключить роль организатора",
+      };
+    }
+
+    setUser(connected.user);
+    await afterAuthSuccess(connected.user);
     return { ok: true as const };
-  }, []);
+  }, [afterAuthSuccess]);
 
   const register = useCallback(
     async (input: {
-      role: AuthUserRole;
+      role: AccountRole;
       fullName: string;
       phone: string;
       email: string;
       password?: string;
     }) => {
-      const result = registerUser(input);
+      const { firstName, lastName } = splitFullName(input.fullName);
+      const result = await getAuthProvider().register({
+        role: input.role,
+        firstName,
+        lastName,
+        phone: input.phone,
+        email: input.email,
+        password: input.password,
+      });
+
       if ("error" in result) {
-        if (result.error === "DUPLICATE_PHONE") {
+        if (result.error === "DUPLICATE_PHONE" || result.code === "DUPLICATE_PHONE") {
           return {
             ok: false as const,
             error: "Пользователь с таким телефоном уже зарегистрирован",
             duplicatePhone: true,
           };
         }
-        if (result.error === "DUPLICATE_EMAIL") {
+        if (result.error === "DUPLICATE_EMAIL" || result.code === "DUPLICATE_EMAIL") {
           return {
             ok: false as const,
             error: "Пользователь с такой почтой уже зарегистрирован",
@@ -180,18 +315,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { ok: false as const, error: result.error };
       }
 
-      setUser(result.user);
+      await afterAuthSuccess(result.user);
       return { ok: true as const };
     },
-    []
+    [afterAuthSuccess]
   );
+
+  const requestPasswordReset = useCallback(async (email: string) => {
+    const result = await getAuthProvider().requestPasswordReset(email);
+    if ("error" in result) {
+      return { ok: false as const, error: result.error };
+    }
+    return { ok: true as const };
+  }, []);
 
   const connectOrganizerRole = useCallback(async () => {
     if (!user) {
       return { ok: false as const, error: "Войдите в аккаунт" };
     }
 
-    const result = addOrganizerRole(user.id);
+    const result = await getAuthProvider().addOrganizerRole(user.id);
     if ("error" in result) {
       return { ok: false as const, error: result.error };
     }
@@ -212,7 +355,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { ok: false as const, error: "Войдите в аккаунт" };
       }
 
-      const result = updateUserProfile(user.id, input);
+      const { firstName, lastName } = splitFullName(input.fullName);
+      const result = await getAuthProvider().updateProfile(user.id, {
+        firstName,
+        lastName,
+        phone: input.phone,
+        email: input.email,
+        country: input.country,
+        dateOfBirth: input.dateOfBirth,
+      });
+
       if ("error" in result) {
         return { ok: false as const, error: result.error };
       }
@@ -229,7 +381,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return { ok: false as const, error: "Войдите в аккаунт" };
       }
 
-      const result = updateUserAvatar(user.id, avatarUrl);
+      const result = await getAuthProvider().updateAvatar(user.id, avatarUrl);
       if ("error" in result) {
         return { ok: false as const, error: result.error };
       }
@@ -241,25 +393,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 
   const logout = useCallback(() => {
-    logoutUser();
+    void getAuthProvider().logout();
     setUser(null);
     setAuthOpen(false);
     setAuthIntent("default");
+    setFavoritePromptOpen(false);
+    pendingFavoriteRef.current = null;
+    favoriteFlowRef.current = false;
   }, []);
 
   const value = useMemo(
     () => ({
       user: hydrated ? user : null,
       isAuthenticated: hydrated ? user != null : false,
+      authHydrated: hydrated,
       authOpen,
       authIntent,
+      favoriteAuthStep,
+      favoritePromptOpen,
       openAuth,
       closeAuth,
+      openFavoritePrompt,
+      closeFavoritePrompt,
+      openAuthFromFavorite,
       loginByPhone,
       loginByEmail,
       loginForOrganizerUpgrade,
       register,
       addOrganizerRole: connectOrganizerRole,
+      requestPasswordReset,
       updateProfile,
       updateAvatar,
       logout,
@@ -268,14 +430,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authIntent,
       authOpen,
       closeAuth,
+      closeFavoritePrompt,
       connectOrganizerRole,
+      favoriteAuthStep,
+      favoritePromptOpen,
       hydrated,
       loginByEmail,
       loginByPhone,
       loginForOrganizerUpgrade,
       logout,
       openAuth,
+      openAuthFromFavorite,
+      openFavoritePrompt,
       register,
+      requestPasswordReset,
       updateAvatar,
       updateProfile,
       user,
@@ -285,6 +453,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider value={value}>
       {children}
+      <AuthQueryHandler />
+      <FavoriteAuthPromptModal />
+      <FavoriteAuthSuccessListener />
       <AuthModal />
     </AuthContext.Provider>
   );
@@ -298,6 +469,13 @@ export function useAuth() {
   return context;
 }
 
-export function useHasOrganizerRole(user: AuthUser | null): boolean {
-  return user != null && userHasRole(user, "organizer");
+/** @deprecated Prefer canAccessOrganizerPanel from @/lib/permissions */
+export function useHasOrganizerRole(user: SessionUser | null): boolean {
+  return canAccessOrganizerPanel(user);
 }
+
+export function useCanAccessOrganizerPanel(user: SessionUser | null): boolean {
+  return canAccessOrganizerPanel(user);
+}
+
+export type { SessionUser as AuthUser };

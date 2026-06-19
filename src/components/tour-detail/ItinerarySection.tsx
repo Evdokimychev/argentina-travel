@@ -4,9 +4,19 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { TourItineraryDay } from "@/types";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
+import {
+  tourDetailDayBadgeClass,
+  tourDetailTimelineClass,
+} from "@/lib/tour-detail-ui";
+import ItineraryDayDetails from "./ItineraryDayDetails";
+import ItineraryProgramFooter from "./ItineraryProgramFooter";
+import TourItineraryPdfButton from "./TourItineraryPdfButton";
+import type { TourDetail } from "@/types";
+import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 
 function ItineraryExpandToggle({
   allExpanded,
@@ -22,15 +32,17 @@ function ItineraryExpandToggle({
   onToggle: () => void;
 }) {
   return (
-    <button
-      type="button"
-      role="switch"
-      aria-checked={allExpanded}
+    <div
+      role="group"
       aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
-      onClick={onToggle}
-      className="flex max-w-full items-center gap-3 rounded-xl border border-gray-100 bg-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5"
+      className="flex max-w-full items-center gap-3 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30"
     >
-      <div className="min-w-0 flex-1">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="min-w-0 flex-1 text-left"
+        aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
+      >
         <div className="flex items-baseline justify-between gap-3">
           <span className="text-sm font-medium text-charcoal">
             {allExpanded ? "Свернуть все" : "Раскрыть все"}
@@ -50,30 +62,17 @@ function ItineraryExpandToggle({
               key={index}
               className={cn(
                 "h-1 flex-1 rounded-full transition-colors",
-                isOpen ? "bg-brand" : "bg-gray-200"
+                isOpen ? "bg-sky" : "bg-gray-200"
               )}
             />
           ))}
         </div>
 
         <p className="mt-1.5 text-xs text-slate">{formatOpenedDaysLabel(openCount, allExpanded)}</p>
-      </div>
+      </button>
 
-      <span
-        className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-          allExpanded ? "bg-brand" : "bg-gray-300"
-        )}
-        aria-hidden
-      >
-        <span
-          className={cn(
-            "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-            allExpanded ? "translate-x-5" : "translate-x-0"
-          )}
-        />
-      </span>
-    </button>
+      <Switch checked={allExpanded} onCheckedChange={() => onToggle()} aria-hidden />
+    </div>
   );
 }
 
@@ -98,58 +97,51 @@ function ItineraryDayCard({
         aria-expanded={isOpen}
         className="flex w-full items-start gap-4 text-left"
       >
-        <span className="relative z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-patagonia text-sm font-bold text-white shadow-md sm:h-12 sm:w-12">
+        <span className={cn("relative z-10", tourDetailDayBadgeClass)}>
           {day.dayNumber}
         </span>
-        <div className="flex-1 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md sm:p-5">
-          <div className="flex items-center justify-between gap-2">
-            <h3 className="font-semibold text-charcoal">
-              День {day.dayNumber}. {day.title}
-            </h3>
+        <div className="flex-1 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm transition-shadow hover:border-sky/20 hover:shadow-md sm:p-5">
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate/80">
+            День {day.dayNumber}
+          </p>
+          <div className="mt-1 flex items-start justify-between gap-2">
+            <h3 className="text-base font-semibold leading-snug text-charcoal sm:text-lg">{day.title}</h3>
             <ChevronDown
               className={cn(
-                "h-5 w-5 shrink-0 text-slate transition-transform",
+                "mt-0.5 h-5 w-5 shrink-0 text-slate transition-transform",
                 isOpen && "rotate-180"
               )}
             />
           </div>
           {isOpen && (
-            <div className="mt-4 space-y-4 animate-fade-in-up">
-              <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+            <div className="mt-4 space-y-4 border-t border-gray-100 pt-4 animate-fade-in-up">
+              {day.description ? (
+                day.descriptionHtml ? (
+                  <div
+                    className="rich-text-editor-content text-sm leading-relaxed text-slate"
+                    dangerouslySetInnerHTML={{ __html: day.descriptionHtml }}
+                  />
+                ) : (
+                  <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+                )
+              ) : null}
               {images.length > 0 && (
                 <div className="flex gap-2 overflow-x-auto pb-1">
                   {images.map((img) => (
                     <div
                       key={img}
-                      className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl"
+                      className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl ring-1 ring-gray-100"
                     >
                       <Image src={img} alt="" fill className="object-cover" sizes="144px" />
                     </div>
                   ))}
                 </div>
               )}
-              <div className="grid gap-3 sm:grid-cols-3">
-                <div className="rounded-xl bg-pampas p-3">
-                  <p className="text-xs font-medium text-slate">Активности</p>
-                  <ul className="mt-1 space-y-1 text-sm text-charcoal">
-                    {activities.map((a) => (
-                      <li key={a}>• {a}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-xl bg-pampas p-3">
-                  <p className="text-xs font-medium text-slate">Питание</p>
-                  <ul className="mt-1 space-y-1 text-sm text-charcoal">
-                    {meals.map((m) => (
-                      <li key={m}>• {m}</li>
-                    ))}
-                  </ul>
-                </div>
-                <div className="rounded-xl bg-pampas p-3">
-                  <p className="text-xs font-medium text-slate">Проживание</p>
-                  <p className="mt-1 text-sm text-charcoal">{day.accommodation}</p>
-                </div>
-              </div>
+              <ItineraryDayDetails
+                activities={activities}
+                meals={meals}
+                accommodation={day.accommodation ?? ""}
+              />
             </div>
           )}
         </div>
@@ -160,9 +152,17 @@ function ItineraryDayCard({
 
 interface ItinerarySectionProps {
   days?: TourItineraryDay[] | null;
+  tour?: TourDetail | null;
+  showPdfDownload?: boolean;
+  hideProgramFooter?: boolean;
 }
 
-export default function ItinerarySection({ days }: ItinerarySectionProps) {
+export default function ItinerarySection({
+  days,
+  tour,
+  showPdfDownload = true,
+  hideProgramFooter = false,
+}: ItinerarySectionProps) {
   const itineraryDays = useMemo(() => days ?? [], [days]);
   const firstDayId = itineraryDays[0]?.id;
 
@@ -196,7 +196,6 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
     setOpenDays((prev) => {
       const next = new Set(prev);
       if (next.has(id)) {
-        if (next.size === 1) return prev;
         next.delete(id);
       } else {
         next.add(id);
@@ -207,17 +206,18 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
 
   function handleExpandAll() {
     if (allExpanded) {
-      setOpenDays(firstDayId ? new Set([firstDayId]) : new Set());
+      setOpenDays(new Set());
     } else {
       setOpenDays(new Set(itineraryDays.map((d) => d.id)));
     }
   }
 
   return (
-    <section id="itinerary" className="tour-section-target">
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <SectionHeading title="Программа по дням" />
-        {totalDays > 1 && (
+    <TourSection
+      id="itinerary"
+      title="Программа по дням"
+      headerAddon={
+        totalDays > 1 ? (
           <ItineraryExpandToggle
             allExpanded={allExpanded}
             openCount={openCount}
@@ -225,11 +225,12 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
             openSegments={openSegments}
             onToggle={handleExpandAll}
           />
-        )}
-      </div>
-
+        ) : undefined
+      }
+    >
+      {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-6" /> : null}
       <div className="relative space-y-0">
-        <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gray-200 sm:left-[23px]" />
+        <div className={cn("absolute left-[19px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
         {itineraryDays.map((day) => (
           <ItineraryDayCard
             key={day.id}
@@ -239,6 +240,15 @@ export default function ItinerarySection({ days }: ItinerarySectionProps) {
           />
         ))}
       </div>
-    </section>
+
+      {tour && !hideProgramFooter ? (
+        <ItineraryProgramFooter
+          difficulty={tour.difficulty}
+          difficultyDescriptionHtml={tour.descriptionExtra?.difficulty}
+          organizerComment={tour ? getTourSectionOrganizerComment(tour, "itinerary") : undefined}
+          travelRisks={tour.travelRisks}
+        />
+      ) : null}
+    </TourSection>
   );
 }

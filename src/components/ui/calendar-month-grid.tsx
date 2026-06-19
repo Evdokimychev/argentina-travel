@@ -24,6 +24,8 @@ interface CalendarMonthGridProps {
   maxDate?: Date | null;
   disablePast?: boolean;
   hideTitle?: boolean;
+  /** When set, only days passing this check stay enabled (in addition to min/max/past rules). */
+  isDateSelectable?: (day: Date) => boolean;
   onDayClick: (day: Date) => void;
   className?: string;
 }
@@ -56,6 +58,7 @@ export default function CalendarMonthGrid({
   maxDate,
   disablePast = false,
   hideTitle = false,
+  isDateSelectable,
   onDayClick,
   className,
 }: CalendarMonthGridProps) {
@@ -84,20 +87,25 @@ export default function CalendarMonthGrid({
           <div key={`pad-${i}`} className="h-8" />
         ))}
         {days.map((day) => {
-          const isSelected = selected ? isSameDay(day, selected) : false;
+          const isRangeStart = rangeFrom ? isSameDay(day, rangeFrom) : false;
+          const isRangeEnd = rangeTo ? isSameDay(day, rangeTo) : false;
+          const isSelected =
+            (selected ? isSameDay(day, selected) : false) || isRangeStart || isRangeEnd;
           const inRange = isInRange(day, rangeFrom, rangeTo);
-          const disabled = isDayDisabled(day, minDate, maxDate, disablePast);
+          const disabled =
+            isDayDisabled(day, minDate, maxDate, disablePast) ||
+            (isDateSelectable ? !isDateSelectable(day) : false);
 
           return (
             <button
-              key={day.toISOString()}
+              key={format(day, "yyyy-MM-dd")}
               type="button"
               disabled={disabled}
               onClick={() => onDayClick(day)}
               className={cn(
                 "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
-                isSelected && "bg-brand text-white",
-                inRange && !isSelected && "bg-brand-light text-brand",
+                isSelected && "bg-sky text-white",
+                inRange && !isSelected && "bg-sky/10 text-sky-dark",
                 !isSelected && !inRange && !disabled && "hover:bg-gray-100",
                 disabled && "cursor-not-allowed text-gray-300"
               )}

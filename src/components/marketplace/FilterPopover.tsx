@@ -45,7 +45,11 @@ export function FilterPopover({
             <ChevronDown className="h-4 w-4 opacity-60" />
           </button>
         </PopoverTrigger>
-        <PopoverContent className={cn("p-0", width)} align="start">
+        <PopoverContent
+          className={cn("max-w-[calc(100vw-2rem)] p-0", width)}
+          align="start"
+          collisionPadding={16}
+        >
           {children}
         </PopoverContent>
       </Popover>

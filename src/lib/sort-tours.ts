@@ -30,6 +30,11 @@ function nearestDate(tour: TourListing): number {
   return first ? new Date(first).getTime() : Number.MAX_SAFE_INTEGER;
 }
 
+function reviewScore(tour: TourListing): number {
+  if (tour.reviewCount <= 0) return 0;
+  return tour.rating * 10 + tour.reviewCount * 0.1;
+}
+
 export function sortTours(tours: TourListing[], sort: TourSortOption): TourListing[] {
   const sorted = [...tours];
 
@@ -39,7 +44,9 @@ export function sortTours(tours: TourListing[], sort: TourSortOption): TourListi
     case "price_desc":
       return sorted.sort((a, b) => b.priceUsd - a.priceUsd);
     case "rating_desc":
-      return sorted.sort((a, b) => b.rating - a.rating || b.reviewCount - a.reviewCount);
+      return sorted.sort(
+        (a, b) => reviewScore(b) - reviewScore(a) || b.reviewCount - a.reviewCount
+      );
     case "duration_asc":
       return sorted.sort((a, b) => a.durationDays - b.durationDays);
     case "duration_desc":
@@ -53,14 +60,14 @@ export function sortTours(tours: TourListing[], sort: TourSortOption): TourListi
           (a.featured ? 1000 : 0) +
           (a.isBestOfMonth ? 500 : 0) +
           (a.isHot ? 200 : 0) +
-          a.rating * 10 +
-          a.reviewCount * 0.1;
+          (a.isNew ? 100 : 0) +
+          reviewScore(a);
         const scoreB =
           (b.featured ? 1000 : 0) +
           (b.isBestOfMonth ? 500 : 0) +
           (b.isHot ? 200 : 0) +
-          b.rating * 10 +
-          b.reviewCount * 0.1;
+          (b.isNew ? 100 : 0) +
+          reviewScore(b);
         return scoreB - scoreA;
       });
   }

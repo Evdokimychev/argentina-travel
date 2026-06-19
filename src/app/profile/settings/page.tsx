@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 import { format, isValid, parseISO } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,9 +11,15 @@ import { useAuth } from "@/context/AuthContext";
 import { formatPhoneInput } from "@/lib/auth-store";
 import { maxBirthDateIso, minBirthDateIso, participantAgeLabel } from "@/lib/participant-age";
 import { PROFILE_COUNTRIES, getProfileCountryFlag } from "@/data/profile-countries";
-import ProfileMenu from "@/components/auth/ProfileMenu";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
+import { cabinetLinkClass, cabinetPageSubtitleClass, cabinetPageTitleClass, cabinetPanelClass } from "@/lib/cabinet-ui";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
+
+import { ArrowRight, Pencil, Trash2 } from "lucide-react";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -77,7 +82,7 @@ function CompactActionLink({
         "inline-flex items-center gap-1 text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50",
         variant === "danger"
           ? "text-slate hover:text-red-600"
-          : "text-brand hover:text-brand-dark"
+          : "text-sky hover:text-sky-dark"
       )}
     >
       {children}
@@ -106,7 +111,7 @@ function FieldLabel({
 
 export default function ProfileSettingsPage() {
   const router = useRouter();
-  const { user, isAuthenticated, openAuth, updateProfile, updateAvatar, logout } = useAuth();
+  const { user, updateProfile, updateAvatar, logout } = useAuth();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [firstName, setFirstName] = useState("");
@@ -115,10 +120,19 @@ export default function ProfileSettingsPage() {
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   useEffect(() => {
     if (!user) return;
@@ -131,19 +145,7 @@ export default function ProfileSettingsPage() {
     setCountry(user.country);
   }, [user]);
 
-  if (!isAuthenticated || !user) {
-    return (
-      <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
-        <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-          <h1 className="font-display text-2xl font-bold text-charcoal">Настройки профиля</h1>
-          <p className="mt-3 text-sm text-slate">Войдите в аккаунт, чтобы редактировать профиль</p>
-          <Button type="button" className="mt-6" onClick={() => openAuth()}>
-            Войти
-          </Button>
-        </div>
-      </div>
-    );
-  }
+  if (!user) return null;
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -161,11 +163,17 @@ export default function ProfileSettingsPage() {
     setLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      const normalized = normalizeSiteError(result.error);
+      setError(normalized);
+      feedback.showError(normalized);
       return;
     }
 
     setSaved(true);
+    feedback.success({
+      title: "Профиль обновлён",
+      description: "Изменения сохранены.",
+    });
   }
 
   async function handleAvatarSelect(file: File | null) {
@@ -189,12 +197,17 @@ export default function ProfileSettingsPage() {
       const dataUrl = await readFileAsDataUrl(file);
       const result = await updateAvatar(dataUrl);
       if (!result.ok) {
-        setError(result.error);
+        setError(normalizeSiteError(result.error));
         return;
       }
       setSaved(true);
+      feedback.success({ title: "Фото обновлено", description: "Аватар успешно изменён." });
     } catch {
-      setError("Не удалось загрузить фото");
+      setError(
+        siteFormError("Не удалось загрузить фото", {
+          steps: ["Выберите JPG или PNG до 2 МБ", "Попробуйте другое изображение"],
+        })
+      );
     } finally {
       setAvatarLoading(false);
       if (fileInputRef.current) {
@@ -212,36 +225,24 @@ export default function ProfileSettingsPage() {
     setAvatarLoading(false);
 
     if (!result.ok) {
-      setError(result.error);
+      setError(normalizeSiteError(result.error));
       return;
     }
 
     setSaved(true);
+    feedback.success({ title: "Фото удалено", description: "Аватар сброшен на стандартный." });
   }
 
   return (
-    <div className="bg-pampas pb-16">
-      <div className="border-b border-gray-200 bg-white">
-        <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-4 sm:px-6">
-          <div>
-            <Link href="/" className="text-sm text-slate transition-colors hover:text-brand">
-              ← На главную
-            </Link>
-            <h1 className="mt-1 font-display text-2xl font-bold text-charcoal">Настройки аккаунта</h1>
-          </div>
-          <div className="hidden sm:block">
-            <ProfileMenu />
-          </div>
-        </div>
-      </div>
+    <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+      <form
+        onSubmit={handleSubmit}
+        className={cabinetPanelClass}
+      >
+        <h1 className={cabinetPageTitleClass}>Настройки аккаунта</h1>
+        <p className={cabinetPageSubtitleClass}>Контактные данные и фото профиля</p>
 
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
-          <form
-            onSubmit={handleSubmit}
-            className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6"
-          >
-            <div className="space-y-4">
+        <div className="mt-5 space-y-4">
               <div className="flex gap-4 border-b border-gray-100 pb-4">
                 <div className="flex shrink-0 flex-col items-center">
                   <UserAvatar
@@ -406,20 +407,28 @@ export default function ProfileSettingsPage() {
             </div>
 
           {error ? (
-            <div role="alert" className="mt-4 rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
-              {error}
-            </div>
+            <InlineFeedback
+              variant="error"
+              title={error.title}
+              description={error.description}
+              steps={error.steps}
+              action={error.action}
+              className="mt-4"
+            />
           ) : null}
 
           {saved ? (
-            <div className="mt-4 rounded-xl bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800">
-              Изменения успешно сохранены!
-            </div>
+            <InlineFeedback
+              variant="success"
+              title="Изменения сохранены"
+              description="Данные профиля обновлены."
+              className="mt-4"
+            />
           ) : null}
 
           <div className="mt-5 flex flex-col gap-3 border-t border-gray-100 pt-5 sm:flex-row sm:items-center sm:justify-between">
-            <Button type="submit" disabled={loading || avatarLoading}>
-              {loading ? "Сохраняем…" : "Сохранить изменения"}
+            <Button type="submit" loading={loading} loadingLabel="Сохраняем…" disabled={avatarLoading}>
+              Сохранить изменения
             </Button>
             <button
               type="button"
@@ -434,21 +443,19 @@ export default function ProfileSettingsPage() {
           </div>
         </form>
 
-          <aside className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
-            <h2 className="font-display text-lg font-bold text-charcoal">Авторам путешествий</h2>
+          <aside className={cn(cabinetPanelClass, "p-6")}>
+            <h2 className="font-heading text-lg font-bold text-charcoal">Авторам путешествий</h2>
             <p className="mt-2 text-sm leading-relaxed text-slate">
               Организуйте собственный тур вместе с нами
             </p>
             <Link
               href="/join"
-              className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand transition-colors hover:text-brand-dark"
+              className={cn(cabinetLinkClass, "mt-4 inline-flex items-center gap-1 text-sm font-semibold")}
             >
               Стать автором
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
           </aside>
-        </div>
-      </div>
     </div>
   );
 }

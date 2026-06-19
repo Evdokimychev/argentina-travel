@@ -1,3 +1,11 @@
+export interface JoinHeroHighlight {
+  id: string;
+  label: string;
+  value: string;
+  description: string;
+  icon: "free" | "map" | "crm" | "audience";
+}
+
 export interface JoinBenefit {
   id: string;
   title: string;
@@ -28,6 +36,37 @@ export interface JoinFaqItem {
   question: string;
   answer: string;
 }
+
+export const JOIN_HERO_HIGHLIGHTS: JoinHeroHighlight[] = [
+  {
+    id: "free",
+    label: "Размещение",
+    value: "Бесплатно",
+    description: "Комиссия только за состоявшиеся бронирования",
+    icon: "free",
+  },
+  {
+    id: "editor",
+    label: "Редактор тура",
+    value: "Карта и программа",
+    description: "Маршрут, даты, стоимость и условия в одном месте",
+    icon: "map",
+  },
+  {
+    id: "crm",
+    label: "Личный кабинет",
+    value: "CRM заявок",
+    description: "Статусы бронирований, чат и статистика туров",
+    icon: "crm",
+  },
+  {
+    id: "audience",
+    label: "Аудитория",
+    value: "Россия и СНГ",
+    description: "Туристы, которым нужна именно Аргентина",
+    icon: "audience",
+  },
+];
 
 export const JOIN_BENEFITS: JoinBenefit[] = [
   {
@@ -101,8 +140,9 @@ export const JOIN_STEPS: JoinStep[] = [
   },
   {
     id: "payment",
-    title: "Получайте предоплату",
-    description: "Бронирование подтверждается после оплаты на платформе",
+    title: "Подтверждайте бронирования",
+    description:
+      "Ведите заявки в личном кабинете и настраивайте сценарии оплаты в редакторе тура",
   },
   {
     id: "reviews",

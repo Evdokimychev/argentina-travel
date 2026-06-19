@@ -1,34 +1,24 @@
-export type AuthUserRole = "tourist" | "organizer";
+export type AuthUserRole = import("@/types/user").AccountRole;
 
-export type AuthIntent = "default" | "organizer";
+export type AuthIntent = "default" | "organizer" | "favorite";
 
-export interface AuthUser {
-  id: string;
-  /** Активная роль в текущей сессии */
-  role: AuthUserRole;
-  /** Все роли, доступные аккаунту */
-  roles: AuthUserRole[];
-  fullName: string;
-  phone: string;
-  email: string;
-  avatarUrl: string | null;
-  country: string;
-  dateOfBirth: string | null;
-}
+export type FavoriteAuthStep = "sign-in" | "register";
 
-export interface StoredAuthUser extends Omit<AuthUser, "roles"> {
-  roles?: AuthUserRole[];
+/** Session user exposed to UI — alias for backward compatibility. */
+export type AuthUser = import("@/types/user").SessionUser;
+
+export type StoredAuthUser = Omit<import("@/types/user").User, "roles"> & {
+  roles?: import("@/types/user").AccountRole[];
   password?: string;
-}
+  /** Legacy field — migrated to firstName/lastName on read. */
+  fullName?: string;
+  /** Legacy field — migrated to avatar on read. */
+  avatarUrl?: string | null;
+};
 
-export function normalizeUserRoles(user: Pick<StoredAuthUser, "role" | "roles">): AuthUserRole[] {
-  if (user.roles?.length) return [...new Set(user.roles)];
-  return [user.role];
-}
+export {
+  normalizeAccountRoles as normalizeUserRoles,
+  userHasAccountRole as userHasRole,
+} from "@/types/user";
 
-export function userHasRole(
-  user: Pick<StoredAuthUser, "role" | "roles">,
-  role: AuthUserRole
-): boolean {
-  return normalizeUserRoles(user).includes(role);
-}
+export type { SessionUser, User, AccountRole } from "@/types/user";

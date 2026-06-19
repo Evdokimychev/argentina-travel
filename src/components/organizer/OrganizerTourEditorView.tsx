@@ -1,27 +1,75 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import PublishReadinessPanel from "@/components/organizer/PublishReadinessPanel";
 import { ArrowLeft, CircleX, Copy, ExternalLink, Eye, Info, Link2, MoreHorizontal, Trash2, Upload, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
+import { SwitchField } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/context/AuthContext";
+import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import {
+  cloneOrganizerTour,
+  deleteOrganizerTour,
   readOrganizerTourDraft,
   saveOrganizerTourDraft,
 } from "@/lib/organizer-tour-store";
+import { getCatalogSlug } from "@/lib/tour-slug";
+import { stageOrganizerTourPreviewDraft } from "@/lib/tour-preview";
 import { cn } from "@/lib/cn";
+import {
+  siteStickyBelowHeaderInset075Class,
+  siteStickyBelowHeaderInsetClass,
+} from "@/lib/site-container";
 import TourLeisureTypesBlock from "@/components/organizer/TourLeisureTypesBlock";
-import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
+import TourTravelRisksBlock from "@/components/organizer/TourTravelRisksBlock";
 import TourGeographyBlock from "@/components/organizer/TourGeographyBlock";
+import TourTicketRecommendationsBlock from "@/components/organizer/TourTicketRecommendationsBlock";
+import TourArrivalDepartureBlock from "@/components/organizer/TourArrivalDepartureBlock";
+import TourArrivalDetailsBlock from "@/components/organizer/TourArrivalDetailsBlock";
 import TourGeneralDescriptionBlock from "@/components/organizer/TourGeneralDescriptionBlock";
 import TourPhotosBlock from "@/components/organizer/TourPhotosBlock";
 import TourImpressionsBlock from "@/components/organizer/TourImpressionsBlock";
 import TourGuidesBlock from "@/components/organizer/TourGuidesBlock";
+import TourParticipantRecommendationsBlock from "@/components/organizer/TourParticipantRecommendationsBlock";
+import TourRouteFeaturesBlock from "@/components/organizer/TourRouteFeaturesBlock";
+import TourDifficultyBlock from "@/components/organizer/TourDifficultyBlock";
+import TourComfortBlock from "@/components/organizer/TourComfortBlock";
+import TourAccommodationFooterBlock from "@/components/organizer/TourAccommodationFooterBlock";
+import TourSectionCommentEditor from "@/components/organizer/TourSectionCommentEditor";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
+import TourAccommodationDescriptionBlock from "@/components/organizer/TourAccommodationDescriptionBlock";
+import TourAccommodationVariantsBlock from "@/components/organizer/TourAccommodationVariantsBlock";
+import TourAccommodationPlacesBlock from "@/components/organizer/TourAccommodationPlacesBlock";
+import TourAccommodationSettingsBlock from "@/components/organizer/TourAccommodationSettingsBlock";
+import TourCurrencyBlock from "@/components/organizer/TourCurrencyBlock";
+import TourDiscountBlock from "@/components/organizer/TourDiscountBlock";
+import TourPrivateTripsBlock from "@/components/organizer/TourPrivateTripsBlock";
+import TourGroupDiscountBlock from "@/components/organizer/TourGroupDiscountBlock";
+import TourWaitlistBlock from "@/components/organizer/TourWaitlistBlock";
+import { buildPrivateTourHref } from "@/lib/tour-private-access";
+import TourIndividualBlock from "@/components/organizer/TourIndividualBlock";
+import TourGroupDatesBlock from "@/components/organizer/TourGroupDatesBlock";
+import TourCheckoutPaymentOptionsBlock from "@/components/organizer/TourCheckoutPaymentOptionsBlock";
+import TourCustomBookingLinkBlock from "@/components/organizer/TourCustomBookingLinkBlock";
+import TourProgramBlock from "@/components/organizer/TourProgramBlock";
+import TourItineraryFooterBlock from "@/components/organizer/TourItineraryFooterBlock";
+import TourTermsListBlock from "@/components/organizer/TourTermsListBlock";
+import TourTermsConditionsBlock from "@/components/organizer/TourTermsConditionsBlock";
+import TourInsuranceBlock from "@/components/organizer/TourInsuranceBlock";
+import TourCancellationBlock from "@/components/organizer/TourCancellationBlock";
+import TourFAQBlock from "@/components/organizer/TourFAQBlock";
+import TourPackingListBlock from "@/components/organizer/TourPackingListBlock";
+import {
+  ACCOMMODATION_VARIANT_NOT_FILLED,
+  IGUAZU_VARIANT_ACCOMMODATIONS,
+} from "@/data/tour-accommodation-defaults";
+import { primaryComfortLevel } from "@/data/tour-levels";
+import { NO_ACCOMMODATION_LABEL } from "@/lib/tour-accommodation";
 import type {
-  AccommodationType,
-  ComfortLevel,
   TourBookingMode,
   TourLanguage,
 } from "@/types";
@@ -31,26 +79,52 @@ import {
   type OrganizerTourDraft,
   type OrganizerTourEditorTabId,
   type OrganizerTourStatus,
-  type OrganizerTourType,
 } from "@/types/organizer-tour";
-
-const COMFORT_LEVELS: ComfortLevel[] = ["Базовый", "Стандарт", "Комфорт", "Премиум", "Люкс"];
-
-const ACCOMMODATION_TYPES: AccommodationType[] = [
-  "Без проживания",
-  "Отель",
-  "Лодж",
-  "Палатка",
-  "Бутик-отель",
-];
 
 const LANGUAGES: TourLanguage[] = ["Русский", "Испанский", "Английский", "Португальский"];
 
-const BOOKING_MODES: { value: TourBookingMode; label: string }[] = [
-  { value: "scheduled", label: "Только по расписанию" },
-  { value: "on_request", label: "Только по запросу" },
-  { value: "both", label: "Расписание и индивидуально" },
-];
+function normalizeDraftForSave(draft: OrganizerTourDraft): OrganizerTourDraft {
+  return {
+    ...draft,
+    title: draft.title.slice(0, ORGANIZER_TOUR_TITLE_MAX),
+    durationDays: Math.max(1, draft.durationDays),
+    durationNights: Math.max(0, draft.durationNights),
+    priceUsd: Math.max(0, draft.priceUsd),
+    groupMin: Math.max(1, draft.groupMin),
+    groupMax: Math.max(draft.groupMin, draft.groupMax),
+    maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
+    maxWeightEnabled: draft.maxWeightEnabled,
+    gallery: draft.gallery.filter(Boolean),
+  };
+}
+
+function getNavStickyTopPx(): number {
+  if (typeof window === "undefined") return 84;
+
+  const root = document.documentElement;
+  const headerVar = getComputedStyle(root).getPropertyValue("--site-header-height").trim();
+  const headerPx = headerVar.endsWith("px")
+    ? parseFloat(headerVar)
+    : Number.parseFloat(headerVar) || 72;
+  const remPx = Number.parseFloat(getComputedStyle(root).fontSize) || 16;
+
+  return Math.round(headerPx + 0.75 * remPx);
+}
+
+function syncBookingModeForIndividual(
+  enabled: boolean,
+  current: TourBookingMode,
+  hasGroupDates: boolean
+): TourBookingMode {
+  if (enabled) {
+    if (current === "scheduled") return hasGroupDates ? "both" : "on_request";
+    return current;
+  }
+
+  if (current === "on_request") return "scheduled";
+  if (current === "both") return hasGroupDates ? "scheduled" : "scheduled";
+  return current;
+}
 
 const TOUR_VARIANT_SYNC: Record<
   string,
@@ -59,6 +133,7 @@ const TOUR_VARIANT_SYNC: Record<
     titleDiff?: string;
     minAgeDiff?: number;
     shortDescriptionDiff?: string;
+    accommodationDescriptionDiff?: string;
   }
 > = {
   "org-iguazu": {
@@ -67,6 +142,7 @@ const TOUR_VARIANT_SYNC: Record<
     minAgeDiff: 12,
     shortDescriptionDiff:
       "Двухдневный маршрут с ночёвкой у парка, бразильской стороной и более глубоким погружением в джунгли Misiones.",
+    accommodationDescriptionDiff: ACCOMMODATION_VARIANT_NOT_FILLED,
   },
 };
 
@@ -88,6 +164,89 @@ function FieldLabel({
         {required ? <span className="text-brand"> *</span> : null}
       </label>
       {hint ? <p className="mt-0.5 text-xs leading-relaxed text-slate">{hint}</p> : null}
+    </div>
+  );
+}
+
+function FloatingLabeledInput({
+  id,
+  label,
+  required,
+  className,
+  ...props
+}: React.ComponentProps<typeof Input> & {
+  label: string;
+  required?: boolean;
+}) {
+  return (
+    <div className={cn("relative w-full min-w-0", className)}>
+      <label
+        htmlFor={id}
+        className="pointer-events-none absolute left-3 top-0 z-10 -translate-y-1/2 bg-white px-1 text-xs font-medium text-slate"
+      >
+        {label}
+        {required ? <span className="text-brand"> *</span> : null}
+      </label>
+      <Input id={id} className="h-14 pt-1" {...props} />
+    </div>
+  );
+}
+
+function RangeInputPair({
+  minId,
+  maxId,
+  minLabel,
+  maxLabel,
+  minValue,
+  maxValue,
+  onMinChange,
+  onMaxChange,
+  minRequired,
+  maxRequired,
+  minInputProps,
+  maxInputProps,
+}: {
+  minId: string;
+  maxId: string;
+  minLabel: string;
+  maxLabel: string;
+  minValue: number | string;
+  maxValue: number | string;
+  onMinChange: (value: number) => void;
+  onMaxChange: (value: number) => void;
+  minRequired?: boolean;
+  maxRequired?: boolean;
+  minInputProps?: React.ComponentProps<typeof Input>;
+  maxInputProps?: React.ComponentProps<typeof Input>;
+}) {
+  return (
+    <div className="flex items-center gap-2 sm:gap-3">
+      <FloatingLabeledInput
+        id={minId}
+        label={minLabel}
+        required={minRequired}
+        type="number"
+        className="min-w-0 flex-1"
+        value={minValue}
+        onChange={(event) => onMinChange(Number(event.target.value) || 0)}
+        {...minInputProps}
+      />
+      <span
+        className="flex h-14 w-5 shrink-0 items-center justify-center text-lg font-light text-gray-300"
+        aria-hidden
+      >
+        —
+      </span>
+      <FloatingLabeledInput
+        id={maxId}
+        label={maxLabel}
+        required={maxRequired}
+        type="number"
+        className="min-w-0 flex-1"
+        value={maxValue}
+        onChange={(event) => onMaxChange(Number(event.target.value) || 0)}
+        {...maxInputProps}
+      />
     </div>
   );
 }
@@ -195,11 +354,13 @@ function TourEditorActionsMenu({
   isArchived,
   onUnpublish,
   onArchive,
+  onDelete,
 }: {
   isPublished: boolean;
   isArchived: boolean;
   onUnpublish: () => void;
   onArchive: () => void;
+  onDelete: () => void;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -226,6 +387,15 @@ function TourEditorActionsMenu({
           },
         }
       : null,
+    {
+      key: "delete",
+      label: "Удалить тур",
+      icon: Trash2,
+      onClick: () => {
+        onDelete();
+        setOpen(false);
+      },
+    },
   ].filter(Boolean) as {
     key: string;
     label: string;
@@ -276,29 +446,42 @@ function TourEditorSidebar({
   draft,
   loading,
   saved,
+  autoSaving,
   onUnpublish,
   onArchive,
+  onClone,
+  onDelete,
+  onPreview,
+  onTabSelect,
 }: {
   draft: OrganizerTourDraft;
   loading: boolean;
   saved: boolean;
+  autoSaving: boolean;
   onUnpublish: () => void;
   onArchive: () => void;
+  onClone: () => void;
+  onDelete: () => void;
+  onPreview: () => void;
+  onTabSelect: (tabId: OrganizerTourEditorTabId) => void;
 }) {
   const isPublished = draft.status === "published";
-  const platformName = draft.partnerName || "Клуб Гидов";
-  const tourUrl = `/tours/${draft.slug}`;
-  const previewUrl = `${tourUrl}?preview=1`;
+  const platformName = draft.partnerName || "Пора в Аргентину";
+  const catalogSlug = getCatalogSlug(draft);
+  const tourUrl = draft.isPrivate && draft.privateAccessToken
+    ? buildPrivateTourHref(catalogSlug, draft.privateAccessToken)
+    : `/tours/${catalogSlug}`;
+  const previewUrl = `/organizer/tours/${draft.id}/preview`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
   const statusLabel = isPublished ? "Опубликовано" : "Черновик";
 
   return (
-    <aside className="hidden xl:sticky xl:top-[calc(var(--site-header-height,72px)+1rem)] xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto">
+    <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
       <div className="space-y-4">
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
-            <h2 className="font-display text-base font-bold text-charcoal">Редактирование тура</h2>
+            <h2 className="font-heading text-base font-bold text-charcoal">Редактирование тура</h2>
             {lastChanged ? (
               <p className="mt-1.5 text-xs text-slate">Последнее изменение: {lastChanged}</p>
             ) : null}
@@ -309,6 +492,8 @@ function TourEditorSidebar({
             <span className="font-semibold text-emerald-700">{statusLabel}</span>
           </div>
 
+          <PublishReadinessPanel draft={draft} compact onTabSelect={onTabSelect} />
+
           <Button type="submit" className="h-12 w-full rounded-2xl text-sm" disabled={loading}>
             <Upload className="h-4 w-4" />
             {loading
@@ -318,11 +503,17 @@ function TourEditorSidebar({
                 : "Сохранить черновик"}
           </Button>
 
-          {saved ? (
+          {autoSaving ? (
+            <p className="text-center text-xs text-slate">Автосохранение…</p>
+          ) : saved ? (
             <p className="text-center text-xs text-emerald-700">Изменения сохранены</p>
           ) : null}
 
-          {isPublished ? (
+          {isPublished && draft.isPrivate ? (
+            <div className="rounded-xl bg-amber-50 px-3 py-3 text-sm leading-relaxed text-charcoal">
+              Приватный тур — в каталоге скрыт. Делитесь ссылкой из вкладки «Публикация».
+            </div>
+          ) : isPublished ? (
             <div className="rounded-xl bg-brand-light/70 px-3 py-3 text-sm leading-relaxed text-charcoal">
               Изменения опубликуются на площадках:{" "}
               <Link href={draft.partnerUrl ?? "/tours"} className="font-medium text-sky hover:underline">
@@ -334,6 +525,7 @@ function TourEditorSidebar({
           <div className="space-y-2">
             <button
               type="button"
+              onClick={onClone}
               className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
             >
               <Copy className="h-4 w-4 text-slate" />
@@ -344,22 +536,44 @@ function TourEditorSidebar({
               isArchived={draft.archived}
               onUnpublish={onUnpublish}
               onArchive={onArchive}
+              onDelete={onDelete}
             />
           </div>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-display text-base font-bold text-charcoal">Предпросмотр тура</h2>
-          <div className="mt-3 flex items-center gap-2">
-            <Link href={previewUrl} target="_blank" className="text-sm font-medium text-sky hover:underline">
-              {platformName}
-            </Link>
-            <Eye className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-          </div>
+          <h2 className="font-heading text-base font-bold text-charcoal">Предпросмотр тура</h2>
+          <p className="mt-1.5 line-clamp-2 text-xs text-slate">
+            {draft.title.trim() || "Без названия"}
+          </p>
+          <button
+            type="button"
+            onClick={onPreview}
+            className="mt-3 flex w-full items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3 text-left transition-colors hover:border-brand/30 hover:bg-brand-light/40"
+          >
+            <span className="min-w-0">
+              <span className="block truncate text-sm font-semibold text-charcoal">{platformName}</span>
+              <span className="mt-0.5 block text-xs text-slate">Как увидят туристы</span>
+            </span>
+            <Eye className="h-5 w-5 shrink-0 text-brand" aria-hidden />
+          </button>
+          <p className="mt-2 text-xs leading-relaxed text-slate">
+            Откроется в новой вкладке с учётом текущих изменений из редактора.
+          </p>
+          <Link
+            href={previewUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
+          >
+            Открыть сохранённую версию
+          </Link>
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-          <h2 className="font-display text-base font-bold text-charcoal">Тур на площадке</h2>
+          <h2 className="font-heading text-base font-bold text-charcoal">
+            {draft.isPrivate ? "Приватная ссылка" : "Тур на площадке"}
+          </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Link
               href={isPublished ? tourUrl : "#"}
@@ -395,20 +609,85 @@ interface OrganizerTourEditorViewProps {
 
 export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorViewProps) {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState<OrganizerTourEditorTabId>("main");
   const [draft, setDraft] = useState<OrganizerTourDraft | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [autoSaving, setAutoSaving] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [navStuck, setNavStuck] = useState(false);
+  const navSentinelRef = useRef<HTMLDivElement>(null);
+  const debouncedDraft = useDebouncedValue(draft, 2000);
 
   useEffect(() => {
-    const nextDraft = readOrganizerTourDraft(tourId);
+    const tab = searchParams.get("tab");
+    if (
+      tab &&
+      ORGANIZER_TOUR_EDITOR_TABS.some((item) => item.id === tab)
+    ) {
+      setActiveTab(tab as OrganizerTourEditorTabId);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const nextDraft = readOrganizerTourDraft(tourId, user);
     if (!nextDraft) {
       router.replace("/organizer/tours");
       return;
     }
     setDraft(nextDraft);
-  }, [router, tourId]);
+    setDirty(false);
+    setSaved(true);
+  }, [router, tourId, user]);
+
+  useEffect(() => {
+    if (!debouncedDraft || !dirty || !user || loading) return;
+    if (!debouncedDraft.title.trim()) return;
+
+    setAutoSaving(true);
+    const result = saveOrganizerTourDraft(normalizeDraftForSave(debouncedDraft), user);
+    setAutoSaving(false);
+
+    if ("error" in result) return;
+
+    setDraft(result.draft);
+    setSaved(true);
+    setDirty(false);
+  }, [debouncedDraft, dirty, user, loading]);
+
+  useEffect(() => {
+    const sentinel = navSentinelRef.current;
+    if (!sentinel) return;
+
+    let observer: IntersectionObserver | null = null;
+
+    function mountObserver() {
+      const el = navSentinelRef.current;
+      if (!el) return;
+
+      observer?.disconnect();
+      const topPx = getNavStickyTopPx();
+      observer = new IntersectionObserver(
+        ([entry]) => setNavStuck(!entry.isIntersecting),
+        {
+          threshold: 0,
+          rootMargin: `-${topPx}px 0px 0px 0px`,
+        }
+      );
+      observer.observe(el);
+    }
+
+    mountObserver();
+    window.addEventListener("resize", mountObserver);
+
+    return () => {
+      observer?.disconnect();
+      window.removeEventListener("resize", mountObserver);
+    };
+  }, [draft]);
 
   if (!draft) {
     return (
@@ -420,12 +699,34 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
   function markDirty() {
     setSaved(false);
+    setDirty(true);
     setError(null);
   }
 
   function updateDraft(patch: Partial<OrganizerTourDraft>) {
     setDraft((prev) => (prev ? { ...prev, ...patch } : prev));
     markDirty();
+  }
+
+  function updateSectionOrganizerComments(
+    sectionOrganizerComments: TourSectionOrganizerComments,
+    legacyPatch?: Partial<
+      Pick<OrganizerTourDraft, "itineraryOrganizerCommentText" | "accommodationOrganizerCommentText">
+    >
+  ) {
+    updateDraft({ sectionOrganizerComments, ...legacyPatch });
+  }
+
+  function sectionCommentValue(sectionId: keyof TourSectionOrganizerComments): string {
+    return (
+      draft?.sectionOrganizerComments?.[sectionId] ??
+      (sectionId === "itinerary"
+        ? draft?.itineraryOrganizerCommentText
+        : sectionId === "accommodations"
+          ? draft?.accommodationOrganizerCommentText
+          : "") ??
+      ""
+    );
   }
 
   function toggleLanguage(language: TourLanguage) {
@@ -448,17 +749,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     setError(null);
     setSaved(false);
 
-    const result = saveOrganizerTourDraft({
-      ...draft,
-      title: draft.title.slice(0, ORGANIZER_TOUR_TITLE_MAX),
-      durationDays: Math.max(1, draft.durationDays),
-      durationNights: Math.max(0, draft.durationNights),
-      priceUsd: Math.max(0, draft.priceUsd),
-      groupMin: Math.max(1, draft.groupMin),
-      groupMax: Math.max(draft.groupMin, draft.groupMax),
-      maxWeightKg: draft.maxWeightKg && draft.maxWeightKg > 0 ? draft.maxWeightKg : null,
-      gallery: draft.gallery.filter(Boolean),
-    });
+    const result = saveOrganizerTourDraft(normalizeDraftForSave(draft), user);
 
     setLoading(false);
 
@@ -469,14 +760,45 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
     setDraft(result.draft);
     setSaved(true);
+    setDirty(false);
+  }
+
+  function handlePreview() {
+    if (!draft) return;
+    stageOrganizerTourPreviewDraft(draft);
+    window.open(`/organizer/tours/${draft.id}/preview`, "_blank", "noopener,noreferrer");
+  }
+
+  function handleClone() {
+    const result = cloneOrganizerTour(tourId, user);
+    if ("error" in result) {
+      setError(result.error);
+      return;
+    }
+    router.push(`/organizer/tours/${result.draft.id}/edit`);
+  }
+
+  function handleDelete() {
+    const confirmed = window.confirm(
+      "Удалить тур? Он исчезнет из каталога и поиска. Это действие нельзя отменить."
+    );
+    if (!confirmed) return;
+
+    const result = deleteOrganizerTour(tourId, user);
+    if ("error" in result) {
+      setError(result.error);
+      return;
+    }
+    router.replace("/organizer/tours");
   }
 
   const variantSync = TOUR_VARIANT_SYNC[draft.id];
+  const catalogSlug = getCatalogSlug(draft);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="overflow-hidden rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
-        <div className="flex flex-col gap-4 border-b border-gray-200/60 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-start lg:justify-between">
+      <div className="rounded-3xl bg-white shadow-sm ring-1 ring-gray-200/60">
+        <div className="flex flex-col gap-4 px-4 py-4 sm:px-6 sm:py-5 lg:flex-row lg:items-start lg:justify-between">
         <div className="flex min-w-0 items-start gap-3">
           <Link
             href="/organizer/tours"
@@ -495,6 +817,14 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           </div>
         </div>
         <div className="flex shrink-0 flex-wrap items-center gap-2 lg:pt-1">
+          <button
+            type="button"
+            onClick={handlePreview}
+            className="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200/80 bg-white px-4 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50 xl:hidden"
+          >
+            <Eye className="h-4 w-4 text-brand" />
+            Предпросмотр
+          </button>
           {draft.status === "published" ? (
             <Link
               href={`/tours/${draft.slug}`}
@@ -514,32 +844,45 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 : "Сохранить черновик"}
           </Button>
         </div>
+        </div>
       </div>
 
-      <div className="flex gap-1 overflow-x-auto border-b border-gray-200/60 px-3 scrollbar-hide sm:px-6">
-        {ORGANIZER_TOUR_EDITOR_TABS.map((tab) => (
-          <button
-            key={tab.id}
-            type="button"
-            onClick={() => setActiveTab(tab.id)}
-            className={cn(
-              "relative shrink-0 px-3 py-3.5 text-sm font-medium transition-colors sm:px-4",
-              activeTab === tab.id
-                ? "text-charcoal after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-brand sm:after:inset-x-3"
-                : "text-slate hover:text-charcoal"
-            )}
-          >
-            {tab.label}
-          </button>
-        ))}
-      </div>
-      </div>
+      <div ref={navSentinelRef} className="h-px" aria-hidden />
+
+      <nav
+        aria-label="Разделы редактора тура"
+        className={cn(
+          "sticky z-30 w-full transition-[max-width] duration-300 ease-out",
+          siteStickyBelowHeaderInset075Class,
+          navStuck && "xl:max-w-[calc(100%-19rem)]"
+        )}
+      >
+        <div className="overflow-hidden rounded-2xl bg-white/95 shadow-sm ring-1 ring-gray-200/60 backdrop-blur-md supports-[backdrop-filter]:bg-white/90">
+          <div className="flex gap-1 overflow-x-auto px-3 scrollbar-hide sm:px-4">
+            {ORGANIZER_TOUR_EDITOR_TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={cn(
+                  "relative shrink-0 px-3 py-3.5 text-sm font-medium transition-colors sm:px-4",
+                  activeTab === tab.id
+                    ? "text-charcoal after:absolute after:inset-x-2 after:bottom-0 after:h-0.5 after:rounded-full after:bg-brand sm:after:inset-x-3"
+                    : "text-slate hover:text-charcoal"
+                )}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </nav>
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_280px] xl:items-start">
         <div className="min-w-0 space-y-6">
             {activeTab === "main" ? (
               <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-                <h2 className="font-display text-xl font-bold text-charcoal sm:text-2xl">
+                <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
                   Расскажите о вашем туре
                 </h2>
 
@@ -572,72 +915,56 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   </div>
                 ) : null}
 
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4 sm:grid-cols-2 sm:items-end">
                   <LanguageTagsField languages={draft.languages} onToggle={toggleLanguage} />
-                  <div>
-                    <FieldLabel htmlFor="tour-days" required>
-                      Количество дней
-                    </FieldLabel>
-                    <Input
-                      id="tour-days"
-                      type="number"
-                      min={1}
-                      value={draft.durationDays}
-                      onChange={(event) =>
-                        updateDraft({ durationDays: Number(event.target.value) || 1 })
+                  <FloatingLabeledInput
+                    id="tour-days"
+                    label="Количество дней"
+                    required
+                    type="number"
+                    min={1}
+                    className="w-full"
+                    value={draft.durationDays}
+                    onChange={(event) =>
+                      updateDraft({ durationDays: Number(event.target.value) || 1 })
+                    }
+                  />
+
+                  <div className="sm:col-span-2">
+                    <RangeInputPair
+                      minId="tour-group-min"
+                      maxId="tour-group-max"
+                      minLabel="Мин. человек в группе"
+                      maxLabel="Макс. человек в группе"
+                      minValue={draft.groupMin}
+                      maxValue={draft.groupMax}
+                      maxRequired
+                      minInputProps={{ min: 1 }}
+                      maxInputProps={{ min: 1 }}
+                      onMinChange={(groupMin) => updateDraft({ groupMin: Math.max(1, groupMin) })}
+                      onMaxChange={(groupMax) =>
+                        updateDraft({ groupMax: Math.max(draft.groupMin, groupMax || 1) })
                       }
                     />
                   </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-group-min">Мин. человек в группе</FieldLabel>
-                    <Input
-                      id="tour-group-min"
-                      type="number"
-                      min={1}
-                      value={draft.groupMin}
-                      onChange={(event) =>
-                        updateDraft({ groupMin: Number(event.target.value) || 1 })
+
+                  <div className="sm:col-span-2">
+                    <RangeInputPair
+                      minId="tour-min-age"
+                      maxId="tour-max-age"
+                      minLabel="Минимальный возраст, лет"
+                      maxLabel="Максимальный возраст, лет"
+                      minValue={draft.minimumAge}
+                      maxValue={draft.maximumAge ?? ""}
+                      minRequired
+                      minInputProps={{ min: 0 }}
+                      maxInputProps={{ min: 0 }}
+                      onMinChange={(minimumAge) =>
+                        updateDraft({ minimumAge: Math.max(0, minimumAge) })
                       }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-group-max" required>
-                      Макс. человек в группе
-                    </FieldLabel>
-                    <Input
-                      id="tour-group-max"
-                      type="number"
-                      min={1}
-                      value={draft.groupMax}
-                      onChange={(event) =>
-                        updateDraft({ groupMax: Number(event.target.value) || 1 })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-min-age" required>
-                      Минимальный возраст, лет
-                    </FieldLabel>
-                    <Input
-                      id="tour-min-age"
-                      type="number"
-                      min={0}
-                      value={draft.minimumAge}
-                      onChange={(event) =>
-                        updateDraft({ minimumAge: Number(event.target.value) || 0 })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-max-age">Максимальный возраст, лет</FieldLabel>
-                    <Input
-                      id="tour-max-age"
-                      type="number"
-                      min={0}
-                      value={draft.maximumAge ?? ""}
-                      onChange={(event) =>
+                      onMaxChange={(maximumAge) =>
                         updateDraft({
-                          maximumAge: event.target.value ? Number(event.target.value) : null,
+                          maximumAge: maximumAge > 0 ? maximumAge : null,
                         })
                       }
                     />
@@ -655,34 +982,35 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                 ) : null}
 
                 <div className="space-y-3 border-t border-gray-200/80 pt-5">
-                  <div>
-                    <h3 className="font-display text-base font-bold text-charcoal">
-                      Максимальный вес туриста
-                    </h3>
-                    <p className="mt-1 text-sm text-slate">
-                      Например, это может быть актуально для конных туров верхом
-                    </p>
-                  </div>
-                  <div>
-                    <FieldLabel
-                      htmlFor="tour-max-weight"
-                      hint="Если заполнить это поле — информация будет отражена на странице тура на сайте. Или вы можете оставить поле пустым."
-                    >
-                      Максимальный вес туриста, кг
-                    </FieldLabel>
-                    <Input
-                      id="tour-max-weight"
-                      type="number"
-                      min={0}
-                      value={draft.maxWeightKg ?? ""}
-                      onChange={(event) =>
-                        updateDraft({
-                          maxWeightKg: event.target.value ? Number(event.target.value) : null,
-                        })
-                      }
-                      placeholder="0"
-                    />
-                  </div>
+                  <SwitchField
+                    checked={draft.maxWeightEnabled}
+                    onCheckedChange={(maxWeightEnabled) => updateDraft({ maxWeightEnabled })}
+                    label="Максимальный вес туриста"
+                    description="Например, это может быть актуально для конных туров верхом"
+                  />
+
+                  {draft.maxWeightEnabled ? (
+                    <div>
+                      <FieldLabel
+                        htmlFor="tour-max-weight"
+                        hint="Если заполнить это поле — информация будет отражена на странице тура на сайте. Или вы можете оставить поле пустым."
+                      >
+                        Максимальный вес туриста, кг
+                      </FieldLabel>
+                      <Input
+                        id="tour-max-weight"
+                        type="number"
+                        min={0}
+                        value={draft.maxWeightKg ?? ""}
+                        onChange={(event) =>
+                          updateDraft({
+                            maxWeightKg: event.target.value ? Number(event.target.value) : null,
+                          })
+                        }
+                        placeholder="0"
+                      />
+                    </div>
+                  ) : null}
                 </div>
               </section>
             ) : null}
@@ -710,6 +1038,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "main" ? (
+              <TourTravelRisksBlock
+                risks={draft.travelRisks ?? []}
+                onChange={(travelRisks) => updateDraft({ travelRisks })}
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
               <TourGeographyBlock
                 countries={draft.countries}
                 cities={draft.cities}
@@ -722,13 +1057,65 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "main" ? (
-              <TourGeneralDescriptionBlock
-                value={draft.shortDescription}
-                onChange={(shortDescription) => updateDraft({ shortDescription })}
-                variantLabel={variantSync?.variantLabel}
-                variantDiff={variantSync?.shortDescriptionDiff}
-                onApplySync={() => markDirty()}
+              <TourTicketRecommendationsBlock
+                enabled={draft.ticketRecommendationsEnabled}
+                text={draft.ticketRecommendationsText}
+                onEnabledChange={(ticketRecommendationsEnabled) =>
+                  updateDraft({ ticketRecommendationsEnabled })
+                }
+                onChange={(ticketRecommendationsText) =>
+                  updateDraft({ ticketRecommendationsText })
+                }
               />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourArrivalDetailsBlock
+                enabled={draft.arrivalDetailsEnabled}
+                airportsText={draft.arrivalAirportsText}
+                transfersText={draft.arrivalTransfersText}
+                meetingPoint={draft.arrivalMeetingPoint}
+                mapStartPoint={draft.mapStartPoint}
+                onEnabledChange={(arrivalDetailsEnabled) => updateDraft({ arrivalDetailsEnabled })}
+                onChange={(patch) => updateDraft(patch)}
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <>
+                <TourArrivalDepartureBlock
+                  enabled={draft.arrivalDepartureEnabled}
+                  cities={draft.arrivalDepartureCities}
+                  onEnabledChange={(arrivalDepartureEnabled) =>
+                    updateDraft({ arrivalDepartureEnabled })
+                  }
+                  onChange={(arrivalDepartureCities) => updateDraft({ arrivalDepartureCities })}
+                />
+                <TourSectionCommentEditor
+                  sectionId="logistics"
+                  value={sectionCommentValue("logistics")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
+            ) : null}
+
+            {activeTab === "main" ? (
+              <>
+                <TourGeneralDescriptionBlock
+                  value={draft.shortDescription}
+                  onChange={(shortDescription) => updateDraft({ shortDescription })}
+                  variantLabel={variantSync?.variantLabel}
+                  variantDiff={variantSync?.shortDescriptionDiff}
+                  onApplySync={() => markDirty()}
+                />
+                <TourSectionCommentEditor
+                  sectionId="description"
+                  value={sectionCommentValue("description")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
             ) : null}
 
             {activeTab === "main" ? (
@@ -741,10 +1128,18 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "main" ? (
-              <TourImpressionsBlock
-                places={draft.places}
-                onChange={(places) => updateDraft({ places })}
-              />
+              <>
+                <TourImpressionsBlock
+                  places={draft.places}
+                  onChange={(places) => updateDraft({ places })}
+                />
+                <TourSectionCommentEditor
+                  sectionId="places"
+                  value={sectionCommentValue("places")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
             ) : null}
 
             {activeTab === "main" ? (
@@ -754,193 +1149,309 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               />
             ) : null}
 
+            {activeTab === "main" ? (
+              <TourParticipantRecommendationsBlock
+                items={draft.participantRecommendations}
+                onChange={(participantRecommendations) => updateDraft({ participantRecommendations })}
+              />
+            ) : null}
+
+            {activeTab === "main" ? (
+              <TourRouteFeaturesBlock
+                text={draft.routeFeaturesText}
+                onChange={(routeFeaturesText) => updateDraft({ routeFeaturesText })}
+              />
+            ) : null}
+
             {activeTab === "description" ? (
-              <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-                <div>
-                  <FieldLabel htmlFor="tour-description">Полное описание</FieldLabel>
-                  <textarea
-                    id="tour-description"
-                    value={draft.description}
-                    rows={12}
-                    onChange={(event) => updateDraft({ description: event.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+              <>
+                <TourComfortBlock
+                  comfortLevels={draft.comfortLevels}
+                  onChange={(comfortLevels) => {
+                    const comfortLevel = primaryComfortLevel(comfortLevels);
+                    updateDraft({
+                      comfortLevels,
+                      comfortLevel,
+                      ...(comfortLevel === NO_ACCOMMODATION_LABEL
+                        ? { accommodationType: "Без проживания" }
+                        : {}),
+                    });
+                  }}
+                />
+
+                <TourAccommodationDescriptionBlock
+                  description={draft.accommodationDescriptionText}
+                  photos={draft.accommodationPhotos}
+                  onDescriptionChange={(accommodationDescriptionText) =>
+                    updateDraft({ accommodationDescriptionText })
+                  }
+                  onPhotosChange={(accommodationPhotos) => updateDraft({ accommodationPhotos })}
+                  variantLabel={variantSync?.variantLabel}
+                  variantDiff={variantSync?.accommodationDescriptionDiff}
+                  onApplySync={() => markDirty()}
+                />
+
+                {variantSync?.accommodationDescriptionDiff ? (
+                  <TourAccommodationVariantsBlock
+                    variantLabel={variantSync.variantLabel}
+                    variantPlaces={IGUAZU_VARIANT_ACCOMMODATIONS}
+                    onReplaceAll={() => markDirty()}
                   />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="tour-included">Что включено (каждый пункт с новой строки)</FieldLabel>
-                  <textarea
-                    id="tour-included"
-                    value={draft.includedText}
-                    rows={6}
-                    onChange={(event) => updateDraft({ includedText: event.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  />
-                </div>
-                <div>
-                  <FieldLabel htmlFor="tour-excluded">Что не включено</FieldLabel>
-                  <textarea
-                    id="tour-excluded"
-                    value={draft.excludedText}
-                    rows={6}
-                    onChange={(event) => updateDraft({ excludedText: event.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  />
-                </div>
-              </section>
+                ) : null}
+
+                <TourAccommodationSettingsBlock
+                  upgradesEnabled={draft.accommodationUpgradesEnabled}
+                  onChange={(accommodationUpgradesEnabled) =>
+                    updateDraft({ accommodationUpgradesEnabled })
+                  }
+                />
+
+                <TourAccommodationPlacesBlock
+                  places={draft.accommodationPlaces}
+                  onChange={(accommodationPlaces) => updateDraft({ accommodationPlaces })}
+                />
+
+                <TourAccommodationFooterBlock
+                  comfortLevels={draft.comfortLevels}
+                  accommodationOrganizerCommentText={sectionCommentValue("accommodations")}
+                  onCommentChange={(accommodationOrganizerCommentText) =>
+                    updateSectionOrganizerComments(
+                      {
+                        ...draft.sectionOrganizerComments,
+                        accommodations: accommodationOrganizerCommentText,
+                      },
+                      { accommodationOrganizerCommentText }
+                    )
+                  }
+                />
+              </>
             ) : null}
 
             {activeTab === "conditions" ? (
-              <section className="space-y-6 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
-                <div className="space-y-4">
-                  <h2 className="font-display text-lg font-bold text-charcoal">Категория и формат</h2>
-                  <div>
-                    <FieldLabel htmlFor="tour-type">Тип</FieldLabel>
-                    <select
-                      id="tour-type"
-                      value={draft.type}
-                      onChange={(event) =>
-                        updateDraft({ type: event.target.value as OrganizerTourType })
-                      }
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                    >
-                      <option value="tour">Тур</option>
-                      <option value="excursion">Экскурсия</option>
-                    </select>
-                  </div>
-                </div>
+              <>
+              <TourCurrencyBlock
+                currency={draft.priceCurrency}
+                priceFromPrefix={draft.priceFromPrefix}
+                priceOnRequest={draft.priceOnRequest}
+                referencePriceUsd={draft.priceUsd}
+                onCurrencyChange={(priceCurrency) => updateDraft({ priceCurrency })}
+                onPriceFromPrefixChange={(priceFromPrefix) => updateDraft({ priceFromPrefix })}
+                onPriceOnRequestChange={(priceOnRequest) =>
+                  updateDraft({
+                    priceOnRequest,
+                    priceUsd: priceOnRequest ? draft.priceUsd : draft.priceUsd,
+                  })
+                }
+                onReferencePriceChange={(priceUsd) => updateDraft({ priceUsd })}
+              />
 
-                <div className="space-y-4 border-t border-gray-200 pt-6">
-                  <h2 className="font-display text-lg font-bold text-charcoal">Медиа</h2>
-                  <div>
-                    <FieldLabel htmlFor="tour-cover-label">Подпись на обложке</FieldLabel>
-                    <Input
-                      id="tour-cover-label"
-                      value={draft.coverLabel ?? ""}
-                      onChange={(event) => updateDraft({ coverLabel: event.target.value })}
-                      placeholder="IGUAZU"
-                    />
-                  </div>
-                </div>
+              {!draft.priceOnRequest ? (
+                <>
+                  <TourDiscountBlock
+                    enabledDiscounts={draft.enabledDiscounts}
+                    onChange={(enabledDiscounts) => updateDraft({ enabledDiscounts })}
+                  />
+                  <TourGroupDiscountBlock
+                    settings={draft.groupDiscount}
+                    basePriceUsd={draft.priceUsd || draft.individualPriceUsd}
+                    onChange={(groupDiscount) => updateDraft({ groupDiscount })}
+                  />
+                </>
+              ) : null}
 
-                <div className="space-y-4 border-t border-gray-200 pt-6">
-                  <h2 className="font-display text-lg font-bold text-charcoal">Цена и условия</h2>
-                  <div>
-                    <FieldLabel htmlFor="tour-nights">Ночей</FieldLabel>
-                    <Input
-                      id="tour-nights"
-                      type="number"
-                      min={0}
-                      value={draft.durationNights}
-                      onChange={(event) =>
-                        updateDraft({ durationNights: Number(event.target.value) || 0 })
-                      }
-                    />
-                  </div>
+              <TourIndividualBlock
+                enabled={draft.individualTourEnabled}
+                periodFrom={draft.individualPeriodFrom}
+                periodTo={draft.individualPeriodTo}
+                priceUsd={draft.individualPriceUsd}
+                currency={draft.priceCurrency}
+                onEnabledChange={(individualTourEnabled) =>
+                  updateDraft({
+                    individualTourEnabled,
+                    bookingMode: syncBookingModeForIndividual(
+                      individualTourEnabled,
+                      draft.bookingMode,
+                      draft.groupTourDates.length > 0
+                    ),
+                  })
+                }
+                onPeriodFromChange={(individualPeriodFrom) => updateDraft({ individualPeriodFrom })}
+                onPeriodToChange={(individualPeriodTo) => updateDraft({ individualPeriodTo })}
+                onPriceChange={(individualPriceUsd) => updateDraft({ individualPriceUsd })}
+              />
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <FieldLabel htmlFor="tour-price">Цена, USD</FieldLabel>
-                    <Input
-                      id="tour-price"
-                      type="number"
-                      min={0}
-                      value={draft.priceUsd}
-                      onChange={(event) =>
-                        updateDraft({ priceUsd: Number(event.target.value) || 0 })
-                      }
-                    />
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-old-price">Старая цена, USD</FieldLabel>
-                    <Input
-                      id="tour-old-price"
-                      type="number"
-                      min={0}
-                      value={draft.originalPriceUsd ?? ""}
-                      onChange={(event) =>
-                        updateDraft({
-                          originalPriceUsd: event.target.value
-                            ? Number(event.target.value)
-                            : null,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
+              <TourGroupDatesBlock
+                dates={draft.groupTourDates}
+                autoRollToNextYear={draft.autoRollGroupDatesToNextYear}
+                durationDays={draft.durationDays}
+                durationNights={draft.durationNights}
+                priceCurrency={draft.priceCurrency}
+                defaultPriceUsd={draft.priceUsd || draft.individualPriceUsd}
+                onDatesChange={(groupTourDates) =>
+                  updateDraft({
+                    groupTourDates,
+                    bookingMode: syncBookingModeForIndividual(
+                      draft.individualTourEnabled,
+                      draft.bookingMode,
+                      groupTourDates.length > 0
+                    ),
+                  })
+                }
+                onAutoRollChange={(autoRollGroupDatesToNextYear) =>
+                  updateDraft({ autoRollGroupDatesToNextYear })
+                }
+              />
 
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <div>
-                    <FieldLabel htmlFor="tour-comfort">Комфорт</FieldLabel>
-                    <select
-                      id="tour-comfort"
-                      value={draft.comfortLevel}
-                      onChange={(event) =>
-                        updateDraft({ comfortLevel: event.target.value as ComfortLevel })
-                      }
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                    >
-                      {COMFORT_LEVELS.map((level) => (
-                        <option key={level} value={level}>
-                          {level}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <FieldLabel htmlFor="tour-accommodation">Проживание</FieldLabel>
-                    <select
-                      id="tour-accommodation"
-                      value={draft.accommodationType}
-                      onChange={(event) =>
-                        updateDraft({
-                          accommodationType: event.target.value as AccommodationType,
-                        })
-                      }
-                      className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                    >
-                      {ACCOMMODATION_TYPES.map((type) => (
-                        <option key={type} value={type}>
-                          {type}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+              <TourCustomBookingLinkBlock
+                settings={draft.customBookingLink}
+                onChange={(customBookingLink) => updateDraft({ customBookingLink })}
+              />
 
-                <div>
-                  <FieldLabel htmlFor="tour-booking-mode">Формат бронирования</FieldLabel>
-                  <select
-                    id="tour-booking-mode"
-                    value={draft.bookingMode}
-                    onChange={(event) =>
-                      updateDraft({ bookingMode: event.target.value as TourBookingMode })
-                    }
-                    className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                  >
-                    {BOOKING_MODES.map((mode) => (
-                      <option key={mode.value} value={mode.value}>
-                        {mode.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                </div>
-              </section>
+              {!draft.priceOnRequest && draft.groupTourDates.length > 0 ? (
+                <TourWaitlistBlock
+                  waitlistEnabled={draft.waitlistEnabled ?? false}
+                  onChange={(waitlistEnabled) => updateDraft({ waitlistEnabled })}
+                />
+              ) : null}
+
+              <TourCheckoutPaymentOptionsBlock
+                options={draft.checkoutPaymentOptions}
+                onChange={(checkoutPaymentOptions) => updateDraft({ checkoutPaymentOptions })}
+              />
+
+              <TourSectionCommentEditor
+                sectionId="dates"
+                value={sectionCommentValue("dates")}
+                comments={draft.sectionOrganizerComments}
+                onChange={updateSectionOrganizerComments}
+              />
+              </>
             ) : null}
 
             {activeTab === "program" ? (
-              <section className="rounded-2xl border border-gray-200/60 bg-white px-4 py-4 text-sm leading-relaxed text-charcoal shadow-sm sm:px-5 sm:py-5">
-                <p className="font-medium">Редактор программы по дням</p>
-                <p className="mt-2 text-slate">
-                  Полный конструктор маршрута появится в следующем обновлении. Пока сохраняйте
-                  ключевые детали в полном описании и условиях тура — они уже синхронизируются со
-                  списком и карточкой.
-                </p>
-              </section>
+              <>
+                <TourProgramBlock
+                  routeMapImage={draft.routeMapImage}
+                  routePoints={draft.routePoints}
+                  programDays={draft.programDays}
+                  durationDays={draft.durationDays}
+                  onRouteMapChange={(routeMapImage) => updateDraft({ routeMapImage })}
+                  onRoutePointsChange={(routePoints) => updateDraft({ routePoints })}
+                  onProgramDaysChange={(programDays) => updateDraft({ programDays })}
+                />
+                <TourItineraryFooterBlock
+                  difficultyLevel={draft.difficultyLevel}
+                  itineraryOrganizerCommentText={sectionCommentValue("itinerary")}
+                  onCommentChange={(itineraryOrganizerCommentText) =>
+                    updateSectionOrganizerComments(
+                      {
+                        ...draft.sectionOrganizerComments,
+                        itinerary: itineraryOrganizerCommentText,
+                      },
+                      { itineraryOrganizerCommentText }
+                    )
+                  }
+                  onOpenMainTab={() => setActiveTab("main")}
+                />
+                <TourSectionCommentEditor
+                  sectionId="routeMap"
+                  value={sectionCommentValue("routeMap")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
+            ) : null}
+
+            {activeTab === "terms" ? (
+              <>
+                <TourTermsConditionsBlock
+                  includedText={draft.includedText}
+                  excludedText={draft.excludedText}
+                  onIncludedChange={(includedText) => updateDraft({ includedText })}
+                  onExcludedChange={(excludedText) => updateDraft({ excludedText })}
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="included"
+                  value={sectionCommentValue("included")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+
+                <TourInsuranceBlock
+                  insuranceType={draft.insuranceType}
+                  insuranceDescription={draft.insuranceDescription}
+                  onInsuranceTypeChange={(insuranceType) => updateDraft({ insuranceType })}
+                  onInsuranceDescriptionChange={(insuranceDescription) =>
+                    updateDraft({ insuranceDescription })
+                  }
+                />
+
+                <TourCancellationBlock
+                  useTemplate={draft.useCancellationTemplate}
+                  customText={draft.customCancellationText}
+                  onUseTemplateChange={(useCancellationTemplate) =>
+                    updateDraft({ useCancellationTemplate })
+                  }
+                  onCustomTextChange={(customCancellationText) =>
+                    updateDraft({ customCancellationText })
+                  }
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="policies"
+                  value={sectionCommentValue("policies")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+
+                <TourTermsListBlock
+                  title="Важно знать"
+                  description="Ключевые рекомендации и ограничения для участников тура"
+                  items={draft.importantInfo}
+                  onChange={(importantInfo) => updateDraft({ importantInfo })}
+                  placeholder="Например: возьмите непромокаемую обувь"
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="important"
+                  value={sectionCommentValue("important")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+
+                <TourPackingListBlock
+                  enabled={draft.packingListEnabled}
+                  value={draft.packingListText}
+                  onEnabledChange={(packingListEnabled) => updateDraft({ packingListEnabled })}
+                  onChange={(packingListText) => updateDraft({ packingListText })}
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="packing"
+                  value={sectionCommentValue("packing")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+
+                <TourFAQBlock
+                  items={draft.faq}
+                  onChange={(faq) => updateDraft({ faq })}
+                />
+
+                <TourSectionCommentEditor
+                  sectionId="faq"
+                  value={sectionCommentValue("faq")}
+                  comments={draft.sectionOrganizerComments}
+                  onChange={updateSectionOrganizerComments}
+                />
+              </>
             ) : null}
 
             {activeTab === "publish" ? (
               <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
+                <PublishReadinessPanel draft={draft} onTabSelect={setActiveTab} />
+
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
                     <FieldLabel htmlFor="tour-status">Статус публикации</FieldLabel>
@@ -958,7 +1469,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   </div>
                   <div>
                     <FieldLabel htmlFor="tour-slug">URL тура</FieldLabel>
-                    <Input id="tour-slug" value={draft.slug} readOnly className="bg-gray-50" />
+                    <Input id="tour-slug" value={catalogSlug} readOnly className="bg-gray-50" />
                   </div>
                 </div>
 
@@ -983,6 +1494,16 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   />
                   <span className="text-sm text-charcoal">Отправить в архив</span>
                 </label>
+
+                <TourPrivateTripsBlock
+                  isPrivate={draft.isPrivate ?? false}
+                  privateAccessToken={draft.privateAccessToken}
+                  catalogSlug={catalogSlug}
+                  isPublished={draft.status === "published" && !draft.archived}
+                  onChange={({ isPrivate, privateAccessToken }) =>
+                    updateDraft({ isPrivate, privateAccessToken })
+                  }
+                />
               </section>
             ) : null}
 
@@ -992,7 +1513,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               </div>
             ) : null}
 
-            {saved ? (
+            {autoSaving ? (
+              <div className="rounded-xl bg-gray-50 px-3 py-2.5 text-sm text-slate xl:hidden">
+                Автосохранение…
+              </div>
+            ) : saved ? (
               <div className="rounded-xl bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800 xl:hidden">
                 Изменения сохранены
               </div>
@@ -1002,9 +1527,14 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           <TourEditorSidebar
             draft={draft}
             saved={saved}
+            autoSaving={autoSaving}
             loading={loading}
             onUnpublish={() => updateDraft({ status: "draft" })}
             onArchive={() => updateDraft({ archived: true, status: "draft" })}
+            onClone={handleClone}
+            onDelete={handleDelete}
+            onPreview={handlePreview}
+            onTabSelect={setActiveTab}
           />
         </div>
     </form>

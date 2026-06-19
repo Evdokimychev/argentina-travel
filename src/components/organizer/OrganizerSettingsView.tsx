@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Check, Pencil, Send, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,15 +9,20 @@ import UserAvatar from "@/components/auth/UserAvatar";
 import OrganizerBioExampleModal from "@/components/organizer/OrganizerBioExampleModal";
 import OrganizerContactsTab from "@/components/organizer/OrganizerContactsTab";
 import OrganizerCancellationTab from "@/components/organizer/OrganizerCancellationTab";
+import OrganizerGuidesTab from "@/components/organizer/OrganizerGuidesTab";
 import { useAuth } from "@/context/AuthContext";
 import { joinFullName, splitFullName } from "@/lib/full-name";
 import { readOrganizerProfile, updateOrganizerProfile } from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
+import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
 import {
-  ORGANIZER_BIO_MAX,
+  ORGANIZER_EXTENDED_DESCRIPTION_MAX,
+  ORGANIZER_SHORT_DESCRIPTION_MAX,
   ORGANIZER_STATUS_MAX,
+  type OrganizerExperienceUnit,
   type OrganizerProfile,
 } from "@/types/organizer-profile";
+import { formatPlatformTenure } from "@/lib/organizer-experience";
 
 const MAX_AVATAR_BYTES = 2 * 1024 * 1024;
 
@@ -104,30 +110,33 @@ function InfoBox({
   );
 }
 
-function PlaceholderTab({ title }: { title: string }) {
-  return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm">
-      <p className="font-display text-lg font-bold text-charcoal">{title}</p>
-      <p className="mt-2 text-sm text-slate">Раздел скоро появится</p>
-    </div>
-  );
-}
-
 export default function OrganizerSettingsView() {
   const { user, updateProfile, updateAvatar } = useAuth();
+  const searchParams = useSearchParams();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [activeTab, setActiveTab] = useState<SettingsTabId>("main");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [middleName, setMiddleName] = useState("");
-  const [bio, setBio] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [extendedDescription, setExtendedDescription] = useState("");
   const [statusText, setStatusText] = useState("");
+  const [experienceEnabled, setExperienceEnabled] = useState(false);
+  const [experienceValue, setExperienceValue] = useState("");
+  const [experienceUnit, setExperienceUnit] = useState<OrganizerExperienceUnit>("years");
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [avatarLoading, setAvatarLoading] = useState(false);
   const [bioExampleOpen, setBioExampleOpen] = useState(false);
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab && SETTINGS_TABS.some((item) => item.id === tab)) {
+      setActiveTab(tab as SettingsTabId);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (!user) return;
@@ -138,8 +147,18 @@ export default function OrganizerSettingsView() {
 
     const profile = readOrganizerProfile(user.id);
     setMiddleName(profile.middleName);
-    setBio(profile.bio);
+    setShortDescription(profile.shortDescription);
+    setExtendedDescription(profile.extendedDescription);
     setStatusText(profile.statusText);
+    if (profile.professionalExperience) {
+      setExperienceEnabled(true);
+      setExperienceValue(String(profile.professionalExperience.value));
+      setExperienceUnit(profile.professionalExperience.unit);
+    } else {
+      setExperienceEnabled(false);
+      setExperienceValue("");
+      setExperienceUnit("years");
+    }
   }, [user]);
 
   if (!user) return null;
@@ -157,10 +176,22 @@ export default function OrganizerSettingsView() {
     setError(null);
     setSaved(false);
 
+    const parsedExperience = Number(experienceValue);
+    const professionalExperience =
+      experienceEnabled && Number.isFinite(parsedExperience) && parsedExperience > 0
+        ? {
+            value: Math.min(100, Math.round(parsedExperience)),
+            unit: experienceUnit,
+          }
+        : null;
+
     const profilePatch: Partial<OrganizerProfile> = {
       middleName: middleName.trim(),
-      bio: bio.slice(0, ORGANIZER_BIO_MAX),
+      shortDescription: shortDescription.slice(0, ORGANIZER_SHORT_DESCRIPTION_MAX),
+      extendedDescription: extendedDescription.slice(0, ORGANIZER_EXTENDED_DESCRIPTION_MAX),
+      bio: extendedDescription.slice(0, ORGANIZER_EXTENDED_DESCRIPTION_MAX),
       statusText: statusText.slice(0, ORGANIZER_STATUS_MAX),
+      professionalExperience,
     };
 
     const profileResult = updateOrganizerProfile(user.id, profilePatch);
@@ -377,14 +408,38 @@ export default function OrganizerSettingsView() {
                 </div>
 
                 <div>
-                  <FieldLabel htmlFor="organizer-bio">Расскажите о себе</FieldLabel>
+                  <FieldLabel
+                    htmlFor="organizer-short-description"
+                    hint="Кратко представьтесь — текст появится под вашим именем на страницах туров."
+                  >
+                    Краткое описание
+                  </FieldLabel>
+                  <Input
+                    id="organizer-short-description"
+                    value={shortDescription}
+                    maxLength={ORGANIZER_SHORT_DESCRIPTION_MAX}
+                    placeholder="Эксперт по Патагонии и активным путешествиям…"
+                    onChange={(event) => {
+                      setShortDescription(event.target.value);
+                      markDirty();
+                    }}
+                  />
+                  <p className="mt-1 text-right text-xs text-slate">
+                    {shortDescription.length} / {ORGANIZER_SHORT_DESCRIPTION_MAX}
+                  </p>
+                </div>
+
+                <div>
+                  <FieldLabel htmlFor="organizer-extended-description">
+                    Расширенное описание
+                  </FieldLabel>
                   <textarea
-                    id="organizer-bio"
-                    value={bio}
-                    maxLength={ORGANIZER_BIO_MAX}
+                    id="organizer-extended-description"
+                    value={extendedDescription}
+                    maxLength={ORGANIZER_EXTENDED_DESCRIPTION_MAX}
                     rows={10}
                     onChange={(event) => {
-                      setBio(event.target.value);
+                      setExtendedDescription(event.target.value);
                       markDirty();
                     }}
                     className="w-full resize-y rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
@@ -392,17 +447,81 @@ export default function OrganizerSettingsView() {
                   />
                   <div className="mt-1 flex items-start justify-between gap-3">
                     <p className="text-xs leading-relaxed text-slate">
-                      Не указывайте контакты, ссылки и призывы писать в мессенджеры — это нарушает
-                      правила площадки.
+                      Основной текст карточки организатора на странице тура. Не указывайте контакты
+                      и ссылки — это нарушает правила площадки.
                     </p>
                     <span className="shrink-0 text-xs text-slate">
-                      {bio.length} / {ORGANIZER_BIO_MAX}
+                      {extendedDescription.length} / {ORGANIZER_EXTENDED_DESCRIPTION_MAX}
                     </span>
                   </div>
                 </div>
 
                 <div className="space-y-3 border-t border-gray-100 pt-6">
-                  <h2 className="font-display text-base font-bold text-charcoal">
+                  <h2 className="font-heading text-base font-bold text-charcoal">
+                    Профессиональный опыт
+                  </h2>
+                  <InfoBox variant="sky">
+                    <p>
+                      Укажите, сколько лет или месяцев вы работаете гидом или организатором туров.
+                      Если не заполните, на странице тура будет показано, сколько вы зарегистрированы
+                      на платформе
+                      {user.createdAt ? ` (${formatPlatformTenure(user.createdAt)})` : ""}.
+                    </p>
+                  </InfoBox>
+
+                  <label className="flex items-start gap-3 rounded-xl border border-gray-200 px-4 py-3">
+                    <input
+                      type="checkbox"
+                      checked={experienceEnabled}
+                      onChange={(event) => {
+                        setExperienceEnabled(event.target.checked);
+                        markDirty();
+                      }}
+                      className="mt-0.5 h-4 w-4 rounded border-gray-300 accent-brand"
+                    />
+                    <span className="text-sm text-charcoal">
+                      Показывать мой профессиональный опыт вместо срока регистрации на платформе
+                    </span>
+                  </label>
+
+                  {experienceEnabled ? (
+                    <div className="grid gap-3 sm:grid-cols-[minmax(0,140px)_160px]">
+                      <div>
+                        <FieldLabel htmlFor="organizer-experience-value">Стаж</FieldLabel>
+                        <Input
+                          id="organizer-experience-value"
+                          type="number"
+                          min={1}
+                          max={100}
+                          value={experienceValue}
+                          onChange={(event) => {
+                            setExperienceValue(event.target.value);
+                            markDirty();
+                          }}
+                          placeholder="Например, 5"
+                        />
+                      </div>
+                      <div>
+                        <FieldLabel htmlFor="organizer-experience-unit">Единица</FieldLabel>
+                        <select
+                          id="organizer-experience-unit"
+                          value={experienceUnit}
+                          onChange={(event) => {
+                            setExperienceUnit(event.target.value as OrganizerExperienceUnit);
+                            markDirty();
+                          }}
+                          className="h-10 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                        >
+                          <option value="years">Лет</option>
+                          <option value="months">Месяцев</option>
+                        </select>
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="space-y-3 border-t border-gray-100 pt-6">
+                  <h2 className="font-heading text-base font-bold text-charcoal">
                     Статус на странице автора
                   </h2>
                   <InfoBox variant="amber">
@@ -455,8 +574,8 @@ export default function OrganizerSettingsView() {
               </div>
 
               <aside className="hidden xl:block">
-                <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-                  <h2 className="font-display text-base font-bold text-charcoal">
+                <div className={cn("sticky rounded-2xl border border-gray-200 bg-white p-5 shadow-sm", siteStickyBelowHeaderInsetClass)}>
+                  <h2 className="font-heading text-base font-bold text-charcoal">
                     Настройки автора тура
                   </h2>
                   {saved ? (
@@ -478,13 +597,9 @@ export default function OrganizerSettingsView() {
           <OrganizerContactsTab user={user} />
         ) : activeTab === "cancellation" ? (
           <OrganizerCancellationTab userId={user.id} />
-        ) : (
-          <div className="p-4 sm:p-6">
-            <PlaceholderTab
-              title={SETTINGS_TABS.find((tab) => tab.id === activeTab)?.label ?? "Раздел"}
-            />
-          </div>
-        )}
+        ) : activeTab === "guides" ? (
+          <OrganizerGuidesTab userId={user.id} />
+        ) : null}
       </div>
 
       <OrganizerBioExampleModal open={bioExampleOpen} onClose={() => setBioExampleOpen(false)} />

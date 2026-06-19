@@ -2,6 +2,7 @@ import type { OrganizerTourGuide } from "@/types/organizer-tour";
 import { joinFullName } from "@/lib/full-name";
 
 export const ORGANIZER_TOUR_GUIDES_MAX = 5;
+export const ORGANIZER_TEAM_GUIDES_MAX = 20;
 export const ORGANIZER_TOUR_GUIDE_BIO_MAX = 2000;
 
 export const DEFAULT_GUIDE_AVATAR =
@@ -76,13 +77,19 @@ export function createCustomGuide(input: {
   lastName: string;
   avatar: string;
   bio: string;
+  id?: string;
 }): OrganizerTourGuide {
   return {
-    id: `guide-custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    id: input.id ?? `guide-custom-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
     name: joinFullName(input.firstName, input.lastName),
     avatar: input.avatar.trim() || DEFAULT_GUIDE_AVATAR,
     bio: input.bio.trim().slice(0, ORGANIZER_TOUR_GUIDE_BIO_MAX),
     isTourAuthor: false,
     userId: null,
   };
+}
+
+export function teamGuideFromTourGuide(guide: OrganizerTourGuide): Omit<OrganizerTourGuide, "isTourAuthor"> {
+  const { isTourAuthor: _ignored, ...teamGuide } = guide;
+  return teamGuide;
 }

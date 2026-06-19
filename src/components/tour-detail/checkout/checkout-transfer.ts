@@ -1,6 +1,5 @@
 import {
   TRANSFER_VEHICLE_OPTIONS,
-  calcInsuranceTotal,
   recommendTransferVehicle,
   simpleAddonsTotal,
   transferVehicleCount,
@@ -120,12 +119,7 @@ export function validateTransferAllocations(
 
 export function checkoutAddonsTotal(
   addonIds: string[],
-  transferAllocations: TransferAllocations,
-  insuranceTravelers: number
+  transferAllocations: TransferAllocations
 ): number {
-  return (
-    simpleAddonsTotal(addonIds) +
-    calcTransferTotalFromAllocations(transferAllocations) +
-    calcInsuranceTotal(insuranceTravelers)
-  );
+  return simpleAddonsTotal(addonIds) + calcTransferTotalFromAllocations(transferAllocations);
 }

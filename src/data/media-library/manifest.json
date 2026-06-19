@@ -1,0 +1,4303 @@
+{
+  "version": 1,
+  "assets": [
+    {
+      "id": "place-buenos-aires-hero",
+      "title": "Буэнос-Айрес — обложка",
+      "alt": "Буэнос-Айрес, Аргентина",
+      "caption": "Буэнос-Айрес, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "buenos-aires",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/buenos-aires/hero.jpg",
+      "placeId": "buenos-aires",
+      "role": "hero"
+    },
+    {
+      "id": "place-buenos-aires-gallery-1",
+      "title": "Буэнос-Айрес — фото 1",
+      "alt": "Буэнос-Айрес — вид 1",
+      "caption": "Буэнос-Айрес, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "buenos-aires",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/buenos-aires/gallery-1.jpg",
+      "placeId": "buenos-aires",
+      "role": "gallery"
+    },
+    {
+      "id": "place-buenos-aires-gallery-2",
+      "title": "Буэнос-Айрес — фото 2",
+      "alt": "Буэнос-Айрес — вид 2",
+      "caption": "Буэнос-Айрес, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "buenos-aires",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Buenos_Aires_Obelisk_4.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/buenos-aires/gallery-2.jpg",
+      "placeId": "buenos-aires",
+      "role": "gallery"
+    },
+    {
+      "id": "place-buenos-aires-gallery-3",
+      "title": "Буэнос-Айрес — фото 3",
+      "alt": "Буэнос-Айрес — вид 3",
+      "caption": "Буэнос-Айрес, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "buenos-aires",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/buenos-aires/gallery-3.jpg",
+      "placeId": "buenos-aires",
+      "role": "gallery"
+    },
+    {
+      "id": "place-buenos-aires-gallery-4",
+      "title": "Буэнос-Айрес — фото 4",
+      "alt": "Буэнос-Айрес — вид 4",
+      "caption": "Буэнос-Айрес, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "buenos-aires",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Torre_Monumental_%28Buenos_Aires%29_edit.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/buenos-aires/gallery-4.jpg",
+      "placeId": "buenos-aires",
+      "role": "gallery"
+    },
+    {
+      "id": "place-ushuaia-hero",
+      "title": "Ушуайя — обложка",
+      "alt": "Ушуайя, Аргентина",
+      "caption": "Ушуайя, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "ushuaia",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/ushuaia/hero.jpg",
+      "placeId": "ushuaia",
+      "role": "hero"
+    },
+    {
+      "id": "place-ushuaia-gallery-1",
+      "title": "Ушуайя — фото 1",
+      "alt": "Ушуайя — вид 1",
+      "caption": "Ушуайя, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Aerial_view_of_Ushuaia_Prison_%28crop%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/ushuaia/gallery-1.jpg",
+      "placeId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "place-ushuaia-gallery-2",
+      "title": "Ушуайя — фото 2",
+      "alt": "Ушуайя — вид 2",
+      "caption": "Ушуайя, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Ushuaia-museu-do-fim-do-mun.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/ushuaia/gallery-2.jpg",
+      "placeId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "place-ushuaia-gallery-3",
+      "title": "Ушуайя — фото 3",
+      "alt": "Ушуайя — вид 3",
+      "caption": "Ушуайя, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Casa_Beban_%2815952733035%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/ushuaia/gallery-3.jpg",
+      "placeId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "place-ushuaia-gallery-4",
+      "title": "Ушуайя — фото 4",
+      "alt": "Ушуайя — вид 4",
+      "caption": "Ушуайя, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Parque_Nacional_Tierra_del_Fuego%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/ushuaia/gallery-4.jpg",
+      "placeId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-calafate-hero",
+      "title": "Эль-Калафате — обложка",
+      "alt": "Эль-Калафате, Аргентина",
+      "caption": "Эль-Калафате, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "el-calafate",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/El_Calafate_%2825825005237%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-calafate/hero.jpg",
+      "placeId": "el-calafate",
+      "role": "hero"
+    },
+    {
+      "id": "place-el-calafate-gallery-1",
+      "title": "Эль-Калафате — фото 1",
+      "alt": "Эль-Калафате — вид 1",
+      "caption": "Эль-Калафате, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "el-calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Avenida_del_Libertador%2C_El_Calafate.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-calafate/gallery-1.jpg",
+      "placeId": "el-calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-calafate-gallery-2",
+      "title": "Эль-Калафате — фото 2",
+      "alt": "Эль-Калафате — вид 2",
+      "caption": "Эль-Калафате, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "el-calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Caba%C3%B1as_-_El_Calafate.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-calafate/gallery-2.jpg",
+      "placeId": "el-calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-calafate-gallery-3",
+      "title": "Эль-Калафате — фото 3",
+      "alt": "Эль-Калафате — вид 3",
+      "caption": "Эль-Калафате, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "el-calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-calafate/gallery-3.jpg",
+      "placeId": "el-calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-calafate-gallery-4",
+      "title": "Эль-Калафате — фото 4",
+      "alt": "Эль-Калафате — вид 4",
+      "caption": "Эль-Калафате, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "el-calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/95/SantaCruz-PeritoMoreno-P2140146b.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-calafate/gallery-4.jpg",
+      "placeId": "el-calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-chalten-hero",
+      "title": "Эль-Чалтен — обложка",
+      "alt": "Эль-Чалтен, Аргентина",
+      "caption": "Эль-Чалтен, Wikimedia Commons",
+      "category": "trekking",
+      "tags": [
+        "el-chalten",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-chalten/hero.jpg",
+      "placeId": "el-chalten",
+      "role": "hero"
+    },
+    {
+      "id": "place-el-chalten-gallery-1",
+      "title": "Эль-Чалтен — фото 1",
+      "alt": "Эль-Чалтен — вид 1",
+      "caption": "Эль-Чалтен, Wikimedia Commons",
+      "category": "trekking",
+      "tags": [
+        "el-chalten",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/47/El_Chalt%C3%A9n.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-chalten/gallery-1.jpg",
+      "placeId": "el-chalten",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-chalten-gallery-2",
+      "title": "Эль-Чалтен — фото 2",
+      "alt": "Эль-Чалтен — вид 2",
+      "caption": "Эль-Чалтен, Wikimedia Commons",
+      "category": "trekking",
+      "tags": [
+        "el-chalten",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-chalten/gallery-2.jpg",
+      "placeId": "el-chalten",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-chalten-gallery-3",
+      "title": "Эль-Чалтен — фото 3",
+      "alt": "Эль-Чалтен — вид 3",
+      "caption": "Эль-Чалтен, Wikimedia Commons",
+      "category": "trekking",
+      "tags": [
+        "el-chalten",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-chalten/gallery-3.jpg",
+      "placeId": "el-chalten",
+      "role": "gallery"
+    },
+    {
+      "id": "place-el-chalten-gallery-4",
+      "title": "Эль-Чалтен — фото 4",
+      "alt": "Эль-Чалтен — вид 4",
+      "caption": "Эль-Чалтен, Wikimedia Commons",
+      "category": "trekking",
+      "tags": [
+        "el-chalten",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/el-chalten/gallery-4.jpg",
+      "placeId": "el-chalten",
+      "role": "gallery"
+    },
+    {
+      "id": "place-bariloche-hero",
+      "title": "Барилоче — обложка",
+      "alt": "Барилоче, Аргентина",
+      "caption": "Барилоче, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "bariloche",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/bariloche/hero.jpg",
+      "placeId": "bariloche",
+      "role": "hero"
+    },
+    {
+      "id": "place-bariloche-gallery-1",
+      "title": "Барилоче — фото 1",
+      "alt": "Барилоче — вид 1",
+      "caption": "Барилоче, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/bariloche/gallery-1.jpg",
+      "placeId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "place-bariloche-gallery-2",
+      "title": "Барилоче — фото 2",
+      "alt": "Барилоче — вид 2",
+      "caption": "Барилоче, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Catedral_desde_el_Lago_Nahuel_Huapi_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/bariloche/gallery-2.jpg",
+      "placeId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "place-bariloche-gallery-3",
+      "title": "Барилоче — фото 3",
+      "alt": "Барилоче — вид 3",
+      "caption": "Барилоче, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Bariloche_01.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/bariloche/gallery-3.jpg",
+      "placeId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "place-bariloche-gallery-4",
+      "title": "Барилоче — фото 4",
+      "alt": "Барилоче — вид 4",
+      "caption": "Барилоче, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Bariloche-_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/bariloche/gallery-4.jpg",
+      "placeId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mendoza-hero",
+      "title": "Мендоса — обложка",
+      "alt": "Мендоса, Аргентина",
+      "caption": "Мендоса, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mendoza",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mendoza/hero.jpg",
+      "placeId": "mendoza",
+      "role": "hero"
+    },
+    {
+      "id": "place-mendoza-gallery-1",
+      "title": "Мендоса — фото 1",
+      "alt": "Мендоса — вид 1",
+      "caption": "Мендоса, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Wine_Cellar_in_Mendoza%28GN04637%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mendoza/gallery-1.jpg",
+      "placeId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mendoza-gallery-2",
+      "title": "Мендоса — фото 2",
+      "alt": "Мендоса — вид 2",
+      "caption": "Мендоса, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vignoble_Mendoza_Argentine.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mendoza/gallery-2.jpg",
+      "placeId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mendoza-gallery-3",
+      "title": "Мендоса — фото 3",
+      "alt": "Мендоса — вид 3",
+      "caption": "Мендоса, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mendoza/gallery-3.jpg",
+      "placeId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mendoza-gallery-4",
+      "title": "Мендоса — фото 4",
+      "alt": "Мендоса — вид 4",
+      "caption": "Мендоса, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Salta-Square1.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mendoza/gallery-4.jpg",
+      "placeId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "place-puerto-madryn-hero",
+      "title": "Пуэрто-Мадрин — обложка",
+      "alt": "Пуэрто-Мадрин, Аргентина",
+      "caption": "Пуэрто-Мадрин, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "puerto-madryn",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Vista_de_Puerto_Madryn%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/puerto-madryn/hero.jpg",
+      "placeId": "puerto-madryn",
+      "role": "hero"
+    },
+    {
+      "id": "place-puerto-madryn-gallery-1",
+      "title": "Пуэрто-Мадрин — фото 1",
+      "alt": "Пуэрто-Мадрин — вид 1",
+      "caption": "Пуэрто-Мадрин, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "puerto-madryn",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Southern_right_whale.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/puerto-madryn/gallery-1.jpg",
+      "placeId": "puerto-madryn",
+      "role": "gallery"
+    },
+    {
+      "id": "place-puerto-madryn-gallery-2",
+      "title": "Пуэрто-Мадрин — фото 2",
+      "alt": "Пуэрто-Мадрин — вид 2",
+      "caption": "Пуэрто-Мадрин, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "puerto-madryn",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Peninsula_Vald%C3%A9s_STS-68.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/puerto-madryn/gallery-2.jpg",
+      "placeId": "puerto-madryn",
+      "role": "gallery"
+    },
+    {
+      "id": "place-puerto-madryn-gallery-3",
+      "title": "Пуэрто-Мадрин — фото 3",
+      "alt": "Пуэрто-Мадрин — вид 3",
+      "caption": "Пуэрто-Мадрин, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "puerto-madryn",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Ballenafranca%2Balvina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/puerto-madryn/gallery-3.jpg",
+      "placeId": "puerto-madryn",
+      "role": "gallery"
+    },
+    {
+      "id": "place-puerto-madryn-gallery-4",
+      "title": "Пуэрто-Мадрин — фото 4",
+      "alt": "Пуэрто-Мадрин — вид 4",
+      "caption": "Пуэрто-Мадрин, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "puerto-madryn",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Peninsula_Vald%C3%A9s_STS-68.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/puerto-madryn/gallery-4.jpg",
+      "placeId": "puerto-madryn",
+      "role": "gallery"
+    },
+    {
+      "id": "place-salta-hero",
+      "title": "Сальта — обложка",
+      "alt": "Сальта, Аргентина",
+      "caption": "Сальта, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "salta",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/salta/hero.jpg",
+      "placeId": "salta",
+      "role": "hero"
+    },
+    {
+      "id": "place-salta-gallery-1",
+      "title": "Сальта — фото 1",
+      "alt": "Сальта — вид 1",
+      "caption": "Сальта, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/salta/gallery-1.jpg",
+      "placeId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "place-salta-gallery-2",
+      "title": "Сальта — фото 2",
+      "alt": "Сальта — вид 2",
+      "caption": "Сальта, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/Iglesia_San_Francisco%2C_Salta%2C_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/salta/gallery-2.jpg",
+      "placeId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "place-salta-gallery-3",
+      "title": "Сальта — фото 3",
+      "alt": "Сальта — вид 3",
+      "caption": "Сальта, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Catedral_Bas%C3%ADlica_de_Salta_y_Santuario_del_Se%C3%B1or_y_la_Virgen_del_Milagro.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/salta/gallery-3.jpg",
+      "placeId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "place-salta-gallery-4",
+      "title": "Сальта — фото 4",
+      "alt": "Сальта — вид 4",
+      "caption": "Сальта, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Salta-Square1.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/salta/gallery-4.jpg",
+      "placeId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "place-purmamarca-hero",
+      "title": "Пурмамарка — обложка",
+      "alt": "Пурмамарка, Аргентина",
+      "caption": "Пурмамарка, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "purmamarca",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/purmamarca/hero.jpg",
+      "placeId": "purmamarca",
+      "role": "hero"
+    },
+    {
+      "id": "place-purmamarca-gallery-1",
+      "title": "Пурмамарка — фото 1",
+      "alt": "Пурмамарка — вид 1",
+      "caption": "Пурмамарка, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "purmamarca",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/40/Jujuy-Purmamarca-P3120100.JPG",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/purmamarca/gallery-1.jpg",
+      "placeId": "purmamarca",
+      "role": "gallery"
+    },
+    {
+      "id": "place-purmamarca-gallery-2",
+      "title": "Пурмамарка — фото 2",
+      "alt": "Пурмамарка — вид 2",
+      "caption": "Пурмамарка, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "purmamarca",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/48/Cerro_de_los_7_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/purmamarca/gallery-2.jpg",
+      "placeId": "purmamarca",
+      "role": "gallery"
+    },
+    {
+      "id": "place-purmamarca-gallery-3",
+      "title": "Пурмамарка — фото 3",
+      "alt": "Пурмамарка — вид 3",
+      "caption": "Пурмамарка, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "purmamarca",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/purmamarca/gallery-3.jpg",
+      "placeId": "purmamarca",
+      "role": "gallery"
+    },
+    {
+      "id": "place-purmamarca-gallery-4",
+      "title": "Пурмамарка — фото 4",
+      "alt": "Пурмамарка — вид 4",
+      "caption": "Пурмамарка, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "purmamarca",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/Iglesia_San_Francisco%2C_Salta%2C_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/purmamarca/gallery-4.jpg",
+      "placeId": "purmamarca",
+      "role": "gallery"
+    },
+    {
+      "id": "place-iguazu-falls-hero",
+      "title": "Водопады Игуасу — обложка",
+      "alt": "Водопады Игуасу, Аргентина",
+      "caption": "Водопады Игуасу, Wikimedia Commons",
+      "category": "waterfall",
+      "tags": [
+        "iguazu-falls",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/iguazu-falls/hero.jpg",
+      "placeId": "iguazu-falls",
+      "role": "hero"
+    },
+    {
+      "id": "place-iguazu-falls-gallery-1",
+      "title": "Водопады Игуасу — фото 1",
+      "alt": "Водопады Игуасу — вид 1",
+      "caption": "Водопады Игуасу, Wikimedia Commons",
+      "category": "waterfall",
+      "tags": [
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Iguazu_Cataratas2.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/iguazu-falls/gallery-1.jpg",
+      "placeId": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "place-iguazu-falls-gallery-2",
+      "title": "Водопады Игуасу — фото 2",
+      "alt": "Водопады Игуасу — вид 2",
+      "caption": "Водопады Игуасу, Wikimedia Commons",
+      "category": "waterfall",
+      "tags": [
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Iguazu_National_Park_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/iguazu-falls/gallery-2.jpg",
+      "placeId": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "place-iguazu-falls-gallery-3",
+      "title": "Водопады Игуасу — фото 3",
+      "alt": "Водопады Игуасу — вид 3",
+      "caption": "Водопады Игуасу, Wikimedia Commons",
+      "category": "waterfall",
+      "tags": [
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Iguazu_D%C3%A9cembre_2007_-_Panorama_7.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/iguazu-falls/gallery-3.jpg",
+      "placeId": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "place-iguazu-falls-gallery-4",
+      "title": "Водопады Игуасу — фото 4",
+      "alt": "Водопады Игуасу — вид 4",
+      "caption": "Водопады Игуасу, Wikimedia Commons",
+      "category": "waterfall",
+      "tags": [
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Parque_Nacional_do_Igua%C3%A7%C3%BA_-_Igua%C3%A7u_National_Park_-_Bilheterias_-_Ticket_toll_%2813932942577%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/iguazu-falls/gallery-4.jpg",
+      "placeId": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "place-perito-moreno-glacier-hero",
+      "title": "Ледник Перито-Морено — обложка",
+      "alt": "Ледник Перито-Морено, Аргентина",
+      "caption": "Ледник Перито-Морено, Wikimedia Commons",
+      "category": "glacier",
+      "tags": [
+        "perito-moreno-glacier",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/perito-moreno-glacier/hero.jpg",
+      "placeId": "perito-moreno-glacier",
+      "role": "hero"
+    },
+    {
+      "id": "place-perito-moreno-glacier-gallery-1",
+      "title": "Ледник Перито-Морено — фото 1",
+      "alt": "Ледник Перито-Морено — вид 1",
+      "caption": "Ледник Перито-Морено, Wikimedia Commons",
+      "category": "glacier",
+      "tags": [
+        "perito-moreno-glacier",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/95/SantaCruz-PeritoMoreno-P2140146b.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/perito-moreno-glacier/gallery-1.jpg",
+      "placeId": "perito-moreno-glacier",
+      "role": "gallery"
+    },
+    {
+      "id": "place-perito-moreno-glacier-gallery-2",
+      "title": "Ледник Перито-Морено — фото 2",
+      "alt": "Ледник Перито-Морено — вид 2",
+      "caption": "Ледник Перито-Морено, Wikimedia Commons",
+      "category": "glacier",
+      "tags": [
+        "perito-moreno-glacier",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Glaciar_Perito_Moreno%2C_Bismarck_o_Francisco_Gormaz.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/perito-moreno-glacier/gallery-2.jpg",
+      "placeId": "perito-moreno-glacier",
+      "role": "gallery"
+    },
+    {
+      "id": "place-perito-moreno-glacier-gallery-3",
+      "title": "Ледник Перито-Морено — фото 3",
+      "alt": "Ледник Перито-Морено — вид 3",
+      "caption": "Ледник Перито-Морено, Wikimedia Commons",
+      "category": "glacier",
+      "tags": [
+        "perito-moreno-glacier",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/153_-_Glacier_Perito_Moreno_-_Grotte_glaciaire_-_Janvier_2010.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/perito-moreno-glacier/gallery-3.jpg",
+      "placeId": "perito-moreno-glacier",
+      "role": "gallery"
+    },
+    {
+      "id": "place-perito-moreno-glacier-gallery-4",
+      "title": "Ледник Перито-Морено — фото 4",
+      "alt": "Ледник Перито-Морено — вид 4",
+      "caption": "Ледник Перито-Морено, Wikimedia Commons",
+      "category": "glacier",
+      "tags": [
+        "perito-moreno-glacier",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Perito_Moreno_Glacier_Patagonia_Argentina_Luca_Galuzzi_2005.JPG",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/perito-moreno-glacier/gallery-4.jpg",
+      "placeId": "perito-moreno-glacier",
+      "role": "gallery"
+    },
+    {
+      "id": "place-fitz-roy-hero",
+      "title": "Фиц Roy — обложка",
+      "alt": "Фиц Roy, Аргентина",
+      "caption": "Фиц Roy, Wikimedia Commons",
+      "category": "mountain",
+      "tags": [
+        "fitz-roy",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/fitz-roy/hero.jpg",
+      "placeId": "fitz-roy",
+      "role": "hero"
+    },
+    {
+      "id": "place-fitz-roy-gallery-1",
+      "title": "Фиц Roy — фото 1",
+      "alt": "Фиц Roy — вид 1",
+      "caption": "Фиц Roy, Wikimedia Commons",
+      "category": "mountain",
+      "tags": [
+        "fitz-roy",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/47/El_Chalt%C3%A9n.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/fitz-roy/gallery-1.jpg",
+      "placeId": "fitz-roy",
+      "role": "gallery"
+    },
+    {
+      "id": "place-fitz-roy-gallery-2",
+      "title": "Фиц Roy — фото 2",
+      "alt": "Фиц Roy — вид 2",
+      "caption": "Фиц Roy, Wikimedia Commons",
+      "category": "mountain",
+      "tags": [
+        "fitz-roy",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/fitz-roy/gallery-2.jpg",
+      "placeId": "fitz-roy",
+      "role": "gallery"
+    },
+    {
+      "id": "place-fitz-roy-gallery-3",
+      "title": "Фиц Roy — фото 3",
+      "alt": "Фиц Roy — вид 3",
+      "caption": "Фиц Roy, Wikimedia Commons",
+      "category": "mountain",
+      "tags": [
+        "fitz-roy",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/fitz-roy/gallery-3.jpg",
+      "placeId": "fitz-roy",
+      "role": "gallery"
+    },
+    {
+      "id": "place-fitz-roy-gallery-4",
+      "title": "Фиц Roy — фото 4",
+      "alt": "Фиц Roy — вид 4",
+      "caption": "Фиц Roy, Wikimedia Commons",
+      "category": "mountain",
+      "tags": [
+        "fitz-roy",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/El_Calafate_%2825825005237%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/fitz-roy/gallery-4.jpg",
+      "placeId": "fitz-roy",
+      "role": "gallery"
+    },
+    {
+      "id": "place-los-glaciares-national-park-hero",
+      "title": "Нацпарк Los Glaciares — обложка",
+      "alt": "Нацпарк Los Glaciares, Аргентина",
+      "caption": "Нацпарк Los Glaciares, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "los-glaciares-national-park",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/los-glaciares-national-park/hero.jpg",
+      "placeId": "los-glaciares-national-park",
+      "role": "hero"
+    },
+    {
+      "id": "place-los-glaciares-national-park-gallery-1",
+      "title": "Нацпарк Los Glaciares — фото 1",
+      "alt": "Нацпарк Los Glaciares — вид 1",
+      "caption": "Нацпарк Los Glaciares, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "los-glaciares-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Glaciar_Perito_Moreno%2C_Bismarck_o_Francisco_Gormaz.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/los-glaciares-national-park/gallery-1.jpg",
+      "placeId": "los-glaciares-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-los-glaciares-national-park-gallery-2",
+      "title": "Нацпарк Los Glaciares — фото 2",
+      "alt": "Нацпарк Los Glaciares — вид 2",
+      "caption": "Нацпарк Los Glaciares, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "los-glaciares-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/los-glaciares-national-park/gallery-2.jpg",
+      "placeId": "los-glaciares-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-los-glaciares-national-park-gallery-3",
+      "title": "Нацпарк Los Glaciares — фото 3",
+      "alt": "Нацпарк Los Glaciares — вид 3",
+      "caption": "Нацпарк Los Glaciares, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "los-glaciares-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/El_Calafate_%2825825005237%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/los-glaciares-national-park/gallery-3.jpg",
+      "placeId": "los-glaciares-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-los-glaciares-national-park-gallery-4",
+      "title": "Нацпарк Los Glaciares — фото 4",
+      "alt": "Нацпарк Los Glaciares — вид 4",
+      "caption": "Нацпарк Los Glaciares, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "los-glaciares-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/153_-_Glacier_Perito_Moreno_-_Grotte_glaciaire_-_Janvier_2010.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/los-glaciares-national-park/gallery-4.jpg",
+      "placeId": "los-glaciares-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-nahuel-huapi-national-park-hero",
+      "title": "Нацпарк Nahuel Huapi — обложка",
+      "alt": "Нацпарк Nahuel Huapi, Аргентина",
+      "caption": "Нацпарк Nahuel Huapi, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "nahuel-huapi-national-park",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Catedral_desde_el_Lago_Nahuel_Huapi_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/nahuel-huapi-national-park/hero.jpg",
+      "placeId": "nahuel-huapi-national-park",
+      "role": "hero"
+    },
+    {
+      "id": "place-nahuel-huapi-national-park-gallery-1",
+      "title": "Нацпарк Nahuel Huapi — фото 1",
+      "alt": "Нацпарк Nahuel Huapi — вид 1",
+      "caption": "Нацпарк Nahuel Huapi, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "nahuel-huapi-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/nahuel-huapi-national-park/gallery-1.jpg",
+      "placeId": "nahuel-huapi-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-nahuel-huapi-national-park-gallery-2",
+      "title": "Нацпарк Nahuel Huapi — фото 2",
+      "alt": "Нацпарк Nahuel Huapi — вид 2",
+      "caption": "Нацпарк Nahuel Huapi, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "nahuel-huapi-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Bariloche_01.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/nahuel-huapi-national-park/gallery-2.jpg",
+      "placeId": "nahuel-huapi-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-nahuel-huapi-national-park-gallery-3",
+      "title": "Нацпарк Nahuel Huapi — фото 3",
+      "alt": "Нацпарк Nahuel Huapi — вид 3",
+      "caption": "Нацпарк Nahuel Huapi, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "nahuel-huapi-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Bariloche-_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/nahuel-huapi-national-park/gallery-3.jpg",
+      "placeId": "nahuel-huapi-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-nahuel-huapi-national-park-gallery-4",
+      "title": "Нацпарк Nahuel Huapi — фото 4",
+      "alt": "Нацпарк Nahuel Huapi — вид 4",
+      "caption": "Нацпарк Nahuel Huapi, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "nahuel-huapi-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/nahuel-huapi-national-park/gallery-4.jpg",
+      "placeId": "nahuel-huapi-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-valdes-peninsula-hero",
+      "title": "Полуостров Вальдес — обложка",
+      "alt": "Полуостров Вальдес, Аргентина",
+      "caption": "Полуостров Вальдес, Wikimedia Commons",
+      "category": "wildlife",
+      "tags": [
+        "valdes-peninsula",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Southern_right_whale.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/valdes-peninsula/hero.jpg",
+      "placeId": "valdes-peninsula",
+      "role": "hero"
+    },
+    {
+      "id": "place-valdes-peninsula-gallery-1",
+      "title": "Полуостров Вальдес — фото 1",
+      "alt": "Полуостров Вальдес — вид 1",
+      "caption": "Полуостров Вальдес, Wikimedia Commons",
+      "category": "wildlife",
+      "tags": [
+        "valdes-peninsula",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2d/Peninsula_Vald%C3%A9s_STS-68.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/valdes-peninsula/gallery-1.jpg",
+      "placeId": "valdes-peninsula",
+      "role": "gallery"
+    },
+    {
+      "id": "place-valdes-peninsula-gallery-2",
+      "title": "Полуостров Вальдес — фото 2",
+      "alt": "Полуостров Вальдес — вид 2",
+      "caption": "Полуостров Вальдес, Wikimedia Commons",
+      "category": "wildlife",
+      "tags": [
+        "valdes-peninsula",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Ballenafranca%2Balvina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/valdes-peninsula/gallery-2.jpg",
+      "placeId": "valdes-peninsula",
+      "role": "gallery"
+    },
+    {
+      "id": "place-valdes-peninsula-gallery-3",
+      "title": "Полуостров Вальдес — фото 3",
+      "alt": "Полуостров Вальдес — вид 3",
+      "caption": "Полуостров Вальдес, Wikimedia Commons",
+      "category": "wildlife",
+      "tags": [
+        "valdes-peninsula",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/3a/Vista_de_Puerto_Madryn%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/valdes-peninsula/gallery-3.jpg",
+      "placeId": "valdes-peninsula",
+      "role": "gallery"
+    },
+    {
+      "id": "place-valdes-peninsula-gallery-4",
+      "title": "Полуостров Вальдес — фото 4",
+      "alt": "Полуостров Вальдес — вид 4",
+      "caption": "Полуостров Вальдес, Wikimedia Commons",
+      "category": "wildlife",
+      "tags": [
+        "valdes-peninsula",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/valdes-peninsula/gallery-4.jpg",
+      "placeId": "valdes-peninsula",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cerro-de-los-7-colores-hero",
+      "title": "Cerro de los Siete Colores — обложка",
+      "alt": "Cerro de los Siete Colores, Аргентина",
+      "caption": "Cerro de los Siete Colores, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cerro-de-los-7-colores",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cerro-de-los-7-colores/hero.jpg",
+      "placeId": "cerro-de-los-7-colores",
+      "role": "hero"
+    },
+    {
+      "id": "place-cerro-de-los-7-colores-gallery-1",
+      "title": "Cerro de los Siete Colores — фото 1",
+      "alt": "Cerro de los Siete Colores — вид 1",
+      "caption": "Cerro de los Siete Colores, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cerro-de-los-7-colores",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/48/Cerro_de_los_7_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cerro-de-los-7-colores/gallery-1.jpg",
+      "placeId": "cerro-de-los-7-colores",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cerro-de-los-7-colores-gallery-2",
+      "title": "Cerro de los Siete Colores — фото 2",
+      "alt": "Cerro de los Siete Colores — вид 2",
+      "caption": "Cerro de los Siete Colores, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cerro-de-los-7-colores",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/40/Jujuy-Purmamarca-P3120100.JPG",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cerro-de-los-7-colores/gallery-2.jpg",
+      "placeId": "cerro-de-los-7-colores",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cerro-de-los-7-colores-gallery-3",
+      "title": "Cerro de los Siete Colores — фото 3",
+      "alt": "Cerro de los Siete Colores — вид 3",
+      "caption": "Cerro de los Siete Colores, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cerro-de-los-7-colores",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cerro-de-los-7-colores/gallery-3.jpg",
+      "placeId": "cerro-de-los-7-colores",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cerro-de-los-7-colores-gallery-4",
+      "title": "Cerro de los Siete Colores — фото 4",
+      "alt": "Cerro de los Siete Colores — вид 4",
+      "caption": "Cerro de los Siete Colores, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cerro-de-los-7-colores",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/Iglesia_San_Francisco%2C_Salta%2C_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cerro-de-los-7-colores/gallery-4.jpg",
+      "placeId": "cerro-de-los-7-colores",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tren-de-las-nubes-hero",
+      "title": "Поезд в облака — обложка",
+      "alt": "Поезд в облака, Аргентина",
+      "caption": "Поезд в облака, Wikimedia Commons",
+      "category": "transport",
+      "tags": [
+        "tren-de-las-nubes",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/cd/Tren_nubes_trenesarg.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tren-de-las-nubes/hero.jpg",
+      "placeId": "tren-de-las-nubes",
+      "role": "hero"
+    },
+    {
+      "id": "place-tren-de-las-nubes-gallery-1",
+      "title": "Поезд в облака — фото 1",
+      "alt": "Поезд в облака — вид 1",
+      "caption": "Поезд в облака, Wikimedia Commons",
+      "category": "transport",
+      "tags": [
+        "tren-de-las-nubes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tren-de-las-nubes/gallery-1.jpg",
+      "placeId": "tren-de-las-nubes",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tren-de-las-nubes-gallery-2",
+      "title": "Поезд в облака — фото 2",
+      "alt": "Поезд в облака — вид 2",
+      "caption": "Поезд в облака, Wikimedia Commons",
+      "category": "transport",
+      "tags": [
+        "tren-de-las-nubes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/Iglesia_San_Francisco%2C_Salta%2C_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tren-de-las-nubes/gallery-2.jpg",
+      "placeId": "tren-de-las-nubes",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tren-de-las-nubes-gallery-3",
+      "title": "Поезд в облака — фото 3",
+      "alt": "Поезд в облака — вид 3",
+      "caption": "Поезд в облака, Wikimedia Commons",
+      "category": "transport",
+      "tags": [
+        "tren-de-las-nubes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tren-de-las-nubes/gallery-3.jpg",
+      "placeId": "tren-de-las-nubes",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tren-de-las-nubes-gallery-4",
+      "title": "Поезд в облака — фото 4",
+      "alt": "Поезд в облака — вид 4",
+      "caption": "Поезд в облака, Wikimedia Commons",
+      "category": "transport",
+      "tags": [
+        "tren-de-las-nubes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Salta-Square1.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tren-de-las-nubes/gallery-4.jpg",
+      "placeId": "tren-de-las-nubes",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cueva-de-las-manos-hero",
+      "title": "Cueva de las Manos — обложка",
+      "alt": "Cueva de las Manos, Аргентина",
+      "caption": "Cueva de las Manos, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cueva-de-las-manos",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1f/SantaCruz-CuevaManos-P2210079b.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cueva-de-las-manos/hero.jpg",
+      "placeId": "cueva-de-las-manos",
+      "role": "hero"
+    },
+    {
+      "id": "place-cueva-de-las-manos-gallery-1",
+      "title": "Cueva de las Manos — фото 1",
+      "alt": "Cueva de las Manos — вид 1",
+      "caption": "Cueva de las Manos, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cueva-de-las-manos",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f4/SantaCruz-CuevaManos-P2210651b.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cueva-de-las-manos/gallery-1.jpg",
+      "placeId": "cueva-de-las-manos",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cueva-de-las-manos-gallery-2",
+      "title": "Cueva de las Manos — фото 2",
+      "alt": "Cueva de las Manos — вид 2",
+      "caption": "Cueva de las Manos, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cueva-de-las-manos",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Cueva_de_las_Manos.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cueva-de-las-manos/gallery-2.jpg",
+      "placeId": "cueva-de-las-manos",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cueva-de-las-manos-gallery-3",
+      "title": "Cueva de las Manos — фото 3",
+      "alt": "Cueva de las Manos — вид 3",
+      "caption": "Cueva de las Manos, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cueva-de-las-manos",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Glaciar_Perito_Moreno%2C_Bismarck_o_Francisco_Gormaz.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cueva-de-las-manos/gallery-3.jpg",
+      "placeId": "cueva-de-las-manos",
+      "role": "gallery"
+    },
+    {
+      "id": "place-cueva-de-las-manos-gallery-4",
+      "title": "Cueva de las Manos — фото 4",
+      "alt": "Cueva de las Manos — вид 4",
+      "caption": "Cueva de las Manos, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "cueva-de-las-manos",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/cueva-de-las-manos/gallery-4.jpg",
+      "placeId": "cueva-de-las-manos",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mar-del-plata-hero",
+      "title": "Мар-дель-Плата — обложка",
+      "alt": "Мар-дель-Плата, Аргентина",
+      "caption": "Мар-дель-Плата, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mar-del-plata",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Hotel_Provincial_y_Casino%2C_Plaza_seca_y_la_Plaza_Col%C3%B3n._Vista_panor%C3%A1mica_desde_el_Palacio_Ed%C3%A9n.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mar-del-plata/hero.jpg",
+      "placeId": "mar-del-plata",
+      "role": "hero"
+    },
+    {
+      "id": "place-mar-del-plata-gallery-1",
+      "title": "Мар-дель-Плата — фото 1",
+      "alt": "Мар-дель-Плата — вид 1",
+      "caption": "Мар-дель-Плата, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mar-del-plata",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/88/PT_TORREON3.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mar-del-plata/gallery-1.jpg",
+      "placeId": "mar-del-plata",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mar-del-plata-gallery-2",
+      "title": "Мар-дель-Плата — фото 2",
+      "alt": "Мар-дель-Плата — вид 2",
+      "caption": "Мар-дель-Плата, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mar-del-plata",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Torre_Tranque_de_Obras_Sanitarias_de_la_Naci%C3%B3n.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mar-del-plata/gallery-2.jpg",
+      "placeId": "mar-del-plata",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mar-del-plata-gallery-3",
+      "title": "Мар-дель-Плата — фото 3",
+      "alt": "Мар-дель-Плата — вид 3",
+      "caption": "Мар-дель-Плата, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mar-del-plata",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2a/Museo_castagnino.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mar-del-plata/gallery-3.jpg",
+      "placeId": "mar-del-plata",
+      "role": "gallery"
+    },
+    {
+      "id": "place-mar-del-plata-gallery-4",
+      "title": "Мар-дель-Плата — фото 4",
+      "alt": "Мар-дель-Плата — вид 4",
+      "caption": "Мар-дель-Плата, Wikimedia Commons",
+      "category": "city",
+      "tags": [
+        "mar-del-plata",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/mar-del-plata/gallery-4.jpg",
+      "placeId": "mar-del-plata",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tierra-del-fuego-national-park-hero",
+      "title": "Нацпарк Tierra del Fuego — обложка",
+      "alt": "Нацпарк Tierra del Fuego, Аргентина",
+      "caption": "Нацпарк Tierra del Fuego, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "tierra-del-fuego-national-park",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Parque_Nacional_Tierra_del_Fuego%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tierra-del-fuego-national-park/hero.jpg",
+      "placeId": "tierra-del-fuego-national-park",
+      "role": "hero"
+    },
+    {
+      "id": "place-tierra-del-fuego-national-park-gallery-1",
+      "title": "Нацпарк Tierra del Fuego — фото 1",
+      "alt": "Нацпарк Tierra del Fuego — вид 1",
+      "caption": "Нацпарк Tierra del Fuego, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "tierra-del-fuego-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Escalonadas_Lakes.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tierra-del-fuego-national-park/gallery-1.jpg",
+      "placeId": "tierra-del-fuego-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tierra-del-fuego-national-park-gallery-2",
+      "title": "Нацпарк Tierra del Fuego — фото 2",
+      "alt": "Нацпарк Tierra del Fuego — вид 2",
+      "caption": "Нацпарк Tierra del Fuego, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "tierra-del-fuego-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tierra-del-fuego-national-park/gallery-2.jpg",
+      "placeId": "tierra-del-fuego-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tierra-del-fuego-national-park-gallery-3",
+      "title": "Нацпарк Tierra del Fuego — фото 3",
+      "alt": "Нацпарк Tierra del Fuego — вид 3",
+      "caption": "Нацпарк Tierra del Fuego, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "tierra-del-fuego-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Aerial_view_of_Ushuaia_Prison_%28crop%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tierra-del-fuego-national-park/gallery-3.jpg",
+      "placeId": "tierra-del-fuego-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "place-tierra-del-fuego-national-park-gallery-4",
+      "title": "Нацпарк Tierra del Fuego — фото 4",
+      "alt": "Нацпарк Tierra del Fuego — вид 4",
+      "caption": "Нацпарк Tierra del Fuego, Wikimedia Commons",
+      "category": "national-park",
+      "tags": [
+        "tierra-del-fuego-national-park",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Emblema_Parque_Nacional_Tierra_del_Fuego.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/places/tierra-del-fuego-national-park/gallery-4.jpg",
+      "placeId": "tierra-del-fuego-national-park",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-ba-cover",
+      "title": "Буэнос-Айрес — cover",
+      "alt": "Буэнос-Айрес, популярное направление",
+      "caption": "Буэнос-Айрес",
+      "category": "destination",
+      "tags": [
+        "ba",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ba/cover.jpg",
+      "destinationId": "ba",
+      "role": "hero"
+    },
+    {
+      "id": "dest-ba-gallery-1",
+      "title": "Буэнос-Айрес — gallery-1",
+      "alt": "Буэнос-Айрес, популярное направление",
+      "caption": "Буэнос-Айрес",
+      "category": "destination",
+      "tags": [
+        "ba",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ba/gallery-1.jpg",
+      "destinationId": "ba",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-ba-gallery-2",
+      "title": "Буэнос-Айрес — gallery-2",
+      "alt": "Буэнос-Айрес, популярное направление",
+      "caption": "Буэнос-Айрес",
+      "category": "destination",
+      "tags": [
+        "ba",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Buenos_Aires_Obelisk_4.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ba/gallery-2.jpg",
+      "destinationId": "ba",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-ba-gallery-3",
+      "title": "Буэнос-Айрес — gallery-3",
+      "alt": "Буэнос-Айрес, популярное направление",
+      "caption": "Буэнос-Айрес",
+      "category": "destination",
+      "tags": [
+        "ba",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ba/gallery-3.jpg",
+      "destinationId": "ba",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-bariloche-cover",
+      "title": "Барилоче — cover",
+      "alt": "Барилоче, популярное направление",
+      "caption": "Барилоче",
+      "category": "destination",
+      "tags": [
+        "bariloche",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/bariloche/cover.jpg",
+      "destinationId": "bariloche",
+      "role": "hero"
+    },
+    {
+      "id": "dest-bariloche-gallery-1",
+      "title": "Барилоче — gallery-1",
+      "alt": "Барилоче, популярное направление",
+      "caption": "Барилоче",
+      "category": "destination",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/bariloche/gallery-1.jpg",
+      "destinationId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-bariloche-gallery-2",
+      "title": "Барилоче — gallery-2",
+      "alt": "Барилоче, популярное направление",
+      "caption": "Барилоче",
+      "category": "destination",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Catedral_desde_el_Lago_Nahuel_Huapi_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/bariloche/gallery-2.jpg",
+      "destinationId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-bariloche-gallery-3",
+      "title": "Барилоче — gallery-3",
+      "alt": "Барилоче, популярное направление",
+      "caption": "Барилоче",
+      "category": "destination",
+      "tags": [
+        "bariloche",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Bariloche_01.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/bariloche/gallery-3.jpg",
+      "destinationId": "bariloche",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-calafate-cover",
+      "title": "Эль-Калафате — cover",
+      "alt": "Эль-Калафате, популярное направление",
+      "caption": "Эль-Калафате",
+      "category": "destination",
+      "tags": [
+        "calafate",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/El_Calafate_%2825825005237%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/calafate/cover.jpg",
+      "destinationId": "calafate",
+      "role": "hero"
+    },
+    {
+      "id": "dest-calafate-gallery-1",
+      "title": "Эль-Калафате — gallery-1",
+      "alt": "Эль-Калафате, популярное направление",
+      "caption": "Эль-Калафате",
+      "category": "destination",
+      "tags": [
+        "calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8e/Avenida_del_Libertador%2C_El_Calafate.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/calafate/gallery-1.jpg",
+      "destinationId": "calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-calafate-gallery-2",
+      "title": "Эль-Калафате — gallery-2",
+      "alt": "Эль-Калафате, популярное направление",
+      "caption": "Эль-Калафате",
+      "category": "destination",
+      "tags": [
+        "calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bd/Caba%C3%B1as_-_El_Calafate.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/calafate/gallery-2.jpg",
+      "destinationId": "calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-calafate-gallery-3",
+      "title": "Эль-Калафате — gallery-3",
+      "alt": "Эль-Калафате, популярное направление",
+      "caption": "Эль-Калафате",
+      "category": "destination",
+      "tags": [
+        "calafate",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/calafate/gallery-3.jpg",
+      "destinationId": "calafate",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-ushuaia-cover",
+      "title": "Ушуайя — cover",
+      "alt": "Ушуайя, популярное направление",
+      "caption": "Ушуайя",
+      "category": "destination",
+      "tags": [
+        "ushuaia",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ushuaia/cover.jpg",
+      "destinationId": "ushuaia",
+      "role": "hero"
+    },
+    {
+      "id": "dest-ushuaia-gallery-1",
+      "title": "Ушуайя — gallery-1",
+      "alt": "Ушуайя, популярное направление",
+      "caption": "Ушуайя",
+      "category": "destination",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Aerial_view_of_Ushuaia_Prison_%28crop%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ushuaia/gallery-1.jpg",
+      "destinationId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-ushuaia-gallery-2",
+      "title": "Ушуайя — gallery-2",
+      "alt": "Ушуайя, популярное направление",
+      "caption": "Ушуайя",
+      "category": "destination",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Ushuaia-museu-do-fim-do-mun.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ushuaia/gallery-2.jpg",
+      "destinationId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-ushuaia-gallery-3",
+      "title": "Ушуайя — gallery-3",
+      "alt": "Ушуайя, популярное направление",
+      "caption": "Ушуайя",
+      "category": "destination",
+      "tags": [
+        "ushuaia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Casa_Beban_%2815952733035%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/ushuaia/gallery-3.jpg",
+      "destinationId": "ushuaia",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-iguazu-cover",
+      "title": "Игуасу — cover",
+      "alt": "Игуасу, популярное направление",
+      "caption": "Игуасу",
+      "category": "destination",
+      "tags": [
+        "iguazu",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/iguazu/cover.jpg",
+      "destinationId": "iguazu",
+      "role": "hero"
+    },
+    {
+      "id": "dest-iguazu-gallery-1",
+      "title": "Игуасу — gallery-1",
+      "alt": "Игуасу, популярное направление",
+      "caption": "Игуасу",
+      "category": "destination",
+      "tags": [
+        "iguazu",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Iguazu_Cataratas2.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/iguazu/gallery-1.jpg",
+      "destinationId": "iguazu",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-iguazu-gallery-2",
+      "title": "Игуасу — gallery-2",
+      "alt": "Игуасу, популярное направление",
+      "caption": "Игуасу",
+      "category": "destination",
+      "tags": [
+        "iguazu",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Iguazu_National_Park_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/iguazu/gallery-2.jpg",
+      "destinationId": "iguazu",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-iguazu-gallery-3",
+      "title": "Игуасу — gallery-3",
+      "alt": "Игуасу, популярное направление",
+      "caption": "Игуасу",
+      "category": "destination",
+      "tags": [
+        "iguazu",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Iguazu_D%C3%A9cembre_2007_-_Panorama_7.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/iguazu/gallery-3.jpg",
+      "destinationId": "iguazu",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-mendoza-cover",
+      "title": "Мендоса — cover",
+      "alt": "Мендоса, популярное направление",
+      "caption": "Мендоса",
+      "category": "destination",
+      "tags": [
+        "mendoza",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/mendoza/cover.jpg",
+      "destinationId": "mendoza",
+      "role": "hero"
+    },
+    {
+      "id": "dest-mendoza-gallery-1",
+      "title": "Мендоса — gallery-1",
+      "alt": "Мендоса, популярное направление",
+      "caption": "Мендоса",
+      "category": "destination",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Wine_Cellar_in_Mendoza%28GN04637%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/mendoza/gallery-1.jpg",
+      "destinationId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-mendoza-gallery-2",
+      "title": "Мендоса — gallery-2",
+      "alt": "Мендоса, популярное направление",
+      "caption": "Мендоса",
+      "category": "destination",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vignoble_Mendoza_Argentine.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/mendoza/gallery-2.jpg",
+      "destinationId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-mendoza-gallery-3",
+      "title": "Мендоса — gallery-3",
+      "alt": "Мендоса, популярное направление",
+      "caption": "Мендоса",
+      "category": "destination",
+      "tags": [
+        "mendoza",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/mendoza/gallery-3.jpg",
+      "destinationId": "mendoza",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-salta-cover",
+      "title": "Сальта — cover",
+      "alt": "Сальта, популярное направление",
+      "caption": "Сальта",
+      "category": "destination",
+      "tags": [
+        "salta",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/salta/cover.jpg",
+      "destinationId": "salta",
+      "role": "hero"
+    },
+    {
+      "id": "dest-salta-gallery-1",
+      "title": "Сальта — gallery-1",
+      "alt": "Сальта, популярное направление",
+      "caption": "Сальта",
+      "category": "destination",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/salta/gallery-1.jpg",
+      "destinationId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-salta-gallery-2",
+      "title": "Сальта — gallery-2",
+      "alt": "Сальта, популярное направление",
+      "caption": "Сальта",
+      "category": "destination",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/Iglesia_San_Francisco%2C_Salta%2C_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/salta/gallery-2.jpg",
+      "destinationId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-salta-gallery-3",
+      "title": "Сальта — gallery-3",
+      "alt": "Сальта, популярное направление",
+      "caption": "Сальта",
+      "category": "destination",
+      "tags": [
+        "salta",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Catedral_Bas%C3%ADlica_de_Salta_y_Santuario_del_Se%C3%B1or_y_la_Virgen_del_Milagro.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/salta/gallery-3.jpg",
+      "destinationId": "salta",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-patagonia-cover",
+      "title": "Патагония — cover",
+      "alt": "Патагония, популярное направление",
+      "caption": "Патагония",
+      "category": "destination",
+      "tags": [
+        "patagonia",
+        "cover"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/patagonia/cover.jpg",
+      "destinationId": "patagonia",
+      "role": "hero"
+    },
+    {
+      "id": "dest-patagonia-gallery-1",
+      "title": "Патагония — gallery-1",
+      "alt": "Патагония, популярное направление",
+      "caption": "Патагония",
+      "category": "destination",
+      "tags": [
+        "patagonia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/patagonia/gallery-1.jpg",
+      "destinationId": "patagonia",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-patagonia-gallery-2",
+      "title": "Патагония — gallery-2",
+      "alt": "Патагония, популярное направление",
+      "caption": "Патагония",
+      "category": "destination",
+      "tags": [
+        "patagonia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/patagonia/gallery-2.jpg",
+      "destinationId": "patagonia",
+      "role": "gallery"
+    },
+    {
+      "id": "dest-patagonia-gallery-3",
+      "title": "Патагония — gallery-3",
+      "alt": "Патагония, популярное направление",
+      "caption": "Патагония",
+      "category": "destination",
+      "tags": [
+        "patagonia",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/destinations/patagonia/gallery-3.jpg",
+      "destinationId": "patagonia",
+      "role": "gallery"
+    },
+    {
+      "id": "blog-travel",
+      "title": "Путешествия по Аргентине",
+      "alt": "Путешествия по Аргентине — тематическая иллюстрация",
+      "caption": "Путешествия по Аргентине",
+      "category": "travel-guide",
+      "tags": [
+        "blog",
+        "travel"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/travel.jpg",
+      "blogCategory": "travel",
+      "role": "hero"
+    },
+    {
+      "id": "blog-buenos-aires",
+      "title": "Буэнос-Айрес",
+      "alt": "Буэнос-Айрес — тематическая иллюстрация",
+      "caption": "Буэнос-Айрес",
+      "category": "city",
+      "tags": [
+        "blog",
+        "buenos-aires"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/buenos-aires.jpg",
+      "blogCategory": "buenos-aires",
+      "role": "hero"
+    },
+    {
+      "id": "blog-patagonia",
+      "title": "Патагония",
+      "alt": "Патагония — тематическая иллюстрация",
+      "caption": "Патагония",
+      "category": "national-park",
+      "tags": [
+        "blog",
+        "patagonia"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/patagonia.jpg",
+      "blogCategory": "patagonia",
+      "role": "hero"
+    },
+    {
+      "id": "blog-north",
+      "title": "Север Аргентины",
+      "alt": "Север Аргентины — тематическая иллюстрация",
+      "caption": "Север Аргентины",
+      "category": "province",
+      "tags": [
+        "blog",
+        "north"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/north.jpg",
+      "blogCategory": "north",
+      "role": "hero"
+    },
+    {
+      "id": "blog-iguazu",
+      "title": "Водопады Игуасу",
+      "alt": "Водопады Игуасу — тематическая иллюстрация",
+      "caption": "Водопады Игуасу",
+      "category": "waterfall",
+      "tags": [
+        "blog",
+        "iguazu"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/iguazu.jpg",
+      "blogCategory": "iguazu",
+      "role": "hero"
+    },
+    {
+      "id": "blog-national-parks",
+      "title": "Национальные парки",
+      "alt": "Национальные парки — тематическая иллюстрация",
+      "caption": "Национальные парки",
+      "category": "national-park",
+      "tags": [
+        "blog",
+        "national-parks"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/national-parks.jpg",
+      "blogCategory": "national-parks",
+      "role": "hero"
+    },
+    {
+      "id": "blog-trekking",
+      "title": "Горы и треккинг",
+      "alt": "Горы и треккинг — тематическая иллюстрация",
+      "caption": "Горы и треккинг",
+      "category": "trekking",
+      "tags": [
+        "blog",
+        "trekking"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/trekking.jpg",
+      "blogCategory": "trekking",
+      "role": "hero"
+    },
+    {
+      "id": "blog-wineries",
+      "title": "Винодельни",
+      "alt": "Винодельни — тематическая иллюстрация",
+      "caption": "Винодельни",
+      "category": "winery",
+      "tags": [
+        "blog",
+        "wineries"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Wine_Cellar_in_Mendoza%28GN04637%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/wineries.jpg",
+      "blogCategory": "wineries",
+      "role": "hero"
+    },
+    {
+      "id": "blog-wildlife",
+      "title": "Животные Аргентины",
+      "alt": "Животные Аргентины — тематическая иллюстрация",
+      "caption": "Животные Аргентины",
+      "category": "wildlife",
+      "tags": [
+        "blog",
+        "wildlife"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Southern_right_whale.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/wildlife.jpg",
+      "blogCategory": "wildlife",
+      "role": "hero"
+    },
+    {
+      "id": "blog-food",
+      "title": "Кухня Аргентины",
+      "alt": "Кухня Аргентины — тематическая иллюстрация",
+      "caption": "Кухня Аргентины",
+      "category": "travel-guide",
+      "tags": [
+        "blog",
+        "food"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/45/Asado_argentino.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/food.jpg",
+      "blogCategory": "food",
+      "role": "hero"
+    },
+    {
+      "id": "blog-transport",
+      "title": "Транспорт",
+      "alt": "Транспорт — тематическая иллюстрация",
+      "caption": "Транспорт",
+      "category": "transport",
+      "tags": [
+        "blog",
+        "transport"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/transport.jpg",
+      "blogCategory": "transport",
+      "role": "hero"
+    },
+    {
+      "id": "blog-safety",
+      "title": "Безопасность",
+      "alt": "Безопасность — тематическая иллюстрация",
+      "caption": "Безопасность",
+      "category": "travel-guide",
+      "tags": [
+        "blog",
+        "safety"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/safety.jpg",
+      "blogCategory": "safety",
+      "role": "hero"
+    },
+    {
+      "id": "blog-money",
+      "title": "Деньги и обмен",
+      "alt": "Деньги и обмен — тематическая иллюстрация",
+      "caption": "Деньги и обмен",
+      "category": "banking",
+      "tags": [
+        "blog",
+        "money"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/money.jpg",
+      "blogCategory": "money",
+      "role": "hero"
+    },
+    {
+      "id": "blog-internet",
+      "title": "Интернет и связь",
+      "alt": "Интернет и связь — тематическая иллюстрация",
+      "caption": "Интернет и связь",
+      "category": "mobile-operators",
+      "tags": [
+        "blog",
+        "internet"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Buenos_Aires_Obelisk_4.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/internet.jpg",
+      "blogCategory": "internet",
+      "role": "hero"
+    },
+    {
+      "id": "blog-ba-neighborhoods",
+      "title": "Районы Буэнос-Айреса",
+      "alt": "Районы Буэнос-Айреса — тематическая иллюстрация",
+      "caption": "Районы Буэнос-Айреса",
+      "category": "city",
+      "tags": [
+        "blog",
+        "ba-neighborhoods"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/ba-neighborhoods.jpg",
+      "blogCategory": "ba-neighborhoods",
+      "role": "hero"
+    },
+    {
+      "id": "blog-relocation",
+      "title": "Переезд и релокация",
+      "alt": "Переезд и релокация — тематическая иллюстрация",
+      "caption": "Переезд и релокация",
+      "category": "immigration",
+      "tags": [
+        "blog",
+        "relocation"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Torre_Monumental_%28Buenos_Aires%29_edit.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/blog/relocation.jpg",
+      "blogCategory": "relocation",
+      "role": "hero"
+    },
+    {
+      "id": "guide-kak-dobratsya-hero",
+      "title": "Как добраться — обложка",
+      "alt": "Как добраться, путеводитель по Аргентине",
+      "caption": "Как добраться",
+      "category": "transport",
+      "tags": [
+        "guide",
+        "kak-dobratsya",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/kak-dobratsya/hero.jpg",
+      "guideTopicId": "kak-dobratsya",
+      "role": "hero"
+    },
+    {
+      "id": "guide-gde-zhit-hero",
+      "title": "Где жить — обложка",
+      "alt": "Где жить, путеводитель по Аргентине",
+      "caption": "Где жить",
+      "category": "accommodation",
+      "tags": [
+        "guide",
+        "gde-zhit",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/gde-zhit/hero.jpg",
+      "guideTopicId": "gde-zhit",
+      "role": "hero"
+    },
+    {
+      "id": "guide-transport-hero",
+      "title": "На чём передвигаться — обложка",
+      "alt": "На чём передвигаться, путеводитель по Аргентине",
+      "caption": "На чём передвигаться",
+      "category": "transport",
+      "tags": [
+        "guide",
+        "transport",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/transport/hero.jpg",
+      "guideTopicId": "transport",
+      "role": "hero"
+    },
+    {
+      "id": "guide-turistskie-regiony-hero",
+      "title": "Туристические регионы — обложка",
+      "alt": "Туристические регионы, путеводитель по Аргентине",
+      "caption": "Туристические регионы",
+      "category": "destination",
+      "tags": [
+        "guide",
+        "turistskie-regiony",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/turistskie-regiony/hero.jpg",
+      "guideTopicId": "turistskie-regiony",
+      "role": "hero"
+    },
+    {
+      "id": "guide-dostoprimechatelnosti-hero",
+      "title": "Достопримечательности — обложка",
+      "alt": "Достопримечательности, путеводитель по Аргентине",
+      "caption": "Достопримечательности",
+      "category": "attraction",
+      "tags": [
+        "guide",
+        "dostoprimechatelnosti",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/dostoprimechatelnosti/hero.jpg",
+      "guideTopicId": "dostoprimechatelnosti",
+      "role": "hero"
+    },
+    {
+      "id": "guide-pogoda-i-sezonnost-hero",
+      "title": "Погода и сезонность — обложка",
+      "alt": "Погода и сезонность, путеводитель по Аргентине",
+      "caption": "Погода и сезонность",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "pogoda-i-sezonnost",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/pogoda-i-sezonnost/hero.jpg",
+      "guideTopicId": "pogoda-i-sezonnost",
+      "role": "hero"
+    },
+    {
+      "id": "guide-yazyk-hero",
+      "title": "Язык — обложка",
+      "alt": "Язык, путеводитель по Аргентине",
+      "caption": "Язык",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "yazyk",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/yazyk/hero.jpg",
+      "guideTopicId": "yazyk",
+      "role": "hero"
+    },
+    {
+      "id": "guide-kultura-hero",
+      "title": "Культура — обложка",
+      "alt": "Культура, путеводитель по Аргентине",
+      "caption": "Культура",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "kultura",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/kultura/hero.jpg",
+      "guideTopicId": "kultura",
+      "role": "hero"
+    },
+    {
+      "id": "guide-istoriya-hero",
+      "title": "История — обложка",
+      "alt": "История, путеводитель по Аргентине",
+      "caption": "История",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "istoriya",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/istoriya/hero.jpg",
+      "guideTopicId": "istoriya",
+      "role": "hero"
+    },
+    {
+      "id": "guide-kukhnya-hero",
+      "title": "Кухня — обложка",
+      "alt": "Кухня, путеводитель по Аргентине",
+      "caption": "Кухня",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "kukhnya",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/45/Asado_argentino.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/kukhnya/hero.jpg",
+      "guideTopicId": "kukhnya",
+      "role": "hero"
+    },
+    {
+      "id": "guide-svyaz-hero",
+      "title": "Связь — обложка",
+      "alt": "Связь, путеводитель по Аргентине",
+      "caption": "Связь",
+      "category": "mobile-operators",
+      "tags": [
+        "guide",
+        "svyaz",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Buenos_Aires_Obelisk_4.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/svyaz/hero.jpg",
+      "guideTopicId": "svyaz",
+      "role": "hero"
+    },
+    {
+      "id": "guide-ekonomika-i-dengi-hero",
+      "title": "Экономика и деньги — обложка",
+      "alt": "Экономика и деньги, путеводитель по Аргентине",
+      "caption": "Экономика и деньги",
+      "category": "banking",
+      "tags": [
+        "guide",
+        "ekonomika-i-dengi",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/ekonomika-i-dengi/hero.jpg",
+      "guideTopicId": "ekonomika-i-dengi",
+      "role": "hero"
+    },
+    {
+      "id": "guide-shopping-hero",
+      "title": "Шопинг — обложка",
+      "alt": "Шопинг, путеводитель по Аргентине",
+      "caption": "Шопинг",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "shopping",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Buenos_Aires_Obelisk_4.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/shopping/hero.jpg",
+      "guideTopicId": "shopping",
+      "role": "hero"
+    },
+    {
+      "id": "guide-bezopasnost-hero",
+      "title": "Безопасность — обложка",
+      "alt": "Безопасность, путеводитель по Аргентине",
+      "caption": "Безопасность",
+      "category": "travel-guide",
+      "tags": [
+        "guide",
+        "bezopasnost",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Torre_Monumental_%28Buenos_Aires%29_edit.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/bezopasnost/hero.jpg",
+      "guideTopicId": "bezopasnost",
+      "role": "hero"
+    },
+    {
+      "id": "guide-page-sezony-i-klimat-hero",
+      "title": "Сезоны и климат — обложка",
+      "alt": "Сезоны и климат, путеводитель по Аргентине",
+      "caption": "Сезоны и климат",
+      "category": "travel-guide",
+      "tags": [
+        "guide-page",
+        "sezony-i-klimat",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/95/SantaCruz-PeritoMoreno-P2140146b.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/pages/sezony-i-klimat/hero.jpg",
+      "guidePageSlug": "sezony-i-klimat",
+      "role": "hero"
+    },
+    {
+      "id": "guide-page-gastronomiya-i-asado-hero",
+      "title": "Гастрономия и asado — обложка",
+      "alt": "Гастрономия и asado, путеводитель по Аргентине",
+      "caption": "Гастрономия и asado",
+      "category": "travel-guide",
+      "tags": [
+        "guide-page",
+        "gastronomiya-i-asado",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/45/Asado_argentino.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/pages/gastronomiya-i-asado/hero.jpg",
+      "guidePageSlug": "gastronomiya-i-asado",
+      "role": "hero"
+    },
+    {
+      "id": "guide-page-tango-i-kultura-ba-hero",
+      "title": "Танго и культура BA — обложка",
+      "alt": "Танго и культура BA, путеводитель по Аргентине",
+      "caption": "Танго и культура BA",
+      "category": "travel-guide",
+      "tags": [
+        "guide-page",
+        "tango-i-kultura-ba",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/pages/tango-i-kultura-ba/hero.jpg",
+      "guidePageSlug": "tango-i-kultura-ba",
+      "role": "hero"
+    },
+    {
+      "id": "guide-page-patagoniya-s-chego-nachat-hero",
+      "title": "Патагония: с чего начать — обложка",
+      "alt": "Патагония: с чего начать, путеводитель по Аргентине",
+      "caption": "Патагония: с чего начать",
+      "category": "trekking",
+      "tags": [
+        "guide-page",
+        "patagoniya-s-chego-nachat",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/pages/patagoniya-s-chego-nachat/hero.jpg",
+      "guidePageSlug": "patagoniya-s-chego-nachat",
+      "role": "hero"
+    },
+    {
+      "id": "guide-page-bronirovanie-i-oplata-hero",
+      "title": "Бронирование и оплата — обложка",
+      "alt": "Бронирование и оплата, путеводитель по Аргентине",
+      "caption": "Бронирование и оплата",
+      "category": "travel-guide",
+      "tags": [
+        "guide-page",
+        "bronirovanie-i-oplata",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/guide/pages/bronirovanie-i-oplata/hero.jpg",
+      "guidePageSlug": "bronirovanie-i-oplata",
+      "role": "hero"
+    },
+    {
+      "id": "tour-patagonia-glaciers-hero",
+      "title": "Ледники Патагонии — обложка",
+      "alt": "Ледники Патагонии — обложка тура, Аргентина",
+      "caption": "Ледники Патагонии",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "patagonia-glaciers",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/patagonia-glaciers/hero.jpg",
+      "tourSlug": "patagonia-glaciers",
+      "role": "hero"
+    },
+    {
+      "id": "tour-patagonia-glaciers-gallery-1",
+      "title": "Ледники Патагонии — фото 1",
+      "alt": "Ледники Патагонии — фото 1, Аргентина",
+      "caption": "Ледники Патагонии",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "patagonia-glaciers",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/9/95/SantaCruz-PeritoMoreno-P2140146b.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/patagonia-glaciers/gallery-1.jpg",
+      "tourSlug": "patagonia-glaciers",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-patagonia-glaciers-gallery-2",
+      "title": "Ледники Патагонии — фото 2",
+      "alt": "Ледники Патагонии — фото 2, Аргентина",
+      "caption": "Ледники Патагонии",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "patagonia-glaciers",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/ad/Glaciar_Perito_Moreno%2C_Bismarck_o_Francisco_Gormaz.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/patagonia-glaciers/gallery-2.jpg",
+      "tourSlug": "patagonia-glaciers",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-patagonia-glaciers-gallery-3",
+      "title": "Ледники Патагонии — фото 3",
+      "alt": "Ледники Патагонии — фото 3, Аргентина",
+      "caption": "Ледники Патагонии",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "patagonia-glaciers",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/153_-_Glacier_Perito_Moreno_-_Grotte_glaciaire_-_Janvier_2010.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/patagonia-glaciers/gallery-3.jpg",
+      "tourSlug": "patagonia-glaciers",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-patagonia-glaciers-gallery-4",
+      "title": "Ледники Патагонии — фото 4",
+      "alt": "Ледники Патагонии — фото 4, Аргентина",
+      "caption": "Ледники Патагонии",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "patagonia-glaciers",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5c/Perito_Moreno_Glacier_Patagonia_Argentina_Luca_Galuzzi_2005.JPG",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/patagonia-glaciers/gallery-4.jpg",
+      "tourSlug": "patagonia-glaciers",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-buenos-aires-tango-hero",
+      "title": "Буэнос-Айрес и танго — обложка",
+      "alt": "Буэнос-Айрес и танго — обложка тура, Аргентина",
+      "caption": "Буэнос-Айрес и танго",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "buenos-aires-tango",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/buenos-aires-tango/hero.jpg",
+      "tourSlug": "buenos-aires-tango",
+      "role": "hero"
+    },
+    {
+      "id": "tour-buenos-aires-tango-gallery-1",
+      "title": "Буэнос-Айрес и танго — фото 1",
+      "alt": "Буэнос-Айрес и танго — фото 1, Аргентина",
+      "caption": "Буэнос-Айрес и танго",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "buenos-aires-tango",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/dd/Caminito%2C_La_Boca.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/buenos-aires-tango/gallery-1.jpg",
+      "tourSlug": "buenos-aires-tango",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-buenos-aires-tango-gallery-2",
+      "title": "Буэнос-Айрес и танго — фото 2",
+      "alt": "Буэнос-Айрес и танго — фото 2, Аргентина",
+      "caption": "Буэнос-Айрес и танго",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "buenos-aires-tango",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Buenos_Aires_Obelisk_4.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/buenos-aires-tango/gallery-2.jpg",
+      "tourSlug": "buenos-aires-tango",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-buenos-aires-tango-gallery-3",
+      "title": "Буэнос-Айрес и танго — фото 3",
+      "alt": "Буэнос-Айрес и танго — фото 3, Аргентина",
+      "caption": "Буэнос-Айрес и танго",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "buenos-aires-tango",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/buenos-aires-tango/gallery-3.jpg",
+      "tourSlug": "buenos-aires-tango",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-buenos-aires-tango-gallery-4",
+      "title": "Буэнос-Айрес и танго — фото 4",
+      "alt": "Буэнос-Айрес и танго — фото 4, Аргентина",
+      "caption": "Буэнос-Айрес и танго",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "buenos-aires-tango",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f9/Torre_Monumental_%28Buenos_Aires%29_edit.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/buenos-aires-tango/gallery-4.jpg",
+      "tourSlug": "buenos-aires-tango",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-mendoza-wine-hero",
+      "title": "Винный тур Мендосы — обложка",
+      "alt": "Винный тур Мендосы — обложка тура, Аргентина",
+      "caption": "Винный тур Мендосы",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "mendoza-wine",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/mendoza-wine/hero.jpg",
+      "tourSlug": "mendoza-wine",
+      "role": "hero"
+    },
+    {
+      "id": "tour-mendoza-wine-gallery-1",
+      "title": "Винный тур Мендосы — фото 1",
+      "alt": "Винный тур Мендосы — фото 1, Аргентина",
+      "caption": "Винный тур Мендосы",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "mendoza-wine",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Wine_Cellar_in_Mendoza%28GN04637%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/mendoza-wine/gallery-1.jpg",
+      "tourSlug": "mendoza-wine",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-mendoza-wine-gallery-2",
+      "title": "Винный тур Мендосы — фото 2",
+      "alt": "Винный тур Мендосы — фото 2, Аргентина",
+      "caption": "Винный тур Мендосы",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "mendoza-wine",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Vignoble_Mendoza_Argentine.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/mendoza-wine/gallery-2.jpg",
+      "tourSlug": "mendoza-wine",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-mendoza-wine-gallery-3",
+      "title": "Винный тур Мендосы — фото 3",
+      "alt": "Винный тур Мендосы — фото 3, Аргентина",
+      "caption": "Винный тур Мендосы",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "mendoza-wine",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/mendoza-wine/gallery-3.jpg",
+      "tourSlug": "mendoza-wine",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-mendoza-wine-gallery-4",
+      "title": "Винный тур Мендосы — фото 4",
+      "alt": "Винный тур Мендосы — фото 4, Аргентина",
+      "caption": "Винный тур Мендосы",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "mendoza-wine",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Salta-Square1.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/mendoza-wine/gallery-4.jpg",
+      "tourSlug": "mendoza-wine",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-iguazu-falls-hero",
+      "title": "Водопады Игуасу — обложка",
+      "alt": "Водопады Игуасу — обложка тура, Аргентина",
+      "caption": "Водопады Игуасу",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "iguazu-falls",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/iguazu-falls/hero.jpg",
+      "tourSlug": "iguazu-falls",
+      "role": "hero"
+    },
+    {
+      "id": "tour-iguazu-falls-gallery-1",
+      "title": "Водопады Игуасу — фото 1",
+      "alt": "Водопады Игуасу — фото 1, Аргентина",
+      "caption": "Водопады Игуасу",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Iguazu_Cataratas2.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/iguazu-falls/gallery-1.jpg",
+      "tourSlug": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-iguazu-falls-gallery-2",
+      "title": "Водопады Игуасу — фото 2",
+      "alt": "Водопады Игуасу — фото 2, Аргентина",
+      "caption": "Водопады Игуасу",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Iguazu_National_Park_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/iguazu-falls/gallery-2.jpg",
+      "tourSlug": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-iguazu-falls-gallery-3",
+      "title": "Водопады Игуасу — фото 3",
+      "alt": "Водопады Игуасу — фото 3, Аргентина",
+      "caption": "Водопады Игуасу",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/2/2c/Iguazu_D%C3%A9cembre_2007_-_Panorama_7.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/iguazu-falls/gallery-3.jpg",
+      "tourSlug": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-iguazu-falls-gallery-4",
+      "title": "Водопады Игуасу — фото 4",
+      "alt": "Водопады Игуасу — фото 4, Аргентина",
+      "caption": "Водопады Игуасу",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "iguazu-falls",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/e/e2/Parque_Nacional_do_Igua%C3%A7%C3%BA_-_Igua%C3%A7u_National_Park_-_Bilheterias_-_Ticket_toll_%2813932942577%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/iguazu-falls/gallery-4.jpg",
+      "tourSlug": "iguazu-falls",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-salta-northwest-hero",
+      "title": "Северо-запад — обложка",
+      "alt": "Северо-запад — обложка тура, Аргентина",
+      "caption": "Северо-запад",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "salta-northwest",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/salta-northwest/hero.jpg",
+      "tourSlug": "salta-northwest",
+      "role": "hero"
+    },
+    {
+      "id": "tour-salta-northwest-gallery-1",
+      "title": "Северо-запад — фото 1",
+      "alt": "Северо-запад — фото 1, Аргентина",
+      "caption": "Северо-запад",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "salta-northwest",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/salta-northwest/gallery-1.jpg",
+      "tourSlug": "salta-northwest",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-salta-northwest-gallery-2",
+      "title": "Северо-запад — фото 2",
+      "alt": "Северо-запад — фото 2, Аргентина",
+      "caption": "Северо-запад",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "salta-northwest",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/72/Iglesia_San_Francisco%2C_Salta%2C_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/salta-northwest/gallery-2.jpg",
+      "tourSlug": "salta-northwest",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-salta-northwest-gallery-3",
+      "title": "Северо-запад — фото 3",
+      "alt": "Северо-запад — фото 3, Аргентина",
+      "caption": "Северо-запад",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "salta-northwest",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/bb/Catedral_Bas%C3%ADlica_de_Salta_y_Santuario_del_Se%C3%B1or_y_la_Virgen_del_Milagro.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/salta-northwest/gallery-3.jpg",
+      "tourSlug": "salta-northwest",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-salta-northwest-gallery-4",
+      "title": "Северо-запад — фото 4",
+      "alt": "Северо-запад — фото 4, Аргентина",
+      "caption": "Северо-запад",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "salta-northwest",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/06/Salta-Square1.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/salta-northwest/gallery-4.jpg",
+      "tourSlug": "salta-northwest",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-ushuaia-end-of-world-hero",
+      "title": "Ушуайя — обложка",
+      "alt": "Ушуайя — обложка тура, Аргентина",
+      "caption": "Ушуайя",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "ushuaia-end-of-world",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/ushuaia-end-of-world/hero.jpg",
+      "tourSlug": "ushuaia-end-of-world",
+      "role": "hero"
+    },
+    {
+      "id": "tour-ushuaia-end-of-world-gallery-1",
+      "title": "Ушуайя — фото 1",
+      "alt": "Ушуайя — фото 1, Аргентина",
+      "caption": "Ушуайя",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "ushuaia-end-of-world",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b9/Aerial_view_of_Ushuaia_Prison_%28crop%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/ushuaia-end-of-world/gallery-1.jpg",
+      "tourSlug": "ushuaia-end-of-world",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-ushuaia-end-of-world-gallery-2",
+      "title": "Ушуайя — фото 2",
+      "alt": "Ушуайя — фото 2, Аргентина",
+      "caption": "Ушуайя",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "ushuaia-end-of-world",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b0/Ushuaia-museu-do-fim-do-mun.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/ushuaia-end-of-world/gallery-2.jpg",
+      "tourSlug": "ushuaia-end-of-world",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-ushuaia-end-of-world-gallery-3",
+      "title": "Ушуайя — фото 3",
+      "alt": "Ушуайя — фото 3, Аргентина",
+      "caption": "Ушуайя",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "ushuaia-end-of-world",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Casa_Beban_%2815952733035%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/ushuaia-end-of-world/gallery-3.jpg",
+      "tourSlug": "ushuaia-end-of-world",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-ushuaia-end-of-world-gallery-4",
+      "title": "Ушуайя — фото 4",
+      "alt": "Ушуайя — фото 4, Аргентина",
+      "caption": "Ушуайя",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "ushuaia-end-of-world",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/Parque_Nacional_Tierra_del_Fuego%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/ushuaia-end-of-world/gallery-4.jpg",
+      "tourSlug": "ushuaia-end-of-world",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-bariloche-lakes-hero",
+      "title": "Барилоче — обложка",
+      "alt": "Барилоче — обложка тура, Аргентина",
+      "caption": "Барилоче",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "bariloche-lakes",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/bariloche-lakes/hero.jpg",
+      "tourSlug": "bariloche-lakes",
+      "role": "hero"
+    },
+    {
+      "id": "tour-bariloche-lakes-gallery-1",
+      "title": "Барилоче — фото 1",
+      "alt": "Барилоче — фото 1, Аргентина",
+      "caption": "Барилоче",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "bariloche-lakes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/bariloche-lakes/gallery-1.jpg",
+      "tourSlug": "bariloche-lakes",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-bariloche-lakes-gallery-2",
+      "title": "Барилоче — фото 2",
+      "alt": "Барилоче — фото 2, Аргентина",
+      "caption": "Барилоче",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "bariloche-lakes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/16/Catedral_desde_el_Lago_Nahuel_Huapi_-_panoramio.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/bariloche-lakes/gallery-2.jpg",
+      "tourSlug": "bariloche-lakes",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-bariloche-lakes-gallery-3",
+      "title": "Барилоче — фото 3",
+      "alt": "Барилоче — фото 3, Аргентина",
+      "caption": "Барилоче",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "bariloche-lakes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/8/8c/Bariloche_01.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/bariloche-lakes/gallery-3.jpg",
+      "tourSlug": "bariloche-lakes",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-bariloche-lakes-gallery-4",
+      "title": "Барилоче — фото 4",
+      "alt": "Барилоче — фото 4, Аргентина",
+      "caption": "Барилоче",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "bariloche-lakes",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/fd/Bariloche-_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/bariloche-lakes/gallery-4.jpg",
+      "tourSlug": "bariloche-lakes",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-fitz-roy-trek-hero",
+      "title": "Fitz Roy — обложка",
+      "alt": "Fitz Roy — обложка тура, Аргентина",
+      "caption": "Fitz Roy",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "fitz-roy-trek",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/fitz-roy-trek/hero.jpg",
+      "tourSlug": "fitz-roy-trek",
+      "role": "hero"
+    },
+    {
+      "id": "tour-fitz-roy-trek-gallery-1",
+      "title": "Fitz Roy — фото 1",
+      "alt": "Fitz Roy — фото 1, Аргентина",
+      "caption": "Fitz Roy",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "fitz-roy-trek",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/4/47/El_Chalt%C3%A9n.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/fitz-roy-trek/gallery-1.jpg",
+      "tourSlug": "fitz-roy-trek",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-fitz-roy-trek-gallery-2",
+      "title": "Fitz Roy — фото 2",
+      "alt": "Fitz Roy — фото 2, Аргентина",
+      "caption": "Fitz Roy",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "fitz-roy-trek",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/fitz-roy-trek/gallery-2.jpg",
+      "tourSlug": "fitz-roy-trek",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-fitz-roy-trek-gallery-3",
+      "title": "Fitz Roy — фото 3",
+      "alt": "Fitz Roy — фото 3, Аргентина",
+      "caption": "Fitz Roy",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "fitz-roy-trek",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/05/Vista_a%C3%A9rea_de_Bariloche_y_la_Catedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/fitz-roy-trek/gallery-3.jpg",
+      "tourSlug": "fitz-roy-trek",
+      "role": "gallery"
+    },
+    {
+      "id": "tour-fitz-roy-trek-gallery-4",
+      "title": "Fitz Roy — фото 4",
+      "alt": "Fitz Roy — фото 4, Аргентина",
+      "caption": "Fitz Roy",
+      "category": "itinerary",
+      "tags": [
+        "tour",
+        "fitz-roy-trek",
+        "gallery"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/tours/fitz-roy-trek/gallery-4.jpg",
+      "tourSlug": "fitz-roy-trek",
+      "role": "gallery"
+    },
+    {
+      "id": "climate-global-1",
+      "title": "Климат — месяц 1",
+      "alt": "Пейзаж Аргентины, месяц 1",
+      "caption": "Сезонный вид — месяц 1",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-1"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a5/Hotel_Provincial_y_Casino%2C_Plaza_seca_y_la_Plaza_Col%C3%B3n._Vista_panor%C3%A1mica_desde_el_Palacio_Ed%C3%A9n.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-1.jpg",
+      "climateKey": "global-1",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-2",
+      "title": "Климат — месяц 2",
+      "alt": "Пейзаж Аргентины, месяц 2",
+      "caption": "Сезонный вид — месяц 2",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-2"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-2.jpg",
+      "climateKey": "global-2",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-3",
+      "title": "Климат — месяц 3",
+      "alt": "Пейзаж Аргентины, месяц 3",
+      "caption": "Сезонный вид — месяц 3",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-3"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Wine_Cellar_in_Mendoza%28GN04637%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-3.jpg",
+      "climateKey": "global-3",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-4",
+      "title": "Климат — месяц 4",
+      "alt": "Пейзаж Аргентины, месяц 4",
+      "caption": "Сезонный вид — месяц 4",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-4"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-4.jpg",
+      "climateKey": "global-4",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-5",
+      "title": "Климат — месяц 5",
+      "alt": "Пейзаж Аргентины, месяц 5",
+      "caption": "Сезонный вид — месяц 5",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-5"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-5.jpg",
+      "climateKey": "global-5",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-6",
+      "title": "Климат — месяц 6",
+      "alt": "Пейзаж Аргентины, месяц 6",
+      "caption": "Сезонный вид — месяц 6",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-6"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-6.jpg",
+      "climateKey": "global-6",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-7",
+      "title": "Климат — месяц 7",
+      "alt": "Пейзаж Аргентины, месяц 7",
+      "caption": "Сезонный вид — месяц 7",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-7"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-7.jpg",
+      "climateKey": "global-7",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-8",
+      "title": "Климат — месяц 8",
+      "alt": "Пейзаж Аргентины, месяц 8",
+      "caption": "Сезонный вид — месяц 8",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-8"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-8.jpg",
+      "climateKey": "global-8",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-9",
+      "title": "Климат — месяц 9",
+      "alt": "Пейзаж Аргентины, месяц 9",
+      "caption": "Сезонный вид — месяц 9",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-9"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-9.jpg",
+      "climateKey": "global-9",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-10",
+      "title": "Климат — месяц 10",
+      "alt": "Пейзаж Аргентины, месяц 10",
+      "caption": "Сезонный вид — месяц 10",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-10"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-10.jpg",
+      "climateKey": "global-10",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-11",
+      "title": "Климат — месяц 11",
+      "alt": "Пейзаж Аргентины, месяц 11",
+      "caption": "Сезонный вид — месяц 11",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-11"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-11.jpg",
+      "climateKey": "global-11",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-global-12",
+      "title": "Климат — месяц 12",
+      "alt": "Пейзаж Аргентины, месяц 12",
+      "caption": "Сезонный вид — месяц 12",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "global",
+        "month-12"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a4/Ushuaia_aerial_panorama.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/global/month-12.jpg",
+      "climateKey": "global-12",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-ba-1",
+      "title": "Климат — ba-1",
+      "alt": "Климатический вид региона Аргентины (ba-1)",
+      "caption": "Региональный климат — ba-1",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "ba-1"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/b/b7/Obelisco_Buenos_Aires.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/ba-1.jpg",
+      "climateKey": "ba-1",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-ba-6",
+      "title": "Климат — ba-6",
+      "alt": "Климатический вид региона Аргентины (ba-6)",
+      "caption": "Региональный климат — ba-6",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "ba-6"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/1/1e/Puerto_Madero%2C_Buenos_Aires_%2840689219792%29_%28cropped%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/ba-6.jpg",
+      "climateKey": "ba-6",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-patagonia-1",
+      "title": "Климат — patagonia-1",
+      "alt": "Климатический вид региона Аргентины (patagonia-1)",
+      "caption": "Региональный климат — patagonia-1",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "patagonia-1"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c8/Perito_Moreno_Glacier_2023.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/patagonia-1.jpg",
+      "climateKey": "patagonia-1",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-patagonia-2",
+      "title": "Климат — patagonia-2",
+      "alt": "Климатический вид региона Аргентины (patagonia-2)",
+      "caption": "Региональный климат — patagonia-2",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "patagonia-2"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c6/San_Carlos_de_Bariloche.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/patagonia-2.jpg",
+      "climateKey": "patagonia-2",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-patagonia-7",
+      "title": "Климат — patagonia-7",
+      "alt": "Климатический вид региона Аргентины (patagonia-7)",
+      "caption": "Региональный климат — patagonia-7",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "patagonia-7"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a2/Fitz_Roy%2C_Patagonia%2C_Argentina.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/patagonia-7.jpg",
+      "climateKey": "patagonia-7",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-patagonia-11",
+      "title": "Климат — patagonia-11",
+      "alt": "Климатический вид региона Аргентины (patagonia-11)",
+      "caption": "Региональный климат — patagonia-11",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "patagonia-11"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/3/33/El_Calafate_%2825825005237%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/patagonia-11.jpg",
+      "climateKey": "patagonia-11",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-iguazu-2",
+      "title": "Климат — iguazu-2",
+      "alt": "Климатический вид региона Аргентины (iguazu-2)",
+      "caption": "Региональный климат — iguazu-2",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "iguazu-2"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/c/c4/Iguazu_Cataratas2.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/iguazu-2.jpg",
+      "climateKey": "iguazu-2",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-iguazu-3",
+      "title": "Климат — iguazu-3",
+      "alt": "Климатический вид региона Аргентины (iguazu-3)",
+      "caption": "Региональный климат — iguazu-3",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "iguazu-3"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Iguazu_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/iguazu-3.jpg",
+      "climateKey": "iguazu-3",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-iguazu-12",
+      "title": "Климат — iguazu-12",
+      "alt": "Климатический вид региона Аргентины (iguazu-12)",
+      "caption": "Региональный климат — iguazu-12",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "iguazu-12"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/d/d1/Iguazu_National_Park_Falls.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/iguazu-12.jpg",
+      "climateKey": "iguazu-12",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-salta-4",
+      "title": "Климат — salta-4",
+      "alt": "Климатический вид региона Аргентины (salta-4)",
+      "caption": "Региональный климат — salta-4",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "salta-4"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/salta-4.jpg",
+      "climateKey": "salta-4",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-salta-5",
+      "title": "Климат — salta-5",
+      "alt": "Климатический вид региона Аргентины (salta-5)",
+      "caption": "Региональный климат — salta-5",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "salta-5"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Salta_Cathedral.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/salta-5.jpg",
+      "climateKey": "salta-5",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-salta-9",
+      "title": "Климат — salta-9",
+      "alt": "Климатический вид региона Аргентины (salta-9)",
+      "caption": "Региональный климат — salta-9",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "salta-9"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/0/0a/Cerro_de_los_siete_colores.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/salta-9.jpg",
+      "climateKey": "salta-9",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-mendoza-3",
+      "title": "Климат — mendoza-3",
+      "alt": "Климатический вид региона Аргентины (mendoza-3)",
+      "caption": "Региональный климат — mendoza-3",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "mendoza-3"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/f/f1/Wine_Cellar_in_Mendoza%28GN04637%29.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/mendoza-3.jpg",
+      "climateKey": "mendoza-3",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-mendoza-4",
+      "title": "Климат — mendoza-4",
+      "alt": "Климатический вид региона Аргентины (mendoza-4)",
+      "caption": "Региональный климат — mendoza-4",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "mendoza-4"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/54/Panor%C3%A1mica_Ciudad_de_Salta.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/mendoza-4.jpg",
+      "climateKey": "mendoza-4",
+      "role": "thumbnail"
+    },
+    {
+      "id": "climate-mendoza-9",
+      "title": "Климат — mendoza-9",
+      "alt": "Климатический вид региона Аргентины (mendoza-9)",
+      "caption": "Региональный климат — mendoza-9",
+      "category": "travel-guide",
+      "tags": [
+        "climate",
+        "region",
+        "mendoza-9"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://upload.wikimedia.org/wikipedia/commons/5/53/Downtown_Mendoza.jpg",
+      "license": "CC BY-SA / CC BY (Wikimedia Commons)",
+      "author": "Wikimedia Commons contributors",
+      "localPath": "media/climate/regions/mendoza-9.jpg",
+      "climateKey": "mendoza-9",
+      "role": "thumbnail"
+    }
+  ]
+}

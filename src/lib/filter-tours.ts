@@ -1,3 +1,4 @@
+import { startOfDay } from "date-fns";
 import {
   TourListing,
   TourFilters,
@@ -5,6 +6,7 @@ import {
   DEFAULT_FILTERS,
 } from "@/types";
 import { CurrencyCode } from "@/types/locale";
+import { resolveTourFilterPriceUsd } from "@/lib/tour-price-public";
 import { convertFromUsd, getFilterPriceMax } from "@/lib/currency";
 import {
   DURATION_PRESETS,
@@ -15,6 +17,9 @@ import {
   isPriceFilterActive,
 } from "@/lib/tour-price-bounds";
 import { matchesTourFormat } from "@/lib/tour-format";
+import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -40,10 +45,16 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 
 function matchesDateRange(tour: TourListing, from: Date | null, to: Date | null) {
   if (!from && !to) return true;
+  // Партнёрские туры Tripster не имеют дат заезда в нашей БД — не отсекаем по календарю.
+  if (isPartnerTourListing(tour)) return true;
+
+  const rangeStart = from ? startOfDay(from) : null;
+  const rangeEnd = to ? startOfDay(to) : null;
+
   return tour.availableDates.some((d) => {
-    const start = new Date(d.start);
-    if (from && start < from) return false;
-    if (to && start > to) return false;
+    const start = startOfDay(new Date(d.start));
+    if (rangeStart && start < rangeStart) return false;
+    if (rangeEnd && start > rangeEnd) return false;
     return true;
   });
 }
@@ -99,8 +110,16 @@ export function filterTours(
   let result = tours.filter((tour) => {
     if (!matchesQuery(tour, filters.query)) return false;
     if (!matchesDateRange(tour, filters.dateFrom, filters.dateTo)) return false;
-    const displayPrice = convertFromUsd(tour.priceUsd, currency);
-    if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
+    const filterPrice = resolveTourFilterPriceUsd({
+      priceUsd: tour.priceUsd,
+      priceOnRequest: tour.priceOnRequest,
+    });
+    if (filterPrice == null) {
+      // Туры «цена по запросу» без ориентира не отсекаются фильтром по цене.
+    } else if (!isPartnerTourListing(tour)) {
+      const displayPrice = convertFromUsd(filterPrice, currency);
+      if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
+    }
 
     if (
       filters.activityTypes.length &&
@@ -112,24 +131,28 @@ export function filterTours(
 
     if (
       filters.accommodations.length &&
+      !isPartnerTourListing(tour) &&
       !filters.accommodations.includes(tour.accommodationType)
     )
       return false;
 
     if (
       filters.comfortLevels.length &&
-      !filters.comfortLevels.includes(tour.comfortLevel)
+      !isPartnerTourListing(tour) &&
+      !filters.comfortLevels.includes(resolveListingComfortLevel(tour))
     )
       return false;
 
     if (
       filters.difficultyLevels.length &&
+      !isPartnerTourListing(tour) &&
       !filters.difficultyLevels.includes(tour.difficultyLevel)
     )
       return false;
 
     if (
       filters.languages.length &&
+      !isPartnerTourListing(tour) &&
       !filters.languages.some((l) => tour.language.includes(l))
     )
       return false;
@@ -144,6 +167,14 @@ export function filterTours(
 
     if (filters.tourFormats.length && !matchesTourFormat(tour, filters.tourFormats))
       return false;
+
+    if (
+      filters.organizerSlug.trim() &&
+      resolveListingOwnerUserId(tour) !== filters.organizerSlug.trim() &&
+      tour.organizer.slug !== filters.organizerSlug.trim()
+    ) {
+      return false;
+    }
 
     return true;
   });
@@ -188,6 +219,7 @@ export function countActiveFilters(
   if (filters.groupSizes.length) n++;
   if (filters.tourFormats.length) n++;
   if (filters.nearMe) n++;
+  if (filters.organizerSlug.trim()) n++;
   return n;
 }
 

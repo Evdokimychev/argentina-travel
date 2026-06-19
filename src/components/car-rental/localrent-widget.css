@@ -1,0 +1,21 @@
+/* Keep LocalRent WL inside our page column — widget defaults to body-level full-bleed layout. */
+.localrent-wl-mount {
+  isolation: isolate;
+}
+
+.localrent-wl-mount #mrc_wl_plhcrd,
+.localrent-wl-mount [id^="mrc_wl"] {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  transform: none !important;
+}
+
+.localrent-wl-mount #mrc_wl_plhcrd .mrc-wl-search,
+.localrent-wl-mount #mrc_wl_plhcrd [class*="search"] {
+  max-width: 100%;
+}

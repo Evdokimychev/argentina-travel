@@ -64,8 +64,12 @@ export function applyAuthUserToCheckoutForm(
   return next;
 }
 
-export function createCheckoutForm(guests: number, user?: AuthUser | null): CheckoutFormState {
-  const base = createInitialCheckoutForm(guests);
+export function createCheckoutForm(
+  guests: number,
+  user?: AuthUser | null,
+  roomOptions?: import("./types").RoomOption[]
+): CheckoutFormState {
+  const base = createInitialCheckoutForm(guests, roomOptions);
   if (!user) return base;
   return applyAuthUserToCheckoutForm(base, user);
 }

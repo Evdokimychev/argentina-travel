@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum PlaceCategory {
+  NATIONAL_PARK
+  WATERFALL
+  GLACIER
+  LAKE
+  MOUNTAIN
+  TREKKING
+  CITY
+  TOWN
+  BEACH
+  WINERY
+  MUSEUM
+  HISTORIC
+  VIEWPOINT
+  RESERVE
+  WILDLIFE
+}
+
+enum PlaceSource {
+  MANUAL
+  OPENSTREETMAP
+  OVERPASS
+  WIKIMEDIA
+  WIKIPEDIA
+  WIKIDATA
+  GEONAMES
+}
+
+enum PlaceRelationType {
+  GEOGRAPHIC
+  TAG
+  CATEGORY
+  REGION
+  DISTANCE
+}
+
+model Place {
+  id               String        @id @default(cuid())
+  slug             String        @unique
+  name             String
+  shortDescription String
+  fullDescription  String        @db.Text
+  category         PlaceCategory
+  region           String
+  province         String?
+  city             String?
+  latitude         Float
+  longitude        Float
+  gallery          String[]
+  coverImage       String?
+  tags             String[]
+  rating           Float?
+  visitDuration    String?
+  season           String?
+  ticketPrice      String?
+  website          String?
+  source           PlaceSource   @default(MANUAL)
+  popularity       Int           @default(0)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  relationsFrom    PlaceRelation[]  @relation("PlaceRelationFrom")
+  relationsTo      PlaceRelation[]  @relation("PlaceRelationTo")
+  collectionItems  CollectionPlace[]
+  itineraryStops   ItineraryStop[]
+  savedBy          SavedPlace[]
+
+  @@index([category])
+  @@index([region])
+  @@index([province])
+}
+
+model PlaceRelation {
+  id          String            @id @default(cuid())
+  fromPlaceId String
+  toPlaceId   String
+  type        PlaceRelationType
+  score       Float             @default(0)
+  distanceKm  Float?
+  reason      String?
+
+  fromPlace Place @relation("PlaceRelationFrom", fields: [fromPlaceId], references: [id], onDelete: Cascade)
+  toPlace   Place @relation("PlaceRelationTo", fields: [toPlaceId], references: [id], onDelete: Cascade)
+
+  @@unique([fromPlaceId, toPlaceId, type])
+  @@index([fromPlaceId])
+  @@index([toPlaceId])
+}
+
+model Collection {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  title       String
+  subtitle    String?
+  description String   @db.Text
+  coverImage  String?
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  places CollectionPlace[]
+}
+
+model CollectionPlace {
+  collectionId String
+  placeId      String
+  sortOrder    Int @default(0)
+
+  collection Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+  place      Place      @relation(fields: [placeId], references: [id], onDelete: Cascade)
+
+  @@id([collectionId, placeId])
+}
+
+model Itinerary {
+  id           String   @id @default(cuid())
+  slug         String   @unique
+  title        String
+  subtitle     String?
+  description  String   @db.Text
+  coverImage   String?
+  durationDays Int
+  season       String?
+  difficulty   String?
+  tags         String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  stops ItineraryStop[]
+}
+
+model ItineraryStop {
+  id          String  @id @default(cuid())
+  itineraryId String
+  placeId     String?
+  dayNumber   Int
+  sortOrder   Int     @default(0)
+  title       String
+  description String?
+  note        String?
+
+  itinerary Itinerary @relation(fields: [itineraryId], references: [id], onDelete: Cascade)
+  place     Place?    @relation(fields: [placeId], references: [id], onDelete: SetNull)
+
+  @@index([itineraryId])
+}
+
+model SavedPlace {
+  id      String   @id @default(cuid())
+  userId  String
+  placeId String
+  savedAt DateTime @default(now())
+
+  place Place @relation(fields: [placeId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, placeId])
+  @@index([userId])
+}

@@ -1,6 +1,11 @@
 // Supabase-ready marketplace tour listing type
 // Maps to `tours` table + related fields
 
+import type { OrganizerProfessionalExperience } from "@/types/organizer-profile";
+import type { GroupDiscountSettings } from "@/types/group-discount";
+import type { TourAccommodation } from "@/types/tour-accommodation";
+import type { TourCustomBookingLinkPublic } from "@/types/tour-custom-booking-link";
+
 export type TourBadge = "hot" | "new" | "hit" | "family" | "expedition";
 
 export type ActivityType =
@@ -41,6 +46,7 @@ export type AccommodationType =
 export type DurationBucket = "1–2 дня" | "2–3 дня" | "4–7 дней" | "8–14 дней" | "15+ дней";
 
 export type ComfortLevel =
+  | "Без проживания"
   | "Базовый"
   | "Стандарт"
   | "Комфорт"
@@ -88,6 +94,9 @@ export type TourBookingMode = "scheduled" | "on_request" | "both";
 export interface TourOrganizerPreview {
   name: string;
   avatar: string;
+  /** Public profile URL segment — organizer account id. */
+  slug?: string;
+  ownerUserId?: string;
 }
 
 export interface TourListing {
@@ -101,14 +110,26 @@ export interface TourListing {
   // Filter fields (Supabase columns)
   destination: string;
   region: string;
+  /** Страна старта / основная локация (для партнёрских туров — из Tripster, не только Аргентина). */
+  country?: string;
   activityType: ActivityType;
   durationDays: number;
   durationNights: number;
   durationBucket: DurationBucket;
+  /** Organizer account id for catalog filtering and public profile links. */
+  organizerOwnerId?: string;
   /** Base price in USD — convert on frontend */
   priceUsd: number;
   /** Strikethrough price when a discount is active */
   originalPriceUsd?: number;
+  /** Нет фиксированной цены */
+  priceOnRequest?: boolean;
+  /** Показывать «от» перед ориентировочной ценой */
+  priceFromPrefix?: boolean;
+  /** Групповая скидка настроена организатором */
+  groupDiscountEnabled?: boolean;
+  /** Краткая подпись для карточки каталога */
+  groupDiscountHint?: string;
   /** Individual / custom-date booking available */
   bookingMode?: TourBookingMode;
   requestDateFrom?: string;
@@ -138,6 +159,17 @@ export interface TourListing {
   isNew?: boolean;
   isBestOfMonth?: boolean;
   featured?: boolean;
+  /** Партнёрский тур (Tripster) — не редактируется в кабинете организатора */
+  partnerSource?: "tripster";
+  /** Отображение цены от Tripster, если валюта не USD */
+  partnerPriceDisplay?: string;
+  /** Числовая цена от Tripster в исходной валюте */
+  partnerPriceValue?: number;
+  partnerPriceCurrency?: string;
+  /** Базовая цена до скидки Tripster (за человека или за тур) */
+  partnerOriginalPriceValue?: number;
+  /** За человека или за группу/тур */
+  partnerPriceUnit?: "per_person" | "per_group";
 }
 
 export interface TourFilters {
@@ -160,6 +192,8 @@ export interface TourFilters {
   tourFormats: TourFormat[];
   nearMe: boolean;
   userCoords: { lat: number; lng: number } | null;
+  /** Filter by organizer public profile slug (account id). */
+  organizerSlug: string;
 }
 
 export const DEFAULT_FILTERS: TourFilters = {
@@ -182,6 +216,7 @@ export const DEFAULT_FILTERS: TourFilters = {
   tourFormats: [],
   nearMe: false,
   userCoords: null,
+  organizerSlug: "",
 };
 
 // --- Detail page types (unchanged subset) ---
@@ -191,6 +226,8 @@ export interface TourPlace {
   title: string;
   description: string;
   image: string;
+  extendedScheduleEnabled?: boolean;
+  extendedSchedule?: string;
 }
 
 export interface TourRoutePoint {
@@ -206,13 +243,21 @@ export interface TourFeature {
   description: string;
 }
 
+import type { TourDayActivity } from "@/types/tour-itinerary-activity";
+import type { TourTravelRisk } from "@/types/tour-travel-risk";
+import type { TourSectionOrganizerComments } from "@/types/tour-section-comments";
+
+export type { TourDayActivity } from "@/types/tour-itinerary-activity";
+
 export interface TourItineraryDay {
   id: string;
   dayNumber: number;
   title: string;
   description: string;
+  /** HTML-описание дня (партнёрские туры Tripster) */
+  descriptionHtml?: string;
   images: string[];
-  activities: string[];
+  activities: TourDayActivity[];
   meals: string[];
   accommodation: string;
 }
@@ -226,6 +271,7 @@ export interface RichTextBlock {
 }
 
 export interface TourDescriptionExtra {
+  difficulty: string;
   seasonality: string;
   packing: string[];
   flights: string;
@@ -239,11 +285,24 @@ export interface TourOrganizerDetail {
   name: string;
   role: string;
   avatar: string;
+  shortDescription?: string;
+  extendedDescription?: string;
+  /** Status line from organizer settings — shown on tour and profile pages. */
+  statusText?: string;
+  /** Public profile URL segment — organizer account id. */
+  slug?: string;
+  ownerUserId?: string;
   rating: number;
+  /** Organizer-wide review count (Tripster guide profile for partner tours). */
+  reviewCount?: number;
   tourCount: number;
   travelerCount: number;
   languages: string[];
   experienceYears: number;
+  /** ISO date when organizer registered on the platform. */
+  platformRegisteredAt?: string;
+  /** Organizer-provided professional experience (settings). */
+  professionalExperience?: OrganizerProfessionalExperience | null;
   phone: string;
   email: string;
 }
@@ -257,16 +316,20 @@ export interface TourReview {
   tripDate: string;
   text: string;
   photos: string[];
+  /** Review from a verified booking / completed trip. */
+  verifiedTrip?: boolean;
 }
 
-export interface TourAccommodation {
-  id: string;
-  name: string;
-  description: string;
-  comfort: ComfortLevel;
-  amenities: string[];
-  images: string[];
-}
+export type {
+  TourAccommodation,
+  TourAccommodationAlternative,
+  TourAccommodationRoomType,
+  AccommodationDisplayMode,
+} from "@/types/tour-accommodation";
+export type {
+  TourCustomBookingLink,
+  TourCustomBookingLinkPublic,
+} from "@/types/tour-custom-booking-link";
 
 export interface TourArrivalInfo {
   airports: string[];
@@ -288,6 +351,9 @@ export interface TourDatePrice {
   spotsLeft: number;
   /** Base price in USD for this departure */
   priceUsd: number;
+  /** Цена заезда от партнёра (если валюта не USD) */
+  partnerPriceValue?: number;
+  partnerPriceCurrency?: string;
 }
 
 export interface TourDetail {
@@ -309,6 +375,7 @@ export interface TourDetail {
   shortDescription: string;
   difficulty: DifficultyLevel;
   comfort: ComfortLevel;
+  comfortLevels?: ComfortLevel[];
   accommodationType?: AccommodationType;
   groupMin: number;
   groupMax: number;
@@ -323,6 +390,14 @@ export interface TourDetail {
   descriptionBlocks: RichTextBlock[];
   descriptionExtra?: TourDescriptionExtra;
   itinerary: TourItineraryDay[];
+  /** Комментарий организатора в конце блока программы. */
+  itineraryOrganizerComment?: string;
+  /** Комментарий организатора в конце блока «Проживание». */
+  accommodationOrganizerComment?: string;
+  /** Комментарии организатора в конце секций страницы тура. */
+  sectionOrganizerComments?: TourSectionOrganizerComments;
+  /** Факторы маршрута, на которые стоит обратить внимание. */
+  travelRisks?: TourTravelRisk[];
   organizerComment: {
     greeting: string;
     recommendations: string[];
@@ -339,6 +414,34 @@ export interface TourDetail {
   dates: TourDatePrice[];
   tags: string[];
   featured?: boolean;
+  checkoutPaymentOptions?: import("@/types/tour-checkout-payment").TourCheckoutPaymentOptions;
+  groupDiscount?: GroupDiscountSettings;
+  groupDiscountEnabled?: boolean;
+  groupDiscountHint?: string;
+  priceOnRequest?: boolean;
+  priceFromPrefix?: boolean;
+  /** Приватный тур — не показывается в каталоге без ?access= */
+  isPrivate?: boolean;
+  /** Лист ожидания при нехватке мест на выбранную дату. */
+  waitlistEnabled?: boolean;
+  /** Разрешить выбор типа номера при бронировании. */
+  accommodationUpgradesEnabled?: boolean;
+  /** Внешняя ссылка на бронирование вместо checkout. */
+  customBookingLink?: TourCustomBookingLinkPublic;
+  /** Партнёрский тур Tripster */
+  partnerSource?: "tripster";
+  partnerExperienceId?: number;
+  partnerPriceDisplay?: string;
+  partnerPriceValue?: number;
+  partnerPriceCurrency?: string;
+  partnerOriginalPriceValue?: number;
+  partnerPriceUnit?: "per_person" | "per_group";
+  /** Контент партнёрского тура Tripster (HTML-блоки, условия) */
+  partnerContent?: import("@/lib/tripster/partner-tour-content").PartnerTourContent;
+  /** Профиль гида Tripster (обогащение с API) */
+  partnerGuideProfile?: import("@/types/excursion").ExcursionGuideProfile;
+  /** Отзывы гида с других туров Tripster, если у текущего тура отзывов нет */
+  partnerGuideReviews?: TourReview[];
 }
 
 /** @deprecated Use TourListing for marketplace */
@@ -364,17 +467,46 @@ export interface Tour {
   tags: string[];
 }
 
+export type BlogCardVariant = "featured" | "standard" | "compact";
+
+export type BlogRelatedResource = {
+  label: string;
+  href: string;
+  type: "guide" | "immigration" | "tour" | "blog";
+  description?: string;
+};
+
+export interface BlogPostSection {
+  title: string;
+  body: string;
+}
+
 export interface BlogPost {
   id: string;
   slug: string;
   title: string;
+  seoTitle?: string;
   excerpt: string;
   content: string;
+  sections?: BlogPostSection[];
   author: string;
+  authorBio?: string;
+  authorAvatar?: string;
   date: string;
   image: string;
   category: string;
+  /** @deprecated Prefer readTimeMinutes + formatBlogReadTime */
   readTime: string;
+  readTimeMinutes: number;
+  views: number;
+  tags: string[];
+  featured?: boolean;
+  cardVariant?: BlogCardVariant;
+  /** Статья прошла полную ручную редакцию */
+  editorialReviewed?: boolean;
+  relatedResources?: BlogRelatedResource[];
+  /** Встраиваемые виджеты туров в теле статьи */
+  tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];
 }
 
 export interface Testimonial {
@@ -383,6 +515,9 @@ export interface Testimonial {
   location: string;
   text: string;
   rating: number;
+  tourSlug?: string;
+  tourTitle?: string;
+  verifiedTrip?: boolean;
 }
 
 export interface Destination {
@@ -391,5 +526,7 @@ export interface Destination {
   region: string;
   description: string;
   image: string;
+  imageAlt?: string;
+  gallery?: string[];
   keywords: string[];
 }

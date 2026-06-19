@@ -1,51 +1,71 @@
 import Image from "next/image";
 import Link from "next/link";
-import { TourDetail } from "@/types";
-import TourPriceDisplay from "./TourPriceDisplay";
+import type { SimilarTourCard } from "@/lib/tours-server";
+import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import { formatDurationShort } from "@/lib/pluralize";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
+import { cn } from "@/lib/cn";
+import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import TourCardImageVignette from "@/components/marketplace/TourCardImageVignette";
 
-export default function SimilarToursSection({ tours }: { tours: TourDetail[] }) {
+export default function SimilarToursSection({ tours }: { tours: SimilarTourCard[] }) {
   if (tours.length === 0) return null;
 
   return (
-    <section id="similar" className="tour-section-target">
-      <SectionHeading title="Похожие путешествия" />
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    <TourSection id="similar" title="Похожие путешествия">
+      <div className="grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {tours.map((tour) => (
           <Link
             key={tour.slug}
             href={`/tours/${tour.slug}`}
-            className="group overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition-shadow hover:shadow-lg"
+            className={cn(
+              "group flex h-full flex-col",
+              tourCardShellClass,
+              tourCardShellInteractiveClass,
+              "hover:border-sky/20"
+            )}
           >
-            <div className="relative h-44">
+            <div className="relative aspect-[4/3] shrink-0 overflow-hidden">
               <Image
                 src={tour.image}
                 alt={tour.title}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                 sizes="(max-width: 768px) 100vw, 33vw"
               />
+              <TourCardImageVignette />
             </div>
-            <div className="p-4">
-              <h3 className="font-semibold text-charcoal group-hover:text-sky">
+
+            <div className="flex min-h-[8.5rem] flex-1 flex-col p-4">
+              <h3 className="line-clamp-2 font-heading text-base font-bold leading-snug text-charcoal group-hover:text-sky">
                 {tour.title}
               </h3>
-              <div className="mt-2 flex items-center justify-between text-sm">
-                <span className="text-slate">
+
+              {tour.region ? (
+                <p className="mt-1.5 line-clamp-1 text-xs text-slate">{tour.region}</p>
+              ) : tour.shortDescription ? (
+                <p className="mt-1.5 line-clamp-1 text-xs text-slate">{tour.shortDescription}</p>
+              ) : null}
+
+              <div className="mt-auto space-y-1.5 border-t border-gray-100 pt-3">
+                <p className="text-xs text-slate">
                   {formatDurationShort(tour.durationDays, tour.durationNights)}
-                </span>
-                <TourPriceDisplay
+                </p>
+                <TourPublicPriceDisplay
                   priceUsd={tour.priceUsd}
                   originalPriceUsd={tour.originalPriceUsd}
+                  priceOnRequest={tour.priceOnRequest}
+                  priceFromPrefix={tour.priceFromPrefix}
                   size="sm"
-                  showFrom={false}
+                  showDiscountRibbon={false}
+                  density="compact"
+                  className="[&_.font-bold]:text-base [&_.line-through]:text-[11px]"
                 />
               </div>
             </div>
           </Link>
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }

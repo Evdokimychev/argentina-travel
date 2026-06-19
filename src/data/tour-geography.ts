@@ -1,4 +1,10 @@
-import { POPULAR_DESTINATIONS, SEARCH_DESTINATIONS } from "@/data/filters";
+import { ARGENTINA_CITIES } from "@/data/argentina-cities";
+import { SEARCH_DESTINATIONS } from "@/data/filters";
+import {
+  ARGENTINA_CITY_NAMES,
+  normalizeTourDestinationValue,
+  translateTourRegionLabel,
+} from "@/lib/argentina-cities";
 
 export const TOUR_COUNTRY_OPTIONS = [
   "Аргентина",
@@ -11,26 +17,23 @@ export const TOUR_COUNTRY_OPTIONS = [
 
 export type TourCountry = (typeof TOUR_COUNTRY_OPTIONS)[number];
 
-const cityLabels = new Set<string>([
-  "Пуэрто-Игуасу",
-  ...SEARCH_DESTINATIONS.filter((item) => item.type === "city").map((item) => item.label),
-  ...POPULAR_DESTINATIONS.map((item) => item.name),
-]);
-
-export const TOUR_CITY_OPTIONS = Array.from(cityLabels).sort((a, b) =>
-  a.localeCompare(b, "ru")
-);
+export const TOUR_CITY_OPTIONS = ARGENTINA_CITY_NAMES;
 
 export const TOURIST_REGION_OPTIONS = Array.from(
   new Set([
-    ...SEARCH_DESTINATIONS.map((item) => item.region),
-    ...POPULAR_DESTINATIONS.map((item) => item.region),
+    ...ARGENTINA_CITIES.map((city) => city.macroRegionRu),
+    ...ARGENTINA_CITIES.map((city) => city.provinceRu),
     "Патагония",
-    "Misiones",
+    "Мисионес",
     "Буэнос-Айрес",
     "Мендоса",
     "Сальта",
     "Огненная Земля",
+    "Месопотамия",
+    "Литорал",
+    "Куйо",
+    "Центр",
+    "Пампа",
   ])
 ).sort((a, b) => a.localeCompare(b, "ru"));
 
@@ -41,7 +44,7 @@ export const TOUR_LANDMARK_OPTIONS = SEARCH_DESTINATIONS.filter(
   .sort((a, b) => a.localeCompare(b, "ru"));
 
 export const DEFAULT_IGUAZU_MAP_START_POINT =
-  "Провинция де Мисионес, Департаменто Игуасу, аэропорт Катаратас дель Игуасу";
+  "Провинция Мисионес, департамент Игуасу, аэропорт Катаратас-дель-Игуасу";
 
 export function buildGeographySeed(input: {
   slug: string;
@@ -50,18 +53,18 @@ export function buildGeographySeed(input: {
   region?: string;
   startLocation?: string;
 }) {
-  const isIguazu = input.slug === "iguazu-waterfalls-day";
+  const isIguazu = input.slug === "iguazu-falls";
+  const destination = normalizeTourDestinationValue(
+    isIguazu ? "Пуэрто-Игуасу" : input.destination
+  );
+  const region = translateTourRegionLabel(input.region);
 
   return {
     countries: [input.country ?? "Аргентина"],
-    cities: isIguazu
-      ? ["Пуэрто-Игуасу"]
-      : input.destination
-        ? [input.destination]
-        : [],
-    mainLocation: isIguazu ? "Пуэрто-Игуасу" : input.destination ?? "",
-    touristRegions: input.region ? [input.region] : [],
-    landmarks: isIguazu ? ["Национальный парк Иguacu"] : [],
+    cities: destination ? [destination] : [],
+    mainLocation: destination,
+    touristRegions: region ? [region] : [],
+    landmarks: isIguazu ? ["Национальный парк Игуасу"] : [],
     mapStartPoint: isIguazu
       ? DEFAULT_IGUAZU_MAP_START_POINT
       : input.startLocation ?? "",

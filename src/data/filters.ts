@@ -1,27 +1,124 @@
 import {
   AccommodationType,
   ChildrenPolicy,
-  ComfortLevel,
   DifficultyLevel,
   DurationBucket,
   GroupSizeBucket,
   TourLanguage,
 } from "@/types";
+import {
+  getDestinationGallery,
+  getDestinationImage,
+  getDestinationImageAlt,
+} from "@/lib/media-resolver";
 
 export const SEARCH_DESTINATIONS = [
-  { label: "Буэнос-Айрес", type: "city", region: "Буэнос-Айрес" },
-  { label: "Барилоче", type: "city", region: "Патагония" },
-  { label: "Эль-Калафате", type: "city", region: "Патагония" },
-  { label: "Ушуайя", type: "city", region: "Огненная Земля" },
-  { label: "Игуасу", type: "city", region: "Misiones" },
-  { label: "Сальта", type: "city", region: "Сальта" },
-  { label: "Мендоса", type: "city", region: "Мендоса" },
-  { label: "Перито-Морено", type: "landmark", region: "Патагония" },
-  { label: "Фitz Roy", type: "landmark", region: "Патагония" },
-  { label: "Torres del Paine", type: "park", region: "Патагония" },
-  { label: "Патагония", type: "region", region: "Патагония" },
-  { label: "Национальный парк Иguacu", type: "park", region: "Misiones" },
+  {
+    label: "Аргентина",
+    type: "country",
+    region: "Аргентина",
+    description: "Туры по всей стране — от столицы до Патагонии",
+    keywords: ["argentina", "арgentina", "аргент"],
+  },
+  {
+    label: "Буэнос-Айрес",
+    type: "city",
+    region: "Буэнос-Айрес",
+    description: "Танго, архитектура и гастрономия — старт маршрута",
+    keywords: ["buenos aires", "buenos", "ба", "реколета", "san telmo", "la boca"],
+  },
+  {
+    label: "Барилоче",
+    type: "city",
+    region: "Патагония",
+    description: "Озёра, горнолыжные склоны и шоколадные мастерские",
+    keywords: ["bariloche", "nahuel huapi", "catedral"],
+  },
+  {
+    label: "Эль-Калафате",
+    type: "city",
+    region: "Патагония",
+    description: "База у ледников и круизов по озёрам",
+    keywords: ["calafate", "калафате", "los glaciares"],
+  },
+  {
+    label: "Ушуайя",
+    type: "city",
+    region: "Огненная Земля",
+    description: "Самый южный город мира и канал Бигля",
+    keywords: ["ushuaia", "огненная", "beagle", "антарктида"],
+  },
+  {
+    label: "Пуэрто-Игуасу",
+    type: "city",
+    region: "Мисионес",
+    description: "Водопады, джунгли и пограничный регион с Бразилией",
+    keywords: ["iguazu", "iguazú", "puerto iguazu", "водопад", "misiones", "игуасу"],
+  },
+  {
+    label: "Сальта",
+    type: "city",
+    region: "Сальта",
+    description: "Каньоны, виноградники Cafayate и колониальный центр",
+    keywords: ["salta", "humahuaca", "cafayate", "каньон"],
+  },
+  {
+    label: "Мендоса",
+    type: "city",
+    region: "Мендоса",
+    description: "Винодельни и дегустации Malbec у подножия Аконкагуа",
+    keywords: ["mendoza", "malbec", "вино", "aconcagua"],
+  },
+  {
+    label: "Патагония",
+    type: "region",
+    region: "Патагония",
+    description: "Ледники, горы Fitz Roy и бескрайние степи юга",
+    keywords: ["patagonia", "патагон"],
+  },
+  {
+    label: "Перито-Морено",
+    type: "landmark",
+    region: "Патагония",
+    nearCity: "Эль-Калафате",
+    description: "Главный ледник Los Glaciares — обвал льда с близких смотровых",
+    keywords: ["perito moreno", "ледник", "glaciares"],
+  },
+  {
+    label: "Лаго Аргентино",
+    type: "landmark",
+    region: "Патагония",
+    nearCity: "Эль-Калафате",
+    description: "Озеро с ледниковыми отколами и круизами к ледникам",
+    keywords: ["lago argentino", "аргентино", "озеро"],
+  },
+  {
+    label: "Fitz Roy",
+    type: "landmark",
+    region: "Патагония",
+    nearCity: "Эль-Чалten",
+    description: "Гранитная вершина и треккинги вокруг Chaltén",
+    keywords: ["fitz roy", "chaltén", "el chalten", "chalten"],
+  },
+  {
+    label: "Torres del Paine",
+    type: "park",
+    region: "Патагония",
+    nearCity: "Пунта-Аренas",
+    description: "Чилийский парк с башнями Torres — часто в комбинированных турах",
+    keywords: ["torres del paine", "торрес", "paine"],
+  },
+  {
+    label: "Национальный парк Иguacu",
+    type: "park",
+    region: "Мисионес",
+    nearCity: "Пуэрто-Игуасу",
+    description: "275 водопадов и тропы к Garganta del Diablo",
+    keywords: ["iguacu", "iguazu", "игуасу", "unesco"],
+  },
 ] as const;
+
+export type SearchDestinationType = (typeof SEARCH_DESTINATIONS)[number]["type"];
 
 export const DATE_PRESETS = [
   { id: "weekend", label: "Ближайшие выходные" },
@@ -60,13 +157,7 @@ export const ACCOMMODATION_OPTIONS: AccommodationType[] = [
   "Круизная каюта",
 ];
 
-export const COMFORT_OPTIONS: { level: ComfortLevel; description: string }[] = [
-  { level: "Базовый", description: "Палатки, кемпинги, минимальные удобства." },
-  { level: "Стандарт", description: "Хостелы, бюджетные отели, удобства на этаже." },
-  { level: "Комфорт", description: "Отели 3–4*, завтраки, уборка." },
-  { level: "Премиум", description: "Boutique-отели, спа, индивидуальный сервис." },
-  { level: "Люкс", description: "Лучшие отели, глэмпинг, VIP-трансферы." },
-];
+export { COMFORT_LEVELS as COMFORT_OPTIONS } from "@/data/tour-levels";
 
 export const DIFFICULTY_OPTIONS: { level: DifficultyLevel; description: string }[] = [
   { level: "Лёгкая", description: "Подходит для всех." },
@@ -104,69 +195,75 @@ export const GROUP_SIZE_OPTIONS: GroupSizeBucket[] = [
 
 export const PRICE_MAX = 500000;
 
-export const POPULAR_DESTINATIONS = [
+const POPULAR_DESTINATIONS_BASE = [
   {
     id: "ba",
     name: "Буэнос-Айрес",
     region: "Столица",
-    description: "Танго, архитектура, гастрономия",
-    image: "https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=600&q=80",
-    keywords: ["буэнос", "ba"],
+    description: "Танго, архитектура и гастрономия — идеальный старт маршрута",
+    keywords: ["буэнос", "ba", "buenos aires", "реколета", "san telmo"],
   },
   {
     id: "bariloche",
     name: "Барилоче",
     region: "Патагония",
-    description: "Озёра, горы, шоколад",
-    image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80",
-    keywords: ["барилоче", "bariloche"],
+    description: "Озёра Nahuel Huapi, Cerro Catedral и шоколадные fabrikas",
+    keywords: ["барилоче", "bariloche", "nahuel huapi", "catedral"],
   },
   {
     id: "calafate",
     name: "Эль-Калафате",
     region: "Патагония",
-    description: "Ледник Перито-Морено",
-    image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=600&q=80",
-    keywords: ["калафате", "calafate", "перито"],
+    description: "Ледник Perito Moreno и ледниковые трекинги",
+    keywords: ["калафате", "calafate", "перито", "perito moreno", "ледник"],
   },
   {
     id: "ushuaia",
     name: "Ушуайя",
     region: "Огненная Земля",
-    description: "Край света",
-    image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80",
-    keywords: ["ушуайя", "ushuaia"],
+    description: "Самый южный город мира и ворота в Антарктиду",
+    keywords: ["ушуайя", "ushuaia", "огненная", "beagle", "антарктида"],
   },
   {
     id: "iguazu",
-    name: "Игуасу",
-    region: "Misiones",
-    description: "280 водопадов",
-    image: "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=600&q=80",
-    keywords: ["игуасу", "iguazu"],
+    name: "Пуэрто-Игуасу",
+    region: "Мисионес",
+    description: "275 водопадов и Garganta del Diablo — UNESCO",
+    keywords: ["игуасу", "iguazu", "iguazú", "водопад", "misiones"],
   },
   {
     id: "mendoza",
     name: "Мендоса",
     region: "Анд",
-    description: "Винодельни и горы",
-    image: "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=600&q=80",
-    keywords: ["мендоса", "mendoza"],
+    description: "Malbec, bodegas у подножия Aconcagua",
+    keywords: ["мендоса", "mendoza", "malbec", "вино", "aconcagua"],
   },
   {
     id: "salta",
     name: "Сальта",
     region: "Северо-Запад",
-    description: "Каньоны и вина",
-    image: "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=600&q=80",
-    keywords: ["сальта", "salta"],
+    description: "Quebrada de Humahuaca, Cafayate и колониальный центр",
+    keywords: ["сальта", "salta", "humahuaca", "cafayate", "каньон"],
   },
   {
     id: "patagonia",
     name: "Патагония",
     region: "Юг",
-    description: "Ледники и треккинг",
-    image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80",
-    keywords: ["патагония", "patagonia"],
+    description: "Ледники, Fitz Roy и бескрайние степи юга",
+    keywords: ["патагония", "patagonia", "fitz roy", "chaltén", "valdés"],
   },
-];
+] as const satisfies ReadonlyArray<{
+  id: string;
+  name: string;
+  region: string;
+  description: string;
+  keywords: readonly string[];
+}>;
+
+export const POPULAR_DESTINATIONS = POPULAR_DESTINATIONS_BASE.map((dest) => ({
+  ...dest,
+  keywords: [...dest.keywords],
+  image: getDestinationImage(dest.id),
+  imageAlt: getDestinationImageAlt(dest.id),
+  gallery: getDestinationGallery(dest.id),
+}));

@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
 import Image from "next/image";
 import { BadgeCheck, CircleHelp, Phone, X } from "lucide-react";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 const EXAMPLE_AUTHOR = {
   name: "Ирина Б.",
@@ -37,46 +37,17 @@ export default function OrganizerBioExampleModal({
   open,
   onClose,
 }: OrganizerBioExampleModalProps) {
-  useEffect(() => {
-    if (open) document.body.style.overflow = "hidden";
-    else document.body.style.overflow = "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [open, onClose]);
-
-  if (!open) return null;
-
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="organizer-bio-example-title"
-    >
-      <div
-        className="flex max-h-[90vh] w-full max-w-lg animate-fade-in-up flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[90vh] max-w-lg animate-fade-in-up flex-col overflow-hidden p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
-          <h3
-            id="organizer-bio-example-title"
-            className="font-display text-lg font-bold text-charcoal sm:text-xl"
-          >
+          <DialogTitle className="text-lg sm:text-xl">
             Пример хорошего описания автора
-          </h3>
+          </DialogTitle>
           <button
             type="button"
             onClick={onClose}
@@ -90,7 +61,7 @@ export default function OrganizerBioExampleModal({
         <div className="overflow-y-auto px-5 py-5 sm:px-6 sm:py-6">
           <div className="flex items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
-              <h4 className="font-display text-xl font-bold leading-tight text-charcoal sm:text-2xl">
+              <h4 className="font-heading text-xl font-bold leading-tight text-charcoal sm:text-2xl">
                 {EXAMPLE_AUTHOR.name} — {EXAMPLE_AUTHOR.title}
               </h4>
               <div className="mt-2 flex flex-wrap items-center gap-1.5 text-sm text-slate">
@@ -133,7 +104,7 @@ export default function OrganizerBioExampleModal({
             контактов и ссылок — туристы свяжутся с вами через площадку.
           </p>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

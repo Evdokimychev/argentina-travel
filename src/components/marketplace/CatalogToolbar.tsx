@@ -10,8 +10,9 @@ import {
 import { formatToursFound, filtersWord } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import type { CatalogViewMode } from "@/lib/catalog-filter-url";
 
-export type CatalogViewMode = "grid" | "list" | "map";
+export type { CatalogViewMode };
 
 interface CatalogToolbarProps {
   count: number;
@@ -107,7 +108,7 @@ export default function CatalogToolbar({
       <div
         role="group"
         aria-label="Сортировка"
-        className="flex min-w-0 flex-1 flex-wrap items-center gap-0.5 rounded-full bg-gray-100 px-1 py-1"
+        className="scrollbar-hide flex min-w-0 flex-1 flex-nowrap items-center gap-0.5 overflow-x-auto rounded-full bg-gray-100 px-1 py-1"
       >
         {PRIMARY_SORT_OPTIONS.map((option) => (
           <button
@@ -115,7 +116,7 @@ export default function CatalogToolbar({
             type="button"
             onClick={() => onSortChange(option.value)}
             className={cn(
-              "rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+              "shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
               sort === option.value
                 ? "bg-white text-brand shadow-sm"
                 : "text-slate hover:text-charcoal"
@@ -130,7 +131,7 @@ export default function CatalogToolbar({
             <button
               type="button"
               className={cn(
-                "flex items-center gap-0.5 rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
+                "flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
                 isSecondary
                   ? "bg-white text-brand shadow-sm"
                   : "text-slate hover:text-charcoal"
@@ -168,7 +169,7 @@ export default function CatalogToolbar({
           <Button
             variant="ghost"
             size="sm"
-            className="hidden h-8 px-2 text-xs sm:inline-flex"
+            className="h-8 shrink-0 px-2 text-xs"
             onClick={onResetFilters}
           >
             Сбросить

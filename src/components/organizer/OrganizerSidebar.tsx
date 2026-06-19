@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
+  BarChart3,
   ChevronLeft,
   ChevronRight,
   Clock3,
@@ -17,7 +18,21 @@ import {
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { cn } from "@/lib/cn";
+import {
+  cabinetMobileHeaderClass,
+  cabinetMobileNavClass,
+  cabinetNavBadgeClass,
+  cabinetNavActiveClass,
+  cabinetNavIdleClass,
+  cabinetSidebarClass,
+  cabinetSidebarSkeletonClass,
+} from "@/lib/cabinet-ui";
 import { ORGANIZER_NAV_ITEMS, type OrganizerNavId } from "@/data/organizer-dashboard";
+import { useAuth } from "@/context/AuthContext";
+import { getOrganizerNavItemsWithBadges } from "@/lib/organizer-bookings";
+import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
+import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
+import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "organizer-sidebar-collapsed";
 /** Ниже этой ширины окна сайдбар сворачивается автоматически */
@@ -25,6 +40,7 @@ const AUTO_COLLAPSE_MAX_WIDTH = 1279;
 
 const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
   dashboard: LayoutGrid,
+  analytics: BarChart3,
   tours: Compass,
   bookings: Clock3,
   messages: Mail,
@@ -60,9 +76,11 @@ export default function OrganizerSidebar({
   avatarUrl,
   forceCompact = false,
 }: OrganizerSidebarProps) {
+  const { user } = useAuth();
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
   const isSettingsActive = pathname.startsWith("/organizer/settings");
 
   const isCompact = forceCompact || collapsed;
@@ -83,6 +101,22 @@ export default function OrganizerSidebar({
     return () => window.removeEventListener("resize", syncCollapsedState);
   }, []);
 
+  useEffect(() => {
+    if (!user) return;
+
+    function refreshNavBadges() {
+      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
+    }
+
+    refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    };
+  }, [user]);
+
   function toggleCollapsed() {
     setCollapsed((prev) => {
       const next = !prev;
@@ -94,17 +128,14 @@ export default function OrganizerSidebar({
   if (!hydrated) {
     return (
       <div className="hidden w-[248px] shrink-0 md:block">
-        <aside className="sticky top-[calc(var(--site-header-height,72px)+1rem)] h-fit w-[248px] rounded-3xl border border-gray-200 bg-white shadow-sm" />
+        <aside className={cn(cabinetSidebarSkeletonClass, "w-[248px]")} />
       </div>
     );
   }
 
   return (
     <aside
-      className={cn(
-        "sticky top-[calc(var(--site-header-height,72px)+1rem)] hidden h-fit max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] shrink-0 flex-col overflow-y-auto rounded-3xl border border-gray-200 bg-white shadow-sm transition-[width] duration-300 ease-out md:flex",
-        isCompact ? "w-[72px]" : "w-[248px]"
-      )}
+      className={cn(cabinetSidebarClass, isCompact ? "w-[72px]" : "w-[248px]")}
     >
       <div
         className={cn(
@@ -159,7 +190,7 @@ export default function OrganizerSidebar({
           isCompact ? "px-2 py-3" : "px-3 py-4"
         )}
       >
-        {ORGANIZER_NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const Icon = NAV_ICONS[item.id];
           const active =
             item.href === "/organizer"
@@ -175,9 +206,7 @@ export default function OrganizerSidebar({
               className={cn(
                 "relative flex items-center rounded-xl text-sm font-medium transition-colors",
                 isCompact ? "justify-center px-2 py-2.5" : "gap-3 px-3 py-2.5",
-                active
-                  ? "bg-sky/10 text-sky"
-                  : "text-slate hover:bg-gray-50 hover:text-charcoal"
+                active ? cabinetNavActiveClass : cabinetNavIdleClass
               )}
             >
               <Icon className="h-[18px] w-[18px] shrink-0" strokeWidth={1.75} />
@@ -185,7 +214,7 @@ export default function OrganizerSidebar({
               {item.badge ? (
                 <span
                   className={cn(
-                    "flex items-center justify-center rounded-full bg-brand font-bold text-white",
+                    cabinetNavBadgeClass,
                     isCompact
                       ? "absolute -right-0.5 -top-0.5 h-4 min-w-4 px-0.5 text-[9px]"
                       : "h-5 min-w-5 px-1 text-[10px]"
@@ -203,13 +232,12 @@ export default function OrganizerSidebar({
         <div className="shrink-0 space-y-2 border-t border-gray-100 px-4 py-4 text-[11px] leading-relaxed text-slate">
           <p>© Пора в Аргентину, {new Date().getFullYear()}</p>
           <div className="space-y-1">
-            <Link href="/contacts" className="block transition-colors hover:text-brand">
-              Публичная оферта
-            </Link>
-            <Link href="/contacts" className="block transition-colors hover:text-brand">
-              Политика конфиденциальности
-            </Link>
-            <Link href="/join" className="block transition-colors hover:text-brand">
+            {SITE_LEGAL_LINKS.slice(0, 2).map((link) => (
+              <Link key={link.href} href={link.href} className="block transition-colors hover:text-sky">
+                {link.label}
+              </Link>
+            ))}
+            <Link href="/join" className="block transition-colors hover:text-sky">
               Договор для организаторов
             </Link>
           </div>
@@ -245,12 +273,12 @@ export default function OrganizerSidebar({
 
 export function OrganizerMobileHeader() {
   return (
-    <div className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:hidden">
+    <div className={cabinetMobileHeaderClass}>
       <Link href="/" className="inline-flex">
         <ArgentinaLogo size="sm" />
       </Link>
       <p className="text-sm font-semibold text-charcoal">Кабинет организатора</p>
-      <Link href="/organizer/settings" className="text-xs font-medium text-brand">
+      <Link href="/organizer/settings" className="text-xs font-medium text-sky">
         Управление
       </Link>
     </div>
@@ -258,11 +286,29 @@ export function OrganizerMobileHeader() {
 }
 
 export function OrganizerMobileNav() {
+  const { user } = useAuth();
   const pathname = usePathname();
+  const [navItems, setNavItems] = useState(ORGANIZER_NAV_ITEMS);
+
+  useEffect(() => {
+    if (!user) return;
+
+    function refreshNavBadges() {
+      setNavItems(getOrganizerNavItemsWithBadges(user!.id));
+    }
+
+    refreshNavBadges();
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+    window.addEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    return () => {
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshNavBadges);
+      window.removeEventListener(MESSAGES_UPDATED_EVENT, refreshNavBadges);
+    };
+  }, [user]);
 
   return (
-    <nav className="flex gap-1 overflow-x-auto border-b border-gray-200 bg-white px-3 py-2 md:hidden scrollbar-hide">
-      {ORGANIZER_NAV_ITEMS.map((item) => {
+    <nav className={cabinetMobileNavClass}>
+      {navItems.map((item) => {
         const Icon = NAV_ICONS[item.id];
         const active =
           item.href === "/organizer"
@@ -275,13 +321,13 @@ export function OrganizerMobileNav() {
             href={item.href}
             className={cn(
               "relative flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
-              active ? "bg-sky/10 text-sky" : "text-slate hover:bg-gray-50"
+              active ? cabinetNavActiveClass : cabinetNavIdleClass
             )}
           >
             <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
             {item.label}
             {item.badge ? (
-              <span className="ml-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-brand px-1 text-[9px] font-bold text-white">
+              <span className={cn(cabinetNavBadgeClass, "ml-0.5 h-4 min-w-4 px-1 text-[9px]")}>
                 {item.badge}
               </span>
             ) : null}

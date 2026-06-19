@@ -1,13 +1,15 @@
-import type { Metadata } from "next";
-import OrganizerSectionPageClient from "../OrganizerSectionPageClient";
+"use client";
 
-export const metadata: Metadata = { title: "Сообщения" };
+import { Suspense } from "react";
+import OrganizerShell from "@/components/organizer/OrganizerShell";
+import MessagesInboxView from "@/components/messages/MessagesInboxView";
 
-export default function Page() {
+export default function OrganizerMessagesPage() {
   return (
-    <OrganizerSectionPageClient
-      title="Сообщения"
-      description="Переписка с туристами и уведомления от платформы."
-    />
+    <OrganizerShell>
+      <Suspense fallback={<div className="text-sm text-slate">Загрузка сообщений…</div>}>
+        <MessagesInboxView role="organizer" basePath="/organizer/messages" />
+      </Suspense>
+    </OrganizerShell>
   );
 }

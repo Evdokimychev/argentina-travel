@@ -4,7 +4,11 @@ import {
   GroupSizeBucket,
   ChildrenPolicy,
 } from "@/types";
-import { baseTours } from "./tours";
+import { getTourCoverImage, getTourGallery } from "@/lib/media-resolver";
+import {
+  normalizeTourDestinationValue,
+  translateTourRegionLabel,
+} from "@/lib/argentina-cities";
 
 function durationBucket(days: number): DurationBucket {
   if (days <= 2) return "1–2 дня";
@@ -73,7 +77,9 @@ const rawMarketplaceTours = [
     groupSizeMin: 8,
     groupSizeMax: 12,
     groupSizeBucket: groupBucket(8, 12),
-    availableDates: mkDates(12, 11),
+    availableDates: mkDates(12, 11).map((date, index) =>
+      index === 0 ? { ...date, spotsLeft: 2 } : date
+    ),
     latitude: -50.337,
     longitude: -72.265,
     rating: 4.9,
@@ -172,9 +178,9 @@ const rawMarketplaceTours = [
     language: ["Русский", "Испанский", "Португальский"],
     childrenAllowed: childPolicy(2),
     minimumAge: 2,
-    groupSizeMin: 8,
+    groupSizeMin: 1,
     groupSizeMax: 14,
-    groupSizeBucket: groupBucket(8, 14),
+    groupSizeBucket: groupBucket(1, 14),
     availableDates: mkDates(14, 5),
     latitude: -25.695,
     longitude: -54.437,
@@ -284,7 +290,7 @@ const rawMarketplaceTours = [
     title: "Треккинг к Fitz Roy из Эль-Чалten",
     shortDescription: "Иконические пики Патагонии",
     image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
-    destination: "Эль-Чалten",
+    destination: "Эль-Чалтен",
     region: "Патагония",
     activityType: "Пешие туры",
     durationDays: 8,
@@ -313,10 +319,9 @@ const rawMarketplaceTours = [
 
 export const marketplaceTours: TourListing[] = rawMarketplaceTours.map((tour) => ({
   ...tour,
-  gallery: baseTours.find((b) => b.slug === tour.slug)?.gallery ?? [tour.image],
+  destination: normalizeTourDestinationValue(tour.destination),
+  region: translateTourRegionLabel(tour.region),
+  image: getTourCoverImage(tour.slug),
+  gallery: getTourGallery(tour.slug),
 }));
 
-export async function fetchMarketplaceTours(): Promise<TourListing[]> {
-  // TODO: supabase.from('tours').select('*')
-  return marketplaceTours;
-}

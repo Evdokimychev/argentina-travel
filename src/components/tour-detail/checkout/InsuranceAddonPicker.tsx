@@ -1,11 +1,11 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ChevronDown } from "lucide-react";
-import FormattedPrice from "@/components/FormattedPrice";
-import { cn } from "@/lib/cn";
+import { ArrowUpRight, ChevronDown, Shield } from "lucide-react";
+import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 import { formatTourists } from "@/lib/pluralize";
-import { calcInsuranceTotal, INSURANCE_ADDON } from "./checkout-addons";
+import { INSURANCE_ADDON } from "./checkout-addons";
 
 interface InsuranceAddonPickerProps {
   guests: number;
@@ -21,7 +21,7 @@ export default function InsuranceAddonPicker({
   const enabled = count > 0;
   const isFullGroup = count === guests;
   const [expanded, setExpanded] = useState(false);
-  const lineTotal = calcInsuranceTotal(count);
+  const insuranceHref = buildInsuranceHref({ travelers: count > 0 ? count : guests });
 
   useEffect(() => {
     if (enabled && !isFullGroup) setExpanded(true);
@@ -50,15 +50,12 @@ export default function InsuranceAddonPicker({
           <span className="min-w-0 flex-1">
             <span className="flex items-start justify-between gap-3">
               <span className="font-medium text-charcoal">{INSURANCE_ADDON.title}</span>
-              <span className="shrink-0 text-right text-sm font-semibold text-charcoal">
-                <FormattedPrice
-                  priceUsd={INSURANCE_ADDON.priceUsdPerTraveler}
-                  className="text-sm font-semibold"
-                />
-                <span className="block text-[11px] font-normal text-slate">за туриста</span>
-              </span>
+              <Shield className="h-4 w-4 shrink-0 text-sky" aria-hidden />
             </span>
             <span className="mt-1 block text-sm text-slate">{INSURANCE_ADDON.description}</span>
+            <span className="mt-2 block text-xs leading-relaxed text-slate">
+              {INSURANCE_ADDON.partnerNote}
+            </span>
           </span>
         </label>
 
@@ -68,8 +65,7 @@ export default function InsuranceAddonPicker({
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <p className="text-sm text-charcoal">
                   <span className="font-medium">{formatTourists(count)}</span>
-                  <span className="text-slate"> · </span>
-                  <FormattedPrice priceUsd={lineTotal} className="text-sm font-medium text-charcoal" />
+                  <span className="text-slate"> · оформление на сайте партнёра</span>
                 </p>
                 <button
                   type="button"
@@ -87,7 +83,7 @@ export default function InsuranceAddonPicker({
                       htmlFor="insurance-travelers"
                       className="text-xs font-medium text-charcoal"
                     >
-                      Для скольких туристов оформить страховку
+                      Для скольких туристов нужен полис
                     </label>
                     <div className="relative mt-1.5 sm:max-w-[220px]">
                       <select
@@ -108,10 +104,6 @@ export default function InsuranceAddonPicker({
                       />
                     </div>
                   </div>
-                  <div className="shrink-0 text-right">
-                    <p className="text-[11px] text-slate">Итого</p>
-                    <FormattedPrice priceUsd={lineTotal} className="text-sm font-semibold text-charcoal" />
-                  </div>
                 </div>
 
                 {isFullGroup && (
@@ -125,6 +117,16 @@ export default function InsuranceAddonPicker({
                 )}
               </div>
             )}
+
+            <Link
+              href={insuranceHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-4 flex items-center justify-between rounded-xl border border-sky/25 bg-sky/5 px-4 py-3 text-sm font-semibold text-sky transition-colors hover:bg-sky/10"
+            >
+              Подобрать полис на /insurance
+              <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden />
+            </Link>
           </div>
         )}
       </div>

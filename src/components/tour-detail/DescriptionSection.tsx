@@ -1,18 +1,40 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import Image from "next/image";
 import { RichTextBlock, TourDescriptionExtra } from "@/types";
+import { normalizeEditorValue } from "@/lib/rich-text";
 import {
   DESCRIPTION_EXTRA_TABS,
   type DescriptionExtraTabId,
 } from "@/data/tour-description-extra";
-import { SectionHeading } from "./InfoModal";
+import TourSection from "./TourSection";
 import { cn } from "@/lib/cn";
 
 interface DescriptionSectionProps {
   blocks: RichTextBlock[];
   extra: TourDescriptionExtra;
+}
+
+function tabHasContent(tabId: DescriptionExtraTabId, extra: TourDescriptionExtra): boolean {
+  switch (tabId) {
+    case "difficulty":
+      return extra.difficulty.trim().length > 0;
+    case "seasonality":
+      return extra.seasonality.trim().length > 0;
+    case "packing":
+      return extra.packing.length > 0;
+    case "flights":
+      return extra.flights.trim().length > 0;
+    case "meals":
+      return extra.meals.trim().length > 0;
+    case "comfort":
+      return extra.comfort.trim().length > 0;
+    case "transfers":
+      return extra.transfers.trim().length > 0;
+    default:
+      return false;
+  }
 }
 
 function ExtraTabContent({
@@ -23,6 +45,13 @@ function ExtraTabContent({
   extra: TourDescriptionExtra;
 }) {
   switch (tabId) {
+    case "difficulty":
+      return (
+        <div
+          className="rich-text-editor-content text-sm leading-relaxed text-slate"
+          dangerouslySetInnerHTML={{ __html: normalizeEditorValue(extra.difficulty) }}
+        />
+      );
     case "seasonality":
       return <p className="leading-relaxed text-slate">{extra.seasonality}</p>;
     case "packing":
@@ -49,19 +78,33 @@ function ExtraTabContent({
   }
 }
 
-export default function DescriptionSection({ blocks, extra }: DescriptionSectionProps) {
-  const [activeTab, setActiveTab] = useState<DescriptionExtraTabId>("seasonality");
+export default function DescriptionSection({
+  blocks,
+  extra,
+  organizerComment,
+}: DescriptionSectionProps & { organizerComment?: string }) {
+  const visibleTabs = useMemo(
+    () => DESCRIPTION_EXTRA_TABS.filter((tab) => tabHasContent(tab.id, extra)),
+    [extra]
+  );
+  const [activeTab, setActiveTab] = useState<DescriptionExtraTabId>(
+    visibleTabs[0]?.id ?? "difficulty"
+  );
+
+  useEffect(() => {
+    if (!visibleTabs.some((tab) => tab.id === activeTab)) {
+      setActiveTab(visibleTabs[0]?.id ?? "difficulty");
+    }
+  }, [activeTab, visibleTabs]);
 
   return (
-    <section id="description" className="tour-section-target">
-      <SectionHeading title="Описание путешествия" />
-      <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-        <div className="space-y-5 p-6 sm:p-8">
+    <TourSection id="description" title="Описание путешествия" organizerComment={organizerComment}>
+      <div className="space-y-5">
           {blocks.map((block, i) => {
             switch (block.type) {
               case "heading":
                 return (
-                  <h3 key={i} className="font-display text-xl font-bold text-charcoal">
+                  <h3 key={i} className="font-heading text-xl font-bold text-charcoal">
                     {block.content}
                   </h3>
                 );
@@ -111,15 +154,16 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
                 return null;
             }
           })}
-        </div>
+      </div>
 
-        <div className="border-t border-gray-100 bg-pampas/40">
+      {visibleTabs.length > 0 ? (
+        <div className="-mx-2 mt-8 border-t border-gray-100 pt-6 sm:-mx-4">
           <div
-            className="scrollbar-hide flex gap-1 overflow-x-auto border-b border-gray-100 px-4 pt-3 sm:px-6"
+            className="scrollbar-hide flex gap-1.5 overflow-x-auto pb-1"
             role="tablist"
             aria-label="Дополнительная информация о туре"
           >
-            {DESCRIPTION_EXTRA_TABS.map((tab) => (
+            {visibleTabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
@@ -127,21 +171,21 @@ export default function DescriptionSection({ blocks, extra }: DescriptionSection
                 aria-selected={activeTab === tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={cn(
-                  "shrink-0 rounded-t-lg px-3 py-2 text-sm font-medium transition-colors",
+                  "shrink-0 rounded-full border px-3 py-1.5 text-sm font-medium transition-colors",
                   activeTab === tab.id
-                    ? "bg-white text-charcoal shadow-sm"
-                    : "text-slate hover:text-charcoal"
+                    ? "border-sky bg-sky text-white shadow-sm"
+                    : "border-gray-200 bg-white text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
                 )}
               >
                 {tab.label}
               </button>
             ))}
           </div>
-          <div className="p-6 sm:p-8" role="tabpanel">
+          <div className="pt-5" role="tabpanel">
             <ExtraTabContent tabId={activeTab} extra={extra} />
           </div>
         </div>
-      </div>
-    </section>
+      ) : null}
+    </TourSection>
   );
 }

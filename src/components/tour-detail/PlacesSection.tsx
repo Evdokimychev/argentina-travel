@@ -1,11 +1,27 @@
+"use client";
+
 import Image from "next/image";
 import { TourPlace } from "@/types";
-import { SectionHeading } from "./InfoModal";
+import { normalizeEditorValue } from "@/lib/rich-text";
+import { hasPlacesContent } from "@/lib/tour-public-display";
+import TourSection from "./TourSection";
 
-export default function PlacesSection({ places }: { places: TourPlace[] }) {
+export default function PlacesSection({
+  places,
+  organizerComment,
+}: {
+  places: TourPlace[];
+  organizerComment?: string;
+}) {
+  if (!hasPlacesContent(places)) return null;
+
   return (
-    <section id="places" className="tour-section-target">
-      <SectionHeading title="Главные впечатления" subtitle="Уникальные моменты тура" />
+    <TourSection
+      id="places"
+      title="Главные впечатления"
+      subtitle="Уникальные моменты тура"
+      organizerComment={organizerComment}
+    >
       <div className="grid gap-4 sm:grid-cols-2">
         {places.map((place) => (
           <article
@@ -24,10 +40,18 @@ export default function PlacesSection({ places }: { places: TourPlace[] }) {
             <div className="p-5">
               <h3 className="font-semibold text-charcoal">{place.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-slate">{place.description}</p>
+              {place.extendedScheduleEnabled && place.extendedSchedule?.trim() ? (
+                <div
+                  className="rich-text-editor-content mt-4 border-t border-gray-100 pt-4 text-sm leading-relaxed text-slate"
+                  dangerouslySetInnerHTML={{
+                    __html: normalizeEditorValue(place.extendedSchedule),
+                  }}
+                />
+              ) : null}
             </div>
           </article>
         ))}
       </div>
-    </section>
+    </TourSection>
   );
 }

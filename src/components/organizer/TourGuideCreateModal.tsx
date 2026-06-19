@@ -4,28 +4,37 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import UserAvatar from "@/components/auth/UserAvatar";
 import {
   ORGANIZER_TOUR_GUIDE_BIO_MAX,
   createCustomGuide,
 } from "@/data/tour-guides-defaults";
 import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
-import { joinFullName } from "@/lib/full-name";
+import { joinFullName, splitFullName } from "@/lib/full-name";
 import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import type { OrganizerTeamGuide } from "@/types/organizer-profile";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
 
 interface TourGuideCreateModalProps {
   open: boolean;
   onClose: () => void;
-  onCreate: (guide: OrganizerTourGuide) => void;
+  /** @deprecated Use onSave */
+  onCreate?: (guide: OrganizerTourGuide) => void;
+  onSave?: (guide: OrganizerTourGuide) => void;
+  initialGuide?: OrganizerTeamGuide | OrganizerTourGuide;
 }
 
 export default function TourGuideCreateModal({
   open,
   onClose,
   onCreate,
+  onSave,
+  initialGuide,
 }: TourGuideCreateModalProps) {
+  const isEditing = Boolean(initialGuide);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -36,32 +45,33 @@ export default function TourGuideCreateModal({
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    if (open) return;
-    setLastName("");
-    setFirstName("");
-    setBio("");
-    setAvatar("");
+    if (!open) {
+      setLastName("");
+      setFirstName("");
+      setBio("");
+      setAvatar("");
+      setUrlInput("");
+      setError(null);
+      setUploading(false);
+      return;
+    }
+
+    if (initialGuide) {
+      const { firstName: nextFirst, lastName: nextLast } = splitFullName(initialGuide.name);
+      setFirstName(nextFirst);
+      setLastName(nextLast);
+      setBio(initialGuide.bio);
+      setAvatar(initialGuide.avatar);
+    } else {
+      setLastName("");
+      setFirstName("");
+      setBio("");
+      setAvatar("");
+    }
     setUrlInput("");
     setError(null);
     setUploading(false);
-  }, [open]);
-
-  useEffect(() => {
-    if (!open) return;
-    document.body.style.overflow = "hidden";
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [open, onClose]);
-
-  if (!open) return null;
+  }, [open, initialGuide]);
 
   const previewName = joinFullName(firstName, lastName) || "Новый гид";
 
@@ -128,39 +138,39 @@ export default function TourGuideCreateModal({
       return;
     }
 
-    onCreate(
-      createCustomGuide({
-        firstName,
-        lastName,
-        avatar,
-        bio,
-      })
-    );
+    const guide = createCustomGuide({
+      id: initialGuide?.id,
+      firstName,
+      lastName,
+      avatar,
+      bio,
+    });
+
+    (onSave ?? onCreate)?.(guide);
     onClose();
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/50 p-4 backdrop-blur-sm sm:items-center"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="tour-guide-create-title"
-    >
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent
+        className="flex max-h-[90vh] max-w-lg animate-fade-in-up flex-col overflow-hidden p-0"
+        onPointerDownOutside={onClose}
+        onEscapeKeyDown={onClose}
+      >
       <form
-        className="flex max-h-[90vh] w-full max-w-lg animate-fade-in-up flex-col overflow-hidden rounded-2xl bg-white shadow-xl"
-        onClick={(event) => event.stopPropagation()}
+        className="flex flex-col overflow-hidden"
         onSubmit={handleSubmit}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
           <div>
-            <h3
-              id="tour-guide-create-title"
-              className="font-display text-lg font-bold text-charcoal sm:text-xl"
-            >
-              Новый гид
-            </h3>
-            <p className="mt-1 text-sm text-slate">Загрузите фото и заполните данные гида</p>
+            <DialogTitle className="text-lg sm:text-xl">
+              {isEditing ? "Редактировать гида" : "Новый гид"}
+            </DialogTitle>
+            <p className="mt-1 text-sm text-slate">
+              {isEditing
+                ? "Обновите фото и данные гида"
+                : "Загрузите фото и заполните данные гида"}
+            </p>
           </div>
           <button
             type="button"
@@ -267,7 +277,7 @@ export default function TourGuideCreateModal({
             <label htmlFor="guide-bio" className="mb-1.5 block text-xs font-medium text-charcoal">
               Описание *
             </label>
-            <textarea
+            <Textarea
               id="guide-bio"
               value={bio}
               rows={6}
@@ -276,7 +286,6 @@ export default function TourGuideCreateModal({
                 setBio(event.target.value.slice(0, ORGANIZER_TOUR_GUIDE_BIO_MAX))
               }
               placeholder="Расскажите об опыте гида, языках и специализации…"
-              className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm leading-relaxed text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
               required
             />
             <p className="mt-1 text-right text-xs text-slate">
@@ -295,9 +304,10 @@ export default function TourGuideCreateModal({
           <Button type="button" variant="outline" onClick={onClose}>
             Отмена
           </Button>
-          <Button type="submit">Добавить гида</Button>
+          <Button type="submit">{isEditing ? "Сохранить" : "Добавить гида"}</Button>
         </div>
       </form>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

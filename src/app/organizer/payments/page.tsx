@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import OrganizerSectionPageClient from "../OrganizerSectionPageClient";
+import OrganizerPaymentsPageClient from "./OrganizerPaymentsPageClient";
 
-export const metadata: Metadata = { title: "Платежи" };
+export const metadata: Metadata = { title: "Платежи — кабинет организатора" };
 
-export default function Page() {
-  return (
-    <OrganizerSectionPageClient
-      title="Платежи"
-      description="История выплат, счета и финансовая отчётность."
-    />
-  );
+export default function OrganizerPaymentsPage() {
+  return <OrganizerPaymentsPageClient />;
 }

@@ -59,14 +59,15 @@ export interface PerTravelerAddon {
   id: "insurance";
   title: string;
   description: string;
-  priceUsdPerTraveler: number;
+  partnerNote: string;
 }
 
 export const INSURANCE_ADDON: PerTravelerAddon = {
   id: "insurance",
   title: "Страховка путешественника",
-  description: "Медицинское страхование на весь период поездки.",
-  priceUsdPerTraveler: 35,
+  description: "Медицинское покрытие на период поездки — оформляется отдельно у партнёра.",
+  partnerNote:
+    "Полис не входит в стоимость тура. После бронирования оформите страховку на /insurance или сразу по ссылке ниже.",
 };
 
 /** Дополнения с фиксированной ценой на группу (не трансфер, не страховка) */
@@ -78,11 +79,6 @@ export const CHECKOUT_ADDONS: CheckoutAddon[] = [
     priceUsd: 120,
   },
 ];
-
-export function calcInsuranceTotal(travelers: number): number {
-  if (travelers <= 0) return 0;
-  return travelers * INSURANCE_ADDON.priceUsdPerTraveler;
-}
 
 export function minTransferVehiclePriceUsd(): number {
   return Math.min(...TRANSFER_VEHICLE_OPTIONS.map((vehicle) => vehicle.priceUsd));

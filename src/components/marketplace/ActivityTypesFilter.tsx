@@ -12,6 +12,7 @@ import { FilterFooter } from "./FilterPopover";
 
 interface ActivityTypesFilterProps {
   selected: ActivityType[];
+  counts: Partial<Record<ActivityType, number>>;
   onToggle: (type: ActivityType) => void;
   onClear: () => void;
   onApply: () => void;
@@ -19,6 +20,7 @@ interface ActivityTypesFilterProps {
 
 export default function ActivityTypesFilter({
   selected,
+  counts,
   onToggle,
   onClear,
   onApply,
@@ -26,15 +28,20 @@ export default function ActivityTypesFilter({
   const [search, setSearch] = useState("");
   const [focused, setFocused] = useState(false);
 
+  const availableOptions = useMemo(
+    () => ACTIVITY_TYPE_OPTIONS.filter(({ type }) => (counts[type] ?? 0) > 0),
+    [counts]
+  );
+
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return ACTIVITY_TYPE_OPTIONS;
-    return ACTIVITY_TYPE_OPTIONS.filter(
+    if (!q) return availableOptions;
+    return availableOptions.filter(
       (opt) =>
         opt.type.toLowerCase().includes(q) ||
         opt.keywords.some((k) => k.toLowerCase().includes(q))
     );
-  }, [search]);
+  }, [search, availableOptions]);
 
   const filteredCollections = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -80,13 +87,19 @@ export default function ActivityTypesFilter({
 
       <div className="max-h-80 overflow-y-auto px-3 pb-3">
         {filtered.length === 0 && filteredCollections.length === 0 ? (
-          <p className="py-8 text-center text-sm text-slate">Нет подходящих активностей</p>
+          <p className="py-8 text-center text-sm text-slate">
+            {availableOptions.length === 0
+              ? "В каталоге пока нет туров с активностями"
+              : "Нет подходящих активностей"}
+          </p>
         ) : (
           <>
             {filtered.length > 0 ? (
               <ul className="grid grid-cols-2 gap-1">
                 {filtered.map(({ type, icon: Icon }) => {
                   const isSelected = selected.includes(type);
+                  const count = counts[type] ?? 0;
+
                   return (
                     <li key={type}>
                       <button
@@ -94,9 +107,7 @@ export default function ActivityTypesFilter({
                         onClick={() => onToggle(type)}
                         className={cn(
                           "flex w-full items-center gap-2.5 rounded-xl px-2.5 py-2.5 text-left transition-all duration-150",
-                          isSelected
-                            ? "bg-gray-100"
-                            : "hover:bg-gray-50"
+                          isSelected ? "bg-sky/10 ring-1 ring-sky/20" : "hover:bg-gray-50"
                         )}
                       >
                         <Icon
@@ -106,9 +117,14 @@ export default function ActivityTypesFilter({
                         <span className="min-w-0 flex-1 text-[13px] font-medium leading-tight text-charcoal">
                           {type}
                         </span>
-                        {isSelected && (
-                          <Check className="h-4 w-4 shrink-0 text-charcoal" strokeWidth={2.5} />
-                        )}
+                        <span className="flex shrink-0 items-center gap-1">
+                          <span className="rounded-full bg-gray-100 px-2 py-0.5 text-[11px] tabular-nums text-slate">
+                            {count}
+                          </span>
+                          {isSelected ? (
+                            <Check className="h-4 w-4 text-sky" strokeWidth={2.5} aria-hidden />
+                          ) : null}
+                        </span>
                       </button>
                     </li>
                   );

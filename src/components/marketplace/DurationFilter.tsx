@@ -6,6 +6,7 @@ import {
   DURATION_MAX_DAYS,
   rangeFromPresets,
 } from "@/data/duration-presets";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
 import { FilterFooter } from "./FilterPopover";
 import { Check } from "lucide-react";
@@ -139,35 +140,22 @@ export default function DurationFilter({
           </div>
         </div>
 
-        <button
-          type="button"
-          role="switch"
-          aria-checked={dayTripsOnly}
-          aria-disabled={dayTripsDisabled}
-          disabled={dayTripsDisabled}
-          onClick={() => !dayTripsDisabled && handleDayTripsOnly(!dayTripsOnly)}
+        <div
           className={cn(
             "flex w-full items-center gap-3 rounded-xl bg-sky/10 px-3 py-3 text-left transition-colors hover:bg-sky/15",
             dayTripsDisabled && "cursor-not-allowed opacity-45 hover:bg-sky/10"
           )}
         >
-          <span
-            className={cn(
-              "relative inline-flex h-6 w-11 shrink-0 overflow-hidden rounded-full p-0.5 transition-colors duration-200",
-              dayTripsOnly ? "bg-brand" : "bg-gray-300"
-            )}
-          >
-            <span
-              className={cn(
-                "block h-5 w-5 rounded-full bg-white shadow-sm transition-transform duration-200 ease-in-out",
-                dayTripsOnly ? "translate-x-5" : "translate-x-0"
-              )}
-            />
-          </span>
+          <Switch
+            checked={dayTripsOnly}
+            onCheckedChange={handleDayTripsOnly}
+            disabled={dayTripsDisabled}
+            aria-label="Только однодневные экскурсии"
+          />
           <span className="min-w-0 flex-1 text-sm font-medium leading-snug text-charcoal">
             Только однодневные экскурсии
           </span>
-        </button>
+        </div>
       </div>
 
       <div className="px-4 pb-2">

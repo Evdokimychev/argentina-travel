@@ -24,8 +24,10 @@ import {
   type OrganizerCancellationPolicyType,
   type OrganizerCancellationSettings,
 } from "@/types/organizer-profile";
+import { buildCancellationTouristPreviewFull } from "@/lib/organizer-cancellation-preview";
 import { readOrganizerProfile, updateOrganizerProfile } from "@/lib/organizer-profile-store";
 import { cn } from "@/lib/cn";
+import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
 
 function InfoBox({ children }: { children: React.ReactNode }) {
   return (
@@ -44,8 +46,8 @@ function SaveSidebar({
 }) {
   return (
     <aside className="hidden xl:block">
-      <div className="sticky top-[calc(var(--site-header-height,72px)+1rem)] rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
-        <h2 className="font-display text-base font-bold text-charcoal">Отмена бронирования</h2>
+      <div className={cn("sticky rounded-2xl border border-gray-200 bg-white p-5 shadow-sm", siteStickyBelowHeaderInsetClass)}>
+        <h2 className="font-heading text-base font-bold text-charcoal">Отмена бронирования</h2>
         {saved ? <p className="mt-2 text-sm text-emerald-700">Изменения сохранены</p> : null}
         <Button type="submit" className="mt-4 w-full" disabled={loading}>
           <Check className="h-4 w-4" />
@@ -54,24 +56,6 @@ function SaveSidebar({
       </div>
     </aside>
   );
-}
-
-function buildTouristPreview(settings: OrganizerCancellationSettings): string {
-  if (settings.policyType === "standard") {
-    return "При отмене бронирования туристу возвращается полная сумма за вычетом организационных расходов.";
-  }
-
-  const filled = settings.penalties.filter(
-    (penalty) => penalty.amount.trim() && penalty.period.trim()
-  );
-
-  if (filled.length === 0) {
-    return "Штрафные санкции отсутствуют";
-  }
-
-  return filled
-    .map((penalty) => `${penalty.amount.trim()} — ${penalty.period.trim()}`)
-    .join("; ");
 }
 
 function PolicyCard({
@@ -325,7 +309,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
     setSaved(true);
   }
 
-  const previewText = buildTouristPreview(settings);
+  const previewText = buildCancellationTouristPreviewFull(settings);
 
   return (
     <form onSubmit={handleSubmit} className="p-4 sm:p-6">
@@ -358,7 +342,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
 
           {settings.policyType === "individual" ? (
             <section className="space-y-4">
-              <h2 className="font-display text-base font-bold text-charcoal">Штрафные санкции</h2>
+              <h2 className="font-heading text-base font-bold text-charcoal">Штрафные санкции</h2>
               <InfoBox>
                 <p>
                   Укажите штрафы в порядке убывания срока до начала тура. Например: «20% — от 30 до
@@ -444,7 +428,7 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
           ) : null}
 
           <section className="space-y-4 border-t border-gray-100 pt-8">
-            <h2 className="font-display text-base font-bold text-charcoal">Дополнительные условия</h2>
+            <h2 className="font-heading text-base font-bold text-charcoal">Дополнительные условия</h2>
             <InfoBox>
               <p>
                 Например: «Сумма бронирования может быть перенесена на другой тур автора в течение 12
@@ -472,12 +456,9 @@ export default function OrganizerCancellationTab({ userId }: OrganizerCancellati
             <p className="text-xs font-medium uppercase tracking-wide text-slate">
               Турист увидит условия отмены:
             </p>
-            <p className="mt-2 text-sm leading-relaxed text-charcoal">{previewText}</p>
-            {settings.additionalConditions.trim() ? (
-              <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-charcoal">
-                {settings.additionalConditions.trim()}
-              </p>
-            ) : null}
+            <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-charcoal">
+              {previewText}
+            </p>
           </div>
 
           {error ? (

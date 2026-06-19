@@ -9,10 +9,10 @@ export function Badge({
 }) {
   const variants = {
     default: "bg-gray-100 text-charcoal",
-    hot: "bg-orange-500 text-white",
+    hot: "bg-brand text-white",
     new: "bg-sky text-white",
     hit: "bg-wine text-white",
-    family: "bg-emerald-600 text-white",
+    family: "bg-success-muted text-success",
     expedition: "bg-charcoal text-white",
     outline: "border border-gray-200 bg-white/90 text-charcoal backdrop-blur-sm",
   };

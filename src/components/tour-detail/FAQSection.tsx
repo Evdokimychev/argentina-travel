@@ -2,16 +2,25 @@
 
 import { useState } from "react";
 import { TourFAQ } from "@/types";
-import { SectionHeading } from "./InfoModal";
+import { normalizeEditorValue } from "@/lib/rich-text";
+import TourSection from "./TourSection";
 
-export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
-  const [openId, setOpenId] = useState<string | null>(faq[0]?.id ?? null);
+export default function FAQSection({
+  faq,
+  organizerComment,
+}: {
+  faq: TourFAQ[];
+  organizerComment?: string;
+}) {
+  const items = faq.filter((item) => item.question?.trim() && item.answer?.trim());
+  const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
+
+  if (!items.length) return null;
 
   return (
-    <section id="faq" className="tour-section-target">
-      <SectionHeading title="Часто задаваемые вопросы" />
-      <div className="divide-y divide-gray-100 rounded-2xl border border-gray-200 bg-white">
-        {faq.map((item) => {
+    <TourSection id="faq" title="Часто задаваемые вопросы" organizerComment={organizerComment}>
+      <div className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-surface-muted/30">
+        {items.map((item) => {
           const isOpen = openId === item.id;
           return (
             <div key={item.id}>
@@ -31,14 +40,15 @@ export default function FAQSection({ faq }: { faq: TourFAQ[] }) {
                 </svg>
               </button>
               {isOpen && (
-                <div className="px-5 pb-4 text-sm leading-relaxed text-slate">
-                  {item.answer}
-                </div>
+                <div
+                  className="rich-text-editor-content px-5 pb-4 text-sm leading-relaxed text-slate"
+                  dangerouslySetInnerHTML={{ __html: normalizeEditorValue(item.answer) }}
+                />
               )}
             </div>
           );
         })}
       </div>
-    </section>
+    </TourSection>
   );
 }

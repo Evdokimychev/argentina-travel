@@ -1,0 +1,212 @@
+{
+  "id": 109207,
+  "paths": {
+    "/experiences/109207/?detailed=true&price_format=detailed": {
+      "status": 200,
+      "ok": true,
+      "keys": [
+        "id",
+        "title",
+        "tagline",
+        "url",
+        "type",
+        "format",
+        "grade",
+        "movement_type",
+        "schedule_type",
+        "instant_booking",
+        "status",
+        "is_bookable",
+        "is_visible",
+        "is_new",
+        "child_friendly",
+        "max_persons",
+        "duration",
+        "meeting_point",
+        "finish_point",
+        "price",
+        "review_count",
+        "rating",
+        "rating20",
+        "popularity",
+        "city",
+        "guide",
+        "tags",
+        "photos",
+        "links",
+        "geo",
+        "exp_format",
+        "annotation",
+        "description",
+        "description_blocks",
+        "schedule",
+        "cover_image",
+        "pricing_model",
+        "visitors_count",
+        "comfort_level_info",
+        "price_included_description",
+        "price_not_included_description"
+      ],
+      "sample": "{\"id\":109207,\"title\":\"От Буэнос-Айреса до края света: большой фототур по знаковым локациям Аргентины и Чили в мини-группе\",\"tagline\":\"Посетить водопады Игуасу и Ушуайю, прогуляться по Каналу Бигля и увидеть разных животных\",\"url\":\"https://experience.tripster.ru/experience/109207/\",\"type\":\"tour\",\"format\":\"activity\",\"grade\":null,\"movement_type\":\"car\",\"schedule_type\":\"fixed_slots\",\"instant_booking\":false,\"status\":\"active\",\"is_bookable\":true,\"is_visible\":true,\"is_new\":false,\"child_friendly\":false,\"max_persons\":8,\"duration\":264,\"meeting_point\":{\"text\":\"Буэнос-Айрес, точное место — по договорённости, 13:00 (или любое время в течение дня)\"},\"finish_point\":{\"text\":\"Игуасу, 13:00\"},\"price\":{\"currency\":\"USD\",\"currency_rate\":75.75,\"onsite_payment\":0.15,\"per_person\":[{\"id\":3917702062,\"title\":\"Участник\",\"is_default\":true,\"value\":4905,\"option_id\":\"019df9cf-11d0-764e-bf7e-899906c1d967\",\"without_discount\":5450}],\"discount\":{\"value\":0.1,\"expiration\":\"2028-02-01\"},\"value\":4905,\"value_string\":\"$4905 за одного\",\"unit_string\":\"за одного\",\"price_description\":\"$4905 за одного\",\"total_commission_rate\":15},\"review_count\":0,\"rating\":0,\"rating20\":0,\"popularity\":53232,\"city\":{\"id\":204,\"name_ru\":\"Буэнос-Айрес\",\"name_1_ru\":\"Буэнос-Айреса\",\"name_5_ru\":\"Буэнос-Айресе\",\"name_en\":\"Buenos Aires\",\"iata\":\"BAI\",\"country\":{\"id\":65,\"name_ru\":\"Аргентина\",\"name_2_ru\":\"Аргентине\",\"name_5_ru\":\"Аргентине\",\"name_en\":\"Argentina\",\"currency\":\"USD\",\"in_obj_phrase\":\"в Аргентине\",\"about_obj_phrase\":\"об Аргентине\",\"across_obj_phrase\":\"по Аргентине\",\"experience_count\":68,\"tours_count\":11,\"guides_count\":28,\"url\":\"https://experience.tripster.ru/destinations/argentina/\",\"tours_url\":\"https://experience.tripster.ru/tours/argentina/\",\"region\":\"AM\"},\"experience_count\":52,\"tours_count\":4,\"excursions_count\":48,\"about_obj_phrase\":\"о Буэнос-Айресе\",\"in_obj_phrase\":\"в Буэнос-Айресе\",\"from_obj_phrase\":\"из Буэнос-Айреса\",\"across_obj_phrase\":\"по Буэнос-Айресу\",\"name_prepositional\":\"Буэнос-Айресе\",\"url\":\"https://experience.tripster.ru/experience/Buenos_Aires/\",\"image\":{\"cover\":\"https://resize.tripster.ru/S-BjdT3PuKoUgcLN5dxDAeybYPY=/1920x320/filters:no_upscale()/https://cdn.tripster.ru/photos/3d566f44-dc39-404e-bea8-be60887c4f43.jpg\",\"thumbnail\":\"https://resize.tripster.ru/w-PvKynUB-z7yUadZMOzO_jVAFQ=/fit-in/800x600/filters:no_upscale()/https://cdn.tripster.ru/photos/9d26e1ad-f0d7-46c4-b36c-f72e0c655afc.jpg\"},\"utc_offset\":-10800,\"guides_count\":23,\"slug\":\"Buenos_Aires\"},\"guide\":{\"id\":1052403,\"first_name\":\"Евгений\",\"url\":\"http"
+    },
+    "/experiences/109207/plan/": {
+      "status": 200,
+      "ok": true,
+      "keys": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11"
+      ],
+      "sample": "[{\"number\":1,\"title\":\"Привет, Буэнос-Айрес\",\"description\":\"<div><p>Добро пожаловать в Аргентину! Нас встречает Буэнос-Айрес — город, где величие старинных кварталов соседствует с блеском современных небоскрёбов.</p>\\n\\n\\t<p>Вечером запланирован общий ужин (за доплату), за которым вы попробуюте настоящее аргентинское мясо на гриле и отправитесь на вечер танго. Яркое шоу с живой музыкой и страстными танцами погружает в атмосферу Буэнос-Айреса уже в первый вечер.</p>\\n\\n\\t<p>Ночёвка в Буэнос-Айресе.</p></div>\",\"photos\":[{\"thumbnail\":\"https://resize.tripster.ru/Vn8DirBfVEbglpq7EBM6yxBupo4=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/5dc449d0-949c-4b32-9b83-e6f7d808a64c.jpg\",\"medium\":\"https://resize.tripster.ru/nTOpt2romCKGdjfmjx0bG4OIGh4=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/5dc449d0-949c-4b32-9b83-e6f7d808a64c.jpg\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/EfG1Vk5Vyyw4nn0zv7DIVTirRgg=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/5dc449d0-949c-4b32-9b83-e6f7d808a64c.jpg\"},{\"thumbnail\":\"https://resize.tripster.ru/PB32fyCcQ-62KA1BmCVYzzB05uk=/350x280/filters:no_upscale()/https://cdn.tripster.ru/photos/e60bc888-8927-476f-adce-577b14aa9a61.jpg\",\"medium\":\"https://resize.tripster.ru/q9lsto_n4Uxf8sCjVKVPaNQKxT4=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/e60bc888-8927-476f-adce-577b14aa9a61.jpg\",\"type\":\"exp_plan\",\"scaled\":\"https://resize.tripster.ru/4xhxAxcDPuObDwAyB76EDeTyDbI=/fit-in/870x490/filters:no_upscale()/https://cdn.tripster.ru/photos/e60bc888-8927-476f-adce-577b14aa9a61.jpg\"}]},{\"number\":2,\"title\":\"Вкус и ритм Буэнос-Айреса, Ушуайя\",\"description\":\"<div><p>Утро пройдёт в спокойном ритме — аромат кофе и первые впечатления от города. Прогулка по Сан-Тельмо подарит встречу с антикварными лавками и уличными кафе, где пахнет жареным мясом с рынка Меркадо Сан-Тельмо. Атмосфера старого Буэнос-Айреса здесь особенно ощутима.</p>\\n\\n\\t<p>Далее маршрут ведёт в Ла-Боку — квартал, где пёстрые дома, уличные музыканты и танцоры превращают улицы в живую сцену.</p>\\n\\n\\t<p>Затем состоится мастер-класс аргентинской кухни: приготовление эмпанадас, альфахорес и традиционного мате. Всё созданное можно будет продегустировать.</p>\\n\\n\\t<p>К вечеру запланирован перелёт в Ушуайю — жару сменит прохлада, а городской шум — тишина и свежий воздух южных широт. Ужин у воды с блюдами из свежей рыбы и вечерняя прогулка по набережной завершат день.</p>\\n\\n\\t<p>Ночёвка в Ушуайе.</p></div"
+    },
+    "/experiences/109207/accommodation/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "detail"
+      ],
+      "sample": "{\"detail\":\"Not Found\"}"
+    },
+    "/experiences/109207/accommodations/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "detail"
+      ],
+      "sample": "{\"detail\":\"Not Found\"}"
+    },
+    "/experiences/109207/lodging/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "detail"
+      ],
+      "sample": "{\"detail\":\"Not Found\"}"
+    },
+    "/experiences/109207/comfort/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "detail"
+      ],
+      "sample": "{\"detail\":\"Not Found\"}"
+    },
+    "/experiences/109207/comfort_level/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "detail"
+      ],
+      "sample": "{\"detail\":\"Not Found\"}"
+    },
+    "/experiences/109207/hotels/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "detail"
+      ],
+      "sample": "{\"detail\":\"Not Found\"}"
+    }
+  },
+  "accommodationRelated": {
+    "comfort_level_info": ""
+  },
+  "descriptionBlockTitles": [
+    "Организационные детали"
+  ],
+  "descriptionBlocks": [
+    {
+      "title": "Организационные детали",
+      "htmlLength": 40,
+      "htmlPreview": "<p>Тур проводится без участия детей.</p>"
+    }
+  ],
+  "priceIncludedPreview": "<ul>\n\t\t<li>Проживание</li>\n\t\t<li>Трансфер по маршруту, включая внутренние перелёты</li>\n\t\t<li>Услуги гида</li>\n\t\t<li>Конная прогулка</li>\n\t\t<li>Посещение платных национальных парков по маршруту</li>\n\t\t<li>Посещение платных смотровых площадок и водопадов</li>\n\t\t<li>Морская прогулка по каналу Бигля</li>\n\t\t<li>Кулинарный мастер-класс в Буэнос-Айресе</li>\n\t\t<li>Билет на теплоход к подножию ледника Перито-Морено</li>\n\t\t<li>Фотосопровождение</li>\n\t</ul>",
+  "priceExcludedPreview": "<ul>\n\t\t<li>Авиабилеты до Аргентины и обратно (от $1300)</li>\n\t\t<li>Питание (примерно $35 в день)</li>\n\t\t<li>1-местное размещение</li>\n\t\t<li>Медицинская страховка</li>\n\t</ul>",
+  "webPaths": {
+    "https://experience.tripster.ru/api/web/v2/experiences/109207/": {
+      "status": 200,
+      "ok": true,
+      "keys": [
+        "status",
+        "id",
+        "title",
+        "tagline",
+        "annotation",
+        "url",
+        "type",
+        "format",
+        "grade",
+        "movement_type",
+        "schedule_type",
+        "exp_status",
+        "is_instant_booking",
+        "is_under_sanctions",
+        "is_new",
+        "show_promotion_badge",
+        "max_persons",
+        "duration",
+        "price",
+        "display_price",
+        "rating",
+        "visitors_count",
+        "review_count",
+        "pause_finish_date",
+        "pause_reason",
+        "cancel_finish_date",
+        "cancel_reason",
+        "additional_info",
+        "comfort_level_info",
+        "price_included_description",
+        "price_not_included_description",
+        "geo_access_level",
+        "geo",
+        "guide",
+        "guide_can_resume",
+        "has_non_refundable_part",
+        "photos",
+        "legal_exp_type",
+        "accommodation",
+        "child_friendly",
+        "children_allowed_age",
+        "pricing_model",
+        "minimal_price_info",
+        "description",
+        "meeting_point",
+        "finish_point",
+        "video_id",
+        "photos_count",
+        "cover_image",
+        "cover_image_source",
+        "schedule",
+        "languages",
+        "legality_description",
+        "is_paid_issuance",
+        "options",
+        "integration"
+      ],
+      "accommodation": {
+        "paid_separately": false
+      },
+      "comfortLen": 0
+    },
+    "https://experience.tripster.ru/api/web/v2/experiences/109207/accommodation/": {
+      "status": 404,
+      "ok": false,
+      "keys": [
+        "_raw"
+      ],
+      "accommodation": null,
+      "comfortLen": 0
+    }
+  }
+}

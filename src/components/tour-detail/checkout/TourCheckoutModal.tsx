@@ -2,20 +2,26 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Check, ChevronLeft, ChevronRight, Lock, X } from "lucide-react";
 import { TourDetail } from "@/types";
-import { formatDays, formatTouristsBooking, formatTouristsRange, formatSpots } from "@/lib/pluralize";
+import { formatDays, formatForTourists, formatTourists, formatTouristsRange, formatSpots } from "@/lib/pluralize";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import FormattedPrice from "@/components/FormattedPrice";
 import GuestCounter from "../GuestCounter";
 import SingleDatePicker from "@/components/ui/single-date-picker";
 import { useTourBooking } from "../TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "../BookingDateSelector";
-import { tourHasAccommodation } from "@/lib/tour-accommodation";
+import {
+  resolveTourCheckoutRoomOptions,
+  tourCheckoutHasRoomSelection,
+} from "@/lib/tour-checkout-accommodation";
 import {
   maxBirthDateIso,
   minBirthDateIso,
@@ -29,6 +35,12 @@ import {
   createEmptyTraveler,
 } from "./types";
 import {
+  ensureValidCheckoutPaymentOption,
+  getEnabledCheckoutPaymentOptions,
+  resolveCheckoutDepositAmountUsd,
+  resolveTourCheckoutPaymentOptionsFromTour,
+} from "@/lib/tour-checkout-payment";
+import {
   calcRoomTotalUsd,
   createDefaultRoomAllocations,
   validateRoomAllocations,
@@ -36,7 +48,6 @@ import {
 import AccommodationStep from "./AccommodationStep";
 import {
   CHECKOUT_ADDONS,
-  calcInsuranceTotal,
   INSURANCE_ADDON,
   TRANSFER_VEHICLE_OPTIONS,
   transferVehicleCount,
@@ -52,6 +63,12 @@ import TransferAddonPicker from "./TransferAddonPicker";
 import InsuranceAddonPicker from "./InsuranceAddonPicker";
 import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm } from "./checkout-contact";
 import { useAuth } from "@/context/AuthContext";
+import { createBookingFromCheckout } from "@/lib/bookings-store";
+import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { useSiteFeedback } from "@/context/SiteFeedbackContext";
+import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import type { SiteFeedbackMessage } from "@/types/site-feedback";
 
 interface TourCheckoutModalProps {
   tour: TourDetail;
@@ -61,6 +78,20 @@ function getVisibleSteps(hasAccommodation: boolean) {
   return CHECKOUT_STEPS.filter(
     (step) => step.id !== "accommodation" || hasAccommodation
   );
+}
+
+function getInitialCheckoutStepIndex(
+  tour: TourDetail,
+  visibleSteps: ReturnType<typeof getVisibleSteps>,
+  dateMode: ReturnType<typeof useTourBooking>["dateMode"],
+  customDate: Date | null,
+  guests: number,
+  selectedDateId: string
+): number {
+  if (visibleSteps[0]?.id !== "travelers") return 0;
+  const dateError = validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
+  if (dateError) return 0;
+  return visibleSteps.length > 1 ? 1 : 0;
 }
 
 function formatCheckoutDate(date: Date): string {
@@ -98,7 +129,7 @@ function StepIndicator({
             key={step.id}
             className={cn(
               "flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-medium transition-colors",
-              done && "bg-emerald-50 text-emerald-700",
+              done && "bg-sky/10 text-sky-dark",
               active && "bg-brand text-white",
               !done && !active && "bg-gray-100 text-slate"
             )}
@@ -106,7 +137,7 @@ function StepIndicator({
             <span
               className={cn(
                 "flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold",
-                done && "bg-emerald-600 text-white",
+                done && "bg-sky text-white",
                 active && "bg-white/20 text-white",
                 !done && !active && "bg-white text-slate"
               )}
@@ -130,8 +161,10 @@ function CheckoutSummary({
   dateModeLabel,
   subtotalUsd,
   roomAllocations,
+  roomOptions,
   totalUsd,
   payNowUsd,
+  depositPercent,
 }: {
   tour: TourDetail;
   form: CheckoutFormState;
@@ -141,14 +174,16 @@ function CheckoutSummary({
   dateModeLabel?: string;
   subtotalUsd: number;
   roomAllocations: CheckoutFormState["roomAllocations"];
+  roomOptions: typeof CHECKOUT_ROOM_OPTIONS;
   totalUsd: number;
   payNowUsd: number;
+  depositPercent: number;
 }) {
   const selectedAddons = CHECKOUT_ADDONS.filter((a) => form.addonIds.includes(a.id));
 
   return (
     <div className="flex h-full flex-col bg-gray-50 p-5">
-      <h3 className="font-display text-lg font-bold text-charcoal">Ваш тур</h3>
+      <h3 className="font-heading text-lg font-bold text-charcoal">Ваш тур</h3>
 
       <div className="mt-4 overflow-hidden rounded-xl border border-gray-200 bg-white">
         <div className="relative aspect-[16/10] w-full">
@@ -161,7 +196,7 @@ function CheckoutSummary({
           />
         </div>
         <div className="p-4">
-          <p className="font-display text-sm font-bold leading-snug text-charcoal">
+          <p className="font-heading text-sm font-bold leading-snug text-charcoal">
             {tour.title}
           </p>
           <dl className="mt-3 space-y-2 text-xs text-slate">
@@ -188,7 +223,7 @@ function CheckoutSummary({
             <div className="flex justify-between gap-3">
               <dt>Туристы</dt>
               <dd className="text-right font-medium text-charcoal">
-                {formatTouristsBooking(guests)}
+                {formatTourists(guests)}
               </dd>
             </div>
           </dl>
@@ -200,7 +235,7 @@ function CheckoutSummary({
           <span>Тур × {guests}</span>
           <FormattedPrice priceUsd={subtotalUsd} className="font-medium text-charcoal" />
         </div>
-        {CHECKOUT_ROOM_OPTIONS.map((room) => {
+        {roomOptions.map((room) => {
           const count = roomAllocations[room.id];
           if (!count || room.priceUsdPerTraveler === 0) return null;
           return (
@@ -235,10 +270,7 @@ function CheckoutSummary({
             <span className="min-w-0 truncate">
               {INSURANCE_ADDON.title} × {form.insuranceTravelers}
             </span>
-            <FormattedPrice
-              priceUsd={calcInsuranceTotal(form.insuranceTravelers)}
-              className="shrink-0 font-medium text-charcoal"
-            />
+            <span className="shrink-0 text-xs font-medium text-sky">отдельно на /insurance</span>
           </div>
         )}
         {selectedAddons.map((addon) => (
@@ -247,22 +279,35 @@ function CheckoutSummary({
             <FormattedPrice priceUsd={addon.priceUsd} className="shrink-0 font-medium text-charcoal" />
           </div>
         ))}
-        <div className="flex justify-between gap-3 border-t border-gray-100 pt-3 font-display text-base font-bold text-charcoal">
+        <div className="flex justify-between gap-3 border-t border-gray-100 pt-3 font-heading text-base font-bold text-charcoal">
           <span>Итого</span>
           <FormattedPrice priceUsd={totalUsd} />
         </div>
         {form.paymentOption === "deposit" && (
           <div className="flex justify-between gap-3 text-sm text-brand">
-            <span>К оплате сейчас (10%)</span>
+            <span>К оплате сейчас ({depositPercent}%)</span>
             <FormattedPrice priceUsd={payNowUsd} className="font-semibold" />
+          </div>
+        )}
+        {form.paymentOption === "later" && (
+          <div className="flex justify-between gap-3 text-sm text-slate">
+            <span>К оплате сейчас</span>
+            <span className="font-semibold text-charcoal">Оплата позже</span>
           </div>
         )}
       </div>
 
-      <p className="mt-auto flex items-center gap-2 pt-4 text-xs text-slate">
-        <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
-        Безопасное SSL-шифрование. Данные карты не сохраняются.
-      </p>
+      {(form.paymentOption === "full" || form.paymentOption === "deposit") ? (
+        <p className="mt-auto flex items-center gap-2 pt-4 text-xs text-slate">
+          <Lock className="h-3.5 w-3.5 shrink-0" aria-hidden />
+          Безопасное SSL-шифрование. Данные карты не сохраняются.
+        </p>
+      ) : (
+        <p className="mt-auto pt-4 text-xs leading-relaxed text-slate">
+          Оплата не требуется сейчас. Организатор пришлёт ссылку или реквизиты после подтверждения
+          заявки.
+        </p>
+      )}
     </div>
   );
 }
@@ -280,16 +325,45 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   } = useTourBooking();
   const { user, isAuthenticated, openAuth } = useAuth();
 
-  const hasAccommodation = tourHasAccommodation(tour);
+  const roomOptions = useMemo(() => resolveTourCheckoutRoomOptions(tour), [tour]);
+  const hasAccommodationStep = tourCheckoutHasRoomSelection(tour);
   const visibleSteps = useMemo(
-    () => getVisibleSteps(hasAccommodation),
-    [hasAccommodation]
+    () => getVisibleSteps(hasAccommodationStep),
+    [hasAccommodationStep]
+  );
+  const checkoutPaymentOptions = useMemo(
+    () => resolveTourCheckoutPaymentOptionsFromTour(tour),
+    [tour]
+  );
+  const enabledPaymentOptions = useMemo(
+    () => getEnabledCheckoutPaymentOptions(checkoutPaymentOptions),
+    [checkoutPaymentOptions]
   );
 
   const [stepIndex, setStepIndex] = useState(0);
-  const [form, setForm] = useState<CheckoutFormState>(() => createCheckoutForm(guests, user));
+  const [form, setForm] = useState<CheckoutFormState>(() => {
+    const options = resolveTourCheckoutRoomOptions(tour);
+    const base = createCheckoutForm(guests, user, options);
+    const paymentOption = ensureValidCheckoutPaymentOption(
+      base.paymentOption,
+      checkoutPaymentOptions
+    );
+    return { ...base, paymentOption };
+  });
   const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [savedToProfile, setSavedToProfile] = useState(false);
+  const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
+  const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const feedback = useSiteFeedback();
+
+  const setError = (value: string | SiteFeedbackMessage | null) => {
+    if (value === null) {
+      setErrorState(null);
+      return;
+    }
+    setErrorState(typeof value === "string" ? siteFormError(value) : value);
+  };
 
   const currentStep = visibleSteps[stepIndex]?.id ?? "travelers";
   const selectedDate = tour.dates.find((d) => d.id === selectedDateId);
@@ -315,15 +389,33 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
         ? formatCheckoutDate(new Date(selectedDate.endDate))
         : "—";
 
-  const roomTotalUsd = calcRoomTotalUsd(form.roomAllocations);
-  const addonsTotalUsd = checkoutAddonsTotal(
-    form.addonIds,
-    form.transferAllocations,
-    form.insuranceTravelers
-  );
+  const roomTotalUsd = calcRoomTotalUsd(form.roomAllocations, roomOptions);
+  const addonsTotalUsd = checkoutAddonsTotal(form.addonIds, form.transferAllocations);
   const subtotalUsd = totalPriceUsd;
   const totalUsd = subtotalUsd + roomTotalUsd + addonsTotalUsd;
-  const payNowUsd = form.paymentOption === "deposit" ? Math.round(totalUsd * 0.1) : totalUsd;
+  const payNowUsd =
+    form.paymentOption === "deposit"
+      ? resolveCheckoutDepositAmountUsd(totalUsd, checkoutPaymentOptions)
+      : form.paymentOption === "later"
+        ? 0
+        : totalUsd;
+
+  useEffect(() => {
+    setForm((prev) => {
+      const paymentOption = ensureValidCheckoutPaymentOption(
+        prev.paymentOption,
+        checkoutPaymentOptions
+      );
+      if (paymentOption === prev.paymentOption) return prev;
+      return {
+        ...prev,
+        paymentOption,
+        ...(paymentOption === "later"
+          ? { cardNumber: "", cardExpiry: "", cardCvc: "" }
+          : {}),
+      };
+    });
+  }, [checkoutPaymentOptions]);
 
   const bookingMode = tour.bookingMode ?? "scheduled";
   const dateModeLabel =
@@ -336,17 +428,35 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   useEffect(() => {
     if (checkoutOpen) {
       document.body.style.overflow = "hidden";
-      setStepIndex(0);
+      setStepIndex(
+        getInitialCheckoutStepIndex(
+          tour,
+          visibleSteps,
+          dateMode,
+          customDate,
+          guests,
+          selectedDateId
+        )
+      );
       setSubmitted(false);
+      setSavedToProfile(false);
       setError(null);
-      setForm(createCheckoutForm(guests, null));
+      setForm(() => {
+        const options = resolveTourCheckoutRoomOptions(tour);
+        const base = createCheckoutForm(guests, user, options);
+        const paymentOption = ensureValidCheckoutPaymentOption(
+          base.paymentOption,
+          checkoutPaymentOptions
+        );
+        return { ...base, paymentOption };
+      });
     } else {
       document.body.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
     };
-  }, [checkoutOpen, guests]);
+  }, [checkoutOpen, guests, user, checkoutPaymentOptions, tour, visibleSteps, dateMode, customDate, selectedDateId]);
 
   useEffect(() => {
     if (!checkoutOpen || !user) return;
@@ -361,7 +471,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
 
       const allocated = Object.values(prev.roomAllocations).reduce((a, b) => a + b, 0);
       const roomAllocations =
-        allocated === guests ? prev.roomAllocations : createDefaultRoomAllocations(guests);
+        allocated === guests ? prev.roomAllocations : createDefaultRoomAllocations(guests, roomOptions);
 
       const transferAllocated = totalTransferAllocated(prev.transferAllocations);
       const transferAllocations =
@@ -376,9 +486,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
 
       return { ...prev, travelers, roomAllocations, transferAllocations, insuranceTravelers };
     });
-  }, [guests]);
-
-  if (!checkoutOpen) return null;
+  }, [guests, roomOptions]);
 
   function patchForm(patch: Partial<CheckoutFormState>) {
     setForm((prev) => ({ ...prev, ...patch }));
@@ -415,7 +523,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       return validateBookingDates(tour, dateMode, customDate, guests, selectedDateId);
     }
     if (step === "accommodation") {
-      return validateRoomAllocations(form.roomAllocations, guests);
+      return validateRoomAllocations(form.roomAllocations, guests, roomOptions);
     }
     if (step === "addons") {
       return validateTransferAllocations(form.transferAllocations, guests);
@@ -438,12 +546,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       }
     }
     if (step === "payment") {
-      if (form.paymentOption === "full" || form.paymentOption === "deposit") {
-        if (form.cardNumber.replace(/\s/g, "").length < 12) {
-          return "Введите номер карты";
-        }
-        if (!form.cardExpiry.trim()) return "Укажите срок действия";
-        if (form.cardCvc.length < 3) return "Укажите CVC";
+      if (form.paymentOption !== "later") {
+        return "Сейчас доступна только заявка без оплаты. Выберите «Оплатить позже».";
       }
     }
     return null;
@@ -459,8 +563,60 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     if (stepIndex < visibleSteps.length - 1) {
       setStepIndex((i) => i + 1);
     } else {
-      setSubmitted(true);
+      void submitCheckout();
     }
+  }
+
+  async function submitCheckout() {
+    setSubmitting(true);
+    setError(null);
+
+    const startDate =
+      dateMode === "custom" && customDate
+        ? customDate.toISOString().slice(0, 10)
+        : selectedDate?.startDate;
+    const endDate =
+      dateMode === "custom" && customDate
+        ? new Date(customDate.getTime() + (tour.durationDays - 1) * 86400000)
+            .toISOString()
+            .slice(0, 10)
+        : selectedDate?.endDate;
+
+    const bookingResult = await createBookingFromCheckout({
+      actor: user,
+      userId: user?.id,
+      tour,
+      guests,
+      startDate,
+      endDate,
+      totalPriceUsd: totalUsd,
+      form,
+    });
+
+    if ("error" in bookingResult) {
+      const normalized = normalizeSiteError(bookingResult.error, {
+        title: "Не удалось отправить заявку",
+        steps: ["Проверьте контактные данные", "Попробуйте ещё раз или свяжитесь с организатором"],
+      });
+      setError(normalized);
+      feedback.showError(normalized);
+      setSubmitting(false);
+      return;
+    }
+
+    if (user) {
+      setSavedToProfile(true);
+    }
+    setCreatedBookingId(bookingResult.id);
+    setSubmitted(true);
+    setSubmitting(false);
+    feedback.success({
+      title: "Заявка отправлена",
+      description: savedToProfile || user
+        ? "Заявка сохранена в личном кабинете — следите за статусом в разделе «Бронирования»."
+        : "Организатор свяжется с вами по указанному email.",
+      action: user ? { label: "Мои бронирования", href: "/profile/bookings" } : undefined,
+    });
   }
 
   function goBack() {
@@ -469,16 +625,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   }
 
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-end justify-center bg-charcoal/55 p-0 backdrop-blur-sm sm:items-center sm:p-4"
-      onClick={closeCheckout}
-      role="dialog"
-      aria-modal="true"
-      aria-labelledby="checkout-title"
-    >
-      <div
-        className="flex h-[100dvh] w-full max-w-6xl flex-col overflow-hidden bg-white shadow-2xl sm:h-auto sm:max-h-[92vh] sm:rounded-2xl lg:flex-row"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={checkoutOpen} onOpenChange={(next) => !next && closeCheckout()}>
+      <DialogContent
+        bottomSheet
+        className="flex h-[100dvh] max-w-6xl flex-col overflow-hidden p-0 shadow-2xl sm:h-auto sm:max-h-[92vh] lg:flex-row"
+        onPointerDownOutside={closeCheckout}
+        onEscapeKeyDown={closeCheckout}
       >
         <div className="flex min-h-0 min-w-0 flex-1 flex-col">
           <header className="flex shrink-0 items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
@@ -486,7 +638,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
               <p className="text-xs font-medium uppercase tracking-wide text-slate">
                 Бронирование
               </p>
-              <h2 id="checkout-title" className="font-display text-xl font-bold text-charcoal">
+              <h2 id="checkout-title" className="font-heading text-xl font-bold text-charcoal">
                 {submitted ? "Заявка отправлена" : "Подтверждение и оплата"}
               </h2>
               {!submitted && (
@@ -508,29 +660,106 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
           <div className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
             {submitted ? (
               <div className="mx-auto max-w-md py-8 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-sky/10 text-sky">
                   <Check className="h-8 w-8" strokeWidth={2.5} />
                 </div>
-                <h3 className="mt-5 font-display text-2xl font-bold text-charcoal">
+                <h3 className="mt-5 font-heading text-2xl font-bold text-charcoal">
                   Спасибо за бронирование!
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate">
-                  Мы отправили подтверждение на{" "}
-                  <span className="font-medium text-charcoal">{form.contactEmail}</span>.
+                  {savedToProfile ? (
+                    <>
+                      Заявка сохранена в профиле. Уведомление о статусе — в разделе «Обзор» и на{" "}
+                      <span className="font-medium text-charcoal">{form.contactEmail}</span> (когда
+                      подключим email).
+                    </>
+                  ) : (
+                    <>
+                      Заявка сохранена в браузере. Организатор свяжется по{" "}
+                      <span className="font-medium text-charcoal">{form.contactEmail}</span>.
+                    </>
+                  )}{" "}
+                  {form.paymentOption === "later" ? (
+                    <>
+                      Оплата через платформу скоро — сейчас списание не производится. После
+                      подтверждения откройте ссылку на оплату из уведомлений или личного кабинета.
+                    </>
+                  ) : (
+                    <>
+                      Оплата картой на сайте появится позже. Организатор пришлёт ссылку на
+                      предоплату после подтверждения заявки.
+                    </>
+                  )}
                   {form.fillTravelersLater
-                    ? " Ссылка для указания имён участников придёт отдельным письмом."
-                    : " Организатор свяжется с вами в ближайшее время."}
+                    ? " Заполните данные участников по ссылке из уведомлений."
+                    : null}
                 </p>
+                {savedToProfile && createdBookingId ? (
+                  <p className="mt-3 text-sm text-sky-dark">
+                    <Link
+                      href={`/profile/bookings/${createdBookingId}`}
+                      className="font-medium underline"
+                    >
+                      Открыть заявку
+                    </Link>
+                    {" · "}
+                    <Link href="/profile/bookings" className="font-medium underline">
+                      все бронирования
+                    </Link>
+                  </p>
+                ) : null}
+                {!savedToProfile ? (
+                  <div className="mt-4 rounded-xl border border-brand/20 bg-brand-light/20 px-4 py-4 text-left text-sm">
+                    <p className="font-medium text-charcoal">Создайте аккаунт — заявка привяжется автоматически</p>
+                    <p className="mt-1 text-slate">
+                      Используйте тот же email: {form.contactEmail}
+                    </p>
+                    <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+                      <Button type="button" variant="outline" className="flex-1" onClick={() => openAuth()}>
+                        Создать аккаунт
+                      </Button>
+                      <Link
+                        href={`/booking/find?email=${encodeURIComponent(form.contactEmail)}`}
+                        className="inline-flex flex-1 items-center justify-center rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-charcoal hover:bg-gray-50"
+                      >
+                        Найти заявку
+                      </Link>
+                    </div>
+                  </div>
+                ) : null}
+                {form.insuranceTravelers > 0 ? (
+                  <div className="mt-4 rounded-xl border border-sky/20 bg-sky/5 px-4 py-4 text-left text-sm">
+                    <p className="font-medium text-charcoal">Оформите страховку для поездки</p>
+                    <p className="mt-1 text-slate">
+                      Полис для {formatForTourists(form.insuranceTravelers)} — на сайте партнёра,
+                      отдельно от оплаты тура.
+                    </p>
+                    <Link
+                      href={buildInsuranceHref({ travelers: form.insuranceTravelers })}
+                      className="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-sky px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-sky-dark"
+                    >
+                      Перейти к подбору полиса
+                    </Link>
+                  </div>
+                ) : null}
                 <Button className="mt-6 w-full" onClick={closeCheckout}>
                   Вернуться к туру
                 </Button>
+                {savedToProfile ? (
+                  <Link
+                    href={createdBookingId ? `/profile/bookings/${createdBookingId}` : "/profile/bookings"}
+                    className="mt-3 inline-flex w-full items-center justify-center rounded-xl border border-gray-200 py-2.5 text-sm font-medium text-charcoal hover:bg-gray-50"
+                  >
+                    {createdBookingId ? "Открыть заявку" : "Мои бронирования"}
+                  </Link>
+                ) : null}
               </div>
             ) : (
               <>
                 {currentStep === "travelers" && (
                   <section className="mx-auto max-w-xl space-y-5">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
                         1. Туристы
                       </h3>
                       <p className="mt-1 text-sm text-slate">
@@ -558,6 +787,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   <AccommodationStep
                     guests={guests}
                     allocations={form.roomAllocations}
+                    roomOptions={roomOptions}
                     onChange={(roomAllocations) => patchForm({ roomAllocations })}
                     onViewDetails={() => {
                       closeCheckout();
@@ -573,8 +803,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "addons" && (
                   <section className="mx-auto max-w-xl space-y-4">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
-                        {hasAccommodation ? "3" : "2"}. Дополнения
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
+                        {hasAccommodationStep ? "3" : "2"}. Дополнения
                       </h3>
                       <p className="mt-1 text-sm text-slate">Необязательные услуги к туру</p>
                     </div>
@@ -630,8 +860,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "details" && (
                   <section className="mx-auto max-w-xl space-y-8">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
-                        {hasAccommodation ? "4" : "3"}. Данные путешественников
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
+                        {hasAccommodationStep ? "4" : "3"}. Данные путешественников
                       </h3>
                       <p className="mt-1 text-sm text-slate">
                         Контакт для бронирования и данные всех участников
@@ -746,7 +976,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         )}
 
                         {isAuthenticated && user ? (
-                          <div className="rounded-lg border border-emerald-100 bg-emerald-50/80 px-3 py-2.5 text-xs leading-relaxed text-emerald-800">
+                          <div className="rounded-lg border border-sky/15 bg-sky/5 px-3 py-2.5 text-xs leading-relaxed text-sky-dark">
                             Данные подставлены из вашего профиля — бронирование будет привязано к
                             аккаунту.
                           </div>
@@ -912,12 +1142,11 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                         </h4>
                         <p className="mt-0.5 text-xs text-slate">Необязательно</p>
                       </div>
-                      <textarea
+                      <Textarea
                         value={form.comments}
                         onChange={(e) => patchForm({ comments: e.target.value })}
                         rows={3}
                         placeholder="Аллергии, диетические предпочтения, время прилёта…"
-                        className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm text-charcoal placeholder:text-gray-400 focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                       />
                     </div>
                   </section>
@@ -926,27 +1155,29 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 {currentStep === "payment" && (
                   <section className="mx-auto max-w-xl space-y-5">
                     <div>
-                      <h3 className="font-display text-lg font-bold text-charcoal">
-                        {hasAccommodation ? "5" : "4"}. Оплата
+                      <h3 className="font-heading text-lg font-bold text-charcoal">
+                        {hasAccommodationStep ? "5" : "4"}. Оплата
                       </h3>
                       <p className="mt-1 text-sm text-slate">
-                        Выберите способ оплаты и введите данные карты
+                        Оформите заявку — организатор подтвердит детали и пришлёт ссылку на оплату
                       </p>
                     </div>
 
                     <div className="flex rounded-xl bg-gray-100 p-1">
-                      {(
-                        [
-                          { id: "full", label: "Полная оплата" },
-                          { id: "deposit", label: "Депозит 10%" },
-                        ] as const
-                      ).map((opt) => (
+                      {enabledPaymentOptions.map((opt) => (
                         <button
                           key={opt.id}
                           type="button"
-                          onClick={() => patchForm({ paymentOption: opt.id })}
+                          onClick={() =>
+                            patchForm({
+                              paymentOption: opt.id,
+                              ...(opt.id === "later"
+                                ? { cardNumber: "", cardExpiry: "", cardCvc: "" }
+                                : {}),
+                            })
+                          }
                           className={cn(
-                            "flex-1 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+                            "flex-1 rounded-lg px-2 py-2.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
                             form.paymentOption === opt.id
                               ? "bg-white text-charcoal shadow-sm"
                               : "text-slate hover:text-charcoal"
@@ -957,60 +1188,62 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                       ))}
                     </div>
 
-                    <div className="space-y-3">
-                      <Input
-                        placeholder="Номер карты"
-                        value={form.cardNumber}
-                        onChange={(e) =>
-                          patchForm({
-                            cardNumber: e.target.value.replace(/[^\d\s]/g, "").slice(0, 19),
-                          })
-                        }
-                      />
-                      <div className="grid grid-cols-2 gap-3">
-                        <Input
-                          placeholder="MM/ГГ"
-                          value={form.cardExpiry}
-                          onChange={(e) => patchForm({ cardExpiry: e.target.value })}
-                        />
-                        <Input
-                          placeholder="CVC"
-                          value={form.cardCvc}
-                          onChange={(e) =>
-                            patchForm({ cardCvc: e.target.value.replace(/\D/g, "").slice(0, 4) })
-                          }
-                        />
+                    {form.paymentOption === "later" ? (
+                      <div className="rounded-xl border border-sky-200/70 bg-sky-50/50 px-4 py-3 text-sm leading-relaxed text-charcoal">
+                        Заявка будет отправлена организатору без списания средств. После
+                        подтверждения вы получите ссылку на оплату предоплаты или полной суммы.
                       </div>
-                    </div>
+                    ) : (
+                      <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal">
+                        Оплата картой на сайте появится позже. Пожалуйста, выберите «Оплатить позже»
+                        и отправьте заявку организатору.
+                      </div>
+                    )}
 
-                    <div className="border-t border-gray-100 pt-5">
-                      <p className="mb-3 text-sm font-medium text-charcoal">Промокод</p>
-                      <div className="flex gap-2">
-                        <Input
-                          placeholder="Введите код"
-                          value={form.coupon}
-                          onChange={(e) => patchForm({ coupon: e.target.value })}
-                          className="flex-1"
-                        />
-                        <Button type="button" variant="outline" className="shrink-0">
-                          Применить
-                        </Button>
-                      </div>
-                    </div>
                   </section>
                 )}
 
-                {error && (
-                  <p className="mx-auto mt-4 max-w-xl rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">
-                    {error}
-                  </p>
-                )}
+                {error ? (
+                  <InlineFeedback
+                    variant="error"
+                    title={error.title}
+                    description={error.description}
+                    steps={error.steps}
+                    action={error.action}
+                    className="mx-auto mt-4 max-w-xl"
+                  />
+                ) : null}
               </>
             )}
           </div>
 
           {!submitted && (
-            <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-gray-100 px-5 py-4 sm:px-6">
+            <>
+              <div className="shrink-0 border-t border-gray-100 bg-gray-50 px-5 py-3 lg:hidden">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs text-slate">Итого за {formatForTourists(guests)}</p>
+                    <FormattedPrice
+                      priceUsd={totalUsd}
+                      className="font-heading text-lg font-bold text-charcoal"
+                    />
+                  </div>
+                  <p className="text-right text-xs text-slate">
+                    {form.paymentOption === "later" ? (
+                      <span className="font-medium text-charcoal">Оплата позже</span>
+                    ) : (
+                      <>
+                        К оплате сейчас{" "}
+                        <FormattedPrice
+                          priceUsd={payNowUsd}
+                          className="block font-semibold text-charcoal"
+                        />
+                      </>
+                    )}
+                  </p>
+                </div>
+              </div>
+              <footer className="flex shrink-0 items-center justify-between gap-3 border-t border-gray-100 px-5 py-4 sm:px-6">
               <Button
                 type="button"
                 variant="outline"
@@ -1021,9 +1254,15 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 <ChevronLeft className="h-4 w-4" />
                 Назад
               </Button>
-              <Button type="button" onClick={goNext} className="min-w-[140px]">
+              <Button
+                type="button"
+                onClick={goNext}
+                className="min-w-[140px]"
+                loading={submitting}
+                loadingLabel="Отправка…"
+              >
                 {stepIndex === visibleSteps.length - 1 ? (
-                  "Забронировать"
+                  form.paymentOption === "later" ? "Отправить заявку" : "Забронировать"
                 ) : (
                   <>
                     Далее
@@ -1032,6 +1271,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 )}
               </Button>
             </footer>
+            </>
           )}
         </div>
 
@@ -1045,11 +1285,13 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             dateModeLabel={dateModeLabel}
             subtotalUsd={subtotalUsd}
             roomAllocations={form.roomAllocations}
+            roomOptions={roomOptions}
             totalUsd={totalUsd}
             payNowUsd={payNowUsd}
+            depositPercent={checkoutPaymentOptions.depositPercent}
           />
         </aside>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

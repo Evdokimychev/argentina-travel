@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
-import OrganizerSectionPageClient from "../OrganizerSectionPageClient";
+import OrganizerReviewsPageClient from "./OrganizerReviewsPageClient";
 
-export const metadata: Metadata = { title: "Отзывы" };
+export const metadata: Metadata = { title: "Отзывы — кабинет организатора" };
 
-export default function Page() {
-  return (
-    <OrganizerSectionPageClient
-      title="Отзывы"
-      description="Отзывы участников ваших туров и рейтинг организатора."
-    />
-  );
+export default function OrganizerReviewsPage() {
+  return <OrganizerReviewsPageClient />;
 }

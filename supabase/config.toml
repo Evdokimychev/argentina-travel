@@ -1,0 +1,7 @@
+# Supabase CLI — https://supabase.com/docs/guides/cli
+# Link: supabase link --project-ref ejseeuszipxwvdeuqamc
+
+project_id = "ejseeuszipxwvdeuqamc"
+
+[db]
+major_version = 15

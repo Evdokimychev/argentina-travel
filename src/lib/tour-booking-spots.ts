@@ -43,7 +43,7 @@ export function getGuestLimits(
 }
 
 export function validateGuestsForScheduledBooking(
-  tour: TourDetail,
+  tour: Pick<TourDetail, "groupMin" | "dates">,
   guests: number,
   selectedDateId: string
 ): string | null {

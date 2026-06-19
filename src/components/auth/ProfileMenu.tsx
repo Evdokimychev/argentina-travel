@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, LayoutGrid, LogOut, Settings, User } from "lucide-react";
+import { ChevronDown, Heart, LayoutGrid, LogOut, Settings, User } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import { userHasRole } from "@/types/auth";
@@ -96,10 +96,11 @@ export default function ProfileMenu() {
       <button
         type="button"
         onClick={() => openAuth()}
-        aria-label="Профиль"
-        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-gray-200/80 bg-white text-charcoal transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky"
+        aria-label="Войти в профиль"
+        className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-sm font-medium text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-3"
       >
-        <User className="h-[18px] w-[18px]" strokeWidth={1.75} />
+        <User className="h-4 w-4 shrink-0 text-slate" strokeWidth={1.75} />
+        <span className="hidden sm:inline">Войти</span>
       </button>
     );
   }
@@ -114,10 +115,10 @@ export default function ProfileMenu() {
         aria-expanded={open}
         aria-haspopup="menu"
         className={cn(
-          "flex items-center gap-2 rounded-full border py-1 pl-1 pr-2 transition-[background-color,border-color,box-shadow] sm:pr-2.5",
+          "flex h-10 items-center gap-2 rounded-full py-1 pl-1 pr-2 ring-1 transition-[background-color,box-shadow,ring-color] sm:pr-2.5",
           open
-            ? "border-gray-200 bg-white shadow-sm"
-            : "border-transparent hover:border-gray-200/80 hover:bg-white/80"
+            ? "bg-white shadow-sm ring-sky/25"
+            : "bg-charcoal/[0.04] ring-charcoal/10 hover:bg-sky/5 hover:ring-sky/25"
         )}
       >
         <UserAvatar
@@ -140,7 +141,7 @@ export default function ProfileMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+0.5rem)] z-[60] w-[280px] overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
+          className="absolute right-0 top-[calc(100%+0.5rem)] z-[60] w-[min(280px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
         >
           <div className="rounded-xl bg-gray-50 px-3 py-3">
             <div className="flex items-center gap-3">
@@ -169,6 +170,18 @@ export default function ProfileMenu() {
           </div>
 
           <div className="mt-1 space-y-0.5 px-1 py-1">
+            <MenuItem
+              href="/profile"
+              icon={User}
+              label="Личный кабинет"
+              onClick={() => setOpen(false)}
+            />
+            <MenuItem
+              href="/profile/favorites"
+              icon={Heart}
+              label="Избранное"
+              onClick={() => setOpen(false)}
+            />
             {hasOrganizerRole ? (
               <MenuItem
                 href="/organizer"

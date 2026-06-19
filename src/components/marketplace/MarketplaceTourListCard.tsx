@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
+import FavoriteButton from "@/components/profile/FavoriteButton";
+import { favoriteActionButtonClass } from "@/lib/favorite-button-styles";
 import {
-  Heart,
   Star,
   Flame,
   MapPin,
@@ -13,16 +14,25 @@ import {
   UserRound,
 } from "lucide-react";
 import { TourListing, TourBadge } from "@/types";
-import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import TourCardGallery from "./TourCardGallery";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { formatDays, formatNights, formatMoreDates } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
+import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { ACTIVITY_TYPE_OPTIONS } from "@/data/activity-icons";
 import { DIFFICULTY_DOT_COUNT, COMFORT_DOT_COUNT } from "@/data/tour-levels";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
+import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { formatMinimumAgeShort } from "@/lib/tour-age";
 import { buttonVariants } from "@/components/ui/button";
+import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { formatShortDisplayName } from "@/lib/full-name";
+import TourDepartureDatesModal from "./TourDepartureDatesModal";
+import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import { isLowAvailability } from "@/lib/tour-departure-countdown";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -68,16 +78,20 @@ function StatCell({ label, children }: { label: string; children: React.ReactNod
 }
 
 export default function MarketplaceTourListCard({ tour }: { tour: TourListing }) {
-  const [fav, setFav] = useState(false);
+  const [datesModalOpen, setDatesModalOpen] = useState(false);
   const nextDate = tour.availableDates[0];
   const moreDates = tour.availableDates.length - 1;
-  const hasReviews = tour.reviewCount > 0;
+  const ratingDisplay = resolveTourRatingLabel(tour);
+  const comfortLevel = resolveListingComfortLevel(tour);
   const activityIcon = ACTIVITY_TYPE_OPTIONS.find((o) => o.type === tour.activityType)?.icon;
   const ActivityIcon = activityIcon;
   const isIndividualOnly = tour.bookingMode === "on_request";
+  const organizerLabel = formatShortDisplayName(tour.organizer.name);
+  const cityDisplay = resolveTourCityDisplay(tour);
+  const isPartnerTour = isPartnerTourListing(tour);
 
   return (
-    <article className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-lg">
+    <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
       <div className="flex flex-col lg:flex-row">
         {/* Image */}
         <Link
@@ -86,7 +100,8 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
         >
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
-          <div className="absolute left-3 top-3 flex flex-wrap gap-1.5">
+          <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
+            {isPartnerTour ? <Badge variant="new">Tripster</Badge> : null}
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий
@@ -102,46 +117,46 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               ))}
           </div>
 
-          <div className="absolute bottom-3 left-3 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
+          <div className="absolute bottom-3 left-3 z-10 flex items-center gap-2 rounded-full bg-charcoal/60 py-1 pl-1 pr-3 backdrop-blur-sm">
             <div className="relative h-7 w-7 overflow-hidden rounded-full">
               <Image
                 src={tour.organizer.avatar}
-                alt={tour.organizer.name}
+                alt={organizerLabel}
                 fill
                 className="object-cover"
                 sizes="28px"
               />
             </div>
-            <span className="text-xs font-medium text-white">{tour.organizer.name}</span>
+            <span className="text-xs font-medium text-white">{organizerLabel}</span>
           </div>
         </Link>
 
         {/* Main content */}
         <div className="flex min-w-0 flex-1 flex-col p-5">
           <Link href={`/tours/${tour.slug}`} className="block min-w-0 flex-1">
-            <h3 className="font-display text-lg font-bold leading-snug text-charcoal group-hover:text-brand sm:text-xl">
+            <h3 className="font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky sm:text-xl">
               {tour.title}
             </h3>
 
             <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-slate">
-              {hasReviews ? (
+              {ratingDisplay.hasReviews ? (
                 <>
                   <Star className="h-3.5 w-3.5 fill-sun text-sun" aria-hidden />
-                  <span className="font-semibold text-charcoal">{tour.rating}</span>
+                  <span className="font-semibold text-charcoal">{ratingDisplay.ratingText}</span>
                   <span>({tour.reviewCount})</span>
                 </>
               ) : (
                 <>
-                  <Star className="h-3.5 w-3.5 fill-brand text-brand" aria-hidden />
-                  <span className="font-medium text-brand">Новый</span>
+                  <Star className="h-3.5 w-3.5 fill-sky text-sky" aria-hidden />
+                  <span className="font-medium text-sky">{ratingDisplay.badgeLabel}</span>
                 </>
               )}
               <span aria-hidden>·</span>
               <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>{tour.region}</span>
+              <span>{cityDisplay}</span>
             </p>
 
-            <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-slate">
+            <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate">
               {tour.shortDescription}
             </p>
 
@@ -157,29 +172,47 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           </Link>
 
           <div className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 sm:grid-cols-4">
-            <StatCell label="Сложность">
-              <span>{tour.difficultyLevel}</span>
-              <DifficultyDots level={tour.difficultyLevel} />
-            </StatCell>
-            <StatCell label="Комфорт">
-              <span>{tour.comfortLevel}</span>
-              <ComfortDots level={tour.comfortLevel} />
-            </StatCell>
-            <StatCell label="Язык">{tour.language[0]}</StatCell>
-            <StatCell label="Возраст">
-              {formatMinimumAgeShort(tour.minimumAge)}
-            </StatCell>
+            {isPartnerTour ? (
+              <>
+                <StatCell label="Формат">{tour.activityType}</StatCell>
+                <StatCell label="Группа">{tour.groupSizeBucket}</StatCell>
+                <StatCell label="Длительность">
+                  {formatDays(tour.durationDays)}
+                  {tour.durationNights > 0 ? ` · ${formatNights(tour.durationNights)}` : null}
+                </StatCell>
+                <StatCell label="Возраст">
+                  {formatMinimumAgeShort(tour.minimumAge)}
+                </StatCell>
+              </>
+            ) : (
+              <>
+                <StatCell label="Сложность">
+                  <span>{tour.difficultyLevel}</span>
+                  <DifficultyDots level={tour.difficultyLevel} />
+                </StatCell>
+                <StatCell label="Комфорт">
+                  <span>{comfortLevel}</span>
+                  <ComfortDots level={comfortLevel} />
+                </StatCell>
+                <StatCell label="Язык">{tour.language[0]}</StatCell>
+                <StatCell label="Возраст">
+                  {formatMinimumAgeShort(tour.minimumAge)}
+                </StatCell>
+              </>
+            )}
           </div>
         </div>
 
         {/* Booking panel */}
         <div className="flex shrink-0 flex-col border-t border-gray-100 p-5 lg:w-60 lg:border-l lg:border-t-0 xl:w-64">
           <div className="relative">
-            <TourPriceDisplay
+            <TourPublicPriceDisplay
               priceUsd={tour.priceUsd}
               originalPriceUsd={tour.originalPriceUsd}
+              priceOnRequest={tour.priceOnRequest}
+              priceFromPrefix={tour.priceFromPrefix}
               size="sm"
-              showFrom={false}
+              density="compact"
               className="[&_span.font-bold]:text-2xl [&_span.font-bold]:leading-tight"
             />
           </div>
@@ -207,8 +240,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
                 </p>
                 {tour.requestDateFrom && tour.requestDateTo ? (
                   <p className="mt-1.5 text-xs leading-relaxed text-slate">
-                    Любые даты с {formatDateShort(tour.requestDateFrom)} по{" "}
-                    {formatDateShort(tour.requestDateTo)}
+                    Любые даты с {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
                   </p>
                 ) : (
                   <p className="mt-1.5 text-xs leading-relaxed text-slate">
@@ -221,13 +253,33 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             nextDate && (
               <div className="mt-4">
                 <p className="text-[11px] text-slate">Дата набора групп</p>
-                <p className="mt-0.5 text-sm font-medium text-charcoal">
-                  {formatDateShort(nextDate.start)} – {formatDateShort(nextDate.end)}
-                </p>
-                {moreDates > 0 && (
-                  <span className="mt-1.5 inline-block rounded-md bg-sky/10 px-2 py-0.5 text-xs font-medium text-sky">
-                    {formatMoreDates(moreDates)}
-                  </span>
+                {isLowAvailability(nextDate.spotsLeft) ? (
+                  <TourCardDepartureSchedule
+                    className="mt-1.5"
+                    schedule={{
+                      type: "dates",
+                      start: nextDate.start,
+                      end: nextDate.end,
+                      moreDates,
+                      spotsLeft: nextDate.spotsLeft,
+                    }}
+                    onMoreDatesClick={moreDates > 0 ? () => setDatesModalOpen(true) : undefined}
+                  />
+                ) : (
+                  <>
+                    <p className="mt-0.5 text-sm font-medium text-charcoal">
+                      {formatDateRange(nextDate.start, nextDate.end)}
+                    </p>
+                    {moreDates > 0 ? (
+                      <button
+                        type="button"
+                        className="mt-1.5 inline-flex items-center rounded-full border border-sky/20 bg-sky/5 px-2 py-0.5 text-xs font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
+                        onClick={() => setDatesModalOpen(true)}
+                      >
+                        {formatMoreDates(moreDates)}
+                      </button>
+                    ) : null}
+                  </>
                 )}
               </div>
             )
@@ -240,19 +292,27 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             >
               Смотреть тур
             </Link>
-            <button
-              type="button"
-              onClick={() => setFav(!fav)}
-              aria-label="В избранное"
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white transition-colors hover:bg-gray-50"
-            >
-              <Heart
-                className={cn("h-5 w-5", fav ? "fill-wine text-wine" : "text-charcoal")}
-              />
-            </button>
+            <FavoriteButton
+              tourId={tour.id}
+              tourSlug={tour.slug}
+              tourTitle={tour.title}
+              tourImage={tour.image}
+              region={tour.region}
+              priceUsd={tour.priceUsd}
+              className={favoriteActionButtonClass}
+              iconClassName="h-5 w-5"
+            />
           </div>
         </div>
       </div>
+
+      {moreDates > 0 ? (
+        <TourDepartureDatesModal
+          tour={tour}
+          open={datesModalOpen}
+          onOpenChange={setDatesModalOpen}
+        />
+      ) : null}
     </article>
   );
 }

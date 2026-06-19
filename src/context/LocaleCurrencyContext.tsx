@@ -18,7 +18,9 @@ import {
 } from "@/types/locale";
 import { getLanguage, getCurrency } from "@/data/locale-config";
 import { loadMessages, t as translate } from "@/lib/i18n";
-import { formatPriceUsd } from "@/lib/currency";
+import { formatCurrencyAmount } from "@/lib/currency";
+import { resolveRateFromUsd } from "@/lib/exchange-rates";
+import type { ExchangeRatesPayload } from "@/lib/exchange-rates";
 
 interface LocaleCurrencyContextValue {
   locale: LocaleCode;
@@ -39,6 +41,7 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
   const [currency, setCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY);
   const [messages, setMessages] = useState<Record<string, string>>({});
   const [ready, setReady] = useState(false);
+  const [liveRates, setLiveRates] = useState<Partial<Record<CurrencyCode, number>>>({});
 
   useEffect(() => {
     const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as LocaleCode | null;
@@ -46,6 +49,15 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
     if (savedLocale) setLocaleState(savedLocale);
     if (savedCurrency) setCurrencyState(savedCurrency);
     setReady(true);
+  }, []);
+
+  useEffect(() => {
+    fetch("/api/exchange-rates")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((payload: ExchangeRatesPayload | null) => {
+        if (payload?.rates) setLiveRates(payload.rates);
+      })
+      .catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -71,11 +83,14 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
       setCurrency,
       language: getLanguage(locale),
       currencyInfo: getCurrency(currency),
-      formatPrice: (priceUsd: number) => formatPriceUsd(priceUsd, currency, locale),
+      formatPrice: (priceUsd: number) => {
+        const rate = resolveRateFromUsd(currency, liveRates);
+        return formatCurrencyAmount(Math.round(priceUsd * rate), currency, locale);
+      },
       t: (key: string) => translate(messages, key, key),
       ready,
     }),
-    [locale, currency, setLocale, setCurrency, messages, ready]
+    [locale, currency, setLocale, setCurrency, messages, ready, liveRates]
   );
 
   return (

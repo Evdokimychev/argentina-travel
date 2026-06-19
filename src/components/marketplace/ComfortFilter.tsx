@@ -1,19 +1,11 @@
 "use client";
 
 import { ComfortLevel } from "@/types";
-import { COMFORT_LEVELS, COMFORT_DOT_COUNT } from "@/data/tour-levels";
+import { COMFORT_LEVELS, COMFORT_DOT_COUNT, COMFORT_ICONS } from "@/data/tour-levels";
 import { ComfortDotRating } from "./sidebar-filter-ui";
 import { cn } from "@/lib/cn";
-import { Check, Bed, Hotel, Sparkles, Crown, Tent, type LucideIcon } from "lucide-react";
+import { Check } from "lucide-react";
 import { FilterFooter } from "./FilterPopover";
-
-const COMFORT_ICONS: Record<ComfortLevel, LucideIcon> = {
-  Базовый: Tent,
-  Стандарт: Bed,
-  Комфорт: Hotel,
-  Премиум: Sparkles,
-  Люкс: Crown,
-};
 
 interface ComfortFilterProps {
   selected: ComfortLevel[];

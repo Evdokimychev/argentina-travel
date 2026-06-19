@@ -54,6 +54,31 @@ export function ComfortDotRating({
   );
 }
 
+/** Emerald bar scale for comfort levels on tour pages and editor */
+export function ComfortBarRating({
+  filled,
+  total = 5,
+  className,
+}: {
+  filled: number;
+  total?: number;
+  className?: string;
+}) {
+  return (
+    <div className={cn("flex w-full gap-1", className)} aria-hidden>
+      {Array.from({ length: total }, (_, i) => (
+        <span
+          key={i}
+          className={cn(
+            "h-1.5 flex-1 rounded-full",
+            i < filled ? "bg-emerald-500" : "bg-gray-200"
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
 /** Brand/red dot scale for difficulty filters and tour cards */
 export function DifficultyDotRating({
   filled,

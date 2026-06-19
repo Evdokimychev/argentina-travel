@@ -3,10 +3,12 @@
 import { useEffect, useState } from "react";
 import { ChevronDown, Info } from "lucide-react";
 import { TourDetail } from "@/types";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { spotsWord } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
+import { formatCompactUsd } from "@/lib/tour-date-pricing";
 import SingleDatePicker from "@/components/ui/single-date-picker";
+import TourDepartureCalendar from "@/components/tour-detail/TourDepartureCalendar";
 import {
   dateFitsGuestCount,
   dateOptionSuffix,
@@ -16,6 +18,8 @@ import {
   type BookingDateMode,
 } from "@/lib/tour-booking-spots";
 import { useTourBooking } from "./TourBookingContext";
+import { tourDetailInsetClass } from "@/lib/tour-detail-ui";
+import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
 interface BookingDateSelectorProps {
   tour: TourDetail;
@@ -24,6 +28,8 @@ interface BookingDateSelectorProps {
   className?: string;
   /** Свернуть выбор: показывать только текущие даты и кнопку «Изменить» */
   collapsible?: boolean;
+  /** Календарь отправлений — только в основном блоке «Даты», не в боковой панели */
+  showDepartureCalendar?: boolean;
 }
 
 function formatSelectionSummary(
@@ -35,18 +41,24 @@ function formatSelectionSummary(
 ): string {
   if (dateMode === "custom" && canPickCustom(tour.bookingMode ?? "scheduled")) {
     const datePart = customDate
-      ? new Intl.DateTimeFormat("ru-RU", { day: "numeric", month: "short" }).format(customDate)
+      ? new Intl.DateTimeFormat("ru-RU", {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        }).format(customDate)
       : null;
     return datePart ? `Индивидуально · ${datePart}` : "Индивидуально";
   }
 
   const selected = tour.dates.find((d) => d.id === selectedDateId);
   const datesPart = selected
-    ? `${formatDateShort(selected.startDate)} – ${formatDateShort(selected.endDate)}`
+    ? formatDateRange(selected.startDate, selected.endDate)
     : null;
 
   if (showModeToggle || (tour.bookingMode ?? "scheduled") === "scheduled") {
-    return datesPart ? `Групповой тур · ${datesPart}` : "Групповой тур";
+    return datesPart
+      ? `Групповой тур · ${datesPart}`
+      : "Групповой тур · выберите дату";
   }
 
   return datesPart ?? "Даты не выбраны";
@@ -65,8 +77,11 @@ export default function BookingDateSelector({
   idPrefix = "booking",
   className,
   collapsible = false,
+  showDepartureCalendar = true,
 }: BookingDateSelectorProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
+  const isPartnerTour = isPartnerTourDetail(tour);
+  const hasScheduledDates = tour.dates.length > 0;
   const {
     selectedDateId,
     setSelectedDateId,
@@ -77,10 +92,17 @@ export default function BookingDateSelector({
     guests,
   } = useTourBooking();
 
-  const [expanded, setExpanded] = useState(!collapsible);
+  const [expanded, setExpanded] = useState(() => !collapsible || !selectedDateId);
+  const showCollapsed = collapsible && !expanded && Boolean(selectedDateId);
   const showModeToggle = bookingMode === "both";
-  const showScheduledPicker = dateMode === "scheduled" && canPickScheduled(bookingMode);
-  const showCustomPicker = dateMode === "custom" && canPickCustom(bookingMode);
+  const showScheduledPicker =
+    dateMode === "scheduled" &&
+    hasScheduledDates &&
+    (canPickScheduled(bookingMode) || isPartnerTour);
+  const showCustomPicker =
+    dateMode === "custom" &&
+    canPickCustom(bookingMode) &&
+    !(isPartnerTour && hasScheduledDates);
   const selectId = `${idPrefix}-date-select`;
   const customDateId = `${idPrefix}-custom-date`;
   const selectionSummary = formatSelectionSummary(
@@ -110,9 +132,15 @@ export default function BookingDateSelector({
     }
   }, [collapsible, scheduledError]);
 
+  useEffect(() => {
+    if (collapsible && !selectedDateId) {
+      setExpanded(true);
+    }
+  }, [collapsible, selectedDateId]);
+
   return (
     <div className={cn("space-y-4", className)}>
-      {collapsible && !expanded ? (
+      {showCollapsed ? (
         <div className="space-y-2">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <p className="text-sm text-charcoal">{selectionSummary}</p>
@@ -163,32 +191,57 @@ export default function BookingDateSelector({
           )}
 
           {showScheduledPicker && tour.dates.length > 0 && (
-            <div>
-              <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
-                Даты путешествия
-              </label>
-              <div className="relative mt-1.5">
-                <select
-                  id={selectId}
-                  value={selectedDateId}
-                  onChange={(e) => setSelectedDateId(e.target.value)}
-                  className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
-                >
-                  {tour.dates.map((d) => {
-                    const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
-                    return (
-                      <option key={d.id} value={d.id} disabled={!bookable}>
-                        {formatDateShort(d.startDate)} – {formatDateShort(d.endDate)} ({d.spotsLeft}{" "}
-                        {spotsWord(d.spotsLeft)})
-                        {dateOptionSuffix(d, guests, tour.groupMin)}
-                      </option>
-                    );
-                  })}
-                </select>
-                <ChevronDown
-                  className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
-                  aria-hidden
+            <div className="space-y-4">
+              {showDepartureCalendar ? (
+                <TourDepartureCalendar
+                  dates={tour.dates}
+                  selectedDateId={selectedDateId}
+                  guests={guests}
+                  groupMin={tour.groupMin}
+                  onSelect={(date) => setSelectedDateId(date.id)}
                 />
+              ) : null}
+
+              <div>
+                <label htmlFor={selectId} className="text-sm font-medium text-charcoal">
+                  {isPartnerTour
+                    ? "Дата заезда"
+                    : showDepartureCalendar
+                      ? "Или выберите из списка"
+                      : "Дата отправления"}
+                </label>
+                <div className="relative mt-1.5">
+                  <select
+                    id={selectId}
+                    value={selectedDateId}
+                    onChange={(e) => setSelectedDateId(e.target.value)}
+                    className="w-full appearance-none rounded-xl border border-gray-200 bg-white px-4 py-3 pr-10 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+                  >
+                    {!selectedDateId ? (
+                      <option value="" disabled>
+                        Выберите дату заезда
+                      </option>
+                    ) : null}
+                    {tour.dates.map((d) => {
+                      const bookable = dateFitsGuestCount(d, guests, tour.groupMin);
+                      const priceLabel = tour.priceOnRequest
+                        ? ""
+                        : ` · ${formatCompactUsd(d.priceUsd)}`;
+                      return (
+                        <option key={d.id} value={d.id} disabled={!bookable}>
+                          {formatDateRange(d.startDate, d.endDate)} ({d.spotsLeft}{" "}
+                          {spotsWord(d.spotsLeft)})
+                          {priceLabel}
+                          {dateOptionSuffix(d, guests, tour.groupMin)}
+                        </option>
+                      );
+                    })}
+                  </select>
+                  <ChevronDown
+                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
+                    aria-hidden
+                  />
+                </div>
               </div>
               {scheduledError && (
                 <div className="mt-2 space-y-2 rounded-xl bg-amber-50 px-3 py-2.5 text-xs text-amber-950">
@@ -203,7 +256,7 @@ export default function BookingDateSelector({
                           onClick={() => setSelectedDateId(d.id)}
                           className="rounded-lg border border-amber-200 bg-white px-2.5 py-1 text-xs font-medium text-charcoal transition-colors hover:border-brand hover:text-brand"
                         >
-                          {formatDateShort(d.startDate)} – {formatDateShort(d.endDate)}
+                          {formatDateRange(d.startDate, d.endDate)}
                         </button>
                       ))}
                     </div>
@@ -215,19 +268,27 @@ export default function BookingDateSelector({
 
           {showCustomPicker && (
             <div className="space-y-3">
-              <div className="flex gap-3 rounded-xl bg-sky/10 p-3">
-                <Info className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
-                <div className="text-sm leading-relaxed text-charcoal">
-                  <p className="font-medium">Индивидуальный заезд</p>
-                  {tour.requestDateFrom && tour.requestDateTo && (
-                    <p className="mt-1 text-slate">
-                      Доступны любые даты в период {formatDateShort(tour.requestDateFrom)} по{" "}
-                      {formatDateShort(tour.requestDateTo)}
+              <div className={cn(tourDetailInsetClass, "p-3.5")}>
+                <div className="flex items-start gap-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky/10 text-sky">
+                    <Info className="h-4 w-4" aria-hidden />
+                  </span>
+                  <div className="min-w-0 space-y-1.5">
+                    <p className="text-sm font-semibold leading-snug text-charcoal">
+                      Индивидуальный заезд
                     </p>
-                  )}
-                  <p className="mt-1 text-slate">
-                    Только ваша группа, даты по согласованию с организатором
-                  </p>
+                    <div className="space-y-1 text-xs leading-relaxed text-slate">
+                      {tour.requestDateFrom && tour.requestDateTo && (
+                        <div className="space-y-0.5">
+                          <p>Любые даты в период</p>
+                          <p className="font-medium text-charcoal/90">
+                            {formatDateRange(tour.requestDateFrom, tour.requestDateTo)}
+                          </p>
+                        </div>
+                      )}
+                      <p>Только ваша группа · даты согласуются с организатором</p>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -248,7 +309,7 @@ export default function BookingDateSelector({
             </div>
           )}
 
-          {collapsible && (
+          {collapsible && selectedDateId ? (
             <button
               type="button"
               onClick={() => setExpanded(false)}
@@ -256,7 +317,7 @@ export default function BookingDateSelector({
             >
               ← Свернуть
             </button>
-          )}
+          ) : null}
         </>
       )}
     </div>

@@ -1,10 +1,12 @@
 import type { OrganizerTourListing } from "@/types/organizer-tour";
+import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
 
 /** Демо-список туров организатора — заменить на API */
 export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   {
     id: "org-iguazu",
-    slug: "iguazu-waterfalls-day",
+    ownerUserId: DEFAULT_ORGANIZER_OWNER_ID,
+    slug: "iguazu-falls",
     title: "Водопады Игуасу за 1 день: аргентинская и бразильская стороны",
     image: "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
     coverLabel: "IGUAZU",
@@ -18,7 +20,8 @@ export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   },
   {
     id: "org-salta",
-    slug: "salta-jujuy-colors",
+    ownerUserId: DEFAULT_ORGANIZER_OWNER_ID,
+    slug: "salta-northwest",
     title: "Сальта и ХуХуй: горные деревни, виноградники и долина Калчакí",
     image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
     coverLabel: "SALTA",
@@ -31,6 +34,7 @@ export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   },
   {
     id: "org-mendoza",
+    ownerUserId: DEFAULT_ORGANIZER_OWNER_ID,
     slug: "mendoza-wine",
     title: "Мендоса: винные маршруты, Аконкагуа и гастрономические ужины",
     image: "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=800&q=80",
@@ -45,6 +49,7 @@ export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   },
   {
     id: "org-buenosaires",
+    ownerUserId: DEFAULT_ORGANIZER_OWNER_ID,
     slug: "buenos-aires-tango",
     title: "Буэнос-Айрес: San Telmo, La Boca, танго-шоу и авторская гастрономия",
     image: "https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=800&q=80",
@@ -58,11 +63,12 @@ export const ORGANIZER_TOUR_LISTINGS: OrganizerTourListing[] = [
   },
   {
     id: "org-patagonia-archive",
+    ownerUserId: DEFAULT_ORGANIZER_OWNER_ID,
     slug: "patagonia-glaciers",
     title: "Ледники Патагонии: Перито-Морено и национальный парк Лос-Гласьярес",
     image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
     coverLabel: "PATAGONIA",
-    durationDays: 5,
+    durationDays: 10,
     type: "tour",
     status: "published",
     archived: true,

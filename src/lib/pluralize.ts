@@ -41,13 +41,30 @@ export function formatTourists(count: number): string {
   return formatWithWord(count, "турист", "туриста", "туристов");
 }
 
-/** Для подписи «8 туристов за 10 дней» — 1 туриста, 2 туриста, 5 туристов */
+/** После «для» / «за»: для 1 туриста, для 2 туристов */
+export function touristsGenitiveWord(count: number): string {
+  const mod10 = Math.abs(count) % 10;
+  const mod100 = Math.abs(count) % 100;
+  if (mod10 === 1 && mod100 !== 11) return "туриста";
+  return "туристов";
+}
+
+export function formatForTourists(count: number): string {
+  return `${count} ${touristsGenitiveWord(count)}`;
+}
+
+/** Подпись в блоке бронирования: «2 туриста · 10 дней» */
+export function formatTourBookingGuestsDays(guests: number, days: number): string {
+  return `${formatTourists(guests)} · ${formatDays(days)}`;
+}
+
+/** @deprecated Используйте formatTourists или formatForTourists в зависимости от контекста */
 export function touristsBookingWord(count: number): string {
-  return pluralRu(count, "туриста", "туриста", "туристов");
+  return pluralRu(count, "турист", "туриста", "туристов");
 }
 
 export function formatTouristsBooking(count: number): string {
-  return formatWithWord(count, "туриста", "туриста", "туристов");
+  return formatTourists(count);
 }
 
 export function formatTouristsRange(min: number, max: number): string {

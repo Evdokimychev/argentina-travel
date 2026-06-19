@@ -2,13 +2,24 @@ import type {
   OrganizerCancellationSettings,
   OrganizerContactsSettings,
   OrganizerProfile,
+  OrganizerTeamGuide,
 } from "@/types/organizer-profile";
 import {
   createDefaultOrganizerCancellation,
   createDefaultOrganizerContacts,
+  ORGANIZER_EXTENDED_DESCRIPTION_MAX,
+  ORGANIZER_SHORT_DESCRIPTION_MAX,
 } from "@/types/organizer-profile";
+import {
+  DEFAULT_GUIDE_AVATAR,
+  ORGANIZER_TOUR_GUIDE_BIO_MAX,
+  ORGANIZER_TEAM_GUIDES_MAX,
+  TOUR_GUIDE_CATALOG,
+} from "@/data/tour-guides-defaults";
 
 const PROFILES_KEY = "argentina-travel-organizer-profiles";
+
+export const ORGANIZER_PROFILE_UPDATED_EVENT = "organizer-profile-updated";
 
 const IVAN_CONTACTS = createDefaultOrganizerContacts({
   website: "https://barilochetrip.tilda.ws/",
@@ -17,15 +28,21 @@ const IVAN_CONTACTS = createDefaultOrganizerContacts({
   reviewUrls: ["https://www.instagram.com/p/C8xJqJ2R9kL/"],
 });
 
-const DEFAULT_PROFILES: Record<string, OrganizerProfile> = {
-  "ivan-evdokimychev": {
-    middleName: "",
-    bio: `Привет! Меня зовут Иван, и я живу в Буэнос-Айресе уже больше пяти лет. За это время я успел полюбить эту страну — её культуру, природу и, конечно, людей.
+const IVAN_BIO = `Привет! Меня зовут Иван, и я живу в Буэнос-Айресе уже больше пяти лет. За это время я успел полюбить эту страну — её культуру, природу и, конечно, людей.
 
 Я организую авторские туры по Аргентине: от прогулок по историческому центру Буэнос-Айреса до поездок в Мендосу и Патагонию. Мне важно, чтобы каждый путешественник почувствовал себя не туристом, а гостем.
 
-На моих турах вы узнаете, где пьют лучший мате, как заказывать стейк как местный и почему аргентинцы так любят футбол. Добро пожаловать в мою Аргентину!`,
+На моих турах вы узнаете, где пьют лучший мате, как заказывать стейк как местный и почему аргентинцы так любят футбол. Добро пожаловать в мою Аргентину!`;
+
+const DEFAULT_PROFILES: Record<string, OrganizerProfile> = {
+  "ivan-evdokimychev": {
+    middleName: "",
+    shortDescription:
+      "Живу в Буэнос-Айресе и организую авторские туры по Аргентине для русскоязычных путешественников.",
+    extendedDescription: IVAN_BIO,
+    bio: IVAN_BIO,
     statusText: "Жду вас на моём туре по Аргентине 🇦🇷",
+    guides: TOUR_GUIDE_CATALOG.map((guide) => ({ ...guide })),
     contacts: IVAN_CONTACTS,
     cancellation: createDefaultOrganizerCancellation(),
   },
@@ -59,13 +76,58 @@ function mergeContacts(
   };
 }
 
+function normalizeTeamGuide(guide: Partial<OrganizerTeamGuide>): OrganizerTeamGuide | null {
+  const name = guide.name?.trim();
+  if (!name) return null;
+
+  return {
+    id: guide.id?.trim() || `guide-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+    name,
+    avatar: guide.avatar?.trim() || DEFAULT_GUIDE_AVATAR,
+    bio: (guide.bio ?? "").trim().slice(0, ORGANIZER_TOUR_GUIDE_BIO_MAX),
+    userId: guide.userId ?? null,
+  };
+}
+
+function normalizeTeamGuides(guides?: Partial<OrganizerTeamGuide>[]): OrganizerTeamGuide[] {
+  if (!guides?.length) return [];
+  return guides
+    .map((guide) => normalizeTeamGuide(guide))
+    .filter((guide): guide is OrganizerTeamGuide => Boolean(guide))
+    .slice(0, ORGANIZER_TEAM_GUIDES_MAX);
+}
+
 function normalizeProfile(profile: Partial<OrganizerProfile>): OrganizerProfile {
+  const professionalExperience = normalizeProfessionalExperience(profile.professionalExperience);
+  const extendedDescription = (profile.extendedDescription ?? profile.bio ?? "")
+    .trim()
+    .slice(0, ORGANIZER_EXTENDED_DESCRIPTION_MAX);
+  const shortDescription = (profile.shortDescription ?? "")
+    .trim()
+    .slice(0, ORGANIZER_SHORT_DESCRIPTION_MAX);
+
   return {
     middleName: profile.middleName ?? "",
-    bio: profile.bio ?? "",
+    shortDescription,
+    extendedDescription,
+    bio: extendedDescription,
     statusText: profile.statusText ?? "",
+    professionalExperience,
+    guides: normalizeTeamGuides(profile.guides),
     contacts: mergeContacts(profile.contacts),
     cancellation: mergeCancellation(profile.cancellation),
+  };
+}
+
+function normalizeProfessionalExperience(
+  raw?: OrganizerProfile["professionalExperience"]
+): OrganizerProfile["professionalExperience"] {
+  if (raw === null || raw === undefined) return null;
+  const value = Math.round(raw.value);
+  if (!Number.isFinite(value) || value <= 0) return null;
+  return {
+    value,
+    unit: raw.unit === "months" ? "months" : "years",
   };
 }
 
@@ -103,6 +165,11 @@ function readAll(): Record<string, OrganizerProfile> {
 
 function writeAll(profiles: Record<string, OrganizerProfile>) {
   window.localStorage.setItem(PROFILES_KEY, JSON.stringify(profiles));
+  window.dispatchEvent(new CustomEvent(ORGANIZER_PROFILE_UPDATED_EVENT));
+}
+
+export function readOrganizerGuideTeam(userId: string): OrganizerTeamGuide[] {
+  return readOrganizerProfile(userId).guides;
 }
 
 export function readOrganizerProfile(userId: string): OrganizerProfile {
@@ -112,7 +179,10 @@ export function readOrganizerProfile(userId: string): OrganizerProfile {
     normalizeProfile({
       middleName: "",
       bio: "",
+      shortDescription: "",
+      extendedDescription: "",
       statusText: "",
+      guides: [],
     })
   );
 }
@@ -130,6 +200,7 @@ export function updateOrganizerProfile(
   const next = normalizeProfile({
     ...current,
     ...patch,
+    guides: patch.guides ? normalizeTeamGuides(patch.guides) : current.guides,
     contacts: patch.contacts ? { ...current.contacts, ...patch.contacts } : current.contacts,
     cancellation: patch.cancellation
       ? { ...current.cancellation, ...patch.cancellation }
