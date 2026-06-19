@@ -15,6 +15,7 @@ export default function robots(): MetadataRoute.Robots {
         "/trip/",
         "/auth/",
         "/embed/",
+        "/dev/",
       ],
     },
     sitemap: absoluteUrl("/sitemap.xml"),

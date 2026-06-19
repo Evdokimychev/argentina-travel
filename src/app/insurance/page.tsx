@@ -4,7 +4,7 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getInsuranceWhitelabelScriptUrl } from "@/lib/travelpayouts/whitelabel/insurance-config";
 
-const PAGE_TITLE = "Туристическая страховка в Аргентину — Пора в Аргентину";
+const PAGE_TITLE = "Туристическая страховка в Аргентину";
 const PAGE_DESCRIPTION =
   "Медицинская страховка для поездки в Аргентину: подбор полиса онлайн через партнёра Travelpayouts. Покрытие медицины, эвакуации и активного отдыха.";
 

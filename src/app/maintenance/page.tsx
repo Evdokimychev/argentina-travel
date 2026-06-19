@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Техническое обслуживание — Пора в Аргентину",
+  title: "Техническое обслуживание",
   robots: { index: false, follow: false },
 };
 

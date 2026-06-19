@@ -41,7 +41,7 @@ const DESTINATION_CONTENT: Record<
   bariloche: {
     regionGroup: "Патагония",
     intro:
-      "San Carlos de Bariloche стоит на берегу озера Nahuel Huapi у подножия Анд — главная база озёрной Патагонии. Летом — треккинг, kayaking и Circuito Chico; зимой — Cerro Catedral, один из крупнейших горнолыжных курортов Южного полушария. Город известен шоколадными fabrikas, дымкой из cypress и видами на Cerro Tronador. Отсюда удобно ехать в Villa La Angostura и на Seven Lakes Route.",
+      "San Carlos de Bariloche стоит на берегу озера Nahuel Huapi у подножия Анд — главная база озёрной Патагонии. Летом — треккинг, каякинг и маршрут Circuito Chico; зимой — Cerro Catedral, один из крупнейших горнолыжных курортов Южного полушария. Город известен знаменитыми шоколадными мастерскими, ароматом кипарисовых лесов и видами на Cerro Tronador. Отсюда удобно ехать в Villa La Angostura и на Seven Lakes Route.",
     highlights: [
       "Cerro Catedral — лыжи и канатка",
       "Circuito Chico и Punto Panorámico",
@@ -64,7 +64,7 @@ const DESTINATION_CONTENT: Record<
   calafate: {
     regionGroup: "Патагония",
     intro:
-      "El Calafate — компактный город на берегу Lago Argentino и главные ворота к леднику Perito Moreno в Los Glaciares National Park. Сюда приезжают за катастрофическими разломами льда, ледниковыми трекингами (Mini-Trekking, Big Ice) и круизами к Upsala и Spegazzini. Город полностью туристический: рестораны с lamb patagónico, музеи ледников и прокат снаряжения.",
+      "El Calafate — компактный город на берегу Lago Argentino и главные ворота к леднику Perito Moreno в Los Glaciares National Park. Сюда приезжают за зрелищными обрушениями ледяных глыб (calving), ледниковыми трекингами (Mini-Trekking, Big Ice) и круизами к Upsala и Spegazzini. Город полностью туристический: рестораны с lamb patagónico, музеи ледников и прокат снаряжения.",
     highlights: [
       "Ледник Perito Moreno",
       "Walkways и смотровые площадки",
@@ -87,7 +87,7 @@ const DESTINATION_CONTENT: Record<
   ushuaia: {
     regionGroup: "Огненная Земля",
     intro:
-      "Ushuaia — самый южный город мира на берегу канала Beagle, окружённый Martial Range. Отсюда отправляются круизы в Антарктиду, экскурсии в Tierra del Fuego National Park и морские прогулки к островам с пinguinos и sea lions. End of the World Train, треккинг Laguna Esmeralda и рыбалка — классика региона. Город компактный, с видом на порт и снежные вершины.",
+      "Ushuaia — один из самых южных городов мира и главные ворота к Антарктиде на берегу канала Beagle, окружённая Martial Range. Отсюда отправляются круизы в Антарктиду, экскурсии в Tierra del Fuego National Park и морские прогулки к островам с пингвинами и sea lions. End of the World Train, треккинг Laguna Esmeralda и рыбалка — классика региона. Город компактный, с видом на порт и снежные вершины.",
     highlights: [
       "Tierra del Fuego National Park",
       "End of the World Train",
@@ -124,7 +124,7 @@ const DESTINATION_CONTENT: Record<
     howToGetThere:
       "Прямые рейсы BA → Puerto Iguazú (IGR), ~2 ч. Из аэропорта 20–25 мин до Puerto Iguazú. Также рейсы из Mendoza и Córdoba с пересадкой.",
     travelTips: [
-      "На 2 дня: день — аргентинская сторона, день — бrazilian side (нужна виза или e-visa для РФ — проверяйте актуальные правила).",
+      "На 2 дня: день — аргентинская сторона, день — бразильская side. Для посещения бразильской стороны нужен загранпаспорт; виза гражданам РФ не нужна (безвиз до 90 дней). Уточняйте актуальные правила перед поездкой.",
       "Spray у Garganta — защита для камеры и лёгкая дождевка.",
       "Билеты в парк online; утро — меньше людей на Devil's Throat.",
       "Репеллент от комаров обязателен круглый год.",
@@ -150,18 +150,18 @@ const DESTINATION_CONTENT: Record<
       "Wine tours бронируйте заранее — в vendimia sold out за месяцы.",
       "Uco Valley — полный день, трансфер или аренда авто.",
       "С altitude в Uco пейте больше воды; SPF обязателен.",
-      "Сiesta 13:00–17:00 — планируйте дегустации на утро/вечер.",
+      "Сиеста 13:00–17:00 — планируйте дегустации на утро/вечер.",
     ],
   },
   salta: {
     regionGroup: "Северо-Запад",
     intro:
-      "Salta — «Sr. de los Andes»: колониальная архитектура, peñas с folk music и база для Quebrada de Humahuaca (UNESCO) — каньоны с полосатыми горами в Tilcara и Purmamarca. Cafayate — вина Torrontés среди красных скал Quebrada de las Conchas. Train to the Clouds (Tren a las Nubes) — одна из высочайших железных дорог мира (сезонный график).",
+      "Salta — «Salta la Linda»: колониальный центр и Cafayate (вина Torrontés); соседняя провинция Жужуй — Quebrada de Humahuaca, Purmamarca (UNESCO). Train to the Clouds (Tren a las Nubes) — одна из высочайших железных дорог мира (сезонный график).",
     highlights: [
-      "Quebrada de Humahuaca",
-      "Purmamarca и Hill of Seven Colors",
-      "Cafayate и винные bodegas",
       "Колониальный центр Salta",
+      "Cafayate и винные bodegas",
+      "Quebrada de Humahuaca (Жужуй, UNESCO)",
+      "Purmamarca и Cerro de los Siete Colores",
       "Tren a las Nubes",
       "Peñas и folk music",
     ],
@@ -170,7 +170,7 @@ const DESTINATION_CONTENT: Record<
     howToGetThere:
       "Перелёт BA → Salta (SLA), ~2 ч. Дальше — аренда авто или организованные туры в Quebrada и Cafayate (3–4 ч на машине).",
     travelTips: [
-      "Высота Salta ~1200 м, Humahuaca до 3000 м — выделите 1 день на акклиматизацию.",
+      "Высота Salta ~1200 м, Quebrada de Humahuaca (Жужуй) до 3000 м — выделите 1 день на акклиматизацию.",
       "Cafayate — ночёвка в bodega hotel или возврат в Salta.",
       "Tren a las Nubes — покупка билетов на официальном сайте, сезон апрель–ноябрь.",
       "На юге региона — сухой климат, вода и головной убор.",

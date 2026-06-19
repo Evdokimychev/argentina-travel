@@ -18,7 +18,7 @@ const ROUTE_DESTINATION_COORDS: ReadonlyArray<{
   { name: "Сальта", lat: -24.782, lng: -65.423 },
   { name: "Ушуайя", lat: -54.801, lng: -68.303 },
   { name: "Барилоче", lat: -41.133, lng: -71.308 },
-  { name: "Эль-Чалten", lat: -49.331, lng: -72.886 },
+  { name: "Эль-Чалтен", lat: -49.331, lng: -72.886 },
 ];
 
 const knownLocations = new Map<string, { lat: number; lng: number }>();

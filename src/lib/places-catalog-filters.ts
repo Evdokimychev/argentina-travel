@@ -102,6 +102,25 @@ export function parsePlaceFiltersFromSearchParams(
   });
 }
 
+export function parsePlaceFiltersFromSearchParamsRecord(
+  searchParams: Record<string, string | string[] | undefined>,
+): PlaceCatalogFilters {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (typeof value === "string") params.set(key, value);
+    else if (Array.isArray(value) && value[0]) params.set(key, value[0]);
+  }
+  return parsePlaceFiltersFromSearchParams(params);
+}
+
+export function parsePlacesViewMode(
+  searchParams: Record<string, string | string[] | undefined>,
+): "grid" | "map" {
+  const view = searchParams.view;
+  const raw = typeof view === "string" ? view : Array.isArray(view) ? view[0] : "";
+  return raw === "map" ? "map" : "grid";
+}
+
 export function placeFiltersToSearchParams(filters: PlaceCatalogFilters, page = 1): URLSearchParams {
   const params = new URLSearchParams();
   if (filters.query.trim()) params.set("query", filters.query.trim());

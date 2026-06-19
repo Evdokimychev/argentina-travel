@@ -6,6 +6,7 @@ import { SafeImage } from "@/components/ui/safe-image";
 import { TourReview } from "@/types";
 import { formatDateOptional } from "@/lib/utils";
 import { formatReviews } from "@/lib/pluralize";
+import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
 import { EmptyState } from "@/components/ui/empty-state";
 import { StarRating } from "@/components/ui/star-rating";
 import TourSection from "./TourSection";
@@ -55,20 +56,21 @@ function countReviewsByStar(reviews: TourReview[]): Map<number, number> {
 
 export default function ReviewsSection({
   reviews,
-  rating,
-  reviewCount,
   headingNote,
 }: {
   reviews: TourReview[];
-  rating: number;
-  reviewCount: number;
+  /** @deprecated Derived from reviews.length */
+  rating?: number;
+  /** @deprecated Derived from reviews.length */
+  reviewCount?: number;
   /** Пояснение под заголовком (например, отзывы с других туров гида). */
   headingNote?: string;
 }) {
+  const visibleReviews = useMemo(() => stripStaticSeedReviews(reviews), [reviews]);
   const [filter, setFilter] = useState<number | "all">("all");
   const [page, setPage] = useState(1);
 
-  const ratingCounts = useMemo(() => countReviewsByStar(reviews), [reviews]);
+  const ratingCounts = useMemo(() => countReviewsByStar(visibleReviews), [visibleReviews]);
 
   const filterOptions = useMemo(() => {
     const options: Array<(typeof FILTER_STARS)[number] | "all"> = ["all"];
@@ -86,28 +88,15 @@ export default function ReviewsSection({
   }, [filter, ratingCounts]);
 
   const filtered = useMemo(() => {
-    if (filter === "all") return reviews;
-    return reviews.filter((r) => r.rating === filter);
-  }, [reviews, filter]);
+    if (filter === "all") return visibleReviews;
+    return visibleReviews.filter((r) => r.rating === filter);
+  }, [visibleReviews, filter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
+  const { rating: displayRating, reviewCount: displayCount } = deriveTourReviewStats(visibleReviews);
 
-  if (reviews.length === 0) {
-    if (reviewCount > 0) {
-      return (
-        <TourSection id="reviews" title="Отзывы" subtitle={`${rating} · ${formatReviews(reviewCount)}`}>
-          <EmptyState
-            icon={MessageSquare}
-            title="Отзывы на Tripster"
-            description="Отзывы есть на странице тура у партнёра — обновите страницу или проверьте подключение к API Tripster."
-            bordered={false}
-            className="px-0"
-          />
-        </TourSection>
-      );
-    }
-
+  if (visibleReviews.length === 0) {
     return (
       <TourSection id="reviews" title="Отзывы">
         <EmptyState
@@ -128,8 +117,8 @@ export default function ReviewsSection({
       collapsibleOnMobile={false}
       subtitle={
         headingNote
-          ? `${rating} · ${formatReviews(reviewCount)} · ${headingNote}`
-          : `${rating} · ${formatReviews(reviewCount)}`
+          ? `${displayRating} · ${formatReviews(displayCount)} · ${headingNote}`
+          : `${displayRating} · ${formatReviews(displayCount)}`
       }
     >
       <div className="mb-5 flex flex-wrap gap-2">

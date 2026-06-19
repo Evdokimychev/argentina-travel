@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import TripClientPortalView from "@/components/trip/TripClientPortalView";
 
 export const metadata: Metadata = {
-  title: "Ваша поездка — Пора в Аргентину",
+  title: "Ваша поездка",
   robots: { index: false, follow: false },
 };
 

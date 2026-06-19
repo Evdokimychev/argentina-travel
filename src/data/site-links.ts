@@ -31,9 +31,13 @@ export const SITE_FOOTER_CONTACTS = [
   { href: "/booking/find", label: "Найти заявку", labelKey: "footer.contact.findBooking" },
 ] as const;
 
-export const SITE_SOCIAL_LINKS = [
-  { href: "https://t.me/", label: "Telegram", external: true },
-  { href: "https://instagram.com/", label: "Instagram", external: true },
-] as const;
+export type SiteSocialLink = {
+  href: string;
+  label: string;
+  external: true;
+};
+
+/** Empty until real channel URLs are configured (avoids placeholder t.me/ links). */
+export const SITE_SOCIAL_LINKS: readonly SiteSocialLink[] = [];
 
 /** Primary public navigation lives in `@/data/site-nav`. Footer mirrors main sections. */

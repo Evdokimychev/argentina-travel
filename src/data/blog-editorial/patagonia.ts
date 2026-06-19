@@ -112,7 +112,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("FAQ", p(
         "Коляска на тропах? Только на асфальте Calafate и в парке Tierra del Fuego на коротких участках; на тропах Chaltén — рюкзак-переноска.",
         "Нужен ли гид с детьми? На Perito Moreno и пингвинах — групповая экскурсия снимает логистику; в Chaltén можно самим на лёгких маршрутах.",
-        "Аltitude? Южная Patagonia низкая, проблем с высотой нет.",
+        "Высота? Южная Patagonia низкая, проблем с высотой нет.",
       )),
     ],
   ),
@@ -200,7 +200,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Когда ехать", p(
         "Декабрь: день длинный, ещё не пик новогодних цен до 20-х чисел.",
         "Январь–февраль: максимум людей на тропах; стартуйте на маршруты в 6–7 утра.",
-        "Кarnaval и местные праздники поднимают цены на рейсы — смотрите календарь Аргентины.",
+        "Карнавал и местные праздники поднимают цены на рейсы — смотрите календарь Аргентины.",
       )),
       section("Как добраться", p(
         "Рейсы заполнены: покупайте BA–FTE за 2–3 месяца. Flybondi и Aerolíneas конкурируют по цене.",
@@ -337,7 +337,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
     "Что проверить перед поездкой в Патагонию: документы, снаряжение, брони, деньги и приложения — полный список.",
     [
       section("Кратко", p(
-        "Чек-лист для Patagonia отличается от «обычной» поездки: здесь ветер, UV, отсутствие связи на тропах и оплата парков иногда только наличными песo. Пройдитесь по списку за 2 недели и за день до вылета.",
+        "Чек-лист для Patagonia отличается от «обычной» поездки: здесь ветер, UV, отсутствие связи на тропах и оплата парков иногда только наличными pesos. Пройдитесь по списку за 2 недели и за день до вылета.",
         "Разделите вещи на документы, одежду по слоям, электронику и медикаменты. Дубликат паспорта в облаке, бумажная копия страховки.",
         "Статья не заменяет visa-check, но закрывает практические дыры, из-за которых портят отпуск.",
       )),
@@ -358,7 +358,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       )),
       section("Бюджет", p(
         "Наличные USD (крупные купюры без повреждений) + карта запасная.",
-        "Песo снимите в Calafate/Ushuaia — в Chaltén ATM бывает пустой.",
+        "Pesos снимите в Calafate/Ushuaia — в Chaltén ATM бывает пустой.",
         "Заложите 10 % бюджета на непредвиденное: отмена лодки, дополнительная ночь из-за погоды.",
       )),
       section("FAQ", p(
@@ -378,7 +378,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
         "Исправлять план лучше до покупки билетов — после landing дороже.",
       )),
       section("Когда ехать", p(
-        "Ошибка: ехать в Chaltén в июле без проверки жилья. Решение: Calafate или летний/shoulder сезон.",
+        "Ошибка: ехать в Chaltén в июле без проверки жилья. Решение: Calafate или летний и межсезонный (shoulder) сезон.",
         "Ошибка: игнорировать Semana Santa и новогодние цены. Решение: бронировать за 2–3 месяца или сдвинуть даты.",
         "Ошибка: whale watching в феврале в Calafate. Киты — у Puerto Madryn, другой перелёт.",
       )),
@@ -394,7 +394,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       )),
       section("Бюджет", p(
         "Ошибка: менять деньги у случайного менялы — Solution: проверенные cuevas или WU.",
-        "Ошибка: не закладывать парковые и экскursion fees — +100 USD на человека.",
+        "Ошибка: не закладывать парковые сборы и плату за экскурсии — +100 USD на человека.",
         "Ошибка: экономить на обуви — купили кроссовки, не держат на камнях Chaltén.",
       )),
       section("FAQ", p(
@@ -807,7 +807,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Кратко", p(
         "В Patagonia летят через Buenos Aires: основные аэропорты El Calafate (FTE), Ushuaia (USH), Puerto Madryn (PMY), иногда Comodoro Rivadavia. Операторы — Aerolíneas Argentinas и Flybondi; JetSMART тоже встречается на некоторых направлениях.",
         "Багаж на Flybondi часто отдельно; сравнивайте total price. Рейс 3 ч, задержки погодой в FTE не редкость.",
-        "Статья про внутренние перелёты именно в южную Patagonia, не про межcontinental.",
+        "Статья про внутренние перелёты именно в южную Patagonia, не про международные.",
       )),
       section("Когда ехать", p(
         "Booking за 6–8 недель в январе–феврале даёт лучшие fares.",
@@ -879,7 +879,7 @@ export const PATAGONIA_EDITORIAL: Record<string, EditorialOverride> = {
       section("Кратко", p(
         "Машина в Patagonia даёт свободу для estancias, смотровых вне shuttle и рассвета у Perito Moreno. Ruta 40 между Calafate и Chaltén асфальт; ответвления на gravel — медленно и осторожно.",
         "Прокат в FTE airport: Hertz, Localiza, regional companies. Полная страховка + нулевая франшиза recommended на gravel.",
-        "Для Calafate–Chaltén–Ushuaia solo traveler автобус+plane часто дешевле и спокойнее.",
+        "Для Calafate–Chaltén–Ushuaia solo traveler автобусом и самолётом часто дешевле и спокойнее.",
       )),
       section("Когда ехать", p(
         "Summer daylight для long drives; не ездите ночью — guanaco на дороге.",

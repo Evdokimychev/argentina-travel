@@ -11,6 +11,7 @@ import {
 import { resolveTourFlightRouteIds } from "@/lib/flights/destination-airports";
 import { getFlightPriceTeasers } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
+import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 export const dynamic = "force-dynamic";
 
@@ -37,6 +38,8 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
   const { access } = await searchParams;
   const tour = await fetchTourDetail(slug, { accessToken: access });
   if (!tour) return { title: "Тур не найден" };
+  const pageUrl = absoluteUrl(`/tours/${slug}`);
+  const imageUrl = tour.image ? resolvePublicUrl(tour.image) : undefined;
   return {
     title: `${tour.title} — тур по Аргентине`,
     description: tour.shortDescription,
@@ -44,13 +47,22 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
     openGraph: {
       title: tour.title,
       description: tour.shortDescription,
-      images: tour.gallery.length ? [tour.image] : undefined,
+      url: pageUrl,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
       type: "website",
     },
+    twitter: imageUrl
+      ? {
+          card: "summary_large_image",
+          title: tour.title,
+          description: tour.shortDescription,
+          images: [imageUrl],
+        }
+      : undefined,
     alternates: tour.isPrivate
       ? undefined
       : {
-          canonical: `/tours/${slug}`,
+          canonical: pageUrl,
         },
   };
 }

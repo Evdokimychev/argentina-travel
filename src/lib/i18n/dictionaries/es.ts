@@ -24,13 +24,13 @@ export const esDictionary: Record<DictionaryKey, string> = {
   "nav.utility.join": "Para organizadores",
   "nav.utility.contacts": "Contáctanos",
 
-  "home.hero.eyebrow": "Tours a medida",
-  "home.hero.title": "Viajes por",
-  "home.hero.titleAccent": "Argentina",
+  "home.hero.eyebrow": "Viajes a medida por Argentina",
+  "home.hero.title": "Argentina — de los glaciares patagónicos",
+  "home.hero.titleAccent": "al tango de Buenos Aires",
   "home.hero.subtitle":
-    "Rutas de organizadores locales — del tango en Buenos Aires a los glaciares de la Patagonia",
+    "Rutas verificadas con guías de habla rusa, guía honesta del país y ayuda con la mudanza — todo en un solo lugar.",
   "home.hero.ctaRoute": "Encontrar ruta",
-  "home.hero.ctaHint": "¿No sabes por dónde empezar?",
+  "home.hero.ctaHint": "Responde 4 preguntas — te propondremos tours adecuados",
 
   "footer.description":
     "Marketplace de tours a medida en Argentina: Patagonia, Buenos Aires, vino y tango. Reserva directamente con organizadores verificados.",

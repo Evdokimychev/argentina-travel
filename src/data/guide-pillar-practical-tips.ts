@@ -70,7 +70,7 @@ const GUIDE_PRACTICAL_TIPS: Record<string, GuidePracticalTips> = {
     consider: [
       "Patagonia требует больше дней, чем кажется на карте",
       "NOA (Salta) — другой климат и высота, акклиматизация нужна",
-      "Mendoza удобно совмещать с вином и Андes, не только с BA",
+      "Mendoza удобно совмещать с вином и Анды, не только с BA",
     ],
     avoid: [
       "Не пытайтесь объехать всю страну за 10 дней",

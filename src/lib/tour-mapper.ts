@@ -7,6 +7,7 @@ import {
   normalizeAccommodationOrganizerComment,
 } from "@/data/tour-organizer-display-defaults";
 import { enrichTourOrganizerDetail } from "@/lib/organizer-experience-enrich";
+import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getOrganizerSlug, resolveTourOwnerUserId } from "@/lib/organizer-public";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
@@ -466,11 +467,11 @@ export function listingAndDetailToTour(listing: TourListing, detail: TourDetail)
         arrivalMeetingPoint: detail.arrival.meetingPoint,
       };
     })(),
-    social: {
-      rating: listing.rating,
-      reviewCount: listing.reviewCount,
-      reviews: detail.reviews,
-    },
+    social: (() => {
+      const reviews = stripStaticSeedReviews(detail.reviews);
+      const stats = deriveTourReviewStats(reviews);
+      return { ...stats, reviews };
+    })(),
   };
 }
 
@@ -685,6 +686,7 @@ export function tourToListing(tour: Tour): TourListing {
   const groupDiscountEnabled = normalizeGroupDiscountSettings(tour.pricing.groupDiscount).enabled;
 
   const coords = tour.geography.coordinates ?? { lat: -34.6, lng: -58.4 };
+  const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.social.reviews));
 
   return {
     id: tour.id,
@@ -724,8 +726,8 @@ export function tourToListing(tour: Tour): TourListing {
     availableDates: listingDates,
     latitude: coords.lat,
     longitude: coords.lng,
-    rating: tour.social.rating,
-    reviewCount: tour.social.reviewCount,
+    rating: reviewStats.rating,
+    reviewCount: reviewStats.reviewCount,
     organizer: {
       ...tour.team.organizerPreview,
       slug: organizerSlug,
@@ -787,6 +789,8 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     tour.durationNights
   );
 
+  const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.social.reviews));
+
   return {
     id: tour.id,
     slug: tour.slug,
@@ -799,8 +803,8 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
       ? tour.pricing.basePriceUsd
       : catalogPrice.priceUsd,
     originalPriceUsd: tour.pricing.originalPriceUsd,
-    rating: tour.social.rating,
-    reviewCount: tour.social.reviewCount,
+    rating: reviewStats.rating,
+    reviewCount: reviewStats.reviewCount,
     gallery: tour.media.gallery,
     image: tour.media.coverImage,
     shortDescription: tour.shortDescription,
@@ -846,7 +850,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
         ? getOrganizerTourOwnerId(tour.organizerTourId)
         : DEFAULT_ORGANIZER_OWNER_ID
     ),
-    reviews: tour.social.reviews,
+    reviews: stripStaticSeedReviews(tour.social.reviews),
     accommodations: publicAccommodations,
     accommodationUpgradesEnabled: resolveTourAccommodationUpgradesEnabled(
       tour.slug,

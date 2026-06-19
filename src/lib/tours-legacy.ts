@@ -130,28 +130,15 @@ function buildTourDetailFromBase(
       name: extra.organizer.name,
       role: extra.organizer.role,
       avatar: extra.organizer.avatar,
-      rating: 4.8,
-      tourCount: 12,
-      travelerCount: 320,
+      rating: 0,
+      tourCount: 0,
+      travelerCount: 0,
       languages: ["Русский", "Испанский"],
-      experienceYears: 8,
+      experienceYears: 0,
       phone: "+7 (495) 123-45-67",
       email: "info@argentina-travel.ru",
     },
-    reviews: [
-      {
-        id: "r-default-1",
-        author: "Путешественник",
-        avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
-        rating: 5,
-        date: "2025-03-01",
-        tripDate: "2025-02-01",
-        text: "Отличный тур, всё организовано на высшем уровне. Рекомендую!",
-        photos: [],
-        verifiedTrip: true,
-        source: "static",
-      },
-    ],
+    reviews: [],
     accommodations: (() => {
       const type = resolveListingAccommodationType(base.slug, nights);
       if (type === "Без проживания" || nights === 0) return [];

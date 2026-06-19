@@ -181,7 +181,7 @@ export const BEZOPASNOST_PILLAR: GuidePillarContent = {
         {
           title: "Туристическая полиция",
           body:
-            "Comisaría del Turismo — помощь на испан/англ в centro. Denuncia можно подать и в обычной commissaría; для страховки нужен протокол.",
+            "Comisaría del Turismo — помощь на испан/англ в centro. Denuncia можно подать и в обычной comisaría; для страховки нужен протокол.",
         },
       ],
       infoBoxes: [

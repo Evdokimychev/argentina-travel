@@ -1,5 +1,7 @@
 import type { SiteLegal } from "@/lib/site-settings-server";
 
+export const DEFAULT_SUPPORT_EMAIL = "hello@goargentina.ru";
+
 export function formatSiteLegalLine(legal: SiteLegal): string | null {
   const parts: string[] = [];
   if (legal.companyName?.trim()) parts.push(legal.companyName.trim());
@@ -17,6 +19,6 @@ export async function loadSiteLegalForFooter(): Promise<{
   const legal = await fetchSiteLegal();
   return {
     legalLine: formatSiteLegalLine(legal),
-    supportEmail: legal.supportEmail?.trim() || null,
+    supportEmail: legal.supportEmail?.trim() || DEFAULT_SUPPORT_EMAIL,
   };
 }

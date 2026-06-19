@@ -45,7 +45,7 @@ const TOPIC_META: Record<
     id: "citizenship",
     slug: "grazhdanstvo",
     title: "Гражданство",
-    shortDescription: "Натурализация через суд, 2 года резиденции, документы и сроки",
+    shortDescription: "Административно (DNM), DNU 366/2025 — 2 года без выезда",
     heroImage:
       "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=1920&q=80",
   },

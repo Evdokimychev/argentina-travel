@@ -1,15 +1,19 @@
 import type { BlogPost } from "@/types";
 import { formatBlogReadTime } from "@/lib/blog-utils";
+import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { getPublishedPlanPosts } from "@/lib/blog-from-plan";
 
 const rt = (minutes: number) => formatBlogReadTime(minutes);
+
+const editorialAuthor = BLOG_EDITORIAL.name;
+const editorialBio = BLOG_EDITORIAL.bio;
 
 const manualBlogPosts: BlogPost[] = [
   {
     id: "1",
     slug: "best-time-to-visit-argentina",
     title: "Когда лучше ехать в Аргентину: сезоны и климат",
-    seoTitle: "Когда лучше ехать в Аргентину: сезоны и климат | Пора в Аргентину",
+    seoTitle: "Когда лучше ехать в Аргентину: сезоны и климат",
     excerpt:
       "Разбираемся, в какое время года лучше посетить Патагонию, Буэнос-Айрес и северо-запад страны.",
     sections: [
@@ -21,7 +25,7 @@ const manualBlogPosts: BlogPost[] = [
       {
         title: "Когда ехать по регионам",
         body:
-          "Патагония (Эль-Калафате, Эль-Чалтén, Ушуая): лучшее окно — с ноября по март, когда дни длинные и погода стабильнее для ледников, треккинга и паромов. Буэнос-Айрес приятен круглый год, но осень (март–май) особенно красива: меньше жары, зелёные парки и комфортные вечера. Северо-запад (Сальта, Кафаяте, Purmamarca) удобнее посещать весной и осенью, избегая жары лета и холодов зимы на высоте. Игуасу: водопады полноводнее в сезон дождей (ноябрь–март), но тропы могут быть скользкими; в сухой сезон проще ходить, но поток воды меньше. Зимой (июнь–август) выгодны цены на жильё в столице, но многие маршруты на юге сокращены из-за погоды.",
+          "Патагония (Эль-Калафате, Эль-Чалтен, Ушуая): лучшее окно — с ноября по март, когда дни длинные и погода стабильнее для ледников, треккинга и паромов. Буэнос-Айрес приятен круглый год, но осень (март–май) особенно красива: меньше жары, зелёные парки и комфортные вечера. Северо-запад (Сальта, Кафаяте, Purmamarca) удобнее посещать весной и осенью, избегая жары лета и холодов зимы на высоте. Игуасу: водопады полноводнее в сезон дождей (ноябрь–март), но тропы могут быть скользкими; в сухой сезон проще ходить, но поток воды меньше. Зимой (июнь–август) выгодны цены на жильё в столице, но многие маршруты на юге сокращены из-за погоды.",
       },
       {
         title: "Практика планирования",
@@ -40,8 +44,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Мария Гонсалес",
-    authorBio: "Экскурсовод по Патагонии, 8 лет в туризме",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2025-05-15",
     image:
       "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1200&q=80",
@@ -52,6 +56,7 @@ const manualBlogPosts: BlogPost[] = [
     tags: ["сезон", "климат", "Patagonia", "Buenos Aires", "Salta"],
     featured: true,
     cardVariant: "featured",
+    editorialReviewed: true,
     relatedResources: [
       { label: "Погода и сезонность", href: "/guide/pogoda-i-sezonnost", type: "guide" },
       { label: "Туры в Patagonia", href: "/tours?query=Patagonia", type: "tour" },
@@ -61,7 +66,7 @@ const manualBlogPosts: BlogPost[] = [
     id: "2",
     slug: "argentinian-steak-guide",
     title: "Аргентинский стейк: asado и parrilla",
-    seoTitle: "Аргентинский стейк: asado и parrilla | Пора в Аргентину",
+    seoTitle: "Аргентинский стейк: asado и parrilla",
     excerpt:
       "Всё о культуре asado: от выбора мяса до лучших parrilla в Буэнос-Айресе.",
     sections: [
@@ -78,7 +83,7 @@ const manualBlogPosts: BlogPost[] = [
       {
         title: "Практика заказа",
         body:
-          "Традиционно готовят на parrilla разные отрубы: bife de chorizo (рибай), ojo de bife, vacío (фланк), а также chorizo и morcilla. Не забудьте chimichurri — соус из петрушки, чеснока и оливкового масла; его подают отдельно, чтобы каждый регулировал остроту. К вину выбирают malbec из Мендосы. Если не едите красное мясо, многие parrilla предлагают рыбу, овощи на гриле и ensaladas.",
+          "Традиционно готовят на parrilla разные отрубы: bife de chorizo (стриплойн, тонкий край), ojo de bife (рибай), vacío (фланк), а также chorizo и morcilla. Не забудьте chimichurri — соус из петрушки, чеснока и оливкового масла; его подают отдельно, чтобы каждый регулировал остроту. К вину выбирают malbec из Мендосы. Если не едите красное мясо, многие parrilla предлагают рыбу, овощи на гриле и ensaladas.",
       },
       {
         title: "Бюджет",
@@ -97,7 +102,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Карлос Ривера",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2025-04-28",
     image:
       "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1200&q=80",
@@ -106,6 +112,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 9340,
     tags: ["asado", "parrilla", "Buenos Aires", "стейк", "гастрономия"],
+    editorialReviewed: true,
     relatedResources: [
       { label: "Кухня Аргентины", href: "/guide/kukhnya", type: "guide" },
       { label: "Туры с гастрономией", href: "/tours?query=гастроном", type: "tour" },
@@ -115,7 +122,7 @@ const manualBlogPosts: BlogPost[] = [
     id: "3",
     slug: "tango-beginners-guide",
     title: "Танго для начинающих: milonga и первые шаги",
-    seoTitle: "Танго для начинающих: milonga и первые шаги | Пора в Аргентину",
+    seoTitle: "Танго для начинающих: milonga и первые шаги",
     excerpt:
       "Как посетить milonga в Буэнос-Айресе и не чувствовать себя чужим на танцполе.",
     sections: [
@@ -151,7 +158,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Ана López",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2025-04-10",
     image:
       "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&q=80",
@@ -160,6 +168,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 7120,
     tags: ["танго", "milonga", "San Telmo", "культура", "Buenos Aires"],
+    editorialReviewed: true,
     relatedResources: [
       { label: "Культура", href: "/guide/kultura", type: "guide" },
       { label: "Буэнос-Айрес", href: "/destinations/ba", type: "tour" },
@@ -169,7 +178,7 @@ const manualBlogPosts: BlogPost[] = [
     id: "4",
     slug: "patagonia-packing-list",
     title: "Что взять в Patagonia: список вещей",
-    seoTitle: "Что взять в Patagonia: список вещей | Пора в Аргентину",
+    seoTitle: "Что взять в Patagonia: список вещей",
     excerpt:
       "Слои одежды, обувь и аксессуары для комфортного треккинга в переменчивую погоду.",
     sections: [
@@ -191,7 +200,7 @@ const manualBlogPosts: BlogPost[] = [
       {
         title: "Бюджет на снаряжение",
         body:
-          "Если не планируете частый треккинг, не покупайте всё новое — арендуйте палки и gaiters в Эль-Чалтén. Наличные мелочью на туалеты и чаевые в парках. Не берите «городскую» обувь на тропы Laguna de los Tres — грязь и камни. Список согласован с программой туров в Los Glaciares; уточняйте у организатора, что включено в снаряжение.",
+          "Если не планируете частый треккинг, не покупайте всё новое — арендуйте палки и gaiters в Эль-Чалтен. Наличные мелочью на туалеты и чаевые в парках. Не берите «городскую» обувь на тропы Laguna de los Tres — грязь и камни. Список согласован с программой туров в Los Glaciares; уточняйте у организатора, что включено в снаряжение.",
       },
       {
         title: "Советы",
@@ -205,7 +214,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Pablo Martínez",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2025-03-22",
     image:
       "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1200&q=80",
@@ -214,6 +224,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 15890,
     tags: ["Patagonia", "треккинг", "сборы", "одежда", "Perito Moreno"],
+    editorialReviewed: true,
     tourEmbeds: [
       {
         id: "patagonia-tours-strip",
@@ -236,7 +247,7 @@ const manualBlogPosts: BlogPost[] = [
     id: "5",
     slug: "blue-dollar-argentina-2026",
     title: "Синий доллар и оплата в Аргентине: что знать туристу",
-    seoTitle: "Синий доллар и оплата в Аргентине: что знать туристу | Пора в Аргентину",
+    seoTitle: "Синий доллар и оплата в Аргентине: что знать туристу",
     excerpt:
       "Как безопасно обменять валюту, платить картой и не переплачивать в 2026 году.",
     sections: [
@@ -272,7 +283,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Редакция «Пора в Аргентину»",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2026-06-01",
     image:
       "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1200&q=80",
@@ -281,6 +293,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(10),
     views: 22100,
     tags: ["деньги", "dólar blue", "обмен", "карты", "ARS"],
+    editorialReviewed: true,
     cardVariant: "standard",
     relatedResources: [
       { label: "Экономика и деньги", href: "/guide/ekonomika-i-dengi", type: "guide" },
@@ -291,7 +304,7 @@ const manualBlogPosts: BlogPost[] = [
     id: "6",
     slug: "argentina-tourist-visa-2026",
     title: "Въезд туриста в Аргентину: виза, сроки и документы",
-    seoTitle: "Въезд туриста в Аргентину: виза, сроки и документы | Пора в Аргентину",
+    seoTitle: "Въезд туриста в Аргентину: виза, сроки и документы",
     excerpt:
       "Кто может въехать без визы, сколько дней дают на границе и что подготовить заранее.",
     sections: [
@@ -322,7 +335,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Редакция «Пора в Аргентину»",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2026-05-28",
     image:
       "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80",
@@ -331,6 +345,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 18750,
     tags: ["виза", "въезд", "паспорт", "миграция", "турист"],
+    editorialReviewed: true,
     relatedResources: [
       { label: "Визы для туристов", href: "/immigration/vizy-dlya-turistov", type: "immigration" },
       { label: "Иммиграция", href: "/immigration", type: "immigration" },
@@ -340,14 +355,14 @@ const manualBlogPosts: BlogPost[] = [
     id: "7",
     slug: "buenos-aires-neighborhoods",
     title: "Районы Buenos Aires: где остановиться и гулять",
-    seoTitle: "Районы Buenos Aires: где остановиться и гулять | Пора в Аргентину",
+    seoTitle: "Районы Buenos Aires: где остановиться и гулять",
     excerpt:
       "Palermo, Recoleta, San Telmo и другие — краткий обзор для выбора жилья и маршрутов.",
     sections: [
       {
         title: "Кратко",
         body:
-          "Буэнос-Айрес — город контрастов: от парков Palermo до кладбища Recoleta и тango-баров San Telmo. Выбор района определяет атмосферу, бюджет и безопасность прогулок. Для первого визита чаще выбирают Palermo или Recoleta.",
+          "Буэнос-Айрес — город контрастов: от парков Palermo до кладбища Recoleta и танго-баров San Telmo. Выбор района определяет атмосферу, бюджет и безопасность прогулок. Для первого визита чаще выбирают Palermo или Recoleta.",
       },
       {
         title: "Когда и где остановиться",
@@ -376,7 +391,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Мария Гонсалес",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2025-05-20",
     image:
       "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1200&q=80",
@@ -385,6 +401,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(10),
     views: 10340,
     tags: ["Buenos Aires", "районы", "жильё", "Palermo", "Recoleta"],
+    editorialReviewed: true,
     tourEmbeds: [
       {
         id: "ba-tours-compact",
@@ -407,7 +424,7 @@ const manualBlogPosts: BlogPost[] = [
     id: "8",
     slug: "mendoza-wine-route",
     title: "Винный маршрут Mendoza: bodega за одни выходные",
-    seoTitle: "Винный маршрут Mendoza: bodega за одни выходные | Пора в Аргентину",
+    seoTitle: "Винный маршрут Mendoza: bodega за одни выходные",
     excerpt:
       "Maipú, Luján de Cuyo и Uco Valley — как спланировать дегустации без машины и с машиной.",
     sections: [
@@ -443,7 +460,8 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     content: "",
-    author: "Карлос Ривера",
+    author: editorialAuthor,
+    authorBio: editorialBio,
     date: "2025-04-05",
     image:
       "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=1200&q=80",
@@ -452,6 +470,7 @@ const manualBlogPosts: BlogPost[] = [
     readTime: rt(9),
     views: 5680,
     tags: ["Mendoza", "вино", "bodega", "malbec", "Uco Valley"],
+    editorialReviewed: true,
     tourEmbeds: [
       {
         id: "mendoza-wine-featured",

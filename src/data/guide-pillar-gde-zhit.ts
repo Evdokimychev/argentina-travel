@@ -318,7 +318,7 @@ export const GDE_ZHIT_PILLAR: GuidePillarContent = {
           ["El Chaltén", "Деревня", "Хостел, lodge", "Рано в янв–фев", "Тропы Fitz Roy"],
           ["Ushuaia", "Центр, Beagle", "Отели, B&B", "Сезон + круизы", "Tierra del Fuego, катамараны"],
           ["Bariloche", "Centro / Llao Llao", "Отели, cabañas", "Лето и зима", "Озёра, Cerro Catedral"],
-          ["Mendoza", "Centro / Chacras", "Отели, estancia", "Урожай — март", "Bodegas, Андes"],
+          ["Mendoza", "Centro / Chacras", "Отели, estancia", "Урожай — март", "Bodegas, Анды"],
           ["Salta / NOA", "Salta ciudad", "Boutique, posada", "Гибче Patagonia", "Cafayate, Humahuaca"],
           ["Iguazú", "Puerto Iguazú", "Отели, lodge в парке", "2+ мес. в сезон", "Водопады AR/BR"],
           ["Побережье", "Mar del Plata, Pinamar", "Курорты", "Январь", "Пляж, BA weekend"],

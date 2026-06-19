@@ -142,7 +142,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     ],
     partnerServices: [],
     blogLinks: [
-      { title: "Гражданство", href: topicHref("grazhdanstvo") },
+      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), DNU 366/2025" },
       { title: "ВНЖ и ПМЖ", href: topicHref("vnzh-i-pmzh") },
     ],
   },
@@ -155,10 +155,10 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       { label: "Запросить контакты", href: "/contacts", variant: "tertiary" },
     ],
     quickFacts: [
-      { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 стран", detail: "Шенген, Великобритания, Япония и страны Латинской Америки" },
-      { emoji: "⏱", label: "Резиденция", headline: "2 года непрерывно", detail: "Легальный статус на момент подачи в суд" },
-      { emoji: "⚖️", label: "Подача", headline: "Федеральный суд PJN", detail: "CARTADECIUDADANIA@PJN.GOV.AR — с 2023 электронно" },
-      { emoji: "🗳", label: "Срок дела", headline: "6 мес — 3 года", detail: "От подачи до Carta de Ciudadanía; затем DNI и паспорт" },
+      { emoji: "📘", label: "Паспорт AR", headline: "Безвиз ~170 направлений", detail: "Шенген, Великобритания, Япония и страны Латинской Америки" },
+      { emoji: "⏱", label: "Резиденция", headline: "2 года без выезда", detail: "Любой выезд обнуляет срок (366/2025)" },
+      { emoji: "🏛", label: "Подача", headline: "DNM / Migraciones", detail: "Административно с окт. 2025; не PJN" },
+      { emoji: "🗳", label: "Срок дела", headline: "Не фиксирован", detail: "От месяцев до нескольких лет — уточняйте на migraciones.gob.ar" },
     ],
     sections: [
       {
@@ -171,7 +171,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       {
         question: "Через сколько можно подать на гражданство?",
         answer:
-          "При натурализации — 2 года непрерывной резиденции в Аргентине и легальный статус на дату подачи. Супруг(а) аргентинца по рождению и родители ребёнка-аргентинца могут подать без периода ожидания.",
+          "При натурализации — 2 года непрерывной легальной резиденции без выездов. Супруг(а) аргентинца по рождению и родители ребёнка-аргентинца могут подать без периода ожидания — уточняйте на migraciones.gob.ar.",
       },
       {
         question: "Нужен ли ПМЖ перед подачей на гражданство?",
@@ -181,22 +181,22 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       {
         question: "Как подать документы на гражданство?",
         answer:
-          "С 1 декабря 2023 года — полностью в электронном виде: письмо на CARTADECIUDADANIA@PJN.GOV.AR с двумя PDF (комплект документов и заполненное заявление). Затем — оригиналы в назначенный суд.",
+          "С октября 2025 новые дела — административно в DNM (не суд). Канал и формы — migraciones.gob.ar. Дела до 29.05.2025 могли идти через федеральный суд.",
       },
       {
         question: "Сколько длится рассмотрение дела?",
         answer:
-          "Законом срок не ограничен. На практике — от 6 месяцев до 3 лет и дольше. Дольше всего занимает сбор справок о несудимости по всем 24 субъектам федерации и запросы в Interpol.",
+          "Законом срок может не быть ограничен; на практике — от нескольких месяцев до нескольких лет. Уточняйте на migraciones.gob.ar.",
       },
       {
         question: "Нужны ли экзамены по испанскому или «Conocer Argentina»?",
         answer:
-          "Суд может назначить языковую проверку или вопросы по конституции — практика различается по судьям. Часть таких требований оспаривается; можно согласиться или обжаловать через abogado.",
+          "Языковые проверки и экзамены по конституции в административном порядке могут применяться — практика после реформы уточняется.",
       },
       {
         question: "Что такое Carta de Ciudadanía?",
         answer:
-          "Документ суда о принятии в гражданство. С ним обращаются в RENAPER за DNI гражданина Аргентины, затем оформляют pasaporte argentino.",
+          "Документ об одобрении naturalización; с ним обращаются в RENAPER за DNI гражданина Аргентины, затем оформляют pasaporte argentino.",
       },
       {
         question: "Даёт ли аргентинский паспорт безвизовый режим?",
@@ -206,7 +206,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
       {
         question: "Как Decreto 366/2025 влияет на гражданство?",
         answer:
-          "Декрет изменил правила иммиграции в целом. Детали по гражданству могут уточняться регламентами — следите за обновлениями на migraciones.gob.ar и pjn.gov.ar.",
+          "Перевод натурализации в DNM, 2 года строго без выезда, отмена присяги для новых дел. Декрет оспаривается в судах — следите за migraciones.gob.ar.",
       },
     ],
     partnerServices: [],
@@ -270,7 +270,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     blogLinks: [
       { title: "Обзор видов ВНЖ", href: "/immigration/obzor-vnzh" },
       { title: "Процесс иммиграции", href: topicHref("protsess-immigratsii") },
-      { title: "Гражданство", href: topicHref("grazhdanstvo") },
+      { title: "Гражданство", href: topicHref("grazhdanstvo"), description: "Административно (DNM), DNU 366/2025" },
       { title: "Роды в Аргентине", href: topicHref("rody-v-argentine") },
     ],
   },
@@ -347,7 +347,7 @@ export const IMMIGRATION_PILLARS: Record<string, GuidePillarContent> = {
     ],
     quickFacts: [
       { emoji: "🏛", label: "Migraciones", headline: "Официальные правила", detail: "migraciones.gob.ar — первоисточник" },
-      { emoji: "📋", label: "RADEX", headline: "Онлайн-trámites", detail: "tramites.migraciones.gob.ar" },
+      { emoji: "📋", label: "RADEX", headline: "Онлайн-оформление (trámites en línea)", detail: "tramites.migraciones.gob.ar" },
       { emoji: "🪪", label: "Renaper", headline: "DNI после residencia", detail: "argentina.gob.ar/interior/renaper" },
       { emoji: "📰", label: "Boletín Oficial", headline: "Декреты и нормы", detail: "boletinoficial.gob.ar" },
     ],

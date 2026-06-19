@@ -6,7 +6,7 @@ const SHOPPING_FAQ = [
   { question: "Как работает tax free?", answer: "Global Blue в partner-магазинах — возврат IVA при вывозе. Чеки и паспорт." },
   { question: "Можно ли вывезти вино?", answer: "Проверьте лимиты авиакомпании и таможни вашей страны. Duty free — проще." },
   { question: "Что такое feria San Telmo?", answer: "Воскресный рынок — антиквариат, сувениры, уличные артисты." },
-  { question: "Где alpaca и poncho?", answer: "Salta, Humahuaca — шерсть альпaca. В BA — туристические магазины Palermo." },
+  { question: "Где alpaca и poncho?", answer: "Salta, Humahuaca — шерсть альпаки. В BA — туристические магазины Palermo." },
   { question: "Подделки mate?", answer: "Покупайте calabaza и bombilla в специализированных магазинах, не только на улице." },
   { question: "Торг уместен?", answer: "На feria — иногда. В бутиках — нет." },
   { question: "Когда Galerías Pacífico?", answer: "Классический mall в centro — tax free partner, архитектура." },

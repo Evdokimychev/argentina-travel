@@ -34,7 +34,7 @@ const HUB_TOPIC_LINKS: SiteNavLink[] = [
     id: "immigration-citizenship",
     label: "Гражданство",
     href: "/immigration/grazhdanstvo",
-    description: "Паспорт, экзамены, сроки",
+    description: "Административно (DNM), DNU 366/2025",
   },
   {
     id: "immigration-residency",

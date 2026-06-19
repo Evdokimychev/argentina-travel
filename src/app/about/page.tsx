@@ -4,9 +4,9 @@ import { getPlatformStatsFromRepository } from "@/lib/organizer-public";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = buildPublicPageMetadata({
-  title: "О нас — Пора в Аргентину",
+  title: "О проекте",
   description:
-    "Argentina Travel — маркетплейс авторских туров по Аргентине. Миссия, ценности и визуальный язык платформы.",
+    "«Пора в Аргентину» — маркетплейс авторских туров по Аргентине. Миссия, ценности и как устроена платформа.",
   path: "/about",
 });
 

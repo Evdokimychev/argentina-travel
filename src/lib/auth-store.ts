@@ -43,7 +43,7 @@ export const SEED_USERS: StoredAuthUser[] = [
     country: "Россия",
     avatar: null,
     dateOfBirth: "1990-05-15",
-    createdAt: "2024-01-01T00:00:00.000Z",
+    createdAt: "2023-01-01T00:00:00.000Z",
   },
 ];
 

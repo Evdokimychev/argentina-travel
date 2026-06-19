@@ -126,12 +126,6 @@ export default function TourDetailView({
     tour.customBookingLink?.url ?? `/api/affiliate/go/${tour.slug}`;
   const partnerDisplayReviews =
     tour.reviews.length > 0 ? tour.reviews : (tour.partnerGuideReviews ?? []);
-  const partnerDisplayReviewRating =
-    tour.reviews.length > 0 ? tour.rating : tour.organizer.rating;
-  const partnerDisplayReviewCount =
-    tour.reviews.length > 0
-      ? tour.reviewCount
-      : Math.max(tour.organizer.reviewCount ?? 0, tour.partnerGuideReviews?.length ?? 0);
   const partnerReviewHeadingNote =
     tour.reviews.length === 0 && (tour.partnerGuideReviews?.length ?? 0) > 0
       ? "о гиде на других турах Tripster"
@@ -236,8 +230,6 @@ export default function TourDetailView({
                   {partnerSections.reviews ? (
                     <ReviewsSection
                       reviews={partnerDisplayReviews}
-                      rating={partnerDisplayReviewRating}
-                      reviewCount={partnerDisplayReviewCount}
                       headingNote={partnerReviewHeadingNote}
                     />
                   ) : null}
@@ -338,11 +330,7 @@ export default function TourDetailView({
               {!previewMode ? (
                 <TourReviewPanel tour={tour} organizerTourId={canonicalTour?.id} />
               ) : null}
-              <ReviewsSection
-                reviews={tour.reviews}
-                rating={tour.rating}
-                reviewCount={tour.reviewCount}
-              />
+              <ReviewsSection reviews={tour.reviews} />
               {!previewMode ? <SimilarToursSection tours={similarTours} /> : null}
                 </>
               )}

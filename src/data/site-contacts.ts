@@ -14,8 +14,8 @@ export const SITE_PHONES = [
 ] as const;
 
 export const SITE_EMAIL = {
-  display: "IAEvdokimychev@ya.ru",
-  href: "mailto:IAEvdokimychev@ya.ru",
+  display: "hello@goargentina.ru",
+  href: "mailto:hello@goargentina.ru",
   note: "Почта для связи, предложений и сотрудничества",
 } as const;
 

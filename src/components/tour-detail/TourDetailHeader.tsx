@@ -17,6 +17,7 @@ import {
   resolveTourCityDisplay,
 } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
+import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
 import TourClassificationBar from "./TourClassificationBar";
 import TourDurationInfo from "./TourDurationInfo";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -28,7 +29,8 @@ interface TourDetailHeaderProps {
 
 export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHeaderProps) {
   const [shared, setShared] = useState(false);
-  const ratingDisplay = resolveTourRatingLabel(tour);
+  const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.reviews));
+  const ratingDisplay = resolveTourRatingLabel(reviewStats);
   const cityDisplay = resolveTourCityDisplay({
     destination: canonicalTour?.geography.destination,
     mainLocation: canonicalTour?.geography.mainLocation,
@@ -154,7 +156,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
                     onClick={scrollToReviews}
                     className="text-sm font-medium text-sky hover:underline"
                   >
-                    {formatReviews(tour.reviewCount)}
+                    {formatReviews(reviewStats.reviewCount)}
                   </button>
                 </>
               ) : (

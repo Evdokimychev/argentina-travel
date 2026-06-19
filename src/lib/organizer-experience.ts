@@ -45,6 +45,10 @@ export function resolveOrganizerExperienceStat(
   }
 
   if (organizer.platformRegisteredAt?.trim()) {
+    const start = parseISO(organizer.platformRegisteredAt);
+    if (isValid(start) && start.getFullYear() >= 2000) {
+      return `С ${start.getFullYear()} года`;
+    }
     return formatPlatformTenure(organizer.platformRegisteredAt);
   }
 

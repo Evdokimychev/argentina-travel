@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import ContactPageJsonLd from "@/components/seo/ContactPageJsonLd";
 
 export const metadata: Metadata = {
-  title: "Контакты — Пора в Аргентину",
+  title: "Контакты",
   description:
     "Свяжитесь с редакцией и менеджерами: форма обратной связи, WhatsApp, email и офис в Буэнос-Айресе.",
   alternates: { canonical: "/contacts" },

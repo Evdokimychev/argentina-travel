@@ -27,8 +27,8 @@ export interface TourExtra {
 
 export const tourExtra: Record<string, TourExtra> = {
   "patagonia-glaciers": {
-    rating: 4.9,
-    reviewCount: 187,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "Мария Г.",
       role: "Организатор путешествия",
@@ -63,8 +63,8 @@ export const tourExtra: Record<string, TourExtra> = {
     minimumAge: 12,
   },
   "buenos-aires-tango": {
-    rating: 4.8,
-    reviewCount: 142,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "Карлос Р.",
       role: "Организатор путешествия",
@@ -91,7 +91,7 @@ export const tourExtra: Record<string, TourExtra> = {
       {
         title: "Архитектура",
         description:
-          "Европейский дух столицы: Recoleta, Palermo и кладбище, где покоится Эва Перón.",
+          "Европейский дух столицы: Recoleta, Palermo и кладбище, где покоится Эва Перón (Perón).",
       },
     ],
     tags: ["5 дней (4 ночи)", "Городские туры", "Культура и гастрономия"],
@@ -107,8 +107,8 @@ export const tourExtra: Record<string, TourExtra> = {
     ],
   },
   "mendoza-wine": {
-    rating: 4.9,
-    reviewCount: 96,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "Ана Л.",
       role: "Организатор путешествия",
@@ -141,10 +141,10 @@ export const tourExtra: Record<string, TourExtra> = {
     tags: ["7 дней (6 ночей)", "Винные туры", "Гастрономия"],
   },
   "iguazu-falls": {
-    rating: 4.9,
-    reviewCount: 203,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
-      name: "Пабlo М.",
+      name: "Пабло М.",
       role: "Организатор путешествия",
       avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
     },
@@ -157,7 +157,7 @@ export const tourExtra: Record<string, TourExtra> = {
           "Подойдите к самому мощному водопаду — «Глотке Дьявола» — по подвесным мосткам.",
       },
       {
-        title: "280 водопадов",
+        title: "Около 275 водопадов",
         description:
           "Прогулка по обширной системе каскадов на границе Аргентины и Бразилии.",
       },
@@ -175,8 +175,8 @@ export const tourExtra: Record<string, TourExtra> = {
     tags: ["4 дня (3 ночи)", "Экскурсионные туры", "Природа"],
   },
   "salta-northwest": {
-    rating: 4.7,
-    reviewCount: 78,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
       name: "София Т.",
       role: "Организатор путешествия",
@@ -198,7 +198,7 @@ export const tourExtra: Record<string, TourExtra> = {
       {
         title: "Колониальная Сальта",
         description:
-          "Испанская архитектура, peñas с folk-музыкой и атмосфера северо-запада.",
+          "Испанская архитектура, peñas с народной музыкой и атмосфера северо-запада.",
       },
       {
         title: "Винодельни Кафаяте",
@@ -209,10 +209,10 @@ export const tourExtra: Record<string, TourExtra> = {
     tags: ["8 дней (7 ночей)", "Экскурсионные туры", "Культура"],
   },
   "ushuaia-end-of-world": {
-    rating: 4.8,
-    reviewCount: 115,
+    rating: 0,
+    reviewCount: 0,
     organizer: {
-      name: "Дiego Ф.",
+      name: "Диего Ф.",
       role: "Организатор путешествия",
       avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
     },

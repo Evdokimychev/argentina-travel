@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import BookingPaymentLinkView from "@/components/booking/BookingPaymentLinkView";
 
 export const metadata: Metadata = {
-  title: "Оплата бронирования — Пора в Аргентину",
+  title: "Оплата бронирования",
 };
 
 export default async function BookingPaymentLinkPage({

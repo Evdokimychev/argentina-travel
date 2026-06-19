@@ -2,7 +2,7 @@ import GalleryPageView from "@/components/gallery/GalleryPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "Галерея — Пора в Аргентину";
+const PAGE_TITLE = "Галерея";
 const PAGE_DESCRIPTION =
   "Фотографии из авторских туров по Аргентине: Патагония, Буэнос-Айрес, вино, Игуасу и другие регионы.";
 

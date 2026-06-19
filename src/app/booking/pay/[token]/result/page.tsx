@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import BookingPaymentResultView from "@/components/booking/BookingPaymentResultView";
 
 export const metadata: Metadata = {
-  title: "Результат оплаты — Пора в Аргентину",
+  title: "Результат оплаты",
 };
 
 export default async function BookingPaymentResultPage({

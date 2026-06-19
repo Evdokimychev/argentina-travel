@@ -7,7 +7,7 @@ import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
-const PAGE_TITLE = "Частые вопросы — Пора в Аргентину";
+const PAGE_TITLE = "Частые вопросы";
 const PAGE_DESCRIPTION =
   "Ответы на популярные вопросы о бронировании туров, оплате и работе с организаторами.";
 

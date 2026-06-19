@@ -6,14 +6,17 @@ export function getSiteUrl(): string {
     return process.env.NEXT_PUBLIC_SITE_URL.replace(/\/$/, "");
   }
 
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-
   return DEFAULT_SITE_URL;
 }
 
 export function absoluteUrl(path: string): string {
   const normalized = path.startsWith("/") ? path : `/${path}`;
   return `${getSiteUrl()}${normalized}`;
+}
+
+/** Site-relative path → absolute URL; external http(s) URLs pass through unchanged. */
+export function resolvePublicUrl(url: string): string {
+  if (/^https?:\/\//i.test(url)) return url;
+  if (url.startsWith("//")) return `https:${url}`;
+  return absoluteUrl(url);
 }

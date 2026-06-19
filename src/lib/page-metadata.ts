@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 export function buildPublicPageMetadata({
   title,
@@ -11,24 +12,27 @@ export function buildPublicPageMetadata({
   path: string;
   image?: string;
 }): Metadata {
+  const pageUrl = absoluteUrl(path);
+  const imageUrl = image ? resolvePublicUrl(image) : undefined;
+
   return {
     title,
     description,
     alternates: {
-      canonical: path,
+      canonical: pageUrl,
     },
     openGraph: {
       title,
       description,
       type: "website",
-      url: path,
-      ...(image ? { images: [{ url: image }] } : {}),
+      url: pageUrl,
+      ...(imageUrl ? { images: [{ url: imageUrl }] } : {}),
     },
     twitter: {
       card: "summary_large_image",
       title,
       description,
-      ...(image ? { images: [image] } : {}),
+      ...(imageUrl ? { images: [imageUrl] } : {}),
     },
   };
 }

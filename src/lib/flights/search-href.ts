@@ -1,3 +1,8 @@
+import {
+  findPopularRouteLabel,
+  getDestinationFlightRouteIds,
+} from "@/lib/flights/destination-airports";
+
 export function buildFlightsSearchHref(origin: string, destination: string): string {
   return `/flights?${new URLSearchParams({
     origin: origin.toUpperCase(),
@@ -16,5 +21,26 @@ export function resolveAirportFlightSearch(airportCode: string): { origin: strin
 
 export function buildAirportFlightsHref(airportCode: string): string {
   const { origin, destination } = resolveAirportFlightSearch(airportCode);
+  return buildFlightsSearchHref(origin, destination);
+}
+
+/** Primary flight search prefill for a destination hub page (e.g. MOW→IGR for Игуасу). */
+export function resolveDestinationFlightSearch(destinationId: string): {
+  origin: string;
+  destination: string;
+} {
+  const routeIds = getDestinationFlightRouteIds(destinationId);
+  const routeId = routeIds.find((id) => id.startsWith("mow-")) ?? routeIds[0] ?? "mow-bue";
+  const route = findPopularRouteLabel(routeId);
+  if (route) {
+    return { origin: route.origin, destination: route.destination };
+  }
+
+  const [origin, destination] = routeId.split("-");
+  return { origin: origin.toUpperCase(), destination: destination.toUpperCase() };
+}
+
+export function buildDestinationFlightsHref(destinationId: string): string {
+  const { origin, destination } = resolveDestinationFlightSearch(destinationId);
   return buildFlightsSearchHref(origin, destination);
 }

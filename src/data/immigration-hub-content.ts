@@ -17,7 +17,7 @@ const FAQ: ImmigrationHubContent["faq"] = [
   {
     question: "Сколько оснований для ВНЖ существует в Аргентине?",
     answer:
-      "15 подкategorий residencia temporaria в ст. 23 Ley 25.871 (incisos a–ñ), включая reunificación familiar с Decreto 366/2025. Nómada digital — transitoria по Disposición 758/2022, не входит в эту таблицу.",
+      "15 подкатегорий residencia temporaria в ст. 23 Ley 25.871 (incisos a–ñ), включая reunificación familiar с Decreto 366/2025. Nómada digital — transitoria по Disposición 758/2022, не входит в эту таблицу.",
   },
   {
     question: "Через сколько лет можно получить гражданство?",
@@ -142,7 +142,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "citizenship",
       emoji: "🇦🇷",
       title: "Гражданство",
-      description: "Паспорт, экзамены, сроки и безвизовый режим",
+      description: "Административно (DNM), DNU 366/2025",
       teaser: IMMIGRATION_CITIZENSHIP.intro,
       href: "/immigration/grazhdanstvo",
     },
@@ -150,7 +150,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
       id: "residency",
       emoji: "📋",
       title: "ВНЖ и ПМЖ",
-      description: "ВНЖ, ПМЖ и 14 оснований",
+      description: "ВНЖ, ПМЖ и 15 оснований",
       teaser: IMMIGRATION_RESIDENCY.intro,
       href: "/immigration/vnzh-i-pmzh",
     },

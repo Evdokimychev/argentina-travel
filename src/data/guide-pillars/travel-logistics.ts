@@ -76,7 +76,7 @@ export const KAK_DOBRATSYA_PILLAR: GuidePillarContent = {
     { label: "Внутренний хаб", headline: "Aeroparque (AEP)", detail: "В черте города — Patagonia, Iguazú, Mendoza" },
     { label: "Типичный перелёт из Европы", headline: "15–20 ч", detail: "1 пересадка — Istanbul, Doha, Madrid" },
     { label: "Внутренние авиалинии", headline: "Aerolíneas, Flybondi", detail: "Jetsmart — багаж часто отдельно на лоукостерах" },
-    { label: "Трансфер EZE → центр", headline: "40–60 мин", detail: "$40–60 USD — такsi на стойке или Cabify" },
+    { label: "Трансфер EZE → центр", headline: "40–60 мин", detail: "$40–60 USD — такси на стойке или Cabify" },
     { label: "Виза для РФ (туризм)", headline: "Безвиз до 90 дней", detail: "Паспорт 6+ мес., обратный билет желателен" },
   ],
   sections: [

@@ -214,9 +214,11 @@ function AccessBreakdown({
 function VisaFreeHighlights({
   highlights,
   selectedCode,
+  totalDestinations,
 }: {
   highlights: PassportProfile["visaFreeHighlights"];
   selectedCode: string;
+  totalDestinations: number;
 }) {
   const [region, setRegion] = useState<VisaFreeRegion>("all");
 
@@ -240,7 +242,9 @@ function VisaFreeHighlights({
             ? "Без визы с аргентинским паспортом"
             : "Без визы с выбранным паспортом"}
         </p>
-        <span className="text-[11px] tabular-nums text-slate">{filtered.length} направлений</span>
+        <span className="text-[11px] tabular-nums text-slate">
+          примеры · всего ~{totalDestinations} направлений
+        </span>
       </div>
 
       <div className="mb-3 flex flex-wrap gap-1.5">
@@ -446,6 +450,8 @@ export default function ArgentinaPassportPowerWidget() {
 
   const animatedDestinations = useAnimatedValue(selected.destinations, revealed);
   const animatedRank = useAnimatedValue(selected.globalRank, revealed, 900);
+  const displayRank = revealed ? animatedRank : selected.globalRank;
+  const displayDestinations = revealed ? animatedDestinations : selected.destinations;
 
   const comparisonBase =
     tab === "latam" ? LATAM_COMPARISON : tab === "peers" ? PEERS_COMPARISON : GLOBAL_RANK_LADDER;
@@ -512,19 +518,23 @@ export default function ArgentinaPassportPowerWidget() {
           <div key={statsKey} className="grid w-full grid-cols-2 gap-3">
             <div className="rounded-2xl border border-white/80 bg-white/70 p-4 backdrop-blur-sm">
               <p className="text-[11px] font-medium uppercase tracking-wider text-slate">Место в мире</p>
-              <p className="mt-1 font-heading text-3xl font-bold tabular-nums text-charcoal">#{animatedRank}</p>
+              <p className="mt-1 font-heading text-3xl font-bold tabular-nums text-charcoal">#{displayRank}</p>
               <p className="mt-1 text-xs text-slate">из {selected.totalRanked} паспортов</p>
             </div>
             <div className="rounded-2xl border border-white/80 bg-white/70 p-4 backdrop-blur-sm">
               <p className="text-[11px] font-medium uppercase tracking-wider text-slate">Направления</p>
               <p className="mt-1 font-heading text-3xl font-bold tabular-nums text-charcoal">
-                {animatedDestinations}
+                {displayDestinations}
               </p>
               <p className="mt-1 text-xs text-slate">стран и территорий</p>
             </div>
           </div>
 
-          <VisaFreeHighlights highlights={selected.visaFreeHighlights} selectedCode={selected.code} />
+          <VisaFreeHighlights
+            highlights={selected.visaFreeHighlights}
+            selectedCode={selected.code}
+            totalDestinations={selected.destinations}
+          />
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">

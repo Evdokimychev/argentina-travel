@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import type { PlaceDetail, PlaceListing } from "@/types/place";
-import { absoluteUrl } from "@/lib/site-url";
+import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 import { placeHref } from "@/lib/places-repository";
 
 export function buildPlaceMetadata(place: PlaceDetail): Metadata {
+  const pageUrl = absoluteUrl(placeHref(place.slug));
+  const imageUrl = place.coverImage ? resolvePublicUrl(place.coverImage) : undefined;
+
   return {
     title: `${place.name} — места Аргентины`,
     description: place.shortDescription,
@@ -11,10 +14,17 @@ export function buildPlaceMetadata(place: PlaceDetail): Metadata {
       title: place.name,
       description: place.shortDescription,
       type: "website",
-      images: place.coverImage ? [{ url: place.coverImage }] : undefined,
+      url: pageUrl,
+      images: imageUrl ? [{ url: imageUrl }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: place.name,
+      description: place.shortDescription,
+      images: imageUrl ? [imageUrl] : undefined,
     },
     alternates: {
-      canonical: placeHref(place.slug),
+      canonical: pageUrl,
     },
   };
 }
@@ -50,10 +60,17 @@ export function buildPlaceProductJsonLd(place: PlaceDetail) {
 }
 
 export function buildPlacesCatalogMetadata(count: number): Metadata {
+  const pageUrl = absoluteUrl("/places");
   return {
     title: "Места Аргентины — справочник путешественника",
     description: `${count} мест: национальные парки, города, ледники, водопады и заповедники. Поиск, карта и подборки маршрутов.`,
-    alternates: { canonical: "/places" },
+    alternates: { canonical: pageUrl },
+    openGraph: {
+      title: "Места Аргентины — справочник путешественника",
+      description: `${count} мест: национальные парки, города, ледники, водопады и заповедники.`,
+      type: "website",
+      url: pageUrl,
+    },
   };
 }
 

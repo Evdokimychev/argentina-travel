@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowRight, Compass, Search, ShieldCheck, Users, Wallet } from "lucide-react";
+import { ArrowRight, Compass, Search } from "lucide-react";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { buildCatalogFilterHref } from "@/lib/catalog-filter-url";
@@ -24,6 +24,7 @@ import { tripsWord, filtersWord } from "@/lib/pluralize";
 import PlatformStatsBlock from "./PlatformStatsBlock";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
+import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -132,6 +133,7 @@ export default function MarketplaceHome({
 }: MarketplaceHomeProps) {
   const router = useRouter();
   const tours = useRepositoryTourListings(initialTours);
+  const homepageTours = useMemo(() => filterArgentinaHomepageTours(tours), [tours]);
   const { currency, t } = useLocaleCurrency();
   const [filters, setFilters] = useState<TourFilters>(() =>
     getDefaultFilters(currency, tours)
@@ -146,58 +148,43 @@ export default function MarketplaceHome({
   const activeCount = countActiveFilters(filters, currency, tours);
   const hasActiveSearch = activeCount > 0 || Boolean(filters.query.trim());
 
-  const bestOfMonth = tours.filter((t) => t.isBestOfMonth).slice(0, 3);
-  const hotTours = tours.filter((t) => t.isHot).slice(0, 3);
-  const newTours = tours.filter((t) => t.isNew).slice(0, 3);
-  const recommendedTours = useMemo(() => getRecommendedListings(tours, 6), [tours]);
+  const hotTours = homepageTours
+    .filter(
+      (t) =>
+        t.isHot &&
+        t.originalPriceUsd != null &&
+        t.originalPriceUsd > t.priceUsd
+    )
+    .slice(0, 3);
+  const recommendedTours = useMemo(
+    () => getRecommendedListings(homepageTours, 6),
+    [homepageTours]
+  );
 
   const valueProps = [
     {
-      emoji: "🧭",
+      emoji: "🛡",
       label: "Организаторы",
-      headline: "Проверенные авторы",
-      detail: "Реальные программы и отзывы после поездок",
+      headline: "Проверенные организаторы",
+      detail: "Каждый гид проходит отбор; отзывы появляются только после реальных поездок",
     },
     {
       emoji: "👥",
       label: "Группы",
-      headline: "Комфортный размер",
-      detail: "Малые группы и индивидуальные заявки",
+      headline: "Малые группы",
+      detail: "Комфортный размер группы: больше внимания и гибкости в маршруте",
     },
     {
       emoji: "💬",
       label: "Язык",
-      headline: "На русском",
-      detail: "Большинство туров с русскоязычными гидами",
+      headline: "Русскоязычные гиды",
+      detail: "Большинство туров проводят гиды, говорящие по-русски",
     },
     {
-      emoji: "🛡",
+      emoji: "💳",
       label: "Оплата",
-      headline: "Без предоплаты",
-      detail: "Заявка сейчас — оплата после подтверждения",
-    },
-  ];
-
-  const whyUs = [
-    {
-      icon: ShieldCheck,
-      title: "Проверенные организаторы",
-      desc: "Каждый гид проходит отбор; отзывы только после реальных поездок",
-    },
-    {
-      icon: Users,
-      title: "Малые группы",
-      desc: "Комфортный размер группы — больше внимания и гибкости маршрута",
-    },
-    {
-      icon: Wallet,
-      title: "Прозрачная оплата",
-      desc: "Отправляете заявку без предоплаты, платите после подтверждения организатором",
-    },
-    {
-      icon: ArrowRight,
-      title: "Путеводитель и иммиграция",
-      desc: "Справочник по стране и переезду — дополняет выбор тура",
+      headline: "Оплата без предоплаты",
+      detail: "Оставляете заявку сейчас, платите после подтверждения организатором",
     },
   ];
 
@@ -371,12 +358,15 @@ export default function MarketplaceHome({
       ) : (
         <section className="border-b border-gray-100 bg-surface-muted/50 py-10">
           <div className={siteContainerClass}>
-            <HubQuickFactsGrid columns={4} facts={valueProps} />
+            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Почему с нами</h2>
+            <div className="mt-6">
+              <HubQuickFactsGrid columns={4} facts={valueProps} />
+            </div>
             <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
               <p className="text-center text-sm text-slate">
                 В каталоге{" "}
                 <span className="font-semibold text-charcoal">
-                  {tours.length} {tripsWord(tours.length)}
+                  {homepageTours.length} {tripsWord(homepageTours.length)}
                 </span>{" "}
                 — выбирайте даты и отправляйте заявку
               </p>
@@ -464,16 +454,14 @@ export default function MarketplaceHome({
           <TourGrid
             id="recommended"
             title="Рекомендуем"
-            subtitle="Подборка по рейтингу, отзывам и актуальности"
+            subtitle="По рейтингу и актуальности"
             tours={recommendedTours}
           />
           <TourGrid
-            title="Лучшие туры месяца"
-            subtitle="Выбор редакции"
-            tours={bestOfMonth}
+            title="Горящие даты"
+            subtitle="Только туры с реальной скидкой и ближайшими датами"
+            tours={hotTours}
           />
-          <TourGrid title="Горящие предложения" subtitle="Успейте забронировать" tours={hotTours} />
-          <TourGrid title="Новые туры" subtitle="Свежие маршруты сезона" tours={newTours} />
         </div>
       </section>
 
@@ -489,10 +477,16 @@ export default function MarketplaceHome({
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-white/80 px-6 py-12 text-center">
-              <p className="font-heading font-semibold text-charcoal">Отзывы появляются после поездок</p>
-              <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate">
-                Показываем только отзывы с меткой «Проверенная поездка» — без выдуманных цитат.
+              <p className="font-heading font-semibold text-charcoal">
+                Отзывы появятся после первых поездок
               </p>
+              <Link
+                href="/tours"
+                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+              >
+                Смотреть каталог туров
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </Link>
             </div>
           )}
         </div>
@@ -515,25 +509,13 @@ export default function MarketplaceHome({
         </div>
       </section>
 
-      {/* Why us + guide links */}
+      {/* Guide & immigration */}
       <section className="border-t border-gray-100 bg-patagonia py-14 text-white" data-scroll-rail-tone="dark">
         <div className={siteContainerClass}>
-          <h2 className="font-heading text-2xl font-bold sm:text-3xl">Почему путешествовать с нами</h2>
+          <h2 className="font-heading text-2xl font-bold sm:text-3xl">Путеводитель и иммиграция</h2>
           <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">
-            Площадка, справочник и иммиграционный раздел — всё в одном проекте о жизни и поездках в Аргентину.
+            Справочник по стране, переезду и практическим советам — дополняет выбор тура.
           </p>
-          <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {whyUs.map(({ icon: Icon, title, desc }) => (
-              <div
-                key={title}
-                className="rounded-2xl border border-white/10 bg-white/10 p-5 backdrop-blur-sm"
-              >
-                <Icon className="h-6 w-6 text-sun" aria-hidden />
-                <h3 className="mt-3 font-heading font-semibold">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/75">{desc}</p>
-              </div>
-            ))}
-          </div>
           <div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/guide"

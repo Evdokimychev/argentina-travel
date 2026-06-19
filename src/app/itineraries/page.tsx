@@ -3,7 +3,7 @@ import ItinerariesIndexView from "@/components/itineraries/ItinerariesIndexView"
 import { fetchItinerariesServer } from "@/lib/places-repository";
 
 export const metadata: Metadata = {
-  title: "Маршруты по Аргентине — Пора в Аргентину",
+  title: "Маршруты по Аргентине",
   description: "Готовые маршруты: Patagonia, северо-запад, Buenos Aires и Iguazú.",
   alternates: { canonical: "/itineraries" },
 };

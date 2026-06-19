@@ -4,7 +4,7 @@ import { PRIVATE_PAGE_ROBOTS } from "@/lib/private-page-metadata";
 
 export const metadata: Metadata = {
   title: {
-    default: "Личный кабинет — Пора в Аргентину",
+    default: "Личный кабинет",
     template: "%s",
   },
   robots: PRIVATE_PAGE_ROBOTS,

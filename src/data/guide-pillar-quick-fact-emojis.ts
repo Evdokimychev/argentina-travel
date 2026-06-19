@@ -86,7 +86,7 @@ const SLUG_LABEL_EMOJIS: Record<string, Record<string, string>> = {
   },
   istoriya: {
     Независимость: "🇦🇷",
-    "Perón / Evita": "✊",
+    "Перón (Perón) / Evita": "✊",
     "Демократия с": "🗳️",
     "Must-see": "🏛️",
     Мемориал: "🕊️",

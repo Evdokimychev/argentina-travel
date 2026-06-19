@@ -3,7 +3,7 @@ import ServicesPageView from "@/components/services/ServicesPageView";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "Сервисы для поездки — Пора в Аргентину";
+const PAGE_TITLE = "Сервисы для поездки";
 const PAGE_DESCRIPTION =
   "Перелёты, трансферы, страхование и визовая поддержка — партнёрские ссылки и заявки через платформу.";
 

@@ -19,6 +19,8 @@ import {
 } from "@/types/locale";
 import { getLanguage, getCurrency } from "@/data/locale-config";
 import { loadMessages, t as translate } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { toI18nLocale } from "@/lib/i18n/config";
 import { getLocaleFromPathname } from "@/lib/i18n/locale-path";
 import { formatCurrencyAmount } from "@/lib/currency";
 import { resolveRateFromUsd } from "@/lib/exchange-rates";
@@ -38,11 +40,17 @@ interface LocaleCurrencyContextValue {
 
 const LocaleCurrencyContext = createContext<LocaleCurrencyContextValue | null>(null);
 
+function bootstrapMessages(locale: LocaleCode): Record<string, string> {
+  return { ...getDictionary(toI18nLocale(locale)) };
+}
+
 export function LocaleCurrencyProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [locale, setLocaleState] = useState<LocaleCode>(DEFAULT_LOCALE);
   const [currency, setCurrencyState] = useState<CurrencyCode>(DEFAULT_CURRENCY);
-  const [messages, setMessages] = useState<Record<string, string>>({});
+  const [messages, setMessages] = useState<Record<string, string>>(() =>
+    bootstrapMessages(DEFAULT_LOCALE),
+  );
   const [ready, setReady] = useState(false);
   const [liveRates, setLiveRates] = useState<Partial<Record<CurrencyCode, number>>>({});
 
@@ -77,7 +85,8 @@ export function LocaleCurrencyProvider({ children }: { children: React.ReactNode
   }, []);
 
   useEffect(() => {
-    loadMessages(locale).then(setMessages);
+    setMessages(bootstrapMessages(locale));
+    void loadMessages(locale).then(setMessages);
     document.documentElement.lang = locale;
   }, [locale]);
 

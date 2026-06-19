@@ -60,7 +60,7 @@ const FAQ: TravelHubContent["faq"] = [
   {
     question: "Можно ли въехать в Аргентину на автомобиле?",
     answer:
-      "Да, через границы с Чили, Бrazil, Парагваем, Боливией и Уругваем. Нужны документы на авто, страховка Green Card и знание таможенных правил.",
+      "Да, через границы с Чили, Brazil, Парагваем, Боливией и Уругваем. Нужны документы на авто, страховка Green Card и знание таможенных правил.",
   },
   {
     question: "Есть ли международные автобусы?",
@@ -387,7 +387,7 @@ export const KAK_DOBRATSYA_HUB: TravelHubContent = {
       name: "El Plumerillo",
       city: "Мендоса",
       emoji: "🛬",
-      description: "Винодельни, Андes, сезонные прямые рейсы в Patagonia.",
+      description: "Винодельни, Анды, сезонные прямые рейсы в Patagonia.",
     },
     {
       code: "SLA",

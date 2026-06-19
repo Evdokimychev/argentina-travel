@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const description = labels.getRouteIntro(route.id, route.originLabel, route.destinationLabel);
 
   return buildPublicPageMetadata({
-    title: `${title} — авиабилеты | Пора в Аргентину`,
+    title: `${title} — авиабилеты`,
     description,
     path: `/flights/${route.id}`,
   });

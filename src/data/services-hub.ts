@@ -65,7 +65,7 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
         id: "transfers-patagonia",
         slug: "patagonia-transfer",
         title: "Трансферы в Патагонии",
-        description: "Эль-Калафате, Чалten, Барилоче — индивидуальные и групповые.",
+        description: "Эль-Калафате, Чалтен, Барилоче — индивидуальные и групповые.",
         href: "/contacts?service=patagonia-transfer",
       },
     ],

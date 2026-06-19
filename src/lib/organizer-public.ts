@@ -1,3 +1,4 @@
+import { getOrganizerCanonicalStats } from "@/data/organizer-canonical-stats";
 import { SEED_USERS } from "@/lib/auth-store";
 import { joinFullName } from "@/lib/full-name";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
@@ -98,18 +99,20 @@ function aggregateOrganizerDetail(
   }
 
   const sample = tours[0]?.team.organizerDetail;
-  const rating = ratingWeight > 0 ? ratingSum / ratingWeight : sample?.rating ?? 0;
+  const canonical = getOrganizerCanonicalStats(slug);
+  const rating = ratingWeight > 0 ? ratingSum / ratingWeight : 0;
 
   const base: TourOrganizerDetail = {
     id: slug,
     name: sample?.name ?? "Организатор",
     role: sample?.role ?? "Организатор путешествия",
     avatar: sample?.avatar ?? "",
-    rating,
-    tourCount: publishedTourCount,
-    travelerCount,
+    rating: canonical ? 0 : rating,
+    tourCount: canonical?.tourCount ?? publishedTourCount,
+    travelerCount: canonical?.travelerCount ?? travelerCount,
     languages: sample?.languages ?? [],
-    experienceYears: sample?.experienceYears ?? 0,
+    experienceYears: canonical ? 0 : sample?.experienceYears ?? 0,
+    platformRegisteredAt: canonical?.platformRegisteredAt,
     phone: "",
     email: "",
   };
