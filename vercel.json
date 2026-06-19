@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/platform-maintenance",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 3 * * *"
     }
   ]
 }
