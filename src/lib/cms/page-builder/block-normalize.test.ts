@@ -7,6 +7,7 @@ import {
   normalizeBlogBodyBlock,
   normalizeBlogBodyBlocks,
   parseCmsBlogSection,
+  parseCmsGuideSection,
 } from "@/lib/cms/page-builder/block-normalize";
 
 describe("page-builder block registry", () => {
@@ -33,6 +34,21 @@ describe("block normalize", () => {
     });
     expect(section.blockType).toBe("faq");
     expect(section.blocks).toHaveLength(1);
+  });
+
+  it("parses cms guide section with heading and blocks", () => {
+    const section = parseCmsGuideSection({
+      heading: "Сезоны",
+      html: "<p>Текст</p>",
+      blockType: "checklist",
+      blocks: [{ type: "paragraph", text: "Абзац" }],
+      list: ["Пункт"],
+    });
+    expect(section.heading).toBe("Сезоны");
+    expect(section.html).toBe("<p>Текст</p>");
+    expect(section.blockType).toBe("checklist");
+    expect(section.blocks).toHaveLength(1);
+    expect(section.list).toEqual(["Пункт"]);
   });
 
   it("filters invalid blocks", () => {

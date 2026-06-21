@@ -23,7 +23,13 @@ function hasTextList(items: string[] | undefined): boolean {
 
 function hasRichSections(
   sections:
-    | Array<{ heading?: string; paragraphs?: string[]; list?: string[]; html?: string }>
+    | Array<{
+        heading?: string;
+        paragraphs?: string[];
+        list?: string[];
+        html?: string;
+        blocks?: unknown[];
+      }>
     | undefined
 ): boolean {
   return (
@@ -33,7 +39,8 @@ function hasRichSections(
         hasText(section.heading) ||
         hasText(section.html) ||
         hasTextList(section.paragraphs) ||
-        hasTextList(section.list)
+        hasTextList(section.list) ||
+        (Array.isArray(section.blocks) && section.blocks.length > 0)
     )
   );
 }
@@ -79,7 +86,7 @@ export function toLocaleTranslationStatus(
   document: CmsDocument | null | undefined
 ): CmsLocaleTranslationStatus {
   if (!document) return "missing";
-  if (document.status === "draft") return "draft";
+  if (document.status === "draft" || document.status === "scheduled") return "draft";
   if (document.status === "archived") return "archived";
   return isCmsDocumentComplete(document) ? "published_complete" : "published_incomplete";
 }

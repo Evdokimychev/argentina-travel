@@ -13,6 +13,8 @@ export const DEFAULT_SITE_BRANDING: SiteBrandingGlobal = {
   titleTemplate: "%s | Пора в Аргентину",
   defaultOgImage: "/logo-light.svg",
   themeColor: "#74acdf",
+  faviconUrl: "/logo-light.svg",
+  appleTouchIconUrl: "/icons/pwa-icon.svg",
 };
 
 export const DEFAULT_SITE_SEO: SiteSeoGlobal = {
@@ -35,6 +37,8 @@ export const DEFAULT_SITE_FEATURES: SiteFeaturesGlobal = {
   allowOrganizerSignup: true,
   cmsBlogCutover: false,
   cmsGuideCutover: false,
+  cmsDestinationCutover: false,
+  cmsPlaceCutover: false,
 };
 
 function asString(value: unknown, fallback = ""): string {
@@ -67,6 +71,8 @@ export function normalizeSiteFeatures(value: unknown): SiteFeaturesGlobal {
     allowOrganizerSignup: r.allowOrganizerSignup !== false,
     cmsBlogCutover: r.cmsBlogCutover === true,
     cmsGuideCutover: r.cmsGuideCutover === true,
+    cmsDestinationCutover: r.cmsDestinationCutover === true,
+    cmsPlaceCutover: r.cmsPlaceCutover === true,
   };
 }
 
@@ -82,6 +88,11 @@ export function normalizeSiteBranding(value: unknown): SiteBrandingGlobal {
     titleTemplate: asString(r.titleTemplate, DEFAULT_SITE_BRANDING.titleTemplate),
     defaultOgImage: asString(r.defaultOgImage, DEFAULT_SITE_BRANDING.defaultOgImage),
     themeColor: asString(r.themeColor, DEFAULT_SITE_BRANDING.themeColor),
+    faviconUrl: asString(r.faviconUrl, DEFAULT_SITE_BRANDING.faviconUrl ?? "/logo-light.svg"),
+    appleTouchIconUrl: asString(
+      r.appleTouchIconUrl,
+      DEFAULT_SITE_BRANDING.appleTouchIconUrl ?? "/icons/pwa-icon.svg"
+    ),
   };
 }
 
@@ -94,6 +105,9 @@ export function normalizeSiteSeo(value: unknown): SiteSeoGlobal {
     defaultDescription: asString(r.defaultDescription, DEFAULT_SITE_SEO.defaultDescription),
     twitterHandle: asString(r.twitterHandle) || undefined,
     allowIndexing: r.allowIndexing !== false,
+    googleSiteVerification: asString(r.googleSiteVerification) || undefined,
+    bingSiteVerification: asString(r.bingSiteVerification) || undefined,
+    ahrefsSiteVerification: asString(r.ahrefsSiteVerification) || undefined,
   };
 }
 

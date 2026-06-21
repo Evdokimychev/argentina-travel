@@ -11,6 +11,12 @@ import {
   invalidateSiteGlobal,
 } from "@/lib/site-settings-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import {
+  fetchCmsCutoverReadiness,
+} from "@/lib/cms/cms-cutover";
+import { fetchCmsOpsSummary } from "@/lib/cms/cms-ops";
+import { normalizeSiteFeatures } from "@/lib/cms/site-globals/normalize";
+import { readCronHealthReport } from "@/lib/ops/ops-status";
 import type { Json } from "@/types/database";
 import type { SiteGlobalKey } from "@/types/site-globals";
 import { SITE_GLOBAL_KEYS } from "@/types/site-globals";
@@ -40,6 +46,7 @@ export async function GET(request: Request) {
   }
 
   const normalized = await fetchAllSiteGlobalsForAdmin();
+  const cmsOps = await fetchCmsOpsSummary(supabase);
 
   return NextResponse.json({
     settings: {
@@ -56,6 +63,8 @@ export async function GET(request: Request) {
       description: g.description,
     })),
     ops: readOpsStatusSnapshot(),
+    cmsOps,
+    cronHealth: readCronHealthReport(12),
     productionReadiness: fetchProductionReadinessSnapshot(),
     publicHealth: await fetchPublicHealthSnapshot({ includeSearchIndexCount: false }),
   });
@@ -95,6 +104,52 @@ export async function PATCH(request: Request) {
   const supabase = createSupabaseAdminClient();
 
   for (const update of updates) {
+    if (update.key === "site.features") {
+      const features = normalizeSiteFeatures(update.value);
+      const readiness = await fetchCmsCutoverReadiness();
+
+      if (features.cmsBlogCutover && !readiness.blog.canEnable) {
+        return NextResponse.json(
+          {
+            error: "Нельзя включить CMS-only для блога: не все TS-slug опубликованы в CMS",
+            lane: "blog",
+            missingSlugs: readiness.blog.missingSlugs,
+          },
+          { status: 400 }
+        );
+      }
+      if (features.cmsGuideCutover && !readiness.guide.canEnable) {
+        return NextResponse.json(
+          {
+            error: "Нельзя включить CMS-only для путеводителя: не все TS-slug опубликованы в CMS",
+            lane: "guide",
+            missingSlugs: readiness.guide.missingSlugs,
+          },
+          { status: 400 }
+        );
+      }
+      if (features.cmsDestinationCutover && !readiness.destination.canEnable) {
+        return NextResponse.json(
+          {
+            error: "Нельзя включить CMS-only для направлений: не все TS-slug опубликованы в CMS",
+            lane: "destination",
+            missingSlugs: readiness.destination.missingSlugs,
+          },
+          { status: 400 }
+        );
+      }
+      if (features.cmsPlaceCutover && !readiness.place.canEnable) {
+        return NextResponse.json(
+          {
+            error: "Нельзя включить CMS-only для мест: не все TS-slug опубликованы в CMS",
+            lane: "place",
+            missingSlugs: readiness.place.missingSlugs,
+          },
+          { status: 400 }
+        );
+      }
+    }
+
     const { error } = await supabase.from("site_settings").upsert(
       {
         key: update.key,

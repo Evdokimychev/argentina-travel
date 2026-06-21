@@ -3,12 +3,15 @@
 import { useEffect, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import SiteGtmLoader from "@/components/analytics/SiteGtmLoader";
+import MessengerClickTracker from "@/components/analytics/MessengerClickTracker";
 import {
   COOKIE_CONSENT_CHANGED_EVENT,
   hasAnalyticsConsent,
 } from "@/lib/cookie-consent";
+import { isGtmEnabled } from "@/lib/analytics/gtm-config";
 
-/** Vercel Analytics + Speed Insights — only after analytics consent (see legal/cookies). */
+/** Vercel Analytics + GTM (via consent) — see legal/cookies. */
 export default function SiteAnalytics() {
   const [enabled, setEnabled] = useState(false);
 
@@ -20,12 +23,20 @@ export default function SiteAnalytics() {
     return () => window.removeEventListener(COOKIE_CONSENT_CHANGED_EVENT, onConsent);
   }, []);
 
-  if (!enabled) return null;
-
   return (
     <>
-      <Analytics />
-      <SpeedInsights />
+      {isGtmEnabled() ? (
+        <>
+          <SiteGtmLoader />
+          <MessengerClickTracker />
+        </>
+      ) : null}
+      {enabled ? (
+        <>
+          <Analytics />
+          <SpeedInsights />
+        </>
+      ) : null}
     </>
   );
 }

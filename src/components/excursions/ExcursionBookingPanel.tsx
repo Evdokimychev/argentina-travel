@@ -12,6 +12,7 @@ import { useExcursionBooking } from "@/components/excursions/ExcursionBookingCon
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { trackExcursionBookingClick } from "@/lib/analytics/gtm-events";
 import { useState } from "react";
 
 type ExcursionBookingPanelProps = {
@@ -67,6 +68,12 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
 
   function handleOpenPreview() {
     setFormError(null);
+    trackExcursionBookingClick({
+      slug: excursion.slug,
+      title: excursion.title,
+      action: canBookOnSite ? "preview" : "affiliate",
+      placement: "booking_panel",
+    });
     if (!openBookingPreview()) {
       if (!selectedDate || !selectedTime) {
         setFormError(t("excursions.booking.pickDateTime"));

@@ -101,6 +101,9 @@ function persistPreferences(preferences: CookieConsentPreferences): void {
   } catch {
     /* ignore */
   }
+  if (typeof window !== "undefined") {
+    import("@/lib/analytics/gtm-consent").then(({ syncGtmConsent }) => syncGtmConsent(preferences));
+  }
   window.dispatchEvent(new Event(COOKIE_CONSENT_CHANGED_EVENT));
 }
 

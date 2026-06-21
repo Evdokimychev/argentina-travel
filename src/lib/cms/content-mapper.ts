@@ -7,7 +7,7 @@ import type {
   CmsRevision,
 } from "@/types/cms-content";
 import type { LegalSection } from "@/data/legal-content";
-import { parseCmsBlogSection } from "@/lib/cms/page-builder/block-normalize";
+import { parseCmsBlogSection, parseCmsGuideSection } from "@/lib/cms/page-builder/block-normalize";
 
 type ContentDocumentRow = Database["public"]["Tables"]["content_documents"]["Row"];
 type ContentRevisionRow = Database["public"]["Tables"]["content_revisions"]["Row"];
@@ -35,7 +35,9 @@ function parseBody(value: Json): CmsDocumentBody {
       kind: "guide",
       description: typeof record.description === "string" ? record.description : "",
       category: typeof record.category === "string" ? record.category : undefined,
-      sections: Array.isArray(record.sections) ? (record.sections as LegalSection[]) : [],
+      sections: Array.isArray(record.sections)
+        ? record.sections.map((section) => parseCmsGuideSection(section))
+        : [],
       relatedLinks: Array.isArray(record.relatedLinks)
         ? (record.relatedLinks as { label: string; href: string; description?: string }[])
         : undefined,
@@ -85,7 +87,7 @@ function parseSeo(value: Json): CmsDocumentSeo {
 }
 
 function parseStatus(value: string): CmsDocumentStatus {
-  if (value === "published" || value === "archived") return value;
+  if (value === "published" || value === "archived" || value === "scheduled") return value;
   return "draft";
 }
 
@@ -100,6 +102,7 @@ export function rowToCmsDocument(row: ContentDocumentRow): CmsDocument {
     body: parseBody(row.body),
     seo: parseSeo(row.seo),
     publishedAt: row.published_at,
+    scheduledPublishAt: row.scheduled_publish_at ?? null,
     createdBy: row.created_by,
     updatedBy: row.updated_by,
     createdAt: row.created_at,
@@ -123,7 +126,16 @@ export function rowToCmsRevision(row: ContentRevisionRow): CmsRevision {
 export function cmsDocumentToRow(
   doc: Pick<
     CmsDocument,
-    "id" | "docType" | "slug" | "locale" | "title" | "status" | "body" | "seo" | "publishedAt"
+    | "id"
+    | "docType"
+    | "slug"
+    | "locale"
+    | "title"
+    | "status"
+    | "body"
+    | "seo"
+    | "publishedAt"
+    | "scheduledPublishAt"
   > & { createdBy?: string | null; updatedBy?: string | null }
 ): Database["public"]["Tables"]["content_documents"]["Insert"] {
   return {
@@ -136,6 +148,7 @@ export function cmsDocumentToRow(
     body: doc.body as Json,
     seo: doc.seo as Json,
     published_at: doc.publishedAt,
+    scheduled_publish_at: doc.scheduledPublishAt ?? null,
     created_by: doc.createdBy ?? null,
     updated_by: doc.updatedBy ?? null,
   };

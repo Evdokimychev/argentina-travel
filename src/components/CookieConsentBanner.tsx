@@ -123,7 +123,7 @@ export default function CookieConsentBanner() {
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-charcoal">Мы используем cookie</p>
           <p className="mt-1 text-xs leading-relaxed text-slate sm:text-sm">
-            Необходимые cookie нужны для входа и работы сайта. Аналитика и персонализация
+            Необходимые cookie нужны для входа и работы сайта. Аналитика (Google Analytics, Яндекс.Метрика, Microsoft Clarity через GTM) и персонализация
             включаются только с вашего согласия.{" "}
             <Link href="/legal/cookies" className="font-medium text-sky hover:underline">
               Политика cookie
@@ -142,7 +142,7 @@ export default function CookieConsentBanner() {
               <CategoryToggle
                 id="cookie-analytics"
                 label={CATEGORY_LABELS.analytics}
-                description="Анонимная статистика посещений и производительности сайта."
+                description="Анонимная статистика посещений (GA4, Яндекс.Метрика, Clarity через GTM)."
                 checked={analytics}
                 onChange={setAnalytics}
               />

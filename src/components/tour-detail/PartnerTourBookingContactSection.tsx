@@ -25,6 +25,7 @@ import {
   resolveTripsterFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
 import type { TourDetail } from "@/types";
+import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
 
 function RequiredMark() {
   return (
@@ -348,6 +349,14 @@ export default function PartnerTourBookingContactSection({
       }
 
       setSubmitted(true);
+      trackBookingSubmit({
+        productType: "tour",
+        slug: tour.slug,
+        title: tour.title,
+        partner: "tripster",
+        guests,
+        source: "partner_booking",
+      });
       feedback.success({
         title: "Заявка отправлена",
         description: "Переходим к оформлению на Tripster…",

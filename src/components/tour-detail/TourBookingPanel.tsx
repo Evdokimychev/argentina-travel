@@ -26,6 +26,7 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import BookingWaitlistPrompt from "./BookingWaitlistPrompt";
 import ExternalBookingButton from "./ExternalBookingButton";
 import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
+import { trackTourBookingClick } from "@/lib/analytics/gtm-events";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { normalizeGroupDiscountSettings } from "@/lib/group-discount";
@@ -161,6 +162,12 @@ export default function TourBookingPanel({
       return;
     }
     setBookingError(null);
+    trackTourBookingClick({
+      slug: tour.slug,
+      title: tour.title,
+      action: "checkout",
+      placement: "booking_panel",
+    });
     if (!openCheckout()) {
       setBookingError("Не удалось открыть бронирование. Проверьте дату и количество туристов.");
     }
@@ -174,6 +181,12 @@ export default function TourBookingPanel({
         return;
       }
       setBookingError(null);
+      trackTourBookingClick({
+        slug: tour.slug,
+        title: tour.title,
+        action: "partner_preview",
+        placement: "booking_panel",
+      });
       if (!openPartnerBookingPreview()) {
         setBookingError("Выберите дату заезда и проверьте количество туристов.");
       }
@@ -186,6 +199,12 @@ export default function TourBookingPanel({
       return;
     }
     setBookingError(null);
+    trackTourBookingClick({
+      slug: tour.slug,
+      title: tour.title,
+      action: "external",
+      placement: "booking_panel",
+    });
   }
 
   function handlePrimaryAction() {

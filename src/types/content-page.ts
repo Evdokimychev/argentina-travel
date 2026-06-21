@@ -1,9 +1,15 @@
+import type { BlogBodyBlock, BlogSectionKind } from "@/types/blog-content-blocks";
+
 export type ContentSection = {
   heading?: string;
   paragraphs?: string[];
   list?: string[];
   /** Sanitized HTML body (CMS rich text). Falls back to paragraphs when absent. */
   html?: string;
+  /** Page-builder section kind (FAQ, checklist, …). */
+  blockType?: BlogSectionKind;
+  /** Structured blocks from CMS page builder. */
+  blocks?: BlogBodyBlock[];
 };
 
 export type ContentRelatedLink = {

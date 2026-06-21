@@ -48,6 +48,8 @@ describe("normalizeSiteFeatures", () => {
       allowOrganizerSignup: false,
       cmsBlogCutover: false,
       cmsGuideCutover: false,
+      cmsDestinationCutover: false,
+      cmsPlaceCutover: false,
     });
   });
 
@@ -56,10 +58,14 @@ describe("normalizeSiteFeatures", () => {
       normalizeSiteFeatures({
         cmsBlogCutover: true,
         cmsGuideCutover: true,
+        cmsDestinationCutover: true,
+        cmsPlaceCutover: true,
       })
     ).toMatchObject({
       cmsBlogCutover: true,
       cmsGuideCutover: true,
+      cmsDestinationCutover: true,
+      cmsPlaceCutover: true,
     });
   });
 });

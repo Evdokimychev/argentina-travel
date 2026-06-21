@@ -8,7 +8,7 @@ import { formatBlogReadTime } from "@/lib/blog-utils";
 /** Document types supported by CMS v1.3 */
 export type CmsDocType = "legal" | "blog" | "guide" | "destination" | "place";
 
-export type CmsDocumentStatus = "draft" | "published" | "archived";
+export type CmsDocumentStatus = "draft" | "scheduled" | "published" | "archived";
 
 export type CmsLegalBody = {
   kind: "legal";
@@ -87,6 +87,8 @@ export type CmsDocument = {
   body: CmsDocumentBody;
   seo: CmsDocumentSeo;
   publishedAt: string | null;
+  /** Set when status=scheduled; auto-publish via cron at this time (UTC). */
+  scheduledPublishAt: string | null;
   createdBy: string | null;
   updatedBy: string | null;
   createdAt: string;

@@ -2192,6 +2192,7 @@ export interface Database {
           body: Json;
           seo: Json;
           published_at: string | null;
+          scheduled_publish_at: string | null;
           created_by: string | null;
           updated_by: string | null;
           created_at: string;
@@ -2207,6 +2208,7 @@ export interface Database {
           body?: Json;
           seo?: Json;
           published_at?: string | null;
+          scheduled_publish_at?: string | null;
           created_by?: string | null;
           updated_by?: string | null;
           created_at?: string;
@@ -2222,6 +2224,7 @@ export interface Database {
           body?: Json;
           seo?: Json;
           published_at?: string | null;
+          scheduled_publish_at?: string | null;
           created_by?: string | null;
           updated_by?: string | null;
           created_at?: string;

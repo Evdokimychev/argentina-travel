@@ -8,6 +8,7 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { trackNewsletterSubscribe } from "@/lib/analytics/gtm-events";
 
 export default function FooterNewsletter() {
   const [email, setEmail] = useState("");
@@ -37,6 +38,7 @@ export default function FooterNewsletter() {
       }
 
       setSubmitted(true);
+      trackNewsletterSubscribe({ source: "footer" });
       feedback.success({
         title: "Подписка оформлена",
         description: "Мы будем присылать новости о турах и советы по Аргентине.",

@@ -46,7 +46,7 @@ export async function PATCH(
   const decodedId = decodeURIComponent(id);
   const body = (await request.json()) as PatchBody;
 
-  if (body.status === "published") {
+  if (body.status === "published" || body.status === "scheduled") {
     const publishAuth = await authorizeAdminRequest(request, "content.publish");
     if (!publishAuth.ok) return publishAuth.response;
   }

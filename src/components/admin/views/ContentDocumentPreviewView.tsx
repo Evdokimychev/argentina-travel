@@ -1,18 +1,17 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import LegalPageView from "@/components/legal/LegalPageView";
-import ContentPageView from "@/components/content/ContentPageView";
-import BlogSectionBody from "@/components/blog/BlogSectionBody";
+import { useSearchParams } from "next/navigation";
 import { AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
+import CmsDocumentPreviewContent from "@/components/admin/cms/CmsDocumentPreviewContent";
+import CmsPreviewBanner from "@/components/admin/cms/CmsPreviewBanner";
 import {
-  guidePageFromCms,
-  legalDocumentFromCms,
-  type CmsDocument,
-} from "@/types/cms-content";
-import { cabinetCardClass } from "@/lib/cabinet-ui";
+  mergeCmsDocumentWithPreviewDraft,
+  readStagedCmsDocumentPreviewDraft,
+} from "@/lib/cms/cms-preview";
+import type { CmsDocument } from "@/types/cms-content";
 
 type Props = {
   documentId: string;
@@ -21,6 +20,8 @@ type Props = {
 type DocumentResponse = { document?: CmsDocument; error?: string };
 
 export default function ContentDocumentPreviewView({ documentId }: Props) {
+  const searchParams = useSearchParams();
+  const liveDraft = searchParams.get("live") === "1";
   const encodedId = encodeURIComponent(documentId);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -45,14 +46,20 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
     void load();
   }, [load]);
 
-  const guidePreview = doc?.body.kind === "guide" ? guidePageFromCms(doc) : null;
+  const previewDoc = useMemo(() => {
+    if (!doc) return null;
+    if (!liveDraft) return doc;
+    const staged = readStagedCmsDocumentPreviewDraft(documentId);
+    return mergeCmsDocumentWithPreviewDraft(doc, staged);
+  }, [doc, documentId, liveDraft]);
 
   return (
     <CapabilityGate capability="content.edit">
       <AdminPageShell>
-        <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="mb-4 flex items-center justify-between gap-3 px-4 pt-4 md:px-6">
           <p className="text-sm text-slate">
-            Предпросмотр черновика · статус: {doc?.status ?? "…"}
+            {liveDraft ? "Предпросмотр с несохранёнными правками" : "Предпросмотр сохранённой версии"} ·{" "}
+            {doc?.docType ?? "…"} · {doc?.slug ?? "…"}
           </p>
           <Link
             href={`/admin/content/documents/${encodedId}`}
@@ -62,40 +69,14 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
           </Link>
         </div>
 
-        {loading ? <p className="text-sm text-slate">Загрузка…</p> : null}
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {loading ? <p className="px-4 text-sm text-slate md:px-6">Загрузка…</p> : null}
+        {error ? <p className="px-4 text-sm text-red-600 md:px-6">{error}</p> : null}
 
-        {doc?.body.kind === "legal" ? (
-          <LegalPageView document={legalDocumentFromCms(doc)!} />
-        ) : null}
-
-        {doc?.body.kind === "blog" ? (
-          <article className={`${cabinetCardClass} mx-auto max-w-3xl space-y-6 p-6 sm:p-8`}>
-            <header>
-              <p className="text-xs uppercase tracking-wide text-sky">Статья · предпросмотр</p>
-              <h1 className="mt-2 font-heading text-3xl font-bold text-charcoal">{doc.title}</h1>
-              {doc.body.excerpt ? <p className="mt-3 text-slate">{doc.body.excerpt}</p> : null}
-            </header>
-            {(doc.body.sections ?? []).map((section, index) => (
-              <section key={index}>
-                <h2 className="font-heading text-xl font-bold text-charcoal">{section.title}</h2>
-                <BlogSectionBody
-                  section={section}
-                  postSlug={doc.slug}
-                  className="mt-4 blog-section-body space-y-5"
-                />
-              </section>
-            ))}
-            {!doc.body.sections?.length && doc.body.content ? (
-              <p className="whitespace-pre-wrap text-sm leading-relaxed text-slate">{doc.body.content}</p>
-            ) : null}
-          </article>
-        ) : null}
-
-        {guidePreview ? <ContentPageView page={guidePreview} /> : null}
-
-        {doc && doc.body.kind !== "legal" && doc.body.kind !== "blog" && doc.body.kind !== "guide" ? (
-          <p className="text-sm text-slate">Тип документа не поддерживается для предпросмотра.</p>
+        {previewDoc ? (
+          <>
+            <CmsPreviewBanner doc={previewDoc} liveDraft={liveDraft} />
+            <CmsDocumentPreviewContent doc={previewDoc} />
+          </>
         ) : null}
       </AdminPageShell>
     </CapabilityGate>

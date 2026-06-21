@@ -1,11 +1,15 @@
 import Link from "next/link";
+import { fetchSiteContact } from "@/lib/site-settings-server";
 
 export const metadata = {
   title: "Техническое обслуживание",
   robots: { index: false, follow: false },
 };
 
-export default function MaintenancePage() {
+export default async function MaintenancePage() {
+  const contact = await fetchSiteContact();
+  const supportEmail = contact.supportEmail?.trim() || "hello@goargentina.ru";
+
   return (
     <main className="flex min-h-[70vh] flex-col items-center justify-center px-4 py-16 text-center">
       <p className="text-sm font-medium uppercase tracking-wide text-sky">Сайт на обслуживании</p>
@@ -14,8 +18,8 @@ export default function MaintenancePage() {
       </h1>
       <p className="mt-4 max-w-md text-slate">
         Мы обновляем сервис. Попробуйте зайти позже или напишите на{" "}
-        <a href="mailto:IAEvdokimychev@ya.ru" className="text-sky hover:underline">
-          IAEvdokimychev@ya.ru
+        <a href={`mailto:${supportEmail}`} className="text-sky hover:underline">
+          {supportEmail}
         </a>
         .
       </p>

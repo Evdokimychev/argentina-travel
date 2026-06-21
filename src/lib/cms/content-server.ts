@@ -10,8 +10,21 @@ import type {
   CmsRevision,
 } from "@/types/cms-content";
 import { cmsDocumentId } from "@/types/cms-content";
+import { validateScheduledPublishAt } from "@/lib/cms/cms-scheduled-publish";
+import { syncCmsDocumentToSearchIndex } from "@/lib/search/cms-search-sync";
 
 type DbClient = SupabaseClient<Database>;
+
+async function syncSearchAfterCmsDocumentChange(
+  supabase: DbClient,
+  document: CmsDocument
+): Promise<void> {
+  try {
+    await syncCmsDocumentToSearchIndex(supabase, document);
+  } catch {
+    // Search sync must not block CMS publish/save.
+  }
+}
 
 export async function listCmsDocuments(
   supabase: DbClient,
@@ -70,6 +83,7 @@ export async function createCmsDocument(
     body: input.body,
     seo: input.seo ?? {},
     publishedAt: null,
+    scheduledPublishAt: null,
     createdBy: input.actorId,
     updatedBy: input.actorId,
   });
@@ -99,7 +113,7 @@ async function nextRevisionNumber(supabase: DbClient, documentId: string): Promi
 async function appendCmsRevision(
   supabase: DbClient,
   doc: CmsDocument,
-  actorId: string,
+  actorId: string | null,
   revisionNumber?: number
 ): Promise<void> {
   const revNum = revisionNumber ?? (await nextRevisionNumber(supabase, doc.id));
@@ -138,8 +152,60 @@ export async function updateCmsDocument(
     update.status = input.status;
     if (input.status === "published") {
       update.published_at = new Date().toISOString();
+      update.scheduled_publish_at = null;
+    } else if (input.status === "draft" || input.status === "archived") {
+      update.scheduled_publish_at = null;
     }
   }
+
+  const { error } = await supabase.from("content_documents").update(update).eq("id", id);
+  if (error) return { error: error.message };
+
+  const document = await getCmsDocumentById(supabase, id);
+  if (!document) return { error: "Не удалось прочитать документ" };
+
+  await appendCmsRevision(supabase, document, input.actorId);
+  await syncSearchAfterCmsDocumentChange(supabase, document);
+  return { document };
+}
+
+export async function publishCmsDocument(
+  supabase: DbClient,
+  id: string,
+  actorId: string
+): Promise<{ document: CmsDocument } | { error: string }> {
+  return updateCmsDocument(supabase, id, { status: "published", actorId });
+}
+
+export async function scheduleCmsDocument(
+  supabase: DbClient,
+  id: string,
+  input: {
+    scheduledPublishAt: string;
+    title?: string;
+    body?: CmsDocumentBody;
+    seo?: CmsDocumentSeo;
+    actorId: string;
+  }
+): Promise<{ document: CmsDocument } | { error: string }> {
+  const validated = validateScheduledPublishAt(input.scheduledPublishAt);
+  if (!validated.ok) return { error: validated.error };
+
+  const current = await getCmsDocumentById(supabase, id);
+  if (!current) return { error: "Документ не найден" };
+  if (current.status === "published") {
+    return { error: "Опубликованный документ нельзя запланировать — сначала снимите с публикации" };
+  }
+
+  const update: Database["public"]["Tables"]["content_documents"]["Update"] = {
+    status: "scheduled",
+    scheduled_publish_at: validated.iso,
+    updated_by: input.actorId,
+  };
+
+  if (input.title !== undefined) update.title = input.title;
+  if (input.body !== undefined) update.body = input.body as Json;
+  if (input.seo !== undefined) update.seo = input.seo as Json;
 
   const { error } = await supabase.from("content_documents").update(update).eq("id", id);
   if (error) return { error: error.message };
@@ -151,12 +217,87 @@ export async function updateCmsDocument(
   return { document };
 }
 
-export async function publishCmsDocument(
+export async function cancelCmsDocumentSchedule(
   supabase: DbClient,
   id: string,
   actorId: string
 ): Promise<{ document: CmsDocument } | { error: string }> {
-  return updateCmsDocument(supabase, id, { status: "published", actorId });
+  const current = await getCmsDocumentById(supabase, id);
+  if (!current) return { error: "Документ не найден" };
+  if (current.status !== "scheduled") {
+    return { error: "У документа нет запланированной публикации" };
+  }
+
+  const { error } = await supabase
+    .from("content_documents")
+    .update({
+      status: "draft",
+      scheduled_publish_at: null,
+      updated_by: actorId,
+    })
+    .eq("id", id);
+
+  if (error) return { error: error.message };
+
+  const document = await getCmsDocumentById(supabase, id);
+  if (!document) return { error: "Не удалось прочитать документ" };
+
+  await appendCmsRevision(supabase, document, actorId);
+  return { document };
+}
+
+export type PublishScheduledCmsResult = {
+  publishedIds: string[];
+  failed: Array<{ id: string; error: string }>;
+};
+
+export async function publishDueScheduledCmsDocuments(
+  supabase: DbClient,
+  actorId: string | null = null
+): Promise<PublishScheduledCmsResult> {
+  const now = new Date().toISOString();
+  const { data, error } = await supabase
+    .from("content_documents")
+    .select("id")
+    .eq("status", "scheduled")
+    .lte("scheduled_publish_at", now);
+
+  if (error || !data?.length) {
+    return { publishedIds: [], failed: error ? [{ id: "*", error: error.message }] : [] };
+  }
+
+  const publishedIds: string[] = [];
+  const failed: Array<{ id: string; error: string }> = [];
+
+  for (const row of data) {
+    const current = await getCmsDocumentById(supabase, row.id);
+    if (!current || current.status !== "scheduled" || !current.scheduledPublishAt) continue;
+
+    const publishAt = current.scheduledPublishAt;
+    const { error: updateError } = await supabase
+      .from("content_documents")
+      .update({
+        status: "published",
+        published_at: publishAt,
+        scheduled_publish_at: null,
+        updated_by: actorId,
+      })
+      .eq("id", row.id);
+
+    if (updateError) {
+      failed.push({ id: row.id, error: updateError.message });
+      continue;
+    }
+
+    const document = await getCmsDocumentById(supabase, row.id);
+    if (document) {
+      await appendCmsRevision(supabase, document, actorId);
+      await syncSearchAfterCmsDocumentChange(supabase, document);
+    }
+    publishedIds.push(row.id);
+  }
+
+  return { publishedIds, failed };
 }
 
 export async function deleteCmsDocument(

@@ -7,9 +7,13 @@ import SiteGlobalForm from "@/components/admin/site-globals/SiteGlobalForm";
 import ProductionReadinessPanel from "@/components/admin/ProductionReadinessPanel";
 import CutoverChecklistPanel from "@/components/admin/CutoverChecklistPanel";
 import CmsCutoverPanel from "@/components/admin/CmsCutoverPanel";
+import CmsOpsPanel from "@/components/admin/cms/CmsOpsPanel";
+import SiteGlobalsSeoPreview from "@/components/admin/cms/SiteGlobalsSeoPreview";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
+import type { CmsOpsSummary } from "@/lib/cms/cms-ops";
+import type { CronHealthReport } from "@/lib/ops/ops-status";
 import {
   SITE_CONTENT_GLOBAL_KEYS,
   SITE_GLOBAL_DEFINITIONS,
@@ -67,6 +71,8 @@ type SettingsResponse = {
       };
     };
   };
+  cmsOps?: CmsOpsSummary;
+  cronHealth?: CronHealthReport;
 };
 
 type SettingsTab = "content" | "ops" | "maintenance";
@@ -188,6 +194,10 @@ export default function SettingsView() {
                 updatedAt={data?.updatedAt?.[definition.key] ?? null}
               />
             ))}
+            <SiteGlobalsSeoPreview
+              branding={globals["site.branding"]}
+              seo={globals["site.seo"]}
+            />
           </div>
         ) : null}
 
@@ -212,6 +222,11 @@ export default function SettingsView() {
 
         {tab === "maintenance" ? (
           <div className="space-y-6">
+            <CmsOpsPanel
+              cmsOps={data?.cmsOps}
+              cronHealth={data?.cronHealth}
+              onRefresh={() => void refresh()}
+            />
             <ThemeSettingsSection />
 
             <ProductionReadinessPanel snapshot={data?.productionReadiness} />

@@ -20,6 +20,7 @@ const SUBTASKS: Subtask[] = [
   { key: "tripPrepReminders", path: "/api/cron/trip-prep/reminders" },
   { key: "digest", path: "/api/cron/notifications/digest" },
   { key: "contentFreshness", path: "/api/cron/content-freshness" },
+  { key: "cmsPublishScheduled", path: "/api/cron/cms/publish-scheduled" },
   {
     key: "backup",
     path: "/api/cron/ops/backup-hint",

@@ -89,7 +89,11 @@ export default function TourDetailView({
   previewIsPublished = false,
   previewPublishBlockingCount = 0,
 }: TourDetailViewProps) {
-  useTrackEntityView("tour", previewMode ? null : slug);
+  useTrackEntityView("tour", previewMode ? null : slug, {
+    title: initialTour?.title,
+    priceUsd: initialTour?.priceUsd,
+    organizerId: initialTour?.organizer?.slug,
+  });
 
   const syncedTour = useRepositoryTourDetail(slug, initialTour);
   const liveCanonicalTour = useCanonicalTour(slug, initialCanonicalTour);

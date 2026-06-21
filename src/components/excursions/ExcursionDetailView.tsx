@@ -34,7 +34,11 @@ export default function ExcursionDetailView({
   similarExcursions?: ExcursionListing[];
 }) {
   const { t } = useLocaleCurrency();
-  useTrackEntityView("excursion", excursion.slug);
+  useTrackEntityView("excursion", excursion.slug, {
+    title: excursion.title,
+    partner: excursion.partner,
+    cityName: excursion.cityName,
+  });
 
   const galleryImages = (
     excursion.photos.length

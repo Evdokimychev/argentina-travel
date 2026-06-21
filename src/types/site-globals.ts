@@ -15,6 +15,10 @@ export type SiteFeaturesGlobal = {
   cmsBlogCutover?: boolean;
   /** When true, guide pages resolve from CMS only (no TS fallback). */
   cmsGuideCutover?: boolean;
+  /** When true, destination pages resolve from CMS only (no TS fallback). */
+  cmsDestinationCutover?: boolean;
+  /** When true, place pages resolve from CMS only (no TS fallback). */
+  cmsPlaceCutover?: boolean;
 };
 
 export type SiteBrandingGlobal = {
@@ -24,12 +28,22 @@ export type SiteBrandingGlobal = {
   titleTemplate: string;
   defaultOgImage: string;
   themeColor: string;
+  /** Favicon path or URL (layout icons.icon). */
+  faviconUrl?: string;
+  /** Apple touch icon path or URL. */
+  appleTouchIconUrl?: string;
 };
 
 export type SiteSeoGlobal = {
   defaultDescription: string;
   twitterHandle?: string;
   allowIndexing: boolean;
+  /** Google Search Console HTML verification token (content value only). */
+  googleSiteVerification?: string;
+  /** Bing Webmaster Tools msvalidate.01 token. */
+  bingSiteVerification?: string;
+  /** Ahrefs Webmaster Tools verification token. */
+  ahrefsSiteVerification?: string;
 };
 
 export type SiteContactGlobal = {

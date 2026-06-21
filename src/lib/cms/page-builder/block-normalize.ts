@@ -180,6 +180,38 @@ export function parseCmsBlogSection(value: unknown): {
   };
 }
 
+export function parseCmsGuideSection(value: unknown): {
+  heading?: string;
+  paragraphs?: string[];
+  list?: string[];
+  html?: string;
+  blockType?: BlogSectionKind;
+  blocks?: BlogBodyBlock[];
+} {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return {};
+  }
+  const record = value as Record<string, unknown>;
+  const blocks = normalizeBlogBodyBlocks(record.blocks);
+  const heading = asString(record.heading);
+  const html = asString(record.html);
+  const paragraphs = Array.isArray(record.paragraphs)
+    ? record.paragraphs.filter((item): item is string => typeof item === "string")
+    : undefined;
+  const list = Array.isArray(record.list)
+    ? record.list.filter((item): item is string => typeof item === "string")
+    : undefined;
+
+  return {
+    heading: heading || undefined,
+    html: html || undefined,
+    paragraphs: paragraphs?.length ? paragraphs : undefined,
+    list: list?.length ? list : undefined,
+    blockType: normalizeSectionKind(record.blockType),
+    blocks: blocks.length > 0 ? blocks : undefined,
+  };
+}
+
 /** When blocks exist, derive plain body for search/fallback from paragraph blocks. */
 export function blocksToPlainText(blocks: BlogBodyBlock[]): string {
   return blocks

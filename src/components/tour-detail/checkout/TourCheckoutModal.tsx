@@ -73,6 +73,7 @@ import { syncContactToTraveler1, createCheckoutForm, applyAuthUserToCheckoutForm
 import { useAuth } from "@/context/AuthContext";
 import { createBookingFromCheckout } from "@/lib/bookings-store";
 import { getStoredFirstTouchAttribution } from "@/lib/attribution/first-touch";
+import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
 import { buildInsuranceHref } from "@/lib/insurance/checkout-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import BookingCheckoutStepper from "@/components/booking/BookingCheckoutStepper";
@@ -658,6 +659,14 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
     }
     setCreatedBookingId(bookingResult.id);
     setSubmitted(true);
+    trackBookingSubmit({
+      productType: "tour",
+      slug: tour.slug,
+      title: tour.title,
+      guests,
+      valueUsd: totalUsd,
+      source: "checkout_modal",
+    });
     setSubmitting(false);
     feedback.success({
       title: "Заявка отправлена",

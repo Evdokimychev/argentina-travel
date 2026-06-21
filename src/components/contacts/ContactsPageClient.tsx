@@ -23,6 +23,7 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import { trackContactFormSubmit } from "@/lib/analytics/gtm-events";
 
 const DEFAULT_FORM_INTRO = "Заполните форму, и мы свяжемся с вами в течение 24 часов";
 
@@ -98,6 +99,12 @@ function ContactsForm() {
       }
 
       setSubmitted(true);
+      trackContactFormSubmit({
+        source: "contacts",
+        tourSlug: tourSlug ?? undefined,
+        productSlug: productSlug ?? undefined,
+        serviceSlug: serviceSlug ?? undefined,
+      });
       feedback.success({
         title: "Сообщение отправлено",
         description: "Менеджер свяжется с вами в ближайшее время.",

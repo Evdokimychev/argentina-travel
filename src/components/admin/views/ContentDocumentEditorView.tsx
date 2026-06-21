@@ -15,8 +15,8 @@ import { cabinetCardClass } from "@/lib/cabinet-ui";
 import { buildCmsRevisionDiff } from "@/lib/cms/revision-diff";
 import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
 import { isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
-import type { LegalSection } from "@/data/legal-content";
 import type { BlogPostSection } from "@/types";
+import type { ContentSection } from "@/types/content-page";
 import type {
   CmsDestinationBody,
   CmsDocument,
@@ -31,6 +31,14 @@ import { parseCmsDocumentId } from "@/types/cms-content";
 import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
 import CmsSectionEditor from "@/components/admin/cms/CmsSectionEditor";
 import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
+import GuideSectionPageBuilder from "@/components/admin/page-builder/GuideSectionPageBuilder";
+import { stageCmsDocumentPreviewDraft } from "@/lib/cms/cms-preview";
+import {
+  datetimeLocalValueToScheduledPublishAt,
+  formatScheduledPublishLabel,
+  scheduledPublishAtToDatetimeLocalValue,
+} from "@/lib/cms/cms-scheduled-publish";
+import { normalizeGuideSectionForCms } from "@/lib/content-section-body";
 
 type Props = {
   documentId: string;
@@ -72,7 +80,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [guideCategory, setGuideCategory] = useState("");
-  const [sections, setSections] = useState<LegalSection[]>([]);
+  const [sections, setSections] = useState<ContentSection[]>([]);
   const [excerpt, setExcerpt] = useState("");
   const [blogSections, setBlogSections] = useState<BlogPostSection[]>([]);
   const [blogFeatured, setBlogFeatured] = useState(false);
@@ -96,6 +104,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [localeCoverage, setLocaleCoverage] = useState<CmsLocaleCoverage>(buildEmptyLocaleCoverage());
   const [creatingLocale, setCreatingLocale] = useState<I18nLocale | null>(null);
   const [seo, setSeo] = useState<CmsDocumentSeo>({});
+  const [scheduleAtLocal, setScheduleAtLocal] = useState("");
 
   const parsedId = useMemo(() => parseCmsDocumentId(documentId), [documentId]);
   const currentLocale: I18nLocale =
@@ -136,6 +145,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       setTitle(document.title);
       setStatus(document.status);
       setSeo(document.seo ?? {});
+      setScheduleAtLocal(scheduledPublishAtToDatetimeLocalValue(document.scheduledPublishAt));
 
       if (document.body.kind === "legal") {
         setDescription(document.body.description);
@@ -223,7 +233,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         kind: "guide",
         description: description.trim(),
         category: guideCategory.trim() || undefined,
-        sections,
+        sections: sections.map((section) => normalizeGuideSectionForCms(section)),
         relatedLinks: doc.body.relatedLinks,
         relatedTourQuery: doc.body.relatedTourQuery,
       } satisfies CmsGuideBody;
@@ -398,6 +408,68 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     }
   }
 
+  function openLivePreview() {
+    stageCmsDocumentPreviewDraft(documentId, {
+      title: title.trim(),
+      body: buildBody(),
+      seo: buildSeo(),
+    });
+    window.open(
+      `/admin/content/documents/${encodedId}/preview?live=1`,
+      "_blank",
+      "noopener,noreferrer"
+    );
+  }
+
+  async function schedulePublication() {
+    if (!canPublish) return;
+    const scheduledPublishAt = datetimeLocalValueToScheduledPublishAt(scheduleAtLocal);
+    if (!scheduledPublishAt) {
+      alert("Укажите дату и время публикации");
+      return;
+    }
+
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/content/documents/${encodedId}/schedule`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          scheduledPublishAt,
+          title: title.trim(),
+          body: buildBody(),
+          seo: buildSeo(),
+        }),
+      });
+      const json = (await res.json()) as DocumentResponse;
+      if (!res.ok) throw new Error(json.error ?? "Не удалось запланировать публикацию");
+      await load();
+    } catch (scheduleError) {
+      alert(scheduleError instanceof Error ? scheduleError.message : "Ошибка");
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function cancelSchedule() {
+    if (!canPublish) return;
+    if (!window.confirm("Отменить запланированную публикацию?")) return;
+
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/content/documents/${encodedId}/schedule`, {
+        method: "DELETE",
+      });
+      const json = (await res.json()) as DocumentResponse;
+      if (!res.ok) throw new Error(json.error ?? "Не удалось отменить публикацию");
+      await load();
+    } catch (cancelError) {
+      alert(cancelError instanceof Error ? cancelError.message : "Ошибка");
+    } finally {
+      setSaving(false);
+    }
+  }
+
   async function removeOverride() {
     if (!canPublish) return;
     if (!window.confirm("Удалить CMS-версию? На сайте снова будет файл из репозитория.")) return;
@@ -414,7 +486,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     }
   }
 
-  function updateSection(index: number, patch: Partial<LegalSection>) {
+  function updateSection(index: number, patch: Partial<ContentSection>) {
     setSections((prev) => prev.map((section, i) => (i === index ? { ...section, ...patch } : section)));
   }
 
@@ -464,27 +536,38 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           ? `/destinations/${doc.slug}`
           : `/places/${doc.slug}`;
 
+  const isScheduled = status === "scheduled";
+  const scheduledLabel =
+    doc.scheduledPublishAt && isScheduled
+      ? formatScheduledPublishLabel(doc.scheduledPublishAt)
+      : null;
+
   return (
     <CapabilityGate capability="content.edit">
       <AdminPageShell>
         <AdminPageHeader
           title={title || doc.title}
-          subtitle={`CMS · ${doc.docType} · ${doc.slug} · ${currentLocale} · ${status}`}
+          subtitle={`CMS · ${doc.docType} · ${doc.slug} · ${currentLocale} · ${status}${
+            scheduledLabel ? ` · ${scheduledLabel}` : ""
+          }`}
           actions={
             <div className="flex flex-wrap gap-2">
               <Button variant="outline" disabled={saving} onClick={() => void saveDraft()}>
                 Сохранить черновик
               </Button>
               {canPublish ? (
-                <Button disabled={saving} onClick={() => void publish()}>
+                <Button disabled={saving || isScheduled} onClick={() => void publish()}>
                   Опубликовать
                 </Button>
               ) : null}
+              <Button type="button" variant="outline" disabled={saving} onClick={openLivePreview}>
+                Предпросмотр
+              </Button>
               <Link
                 href={`/admin/content/documents/${encodedId}/preview`}
                 className="inline-flex h-10 items-center rounded-xl border border-gray-200 px-4 text-sm font-medium text-charcoal hover:border-sky/40 hover:text-sky"
               >
-                Предпросмотр
+                Сохранённая версия
               </Link>
               <Link
                 href={publicHref}
@@ -656,12 +739,10 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </NativeSelect>
             </label>
 
-            {isLegal || isGuide ? (
+            {isLegal ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h2 className="font-heading text-lg font-bold text-charcoal">
-                  {isGuide ? "Разделы путеводителя" : "Разделы"}
-                </h2>
+                <h2 className="font-heading text-lg font-bold text-charcoal">Разделы</h2>
                 <Button size="sm" variant="outline" onClick={addSection}>
                   Добавить раздел
                 </Button>
@@ -677,6 +758,10 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 />
               ))}
             </div>
+            ) : null}
+
+            {isGuide ? (
+              <GuideSectionPageBuilder sections={sections} onChange={setSections} />
             ) : null}
 
             {isBlog ? (
@@ -696,6 +781,43 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 <p className="mt-1 text-xs text-slate">
                   Опубликовано: {formatAdminWhen(doc.publishedAt)}
                 </p>
+              ) : null}
+              {doc.scheduledPublishAt && isScheduled ? (
+                <p className="mt-1 text-xs text-amber-700">
+                  Запланировано: {formatScheduledPublishLabel(doc.scheduledPublishAt)}
+                </p>
+              ) : null}
+              {canPublish && status !== "published" ? (
+                <div className="mt-4 space-y-2 rounded-xl border border-gray-100 p-3">
+                  <p className="text-xs font-medium text-charcoal">Отложенная публикация</p>
+                  <input
+                    type="datetime-local"
+                    className="w-full rounded-lg border border-gray-200 px-2 py-1.5 text-xs text-charcoal"
+                    value={scheduleAtLocal}
+                    onChange={(e) => setScheduleAtLocal(e.target.value)}
+                    disabled={saving}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full"
+                    disabled={saving || !scheduleAtLocal.trim()}
+                    onClick={() => void schedulePublication()}
+                  >
+                    Запланировать
+                  </Button>
+                  {isScheduled ? (
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      className="w-full"
+                      disabled={saving}
+                      onClick={() => void cancelSchedule()}
+                    >
+                      Отменить публикацию
+                    </Button>
+                  ) : null}
+                </div>
               ) : null}
               {canPublish ? (
                 <Button

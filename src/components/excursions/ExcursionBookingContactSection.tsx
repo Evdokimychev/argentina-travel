@@ -21,6 +21,7 @@ import { cn } from "@/lib/cn";
 import { formatTourists } from "@/lib/pluralize";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { AuthUser } from "@/types/auth";
+import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
 
 function RequiredMark() {
   return (
@@ -280,6 +281,14 @@ export default function ExcursionBookingContactSection() {
       }
 
       setSubmitted(true);
+      trackBookingSubmit({
+        productType: "excursion",
+        slug: excursion.slug,
+        title: excursion.title,
+        partner: excursion.partner,
+        guests: persons,
+        source: "excursion_booking",
+      });
       feedback.success({
         title: "Заявка отправлена",
         description: "Переходим к оформлению…",

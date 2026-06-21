@@ -38,6 +38,7 @@ async function main() {
   const publish = !process.argv.includes("--draft");
   const force = process.argv.includes("--force");
   const i18nStubs = process.argv.includes("--i18n-stubs");
+  const includeRichHtml = !process.argv.includes("--no-rich-html");
   const docTypeArg = process.argv.find((arg) => arg.startsWith("--type="));
   const docTypes = docTypeArg
     ? docTypeArg
@@ -62,6 +63,7 @@ async function main() {
     docTypes,
     publish,
     skipExisting: !force,
+    includeRichHtml,
   });
 
   console.log(

@@ -1,6 +1,11 @@
 import { getAllDestinations, getDestinationBySlug } from "@/lib/destinations";
 import type { DestinationPage } from "@/data/destination-pages";
 import {
+  destinationsFromCmsDocuments,
+  fetchPublishedCmsDocumentsForCutover,
+  getCmsCutoverFlags,
+} from "@/lib/cms/cms-cutover";
+import {
   attachCmsResolverMetadata,
   buildCmsResolverMetadata,
   cmsOverrideId,
@@ -57,8 +62,19 @@ export function mergeDestinationCatalog(
 }
 
 export async function resolveDestinationCatalog(locale = "ru"): Promise<DestinationPage[]> {
-  const fallback = getAllDestinations();
+  const cutover = await getCmsCutoverFlags();
   const supabase = await getCmsServerClient();
+
+  if (cutover.destination) {
+    if (!supabase) return [];
+    const cmsDestinations = await fetchPublishedCmsDocumentsForCutover("destination", locale);
+    return destinationsFromCmsDocuments(
+      cmsDestinations,
+      getAllDestinations().map((destination) => destination.id)
+    );
+  }
+
+  const fallback = getAllDestinations();
   if (!supabase) return fallback;
 
   const cmsDestinations = await fetchPublishedCmsDocumentsMergedByLocaleChain(
@@ -76,13 +92,14 @@ export async function resolveDestinationPage(
   slug: string,
   locale = "ru"
 ): Promise<DestinationPage | null> {
-  const fallback = getDestinationBySlug(slug) ?? null;
+  const cutover = await getCmsCutoverFlags();
+  const fallback = cutover.destination ? null : (getDestinationBySlug(slug) ?? null);
   const supabase = await getCmsServerClient();
   const translationStatus = supabase
     ? await fetchCmsTranslationStatusForSlug(supabase, "destination", slug, {
-        ruFallbackComplete: Boolean(fallback),
+        ruFallbackComplete: cutover.destination ? false : Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(Boolean(fallback));
+    : buildDefaultTranslationStatus(cutover.destination ? false : Boolean(fallback));
 
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "destination",
@@ -98,6 +115,9 @@ export async function resolveDestinationPage(
 }
 
 export async function listPublishedDestinationSlugs(locale = "ru"): Promise<string[]> {
+  const cutover = await getCmsCutoverFlags();
   const fallbackSlugs = getAllDestinations().map((destination) => destination.id);
-  return listPublishedCmsSlugs("destination", fallbackSlugs, locale);
+  return listPublishedCmsSlugs("destination", fallbackSlugs, locale, {
+    cmsOnly: cutover.destination,
+  });
 }

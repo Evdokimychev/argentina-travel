@@ -21,6 +21,7 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { trackTourBookingClick } from "@/lib/analytics/gtm-events";
 
 function formatMobileDateSummary(
   dates: TourDetail["dates"],
@@ -138,6 +139,12 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       }
       setError(null);
       setExpanded(false);
+      trackTourBookingClick({
+        slug: tour.slug,
+        title: tour.title,
+        action: "partner_preview",
+        placement: "mobile_bar",
+      });
       if (!openPartnerBookingPreview()) {
         setError("Выберите дату заезда и проверьте количество туристов.");
         setExpanded(true);
@@ -161,6 +168,12 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       return;
     }
     setError(null);
+    trackTourBookingClick({
+      slug: tour.slug,
+      title: tour.title,
+      action: "checkout",
+      placement: "mobile_bar",
+    });
     if (!openCheckout()) {
       setError(
         siteFormError("Не удалось открыть бронирование", {

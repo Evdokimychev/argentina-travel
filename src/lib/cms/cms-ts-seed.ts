@@ -11,6 +11,7 @@ import {
   buildCmsI18nRolloutStubEntries,
 } from "@/lib/cms/cms-i18n-rollout";
 import type { Database, Json } from "@/types/database";
+import { enrichContentSectionsWithHtml } from "@/lib/content-section-body";
 import {
   blogBodyFromTs,
   cmsDocumentId,
@@ -39,6 +40,8 @@ export type CmsSeedOptions = {
   locale?: string;
   publish?: boolean;
   skipExisting?: boolean;
+  /** When true (default), legal/guide sections get `html` from plain paragraphs. */
+  includeRichHtml?: boolean;
   actorId?: string | null;
 };
 
@@ -112,6 +115,31 @@ export function buildCmsSeedEntries(locale = "ru"): CmsSeedEntry[] {
   return entries;
 }
 
+/** Enrich legal/guide seed bodies with sanitized HTML for rich-text editor (E1). */
+export function enrichSeedBodyWithRichHtml(body: CmsDocumentBody): CmsDocumentBody {
+  if (body.kind === "legal") {
+    return {
+      ...body,
+      sections: enrichContentSectionsWithHtml(body.sections),
+    };
+  }
+  if (body.kind === "guide") {
+    return {
+      ...body,
+      sections: enrichContentSectionsWithHtml(body.sections),
+    };
+  }
+  return body;
+}
+
+function prepareSeedEntry(entry: CmsSeedEntry, includeRichHtml: boolean): CmsSeedEntry {
+  if (!includeRichHtml) return entry;
+  return {
+    ...entry,
+    body: enrichSeedBodyWithRichHtml(entry.body),
+  };
+}
+
 async function appendSeedRevision(
   supabase: DbClient,
   documentId: string,
@@ -146,12 +174,13 @@ export async function seedCmsFromTs(
   const locale = options.locale ?? "ru";
   const publish = options.publish ?? true;
   const skipExisting = options.skipExisting ?? true;
+  const includeRichHtml = options.includeRichHtml !== false;
   const actorId = options.actorId ?? null;
   const allowedTypes = options.docTypes ? new Set(options.docTypes) : null;
 
-  const entries = buildCmsSeedEntries(locale).filter(
-    (entry) => !allowedTypes || allowedTypes.has(entry.docType)
-  );
+  const entries = buildCmsSeedEntries(locale)
+    .filter((entry) => !allowedTypes || allowedTypes.has(entry.docType))
+    .map((entry) => prepareSeedEntry(entry, includeRichHtml));
 
   let created = 0;
   let skipped = 0;
@@ -212,6 +241,7 @@ export async function seedCmsFromTs(
       body: entry.body,
       seo: entry.seo,
       publishedAt,
+      scheduledPublishAt: null,
       createdBy: actorId,
       updatedBy: actorId,
     });
@@ -298,6 +328,7 @@ export async function seedCmsI18nPilot(
       body: entry.body,
       seo: entry.seo,
       publishedAt,
+      scheduledPublishAt: null,
       createdBy: actorId,
       updatedBy: actorId,
     });
@@ -438,6 +469,7 @@ export async function seedCmsI18nEmptyStubs(
       body: entry.body,
       seo: entry.seo,
       publishedAt,
+      scheduledPublishAt: null,
       createdBy: actorId,
       updatedBy: actorId,
     });
@@ -523,6 +555,7 @@ export async function seedCmsLocalePlaceholders(
       body: entry.body,
       seo: entry.seo,
       publishedAt,
+      scheduledPublishAt: null,
       createdBy: actorId,
       updatedBy: actorId,
     });

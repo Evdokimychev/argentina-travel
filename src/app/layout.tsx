@@ -4,8 +4,10 @@ import Providers from "@/components/Providers";
 import ThemeScript from "@/components/ThemeScript";
 import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
+import GtmHeadScripts from "@/components/analytics/GtmHeadScripts";
 import { loadSiteFooterInfo } from "@/lib/site-footer-info";
 import { siteRobotsMetadata } from "@/lib/cms/site-globals/robots-meta";
+import { resolveSiteVerificationMeta } from "@/lib/analytics/site-verification-meta";
 import { fetchSiteBranding, fetchSitePublicMeta } from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
@@ -28,6 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const ogImageUrl = resolveOgImageUrl(branding.defaultOgImage);
   const twitterTitle = branding.defaultTitle;
   const twitterDescription = seo.defaultDescription;
+  const verification = resolveSiteVerificationMeta(seo);
 
   return {
     metadataBase: new URL(getSiteUrl()),
@@ -37,6 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
     },
     description: seo.defaultDescription,
     robots: siteRobotsMetadata(seo.allowIndexing),
+    ...(verification ? { verification } : {}),
     openGraph: {
       type: "website",
       locale: "ru_RU",
@@ -60,8 +64,8 @@ export async function generateMetadata(): Promise<Metadata> {
         : {}),
     },
     icons: {
-      icon: "/logo-light.svg",
-      apple: "/icons/pwa-icon.svg",
+      icon: branding.faviconUrl?.trim() || "/logo-light.svg",
+      apple: branding.appleTouchIconUrl?.trim() || "/icons/pwa-icon.svg",
     },
     manifest: "/manifest.json",
     appleWebApp: {
@@ -92,6 +96,7 @@ export default async function RootLayout({
   return (
     <html lang="ru" className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
       <head>
+        <GtmHeadScripts />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var h=w?140:84;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
