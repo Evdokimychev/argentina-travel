@@ -7,6 +7,7 @@ import type {
   CmsRevision,
 } from "@/types/cms-content";
 import type { LegalSection } from "@/data/legal-content";
+import { parseCmsBlogSection } from "@/lib/cms/page-builder/block-normalize";
 
 type ContentDocumentRow = Database["public"]["Tables"]["content_documents"]["Row"];
 type ContentRevisionRow = Database["public"]["Tables"]["content_revisions"]["Row"];
@@ -25,7 +26,7 @@ function parseBody(value: Json): CmsDocumentBody {
       content: typeof record.content === "string" ? record.content : undefined,
       featured: typeof record.featured === "boolean" ? record.featured : undefined,
       sections: Array.isArray(record.sections)
-        ? (record.sections as { title: string; body: string }[])
+        ? record.sections.map((section) => parseCmsBlogSection(section))
         : undefined,
     };
   }
@@ -79,6 +80,7 @@ function parseSeo(value: Json): CmsDocumentSeo {
   return {
     description: typeof record.description === "string" ? record.description : undefined,
     title: typeof record.title === "string" ? record.title : undefined,
+    image: typeof record.image === "string" ? record.image : undefined,
   };
 }
 

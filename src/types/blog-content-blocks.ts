@@ -36,7 +36,8 @@ export type BlogBodyBlock =
   | { type: "map"; lat: number; lng: number; label: string }
   | { type: "ticket-link"; url: string; label: string }
   | { type: "seasons"; items: BlogSeasonItem[]; conclusion?: string }
-  | { type: "budget"; items: BlogBudgetItem[]; note?: string };
+  | { type: "budget"; items: BlogBudgetItem[]; note?: string }
+  | { type: "media"; src: string; alt: string; caption?: string };
 
 /** Optional CMS hint for section parsing/rendering (fallback: title heuristics) */
 export type BlogSectionKind = "default" | "faq" | "mistakes" | "checklist";

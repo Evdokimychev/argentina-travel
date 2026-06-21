@@ -21,12 +21,16 @@ import type {
   CmsDestinationBody,
   CmsDocument,
   CmsDocumentBody,
+  CmsDocumentSeo,
   CmsGuideBody,
   CmsLegalBody,
   CmsPlaceBody,
   CmsRevision,
 } from "@/types/cms-content";
 import { parseCmsDocumentId } from "@/types/cms-content";
+import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
+import CmsMediaPickerDialog from "@/components/admin/CmsMediaPickerDialog";
+import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
 
 type Props = {
   documentId: string;
@@ -91,6 +95,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [restoringRevisionId, setRestoringRevisionId] = useState<string | null>(null);
   const [localeCoverage, setLocaleCoverage] = useState<CmsLocaleCoverage>(buildEmptyLocaleCoverage());
   const [creatingLocale, setCreatingLocale] = useState<I18nLocale | null>(null);
+  const [seo, setSeo] = useState<CmsDocumentSeo>({});
+  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
 
   const parsedId = useMemo(() => parseCmsDocumentId(documentId), [documentId]);
   const currentLocale: I18nLocale =
@@ -130,6 +136,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       setDoc(document);
       setTitle(document.title);
       setStatus(document.status);
+      setSeo(document.seo ?? {});
 
       if (document.body.kind === "legal") {
         setDescription(document.body.description);
@@ -141,7 +148,11 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       } else if (document.body.kind === "blog") {
         setExcerpt(document.body.excerpt ?? "");
         setBlogFeatured(document.body.featured ?? false);
-        setBlogSections(document.body.sections ?? [{ title: "Основной текст", body: document.body.content ?? "" }]);
+        setBlogSections(
+          document.body.sections ?? [
+            { title: "Основной текст", body: document.body.content ?? "", blocks: [] },
+          ]
+        );
       } else if (document.body.kind === "destination") {
         setDescription(document.body.description);
         setDestinationIntro(document.body.intro ?? "");
@@ -248,16 +259,26 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     } satisfies CmsLegalBody;
   }
 
+  function buildSeo(): CmsDocumentSeo {
+    return {
+      title: seo.title?.trim() || undefined,
+      description: seo.description?.trim() || undefined,
+      image: seo.image?.trim() || undefined,
+    };
+  }
+
   const revisionDiff = useMemo(() => {
     if (!selectedRevision || !doc) return null;
     return buildCmsRevisionDiff(
       {
         title: title.trim(),
         body: buildBody(),
+        seo: buildSeo(),
       },
       {
         title: selectedRevision.title,
         body: selectedRevision.body,
+        seo: selectedRevision.seo ?? {},
       }
     );
   }, [
@@ -279,6 +300,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     placeShortDescription,
     sections,
     selectedRevision,
+    seo,
     title,
   ]);
 
@@ -343,7 +365,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       const res = await fetch(`/api/admin/content/documents/${encodedId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), body: buildBody(), status: "draft" }),
+        body: JSON.stringify({ title: title.trim(), body: buildBody(), seo: buildSeo(), status: "draft" }),
       });
       const json = (await res.json()) as DocumentResponse;
       if (!res.ok) throw new Error(json.error ?? "Ошибка сохранения");
@@ -362,7 +384,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       await fetch(`/api/admin/content/documents/${encodedId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title: title.trim(), body: buildBody() }),
+        body: JSON.stringify({ title: title.trim(), body: buildBody(), seo: buildSeo() }),
       });
       const res = await fetch(`/api/admin/content/documents/${encodedId}/publish`, {
         method: "POST",
@@ -403,18 +425,6 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
 
   function removeSection(index: number) {
     setSections((prev) => prev.filter((_, i) => i !== index));
-  }
-
-  function removeBlogSection(index: number) {
-    setBlogSections((prev) => prev.filter((_, i) => i !== index));
-  }
-
-  function updateBlogSection(index: number, patch: Partial<BlogPostSection>) {
-    setBlogSections((prev) => prev.map((section, i) => (i === index ? { ...section, ...patch } : section)));
-  }
-
-  function addBlogSection() {
-    setBlogSections((prev) => [...prev, { title: "", body: "" }]);
   }
 
   if (loading) {
@@ -694,36 +704,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
             ) : null}
 
             {isBlog ? (
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <h2 className="font-heading text-lg font-bold text-charcoal">Разделы статьи</h2>
-                <Button size="sm" variant="outline" onClick={addBlogSection}>
-                  Добавить раздел
-                </Button>
-              </div>
-              {blogSections.map((section, index) => (
-                <div key={index} className="space-y-2 rounded-2xl border border-gray-100 p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <Input
-                      value={section.title}
-                      onChange={(e) => updateBlogSection(index, { title: e.target.value })}
-                      placeholder="Заголовок раздела"
-                    />
-                    <Button size="sm" variant="ghost" onClick={() => removeBlogSection(index)}>
-                      Удалить
-                    </Button>
-                  </div>
-                  <label className="block space-y-1 text-xs text-slate">
-                    Текст
-                    <textarea
-                      className="min-h-[120px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
-                      value={section.body}
-                      onChange={(e) => updateBlogSection(index, { body: e.target.value })}
-                    />
-                  </label>
-                </div>
-              ))}
-            </div>
+              <BlogSectionPageBuilder sections={blogSections} onChange={setBlogSections} />
             ) : null}
           </section>
 
@@ -752,6 +733,15 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                 </Button>
               ) : null}
             </section>
+
+            <CmsSeoPanel
+              pageTitle={title}
+              excerpt={isBlog ? excerpt : description}
+              seo={seo}
+              onChange={setSeo}
+              publicPath={publicHref}
+              onPickImage={() => setMediaPickerOpen(true)}
+            />
 
             <section className={`${cabinetCardClass} p-4`}>
               <h2 className="font-heading text-sm font-bold text-charcoal">Ревизии</h2>
@@ -846,6 +836,11 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           </aside>
         </div>
       </AdminPageShell>
+      <CmsMediaPickerDialog
+        open={mediaPickerOpen}
+        onClose={() => setMediaPickerOpen(false)}
+        onSelect={(localPath) => setSeo((prev) => ({ ...prev, image: localPath }))}
+      />
     </CapabilityGate>
   );
 }

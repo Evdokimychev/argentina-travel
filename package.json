@@ -43,6 +43,7 @@
     "lighthouse:blog": "node scripts/lighthouse-blog-cwv.mjs",
     "sync-rich-articles": "node scripts/sync-blog-rich-articles-from-md.mjs",
     "sync-rich-articles:check": "node scripts/sync-blog-rich-articles-from-md.mjs --check",
+    "sync-cms-media-manifest": "node scripts/sync-cms-media-manifest.mjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },

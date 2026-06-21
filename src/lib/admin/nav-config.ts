@@ -120,7 +120,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     section: "content",
     href: "/admin/media",
     label: "Медиатека",
-    description: "Manifest assets — heroes, gallery, stock",
+    description: "Upload, grid, sync manifest",
     capability: "content.edit",
   },
   {

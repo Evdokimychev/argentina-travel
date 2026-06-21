@@ -20,6 +20,7 @@ export type CmsRevisionDiffResult = {
 type CmsSnapshot = {
   title: string;
   body: CmsDocumentBody;
+  seo?: { title?: string; description?: string; image?: string };
 };
 
 function normalizeText(value: string | null | undefined): string {
@@ -221,6 +222,10 @@ export function buildCmsRevisionDiff(current: CmsSnapshot, revision: CmsSnapshot
   const items: CmsRevisionDiffItem[] = [];
 
   pushTextDiff(items, "Заголовок", current.title, revision.title);
+
+  pushTextDiff(items, "SEO title", current.seo?.title ?? "", revision.seo?.title ?? "");
+  pushTextDiff(items, "SEO description", current.seo?.description ?? "", revision.seo?.description ?? "");
+  pushTextDiff(items, "SEO image", current.seo?.image ?? "", revision.seo?.image ?? "");
 
   if (current.body.kind === "legal" && revision.body.kind === "legal") {
     diffLegalBody(items, current.body, revision.body);

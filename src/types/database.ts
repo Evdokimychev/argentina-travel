@@ -2082,6 +2082,66 @@ export interface Database {
           },
         ];
       };
+      cms_media_assets: {
+        Row: {
+          id: string;
+          title: string;
+          alt: string;
+          storage_path: string;
+          public_url: string;
+          mime_type: string | null;
+          file_size: number | null;
+          width: number | null;
+          height: number | null;
+          category: string;
+          tags: string[];
+          role: string;
+          manifest_synced: boolean;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id: string;
+          title: string;
+          alt?: string;
+          storage_path: string;
+          public_url: string;
+          mime_type?: string | null;
+          file_size?: number | null;
+          width?: number | null;
+          height?: number | null;
+          category?: string;
+          tags?: string[];
+          role?: string;
+          manifest_synced?: boolean;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          title?: string;
+          alt?: string;
+          storage_path?: string;
+          public_url?: string;
+          mime_type?: string | null;
+          file_size?: number | null;
+          width?: number | null;
+          height?: number | null;
+          category?: string;
+          tags?: string[];
+          role?: string;
+          manifest_synced?: boolean;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       content_documents: {
         Row: {
           id: string;

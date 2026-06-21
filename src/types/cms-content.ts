@@ -73,6 +73,8 @@ export type CmsDocumentBody =
 export type CmsDocumentSeo = {
   description?: string;
   title?: string;
+  /** OG / meta image — localPath, /media/... or absolute URL */
+  image?: string;
 };
 
 export type CmsDocument = {
@@ -211,7 +213,7 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     authorBio: fallback?.authorBio,
     authorAvatar: fallback?.authorAvatar,
     date: doc.publishedAt?.slice(0, 10) ?? fallback?.date ?? doc.updatedAt.slice(0, 10),
-    image: fallback?.image ?? "/logo-light.svg",
+    image: doc.seo.image ?? fallback?.image ?? "/logo-light.svg",
     category: fallback?.category ?? "Статья",
     readTime: fallback?.readTime ?? formatBlogReadTime(readTimeMinutes),
     readTimeMinutes,

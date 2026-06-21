@@ -4,21 +4,26 @@ import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipToContentLink from "@/components/SkipToContentLink";
+import type { SiteFooterInfo } from "@/lib/site-footer-info";
 
-export type SiteLegalFooterInfo = {
-  legalLine: string | null;
-  supportEmail: string | null;
-};
+export type { SiteFooterInfo };
+
+/** @deprecated Use SiteFooterInfo */
+export type SiteLegalFooterInfo = SiteFooterInfo;
 
 export default function SiteChrome({
   children,
+  siteFooter,
+  /** @deprecated Pass siteFooter instead */
   siteLegal,
 }: {
   children: React.ReactNode;
-  siteLegal?: SiteLegalFooterInfo;
+  siteFooter?: SiteFooterInfo;
+  siteLegal?: SiteFooterInfo;
 }) {
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
+  const footerInfo = siteFooter ?? siteLegal;
 
   if (isEmbed) {
     return <>{children}</>;
@@ -32,7 +37,7 @@ export default function SiteChrome({
       <main id="main-content" className="relative z-0 flex-1" tabIndex={-1}>
         {children}
       </main>
-      <Footer siteLegal={siteLegal} />
+      <Footer siteFooter={footerInfo} />
     </>
   );
 }

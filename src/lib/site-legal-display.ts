@@ -1,4 +1,5 @@
 import type { SiteLegal } from "@/lib/site-settings-server";
+import { loadSiteFooterInfo } from "@/lib/site-footer-info";
 
 export const DEFAULT_SUPPORT_EMAIL = "IAEvdokimychev@ya.ru";
 
@@ -11,14 +12,14 @@ export function formatSiteLegalLine(legal: SiteLegal): string | null {
   return parts.length ? parts.join(" · ") : null;
 }
 
+/** @deprecated Use loadSiteFooterInfo */
 export async function loadSiteLegalForFooter(): Promise<{
   legalLine: string | null;
   supportEmail: string | null;
 }> {
-  const { fetchSiteLegal } = await import("@/lib/site-settings-server");
-  const legal = await fetchSiteLegal();
+  const info = await loadSiteFooterInfo();
   return {
-    legalLine: formatSiteLegalLine(legal),
-    supportEmail: legal.supportEmail?.trim() || DEFAULT_SUPPORT_EMAIL,
+    legalLine: info.legalLine,
+    supportEmail: info.supportEmail,
   };
 }

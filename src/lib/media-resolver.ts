@@ -30,9 +30,13 @@ export const MEDIA_LOGO_FALLBACK = "/logo-light.svg";
 
 const FALLBACK = MEDIA_LOGO_FALLBACK;
 
-/** Public URL for a file under public/ (localPath includes `media/` prefix). */
+/** Public URL for a file under public/ (localPath includes `media/` prefix) or absolute CMS upload URL. */
 export function mediaUrl(localPath: string): string {
-  const normalized = localPath.replace(/^\/+/, "");
+  const trimmed = localPath.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  const normalized = trimmed.replace(/^\/+/, "");
   return normalized.startsWith("media/") ? `/${normalized}` : `/media/${normalized}`;
 }
 

@@ -13,9 +13,9 @@ import {
   SITE_SOCIAL_LINKS,
 } from "@/data/site-links";
 import { cn } from "@/lib/cn";
+import type { SiteFooterInfo } from "@/lib/site-footer-info";
 import { siteContainerClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
-import type { SiteLegalFooterInfo } from "@/components/SiteChrome";
 
 function FooterColumn({
   title,
@@ -57,8 +57,18 @@ function FooterLinkList({
   );
 }
 
-export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo }) {
+export default function Footer({
+  siteFooter,
+  /** @deprecated Pass siteFooter instead */
+  siteLegal,
+}: {
+  siteFooter?: SiteFooterInfo;
+  siteLegal?: SiteFooterInfo;
+}) {
   const { t } = useLocaleCurrency();
+  const footerInfo = siteFooter ?? siteLegal;
+  const socialLinks =
+    footerInfo?.socialLinks?.length ? footerInfo.socialLinks : [...SITE_SOCIAL_LINKS];
   const navMid = Math.ceil(SITE_FOOTER_NAV.length / 2);
   const navPrimary = SITE_FOOTER_NAV.slice(0, navMid);
   const navSecondary = SITE_FOOTER_NAV.slice(navMid);
@@ -116,20 +126,22 @@ export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo 
                   </li>
                 ))}
               </ul>
-              <div className="mt-5 flex flex-wrap gap-2">
-                {SITE_SOCIAL_LINKS.map((link) => (
-                  <a
-                    key={link.label}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-elevated px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:border-sky/30 hover:text-sky dark:border-border-subtle dark:bg-surface-elevated"
-                  >
-                    {link.label}
-                    <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
-                  </a>
-                ))}
-              </div>
+              {socialLinks.length ? (
+                <div className="mt-5 flex flex-wrap gap-2">
+                  {socialLinks.map((link) => (
+                    <a
+                      key={`${link.label}-${link.href}`}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 rounded-full border border-border-subtle bg-surface-elevated px-3 py-1.5 text-sm font-medium text-foreground shadow-sm transition-colors hover:border-sky/30 hover:text-sky dark:border-border-subtle dark:bg-surface-elevated"
+                    >
+                      {link.label}
+                      <ArrowUpRight className="h-3.5 w-3.5 opacity-60" aria-hidden />
+                    </a>
+                  ))}
+                </div>
+              ) : null}
             </FooterColumn>
           </div>
         </div>
@@ -159,16 +171,16 @@ export default function Footer({ siteLegal }: { siteLegal?: SiteLegalFooterInfo 
         <div className="mt-12 flex flex-col gap-3 border-t border-border-subtle pt-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between dark:border-border-subtle">
           <div>
             <p>© {new Date().getFullYear()} {t("footer.copyright")}</p>
-            {siteLegal?.legalLine ? (
-              <p className="mt-1 text-xs text-slate/80">{siteLegal.legalLine}</p>
+            {footerInfo?.legalLine ? (
+              <p className="mt-1 text-xs text-slate/80">{footerInfo.legalLine}</p>
             ) : null}
           </div>
           <p className="text-xs text-slate/70">
-            {siteLegal?.supportEmail ? (
+            {footerInfo?.supportEmail ? (
               <>
                 {t("footer.support")}{" "}
-                <a href={`mailto:${siteLegal.supportEmail}`} className="text-sky hover:underline">
-                  {siteLegal.supportEmail}
+                <a href={`mailto:${footerInfo.supportEmail}`} className="text-sky hover:underline">
+                  {footerInfo.supportEmail}
                 </a>
               </>
             ) : (

@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import LegalPageView from "@/components/legal/LegalPageView";
 import ContentPageView from "@/components/content/ContentPageView";
+import BlogSectionBody from "@/components/blog/BlogSectionBody";
 import { AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import {
@@ -78,9 +79,11 @@ export default function ContentDocumentPreviewView({ documentId }: Props) {
             {(doc.body.sections ?? []).map((section, index) => (
               <section key={index}>
                 <h2 className="font-heading text-xl font-bold text-charcoal">{section.title}</h2>
-                <p className="mt-3 whitespace-pre-wrap text-sm leading-relaxed text-slate">
-                  {section.body}
-                </p>
+                <BlogSectionBody
+                  section={section}
+                  postSlug={doc.slug}
+                  className="mt-4 blog-section-body space-y-5"
+                />
               </section>
             ))}
             {!doc.body.sections?.length && doc.body.content ? (

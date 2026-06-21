@@ -4,9 +4,9 @@ import Providers from "@/components/Providers";
 import ThemeScript from "@/components/ThemeScript";
 import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
-import { getDefaultOgImageUrl } from "@/components/seo/SiteJsonLd";
-import { loadSiteLegalForFooter } from "@/lib/site-legal-display";
-import { getSiteUrl } from "@/lib/site-url";
+import { loadSiteFooterInfo } from "@/lib/site-footer-info";
+import { fetchSiteBranding, fetchSitePublicMeta } from "@/lib/site-settings-server";
+import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const unbounded = Unbounded({
@@ -15,52 +15,77 @@ const unbounded = Unbounded({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(getSiteUrl()),
-  title: {
-    default: "Пора в Аргентину — путешествия по Аргентине",
-    template: "%s | Пора в Аргентину",
-  },
-  description:
-    "Авторские туры и экскурсии по Аргентине: Патагония, Буэнос-Айрес, Мендоса, Игуасу. Русскоязычные гиды и организаторы.",
-  openGraph: {
-    type: "website",
-    locale: "ru_RU",
-    siteName: "Пора в Аргентину",
-    images: [{ url: getDefaultOgImageUrl(), width: 1200, height: 630, alt: "Пора в Аргентину" }],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Пора в Аргентину — путешествия по Аргентине",
-    description:
-      "Авторские туры и экскурсии по Аргентине: Патагония, Буэнос-Айрес, Мендоса, Игуасу.",
-    images: [getDefaultOgImageUrl()],
-  },
-  icons: {
-    icon: "/logo-light.svg",
-    apple: "/icons/pwa-icon.svg",
-  },
-  manifest: "/manifest.json",
-  appleWebApp: {
-    capable: true,
-    title: "Пора в Аргентину",
-    statusBarStyle: "default",
-  },
-};
+function resolveOgImageUrl(pathOrUrl: string): string {
+  if (pathOrUrl.startsWith("http://") || pathOrUrl.startsWith("https://")) {
+    return pathOrUrl;
+  }
+  return absoluteUrl(pathOrUrl.startsWith("/") ? pathOrUrl : `/${pathOrUrl}`);
+}
 
-export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
-  viewportFit: "cover",
-  themeColor: "#74acdf",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { branding, seo } = await fetchSitePublicMeta();
+  const ogImageUrl = resolveOgImageUrl(branding.defaultOgImage);
+  const twitterTitle = branding.defaultTitle;
+  const twitterDescription = seo.defaultDescription;
+
+  return {
+    metadataBase: new URL(getSiteUrl()),
+    title: {
+      default: branding.defaultTitle,
+      template: branding.titleTemplate,
+    },
+    description: seo.defaultDescription,
+    openGraph: {
+      type: "website",
+      locale: "ru_RU",
+      siteName: branding.siteName,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: branding.siteName,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: twitterTitle,
+      description: twitterDescription,
+      images: [ogImageUrl],
+      ...(seo.twitterHandle?.trim()
+        ? { site: seo.twitterHandle.trim(), creator: seo.twitterHandle.trim() }
+        : {}),
+    },
+    icons: {
+      icon: "/logo-light.svg",
+      apple: "/icons/pwa-icon.svg",
+    },
+    manifest: "/manifest.json",
+    appleWebApp: {
+      capable: true,
+      title: branding.siteName,
+      statusBarStyle: "default",
+    },
+  };
+}
+
+export async function generateViewport(): Promise<Viewport> {
+  const branding = await fetchSiteBranding();
+  return {
+    width: "device-width",
+    initialScale: 1,
+    viewportFit: "cover",
+    themeColor: branding.themeColor,
+  };
+}
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteLegal = await loadSiteLegalForFooter();
+  const siteFooter = await loadSiteFooterInfo();
 
   return (
     <html lang="ru" className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
@@ -75,7 +100,7 @@ export default async function RootLayout({
         <ThemeScript />
         <SiteJsonLd />
         <Providers>
-          <SiteChrome siteLegal={siteLegal}>{children}</SiteChrome>
+          <SiteChrome siteFooter={siteFooter}>{children}</SiteChrome>
         </Providers>
       </body>
     </html>

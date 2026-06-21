@@ -1,3 +1,4 @@
+import BlogMediaBlock from "@/components/blog/BlogMediaBlock";
 import BlogBudgetWidget from "@/components/blog/BlogBudgetWidget";
 import BlogCallout from "@/components/blog/BlogCallout";
 import BlogChecklist from "@/components/blog/BlogChecklist";
@@ -82,6 +83,10 @@ function renderBlock(block: BlogBodyBlock, index: number) {
       );
     case "budget":
       return <BlogBudgetWidget key={index} items={block.items} note={block.note} />;
+    case "media":
+      return (
+        <BlogMediaBlock key={index} src={block.src} alt={block.alt} caption={block.caption} />
+      );
     default:
       return null;
   }
