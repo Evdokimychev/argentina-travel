@@ -11,6 +11,10 @@ export type SiteLegalGlobal = {
 export type SiteFeaturesGlobal = {
   maintenanceMode: boolean;
   allowOrganizerSignup: boolean;
+  /** When true, blog catalog and posts resolve from CMS only (no TS fallback). */
+  cmsBlogCutover?: boolean;
+  /** When true, guide pages resolve from CMS only (no TS fallback). */
+  cmsGuideCutover?: boolean;
 };
 
 export type SiteBrandingGlobal = {

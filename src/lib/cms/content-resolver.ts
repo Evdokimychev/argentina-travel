@@ -200,10 +200,11 @@ export async function fetchCmsTranslationStatusForSlug(
 export async function listPublishedCmsSlugs(
   docType: CmsDocType,
   fallbackSlugs: string[],
-  locale = "ru"
+  locale = "ru",
+  options?: { cmsOnly?: boolean }
 ): Promise<string[]> {
   const supabase = await getCmsServerClient();
-  if (!supabase) return fallbackSlugs;
+  if (!supabase) return options?.cmsOnly ? [] : fallbackSlugs;
 
   const { data } = await supabase
     .from("content_documents")
@@ -212,7 +213,8 @@ export async function listPublishedCmsSlugs(
     .eq("locale", locale)
     .eq("status", "published");
 
-  const cmsSlugs = new Set((data ?? []).map((row) => row.slug));
+  const cmsSlugs = (data ?? []).map((row) => row.slug);
+  if (options?.cmsOnly) return Array.from(new Set(cmsSlugs));
   return Array.from(new Set([...fallbackSlugs, ...cmsSlugs]));
 }
 

@@ -1,4 +1,5 @@
-import { absoluteUrl } from "@/lib/site-url";
+import JsonLdScript from "@/components/seo/JsonLdScript";
+import { buildWebPageSchema } from "@/lib/schema-json-ld";
 
 type WebPageJsonLdProps = {
   name: string;
@@ -7,18 +8,5 @@ type WebPageJsonLdProps = {
 };
 
 export default function WebPageJsonLd({ name, description, path }: WebPageJsonLdProps) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name,
-    description,
-    url: absoluteUrl(path),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLdScript data={buildWebPageSchema({ name, description, path })} />;
 }

@@ -1,6 +1,11 @@
 import { getPagesBySection, getContentPage } from "@/lib/content-pages";
 import type { ContentPage } from "@/types/content-page";
 import {
+  fetchPublishedCmsDocumentsForCutover,
+  getCmsCutoverFlags,
+  guidePagesFromCmsDocuments,
+} from "@/lib/cms/cms-cutover";
+import {
   attachCmsResolverMetadata,
   buildCmsResolverMetadata,
   cmsOverrideId,
@@ -48,8 +53,16 @@ export function mergeGuideCatalog(filePages: ContentPage[], cmsDocs: CmsDocument
 }
 
 export async function resolveGuideCatalog(locale = "ru"): Promise<ContentPage[]> {
-  const fallback = getPagesBySection("guide");
+  const cutover = await getCmsCutoverFlags();
   const supabase = await getCmsServerClient();
+
+  if (cutover.guide) {
+    if (!supabase) return [];
+    const cmsGuides = await fetchPublishedCmsDocumentsForCutover("guide", locale);
+    return guidePagesFromCmsDocuments(cmsGuides);
+  }
+
+  const fallback = getPagesBySection("guide");
   if (!supabase) return fallback;
 
   const cmsGuides = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "guide", locale);
@@ -60,13 +73,14 @@ export async function resolveGuideCatalog(locale = "ru"): Promise<ContentPage[]>
 
 /** Published DB override takes precedence over TS file. */
 export async function resolveGuidePage(slug: string, locale = "ru"): Promise<ContentPage | null> {
-  const fallback = getContentPage("guide", slug) ?? null;
+  const cutover = await getCmsCutoverFlags();
+  const fallback = cutover.guide ? null : (getContentPage("guide", slug) ?? null);
   const supabase = await getCmsServerClient();
   const translationStatus = supabase
     ? await fetchCmsTranslationStatusForSlug(supabase, "guide", slug, {
-        ruFallbackComplete: Boolean(fallback),
+        ruFallbackComplete: cutover.guide ? false : Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(Boolean(fallback));
+    : buildDefaultTranslationStatus(cutover.guide ? false : Boolean(fallback));
 
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "guide",
@@ -82,6 +96,7 @@ export async function resolveGuidePage(slug: string, locale = "ru"): Promise<Con
 }
 
 export async function listPublishedGuideSlugs(locale = "ru"): Promise<string[]> {
+  const cutover = await getCmsCutoverFlags();
   const fallbackSlugs = getPagesBySection("guide").map((page) => page.slug);
-  return listPublishedCmsSlugs("guide", fallbackSlugs, locale);
+  return listPublishedCmsSlugs("guide", fallbackSlugs, locale, { cmsOnly: cutover.guide });
 }

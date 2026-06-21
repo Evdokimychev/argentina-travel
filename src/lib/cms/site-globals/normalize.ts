@@ -33,6 +33,8 @@ export const DEFAULT_SITE_CONTACT: SiteContactGlobal = {
 export const DEFAULT_SITE_FEATURES: SiteFeaturesGlobal = {
   maintenanceMode: false,
   allowOrganizerSignup: true,
+  cmsBlogCutover: false,
+  cmsGuideCutover: false,
 };
 
 function asString(value: unknown, fallback = ""): string {
@@ -63,6 +65,8 @@ export function normalizeSiteFeatures(value: unknown): SiteFeaturesGlobal {
   return {
     maintenanceMode: r.maintenanceMode === true,
     allowOrganizerSignup: r.allowOrganizerSignup !== false,
+    cmsBlogCutover: r.cmsBlogCutover === true,
+    cmsGuideCutover: r.cmsGuideCutover === true,
   };
 }
 

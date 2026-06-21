@@ -7,6 +7,7 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveBlogCatalog, resolveBlogPost } from "@/lib/cms/blog-resolver";
+import { getCmsCutoverFlags } from "@/lib/cms/cms-cutover";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { getBlogPostHeroResolved } from "@/lib/media-resolver";
@@ -23,7 +24,8 @@ export async function generateStaticParams() {
     const catalog = await resolveBlogCatalog();
     return catalog.map((post) => ({ slug: post.slug }));
   } catch {
-    return blogPosts.map((post) => ({ slug: post.slug }));
+    const cutover = await getCmsCutoverFlags();
+    return cutover.blog ? [] : blogPosts.map((post) => ({ slug: post.slug }));
   }
 }
 

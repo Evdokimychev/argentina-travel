@@ -2,6 +2,8 @@ export type LegalSection = {
   heading?: string;
   paragraphs?: string[];
   list?: string[];
+  /** Sanitized HTML body (CMS rich text). Falls back to paragraphs when absent. */
+  html?: string;
 };
 
 export type LegalDocument = {

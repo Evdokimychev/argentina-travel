@@ -11,6 +11,7 @@ import { LOCALE_COOKIE_KEY } from "@/lib/i18n/config";
 import { getLocaleFromPathname, stripLocalePrefix } from "@/lib/i18n/locale-path";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
+import { matchUrlRedirect } from "@/lib/redirects/url-redirect-server";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
@@ -116,6 +117,21 @@ function applyLocalePrefix(request: NextRequest): NextResponse | null {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const routePathname = stripLocalePrefix(pathname);
+
+  if (request.method === "GET" || request.method === "HEAD") {
+    try {
+      const redirect = await matchUrlRedirect(routePathname);
+      if (redirect) {
+        const target = redirect.toPath.startsWith("http")
+          ? new URL(redirect.toPath)
+          : new URL(redirect.toPath, request.url);
+        target.search = request.nextUrl.search;
+        return NextResponse.redirect(target, redirect.statusCode);
+      }
+    } catch {
+      // Redirect lookup unavailable — continue request
+    }
+  }
 
   if (request.method === "POST" && pathname.startsWith("/api/webhooks/")) {
     const ip = getClientIp(request);

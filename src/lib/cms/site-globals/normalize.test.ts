@@ -46,6 +46,20 @@ describe("normalizeSiteFeatures", () => {
     ).toEqual({
       maintenanceMode: true,
       allowOrganizerSignup: false,
+      cmsBlogCutover: false,
+      cmsGuideCutover: false,
+    });
+  });
+
+  it("respects cms cutover flags", () => {
+    expect(
+      normalizeSiteFeatures({
+        cmsBlogCutover: true,
+        cmsGuideCutover: true,
+      })
+    ).toMatchObject({
+      cmsBlogCutover: true,
+      cmsGuideCutover: true,
     });
   });
 });

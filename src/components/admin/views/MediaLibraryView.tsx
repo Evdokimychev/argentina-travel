@@ -60,6 +60,7 @@ export default function MediaLibraryView() {
   const [viewMode, setViewMode] = useState<"grid" | "table">("grid");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [syncing, setSyncing] = useState(false);
+  const [uploadNotice, setUploadNotice] = useState<string | null>(null);
 
   const categories = useMemo(() => [...new Set(assets.map((a) => a.category))].sort(), [assets]);
 
@@ -118,7 +119,7 @@ export default function MediaLibraryView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Медиатека"
-          subtitle={`${stats.total} assets · grid upload (Phase A)`}
+          subtitle={`${stats.total} assets · авто-sync manifest после upload`}
           actions={
             <div className="flex flex-wrap gap-2">
               <Button
@@ -178,7 +179,20 @@ export default function MediaLibraryView() {
         </div>
 
         <div className="mb-6">
-          <MediaUploadDropzone onUploaded={() => void refresh()} disabled={loading} />
+          <MediaUploadDropzone
+            onUploaded={(info) => {
+              if (info?.manifestSkipped) {
+                setUploadNotice(
+                  "Файл загружен. Manifest не обновлён на сервере — выполните npm run sync-cms-media-manifest локально или в CI."
+                );
+              } else {
+                setUploadNotice(null);
+              }
+              void refresh();
+            }}
+            disabled={loading}
+          />
+          {uploadNotice ? <p className="text-sm text-amber-700">{uploadNotice}</p> : null}
         </div>
 
         <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">

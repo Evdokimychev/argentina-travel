@@ -58,6 +58,7 @@ export type AdminNavItemId =
   | "users-list"
   | "analytics-overview"
   | "analytics-funnels"
+  | "system-redirects"
   | "system-settings"
   | "system-feature-flags"
   | "system-api-keys"

@@ -13,7 +13,14 @@ describe("seo-utils", () => {
     expect(seoTitleStatus("Национальный парк Игуасу — полный путеводитель 2026")).toBe("good");
   });
 
-  it("builds default seo title with site name", () => {
+  it("builds default seo title with custom site name", () => {
+    expect(buildDefaultSeoTitle("Игуасу", "Go Argentina")).toBe("Игуасу | Go Argentina");
+    expect(buildDefaultSeoTitle("Игуасу | Go Argentina", "Go Argentina")).toBe(
+      "Игуасу | Go Argentina"
+    );
+  });
+
+  it("builds default seo title with default site name", () => {
     expect(buildDefaultSeoTitle("Игуасу")).toContain("Игуасу");
     expect(buildDefaultSeoTitle("Игуасу")).toContain("Пора в Аргентину");
   });

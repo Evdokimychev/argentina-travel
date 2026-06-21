@@ -2,6 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import CmsMediaPathField from "@/components/admin/CmsMediaPathField";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { SiteGlobalDefinition } from "@/lib/cms/site-globals/registry";
 
@@ -65,6 +66,20 @@ export default function SiteGlobalForm({
                   placeholder={field.placeholder}
                 />
               </label>
+            );
+          }
+
+          if (field.type === "media") {
+            return (
+              <CmsMediaPathField
+                key={field.name}
+                className="sm:col-span-2"
+                label={field.label}
+                hint={field.hint}
+                placeholder={field.placeholder ?? "/media/... или https://"}
+                value={typeof value === "string" ? value : ""}
+                onChange={(next) => setField(field.name, next)}
+              />
             );
           }
 

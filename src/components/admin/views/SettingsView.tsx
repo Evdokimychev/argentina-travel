@@ -6,6 +6,7 @@ import CapabilityGate from "@/components/admin/CapabilityGate";
 import SiteGlobalForm from "@/components/admin/site-globals/SiteGlobalForm";
 import ProductionReadinessPanel from "@/components/admin/ProductionReadinessPanel";
 import CutoverChecklistPanel from "@/components/admin/CutoverChecklistPanel";
+import CmsCutoverPanel from "@/components/admin/CmsCutoverPanel";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
@@ -192,6 +193,7 @@ export default function SettingsView() {
 
         {tab === "ops" ? (
           <div className="space-y-6">
+            <CmsCutoverPanel />
             {opsDefinitions.map((definition) => (
               <SiteGlobalForm
                 key={definition.key}

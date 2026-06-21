@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/data/blog";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
+import { getCmsCutoverFlags } from "@/lib/cms/cms-cutover";
 import { FLIGHT_POPULAR_ROUTES } from "@/data/flight-popular-routes";
 import { marketplaceTours } from "@/data/marketplace-tours";
 import { LEGAL_DOCUMENTS } from "@/data/legal-content";
@@ -57,10 +58,13 @@ function toSitemapEntry(
 
 async function collectBlogSitemapCatalog(): Promise<BlogPost[]> {
   try {
-    const mergedCatalog = await resolveBlogCatalog();
-    return mergedCatalog.length > 0 ? mergedCatalog : blogPosts;
+    const catalog = await resolveBlogCatalog();
+    if (catalog.length > 0) return catalog;
+    const cutover = await getCmsCutoverFlags();
+    return cutover.blog ? [] : blogPosts;
   } catch {
-    return blogPosts;
+    const cutover = await getCmsCutoverFlags();
+    return cutover.blog ? [] : blogPosts;
   }
 }
 

@@ -6,7 +6,8 @@ export type SiteGlobalFieldType =
   | "url"
   | "textarea"
   | "checkbox"
-  | "color";
+  | "color"
+  | "media";
 
 export type SiteGlobalFieldDef = {
   name: string;
@@ -48,9 +49,9 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
       },
       {
         name: "defaultOgImage",
-        label: "OG image (путь или URL)",
-        type: "text",
-        placeholder: "/media/...",
+        label: "OG image",
+        type: "media",
+        hint: "Изображение по умолчанию для Open Graph",
       },
       { name: "themeColor", label: "Theme color", type: "color" },
     ],
@@ -114,6 +115,18 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
     fields: [
       { name: "maintenanceMode", label: "Режим обслуживания", type: "checkbox" },
       { name: "allowOrganizerSignup", label: "Заявки организаторов", type: "checkbox" },
+      {
+        name: "cmsBlogCutover",
+        label: "CMS-only: блог",
+        type: "checkbox",
+        hint: "Без fallback на TS — только опубликованные content_documents",
+      },
+      {
+        name: "cmsGuideCutover",
+        label: "CMS-only: путеводитель",
+        type: "checkbox",
+        hint: "Статьи /guide/* из CMS; топики TS остаются",
+      },
     ],
   },
 ];

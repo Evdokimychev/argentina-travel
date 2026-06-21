@@ -46,18 +46,22 @@ if (error) {
 
 const raw = await fs.readFile(MANIFEST_PATH, "utf8");
 const manifest = JSON.parse(raw);
-const existingIds = new Set(manifest.assets.map((a) => a.id));
 let added = 0;
+let updated = 0;
 
 for (const row of rows ?? []) {
   const asset = rowToAsset(row);
-  if (existingIds.has(asset.id)) continue;
-  manifest.assets.push(asset);
-  existingIds.add(asset.id);
-  added += 1;
+  const index = manifest.assets.findIndex((entry) => entry.id === asset.id);
+  if (index >= 0) {
+    manifest.assets[index] = asset;
+    updated += 1;
+  } else {
+    manifest.assets.push(asset);
+    added += 1;
+  }
 }
 
-if (added > 0) {
+if (added > 0 || updated > 0) {
   manifest.version = (manifest.version ?? 1) + 1;
   await fs.writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
 }
@@ -67,4 +71,6 @@ if (syncedIds.length > 0) {
   await supabase.from("cms_media_assets").update({ manifest_synced: true }).in("id", syncedIds);
 }
 
-console.log(`CMS media manifest sync: added ${added}, total ${manifest.assets.length}`);
+console.log(
+  `CMS media manifest sync: added ${added}, updated ${updated}, total ${manifest.assets.length}`
+);

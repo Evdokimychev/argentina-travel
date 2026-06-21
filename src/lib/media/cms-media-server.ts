@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { processCmsUploadImage } from "@/lib/media/cms-media-image";
 import type { Database } from "@/types/database";
 import type { MediaAsset, MediaCategory, MediaAssetRole } from "@/types/media-asset";
 
@@ -37,6 +38,15 @@ export type CmsMediaUploadInput = {
   role?: MediaAssetRole;
   tags?: string[];
   actorId: string;
+};
+
+export type CmsManifestSyncResult = {
+  added: number;
+  updated: number;
+  removed: number;
+  total: number;
+  skipped?: boolean;
+  error?: string;
 };
 
 function sanitizeFilename(name: string): string {
@@ -78,23 +88,26 @@ export async function listCmsMediaAssets(supabase: DbClient): Promise<CmsMediaAs
 export async function uploadCmsMediaAsset(
   supabase: DbClient,
   input: CmsMediaUploadInput
-): Promise<{ asset: CmsMediaAssetRow } | { error: string }> {
+): Promise<{ asset: CmsMediaAssetRow; manifestSync: CmsManifestSyncResult } | { error: string }> {
   const mime = input.file.type || "application/octet-stream";
   if (!mime.startsWith("image/")) {
     return { error: "Допустимы только изображения (JPEG, PNG, WebP, GIF, AVIF)" };
   }
 
   const id = randomUUID();
-  const ext = mime.split("/")[1]?.replace("jpeg", "jpg") ?? "jpg";
-  const baseName = sanitizeFilename(input.file.name.replace(/\.[^.]+$/, "")) || "upload";
-  const storagePath = `uploads/${new Date().getFullYear()}/${id}-${baseName}.${ext}`;
+  const rawBuffer = Buffer.from(await input.file.arrayBuffer());
+  const processed = await processCmsUploadImage(rawBuffer, mime);
+  if ("error" in processed) {
+    return { error: processed.error };
+  }
 
-  const buffer = Buffer.from(await input.file.arrayBuffer());
+  const baseName = sanitizeFilename(input.file.name.replace(/\.[^.]+$/, "")) || "upload";
+  const storagePath = `uploads/${new Date().getFullYear()}/${id}-${baseName}.${processed.extension}`;
 
   const { error: uploadError } = await supabase.storage
     .from(CMS_MEDIA_BUCKET)
-    .upload(storagePath, buffer, {
-      contentType: mime,
+    .upload(storagePath, processed.buffer, {
+      contentType: processed.mimeType,
       upsert: false,
       cacheControl: "31536000",
     });
@@ -112,8 +125,10 @@ export async function uploadCmsMediaAsset(
     alt: input.alt?.trim() || input.title?.trim() || baseName,
     storage_path: storagePath,
     public_url: publicUrl,
-    mime_type: mime,
-    file_size: buffer.byteLength,
+    mime_type: processed.mimeType,
+    file_size: processed.buffer.byteLength,
+    width: processed.width || null,
+    height: processed.height || null,
     category: input.category ?? "blog-article",
     tags: input.tags ?? [],
     role: input.role ?? "content",
@@ -128,7 +143,8 @@ export async function uploadCmsMediaAsset(
     return { error: insertError.message };
   }
 
-  return { asset: row as CmsMediaAssetRow };
+  const manifestSync = await autoSyncCmsMediaManifest(supabase);
+  return { asset: row as CmsMediaAssetRow, manifestSync };
 }
 
 export async function updateCmsMediaAsset(
@@ -136,7 +152,7 @@ export async function updateCmsMediaAsset(
   id: string,
   patch: { title?: string; alt?: string; category?: string; tags?: string[]; role?: string },
   actorId: string
-): Promise<{ asset: CmsMediaAssetRow } | { error: string }> {
+): Promise<{ asset: CmsMediaAssetRow; manifestSync: CmsManifestSyncResult } | { error: string }> {
   const { data, error } = await supabase
     .from("cms_media_assets")
     .update({
@@ -153,13 +169,15 @@ export async function updateCmsMediaAsset(
     .maybeSingle();
 
   if (error || !data) return { error: error?.message ?? "Asset не найден" };
-  return { asset: data as CmsMediaAssetRow };
+
+  const manifestSync = await autoSyncCmsMediaManifest(supabase);
+  return { asset: data as CmsMediaAssetRow, manifestSync };
 }
 
 export async function deleteCmsMediaAsset(
   supabase: DbClient,
   id: string
-): Promise<{ ok: true } | { error: string }> {
+): Promise<{ ok: true; manifestSync: CmsManifestSyncResult } | { error: string }> {
   const { data, error: fetchError } = await supabase
     .from("cms_media_assets")
     .select("storage_path")
@@ -172,52 +190,116 @@ export async function deleteCmsMediaAsset(
 
   const { error } = await supabase.from("cms_media_assets").delete().eq("id", id);
   if (error) return { error: error.message };
-  return { ok: true };
+
+  const manifestSync = await removeCmsMediaFromManifest(id);
+  return { ok: true, manifestSync };
 }
 
 const MANIFEST_PATH = path.join(process.cwd(), "src/data/media-library/manifest.json");
 
+async function readManifestFile(): Promise<{ version: number; assets: MediaAsset[] }> {
+  const raw = await fs.readFile(MANIFEST_PATH, "utf8");
+  return JSON.parse(raw) as { version: number; assets: MediaAsset[] };
+}
+
+async function writeManifestFile(manifest: { version: number; assets: MediaAsset[] }): Promise<void> {
+  await fs.writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
+}
+
+function isManifestSyncSkipped(): boolean {
+  return process.env.CMS_MEDIA_SKIP_MANIFEST_SYNC === "1" || process.env.VERCEL === "1";
+}
+
+/** Best-effort sync after upload/update. Skipped on Vercel (read-only FS). */
+export async function autoSyncCmsMediaManifest(supabase: DbClient): Promise<CmsManifestSyncResult> {
+  if (isManifestSyncSkipped()) {
+    return { added: 0, updated: 0, removed: 0, total: 0, skipped: true };
+  }
+
+  try {
+    const result = await syncCmsMediaToManifest(supabase);
+    if ("error" in result) {
+      return { added: 0, updated: 0, removed: 0, total: 0, error: result.error };
+    }
+    return result;
+  } catch (error) {
+    return {
+      added: 0,
+      updated: 0,
+      removed: 0,
+      total: 0,
+      error: error instanceof Error ? error.message : "Manifest sync failed",
+    };
+  }
+}
+
 export async function syncCmsMediaToManifest(
   supabase: DbClient
-): Promise<{ added: number; total: number } | { error: string }> {
+): Promise<CmsManifestSyncResult | { error: string }> {
   const { data: rows, error } = await supabase
     .from("cms_media_assets")
     .select("*")
     .eq("manifest_synced", false);
 
   if (error) return { error: error.message };
-  if (!rows?.length) {
-    const manifest = await readManifestFile();
-    return { added: 0, total: manifest.assets.length };
-  }
 
   const manifest = await readManifestFile();
-  const existingIds = new Set(manifest.assets.map((a) => a.id));
+  const pendingRows = (rows ?? []) as CmsMediaAssetRow[];
   let added = 0;
+  let updated = 0;
 
-  for (const row of rows as CmsMediaAssetRow[]) {
+  for (const row of pendingRows) {
     const asset = cmsMediaRowToManifestAsset(row);
-    if (existingIds.has(asset.id)) continue;
-    manifest.assets.push(asset);
-    existingIds.add(asset.id);
-    added += 1;
+    const index = manifest.assets.findIndex((entry) => entry.id === asset.id);
+    if (index >= 0) {
+      manifest.assets[index] = asset;
+      updated += 1;
+    } else {
+      manifest.assets.push(asset);
+      added += 1;
+    }
   }
 
-  manifest.version = (manifest.version ?? 1) + (added > 0 ? 1 : 0);
+  if (added > 0 || updated > 0) {
+    manifest.version = (manifest.version ?? 1) + 1;
+    await writeManifestFile(manifest);
+  }
 
-  await fs.writeFile(MANIFEST_PATH, `${JSON.stringify(manifest, null, 2)}\n`, "utf8");
-
-  const syncedIds = (rows as CmsMediaAssetRow[]).map((r) => r.id);
+  const syncedIds = pendingRows.map((row) => row.id);
   if (syncedIds.length > 0) {
     await supabase.from("cms_media_assets").update({ manifest_synced: true }).in("id", syncedIds);
   }
 
-  return { added, total: manifest.assets.length };
+  return { added, updated, removed: 0, total: manifest.assets.length };
 }
 
-async function readManifestFile(): Promise<{ version: number; assets: MediaAsset[] }> {
-  const raw = await fs.readFile(MANIFEST_PATH, "utf8");
-  return JSON.parse(raw) as { version: number; assets: MediaAsset[] };
+export async function removeCmsMediaFromManifest(cmsAssetId: string): Promise<CmsManifestSyncResult> {
+  if (isManifestSyncSkipped()) {
+    return { added: 0, updated: 0, removed: 0, total: 0, skipped: true };
+  }
+
+  try {
+    const manifest = await readManifestFile();
+    const assetId = `cms:${cmsAssetId}`;
+    const before = manifest.assets.length;
+    manifest.assets = manifest.assets.filter((entry) => entry.id !== assetId);
+    const removed = before - manifest.assets.length;
+
+    if (removed > 0) {
+      manifest.version = (manifest.version ?? 1) + 1;
+      await writeManifestFile(manifest);
+    }
+
+    return { added: 0, updated: 0, removed, total: manifest.assets.length };
+  } catch (error) {
+    return {
+      added: 0,
+      updated: 0,
+      removed: 0,
+      total: 0,
+      error: error instanceof Error ? error.message : "Manifest remove failed",
+    };
+  }
 }
 
 export async function readManifestWithCmsUploads(
@@ -230,7 +312,10 @@ export async function readManifestWithCmsUploads(
 
   for (const row of cmsRows) {
     const asset = cmsMediaRowToManifestAsset(row);
-    if (!ids.has(asset.id)) {
+    const index = merged.findIndex((entry) => entry.id === asset.id);
+    if (index >= 0) {
+      merged[index] = asset;
+    } else {
       merged.push(asset);
       ids.add(asset.id);
     }

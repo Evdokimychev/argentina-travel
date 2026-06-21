@@ -1,4 +1,5 @@
-import { absoluteUrl } from "@/lib/site-url";
+import JsonLdScript from "@/components/seo/JsonLdScript";
+import { buildFaqPageSchema } from "@/lib/schema-json-ld";
 
 type FAQPageJsonLdProps = {
   questions: Array<{ question: string; answer: string }>;
@@ -6,24 +7,5 @@ type FAQPageJsonLdProps = {
 };
 
 export default function FAQPageJsonLd({ questions, path }: FAQPageJsonLdProps) {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: questions.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-    url: absoluteUrl(path),
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLdScript data={buildFaqPageSchema({ path, questions })} />;
 }

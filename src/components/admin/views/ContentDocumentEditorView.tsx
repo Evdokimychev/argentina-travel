@@ -29,7 +29,7 @@ import type {
 } from "@/types/cms-content";
 import { parseCmsDocumentId } from "@/types/cms-content";
 import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
-import CmsMediaPickerDialog from "@/components/admin/CmsMediaPickerDialog";
+import CmsSectionEditor from "@/components/admin/cms/CmsSectionEditor";
 import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
 
 type Props = {
@@ -96,7 +96,6 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [localeCoverage, setLocaleCoverage] = useState<CmsLocaleCoverage>(buildEmptyLocaleCoverage());
   const [creatingLocale, setCreatingLocale] = useState<I18nLocale | null>(null);
   const [seo, setSeo] = useState<CmsDocumentSeo>({});
-  const [mediaPickerOpen, setMediaPickerOpen] = useState(false);
 
   const parsedId = useMemo(() => parseCmsDocumentId(documentId), [documentId]);
   const currentLocale: I18nLocale =
@@ -420,7 +419,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   }
 
   function addSection() {
-    setSections((prev) => [...prev, { heading: "", paragraphs: [""] }]);
+    setSections((prev) => [...prev, { heading: "" }]);
   }
 
   function removeSection(index: number) {
@@ -669,36 +668,13 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </div>
 
               {sections.map((section, index) => (
-                <div key={index} className="space-y-2 rounded-2xl border border-gray-100 p-4">
-                  <div className="flex items-center justify-between gap-2">
-                    <Input
-                      value={section.heading ?? ""}
-                      onChange={(e) => updateSection(index, { heading: e.target.value })}
-                      placeholder="Заголовок раздела (необязательно)"
-                    />
-                    <Button size="sm" variant="ghost" onClick={() => removeSection(index)}>
-                      Удалить
-                    </Button>
-                  </div>
-                  <label className="block space-y-1 text-xs text-slate">
-                    Абзацы (по одному на строку)
-                    <textarea
-                      className="min-h-[80px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
-                      value={listToLines(section.paragraphs)}
-                      onChange={(e) =>
-                        updateSection(index, { paragraphs: linesToList(e.target.value) })
-                      }
-                    />
-                  </label>
-                  <label className="block space-y-1 text-xs text-slate">
-                    Список (по одному пункту на строку)
-                    <textarea
-                      className="min-h-[60px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal"
-                      value={listToLines(section.list)}
-                      onChange={(e) => updateSection(index, { list: linesToList(e.target.value) })}
-                    />
-                  </label>
-                </div>
+                <CmsSectionEditor
+                  key={index}
+                  index={index}
+                  section={section}
+                  onChange={(next) => updateSection(index, next)}
+                  onRemove={() => removeSection(index)}
+                />
               ))}
             </div>
             ) : null}
@@ -740,7 +716,6 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               seo={seo}
               onChange={setSeo}
               publicPath={publicHref}
-              onPickImage={() => setMediaPickerOpen(true)}
             />
 
             <section className={`${cabinetCardClass} p-4`}>
@@ -836,11 +811,6 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           </aside>
         </div>
       </AdminPageShell>
-      <CmsMediaPickerDialog
-        open={mediaPickerOpen}
-        onClose={() => setMediaPickerOpen(false)}
-        onSelect={(localPath) => setSeo((prev) => ({ ...prev, image: localPath }))}
-      />
     </CapabilityGate>
   );
 }

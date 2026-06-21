@@ -22,13 +22,18 @@ function hasTextList(items: string[] | undefined): boolean {
 }
 
 function hasRichSections(
-  sections: Array<{ heading?: string; paragraphs?: string[]; list?: string[] }> | undefined
+  sections:
+    | Array<{ heading?: string; paragraphs?: string[]; list?: string[]; html?: string }>
+    | undefined
 ): boolean {
   return (
     Array.isArray(sections) &&
     sections.some(
       (section) =>
-        hasText(section.heading) || hasTextList(section.paragraphs) || hasTextList(section.list)
+        hasText(section.heading) ||
+        hasText(section.html) ||
+        hasTextList(section.paragraphs) ||
+        hasTextList(section.list)
     )
   );
 }

@@ -1,12 +1,7 @@
-import { buildBreadcrumbListJsonLd, type BreadcrumbJsonLdItem } from "@/lib/breadcrumb-json-ld";
+import JsonLdScript from "@/components/seo/JsonLdScript";
+import { buildBreadcrumbListSchema } from "@/lib/schema-json-ld";
+import type { BreadcrumbJsonLdItem } from "@/lib/breadcrumb-json-ld";
 
 export default function BreadcrumbListJsonLd({ items }: { items: BreadcrumbJsonLdItem[] }) {
-  const jsonLd = buildBreadcrumbListJsonLd(items);
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-    />
-  );
+  return <JsonLdScript data={buildBreadcrumbListSchema(items)} />;
 }

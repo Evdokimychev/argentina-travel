@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ContentSectionBody from "@/components/content/ContentSectionBody";
 import type { LegalDocument } from "@/data/legal-content";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
@@ -40,24 +41,7 @@ export default function LegalPageView({ document }: LegalPageViewProps) {
               {section.heading ? (
                 <h2 className="font-heading text-xl font-bold text-charcoal">{section.heading}</h2>
               ) : null}
-              {section.paragraphs?.map((paragraph, pIndex) => (
-                <p
-                  key={pIndex}
-                  className={cn(
-                    "text-sm leading-relaxed text-slate",
-                    section.heading || pIndex > 0 ? "mt-3" : undefined
-                  )}
-                >
-                  {paragraph}
-                </p>
-              ))}
-              {section.list ? (
-                <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate">
-                  {section.list.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              ) : null}
+              <ContentSectionBody section={section} withHeading={Boolean(section.heading)} />
             </section>
           ))}
         </article>

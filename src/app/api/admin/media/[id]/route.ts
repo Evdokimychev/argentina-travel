@@ -35,10 +35,14 @@ export async function PATCH(request: Request, context: RouteContext) {
     action: "cms.media.update",
     entityType: "cms_media_asset",
     entityId: id,
+    payload: { manifestSync: result.manifestSync },
     ipAddress: clientIpFromRequest(request),
   });
 
-  return NextResponse.json({ asset: cmsMediaRowToManifestAsset(result.asset) });
+  return NextResponse.json({
+    asset: cmsMediaRowToManifestAsset(result.asset),
+    manifestSync: result.manifestSync,
+  });
 }
 
 export async function DELETE(request: Request, context: RouteContext) {
@@ -58,8 +62,9 @@ export async function DELETE(request: Request, context: RouteContext) {
     action: "cms.media.delete",
     entityType: "cms_media_asset",
     entityId: id,
+    payload: { manifestSync: result.manifestSync },
     ipAddress: clientIpFromRequest(request),
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, manifestSync: result.manifestSync });
 }

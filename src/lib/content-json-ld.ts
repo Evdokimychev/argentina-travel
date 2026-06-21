@@ -3,6 +3,11 @@ import type { BlogPost } from "@/types";
 import type { PlaceCollection, PlaceItinerary } from "@/types/place";
 import { destinationHref } from "@/lib/destinations";
 import { collectionHref, itineraryHref, placeHref } from "@/lib/places-repository";
+import {
+  buildArticleSchema,
+  buildFaqPageSchema,
+  buildTouristDestinationSchema,
+} from "@/lib/schema-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
 
 export function buildCollectionItemListJsonLd(collection: PlaceCollection) {
@@ -51,54 +56,29 @@ export function buildItineraryTripJsonLd(itinerary: PlaceItinerary) {
 }
 
 export function buildDestinationTouristJsonLd(destination: DestinationPage) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "TouristDestination",
+  return buildTouristDestinationSchema({
     name: destination.name,
     description: destination.intro,
-    url: absoluteUrl(destinationHref(destination.id)),
+    path: destinationHref(destination.id),
     image: destination.image,
-    touristType: "Leisure",
-  };
+  });
 }
 
 export function buildBlogArticleJsonLd(post: BlogPost) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "Article",
-    headline: post.title,
-    description: post.excerpt,
-    url: absoluteUrl(`/blog/${post.slug}`),
+  return buildArticleSchema({
+    title: post.title,
+    excerpt: post.excerpt,
+    slug: post.slug,
     image: post.image,
     datePublished: post.date,
     dateModified: post.dateModified ?? post.date,
-    inLanguage: "ru",
-    author: {
-      "@type": "Organization",
-      name: post.author,
-    },
-    publisher: {
-      "@type": "Organization",
-      name: "Пора в Аргентину",
-    },
-  };
+    authorName: post.author,
+  });
 }
 
 export function buildBlogFaqJsonLd(
   items: Array<{ question: string; answer: string }>,
   pageUrl: string
 ) {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: items.map((item) => ({
-      "@type": "Question",
-      name: item.question,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.answer,
-      },
-    })),
-    url: absoluteUrl(pageUrl),
-  };
+  return buildFaqPageSchema({ path: pageUrl, questions: items });
 }

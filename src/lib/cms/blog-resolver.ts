@@ -1,6 +1,10 @@
 import { blogPosts, getBlogPostBySlug } from "@/data/blog";
 import { sortBlogPostsByDate } from "@/lib/blog-utils";
-import type { BlogPost } from "@/types";
+import {
+  blogPostsFromCmsDocuments,
+  fetchPublishedCmsDocumentsForCutover,
+  getCmsCutoverFlags,
+} from "@/lib/cms/cms-cutover";
 import {
   attachCmsResolverMetadata,
   buildCmsResolverMetadata,
@@ -8,6 +12,7 @@ import {
   fetchCmsTranslationStatusForSlug,
   fetchPublishedCmsDocumentsMergedByLocaleChain,
   getCmsServerClient,
+  listPublishedCmsSlugs,
   resolveWithPublishedCmsOverride,
 } from "@/lib/cms/content-resolver";
 import { buildDefaultTranslationStatus, isCmsDocumentComplete } from "@/lib/cms/translation-status";
@@ -15,6 +20,7 @@ import {
   blogPostFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
+import type { BlogPost } from "@/types";
 
 export {
   fetchPublishedCmsDocument as fetchPublishedBlogOverride,
@@ -47,8 +53,16 @@ export function mergeBlogCatalog(filePosts: BlogPost[], cmsPosts: CmsDocument[])
 
 /** Blog catalog for server components with CMS published overrides. */
 export async function resolveBlogCatalog(locale = "ru"): Promise<BlogPost[]> {
-  const fallback = sortBlogPostsByDate(blogPosts);
+  const cutover = await getCmsCutoverFlags();
   const supabase = await getCmsServerClient();
+
+  if (cutover.blog) {
+    if (!supabase) return [];
+    const cmsPosts = await fetchPublishedCmsDocumentsForCutover("blog", locale);
+    return blogPostsFromCmsDocuments(cmsPosts);
+  }
+
+  const fallback = sortBlogPostsByDate(blogPosts);
   if (!supabase) return fallback;
 
   const cmsPosts = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "blog", locale);
@@ -59,19 +73,20 @@ export async function resolveBlogCatalog(locale = "ru"): Promise<BlogPost[]> {
 
 /** Published CMS override merged with TS defaults for missing media/metadata. */
 export async function resolveBlogPost(slug: string, locale = "ru"): Promise<BlogPost | undefined> {
-  const fallback = getBlogPostBySlug(slug);
+  const cutover = await getCmsCutoverFlags();
+  const fallback = cutover.blog ? null : (getBlogPostBySlug(slug) ?? null);
   const supabase = await getCmsServerClient();
   const translationStatus = supabase
     ? await fetchCmsTranslationStatusForSlug(supabase, "blog", slug, {
-        ruFallbackComplete: Boolean(fallback),
+        ruFallbackComplete: cutover.blog ? false : Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(Boolean(fallback));
+    : buildDefaultTranslationStatus(cutover.blog ? false : Boolean(fallback));
 
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "blog",
     slug,
     locale,
-    fallback: fallback ?? null,
+    fallback,
     merge: (doc, fb) => blogPostFromCms(doc, fb),
     supabase,
     isUsable: isCmsDocumentComplete,
@@ -79,4 +94,10 @@ export async function resolveBlogPost(slug: string, locale = "ru"): Promise<Blog
 
   if (!resolved) return undefined;
   return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+}
+
+export async function listPublishedBlogSlugs(locale = "ru"): Promise<string[]> {
+  const cutover = await getCmsCutoverFlags();
+  const fallbackSlugs = blogPosts.map((post) => post.slug);
+  return listPublishedCmsSlugs("blog", fallbackSlugs, locale, { cmsOnly: cutover.blog });
 }

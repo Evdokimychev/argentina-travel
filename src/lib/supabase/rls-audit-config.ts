@@ -12,6 +12,7 @@ export const SERVICE_ROLE_ONLY_TABLES = [
   "trip_prep_reminders_sent",
   "tripster_booking_requests",
   "tripster_sync_runs",
+  "url_redirects",
 ] as const;
 
 export type ServiceRoleOnlyTable = (typeof SERVICE_ROLE_ONLY_TABLES)[number];

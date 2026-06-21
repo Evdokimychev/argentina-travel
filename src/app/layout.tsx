@@ -5,6 +5,7 @@ import ThemeScript from "@/components/ThemeScript";
 import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import { loadSiteFooterInfo } from "@/lib/site-footer-info";
+import { siteRobotsMetadata } from "@/lib/cms/site-globals/robots-meta";
 import { fetchSiteBranding, fetchSitePublicMeta } from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
@@ -35,6 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
       template: branding.titleTemplate,
     },
     description: seo.defaultDescription,
+    robots: siteRobotsMetadata(seo.allowIndexing),
     openGraph: {
       type: "website",
       locale: "ru_RU",

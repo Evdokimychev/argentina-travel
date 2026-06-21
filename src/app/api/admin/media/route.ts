@@ -69,10 +69,14 @@ export async function POST(request: Request) {
     action: "cms.media.upload",
     entityType: "cms_media_asset",
     entityId: result.asset.id,
+    payload: { manifestSync: result.manifestSync },
     ipAddress: clientIpFromRequest(request),
   });
 
-  return NextResponse.json({ asset: cmsMediaRowToManifestAsset(result.asset) });
+  return NextResponse.json({
+    asset: cmsMediaRowToManifestAsset(result.asset),
+    manifestSync: result.manifestSync,
+  });
 }
 
 export async function PUT(request: Request) {

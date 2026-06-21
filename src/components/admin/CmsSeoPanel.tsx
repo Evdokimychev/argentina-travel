@@ -4,6 +4,7 @@ import { useMemo } from "react";
 import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import CmsMediaPathField from "@/components/admin/CmsMediaPathField";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import {
   SEO_DESCRIPTION_IDEAL_MAX,
@@ -15,8 +16,7 @@ import {
   seoStatusLabel,
   seoTitleStatus,
 } from "@/lib/cms/seo-utils";
-import { mediaUrl } from "@/lib/media-resolver";
-import { SafeImage } from "@/components/ui/safe-image";
+import { useSiteBrandName } from "@/hooks/useSiteBrandName";
 import type { CmsDocumentSeo } from "@/types/cms-content";
 
 type Props = {
@@ -24,7 +24,8 @@ type Props = {
   excerpt?: string;
   seo: CmsDocumentSeo;
   onChange: (seo: CmsDocumentSeo) => void;
-  onPickImage?: () => void;
+  /** Override brand from globals (e.g. in tests). */
+  siteBrandName?: string;
   publicPath?: string;
 };
 
@@ -41,15 +42,23 @@ export default function CmsSeoPanel({
   excerpt = "",
   seo,
   onChange,
-  onPickImage,
+  siteBrandName: siteBrandNameProp,
   publicPath,
 }: Props) {
+  const siteBrandNameFromGlobals = useSiteBrandName();
+  const siteBrandName = siteBrandNameProp ?? siteBrandNameFromGlobals;
+
   const title = seo.title ?? "";
   const description = seo.description ?? "";
   const image = seo.image ?? "";
 
   const titleStatus = useMemo(() => seoTitleStatus(title), [title]);
   const descriptionStatus = useMemo(() => seoDescriptionStatus(description), [description]);
+
+  const defaultTitle = useMemo(
+    () => buildDefaultSeoTitle(pageTitle, siteBrandName),
+    [pageTitle, siteBrandName]
+  );
 
   const previewTitle = title.trim() || pageTitle.trim() || "Заголовок страницы";
   const previewDescription =
@@ -63,7 +72,7 @@ export default function CmsSeoPanel({
 
   function autoGenerate() {
     onChange({
-      title: buildDefaultSeoTitle(pageTitle),
+      title: buildDefaultSeoTitle(pageTitle, siteBrandName),
       description: buildDefaultSeoDescription(excerpt, pageTitle),
       image: seo.image,
     });
@@ -75,8 +84,7 @@ export default function CmsSeoPanel({
         <div>
           <h2 className="font-heading text-sm font-bold text-charcoal">SEO</h2>
           <p className="mt-1 text-xs text-slate">
-            Паттерн полей как в{" "}
-            <code className="rounded bg-gray-100 px-1">@payloadcms/plugin-seo</code>
+            Бренд в title: <span className="font-medium text-charcoal">{siteBrandName}</span>
           </p>
         </div>
         <Button type="button" size="sm" variant="outline" onClick={autoGenerate}>
@@ -97,7 +105,7 @@ export default function CmsSeoPanel({
           <Input
             value={title}
             onChange={(e) => onChange({ ...seo, title: e.target.value })}
-            placeholder={buildDefaultSeoTitle(pageTitle)}
+            placeholder={defaultTitle}
           />
         </label>
 
@@ -117,33 +125,11 @@ export default function CmsSeoPanel({
           />
         </label>
 
-        <div className="space-y-2">
-          <span className="text-sm text-slate">OG image</span>
-          <div className="flex flex-wrap items-center gap-3">
-            {image ? (
-              <div className="relative h-16 w-28 overflow-hidden rounded-lg bg-gray-100">
-                <SafeImage src={mediaUrl(image)} alt="" fill className="object-cover" sizes="112px" />
-              </div>
-            ) : (
-              <div className="flex h-16 w-28 items-center justify-center rounded-lg border border-dashed border-gray-200 text-xs text-slate">
-                Нет изображения
-              </div>
-            )}
-            <div className="flex min-w-0 flex-1 flex-col gap-2">
-              <Input
-                value={image}
-                onChange={(e) => onChange({ ...seo, image: e.target.value })}
-                placeholder="/media/... или https://"
-                className="font-mono text-xs"
-              />
-              {onPickImage ? (
-                <Button type="button" size="sm" variant="outline" onClick={onPickImage}>
-                  Выбрать из медиатеки
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        </div>
+        <CmsMediaPathField
+          label="OG image"
+          value={image}
+          onChange={(next) => onChange({ ...seo, image: next })}
+        />
       </div>
 
       <div className="rounded-xl border border-gray-100 bg-surface-muted/40 p-3">

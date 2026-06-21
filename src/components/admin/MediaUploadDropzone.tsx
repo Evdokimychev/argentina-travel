@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 
 type Props = {
-  onUploaded: () => void;
+  onUploaded: (info?: { manifestSkipped?: boolean }) => void;
   disabled?: boolean;
 };
 
@@ -26,16 +26,21 @@ export default function MediaUploadDropzone({ onUploaded, disabled }: Props) {
 
       setUploading(true);
       setError(null);
+      let manifestSkipped = false;
       try {
         for (const file of list) {
           const form = new FormData();
           form.append("file", file);
           form.append("title", file.name.replace(/\.[^.]+$/, ""));
           const res = await fetch("/api/admin/media", { method: "POST", body: form });
-          const json = (await res.json()) as { error?: string };
+          const json = (await res.json()) as {
+            error?: string;
+            manifestSync?: { skipped?: boolean };
+          };
           if (!res.ok) throw new Error(json.error ?? "Ошибка загрузки");
+          if (json.manifestSync?.skipped) manifestSkipped = true;
         }
-        onUploaded();
+        onUploaded({ manifestSkipped });
       } catch (uploadError) {
         setError(uploadError instanceof Error ? uploadError.message : "Ошибка загрузки");
       } finally {
@@ -87,7 +92,9 @@ export default function MediaUploadDropzone({ onUploaded, disabled }: Props) {
             выберите файлы
           </button>
         </p>
-        <p className="text-xs text-slate">До 10 МБ · JPEG, PNG, WebP, GIF, AVIF · Supabase Storage</p>
+        <p className="text-xs text-slate">
+          До 10 МБ · JPEG, PNG, WebP, GIF, AVIF · оптимизация в WebP · Supabase Storage
+        </p>
         {uploading ? <p className="text-sm text-sky">Загрузка…</p> : null}
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         <Button

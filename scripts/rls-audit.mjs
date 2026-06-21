@@ -34,6 +34,7 @@ const SERVICE_ROLE_ONLY_TABLES = new Set([
   "trip_prep_reminders_sent",
   "tripster_booking_requests",
   "tripster_sync_runs",
+  "url_redirects",
 ]);
 
 const TABLE_RE = /create\s+table\s+if\s+not\s+exists\s+public\.([a-z0-9_]+)/gi;

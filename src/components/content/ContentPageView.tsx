@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNav";
+import ContentSectionBody from "@/components/content/ContentSectionBody";
 import ContentReadingLayout from "@/components/content/ContentReadingLayout";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
 import { buttonVariants } from "@/components/ui/button";
@@ -127,21 +128,11 @@ export default function ContentPageView({ page, freshness }: ContentPageViewProp
                         {section.heading}
                       </h2>
                     ) : null}
-                    {section.paragraphs?.map((paragraph, pIndex) => (
-                      <p
-                        key={pIndex}
-                        className={cn(section.heading || pIndex > 0 ? "mt-4" : undefined)}
-                      >
-                        {paragraph}
-                      </p>
-                    ))}
-                    {section.list ? (
-                      <ul className="mt-4 list-disc space-y-2 pl-5">
-                        {section.list.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    ) : null}
+                    <ContentSectionBody
+                      section={section}
+                      withHeading={Boolean(section.heading)}
+                      className="text-charcoal/90"
+                    />
                   </section>
               ))}
             </div>

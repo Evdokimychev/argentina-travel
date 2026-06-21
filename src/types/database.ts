@@ -2142,6 +2142,45 @@ export interface Database {
         };
         Relationships: [];
       };
+      url_redirects: {
+        Row: {
+          id: string;
+          from_path: string;
+          to_path: string;
+          status_code: number;
+          enabled: boolean;
+          note: string | null;
+          created_by: string | null;
+          updated_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          from_path: string;
+          to_path: string;
+          status_code?: number;
+          enabled?: boolean;
+          note?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          from_path?: string;
+          to_path?: string;
+          status_code?: number;
+          enabled?: boolean;
+          note?: string | null;
+          created_by?: string | null;
+          updated_by?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       content_documents: {
         Row: {
           id: string;

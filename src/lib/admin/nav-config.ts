@@ -162,6 +162,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "analytics.view",
   },
   {
+    id: "system-redirects",
+    section: "system",
+    href: "/admin/system/redirects",
+    label: "Редиректы",
+    description: "301/302 для переноса URL",
+    capability: "system.settings",
+  },
+  {
     id: "system-settings",
     section: "system",
     href: "/admin/system/settings",
