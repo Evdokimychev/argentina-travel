@@ -53,6 +53,7 @@ const RECOMMENDED_ENV = [
 const FORBIDDEN_TRUE = ["NEXT_PUBLIC_ENABLE_DEMO_SEED"];
 
 const SERVICE_ROLE_ONLY_TABLES = new Set([
+  "api_key_usage_log",
   "affiliate_link_clicks",
   "booking_commission_snapshots",
   "payment_audit_log",
@@ -61,6 +62,7 @@ const SERVICE_ROLE_ONLY_TABLES = new Set([
   "platform_commission_rules",
   "sputnik8_booking_requests",
   "sputnik8_sync_runs",
+  "trip_prep_reminders_sent",
   "tripster_booking_requests",
   "tripster_sync_runs",
 ]);
