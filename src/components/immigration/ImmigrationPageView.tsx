@@ -6,6 +6,7 @@ import {
   IMMIGRATION_HUB_INTRO,
   IMMIGRATION_HUB_RELATED,
 } from "@/data/immigration-hub";
+import { getImmigrationHubHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 
 export default function ImmigrationPageView() {
@@ -14,7 +15,7 @@ export default function ImmigrationPageView() {
       <Hero
         title="Иммиграция и въезд в Аргентину"
         subtitle="Визы, документы и обзор видов ВНЖ — справочно, без юридических гарантий"
-        image="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80"
+        image={getImmigrationHubHeroImage()}
         compact
       />
 

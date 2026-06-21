@@ -30,7 +30,7 @@ export default function BlogStartHere({ posts, className }: BlogStartHereProps) 
       </p>
 
       <div className="mt-5 space-y-4">
-        {lead ? <BlogCard post={lead} variant="featured" /> : null}
+        {lead ? <BlogCard post={lead} variant="featured" priority={false} /> : null}
         <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {rest.map((post) => (
             <li key={post.id}>

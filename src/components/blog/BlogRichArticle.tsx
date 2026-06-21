@@ -2,78 +2,35 @@
 
 import Link from "next/link";
 import {
-  AlertTriangle,
   ArrowUpRight,
   Clock,
   ExternalLink,
-  Info,
-  Lightbulb,
   MapPin,
   Mountain,
   Star,
 } from "lucide-react";
+import BlogCallout from "@/components/blog/BlogCallout";
+import BlogContentTable from "@/components/blog/BlogContentTable";
+import BlogFaqSection from "@/components/blog/BlogFaqSection";
+import BlogMapBlock from "@/components/blog/BlogMapBlock";
+import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
+import BlogTicketLink from "@/components/blog/BlogTicketLink";
+import { BlogRichGalleryCarousel } from "@/components/blog/BlogRichGalleryCarousel";
+import PageImage from "@/components/media/PageImage";
 import { cn } from "@/lib/cn";
+import { getContentImage, getRichArticleGallery } from "@/lib/media-resolver";
 import { siteScrollAnchorClass } from "@/lib/site-container";
 import type {
   BlogRichArticle,
   BlogRichBlock,
   BlogRichCalloutVariant,
-  BlogRichSeason,
   BlogRichSpot,
 } from "@/types/blog-rich-article";
+import type { BlogCalloutVariant } from "@/types/blog-content-blocks";
 
-const CALLOUT_STYLES: Record<
-  BlogRichCalloutVariant,
-  { border: string; bg: string; icon: typeof Info; iconClass: string }
-> = {
-  info: {
-    border: "border-gray-200",
-    bg: "bg-surface-muted/70",
-    icon: Info,
-    iconClass: "text-slate",
-  },
-  tip: {
-    border: "border-sky/20",
-    bg: "bg-sky/[0.06]",
-    icon: Lightbulb,
-    iconClass: "text-sky",
-  },
-  warning: {
-    border: "border-amber-200/80",
-    bg: "bg-amber-50/60",
-    icon: AlertTriangle,
-    iconClass: "text-amber-700",
-  },
-};
-
-function RichCallout({
-  variant,
-  title,
-  body,
-}: {
-  variant: BlogRichCalloutVariant;
-  title: string;
-  body: string;
-}) {
-  const style = CALLOUT_STYLES[variant];
-  const Icon = style.icon;
-  return (
-    <aside
-      className={cn(
-        "rounded-2xl border p-4 shadow-sm sm:p-5",
-        style.border,
-        style.bg
-      )}
-    >
-      <div className="flex items-start gap-3">
-        <Icon className={cn("mt-0.5 h-5 w-5 shrink-0", style.iconClass)} aria-hidden />
-        <div>
-          <p className="font-heading text-sm font-bold text-charcoal">{title}</p>
-          <p className="mt-1.5 text-sm leading-relaxed text-slate">{body}</p>
-        </div>
-      </div>
-    </aside>
-  );
+function mapRichCalloutVariant(variant: BlogRichCalloutVariant): BlogCalloutVariant {
+  if (variant === "info") return "know";
+  return variant;
 }
 
 function RichStatsGrid({ items }: { items: Array<{ label: string; value: string }> }) {
@@ -176,103 +133,11 @@ function RichTable({
   rows: string[][];
   caption?: string;
 }) {
-  return (
-    <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <table className="w-full min-w-[520px] text-left text-sm">
-        {caption ? (
-          <caption className="border-b border-gray-100 bg-surface-muted/50 px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-slate">
-            {caption}
-          </caption>
-        ) : null}
-        <thead>
-          <tr className="border-b border-gray-100 bg-surface-muted/60">
-            {headers.map((header) => (
-              <th
-                key={header}
-                scope="col"
-                className="px-4 py-3 font-heading font-bold text-charcoal"
-              >
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rows.map((row, rowIndex) => (
-            <tr key={rowIndex} className="border-b border-gray-50 last:border-0">
-              {row.map((cell, cellIndex) => (
-                <td
-                  key={cellIndex}
-                  className={cn(
-                    "px-4 py-3 text-slate",
-                    cellIndex === 0 && "font-medium text-charcoal"
-                  )}
-                >
-                  {cell}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
-}
-
-function RichSeasonCard({ season }: { season: BlogRichSeason }) {
-  return (
-    <article className="rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
-      <h3 className="font-heading text-base font-bold text-charcoal">{season.name}</h3>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-emerald-700">Плюсы</p>
-          <ul className="mt-1.5 space-y-1 text-sm text-slate">
-            {season.pros.map((item) => (
-              <li key={item} className="flex gap-2">
-                <span className="text-emerald-600" aria-hidden>
-                  +
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-wide text-amber-800">Минусы</p>
-          <ul className="mt-1.5 space-y-1 text-sm text-slate">
-            {season.cons.map((item) => (
-              <li key={item} className="flex gap-2">
-                <span className="text-amber-700" aria-hidden>
-                  −
-                </span>
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </article>
-  );
+  return <BlogContentTable headers={headers} rows={rows} caption={caption} />;
 }
 
 function RichFaqList({ items }: { items: Array<{ question: string; answer: string }> }) {
-  return (
-    <div className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-white shadow-sm">
-      {items.map((item) => (
-        <details key={item.question} className="group px-4 py-3 sm:px-5 sm:py-4">
-          <summary className="cursor-pointer list-none font-medium text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
-            <span className="flex items-start justify-between gap-3">
-              <span>{item.question}</span>
-              <span className="mt-0.5 text-sky transition group-open:rotate-45" aria-hidden>
-                +
-              </span>
-            </span>
-          </summary>
-          <p className="mt-3 text-sm leading-relaxed text-slate">{item.answer}</p>
-        </details>
-      ))}
-    </div>
-  );
+  return <BlogFaqSection items={items} />;
 }
 
 function StarRating({ value }: { value: number }) {
@@ -332,7 +197,15 @@ function RichRatings({
   );
 }
 
-function RichBlock({ block }: { block: BlogRichBlock }) {
+function RichMap({ lat, lng, label }: { lat: number; lng: number; label: string }) {
+  return <BlogMapBlock lat={lat} lng={lng} label={label} />;
+}
+
+function RichTicketLink({ url, label }: { url: string; label: string }) {
+  return <BlogTicketLink url={url} label={label} />;
+}
+
+function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: string }) {
   switch (block.type) {
     case "paragraphs":
       return (
@@ -345,7 +218,13 @@ function RichBlock({ block }: { block: BlogRichBlock }) {
         </div>
       );
     case "callout":
-      return <RichCallout variant={block.variant} title={block.title} body={block.body} />;
+      return (
+        <BlogCallout
+          variant={mapRichCalloutVariant(block.variant)}
+          title={block.title}
+          body={block.body}
+        />
+      );
     case "stats":
       return <RichStatsGrid items={block.items} />;
     case "links":
@@ -377,16 +256,7 @@ function RichBlock({ block }: { block: BlogRichBlock }) {
       );
     case "seasons":
       return (
-        <div className="space-y-4">
-          {block.items.map((season) => (
-            <RichSeasonCard key={season.name} season={season} />
-          ))}
-          {block.conclusion ? (
-            <p className="rounded-2xl border border-gray-100 bg-white px-4 py-3 text-sm leading-relaxed text-slate shadow-sm sm:px-5">
-              {block.conclusion}
-            </p>
-          ) : null}
-        </div>
+        <BlogSeasonWidget items={block.items} conclusion={block.conclusion} />
       );
     case "faq":
       return <RichFaqList items={block.items} />;
@@ -407,14 +277,67 @@ function RichBlock({ block }: { block: BlogRichBlock }) {
           ))}
         </ol>
       );
+    case "gallery":
+      return (
+        <BlogRichGalleryCarousel
+          images={block.images.map((image) => ({
+            src: image.src,
+            alt: image.alt,
+            caption: image.title,
+          }))}
+          ariaLabel="Галерея в статье"
+        />
+      );
+    case "section-image": {
+      const image = block.slotId
+        ? getContentImage(`rich:${articleId}`, `section-${block.slotId}`)
+        : block.src;
+      if (!image) return null;
+      return (
+        <figure className="mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100">
+          <div className="relative aspect-[16/10] w-full">
+            <PageImage
+              image={image}
+              role="section"
+              fill
+              className="object-cover"
+            />
+          </div>
+          {block.caption ? (
+            <figcaption className="px-4 py-3 text-sm text-slate">{block.caption}</figcaption>
+          ) : (
+            <figcaption className="sr-only">{block.alt}</figcaption>
+          )}
+        </figure>
+      );
+    }
+    case "map":
+      return <RichMap lat={block.lat} lng={block.lng} label={block.label} />;
+    case "ticket-link":
+      return <RichTicketLink url={block.url} label={block.label} />;
     default:
       return null;
   }
 }
 
-export default function BlogRichArticle({ article }: { article: BlogRichArticle }) {
+export default function BlogRichArticle({
+  article,
+  galleryImages,
+}: {
+  article: BlogRichArticle;
+  galleryImages?: Array<{ src: string; alt: string }>;
+}) {
+  const gallery = galleryImages ?? getRichArticleGallery(article.id);
+
   return (
     <div className="space-y-10">
+      {gallery.length > 0 ? (
+        <BlogRichGalleryCarousel
+          images={gallery}
+          ariaLabel="Фотогалерея национального парка"
+        />
+      ) : null}
+
       <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/[0.07] via-white to-white p-5 shadow-sm sm:p-6">
         <div className="flex items-start gap-3">
           <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
@@ -444,7 +367,7 @@ export default function BlogRichArticle({ article }: { article: BlogRichArticle 
           </h2>
           <div className="space-y-5">
             {section.blocks.map((block, index) => (
-              <RichBlock key={`${section.id}-${index}`} block={block} />
+              <RichBlock key={`${section.id}-${index}`} block={block} articleId={article.id} />
             ))}
           </div>
         </section>

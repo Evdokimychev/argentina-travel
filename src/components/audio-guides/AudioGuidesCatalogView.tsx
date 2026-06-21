@@ -8,12 +8,12 @@ import AudioGuideBenefits from "@/components/audio-guides/AudioGuideBenefits";
 import AudioGuideCard from "@/components/audio-guides/AudioGuideCard";
 import { DEFAULT_WEGOTTRIP_CITY_ID, WEGOTTRIP_FEATURED_CITIES } from "@/lib/wegottrip/constants";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import type { WeGoTripProductSummary } from "@/lib/wegottrip/types";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1520986750442-3f7a5444e4f7?w=1200&q=80";
+const HERO_IMAGE = getServicePageHeroImage("audio-guides");
 
 export default function AudioGuidesCatalogView() {
   const searchParams = useSearchParams();

@@ -14,7 +14,7 @@ const reportPath = path.join(root, "docs/image-audit-report.md");
 const manifestPath = path.join(root, "src/data/media-library/manifest.json");
 
 const URL_PATTERN =
-  /https?:\/\/[^\s"'`<>]+(?:\.(?:jpg|jpeg|png|gif|webp|svg)|images\.unsplash\.com|upload\.wikimedia\.org|commons\.wikimedia\.org)[^\s"'`<>]*/gi;
+  /https?:\/\/(?:images\.unsplash\.com\/[^\s"'`<>]+|[^\s"'`<>]+\.(?:jpg|jpeg|png|gif|webp|svg)(?:\?[^\s"'`<>]*)?|upload\.wikimedia\.org\/[^\s"'`<>]+|commons\.wikimedia\.org\/[^\s"'`<>]+)/gi;
 
 const EXTENSIONS = new Set([".ts", ".tsx", ".js", ".jsx", ".json", ".md", ".mdx", ".css"]);
 

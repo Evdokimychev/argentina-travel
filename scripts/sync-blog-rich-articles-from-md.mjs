@@ -5,6 +5,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
 const DOCS = path.join(ROOT, "docs");
@@ -35,6 +36,54 @@ const ARTICLES = [
     exportName: "losGlaciaresNationalParkArticle",
     id: "los-glaciares-national-park",
   },
+  {
+    md: "Национальный-парк-Ибера.md",
+    out: "ibera-national-park.ts",
+    exportName: "iberaNationalParkArticle",
+    id: "ibera-national-park",
+  },
+  {
+    md: "Национальный-парк-Ланин.md",
+    out: "lanin-national-park.ts",
+    exportName: "laninNationalParkArticle",
+    id: "lanin-national-park",
+  },
+  {
+    md: "Национальный-парк-Лос-Алерсес.md",
+    out: "los-alerces-national-park.ts",
+    exportName: "losAlercesNationalParkArticle",
+    id: "los-alerces-national-park",
+  },
+  {
+    md: "Национальный-парк-Лос-Кардонес.md",
+    out: "los-cardones-national-park.ts",
+    exportName: "losCardonesNationalParkArticle",
+    id: "los-cardones-national-park",
+  },
+  {
+    md: "Национальный-парк-Патагония.md",
+    out: "patagonia-national-park.ts",
+    exportName: "patagoniaNationalParkArticle",
+    id: "patagonia-national-park",
+  },
+  {
+    md: "Национальный-парк-Талампая.md",
+    out: "talampaya-national-park.ts",
+    exportName: "talampayaNationalParkArticle",
+    id: "talampaya-national-park",
+  },
+  {
+    md: "Баньядо-ла-Эстрелья.md",
+    out: "banado-la-estrella.ts",
+    exportName: "banadoLaEstrellaArticle",
+    id: "banado-la-estrella",
+  },
+  {
+    md: "Все-национальные-парки-Аргентины.md",
+    out: "all-argentina-national-parks.ts",
+    exportName: "allArgentinaNationalParksArticle",
+    id: "all-argentina-national-parks",
+  },
 ];
 
 function escapeTs(str) {
@@ -42,6 +91,9 @@ function escapeTs(str) {
     .replace(/\\/g, "\\\\")
     .replace(/`/g, "\\`")
     .replace(/\$\{/g, "\\${")
+    .replace(/\r\n/g, "\n")
+    .replace(/\r/g, "\n")
+    .replace(/\n/g, "\\n")
     .replace(/"/g, '\\"');
 }
 
@@ -52,6 +104,95 @@ function stripMdInline(text) {
     .replace(/`/g, "")
     .trim();
 }
+
+function parseMapComment(line) {
+  const m = line.match(
+    /<!--\s*map:\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)(?:\s*,\s*(.+?))?\s*-->/,
+  );
+  if (!m) return null;
+  return {
+    lat: Number(m[1]),
+    lng: Number(m[2]),
+    label: m[3]?.trim() || "Открыть на Google Maps",
+  };
+}
+
+function parseTicketComment(line) {
+  const m = line.match(/<!--\s*ticket:\s*(https?:\/\/[^\s,]+)(?:\s*,\s*(.+?))?\s*-->/);
+  if (!m) return null;
+  return { url: m[1], label: m[2]?.trim() || "Купить билет онлайн" };
+}
+
+function parseMarkdownLinks(text) {
+  const items = [];
+  const re = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    items.push({ label: stripMdInline(m[1]), href: m[2], external: true });
+  }
+  return items;
+}
+
+function parseMapsFromText(text) {
+  const maps = [];
+  const seen = new Set();
+  for (const line of text.split("\n")) {
+    const comment = parseMapComment(line);
+    if (comment) {
+      const key = `${comment.lat},${comment.lng}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        maps.push(comment);
+      }
+      continue;
+    }
+    const urlMatch = line.match(/maps\?q=(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+    if (urlMatch) {
+      const lat = Number(urlMatch[1]);
+      const lng = Number(urlMatch[2]);
+      const key = `${lat},${lng}`;
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const labelMatch = line.match(/^([^:`]+?)(?:\s*—|:)\s*`?https?:/);
+      const label = labelMatch
+        ? stripMdInline(labelMatch[1].replace(/Рекомендуемая точка[^—]*—\s*/, ""))
+        : "Открыть на Google Maps";
+      maps.push({ lat, lng, label });
+    }
+  }
+  return maps;
+}
+
+function sectionImageBlock(slotId, alt, caption) {
+  return { type: "section-image", slotId, alt, caption };
+}
+
+const SECTION_IMAGE_PRESETS = {
+  overview: {
+    alt: "Общий вид национального парка",
+    caption: "Панорама и масштаб парка",
+  },
+  seasons: {
+    alt: "Сезонные условия в парке",
+    caption: "Как меняется парк по сезонам",
+  },
+  logistics: {
+    alt: "Дорога и логистика до парка",
+    caption: "Как добраться и организовать визит",
+  },
+  landmark: {
+    alt: "Главная достопримечательность — вид на парк",
+    caption: "Главные виды и символы парка",
+  },
+  trails: {
+    alt: "Тропы и маршруты — прогулка по парку",
+    caption: "Маршруты и активности для путешественника",
+  },
+  wildlife: {
+    alt: "Флора и фауна — обитатели парка",
+    caption: "Дикая природа и типичные виды",
+  },
+};
 
 function parseMd(content) {
   const lines = content.split("\n");
@@ -111,10 +252,22 @@ function slugify(title) {
   const map = {
     "Краткая информация": "overview",
     "Где находится парк": "location",
+    "Где находится": "location",
     "Чем знаменит этот парк": "highlights",
     "Чем знаменит парк": "highlights",
+    "Чем знаменито это место": "highlights",
     "Что обязательно посмотреть: ТОП-10": "top-10",
+    "Что обязательно увидеть и сделать: ТОП-10": "top-10",
     "Лучшие маршруты": "routes",
+    "Лучшие маршруты (экскурсии)": "routes",
+    "Лучшие активности и порталы": "routes",
+    "Форматы посещения": "routes",
+    "Коротко о системе национальных парков": "system",
+    "Сравнительная таблица всех национальных парков": "all-parks-table",
+    "Парки по регионам": "regions",
+    "Подробные гиды по паркам": "park-guides",
+    "Какой парк выбрать": "choose-park",
+    "Билеты, цены и полезное": "tickets",
     "Флора и фауна": "wildlife",
     "Когда лучше ехать": "seasons",
     "Как добраться": "getting-there",
@@ -123,6 +276,7 @@ function slugify(title) {
     "Инфраструктура": "infrastructure",
     "Практические советы": "tips",
     "Советы местного гида": "guide-tips",
+    "Советы «местного гида»": "guide-tips",
     "Интересные факты": "facts",
     "Часто задаваемые вопросы": "faq",
     Итог: "summary",
@@ -423,6 +577,51 @@ function sectionBlocks(section) {
         items: table.rows.map(([label, value]) => ({ label, value })),
       });
     }
+    const preset = SECTION_IMAGE_PRESETS.overview;
+    blocks.push(sectionImageBlock("overview", preset.alt, preset.caption));
+    return cleanupBlocks({ id, title, blocks });
+  }
+
+  if (
+    title === "Где находится парк" ||
+    title === "Где находится"
+  ) {
+    const maps = parseMapsFromText(body);
+    const bodyWithoutMaps = body
+      .split("\n")
+      .filter(
+        (line) =>
+          !line.includes("ВСТАВИТЬ GOOGLE MAPS") &&
+          !parseMapComment(line) &&
+          !line.includes("maps?q=") &&
+          !line.includes("iframe Google Maps"),
+      )
+      .join("\n");
+
+    for (const chunk of bodyWithoutMaps.split(/\n\n+/)) {
+      if (!chunk.trim()) continue;
+      if (chunk.trim().startsWith("|")) {
+        const table = parseTable(chunk);
+        if (table) blocks.push({ type: "table", headers: table.headers, rows: table.rows });
+      } else if (/^[-*]\s/m.test(chunk) || /^\d+\.\s/m.test(chunk)) {
+        const titleMatch = chunk.match(/^\*\*([^*]+)\*\*/);
+        const items = parseBullets(chunk);
+        if (items.length) {
+          blocks.push({
+            type: "bullets",
+            title: titleMatch ? stripMdInline(titleMatch[1]) : undefined,
+            items,
+          });
+        }
+      } else {
+        const p = stripMdInline(chunk);
+        if (p) blocks.push({ type: "paragraphs", items: [p] });
+      }
+    }
+
+    for (const map of maps) {
+      blocks.push({ type: "map", lat: map.lat, lng: map.lng, label: map.label });
+    }
     return cleanupBlocks({ id, title, blocks });
   }
 
@@ -434,15 +633,19 @@ function sectionBlocks(section) {
 
   if (title.includes("знаменит")) {
     blocks.push(...parseHighlights(body));
+    const preset = SECTION_IMAGE_PRESETS.landmark;
+    blocks.push(sectionImageBlock("landmark", preset.alt, preset.caption));
     return cleanupBlocks({ id, title, blocks });
   }
 
   if (title === "Флора и фауна") {
     blocks.push(...parseWildlife(body));
+    const preset = SECTION_IMAGE_PRESETS.wildlife;
+    blocks.push(sectionImageBlock("wildlife", preset.alt, preset.caption));
     return cleanupBlocks({ id, title, blocks });
   }
 
-  if (title === "Советы местного гида") {
+  if (title === "Советы местного гида" || title.includes("местного гида")) {
     blocks.push(...parseGuideTips(body));
     return cleanupBlocks({ id, title, blocks });
   }
@@ -459,10 +662,17 @@ function sectionBlocks(section) {
 
   if (title === "Как добраться") {
     blocks.push(...parseSubsections(body));
+    const preset = SECTION_IMAGE_PRESETS.logistics;
+    blocks.push(sectionImageBlock("logistics", preset.alt, preset.caption));
     return cleanupBlocks({ id, title, blocks });
   }
 
-  if (title === "Лучшие маршруты") {
+  if (
+    title === "Лучшие маршруты" ||
+    title.includes("Лучшие маршруты") ||
+    title === "Лучшие активности и порталы" ||
+    title === "Форматы посещения"
+  ) {
     const table = parseTable(body);
     if (table) {
       blocks.push({
@@ -478,6 +688,8 @@ function sectionBlocks(section) {
       .map(stripMdInline)
       .filter(Boolean);
     if (paras.length) blocks.push({ type: "paragraphs", items: paras });
+    const preset = SECTION_IMAGE_PRESETS.trails;
+    blocks.push(sectionImageBlock("trails", preset.alt, preset.caption));
     return cleanupBlocks({ id, title, blocks });
   }
 
@@ -488,6 +700,8 @@ function sectionBlocks(section) {
     }
     const { items, conclusion } = parseSeasons(body);
     if (items.length) blocks.push({ type: "seasons", items, conclusion });
+    const preset = SECTION_IMAGE_PRESETS.seasons;
+    blocks.push(sectionImageBlock("seasons", preset.alt, preset.caption));
     return cleanupBlocks({ id, title, blocks });
   }
 
@@ -510,9 +724,20 @@ function sectionBlocks(section) {
     return cleanupBlocks({ id, title, blocks });
   }
 
-  if (title === "Билеты и стоимость посещения" || title === "Билеты и стоимость") {
+  if (
+    title === "Билеты и стоимость посещения" ||
+    title === "Билеты и стоимость" ||
+    title === "Стоимость посещения" ||
+    title === "Билеты, цены и полезное"
+  ) {
+    let ticketComment = null;
     const parts = body.split("\n\n");
     for (const part of parts) {
+      for (const line of part.split("\n")) {
+        const ticket = parseTicketComment(line);
+        if (ticket) ticketComment = ticket;
+      }
+
       if (part.startsWith(">")) {
         const calloutBody = stripMdInline(part.replace(/^>\s*/gm, ""));
         blocks.push({
@@ -523,29 +748,50 @@ function sectionBlocks(section) {
         });
       } else if (part.trim().startsWith("|")) {
         const table = parseTable(part);
-        if (table)
-          blocks.push({ type: "table", headers: table.headers, rows: table.rows });
-      } else if (part.includes("**[ВСТАВИТЬ")) {
-        const linkMatch = part.match(/\[([^\]]+)\]\(([^)]+)\)/g);
-        if (linkMatch) {
+        if (table) blocks.push({ type: "table", headers: table.headers, rows: table.rows });
+      } else if (
+        part.includes("ВСТАВИТЬ") ||
+        part.includes("ventaweb.apn") ||
+        parseMarkdownLinks(part).length > 0
+      ) {
+        const links = parseMarkdownLinks(part);
+        if (links.length) {
+          const primary =
+            links.find((l) => l.href.includes("ventaweb.apn")) ?? links[0];
+          const secondary = links.filter((l) => l.href !== primary.href);
           blocks.push({
-            type: "links",
-            title: "Официальная продажа билетов",
-            items: linkMatch.map((l) => {
-              const m = l.match(/\[([^\]]+)\]\(([^)]+)\)/);
-              return { label: m[1], href: m[2], external: true };
-            }),
+            type: "ticket-link",
+            url: ticketComment?.url ?? primary.href,
+            label: ticketComment?.label ?? "Купить билет онлайн",
           });
+          if (secondary.length) {
+            blocks.push({
+              type: "links",
+              title: "Дополнительные официальные каналы",
+              items: secondary,
+            });
+          }
         }
+      } else if (part.includes("**[ВСТАВИТЬ")) {
+        // placeholder without parsed links — skip
       } else {
         const bullets = parseBullets(part);
         if (bullets.length) blocks.push({ type: "bullets", items: bullets });
         else {
           const p = stripMdInline(part);
-          if (p) blocks.push({ type: "paragraphs", items: [p] });
+          if (p && !p.startsWith("[ВСТАВИТЬ")) blocks.push({ type: "paragraphs", items: [p] });
         }
       }
     }
+
+    if (ticketComment && !blocks.some((b) => b.type === "ticket-link")) {
+      blocks.push({
+        type: "ticket-link",
+        url: ticketComment.url,
+        label: ticketComment.label,
+      });
+    }
+
     return cleanupBlocks({ id, title, blocks });
   }
 
@@ -591,13 +837,9 @@ function sectionBlocks(section) {
           body: stripMdInline(m[2]),
         });
     } else if (part.includes("**[ВСТАВИТЬ GOOGLE MAPS]")) {
-      const urlMatch = part.match(/https:\/\/[^\s`]+/);
-      if (urlMatch) {
-        blocks.push({
-          type: "links",
-          title: "Карта",
-          items: [{ label: "Открыть на Google Maps", href: urlMatch[0], external: true }],
-        });
+      const maps = parseMapsFromText(part);
+      for (const map of maps) {
+        blocks.push({ type: "map", lat: map.lat, lng: map.lng, label: map.label });
       }
     } else {
       const p = stripMdInline(part);
@@ -654,6 +896,12 @@ function serializeBlock(block, indent) {
         .join("\n")}\n${inner}],\n${pad}},`;
     case "ratings":
       return `${pad}{\n${inner}type: "ratings",${block.note ? `\n${inner}note: "${escapeTs(block.note)}",` : ""}\n${inner}audience: [\n${block.audience.map((a) => `${inner}  "${escapeTs(a)}",`).join("\n")}\n${inner}],\n${inner}items: [\n${block.items.map((r) => `${inner}  { label: "${escapeTs(r.label)}", stars: ${r.stars} },`).join("\n")}\n${inner}],\n${pad}},`;
+    case "section-image":
+      return `${pad}{\n${inner}type: "section-image",\n${inner}slotId: "${block.slotId}",\n${inner}alt: "${escapeTs(block.alt)}",${block.caption ? `\n${inner}caption: "${escapeTs(block.caption)}",` : ""}\n${pad}},`;
+    case "map":
+      return `${pad}{\n${inner}type: "map",\n${inner}lat: ${block.lat},\n${inner}lng: ${block.lng},\n${inner}label: "${escapeTs(block.label)}",\n${pad}},`;
+    case "ticket-link":
+      return `${pad}{\n${inner}type: "ticket-link",\n${inner}url: "${escapeTs(block.url)}",\n${inner}label: "${escapeTs(block.label)}",\n${pad}},`;
     default:
       return "";
   }
@@ -662,6 +910,7 @@ function serializeBlock(block, indent) {
 function generateArticle(config) {
   const mdPath = path.join(DOCS, config.md);
   const content = fs.readFileSync(mdPath, "utf8");
+  const mdChecksum = crypto.createHash("sha256").update(content).digest("hex").slice(0, 16);
   const parsed = parseMd(content);
   const topFaq = parseSeoFaq(content);
 
@@ -694,7 +943,8 @@ function generateArticle(config) {
     )
     .join("\n");
 
-  return `import type { BlogRichArticle } from "@/types/blog-rich-article";
+  return `// Generated from docs/${config.md} — md-checksum: ${mdChecksum}
+import type { BlogRichArticle } from "@/types/blog-rich-article";
 
 export const ${config.exportName}: BlogRichArticle = {
   id: "${config.id}",
@@ -708,8 +958,30 @@ ${sectionsTs}
 `;
 }
 
+const checkMode = process.argv.includes("--check");
+let driftCount = 0;
+
 for (const config of ARTICLES) {
   const ts = generateArticle(config);
-  fs.writeFileSync(path.join(OUT, config.out), ts, "utf8");
+  const outPath = path.join(OUT, config.out);
+  if (checkMode) {
+    const existing = fs.existsSync(outPath) ? fs.readFileSync(outPath, "utf8") : "";
+    if (existing !== ts) {
+      console.error(`DRIFT: ${config.out} (MD docs/${config.md})`);
+      driftCount += 1;
+    } else {
+      console.log(`OK ${config.out}`);
+    }
+    continue;
+  }
+  fs.writeFileSync(outPath, ts, "utf8");
   console.log(`Wrote ${config.out}`);
+}
+
+if (checkMode) {
+  if (driftCount > 0) {
+    console.error(`${driftCount} file(s) out of sync — run: node scripts/sync-blog-rich-articles-from-md.mjs`);
+    process.exit(1);
+  }
+  console.log("All rich articles in sync with MD sources.");
 }

@@ -16,10 +16,19 @@ export type CmsLegalBody = {
   sections: LegalSection[];
 };
 
+import type { BlogBodyBlock, BlogSectionKind } from "@/types/blog-content-blocks";
+
+export type CmsBlogSection = {
+  title: string;
+  body: string;
+  blockType?: BlogSectionKind;
+  blocks?: BlogBodyBlock[];
+};
+
 export type CmsBlogBody = {
   kind: "blog";
   excerpt?: string;
-  sections?: { title: string; body: string }[];
+  sections?: CmsBlogSection[];
   content?: string;
   featured?: boolean;
 };
@@ -210,6 +219,10 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     tags: fallback?.tags ?? [],
     featured: doc.body.featured ?? fallback?.featured,
     editorialReviewed: fallback?.editorialReviewed,
+    noIndex: fallback?.noIndex,
+    canonicalSlug: fallback?.canonicalSlug,
+    dateModified: fallback?.dateModified,
+    richArticleId: fallback?.richArticleId,
     relatedResources: fallback?.relatedResources,
     tourEmbeds: fallback?.tourEmbeds,
   };

@@ -1,3 +1,5 @@
+import { getShopProductImage } from "@/lib/media-resolver";
+
 export type ShopProduct = {
   id: string;
   slug: string;
@@ -12,7 +14,7 @@ export type ShopProduct = {
   storagePath?: string;
 };
 
-export const SHOP_PRODUCTS: ShopProduct[] = [
+const SHOP_PRODUCTS_RAW: Omit<ShopProduct, "image">[] = [
   {
     id: "shop-patagonia-guide",
     slug: "patagonia-pdf-guide",
@@ -22,7 +24,6 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     price: 19,
     currency: "USD",
     deliveryType: "digital",
-    image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
     format: "PDF, 48 страниц",
   },
   {
@@ -34,7 +35,6 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     price: 15,
     currency: "USD",
     deliveryType: "digital",
-    image: "https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=800&q=80",
     format: "PDF, 36 страниц",
   },
   {
@@ -46,7 +46,6 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     price: 9,
     currency: "USD",
     deliveryType: "digital",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80",
     format: "PDF, 12 страниц",
   },
   {
@@ -58,7 +57,6 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     price: 14,
     currency: "USD",
     deliveryType: "digital",
-    image: "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=800&q=80",
     format: "PDF, 32 страниц",
   },
   {
@@ -70,7 +68,6 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     price: 16,
     currency: "USD",
     deliveryType: "digital",
-    image: "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=800&q=80",
     format: "PDF, 40 страниц",
   },
   {
@@ -82,10 +79,14 @@ export const SHOP_PRODUCTS: ShopProduct[] = [
     price: 7,
     currency: "USD",
     deliveryType: "digital",
-    image: "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
     format: "PDF, 10 страниц",
   },
 ];
+
+export const SHOP_PRODUCTS: ShopProduct[] = SHOP_PRODUCTS_RAW.map((product) => ({
+  ...product,
+  image: getShopProductImage(product.id),
+}));
 
 export function getShopProductBySlug(slug: string): ShopProduct | undefined {
   return SHOP_PRODUCTS.find((product) => product.slug === slug);

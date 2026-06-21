@@ -6,6 +6,7 @@ import type { ContentTocItem, RelatedContentItem } from "@/types/content-reading
 
 type ContentReadingLayoutProps = {
   tocItems: ContentTocItem[];
+  tocMinItems?: number;
   children: React.ReactNode;
   aside?: React.ReactNode;
   relatedItems?: RelatedContentItem[];
@@ -17,6 +18,7 @@ type ContentReadingLayoutProps = {
 
 export default function ContentReadingLayout({
   tocItems,
+  tocMinItems = 2,
   children,
   aside,
   relatedItems = [],
@@ -25,11 +27,12 @@ export default function ContentReadingLayout({
   articleClassName,
   className,
 }: ContentReadingLayoutProps) {
-  const hasSidebar = tocItems.length >= 2 || aside;
+  const showToc = tocItems.length >= tocMinItems;
+  const hasSidebar = showToc || aside;
 
   return (
     <div className={cn("space-y-6", className)}>
-      <TableOfContents items={tocItems} variant="mobile" />
+      <TableOfContents items={showToc ? tocItems : []} variant="mobile" />
 
       <div
         className={cn(
@@ -43,7 +46,7 @@ export default function ContentReadingLayout({
         <div className="min-w-0">
           <article
             className={cn(
-              "content-reading-prose rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8 md:p-10",
+              "content-reading-prose rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-8 md:p-10",
               articleClassName
             )}
           >
@@ -70,7 +73,7 @@ export default function ContentReadingLayout({
                 hubTocStickyMaxHeightClass
               )}
             >
-              {tocItems.length >= 2 ? (
+              {showToc ? (
                 <TableOfContents items={tocItems} variant="sidebar" embedded />
               ) : null}
               {aside}

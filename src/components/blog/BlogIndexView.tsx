@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import HubHero from "@/components/guide/hub/HubHero";
 import BlogCard from "@/components/blog/BlogCard";
+import BlogEditorialHubs from "@/components/blog/BlogEditorialHubs";
+import BlogEmptyCatalogState from "@/components/blog/BlogEmptyCatalogState";
 import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogStartHere from "@/components/blog/BlogStartHere";
@@ -14,12 +16,14 @@ import {
   computeBlogStats,
   filterBlogPosts,
   getBlogCategoriesWithCounts,
-  getEditorialBlogPosts,
+  getBlogStartHerePosts,
   getTopBlogTags,
   sortBlogPostsByDate,
 } from "@/data/blog";
 import { getEditorialProgress } from "@/data/blog-editorial";
+import { filterIndexableBlogPosts, resolveBlogCardVariant } from "@/lib/blog-utils";
 import { buttonVariants } from "@/components/ui/button";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { BlogPost } from "@/types";
@@ -34,63 +38,76 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
   const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [reviewedOnly, setReviewedOnly] = useState(false);
+  const [showDrafts, setShowDrafts] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const catalogRef = useRef<HTMLElement>(null);
 
-  const catalogPosts = useMemo(
+  const allCatalogPosts = useMemo(
     () => sortBlogPostsByDate(posts?.length ? posts : blogPosts),
     [posts],
   );
-  const editorialPosts = useMemo(() => {
-    if (!posts?.length) return sortBlogPostsByDate(getEditorialBlogPosts());
-    const featuredPosts = sortBlogPostsByDate(catalogPosts.filter((post) => post.featured)).slice(0, 8);
-    return featuredPosts.length > 0 ? featuredPosts : sortBlogPostsByDate(getEditorialBlogPosts());
-  }, [posts, catalogPosts]);
-  const categoriesWithCounts = useMemo(() => getBlogCategoriesWithCounts(catalogPosts), [catalogPosts]);
-  const tags = useMemo(() => getTopBlogTags(catalogPosts, 14), [catalogPosts]);
-  const stats = useMemo(() => computeBlogStats(catalogPosts), [catalogPosts]);
-  const editorialProgress = useMemo(() => getEditorialProgress(), []);
-  const freshPosts = useMemo(() => catalogPosts.slice(0, 4), [catalogPosts]);
 
-  const hasActiveFilters = Boolean(query.trim() || activeCategory !== "Все" || activeTag);
+  const catalogPosts = useMemo(() => {
+    if (showDrafts) return allCatalogPosts;
+    return filterIndexableBlogPosts(allCatalogPosts);
+  }, [allCatalogPosts, showDrafts]);
 
-  const filteredPosts = useMemo(
-    () =>
-      sortBlogPostsByDate(
-        filterBlogPosts(catalogPosts, {
-          query,
-          category: activeCategory,
-          tag: activeTag,
-        }),
-      ),
-    [catalogPosts, query, activeCategory, activeTag],
+  const indexableCatalog = useMemo(
+    () => filterIndexableBlogPosts(catalogPosts),
+    [catalogPosts],
   );
+
+  const editorialPosts = useMemo(() => getBlogStartHerePosts(), []);
+  const categoriesWithCounts = useMemo(
+    () => getBlogCategoriesWithCounts(indexableCatalog),
+    [indexableCatalog],
+  );
+  const tags = useMemo(() => getTopBlogTags(indexableCatalog, 14), [indexableCatalog]);
+  const stats = useMemo(() => computeBlogStats(allCatalogPosts), [allCatalogPosts]);
+  const editorialProgress = useMemo(() => getEditorialProgress(), []);
+  const freshPosts = useMemo(
+    () => sortBlogPostsByDate(indexableCatalog).slice(0, 4),
+    [indexableCatalog],
+  );
+
+  const hasActiveFilters = Boolean(
+    query.trim() || activeCategory !== "Все" || activeTag || reviewedOnly,
+  );
+
+  const filteredPosts = useMemo(() => {
+    let result = filterBlogPosts(catalogPosts, {
+      query,
+      category: activeCategory,
+      tag: activeTag,
+    });
+    if (reviewedOnly) {
+      result = result.filter((post) => post.editorialReviewed || Boolean(post.richArticleId));
+    }
+    return sortBlogPostsByDate(result);
+  }, [catalogPosts, query, activeCategory, activeTag, reviewedOnly]);
 
   const displayedPosts = filteredPosts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredPosts.length;
+  const featuredUsed = { value: false };
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [query, activeCategory, activeTag]);
+  }, [query, activeCategory, activeTag, reviewedOnly, showDrafts]);
 
   function resetFilters() {
     setQuery("");
     setActiveCategory("Все");
     setActiveTag(null);
-  }
-
-  function selectCategory(category: string) {
-    setActiveCategory(category);
-    setActiveTag(null);
-    catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    setReviewedOnly(false);
   }
 
   return (
     <>
       <HubHero
         title="Блог о путешествиях"
-        subtitle={`${stats.totalPosts.toLocaleString("ru-RU")} материалов по ${stats.categories.length} темам — от Патагонии и Игуасу до денег, виз и районов Буэнос-Айреса. Начните с редакционных материалов или выберите тему ниже.`}
-        image="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=1920&q=80"
+        subtitle={`${stats.indexablePosts.toLocaleString("ru-RU")} материалов в поиске${stats.draftPosts > 0 ? ` и ${stats.draftPosts.toLocaleString("ru-RU")} в доработке` : ""} — от Патагонии и Игуасу до денег, въезда и районов Буэнос-Айреса. Начните с редакционных материалов или выберите тему ниже.`}
+        image={getServicePageHeroImage("blog-index")}
         eyebrow={{ label: "Журнал", href: "/blog" }}
         ctas={[
           { label: "Путеводитель", href: "/guide", variant: "secondary" },
@@ -118,10 +135,15 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
           {!hasActiveFilters ? (
             <>
               <BlogStartHere posts={editorialPosts} className="mt-10" />
+              <BlogEditorialHubs posts={indexableCatalog} className="mt-10" />
               <BlogTopicHubs
                 categories={categoriesWithCounts}
                 activeCategory={activeCategory}
-                onCategorySelect={selectCategory}
+                onCategorySelect={(category) => {
+                  setActiveCategory(category);
+                  setActiveTag(null);
+                  catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
                 className="mt-10"
               />
             </>
@@ -142,26 +164,35 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
                   tags={tags}
                   activeTag={activeTag}
                   onTagChange={setActiveTag}
+                  reviewedOnly={reviewedOnly}
+                  onReviewedOnlyChange={setReviewedOnly}
+                  showDrafts={showDrafts}
+                  onShowDraftsChange={setShowDrafts}
+                  draftCount={stats.draftPosts}
                   resultCount={filteredPosts.length}
                   onReset={resetFilters}
                 />
 
                 {displayedPosts.length > 0 ? (
-                  <ul className="mt-6 grid gap-5 sm:grid-cols-2">
-                    {displayedPosts.map((post) => (
-                      <li key={post.id}>
-                        <BlogCard post={post} variant="standard" />
-                      </li>
-                    ))}
+                  <ul className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-5">
+                    {displayedPosts.map((post, index) => {
+                      const variant = resolveBlogCardVariant(post, index, featuredUsed);
+                      return (
+                        <li
+                          key={post.id}
+                          className={variant === "featured" ? "sm:col-span-2" : undefined}
+                        >
+                          <BlogCard
+                            post={post}
+                            variant={variant}
+                            priority={index === 0 && variant === "featured"}
+                          />
+                        </li>
+                      );
+                    })}
                   </ul>
                 ) : (
-                  <p className="mt-8 rounded-panel border border-dashed border-border-subtle bg-surface-elevated p-10 text-center text-slate">
-                    Статей по вашему запросу нет. Попробуйте сбросить фильтры или откройте{" "}
-                    <Link href="/guide" className="font-medium text-sky hover:underline">
-                      путеводитель
-                    </Link>
-                    .
-                  </p>
+                  <BlogEmptyCatalogState onReset={resetFilters} />
                 )}
 
                 {hasMore ? (
@@ -180,7 +211,6 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
                 ) : null}
               </section>
 
-              {/* Свежие материалы на планшете/мобиле — sidebar скрыт до xl */}
               <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-5 shadow-card xl:hidden">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-slate">Недавние</h2>
                 <ul className="mt-3 space-y-1">

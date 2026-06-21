@@ -2,6 +2,7 @@ import Link from "next/link";
 import Hero from "@/components/Hero";
 import { buttonVariants } from "@/components/ui/button";
 import { SITE_WHATSAPP_URL } from "@/data/site-contacts";
+import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { GuidePillarHeroCta } from "@/types/guide-pillar";
@@ -20,9 +21,7 @@ export default function GuidePillarHero({
   heroSubtitle,
   ctas,
 }: GuidePillarHeroProps) {
-  const heroImage =
-    topic.heroImage ??
-    "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80";
+  const heroImage = topic.heroImage ?? getGuideTopicHeroImage(topic.slug);
 
   return (
     <>

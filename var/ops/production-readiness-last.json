@@ -1,0 +1,139 @@
+{
+  "ok": false,
+  "ranAt": "2026-06-21T06:10:31.820Z",
+  "gitSha": null,
+  "checks": [
+    {
+      "id": "env:NEXT_PUBLIC_SITE_URL",
+      "label": "Переменная NEXT_PUBLIC_SITE_URL",
+      "status": "warn",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:NEXT_PUBLIC_SUPABASE_URL",
+      "label": "Переменная NEXT_PUBLIC_SUPABASE_URL",
+      "status": "ok",
+      "message": "Задана",
+      "category": "env"
+    },
+    {
+      "id": "env:NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "label": "Переменная NEXT_PUBLIC_SUPABASE_ANON_KEY",
+      "status": "ok",
+      "message": "Задана",
+      "category": "env"
+    },
+    {
+      "id": "env:SUPABASE_SERVICE_ROLE_KEY",
+      "label": "Переменная SUPABASE_SERVICE_ROLE_KEY",
+      "status": "ok",
+      "message": "Задана",
+      "category": "env"
+    },
+    {
+      "id": "env:DATABASE_URL",
+      "label": "Переменная DATABASE_URL",
+      "status": "ok",
+      "message": "Задана",
+      "category": "env"
+    },
+    {
+      "id": "env:DEPLOY_ENV",
+      "label": "Переменная DEPLOY_ENV",
+      "status": "warn",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:CRON_SECRET",
+      "label": "Переменная CRON_SECRET",
+      "status": "warn",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:recommended:GIT_SHA",
+      "label": "Рекомендуется: GIT_SHA",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:recommended:SENTRY_DSN",
+      "label": "Рекомендуется: SENTRY_DSN",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:recommended:NEXT_PUBLIC_SENTRY_DSN",
+      "label": "Рекомендуется: NEXT_PUBLIC_SENTRY_DSN",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:recommended:RESEND_API_KEY",
+      "label": "Рекомендуется: RESEND_API_KEY",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:recommended:LEADS_NOTIFY_EMAIL",
+      "label": "Рекомендуется: LEADS_NOTIFY_EMAIL",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:forbidden:NEXT_PUBLIC_ENABLE_DEMO_SEED",
+      "label": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false",
+      "status": "fail",
+      "message": "Демо-данные включены",
+      "category": "security"
+    },
+    {
+      "id": "migrations:files",
+      "label": "Миграции в репозитории",
+      "status": "ok",
+      "message": "44 файлов, последняя: 20250627000006_local_experts_e101",
+      "category": "database"
+    },
+    {
+      "id": "security:rls-audit",
+      "label": "Статический RLS-аудит",
+      "status": "ok",
+      "message": "71 таблиц, критичных проблем нет",
+      "category": "security"
+    },
+    {
+      "id": "migrations:db-count",
+      "label": "Миграции в БД",
+      "status": "warn",
+      "message": "Таблиц public: 71. schema_migrations недоступна — сверьте вручную с 44 файлами (последняя: 20250627000006_local_experts_e101)",
+      "category": "database"
+    },
+    {
+      "id": "smoke:supabase-verify",
+      "label": "Smoke /api/health",
+      "status": "ok",
+      "message": "OK. migrationVersion=20250627000006_local_experts_e101, deployEnv=development",
+      "category": "smoke"
+    },
+    {
+      "id": "build:tsc",
+      "label": "TypeScript (tsc --noEmit)",
+      "status": "ok",
+      "message": "Компиляция без ошибок",
+      "category": "build"
+    }
+  ],
+  "summary": {
+    "ok": 8,
+    "warn": 4,
+    "fail": 1,
+    "skip": 5
+  }
+}

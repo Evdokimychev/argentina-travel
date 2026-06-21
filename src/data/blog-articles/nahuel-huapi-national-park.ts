@@ -1,3 +1,4 @@
+// Generated from docs/Национальный-парк-Науэль-Уапи.md — md-checksum: 98527555e3e22710
 import type { BlogRichArticle } from "@/types/blog-rich-article";
 
 export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
@@ -57,6 +58,12 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
             { label: "Официальный сайт", value: "argentina.gob.ar/parquesnacionales · nahuelhuapi.gov.ar" },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "overview",
+          alt: "Общий вид национального парка",
+          caption: "Панорама и масштаб парка",
+        },
       ],
     },
     {
@@ -99,11 +106,16 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
-          type: "links",
-          title: "Карта",
-          items: [
-            { label: "Открыть на Google Maps", href: "https://www.google.com/maps?q=-41.0772,-71.4561", external: true },
-          ],
+          type: "map",
+          lat: -41.0772,
+          lng: -71.4561,
+          label: "Серро-Кампанарио",
+        },
+        {
+          type: "map",
+          lat: -41.1335,
+          lng: -71.3103,
+          label: "Центр Барилоче",
         },
       ],
     },
@@ -140,6 +152,12 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
           variant: "tip",
           title: "Ради чего едут",
           body: "Ради сочетания, которого нет в других больших парках: большой природы и полноценного города рядом. Утром — горный трек или лыжи, днём — прогулка по озеру на катере, вечером — шоколад и ужин в Барилоче.",
+        },
+        {
+          type: "section-image",
+          slotId: "landmark",
+          alt: "Главная достопримечательность — вид на парк",
+          caption: "Главные виды и символы парка",
         },
       ],
     },
@@ -260,6 +278,12 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
             "Серро-Кампанарио (пешком). Если не хочется ждать подъёмник — наверх ведёт короткая, но крутая тропа (40–60 минут). Награда — та самая «лучшая панорама».",
           ],
         },
+        {
+          type: "section-image",
+          slotId: "trails",
+          alt: "Тропы и маршруты — прогулка по парку",
+          caption: "Маршруты и активности для путешественника",
+        },
       ],
     },
     {
@@ -271,6 +295,12 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
           items: [
             "Парк охватывает несколько природных миров: от влажных андских лесов на западе до сухой степи на востоке, поэтому виды заметно меняются по мере удаления от гор.",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "wildlife",
+          alt: "Флора и фауна — обитатели парка",
+          caption: "Дикая природа и типичные виды",
         },
       ],
     },
@@ -310,6 +340,12 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
             },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "seasons",
+          alt: "Сезонные условия в парке",
+          caption: "Как меняется парк по сезонам",
+        },
       ],
     },
     {
@@ -333,6 +369,12 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
             "Аренда авто оптимальна для Малого круга, Тронадора и Дороги семи озёр.",
             "Катера к острову Виктория, лесу Аррайянес и Пуэрто-Блест отправляются от Пуэрто-Паньуэло (Льяо-Льяо).",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "logistics",
+          alt: "Дорога и логистика до парка",
+          caption: "Как добраться и организовать визит",
         },
       ],
     },
@@ -388,10 +430,14 @@ export const nahuelHuapiNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
+          type: "ticket-link",
+          url: "https://ventaweb.apn.gob.ar/",
+          label: "Купить билет на APN",
+        },
+        {
           type: "links",
-          title: "Официальная продажа билетов",
+          title: "Дополнительные официальные каналы",
           items: [
-            { label: "ventaweb.apn.gob.ar", href: "https://ventaweb.apn.gob.ar/", external: true },
             { label: "nahuelhuapi.gov.ar/tarifas-de-ingreso", href: "https://nahuelhuapi.gov.ar/tarifas-de-ingreso/", external: true },
           ],
         },

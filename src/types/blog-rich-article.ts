@@ -40,7 +40,18 @@ export type BlogRichBlock =
       audience: string[];
       note?: string;
     }
-  | { type: "numbered-tips"; items: string[] };
+  | { type: "numbered-tips"; items: string[] }
+  | { type: "gallery"; images: Array<{ src: string; alt: string; title?: string }> }
+  | {
+      type: "section-image";
+      src?: string;
+      slotId?: string;
+      alt: string;
+      title?: string;
+      caption?: string;
+    }
+  | { type: "map"; lat: number; lng: number; label: string }
+  | { type: "ticket-link"; url: string; label: string };
 
 export type BlogRichArticleSection = {
   id: string;

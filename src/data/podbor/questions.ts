@@ -1,21 +1,22 @@
 import type { PodborOption, PodborQuestion, PodborQuestionId } from "@/types/podbor";
+import { getPodborThemeImage } from "@/lib/media-resolver";
 
 const IMG = {
-  nature: "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=900&q=80",
-  city: "https://images.unsplash.com/photo-1589909202802-8d28781408ec?w=900&q=80",
-  wine: "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=900&q=80",
-  glacier: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&q=80",
-  falls: "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=900&q=80",
-  tango: "https://images.unsplash.com/photo-1509099836629-18eb960b6869?w=900&q=80",
-  penguins: "https://images.unsplash.com/photo-1551986782-d0169b3f8fa7?w=900&q=80",
-  mountains: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=900&q=80",
-  relax: "https://images.unsplash.com/photo-1540541333437-94a6835c4e5c?w=900&q=80",
-  family: "https://images.unsplash.com/photo-1511895426328-dc8714191300?w=900&q=80",
-  relocation: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=900&q=80",
-  business: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=900&q=80",
-  expedition: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?w=900&q=80",
-  honeymoon: "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=900&q=80",
-  photo: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=900&q=80",
+  nature: getPodborThemeImage("nature"),
+  city: getPodborThemeImage("city"),
+  wine: getPodborThemeImage("wine"),
+  glacier: getPodborThemeImage("glacier"),
+  falls: getPodborThemeImage("falls"),
+  tango: getPodborThemeImage("tango"),
+  penguins: getPodborThemeImage("penguins"),
+  mountains: getPodborThemeImage("mountains"),
+  relax: getPodborThemeImage("relax"),
+  family: getPodborThemeImage("family"),
+  relocation: getPodborThemeImage("relocation"),
+  business: getPodborThemeImage("business"),
+  expedition: getPodborThemeImage("expedition"),
+  honeymoon: getPodborThemeImage("honeymoon"),
+  photo: getPodborThemeImage("photo"),
 };
 
 export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
@@ -157,7 +158,7 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
       {
         id: "ocean",
         label: "Океан и побережье",
-        image: "https://images.unsplash.com/photo-1505118389327-28a385e4f124?w=900&q=80",
+        image: IMG.relax,
         scores: { ushuaia: 4, patagonia: 2 },
         tags: ["coast"],
       },
@@ -190,14 +191,14 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
       {
         id: "gastronomy",
         label: "Гастрономия",
-        image: "https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=900&q=80",
+        image: IMG.wine,
         scores: { "buenos-aires": 4, mendoza: 4 },
         tags: ["gastro", "food"],
       },
       {
         id: "bars",
         label: "Бары и ночная жизнь",
-        image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=900&q=80",
+        image: IMG.city,
         scores: { "buenos-aires": 4, mendoza: 2 },
         tags: ["nightlife"],
       },
@@ -211,7 +212,7 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
       {
         id: "museums",
         label: "Музеи и искусство",
-        image: "https://images.unsplash.com/photo-1564399579889-451725552d02?w=900&q=80",
+        image: IMG.city,
         scores: { "buenos-aires": 3, salta: 2 },
         tags: ["culture"],
       },
@@ -339,7 +340,7 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
       {
         id: "whales",
         label: "Китов",
-        image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=900&q=80",
+        image: IMG.penguins,
         scores: { patagonia: 3, ushuaia: 4 },
         tags: ["whales"],
       },
@@ -374,7 +375,7 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
       {
         id: "northwest",
         label: "Север Аргентины",
-        image: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=900&q=80",
+        image: IMG.mountains,
         scores: { salta: 5 },
         tags: ["northwest"],
       },
@@ -397,7 +398,7 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
         id: "premium",
         label: "Премиальный",
         description: "Лучшие отели и персональный сервис",
-        image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80",
+        image: IMG.relax,
         tags: ["premium"],
       },
       {

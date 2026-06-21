@@ -24,6 +24,8 @@ import { listPublishedPlaceSlugs } from "@/lib/cms/place-resolver";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { expandI18nSitemapPaths } from "@/lib/i18n/sitemap-locales";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
+import { getBlogSitemapPriority } from "@/lib/blog-sitemap-priority";
+import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { absoluteUrl } from "@/lib/site-url";
 import type { BlogPost } from "@/types";
 
@@ -43,11 +45,13 @@ function uniquePaths(paths: string[]): string[] {
 
 function toSitemapEntry(
   path: string,
-  lastModified?: string | Date
+  lastModified?: string | Date,
+  priority?: number,
 ): MetadataRoute.Sitemap[number] {
   return {
     url: absoluteUrl(path),
     lastModified: lastModified ? new Date(lastModified) : new Date(),
+    ...(priority !== undefined ? { priority } : {}),
   };
 }
 
@@ -143,7 +147,11 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   const placesPaths = await collectPlacesSitemapPaths();
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
   const indexableBlogPosts = filterIndexableBlogPosts(blogCatalog);
-  const blogPaths = indexableBlogPosts.map((post) => `/blog/${post.slug}`);
+  const blogPaths = [
+    "/blog",
+    ...getAllBlogHubIds().map((hubId) => blogHubPath(hubId)),
+    ...indexableBlogPosts.map((post) => `/blog/${post.slug}`),
+  ];
   const immigrationPaths = getPagesBySection("immigration").map((page) => contentPageHref(page));
   const guidePaths = (await listPublishedGuideSlugs()).map((slug) => `/guide/${slug}`);
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
@@ -178,6 +186,7 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   );
   const blogCatalog = await collectBlogSitemapCatalog();
   const blogUpdatedAt = new Map(blogCatalog.map((post) => [`/blog/${post.slug}`, post.date]));
+  const blogPostsBySlug = new Map(blogCatalog.map((post) => [post.slug, post]));
   const legalUpdatedAt = new Map(
     Object.values(LEGAL_DOCUMENTS).map((doc) => [`/legal/${doc.slug}`, doc.updatedAt])
   );
@@ -187,6 +196,7 @@ export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {
   return paths.map((path) => {
     const lastModified =
       contentUpdatedAt.get(path) ?? blogUpdatedAt.get(path) ?? legalUpdatedAt.get(path);
-    return toSitemapEntry(path, lastModified);
+    const priority = getBlogSitemapPriority(path, blogPostsBySlug);
+    return toSitemapEntry(path, lastModified, priority);
   });
 }

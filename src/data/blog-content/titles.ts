@@ -71,7 +71,9 @@ export function buildBlogArticleTitle(category: BlogContentCategory, topic: stri
     return "Безвизовый въезд в Аргентину: кому, на сколько и что на границе";
   }
   if (topic === "90-дней") {
-    return "90 дней в Аргентине без визы: правила и практика";
+    return category === "money"
+      ? "Финансы при поездке до 90 дней: как планировать расходы"
+      : "90 дней в Аргентине без визы: правила и практика";
   }
   if (topic === "sim-карта") {
     return "SIM-карта в Аргентине: операторы, цены и eSIM";

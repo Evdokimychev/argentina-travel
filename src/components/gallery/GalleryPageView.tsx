@@ -10,6 +10,7 @@ import {
   galleryItems,
   type GalleryItem,
 } from "@/data/gallery-items";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 
@@ -42,7 +43,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
       <Hero
         title="Галерея Аргентины"
         subtitle="Фото из авторских туров — Патагония, вино, танго и природные чудеса"
-        image="https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=1920&q=80"
+        image={getServicePageHeroImage("gallery")}
         compact
       />
 

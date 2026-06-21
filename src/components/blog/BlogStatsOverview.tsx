@@ -32,9 +32,13 @@ export default function BlogStatsOverview({
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile
           icon={BookMarked}
-          label="В каталоге"
-          value={stats.totalPosts.toLocaleString("ru-RU")}
-          hint="тематических материалов"
+          label="В поиске"
+          value={stats.indexablePosts.toLocaleString("ru-RU")}
+          hint={
+            stats.draftPosts > 0
+              ? `из ${stats.totalPosts.toLocaleString("ru-RU")} в каталоге`
+              : "indexable материалов"
+          }
         />
         <StatTile
           icon={Layers}

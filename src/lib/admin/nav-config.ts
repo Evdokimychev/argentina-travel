@@ -116,6 +116,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "content.edit",
   },
   {
+    id: "content-media",
+    section: "content",
+    href: "/admin/media",
+    label: "Медиатека",
+    description: "Manifest assets — heroes, gallery, stock",
+    capability: "content.edit",
+  },
+  {
     id: "content-translations",
     section: "content",
     href: "/admin/content/translations",

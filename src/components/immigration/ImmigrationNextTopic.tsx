@@ -3,11 +3,11 @@ import Image from "next/image";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { IMMIGRATION_TOPIC_ORDER, IMMIGRATION_TOPICS } from "@/data/immigration-topics";
 import { immigrationTopicHref } from "@/lib/immigration-topics";
+import { getImmigrationHubHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import type { ImmigrationTopicPage } from "@/types/immigration-topic";
 
-const FALLBACK_IMAGE =
-  "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=800&q=80";
+import { getImmigrationTopicHeroImage } from "@/lib/media-resolver";
 
 type ImmigrationNextTopicProps = {
   slug: string;
@@ -30,7 +30,7 @@ function TopicThumbnail({ src, alt }: { src: string; alt: string }) {
 
 function TopicNavCard({ topic, direction }: { topic: ImmigrationTopicPage; direction: "prev" | "next" }) {
   const isPrev = direction === "prev";
-  const imageSrc = topic.heroImage ?? FALLBACK_IMAGE;
+  const imageSrc = topic.heroImage || getImmigrationTopicHeroImage(topic.slug);
 
   return (
     <Link

@@ -33,7 +33,18 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
-    "supabase:seed-cms-locales": "tsx scripts/seed-cms-locales.mjs"
+    "supabase:seed-cms-locales": "tsx scripts/seed-cms-locales.mjs",
+    "fetch-stock-media": "node scripts/fetch-stock-media.mjs",
+    "audit-images": "node scripts/audit-images.mjs",
+    "audit-blog-heroes": "node scripts/audit-blog-heroes.mjs",
+    "warm-image-cache": "node scripts/warm-image-cache.mjs",
+    "page-image-audit": "node scripts/page-image-audit.mjs",
+    "blog-image-perf-audit": "node scripts/blog-image-perf-audit.mjs",
+    "lighthouse:blog": "node scripts/lighthouse-blog-cwv.mjs",
+    "sync-rich-articles": "node scripts/sync-blog-rich-articles-from-md.mjs",
+    "sync-rich-articles:check": "node scripts/sync-blog-rich-articles-from-md.mjs --check",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -81,6 +92,7 @@
     "pg": "^8.16.0",
     "tailwindcss": "^4.1.8",
     "tsx": "^4.22.4",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.6"
   }
 }

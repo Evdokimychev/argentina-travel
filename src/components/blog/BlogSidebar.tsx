@@ -16,6 +16,11 @@ const AUTO_COLLAPSE_MAX_WIDTH = 1279;
 
 type BlogSidebarProps = {
   freshPosts: BlogPost[];
+  hubFreshPosts?: BlogPost[];
+  hubLabel?: string;
+  hubHref?: string;
+  /** По умолчанию показывать материалы из хаба, если доступны. */
+  defaultHubScope?: boolean;
   className?: string;
   embedded?: boolean;
 };
@@ -49,9 +54,19 @@ const hubLinkIcon = (type: string) => {
   }
 };
 
-export default function BlogSidebar({ freshPosts, className, embedded = false }: BlogSidebarProps) {
+export default function BlogSidebar({
+  freshPosts,
+  hubFreshPosts,
+  hubLabel,
+  hubHref,
+  defaultHubScope = false,
+  className,
+  embedded = false,
+}: BlogSidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const [hydrated, setHydrated] = useState(false);
+  const hasHubScope = Boolean(hubFreshPosts?.length && hubLabel);
+  const [hubScope, setHubScope] = useState(defaultHubScope && hasHubScope);
 
   useEffect(() => {
     function sync() {
@@ -67,6 +82,12 @@ export default function BlogSidebar({ freshPosts, className, embedded = false }:
     return () => window.removeEventListener("resize", sync);
   }, []);
 
+  useEffect(() => {
+    if (defaultHubScope && hasHubScope) {
+      setHubScope(true);
+    }
+  }, [defaultHubScope, hasHubScope]);
+
   function toggle() {
     setCollapsed((prev) => {
       const next = !prev;
@@ -74,6 +95,9 @@ export default function BlogSidebar({ freshPosts, className, embedded = false }:
       return next;
     });
   }
+
+  const displayedFreshPosts =
+    hubScope && hubFreshPosts?.length ? hubFreshPosts : freshPosts;
 
   if (!hydrated) {
     return (
@@ -95,6 +119,7 @@ export default function BlogSidebar({ freshPosts, className, embedded = false }:
 
   return (
     <aside
+      aria-label="Боковая панель блога"
       className={cn(
         embedded
           ? "flex w-full flex-col"
@@ -113,19 +138,38 @@ export default function BlogSidebar({ freshPosts, className, embedded = false }:
         <button
           type="button"
           onClick={toggle}
+          aria-expanded={!collapsed}
           aria-label={collapsed ? "Развернуть панель" : "Свернуть панель"}
-          className="ml-auto flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-sky/10 hover:text-sky"
+          className="blog-interactive-target ml-auto flex items-center justify-center rounded-full text-slate transition-colors hover:bg-sky/10 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
         >
           {collapsed ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </button>
       </div>
 
       {!collapsed ? (
-        <div className="scrollbar-thin flex-1 overflow-y-auto px-4 py-4">
+        <div className="scrollbar-thin flex-1 touch-pan-y overflow-y-auto overscroll-y-contain px-4 py-4">
           <section>
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-slate">Свежее</h2>
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-slate">Свежее</h2>
+              {hasHubScope ? (
+                <label className="blog-touch-target inline-flex cursor-pointer items-center gap-1.5 text-[11px] text-charcoal">
+                  <input
+                    type="checkbox"
+                    checked={hubScope}
+                    onChange={(event) => setHubScope(event.target.checked)}
+                    className="h-3.5 w-3.5 rounded border-gray-300 text-sky focus:ring-sky/30"
+                  />
+                  Из «{hubLabel}»
+                </label>
+              ) : null}
+            </div>
+            {hubScope && hubHref ? (
+              <Link href={hubHref} className="mt-1 inline-block text-[11px] font-medium text-sky hover:underline">
+                Все материалы раздела →
+              </Link>
+            ) : null}
             <div className="mt-3 space-y-1">
-              {freshPosts.map((post) => (
+              {displayedFreshPosts.map((post) => (
                 <BlogCard key={post.id} post={post} variant="compact" />
               ))}
             </div>
@@ -146,7 +190,7 @@ export default function BlogSidebar({ freshPosts, className, embedded = false }:
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="block rounded-xl border border-gray-100 px-3 py-2.5 transition-colors hover:border-sky/25 hover:bg-sky/5"
+                    className="blog-touch-target flex flex-col justify-center rounded-xl border border-gray-100 px-3 transition-colors hover:border-sky/25 hover:bg-sky/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
                   >
                     <span className="text-sm font-medium text-charcoal">
                       {hubLinkIcon(link.type)} {link.label}
@@ -184,7 +228,7 @@ export default function BlogSidebar({ freshPosts, className, embedded = false }:
             </ul>
             <Link
               href="/contacts"
-              className="mt-3 inline-flex text-xs font-medium text-sky hover:underline"
+              className="blog-touch-target mt-3 inline-flex items-center text-xs font-medium text-sky hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             >
               Все контакты →
             </Link>

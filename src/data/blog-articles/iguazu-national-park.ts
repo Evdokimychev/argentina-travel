@@ -1,3 +1,4 @@
+// Generated from docs/Национальный-парк-Игуасу.md — md-checksum: a6f077ad2b8a42f3
 import type { BlogRichArticle } from "@/types/blog-rich-article";
 
 export const iguazuNationalParkArticle: BlogRichArticle = {
@@ -58,6 +59,12 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
             { label: "Официальный сайт", value: "iguazuargentina.com · argentina.gob.ar/parquesnacionales" },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "overview",
+          alt: "Общий вид национального парка",
+          caption: "Панорама и масштаб парка",
+        },
       ],
     },
     {
@@ -98,11 +105,10 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
-          type: "links",
-          title: "Карта",
-          items: [
-            { label: "Открыть на Google Maps", href: "https://www.google.com/maps?q=-25.6916,-54.4367", external: true },
-          ],
+          type: "map",
+          lat: -25.6916,
+          lng: -54.4367,
+          label: "Глотка Дьявола",
         },
       ],
     },
@@ -142,6 +148,12 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
           variant: "tip",
           title: "Ради чего едут",
           body: "Ради сочетания, которого нет почти нигде: грандиозного водопада, к которому можно подойти вплотную по безопасным настилам, и живой сельвы вокруг — с коати, обезьянами, туканами и тучами бабочек, которые садятся прямо на руки.",
+        },
+        {
+          type: "section-image",
+          slotId: "landmark",
+          alt: "Главная достопримечательность — вид на парк",
+          caption: "Главные виды и символы парка",
         },
       ],
     },
@@ -262,6 +274,12 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
             "Порядок прохождения за 1 день (оптимальный): к открытию — Глотка Дьявола (пока мало людей), затем Верхний круг, обед у Центральной станции, после — Нижний круг и (если открыт) остров Сан-Мартин. Макуко логично вынести на отдельное утро второго дня.",
           ],
         },
+        {
+          type: "section-image",
+          slotId: "trails",
+          alt: "Тропы и маршруты — прогулка по парку",
+          caption: "Маршруты и активности для путешественника",
+        },
       ],
     },
     {
@@ -273,6 +291,12 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
           items: [
             "Игуасу — это «зелёный сейф» атлантической сельвы: на территории парка зарегистрировано около 70 видов млекопитающих, более 400 видов птиц (по данным APN — свыше 450), 38 видов рептилий, 18 видов амфибий, около 60 видов рыб и сотни видов бабочек.",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "wildlife",
+          alt: "Флора и фауна — обитатели парка",
+          caption: "Дикая природа и типичные виды",
         },
       ],
     },
@@ -322,6 +346,12 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
             },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "seasons",
+          alt: "Сезонные условия в парке",
+          caption: "Как меняется парк по сезонам",
+        },
       ],
     },
     {
@@ -344,6 +374,12 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
             "Такси/трансфер от города или аэропорта до парка — быстро и удобно для семей и групп.",
             "На авто: по RN 12 до входа ~18 км; на территории парка платная парковка (см. ниже).",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "logistics",
+          alt: "Дорога и логистика до парка",
+          caption: "Как добраться и организовать визит",
         },
       ],
     },
@@ -405,10 +441,14 @@ export const iguazuNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
+          type: "ticket-link",
+          url: "https://ventaweb.apn.gob.ar/",
+          label: "Купить билет на APN",
+        },
+        {
           type: "links",
-          title: "Официальная продажа билетов",
+          title: "Дополнительные официальные каналы",
           items: [
-            { label: "ventaweb.apn.gob.ar", href: "https://ventaweb.apn.gob.ar/", external: true },
             { label: "iguazuargentina.com/.../compra-tus-entradas", href: "https://iguazuargentina.com/planifica-tu-visita/compra-tus-entradas/", external: true },
           ],
         },

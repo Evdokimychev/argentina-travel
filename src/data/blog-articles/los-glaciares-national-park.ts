@@ -1,3 +1,4 @@
+// Generated from docs/Национальный-парк-Лос-Гласьярес.md — md-checksum: 38303f4ed0ce13b8
 import type { BlogRichArticle } from "@/types/blog-rich-article";
 
 export const losGlaciaresNationalParkArticle: BlogRichArticle = {
@@ -57,6 +58,12 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
             { label: "Официальный сайт", value: "argentina.gob.ar/parquesnacionales" },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "overview",
+          alt: "Общий вид национального парка",
+          caption: "Панорама и масштаб парка",
+        },
       ],
     },
     {
@@ -104,11 +111,16 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
-          type: "links",
-          title: "Карта",
-          items: [
-            { label: "Открыть на Google Maps", href: "https://www.google.com/maps?q=-50.4967,-73.0333", external: true },
-          ],
+          type: "map",
+          lat: -50.4967,
+          lng: -73.0333,
+          label: "Перито-Морено",
+        },
+        {
+          type: "map",
+          lat: -49.3315,
+          lng: -72.8863,
+          label: "Эль-Чалтен и Фицрой",
         },
       ],
     },
@@ -145,6 +157,12 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
           variant: "tip",
           title: "Ради чего едут",
           body: "Ради двух разных сильных эмоций в одном парке: подойти вплотную к живому леднику на юге — и пройти к подножию легендарных гранитных башен на севере.",
+        },
+        {
+          type: "section-image",
+          slotId: "landmark",
+          alt: "Главная достопримечательность — вид на парк",
+          caption: "Главные виды и символы парка",
         },
       ],
     },
@@ -265,6 +283,12 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
             "Короткие тропы от посёлка. Мирадорес Кондоров и Орлов, Чоррильо-дель-Сальто и Лагуна-Капри — то, что можно сделать в день приезда/отъезда или когда погода не пускает на длинные маршруты.",
           ],
         },
+        {
+          type: "section-image",
+          slotId: "trails",
+          alt: "Тропы и маршруты — прогулка по парку",
+          caption: "Маршруты и активности для путешественника",
+        },
       ],
     },
     {
@@ -276,6 +300,12 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
           items: [
             "Парк охватывает два очень разных мира — влажные андско-патагонские леса на западе и сухую патагонскую степь на востоке, поэтому видовой состав заметно меняется по пути.",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "wildlife",
+          alt: "Флора и фауна — обитатели парка",
+          caption: "Дикая природа и типичные виды",
         },
       ],
     },
@@ -315,6 +345,12 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
             },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "seasons",
+          alt: "Сезонные условия в парке",
+          caption: "Как меняется парк по сезонам",
+        },
       ],
     },
     {
@@ -337,6 +373,12 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
             "Эль-Калафате → Эль-Чальтен: ~220 км (~3 часа) по RN 40 и RP 23. Ежедневные автобусы (Cootra, Chaltén Travel и др.) и аренда авто.",
             "Внутри Эль-Чальтена большинство треков стартует прямо из посёлка — машина не нужна.",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "logistics",
+          alt: "Дорога и логистика до парка",
+          caption: "Как добраться и организовать визит",
         },
       ],
     },
@@ -393,11 +435,9 @@ export const losGlaciaresNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
-          type: "links",
-          title: "Официальная продажа билетов",
-          items: [
-            { label: "ventaweb.apn.gob.ar", href: "https://ventaweb.apn.gob.ar/", external: true },
-          ],
+          type: "ticket-link",
+          url: "https://ventaweb.apn.gob.ar/",
+          label: "Купить билет на APN",
         },
         {
           type: "paragraphs",

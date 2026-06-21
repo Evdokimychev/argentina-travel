@@ -140,6 +140,7 @@ export const CATEGORY_TOPICS: Record<BlogContentCategory, string[]> = {
     "бюджет",
     "наличные",
     "карты",
+    "90-дней",
     "страховка",
     "чек-лист",
     "ошибки",

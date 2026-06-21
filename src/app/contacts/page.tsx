@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
@@ -222,7 +223,7 @@ export default function ContactsPage() {
       <Hero
         title="Контакты"
         subtitle="Оставьте сообщение или задайте вопрос — мы с радостью ответим"
-        image="https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80"
+        image={getServicePageHeroImage("contacts")}
         compact
       />
 

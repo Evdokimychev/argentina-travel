@@ -14,6 +14,7 @@ import { getFlightRouteLabels } from "@/lib/flights/route-labels";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { buildFlightsSearchHref } from "@/lib/flights/search-href";
 import type { MonthlyFlightPrice } from "@/lib/travelpayouts/aviasales/data-api";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { cn } from "@/lib/utils";
 import { siteContainerClass } from "@/lib/site-container";
@@ -55,7 +56,7 @@ export default function FlightRouteLandingView({
       <HubHero
         title={heroTitle}
         subtitle={heroSubtitle}
-        image="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80"
+        image={getServicePageHeroImage("flights")}
         eyebrow={{ label: labels.eyebrow, href: "/flights" }}
         ctas={[
           { label: labels.searchCta, href: searchHref, variant: "primary" },

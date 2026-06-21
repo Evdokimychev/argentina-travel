@@ -1,3 +1,4 @@
+// Generated from docs/Национальный-парк-Огненная-Земля.md — md-checksum: 2d315caccab1c146
 import type { BlogRichArticle } from "@/types/blog-rich-article";
 
 export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
@@ -57,6 +58,12 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
             { label: "Официальный сайт", value: "argentina.gob.ar/parquesnacionales" },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "overview",
+          alt: "Общий вид национального парка",
+          caption: "Панорама и масштаб парка",
+        },
       ],
     },
     {
@@ -103,11 +110,16 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
-          type: "links",
-          title: "Карта",
-          items: [
-            { label: "Открыть на Google Maps", href: "https://www.google.com/maps?q=-54.8456,-68.5739", external: true },
-          ],
+          type: "map",
+          lat: -54.8456,
+          lng: -68.5739,
+          label: "Залив Лапатайя",
+        },
+        {
+          type: "map",
+          lat: -54.8019,
+          lng: -68.303,
+          label: "Ушуайя",
         },
       ],
     },
@@ -144,6 +156,12 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
           variant: "tip",
           title: "Ради чего едут",
           body: "Ради уникального ощущения «дошёл до конца земли», тихой северной красоты фьордов и лесов, и ради того, чтобы проехать «Поездом на край света» по следам истории каторжной Ушуайи.",
+        },
+        {
+          type: "section-image",
+          slotId: "landmark",
+          alt: "Главная достопримечательность — вид на парк",
+          caption: "Главные виды и символы парка",
         },
       ],
     },
@@ -263,6 +281,12 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
             "Короткие тропы Лапатайи. Сеть коротких маршрутов и настилов у конца трассы — Лагуна-Негра, Мирадор-Лапатайя, тропа «де-лос-Кастореос» — идеальны, чтобы за пару часов охватить лагуны, торфяники и виды на фьорд. Подходят для семей.",
           ],
         },
+        {
+          type: "section-image",
+          slotId: "trails",
+          alt: "Тропы и маршруты — прогулка по парку",
+          caption: "Маршруты и активности для путешественника",
+        },
       ],
     },
     {
@@ -274,6 +298,12 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
           items: [
             "Парк лежит в зоне патагонских лесов на их крайнем юге, где лес уникальным образом доходит до морского берега. Климат суровый и влажный, поэтому растительность приземистая, но очень своеобразная.",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "wildlife",
+          alt: "Флора и фауна — обитатели парка",
+          caption: "Дикая природа и типичные виды",
         },
       ],
     },
@@ -313,6 +343,12 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
             },
           ],
         },
+        {
+          type: "section-image",
+          slotId: "seasons",
+          alt: "Сезонные условия в парке",
+          caption: "Как меняется парк по сезонам",
+        },
       ],
     },
     {
@@ -335,6 +371,12 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
             "Поезд на край света: отдельная станция в ~8 км от Ушуайи; поезд довозит до границы парка (вход в парк оплачивается отдельно).",
             "Внутри парка между Лапатайей, озером Рока и бухтой Энсенада курсирует местный транспорт в сезон; уточняйте расписание.",
           ],
+        },
+        {
+          type: "section-image",
+          slotId: "logistics",
+          alt: "Дорога и логистика до парка",
+          caption: "Как добраться и организовать визит",
         },
       ],
     },
@@ -384,11 +426,9 @@ export const tierraDelFuegoNationalParkArticle: BlogRichArticle = {
           ],
         },
         {
-          type: "links",
-          title: "Официальная продажа билетов",
-          items: [
-            { label: "ventaweb.apn.gob.ar", href: "https://ventaweb.apn.gob.ar/", external: true },
-          ],
+          type: "ticket-link",
+          url: "https://ventaweb.apn.gob.ar/",
+          label: "Купить билет на APN",
         },
       ],
     },

@@ -91,22 +91,30 @@ function ItineraryDayCard({
   const meals = day.meals ?? [];
 
   return (
-    <div className="relative pb-6 last:pb-0">
+    <div className="relative min-w-0 pb-6 last:pb-0">
       <button
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full items-start gap-4 text-left"
+        className="flex w-full min-w-0 items-start gap-4 text-left"
       >
         <span className={cn("relative z-10", tourDetailDayBadgeClass)}>
           {day.dayNumber}
         </span>
-        <div className={cn("flex-1 p-4 transition-shadow sm:p-5", tourDetailCardBorderClass, "hover:border-sky/20 hover:shadow-md")}>
+        <div
+          className={cn(
+            "min-w-0 flex-1 overflow-hidden p-4 transition-shadow sm:p-5",
+            tourDetailCardBorderClass,
+            "hover:border-sky/20 hover:shadow-md"
+          )}
+        >
           <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-slate/80">
             День {day.dayNumber}
           </p>
-          <div className="mt-1 flex items-start justify-between gap-2">
-            <h3 className="text-base font-semibold leading-snug text-charcoal sm:text-lg">{day.title}</h3>
+          <div className="mt-1 flex min-w-0 items-start justify-between gap-2">
+            <h3 className="min-w-0 flex-1 break-words text-base font-semibold leading-snug text-charcoal sm:text-lg">
+              {day.title}
+            </h3>
             <ChevronDown
               className={cn(
                 "mt-0.5 h-5 w-5 shrink-0 text-slate transition-transform",
@@ -115,19 +123,19 @@ function ItineraryDayCard({
             />
           </div>
           {isOpen && (
-            <div className="mt-4 space-y-4 border-t border-gray-100 pt-4 animate-fade-in-up">
+            <div className="mt-4 min-w-0 space-y-4 border-t border-gray-100 pt-4 animate-fade-in-up">
               {day.description ? (
                 day.descriptionHtml ? (
                   <div
-                    className="rich-text-editor-content text-sm leading-relaxed text-slate"
+                    className="rich-text-editor-content max-w-full break-words text-sm leading-relaxed text-slate [&_img]:max-w-full [&_table]:block [&_table]:max-w-full [&_table]:overflow-x-auto"
                     dangerouslySetInnerHTML={{ __html: day.descriptionHtml }}
                   />
                 ) : (
-                  <p className="text-sm leading-relaxed text-slate">{day.description}</p>
+                  <p className="break-words text-sm leading-relaxed text-slate">{day.description}</p>
                 )
               ) : null}
               {images.length > 0 && (
-                <div className="flex gap-2 overflow-x-auto pb-1">
+                <div className="flex min-w-0 gap-2 overflow-x-auto pb-1">
                   {images.map((img) => (
                     <div
                       key={img}
@@ -231,7 +239,7 @@ export default function ItinerarySection({
       }
     >
       {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-5 sm:mb-6" /> : null}
-      <div className="relative space-y-0">
+      <div className="relative min-w-0 space-y-0 overflow-hidden">
         <div className={cn("absolute left-[19px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
         {itineraryDays.map((day) => (
           <ItineraryDayCard

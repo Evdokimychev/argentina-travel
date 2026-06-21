@@ -1,7 +1,15 @@
-import type { BlogPostSection } from "@/types";
+import type { BlogPostSection, BlogRelatedResource } from "@/types";
 
 export function p(...paragraphs: string[]): string[] {
   return paragraphs.filter(Boolean);
+}
+
+export function blogResource(slug: string, label: string): BlogRelatedResource {
+  return { label, href: `/blog/${slug}`, type: "blog" };
+}
+
+export function guideResource(slug: string, label: string): BlogRelatedResource {
+  return { label, href: `/guide/${slug}`, type: "guide" };
 }
 
 export function section(title: string, paragraphs: string[]): { title: string; paragraphs: string[] } {

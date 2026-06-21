@@ -59,6 +59,7 @@ const NAV_ICONS: Partial<Record<AdminNavItemId, typeof LayoutGrid>> = {
   "marketplace-experts": Users,
   "marketplace-moderation": Shield,
   "content-documents": BookOpen,
+  "content-media": BookOpen,
   "content-translations": Languages,
   "content-freshness": Clock3,
   "users-list": Users,

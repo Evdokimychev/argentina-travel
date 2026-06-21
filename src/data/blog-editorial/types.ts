@@ -1,4 +1,4 @@
-import type { BlogPostSection } from "@/types";
+import type { BlogPostSection, BlogRelatedResource } from "@/types";
 
 /** Ручная редакторская версия статьи — перекрывает автогенерацию */
 export type EditorialOverride = {
@@ -7,6 +7,9 @@ export type EditorialOverride = {
   seoTitle?: string;
   sections: BlogPostSection[];
   editorial?: true;
+  relatedResources?: BlogRelatedResource[];
+  dateModified?: string;
+  image?: string;
 };
 
 export function editorialArticle(
@@ -16,7 +19,7 @@ export function editorialArticle(
     editorial: true,
     sections: sections.map((s) => ({
       title: s.title,
-      body: s.paragraphs.join(" "),
+      body: s.paragraphs.join("\n\n"),
     })),
   };
 }

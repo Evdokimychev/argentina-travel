@@ -19,6 +19,11 @@ import {
 import { getTopicLabel } from "@/data/blog-content/topic-labels";
 import { formatBlogReadTime } from "@/lib/blog-utils";
 import { getBlogCategoryImage } from "@/lib/media-resolver";
+import {
+  buildCanonicalCtaParagraph,
+  resolveBlogCanonicalTarget,
+} from "@/data/blog-canonical-map";
+import { getBlogTourEmbeds } from "@/data/blog-tour-embeds";
 import type { BlogPost, BlogRelatedResource } from "@/types";
 
 function categoryImage(category: BlogContentCategory): string {
@@ -123,6 +128,20 @@ function buildRelatedResources(item: BlogContentPlanItem): BlogRelatedResource[]
   return resources.slice(0, 6);
 }
 
+function mergeRelatedResources(
+  base: BlogRelatedResource[],
+  extra?: BlogRelatedResource[],
+): BlogRelatedResource[] {
+  const seen = new Set<string>();
+  const merged: BlogRelatedResource[] = [];
+  for (const resource of [...(extra ?? []), ...base]) {
+    if (seen.has(resource.href)) continue;
+    seen.add(resource.href);
+    merged.push(resource);
+  }
+  return merged.slice(0, 6);
+}
+
 function buildTags(item: BlogContentPlanItem, topic: string): string[] {
   const topicLabel = getTopicLabel(topic);
   const placeTags = item.internalLinks.places
@@ -171,15 +190,20 @@ export function generateBlogPostFromPlan(
       author: author.name,
       authorBio: author.bio,
       date: staggerDate(index),
-      image: categoryImage(item.category),
+      image: override.image ?? categoryImage(item.category),
       category: getBlogPlanCategoryLabel(item.category),
       readTimeMinutes,
       readTime: formatBlogReadTime(readTimeMinutes),
       views: estimateViews(index),
       tags: buildTags(item, topic),
-      relatedResources: buildRelatedResources(item),
+      relatedResources: mergeRelatedResources(
+        buildRelatedResources(item),
+        override.relatedResources,
+      ),
       editorialReviewed: true,
       noIndex: false,
+      dateModified: override.dateModified ?? "2026-06-21",
+      tourEmbeds: getBlogTourEmbeds(item.slug),
     };
   }
 
@@ -187,6 +211,18 @@ export function generateBlogPostFromPlan(
   const sections = sectionsToBlogPostSections(richSections);
   const content = sectionsToContent(richSections);
   const readTimeMinutes = estimateReadMinutes(content);
+  const canonicalTarget = resolveBlogCanonicalTarget(item.slug);
+
+  const sectionsWithCanonical =
+    canonicalTarget && sections.length > 0
+      ? [
+          {
+            ...sections[0],
+            body: `${buildCanonicalCtaParagraph(canonicalTarget)} ${sections[0].body}`,
+          },
+          ...sections.slice(1),
+        ]
+      : sections;
 
   return {
     id: `plan-${item.slug}`,
@@ -194,8 +230,10 @@ export function generateBlogPostFromPlan(
     title: item.title,
     seoTitle: item.seoTitle,
     excerpt: item.metaDescription,
-    content,
-    sections,
+    content: canonicalTarget
+      ? `${buildCanonicalCtaParagraph(canonicalTarget)} ${content}`
+      : content,
+    sections: sectionsWithCanonical,
     author: author.name,
     authorBio: author.bio,
     date: staggerDate(index),
@@ -207,6 +245,7 @@ export function generateBlogPostFromPlan(
     tags: buildTags(item, topic),
     relatedResources: buildRelatedResources(item),
     noIndex: true,
+    ...(canonicalTarget ? { canonicalSlug: canonicalTarget.canonicalSlug } : {}),
   };
 }
 

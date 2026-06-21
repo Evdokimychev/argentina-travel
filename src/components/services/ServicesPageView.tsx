@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { ArrowRight, ExternalLink, Plane } from "lucide-react";
 import Hero from "@/components/Hero";
+import PageImage from "@/components/media/PageImage";
 import {
   SERVICE_CATEGORIES,
   SERVICES_HUB_DISCLAIMER,
   SERVICES_HUB_INTRO,
 } from "@/data/services-hub";
+import { getServiceCategoryCardImage, getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 
 type ServicesPageViewProps = {
@@ -18,7 +20,7 @@ export default function ServicesPageView({ flightsTeaser }: ServicesPageViewProp
       <Hero
         title="Сервисы для поездки"
         subtitle="Перелёты, трансферы, страхование и визовая поддержка — партнёры и заявки"
-        image="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80"
+        image={getServicePageHeroImage("services")}
         compact
       />
 
@@ -28,15 +30,22 @@ export default function ServicesPageView({ flightsTeaser }: ServicesPageViewProp
         </div>
 
         <div className="mt-10 space-y-10">
-          {SERVICE_CATEGORIES.map((category) => (
+          {SERVICE_CATEGORIES.map((category) => {
+            const categoryImage = getServiceCategoryCardImage(category.id);
+            return (
             <div key={category.id}>
-              <div className="flex items-start gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
+              <div className="flex items-start gap-4">
+                <div className="relative hidden h-20 w-28 shrink-0 overflow-hidden rounded-xl ring-1 ring-gray-100 sm:block">
+                  <PageImage image={categoryImage} role="card" fill className="object-cover" />
+                </div>
+                <div className="flex items-start gap-3 min-w-0">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky sm:hidden">
                   <Plane className="h-5 w-5" aria-hidden />
                 </span>
                 <div>
                   <h2 className="font-heading text-xl font-bold text-charcoal">{category.title}</h2>
                   <p className="mt-1 text-sm text-slate">{category.description}</p>
+                </div>
                 </div>
               </div>
 
@@ -88,7 +97,8 @@ export default function ServicesPageView({ flightsTeaser }: ServicesPageViewProp
                 <div className="mt-6">{flightsTeaser}</div>
               ) : null}
             </div>
-          ))}
+            );
+          })}
         </div>
 
         <aside className="mt-12 rounded-2xl border border-amber-200/60 bg-amber-50/50 p-6">

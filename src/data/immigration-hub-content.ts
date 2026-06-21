@@ -1,4 +1,5 @@
 import type { ImmigrationHubContent } from "@/types/immigration-hub";
+import { getImmigrationHubHeroImage } from "@/lib/media-resolver";
 import {
   IMMIGRATION_BIRTH,
   IMMIGRATION_CITIZENSHIP,
@@ -90,7 +91,7 @@ export const IMMIGRATION_HUB: ImmigrationHubContent = {
   heroTitle: "Иммиграция в Аргентину",
   heroSubtitle:
     "Жизнь в стране, ВНЖ и ПМЖ, гражданство, роды и правила въезда — справочно, без юридических гарантий.",
-  heroImage: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80",
+  heroImage: getImmigrationHubHeroImage(),
   heroCtas: [
     { label: "🏠 Жизнь в стране", href: "/immigration/zhizn-v-strane", variant: "primary" },
     { label: "📋 ВНЖ и ПМЖ", href: "/immigration/vnzh-i-pmzh", variant: "secondary" },

@@ -8,7 +8,9 @@ import {
 } from "lucide-react";
 import Hero from "@/components/Hero";
 import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
+import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import { buttonVariants } from "@/components/ui/button";
+import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { GuideTopicPage } from "@/types/guide-topic";
@@ -25,9 +27,7 @@ function tourHref(rec: { href: string; query?: string }): string {
 }
 
 export default function GuideTopicView({ topic }: GuideTopicViewProps) {
-  const heroImage =
-    topic.heroImage ??
-    "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80";
+  const heroImage = topic.heroImage ?? getGuideTopicHeroImage(topic.slug);
 
   return (
     <>
@@ -50,6 +50,12 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
           <p className="mt-6 max-w-3xl text-base leading-relaxed text-slate">{topic.intro}</p>
 
           {topic.features?.exchangeRates ? <ArgentinaExchangeRates /> : null}
+
+          <PageSlotImage
+            pageId={`guide:${topic.slug}`}
+            slotId="content"
+            className="mt-8"
+          />
 
           <article className="prose-legal mt-10 max-w-3xl space-y-8 rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-8">
             {topic.sections.map((section) => (

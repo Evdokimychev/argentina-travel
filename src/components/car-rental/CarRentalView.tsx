@@ -7,10 +7,10 @@ import CarRentalBenefits from "@/components/car-rental/CarRentalBenefits";
 import CarRentalFaqSection from "@/components/car-rental/CarRentalFaqSection";
 import LocalRentWidget from "@/components/car-rental/LocalRentWidget";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80";
+const HERO_IMAGE = getServicePageHeroImage("car-rental");
 
 export default function CarRentalView() {
   const { t } = useLocaleCurrency();

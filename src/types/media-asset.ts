@@ -20,9 +20,23 @@ export type MediaCategory =
   | "collection"
   | "blog-article";
 
-export type MediaSource = "wikimedia" | "wikipedia" | "openstreetmap" | "unsplash" | "local";
+export type MediaSource =
+  | "wikimedia"
+  | "wikipedia"
+  | "openstreetmap"
+  | "unsplash"
+  | "pexels"
+  | "local";
 
-export type MediaAssetRole = "hero" | "gallery" | "logo" | "thumbnail";
+export type MediaAssetRole =
+  | "hero"
+  | "gallery"
+  | "section"
+  | "content"
+  | "card"
+  | "background"
+  | "logo"
+  | "thumbnail";
 
 export interface MediaAsset {
   id: string;
@@ -33,6 +47,14 @@ export interface MediaAsset {
   sourceUrl: string;
   license: string;
   author?: string;
+  authorProfileUrl?: string;
+  attributionHtml?: string;
+  imageTitle?: string;
+  imageDescription?: string;
+  /** Whether attribution caption must be shown (Unsplash/Pexels). */
+  attributionRequired?: boolean;
+  /** Manual pin — skip auto-replacement in warm-image-cache. */
+  pinned?: boolean;
   category: MediaCategory;
   tags: string[];
   localPath: string;
@@ -45,6 +67,14 @@ export interface MediaAsset {
   guidePageSlug?: string;
   tourSlug?: string;
   climateKey?: string;
+  immigrationTopicId?: string;
+  servicePageId?: string;
+  podborRegionId?: string;
+  podborThemeId?: string;
+  shopProductId?: string;
+  blogPostSlug?: string;
+  /** MD5 hex digest of local file bytes — used to dedupe visually identical gallery slots. */
+  contentHash?: string;
   role: MediaAssetRole;
 }
 

@@ -15,10 +15,12 @@ import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
 import HubHero from "@/components/guide/hub/HubHero";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
+import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { getGuidePracticalTips } from "@/data/guide-pillar-practical-tips";
 import { buildGuidePillarToc } from "@/lib/build-guide-pillar-toc";
+import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { guideTopicHref } from "@/lib/guide-topics";
 import { siteContainerClass } from "@/lib/site-container";
@@ -46,9 +48,7 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
 
   const heroTitle = pillar.heroTitle ?? `${topic.title} в Аргентине`;
   const heroSubtitle = pillar.heroSubtitle ?? topic.shortDescription;
-  const heroImage =
-    topic.heroImage ??
-    "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80";
+  const heroImage = topic.heroImage ?? getGuideTopicHeroImage(topic.slug);
   const widgetSlots = pillar.widgetSlots ?? [];
   const hasLiveFacts = pillar.quickFacts.some((f) => f.live);
   const practicalTips = pillar.practicalTips ?? getGuidePracticalTips(topic.slug);
@@ -114,6 +114,8 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
                   <GuideQuickFactsStatic facts={pillar.quickFacts} slug={topic.slug} />
                 )}
               </HubSection>
+
+              <PageSlotImage pageId={`guide:${topic.slug}`} slotId="content" />
 
               {pillar.sections.map((section) => (
                 <GuidePillarSectionBlock

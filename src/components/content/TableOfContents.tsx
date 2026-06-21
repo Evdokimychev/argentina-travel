@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useMemo, type MouseEvent } from "react";
 import { cn } from "@/lib/cn";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import { hubTocStickyMaxHeightClass, hubTocStickyTopClass } from "@/lib/site-container";
+import { useContentTocScrollSpy } from "@/hooks/useContentTocScrollSpy";
 import type { ContentTocItem } from "@/types/content-reading";
 
 type TableOfContentsProps = {
@@ -32,20 +33,27 @@ function TocList({
   if (mobile) {
     return (
       <ol className="mt-3 flex flex-wrap gap-2">
-        {items.map((item) => (
-          <li key={item.id}>
-            <a
-              href={`#${item.id}`}
-              onClick={handleAnchorClick(item.id)}
-              className={cn(
-                "inline-block rounded-full border border-gray-200 bg-surface-muted/60 px-3 py-1.5 text-xs text-charcoal transition-colors hover:border-sky/40 hover:text-sky",
-                item.level === 3 && "ml-2"
-              )}
-            >
-              {item.label}
-            </a>
-          </li>
-        ))}
+        {items.map((item) => {
+          const active = activeId === item.id;
+          return (
+            <li key={item.id}>
+              <a
+                href={`#${item.id}`}
+                onClick={handleAnchorClick(item.id)}
+                aria-current={active ? "location" : undefined}
+                className={cn(
+                  "blog-touch-target inline-flex items-center rounded-full border px-3 text-xs transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
+                  item.level === 3 && "ml-2",
+                  active
+                    ? "border-sky/40 bg-sky/10 font-medium text-sky"
+                    : "border-gray-200 bg-surface-muted/60 text-charcoal hover:border-sky/40 hover:text-sky"
+                )}
+              >
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
       </ol>
     );
   }
@@ -61,7 +69,7 @@ function TocList({
               onClick={handleAnchorClick(item.id)}
               aria-current={active ? "location" : undefined}
               className={cn(
-                "block rounded-lg px-2 py-1.5 transition-colors",
+                "blog-touch-target block rounded-lg px-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
                 item.level === 3 ? "pl-5 text-[13px]" : "font-medium",
                 active ? "bg-sky/10 text-sky" : "text-slate hover:bg-gray-50 hover:text-charcoal"
               )}
@@ -84,30 +92,7 @@ function TocSidebar({
   className?: string;
   embedded?: boolean;
 }) {
-  const [activeId, setActiveId] = useState<string | null>(items[0]?.id ?? null);
-
-  useEffect(() => {
-    const sections = items
-      .map((item) => document.getElementById(item.id))
-      .filter((element): element is HTMLElement => element !== null);
-
-    if (sections.length === 0) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible[0]?.target.id) {
-          setActiveId(visible[0].target.id);
-        }
-      },
-      { rootMargin: "-20% 0px -55% 0px", threshold: [0, 0.25, 0.5] }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, [items]);
+  const activeId = useContentTocScrollSpy(items);
 
   return (
     <nav
@@ -125,29 +110,48 @@ function TocSidebar({
   );
 }
 
+function TocMobile({ items, className }: { items: ContentTocItem[]; className?: string }) {
+  const activeId = useContentTocScrollSpy(items);
+  const activeLabel = useMemo(
+    () => items.find((item) => item.id === activeId)?.label ?? items[0]?.label,
+    [activeId, items]
+  );
+
+  return (
+    <nav
+      className={cn(
+        "sticky z-20 rounded-2xl border border-gray-100 bg-white/95 p-4 shadow-card backdrop-blur-sm lg:hidden",
+        hubTocStickyTopClass,
+        className
+      )}
+      aria-label="Содержание"
+    >
+      <details className="group">
+        <summary className="blog-touch-target cursor-pointer list-none rounded-lg font-heading text-sm font-bold text-charcoal marker:content-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2 [&::-webkit-details-marker]:hidden">
+          <span className="flex min-w-0 items-center justify-between gap-3">
+            <span className="shrink-0">Содержание</span>
+            {activeLabel ? (
+              <span
+                className="min-w-0 flex-1 truncate text-right text-xs font-normal text-slate group-open:hidden"
+                aria-hidden
+              >
+                {activeLabel}
+              </span>
+            ) : null}
+            <span className="shrink-0 text-xs font-normal text-slate group-open:hidden">развернуть</span>
+          </span>
+        </summary>
+        <TocList items={items} activeId={activeId} mobile />
+      </details>
+    </nav>
+  );
+}
+
 export default function TableOfContents({ items, variant, className, embedded }: TableOfContentsProps) {
   if (items.length < 2) return null;
 
   if (variant === "mobile") {
-    return (
-      <nav
-        className={cn(
-          "rounded-2xl border border-gray-100 bg-white p-4 shadow-card lg:hidden",
-          className
-        )}
-        aria-label="Содержание"
-      >
-        <details className="group">
-          <summary className="cursor-pointer list-none font-heading text-sm font-bold text-charcoal marker:content-none [&::-webkit-details-marker]:hidden">
-            <span className="flex items-center justify-between gap-3">
-              Содержание
-              <span className="text-xs font-normal text-slate group-open:hidden">развернуть</span>
-            </span>
-          </summary>
-          <TocList items={items} mobile />
-        </details>
-      </nav>
-    );
+    return <TocMobile items={items} className={className} />;
   }
 
   return <TocSidebar items={items} className={className} embedded={embedded} />;

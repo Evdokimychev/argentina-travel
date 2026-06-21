@@ -14,10 +14,12 @@ import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNa
 import ImmigrationTopicRichSections, {
   getImmigrationTopicTocExtras,
 } from "@/components/immigration/ImmigrationTopicRichSections";
+import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildGuidePillarToc } from "@/lib/build-guide-pillar-toc";
 import { cn } from "@/lib/cn";
+import { getImmigrationTopicHeroImage } from "@/lib/media-resolver";
 import { immigrationTopicHref } from "@/lib/immigration-topics";
 import { siteContainerClass } from "@/lib/site-container";
 import type { ImmigrationTopicPage } from "@/types/immigration-topic";
@@ -31,9 +33,7 @@ export default function ImmigrationPillarView({ topic }: ImmigrationPillarViewPr
   const pillar = topic.pillarPage;
   const heroTitle = pillar.heroTitle ?? topic.title;
   const heroSubtitle = pillar.heroSubtitle ?? topic.shortDescription;
-  const heroImage =
-    topic.heroImage ??
-    "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1920&q=80";
+  const heroImage = topic.heroImage ?? getImmigrationTopicHeroImage(topic.slug);
   const path = immigrationTopicHref(topic.slug);
 
   const relatedArticles = pillar.blogLinks.map((link) => ({
@@ -114,6 +114,8 @@ export default function ImmigrationPillarView({ topic }: ImmigrationPillarViewPr
                   <GuideQuickFactsStatic facts={pillar.quickFacts} slug={topic.slug} />
                 )}
               </HubSection>
+
+              <PageSlotImage pageId={`immigration:${topic.slug}`} slotId="section" />
 
               {pillar.sections.map((section) => (
                 <GuidePillarSectionBlock key={section.id} section={section} />

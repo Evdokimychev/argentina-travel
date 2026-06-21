@@ -12,6 +12,7 @@ import TransferSearchForm, {
 import { buttonVariants } from "@/components/ui/button";
 import { getTransferLocationById } from "@/data/transfer-locations";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -207,7 +208,7 @@ export default function TransfersSearchView() {
         title={t("transfers.title")}
         subtitle={t("transfers.subtitle")}
         description={t("transfers.intro")}
-        image="https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1200&q=80"
+        image={getServicePageHeroImage("transfers")}
         compact
       >
         <TransferSearchForm

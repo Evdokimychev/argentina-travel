@@ -485,6 +485,10 @@ export type BlogRelatedResource = {
 export interface BlogPostSection {
   title: string;
   body: string;
+  /** CMS hint: faq, mistakes, checklist — overrides title heuristics when set */
+  blockType?: import("@/types/blog-content-blocks").BlogSectionKind;
+  /** Typed blocks (map, ticket-link, seasons, budget) — rendered after parsed body */
+  blocks?: import("@/types/blog-content-blocks").BlogBodyBlock[];
 }
 
 export interface BlogPost {
@@ -499,6 +503,8 @@ export interface BlogPost {
   authorBio?: string;
   authorAvatar?: string;
   date: string;
+  /** Дата последней фактической правки (JSON-LD, карточки) */
+  dateModified?: string;
   image: string;
   category: string;
   /** @deprecated Prefer readTimeMinutes + formatBlogReadTime */
@@ -512,6 +518,8 @@ export interface BlogPost {
   editorialReviewed?: boolean;
   /** Шаблонная авто-статья — не индексировать до переработки (класс B) */
   noIndex?: boolean;
+  /** Канонический slug для дубликата Класса B → pillar */
+  canonicalSlug?: string;
   relatedResources?: BlogRelatedResource[];
   /** Встраиваемые виджеты туров в теле статьи */
   tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];

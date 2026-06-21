@@ -7,15 +7,28 @@ import {
   DESTINATION_PLACE_MAP,
   GUIDE_PAGE_PLACE_MAP,
   GUIDE_TOPIC_PLACE_MAP,
+  RICH_ARTICLE_PLACE_MAP,
   TOUR_PLACE_MAP,
 } from "@/data/media-library/maps";
+import {
+  getGalleryImages,
+  getHeroImage,
+  getHeroSrc,
+  getSectionImage as getProviderSectionImage,
+} from "@/lib/image-provider/image-provider";
+import { mediaAssetToResolved } from "@/lib/image-provider/local-fallback";
+import { resolveSlotAssetId } from "@/lib/image-provider/slot-ids";
+import type { ResolvedImage } from "@/lib/image-provider/types";
 import type { MediaAsset } from "@/types/media-asset";
+import { blogMediaFolder } from "@/lib/blog-media-path";
 
 const manifest = manifestData as { version: number; assets: MediaAsset[] };
 
 const assetsById = new Map(manifest.assets.map((a) => [a.id, a]));
 
-const FALLBACK = "/logo-light.svg";
+export const MEDIA_LOGO_FALLBACK = "/logo-light.svg";
+
+const FALLBACK = MEDIA_LOGO_FALLBACK;
 
 /** Public URL for a file under public/ (localPath includes `media/` prefix). */
 export function mediaUrl(localPath: string): string {
@@ -65,14 +78,7 @@ export function getPlaceGalleryAlts(slug: string): string[] {
 }
 
 export function getDestinationImage(destinationId: string): string {
-  const cover =
-    assetsForDestination(destinationId).find((a) => a.role === "hero") ??
-    assetsForDestination(destinationId)[0];
-  if (cover) return assetUrl(cover);
-
-  const placeSlug = DESTINATION_PLACE_MAP[destinationId];
-  if (placeSlug) return getPlaceCoverImage(placeSlug);
-  return FALLBACK;
+  return getHeroSrc(`destination:${destinationId}`);
 }
 
 export function getDestinationGallery(destinationId: string): string[] {
@@ -85,14 +91,7 @@ export function getDestinationGallery(destinationId: string): string[] {
 }
 
 export function getDestinationImageAlt(destinationId: string): string {
-  const cover =
-    assetsForDestination(destinationId).find((a) => a.role === "hero") ??
-    assetsForDestination(destinationId)[0];
-  if (cover?.alt) return cover.alt;
-
-  const placeSlug = DESTINATION_PLACE_MAP[destinationId];
-  if (placeSlug) return getPlaceCoverAlt(placeSlug);
-  return destinationId;
+  return getHeroImage(`destination:${destinationId}`).alt;
 }
 
 export function getBlogCategoryImage(categoryKey: string): string {
@@ -125,19 +124,11 @@ function manifestClimateByKey(key: string): MediaAsset | undefined {
 }
 
 export function getGuideTopicHeroImage(topicSlug: string): string {
-  const asset = manifestHeroBy("guideTopicId", topicSlug);
-  if (asset) return assetUrl(asset);
-  const placeSlug = GUIDE_TOPIC_PLACE_MAP[topicSlug];
-  if (placeSlug) return getPlaceCoverImage(placeSlug);
-  return getPlaceCoverImage("buenos-aires");
+  return getHeroSrc(`guide:${topicSlug}`);
 }
 
 export function getGuideTopicHeroAlt(topicSlug: string): string {
-  const asset = manifestHeroBy("guideTopicId", topicSlug);
-  if (asset?.alt) return asset.alt;
-  const placeSlug = GUIDE_TOPIC_PLACE_MAP[topicSlug];
-  if (placeSlug) return getPlaceCoverAlt(placeSlug);
-  return topicSlug;
+  return getHeroImage(`guide:${topicSlug}`).alt;
 }
 
 export function getGuidePageHeroImage(pageSlug: string): string {
@@ -189,4 +180,276 @@ export function getClimateMonthImage(regionId: string, month: number): string {
 
 export function getAllMediaAssets(): MediaAsset[] {
   return manifest.assets;
+}
+
+function stockHeroBy(field: keyof MediaAsset, value: string): MediaAsset | undefined {
+  return manifest.assets.find((a) => a[field] === value && a.role === "hero");
+}
+
+function stockAssetsBy(field: keyof MediaAsset, value: string): MediaAsset[] {
+  return manifest.assets
+    .filter((a) => a[field] === value)
+    .sort((a, b) => a.id.localeCompare(b.id));
+}
+
+export function getImmigrationTopicHeroImage(topicSlug: string): string {
+  return getHeroSrc(`immigration:${topicSlug}`);
+}
+
+export function getImmigrationTopicHeroAlt(topicSlug: string): string {
+  return getHeroImage(`immigration:${topicSlug}`).alt;
+}
+
+export function getImmigrationHubHeroImage(): string {
+  return getHeroSrc("immigration:hub");
+}
+
+export function getHomeHeroImage(): string {
+  return getServicePageHeroImage("home");
+}
+
+export function getHomeHeroAlt(): string {
+  return getServicePageHeroAlt("home");
+}
+
+export function getServicePageHeroImage(pageId: string): string {
+  return getHeroSrc(`service:${pageId}`);
+}
+
+export function getServicePageHeroAlt(pageId: string): string {
+  return getHeroImage(`service:${pageId}`).alt;
+}
+
+export function getPodborRegionImage(regionId: string): string {
+  return getHeroSrc(`podbor:region:${regionId}`);
+}
+
+export function getPodborRegionAlt(regionId: string): string {
+  return getHeroImage(`podbor:region:${regionId}`).alt;
+}
+
+export function getPodborThemeImage(themeId: string): string {
+  const asset =
+    manifest.assets.find((a) => a.podborThemeId === themeId && a.role === "thumbnail") ??
+    stockHeroBy("podborThemeId", themeId);
+  if (asset) return assetUrl(asset);
+  return getHeroSrc(`podbor:theme:${themeId}`);
+}
+
+export function getShopProductImage(productId: string): string {
+  return getHeroSrc(`shop:${productId}`);
+}
+
+export function getShopProductAlt(productId: string): string {
+  return getHeroImage(`shop:${productId}`).alt;
+}
+
+function manifestBlogHero(slug: string): MediaAsset | undefined {
+  const direct = manifest.assets.find((a) => a.blogPostSlug === slug && a.role === "hero");
+  if (direct) return direct;
+
+  const folder = blogMediaFolder(slug);
+  return manifest.assets.find(
+    (a) => a.role === "hero" && a.localPath.replace(/^\/+/, "").endsWith(`blog/${folder}/hero.jpg`),
+  );
+}
+
+export function isMediaLogoFallback(src: string): boolean {
+  return src === MEDIA_LOGO_FALLBACK;
+}
+
+/** Card/listing cover: manifest hero → page registry → preset image → category hub → logo. */
+export function resolveBlogPostCardImage(post: {
+  slug: string;
+  image?: string;
+  category: string;
+  richArticleId?: string;
+}): string {
+  if (post.richArticleId) {
+    const rich = getRichArticleHeroImage(post.richArticleId);
+    if (!isMediaLogoFallback(rich)) return rich;
+  }
+
+  const manifestHero = manifestBlogHero(post.slug);
+  if (manifestHero) return mediaUrl(manifestHero.localPath);
+
+  const cover = getHeroSrc(`blog:${post.slug}`);
+  if (!isMediaLogoFallback(cover)) return cover;
+
+  if (post.image && post.image !== "" && !isMediaLogoFallback(post.image)) {
+    return post.image;
+  }
+
+  const hub = getBlogHubImage(post.category);
+  if (!isMediaLogoFallback(hub)) return hub;
+
+  return cover;
+}
+
+export function getBlogPostCoverImage(slug: string): string {
+  const manifestHero = manifestBlogHero(slug);
+  if (manifestHero) return mediaUrl(manifestHero.localPath);
+  return getHeroSrc(`blog:${slug}`);
+}
+
+export function getBlogPostCoverAlt(slug: string): string {
+  const manifestHero = manifestBlogHero(slug);
+  if (manifestHero?.alt) return manifestHero.alt;
+  return getHeroImage(`blog:${slug}`).alt;
+}
+
+/** Manifest thumbnail paired with a gallery/full image (contentHash match). */
+export function getManifestThumbnailSrc(src: string): string | undefined {
+  const asset = manifest.assets.find((a) => mediaUrl(a.localPath) === src);
+  if (!asset?.contentHash) return undefined;
+
+  const thumb = manifest.assets.find(
+    (a) => a.role === "thumbnail" && a.contentHash === asset.contentHash,
+  );
+  return thumb ? mediaUrl(thumb.localPath) : undefined;
+}
+
+/** Post page hero with manifest attribution (LCP element). */
+export function getBlogPostHeroResolved(post: {
+  slug: string;
+  title: string;
+  richArticleId?: string;
+}): ResolvedImage {
+  if (post.richArticleId) {
+    const richHero = getHeroImage(`rich:${post.richArticleId}`);
+    if (!isMediaLogoFallback(richHero.src)) return richHero;
+  }
+
+  const manifestHero = manifestBlogHero(post.slug);
+  if (manifestHero) return mediaAssetToResolved(manifestHero);
+
+  const blogHero = getHeroImage(`blog:${post.slug}`);
+  if (!isMediaLogoFallback(blogHero.src)) return blogHero;
+
+  return { ...blogHero, alt: getBlogPostCoverAlt(post.slug) || post.title };
+}
+
+export function getRichArticleGallery(articleId: string): Array<{
+  src: string;
+  alt: string;
+  caption?: string;
+  attributionHtml?: string;
+  thumbSrc?: string;
+}> {
+  const seenSrc = new Set<string>();
+  const seenHash = new Set<string>();
+  const gallery: Array<{
+    src: string;
+    alt: string;
+    caption?: string;
+    attributionHtml?: string;
+    thumbSrc?: string;
+  }> = [];
+
+  const addImage = (
+    src: string,
+    alt: string,
+    contentHash?: string,
+    caption?: string,
+    attributionHtml?: string,
+  ) => {
+    if (seenSrc.has(src)) return;
+    if (contentHash && seenHash.has(contentHash)) return;
+    seenSrc.add(src);
+    if (contentHash) seenHash.add(contentHash);
+    gallery.push({
+      src,
+      alt,
+      caption,
+      attributionHtml,
+      thumbSrc: getManifestThumbnailSrc(src),
+    });
+  };
+
+  for (const img of getGalleryImages(`rich:${articleId}`, 5)) {
+    const asset = manifest.assets.find(
+      (a) => a.articleId === articleId && a.role === "gallery" && mediaUrl(a.localPath) === img.src,
+    );
+    addImage(
+      img.src,
+      img.alt,
+      asset?.contentHash,
+      asset?.imageTitle ?? asset?.title ?? asset?.caption,
+      asset?.attributionHtml,
+    );
+    if (gallery.length >= 5) break;
+  }
+
+  if (gallery.length < 5) {
+    const placeId = RICH_ARTICLE_PLACE_MAP[articleId];
+    if (placeId) {
+      const placeGallery = manifest.assets
+        .filter((a) => a.placeId === placeId && a.role === "gallery")
+        .sort((a, b) => a.id.localeCompare(b.id));
+      for (const asset of placeGallery) {
+        addImage(
+          mediaUrl(asset.localPath),
+          asset.alt,
+          asset.contentHash,
+          asset.imageTitle ?? asset.title ?? asset.caption,
+          asset.attributionHtml,
+        );
+        if (gallery.length >= 5) break;
+      }
+    }
+  }
+
+  return gallery;
+}
+
+export function getRichArticleHeroImage(articleId: string): string {
+  const galleryHero = manifest.assets
+    .filter((a) => a.articleId === articleId && a.role === "gallery")
+    .sort((a, b) => a.id.localeCompare(b.id))[0];
+  if (galleryHero) return assetUrl(galleryHero);
+
+  const articleHero = manifest.assets.find(
+    (a) => a.articleId === articleId && a.role === "hero",
+  );
+  if (articleHero) return assetUrl(articleHero);
+
+  const placeId = RICH_ARTICLE_PLACE_MAP[articleId];
+  if (placeId) return getPlaceCoverImage(placeId);
+
+  return getHeroSrc(`rich:${articleId}`);
+}
+
+export function getContentImage(pageId: string, slotId: string): ResolvedImage {
+  const assetId = resolveSlotAssetId(pageId, slotId);
+  const asset = getMediaAsset(assetId);
+  if (asset) return mediaAssetToResolved(asset);
+  return getProviderSectionImage(pageId, slotId);
+}
+
+/** True when manifest has a dedicated slot asset with a non-logo image src. */
+export function hasContentSlotImage(pageId: string, slotId: string): boolean {
+  const assetId = resolveSlotAssetId(pageId, slotId);
+  const asset = getMediaAsset(assetId);
+  if (!asset) return false;
+  return !isMediaLogoFallback(mediaUrl(asset.localPath));
+}
+
+export function getContentImageSrc(pageId: string, slotId: string): string {
+  return getContentImage(pageId, slotId).src;
+}
+
+export function getSectionImages(pageId: string, slotIds: string[]): ResolvedImage[] {
+  return slotIds.map((slotId) => getContentImage(pageId, slotId));
+}
+
+export function getHomeShowcaseImages(): ResolvedImage[] {
+  return getSectionImages("service:home", [
+    "showcase-patagonia",
+    "showcase-iguazu",
+    "showcase-ba",
+  ]);
+}
+
+export function getServiceCategoryCardImage(categoryId: string): ResolvedImage {
+  return getContentImage("service:services", `card-${categoryId}`);
 }

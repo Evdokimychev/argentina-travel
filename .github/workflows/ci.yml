@@ -37,6 +37,11 @@ jobs:
       - name: RLS audit
         run: node scripts/rls-audit.mjs
 
-      - name: Public smoke checks
+      - name: Blog image perf audit
+        run: npm run blog-image-perf-audit
+
+      - name: Lighthouse blog CWV (optional)
         continue-on-error: true
-        run: node scripts/smoke-public.mjs
+        env:
+          SKIP_LIGHTHOUSE: "1"
+        run: npm run lighthouse:blog

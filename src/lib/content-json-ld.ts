@@ -71,7 +71,7 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
     url: absoluteUrl(`/blog/${post.slug}`),
     image: post.image,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: post.dateModified ?? post.date,
     inLanguage: "ru",
     author: {
       "@type": "Organization",

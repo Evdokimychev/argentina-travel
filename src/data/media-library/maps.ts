@@ -119,3 +119,20 @@ export const CLIMATE_REGION_MONTH_MAP: Record<string, Partial<Record<number, str
   salta: { 4: "purmamarca", 5: "salta", 9: "cerro-de-los-7-colores" },
   mendoza: { 3: "mendoza", 4: "mendoza", 9: "mendoza" },
 };
+
+/** Rich blog article id → place slug for gallery supplement */
+export const RICH_ARTICLE_PLACE_MAP: Record<string, string> = {
+  "all-argentina-national-parks": "los-glaciares-national-park",
+  "banado-la-estrella": "iguazu-falls",
+  "iguazu-national-park": "iguazu-falls",
+  "ibera-national-park": "iguazu-falls",
+  "lanin-national-park": "bariloche",
+  "los-alerces-national-park": "bariloche",
+  "nahuel-huapi-national-park": "nahuel-huapi-national-park",
+  "los-glaciares-national-park": "los-glaciares-national-park",
+  "los-cardones-national-park": "salta",
+  "patagonia-national-park": "el-calafate",
+  "talampaya-national-park": "salta",
+  "tierra-del-fuego-national-park": "tierra-del-fuego-national-park",
+  "valdes-peninsula-national-park": "valdes-peninsula",
+};

@@ -5,11 +5,11 @@ import Hero from "@/components/Hero";
 import FlightPopularRoutes from "@/components/flights/FlightPopularRoutes";
 import FlightsWhitelabelWidget from "@/components/flights/FlightsWhitelabelWidget";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1200&q=80";
+const HERO_IMAGE = getServicePageHeroImage("flights");
 
 export default function FlightsWhitelabelView({ scriptUrl }: { scriptUrl: string }) {
   const { t } = useLocaleCurrency();

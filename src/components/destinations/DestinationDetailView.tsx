@@ -13,6 +13,7 @@ import {
 import ContentReadingLayout from "@/components/content/ContentReadingLayout";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
 import DestinationInsuranceTeaser from "@/components/destinations/DestinationInsuranceTeaser";
+import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import RelatedContentCards from "@/components/content/RelatedContentCards";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -230,6 +231,13 @@ export default function DestinationDetailView({
                 </div>
               ) : null}
             </div>
+
+            <PageSlotImage
+              pageId={`destination:${destination.id}`}
+              slotId="section"
+              role="section"
+              className="max-w-none"
+            />
 
             <div>
               <h2

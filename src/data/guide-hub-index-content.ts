@@ -1,4 +1,5 @@
 import { GUIDE_INDEX_INTRO, GUIDE_TOPICS } from "@/data/guide-topics";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { guideTopicHref } from "@/lib/guide-topics";
 import type { GuideIndexHubContent } from "@/types/guide-index-hub";
 
@@ -93,7 +94,7 @@ export const GUIDE_HUB: GuideIndexHubContent = {
   heroTitle: "Путеводитель по Аргентине",
   heroSubtitle:
     "14 тем для планирования поездки: перелёты, регионы, деньги, культура и безопасность — с турами и сервисами на платформе.",
-  heroImage: "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80",
+  heroImage: getServicePageHeroImage("guide-hub"),
   heroCtas: [
     {
       label: "🇦🇷 Об Аргентине",

@@ -1,6 +1,7 @@
 import Hero from "@/components/Hero";
 import ShopProductCard from "@/components/shop/ShopProductCard";
 import { SHOP_PRODUCTS } from "@/data/shop-products";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { isSupabaseShopEnabled } from "@/lib/auth-mode";
 import { siteContainerClass } from "@/lib/site-container";
 
@@ -12,7 +13,7 @@ export default function ShopPageView() {
       <Hero
         title="Магазин гидов"
         subtitle="PDF-путеводители и списки для самостоятельной подготовки к поездке"
-        image="https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80"
+        image={getServicePageHeroImage("shop")}
         compact
       />
 

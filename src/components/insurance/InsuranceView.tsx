@@ -6,12 +6,12 @@ import Hero from "@/components/Hero";
 import InsuranceBenefits from "@/components/insurance/InsuranceBenefits";
 import InsuranceWhitelabelWidget from "@/components/insurance/InsuranceWhitelabelWidget";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { formatTourists } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 
-const HERO_IMAGE =
-  "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200&q=80";
+const HERO_IMAGE = getServicePageHeroImage("insurance");
 
 export default function InsuranceView({ scriptUrl }: { scriptUrl: string }) {
   const searchParams = useSearchParams();

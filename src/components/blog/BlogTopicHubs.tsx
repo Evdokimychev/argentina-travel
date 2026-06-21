@@ -30,17 +30,17 @@ export default function BlogTopicHubs({
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 id="blog-topic-hubs-title" className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-            Темы и регионы
+            По категориям
           </h2>
           <p className="mt-1 max-w-2xl text-sm text-slate">
-            Выберите направление — откроется каталог с фильтром по категории
+            Быстрый переход к теме — откроется каталог с фильтром по категории
           </p>
         </div>
         {activeCategory !== "Все" ? (
           <button
             type="button"
             onClick={() => onCategorySelect("Все")}
-            className="text-sm font-medium text-sky hover:underline"
+            className="blog-touch-target inline-flex items-center text-sm font-medium text-sky hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
           >
             Показать все темы
           </button>
@@ -57,11 +57,12 @@ export default function BlogTopicHubs({
               <button
                 type="button"
                 onClick={() => onCategorySelect(category)}
+                aria-pressed={active}
                 className={cn(
-                  "group relative flex h-full w-full overflow-hidden rounded-2xl border text-left transition-all",
+                  "group relative flex h-full min-h-[44px] w-full overflow-hidden rounded-2xl border text-left transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2 motion-reduce:transition-none",
                   active
                     ? "border-sky ring-2 ring-sky/20 shadow-md"
-                    : "border-gray-100 bg-white shadow-card hover:-translate-y-0.5 hover:border-sky/25 hover:shadow-lg",
+                    : "border-gray-100 bg-white shadow-card hover:-translate-y-0.5 hover:border-sky/25 hover:shadow-lg motion-reduce:hover:translate-y-0",
                 )}
               >
                 <div className="relative h-24 w-24 shrink-0 sm:h-28 sm:w-28">
@@ -69,7 +70,7 @@ export default function BlogTopicHubs({
                     src={meta.image}
                     alt={category}
                     fill
-                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none motion-reduce:transition-none"
                     sizes="112px"
                   />
                   <div className="absolute inset-0 bg-charcoal/20" />

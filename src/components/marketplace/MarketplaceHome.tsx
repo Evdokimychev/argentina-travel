@@ -32,11 +32,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
 import type { ExcursionListing } from "@/types/excursion";
+import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
+import PageImage from "@/components/media/PageImage";
 
-// Local asset (not a remote Unsplash URL): the previous hero pointed at an
-// Unsplash photo that now 404s, leaving a grey placeholder on the LCP element.
-// A bundled image is reliable and removes an external dependency from the hero.
-const HOME_HERO_IMAGE = "/media/destinations/ba/cover.jpg";
+const HOME_HERO_IMAGE = getHomeHeroImage();
+const HOME_HERO_ALT = getHomeHeroAlt();
+const HOME_SHOWCASE = getHomeShowcaseImages();
 
 interface MarketplaceHomeProps {
   tours: TourListing[];
@@ -242,7 +243,7 @@ export default function MarketplaceHome({
                 <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
                   <Image
                     src={HOME_HERO_IMAGE}
-                    alt="Путешествия по Аргентине: горы, ледники и города"
+                    alt={HOME_HERO_ALT}
                     fill
                     priority
                     sizes="(max-width: 1024px) 100vw, 360px"
@@ -381,6 +382,41 @@ export default function MarketplaceHome({
       )}
 
       <PlatformStatsBlock initialStats={platformStats} />
+
+      {!hasActiveSearch && HOME_SHOWCASE.length > 0 ? (
+        <section className="border-b border-gray-100 bg-white py-12 md:py-14">
+          <div className={siteContainerClass}>
+            <SectionHeader
+              title="Природа Аргентины"
+              subtitle="От ледников Патагонии до водопадов Игуасу — три пейзажа, с которых начинается маршрут"
+            />
+            <div className="grid gap-4 md:grid-cols-3">
+              {HOME_SHOWCASE.map((image) => (
+                <figure
+                  key={image.src}
+                  className="group relative overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100"
+                >
+                  <div className="relative aspect-[4/3] w-full">
+                    <PageImage
+                      image={image}
+                      role="section"
+                      fill
+                      className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
+                    />
+                    <div
+                      className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent"
+                      aria-hidden
+                    />
+                    <figcaption className="absolute bottom-0 p-4 text-sm font-medium leading-snug text-white">
+                      {image.alt}
+                    </figcaption>
+                  </div>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       {/* Regions & places */}
       <section className="py-12 md:py-14">

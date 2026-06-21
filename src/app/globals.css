@@ -879,7 +879,7 @@ body {
   max-width: 65ch;
   color: var(--color-slate);
   font-size: 1rem;
-  line-height: 1.75;
+  line-height: 1.7;
 }
 
 .content-reading-prose h2 {
@@ -906,10 +906,15 @@ body {
 
 .content-reading-prose p {
   margin-top: 1rem;
+  color: color-mix(in srgb, var(--color-charcoal) 78%, var(--color-slate));
 }
 
 .content-reading-prose p:first-child {
   margin-top: 0;
+}
+
+.content-reading-prose li {
+  color: color-mix(in srgb, var(--color-charcoal) 78%, var(--color-slate));
 }
 
 .content-reading-prose ul {
@@ -924,6 +929,49 @@ body {
 
 .content-reading-prose.content-reading-prose--wide {
   max-width: none;
+}
+
+.content-reading-prose.content-reading-prose--wide > .space-y-10 > * + *,
+.content-reading-prose.content-reading-prose--wide .space-y-10 > * + * {
+  margin-top: 2.5rem;
+}
+
+.content-reading-prose aside[role="note"] {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.content-reading-prose table {
+  font-size: 0.9375rem;
+}
+
+.content-reading-prose .blog-section-body > * + * {
+  margin-top: 1.25rem;
+}
+
+@media (max-width: 640px) {
+  .content-reading-prose {
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .content-reading-prose h2 {
+    font-size: 1.25rem;
+  }
+}
+
+/* Blog — WCAG 2.1 touch targets (S14) */
+.blog-touch-target {
+  min-height: 44px;
+}
+
+.blog-interactive-target {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.content-reading-prose aside[role="note"] p {
+  color: color-mix(in srgb, var(--color-charcoal) 82%, var(--color-slate));
 }
 
 /* Custom trailing cursor — decorative overlay; system cursor stays visible for accessibility */

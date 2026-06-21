@@ -16,6 +16,7 @@ import { SafeImage } from "@/components/ui/safe-image";
 import type { DestinationPage } from "@/data/destination-pages";
 import { DESTINATION_REGION_GROUPS } from "@/data/destination-pages";
 import { destinationHref } from "@/lib/destinations";
+import { getPlaceCoverImage } from "@/lib/media-resolver";
 import { destinationHeroAlt } from "@/lib/media-alt-text";
 import { siteContainerClass } from "@/lib/site-container";
 import type { PlaceCollection, PlaceListing } from "@/types/place";
@@ -138,7 +139,7 @@ export default function GeographyHubView({ destinations, places, collections = [
         eyebrow="Регионы и места"
         title="Куда поехать в Аргентине"
         subtitle="Регионы — для планирования поездки: сезоны, логистика и туры. Места — справочник парков, городов и достопримечательностей с картой и подборками."
-        image="https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&q=80"
+        image={getPlaceCoverImage("perito-moreno-glacier")}
         compact
       />
 

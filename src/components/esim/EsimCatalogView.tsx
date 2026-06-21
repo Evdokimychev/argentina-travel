@@ -20,6 +20,7 @@ import {
   resolveAiraloHelpCenterUrl,
 } from "@/lib/airalo/locale-url";
 import type { EsimOfferFilters } from "@/lib/airalo/offer-meta";
+import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import type { EsimCatalogSummary, EsimOffer } from "@/lib/airalo/types";
@@ -147,7 +148,7 @@ export default function EsimCatalogView() {
         title={t("esim.title")}
         subtitle={t("esim.subtitle")}
         description={t("esim.intro")}
-        image="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1200&q=80"
+        image={getServicePageHeroImage("esim")}
         compact
       />
 
