@@ -51,6 +51,8 @@ describe("schema-json-ld", () => {
     });
     expect(schema.headline).toBe("Игуасу");
     expect(JSON.stringify(schema)).toContain("Article");
+    expect(JSON.stringify(schema)).toContain("SpeakableSpecification");
+    expect(JSON.stringify(schema)).toContain("data-speakable");
   });
 
   it("serializes to JSON string", () => {

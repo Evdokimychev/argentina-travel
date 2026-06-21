@@ -7,7 +7,7 @@ export const CMS_I18N_ROLLOUT_TOP_SLUGS: ReadonlyArray<{ docType: CmsDocType; sl
   { docType: "legal", slug: "terms" },
   { docType: "blog", slug: "best-time-to-visit-argentina" },
   { docType: "blog", slug: "patagonia-packing-list" },
-  { docType: "blog", slug: "buenos-aires-neighborhoods" },
+  { docType: "blog", slug: "buenos-aires-rajony" },
   { docType: "guide", slug: "sezony-i-klimat" },
   { docType: "guide", slug: "patagoniya-s-chego-nachat" },
   { docType: "destination", slug: "patagonia" },
@@ -32,6 +32,12 @@ function emptyBodyFromSource(body: CmsDocumentBody): CmsDocumentBody {
     case "blog":
       return {
         kind: "blog",
+        excerpt: "",
+        sections: [{ title: "", body: "" }],
+      };
+    case "author_article":
+      return {
+        kind: "author_article",
         excerpt: "",
         sections: [{ title: "", body: "" }],
       };

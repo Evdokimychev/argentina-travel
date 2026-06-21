@@ -5,13 +5,14 @@ import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { BLOG_START_HERE_SLUGS } from "@/data/blog-canonical-map";
 import { getBlogTourEmbeds } from "@/data/blog-tour-embeds";
 import { getPublishedPlanPosts } from "@/lib/blog-from-plan";
+import { manualPostsFromMd, REPLACED_MANUAL_SLUGS } from "@/data/blog-manual-from-md";
 
 const rt = (minutes: number) => formatBlogReadTime(minutes);
 
 const editorialAuthor = BLOG_EDITORIAL.name;
 const editorialBio = BLOG_EDITORIAL.bio;
 
-const manualBlogPosts: BlogPost[] = [
+const legacyManualBlogPosts: BlogPost[] = [
   {
     id: "1",
     slug: "best-time-to-visit-argentina",
@@ -125,7 +126,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путеводитель",
     readTimeMinutes: 14,
     readTime: rt(14),
-    views: 12480,
     tags: ["сезон", "климат", "Патагония", "Буэнос-Айрес", "Игуасу", "Мендоса", "Барилоче"],
     featured: true,
     cardVariant: "featured",
@@ -280,11 +280,10 @@ const manualBlogPosts: BlogPost[] = [
     category: "Кухня Аргентины",
     readTimeMinutes: 11,
     readTime: rt(11),
-    views: 9340,
     tags: ["asado", "parrilla", "Буэнос-Айрес", "стейк", "гастрономия", "chimichurri"],
     editorialReviewed: true,
     relatedResources: [
-      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-neighborhoods", type: "blog" },
+      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-rajony", type: "blog" },
       { label: "Буэнос-Айрес за 3 дня", href: "/blog/buenos-aires-за-3-дня", type: "blog" },
       { label: "Синий доллар", href: "/blog/blue-dollar-argentina-2026", type: "blog" },
     ],
@@ -382,11 +381,10 @@ const manualBlogPosts: BlogPost[] = [
     category: "Буэнос-Айрес",
     readTimeMinutes: 12,
     readTime: rt(12),
-    views: 7120,
     tags: ["танго", "милонга", "Буэнос-Айрес", "cabeceo", "культура"],
     editorialReviewed: true,
     relatedResources: [
-      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-neighborhoods", type: "blog" },
+      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-rajony", type: "blog" },
       { label: "Буэнос-Айрес за 3 дня", href: "/blog/buenos-aires-за-3-дня", type: "blog" },
       { label: "Когда лучше ехать", href: "/blog/best-time-to-visit-argentina", type: "blog" },
     ],
@@ -499,7 +497,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Патагония",
     readTimeMinutes: 12,
     readTime: rt(12),
-    views: 15890,
     tags: ["Патагония", "треккинг", "сборы", "одежда", "Перито-Морено"],
     editorialReviewed: true,
     tourEmbeds: [
@@ -668,7 +665,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Патагония",
     readTimeMinutes: 9,
     readTime: rt(9),
-    views: 6840,
     tags: ["ПАТАГОНИЯ", "АВИАБИЛЕТЫ ПО АРГЕНТИНЕ", "ЭЛЬ-КАЛАФАТЕ"],
     editorialReviewed: true,
     relatedResources: [
@@ -790,7 +786,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Патагония",
     readTimeMinutes: 11,
     readTime: rt(11),
-    views: 8420,
     tags: ["Патагония", "пингвины", "Punta Tombo", "Valdes", "wildlife"],
     editorialReviewed: true,
     relatedResources: [
@@ -913,7 +908,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Водопады Игуасу",
     readTimeMinutes: 9,
     readTime: rt(9),
-    views: 6120,
     tags: ["Игуасу", "Garganta del Diablo", "Глотка Дьявола", "Puerto Iguazú", "водопады"],
     editorialReviewed: true,
     relatedResources: [
@@ -1056,7 +1050,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Водопады Игуасу",
     readTimeMinutes: 10,
     readTime: rt(10),
-    views: 5740,
     tags: ["Игуасу", "Puerto Iguazú", "водопады", "маршрут", "Garganta del Diablo"],
     editorialReviewed: true,
     relatedResources: [
@@ -1185,7 +1178,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Патагония",
     readTimeMinutes: 12,
     readTime: rt(12),
-    views: 7890,
     tags: ["Патагония", "киты", "Вальдес", "Пуэрто-Мадрин", "Пуэрто-Пирамидес"],
     editorialReviewed: true,
     relatedResources: [
@@ -1293,7 +1285,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путеводитель",
     readTimeMinutes: 12,
     readTime: rt(12),
-    views: 22100,
     tags: ["деньги", "dólar blue", "обмен", "карты", "ARS", "MEP"],
     editorialReviewed: true,
     cardVariant: "standard",
@@ -1393,7 +1384,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путеводитель",
     readTimeMinutes: 12,
     readTime: rt(12),
-    views: 18750,
     tags: ["виза", "въезд", "паспорт", "миграция", "турист", "безвиз", "страховка"],
     editorialReviewed: true,
     relatedResources: [
@@ -1401,144 +1391,6 @@ const manualBlogPosts: BlogPost[] = [
       { label: "Туристическая страховка", href: "/insurance", type: "guide" },
       { label: "Иммиграция", href: "/immigration", type: "immigration" },
       { label: "Синий доллар", href: "/blog/blue-dollar-argentina-2026", type: "blog" },
-    ],
-  },
-  {
-    id: "7",
-    slug: "buenos-aires-neighborhoods",
-    title: "Районы Буэнос-Айреса: где остановиться и гулять",
-    seoTitle: "Районы Буэнос-Айреса: где остановиться и гулять",
-    excerpt:
-      "Palermo, Recoleta, San Telmo и другие — краткий обзор для выбора жилья и маршрутов.",
-    sections: [
-      {
-        title: "Кратко",
-        body:
-          "Буэнос-Айрес — город контрастов: от парков Palermo до кладбища Recoleta и танго-баров San Telmo. Выбор района определяет атмосферу, бюджет и безопасность прогулок. Для первого визита чаще выбирают Palermo или Recoleta.",
-      },
-      {
-        title: "Когда и где остановиться",
-        body:
-          "Palermo (SoHo и Hollywood) — база для первого визита: кафе, бары, парки, относительно безопаснее днём и вечером в людных местах. Recoleta — музеи, кладбище, более спокойный тон; жильё дороже. San Telmo — танго, антиквариат, воскресный рынок; осторожнее с вещами в толпе. Puerto Madero — набережная, современные башни, спокойнее, но рестораны премиум-класса.",
-      },
-      {
-        title: "Практика выбора жилья",
-        body:
-          "**Внимание:** La Boca — яркие дома Caminito только в туристической зоне днём; в другие кварталы без гида не заходите. Microcentro — деловой центр, шумно в будни, пустеет вечером. Для семей часто выбирают Belgrano или часть Recoleta. Смотрите расстояние до метро и отзывы о шуме — ночная жизнь в Palermo может мешать.",
-      },
-      {
-        title: "Бюджет по районам",
-        body:
-          "Palermo SoHo — средний и выше среднего; Recoleta и Puerto Madero — премиум-сегмент. San Telmo и Almagro — бюджетнее, но проверяйте улицу на карте. Бронируйте жильё с кондиционером или отоплением по сезону — летом жара, зимой сырость.",
-      },
-      {
-        title: "Советы по прогулкам",
-        body:
-          "Днём гуляйте по паркам Palermo и набережной Puerto Madero. В San Telmo приходите на рынок в воскресенье до полудня. Вечером избегайте пустых улиц Microcentro и отдалённых кварталов La Boca. Подробные таблицы районов — в путеводителе «Где жить» и «Безопасность».",
-      },
-      {
-        title: "FAQ",
-        body:
-          "Где безопаснее с детьми? Belgrano, Recoleta, часть Palermo у парков. Можно ли жить в Centro? Краткосрочно — да, но шумно и пусто ночью. Нужна ли машина? В столице нет — метро и приложения покрывают основные маршруты.",
-      },
-    ],
-    content: "",
-    author: editorialAuthor,
-    authorBio: editorialBio,
-    date: "2025-05-20",
-    dateModified: "2026-06-21",
-    image: "",
-    category: "Путеводитель",
-    readTimeMinutes: 10,
-    readTime: rt(10),
-    views: 10340,
-    tags: ["Буэнос-Айрес", "районы", "жильё", "Palermo", "Recoleta"],
-    editorialReviewed: true,
-    tourEmbeds: [
-      {
-        id: "ba-tours-compact",
-        variant: "compact-list",
-        title: "Экскурсии по Буэнос-Айресу",
-        subtitle: "Классика города с русскоязычным гидом",
-        limit: 3,
-        source: { kind: "query", query: "buenos" },
-        catalogHref: "/tours?query=buenos",
-        tone: "inline",
-      },
-    ],
-    relatedResources: [
-      { label: "Где жить", href: "/guide/gde-zhit", type: "guide" },
-      { label: "Безопасность", href: "/guide/bezopasnost", type: "guide" },
-      { label: "Туры в BA", href: "/tours/buenos-aires-tango", type: "tour" },
-    ],
-  },
-  {
-    id: "8",
-    slug: "mendoza-wine-route",
-    title: "Винный маршрут Мендосы: винодельня за одни выходные",
-    seoTitle: "Винный маршрут Мендосы: винодельня за одни выходные",
-    excerpt:
-      "Maipú, Luján de Cuyo и Uco Valley — как спланировать дегустации без машины и с машиной.",
-    sections: [
-      {
-        title: "Кратко",
-        body:
-          "Мендоса — столица мальбека и база для винных маршрутов у подножия Анд. За выходные реально посетить 2–3 винодельни, если заранее забронировать дегустации и не перегружать график.",
-      },
-      {
-        title: "Когда ехать",
-        body:
-          "Высокий сезон — январь–февраль (туристы) и март–апрель (сбор урожая, vendimia). Бронируйте дегустации заранее. Зимой (июнь–август) меньше туристов, но некоторые bodega работают по сокращённому расписанию. Весной цветут виноградники — красиво для фото.",
-      },
-      {
-        title: "Практика маршрута",
-        body:
-          "Maipú ближе к городу: можно ездить на велосипеде между bodega, есть компактные туры с обедом. Luján de Cuyo — классика с видом на горы, крупные известные дома. Uco Valley — премиум, высота 900–1200 м, вина с яркой кислотностью; дорога длиннее, нужен целый день. Без машины — организованный тур или такси на день с фиксированной ценой.",
-      },
-      {
-        title: "Бюджет",
-        body:
-          "Дегустация — ориентир от 10 000 до 30 000 песо за человека (июнь 2026; уточняйте перед поездкой). Трансфер на день — 45 000–80 000 песо на машину.\n\n**Совет:** не планируйте более 3–4 дегустаций в день — качество впечатлений важнее количества. С обедом используйте плевательницу (spittoon) и пейте воду: градусы набираются быстро на солнце.",
-      },
-      {
-        title: "Советы",
-        body:
-          "Многие bodega принимают детей на территории, но дегустация только 18+. Можно совместить с туром из каталога — трансфер и гид включены. Назначьте водителя или берите тур, если планируете полноценные дегустации.",
-      },
-      {
-        title: "FAQ",
-        body:
-          "Нужна ли бронь? В высокий сезон — обязательно. Можно ли без машины? Да, через тур или велосипед в Maipú. Что попробовать новичку? Malbec reserva из Luján de Cuyo и torrontés, если любите белое.",
-      },
-    ],
-    content: "",
-    author: editorialAuthor,
-    authorBio: editorialBio,
-    date: "2025-04-05",
-    dateModified: "2026-06-21",
-    image: "",
-    category: "Винодельни",
-    readTimeMinutes: 9,
-    readTime: rt(9),
-    views: 5680,
-    tags: ["Мендоса", "вино", "bodega", "malbec", "Uco Valley"],
-    editorialReviewed: true,
-    tourEmbeds: [
-      {
-        id: "mendoza-wine-featured",
-        variant: "featured",
-        title: "Винные туры в Мендосе",
-        subtitle: "Дегустации, трансфер и гид — без аренды машины",
-        limit: 3,
-        source: { kind: "slugs", slugs: ["mendoza-wine"] },
-        catalogHref: "/tours?query=mendoza",
-        catalogLabel: "Туры в Мендосу",
-        tone: "inline",
-      },
-    ],
-    relatedResources: [
-      { label: "Тур: Mendoza", href: "/tours/mendoza-wine", type: "tour" },
-      { label: "Кухня и вино", href: "/guide/kukhnya", type: "guide" },
     ],
   },
   {
@@ -1584,7 +1436,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Север Аргентины",
     readTimeMinutes: 12,
     readTime: rt(12),
-    views: 0,
     tags: ["Сальта", "северо-запад", "Пурмамарка", "Кафаяте", "маршрут", "NOA"],
     featured: true,
     cardVariant: "featured",
@@ -1647,7 +1498,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Винодельни",
     readTimeMinutes: 10,
     readTime: rt(10),
-    views: 0,
     tags: ["Uco Valley", "Мендоса", "malbec", "вино", "Аконкагуа", "bodega"],
     featured: true,
     editorialReviewed: true,
@@ -1665,7 +1515,7 @@ const manualBlogPosts: BlogPost[] = [
       },
     ],
     relatedResources: [
-      { label: "Винный маршрут Мендосы", href: "/blog/mendoza-wine-route", type: "guide" },
+      { label: "Винный маршрут Мендосы", href: "/blog/mendoza-vinnyj-gid", type: "guide" },
       { label: "Мендоса", href: "/places/mendoza", type: "guide" },
       { label: "Долина Уко", href: "/places/uco-valley", type: "guide" },
       { label: "Кухня и вино", href: "/guide/kukhnya", type: "guide" },
@@ -1714,7 +1564,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Горы и треккинг",
     readTimeMinutes: 11,
     readTime: rt(11),
-    views: 0,
     tags: ["Эль-Чалтен", "Fitz Roy", "треккинг", "Laguna de los Tres", "Патагония"],
     featured: true,
     editorialReviewed: true,
@@ -1861,7 +1710,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Патагония",
     readTimeMinutes: 16,
     readTime: rt(16),
-    views: 0,
     tags: ["Патагония", "маршрут", "14 дней", "Перито-Морено", "Фицрой", "Ушуая", "Эль-Чальтен"],
     featured: true,
     cardVariant: "featured",
@@ -1971,7 +1819,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путеводитель",
     readTimeMinutes: 8,
     readTime: rt(8),
-    views: 0,
     tags: ["Аргентина", "ошибки", "планирование", "туристы", "Буэнос-Айрес", "Патагония"],
     featured: true,
     cardVariant: "featured",
@@ -1994,7 +1841,7 @@ const manualBlogPosts: BlogPost[] = [
       { label: "Аргентина за 14 дней", href: "/blog/itinerary-за-14-дней", type: "blog" },
       { label: "Сборы в Патагонию", href: "/blog/patagonia-packing-list", type: "blog" },
       { label: "Синий доллар", href: "/blog/blue-dollar-argentina-2026", type: "blog" },
-      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-neighborhoods", type: "blog" },
+      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-rajony", type: "blog" },
       { label: "Когда ехать", href: "/blog/best-time-to-visit-argentina", type: "blog" },
       { label: "Как добраться", href: "/guide/kak-dobratsya", type: "guide" },
       { label: "Безопасность", href: "/guide/bezopasnost", type: "guide" },
@@ -2093,7 +1940,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путешествия",
     readTimeMinutes: 11,
     readTime: rt(11),
-    views: 0,
     tags: ["Аргентина", "маршрут", "10 дней", "Буэнос-Айрес", "Игуасу", "Патагония"],
     featured: true,
     cardVariant: "featured",
@@ -2113,7 +1959,7 @@ const manualBlogPosts: BlogPost[] = [
     ],
     relatedResources: [
       { label: "10 типичных ошибок", href: "/blog/itinerary-ошибки", type: "blog" },
-      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-neighborhoods", type: "blog" },
+      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-rajony", type: "blog" },
       { label: "Игуасу за 3 дня", href: "/blog/iguazu-за-3-дня", type: "blog" },
       { label: "Los Glaciares", href: "/blog/natsionalnyy-park-los-glasiares", type: "guide" },
       { label: "Синий доллар", href: "/blog/blue-dollar-argentina-2026", type: "blog" },
@@ -2235,7 +2081,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путешествия",
     readTimeMinutes: 14,
     readTime: rt(14),
-    views: 0,
     tags: ["Аргентина", "маршрут", "14 дней", "Буэнос-Айрес", "Игуасу", "Патагония", "Барилоче"],
     featured: true,
     cardVariant: "featured",
@@ -2256,7 +2101,7 @@ const manualBlogPosts: BlogPost[] = [
     relatedResources: [
       { label: "10 типичных ошибок", href: "/blog/itinerary-ошибки", type: "blog" },
       { label: "Аргентина за 10 дней", href: "/blog/itinerary-за-10-дней", type: "blog" },
-      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-neighborhoods", type: "blog" },
+      { label: "Районы Буэнос-Айреса", href: "/blog/buenos-aires-rajony", type: "blog" },
       { label: "Игуасу", href: "/blog/natsionalnyy-park-iguasu", type: "guide" },
       { label: "Los Glaciares", href: "/blog/natsionalnyy-park-los-glasiares", type: "guide" },
       { label: "Эль-Чалтен", href: "/blog/el-chalten-i-fitts-roy", type: "guide" },
@@ -2345,7 +2190,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Путеводитель",
     readTimeMinutes: 9,
     readTime: rt(9),
-    views: 0,
     tags: ["чек-лист", "подготовка", "документы", "Аргентина", "советы"],
     featured: true,
     cardVariant: "featured",
@@ -2392,7 +2236,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 18,
     readTime: rt(18),
-    views: 0,
     tags: [
       "Огненная Земля",
       "Ушуайя",
@@ -2455,7 +2298,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 20,
     readTime: rt(20),
-    views: 0,
     tags: [
       "Науэль-Уапи",
       "Барилоче",
@@ -2519,7 +2361,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 22,
     readTime: rt(22),
-    views: 0,
     tags: [
       "Лос-Гласьярес",
       "Перито-Морено",
@@ -2589,7 +2430,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 21,
     readTime: rt(21),
-    views: 0,
     tags: [
       "Игуасу",
       "водопады",
@@ -2652,7 +2492,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 18,
     readTime: rt(18),
-    views: 0,
     tags: [
       "Вальдес",
       "Puerto Madryn",
@@ -2703,7 +2542,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 16,
     readTime: rt(16),
-    views: 0,
     tags: ["нацпарки", "обзор", "ЮНЕСКО", "APN", "список парков", "Аргентина"],
     featured: true,
     cardVariant: "featured",
@@ -2733,7 +2571,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 19,
     readTime: rt(19),
-    views: 0,
     tags: ["Ибера", "Корриентес", "нацпарки", "болота", "ягуар", "рейуайлдинг", "сафари"],
     featured: true,
     cardVariant: "featured",
@@ -2761,7 +2598,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 20,
     readTime: rt(20),
-    views: 0,
     tags: ["Ланин", "Неукен", "нацпарки", "Патагония", "вулкан", "араукария", "треккинг"],
     featured: true,
     cardVariant: "featured",
@@ -2790,7 +2626,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 19,
     readTime: rt(19),
-    views: 0,
     tags: ["Лос-Алерсес", "Чубут", "нацпарки", "ЮНЕСКО", "алерсе", "Эскель", "леса"],
     featured: true,
     cardVariant: "featured",
@@ -2819,7 +2654,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 18,
     readTime: rt(18),
-    views: 0,
     tags: ["Лос-Кардонес", "Сальта", "нацпарки", "кактусы", "северо-запад", "Куэста-дель-Обиспо"],
     featured: true,
     cardVariant: "featured",
@@ -2848,7 +2682,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 18,
     readTime: rt(18),
-    views: 0,
     tags: ["Патагония", "Санта-Крус", "нацпарки", "степь", "кондор", "Рута 40"],
     featured: true,
     cardVariant: "featured",
@@ -2877,7 +2710,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 19,
     readTime: rt(19),
-    views: 0,
     tags: ["Талампая", "Ла-Риоха", "нацпарки", "ЮНЕСКО", "каньон", "динозавры"],
     featured: true,
     cardVariant: "featured",
@@ -2947,7 +2779,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Животные Аргентины",
     readTimeMinutes: 9,
     readTime: rt(9),
-    views: 0,
     tags: ["дикая природа", "гид", "нацпарки", "Патагония", "Игуасу", "Ибера"],
     featured: true,
     cardVariant: "featured",
@@ -2992,7 +2823,6 @@ const manualBlogPosts: BlogPost[] = [
     category: "Национальные парки",
     readTimeMinutes: 18,
     readTime: rt(18),
-    views: 0,
     tags: ["Баньядо-ла-Эстрелья", "Формоса", "болота", "champales", "сафари", "Гран-Чако"],
     featured: false,
     cardVariant: "standard",
@@ -3004,6 +2834,44 @@ const manualBlogPosts: BlogPost[] = [
       { label: "Все нацпарки", href: "/blog/natsionalnye-parki-argentiny", type: "guide" },
     ],
   },
+  {
+    id: "blog-ischigualasto",
+    slug: "ischigualasto-valle-de-la-luna",
+    title: "Исчигуаласто (Долина Луны): полный гид по парку (2026)",
+    seoTitle: "Исчигуаласто (Долина Луны): гид по парку 2026",
+    excerpt:
+      "Гид по Исчигуаласто 2026: Долина Луны, триасовые динозавры, автоколонна, цены, сезоны и связка с Талампаей. UNESCO вместе с Талампаей.",
+    sections: [],
+    content: "",
+    author: editorialAuthor,
+    authorBio: editorialBio,
+    date: "2026-06-21",
+    dateModified: "2026-06-21",
+    image: "",
+    category: "Национальные парки",
+    readTimeMinutes: 18,
+    readTime: rt(18),
+    tags: ["Исчигуаласто", "Долина Луны", "Талампая", "Сан-Хуан", "UNESCO", "динозавры"],
+    featured: false,
+    cardVariant: "standard",
+    editorialReviewed: true,
+    richArticleId: "ischigualasto-valley-of-the-moon",
+    relatedResources: [
+      { label: "Талампая", href: "/blog/natsionalnyy-park-talampaya", type: "guide" },
+      { label: "Лос-Кардонес", href: "/blog/natsionalnyy-park-los-cardones", type: "guide" },
+      { label: "Все нацпарки", href: "/blog/natsionalnye-parki-argentiny", type: "guide" },
+    ],
+  },
+];
+
+const manualBlogPosts: BlogPost[] = [
+  ...legacyManualBlogPosts.filter((post) => !REPLACED_MANUAL_SLUGS.has(post.slug)),
+  ...manualPostsFromMd.map((post) => ({
+    ...post,
+    author: editorialAuthor,
+    authorBio: editorialBio,
+    readTime: rt(post.readTimeMinutes),
+  })),
 ];
 
 // Заполняем content из секций
@@ -3046,4 +2914,4 @@ export function formatDate(dateStr: string): string {
   }).format(new Date(dateStr));
 }
 
-export { getBlogCategories, getBlogCategoriesWithCounts, getBlogTags, getTopBlogTags, filterBlogPosts, sortBlogPostsByDate, computeBlogStats, formatBlogViews, formatBlogReadTime, formatBlogUpdatedLabel, pluralizeArticles } from "@/lib/blog-utils";
+export { getBlogCategories, getBlogCategoriesWithCounts, getBlogTags, getTopBlogTags, filterBlogPosts, sortBlogPostsByDate, computeBlogStats, formatBlogReadTime, formatBlogUpdatedLabel, pluralizeArticles } from "@/lib/blog-utils";

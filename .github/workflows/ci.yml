@@ -43,6 +43,26 @@ jobs:
       - name: Blog image perf audit
         run: npm run blog-image-perf-audit
 
+      - name: Blog MD sync check
+        run: npm run sync-manual-posts:check && npm run sync-rich-articles:check
+
+      - name: Blog hero audit
+        run: node scripts/audit-blog-heroes.mjs --strict
+
+      - name: Cornerstone media check
+        run: npm run register-cornerstone-media:check
+
+      - name: Content-plan redirects manifest
+        run: npm run sync-content-plan-redirects:check
+
+      - name: Migration meta
+        run: node scripts/write-migration-meta.mjs
+
+      - name: Production build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_SITE_URL: https://www.goargentina.ru
+
       - name: Lighthouse blog CWV (optional)
         continue-on-error: true
         env:

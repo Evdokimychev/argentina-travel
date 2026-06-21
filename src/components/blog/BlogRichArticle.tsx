@@ -342,7 +342,9 @@ export default function BlogRichArticle({
         <div className="flex items-start gap-3">
           <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
           <div>
-            <p className="text-base leading-relaxed text-charcoal">{article.lede}</p>
+            <p data-speakable="lede" className="text-base leading-relaxed text-charcoal">
+              {article.lede}
+            </p>
             {article.intro?.map((paragraph) => (
               <p key={paragraph.slice(0, 48)} className="mt-4 text-base leading-relaxed text-charcoal">
                 {paragraph}

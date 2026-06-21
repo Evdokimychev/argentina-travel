@@ -32,11 +32,32 @@ export const TURISTICSKIE_REGIONY_PILLAR: GuidePillarContent = {
     { label: "Классика первой поездки", headline: "BA + 1 регион", detail: "Не пытайтесь объехать всё за 10 дней" },
   ],
   sections: [
+    {
+      id: "turistskie-regiony-overview",
+      title: "Аргентина для туриста: сводка",
+      content:
+        "Интерактивная инфографика: факты, карта ключевых городов, популярность направлений и практические советы по логистике.",
+      widgetSlot: {
+        id: "tourism-infographic",
+        label: "Инфографика",
+        type: "tourism-infographic",
+      },
+    },
     { id: "turistskie-regiony-1", title: "Патагония и Огненная Земля", content: "Эль-Калафате, El Chaltén, Барилоче, Ушуайя — ледники, треккинг, край света. Сезон ноябрь–март." },
     { id: "turistskie-regiony-2", title: "Центр и столица", content: "BA — культура, asado, milonga. Mendoza — malbec. Кордова — для второго визита." },
     { id: "turistskie-regiony-3", title: "Север: Salta и Iguazú", content: "Высокогорье, torrontés, Quebrada de Humahuaca. Iguazú — 275 водопадов на границе с Бразилией." },
     { id: "turistskie-regiony-4", title: "Как комбинировать регионы", content: "Не пытайтесь за 10 дней объехать всё — выберите BA + один природный регион. Внутренние перелёты экономят недели." },
-    { id: "turistskie-regiony-5", title: "Сезоны по регионам", content: "Патагония — лето Южного полушария. Iguazú — избегайте пик дождей. NOA — весна и осень комфортнее лета." },
+    {
+      id: "turistskie-regiony-5",
+      title: "Сезоны по регионам",
+      content:
+        "Патагония — лето Южного полушария. Iguazú — избегайте пик дождей. NOA — весна и осень комфортнее лета. Ниже — как складывался современный туризм по стране.",
+      widgetSlot: {
+        id: "tourism-timeline",
+        label: "Эволюция туризма",
+        type: "tourism-timeline",
+      },
+    },
   ],
   faq: REGIONS_FAQ,
   blogLinks: [
@@ -131,6 +152,17 @@ export const POGODA_PILLAR: GuidePillarContent = {
     { emoji: "💨", label: "Ветер Patagonia", headline: "Круглый год", detail: "Закладывайте запас дней на треккинг" },
   ],
   sections: [
+    {
+      id: "season-matrix",
+      title: "Когда ехать: сводная таблица",
+      content:
+        "Интерактивная матрица по 11 направлениям и 12 месяцам. Нажмите месяц — увидите лучшие регионы; наведите на ячейку — подсказка по сезону и погоде.",
+      widgetSlot: {
+        id: "season-matrix",
+        label: "Таблица сезонности",
+        type: "season-matrix",
+      },
+    },
     {
       id: "weather-dashboard",
       title: "Климат по месяцам и прогноз",

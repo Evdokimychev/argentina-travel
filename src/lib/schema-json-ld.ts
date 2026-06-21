@@ -115,6 +115,12 @@ export function buildBreadcrumbListSchema(
   };
 }
 
+/** CSS selectors for Google speakable (must match blog post markup). */
+export const BLOG_SPEAKABLE_CSS_SELECTORS = [
+  "[data-speakable='headline']",
+  "[data-speakable='lede']",
+] as const;
+
 export function buildArticleSchema(input: {
   title: string;
   excerpt: string;
@@ -135,6 +141,10 @@ export function buildArticleSchema(input: {
     datePublished: input.datePublished,
     dateModified: input.dateModified ?? input.datePublished,
     inLanguage: "ru",
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: [...BLOG_SPEAKABLE_CSS_SELECTORS],
+    },
     author: {
       "@type": "Organization",
       name: input.authorName,

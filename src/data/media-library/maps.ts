@@ -133,6 +133,7 @@ export const RICH_ARTICLE_PLACE_MAP: Record<string, string> = {
   "los-cardones-national-park": "salta",
   "patagonia-national-park": "el-calafate",
   "talampaya-national-park": "salta",
+  "ischigualasto-valley-of-the-moon": "talampaya-national-park",
   "tierra-del-fuego-national-park": "tierra-del-fuego-national-park",
   "valdes-peninsula-national-park": "valdes-peninsula",
 };

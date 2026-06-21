@@ -6,9 +6,23 @@ import BlogContentTable from "@/components/blog/BlogContentTable";
 import BlogFaqSection from "@/components/blog/BlogFaqSection";
 import BlogMapBlock from "@/components/blog/BlogMapBlock";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
+import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
+import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
+import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import BlogSectionDivider from "@/components/blog/BlogSectionDivider";
 import BlogStepList from "@/components/blog/BlogStepList";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
+import BlogAccordionBlock from "@/components/page-builder/blocks/BlogAccordionBlock";
+import BlogComparisonTableBlock from "@/components/page-builder/blocks/BlogComparisonTableBlock";
+import BlogContentEmbedBlock from "@/components/page-builder/blocks/BlogContentEmbedBlock";
+import BlogCtaBlock from "@/components/page-builder/blocks/BlogCtaBlock";
+import BlogGalleryBlock from "@/components/page-builder/blocks/BlogGalleryBlock";
+import BlogInfoboxBlock from "@/components/page-builder/blocks/BlogInfoboxBlock";
+import BlogRouteMapBlock from "@/components/page-builder/blocks/BlogRouteMapBlock";
+import BlogTourBookingBlock from "@/components/page-builder/blocks/BlogTourBookingBlock";
+import BlogVideoBlock from "@/components/page-builder/blocks/BlogVideoBlock";
+import BlogWidgetBlock from "@/components/page-builder/blocks/BlogWidgetBlock";
+import { sanitizeHtml } from "@/lib/rich-text";
 import { resolveBlogSectionBlocks } from "@/lib/blog-section-blocks";
 import type { BlogPostSection } from "@/types";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
@@ -22,6 +36,15 @@ type BlogSectionBodyProps = {
 function renderBlock(block: BlogBodyBlock, index: number) {
   switch (block.type) {
     case "paragraph":
+      if (block.html?.trim()) {
+        return (
+          <div
+            key={index}
+            className="prose prose-sm max-w-none leading-relaxed text-slate"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(block.html) }}
+          />
+        );
+      }
       return (
         <p key={index} className="leading-relaxed text-slate">
           {block.text}
@@ -81,11 +104,87 @@ function renderBlock(block: BlogBodyBlock, index: number) {
       return (
         <BlogSeasonWidget key={index} items={block.items} conclusion={block.conclusion} />
       );
+    case "season-matrix":
+      return <ArgentinaSeasonMatrix key={index} className="my-6" />;
+    case "tourism-infographic":
+      return <ArgentinaTourismInfographic key={index} className="my-6" />;
+    case "tourism-timeline":
+      return <ArgentinaTourismTimeline key={index} className="my-6" />;
     case "budget":
       return <BlogBudgetWidget key={index} items={block.items} note={block.note} />;
     case "media":
       return (
         <BlogMediaBlock key={index} src={block.src} alt={block.alt} caption={block.caption} />
+      );
+    case "infobox":
+      return (
+        <BlogInfoboxBlock
+          key={index}
+          variant={block.variant}
+          title={block.title}
+          body={block.body}
+        />
+      );
+    case "accordion":
+      return <BlogAccordionBlock key={index} items={block.items} />;
+    case "comparison-table":
+      return (
+        <BlogComparisonTableBlock
+          key={index}
+          headers={block.headers}
+          rows={block.rows}
+          highlightColumn={block.highlightColumn}
+          caption={block.caption}
+        />
+      );
+    case "cta":
+      return (
+        <BlogCtaBlock key={index} label={block.label} href={block.href} variant={block.variant} />
+      );
+    case "tour-booking":
+      return (
+        <BlogTourBookingBlock
+          key={index}
+          tourSlug={block.tourSlug}
+          label={block.label}
+          showPrice={block.showPrice}
+        />
+      );
+    case "route-map":
+      return (
+        <BlogRouteMapBlock key={index} points={block.points} caption={block.caption} />
+      );
+    case "gallery":
+      return (
+        <BlogGalleryBlock key={index} items={block.items} columns={block.columns} />
+      );
+    case "video":
+      return (
+        <BlogVideoBlock
+          key={index}
+          provider={block.provider}
+          videoId={block.videoId}
+          title={block.title}
+          caption={block.caption}
+        />
+      );
+    case "content-embed":
+      return (
+        <BlogContentEmbedBlock
+          key={index}
+          embedKind={block.embedKind}
+          slug={block.slug}
+          title={block.title}
+        />
+      );
+    case "widget":
+      return (
+        <BlogWidgetBlock
+          key={index}
+          widgetKey={block.widgetKey}
+          title={block.title}
+          config={block.config}
+        />
       );
     default:
       return null;

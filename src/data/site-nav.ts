@@ -99,9 +99,9 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
   },
   {
     id: "travel-map",
-    label: "Туры на карте",
-    href: "/tours",
-    description: "Каталог с режимом карты",
+    label: "Карта Аргентины",
+    href: "/mapa-argentina",
+    description: "Интерактивная карта страны",
   },
   {
     id: "travel-booking",
@@ -215,6 +215,12 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         title: "Места и достопримечательности",
         titleKey: "nav.columns.places",
         links: [
+          {
+            id: "places-map",
+            label: "Карта Аргентины",
+            href: "/mapa-argentina",
+            description: "Города, парки, экскурсии на одной карте",
+          },
           {
             id: "places-catalog",
             label: "Справочник мест",

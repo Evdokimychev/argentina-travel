@@ -510,7 +510,6 @@ export interface BlogPost {
   /** @deprecated Prefer readTimeMinutes + formatBlogReadTime */
   readTime: string;
   readTimeMinutes: number;
-  views: number;
   tags: string[];
   featured?: boolean;
   cardVariant?: BlogCardVariant;

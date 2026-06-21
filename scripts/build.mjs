@@ -46,12 +46,24 @@ if (removeNextCache(root)) {
 
 console.log("Running next build …");
 
-const child = spawn("npx", ["next", "build"], {
+const meta = spawn("node", ["scripts/write-migration-meta.mjs"], {
   cwd: root,
   stdio: "inherit",
   env: process.env,
 });
 
-child.on("exit", (code) => {
-  process.exit(code ?? 0);
+meta.on("exit", (metaCode) => {
+  if (metaCode !== 0) {
+    process.exit(metaCode ?? 1);
+  }
+
+  const child = spawn("npx", ["next", "build"], {
+    cwd: root,
+    stdio: "inherit",
+    env: process.env,
+  });
+
+  child.on("exit", (code) => {
+    process.exit(code ?? 0);
+  });
 });

@@ -7,7 +7,7 @@ const PILLAR = blogResource(
 );
 const CARDS = blogResource("money-карты", "Деньги в Аргентине: оплата картой");
 const BA = blogResource(
-  "buenos-aires-neighborhoods",
+  "buenos-aires-rajony",
   "Районы Буэнос-Айреса: где остановиться и гулять",
 );
 const CHECKLIST = blogResource("itinerary-чек-лист", "Чек-лист перед поездкой");

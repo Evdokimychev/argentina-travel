@@ -7,6 +7,7 @@ import DestinationDetailView from "@/components/destinations/DestinationDetailVi
 import PlaceDetailView from "@/components/places/PlaceDetailView";
 import {
   blogPostFromCms,
+  authorArticleFromCms,
   destinationPageFromCms,
   guidePageFromCms,
   legalDocumentFromCms,
@@ -26,6 +27,11 @@ export default function CmsDocumentPreviewContent({ doc }: Props) {
 
   if (doc.body.kind === "blog") {
     const post = blogPostFromCms(doc);
+    return post ? <BlogPostView post={post} initialTours={[]} /> : null;
+  }
+
+  if (doc.body.kind === "author_article") {
+    const post = authorArticleFromCms(doc);
     return post ? <BlogPostView post={post} initialTours={[]} /> : null;
   }
 

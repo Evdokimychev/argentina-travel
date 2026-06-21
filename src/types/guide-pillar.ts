@@ -52,6 +52,9 @@ export type GuidePillarWidgetSlotType =
   | "map"
   | "promo"
   | "weather-panel"
+  | "season-matrix"
+  | "tourism-infographic"
+  | "tourism-timeline"
   | "tour-embed";
 
 export type GuidePillarWidgetSlot = {

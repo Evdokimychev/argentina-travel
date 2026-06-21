@@ -1,0 +1,175 @@
+{
+  "ok": true,
+  "ranAt": "2026-06-21T20:48:59.694Z",
+  "baseUrl": "https://www.goargentina.ru",
+  "full": false,
+  "summary": {
+    "ok": 11,
+    "warn": 2,
+    "fail": 0,
+    "manual": 3
+  },
+  "steps": [
+    {
+      "id": "meta:migrations",
+      "label": "Migration meta",
+      "command": "node scripts/write-migration-meta.mjs",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 62,
+      "output": "Migration meta: 49 files, latest=20250627000011_author_article_doc_type → src/lib/ops/migration-meta.generated.json"
+    },
+    {
+      "id": "check:tsc",
+      "label": "TypeScript",
+      "command": "npx tsc --noEmit",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 4725,
+      "output": "npm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "check:unit",
+      "label": "Unit tests",
+      "command": "npm test",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 2932,
+      "output": "> argentina-travel@0.1.0 test\n> vitest run\n\n\n RUN  v3.2.6 /Users/Study/Projects/argentina-travel\n\n ✓ src/lib/blog-section-body.test.ts (28 tests) 8ms\n ✓ src/lib/cms/site-globals/normalize.test.ts (12 tests) 4ms\n ✓ src/lib/analytics/gtm-events.test.ts (3 tests) 6ms\n ✓ src/lib/schema-json-ld.test.ts (5 tests) 5ms\n ✓ src/lib/media/cms-media-image.test.ts (6 tests) 27ms\n ✓ src/lib/cms/page-builder/block-normalize.test.ts (5 tests) 4ms\n ✓ src/lib/content-section-body.test.ts (9 tests) 6ms\n ✓ src/data/content-plan-url-redirects.test.ts (5 tests) 4ms\n ✓ src/lib/cms/cms-scheduled-publish.test.ts (3 tests) 4ms\n ✓ src/lib/cms/site-globals/robots-meta.test.ts (2 tests) 3ms\n ✓ src/lib/blog-section-blocks.test.ts (2 tests) 3ms\n ✓ src/lib/redirects/url-redirect-normalize.test.ts (5 tests) 7ms\n ✓ src/lib/blog-p2.test.ts (2 tests) 3ms\n ✓ src/lib/cms/seo-utils.test.ts (4 tests) 3ms\n ✓ src/lib/metadata/page-title.test.ts (3 tests) 2ms\n ✓ src/lib/cms/cms-preview.test.ts (2 tests) 2ms\n ✓ src/lib/ops/deploy-env.test.ts (3 tests) 2ms\n ✓ src/lib/guide-section-blocks.test.ts (2 tests) 2ms\n ✓ src/lib/cms/cms-import-preview.test.ts (4 tests) 4ms\n ✓ src/lib/cms/cms-cutover.test.ts (9 tests) 4ms\n ✓ src/lib/search/cms-search-sync.test.ts (3 tests) 2ms\n\n Test Files  21 passed (21)\n      Tests  117 passed (117)\n   Start at  17:48:39\n   Duration  2.09s (transform 2.09s, setup 0ms, collect 6.60s, tests 105ms, environment 7ms, prepare 1.72s)\n\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "check:rls",
+      "label": "RLS audit",
+      "command": "node scripts/rls-audit.mjs",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 75,
+      "output": "RLS audit (static): 73 tables\n✓ No critical RLS issues.\nAudit log: var/ops/rls-audit-last.json"
+    },
+    {
+      "id": "check:blog-sync",
+      "label": "Blog MD sync",
+      "command": "npm run sync-manual-posts:check",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 256,
+      "output": "> argentina-travel@0.1.0 sync-manual-posts:check\n> node scripts/sync-blog-manual-posts-from-md.mjs --check\n\nOK argentina-2-nedeli-marshrut.ts\nOK argentina-10-dnej-3-nedeli.ts\nOK ruta-40-sem-ozer.ts\nOK vnutrennie-aviabilety-argentina.ts\nOK kak-dobratsya-v-argentinu.ts\nOK byudzhet-poezdki-argentina.ts\nOK stoimost-zhizni-buenos-aires.ts\nOK kak-menyat-dengi-argentina.ts\nOK buenos-aires-rajony.ts\nOK mendoza-vinnyj-gid.ts\nOK vnzh-argentina-rezidenciya.ts\nOK viza-cifrovogo-kochevnika-argentina.ts\nOK dni-cuil-argentina.ts\nOK grazhdanstvo-argentiny.ts\nOK bankovskij-schet-argentina.ts\nOK index.ts\nAll manual blog posts in sync with MD sources.\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "check:rich-sync",
+      "label": "Rich articles sync",
+      "command": "npm run sync-rich-articles:check",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 252,
+      "output": "> argentina-travel@0.1.0 sync-rich-articles:check\n> node scripts/sync-blog-rich-articles-from-md.mjs --check\n\nOK iguazu-national-park.ts\nOK tierra-del-fuego-national-park.ts\nOK nahuel-huapi-national-park.ts\nOK los-glaciares-national-park.ts\nOK ibera-national-park.ts\nOK lanin-national-park.ts\nOK los-alerces-national-park.ts\nOK los-cardones-national-park.ts\nOK patagonia-national-park.ts\nOK talampaya-national-park.ts\nOK banado-la-estrella.ts\nOK all-argentina-national-parks.ts\nOK ischigualasto-valley-of-the-moon.ts\nAll rich articles in sync with MD sources.\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "check:heroes",
+      "label": "Blog heroes",
+      "command": "node scripts/audit-blog-heroes.mjs --strict",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 66,
+      "output": "Blog hero audit: 49/49 indexable (100%) have local hero.jpg"
+    },
+    {
+      "id": "check:cornerstone",
+      "label": "Cornerstone media",
+      "command": "npm run register-cornerstone-media:check",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 227,
+      "output": "> argentina-travel@0.1.0 register-cornerstone-media:check\n> node scripts/register-cornerstone-blog-media.mjs --check\n\nCornerstone media OK (16 posts)\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "check:redirects",
+      "label": "Content-plan redirects",
+      "command": "npm run sync-content-plan-redirects:check",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 382,
+      "output": "> argentina-travel@0.1.0 sync-content-plan-redirects:check\n> tsx scripts/sync-content-plan-redirects.mjs --check\n\nContent-plan redirects: 19 entries in TS\n  /marshruty/argentina-2-nedeli → /blog/argentina-2-nedeli-marshrut\n  /marshruty/argentina-10-dnej → /blog/argentina-10-dnej-3-nedeli\n  /marshruty/ruta-40-sem-ozer → /blog/ruta-40-sem-ozer\n  /dengi/stoimost-zhizni-ba → /blog/stoimost-zhizni-buenos-aires\n  /dengi/kak-menyat-dengi → /blog/kak-menyat-dengi-argentina\n  /dengi/kak-menyat-valyutu → /blog/kak-menyat-dengi-argentina\n  /dengi/byudzhet-poezdki → /blog/byudzhet-poezdki-argentina\n  /transport/vnutrennie-aviabilety → /blog/vnutrennie-aviabilety-argentina\n  /transport/kak-dobratsya-v-argentinu → /blog/kak-dobratsya-v-argentinu\n  /goroda/buenos-aires-rajony → /blog/buenos-aires-rajony\n  /goroda/mendoza-vino → /blog/mendoza-vinnyj-gid\n  /pereezd/vnzh-argentina → /blog/vnzh-argentina-rezidenciya\n  /pereezd/viza-cifrovogo-kochevnika → /blog/viza-cifrovogo-kochevnika-argentina\n  /pereezd/dni-cuil → /blog/dni-cuil-argentina\n  /pereezd/grazhdanstvo → /blog/grazhdanstvo-argentiny\n  /pereezd/bankovskij-schet → /blog/bankovskij-schet-argentina\n  /blog/buenos-aires-neighborhoods → /blog/buenos-aires-rajony\n  /blog/mendoza-wine-route → /blog/mendoza-vinnyj-gid\n  /parki/ischigualasto-valle-de-la-luna → /blog/ischigualasto-valle-de-la-luna\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "cms:readiness",
+      "label": "CMS cutover readiness",
+      "command": "npm run cms:readiness -- --strict",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 2443,
+      "output": "> argentina-travel@0.1.0 cms:readiness\n> tsx scripts/cms-cutover-readiness.mjs --strict\n\nCMS cutover readiness\nLanes: 4/4 cutover on, 4/4 ready, 4/4 at 100%\n\n✓ blog: 100% (290/290) cutover=true canEnable=true\n✓ guide: 100% (5/5) cutover=true canEnable=true\n✓ destination: 100% (8/8) cutover=true canEnable=true\n✓ place: 100% (27/27) cutover=true canEnable=true\n\nReport: var/ops/cms-cutover-readiness-last.json\nnpm warn Unknown env config \"devdir\". This will stop working in the next major version of npm. See `npm help npmrc` for supported config options."
+    },
+    {
+      "id": "smoke:production",
+      "label": "Production smoke",
+      "command": "node scripts/production-smoke.mjs",
+      "status": "ok",
+      "exitCode": 0,
+      "durationMs": 9969,
+      "output": "Production smoke base URL: https://www.goargentina.ru\n✓ /api/health (deployEnv=unknown, migrationVersion=—)\n✓ /\n✓ /tours\n✓ /excursions\n✓ /destinations\n✓ /places\n✓ /blog\n✓ /blog/buenos-aires-rajony\n✓ /blog/natsionalnyy-park-iguasu\n✓ /guide/sezony-i-klimat\n✓ /destinations/patagonia\n✓ /places/iguazu-falls\nProduction smoke checks passed."
+    },
+    {
+      "id": "live:health",
+      "label": "Live /api/health (https://www.goargentina.ru)",
+      "status": "warn",
+      "message": "deployEnv=unknown (задайте DEPLOY_ENV=production в Vercel); migrationVersion пуст (после деплоя с migration-meta.generated.json исправится); gitSha пуст (Vercel подставит VERCEL_GIT_COMMIT_SHA после redeploy)",
+      "data": {
+        "ok": true,
+        "version": "0.1.0",
+        "gitSha": null,
+        "environment": {
+          "nodeEnv": "production",
+          "deployEnv": "unknown"
+        },
+        "migrationVersion": null,
+        "checks": {
+          "database": {
+            "ok": true,
+            "skipped": false,
+            "error": null
+          },
+          "migrations": {
+            "latestId": null,
+            "fileCount": 0
+          },
+          "searchIndex": {
+            "count": 0,
+            "skipped": false,
+            "error": null
+          }
+        },
+        "generatedAt": "2026-06-21T20:48:56.451Z"
+      }
+    },
+    {
+      "id": "analytics:readiness",
+      "label": "Analytics readiness (I2)",
+      "command": "node scripts/analytics-readiness.mjs",
+      "status": "warn",
+      "exitCode": 1,
+      "durationMs": 3477,
+      "output": "Analytics readiness (I2)\nBase URL: https://www.goargentina.ru\nChecks: OK 2, warn 6, fail 4, skip 1\n\n✗ [fail] NEXT_PUBLIC_GTM_ID: Не задан — GTM не загрузится\n! [warn] NEXT_PUBLIC_GA4_MEASUREMENT_ID: Не задана — справочно для настройки тегов\n! [warn] NEXT_PUBLIC_YM_COUNTER_ID: Не задана — справочно для настройки тегов\n! [warn] NEXT_PUBLIC_CLARITY_PROJECT_ID: Не задана — справочно для настройки тегов\n✗ [fail] Verification env (GSC / Bing / Ahrefs): Ни один токен не задан — meta-теги не появятся без CMS SEO globals\n! [warn] CMS site.seo verification tokens: Пусто — задайте в Vercel env или Admin → Настройки → SEO\n✗ [fail] Live GTM snippet (https://www.goargentina.ru): GTM не в HTML — проверьте env на хостинге и redeploy\n✗ [fail] Live google-site-verification: Meta-тег отсутствует\n! [warn] Live msvalidate.01 (Bing): Meta-тег отсутствует\n! [warn] Live ahrefs-site-verification: Meta-тег отсутствует\n✓ [ok] robots.txt → Sitemap: https://www.goargentina.ru/sitemap.xml\n✓ [ok] sitemap.xml доступен: 1253 URL\n– [skip] GSC: sitemap отправлен вручную: Search Console → Sitemaps → https://www.goargentina.ru/sitemap.xml (после верификации google-site-verification)\n\nReport: var/ops/analytics-readiness-last.json\nRunbook: docs/i2-analytics-gsc-runbook.md",
+      "message": "GTM/verification не настроены — см. docs/i2-analytics-gsc-runbook.md (не блокирует контент)"
+    },
+    {
+      "id": "manual:vercel-env",
+      "label": "Vercel Production env",
+      "status": "manual",
+      "message": "DEPLOY_ENV=production, NEXT_PUBLIC_SITE_URL, Supabase keys, CRON_SECRET, NEXT_PUBLIC_GTM_ID, verification tokens — см. docs/production-launch-runbook.md"
+    },
+    {
+      "id": "manual:gsc",
+      "label": "Google Search Console",
+      "status": "manual",
+      "message": "Верификация домена + sitemap https://www.goargentina.ru/sitemap.xml — docs/i2-analytics-gsc-runbook.md"
+    },
+    {
+      "id": "manual:gtm-publish",
+      "label": "GTM container publish",
+      "status": "manual",
+      "message": "Настроить теги GA4/Метрика/Clarity и опубликовать контейнер — docs/analytics-gtm-setup.md"
+    }
+  ],
+  "runbook": "docs/production-launch-runbook.md"
+}

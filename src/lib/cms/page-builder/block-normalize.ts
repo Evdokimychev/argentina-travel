@@ -51,8 +51,13 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
 
   switch (type) {
     case "paragraph":
+      return {
+        type: "paragraph",
+        text: asString(record.text),
+        html: asString(record.html) || undefined,
+      };
     case "subheading":
-      return { type, text: asString(record.text) };
+      return { type: "subheading", text: asString(record.text) };
     case "bullets":
     case "steps":
       return { type, items: asStringArray(record.items).length ? asStringArray(record.items) : [""] };
@@ -148,6 +153,124 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
         src: asString(record.src),
         alt: asString(record.alt),
         caption: asString(record.caption) || undefined,
+      };
+    case "infobox":
+      return {
+        type: "infobox",
+        variant:
+          record.variant === "important" || record.variant === "warning"
+            ? record.variant
+            : "tip",
+        title: asString(record.title, "Совет"),
+        body: asString(record.body),
+      };
+    case "accordion":
+      return {
+        type: "accordion",
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                title: asString(item.title),
+                body: asString(item.body),
+              }))
+          : [{ title: "", body: "" }],
+      };
+    case "comparison-table":
+      return {
+        type: "comparison-table",
+        headers: asStringArray(record.headers).length
+          ? asStringArray(record.headers)
+          : ["Колонка 1"],
+        rows: Array.isArray(record.rows)
+          ? record.rows
+              .filter((row): row is unknown[] => Array.isArray(row))
+              .map((row) => row.map((cell) => asString(cell)))
+          : [[""]],
+        highlightColumn:
+          typeof record.highlightColumn === "number" ? record.highlightColumn : undefined,
+        caption: asString(record.caption) || undefined,
+      };
+    case "cta":
+      return {
+        type: "cta",
+        label: asString(record.label, "Подробнее"),
+        href: asString(record.href, "/contacts"),
+        variant:
+          record.variant === "secondary" || record.variant === "outline"
+            ? record.variant
+            : "primary",
+      };
+    case "tour-booking":
+      return {
+        type: "tour-booking",
+        tourSlug: asString(record.tourSlug),
+        label: asString(record.label) || undefined,
+        showPrice: record.showPrice !== false,
+      };
+    case "route-map":
+      return {
+        type: "route-map",
+        points: Array.isArray(record.points)
+          ? record.points
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                lat: asNumber(item.lat, -34.6037),
+                lng: asNumber(item.lng, -58.3816),
+                label: asString(item.label, "Точка"),
+              }))
+          : [],
+        caption: asString(record.caption) || undefined,
+      };
+    case "gallery":
+      return {
+        type: "gallery",
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                src: asString(item.src),
+                alt: asString(item.alt),
+                caption: asString(item.caption) || undefined,
+              }))
+          : [{ src: "", alt: "" }],
+        columns:
+          record.columns === 2 || record.columns === 4 ? record.columns : 3,
+      };
+    case "video":
+      return {
+        type: "video",
+        provider: record.provider === "vimeo" ? "vimeo" : "youtube",
+        videoId: asString(record.videoId),
+        title: asString(record.title) || undefined,
+        caption: asString(record.caption) || undefined,
+      };
+    case "content-embed":
+      return {
+        type: "content-embed",
+        embedKind:
+          record.embedKind === "excursion" ||
+          record.embedKind === "article" ||
+          record.embedKind === "guide"
+            ? record.embedKind
+            : "tour",
+        slug: asString(record.slug),
+        title: asString(record.title) || undefined,
+      };
+    case "widget":
+      return {
+        type: "widget",
+        widgetKey: asString(record.widgetKey),
+        title: asString(record.title) || undefined,
+        config:
+          record.config && typeof record.config === "object" && !Array.isArray(record.config)
+            ? Object.fromEntries(
+                Object.entries(record.config as Record<string, unknown>).map(([k, v]) => [
+                  k,
+                  asString(v),
+                ])
+              )
+            : undefined,
       };
     default:
       return null;

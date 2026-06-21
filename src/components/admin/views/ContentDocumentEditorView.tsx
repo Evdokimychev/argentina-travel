@@ -162,6 +162,11 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
             { title: "Основной текст", body: document.body.content ?? "", blocks: [] },
           ]
         );
+      } else if (document.body.kind === "author_article") {
+        setExcerpt(document.body.excerpt ?? "");
+        setBlogSections(
+          document.body.sections ?? [{ title: "Основной текст", body: "", blocks: [] }]
+        );
       } else if (document.body.kind === "destination") {
         setDescription(document.body.description);
         setDestinationIntro(document.body.intro ?? "");
@@ -226,6 +231,14 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         excerpt: excerpt.trim(),
         sections: blogSections,
         featured: blogFeatured,
+      };
+    }
+    if (doc?.body.kind === "author_article") {
+      return {
+        kind: "author_article",
+        excerpt: excerpt.trim(),
+        authorName: doc.body.authorName,
+        sections: blogSections,
       };
     }
     if (doc?.body.kind === "guide") {
@@ -524,6 +537,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const isLegal = doc.body.kind === "legal";
   const isGuide = doc.body.kind === "guide";
   const isBlog = doc.body.kind === "blog";
+  const isAuthorArticle = doc.body.kind === "author_article";
+  const isBlogLike = isBlog || isAuthorArticle;
   const isDestination = doc.body.kind === "destination";
   const isPlace = doc.body.kind === "place";
   const publicHref = isLegal
@@ -532,9 +547,11 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       ? `/guide/${doc.slug}`
       : isBlog
         ? `/blog/${doc.slug}`
-        : isDestination
-          ? `/destinations/${doc.slug}`
-          : `/places/${doc.slug}`;
+        : isAuthorArticle
+          ? `/blog/author/${doc.slug}`
+          : isDestination
+            ? `/destinations/${doc.slug}`
+            : `/places/${doc.slug}`;
 
   const isScheduled = status === "scheduled";
   const scheduledLabel =
@@ -708,7 +725,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               </>
             ) : null}
 
-            {isBlog ? (
+            {isBlogLike ? (
               <label className="block space-y-1 text-sm">
                 <span className="text-slate">Анонс</span>
                 <Input value={excerpt} onChange={(e) => setExcerpt(e.target.value)} />
@@ -764,7 +781,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               <GuideSectionPageBuilder sections={sections} onChange={setSections} />
             ) : null}
 
-            {isBlog ? (
+            {isBlogLike ? (
               <BlogSectionPageBuilder sections={blogSections} onChange={setBlogSections} />
             ) : null}
           </section>

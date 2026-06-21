@@ -29,6 +29,7 @@ npm run backup:schema
 Скопируйте `.env.example` → `.env.local` / настройки хостинга. Обязательно:
 
 - `NEXT_PUBLIC_SITE_URL`, Supabase keys
+- **Аналитика (I2):** `NEXT_PUBLIC_GTM_ID`, токены верификации GSC/Bing/Ahrefs — см. [`docs/i2-analytics-gsc-runbook.md`](./i2-analytics-gsc-runbook.md)
 - `NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY`, `WEB_PUSH_VAPID_PRIVATE_KEY`, `WEB_PUSH_VAPID_SUBJECT` — для web push (E83)
 - `GIT_SHA` — commit SHA (CI и Vercel подставляют автоматически)
 - `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` — по желанию, для мониторинга ошибок
@@ -77,7 +78,7 @@ node scripts/smoke-public.mjs
 - `GET /api/health` — публичный (версия, git SHA, `environment`, `migrationVersion`, ping БД, миграции)
 - `GET /api/admin/health` — для админов (RLS, sync, БД)
 
-Перед production cutover см. **[production-cutover-e72.md](./production-cutover-e72.md)** и `npm run production-readiness`.
+Перед production cutover см. **[production-launch-runbook.md](./production-launch-runbook.md)** (под ключ), **[production-cutover-e72.md](./production-cutover-e72.md)** и `npm run publish:verify`.
 
 ## 4. CI
 

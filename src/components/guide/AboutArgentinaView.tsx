@@ -3,9 +3,10 @@ import { ArrowRight, ExternalLink, MapPin } from "lucide-react";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
 import GuideSectionNav from "@/components/guide/GuideSectionNav";
 import HubHero from "@/components/guide/hub/HubHero";
-import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
+import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
+import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
@@ -65,11 +66,19 @@ export default function AboutArgentinaView() {
               <HubToc items={content.toc} variant="mobile" />
 
               <HubSection id="quick-facts" title="Цифры и факты">
-                <HubQuickFactsGrid facts={content.quickFacts} />
+                <ArgentinaTourismInfographic />
               </HubSection>
 
               <HubSection id="geography" title={content.geography.heading}>
                 <p className="text-sm leading-relaxed text-slate">{content.geography.body}</p>
+              </HubSection>
+
+              <HubSection
+                id="tourism-evolution"
+                title="Эволюция туризма"
+                subtitle="От пампы и estancia до контрастных маршрутов XXI века"
+              >
+                <ArgentinaTourismTimeline />
               </HubSection>
 
               <HubSection id="why-visit" title={content.whyVisit.heading}>

@@ -12,6 +12,7 @@ import { patagoniaNationalParkArticle } from "./patagonia-national-park";
 import { talampayaNationalParkArticle } from "./talampaya-national-park";
 import { tierraDelFuegoNationalParkArticle } from "./tierra-del-fuego-national-park";
 import { valdesPeninsulaNationalParkArticle } from "./valdes-peninsula-national-park";
+import { ischigualastoValleyOfTheMoonArticle } from "./ischigualasto-valley-of-the-moon";
 
 const ARTICLES: Record<string, BlogRichArticle> = {
   "all-argentina-national-parks": allArgentinaNationalParksArticle,
@@ -27,6 +28,7 @@ const ARTICLES: Record<string, BlogRichArticle> = {
   "talampaya-national-park": talampayaNationalParkArticle,
   "tierra-del-fuego-national-park": tierraDelFuegoNationalParkArticle,
   "valdes-peninsula-national-park": valdesPeninsulaNationalParkArticle,
+  "ischigualasto-valley-of-the-moon": ischigualastoValleyOfTheMoonArticle,
 };
 
 export function getBlogRichArticle(id: string): BlogRichArticle | undefined {

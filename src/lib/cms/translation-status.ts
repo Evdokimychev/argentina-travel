@@ -56,6 +56,17 @@ function isBodyComplete(body: CmsDocumentBody): boolean {
         (Array.isArray(body.sections) &&
           body.sections.some((section) => hasText(section.title) || hasText(section.body)))
       );
+    case "author_article":
+      return (
+        hasText(body.excerpt) ||
+        (Array.isArray(body.sections) &&
+          body.sections.some(
+            (section) =>
+              hasText(section.title) ||
+              hasText(section.body) ||
+              (Array.isArray(section.blocks) && section.blocks.length > 0)
+          ))
+      );
     case "guide":
       return hasText(body.description) && hasRichSections(body.sections);
     case "destination":

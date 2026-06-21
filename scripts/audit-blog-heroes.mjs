@@ -23,6 +23,29 @@ function loadIndexableSlugs() {
   for (const match of src.matchAll(/slug:\s*"([^"]+)"[\s\S]*?noIndex:\s*true/g)) {
     noIndex.add(match[1]);
   }
+
+  const mdIndexPath = path.join(root, "src/data/blog-manual-from-md/index.ts");
+  if (fs.existsSync(mdIndexPath)) {
+    const mdSrc = fs.readFileSync(mdIndexPath, "utf8");
+    const replaced = new Set();
+    const replacedBlock = mdSrc.match(/REPLACED_MANUAL_SLUGS[\s\S]*?\];/);
+    if (replacedBlock) {
+      for (const m of replacedBlock[0].matchAll(/"([^"]+)"/g)) {
+        replaced.add(m[1]);
+      }
+    }
+    for (const importMatch of mdSrc.matchAll(/from "\.\/([^"]+)"/g)) {
+      const file = path.join(root, "src/data/blog-manual-from-md", `${importMatch[1]}.ts`);
+      if (!fs.existsSync(file)) continue;
+      const fileSrc = fs.readFileSync(file, "utf8");
+      const slugMatch = fileSrc.match(/slug:\s*"([^"]+)"/);
+      if (slugMatch) slugs.push(slugMatch[1]);
+    }
+    for (const r of replaced) {
+      noIndex.add(r);
+    }
+  }
+
   return [...new Set(slugs)].filter((slug) => !noIndex.has(slug));
 }
 

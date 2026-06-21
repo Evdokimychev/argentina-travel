@@ -7,7 +7,7 @@ import { blogHeroLocalPath, blogMediaFolder } from "./blog-slug-media-path.mjs";
 const PATAGONIA_COPY = "media/places/el-chalten/hero.jpg";
 const PATAGONIA_QUERY = "Patagonia Fitz Roy El Chalten mountains Argentina trekking";
 const MONEY_COPY = "media/blog/blue-dollar-argentina-2026/hero.jpg";
-const BA_COPY = "media/blog/buenos-aires-neighborhoods/hero.jpg";
+const BA_COPY = "media/blog/buenos-aires-rajony/hero.jpg";
 const IGUazu_COPY = "media/blog/iguazu-za-3-dnya/hero.jpg";
 const NW_COPY = "media/blog/salta-i-severo-zapad-marshrut/hero.jpg";
 

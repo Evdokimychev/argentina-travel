@@ -89,13 +89,26 @@ const BLOG_POSTS = [
   "blue-dollar-argentina-2026",
   "money-карты",
   "argentina-tourist-visa-2026",
-  "buenos-aires-neighborhoods",
+  "buenos-aires-rajony",
   "patagonia-packing-list",
   "patagonia-автобусы",
   "patagonia-аренда-авто",
   "patagonia-авиабилеты",
   "patagonia-отели",
-  "mendoza-wine-route",
+  "mendoza-vinnyj-gid",
+  "argentina-2-nedeli-marshrut",
+  "argentina-10-dnej-3-nedeli",
+  "ruta-40-sem-ozer",
+  "vnutrennie-aviabilety-argentina",
+  "kak-dobratsya-v-argentinu",
+  "byudzhet-poezdki-argentina",
+  "stoimost-zhizni-buenos-aires",
+  "kak-menyat-dengi-argentina",
+  "vnzh-argentina-rezidenciya",
+  "viza-cifrovogo-kochevnika-argentina",
+  "dni-cuil-argentina",
+  "grazhdanstvo-argentiny",
+  "bankovskij-schet-argentina",
   "tango-beginners-guide",
   "salta-i-severo-zapad-marshrut",
   "uco-valley-vino-i-gory",
@@ -144,7 +157,25 @@ const RICH_ARTICLES = [
   "talampaya-national-park",
   "tierra-del-fuego-national-park",
   "valdes-peninsula-national-park",
+  "ischigualasto-valley-of-the-moon",
 ] as const;
+
+const RICH_GALLERY_LABELS = [
+  "панорама",
+  "дикая природа",
+  "достопримечательность",
+  "тропа",
+  "растительность",
+] as const;
+
+function richArticleGalleryQueries(articleId: string): ImageQuery[] {
+  return RICH_GALLERY_LABELS.map((label, index) => ({
+    query: `${articleId.replace(/-/g, " ")} ${label} Argentina national park`,
+    role: "gallery" as const,
+    alt: `Национальный парк — ${label}`,
+    localPath: `media/blog/rich/${articleId}/gallery-${index + 1}.jpg`,
+  }));
+}
 
 const SHOP_PRODUCTS = [
   { id: "shop-patagonia-guide", label: "PDF Патагония" },
@@ -200,6 +231,7 @@ const STATIC_ENTRIES: PageRegistryEntry[] = [
   ),
   ...RICH_ARTICLES.map((id) => ({
     ...entry(`rich:${id}`, `/blog/${id}`, `Rich — ${id}`, { articleId: id }),
+    gallery: richArticleGalleryQueries(id),
     sections: Object.fromEntries(
       RICH_ARTICLE_SECTION_SLOT_IDS.map((slotId) => [
         slotId,

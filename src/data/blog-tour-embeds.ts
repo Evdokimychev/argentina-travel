@@ -129,6 +129,31 @@ export const BLOG_TOUR_EMBEDS: Record<string, TourEmbedConfig[]> = {
       tone: "inline",
     },
   ],
+  "buenos-aires-rajony": [
+    {
+      id: "ba-tours-compact",
+      variant: "compact-list",
+      title: "Экскурсии по Буэнос-Айресу",
+      subtitle: "Классика города с русскоязычным гидом",
+      limit: 3,
+      source: { kind: "query", query: "buenos" },
+      catalogHref: "/tours?query=buenos",
+      tone: "inline",
+    },
+  ],
+  "mendoza-vinnyj-gid": [
+    {
+      id: "mendoza-wine-featured",
+      variant: "featured",
+      title: "Винные туры в Мендосе",
+      subtitle: "Дегустации и трансфер из каталога",
+      limit: 3,
+      source: { kind: "query", query: "mendoza wine" },
+      catalogHref: "/tours?query=mendoza",
+      catalogLabel: "Туры в Мендосу",
+      tone: "inline",
+    },
+  ],
 };
 
 export function getBlogTourEmbeds(slug: string): TourEmbedConfig[] | undefined {

@@ -5,14 +5,6 @@ export function formatBlogReadTime(minutes: number): string {
   return `${minutes} мин`;
 }
 
-/** @deprecated Фиктивные просмотры не отображаются — используйте formatBlogUpdatedLabel */
-export function formatBlogViews(views: number): string {
-  if (views >= 1_000_000) return `${(views / 1_000_000).toFixed(1).replace(".0", "")}M`;
-  if (views >= 10_000) return `${Math.round(views / 1000)}K`;
-  if (views >= 1000) return `${(views / 1000).toFixed(1).replace(".0", "")}K`;
-  return views.toLocaleString("ru-RU");
-}
-
 function formatBlogDate(dateStr: string): string {
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
@@ -162,13 +154,13 @@ export function filterIndexableBlogPosts(posts: BlogPost[]): BlogPost[] {
 /** Не более одной featured-карточки на экран (каталог / хаб). */
 export function resolveBlogCardVariant(
   post: BlogPost,
-  index: number,
+  _index: number,
   featuredUsed: { value: boolean },
 ): BlogCardVariant {
   if (featuredUsed.value) return "standard";
   const isFeatured =
     post.cardVariant === "featured" || Boolean(post.richArticleId) || Boolean(post.featured);
-  if (index === 0 && isFeatured) {
+  if (isFeatured) {
     featuredUsed.value = true;
     return "featured";
   }

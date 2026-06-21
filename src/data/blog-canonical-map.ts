@@ -35,8 +35,8 @@ export const BLOG_CANONICAL_BY_SLUG: Record<string, BlogCanonicalTarget> = {
 const BLOG_CANONICAL_PREFIXES: Array<{ prefix: string } & BlogCanonicalTarget> = [
   {
     prefix: "ba-district-",
-    canonicalSlug: "buenos-aires-neighborhoods",
-    canonicalTitle: "Районы Буэнос-Айреса: где остановиться и гулять",
+    canonicalSlug: "buenos-aires-rajony",
+    canonicalTitle: "Буэнос-Айрес: гид по районам — где жить и останавливаться",
   },
   {
     prefix: "northwest-",
@@ -73,9 +73,9 @@ export const BLOG_START_HERE_SLUGS: readonly string[] = [
   "best-time-to-visit-argentina",
   "blue-dollar-argentina-2026",
   "argentina-tourist-visa-2026",
-  "buenos-aires-neighborhoods",
+  "buenos-aires-rajony",
   "patagonia-packing-list",
   "argentinian-steak-guide",
-  "mendoza-wine-route",
+  "mendoza-vinnyj-gid",
   "tango-beginners-guide",
 ] as const;

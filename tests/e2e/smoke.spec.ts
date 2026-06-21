@@ -39,3 +39,39 @@ test.describe("E100 public smoke", () => {
     expect(body.migrationVersion === null || typeof body.migrationVersion === "string").toBe(true);
   });
 });
+
+test.describe("I3 CMS cutover smoke", () => {
+  test("blog cornerstone post renders", async ({ page }) => {
+    await expectHtmlPage(page, "/blog/buenos-aires-rajony");
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
+  test("rich park article renders", async ({ page }) => {
+    await expectHtmlPage(page, "/blog/natsionalnyy-park-iguasu");
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
+  test("guide page renders", async ({ page }) => {
+    await expectHtmlPage(page, "/guide/sezony-i-klimat");
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
+  test("destination page renders", async ({ page }) => {
+    await expectHtmlPage(page, "/destinations/patagonia");
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
+  test("place page renders", async ({ page }) => {
+    await expectHtmlPage(page, "/places/iguazu-falls");
+    await expect(page.locator("h1")).toBeVisible();
+  });
+
+  test("legacy blog slug redirects to canonical", async ({ page }) => {
+    const response = await page.goto("/blog/buenos-aires-neighborhoods", {
+      waitUntil: "domcontentloaded",
+    });
+    expect(response).not.toBeNull();
+    expect(response!.status()).toBeLessThan(400);
+    await expect(page).toHaveURL(/\/blog\/buenos-aires-rajony/);
+  });
+});

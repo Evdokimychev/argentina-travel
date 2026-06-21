@@ -1,0 +1,105 @@
+{
+  "ok": false,
+  "ranAt": "2026-06-21T20:48:59.686Z",
+  "baseUrl": "https://www.goargentina.ru",
+  "checks": [
+    {
+      "id": "env:gtm",
+      "label": "NEXT_PUBLIC_GTM_ID",
+      "status": "fail",
+      "message": "Не задан — GTM не загрузится",
+      "category": "env"
+    },
+    {
+      "id": "env:NEXT_PUBLIC_GA4_MEASUREMENT_ID",
+      "label": "NEXT_PUBLIC_GA4_MEASUREMENT_ID",
+      "status": "warn",
+      "message": "Не задана — справочно для настройки тегов",
+      "category": "env"
+    },
+    {
+      "id": "env:NEXT_PUBLIC_YM_COUNTER_ID",
+      "label": "NEXT_PUBLIC_YM_COUNTER_ID",
+      "status": "warn",
+      "message": "Не задана — справочно для настройки тегов",
+      "category": "env"
+    },
+    {
+      "id": "env:NEXT_PUBLIC_CLARITY_PROJECT_ID",
+      "label": "NEXT_PUBLIC_CLARITY_PROJECT_ID",
+      "status": "warn",
+      "message": "Не задана — справочно для настройки тегов",
+      "category": "env"
+    },
+    {
+      "id": "env:verification",
+      "label": "Verification env (GSC / Bing / Ahrefs)",
+      "status": "fail",
+      "message": "Ни один токен не задан — meta-теги не появятся без CMS SEO globals",
+      "category": "env"
+    },
+    {
+      "id": "cms:seo-verification",
+      "label": "CMS site.seo verification tokens",
+      "status": "warn",
+      "message": "Пусто — задайте в Vercel env или Admin → Настройки → SEO",
+      "category": "cms"
+    },
+    {
+      "id": "live:gtm",
+      "label": "Live GTM snippet (https://www.goargentina.ru)",
+      "status": "fail",
+      "message": "GTM не в HTML — проверьте env на хостинге и redeploy",
+      "category": "live"
+    },
+    {
+      "id": "live:google-verification",
+      "label": "Live google-site-verification",
+      "status": "fail",
+      "message": "Meta-тег отсутствует",
+      "category": "live"
+    },
+    {
+      "id": "live:bing-verification",
+      "label": "Live msvalidate.01 (Bing)",
+      "status": "warn",
+      "message": "Meta-тег отсутствует",
+      "category": "live"
+    },
+    {
+      "id": "live:ahrefs-verification",
+      "label": "Live ahrefs-site-verification",
+      "status": "warn",
+      "message": "Meta-тег отсутствует",
+      "category": "live"
+    },
+    {
+      "id": "live:robots-sitemap",
+      "label": "robots.txt → Sitemap",
+      "status": "ok",
+      "message": "https://www.goargentina.ru/sitemap.xml",
+      "category": "live"
+    },
+    {
+      "id": "live:sitemap",
+      "label": "sitemap.xml доступен",
+      "status": "ok",
+      "message": "1253 URL",
+      "category": "live"
+    },
+    {
+      "id": "manual:gsc-sitemap",
+      "label": "GSC: sitemap отправлен вручную",
+      "status": "skip",
+      "message": "Search Console → Sitemaps → https://www.goargentina.ru/sitemap.xml (после верификации google-site-verification)",
+      "category": "manual"
+    }
+  ],
+  "summary": {
+    "ok": 2,
+    "warn": 6,
+    "fail": 4,
+    "skip": 1
+  },
+  "runbook": "docs/i2-analytics-gsc-runbook.md"
+}

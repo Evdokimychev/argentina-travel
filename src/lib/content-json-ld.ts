@@ -8,6 +8,7 @@ import {
   buildFaqPageSchema,
   buildTouristDestinationSchema,
 } from "@/lib/schema-json-ld";
+import { getBlogUpdatedDate } from "@/lib/blog-utils";
 import { absoluteUrl } from "@/lib/site-url";
 
 export function buildCollectionItemListJsonLd(collection: PlaceCollection) {
@@ -71,7 +72,7 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
     slug: post.slug,
     image: post.image,
     datePublished: post.date,
-    dateModified: post.dateModified ?? post.date,
+    dateModified: getBlogUpdatedDate(post),
     authorName: post.author,
   });
 }

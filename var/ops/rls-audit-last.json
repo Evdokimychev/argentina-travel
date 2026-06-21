@@ -1,9 +1,9 @@
 {
   "ok": true,
   "source": "static",
-  "ranAt": "2026-06-21T06:08:42.572Z",
+  "ranAt": "2026-06-21T20:48:42.151Z",
   "gitSha": null,
-  "tableCount": 71,
+  "tableCount": 73,
   "criticalIssueCount": 0,
   "criticalIssues": [],
   "tables": [
@@ -20,6 +20,7 @@
     "booking_attribution",
     "booking_commission_snapshots",
     "bookings",
+    "cms_media_assets",
     "contact_submissions",
     "content_documents",
     "content_freshness",
@@ -76,6 +77,7 @@
     "tripster_reviews",
     "tripster_sync_runs",
     "typing_presence",
+    "url_redirects",
     "user_favorites",
     "user_interactions"
   ]

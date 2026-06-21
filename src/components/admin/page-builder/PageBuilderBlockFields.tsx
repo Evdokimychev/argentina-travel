@@ -364,6 +364,321 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
         </div>
       );
 
+    case "infobox":
+      return (
+        <div className="space-y-2">
+          <NativeSelect
+            value={block.variant}
+            onChange={(e) =>
+              onChange({ ...block, variant: e.target.value as typeof block.variant })
+            }
+          >
+            <option value="important">Важно</option>
+            <option value="tip">Совет</option>
+            <option value="warning">Предупреждение</option>
+          </NativeSelect>
+          <Input
+            value={block.title}
+            onChange={(e) => onChange({ ...block, title: e.target.value })}
+            placeholder="Заголовок"
+          />
+          <textarea
+            className="min-h-[72px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+            value={block.body}
+            onChange={(e) => onChange({ ...block, body: e.target.value })}
+            placeholder="Текст"
+          />
+        </div>
+      );
+
+    case "accordion":
+      return (
+        <div className="space-y-2">
+          {block.items.map((item, index) => (
+            <div key={index} className="space-y-1 rounded-lg border border-gray-100 p-2">
+              <Input
+                value={item.title}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...items[index], title: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Заголовок"
+              />
+              <textarea
+                className="min-h-[56px] w-full rounded-lg border border-gray-200 px-2 py-1 text-sm"
+                value={item.body}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...items[index], body: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="Содержимое"
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              onChange({ ...block, items: [...block.items, { title: "", body: "" }] })
+            }
+          >
+            + Пункт
+          </Button>
+        </div>
+      );
+
+    case "comparison-table":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.headers.join(" | ")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                headers: e.target.value.split("|").map((h) => h.trim()),
+              })
+            }
+            placeholder="Заголовки через |"
+          />
+          <textarea
+            className="min-h-[80px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm font-mono"
+            value={block.rows.map((row) => row.join(" | ")).join("\n")}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                rows: e.target.value
+                  .split("\n")
+                  .filter(Boolean)
+                  .map((line) => line.split("|").map((cell) => cell.trim())),
+              })
+            }
+            placeholder="Строки: ячейки через |"
+          />
+          <Input
+            type="number"
+            min={0}
+            value={block.highlightColumn ?? 0}
+            onChange={(e) =>
+              onChange({
+                ...block,
+                highlightColumn: Number(e.target.value),
+              })
+            }
+            placeholder="Индекс рекомендуемой колонки"
+          />
+        </div>
+      );
+
+    case "cta":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.label}
+            onChange={(e) => onChange({ ...block, label: e.target.value })}
+            placeholder="Текст кнопки"
+          />
+          <Input
+            value={block.href}
+            onChange={(e) => onChange({ ...block, href: e.target.value })}
+            placeholder="/tours/slug или https://"
+          />
+          <NativeSelect
+            value={block.variant ?? "primary"}
+            onChange={(e) =>
+              onChange({ ...block, variant: e.target.value as typeof block.variant })
+            }
+          >
+            <option value="primary">Primary</option>
+            <option value="secondary">Secondary</option>
+            <option value="outline">Outline</option>
+          </NativeSelect>
+        </div>
+      );
+
+    case "tour-booking":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.tourSlug}
+            onChange={(e) => onChange({ ...block, tourSlug: e.target.value })}
+            placeholder="slug тура"
+          />
+          <Input
+            value={block.label ?? ""}
+            onChange={(e) => onChange({ ...block, label: e.target.value || undefined })}
+            placeholder="Текст кнопки"
+          />
+          <label className="flex items-center gap-2 text-xs text-slate">
+            <input
+              type="checkbox"
+              checked={block.showPrice !== false}
+              onChange={(e) => onChange({ ...block, showPrice: e.target.checked })}
+            />
+            Упоминать стоимость
+          </label>
+        </div>
+      );
+
+    case "route-map":
+      return (
+        <div className="space-y-2">
+          {block.points.map((point, index) => (
+            <div key={index} className="grid gap-2 sm:grid-cols-3">
+              <Input
+                value={point.label}
+                onChange={(e) => {
+                  const points = [...block.points];
+                  points[index] = { ...points[index], label: e.target.value };
+                  onChange({ ...block, points });
+                }}
+                placeholder="Название"
+              />
+              <Input
+                type="number"
+                step="any"
+                value={point.lat}
+                onChange={(e) => {
+                  const points = [...block.points];
+                  points[index] = { ...points[index], lat: Number(e.target.value) };
+                  onChange({ ...block, points });
+                }}
+                placeholder="lat"
+              />
+              <Input
+                type="number"
+                step="any"
+                value={point.lng}
+                onChange={(e) => {
+                  const points = [...block.points];
+                  points[index] = { ...points[index], lng: Number(e.target.value) };
+                  onChange({ ...block, points });
+                }}
+                placeholder="lng"
+              />
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              onChange({
+                ...block,
+                points: [...block.points, { lat: -34.6, lng: -58.38, label: "Точка" }],
+              })
+            }
+          >
+            + Точка
+          </Button>
+        </div>
+      );
+
+    case "gallery":
+      return (
+        <div className="space-y-2">
+          {block.items.map((item, index) => (
+            <div key={index} className="flex gap-2">
+              <Input
+                value={item.src}
+                onChange={(e) => {
+                  const items = [...block.items];
+                  items[index] = { ...items[index], src: e.target.value };
+                  onChange({ ...block, items });
+                }}
+                placeholder="URL"
+                className="font-mono text-xs"
+              />
+              {onPickMedia ? (
+                <Button type="button" size="sm" variant="outline" onClick={onPickMedia}>
+                  +
+                </Button>
+              ) : null}
+            </div>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              onChange({ ...block, items: [...block.items, { src: "", alt: "" }] })
+            }
+          >
+            + Фото
+          </Button>
+        </div>
+      );
+
+    case "video":
+      return (
+        <div className="space-y-2">
+          <NativeSelect
+            value={block.provider}
+            onChange={(e) =>
+              onChange({ ...block, provider: e.target.value as typeof block.provider })
+            }
+          >
+            <option value="youtube">YouTube</option>
+            <option value="vimeo">Vimeo</option>
+          </NativeSelect>
+          <Input
+            value={block.videoId}
+            onChange={(e) => onChange({ ...block, videoId: e.target.value })}
+            placeholder="ID видео (dQw4w9WgXcQ)"
+          />
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Заголовок"
+          />
+        </div>
+      );
+
+    case "content-embed":
+      return (
+        <div className="space-y-2">
+          <NativeSelect
+            value={block.embedKind}
+            onChange={(e) =>
+              onChange({ ...block, embedKind: e.target.value as typeof block.embedKind })
+            }
+          >
+            <option value="tour">Тур</option>
+            <option value="excursion">Экскурсия</option>
+            <option value="article">Статья блога</option>
+            <option value="guide">Путеводитель</option>
+          </NativeSelect>
+          <Input
+            value={block.slug}
+            onChange={(e) => onChange({ ...block, slug: e.target.value })}
+            placeholder="slug"
+          />
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Подпись (необязательно)"
+          />
+        </div>
+      );
+
+    case "widget":
+      return (
+        <div className="space-y-2">
+          <Input
+            value={block.widgetKey}
+            onChange={(e) => onChange({ ...block, widgetKey: e.target.value })}
+            placeholder="flights-teaser / map-hub / …"
+          />
+          <Input
+            value={block.title ?? ""}
+            onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+            placeholder="Заголовок"
+          />
+        </div>
+      );
+
     default:
       return null;
   }

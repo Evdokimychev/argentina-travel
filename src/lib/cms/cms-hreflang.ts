@@ -12,6 +12,7 @@ export const CMS_DOC_TYPE_PATH_SEGMENT: Record<CmsDocType, string> = {
   destination: "destinations",
   place: "places",
   legal: "legal",
+  author_article: "blog/author",
 };
 
 /**

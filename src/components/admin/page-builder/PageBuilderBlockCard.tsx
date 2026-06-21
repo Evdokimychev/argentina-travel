@@ -17,6 +17,8 @@ type Props = {
   onMoveUp: () => void;
   onMoveDown: () => void;
   onPickMedia?: () => void;
+  dragHandleProps?: Record<string, unknown>;
+  hideMoveButtons?: boolean;
 };
 
 export default function PageBuilderBlockCard({
@@ -28,6 +30,8 @@ export default function PageBuilderBlockCard({
   onMoveUp,
   onMoveDown,
   onPickMedia,
+  dragHandleProps,
+  hideMoveButtons = false,
 }: Props) {
   const [expanded, setExpanded] = useState(true);
   const [preview, setPreview] = useState(false);
@@ -37,7 +41,14 @@ export default function PageBuilderBlockCard({
   return (
     <div className="rounded-2xl border border-gray-200 bg-white shadow-sm">
       <div className="flex items-center gap-2 border-b border-gray-100 px-3 py-2">
-        <GripVertical className="h-4 w-4 shrink-0 text-slate/50" aria-hidden />
+        <button
+          type="button"
+          className="cursor-grab touch-none rounded p-0.5 text-slate/50 hover:text-slate active:cursor-grabbing"
+          aria-label="Перетащить блок"
+          {...dragHandleProps}
+        >
+          <GripVertical className="h-4 w-4" aria-hidden />
+        </button>
         <Icon className="h-4 w-4 shrink-0 text-sky" aria-hidden />
         <button
           type="button"
@@ -48,28 +59,32 @@ export default function PageBuilderBlockCard({
           <span className="ml-2 font-mono text-[10px] text-slate">{block.type}</span>
         </button>
         <div className="flex shrink-0 items-center gap-0.5">
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8"
-            disabled={index === 0}
-            onClick={onMoveUp}
-            aria-label="Выше"
-          >
-            <ChevronUp className="h-4 w-4" />
-          </Button>
-          <Button
-            type="button"
-            size="icon"
-            variant="ghost"
-            className="h-8 w-8"
-            disabled={index >= total - 1}
-            onClick={onMoveDown}
-            aria-label="Ниже"
-          >
-            <ChevronDown className="h-4 w-4" />
-          </Button>
+          {!hideMoveButtons ? (
+            <>
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                disabled={index === 0}
+                onClick={onMoveUp}
+                aria-label="Выше"
+              >
+                <ChevronUp className="h-4 w-4" />
+              </Button>
+              <Button
+                type="button"
+                size="icon"
+                variant="ghost"
+                className="h-8 w-8"
+                disabled={index >= total - 1}
+                onClick={onMoveDown}
+                aria-label="Ниже"
+              >
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </>
+          ) : null}
           <Button
             type="button"
             size="sm"
@@ -102,7 +117,9 @@ export default function PageBuilderBlockCard({
             <PageBuilderBlockFields
               block={block}
               onChange={onChange}
-              onPickMedia={block.type === "media" ? onPickMedia : undefined}
+              onPickMedia={
+                block.type === "media" || block.type === "gallery" ? onPickMedia : undefined
+              }
             />
           )}
         </div>

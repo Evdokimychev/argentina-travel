@@ -41,8 +41,8 @@ const PLACE_LABELS: Record<string, string> = {
   purmamarca: "Пурмамарка (Purmamarca)",
   "iguazu-falls": "Водопады Игуасу",
   "fitz-roy": "Fitz Roy",
-  "los-glaciares-national-park": "Нацпарк Los Glaciares",
-  "nahuel-huapi-national-park": "Нацпарк Nahuel Huapi",
+  "los-glaciares-national-park": "Национальный парк Los Glaciares",
+  "nahuel-huapi-national-park": "Национальный парк Nahuel Huapi",
   "valdes-peninsula": "Полуостров Valdés",
   "cerro-de-los-7-colores": "Cerro de los 7 Colores",
 };
@@ -67,7 +67,7 @@ const COLLECTION_LABELS: Record<string, string> = {
   "week-in-argentina": "Неделя в Аргентине",
   "two-weeks-argentina": "Две недели в Аргентине",
   "northwest-colors": "Северо-запад: цвета",
-  "best-national-parks": "Лучшие нацпарки",
+  "best-national-parks": "Национальные парки",
   "best-trekking": "Лучшие треки",
   "wine-mendoza": "Вино Мендосы",
   "best-waterfalls": "Лучшие водопады",
@@ -157,10 +157,6 @@ function staggerDate(index: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-function estimateViews(index: number): number {
-  return 3200 + ((index * 7919) % 18500);
-}
-
 function estimateReadMinutes(content: string): number {
   const words = content.split(/\s+/).length;
   return Math.min(18, Math.max(8, Math.round(words / 160)));
@@ -194,7 +190,6 @@ export function generateBlogPostFromPlan(
       category: getBlogPlanCategoryLabel(item.category),
       readTimeMinutes,
       readTime: formatBlogReadTime(readTimeMinutes),
-      views: estimateViews(index),
       tags: buildTags(item, topic),
       relatedResources: mergeRelatedResources(
         buildRelatedResources(item),
@@ -241,7 +236,6 @@ export function generateBlogPostFromPlan(
     category: getBlogPlanCategoryLabel(item.category),
     readTimeMinutes,
     readTime: formatBlogReadTime(readTimeMinutes),
-    views: estimateViews(index),
     tags: buildTags(item, topic),
     relatedResources: buildRelatedResources(item),
     noIndex: true,

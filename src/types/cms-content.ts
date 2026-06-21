@@ -5,8 +5,14 @@ import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceDetail, PlaceFaqItem } from "@/types/place";
 import { formatBlogReadTime } from "@/lib/blog-utils";
 
-/** Document types supported by CMS v1.3 */
-export type CmsDocType = "legal" | "blog" | "guide" | "destination" | "place";
+/** Document types supported by CMS v1.4 */
+export type CmsDocType =
+  | "legal"
+  | "blog"
+  | "guide"
+  | "destination"
+  | "place"
+  | "author_article";
 
 export type CmsDocumentStatus = "draft" | "scheduled" | "published" | "archived";
 
@@ -63,12 +69,20 @@ export type CmsPlaceBody = {
   faq?: PlaceFaqItem[];
 };
 
+export type CmsAuthorArticleBody = {
+  kind: "author_article";
+  excerpt?: string;
+  authorName?: string;
+  sections?: CmsBlogSection[];
+};
+
 export type CmsDocumentBody =
   | CmsLegalBody
   | CmsBlogBody
   | CmsGuideBody
   | CmsDestinationBody
-  | CmsPlaceBody;
+  | CmsPlaceBody
+  | CmsAuthorArticleBody;
 
 export type CmsDocumentSeo = {
   description?: string;
@@ -189,6 +203,28 @@ export function placeBodyFromTs(
   };
 }
 
+export function authorArticleFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost | null {
+  if (doc.body.kind !== "author_article") return null;
+
+  const blogDoc: CmsDocument = {
+    ...doc,
+    body: {
+      kind: "blog",
+      excerpt: doc.body.excerpt,
+      sections: doc.body.sections,
+    },
+  };
+
+  const post = blogPostFromCms(blogDoc, fallback);
+  if (!post) return null;
+
+  return {
+    ...post,
+    author: doc.body.authorName?.trim() || post.author,
+    category: "Эксперт",
+  };
+}
+
 export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost | null {
   if (doc.body.kind !== "blog") return null;
 
@@ -219,7 +255,6 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     category: fallback?.category ?? "Статья",
     readTime: fallback?.readTime ?? formatBlogReadTime(readTimeMinutes),
     readTimeMinutes,
-    views: fallback?.views ?? 0,
     tags: fallback?.tags ?? [],
     featured: doc.body.featured ?? fallback?.featured,
     editorialReviewed: fallback?.editorialReviewed,

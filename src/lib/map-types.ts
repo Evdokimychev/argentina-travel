@@ -2,6 +2,53 @@ export const MAP_LAYER_IDS = ["tours", "places", "regions", "routes"] as const;
 
 export type MapLayerId = (typeof MAP_LAYER_IDS)[number];
 
+/** User-facing marker categories on /mapa-argentina */
+export const MAP_MARKER_KINDS = [
+  "city",
+  "national_park",
+  "attraction",
+  "tour",
+  "airport",
+  "route",
+  "region",
+  "transport",
+] as const;
+
+export type MapMarkerKind = (typeof MAP_MARKER_KINDS)[number];
+
+export const MAP_MARKER_KIND_LABELS: Record<MapMarkerKind, string> = {
+  city: "Города",
+  national_park: "Национальные парки",
+  attraction: "Достопримечательности",
+  tour: "Экскурсии",
+  airport: "Аэропорты",
+  route: "Маршруты",
+  region: "Регионы",
+  transport: "Как добраться",
+};
+
+export interface MapRelatedLink {
+  title: string;
+  href: string;
+  image?: string;
+}
+
+export interface MapObject {
+  id: string;
+  slug: string;
+  kind: MapMarkerKind;
+  title: string;
+  description?: string;
+  image?: string;
+  latitude: number;
+  longitude: number;
+  region: string;
+  href: string;
+  meta?: string;
+  relatedArticles?: MapRelatedLink[];
+  relatedTours?: MapRelatedLink[];
+}
+
 export interface MapTourPoint {
   id: string;
   slug: string;
@@ -49,6 +96,12 @@ export interface MapLayersPayload {
     places: number;
     routes: number;
   };
+}
+
+export interface MapObjectsPayload {
+  objects: MapObject[];
+  routes: MapRouteItem[];
+  totals: Partial<Record<MapMarkerKind, number>>;
 }
 
 export interface MapRegionFeatureProperties {

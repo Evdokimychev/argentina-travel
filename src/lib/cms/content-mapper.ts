@@ -30,6 +30,16 @@ function parseBody(value: Json): CmsDocumentBody {
         : undefined,
     };
   }
+  if (record.kind === "author_article") {
+    return {
+      kind: "author_article",
+      excerpt: typeof record.excerpt === "string" ? record.excerpt : undefined,
+      authorName: typeof record.authorName === "string" ? record.authorName : undefined,
+      sections: Array.isArray(record.sections)
+        ? record.sections.map((section) => parseCmsBlogSection(section))
+        : undefined,
+    };
+  }
   if (record.kind === "guide") {
     return {
       kind: "guide",

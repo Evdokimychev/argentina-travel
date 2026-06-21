@@ -72,6 +72,7 @@ export const GUIDE_ABOUT_ARGENTINA: GuideAboutArgentinaContent = {
   toc: [
     { id: "quick-facts", label: "Цифры и факты" },
     { id: "geography", label: "География" },
+    { id: "tourism-evolution", label: "Эволюция туризма" },
     { id: "why-visit", label: "Зачем ехать" },
     { id: "regions", label: "Регионы" },
     { id: "itineraries", label: "Маршруты" },

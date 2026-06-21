@@ -2,7 +2,7 @@ import { blogResource, guideResource, p, section } from "./helpers";
 import { editorialArticle, type EditorialOverride } from "./types";
 
 const NEIGHBORHOODS = blogResource(
-  "buenos-aires-neighborhoods",
+  "buenos-aires-rajony",
   "Районы Буэнос-Айреса",
 );
 const GUIDE_KULTURA = guideResource("kultura", "Культура");

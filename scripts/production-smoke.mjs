@@ -18,7 +18,19 @@ const root = path.resolve(__dirname, "..");
 const baseUrl = (process.env.SMOKE_BASE_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
 const timeoutMs = Number.parseInt(process.env.SMOKE_TIMEOUT_MS ?? "15000", 10);
 
-const PAGE_PATHS = ["/", "/tours", "/excursions", "/destinations", "/places", "/blog"];
+const PAGE_PATHS = [
+  "/",
+  "/tours",
+  "/excursions",
+  "/destinations",
+  "/places",
+  "/blog",
+  "/blog/buenos-aires-rajony",
+  "/blog/natsionalnyy-park-iguasu",
+  "/guide/sezony-i-klimat",
+  "/destinations/patagonia",
+  "/places/iguazu-falls",
+];
 
 function loadEnvLocal() {
   for (const file of [".env.local", ".env"]) {

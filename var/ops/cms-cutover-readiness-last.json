@@ -1,0 +1,54 @@
+{
+  "ok": true,
+  "ranAt": "2026-06-21T20:48:45.769Z",
+  "strict": true,
+  "summary": {
+    "allReady": true,
+    "allCutover": true,
+    "lanesEnabled": 4,
+    "lanesReady": 4,
+    "lanesAt100": 4
+  },
+  "readiness": {
+    "blog": {
+      "tsCount": 290,
+      "cmsPublished": 290,
+      "cmsCompletePublished": 290,
+      "coveragePercent": 100,
+      "missingSlugs": [],
+      "cutover": true,
+      "canEnable": true,
+      "ready": true
+    },
+    "guide": {
+      "tsCount": 5,
+      "cmsPublished": 5,
+      "cmsCompletePublished": 5,
+      "coveragePercent": 100,
+      "missingSlugs": [],
+      "cutover": true,
+      "canEnable": true,
+      "ready": true
+    },
+    "destination": {
+      "tsCount": 8,
+      "cmsPublished": 8,
+      "cmsCompletePublished": 8,
+      "coveragePercent": 100,
+      "missingSlugs": [],
+      "cutover": true,
+      "canEnable": true,
+      "ready": true
+    },
+    "place": {
+      "tsCount": 27,
+      "cmsPublished": 27,
+      "cmsCompletePublished": 27,
+      "coveragePercent": 100,
+      "missingSlugs": [],
+      "cutover": true,
+      "canEnable": true,
+      "ready": true
+    }
+  }
+}

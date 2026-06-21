@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * Generates blog rich article TS files from docs/Национальный-парк-*.md
+ * Generates blog rich article TS files from docs/articles/*.md
  * Preserves markdown text verbatim; maps structure to BlogRichArticle blocks.
  */
 import fs from "node:fs";
@@ -8,7 +8,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const DOCS = path.join(ROOT, "docs");
+const DOCS = path.join(ROOT, "docs", "articles");
 const OUT = path.join(ROOT, "src/data/blog-articles");
 
 const ARTICLES = [
@@ -84,6 +84,13 @@ const ARTICLES = [
     exportName: "allArgentinaNationalParksArticle",
     id: "all-argentina-national-parks",
   },
+  {
+    md: "Парк-Исчигуаласто-Долина-Луны.md",
+    out: "ischigualasto-valley-of-the-moon.ts",
+    exportName: "ischigualastoValleyOfTheMoonArticle",
+    id: "ischigualasto-valley-of-the-moon",
+  },
+  // Valdes: MD stub (~42 lines) — full article in valdes-peninsula-national-park.ts until MD expanded.
 ];
 
 function escapeTs(str) {

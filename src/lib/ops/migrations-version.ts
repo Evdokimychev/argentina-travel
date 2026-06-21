@@ -1,9 +1,24 @@
 import fs from "node:fs";
 import path from "node:path";
+import generatedMeta from "@/lib/ops/migration-meta.generated.json";
 
-export function getLatestMigrationId(rootDir = process.cwd()): string | null {
+type MigrationMeta = {
+  latestId: string | null;
+  fileCount: number;
+};
+
+function readGeneratedMeta(): MigrationMeta {
+  return {
+    latestId: generatedMeta.latestId ?? null,
+    fileCount: typeof generatedMeta.fileCount === "number" ? generatedMeta.fileCount : 0,
+  };
+}
+
+function readFilesystemMeta(rootDir: string): MigrationMeta {
   const migrationsDir = path.join(rootDir, "supabase/migrations");
-  if (!fs.existsSync(migrationsDir)) return null;
+  if (!fs.existsSync(migrationsDir)) {
+    return { latestId: null, fileCount: 0 };
+  }
 
   const files = fs
     .readdirSync(migrationsDir)
@@ -11,13 +26,24 @@ export function getLatestMigrationId(rootDir = process.cwd()): string | null {
     .sort();
 
   const latest = files.at(-1);
-  return latest ? latest.replace(/\.sql$/, "") : null;
+  return {
+    latestId: latest ? latest.replace(/\.sql$/, "") : null,
+    fileCount: files.length,
+  };
+}
+
+function resolveMigrationMeta(rootDir = process.cwd()): MigrationMeta {
+  const fromFs = readFilesystemMeta(rootDir);
+  if (fromFs.fileCount > 0) return fromFs;
+  return readGeneratedMeta();
+}
+
+export function getLatestMigrationId(rootDir = process.cwd()): string | null {
+  return resolveMigrationMeta(rootDir).latestId;
 }
 
 export function getMigrationFileCount(rootDir = process.cwd()): number {
-  const migrationsDir = path.join(rootDir, "supabase/migrations");
-  if (!fs.existsSync(migrationsDir)) return 0;
-  return fs.readdirSync(migrationsDir).filter((name) => name.endsWith(".sql")).length;
+  return resolveMigrationMeta(rootDir).fileCount;
 }
 
 export function getMigrationIds(rootDir = process.cwd()): string[] {

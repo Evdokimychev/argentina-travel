@@ -1,6 +1,6 @@
 {
   "ok": false,
-  "ranAt": "2026-06-21T06:10:31.820Z",
+  "ranAt": "2026-06-21T20:31:44.664Z",
   "gitSha": null,
   "checks": [
     {
@@ -88,6 +88,20 @@
       "category": "env"
     },
     {
+      "id": "env:recommended:NEXT_PUBLIC_GTM_ID",
+      "label": "Рекомендуется: NEXT_PUBLIC_GTM_ID",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
+      "id": "env:recommended:NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION",
+      "label": "Рекомендуется: NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION",
+      "status": "skip",
+      "message": "Не задана",
+      "category": "env"
+    },
+    {
       "id": "env:forbidden:NEXT_PUBLIC_ENABLE_DEMO_SEED",
       "label": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false",
       "status": "fail",
@@ -98,28 +112,28 @@
       "id": "migrations:files",
       "label": "Миграции в репозитории",
       "status": "ok",
-      "message": "44 файлов, последняя: 20250627000006_local_experts_e101",
+      "message": "49 файлов, последняя: 20250627000011_author_article_doc_type",
       "category": "database"
     },
     {
       "id": "security:rls-audit",
       "label": "Статический RLS-аудит",
       "status": "ok",
-      "message": "71 таблиц, критичных проблем нет",
+      "message": "73 таблиц, критичных проблем нет",
       "category": "security"
     },
     {
       "id": "migrations:db-count",
       "label": "Миграции в БД",
       "status": "warn",
-      "message": "Таблиц public: 71. schema_migrations недоступна — сверьте вручную с 44 файлами (последняя: 20250627000006_local_experts_e101)",
+      "message": "Таблиц public: 73. schema_migrations недоступна — сверьте вручную с 49 файлами (последняя: 20250627000011_author_article_doc_type)",
       "category": "database"
     },
     {
       "id": "smoke:supabase-verify",
       "label": "Smoke /api/health",
-      "status": "ok",
-      "message": "OK. migrationVersion=20250627000006_local_experts_e101, deployEnv=development",
+      "status": "warn",
+      "message": "Сервер недоступен на http://127.0.0.1:3000. Запустите npm run dev или задайте SMOKE_BASE_URL",
       "category": "smoke"
     },
     {
@@ -131,9 +145,9 @@
     }
   ],
   "summary": {
-    "ok": 8,
-    "warn": 4,
+    "ok": 7,
+    "warn": 5,
     "fail": 1,
-    "skip": 5
+    "skip": 7
   }
 }

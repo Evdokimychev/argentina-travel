@@ -29,6 +29,7 @@ const DOC_TYPE_LABELS: Record<ContentFreshnessDocType, string> = {
   guide: "Путеводители и иммиграция",
   destination: "Направления",
   place: "Места",
+  author_article: "Статьи экспертов",
 };
 
 function formatRuDate(value: string): string {

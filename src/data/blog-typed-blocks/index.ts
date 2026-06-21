@@ -3,6 +3,9 @@ import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 /** Pilot S11: data-only typed blocks keyed by post slug → section title */
 const TYPED_BLOCKS_BY_SLUG: Record<string, Record<string, BlogBodyBlock[]>> = {
   "best-time-to-visit-argentina": {
+    "Краткий ответ": [{ type: "season-matrix" }],
+    "Введение": [{ type: "tourism-infographic" }],
+    "Особенность сезонов в Аргентине": [{ type: "tourism-timeline" }],
     "Лето (декабрь – февраль)": [
       {
         type: "seasons",

@@ -27,7 +27,7 @@ export const BLOG_HUBS: readonly BlogHub[] = [
   {
     id: "national-parks",
     title: "Национальные парки",
-    shortTitle: "Нацпарки",
+    shortTitle: "Национальные парки",
     description:
       "Rich-гиды по паркам APN: билеты, тропы, сезоны и практика посещения — от Игуасу до Огненной Земли.",
     seoDescription:
@@ -43,7 +43,7 @@ export const BLOG_HUBS: readonly BlogHub[] = [
       "wildlife-с-гидом",
     ],
     cta: {
-      label: "Справочник нацпарков",
+      label: "Справочник национальных парков",
       href: "/places?collection=best-national-parks",
     },
     previewLimit: 4,

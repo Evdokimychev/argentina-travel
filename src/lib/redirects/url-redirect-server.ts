@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { matchContentPlanRedirect } from "@/data/content-plan-url-redirects";
 import {
   mapUrlRedirectRow,
   normalizeUrlRedirectInput,
@@ -54,6 +55,11 @@ export async function matchUrlRedirect(pathname: string): Promise<RedirectMatch 
     pathname.length > 1 && pathname.endsWith("/")
       ? pathname.replace(/\/+$/, "")
       : pathname;
+
+  const staticTarget = matchContentPlanRedirect(normalized);
+  if (staticTarget) {
+    return { toPath: staticTarget, statusCode: 301 };
+  }
 
   const map = await loadActiveRedirectsMap();
   return map.get(normalized) ?? null;

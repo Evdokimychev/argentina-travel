@@ -82,6 +82,7 @@ const DOC_TYPE_COVERAGE_LABELS: Record<CmsDocType, string> = {
   guide: "Путеводитель",
   destination: "Направления",
   place: "Места",
+  author_article: "Статьи экспертов",
 };
 
 function countLocaleCoverage(

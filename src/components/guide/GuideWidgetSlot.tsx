@@ -1,5 +1,10 @@
 import { Suspense } from "react";
 import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
+import ArgentinaSeasonMatrix, {
+  ArgentinaSeasonMatrixSkeleton,
+} from "@/components/travel/ArgentinaSeasonMatrix";
+import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
+import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import ArgentinaWeatherPanel, {
   ArgentinaWeatherPanelSkeleton,
 } from "@/components/guide/weather/ArgentinaWeatherPanel";
@@ -28,6 +33,30 @@ export default function GuideWidgetSlot({ slot, initialTours = [] }: GuideWidget
         <Suspense fallback={<ArgentinaWeatherPanelSkeleton />}>
           <ArgentinaWeatherPanel />
         </Suspense>
+      </div>
+    );
+  }
+
+  if (slot.type === "season-matrix") {
+    return (
+      <div id={slot.id} className={siteScrollAnchorClass}>
+        <ArgentinaSeasonMatrix />
+      </div>
+    );
+  }
+
+  if (slot.type === "tourism-infographic") {
+    return (
+      <div id={slot.id} className={siteScrollAnchorClass}>
+        <ArgentinaTourismInfographic />
+      </div>
+    );
+  }
+
+  if (slot.type === "tourism-timeline") {
+    return (
+      <div id={slot.id} className={siteScrollAnchorClass}>
+        <ArgentinaTourismTimeline />
       </div>
     );
   }

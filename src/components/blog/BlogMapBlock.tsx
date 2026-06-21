@@ -1,4 +1,11 @@
-import { ExternalLink, MapPin } from "lucide-react";
+"use client";
+
+import { useEffect, useRef } from "react";
+import Link from "next/link";
+import { MapPin } from "lucide-react";
+import L from "leaflet";
+import { cn } from "@/lib/cn";
+import "leaflet/dist/leaflet.css";
 
 type BlogMapBlockProps = {
   lat: number;
@@ -7,27 +14,55 @@ type BlogMapBlockProps = {
 };
 
 export default function BlogMapBlock({ lat, lng, label }: BlogMapBlockProps) {
-  const href = `https://www.google.com/maps?q=${lat},${lng}`;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<L.Map | null>(null);
+
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current) return;
+
+    const map = L.map(containerRef.current, { scrollWheelZoom: false, zoomControl: false });
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    L.marker([lat, lng], {
+      icon: L.divIcon({
+        className: "",
+        html: `<div class="places-detail-map-marker places-detail-map-marker--main"></div>`,
+        iconSize: [24, 24],
+        iconAnchor: [12, 12],
+      }),
+    }).addTo(map);
+
+    map.setView([lat, lng], 11);
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, [lat, lng]);
 
   return (
     <div className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
-      <div className="flex aspect-[16/10] max-h-[220px] flex-col items-center justify-center gap-3 bg-gradient-to-br from-sky/[0.08] via-white to-surface-muted/60 px-6 text-center">
-        <MapPin className="h-8 w-8 text-sky" aria-hidden />
+      <div className="flex items-center gap-2 border-b border-gray-100 px-4 py-3">
+        <MapPin className="h-4 w-4 text-sky" aria-hidden />
         <p className="font-heading text-sm font-semibold text-charcoal">{label}</p>
-        <p className="text-xs text-slate">
-          {lat.toFixed(4)}°, {lng.toFixed(4)}°
-        </p>
       </div>
-      <div className="border-t border-gray-100 p-4">
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-sky px-4 py-3 text-sm font-semibold text-white transition hover:bg-sky-dark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
-        >
-          Открыть в Google Maps
-          <ExternalLink className="h-4 w-4 shrink-0" aria-hidden />
-        </a>
+      <div
+        ref={containerRef}
+        className="h-[200px] w-full sm:h-[240px]"
+        role="img"
+        aria-label={`Карта: ${label}`}
+      />
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 px-4 py-3 text-xs text-slate">
+        <span>
+          {lat.toFixed(4)}°, {lng.toFixed(4)}°
+        </span>
+        <Link href={`/mapa-argentina?q=${encodeURIComponent(label)}`} className="font-medium text-sky hover:underline">
+          На карте страны →
+        </Link>
       </div>
     </div>
   );

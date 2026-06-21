@@ -7,6 +7,8 @@ import GuideSectionNav from "@/components/guide/GuideSectionNav";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
+import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
+import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { GUIDE_HUB } from "@/data/guide-hub-index-content";
@@ -49,6 +51,14 @@ export default function GuideHubView() {
 
               <HubSection id="quick-30" title="Кратко за 30 секунд">
                 <HubQuickFactsGrid facts={hub.quickFacts30} />
+              </HubSection>
+
+              <HubSection id="country-overview" title="Аргентина в цифрах">
+                <ArgentinaTourismInfographic compact />
+              </HubSection>
+
+              <HubSection id="tourism-evolution" title="Эволюция туризма">
+                <ArgentinaTourismTimeline />
               </HubSection>
 
               <HubSection id="planning" title="Планирование поездки" subtitle={hub.planning.intro}>

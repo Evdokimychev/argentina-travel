@@ -1,0 +1,38 @@
+/** Cornerstone posts from docs/articles → copy media from related indexable posts. */
+export const CORNERSTONE_MEDIA_COPY = {
+  "buenos-aires-rajony": "buenos-aires-neighborhoods",
+  "mendoza-vinnyj-gid": "mendoza-wine-route",
+  "argentina-2-nedeli-marshrut": "patagoniya-marshrut-14-dney",
+  "argentina-10-dnej-3-nedeli": "itinerary-za-14-dney",
+  "ruta-40-sem-ozer": "patagonia-arenda-avto",
+  "vnutrennie-aviabilety-argentina": "patagonia-aviabilety",
+  "kak-dobratsya-v-argentinu": "argentina-tourist-visa-2026",
+  "byudzhet-poezdki-argentina": "money-byudzhet",
+  "stoimost-zhizni-buenos-aires": "buenos-aires-byudzhet",
+  "kak-menyat-dengi-argentina": "blue-dollar-argentina-2026",
+  "vnzh-argentina-rezidenciya": "argentina-tourist-visa-2026",
+  "viza-cifrovogo-kochevnika-argentina": "argentina-tourist-visa-2026",
+  "dni-cuil-argentina": "argentina-tourist-visa-2026",
+  "grazhdanstvo-argentiny": "argentina-tourist-visa-2026",
+  "bankovskij-schet-argentina": "money-karty",
+  "ischigualasto-valle-de-la-luna": "natsionalnyy-park-talampaya",
+};
+
+export const CORNERSTONE_HERO_ALTS = {
+  "buenos-aires-rajony": "Районы Буэнос-Айреса — где жить и гулять",
+  "mendoza-vinnyj-gid": "Винный гид по Мендосе — бодеги и Анд",
+  "argentina-2-nedeli-marshrut": "Маршрут по Аргентине на 2 недели",
+  "argentina-10-dnej-3-nedeli": "Аргентина за 10 дней и 3 недели — маршруты",
+  "ruta-40-sem-ozer": "Дорога семи озёр и Рута 40 в Патагонии",
+  "vnutrennie-aviabilety-argentina": "Внутренние авиабилеты по Аргентине",
+  "kak-dobratsya-v-argentinu": "Как добраться в Аргентину из России и СНГ",
+  "byudzhet-poezdki-argentina": "Бюджет поездки по Аргентине",
+  "stoimost-zhizni-buenos-aires": "Стоимость жизни в Буэнос-Айресе",
+  "kak-menyat-dengi-argentina": "Как менять деньги в Аргентине",
+  "vnzh-argentina-rezidenciya": "ВНЖ Аргентины — все легальные пути",
+  "viza-cifrovogo-kochevnika-argentina": "Виза цифрового кочевника в Аргентине",
+  "dni-cuil-argentina": "DNI и CUIL для иностранца в Аргентине",
+  "grazhdanstvo-argentiny": "Гражданство Аргентины — путь и требования",
+  "bankovskij-schet-argentina": "Банковский счёт и финансы релоканта",
+  "ischigualasto-valle-de-la-luna": "Исчигуаласто — Долина Луны",
+};

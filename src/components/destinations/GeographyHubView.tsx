@@ -12,6 +12,7 @@ import {
 import Hero from "@/components/Hero";
 import PlaceCard from "@/components/places/PlaceCard";
 import PlacesFeaturedCollections from "@/components/places/PlacesFeaturedCollections";
+import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import { SafeImage } from "@/components/ui/safe-image";
 import type { DestinationPage } from "@/data/destination-pages";
 import { DESTINATION_REGION_GROUPS } from "@/data/destination-pages";
@@ -179,6 +180,30 @@ export default function GeographyHubView({ destinations, places, collections = [
             <dd className="font-heading text-lg font-bold text-charcoal">Гиды + карта</dd>
           </div>
         </dl>
+      </section>
+
+      <section id="seasons" className={cn(siteContainerClass, "pb-12 sm:pb-16")}>
+        <div className="mb-6 max-w-2xl">
+          <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">
+            Когда ехать в каждый регион
+          </h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate">
+            Сводная таблица по месяцам: нажмите месяц — увидите лучшие направления, наведите на ячейку —
+            подсказка по погоде и сезону. Подробный разбор — в{" "}
+            <Link href="/guide/pogoda-i-sezonnost" className="font-medium text-sky hover:underline">
+              гиде по погоде
+            </Link>{" "}
+            и статье{" "}
+            <Link
+              href="/blog/best-time-to-visit-argentina"
+              className="font-medium text-sky hover:underline"
+            >
+              «Когда лучше ехать»
+            </Link>
+            .
+          </p>
+        </div>
+        <ArgentinaSeasonMatrix />
       </section>
 
       <section id="regions" className={cn(siteContainerClass, "pb-12 sm:pb-16")}>

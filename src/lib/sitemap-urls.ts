@@ -146,21 +146,35 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...SITE_FOOTER_CONTACTS.map((link) => link.href),
   ].filter(isIndexableInternalPath);
 
-  const tourPaths = await collectTourSitemapPaths();
-  const excursionPaths = await collectExcursionSitemapPaths();
-  const placesPaths = await collectPlacesSitemapPaths();
   const blogCatalog = options?.blogCatalog ?? (await collectBlogSitemapCatalog());
   const indexableBlogPosts = filterIndexableBlogPosts(blogCatalog);
+
+  const [
+    tourPaths,
+    excursionPaths,
+    placesPaths,
+    guideSlugs,
+    destinationSlugs,
+    legalSlugs,
+  ] = await Promise.all([
+    collectTourSitemapPaths(),
+    collectExcursionSitemapPaths(),
+    collectPlacesSitemapPaths(),
+    listPublishedGuideSlugs(),
+    listPublishedDestinationSlugs(),
+    listPublishedLegalSlugs(),
+  ]);
+
   const blogPaths = [
     "/blog",
     ...getAllBlogHubIds().map((hubId) => blogHubPath(hubId)),
     ...indexableBlogPosts.map((post) => `/blog/${post.slug}`),
   ];
   const immigrationPaths = getPagesBySection("immigration").map((page) => contentPageHref(page));
-  const guidePaths = (await listPublishedGuideSlugs()).map((slug) => `/guide/${slug}`);
+  const guidePaths = guideSlugs.map((slug) => `/guide/${slug}`);
   const guideTopicPaths = getAllGuideTopics().map((topic) => guideTopicHref(topic.slug));
-  const destinationPaths = (await listPublishedDestinationSlugs()).map((slug) => `/destinations/${slug}`);
-  const legalPaths = (await listPublishedLegalSlugs()).map((slug) => `/legal/${slug}`);
+  const destinationPaths = destinationSlugs.map((slug) => `/destinations/${slug}`);
+  const legalPaths = legalSlugs.map((slug) => `/legal/${slug}`);
   const flightRoutePaths = FLIGHT_POPULAR_ROUTES.map((route) => `/flights/${route.id}`);
   const organizerPaths = SEED_USERS.filter((user) => user.roles?.includes("organizer")).map(
     (user) => `/organizers/${user.id}`

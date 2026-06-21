@@ -101,10 +101,14 @@ function baseQuery(input: QueryBuilderInput): string {
 export function buildSearchQuery(input: QueryBuilderInput): string {
   const articleId = input.pageId.startsWith("rich:") ? input.pageId.replace("rich:", "") : undefined;
 
-  if (input.role === "gallery" && articleId && NATIONAL_PARK_GALLERY[articleId]) {
-    const idx = input.sectionId ? parseInt(input.sectionId, 10) : 0;
+  if (input.role === "gallery" && articleId) {
     const queries = NATIONAL_PARK_GALLERY[articleId];
-    return queries[Math.min(idx, queries.length - 1)] ?? queries[0];
+    const idx = input.sectionId ? parseInt(input.sectionId, 10) : 0;
+    if (queries) {
+      return queries[Math.min(idx, queries.length - 1)] ?? queries[0];
+    }
+    const label = articleId.replace(/-/g, " ");
+    return `${label} Argentina national park photo ${idx + 1}`;
   }
 
   if (input.sectionId && THEME_QUERIES[input.sectionId]) {
