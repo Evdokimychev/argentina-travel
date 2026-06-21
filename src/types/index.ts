@@ -515,6 +515,8 @@ export interface BlogPost {
   relatedResources?: BlogRelatedResource[];
   /** Встраиваемые виджеты туров в теле статьи */
   tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];
+  /** Идентификатор богатой редакторской вёрстки (см. data/blog-articles) */
+  richArticleId?: string;
 }
 
 export interface Testimonial {

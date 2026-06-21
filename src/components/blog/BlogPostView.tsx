@@ -2,9 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Clock, Eye, UserRound } from "lucide-react";
 import BlogSidebar from "@/components/blog/BlogSidebar";
+import BlogRichArticle from "@/components/blog/BlogRichArticle";
 import ContentReadingLayout from "@/components/content/ContentReadingLayout";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
 import { BLOG_EDITORIAL } from "@/data/blog-author";
+import { getBlogRichArticle, getBlogRichArticleToc } from "@/data/blog-articles";
 import {
   blogPosts,
   formatBlogViews,
@@ -25,6 +27,10 @@ type BlogPostViewProps = {
 };
 
 export default function BlogPostView({ post, initialTours = [] }: BlogPostViewProps) {
+  const richArticle = post.richArticleId
+    ? getBlogRichArticle(post.richArticleId)
+    : undefined;
+
   const freshPosts = sortBlogPostsByDate(blogPosts)
     .filter((p) => p.slug !== post.slug)
     .slice(0, 4);
@@ -45,9 +51,15 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
     section,
     headingId: headingToAnchorId(section.title, usedIds),
   }));
-  const tocItems = buildTocItemsFromHeadings(
-    sectionsWithIds.map(({ section }) => ({ heading: section.title }))
-  );
+  const tocItems = richArticle
+    ? getBlogRichArticleToc(richArticle.id).map((item) => ({
+        id: item.id,
+        label: item.label,
+        level: 2 as const,
+      }))
+    : buildTocItemsFromHeadings(
+        sectionsWithIds.map(({ section }) => ({ heading: section.title }))
+      );
 
   return (
     <>
@@ -149,24 +161,28 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
             }
           >
             <div className="space-y-4">
-              {post.sections?.length
-                ? sectionsWithIds.map(({ section, headingId }) => (
-                    <section key={section.title} className="space-y-3">
-                      <h2
-                        id={headingId}
-                        className={cn(
-                          "font-heading text-xl font-bold text-charcoal",
-                          siteScrollAnchorClass
-                        )}
-                      >
-                        {section.title}
-                      </h2>
-                      {sectionParagraphs(section.body).map((paragraph, index) => (
-                        <p key={index}>{paragraph}</p>
-                      ))}
-                    </section>
-                  ))
-                : paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+              {richArticle ? (
+                <BlogRichArticle article={richArticle} />
+              ) : post.sections?.length ? (
+                sectionsWithIds.map(({ section, headingId }) => (
+                  <section key={section.title} className="space-y-3">
+                    <h2
+                      id={headingId}
+                      className={cn(
+                        "font-heading text-xl font-bold text-charcoal",
+                        siteScrollAnchorClass
+                      )}
+                    >
+                      {section.title}
+                    </h2>
+                    {sectionParagraphs(section.body).map((paragraph, index) => (
+                      <p key={index}>{paragraph}</p>
+                    ))}
+                  </section>
+                ))
+              ) : (
+                paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)
+              )}
             </div>
 
             {post.tourEmbeds?.length && initialTours.length > 0 ? (

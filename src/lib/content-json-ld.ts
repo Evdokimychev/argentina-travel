@@ -71,6 +71,8 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
     url: absoluteUrl(`/blog/${post.slug}`),
     image: post.image,
     datePublished: post.date,
+    dateModified: post.date,
+    inLanguage: "ru",
     author: {
       "@type": "Organization",
       name: post.author,
@@ -79,5 +81,24 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
       "@type": "Organization",
       name: "Пора в Аргентину",
     },
+  };
+}
+
+export function buildBlogFaqJsonLd(
+  items: Array<{ question: string; answer: string }>,
+  pageUrl: string
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+    url: absoluteUrl(pageUrl),
   };
 }
