@@ -1,14 +1,15 @@
 import { Skeleton } from "@/components/ui/skeleton";
+import { pageBandSectionClass } from "@/lib/page-band";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 import "./flights-page.css";
 
 export default function FlightsPageSkeleton() {
   return (
-    <div className="flights-page-root w-full bg-[#f8fafc]" aria-busy="true" aria-live="polite">
+    <div className="flights-page-root w-full" aria-busy="true" aria-live="polite">
       <span className="sr-only">Загружаем поиск авиабилетов…</span>
 
-      <header className="flights-page-hero border-b border-gray-100/80">
+      <header className={pageBandSectionClass}>
         <div className={cn(siteContainerClass, "py-8 sm:py-10 lg:py-11")}>
           <Skeleton className="h-9 w-72 max-w-full sm:h-10" />
           <Skeleton className="mt-3 h-5 w-full max-w-md" />

@@ -2,6 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/cn";
+import {
+  pageBandAccentBlurBottomClass,
+  pageBandAccentBlurTopClass,
+  pageBandAccentSectionClass,
+  pageBandSectionClass,
+} from "@/lib/page-band";
 import { siteContainerClass } from "@/lib/site-container";
 
 interface HeroProps {
@@ -13,6 +19,8 @@ interface HeroProps {
   ctaText?: string;
   ctaHref?: string;
   compact?: boolean;
+  /** `band` — flat gray title strip (default). `accent` — gradient with image (exceptions). */
+  tone?: "band" | "accent";
   children?: ReactNode;
 }
 
@@ -25,22 +33,23 @@ export default function Hero({
   ctaText,
   ctaHref,
   compact = false,
+  tone = "band",
   children,
 }: HeroProps) {
   if (compact) {
+    const accent = tone === "accent";
+
     return (
       <section
         data-scroll-rail-tone="light"
-        className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]"
+        className={accent ? pageBandAccentSectionClass : pageBandSectionClass}
       >
-        <div
-          className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl"
-          aria-hidden
-        />
+        {accent ? (
+          <>
+            <div className={pageBandAccentBlurTopClass} aria-hidden />
+            <div className={pageBandAccentBlurBottomClass} aria-hidden />
+          </>
+        ) : null}
 
         <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-14", children && "pb-8 md:pb-10")}>
           <div className="hero-compact-grid grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">

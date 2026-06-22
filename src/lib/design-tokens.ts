@@ -42,11 +42,11 @@ export const tokenButtonOutlineClass =
 
 /** Site header shell — fixed chrome with token z-index and borders */
 export const tokenHeaderShellClass =
-  "site-header fixed inset-x-0 top-0 isolate z-header border-b border-charcoal/[0.06] bg-surface-elevated shadow-[0_1px_0_rgba(26,26,46,0.04)] dark:border-white/10 dark:bg-surface-elevated dark:shadow-[0_1px_0_rgba(255,255,255,0.06)]";
+  "site-header fixed inset-x-0 top-0 isolate z-header border-b border-charcoal/[0.06] bg-page-band shadow-[0_1px_0_rgba(26,26,46,0.04)] dark:border-white/10 dark:bg-background dark:shadow-[0_1px_0_rgba(255,255,255,0.06)]";
 
 /** Applied when page is scrolled — subtle frosted backdrop (Sprint 10). */
 export const tokenHeaderShellScrolledClass =
-  "border-charcoal/[0.08] bg-surface-elevated/90 shadow-[0_4px_24px_-8px_rgba(26,26,46,0.12)] backdrop-blur-md supports-[backdrop-filter]:bg-surface-elevated/75 dark:border-white/12 dark:bg-surface-elevated/90 dark:supports-[backdrop-filter]:bg-surface-elevated/80";
+  "border-charcoal/[0.08] bg-page-band/90 shadow-[0_4px_24px_-8px_rgba(26,26,46,0.12)] backdrop-blur-md supports-[backdrop-filter]:bg-page-band/85 dark:border-white/12 dark:bg-background/90 dark:supports-[backdrop-filter]:bg-background/85";
 
 /** Header inner navigation bar */
 export const tokenHeaderNavBarClass =

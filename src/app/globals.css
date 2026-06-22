@@ -15,6 +15,7 @@
 
   --color-pampas: var(--token-color-sand);
   --color-surface-muted: var(--token-color-surface-muted);
+  --color-page-band: var(--token-color-page-band);
   --color-nav-pill: var(--token-color-nav-pill);
 
   --color-patagonia: var(--token-color-patagonia);
@@ -114,6 +115,7 @@ html.dark {
   --token-color-surface-elevated: #171a22;
   --token-color-border-subtle: #2a2f3a;
   --token-color-surface-muted: #12151c;
+  --token-color-page-band: #12151c;
   --token-color-nav-pill: #232832;
   --token-color-sand: #171a22;
 

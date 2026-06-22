@@ -3,6 +3,12 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import {
+  pageBandAccentBlurBottomClass,
+  pageBandAccentBlurTopClass,
+  pageBandAccentSectionClass,
+  pageBandSectionClass,
+} from "@/lib/page-band";
 import { siteContainerClass } from "@/lib/site-container";
 import type { GuidePillarHeroCta } from "@/types/guide-pillar";
 
@@ -18,22 +24,31 @@ type HubHeroProps = {
   eyebrow?: HubHeroEyebrow;
   ctas?: GuidePillarHeroCta[];
   searchSlot?: React.ReactNode;
+  tone?: "band" | "accent";
 };
 
-export default function HubHero({ title, subtitle, image, eyebrow, ctas, searchSlot }: HubHeroProps) {
+export default function HubHero({
+  title,
+  subtitle,
+  image,
+  eyebrow,
+  ctas,
+  searchSlot,
+  tone = "band",
+}: HubHeroProps) {
+  const accent = tone === "accent";
+
   return (
     <section
       data-scroll-rail-tone="light"
-      className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]"
+      className={accent ? pageBandAccentSectionClass : pageBandSectionClass}
     >
-      <div
-        className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl"
-        aria-hidden
-      />
-      <div
-        className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl"
-        aria-hidden
-      />
+      {accent ? (
+        <>
+          <div className={pageBandAccentBlurTopClass} aria-hidden />
+          <div className={pageBandAccentBlurBottomClass} aria-hidden />
+        </>
+      ) : null}
 
       <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-14")}>
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">

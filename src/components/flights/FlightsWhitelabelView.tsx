@@ -3,6 +3,7 @@
 import FlightPopularRoutes from "@/components/flights/FlightPopularRoutes";
 import FlightsWhitelabelWidget from "@/components/flights/FlightsWhitelabelWidget";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { pageBandSectionClass } from "@/lib/page-band";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import "./flights-page.css";
@@ -11,13 +12,9 @@ export default function FlightsWhitelabelView({ scriptUrl }: { scriptUrl: string
   const { t } = useLocaleCurrency();
 
   return (
-    <div className="flights-page-root w-full bg-[#f8fafc]">
-      <header className="flights-page-hero relative overflow-hidden border-b border-gray-100/80">
-        <div
-          className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full bg-sky/10 blur-3xl"
-          aria-hidden
-        />
-        <div className={cn(siteContainerClass, "relative py-8 sm:py-10 lg:py-11")}>
+    <div className="flights-page-root w-full">
+      <header className={pageBandSectionClass}>
+        <div className={cn(siteContainerClass, "py-8 sm:py-10 lg:py-11")}>
           <h1 className="max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
             {t("flights.page.title")}
           </h1>
@@ -27,7 +24,7 @@ export default function FlightsWhitelabelView({ scriptUrl }: { scriptUrl: string
         </div>
       </header>
 
-      <main className={cn(siteContainerClass, "relative z-10 pb-14 pt-5 sm:pb-16 sm:pt-6 lg:pb-20")}>
+      <div className={cn(siteContainerClass, "relative z-10 pb-14 pt-5 sm:pb-16 sm:pt-6 lg:pb-20")}>
         <div id="flights-search" className="scroll-mt-[calc(var(--site-header-height,72px)+1rem)]">
           <FlightsWhitelabelWidget
             scriptUrl={scriptUrl}
@@ -41,7 +38,7 @@ export default function FlightsWhitelabelView({ scriptUrl }: { scriptUrl: string
             {t("flights.page.disclaimer")}
           </p>
         </footer>
-      </main>
+      </div>
     </div>
   );
 }

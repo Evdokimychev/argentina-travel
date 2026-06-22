@@ -75,7 +75,7 @@ export default function Footer({
 
   return (
     <footer
-      className="site-footer-safe-area border-t border-border-subtle bg-surface-muted dark:border-border-subtle dark:bg-background"
+      className="site-footer-safe-area border-t border-border-subtle bg-page-band dark:border-border-subtle dark:bg-background"
       data-scroll-rail-tone="light"
     >
       <div className={cn(siteContainerClass, "py-14 lg:py-16")}>

@@ -66,8 +66,10 @@ export default function HomeHeroCollage({
                 className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent"
                 aria-hidden
               />
-              <figcaption className="absolute bottom-0 line-clamp-2 p-2 text-[10px] font-medium leading-tight text-white sm:p-2.5 sm:text-xs">
-                {image.alt}
+              <figcaption className="absolute inset-x-0 bottom-0 overflow-hidden bg-gradient-to-t from-charcoal/80 via-charcoal/45 to-transparent px-2 pb-2 pt-5 sm:px-2.5 sm:pb-2.5 sm:pt-6">
+                <span className="line-clamp-2 block text-[10px] font-medium leading-snug text-white sm:text-[11px] sm:leading-tight">
+                  {image.alt}
+                </span>
               </figcaption>
             </figure>
           ))}
