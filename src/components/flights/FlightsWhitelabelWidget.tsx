@@ -158,11 +158,17 @@ export default function FlightsWhitelabelWidget({
 
     syncWidgetRoot();
 
+    const onScrollReposition = () => {
+      window.dispatchEvent(new Event("resize"));
+    };
+    window.addEventListener("scroll", onScrollReposition, { passive: true, capture: true });
+
     return () => {
       disposed = true;
       observer.disconnect();
       window.clearInterval(interval);
       window.clearTimeout(stopInterval);
+      window.removeEventListener("scroll", onScrollReposition, { capture: true });
       removeAviasalesInjectedStyles();
       document.getElementById("tpwl-modals")?.remove();
     };
