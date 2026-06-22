@@ -1,55 +1,47 @@
 "use client";
 
-import { Plane } from "lucide-react";
-import Hero from "@/components/Hero";
 import FlightPopularRoutes from "@/components/flights/FlightPopularRoutes";
 import FlightsWhitelabelWidget from "@/components/flights/FlightsWhitelabelWidget";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
-
-const HERO_IMAGE = getServicePageHeroImage("flights");
+import "./flights-page.css";
 
 export default function FlightsWhitelabelView({ scriptUrl }: { scriptUrl: string }) {
   const { t } = useLocaleCurrency();
 
   return (
-    <div className="flights-page-root w-full">
-      <Hero
-        eyebrow={t("flights.eyebrow")}
-        title={t("flights.title")}
-        subtitle={t("flights.subtitle")}
-        description={t("flights.intro")}
-        image={HERO_IMAGE}
-        compact
-        ctaText={t("flights.whitelabel.heroCta")}
-        ctaHref="#flights-search"
-      />
-
-      <section className={cn(siteContainerClass, "py-10 sm:py-14")}>
-        <div id="flights-search" className="scroll-mt-24">
-          <div className="flex items-center gap-2">
-            <Plane className="h-5 w-5 text-sky" aria-hidden />
-            <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-              {t("flights.whitelabel.searchTitle")}
-            </h2>
-          </div>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-slate">
-            {t("flights.whitelabel.partnerNote")}
+    <div className="flights-page-root w-full bg-[#f8fafc]">
+      <header className="flights-page-hero relative overflow-hidden border-b border-gray-100/80">
+        <div
+          className="pointer-events-none absolute -right-20 top-0 h-64 w-64 rounded-full bg-sky/10 blur-3xl"
+          aria-hidden
+        />
+        <div className={cn(siteContainerClass, "relative py-8 sm:py-10 lg:py-11")}>
+          <h1 className="max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
+            {t("flights.page.title")}
+          </h1>
+          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
+            {t("flights.page.tagline")}
           </p>
-          <div className="mt-6">
-            <FlightsWhitelabelWidget
-              scriptUrl={scriptUrl}
-              loadingLabel={t("flights.whitelabel.widgetLoading")}
-            />
-          </div>
+        </div>
+      </header>
+
+      <main className={cn(siteContainerClass, "relative z-10 pb-14 pt-5 sm:pb-16 sm:pt-6 lg:pb-20")}>
+        <div id="flights-search" className="scroll-mt-[calc(var(--site-header-height,72px)+1rem)]">
+          <FlightsWhitelabelWidget
+            scriptUrl={scriptUrl}
+            loadingLabel={t("flights.whitelabel.widgetLoading")}
+          />
         </div>
 
-        <FlightPopularRoutes title={t("flights.popular.title")} className="mt-12 border-t border-gray-100 pt-10" />
-
-        <p className="mt-8 text-xs leading-relaxed text-slate">{t("flights.disclaimer")}</p>
-      </section>
+        <footer className="mt-10 border-t border-gray-100 pt-8 sm:mt-12 sm:pt-10">
+          <FlightPopularRoutes title={t("flights.popular.title")} compact />
+          <p className="mx-auto mt-6 max-w-2xl text-center text-xs leading-relaxed text-slate/75">
+            {t("flights.page.disclaimer")}
+          </p>
+        </footer>
+      </main>
     </div>
   );
 }

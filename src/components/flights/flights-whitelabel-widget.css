@@ -1,11 +1,14 @@
-/* Aviasales WL — scoped mount; global reset is stripped in FlightsWhitelabelWidget. */
+/* Aviasales WL — search-first card; global reset stripped in sync hook. */
 .flights-wl-mount {
   position: relative;
   width: 100%;
   overflow: visible;
-  border-radius: 1rem;
-  border: 1px solid rgb(243 244 246);
+  border-radius: var(--flights-search-radius, 1.25rem);
+  border: 1px solid rgb(229 231 235 / 0.9);
   background: #fff;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 8px 24px rgb(15 23 42 / 0.06);
 }
 
 .flights-wl-mount #tpwl-search,
@@ -22,10 +25,32 @@
   overflow: visible !important;
 }
 
+.flights-wl-mount #tpwl-search {
+  padding: 0.75rem 0.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .flights-wl-mount #tpwl-search {
+    padding: 1rem 0.75rem 1.25rem;
+  }
+}
+
+.flights-wl-mount #tpwl-tickets:not(:empty) {
+  margin-top: 0;
+  padding: 0 0.5rem 1rem;
+  border-top: 1px solid rgb(243 244 246);
+}
+
+@media (min-width: 640px) {
+  .flights-wl-mount #tpwl-tickets:not(:empty) {
+    padding: 0 0.75rem 1.25rem;
+  }
+}
+
 /*
- * Partner popovers live in #tpwl-modals shadow DOM on body (position:absolute inside fixed host).
- * Full-viewport fixed host — same as docs/avia-white-label.html / WordPress embed.
- * pointer-events for shadow content — ensureTpwlModalsInteractive().
+ * Partner popovers in #tpwl-modals shadow DOM on body.
+ * Full-viewport fixed host — docs/avia-white-label.html.
+ * Viewport clamp — ensureTpwlModalsInteractive().
  */
 body:has(.flights-page-root) > #tpwl-modals {
   position: fixed !important;

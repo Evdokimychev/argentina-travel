@@ -5,9 +5,9 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getTravelpayoutsWhitelabelScriptUrl } from "@/lib/travelpayouts/whitelabel/config";
 
-const PAGE_TITLE = "Авиабилеты в Аргентину";
+const PAGE_TITLE = "Поиск авиабилетов";
 const PAGE_DESCRIPTION =
-  "Поиск перелётов в Буэнос-Айрес и региональные аэропорты через партнёра Aviasales. Сравнение цен и переход к бронированию.";
+  "Сравните цены сотен авиакомпаний и агентств. Перелёты в Буэнос-Айрес и по Аргентине — поиск через партнёра Aviasales.";
 
 export const metadata = buildPublicPageMetadata({
   title: PAGE_TITLE,

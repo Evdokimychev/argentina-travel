@@ -9,6 +9,7 @@ import { FLIGHTS_WL_PAGE_MOUNT_ID } from "@/lib/travelpayouts/whitelabel/flights
 import { injectTravelpayoutsWhitelabelScript } from "@/lib/travelpayouts/whitelabel/inject-travelpayouts-whitelabel-script";
 import { removeAviasalesInjectedStyles } from "@/lib/travelpayouts/whitelabel/sanitize-aviasales-styles";
 import { syncTravelpayoutsWhitelabelMount } from "@/lib/travelpayouts/whitelabel/sync-travelpayouts-whitelabel";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import "./flights-whitelabel-widget.css";
 
@@ -80,12 +81,22 @@ export default function FlightsWhitelabelWidget({
     <div
       id={FLIGHTS_WL_PAGE_MOUNT_ID}
       ref={mountRef}
-      className={cn("flights-wl-mount px-3 py-4 sm:px-4", className)}
+      className={cn("flights-wl-mount", className)}
     >
       {!ready ? (
-        <p className="mb-3 text-sm text-slate" aria-live="polite">
-          {loadingLabel}
-        </p>
+        <div className="px-4 py-5 sm:px-5 sm:py-6" aria-live="polite">
+          <span className="sr-only">{loadingLabel}</span>
+          <div className="space-y-3">
+            <Skeleton className="h-11 w-full rounded-xl" />
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+              <Skeleton className="h-11 rounded-xl" />
+              <Skeleton className="h-11 rounded-xl" />
+              <Skeleton className="h-11 rounded-xl" />
+              <Skeleton className="h-11 rounded-xl" />
+            </div>
+            <Skeleton className="h-12 w-full rounded-xl sm:max-w-[200px]" />
+          </div>
+        </div>
       ) : null}
       {/* Official Travelpayouts embed containers — see dashboard «Код вставки». */}
       <div id={TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID} />
