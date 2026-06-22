@@ -117,59 +117,45 @@ export default function Header() {
 
   const utilityLinks = SITE_NAV_UTILITY_LINKS;
 
-  const mobileMenuFooter = (
-    <div className="space-y-3">
+  const mobileMenuHeaderActions = (
+    <>
       <button
         type="button"
         onClick={() => {
           setMobileMenuOpen(false);
           openSiteSearch();
         }}
-        className="flex w-full items-center gap-3 rounded-2xl border border-border-subtle bg-surface-muted/50 px-4 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+        aria-label="Поиск по сайту"
       >
-        <Search className="h-4 w-4 shrink-0 text-sky" strokeWidth={1.75} aria-hidden />
-        Поиск по сайту
+        <Search className="h-4 w-4" strokeWidth={1.75} aria-hidden />
       </button>
+      {isAuthenticated ? (
+        <Link
+          href="/profile"
+          onClick={() => setMobileMenuOpen(false)}
+          className="hidden rounded-full px-3 py-1.5 text-xs font-semibold text-sky transition-colors hover:bg-sky/5 sm:inline-flex"
+        >
+          {t("nav.profile")}
+        </Link>
+      ) : (
+        <button
+          type="button"
+          onClick={() => {
+            setMobileMenuOpen(false);
+            openAuth();
+          }}
+          className="hidden rounded-full px-3 py-1.5 text-xs font-semibold text-charcoal transition-colors hover:bg-surface-muted sm:inline-flex"
+        >
+          Войти
+        </button>
+      )}
+    </>
+  );
 
-      <nav
-        className="grid grid-cols-1 gap-1 rounded-2xl border border-border-subtle bg-surface-muted/30 p-2"
-        aria-label="Быстрые ссылки"
-      >
-        {utilityLinks.map((link) => (
-          <Link
-            key={link.id}
-            href={link.href}
-            onClick={() => setMobileMenuOpen(false)}
-            className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/85 transition-colors hover:bg-surface-elevated hover:text-sky"
-          >
-            {resolveNavLabel(link, t)}
-          </Link>
-        ))}
-      </nav>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border-subtle/80 pt-3">
-        <LocaleCurrencySwitcher />
-        {isAuthenticated ? (
-          <Link
-            href="/profile"
-            onClick={() => setMobileMenuOpen(false)}
-            className="inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-sky transition-colors hover:bg-sky/5"
-          >
-            {t("nav.profile")}
-          </Link>
-        ) : (
-          <button
-            type="button"
-            onClick={() => {
-              setMobileMenuOpen(false);
-              openAuth();
-            }}
-            className="inline-flex rounded-xl bg-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-charcoal/90"
-          >
-            Войти
-          </button>
-        )}
-      </div>
+  const mobileMenuFooter = (
+    <div className="flex items-center justify-center">
+      <LocaleCurrencySwitcher variant="compact" />
     </div>
   );
 
@@ -268,11 +254,9 @@ export default function Header() {
             {hasOverflowSections ? (
               <NavOverflowMegaMenuTrigger
                 sections={overflowSections}
-                index={primarySections.length + 1}
                 active={overflowNavActive}
                 t={t}
                 open={openMegaMenuId === "more"}
-                showIndex={showNavIndex}
                 compact={navCompact}
                 onOpenChange={(nextOpen) => {
                   if (nextOpen) {
@@ -307,6 +291,7 @@ export default function Header() {
         pathname={pathname}
         t={t}
         returnFocusRef={mobileMenuTriggerRef}
+        headerActions={mobileMenuHeaderActions}
         footer={mobileMenuFooter}
       />
     </header>

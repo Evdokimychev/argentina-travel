@@ -1,23 +1,20 @@
 import Link from "next/link";
-import { Clock, UserRound } from "lucide-react";
 import BlogPostSectionView from "@/components/blog/BlogPostSectionView";
 import BlogRelatedPosts from "@/components/blog/BlogRelatedPosts";
-import BlogPostBreadcrumbs from "@/components/blog/BlogPostBreadcrumbs";
 import BlogPostFooterLinks from "@/components/blog/BlogPostFooterLinks";
 import BlogSidebar from "@/components/blog/BlogSidebar";
+import BlogPostHeader from "@/components/blog/BlogPostHeader";
+import BlogPostNav from "@/components/blog/BlogPostNav";
 import ArticlePlacesMiniMap from "@/components/blog/ArticlePlacesMiniMap";
 import BlogRichArticle from "@/components/blog/BlogRichArticle";
 import BlogSectionBody from "@/components/blog/BlogSectionBody";
-import BlogPostHero from "@/components/blog/BlogPostHero";
 import ContentReadingLayout from "@/components/content/ContentReadingLayout";
-import SharePageLinkButton from "@/components/content/SharePageLinkButton";
+import CollapsibleAsidePanel from "@/components/content/CollapsibleAsidePanel";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { getBlogRichArticle, getBlogRichArticleToc } from "@/data/blog-articles";
 import {
   blogPosts,
-  formatDate,
-  formatBlogUpdatedLabel,
   sortBlogPostsByDate,
 } from "@/data/blog";
 import { resolveBlogCanonicalTarget } from "@/data/blog-canonical-map";
@@ -26,6 +23,7 @@ import {
   buildBlogPostBreadcrumbJsonLd,
   buildBlogPostUiBreadcrumbs,
 } from "@/lib/blog-breadcrumbs";
+import { getBlogAdjacentPosts } from "@/lib/blog-adjacent-posts";
 import {
   getBlogPostFooterLinks,
   getBlogPostSidebarRelatedResources,
@@ -47,6 +45,8 @@ type BlogPostViewProps = {
   initialTours?: TourListing[];
 };
 
+const TOC_MIN_SECTIONS = 4;
+
 export default function BlogPostView({ post, initialTours = [] }: BlogPostViewProps) {
   const richArticle = post.richArticleId
     ? getBlogRichArticle(post.richArticleId)
@@ -64,6 +64,7 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
     ? []
     : getRelatedBlogPosts(post, blogPosts);
 
+  const adjacentPosts = getBlogAdjacentPosts(post);
   const uiBreadcrumbs = buildBlogPostUiBreadcrumbs(post);
   const sidebarRelatedResources = getBlogPostSidebarRelatedResources(post);
   const footerLinks = getBlogPostFooterLinks(post);
@@ -92,8 +93,8 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
     : buildTocItemsFromHeadings(
         sectionsWithIds.map(({ section }) => ({ heading: section.title }))
       );
-  const sectionCount = post.sections?.length ?? 0;
-  const showToc = sectionCount >= 8 || (richArticle?.sections.length ?? 0) >= 8;
+  const sectionCount = richArticle?.sections.length ?? post.sections?.length ?? 0;
+  const showToc = sectionCount >= TOC_MIN_SECTIONS;
   const effectiveTocItems = showToc ? tocItems : [];
   const articleMapPoints = extractArticleMapPoints(post);
 
@@ -103,94 +104,25 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
         <BreadcrumbListJsonLd items={buildBlogPostBreadcrumbJsonLd(post)} />
       ) : null}
 
-      <section
-        data-scroll-rail-tone="light"
-        className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]"
-      >
-        <div className={cn(siteContainerClass, "relative py-8 md:py-10")}>
-          <BlogPostBreadcrumbs items={uiBreadcrumbs} />
-
-          <div className="mt-6 max-w-3xl">
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <div className="min-w-0 flex-1">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
-                    {post.category}
-                  </span>
-                  {post.richArticleId ? (
-                    <span className="inline-flex rounded-full bg-sky px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
-                      Полный гид
-                    </span>
-                  ) : null}
-                  {post.editorialReviewed ? (
-                    <span className="inline-flex rounded-full bg-success px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
-                      Вычитано
-                    </span>
-                  ) : null}
-                </div>
-                <h1
-                  data-speakable="headline"
-                  className="mt-4 font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.5rem]"
-                >
-                  {post.title}
-                </h1>
-                <div className="mt-4 max-w-2xl rounded-xl border border-gray-200/80 bg-white/70 px-4 py-3.5 shadow-sm backdrop-blur-sm sm:px-5 sm:py-4">
-                  <p
-                    data-speakable="lede"
-                    className="text-base leading-[1.7] text-slate sm:text-lg"
-                  >
-                    {post.excerpt}
-                  </p>
-                </div>
-              </div>
-              <SharePageLinkButton title={post.title} className="shrink-0" />
-            </div>
-
-              <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate">
-                <span className="inline-flex items-center gap-1.5">
-                  <UserRound className="h-4 w-4 text-sky/70" aria-hidden />
-                  {post.author}
-                </span>
-                <span aria-hidden>·</span>
-                <span>{formatDate(post.date)}</span>
-                <span aria-hidden>·</span>
-                <span className="inline-flex items-center gap-1">
-                  <Clock className="h-4 w-4" aria-hidden />
-                  {post.readTime}
-                </span>
-                {!post.noIndex ? (
-                  <>
-                    <span aria-hidden>·</span>
-                    <span>{formatBlogUpdatedLabel(post)}</span>
-                  </>
-                ) : null}
-              </div>
-
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <li
-                    key={tag}
-                    className="rounded-full border border-gray-200 bg-white px-3 py-1 text-xs font-medium text-slate"
-                  >
-                    #{tag}
-                  </li>
-                ))}
-              </ul>
-          </div>
-        </div>
-      </section>
-
-      <BlogPostHero post={post} />
+      <BlogPostHeader post={post} breadcrumbs={uiBreadcrumbs} />
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-10")}>
           <ContentReadingLayout
             tocItems={effectiveTocItems}
-            tocMinItems={8}
+            tocMinItems={TOC_MIN_SECTIONS}
+            collapsiblePanels
+            relatedOutsideArticle
             aside={
               <div className="space-y-4">
                 {articleMapPoints.length > 0 ? (
-                  <ArticlePlacesMiniMap points={articleMapPoints} />
+                  <CollapsibleAsidePanel
+                    title="На карте"
+                    storageKey="blog-map-collapsed"
+                    collapsedHint={`${articleMapPoints.length} точек`}
+                  >
+                    <ArticlePlacesMiniMap points={articleMapPoints} />
+                  </CollapsibleAsidePanel>
                 ) : null}
                 <BlogSidebar
                   freshPosts={freshPosts}
@@ -198,7 +130,6 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
                   hubLabel={primaryHub?.shortTitle}
                   hubHref={primaryHub ? blogHubPath(primaryHub.id) : undefined}
                   defaultHubScope={Boolean(hubFreshPosts?.length)}
-                  embedded
                 />
               </div>
             }
@@ -277,6 +208,14 @@ export default function BlogPostView({ post, initialTours = [] }: BlogPostViewPr
               </div>
             ) : null}
           </ContentReadingLayout>
+
+          {!post.noIndex ? (
+            <BlogPostNav
+              prev={adjacentPosts.prev}
+              next={adjacentPosts.next}
+              className="mt-10"
+            />
+          ) : null}
 
           {!post.noIndex && relatedPosts.length > 0 ? (
             <BlogRelatedPosts posts={relatedPosts} className="mt-10" />

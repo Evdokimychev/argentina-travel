@@ -183,6 +183,10 @@ html {
   }
 }
 
+.mobile-nav-scroll {
+  -webkit-overflow-scrolling: touch;
+}
+
 html[data-site-header="hidden"] .site-header {
   pointer-events: none;
 }

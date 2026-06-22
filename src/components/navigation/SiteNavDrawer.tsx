@@ -18,6 +18,7 @@ export function SiteNavFullScreenOverlay({
   pathname,
   t,
   returnFocusRef,
+  headerActions,
   footer,
 }: {
   open: boolean;
@@ -27,9 +28,11 @@ export function SiteNavFullScreenOverlay({
   pathname: string;
   t: NavTranslate;
   returnFocusRef?: RefObject<HTMLElement | null>;
+  headerActions?: React.ReactNode;
   footer?: React.ReactNode;
 }) {
   const panelRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const mounted = typeof document !== "undefined";
 
@@ -43,6 +46,11 @@ export function SiteNavFullScreenOverlay({
       document.body.style.overflow = previousOverflow;
     };
   }, [open]);
+
+  useEffect(() => {
+    if (!open) return;
+    scrollRef.current?.scrollTo({ top: 0, behavior: "instant" });
+  }, [open, pathname]);
 
   useEffect(() => {
     if (!open) return;
@@ -100,33 +108,42 @@ export function SiteNavFullScreenOverlay({
         role="dialog"
         aria-modal="true"
         aria-label={title}
-        className="relative flex h-full flex-col bg-surface-elevated"
+        className="relative flex h-dvh max-h-dvh flex-col bg-surface-elevated"
       >
-        <div className="flex shrink-0 items-center justify-between border-b border-border-subtle px-4 py-3.5 sm:px-6">
-          <p className="font-heading text-lg font-semibold text-charcoal">{title}</p>
-          <button
-            ref={closeButtonRef}
-            type="button"
-            onClick={onClose}
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
-            aria-label="Закрыть"
-          >
-            <X className="h-[18px] w-[18px]" strokeWidth={1.75} />
-          </button>
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border-subtle px-3 py-3 sm:px-4">
+          <p className="min-w-0 truncate font-heading text-base font-semibold text-charcoal sm:text-lg">
+            {title}
+          </p>
+          <div className="flex shrink-0 items-center gap-1">
+            {headerActions}
+            <button
+              ref={closeButtonRef}
+              type="button"
+              onClick={onClose}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle bg-surface-elevated text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+              aria-label="Закрыть"
+            >
+              <X className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </button>
+          </div>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 sm:px-6">
+        <div
+          ref={scrollRef}
+          className="mobile-nav-scroll min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-y-contain px-3 py-4 sm:px-4 sm:py-5"
+        >
           <MobileSiteNavMenu
             sections={sections}
             pathname={pathname}
             t={t}
             open={open}
             onNavigate={onClose}
+            scrollContainerRef={scrollRef}
           />
         </div>
 
         {footer ? (
-          <div className="shrink-0 border-t border-border-subtle bg-surface-elevated/95 px-4 py-4 backdrop-blur-md sm:px-6">
+          <div className="shrink-0 border-t border-border-subtle bg-surface-elevated/95 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:px-4">
             {footer}
           </div>
         ) : null}

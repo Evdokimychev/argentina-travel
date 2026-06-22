@@ -12,6 +12,8 @@ type TableOfContentsProps = {
   variant: "sidebar" | "mobile";
   className?: string;
   embedded?: boolean;
+  /** Без обёртки nav — только список (внутри CollapsibleAsidePanel) */
+  bare?: boolean;
 };
 
 function handleAnchorClick(id: string) {
@@ -87,17 +89,27 @@ function TocSidebar({
   items,
   className,
   embedded = false,
+  bare = false,
 }: {
   items: ContentTocItem[];
   className?: string;
   embedded?: boolean;
+  bare?: boolean;
 }) {
   const activeId = useContentTocScrollSpy(items);
+
+  if (bare) {
+    return (
+      <nav className={className} aria-label="Содержание">
+        <TocList items={items} activeId={activeId} />
+      </nav>
+    );
+  }
 
   return (
     <nav
       className={cn(
-        "overflow-y-auto rounded-2xl border border-gray-100 bg-white p-5 shadow-card",
+        "rounded-2xl border border-gray-100 bg-white p-5 shadow-card",
         !embedded && hubTocStickyTopClass,
         !embedded && hubTocStickyMaxHeightClass,
         className
@@ -147,12 +159,18 @@ function TocMobile({ items, className }: { items: ContentTocItem[]; className?: 
   );
 }
 
-export default function TableOfContents({ items, variant, className, embedded }: TableOfContentsProps) {
+export default function TableOfContents({
+  items,
+  variant,
+  className,
+  embedded,
+  bare,
+}: TableOfContentsProps) {
   if (items.length < 2) return null;
 
   if (variant === "mobile") {
     return <TocMobile items={items} className={className} />;
   }
 
-  return <TocSidebar items={items} className={className} embedded={embedded} />;
+  return <TocSidebar items={items} className={className} embedded={embedded} bare={bare} />;
 }

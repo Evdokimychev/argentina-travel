@@ -30,6 +30,10 @@ export const hubTocStickyTopClass =
 export const hubTocStickyMaxHeightClass =
   "max-h-[calc(100vh-var(--site-header-height,72px)-var(--site-section-nav-height,0px)-2rem)]";
 
+/** Sticky reading sidebar: один блок на колонку, прокрутка внутри при длинном TOC */
+export const readingAsideStickyScrollClass =
+  `sticky space-y-4 overflow-y-auto overscroll-y-contain scrollbar-thin touch-pan-y ${hubTocStickyTopClass} ${hubTocStickyMaxHeightClass}`;
+
 /** Sticky sidebar (бронирование и т.п.) — ниже хедера и таб-навигации разделов */
 export const siteStickyPanelTopClass =
   `top-[calc(var(--site-header-height,72px)+var(--site-section-nav-height,0px)+var(--tour-section-nav-height,0px)+1rem)] ${siteHeaderOffsetTransitionClass}`;
