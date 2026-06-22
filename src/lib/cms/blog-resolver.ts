@@ -1,4 +1,5 @@
 import { blogPosts, getBlogPostBySlug } from "@/data/blog";
+import { blogSlugLookupCandidates } from "@/lib/blog-slug-resolve";
 import { sortBlogPostsByDate } from "@/lib/blog-utils";
 import {
   blogPostsFromCmsDocuments,
@@ -73,27 +74,34 @@ export async function resolveBlogCatalog(locale = "ru"): Promise<BlogPost[]> {
 
 /** Published CMS override merged with TS defaults for missing media/metadata. */
 export async function resolveBlogPost(slug: string, locale = "ru"): Promise<BlogPost | undefined> {
-  const cutover = await getCmsCutoverFlags();
-  const fallback = cutover.blog ? null : (getBlogPostBySlug(slug) ?? null);
-  const supabase = await getCmsServerClient();
-  const translationStatus = supabase
-    ? await fetchCmsTranslationStatusForSlug(supabase, "blog", slug, {
-        ruFallbackComplete: cutover.blog ? false : Boolean(fallback),
-      })
-    : buildDefaultTranslationStatus(cutover.blog ? false : Boolean(fallback));
+  for (const lookupSlug of blogSlugLookupCandidates(slug)) {
+    const fallback = getBlogPostBySlug(lookupSlug) ?? null;
+    const supabase = await getCmsServerClient();
+    const translationStatus = supabase
+      ? await fetchCmsTranslationStatusForSlug(supabase, "blog", lookupSlug, {
+          ruFallbackComplete: Boolean(fallback),
+        })
+      : buildDefaultTranslationStatus(Boolean(fallback));
 
-  const resolved = await resolveWithPublishedCmsOverride({
-    docType: "blog",
-    slug,
-    locale,
-    fallback,
-    merge: (doc, fb) => blogPostFromCms(doc, fb),
-    supabase,
-    isUsable: isCmsDocumentComplete,
-  });
+    const resolved = await resolveWithPublishedCmsOverride({
+      docType: "blog",
+      slug: lookupSlug,
+      locale,
+      fallback,
+      merge: (doc, fb) => blogPostFromCms(doc, fb),
+      supabase,
+      isUsable: isCmsDocumentComplete,
+    });
 
-  if (!resolved) return undefined;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+    if (resolved) {
+      return attachCmsResolverMetadata(
+        resolved,
+        buildCmsResolverMetadata(locale, translationStatus),
+      );
+    }
+  }
+
+  return undefined;
 }
 
 export async function listPublishedBlogSlugs(locale = "ru"): Promise<string[]> {

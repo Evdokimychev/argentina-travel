@@ -15,7 +15,7 @@ import BlogRichArticleClientBlock, {
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
 import PageImage from "@/components/media/PageImage";
-import { contentFigureShellClass, CONTENT_FIGURE_SIZES } from "@/lib/content-figure";
+import { contentFigureDimensions, contentFigureShellClass, CONTENT_FIGURE_SIZES } from "@/lib/content-figure";
 import { cn } from "@/lib/cn";
 import { getContentImage, getRichArticleGallery } from "@/lib/media-resolver";
 import { siteScrollAnchorClass } from "@/lib/site-container";

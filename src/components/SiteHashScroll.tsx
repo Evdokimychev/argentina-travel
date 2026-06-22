@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
+import { scrollToSiteAnchor, scrollToSiteHashWhenReady } from "@/lib/scroll-anchor";
 
 export default function SiteHashScroll() {
   const pathname = usePathname();
@@ -11,7 +11,7 @@ export default function SiteHashScroll() {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
 
-    const timer = window.setTimeout(() => scrollToSiteAnchor(hash, "auto"), 100);
+    const timer = window.setTimeout(() => scrollToSiteHashWhenReady(hash, "auto"), 100);
     return () => window.clearTimeout(timer);
   }, [pathname]);
 

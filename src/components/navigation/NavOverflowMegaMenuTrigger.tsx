@@ -152,7 +152,6 @@ export function NavOverflowMegaMenuTrigger({
   const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? "");
 
   const label = overflowTriggerLabel(t);
-  const preview = useMemo(() => overflowSectionPreview(sections, t, compact ? 2 : 3), [sections, t, compact]);
   const ariaSections = useMemo(
     () => sections.map((section) => navSectionLabel(section, t)).join(", "),
     [sections, t],
@@ -236,13 +235,7 @@ export function NavOverflowMegaMenuTrigger({
       >
         <span className="shrink-0 font-semibold">{label}</span>
         <span
-          className="hidden min-w-0 truncate text-xs font-normal text-slate xl:inline xl:max-w-[11rem]"
-          aria-hidden
-        >
-          {preview}
-        </span>
-        <span
-          className="inline-flex h-5 min-w-[1.25rem] shrink-0 items-center justify-center rounded-full bg-surface-muted px-1.5 text-[10px] font-semibold tabular-nums text-slate xl:hidden"
+          className="inline-flex h-5 min-w-[1.25rem] shrink-0 items-center justify-center rounded-full bg-surface-muted px-1.5 text-[10px] font-semibold tabular-nums text-slate"
           aria-hidden
         >
           {sections.length}

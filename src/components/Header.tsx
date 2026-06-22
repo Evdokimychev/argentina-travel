@@ -8,8 +8,7 @@ import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
 import ProfileMenu from "@/components/auth/ProfileMenu";
-import { MegaMenuTrigger } from "@/components/navigation/MegaMenuTrigger";
-import { NavOverflowMegaMenuTrigger } from "@/components/navigation/NavOverflowMegaMenuTrigger";
+import DesktopSiteNav from "@/components/navigation/DesktopSiteNav";
 import { SiteNavFullScreenOverlay } from "@/components/navigation/SiteNavDrawer";
 import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
@@ -19,7 +18,6 @@ import {
 } from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
 import { useSiteHeaderAutoHide } from "@/hooks/useSiteHeaderAutoHide";
-import { useSiteNavLayout } from "@/hooks/useSiteNavLayout";
 import { cn } from "@/lib/cn";
 import {
   tokenFocusRingClass,
@@ -30,7 +28,7 @@ import {
 } from "@/lib/design-tokens";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
-import { isNavSectionActive, resolveNavLabel } from "@/lib/site-nav";
+import { resolveNavLabel } from "@/lib/site-nav";
 
 const CircleButton = forwardRef<
   HTMLButtonElement,
@@ -81,14 +79,6 @@ export default function Header() {
   const { t } = useLocaleCurrency();
   const { isAuthenticated, openAuth } = useAuth();
 
-  const { primarySections, overflowSections, showNavIndex, layout: navLayout } =
-    useSiteNavLayout();
-
-  const hasOverflowSections = overflowSections.length > 0;
-  const overflowNavActive = overflowSections.some((section) =>
-    isNavSectionActive(pathname, section)
-  );
-  const navCompact = navLayout === "compact";
   const headerAutoHideDisabled = mobileMenuOpen || openMegaMenuId !== null;
 
   const { headerVisible } = useSiteHeaderAutoHide({
@@ -100,10 +90,6 @@ export default function Header() {
     setMobileMenuOpen(false);
     setOpenMegaMenuId(null);
   }, [pathname]);
-
-  useEffect(() => {
-    setOpenMegaMenuId(null);
-  }, [navLayout]);
 
   useEffect(() => {
     function onScroll() {
@@ -224,52 +210,18 @@ export default function Header() {
             <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} />
           </CircleButton>
 
-          <Link href="/" className="shrink-0" aria-label={t("nav.home")}>
+          <Link href="/" className="relative z-10 shrink-0" aria-label={t("nav.home")}>
             <ArgentinaLogo />
           </Link>
 
-          <nav
-            className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 lg:flex xl:gap-2 2xl:gap-4"
-            aria-label={t("nav.main")}
-          >
-            {primarySections.map((section, index) => (
-              <MegaMenuTrigger
-                key={section.id}
-                section={section}
-                index={index + 1}
-                active={isNavSectionActive(pathname, section)}
-                t={t}
-                open={openMegaMenuId === section.id}
-                showIndex={showNavIndex}
-                compact={navCompact}
-                onOpenChange={(nextOpen) => {
-                  if (nextOpen) {
-                    setOpenMegaMenuId(section.id);
-                    return;
-                  }
-                  setOpenMegaMenuId((current) => (current === section.id ? null : current));
-                }}
-              />
-            ))}
-            {hasOverflowSections ? (
-              <NavOverflowMegaMenuTrigger
-                sections={overflowSections}
-                active={overflowNavActive}
-                t={t}
-                open={openMegaMenuId === "more"}
-                compact={navCompact}
-                onOpenChange={(nextOpen) => {
-                  if (nextOpen) {
-                    setOpenMegaMenuId("more");
-                    return;
-                  }
-                  setOpenMegaMenuId((current) => (current === "more" ? null : current));
-                }}
-              />
-            ) : null}
-          </nav>
+          <DesktopSiteNav
+            pathname={pathname}
+            t={t}
+            openMegaMenuId={openMegaMenuId}
+            onOpenMegaMenuChange={setOpenMegaMenuId}
+          />
 
-          <div className="ml-auto flex shrink-0 items-center gap-1.5 sm:gap-2">
+          <div className="relative z-10 ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
             <CircleButton
               ariaLabel="Поиск по сайту"
               onClick={() => openSiteSearch()}

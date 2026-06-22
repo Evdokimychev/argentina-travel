@@ -4,6 +4,7 @@ import { GUIDE_TOPICS } from "@/data/guide-topics";
 import { getPlaceBySlug } from "@/data/places-seed";
 import { getContentPage } from "@/lib/content-pages";
 import { getDestinationBySlug } from "@/lib/destinations";
+import { isBlogSlugPublished } from "@/lib/blog-slug-resolve";
 import type { BlogPost, BlogRelatedResource } from "@/types";
 
 const SIDEBAR_HREFS = new Set(BLOG_HUB_LINKS.map((link) => link.href));
@@ -14,10 +15,17 @@ function extractPathSlug(href: string, prefix: string): string | null {
   return slug || null;
 }
 
-export function isValidBlogRelatedResourceHref(resource: BlogRelatedResource): boolean {
+export function isValidBlogRelatedResourceHref(
+  resource: BlogRelatedResource,
+  publishedBlogSlugs?: ReadonlySet<string>,
+): boolean {
   if (resource.type === "blog") {
     const slug = extractPathSlug(resource.href, "/blog/");
-    return slug ? Boolean(getBlogPostBySlug(slug)) : false;
+    if (!slug) return false;
+    if (publishedBlogSlugs) {
+      return isBlogSlugPublished(slug, publishedBlogSlugs);
+    }
+    return Boolean(getBlogPostBySlug(slug));
   }
 
   if (resource.type === "guide") {
@@ -47,8 +55,13 @@ export function isValidBlogRelatedResourceHref(resource: BlogRelatedResource): b
   return false;
 }
 
-function filterValidResources(resources: BlogRelatedResource[]): BlogRelatedResource[] {
-  return resources.filter(isValidBlogRelatedResourceHref);
+function filterValidResources(
+  resources: BlogRelatedResource[],
+  publishedBlogSlugs?: ReadonlySet<string>,
+): BlogRelatedResource[] {
+  return resources.filter((resource) =>
+    isValidBlogRelatedResourceHref(resource, publishedBlogSlugs),
+  );
 }
 
 function isExternalSiteSection(resource: BlogRelatedResource): boolean {
@@ -64,10 +77,13 @@ function isExternalSiteSection(resource: BlogRelatedResource): boolean {
 }
 
 /** Компактные ссылки guide/places для подвала статьи — без дублей боковой панели и блог-карточек */
-export function getBlogPostFooterLinks(post: BlogPost): BlogRelatedResource[] {
+export function getBlogPostFooterLinks(
+  post: BlogPost,
+  publishedBlogSlugs?: ReadonlySet<string>,
+): BlogRelatedResource[] {
   const seen = new Set<string>();
 
-  return filterValidResources(post.relatedResources ?? []).filter((resource) => {
+  return filterValidResources(post.relatedResources ?? [], publishedBlogSlugs).filter((resource) => {
     if (resource.type === "blog") return false;
     if (!isExternalSiteSection(resource)) return false;
     if (SIDEBAR_HREFS.has(resource.href)) return false;
@@ -77,6 +93,11 @@ export function getBlogPostFooterLinks(post: BlogPost): BlogRelatedResource[] {
   });
 }
 
-export function getBlogPostSidebarRelatedResources(post: BlogPost): BlogRelatedResource[] {
-  return filterValidResources(post.relatedResources ?? []).filter((resource) => resource.type === "blog");
+export function getBlogPostSidebarRelatedResources(
+  post: BlogPost,
+  publishedBlogSlugs?: ReadonlySet<string>,
+): BlogRelatedResource[] {
+  return filterValidResources(post.relatedResources ?? [], publishedBlogSlugs).filter(
+    (resource) => resource.type === "blog",
+  );
 }

@@ -435,7 +435,33 @@ export const SITE_NAV_PRIMARY_IDS = ["geography", "tours", "excursions", "guide"
 /** Shorter desktop bar at lg–xl to avoid overlap with logo and actions. */
 export const SITE_NAV_COMPACT_PRIMARY_IDS = ["geography", "tours", "excursions", "guide"] as const;
 
+/** Priority order for adaptive desktop bar (left → right). */
+export const SITE_NAV_DESKTOP_PRIORITY_IDS = SITE_NAV_PRIMARY_IDS;
+
 export type SiteNavBarLayout = "wide" | "compact";
+
+export function getSiteNavBarSectionsByCount(visiblePrimaryCount: number): {
+  primarySections: SiteNavSection[];
+  overflowSections: SiteNavSection[];
+} {
+  const clamped = Math.max(
+    2,
+    Math.min(visiblePrimaryCount, SITE_NAV_DESKTOP_PRIORITY_IDS.length),
+  );
+  const primaryIdSet = new Set<string>(
+    SITE_NAV_DESKTOP_PRIORITY_IDS.slice(0, clamped),
+  );
+
+  const primarySections = SITE_NAV_DESKTOP_PRIORITY_IDS.slice(0, clamped)
+    .map((id) => getSiteNavSection(id))
+    .filter((section): section is SiteNavSection => Boolean(section));
+
+  const overflowSections = SITE_NAV_SECTIONS.filter(
+    (section) => section.id !== "home" && !primaryIdSet.has(section.id),
+  );
+
+  return { primarySections, overflowSections };
+}
 
 export function getSiteNavBarSections(layout: SiteNavBarLayout): {
   primarySections: SiteNavSection[];
@@ -444,15 +470,7 @@ export function getSiteNavBarSections(layout: SiteNavBarLayout): {
   const primaryIds =
     layout === "wide" ? SITE_NAV_PRIMARY_IDS : SITE_NAV_COMPACT_PRIMARY_IDS;
 
-  const primarySections = SITE_NAV_SECTIONS.filter((section) =>
-    (primaryIds as readonly string[]).includes(section.id)
-  );
-  const overflowSections = SITE_NAV_SECTIONS.filter(
-    (section) =>
-      section.id !== "home" && !(primaryIds as readonly string[]).includes(section.id)
-  );
-
-  return { primarySections, overflowSections };
+  return getSiteNavBarSectionsByCount(primaryIds.length);
 }
 
 export function getSiteNavSection(id: string): SiteNavSection | undefined {
