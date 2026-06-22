@@ -5,12 +5,20 @@ import { SERVICE_CATEGORIES } from "@/data/services-hub";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 import { TOUR_COLLECTION_OPTIONS } from "@/data/tour-collections";
 import { destinationHref } from "@/lib/destinations";
+import { filterIndexableBlogPosts, sortBlogPostsByDate } from "@/lib/blog-utils";
 import { buildGuideNavColumns } from "@/lib/guide-nav";
 import { buildImmigrationNavColumns } from "@/lib/immigration-nav";
 import { buildPopularPlaceNavLinks } from "@/lib/places-nav";
 import { searchLabelToHref } from "@/lib/geography-links";
 import { destinationCatalogHref } from "@/lib/site-nav";
 import type { SiteNavLink, SiteNavSection } from "@/types/site-nav";
+
+/** Recent indexable posts for mega-menu (not the full 290-post catalog). */
+const BLOG_NAV_RECENT_LIMIT = 12;
+const blogNavRecentPosts = sortBlogPostsByDate(filterIndexableBlogPosts(blogPosts)).slice(
+  0,
+  BLOG_NAV_RECENT_LIMIT
+);
 
 /** Utility links in the header top bar. */
 export const SITE_NAV_UTILITY_LINKS: SiteNavLink[] = [
@@ -162,6 +170,7 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
 const ABOUT_LINKS: SiteNavLink[] = [
   { id: "about-project", label: "О проекте", href: "/about", description: "Миссия и команда платформы" },
   { id: "about-faq", label: "Частые вопросы", href: "/faq", description: "Ответы перед поездкой и бронированием" },
+  { id: "about-experts", label: "Локальные эксперты", href: "/experts", description: "Гиды и консультанты в Аргентине" },
   { id: "about-contacts", label: "Контакты", href: "/contacts", description: "Связаться с командой" },
   { id: "about-join", label: "Для организаторов", href: "/join", description: "Публикация туров на платформе" },
   ...SITE_LEGAL_LINKS.map((link) => ({
@@ -269,6 +278,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     id: "tours",
     label: "Туры",
     labelKey: "nav.tours",
+    href: "/tours",
     columns: [
       {
         id: "tours-browse",
@@ -378,7 +388,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         id: "journal-recent",
         title: "Последние публикации",
         titleKey: "nav.columns.recentPosts",
-        links: blogPosts.map((post) => ({
+        links: blogNavRecentPosts.map((post) => ({
           id: `blog-${post.slug}`,
           label: post.title,
           href: `/blog/${post.slug}`,
@@ -407,13 +417,13 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         id: "about-company",
         title: "Платформа",
         titleKey: "nav.columns.platform",
-        links: ABOUT_LINKS.slice(0, 4),
+        links: ABOUT_LINKS.slice(0, 5),
       },
       {
         id: "about-legal",
         title: "Документы",
         titleKey: "nav.columns.legal",
-        links: ABOUT_LINKS.slice(4),
+        links: ABOUT_LINKS.slice(5),
       },
     ],
   },
@@ -423,7 +433,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
 export const SITE_NAV_PRIMARY_IDS = ["geography", "tours", "excursions", "guide", "immigration"] as const;
 
 /** Shorter desktop bar at lg–xl to avoid overlap with logo and actions. */
-export const SITE_NAV_COMPACT_PRIMARY_IDS = ["geography", "tours", "guide", "immigration"] as const;
+export const SITE_NAV_COMPACT_PRIMARY_IDS = ["geography", "tours", "excursions", "guide"] as const;
 
 export type SiteNavBarLayout = "wide" | "compact";
 

@@ -44,7 +44,7 @@ export default function TourCardGallery({
         alt={alt}
         fill
         placeholderVariant={variant}
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       />
 

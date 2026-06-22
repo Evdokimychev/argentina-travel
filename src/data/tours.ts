@@ -11,6 +11,8 @@ type BaseTour = Omit<
   | "startLocation"
   | "features"
   | "tags"
+  | "image"
+  | "gallery"
 >;
 
 export const baseTours: BaseTour[] = [
@@ -25,16 +27,6 @@ export const baseTours: BaseTour[] = [
     region: "Патагония",
     duration: "10 дней",
     priceUsd: 2663,
-    image:
-      "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      "https://images.unsplash.com/photo-1519682337058-a94d51933763?w=800&q=80",
-      "https://images.unsplash.com/photo-1589182370481-0de83087320f?w=800&q=80",
-    ],
     highlights: [
       "Ледник Перито-Морено",
       "Национальный парк Torres del Paine",
@@ -64,16 +56,6 @@ export const baseTours: BaseTour[] = [
     region: "Буэнос-Айрес",
     duration: "5 дней",
     priceUsd: 967,
-    image:
-      "https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=800&q=80",
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&q=80",
-      "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=800&q=80",
-      "https://images.unsplash.com/photo-1594909127802-a085ed12fbea?w=800&q=80",
-      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=800&q=80",
-      "https://images.unsplash.com/photo-1565299715192-0a869238b7f0?w=800&q=80",
-    ],
     highlights: [
       "Шоу танго в San Telmo",
       "Район La Boca и Caminito",
@@ -103,16 +85,6 @@ export const baseTours: BaseTour[] = [
     region: "Мендоса",
     duration: "7 дней",
     priceUsd: 1696,
-    image:
-      "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=800&q=80",
-      "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=800&q=80",
-      "https://images.unsplash.com/photo-1474722883778-792e2790302b?w=800&q=80",
-      "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=800&q=80",
-      "https://images.unsplash.com/photo-1560493676-04071c5f467f?w=800&q=80",
-      "https://images.unsplash.com/photo-1527283120-80239919596f?w=800&q=80",
-    ],
     highlights: [
       "Дегустации на 5 винодельнях",
       "Вид на Аконкагуа",
@@ -142,16 +114,6 @@ export const baseTours: BaseTour[] = [
     region: "Мисьонес",
     duration: "4 дня",
     priceUsd: 783,
-    image:
-      "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
-      "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
-      "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=800&q=80",
-      "https://images.unsplash.com/photo-1432407692633-884d652312ea?w=800&q=80",
-      "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80",
-      "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80",
-    ],
     highlights: [
       "Водопад Garganta del Diablo",
       "Мостки над водопадами",
@@ -180,16 +142,6 @@ export const baseTours: BaseTour[] = [
     region: "Сальта",
     duration: "8 дней",
     priceUsd: 1457,
-    image:
-      "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=800&q=80",
-      "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80",
-      "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80",
-      "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80",
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80",
-    ],
     highlights: [
       "Каньон Quebrada de las Conchas",
       "Salinas Grandes",
@@ -218,16 +170,6 @@ export const baseTours: BaseTour[] = [
     region: "Огненная Земля",
     duration: "6 дней",
     priceUsd: 1935,
-    image:
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-      "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
-      "https://images.unsplash.com/photo-1519682337058-a94d51933763?w=800&q=80",
-      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-      "https://images.unsplash.com/photo-1589182370481-0de83087320f?w=800&q=80",
-    ],
     highlights: [
       "Круиз по каналу Бигля",
       "Пингвины и морские львы",

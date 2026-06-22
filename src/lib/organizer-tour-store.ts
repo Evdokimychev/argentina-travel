@@ -90,12 +90,11 @@ import {
 } from "@/lib/permissions";
 import type { SessionUser } from "@/types/user";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
+import { tourCover } from "@/lib/seed-media";
 
 const DRAFTS_KEY = "argentina-travel-organizer-tour-drafts";
 const LISTINGS_KEY = "argentina-travel-organizer-tour-listings";
-
-const DEFAULT_TOUR_IMAGE =
-  "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80";
+const DEFAULT_TOUR_IMAGE = tourCover("patagonia-glaciers");
 
 function readDraftMap(): Record<string, OrganizerTourDraft> {
   if (typeof window === "undefined") return {};

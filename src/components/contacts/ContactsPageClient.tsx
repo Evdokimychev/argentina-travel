@@ -1,8 +1,10 @@
 "use client";
 
-import { Suspense, useMemo, useState, type FormEvent } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useState, type FormEvent } from "react";
+import { Mail, MapPin, MessageCircle } from "lucide-react";
 import Hero from "@/components/Hero";
+import ContactOfficeMap from "@/components/contacts/ContactOfficeMap";
+import ContactTeamBlock from "@/components/contacts/ContactTeamBlock";
 import { getShopProductBySlug } from "@/data/shop-products";
 import { getServiceBySlug } from "@/data/services-hub";
 import { getTourBySlug } from "@/data/tours";
@@ -11,55 +13,65 @@ import {
   SITE_OFFICE,
   SITE_PHONES,
   SITE_WHATSAPP_URL,
-  SITE_WORKING_HOURS,
 } from "@/data/site-contacts";
 import { Input } from "@/components/ui/input";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/cn";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
-import ContactTeamStatus from "@/components/contacts/ContactTeamStatus";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackContactFormSubmit } from "@/lib/analytics/gtm-events";
+import { siteContainerClass } from "@/lib/site-container";
 
 const DEFAULT_FORM_INTRO = "Заполните форму, и мы свяжемся с вами в течение 24 часов";
+
+type ContactFormContext = {
+  tourSlug?: string;
+  productSlug?: string;
+  serviceSlug?: string;
+  topic?: string;
+};
 
 type ContactsPageClientProps = {
   contactPageIntro?: string | null;
   whatsAppUrl?: string | null;
   supportEmail?: string;
+  formContext?: ContactFormContext;
 };
 
-function ContactsForm() {
-  const searchParams = useSearchParams();
-  const tourSlug = searchParams.get("tour");
-  const productSlug = searchParams.get("product");
-  const serviceSlug = searchParams.get("service");
+function buildInitialMessage(context: ContactFormContext): string {
+  const tour = context.tourSlug ? getTourBySlug(context.tourSlug) : undefined;
+  const product = context.productSlug ? getShopProductBySlug(context.productSlug) : undefined;
+  const service = context.serviceSlug ? getServiceBySlug(context.serviceSlug) : undefined;
+
+  if (tour) return `Интересует тур «${tour.title}». `;
+  if (product) return `Хочу заказать «${product.title}» (${product.format}). `;
+  if (service) return `Запрос по сервису: «${service.title}». `;
+  if (context.topic) return `Вопрос по теме: ${context.topic}. `;
+  return "";
+}
+
+function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }) {
   const tour = useMemo(
-    () => (tourSlug ? getTourBySlug(tourSlug) : undefined),
-    [tourSlug]
+    () => (formContext.tourSlug ? getTourBySlug(formContext.tourSlug) : undefined),
+    [formContext.tourSlug]
   );
   const product = useMemo(
-    () => (productSlug ? getShopProductBySlug(productSlug) : undefined),
-    [productSlug]
+    () => (formContext.productSlug ? getShopProductBySlug(formContext.productSlug) : undefined),
+    [formContext.productSlug]
   );
   const service = useMemo(
-    () => (serviceSlug ? getServiceBySlug(serviceSlug) : undefined),
-    [serviceSlug]
+    () => (formContext.serviceSlug ? getServiceBySlug(formContext.serviceSlug) : undefined),
+    [formContext.serviceSlug]
   );
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
   const feedback = useSiteFeedback();
-  const [message, setMessage] = useState(() => {
-    if (tour) return `Интересует тур «${tour.title}». `;
-    if (product) return `Хочу заказать «${product.title}» (${product.format}). `;
-    if (service) return `Запрос по сервису: «${service.title}». `;
-    return "";
-  });
+  const [message, setMessage] = useState(() => buildInitialMessage(formContext));
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -81,13 +93,14 @@ function ContactsForm() {
           name,
           email,
           message: bodyMessage,
-          tourSlug: tourSlug ?? undefined,
-          productSlug: productSlug ?? undefined,
-          serviceSlug: serviceSlug ?? undefined,
+          tourSlug: formContext.tourSlug,
+          productSlug: formContext.productSlug,
+          serviceSlug: formContext.serviceSlug,
           context: {
             tour_title: tour?.title ?? (tourTitle || undefined),
             product_title: product?.title,
             service_title: service?.title,
+            topic: formContext.topic,
           },
           pageUrl: typeof window !== "undefined" ? window.location.href : null,
         }),
@@ -101,9 +114,9 @@ function ContactsForm() {
       setSubmitted(true);
       trackContactFormSubmit({
         source: "contacts",
-        tourSlug: tourSlug ?? undefined,
-        productSlug: productSlug ?? undefined,
-        serviceSlug: serviceSlug ?? undefined,
+        tourSlug: formContext.tourSlug,
+        productSlug: formContext.productSlug,
+        serviceSlug: formContext.serviceSlug,
       });
       feedback.success({
         title: "Сообщение отправлено",
@@ -125,23 +138,23 @@ function ContactsForm() {
     <>
       {tour ? (
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
-          Вопрос по туру:{" "}
-          <span className="font-medium">{tour.title}</span>
+          Вопрос по туру: <span className="font-medium">{tour.title}</span>
         </div>
       ) : null}
 
       {product ? (
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
-          Заказ продукта:{" "}
-          <span className="font-medium">{product.title}</span>
-          <span className="text-slate"> · ${product.price} {product.currency}</span>
+          Заказ продукта: <span className="font-medium">{product.title}</span>
+          <span className="text-slate">
+            {" "}
+            · ${product.price} {product.currency}
+          </span>
         </div>
       ) : null}
 
       {service ? (
         <div className="mt-6 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm text-charcoal">
-          Запрос по сервису:{" "}
-          <span className="font-medium">{service.title}</span>
+          Запрос по сервису: <span className="font-medium">{service.title}</span>
         </div>
       ) : null}
 
@@ -236,6 +249,7 @@ export default function ContactsPageClient({
   contactPageIntro,
   whatsAppUrl,
   supportEmail,
+  formContext = {},
 }: ContactsPageClientProps) {
   const whatsAppHref = whatsAppUrl?.trim() || SITE_WHATSAPP_URL;
   const emailDisplay = supportEmail?.trim() || SITE_EMAIL.display;
@@ -251,7 +265,7 @@ export default function ContactsPageClient({
         compact
       />
 
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <section className={cn(siteContainerClass, "py-12 md:py-14")}>
         {whatsAppHref ? (
           <div className="mb-10 flex flex-wrap gap-3">
             <a
@@ -265,41 +279,23 @@ export default function ContactsPageClient({
           </div>
         ) : null}
 
-        <div className="grid gap-12 lg:grid-cols-2">
-          <div>
+        <ContactTeamBlock />
+
+        <div className="mt-10 grid gap-12 lg:grid-cols-2">
+          <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8">
             <h2 className="font-heading text-2xl font-bold text-charcoal">Напишите нам</h2>
             <p className="mt-3 text-slate">{formIntro}</p>
-
-            <Suspense
-              fallback={
-                <div className="mt-8 h-40 animate-pulse rounded-2xl bg-gray-100" />
-              }
-            >
-              <ContactsForm />
-            </Suspense>
+            <ContactsForm formContext={formContext} />
           </div>
 
           <div>
             <h2 className="font-heading text-2xl font-bold text-charcoal">Как нас найти</h2>
 
-            <div className="mt-8 space-y-6">
-              <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
-                  <svg
-                    className="h-6 w-6 text-sky"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
-                    />
-                  </svg>
-                </div>
+            <div className="mt-8 space-y-4">
+              <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky">
+                  <MessageCircle className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+                </span>
                 <div className="min-w-0 flex-1">
                   <p className="font-semibold text-charcoal">WhatsApp и Telegram</p>
                   <ul className="mt-2 space-y-1.5">
@@ -317,28 +313,13 @@ export default function ContactsPageClient({
                       </li>
                     ))}
                   </ul>
-                  <p className="mt-3 text-sm text-slate/70">{SITE_WORKING_HOURS}</p>
-                  <ContactTeamStatus />
                 </div>
               </div>
 
-              <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
-                  <svg
-                    className="h-6 w-6 text-sky"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                    />
-                  </svg>
-                </div>
+              <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky">
+                  <Mail className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+                </span>
                 <div>
                   <p className="font-semibold text-charcoal">Email</p>
                   <a
@@ -351,29 +332,10 @@ export default function ContactsPageClient({
                 </div>
               </div>
 
-              <div className="flex gap-4 rounded-2xl bg-white p-5 shadow-md">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10">
-                  <svg
-                    className="h-6 w-6 text-sky"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    aria-hidden
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </div>
+              <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky">
+                  <MapPin className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+                </span>
                 <div>
                   <p className="font-semibold text-charcoal">Где мы находимся</p>
                   <p className="mt-1 text-slate">{SITE_OFFICE.display}</p>
@@ -382,24 +344,8 @@ export default function ContactsPageClient({
               </div>
             </div>
 
-            <div className="mt-8 flex h-64 items-center justify-center overflow-hidden rounded-2xl bg-gray-200">
-              <div className="text-center text-slate">
-                <svg
-                  className="mx-auto h-12 w-12 text-slate/40"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1.5}
-                    d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                  />
-                </svg>
-                <p className="mt-2 text-sm">Буэнос-Айрес, Аргентина</p>
-              </div>
+            <div className="mt-8">
+              <ContactOfficeMap />
             </div>
           </div>
         </div>

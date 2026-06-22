@@ -1,6 +1,7 @@
 import { TourDetail, DifficultyLevel, ComfortLevel, AccommodationType } from "@/types";
 import { tourDetailsMap } from "@/data/tour-details/patagonia";
 import { baseTours } from "@/data/tours";
+import { getTourCoverImage, getTourGallery } from "@/lib/media-resolver";
 import { tourExtra, type TourExtra } from "@/data/tour-extra";
 import { getTourRoutePoints } from "@/data/tour-routes";
 import { getTourDescriptionExtra } from "@/data/tour-description-extra";
@@ -63,6 +64,9 @@ function buildTourDetailFromBase(
   const { min, max } = parseGroupSize(base.groupSize);
   const { days, nights } = parseDuration(base.duration);
 
+  const coverImage = getTourCoverImage(base.slug);
+  const gallery = getTourGallery(base.slug);
+
   return {
     id: base.id,
     slug: base.slug,
@@ -75,8 +79,8 @@ function buildTourDetailFromBase(
     originalPriceUsd: extra.originalPriceUsd,
     rating: extra.rating,
     reviewCount: extra.reviewCount,
-    gallery: base.gallery,
-    image: base.image,
+    gallery,
+    image: coverImage,
     shortDescription: base.shortDescription,
     difficulty: mapDifficulty(base.difficulty),
     comfort: resolveDetailComfort(base.slug, nights, extra.comfort),
@@ -93,7 +97,7 @@ function buildTourDetailFromBase(
       id: `place-${i}`,
       title: h,
       description: base.shortDescription,
-      image: base.gallery[i] ?? base.image,
+      image: gallery[i] ?? coverImage,
     })),
     descriptionBlocks: [
       { type: "paragraph", content: base.description },
@@ -108,7 +112,7 @@ function buildTourDetailFromBase(
       dayNumber: i + 1,
       title: `День ${i + 1}`,
       description: base.description.slice(0, 200) + "...",
-      images: [base.gallery[i % base.gallery.length]],
+      images: [gallery[i % gallery.length]],
       activities: base.highlights.slice(0, 2).map((title, index) => ({
         id: `legacy-day-${i + 1}-act-${index + 1}`,
         kind: "custom" as const,
@@ -149,7 +153,7 @@ function buildTourDetailFromBase(
           description: "Комфортабельное размещение согласно категории тура.",
           comfort: mapComfort(extra.comfort),
           amenities: ["Wi-Fi", "Завтрак"],
-          images: [base.image],
+          images: [coverImage],
         },
       ];
     })(),

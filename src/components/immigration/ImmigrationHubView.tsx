@@ -12,30 +12,34 @@ import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { IMMIGRATION_HUB } from "@/data/immigration-hub-content";
 import { cn } from "@/lib/cn";
+import { getImmigrationHubTopicIcon } from "@/lib/immigration-nav-icons";
 import { siteContainerClass } from "@/lib/site-container";
 
 function HubTopicGrid({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-      {topics.map((topic) => (
-        <Link
-          key={topic.id}
-          href={topic.href}
-          className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
-        >
-          <span className="text-2xl" aria-hidden>
-            {topic.emoji}
-          </span>
-          <h3 className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky">
-            {topic.title}
-          </h3>
-          <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
-          <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky">
-            Перейти
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </span>
-        </Link>
-      ))}
+      {topics.map((topic) => {
+        const Icon = getImmigrationHubTopicIcon(topic.id);
+        return (
+          <Link
+            key={topic.id}
+            href={topic.href}
+            className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky transition-colors group-hover:bg-sky group-hover:text-white">
+              <Icon className="h-5 w-5" aria-hidden />
+            </span>
+            <h3 className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky">
+              {topic.title}
+            </h3>
+            <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
+            <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky">
+              Перейти
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </Link>
+        );
+      })}
     </div>
   );
 }
@@ -43,29 +47,32 @@ function HubTopicGrid({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) 
 function TopicTeaserList({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) {
   return (
     <div className="space-y-4">
-      {topics.map((topic) => (
-        <article
-          key={topic.id}
-          className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-6"
-        >
-          <div className="flex items-start gap-3">
-            <span className="text-2xl" aria-hidden>
-              {topic.emoji}
-            </span>
-            <div className="min-w-0 flex-1">
-              <h3 className="font-heading text-lg font-bold text-charcoal">{topic.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate line-clamp-3">{topic.teaser}</p>
-              <Link
-                href={topic.href}
-                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
-              >
-                Подробнее
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+      {topics.map((topic) => {
+        const Icon = getImmigrationHubTopicIcon(topic.id);
+        return (
+          <article
+            key={topic.id}
+            className="rounded-2xl border border-gray-100 bg-white p-5 sm:p-6"
+          >
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
+                <Icon className="h-5 w-5" aria-hidden />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h3 className="font-heading text-lg font-bold text-charcoal">{topic.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate line-clamp-3">{topic.teaser}</p>
+                <Link
+                  href={topic.href}
+                  className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+                >
+                  Подробнее
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
             </div>
-          </div>
-        </article>
-      ))}
+          </article>
+        );
+      })}
     </div>
   );
 }

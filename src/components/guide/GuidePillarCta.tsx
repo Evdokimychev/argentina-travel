@@ -20,12 +20,15 @@ export default function GuidePillarCta({
     >
       <p className="font-heading text-lg font-bold text-charcoal">{title}</p>
       <p className="mt-2 text-sm text-slate">{subtitle}</p>
-      <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+      <div className="mt-5 flex flex-col items-center gap-3 sm:flex-row sm:flex-wrap sm:justify-center">
+        <Link href="/tours" className={cn(buttonVariants(), "rounded-full px-6")}>
+          Заказать тур
+        </Link>
         <Link
           href={SITE_WHATSAPP_URL}
           target="_blank"
           rel="noopener noreferrer"
-          className={cn(buttonVariants(), "rounded-full px-6")}
+          className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-6")}
         >
           Написать в WhatsApp
         </Link>
@@ -35,16 +38,12 @@ export default function GuidePillarCta({
         >
           Заказать консультацию
         </Link>
-        <Link href="/tours" className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-6")}>
-          Заказать тур
-        </Link>
-        <Link
-          href="/immigration"
-          className={cn(buttonVariants({ variant: "ghost" }), "rounded-full px-6")}
-        >
-          Иммиграция и ВНЖ
-        </Link>
       </div>
+      <p className="mt-4">
+        <Link href="/immigration" className="text-sm font-medium text-sky hover:underline">
+          Иммиграция и ВНЖ →
+        </Link>
+      </p>
     </section>
   );
 }

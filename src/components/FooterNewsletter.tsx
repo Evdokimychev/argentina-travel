@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail } from "lucide-react";
+import { Mail, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -9,6 +9,8 @@ import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackNewsletterSubscribe } from "@/lib/analytics/gtm-events";
+import { tokenCardSurfaceClass } from "@/lib/design-tokens";
+import { cn } from "@/lib/cn";
 
 export default function FooterNewsletter() {
   const [email, setEmail] = useState("");
@@ -69,16 +71,25 @@ export default function FooterNewsletter() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="mt-6 rounded-2xl border border-gray-100 bg-white p-4 shadow-card sm:p-5"
+      className={cn(
+        "relative mt-6 overflow-hidden p-4 sm:p-5",
+        tokenCardSurfaceClass,
+        "border-sky/15 bg-gradient-to-br from-sky/[0.07] via-surface-elevated to-surface-elevated dark:from-sky/[0.1]",
+      )}
     >
-      <p className="flex items-center gap-2 font-heading text-sm font-semibold text-charcoal">
-        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-sky/10 text-sky">
+      <div
+        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-sky/10 blur-2xl"
+        aria-hidden
+      />
+      <p className="relative flex items-center gap-2 font-heading text-sm font-semibold text-foreground">
+        <span className="flex h-9 w-9 items-center justify-center rounded-full bg-sky/12 text-sky ring-1 ring-sky/20">
           <Mail className="h-4 w-4" strokeWidth={1.75} aria-hidden />
         </span>
         Подписка на новости
+        <Sparkles className="ml-auto h-3.5 w-3.5 text-sky/70" aria-hidden />
       </p>
-      <p className="mt-2 text-xs leading-relaxed text-slate">
-        Туры, акции и советы по Аргентине
+      <p className="relative mt-2 text-xs leading-relaxed text-slate">
+        Туры, акции и практические советы по Аргентине — без спама, раз в две недели.
       </p>
       {error ? (
         <InlineFeedback
@@ -86,16 +97,16 @@ export default function FooterNewsletter() {
           title={error.title}
           description={error.description}
           steps={error.steps}
-          className="mt-3"
+          className="relative mt-3"
         />
       ) : null}
-      <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+      <div className="relative mt-3 flex flex-col gap-2 sm:flex-row">
         <Input
           type="email"
           value={email}
           onChange={(event) => setEmail(event.target.value)}
           placeholder="email@example.com"
-          className="h-10 flex-1"
+          className="h-10 flex-1 border-border-subtle bg-surface-elevated/90"
           aria-label="Email для подписки"
           disabled={loading}
           required

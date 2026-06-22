@@ -4,6 +4,7 @@ import { pdfStyles } from "@/lib/tour-itinerary-pdf/pdf-styles";
 import { formatPdfGeneratedDate } from "@/lib/tour-itinerary-pdf/pdf-meta";
 import { formatDayActivitiesForPdf } from "@/lib/tour-itinerary-activity";
 import { parseTourTermItem } from "@/lib/tour-terms-items";
+import { formatTourPriceForPdf } from "@/lib/tour-pricing";
 import type { TourItineraryPdfMeta, TourItineraryPdfSource } from "@/lib/tour-itinerary-pdf/types";
 
 import { getSiteUrl } from "@/lib/site-url";
@@ -20,10 +21,11 @@ function resolvePdfImageUrl(url: string): string {
 }
 
 function formatTourPrice(source: TourItineraryPdfSource): string {
-  if (source.priceOnRequest) return "Цена по запросу";
-  const prefix = source.priceFromPrefix ? "от " : "";
-  const formatted = new Intl.NumberFormat("ru-RU").format(Math.round(source.priceUsd));
-  return `${prefix}$${formatted} USD`;
+  return formatTourPriceForPdf({
+    priceUsd: source.priceUsd,
+    priceOnRequest: source.priceOnRequest,
+    priceFromPrefix: source.priceFromPrefix,
+  });
 }
 
 function BulletList({ items, withDetails = false }: { items: string[]; withDetails?: boolean }) {

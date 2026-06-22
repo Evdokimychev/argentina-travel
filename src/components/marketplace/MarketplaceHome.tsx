@@ -19,9 +19,11 @@ import MarketplaceTourCard from "./MarketplaceTourCard";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { TourEmbedConfig } from "@/types/tour-embed";
 import BlogCard from "@/components/BlogCard";
-import TestimonialCard from "@/components/TestimonialCard";
 import { tripsWord, filtersWord } from "@/lib/pluralize";
 import PlatformStatsBlock from "./PlatformStatsBlock";
+import HomeHeroCollage from "./HomeHeroCollage";
+import HomeTestimonialsSection from "./HomeTestimonialsSection";
+import SectionShell from "@/components/layout/SectionShell";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
@@ -33,11 +35,12 @@ import { cn } from "@/lib/cn";
 import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
 import type { ExcursionListing } from "@/types/excursion";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
-import PageImage from "@/components/media/PageImage";
 
 const HOME_HERO_IMAGE = getHomeHeroImage();
 const HOME_HERO_ALT = getHomeHeroAlt();
 const HOME_SHOWCASE = getHomeShowcaseImages();
+/** Витрина регионов на главной — 6 карточек с локальными cover */
+const HOME_FEATURED_REGIONS = POPULAR_DESTINATIONS.slice(0, 6);
 
 interface MarketplaceHomeProps {
   tours: TourListing[];
@@ -49,36 +52,6 @@ interface MarketplaceHomeProps {
   personalizedTours?: TourListing[];
   personalizedExcursions?: ExcursionListing[];
   personalizedActive?: boolean;
-}
-
-function SectionHeader({
-  title,
-  subtitle,
-  href,
-  linkLabel,
-}: {
-  title: string;
-  subtitle?: string;
-  href?: string;
-  linkLabel?: string;
-}) {
-  return (
-    <div className="mb-6 flex items-end justify-between gap-4">
-      <div>
-        <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">{title}</h2>
-        {subtitle ? <p className="mt-1.5 text-sm leading-relaxed text-slate sm:text-base">{subtitle}</p> : null}
-      </div>
-      {href && linkLabel ? (
-        <Link
-          href={href}
-          className="hidden shrink-0 items-center gap-1 text-sm font-medium text-sky hover:underline sm:inline-flex"
-        >
-          {linkLabel}
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      ) : null}
-    </div>
-  );
 }
 
 function TourGrid({
@@ -194,13 +167,17 @@ export default function MarketplaceHome({
       {/* Hero */}
       <section
         data-scroll-rail-tone="light"
-        className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]"
+        className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-[#f4f9fc] via-white to-sky/[0.08]"
       >
+        <div
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_100%_0%,rgba(56,189,248,0.12),transparent)]"
+          aria-hidden
+        />
         <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl" aria-hidden />
 
-        <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-14")}>
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">
+        <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-16")}>
+          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,380px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
             <div className="min-w-0">
               <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
                 {t("home.hero.eyebrow")}
@@ -234,28 +211,15 @@ export default function MarketplaceHome({
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
-              <div
-                className="pointer-events-none absolute -bottom-3 -left-3 hidden h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] rounded-2xl border border-sky/20 lg:block"
-                aria-hidden
-              />
-              <div className="relative overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100">
-                <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
-                  <Image
-                    src={HOME_HERO_IMAGE}
-                    alt={HOME_HERO_ALT}
-                    fill
-                    priority
-                    sizes="(max-width: 1024px) 100vw, 360px"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-charcoal/25 via-transparent to-transparent" aria-hidden />
-                </div>
-              </div>
-            </div>
+            <HomeHeroCollage
+              heroSrc={HOME_HERO_IMAGE}
+              heroAlt={HOME_HERO_ALT}
+              showcase={HOME_SHOWCASE}
+            />
           </div>
 
-          <div className="mt-8 max-w-4xl lg:max-w-none">
+          <div className="mt-8 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20 lg:pb-2">
+            <div className="rounded-2xl bg-white/90 p-1 shadow-card ring-1 ring-gray-100 backdrop-blur-md lg:p-1.5">
             <SearchBlock
               tours={tours}
               query={filters.query}
@@ -287,6 +251,7 @@ export default function MarketplaceHome({
                 router.push("/tours");
               }}
             />
+            </div>
           </div>
 
           <div className="mt-4">
@@ -357,122 +322,88 @@ export default function MarketplaceHome({
           ) : null}
         </section>
       ) : (
-        <section className="border-b border-gray-100 bg-surface-muted/50 py-10">
-          <div className={siteContainerClass}>
-            <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Почему с нами</h2>
-            <div className="mt-6">
-              <HubQuickFactsGrid columns={4} facts={valueProps} />
-            </div>
-            <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-              <p className="text-center text-sm text-slate">
-                В каталоге{" "}
-                <span className="font-semibold text-charcoal">
-                  {homepageTours.length} {tripsWord(homepageTours.length)}
-                </span>{" "}
-                — выбирайте даты и отправляйте заявку
-              </p>
-              <Link href="/tours">
-                <Button size="lg" className="rounded-full px-8">
-                  Открыть каталог
-                </Button>
-              </Link>
-            </div>
+        <SectionShell
+          reveal
+          tone="muted"
+          eyebrow="Площадка"
+          title="Почему с нами"
+          subtitle="Честные условия, малые группы и русскоязычные гиды — без скрытых комиссий и накрученных рейтингов"
+          className="border-b border-gray-100 py-10"
+        >
+          <HubQuickFactsGrid columns={4} facts={valueProps} />
+          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <p className="text-center text-sm text-slate">
+              В каталоге{" "}
+              <span className="font-semibold text-charcoal">
+                {homepageTours.length} {tripsWord(homepageTours.length)}
+              </span>{" "}
+              — выбирайте даты и отправляйте заявку
+            </p>
+            <Link href="/tours">
+              <Button size="lg" className="rounded-full px-8">
+                Открыть каталог
+              </Button>
+            </Link>
           </div>
-        </section>
+        </SectionShell>
       )}
 
       <PlatformStatsBlock initialStats={platformStats} />
 
-      {!hasActiveSearch && HOME_SHOWCASE.length > 0 ? (
-        <section className="border-b border-gray-100 bg-white py-12 md:py-14">
-          <div className={siteContainerClass}>
-            <SectionHeader
-              title="Природа Аргентины"
-              subtitle="От ледников Патагонии до водопадов Игуасу — три пейзажа, с которых начинается маршрут"
-            />
-            <div className="grid gap-4 md:grid-cols-3">
-              {HOME_SHOWCASE.map((image) => (
-                <figure
-                  key={image.src}
-                  className="group relative overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100"
-                >
-                  <div className="relative aspect-[4/3] w-full">
-                    <PageImage
-                      image={image}
-                      role="section"
-                      fill
-                      className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                    />
-                    <div
-                      className="absolute inset-0 bg-gradient-to-t from-charcoal/70 via-charcoal/10 to-transparent"
-                      aria-hidden
-                    />
-                    <figcaption className="absolute bottom-0 p-4 text-sm font-medium leading-snug text-white">
-                      {image.alt}
-                    </figcaption>
-                  </div>
-                </figure>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
-
       {/* Regions & places */}
-      <section className="py-12 md:py-14">
-        <div className={siteContainerClass}>
-          <SectionHeader
-            title="Регионы и места"
-            subtitle="Региональные гиды для планирования и справочник парков, городов и достопримечательностей"
-            href="/destinations"
-            linkLabel="Обзор регионов"
-          />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {POPULAR_DESTINATIONS.map((dest) => (
-              <Link
-                key={dest.id}
-                href={destinationHref(dest.id)}
-                className="group relative block h-48 overflow-hidden rounded-2xl ring-1 ring-gray-100 transition-shadow hover:shadow-elevated sm:h-56"
-              >
-                <Image
-                  src={dest.image}
-                  alt={dest.name}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                  sizes="(max-width: 768px) 50vw, 25vw"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
-                <div className="absolute bottom-0 p-4 text-white">
-                  <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{dest.region}</p>
-                  <h3 className="mt-1 font-heading text-lg font-bold">{dest.name}</h3>
-                  <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/80">{dest.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
+      <SectionShell
+        reveal
+        eyebrow="География"
+        title="Регионы и места"
+        subtitle="Региональные гиды для планирования и справочник парков, городов и достопримечательностей"
+        href="/destinations"
+        linkLabel="Обзор регионов"
+      >
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {HOME_FEATURED_REGIONS.map((dest) => (
             <Link
-              href="/places"
-              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 font-medium text-charcoal hover:border-sky hover:text-sky"
+              key={dest.id}
+              href={destinationHref(dest.id)}
+              className="group relative block h-48 overflow-hidden rounded-2xl ring-1 ring-gray-100 transition-shadow hover:shadow-elevated sm:h-56"
             >
-              Справочник мест
-              <ArrowRight className="h-4 w-4" aria-hidden />
+              <Image
+                src={dest.image}
+                alt={dest.name}
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
+                sizes="(max-width: 768px) 50vw, 33vw"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
+              <div className="absolute bottom-0 p-4 text-white">
+                <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{dest.region}</p>
+                <h3 className="mt-1 font-heading text-lg font-bold">{dest.name}</h3>
+                <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/80">{dest.description}</p>
+              </div>
             </Link>
-            <Link
-              href="/places?view=map"
-              className="inline-flex items-center gap-1.5 rounded-full border border-sky/25 bg-sky/5 px-4 py-2 font-medium text-sky hover:bg-sky/10"
-            >
-              Карта мест
-            </Link>
-            <Link
-              href="/collections"
-              className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-2 font-medium text-slate hover:border-sky hover:text-sky"
-            >
-              Подборки
-            </Link>
-          </div>
+          ))}
         </div>
-      </section>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
+          <Link
+            href="/places"
+            className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 font-medium text-charcoal hover:border-sky hover:text-sky"
+          >
+            Справочник мест
+            <ArrowRight className="h-4 w-4" aria-hidden />
+          </Link>
+          <Link
+            href="/places?view=map"
+            className="inline-flex items-center gap-1.5 rounded-full border border-sky/25 bg-sky/5 px-4 py-2 font-medium text-sky hover:bg-sky/10"
+          >
+            Карта мест
+          </Link>
+          <Link
+            href="/collections"
+            className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 px-4 py-2 font-medium text-slate hover:border-sky hover:text-sky"
+          >
+            Подборки
+          </Link>
+        </div>
+      </SectionShell>
 
       {showHomepageRecommendationsV2 ? (
         <PersonalizedRecommendationsSection
@@ -501,58 +432,38 @@ export default function MarketplaceHome({
         </div>
       </section>
 
-      {/* Reviews */}
-      <section className="bg-surface-muted/50 py-12 md:py-14">
-        <div className={siteContainerClass}>
-          <SectionHeader title="Отзывы путешественников" subtitle="Только после реальных поездок" />
-          {testimonials.length > 0 ? (
-            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {testimonials.map((t) => (
-                <TestimonialCard key={t.id} testimonial={t} />
-              ))}
-            </div>
-          ) : (
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-white/80 px-6 py-12 text-center">
-              <p className="font-heading font-semibold text-charcoal">
-                Отзывы появятся после первых поездок
-              </p>
-              <Link
-                href="/tours"
-                className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
-              >
-                Смотреть каталог туров
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </Link>
-            </div>
-          )}
-        </div>
-      </section>
+      {!hasActiveSearch ? <HomeTestimonialsSection testimonials={testimonials} /> : null}
 
       {/* Blog */}
-      <section className="py-12 md:py-14">
-        <div className={siteContainerClass}>
-          <SectionHeader
-            title="Статьи из блога"
-            subtitle="Советы и вдохновение перед поездкой"
-            href="/blog"
-            linkLabel="Все статьи"
-          />
+      {!hasActiveSearch ? (
+        <SectionShell
+          reveal
+          eyebrow="Блог"
+          title="Статьи из блога"
+          subtitle="Советы и вдохновение перед поездкой"
+          href="/blog"
+          linkLabel="Все статьи"
+        >
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {blogPosts.slice(0, 3).map((p) => (
               <BlogCard key={p.id} post={p} />
             ))}
           </div>
-        </div>
-      </section>
+        </SectionShell>
+      ) : null}
 
       {/* Guide & immigration */}
-      <section className="border-t border-gray-100 bg-patagonia py-14 text-white" data-scroll-rail-tone="dark">
-        <div className={siteContainerClass}>
-          <h2 className="font-heading text-2xl font-bold sm:text-3xl">Путеводитель и иммиграция</h2>
-          <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/75 sm:text-base">
-            Справочник по стране, переезду и практическим советам — дополняет выбор тура.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+      {!hasActiveSearch ? (
+        <SectionShell
+          reveal
+          tone="dark"
+          eyebrow="Справочник"
+          title="Путеводитель и иммиграция"
+          subtitle="Справочник по стране, переезду и практическим советам — дополняет выбор тура"
+          className="border-t border-gray-100 py-14"
+          scrollRailTone="dark"
+        >
+          <div className="flex flex-wrap gap-3">
             <Link
               href="/guide"
               className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
@@ -568,8 +479,8 @@ export default function MarketplaceHome({
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-        </div>
-      </section>
+        </SectionShell>
+      ) : null}
     </>
   );
 }

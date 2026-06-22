@@ -287,6 +287,14 @@ body {
   .motion-reduce\:transform-none:hover {
     transform: none !important;
   }
+
+  .content-card-media-hover:hover {
+    transform: none !important;
+  }
+
+  .gallery-carousel-autoplay {
+    animation: none !important;
+  }
 }
 
 .scrollbar-hide {
@@ -759,6 +767,22 @@ body {
   height: 22px;
   background: var(--color-sky);
   box-shadow: 0 3px 12px rgba(116, 172, 223, 0.55);
+}
+
+.itinerary-day-map-marker {
+  width: 14px;
+  height: 14px;
+  border-radius: 9999px;
+  border: 2px solid #fff;
+  background: var(--color-slate);
+  box-shadow: 0 2px 6px rgba(26, 26, 46, 0.2);
+}
+
+.itinerary-day-map-marker--main {
+  width: 20px;
+  height: 20px;
+  background: var(--color-sky);
+  box-shadow: 0 3px 10px rgba(116, 172, 223, 0.45);
 }
 
 .tours-map-popup-shell .leaflet-popup-content-wrapper {

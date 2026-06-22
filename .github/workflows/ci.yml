@@ -55,6 +55,12 @@ jobs:
       - name: Content-plan redirects manifest
         run: npm run sync-content-plan-redirects:check
 
+      - name: Legacy blog media slugs
+        run: npm run prune-legacy-blog-media:check
+
+      - name: CMS media deploy check
+        run: npm run cms-media:deploy-check
+
       - name: Migration meta
         run: node scripts/write-migration-meta.mjs
 
@@ -63,8 +69,12 @@ jobs:
         env:
           NEXT_PUBLIC_SITE_URL: https://www.goargentina.ru
 
-      - name: Lighthouse blog CWV (optional)
+      - name: Bundle size report
+        run: npm run bundle:report
         continue-on-error: true
+
+      - name: Lighthouse blog CWV
         env:
-          SKIP_LIGHTHOUSE: "1"
-        run: npm run lighthouse:blog
+          LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
+          LIGHTHOUSE_SAMPLE_PATHS: /blog,/blog/patagonia-packing-list,/blog/natsionalnyy-park-iguasu
+        run: node scripts/lighthouse-ci.mjs

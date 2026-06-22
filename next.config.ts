@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
+import bundleAnalyzer from "@next/bundle-analyzer";
 
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === "true",
+});
+
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   // Keep Supabase in Node externals — avoids brittle vendor-chunks/@supabase.js in dev workers.
   serverExternalPackages: ["@supabase/supabase-js", "@supabase/ssr", "@react-pdf/renderer"],
@@ -33,6 +39,11 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      {
+        source: "/map",
+        destination: "/mapa-argentina",
+        permanent: true,
+      },
       {
         source: "/blog/blue-dollar-argentina-2025",
         destination: "/blog/blue-dollar-argentina-2026",
@@ -95,4 +106,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

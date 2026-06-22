@@ -4,7 +4,8 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import MapCategoryFilters from "@/components/map/MapCategoryFilters";
-import MapObjectCard from "@/components/map/MapObjectCard";
+import MapLegend from "@/components/map/MapLegend";
+import MapObjectPopup from "@/components/map/MapObjectPopup";
 import MapSearchPanel from "@/components/map/MapSearchPanel";
 import {
   buildMapArgentinaPath,
@@ -156,16 +157,11 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
           />
 
           <MapCategoryFilters activeKinds={state.kinds} onToggle={handleToggleKind} />
+          <MapLegend activeKinds={state.kinds} />
         </div>
       </div>
 
-      {selected ? (
-        <div className="pointer-events-none absolute bottom-4 right-4 z-20 max-w-[calc(100%-2rem)] sm:bottom-6 sm:right-6">
-          <div className="pointer-events-auto">
-            <MapObjectCard object={selected} onClose={() => handleSelectObject(null)} />
-          </div>
-        </div>
-      ) : null}
+      <MapObjectPopup object={selected} onClose={() => handleSelectObject(null)} />
 
       <p className="pointer-events-none absolute bottom-3 left-4 z-10 text-[10px] text-slate/80 sm:left-5">
         {visibleObjects.length} объектов · © OpenStreetMap

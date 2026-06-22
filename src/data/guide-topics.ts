@@ -12,8 +12,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Перелёты, аэропорты и трансферы до отеля",
     intro:
       "Большинство международных рейсов прилетает в Буэнос-Айрес. Внутри страны удобны авиалинии Aerolíneas Argentinas, Flybondi и Jetsmart — расстояния огромные, перелёт экономит дни.",
-    heroImage:
-      "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=1920&q=80",
     sections: [
       {
         heading: "Международные аэропорты",
@@ -79,8 +77,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Отели, районы BA, аренда, Patagonia и регионы — полный справочник",
     intro:
       "Подробный путеводитель по жилью в Аргентине: типы размещения (отель, хостел, апартаменты, estancia), районы Буэнос-Айреса с таблицей сравнения, Патагония, Мендоса, Сальта, Игуасу и побережье, Booking и Airbnb, депозиты и garantía, сезонность, оплата картами и типичные ошибки — от короткой поездки до цифрового кочевника и долгого проживания.",
-    heroImage:
-      "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1920&q=80",
     sections: [
       {
         heading: "Типы жилья и платформы",
@@ -151,8 +147,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Авто, автобусы, перелёты и городской транспорт",
     intro:
       "Аргентина — страна больших расстояний. Внутренние перелёты экономят время, автобусы cama (лежачие места) комфортны на ночных маршрутах, аренда авто даёт свободу в винодельнях и на северо-западе.",
-    heroImage:
-      "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=1920&q=80",
     sections: [
       {
         heading: "Внутренние перелёты",
@@ -212,8 +206,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Патагония, BA, северо-запад, водопады и винодельни",
     intro:
       "Аргентина делится на несколько «миров»: ледники и треккинг на юге, танго и гастрономия в столице, виноградники на западе, красные каньоны на северо-западе и мощь Игуасу на севере.",
-    heroImage:
-      "https://images.unsplash.com/photo-1551632811-561732d1e306?w=1920&q=80",
     sections: [
       {
         heading: "Патагония и Огненная Земля",
@@ -275,8 +267,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Главное: ледники, водопады, города и природные парки",
     intro:
       "Классика первой поездки: Перито-Морено, Iguazú Falls, район La Boca и Recoleta в BA, винодельни Mendoza, Quebrada de Humahuaca. Многие точки удобнее с гидом или в составе тура.",
-    heroImage:
-      "https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=1920&q=80",
     sections: [
       {
         heading: "Природные иконы",
@@ -324,8 +314,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Когда ехать в Патагонию, BA и на север",
     intro:
       "Климат сильно различается по регионам. «Лучшее время» зависит от маршрута: Патагония — лето южного полушария, BA приятен круглый год, северо-запад комфортнее весной и осенью.",
-    heroImage:
-      "https://images.unsplash.com/photo-1483728642387-6bc3bd38dafc?w=1920&q=80",
     sections: [
       {
         heading: "Патагония",
@@ -371,8 +359,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Испанский, местный акцент и базовые фразы",
     intro:
       "Официальный язык — испанский с характерным региональным акцентом rioplatense: «ll» и «y» звучат как «sh», используется voseo (vos вместо tú). В туристических зонах частично понимают английский, но базовый испанский сильно упрощает поездку.",
-    heroImage:
-      "https://images.unsplash.com/photo-1546410531-bb4caa6e4248?w=1920&q=80",
     sections: [
       {
         heading: "Особенности rioplatense",
@@ -428,8 +414,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Танго, традиции, fútbol и повседневный этикет",
     intro:
       "Аргентинская культура — смесь европейских корней и латиноамериканской идентичности. Танго, fútbol, mate, asado и поздние ужины формируют ритм жизни, который стоит учитывать в маршруте.",
-    heroImage:
-      "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=80",
     sections: [
       {
         heading: "Танго и milonga",
@@ -477,8 +461,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "От колонизации до современной Аргентины",
     intro:
       "Понимание истории помогает читать город: европейская застройка BA, память о Пероне и Эвите, «грязная война» 1970–80-х, экономические кризисы — всё это видно в музеях, памятниках и разговорах с местными.",
-    heroImage:
-      "https://images.unsplash.com/photo-1555881400-74d7aca2598b?w=1920&q=80",
     sections: [
       {
         heading: "Ключевые вехи",
@@ -520,8 +502,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Asado, empanadas, вино и гастрономические маршруты",
     intro:
       "Аргентинская кухня — мясо мирового уровня, empanadas, dulce de leche и вина Мендосы. Asado — социальный ритуал; в Буэнос-Айресе десятки parrilla — от районных до рекомендованных Michelin.",
-    heroImage:
-      "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=1920&q=80",
     sections: [
       {
         heading: "Asado и parrilla",
@@ -582,8 +562,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "SIM, eSIM, покрытие по регионам и связь на маршруте",
     intro:
       "Полный справочник по мобильной связи и интернету в Аргентине: операторы Claro/Personal/Movistar, eSIM, покрытие от BA до Patagonia, приложения для туриста, пополнение prepago и связь с гидами после бронирования тура.",
-    heroImage:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1920&q=80",
     sections: [
       {
         heading: "Операторы и SIM",
@@ -628,8 +606,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     intro:
       "Аргентина живёт с несколькими курсами доллара одновременно: oficial, blue, MEP и tarjeta. От выбора способа оплаты зависит, насколько выгодно ваше путешествие или переезд. Этот гид — для туристов и будущих резидентов: курс, обмен, банкоматы, инфляция, счета и 20 ответов в FAQ.",
     features: { exchangeRates: true },
-    heroImage:
-      "https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=1920&q=80",
     sections: [
       {
         heading: "Валюта",
@@ -696,8 +672,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Кожа, mate, вино и tax free",
     intro:
       "Из Аргентины везут кожаные изделия, mate и bombilla, вино (с ограничениями на таможне), dulce de leche, шерстяные poncho с севера. В BA — Palermo Soho и ferias; tax free для иностранцев в крупных магазинах.",
-    heroImage:
-      "https://images.unsplash.com/photo-1441986300917-64676bd600d8?w=1920&q=80",
     sections: [
       {
         heading: "Что купить",
@@ -742,8 +716,6 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription: "Районы BA, кражи, транспорт, «что делать если» и страховка",
     intro:
       "Полный практический справочник: безопасные районы Буэнос-Айреса, уличные кражи и карманники, такси и Subte, деньги и банкоматы, Патагония и нацпарки, экстренные номера и пошаговые действия при краже телефона или паспорта.",
-    heroImage:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1920&q=80",
     sections: [
       {
         heading: "Буэнос-Айрес",

@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import {
   ChevronLeft,
   ChevronRight,
@@ -12,6 +13,7 @@ import {
   Pause,
   Play,
 } from "lucide-react";
+import { buildMapTourDeepLink } from "@/lib/map-argentina-url-state";
 import type { TourArrivalInfo, TourRoutePoint } from "@/types";
 import type { TourLogistics } from "@/types/tour";
 import {
@@ -40,6 +42,8 @@ interface RouteMapSectionProps {
   logistics?: TourLogistics;
   routeMapImage?: string;
   organizerComment?: string;
+  tourSlug?: string;
+  tourId?: string;
 }
 
 const PLAY_MS_PER_SEGMENT = 2200;
@@ -50,6 +54,8 @@ export default function RouteMapSection({
   logistics,
   routeMapImage,
   organizerComment,
+  tourSlug,
+  tourId,
 }: RouteMapSectionProps) {
   const [selectedId, setSelectedId] = useState<string | null>(points[0]?.id ?? null);
   const [progress, setProgress] = useState(0);
@@ -173,13 +179,23 @@ export default function RouteMapSection({
 
       {hasMap ? (
         <div className={cn("space-y-4", hasRouteImage && "mt-8")}>
-          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
               <h3 className="font-heading text-lg font-bold text-charcoal">Маршрут на карте</h3>
               <p className="mt-1 text-sm text-slate">
                 Пройдите маршрут бегунком или запустите анимацию — точки связаны по порядку следования
               </p>
             </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {tourSlug && tourId ? (
+                <Link
+                  href={buildMapTourDeepLink({ slug: tourSlug, id: tourId })}
+                  className="inline-flex min-h-[36px] items-center gap-1.5 rounded-full border border-sky/25 bg-sky/5 px-3 py-1.5 text-xs font-semibold text-sky hover:bg-sky/10"
+                >
+                  <MapPin className="h-3.5 w-3.5" aria-hidden />
+                  Показать на карте
+                </Link>
+              ) : null}
             <div className="flex flex-wrap gap-2 text-xs">
               <span className="rounded-full bg-success-muted px-3 py-1.5 font-semibold text-success">
                 {points.length} {points.length === 1 ? "точка" : points.length < 5 ? "точки" : "точек"}
@@ -189,6 +205,7 @@ export default function RouteMapSection({
                   ≈ {formatRouteDistanceKm(routeDistanceKm)} по прямой
                 </span>
               ) : null}
+            </div>
             </div>
           </div>
 

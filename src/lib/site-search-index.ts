@@ -18,6 +18,7 @@ import { buildGuideTopicSearchItems } from "@/lib/guide-topics";
 import { buildImmigrationTopicSearchItems } from "@/lib/immigration-topics";
 import { flattenSiteNavSections } from "@/lib/site-nav";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
+import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import type { BlogPost, TourListing } from "@/types";
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceListing } from "@/types/place";
@@ -255,6 +256,7 @@ export function buildStaticSearchIndex(
   placeCatalog: PlaceListing[] = getAllPlaceListings(),
   guidePages?: ContentPage[]
 ): SearchIndexItem[] {
+  const indexableBlog = filterIndexableBlogPosts(blogCatalog);
   const flatNav = flattenSiteNavSections(SITE_NAV_SECTIONS);
   const seenNav = new Set<string>();
   const navItems: SearchIndexItem[] = flatNav
@@ -286,7 +288,7 @@ export function buildStaticSearchIndex(
     href: link.href,
   }));
 
-  const blogItems: SearchIndexItem[] = blogCatalog.map((post) => ({
+  const blogItems: SearchIndexItem[] = indexableBlog.map((post) => ({
     id: `blog-${post.slug}`,
     type: "blog" as const,
     title: post.title,

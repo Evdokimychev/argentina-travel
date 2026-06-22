@@ -5,8 +5,8 @@ export const ORGANIZER_TOUR_GUIDES_MAX = 5;
 export const ORGANIZER_TEAM_GUIDES_MAX = 20;
 export const ORGANIZER_TOUR_GUIDE_BIO_MAX = 2000;
 
-export const DEFAULT_GUIDE_AVATAR =
-  "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face";
+/** Placeholder avatar — SafeImage renders initials when empty. */
+export const DEFAULT_GUIDE_AVATAR = "";
 
 export const DEFAULT_TOUR_AUTHOR_BIO = `Привет! Меня зовут Иван, и я живу в Буэнос-Айресе уже больше пяти лет. За это время я успел полюбить эту страну — её культуру, природу и, конечно, людей.
 
@@ -23,32 +23,28 @@ export const TOUR_GUIDE_CATALOG: Omit<OrganizerTourGuide, "isTourAuthor">[] = [
   {
     id: "guide-maria",
     name: "Мария",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face",
+    avatar: "",
     bio: "Гид по Буэнос-Айресу и Мендосе. Организует винные туры, гастрономические прогулки и вечера танго с местными артистами.",
     userId: null,
   },
   {
     id: "guide-carlos",
     name: "Карлос",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    avatar: "",
     bio: "Профессиональный гид по Патагонии. Ведёт треккинги к ледникам, организует экспедиции в национальные парки и фото-туры.",
     userId: null,
   },
   {
     id: "guide-elena",
     name: "Елена",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+    avatar: "",
     bio: "Инструктор по горному туризму на севере Аргентины. Маршруты по Сальте, Кафаяте и долине реки Калчакí — от лёгких прогулок до сложных походов.",
     userId: null,
   },
   {
     id: "guide-diego",
     name: "Диего",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    avatar: "",
     bio: "Гид по Игуасу и северо-востоку. Экскурсии по водопадам, джунглям Misiones и культурным маршрутам с местными общинами.",
     userId: null,
   },

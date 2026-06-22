@@ -7,24 +7,28 @@
 ```bash
 npm run publish:verify
 npm run publish:verify:full    # + локальный next build
+npm run publish:verify:pre-deploy   # code-ready: build + stale /map на prod → warn
 ```
 
 Отчёт: `var/ops/publish-turnkey-last.json`
 
 ---
 
-## Статус готовности (июнь 2026)
+## Статус готовности (21 июня 2026)
 
 | Блок | Статус |
 |------|--------|
+| Спринты 5–11 (код) | ✓ 195 unit-тестов, build OK |
 | CMS cutover (blog/guide/destination/place) | ✓ 100%, CMS-only |
 | Контент cornerstone + rich parks | ✓ опубликован |
 | Редиректы content-plan | ✓ static + Supabase `url_redirects` |
-| Production smoke (страницы + CMS) | ✓ |
-| Sitemap / robots | ✓ 1253 URL |
-| **Build (next build)** | ✓ после fix sitemap force-dynamic |
+| Blog heroes | ✓ 49/49 indexable |
+| Production build (`next build`) | ✓ |
+| Локальный production-smoke (в т.ч. `/map` → `/mapa-argentina`) | ✓ |
+| **Production deploy Phase 2** | ⚠ на prod gitSha `59f7ab3…` — нужен merge + redeploy |
+| **Live `/map` redirect** | ⚠ 200 на prod до redeploy (в коде 301 + `app/map`) |
 | **GTM + GSC verification** | ⚠ Vercel env + ручная настройка |
-| **DEPLOY_ENV=production** | ⚠ задать в Vercel (или VERCEL_ENV fallback после redeploy) |
+| **DEPLOY_ENV=production** | ✓ на live health |
 
 ---
 
@@ -81,6 +85,13 @@ npm run cms:archive-orphan-blog-slugs
 
 # 6. Readiness
 npm run cms:readiness -- --strict
+
+# 7. Legacy media cleanup (переименованные slug)
+npm run prune-legacy-blog-media
+
+# 8. CMS media → manifest (после upload в Admin)
+npm run sync-cms-media-manifest
+npm run cms-media:deploy-check
 ```
 
 Резервная копия схемы перед миграциями:
@@ -91,7 +102,25 @@ npm run backup:schema
 
 ---
 
-## 3. Деплой
+## 2.1 CMS Media (обязательно после upload)
+
+На Vercel `autoSyncCmsMediaManifest` **пропускается** — manifest коммитится в репозиторий.
+
+```bash
+# После загрузки файлов в Admin → Media:
+npm run sync-cms-media-manifest
+npm run cms-media:deploy-check -- --strict
+git add src/data/media-library/manifest.json
+# deploy
+```
+
+Проверка legacy slug в manifest:
+
+```bash
+npm run prune-legacy-blog-media:check
+```
+
+---
 
 1. Merge в `main` → Vercel auto-deploy **или** Promote staging deployment.
 2. Убедиться, что env заданы для **Production** (не только Preview).
@@ -154,10 +183,23 @@ curl -H "Authorization: Bearer $CRON_SECRET" https://www.goargentina.ru/api/cron
 
 ## 7. Критерии «готово к публикации»
 
-- [ ] `npm run publish:verify` — без `fail`
-- [ ] `npm run build` — успешно
-- [ ] `npm run cms:readiness -- --strict` — 4/4 lane 100%
-- [ ] Production smoke + e2e smoke — pass
+**Код (до merge):**
+
+```bash
+npm run publish:verify:pre-deploy
+SMOKE_BASE_URL=http://127.0.0.1:3001 npm run production-smoke   # после npm run build && npm run start
+PLAYWRIGHT_BASE_URL=http://127.0.0.1:3001 npm run test:e2e:smoke
+```
+
+- [x] `npm run publish:verify:pre-deploy` — без blocking `fail` (stale `/map` на prod → warn)
+- [x] `npm run build` — успешно
+- [x] `npm run cms:readiness -- --strict` — 4/4 lane 100%
+- [x] Локальный production-smoke + e2e smoke — pass
+
+**После deploy на production:**
+
+- [ ] `npm run publish:verify` — без `fail` (в т.ч. live `/map`)
+- [ ] Production smoke + e2e smoke на `https://www.goargentina.ru`
 - [ ] Vercel env checklist (раздел 1) заполнен
 - [ ] GTM опубликован (можно после go-live, но до маркетинга)
 - [ ] GSC sitemap отправлен
@@ -175,8 +217,8 @@ curl -H "Authorization: Bearer $CRON_SECRET" https://www.goargentina.ru/api/cron
 ## Команды одной строкой (релизное окно)
 
 ```bash
-npm run publish:verify:full && \
-npm run supabase:migrate && \
+npm run publish:verify:pre-deploy && \
+git push origin main && \
 npm run sync-content-plan-redirects && \
 SMOKE_BASE_URL=https://www.goargentina.ru npm run production-smoke && \
 PLAYWRIGHT_BASE_URL=https://www.goargentina.ru npm run test:e2e:smoke

@@ -22,6 +22,8 @@ export const SITE_EMAIL = {
 export const SITE_OFFICE = {
   display: "Буэнос-Айрес, Аргентина",
   note: "Основной офис и команда на месте",
+  mapEmbedUrl:
+    "https://maps.google.com/maps?q=Buenos+Aires,+Argentina&z=11&output=embed",
 } as const;
 
 export const SITE_WORKING_HOURS =

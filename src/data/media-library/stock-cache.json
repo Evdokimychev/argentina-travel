@@ -1015,7 +1015,7 @@
       "query": "Buenos Aires Palermo street cafe",
       "role": "hero",
       "resolved": {
-        "src": "/media/blog/buenos-aires-neighborhoods/hero.jpg",
+        "src": "/media/blog/buenos-aires-rajony/hero.jpg",
         "alt": "Районы Буэнос-Айреса для туристов",
         "title": "Районы Буэнос-Айреса для туристов",
         "attribution": {
@@ -1025,7 +1025,7 @@
           "license": "Pexels License"
         },
         "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@walter-medina-foto-2154680637\">Walter Medina Foto</a> / <a href=\"https://www.pexels.com/photo/outdoor-cafe-in-buenos-aires-san-telmo-district-35845693/\">Pexels</a>",
-        "localPath": "media/blog/buenos-aires-neighborhoods/hero.jpg"
+        "localPath": "media/blog/buenos-aires-rajony/hero.jpg"
       }
     },
     "hero:Patagonia hiking gear mountains Argentina": {
@@ -1053,7 +1053,7 @@
       "query": "Mendoza vineyard Andes sunset Argentina",
       "role": "hero",
       "resolved": {
-        "src": "/media/blog/mendoza-wine-route/hero.jpg",
+        "src": "/media/blog/mendoza-vinnyj-gid/hero.jpg",
         "alt": "Винный маршрут Мендосы",
         "title": "Винный маршрут Мендосы",
         "attribution": {
@@ -1063,7 +1063,7 @@
           "license": "Pexels License"
         },
         "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@andres-alaniz-461433202\">Andres Alaniz</a> / <a href=\"https://www.pexels.com/photo/breathtaking-andes-mountains-in-potrerillos-argentina-33839967/\">Pexels</a>",
-        "localPath": "media/blog/mendoza-wine-route/hero.jpg"
+        "localPath": "media/blog/mendoza-vinnyj-gid/hero.jpg"
       }
     },
     "hero:tango dancers Buenos Aires milonga Argentina": {
@@ -2440,7 +2440,7 @@
       "query": "Palermo Soho street art cafe Buenos Aires Argentina",
       "role": "section",
       "resolved": {
-        "src": "/media/blog/buenos-aires-neighborhoods/section-1.jpg",
+        "src": "/media/blog/buenos-aires-rajony/section-1.jpg",
         "alt": "Палермо-Сохо — уютные улицы и кафе столицы",
         "title": "Палермо-Сохо — уютные улицы и кафе столицы",
         "attribution": {
@@ -2450,7 +2450,7 @@
           "license": "Pexels License"
         },
         "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@eldisculpe\">el disculpe</a> / <a href=\"https://www.pexels.com/photo/vibrant-street-art-in-buenos-aires-argentina-34237415/\">Pexels</a>",
-        "localPath": "media/blog/buenos-aires-neighborhoods/section-1.jpg"
+        "localPath": "media/blog/buenos-aires-rajony/section-1.jpg"
       }
     },
     "section:Patagonia hiking trail backpacker wind mountains Argentina": {
@@ -2478,7 +2478,7 @@
       "query": "Mendoza vineyard rows Andes snow Argentina wine route",
       "role": "section",
       "resolved": {
-        "src": "/media/blog/mendoza-wine-route/section-1.jpg",
+        "src": "/media/blog/mendoza-vinnyj-gid/section-1.jpg",
         "alt": "Виноградники Мендосы на фоне снежных Анд",
         "title": "Виноградники Мендосы на фоне снежных Анд",
         "attribution": {
@@ -2488,7 +2488,7 @@
           "license": "Pexels License"
         },
         "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@mariana-la-regina-831745137\">Mariana La Regina</a> / <a href=\"https://www.pexels.com/photo/picturesque-vineyards-in-tunuyan-mendoza-with-andes-backdrop-31025236/\">Pexels</a>",
-        "localPath": "media/blog/mendoza-wine-route/section-1.jpg"
+        "localPath": "media/blog/mendoza-vinnyj-gid/section-1.jpg"
       }
     },
     "section:tango couple dance floor Buenos Aires milonga night": {

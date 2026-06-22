@@ -10,8 +10,34 @@ import ArgentinaWeatherPanel, {
 } from "@/components/guide/weather/ArgentinaWeatherPanel";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { siteScrollAnchorClass } from "@/lib/site-container";
-import type { GuidePillarWidgetSlot } from "@/types/guide-pillar";
+import { cn } from "@/lib/cn";
+import type { GuidePillarWidgetSlot, GuidePillarWidgetSlotType } from "@/types/guide-pillar";
 import type { TourListing } from "@/types";
+
+const COMING_SOON_LABELS: Partial<Record<GuidePillarWidgetSlotType, string>> = {
+  calculator: "Калькулятор",
+  map: "Интерактивная карта",
+  promo: "Промо-блок",
+  "tour-embed": "Подборка туров",
+};
+
+function GuideWidgetComingSoon({ slot }: { slot: GuidePillarWidgetSlot }) {
+  const title = slot.label.trim() || COMING_SOON_LABELS[slot.type] || "Виджет";
+
+  return (
+    <div id={slot.id} className={siteScrollAnchorClass}>
+      <aside
+        className={cn(
+          "flex min-h-[7rem] items-center justify-center rounded-2xl border border-dashed border-gray-200",
+          "bg-surface-muted/40 px-6 py-5 text-center text-sm text-slate"
+        )}
+        aria-label={`${title} — скоро`}
+      >
+        {title} — скоро
+      </aside>
+    </div>
+  );
+}
 
 type GuideWidgetSlotProps = {
   slot: GuidePillarWidgetSlot;
@@ -61,17 +87,19 @@ export default function GuideWidgetSlot({ slot, initialTours = [] }: GuideWidget
     );
   }
 
-  if (slot.type === "tour-embed" && slot.tourEmbed && initialTours.length > 0) {
-    return (
-      <div id={slot.id} className={siteScrollAnchorClass}>
-        <TourEmbedSection
-          config={{ ...slot.tourEmbed, tone: slot.tourEmbed.tone ?? "muted" }}
-          initialTours={initialTours}
-        />
-      </div>
-    );
+  if (slot.type === "tour-embed") {
+    if (slot.tourEmbed && initialTours.length > 0) {
+      return (
+        <div id={slot.id} className={siteScrollAnchorClass}>
+          <TourEmbedSection
+            config={{ ...slot.tourEmbed, tone: slot.tourEmbed.tone ?? "muted" }}
+            initialTours={initialTours}
+          />
+        </div>
+      );
+    }
+    return <GuideWidgetComingSoon slot={slot} />;
   }
 
-  // Unimplemented placeholder slots (calculator/map/promo) are hidden until ready.
-  return null;
+  return <GuideWidgetComingSoon slot={slot} />;
 }

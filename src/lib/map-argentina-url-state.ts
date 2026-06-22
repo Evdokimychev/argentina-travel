@@ -55,6 +55,26 @@ export function buildMapArgentinaPath(state: MapArgentinaUrlState): string {
   return qs ? `/mapa-argentina?${qs}` : "/mapa-argentina";
 }
 
+/** Deep link на страницу тура или его маршрут на карте. */
+export function buildMapTourDeepLink(tour: { id: string; slug: string }): string {
+  return buildMapArgentinaPath({
+    kinds: ["tour", "route", "city", "national_park", "attraction"],
+    city: "",
+    q: "",
+    selected: `tour:${tour.id}`,
+  });
+}
+
+/** Deep link на место в справочнике. */
+export function buildMapPlaceDeepLink(place: { id: string }): string {
+  return buildMapArgentinaPath({
+    kinds: ["city", "national_park", "attraction"],
+    city: "",
+    q: "",
+    selected: `place:${place.id}`,
+  });
+}
+
 export function toggleMapArgentinaKind(
   kinds: MapMarkerKind[],
   kind: MapMarkerKind

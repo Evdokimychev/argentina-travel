@@ -1,3 +1,4 @@
+import { tourGalleryImage } from "@/lib/seed-media";
 import type { AccommodationDisplayMode } from "@/types/tour-accommodation";
 import type { TourAccommodation } from "@/types/tour-accommodation";
 import type { AccommodationType } from "@/types";
@@ -74,7 +75,7 @@ export const IGUAZU_VARIANT_ACCOMMODATIONS = [
     comfort: "Комфорт" as const,
     accommodationType: "Отель" as const,
     amenities: ["Wi-Fi", "Завтрак", "Кондиционер", "Трансфер до парка"],
-    images: ["https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80"],
+    images: [tourGalleryImage("iguazu-falls", 0)],
     displayMode: "manual" as const,
     roomTypes: [],
     alternatives: [],

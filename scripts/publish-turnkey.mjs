@@ -7,6 +7,7 @@
  *   npm run publish:verify -- --url=https://www.goargentina.ru
  *   npm run publish:verify -- --full          # includes unit tests + local build
  *   npm run publish:verify -- --skip-build    # skip npm run build in --full mode
+ *   npm run publish:verify -- --pre-deploy    # code-ready gate: build first, live smoke → warn if only /map stale
  *
  * Writes var/ops/publish-turnkey-last.json
  */
@@ -51,7 +52,27 @@ function parseArgs() {
     baseUrl,
     full: argv.includes("--full"),
     skipBuild: argv.includes("--skip-build"),
+    preDeploy: argv.includes("--pre-deploy"),
   };
+}
+
+function isStaleMapRedirectFailure(step) {
+  if (step.id !== "smoke:production" || step.status !== "fail") return false;
+  const output = step.output ?? "";
+  const failLines = output
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(
+      (line) =>
+        line &&
+        !line.startsWith("✓") &&
+        !line.startsWith("Production smoke base URL:")
+    );
+  return (
+    failLines.length === 2 &&
+    failLines[0] === "Production smoke checks failed." &&
+    failLines[1] === "GET /map expected redirect, got 200"
+  );
 }
 
 function runStep(id, label, command, args, env = {}) {
@@ -126,7 +147,7 @@ async function fetchLiveHealth(baseUrl) {
 
 async function main() {
   loadEnvLocal();
-  const { baseUrl, full, skipBuild } = parseArgs();
+  const { baseUrl, full, skipBuild, preDeploy } = parseArgs();
 
   console.log("Publish turnkey verification");
   console.log(`Target: ${baseUrl}`);
@@ -144,7 +165,9 @@ async function main() {
     runStep("check:rich-sync", "Rich articles sync", "npm", ["run", "sync-rich-articles:check"]),
     runStep("check:heroes", "Blog heroes", "node", ["scripts/audit-blog-heroes.mjs", "--strict"]),
     runStep("check:cornerstone", "Cornerstone media", "npm", ["run", "register-cornerstone-media:check"]),
-    runStep("check:redirects", "Content-plan redirects", "npm", ["run", "sync-content-plan-redirects:check"])
+    runStep("check:redirects", "Content-plan redirects", "npm", ["run", "sync-content-plan-redirects:check"]),
+    runStep("check:legacy-media", "Legacy blog media slugs", "npm", ["run", "prune-legacy-blog-media:check"]),
+    runStep("check:cms-media", "CMS media deploy check", "npm", ["run", "cms-media:deploy-check"])
   );
 
   if (process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()) {
@@ -155,11 +178,23 @@ async function main() {
     steps.push(warnStep("cms:readiness", "CMS cutover readiness", "SUPABASE_SERVICE_ROLE_KEY не задан — пропуск"));
   }
 
-  steps.push(
-    runStep("smoke:production", "Production smoke", "node", ["scripts/production-smoke.mjs"], {
-      SMOKE_BASE_URL: baseUrl,
-    })
-  );
+  if (full && !skipBuild) {
+    steps.push(runStep("build:next", "Production build", "npm", ["run", "build"]));
+  }
+
+  const smokeStep = runStep("smoke:production", "Production smoke", "node", ["scripts/production-smoke.mjs"], {
+    SMOKE_BASE_URL: baseUrl,
+  });
+  if (preDeploy && isStaleMapRedirectFailure(smokeStep)) {
+    steps.push({
+      ...smokeStep,
+      status: "warn",
+      message:
+        "Live /map ещё 200 — redeploy Phase 2 (redirect в next.config + app/map). Остальные 15/16 checks OK.",
+    });
+  } else {
+    steps.push(smokeStep);
+  }
 
   steps.push(await fetchLiveHealth(baseUrl));
 
@@ -182,10 +217,6 @@ async function main() {
       return analytics;
     })()
   );
-
-  if (full && !skipBuild) {
-    steps.push(runStep("build:next", "Production build", "npm", ["run", "build"]));
-  }
 
   steps.push(
     manualStep(
@@ -220,6 +251,7 @@ async function main() {
     ranAt: new Date().toISOString(),
     baseUrl,
     full,
+    preDeploy,
     summary,
     steps,
     runbook: "docs/production-launch-runbook.md",

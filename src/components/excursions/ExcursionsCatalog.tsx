@@ -7,7 +7,7 @@ import ExcursionCard from "@/components/excursions/ExcursionCard";
 import ExcursionSearchPanel from "@/components/excursions/ExcursionSearchPanel";
 import ExcursionFilterBar from "@/components/excursions/ExcursionFilterBar";
 import ExcursionCatalogFiltersSheet from "@/components/excursions/ExcursionCatalogFiltersSheet";
-import ExcursionCatalogMapStub from "@/components/excursions/ExcursionCatalogMapStub";
+import ExcursionCatalogMapNotice from "@/components/excursions/ExcursionCatalogMapNotice";
 import CatalogToolbar, { type CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
 import CatalogStickyBar from "@/components/marketplace/CatalogStickyBar";
 import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
@@ -292,7 +292,14 @@ export default function ExcursionsCatalog({
                 />
 
                 {viewMode === "map" ? (
-                  <ExcursionCatalogMapStub cityName={selectedCityName} query={filters.query} />
+                  <>
+                    <ExcursionCatalogMapNotice cityName={selectedCityName} />
+                    <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                      {pageItems.map((excursion) => (
+                        <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
+                      ))}
+                    </div>
+                  </>
                 ) : (
                   <div
                     className={cn(

@@ -101,29 +101,25 @@ export const JOIN_AUTHORS: JoinAuthor[] = [
     id: "maria",
     name: "Мария",
     bio: "Гид по Буэнос-Айресу и Мендосе. Организует винные туры, гастрономические прогулки и вечера танго с местными артистами.",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&h=400&fit=crop&crop=face",
+    image: "",
   },
   {
     id: "carlos",
     name: "Карлос",
     bio: "Профессиональный гид по Патагонии. Ведёт треккинги к ледникам, организует экспедиции в национальные парки и фото-туры.",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    image: "",
   },
   {
     id: "elena",
     name: "Елена",
     bio: "Инструктор по горному туризму на севере Аргентины. Маршруты по Сальте, Кафаяте и долине реки Калчакí — от лёгких прогулок до сложных походов.",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=400&h=400&fit=crop&crop=face",
+    image: "",
   },
   {
     id: "diego",
     name: "Диего",
     bio: "Гид по Игуасу и северо-востоку. Экскурсии по водопадам, джунглям Мисьонес и культурным маршрутам с местными общинами.",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop&crop=face",
+    image: "",
   },
 ];
 

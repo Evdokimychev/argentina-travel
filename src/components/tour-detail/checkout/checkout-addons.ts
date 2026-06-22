@@ -1,3 +1,5 @@
+import { TRANSFER_VEHICLE_PLACEHOLDER } from "@/lib/seed-media";
+
 export interface TransferVehicleOption {
   id: string;
   title: string;
@@ -14,8 +16,7 @@ export const TRANSFER_VEHICLE_OPTIONS: TransferVehicleOption[] = [
     id: "sedan",
     title: "Легковой автомобиль",
     description: "Комфортный седан или универсал с багажом.",
-    image:
-      "https://images.unsplash.com/photo-1549397661-22abc752106a?w=240&h=160&fit=crop&crop=entropy&auto=format&q=80",
+    image: TRANSFER_VEHICLE_PLACEHOLDER,
     capacity: 3,
     priceUsd: 45,
   },
@@ -23,8 +24,7 @@ export const TRANSFER_VEHICLE_OPTIONS: TransferVehicleOption[] = [
     id: "minivan",
     title: "Минивэн",
     description: "Подходит для семьи или небольшой группы с чемоданами.",
-    image:
-      "https://images.unsplash.com/photo-1519641471654-76cefc7a104f?w=240&h=160&fit=crop&crop=entropy&auto=format&q=80",
+    image: TRANSFER_VEHICLE_PLACEHOLDER,
     capacity: 7,
     priceUsd: 65,
   },
@@ -32,8 +32,7 @@ export const TRANSFER_VEHICLE_OPTIONS: TransferVehicleOption[] = [
     id: "van",
     title: "Микроавтобус",
     description: "Просторный транспорт для средних групп.",
-    image:
-      "https://images.unsplash.com/photo-1609521263047-f8f205293f24?w=240&h=160&fit=crop&crop=entropy&auto=format&q=80",
+    image: TRANSFER_VEHICLE_PLACEHOLDER,
     capacity: 12,
     priceUsd: 95,
   },
@@ -41,8 +40,7 @@ export const TRANSFER_VEHICLE_OPTIONS: TransferVehicleOption[] = [
     id: "bus",
     title: "Автобус",
     description: "Для больших групп и корпоративных заездов.",
-    image:
-      "https://images.unsplash.com/photo-1570125909232-e93365328168?w=240&h=160&fit=crop&crop=entropy&auto=format&q=80",
+    image: TRANSFER_VEHICLE_PLACEHOLDER,
     capacity: 20,
     priceUsd: 140,
   },

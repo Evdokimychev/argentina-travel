@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import HubHero from "@/components/guide/hub/HubHero";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogEditorialHubs from "@/components/blog/BlogEditorialHubs";
@@ -11,6 +11,7 @@ import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogStartHere from "@/components/blog/BlogStartHere";
 import BlogStatsOverview from "@/components/blog/BlogStatsOverview";
 import BlogTopicHubs from "@/components/blog/BlogTopicHubs";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import {
   blogPosts,
   computeBlogStats,
@@ -34,7 +35,9 @@ type BlogIndexViewProps = {
   posts?: BlogPost[];
 };
 
-export default function BlogIndexView({ posts }: BlogIndexViewProps) {
+function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
   const [activeTag, setActiveTag] = useState<string | null>(null);
@@ -95,11 +98,33 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
     setVisibleCount(PAGE_SIZE);
   }, [query, activeCategory, activeTag, reviewedOnly, showDrafts]);
 
+  useEffect(() => {
+    const tagFromUrl = searchParams.get("tag")?.trim();
+    if (tagFromUrl) {
+      setActiveTag(tagFromUrl);
+      catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [searchParams]);
+
+  function syncTagInUrl(tag: string | null) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (tag) params.set("tag", tag);
+    else params.delete("tag");
+    const qs = params.toString();
+    router.replace(qs ? `/blog?${qs}` : "/blog", { scroll: false });
+  }
+
+  function handleTagChange(tag: string | null) {
+    setActiveTag(tag);
+    syncTagInUrl(tag);
+  }
+
   function resetFilters() {
     setQuery("");
     setActiveCategory("Все");
     setActiveTag(null);
     setReviewedOnly(false);
+    syncTagInUrl(null);
   }
 
   return (
@@ -117,13 +142,12 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-10")}>
-          <nav className="text-sm text-slate" aria-label="Хлебные крошки">
-            <Link href="/" className="transition-colors hover:text-sky">
-              Главная
-            </Link>
-            <span className="mx-2 text-gray-300">/</span>
-            <span className="text-charcoal">Блог</span>
-          </nav>
+          <PageBreadcrumbs
+            items={[
+              { label: "Главная", href: "/" },
+              { label: "Блог" },
+            ]}
+          />
 
           <BlogStatsOverview
             stats={stats}
@@ -141,7 +165,7 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
                 activeCategory={activeCategory}
                 onCategorySelect={(category) => {
                   setActiveCategory(category);
-                  setActiveTag(null);
+                  handleTagChange(null);
                   catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
                 className="mt-10"
@@ -159,11 +183,11 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
                   activeCategory={activeCategory}
                   onCategoryChange={(cat) => {
                     setActiveCategory(cat);
-                    setActiveTag(null);
+                    handleTagChange(null);
                   }}
                   tags={tags}
                   activeTag={activeTag}
-                  onTagChange={setActiveTag}
+                  onTagChange={handleTagChange}
                   reviewedOnly={reviewedOnly}
                   onReviewedOnlyChange={setReviewedOnly}
                   showDrafts={showDrafts}
@@ -228,5 +252,13 @@ export default function BlogIndexView({ posts }: BlogIndexViewProps) {
         </div>
       </div>
     </>
+  );
+}
+
+export default function BlogIndexView(props: BlogIndexViewProps) {
+  return (
+    <Suspense fallback={null}>
+      <BlogIndexViewContent {...props} />
+    </Suspense>
   );
 }

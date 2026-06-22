@@ -1,14 +1,17 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { LucideIcon } from "lucide-react";
+import { CheckCircle2, Map, Sparkles, Users } from "lucide-react";
 import {
   getPlatformStatsFromRepository,
   mergePlatformStats,
   type PlatformStats,
 } from "@/lib/organizer-public";
-import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
+import { useAnimatedValue, useRevealAnimation } from "@/hooks/useRevealAnimation";
 import { tripsWord } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
+import { cn } from "@/lib/cn";
 
 function countCompletedBookings(): number {
   if (typeof window === "undefined") return 0;
@@ -23,8 +26,51 @@ function countCompletedBookings(): number {
   }
 }
 
+type StatCard = {
+  icon: LucideIcon;
+  label: string;
+  value: number;
+  formatValue: (n: number) => string;
+  detail: string;
+};
+
+function StatTile({
+  card,
+  revealed,
+  delayClass,
+}: {
+  card: StatCard;
+  revealed: boolean;
+  delayClass?: string;
+}) {
+  const animated = useAnimatedValue(card.value, revealed);
+  const Icon = card.icon;
+
+  return (
+    <div
+      className={cn(
+        "rounded-2xl border border-gray-100 bg-white p-5 shadow-card sm:p-6",
+        !revealed && "opacity-0",
+        revealed && cn("animate-fade-in-up motion-reduce:opacity-100", delayClass)
+      )}
+    >
+      <div className="flex items-center gap-3">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
+          <Icon className="h-5 w-5" strokeWidth={1.75} aria-hidden />
+        </span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-slate">{card.label}</span>
+      </div>
+      <p className="mt-4 font-heading text-3xl font-bold tabular-nums text-charcoal sm:text-4xl">
+        {card.formatValue(animated)}
+      </p>
+      <p className="mt-2 text-sm leading-relaxed text-slate">{card.detail}</p>
+    </div>
+  );
+}
+
 export default function PlatformStatsBlock({ initialStats }: { initialStats: PlatformStats }) {
   const [stats, setStats] = useState(initialStats);
+  const { ref, revealed } = useRevealAnimation<HTMLElement>(0.15);
 
   useEffect(() => {
     const completed = countCompletedBookings();
@@ -33,65 +79,76 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
 
   if (stats.isNewPlatform && stats.tourCount <= 3) {
     return (
-      <section className="border-y border-gray-100 bg-surface-muted/50 py-10">
+      <section ref={ref} className="border-y border-gray-100 bg-gradient-to-b from-white to-surface-muted/40 py-10">
         <div className={siteContainerClass}>
-          <HubQuickFactsGrid
-            columns={3}
-            facts={[
-              {
-                emoji: "✨",
-                label: "Площадка",
-                headline: "Новая площадка авторских туров",
-                detail:
-                  stats.tourCount > 0
-                    ? `В каталоге уже ${stats.tourCount} ${tripsWord(stats.tourCount)} — отзывы появятся после реальных поездок`
-                    : "Первые маршруты уже в каталоге — отзывы появятся после реальных поездок",
-              },
-            ]}
+          <StatTile
+            revealed={revealed}
+            card={{
+              icon: Sparkles,
+              label: "Площадка",
+              value: stats.tourCount,
+              formatValue: (n: number) => (n > 0 ? `${n} ${tripsWord(n)}` : "Старт"),
+              detail:
+                stats.tourCount > 0
+                  ? "Авторские маршруты уже в каталоге — отзывы появятся после реальных поездок"
+                  : "Первые маршруты уже в каталоге — отзывы появятся после реальных поездок",
+            }}
           />
         </div>
       </section>
     );
   }
 
-  const facts = [
+  const cards: StatCard[] = [
     stats.tourCount > 0
       ? {
-          emoji: "🗺",
+          icon: Map,
           label: "Каталог",
-          headline: `${stats.tourCount} ${tripsWord(stats.tourCount)}`,
-          detail: "Авторские маршруты по всей стране",
+          value: stats.tourCount,
+          formatValue: (n: number) => `${n} ${tripsWord(n)}`,
+          detail: "Авторские маршруты по Аргентине",
         }
       : null,
     stats.organizerCount > 0
       ? {
-          emoji: "🧭",
+          icon: Users,
           label: stats.organizerCount === 1 ? "Организатор" : "Организаторы",
-          headline: String(stats.organizerCount),
+          value: stats.organizerCount,
+          formatValue: (n: number) => String(n),
           detail: "Проверенные гиды и туроператоры",
         }
       : null,
     stats.completedBookingsCount != null && stats.completedBookingsCount > 0
       ? {
-          emoji: "✅",
+          icon: CheckCircle2,
           label: "Поездки",
-          headline: String(stats.completedBookingsCount),
+          value: stats.completedBookingsCount,
+          formatValue: (n: number) => String(n),
           detail: "Завершённые бронирования на площадке",
         }
       : null,
-  ].filter(Boolean) as Array<{
-    emoji: string;
-    label: string;
-    headline: string;
-    detail: string;
-  }>;
+  ].filter(Boolean) as StatCard[];
 
-  if (facts.length === 0) return null;
+  if (cards.length === 0) return null;
+
+  const delayClasses = ["", "animate-delay-100", "animate-delay-200"];
 
   return (
-    <section className="border-y border-gray-100 bg-surface-muted/50 py-10">
+    <section
+      ref={ref}
+      className="border-y border-gray-100 bg-gradient-to-b from-surface-muted/30 via-white to-surface-muted/20 py-10 md:py-12"
+    >
       <div className={siteContainerClass}>
-        <HubQuickFactsGrid facts={facts} columns={facts.length >= 3 ? 3 : 3} />
+        <div
+          className={cn(
+            "grid gap-4",
+            cards.length >= 3 ? "sm:grid-cols-3" : cards.length === 2 ? "sm:grid-cols-2" : "max-w-md"
+          )}
+        >
+          {cards.map((card, index) => (
+            <StatTile key={card.label} card={card} revealed={revealed} delayClass={delayClasses[index]} />
+          ))}
+        </div>
       </div>
     </section>
   );

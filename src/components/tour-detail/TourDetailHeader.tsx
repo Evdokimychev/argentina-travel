@@ -6,6 +6,7 @@ import { ArrowUpRight, MapPin, Share2 } from "lucide-react";
 import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
 import FavoriteButton from "@/components/profile/FavoriteButton";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import { StarRating } from "@/components/ui/star-rating";
 import { cn } from "@/lib/cn";
@@ -76,19 +77,14 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
       />
 
       <div className={cn(siteContainerClass, "relative py-6 md:py-8 lg:py-10")}>
-        <nav className="text-sm text-slate" aria-label="Хлебные крошки">
-          <Link href="/" className="transition-colors hover:text-sky">
-            Главная
-          </Link>
-          <span className="mx-2 text-gray-300">/</span>
-          <Link href="/tours" className="transition-colors hover:text-sky">
-            Авторские туры
-          </Link>
-          <span className="mx-2 text-gray-300">/</span>
-          <span className="text-slate">{provinceLabel}</span>
-          <span className="mx-2 text-gray-300">/</span>
-          <span className="text-charcoal">{tour.title}</span>
-        </nav>
+        <PageBreadcrumbs
+          items={[
+            { label: "Главная", href: "/" },
+            { label: "Авторские туры", href: "/tours" },
+            { label: provinceLabel },
+            { label: tour.title },
+          ]}
+        />
 
         <div className="mt-6 grid items-start gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,400px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-10">
           <div className="min-w-0">

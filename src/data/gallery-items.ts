@@ -23,11 +23,17 @@ function toRegionSlug(region: string): string {
   return REGION_SLUG_MAP[region] ?? region.toLowerCase().replace(/\s+/g, "-");
 }
 
+/** Sprint 11: gallery uses manifest-local media only (no hotlinks or logo fallbacks). */
+function isManifestGalleryImage(url: string): boolean {
+  return url.startsWith("/media/") && !url.includes("logo");
+}
+
 export function buildGalleryItems(): GalleryItem[] {
   const items: GalleryItem[] = [];
 
   for (const tour of marketplaceTours) {
-    const gallery = tour.gallery?.length ? tour.gallery : [tour.image];
+    const gallery = (tour.gallery?.length ? tour.gallery : [tour.image]).filter(isManifestGalleryImage);
+    if (gallery.length === 0) continue;
     gallery.forEach((imageUrl, index) => {
       items.push({
         id: `${tour.slug}-${index}`,

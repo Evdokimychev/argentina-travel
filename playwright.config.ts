@@ -1,10 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
 
-const baseURL =
+const explicitBase =
   process.env.PLAYWRIGHT_BASE_URL?.trim() ||
-  process.env.SMOKE_BASE_URL?.trim() ||
-  "http://127.0.0.1:3000";
-const useLocalWebServer = /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(baseURL);
+  process.env.SMOKE_BASE_URL?.trim();
+const baseURL = explicitBase || "http://127.0.0.1:3000";
+const useLocalWebServer =
+  !explicitBase && /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(baseURL);
 
 export default defineConfig({
   testDir: "./tests/e2e",

@@ -10,6 +10,9 @@
  *
  * Env:
  *   LIGHTHOUSE_BASE_URL — default http://127.0.0.1:3000
+ *   LIGHTHOUSE_SAMPLE_PATHS — comma-separated paths
+ *   LIGHTHOUSE_CATEGORIES — comma-separated (default: performance)
+ *   LIGHTHOUSE_REPORT_FILE — relative to var/ops (default: lighthouse-blog-cwv-last.json)
  *   SKIP_LIGHTHOUSE=1 — exit 0 without running (CI without server)
  *
  * Writes: var/ops/lighthouse-blog-cwv-last.json
@@ -22,20 +25,29 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const reportDir = path.join(root, "var/ops");
-const reportFile = path.join(reportDir, "lighthouse-blog-cwv-last.json");
+const reportFile = path.join(
+  reportDir,
+  process.env.LIGHTHOUSE_REPORT_FILE ?? "lighthouse-blog-cwv-last.json",
+);
 
 const BASE_URL = (process.env.LIGHTHOUSE_BASE_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
 
-const SAMPLE_PATHS = [
-  "/blog",
-  "/blog/hub/patagonia",
-  "/blog/patagonia-packing-list",
-  "/blog/argentinian-steak-guide",
-  "/blog/natsionalnyy-park-iguasu",
-];
+const SAMPLE_PATHS = (process.env.LIGHTHOUSE_SAMPLE_PATHS?.split(",").map((p) => p.trim()).filter(Boolean) ??
+  [
+    "/blog",
+    "/blog/hub/patagonia",
+    "/blog/patagonia-packing-list",
+    "/blog/argentinian-steak-guide",
+    "/blog/natsionalnyy-park-iguasu",
+  ]);
+
+const CATEGORIES = (
+  process.env.LIGHTHOUSE_CATEGORIES?.split(",").map((c) => c.trim()).filter(Boolean) ?? ["performance"]
+);
 
 const BUDGET = {
-  performance: 90,
+  performance: Number(process.env.LIGHTHOUSE_PERF_BUDGET ?? 90),
+  accessibility: Number(process.env.LIGHTHOUSE_A11Y_BUDGET ?? 95),
   lcpMs: 2500,
   cls: 0.1,
   inpMs: 200,
@@ -62,9 +74,9 @@ function probe(url) {
   }
 }
 
-if (!probe(`${BASE_URL}/blog`)) {
+if (!probe(`${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"}`)) {
   console.error(
-    `Cannot reach ${BASE_URL}/blog — start the server first (npm run build && npm run start).`,
+    `Cannot reach ${BASE_URL}${SAMPLE_PATHS[0] ?? "/blog"} — start the server first (npm run build && npm run start).`,
   );
   console.error("Set SKIP_LIGHTHOUSE=1 to skip in CI without a running server.");
   process.exit(1);
@@ -88,7 +100,7 @@ for (const samplePath of SAMPLE_PATHS) {
       url,
       "--quiet",
       "--chrome-flags=--headless --no-sandbox --disable-gpu",
-      "--only-categories=performance",
+      "--only-categories=" + CATEGORIES.join(","),
       "--form-factor=mobile",
       "--screenEmulation.mobile=true",
       "--throttling-method=simulate",
@@ -106,6 +118,10 @@ for (const samplePath of SAMPLE_PATHS) {
 
   const report = JSON.parse(fs.readFileSync(outFile, "utf8"));
   const perfScore = Math.round((report.categories?.performance?.score ?? 0) * 100);
+  const a11yScore =
+    CATEGORIES.includes("accessibility")
+      ? Math.round((report.categories?.accessibility?.score ?? 0) * 100)
+      : null;
   const audits = report.audits ?? {};
 
   const lcpMs = audits["largest-contentful-paint"]?.numericValue ?? Infinity;
@@ -115,49 +131,78 @@ for (const samplePath of SAMPLE_PATHS) {
     audits["experimental-interaction-to-next-paint"]?.numericValue ??
     null;
 
+  const perfPass =
+    !CATEGORIES.includes("performance") ||
+    (perfScore >= BUDGET.performance &&
+      lcpMs <= BUDGET.lcpMs &&
+      cls <= BUDGET.cls &&
+      (inpMs == null || inpMs <= BUDGET.inpMs));
+  const a11yPass =
+    a11yScore == null || a11yScore >= BUDGET.accessibility;
+
   const row = {
     path: samplePath,
     url,
-    performance: perfScore,
+    performance: CATEGORIES.includes("performance") ? perfScore : null,
+    accessibility: a11yScore,
     lcpMs: Math.round(lcpMs),
     cls: Number(cls.toFixed(3)),
     inpMs: inpMs != null ? Math.round(inpMs) : null,
-    pass:
-      perfScore >= BUDGET.performance &&
-      lcpMs <= BUDGET.lcpMs &&
-      cls <= BUDGET.cls &&
-      (inpMs == null || inpMs <= BUDGET.inpMs),
+    pass: perfPass && a11yPass,
   };
 
   results.push(row);
 
   const status = row.pass ? "PASS" : "FAIL";
   console.log(
-    `  ${status} perf=${perfScore} LCP=${row.lcpMs}ms CLS=${row.cls}` +
+    `  ${status}` +
+      (row.performance != null ? ` perf=${row.performance}` : "") +
+      (row.accessibility != null ? ` a11y=${row.accessibility}` : "") +
+      ` LCP=${row.lcpMs}ms CLS=${row.cls}` +
       (row.inpMs != null ? ` INP=${row.inpMs}ms` : ""),
   );
 
   if (!row.pass) failed = true;
 }
 
-const perfScores = results.filter((r) => typeof r.performance === "number").map((r) => r.performance);
-const medianPerf =
-  perfScores.length > 0
-    ? perfScores.sort((a, b) => a - b)[Math.floor(perfScores.length / 2)]
-    : 0;
+const perfScores = results
+  .filter((r) => typeof r.performance === "number")
+  .map((r) => r.performance);
+const a11yScores = results
+  .filter((r) => typeof r.accessibility === "number")
+  .map((r) => r.accessibility);
+
+function median(values) {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  return sorted[Math.floor(sorted.length / 2)];
+}
+
+const medianPerf = median(perfScores);
+const medianA11y = median(a11yScores);
 
 const summary = {
   at: new Date().toISOString(),
   baseUrl: BASE_URL,
+  categories: CATEGORIES,
   budget: BUDGET,
   medianPerformance: medianPerf,
+  medianAccessibility: medianA11y || null,
   results,
-  pass: !failed && medianPerf >= BUDGET.performance,
+  pass:
+    !failed &&
+    (perfScores.length === 0 || medianPerf >= BUDGET.performance) &&
+    (a11yScores.length === 0 || medianA11y >= BUDGET.accessibility),
 };
 
 fs.mkdirSync(reportDir, { recursive: true });
 fs.writeFileSync(reportFile, JSON.stringify(summary, null, 2));
 console.log(`\nReport: ${path.relative(root, reportFile)}`);
-console.log(`Median Performance: ${medianPerf} (budget ≥ ${BUDGET.performance})`);
+if (perfScores.length) {
+  console.log(`Median Performance: ${medianPerf} (budget ≥ ${BUDGET.performance})`);
+}
+if (a11yScores.length) {
+  console.log(`Median Accessibility: ${medianA11y} (budget ≥ ${BUDGET.accessibility})`);
+}
 
 process.exit(failed ? 1 : 0);

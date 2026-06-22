@@ -9,7 +9,7 @@ import {
   buildTouristDestinationSchema,
 } from "@/lib/schema-json-ld";
 import { getBlogUpdatedDate } from "@/lib/blog-utils";
-import { absoluteUrl } from "@/lib/site-url";
+import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 export function buildCollectionItemListJsonLd(collection: PlaceCollection) {
   return {
@@ -33,13 +33,14 @@ export function buildCollectionItemListJsonLd(collection: PlaceCollection) {
 }
 
 export function buildItineraryTripJsonLd(itinerary: PlaceItinerary) {
+  const imageUrl = itinerary.coverImage ? resolvePublicUrl(itinerary.coverImage) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "Trip",
     name: itinerary.title,
     description: itinerary.description,
     url: absoluteUrl(itineraryHref(itinerary.slug)),
-    image: itinerary.coverImage,
+    ...(imageUrl ? { image: imageUrl } : {}),
     itinerary: {
       "@type": "ItemList",
       numberOfItems: itinerary.stops.length,

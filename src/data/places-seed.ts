@@ -15,22 +15,8 @@ function placeMedia(slug: string) {
   };
 }
 
-function placeMediaWithFallback(
-  slug: string,
-  fallback: { cover: string; gallery?: string[] },
-) {
-  const cover = getPlaceCoverImage(slug);
-  if (cover === MEDIA_FALLBACK) {
-    return {
-      coverImage: fallback.cover,
-      gallery: fallback.gallery ?? [fallback.cover],
-    };
-  }
-  const gallery = getPlaceGallery(slug);
-  return {
-    coverImage: cover,
-    gallery: gallery.length > 0 ? gallery : [cover],
-  };
+function placeMediaWithFallback(slug: string) {
+  return placeMedia(slug);
 }
 
 type SeedPlace = Omit<
@@ -181,9 +167,7 @@ export const PLACES_SEED: SeedPlace[] = [
     city: "Maipú",
     latitude: -32.959,
     longitude: -68.768,
-    ...placeMediaWithFallback("maipu", {
-      cover: "https://images.unsplash.com/photo-1506377247377-2ccd5a1b6d19?w=1200&q=80",
-    }),
+    ...placeMediaWithFallback("maipu"),
     tags: ["вино", "мендоса", "дегустация"],
     rating: 4.6,
     visitDuration: "1 день",
@@ -204,9 +188,7 @@ export const PLACES_SEED: SeedPlace[] = [
     city: "Luján de Cuyo",
     latitude: -33.035,
     longitude: -68.879,
-    ...placeMediaWithFallback("lujan-de-cuyo", {
-      cover: "https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=1200&q=80",
-    }),
+    ...placeMediaWithFallback("lujan-de-cuyo"),
     tags: ["вино", "malbec", "мендоса"],
     rating: 4.7,
     visitDuration: "1–2 дня",
@@ -227,9 +209,7 @@ export const PLACES_SEED: SeedPlace[] = [
     city: "Tunuyán",
     latitude: -33.576,
     longitude: -69.017,
-    ...placeMediaWithFallback("uco-valley", {
-      cover: "https://images.unsplash.com/photo-1474722883778-792e7990302f?w=1200&q=80",
-    }),
+    ...placeMediaWithFallback("uco-valley"),
     tags: ["вино", "uco", "мендоса"],
     rating: 4.8,
     visitDuration: "1–2 дня",
@@ -250,9 +230,7 @@ export const PLACES_SEED: SeedPlace[] = [
     city: "Potrerillos",
     latitude: -32.981,
     longitude: -69.024,
-    ...placeMediaWithFallback("potrerillos", {
-      cover: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80",
-    }),
+    ...placeMediaWithFallback("potrerillos"),
     tags: ["озеро", "горы", "мендоса"],
     rating: 4.5,
     visitDuration: "Полдня — 1 день",
@@ -566,13 +544,7 @@ export const PLACES_SEED: SeedPlace[] = [
     city: "Córdoba",
     latitude: -31.4201,
     longitude: -64.1888,
-    ...placeMediaWithFallback("cordoba", {
-      cover: "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=1200&q=80",
-      gallery: [
-        "https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=1200&q=80",
-        "https://images.unsplash.com/photo-1555881400-74d7aca8a582?w=1200&q=80",
-      ],
-    }),
+    ...placeMediaWithFallback("cordoba"),
     tags: ["город", "unesco", "горы", "культура"],
     rating: 4.4,
     visitDuration: "2–3 дня",
@@ -593,9 +565,7 @@ export const PLACES_SEED: SeedPlace[] = [
     province: "Corrientes",
     latitude: -28.55,
     longitude: -57.45,
-    ...placeMediaWithFallback("estero-ibera", {
-      cover: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1200&q=80",
-    }),
+    ...placeMediaWithFallback("estero-ibera"),
     tags: ["природа", "сафари", "птицы", "заповедник"],
     rating: 4.7,
     visitDuration: "2–4 дня",
@@ -616,9 +586,7 @@ export const PLACES_SEED: SeedPlace[] = [
     province: "La Rioja",
     latitude: -29.85,
     longitude: -67.95,
-    ...placeMediaWithFallback("talampaya", {
-      cover: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80",
-    }),
+    ...placeMediaWithFallback("talampaya"),
     tags: ["unesco", "каньоны", "пустыня", "геология"],
     rating: 4.6,
     visitDuration: "1–2 дня",

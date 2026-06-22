@@ -52,7 +52,7 @@ const PODBOR_REGIONS_RAW: Record<PodborRegionId, PodborRegionMeta> = {
     slug: "iguazu",
     destinationSlug: "iguazu",
     image: "",
-    description: "280 водопадов в тропическом парке — один из главных символов континента.",
+    description: "Около 275 водопадов в тропическом парке — один из главных символов континента.",
     bestSeason: "март — май, август — ноябрь",
     idealDuration: "3–4 дня",
     mapX: 72,

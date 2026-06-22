@@ -32,7 +32,7 @@ export const tourExtra: Record<string, TourExtra> = {
     organizer: {
       name: "Мария Г.",
       role: "Организатор путешествия",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80",
+      avatar: "",
     },
     comfort: "Средний",
     startLocation: "Буэнос-Айрес, аэропорт Ezeiza",
@@ -68,7 +68,7 @@ export const tourExtra: Record<string, TourExtra> = {
     organizer: {
       name: "Карлос Р.",
       role: "Организатор путешествия",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80",
+      avatar: "",
     },
     comfort: "Высокий",
     startLocation: "Буэнос-Айрес, аэропорт Aeroparque",
@@ -112,7 +112,7 @@ export const tourExtra: Record<string, TourExtra> = {
     organizer: {
       name: "Ана Л.",
       role: "Организатор путешествия",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80",
+      avatar: "",
     },
     comfort: "Высокий",
     startLocation: "Мендоса, аэропорт El Plumerillo",
@@ -146,7 +146,7 @@ export const tourExtra: Record<string, TourExtra> = {
     organizer: {
       name: "Пабло М.",
       role: "Организатор путешествия",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&q=80",
+      avatar: "",
     },
     comfort: "Средний",
     startLocation: "Пуэрто-Игуасу, Аргентина, аэропорт Катаратас-дель-Игуасу",
@@ -180,7 +180,7 @@ export const tourExtra: Record<string, TourExtra> = {
     organizer: {
       name: "София Т.",
       role: "Организатор путешествия",
-      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&q=80",
+      avatar: "",
     },
     comfort: "Средний",
     startLocation: "Сальта, аэропорт Martín Miguel de Güemes",
@@ -214,7 +214,7 @@ export const tourExtra: Record<string, TourExtra> = {
     organizer: {
       name: "Диего Ф.",
       role: "Организатор путешествия",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80",
+      avatar: "",
     },
     comfort: "Средний",
     startLocation: "Ушуайя, аэропорт Malvinas Argentinas",

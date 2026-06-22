@@ -1,5 +1,5 @@
 {
-  "version": 4,
+  "version": 5,
   "assets": [
     {
       "id": "place-buenos-aires-hero",
@@ -4936,28 +4936,6 @@
       "imageTitle": "Туристическая виза и правила въезда в Аргентину"
     },
     {
-      "id": "blog-buenos-aires-neighborhoods",
-      "title": "Районы Буэнос-Айреса для туристов",
-      "alt": "Районы Буэнос-Айреса для туристов",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "hero"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/outdoor-cafe-in-buenos-aires-san-telmo-district-35845693/",
-      "license": "Pexels License",
-      "author": "Walter Medina Foto",
-      "localPath": "media/blog/buenos-aires-neighborhoods/hero.jpg",
-      "role": "hero",
-      "contentHash": "0c0d0e6697232c103670339e3784ac62",
-      "blogPostSlug": "buenos-aires-neighborhoods",
-      "authorProfileUrl": "https://www.pexels.com/@walter-medina-foto-2154680637",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@walter-medina-foto-2154680637\">Walter Medina Foto</a> / <a href=\"https://www.pexels.com/photo/outdoor-cafe-in-buenos-aires-san-telmo-district-35845693/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Районы Буэнос-Айреса для туристов"
-    },
-    {
       "id": "blog-patagonia-packing-list",
       "title": "Что взять в поездку в Патагонию",
       "alt": "Что взять в поездку в Патагонию",
@@ -5849,28 +5827,6 @@
       "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@zhenming-wang-1647344339\">Zhenming Wang</a> / <a href=\"https://www.pexels.com/photo/scenic-mountain-stream-in-patagonian-landscape-33088312/\">Pexels</a>",
       "attributionRequired": true,
       "imageTitle": "Когда лучше ехать в Аргентину — сезоны и климат"
-    },
-    {
-      "id": "blog-mendoza-wine-route",
-      "title": "Винный маршрут Мендосы",
-      "alt": "Винный маршрут Мендосы",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "hero"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/breathtaking-andes-mountains-in-potrerillos-argentina-33839967/",
-      "license": "Pexels License",
-      "author": "Andres Alaniz",
-      "localPath": "media/blog/mendoza-wine-route/hero.jpg",
-      "role": "hero",
-      "contentHash": "738a678c5f6b56096eb4afb11fb79f23",
-      "blogPostSlug": "mendoza-wine-route",
-      "authorProfileUrl": "https://www.pexels.com/@andres-alaniz-461433202",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@andres-alaniz-461433202\">Andres Alaniz</a> / <a href=\"https://www.pexels.com/photo/breathtaking-andes-mountains-in-potrerillos-argentina-33839967/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Винный маршрут Мендосы"
     },
     {
       "id": "blog-rich-iguazu-national-park-gallery-1",
@@ -6882,28 +6838,6 @@
       "imageTitle": "Прилёт в Буэнос-Айрес — первые шаги после въезда"
     },
     {
-      "id": "blog-buenos-aires-neighborhoods-section-1",
-      "title": "Палермо-Сохо — уютные улицы и кафе столицы",
-      "alt": "Палермо-Сохо — уютные улицы и кафе столицы",
-      "category": "city",
-      "tags": [
-        "stock",
-        "section"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/vibrant-street-art-in-buenos-aires-argentina-34237415/",
-      "license": "Pexels License",
-      "author": "el disculpe",
-      "localPath": "media/blog/buenos-aires-neighborhoods/section-1.jpg",
-      "role": "section",
-      "contentHash": "c1d38401b77f331e29f91d7b49b33931",
-      "blogPostSlug": "buenos-aires-neighborhoods",
-      "authorProfileUrl": "https://www.pexels.com/@eldisculpe",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@eldisculpe\">el disculpe</a> / <a href=\"https://www.pexels.com/photo/vibrant-street-art-in-buenos-aires-argentina-34237415/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Палермо-Сохо — уютные улицы и кафе столицы"
-    },
-    {
       "id": "blog-patagonia-packing-list-section-1",
       "title": "Треккинг в ветреной Патагонии — что взять в поход",
       "alt": "Треккинг в ветреной Патагонии — что взять в поход",
@@ -6924,28 +6858,6 @@
       "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@kelsey-wilkerson-443975242\">Kelsey Wilkerson</a> / <a href=\"https://www.pexels.com/photo/hiker-looking-at-winding-river-in-valley-26856185/\">Pexels</a>",
       "attributionRequired": true,
       "imageTitle": "Треккинг в ветреной Патагонии — что взять в поход"
-    },
-    {
-      "id": "blog-mendoza-wine-route-section-1",
-      "title": "Виноградники Мендосы на фоне снежных Анд",
-      "alt": "Виноградники Мендосы на фоне снежных Анд",
-      "category": "winery",
-      "tags": [
-        "stock",
-        "section"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/picturesque-vineyards-in-tunuyan-mendoza-with-andes-backdrop-31025236/",
-      "license": "Pexels License",
-      "author": "Mariana La Regina",
-      "localPath": "media/blog/mendoza-wine-route/section-1.jpg",
-      "role": "section",
-      "contentHash": "891398de1eb9eef427bd2c4a110a98c8",
-      "blogPostSlug": "mendoza-wine-route",
-      "authorProfileUrl": "https://www.pexels.com/@mariana-la-regina-831745137",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@mariana-la-regina-831745137\">Mariana La Regina</a> / <a href=\"https://www.pexels.com/photo/picturesque-vineyards-in-tunuyan-mendoza-with-andes-backdrop-31025236/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Виноградники Мендосы на фоне снежных Анд"
     },
     {
       "id": "blog-tango-beginners-guide-section-1",
@@ -10372,50 +10284,6 @@
       "imageTitle": "Прилёт в Буэнос-Айрес — первые шаги после въезда — практические детали"
     },
     {
-      "id": "blog-buenos-aires-neighborhoods-section-2",
-      "title": "Районы Буэнос-Айреса для туристов — обзор маршрута",
-      "alt": "Районы Буэнос-Айреса для туристов — обзор маршрута",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "hero"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/outdoor-cafe-in-buenos-aires-san-telmo-district-35845693/",
-      "license": "Pexels License",
-      "author": "Walter Medina Foto",
-      "localPath": "media/blog/buenos-aires-neighborhoods/section-2.jpg",
-      "role": "section",
-      "contentHash": "0c0d0e6697232c103670339e3784ac62",
-      "blogPostSlug": "buenos-aires-neighborhoods",
-      "authorProfileUrl": "https://www.pexels.com/@walter-medina-foto-2154680637",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@walter-medina-foto-2154680637\">Walter Medina Foto</a> / <a href=\"https://www.pexels.com/photo/outdoor-cafe-in-buenos-aires-san-telmo-district-35845693/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Районы Буэнос-Айреса для туристов — обзор маршрута"
-    },
-    {
-      "id": "blog-buenos-aires-neighborhoods-section-3",
-      "title": "Палермо-Сохо — уютные улицы и кафе столицы — практические детали",
-      "alt": "Палермо-Сохо — уютные улицы и кафе столицы — практические детали",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "section"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/vibrant-street-art-in-buenos-aires-argentina-34237415/",
-      "license": "Pexels License",
-      "author": "el disculpe",
-      "localPath": "media/blog/buenos-aires-neighborhoods/section-3.jpg",
-      "role": "section",
-      "contentHash": "c1d38401b77f331e29f91d7b49b33931",
-      "blogPostSlug": "buenos-aires-neighborhoods",
-      "authorProfileUrl": "https://www.pexels.com/@eldisculpe",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@eldisculpe\">el disculpe</a> / <a href=\"https://www.pexels.com/photo/vibrant-street-art-in-buenos-aires-argentina-34237415/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Палермо-Сохо — уютные улицы и кафе столицы — практические детали"
-    },
-    {
       "id": "blog-patagonia-packing-list-section-2",
       "title": "Что взять в поездку в Патагонию — обзор маршрута",
       "alt": "Что взять в поездку в Патагонию — обзор маршрута",
@@ -10458,50 +10326,6 @@
       "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@kelsey-wilkerson-443975242\">Kelsey Wilkerson</a> / <a href=\"https://www.pexels.com/photo/hiker-looking-at-winding-river-in-valley-26856185/\">Pexels</a>",
       "attributionRequired": true,
       "imageTitle": "Треккинг в ветреной Патагонии — что взять в поход — практические детали"
-    },
-    {
-      "id": "blog-mendoza-wine-route-section-2",
-      "title": "Винный маршрут Мендосы — обзор маршрута",
-      "alt": "Винный маршрут Мендосы — обзор маршрута",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "hero"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/breathtaking-andes-mountains-in-potrerillos-argentina-33839967/",
-      "license": "Pexels License",
-      "author": "Andres Alaniz",
-      "localPath": "media/blog/mendoza-wine-route/section-2.jpg",
-      "role": "section",
-      "contentHash": "738a678c5f6b56096eb4afb11fb79f23",
-      "blogPostSlug": "mendoza-wine-route",
-      "authorProfileUrl": "https://www.pexels.com/@andres-alaniz-461433202",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@andres-alaniz-461433202\">Andres Alaniz</a> / <a href=\"https://www.pexels.com/photo/breathtaking-andes-mountains-in-potrerillos-argentina-33839967/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Винный маршрут Мендосы — обзор маршрута"
-    },
-    {
-      "id": "blog-mendoza-wine-route-section-3",
-      "title": "Виноградники Мендосы на фоне снежных Анд — практические детали",
-      "alt": "Виноградники Мендосы на фоне снежных Анд — практические детали",
-      "category": "blog-article",
-      "tags": [
-        "stock",
-        "section"
-      ],
-      "source": "pexels",
-      "sourceUrl": "https://www.pexels.com/photo/picturesque-vineyards-in-tunuyan-mendoza-with-andes-backdrop-31025236/",
-      "license": "Pexels License",
-      "author": "Mariana La Regina",
-      "localPath": "media/blog/mendoza-wine-route/section-3.jpg",
-      "role": "section",
-      "contentHash": "891398de1eb9eef427bd2c4a110a98c8",
-      "blogPostSlug": "mendoza-wine-route",
-      "authorProfileUrl": "https://www.pexels.com/@mariana-la-regina-831745137",
-      "attributionHtml": "Фото: <a href=\"https://www.pexels.com/@mariana-la-regina-831745137\">Mariana La Regina</a> / <a href=\"https://www.pexels.com/photo/picturesque-vineyards-in-tunuyan-mendoza-with-andes-backdrop-31025236/\">Pexels</a>",
-      "attributionRequired": true,
-      "imageTitle": "Виноградники Мендосы на фоне снежных Анд — практические детали"
     },
     {
       "id": "blog-tango-beginners-guide-section-2",

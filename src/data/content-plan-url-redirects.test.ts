@@ -32,6 +32,10 @@ describe("matchContentPlanRedirect", () => {
     );
   });
 
+  it("redirects legacy map URL to mapa-argentina", () => {
+    expect(matchContentPlanRedirect("/map")).toBe("/mapa-argentina");
+  });
+
   it("returns null for unknown paths", () => {
     expect(matchContentPlanRedirect("/blog/unknown-slug")).toBeNull();
     expect(matchContentPlanRedirect("/")).toBeNull();

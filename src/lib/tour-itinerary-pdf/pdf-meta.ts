@@ -1,5 +1,9 @@
 import { absoluteUrl } from "@/lib/site-url";
-import { getSiteBrandDomain, getSiteBrandUrl, SITE_BRAND_NAME } from "@/lib/site-brand";
+import {
+  getProductionBrandDomain,
+  getSiteBrandUrl,
+  SITE_BRAND_NAME,
+} from "@/lib/site-brand";
 import type { TourItineraryPdfMeta } from "@/lib/tour-itinerary-pdf/types";
 
 export function buildTourItineraryPdfMeta(slug: string): TourItineraryPdfMeta {
@@ -12,7 +16,7 @@ export function buildTourItineraryPdfMeta(slug: string): TourItineraryPdfMeta {
     generatedAt,
     tourUrl: absoluteUrl(`/tours/${slug}`),
     brandName: SITE_BRAND_NAME,
-    brandDomain: getSiteBrandDomain(),
+    brandDomain: getProductionBrandDomain(),
     brandUrl: getSiteBrandUrl(),
   };
 }

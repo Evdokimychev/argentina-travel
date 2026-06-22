@@ -1,6 +1,7 @@
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
 import { shouldSeedDemoData } from "@/lib/demo-mode";
+import { tourCover } from "@/lib/seed-media";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { createBooking } from "@/lib/bookings-store";
@@ -117,8 +118,7 @@ function seedDemoWaitlist(): WaitlistEntry[] {
       tourId: "1",
       tourSlug: "patagonia-glaciers",
       tourTitle: "Ледники Патагонии: Перито-Морено и Torres del Paine",
-      tourImage:
-        "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
+      tourImage: tourCover("patagonia-glaciers"),
       tourDateId: "dt3",
       startDate: "2025-12-01",
       endDate: "2025-12-10",
@@ -142,8 +142,7 @@ function seedDemoWaitlist(): WaitlistEntry[] {
       tourId: "3",
       tourSlug: "mendoza-wine",
       tourTitle: "Винный тур в Мендосе",
-      tourImage:
-        "https://images.unsplash.com/photo-1506377247377-2ccd5a1b6b4a?w=800&q=80",
+      tourImage: tourCover("mendoza-wine"),
       tourDateId: "dt-default",
       startDate: "2025-11-01",
       endDate: "2025-11-07",

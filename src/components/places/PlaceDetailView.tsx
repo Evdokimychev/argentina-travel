@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -10,9 +12,10 @@ import {
   Ticket,
 } from "lucide-react";
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
 import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
-import PlaceDetailLocationSection from "@/components/places/PlaceDetailLocationSection";
+import PlaceTransportMapSection from "@/components/places/PlaceTransportMapSection";
 import RelatedPlacesSection from "@/components/places/RelatedPlacesSection";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
@@ -22,6 +25,8 @@ import type { PlaceDetail } from "@/types/place";
 import type { TourListing } from "@/types";
 import { destinationHref } from "@/lib/destinations";
 import { pairedDestinationIdForPlace } from "@/lib/geography-links";
+import { matchToursForPlace } from "@/lib/places-tour-match";
+import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { collectionHref, itineraryHref } from "@/lib/places-repository";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
@@ -38,6 +43,8 @@ export default function PlaceDetailView({
   knowledgeLinks?: KnowledgeLinksBundle;
   initialTours?: TourListing[];
 }) {
+  const tours = useRepositoryTourListings(initialTours);
+  const matchedTours = matchToursForPlace(tours, place);
   const galleryAlts = getPlaceGalleryAlts(place.slug);
   const destinationId = pairedDestinationIdForPlace(place.slug);
   const destinationPage = destinationId ? getDestinationPageById(destinationId) : undefined;
@@ -57,21 +64,17 @@ export default function PlaceDetailView({
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-charcoal/10" />
         <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-8 pt-16")}>
-          <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-white/75">
-            <Link href="/" className="hover:text-white">
-              Главная
-            </Link>
-            <span aria-hidden>–</span>
-            <Link href="/destinations" className="hover:text-white">
-              Регионы и места
-            </Link>
-            <span aria-hidden>–</span>
-            <Link href="/places" className="hover:text-white">
-              Справочник
-            </Link>
-            <span aria-hidden>–</span>
-            <span className="text-white">{place.name}</span>
-          </nav>
+          <PageBreadcrumbs
+            variant="on-dark"
+            separator="dash"
+            className="mb-4"
+            items={[
+              { label: "Главная", href: "/" },
+              { label: "Регионы и места", href: "/destinations" },
+              { label: "Справочник", href: "/places" },
+              { label: place.name },
+            ]}
+          />
           <span className="inline-flex w-fit rounded-full bg-white/15 px-3 py-1 text-xs font-medium uppercase tracking-wide text-white backdrop-blur-sm">
             {PLACE_CATEGORY_LABELS[place.category]}
           </span>
@@ -112,21 +115,21 @@ export default function PlaceDetailView({
             </section>
           ) : null}
 
-          <PlaceDetailLocationSection place={place} relatedPlaces={place.relatedPlaces} />
+          <PlaceTransportMapSection place={place} relatedPlaces={place.relatedPlaces} />
 
-          {initialTours.length > 0 ? (
+          {matchedTours.length > 0 ? (
             <TourEmbedSection
               config={{
-                variant: "compact-list",
+                variant: "strip",
                 title: `Туры рядом с ${place.name}`,
                 subtitle: "Проверенные маршруты с гидом — логистика уже продумана",
-                limit: 3,
-                source: { kind: "query", query: place.name.split(/\s+/)[0] },
+                limit: 6,
+                source: { kind: "slugs", slugs: matchedTours.map((t) => t.slug) },
                 catalogHref: `/tours?query=${encodeURIComponent(place.region)}`,
                 catalogLabel: "Все туры региона",
                 tone: "muted",
               }}
-              initialTours={initialTours}
+              initialTours={matchedTours}
             />
           ) : null}
 

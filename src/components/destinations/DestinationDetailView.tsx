@@ -11,8 +11,10 @@ import {
   Plane,
 } from "lucide-react";
 import ContentReadingLayout from "@/components/content/ContentReadingLayout";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
 import DestinationInsuranceTeaser from "@/components/destinations/DestinationInsuranceTeaser";
+import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import RelatedContentCards from "@/components/content/RelatedContentCards";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
@@ -40,16 +42,29 @@ interface DestinationDetailViewProps {
   flightSidebar?: React.ReactNode;
 }
 
-function FactPill({ icon: Icon, label, value }: { icon: typeof Clock; label: string; value: string }) {
-  return (
-    <div className="flex min-w-0 items-start gap-2.5 rounded-xl border border-white/15 bg-white/10 px-3 py-2.5 backdrop-blur-sm">
-      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-sky-200" aria-hidden />
-      <div className="min-w-0">
-        <p className="text-[10px] font-medium uppercase tracking-wide text-white/60">{label}</p>
-        <p className="text-sm font-medium leading-snug text-white">{value}</p>
-      </div>
-    </div>
-  );
+function buildDestinationQuickFacts(destination: DestinationPage) {
+  return [
+    {
+      emoji: "🗓",
+      label: "Срок",
+      headline: destination.idealDuration,
+      detail: "Оптимальная длительность поездки в регион",
+    },
+    {
+      emoji: "☀️",
+      label: "Сезон",
+      headline: destination.bestSeason.split(";")[0]?.trim() ?? destination.bestSeason,
+      detail: destination.bestSeason.includes(";")
+        ? destination.bestSeason.split(";").slice(1).join(";").trim()
+        : undefined,
+    },
+    {
+      emoji: "✈️",
+      label: "Логистика",
+      headline: "Как добраться",
+      detail: "Авиа, наземный транспорт и переезды — в разделе ниже",
+    },
+  ];
 }
 
 function buildDestinationTocItems(destination: DestinationPage): ContentTocItem[] {
@@ -126,29 +141,28 @@ export default function DestinationDetailView({
 
   return (
     <>
-      <section className="relative min-h-[48vh] overflow-hidden sm:min-h-[52vh]">
+      <section className="relative min-h-[56vh] overflow-hidden sm:min-h-[62vh]">
         <SafeImage
           src={destination.image}
           alt={destination.imageAlt ?? destinationHeroAlt(destination.name)}
           fill
           priority
-          className="object-cover"
+          className="object-cover object-[center_35%] sm:object-center"
           sizes="100vw"
           placeholderVariant="destination"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/45 to-charcoal/20" />
-        <div className={cn(siteContainerClass, "relative flex min-h-[48vh] flex-col justify-end py-10 sm:min-h-[52vh] sm:py-12")}>
-          <nav className="mb-4 flex flex-wrap items-center gap-1.5 text-sm text-white/75">
-            <Link href="/" className="hover:text-white">
-              Главная
-            </Link>
-            <span aria-hidden>–</span>
-            <Link href="/destinations" className="hover:text-white">
-              Регионы и места
-            </Link>
-            <span aria-hidden>–</span>
-            <span className="text-white">{destination.name}</span>
-          </nav>
+        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/95 via-charcoal/50 to-charcoal/15" />
+        <div className={cn(siteContainerClass, "relative flex min-h-[56vh] flex-col justify-end py-12 sm:min-h-[62vh] sm:py-14")}>
+          <PageBreadcrumbs
+            variant="on-dark"
+            separator="dash"
+            className="mb-4"
+            items={[
+              { label: "Главная", href: "/" },
+              { label: "Регионы и места", href: "/destinations" },
+              { label: destination.name },
+            ]}
+          />
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div className="min-w-0 flex-1">
               <span className="inline-flex w-fit rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur-sm">
@@ -168,11 +182,12 @@ export default function DestinationDetailView({
               className="shrink-0 border-white/20 bg-white/10 text-white hover:border-white/40 hover:bg-white/20 hover:text-white"
             />
           </div>
-          <div className="mt-6 grid max-w-3xl gap-2 sm:grid-cols-3">
-            <FactPill icon={Clock} label="На сколько" value={destination.idealDuration} />
-            <FactPill icon={CalendarDays} label="Сезон" value={destination.bestSeason.split(";")[0]} />
-            <FactPill icon={Plane} label="Как добраться" value="См. ниже" />
-          </div>
+        </div>
+      </section>
+
+      <section className="relative z-10 -mt-10 pb-2 sm:-mt-12">
+        <div className={siteContainerClass}>
+          <HubQuickFactsGrid facts={buildDestinationQuickFacts(destination)} columns={3} />
         </div>
       </section>
 
@@ -267,9 +282,17 @@ export default function DestinationDetailView({
                 >
                   Галерея
                 </h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <div className="mt-4 grid gap-3 sm:grid-cols-3">
                   {destination.gallery.map((src, i) => (
-                    <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                    <div
+                      key={src}
+                      className={cn(
+                        "relative overflow-hidden rounded-xl",
+                        i === 0 && destination.gallery!.length >= 3
+                          ? "aspect-[4/3] sm:row-span-1"
+                          : "aspect-[4/3]"
+                      )}
+                    >
                       <SafeImage
                         src={src}
                         alt={destinationGalleryAlt(
@@ -279,7 +302,7 @@ export default function DestinationDetailView({
                         )}
                         fill
                         className="object-cover"
-                        sizes="50vw"
+                        sizes="33vw"
                         placeholderVariant="destination"
                       />
                     </div>

@@ -4,23 +4,13 @@ import { useEffect, useRef } from "react";
 import maplibregl from "maplibre-gl";
 import type { Feature, FeatureCollection, LineString, Point } from "geojson";
 import type { MapMarkerKind, MapObject, MapRouteItem } from "@/lib/map-types";
+import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
 import { ARGENTINA_REGIONS_GEOJSON } from "@/data/argentina-regions";
 import { cn } from "@/lib/cn";
 import "maplibre-gl/dist/maplibre-gl.css";
 
 const ARGENTINA_CENTER: [number, number] = [-64.2, -38.5];
 const ARGENTINA_ZOOM = 4;
-
-const KIND_COLORS: Record<MapMarkerKind, string> = {
-  city: "#2563eb",
-  national_park: "#059669",
-  attraction: "#d97706",
-  tour: "#7c3aed",
-  airport: "#0891b2",
-  route: "#6366f1",
-  region: "#94a3b8",
-  transport: "#64748b",
-};
 
 type Props = {
   objects: MapObject[];
@@ -41,7 +31,7 @@ function objectsToGeoJson(objects: MapObject[]): FeatureCollection<Point> {
         id: obj.id,
         kind: obj.kind,
         title: obj.title,
-        color: KIND_COLORS[obj.kind] ?? "#2563eb",
+        color: MAP_KIND_COLORS[obj.kind] ?? "#2563eb",
       },
     })),
   };
@@ -144,7 +134,7 @@ export default function ArgentinaMapLibreCanvas({
         type: "line",
         source: "routes",
         paint: {
-          "line-color": KIND_COLORS.route,
+          "line-color": MAP_KIND_COLORS.route,
           "line-width": 3,
           "line-opacity": 0.75,
         },

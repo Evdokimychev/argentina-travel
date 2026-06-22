@@ -4,6 +4,7 @@ import type { BlogPost } from "@/types";
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceDetail, PlaceFaqItem } from "@/types/place";
 import { formatBlogReadTime } from "@/lib/blog-utils";
+import { resolveBlogPostCardImage } from "@/lib/media-resolver";
 
 /** Document types supported by CMS v1.4 */
 export type CmsDocType =
@@ -239,7 +240,7 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     fallback?.readTimeMinutes ??
     Math.max(3, Math.ceil(content.split(/\s+/).filter(Boolean).length / 180));
 
-  return {
+  const draft: BlogPost = {
     id: fallback?.id ?? doc.id,
     slug: doc.slug,
     title: doc.title,
@@ -265,6 +266,8 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     relatedResources: fallback?.relatedResources,
     tourEmbeds: fallback?.tourEmbeds,
   };
+
+  return { ...draft, image: resolveBlogPostCardImage(draft) };
 }
 
 export function guidePageFromCms(doc: CmsDocument, fallback?: ContentPage): ContentPage | null {

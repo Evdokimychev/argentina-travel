@@ -63,10 +63,34 @@ function InfoBox({ box }: { box: GuidePillarInfoBox }) {
   );
 }
 
+function PillarTableMobileCards({ headers, rows }: { headers: string[]; rows: string[][] }) {
+  return (
+    <div className="mt-5 space-y-3 md:hidden">
+      {rows.map((row, rowIndex) => (
+        <article
+          key={rowIndex}
+          className="rounded-2xl border border-gray-200 bg-white p-4 shadow-sm"
+        >
+          <dl className="space-y-3">
+            {headers.map((header, cellIndex) => (
+              <div key={`${rowIndex}-${header}`}>
+                <dt className="text-xs font-medium uppercase tracking-wide text-slate">{header}</dt>
+                <dd className="mt-1 text-sm leading-relaxed text-charcoal">{row[cellIndex]}</dd>
+              </div>
+            ))}
+          </dl>
+        </article>
+      ))}
+    </div>
+  );
+}
+
 function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] }) {
   return (
-    <div className="mt-5 overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
-      <table className="w-full min-w-[480px] text-left text-sm">
+    <>
+      <PillarTableMobileCards headers={headers} rows={rows} />
+      <div className="mt-5 hidden overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm md:block">
+        <table className="w-full min-w-[480px] text-left text-sm">
         <thead>
           <tr className="border-b border-gray-100 bg-surface-muted/60">
             {headers.map((header) => (
@@ -92,7 +116,8 @@ function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] })
           ))}
         </tbody>
       </table>
-    </div>
+      </div>
+    </>
   );
 }
 

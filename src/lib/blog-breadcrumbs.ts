@@ -37,7 +37,7 @@ export function buildBlogPostUiBreadcrumbs(post: BlogPost): BlogUiBreadcrumbItem
     items.push({ label: hub.shortTitle, href: blogHubPath(hub.id) });
   }
 
-  items.push({ label: post.category });
+  items.push({ label: post.title });
   return items;
 }
 

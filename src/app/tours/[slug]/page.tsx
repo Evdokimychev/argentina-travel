@@ -12,6 +12,7 @@ import { resolveTourFlightRouteIds } from "@/lib/flights/destination-airports";
 import { getFlightPriceTeasers } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
+import { resolveTourCoverImage } from "@/lib/tour-metadata";
 
 export const dynamic = "force-dynamic";
 
@@ -39,7 +40,8 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
   const tour = await fetchTourDetail(slug, { accessToken: access });
   if (!tour) return { title: "Тур не найден" };
   const pageUrl = absoluteUrl(`/tours/${slug}`);
-  const imageUrl = tour.image ? resolvePublicUrl(tour.image) : undefined;
+  const coverImage = resolveTourCoverImage(tour);
+  const imageUrl = coverImage ? resolvePublicUrl(coverImage) : undefined;
   return {
     title: `${tour.title} — тур по Аргентине`,
     description: tour.shortDescription,

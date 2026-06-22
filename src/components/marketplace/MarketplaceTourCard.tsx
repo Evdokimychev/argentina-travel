@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Flame, MapPin, UserRound } from "lucide-react";
@@ -11,17 +10,22 @@ import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisp
 import TourCardGallery from "./TourCardGallery";
 import { formatDurationShort } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
-import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardMedia,
+  ContentCardOverlayLink,
+  ContentCardTitle,
+} from "@/components/content/ContentCard";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { avatarAlt, tourCoverAlt } from "@/lib/media-alt-text";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
-import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import { isPartnerTourListing, PARTNER_TRIPSTER_BADGE_HINT, PARTNER_TRIPSTER_BADGE_LABEL } from "@/lib/tripster/partner-tour-utils";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
@@ -54,19 +58,23 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
   const isPartnerTour = isPartnerTourListing(tour);
 
   return (
-    <article
-      className={cn("group relative flex flex-col", tourCardShellClass, tourCardShellInteractiveClass)}
-    >
+    <ContentCard>
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <ContentCardMedia aspect="4/3" gradient="none">
           <TourCardGallery images={tour.gallery} alt={tourCoverAlt(tour.title)} variant="tour" />
 
-          <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
+          <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-3.5rem)] flex-wrap gap-1.5">
             {isPartnerTour ? (
-              <Badge variant="new">Tripster</Badge>
+              <Badge
+                variant="new"
+                title={PARTNER_TRIPSTER_BADGE_HINT}
+                className="border-white/30 bg-white/90 backdrop-blur-sm"
+              >
+                {PARTNER_TRIPSTER_BADGE_LABEL}
+              </Badge>
             ) : null}
             {tour.isHot && (
-              <Badge variant="hot">
+              <Badge variant="hot" className="border-white/20 backdrop-blur-sm">
                 <Flame className="h-3 w-3" /> Горящий
               </Badge>
             )}
@@ -74,7 +82,11 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               .filter((b) => !(b === "hot" && tour.isHot))
               .slice(0, 2)
               .map((b) => (
-                <Badge key={b} variant={BADGE_CONFIG[b].variant}>
+                <Badge
+                  key={b}
+                  variant={BADGE_CONFIG[b].variant}
+                  className="border-white/20 backdrop-blur-sm"
+                >
                   {BADGE_CONFIG[b].label}
                 </Badge>
               ))}
@@ -115,9 +127,9 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               <span className="text-xs font-medium text-white">{organizerLabel}</span>
             )}
           </div>
-        </div>
+        </ContentCardMedia>
 
-        <div className="flex flex-1 flex-col p-4">
+        <ContentCardBody>
           <div className="flex items-center justify-between gap-3 text-sm">
             <span className="flex min-w-0 items-center gap-1.5 text-slate">
               <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
@@ -135,9 +147,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
             )}
           </div>
 
-          <h3 className="mt-2 line-clamp-2 font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky">
-            {tour.title}
-          </h3>
+          <ContentCardTitle>{tour.title}</ContentCardTitle>
 
           {tour.shortDescription ? (
             <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
@@ -206,25 +216,12 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               </>
             ) : null}
           </div>
-
-          <div className="pointer-events-auto relative z-20 mt-auto pt-4">
-            <Link
-              href={`/tours/${tour.slug}`}
-              className={buttonVariants({
-                variant: "outline",
-                className: "h-10 w-full rounded-xl text-sm font-semibold",
-              })}
-            >
-              Смотреть тур
-            </Link>
-          </div>
-        </div>
+        </ContentCardBody>
       </div>
 
-      <Link
+      <ContentCardOverlayLink
         href={`/tours/${tour.slug}`}
-        className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
-        aria-label={`Открыть тур: ${tour.title}`}
+        ariaLabel={`Открыть тур: ${tour.title}`}
       />
 
       {schedule?.type === "dates" && schedule.moreDates > 0 ? (
@@ -234,6 +231,6 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           onOpenChange={setDatesModalOpen}
         />
       ) : null}
-    </article>
+    </ContentCard>
   );
 }

@@ -3,6 +3,7 @@ import { SEED_USERS } from "@/lib/auth-store";
 import { joinFullName } from "@/lib/full-name";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
+import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
 import {
   getAllCanonicalTours,
   getMarketplaceListings,
@@ -170,7 +171,7 @@ export function getPublishedToursByOrganizer(slug: string): TourListing[] {
 }
 
 export function getPlatformStatsFromRepository(): PlatformStats {
-  const listings = getMarketplaceListings();
+  const listings = filterArgentinaHomepageTours(getMarketplaceListings());
   const organizerIds = new Set(listings.map((listing) => resolveListingOwnerUserId(listing)));
 
   return {

@@ -1,5 +1,6 @@
 import type { TourPlace } from "@/types";
 import { normalizeEditorValue, trimHtmlToPlainTextLength } from "@/lib/rich-text";
+import { tourGalleryImage } from "@/lib/seed-media";
 
 export const ORGANIZER_TOUR_IMPRESSION_TITLE_MAX = 55;
 export const ORGANIZER_TOUR_IMPRESSION_DESCRIPTION_MAX = 150;
@@ -12,21 +13,21 @@ export const DEFAULT_IGUAZU_IMPRESSIONS: TourPlace[] = [
     title: "Панорамный вид на водопады Игуасу",
     description:
       "Самая знаменитая точка парка — «Глотка Дьявола» (Garganta del Diablo). Шум воды слышен за километр, брызги создают радуги, а панорама из около 275 каскадов оставляет сильное впечатление.",
-    image: "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
+    image: tourGalleryImage("iguazu-falls", 0),
   },
   {
     id: "iguazu-imp-2",
     title: "Экологический поезд через джунгли",
     description:
       "Поезд проносит вас сквозь тропический лес Атлантики к началу пешего маршрута. По пути можно увидеть коати, туканов и редкие виды орхидей.",
-    image: "https://images.unsplash.com/photo-1516026672322-bc52c61a55d5?w=800&q=80",
+    image: tourGalleryImage("iguazu-falls", 1),
   },
   {
     id: "iguazu-imp-3",
     title: "Смотровые площадки аргентинской стороны",
     description:
       "Серия трасс и мостков ведёт к водопадам с разных ракурсов — от общего вида до близких точек, где чувствуешь мощь падающей воды.",
-    image: "https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80",
+    image: tourGalleryImage("iguazu-falls", 2),
   },
 ];
 

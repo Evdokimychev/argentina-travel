@@ -1,77 +1,27 @@
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import ArgentinaMapHub from "@/components/map/ArgentinaMapHub";
-import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
-import MapFeaturedToursJsonLd from "@/components/seo/MapFeaturedToursJsonLd";
-import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
-import { fetchFeaturedMapTours, fetchMapLayers } from "@/lib/map-layers-server";
-import { buildMapPageMetadata } from "@/lib/map-seo";
-import { parseMapLayersParam, parseMapUrlState } from "@/lib/map-url-state";
+import { redirect } from "next/navigation";
 
-type MapPageProps = {
+type MapLegacyRedirectProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-function toSearchParams(input: Record<string, string | string[] | undefined>): URLSearchParams {
+/** Legacy /map — перенаправление на каноническую карту (next.config 301 + runtime fallback). */
+export default async function MapLegacyRedirectPage({ searchParams }: MapLegacyRedirectProps) {
+  const raw = await searchParams;
   const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(input)) {
-    if (value == null) continue;
-    if (Array.isArray(value)) {
-      value.forEach((item) => params.append(key, item));
-    } else {
-      params.set(key, value);
-    }
+
+  const layer = typeof raw.layer === "string" ? raw.layer : "";
+  if (layer) {
+    const kinds: string[] = [];
+    if (layer.includes("tours")) kinds.push("tour", "route");
+    if (layer.includes("places")) kinds.push("city", "national_park", "attraction");
+    if (layer.includes("routes")) kinds.push("route");
+    if (kinds.length) params.set("kind", [...new Set(kinds)].join(","));
   }
-  return params;
-}
 
-export async function generateMetadata({ searchParams }: MapPageProps): Promise<Metadata> {
-  const params = await searchParams;
-  return buildMapPageMetadata(params);
-}
+  if (typeof raw.city === "string" && raw.city) params.set("city", raw.city);
+  if (typeof raw.q === "string" && raw.q) params.set("q", raw.q);
+  if (typeof raw.selected === "string" && raw.selected) params.set("selected", raw.selected);
 
-export default async function MapPage({ searchParams }: MapPageProps) {
-  const rawParams = await searchParams;
-  const urlParams = toSearchParams(rawParams);
-  const urlState = parseMapUrlState(urlParams);
-  const layers = parseMapLayersParam(
-    typeof rawParams.layer === "string" ? rawParams.layer : null
-  );
-
-  const [initialData, featuredTours] = await Promise.all([
-    fetchMapLayers({
-      city: urlState.city || undefined,
-      category: urlState.category || undefined,
-      includeTours: layers.includes("tours"),
-      includePlaces: layers.includes("places"),
-      includeRoutes: layers.includes("routes"),
-    }),
-    fetchFeaturedMapTours(),
-  ]);
-
-  const pageTitle = "Карта Аргентины — туры, места и маршруты";
-  const pageDescription =
-    "Интерактивная карта Аргентины с турами, местами, провинциями и маршрутами.";
-
-  return (
-    <>
-      <BreadcrumbListJsonLd
-        items={[
-          { name: "Главная", path: "/" },
-          { name: "Карта Аргентины", path: "/map" },
-        ]}
-      />
-      <WebPageJsonLd name={pageTitle} description={pageDescription} path="/map" />
-      <MapFeaturedToursJsonLd tours={featuredTours} />
-      <Suspense
-        fallback={
-          <div className="mx-auto max-w-7xl px-4 py-24 text-center text-slate">
-            Загрузка карты…
-          </div>
-        }
-      >
-        <ArgentinaMapHub initialData={initialData} initialState={urlState} />
-      </Suspense>
-    </>
-  );
+  const qs = params.toString();
+  redirect(qs ? `/mapa-argentina?${qs}` : "/mapa-argentina");
 }

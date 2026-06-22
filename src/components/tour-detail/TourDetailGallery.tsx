@@ -1,83 +1,73 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
-import {
-  tourDetailGalleryGridClass,
-  tourDetailGalleryMobileAspectClass,
-} from "@/lib/tour-detail-ui";
+import { tourDetailGalleryMobileAspectClass } from "@/lib/tour-detail-ui";
 
 interface TourDetailGalleryProps {
   images: string[];
   title: string;
 }
 
-function GalleryTile({
-  src,
-  alt,
-  className,
-  priority,
-  onClick,
-  children,
-}: {
-  src: string;
-  alt: string;
-  className?: string;
-  priority?: boolean;
-  onClick?: () => void;
-  children?: React.ReactNode;
-}) {
-  const cdnSrc = buildSupabaseCdnUrl(src, { width: 1440, quality: 80 });
+function useGalleryKeyboard(
+  enabled: boolean,
+  onPrev: () => void,
+  onNext: () => void,
+  onClose?: () => void
+) {
+  useEffect(() => {
+    if (!enabled) return;
 
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        "relative h-full min-h-0 overflow-hidden rounded-2xl bg-gray-100",
-        className
-      )}
-    >
-      <SafeImage
-        src={cdnSrc}
-        alt={alt}
-        fill
-        placeholderVariant="tour"
-        className="object-cover transition-transform duration-500 hover:scale-[1.03]"
-        sizes="(max-width: 768px) 50vw, 40vw"
-        priority={priority}
-      />
-      {children}
-    </button>
-  );
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        onPrev();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        onNext();
+      } else if (event.key === "Escape" && onClose) {
+        event.preventDefault();
+        onClose();
+      }
+    }
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [enabled, onClose, onNext, onPrev]);
 }
 
-function MobileGalleryCarousel({
+function GalleryCarousel({
   images,
   title,
   activeIndex,
   onActiveIndexChange,
   onOpenLightbox,
+  className,
+  priorityFirst = false,
+  scrollRef: externalScrollRef,
 }: {
   images: string[];
   title: string;
   activeIndex: number;
   onActiveIndexChange: (index: number) => void;
   onOpenLightbox: (index: number) => void;
+  className?: string;
+  priorityFirst?: boolean;
+  scrollRef?: React.RefObject<HTMLDivElement | null>;
 }) {
-  const scrollRef = useRef<HTMLDivElement>(null);
+  const internalScrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = externalScrollRef ?? internalScrollRef;
   const hasMultiple = images.length > 1;
 
   const scrollToIndex = useCallback(
     (index: number) => {
       const el = scrollRef.current;
       if (!el) return;
-
       const nextIndex = (index + images.length) % images.length;
       el.scrollTo({ left: nextIndex * el.clientWidth, behavior: "smooth" });
       onActiveIndexChange(nextIndex);
@@ -85,22 +75,44 @@ function MobileGalleryCarousel({
     [images.length, onActiveIndexChange]
   );
 
+  const goPrev = useCallback(() => scrollToIndex(activeIndex - 1), [activeIndex, scrollToIndex]);
+  const goNext = useCallback(() => scrollToIndex(activeIndex + 1), [activeIndex, scrollToIndex]);
+
   const handleScroll = useCallback(() => {
     const el = scrollRef.current;
     if (!el || el.clientWidth === 0) return;
-
     const index = Math.round(el.scrollLeft / el.clientWidth);
     if (index >= 0 && index < images.length && index !== activeIndex) {
       onActiveIndexChange(index);
     }
   }, [activeIndex, images.length, onActiveIndexChange]);
 
+  useGalleryKeyboard(hasMultiple, goPrev, goNext);
+
   return (
-    <div className={cn("relative md:hidden", tourDetailGalleryMobileAspectClass)}>
+    <div
+      className={cn("relative", className)}
+      tabIndex={hasMultiple ? 0 : undefined}
+      role={hasMultiple ? "region" : undefined}
+      aria-label={hasMultiple ? "Галерея тура" : undefined}
+      onKeyDown={
+        hasMultiple
+          ? (event) => {
+              if (event.key === "ArrowLeft") {
+                event.preventDefault();
+                goPrev();
+              } else if (event.key === "ArrowRight") {
+                event.preventDefault();
+                goNext();
+              }
+            }
+          : undefined
+      }
+    >
       <div
         ref={scrollRef}
         onScroll={handleScroll}
-        className="scrollbar-hide flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth"
+        className="scrollbar-hide flex h-full snap-x snap-mandatory overflow-x-auto scroll-smooth rounded-2xl"
       >
         {images.map((src, index) => (
           <button
@@ -110,12 +122,12 @@ function MobileGalleryCarousel({
             className="relative h-full min-w-full shrink-0 snap-center snap-always overflow-hidden rounded-2xl bg-gray-100"
           >
             <SafeImage
-              src={buildSupabaseCdnUrl(src, { width: 1280, quality: 80 })}
+              src={buildSupabaseCdnUrl(src, { width: 1440, quality: 82 })}
               alt={index === 0 ? title : `${title} — ${index + 1}`}
               fill
               placeholderVariant="tour"
               className="object-cover"
-              priority={index === 0}
+              priority={priorityFirst && index === 0}
               sizes="100vw"
             />
           </button>
@@ -126,23 +138,22 @@ function MobileGalleryCarousel({
         <>
           <button
             type="button"
-            onClick={() => scrollToIndex(activeIndex - 1)}
+            onClick={goPrev}
             aria-label="Предыдущее фото"
-            className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm"
+            className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm transition-opacity hover:bg-white motion-reduce:transition-none"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
           <button
             type="button"
-            onClick={() => scrollToIndex(activeIndex + 1)}
+            onClick={goNext}
             aria-label="Следующее фото"
-            className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm"
+            className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/90 text-charcoal shadow-md backdrop-blur-sm transition-opacity hover:bg-white motion-reduce:transition-none"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
-
           <div
-            className="pointer-events-none absolute bottom-14 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5"
+            className="pointer-events-none absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1.5"
             aria-hidden
           >
             {images.map((_, index) => (
@@ -161,10 +172,56 @@ function MobileGalleryCarousel({
       <button
         type="button"
         onClick={() => onOpenLightbox(activeIndex)}
-        className="absolute bottom-3 right-3 z-10 min-h-[44px] rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md"
+        className="absolute bottom-3 right-3 z-10 min-h-[44px] rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-charcoal shadow-md backdrop-blur-sm"
       >
-        Все фото ({images.length})
+        {hasMultiple ? `Все фото (${images.length})` : "На весь экран"}
       </button>
+    </div>
+  );
+}
+
+function GalleryThumbnailStrip({
+  images,
+  title,
+  activeIndex,
+  onSelect,
+}: {
+  images: string[];
+  title: string;
+  activeIndex: number;
+  onSelect: (index: number) => void;
+}) {
+  if (images.length <= 1) return null;
+
+  return (
+    <div
+      className="mt-2 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
+      role="tablist"
+      aria-label="Миниатюры галереи"
+    >
+      {images.map((src, index) => (
+        <button
+          key={`${src}-thumb-${index}`}
+          type="button"
+          role="tab"
+          aria-selected={index === activeIndex}
+          aria-label={`Фото ${index + 1} из ${images.length}`}
+          onClick={() => onSelect(index)}
+          className={cn(
+            "relative h-16 w-24 shrink-0 overflow-hidden rounded-xl bg-gray-100 ring-1 ring-gray-100 transition-shadow",
+            index === activeIndex && "ring-2 ring-sky shadow-sm"
+          )}
+        >
+          <Image
+            src={buildSupabaseCdnUrl(src, { width: 320, quality: 72 })}
+            alt={index === 0 ? title : `${title} — ${index + 1}`}
+            fill
+            className="object-cover"
+            sizes="96px"
+            loading="lazy"
+          />
+        </button>
+      ))}
     </div>
   );
 }
@@ -172,15 +229,33 @@ function MobileGalleryCarousel({
 export default function TourDetailGallery({ images, title }: TourDetailGalleryProps) {
   const [lightbox, setLightbox] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
+  const carouselScrollRef = useRef<HTMLDivElement>(null);
   const galleryImages = dedupeGalleryImages(images.filter(Boolean));
+
+  const goPrev = useCallback(
+    () => setActiveIndex((index) => (index - 1 + galleryImages.length) % galleryImages.length),
+    [galleryImages.length]
+  );
+  const goNext = useCallback(
+    () => setActiveIndex((index) => (index + 1) % galleryImages.length),
+    [galleryImages.length]
+  );
+
+  useGalleryKeyboard(lightbox, goPrev, goNext, () => setLightbox(false));
+
+  const scrollCarouselToIndex = useCallback((index: number) => {
+    setActiveIndex(index);
+    const el = carouselScrollRef.current;
+    if (!el || el.clientWidth === 0) return;
+    el.scrollTo({ left: index * el.clientWidth, behavior: "smooth" });
+  }, []);
 
   if (!galleryImages.length) {
     return (
       <div
         className={cn(
           "flex items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50",
-          tourDetailGalleryMobileAspectClass,
-          "md:aspect-[16/10] md:max-h-[320px]"
+          tourDetailGalleryMobileAspectClass
         )}
       >
         <p className="text-sm text-slate">Фото тура скоро появятся</p>
@@ -188,64 +263,40 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
     );
   }
 
-  const [main, ...rest] = galleryImages;
-  const side = rest.slice(0, 4);
-
-  const openLightbox = (index: number) => {
-    setActiveIndex(index);
-    setLightbox(true);
-  };
-
   return (
     <div data-scroll-rail-tone="dark">
-      <div className={tourDetailGalleryGridClass}>
-        <GalleryTile
-          src={main}
-          alt={title}
-          className="col-span-2 row-span-2"
-          priority
-          onClick={() => openLightbox(0)}
+      <div className={cn("w-full", tourDetailGalleryMobileAspectClass)}>
+        <GalleryCarousel
+          images={galleryImages}
+          title={title}
+          activeIndex={activeIndex}
+          onActiveIndexChange={setActiveIndex}
+          onOpenLightbox={(index) => {
+            setActiveIndex(index);
+            setLightbox(true);
+          }}
+          scrollRef={carouselScrollRef}
+          className="h-full"
+          priorityFirst
         />
-        {side.map((src, i) => (
-          <GalleryTile
-            key={src}
-            src={src}
-            alt={`${title} — ${i + 2}`}
-            onClick={() => openLightbox(i + 1)}
-          >
-            {i === side.length - 1 && galleryImages.length > 5 && (
-              <span className="absolute bottom-3 right-3 flex min-h-[44px] items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-medium text-charcoal shadow-md">
-                <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"
-                  />
-                </svg>
-                Показать все ({galleryImages.length})
-              </span>
-            )}
-          </GalleryTile>
-        ))}
       </div>
 
-      <MobileGalleryCarousel
+      <GalleryThumbnailStrip
         images={galleryImages}
         title={title}
         activeIndex={activeIndex}
-        onActiveIndexChange={setActiveIndex}
-        onOpenLightbox={openLightbox}
+        onSelect={scrollCarouselToIndex}
       />
 
-      {lightbox && (
+      {lightbox ? (
         <div
           className="fixed inset-0 z-[100] flex flex-col bg-charcoal/95"
           role="dialog"
           aria-modal="true"
+          aria-label="Просмотр фото тура"
         >
           <div className="flex items-center justify-between p-4 text-white">
-            <span className="text-sm">
+            <span className="text-sm tabular-nums">
               {activeIndex + 1} / {galleryImages.length}
             </span>
             <button
@@ -261,11 +312,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
               <>
                 <button
                   type="button"
-                  onClick={() =>
-                    setActiveIndex(
-                      (activeIndex - 1 + galleryImages.length) % galleryImages.length
-                    )
-                  }
+                  onClick={goPrev}
                   aria-label="Предыдущее фото"
                   className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:left-6"
                 >
@@ -273,7 +320,7 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
                 </button>
                 <button
                   type="button"
-                  onClick={() => setActiveIndex((activeIndex + 1) % galleryImages.length)}
+                  onClick={goNext}
                   aria-label="Следующее фото"
                   className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:right-6"
                 >
@@ -290,27 +337,14 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
               priority
             />
           </div>
-          <div className="flex gap-2 overflow-x-auto p-4">
-            {galleryImages.map((src, i) => (
-              <button
-                key={`${src}-${i}`}
-                type="button"
-                onClick={() => setActiveIndex(i)}
-                className={`relative h-16 w-24 shrink-0 overflow-hidden rounded-lg ${i === activeIndex ? "ring-2 ring-sun" : ""}`}
-              >
-                <Image
-                  src={buildSupabaseCdnUrl(src, { width: 320, quality: 72 })}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  sizes="96px"
-                  loading="lazy"
-                />
-              </button>
-            ))}
-          </div>
+          <GalleryThumbnailStrip
+            images={galleryImages}
+            title={title}
+            activeIndex={activeIndex}
+            onSelect={setActiveIndex}
+          />
         </div>
-      )}
+      ) : null}
     </div>
   );
 }

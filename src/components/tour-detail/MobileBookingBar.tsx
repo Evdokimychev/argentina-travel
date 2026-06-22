@@ -12,6 +12,8 @@ import { cn } from "@/lib/cn";
 import { tourDetailMobileBarClass } from "@/lib/tour-detail-ui";
 import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
+import FormattedPrice from "@/components/FormattedPrice";
+import { resolveTourPriceFromPrefix } from "@/lib/tour-price-public";
 import GuestCounter from "./GuestCounter";
 import { useTourBooking } from "./TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
@@ -199,7 +201,14 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
       ? "Запросить расчёт"
       : canJoinWaitlist && bookingValidationError
         ? "Лист ожидания"
-        : "Забронировать";
+        : "Заявка";
+
+  const showFromPrefix = resolveTourPriceFromPrefix({
+    priceUsd: tour.priceUsd,
+    priceOnRequest,
+    priceFromPrefix: tour.priceFromPrefix,
+  });
+  const displayPriceUsd = priceOnRequest ? tour.priceUsd : totalPriceUsd;
 
   return (
     <div className={tourDetailMobileBarClass}>
@@ -258,19 +267,17 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className={cn(
-                "flex w-full min-h-[44px] items-center justify-between gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5 text-left transition-colors hover:border-brand/40 hover:bg-white"
-              )}
+              className="flex w-full min-h-[36px] items-center justify-between gap-3 rounded-lg px-0.5 text-left text-xs text-slate transition-colors hover:text-charcoal"
             >
-              <span className="min-w-0 truncate text-xs text-charcoal">
-                <span className="font-medium">{dateSummary}</span>
-                <span className="text-slate"> · {formatTourists(guests)}</span>
+              <span className="min-w-0 truncate">
+                <span className="font-medium text-charcoal">{dateSummary}</span>
+                <span> · {formatTourists(guests)}</span>
               </span>
-              <ChevronUp className="h-4 w-4 shrink-0 text-slate" aria-hidden />
+              <ChevronUp className="h-3.5 w-3.5 shrink-0" aria-hidden />
             </button>
           ) : null}
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center justify-between gap-3">
             {partnerBookingPrice ? (
               <div className="min-w-0 shrink">
                 <PartnerTourBookingPriceSummary
@@ -279,15 +286,20 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
                   size="sm"
                 />
               </div>
-            ) : (
+            ) : priceOnRequest ? (
               <TourPublicPriceDisplay
-                priceUsd={priceOnRequest ? tour.priceUsd : totalPriceUsd}
-                originalPriceUsd={priceOnRequest ? tour.originalPriceUsd : totalOriginalPriceUsd}
-                priceOnRequest={priceOnRequest}
+                priceUsd={tour.priceUsd}
+                originalPriceUsd={tour.originalPriceUsd}
+                priceOnRequest
                 priceFromPrefix={tour.priceFromPrefix}
                 size="sm"
                 showFrom={false}
               />
+            ) : (
+              <p className="min-w-0 truncate text-base font-semibold text-charcoal">
+                {showFromPrefix ? <span className="font-normal text-slate">от </span> : null}
+                <FormattedPrice priceUsd={displayPriceUsd} className="tabular-nums" />
+              </p>
             )}
             {usesExternalBooking && externalBookingHref && externalBookingLink ? (
               <ExternalBookingButton

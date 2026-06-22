@@ -17,6 +17,9 @@ import {
 } from "@/lib/guide-topics";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
+import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
+import { getGuideTopicHeroImage } from "@/lib/media-resolver";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -33,15 +36,26 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
   const topicMeta = getGuideTopicMetadata(slug);
   if (topicMeta) {
+    const path = `/guide/${slug}`;
     if (slug === "kak-dobratsya") {
       return {
-        title: KAK_DOBRATSYA_HUB.heroTitle,
-        description: KAK_DOBRATSYA_HUB.heroSubtitle,
+        ...buildPublicPageMetadata({
+          title: KAK_DOBRATSYA_HUB.heroTitle,
+          description: KAK_DOBRATSYA_HUB.heroSubtitle,
+          path,
+          image: getGuideTopicHeroImage(slug),
+        }),
+        alternates: buildHreflangAlternates(path),
       };
     }
     return {
-      title: topicMeta.title,
-      description: topicMeta.description,
+      ...buildPublicPageMetadata({
+        title: topicMeta.title,
+        description: topicMeta.description,
+        path,
+        image: getGuideTopicHeroImage(slug),
+      }),
+      alternates: buildHreflangAlternates(path),
     };
   }
 

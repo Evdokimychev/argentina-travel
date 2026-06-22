@@ -322,6 +322,8 @@ export default function TourDetailView({
                   logistics={canonicalTour?.logistics}
                   routeMapImage={canonicalTour?.program.routeMapImage}
                   organizerComment={getTourSectionOrganizerComment(tour, "routeMap")}
+                  tourSlug={tour.slug}
+                  tourId={tour.id}
                 />
               ) : null}
               <FAQSection

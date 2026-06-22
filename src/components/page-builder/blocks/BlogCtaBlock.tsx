@@ -10,7 +10,16 @@ type Props = {
 };
 
 export default function BlogCtaBlock({ label, href, variant = "primary" }: Props) {
-  if (!label.trim() || !href.trim()) return null;
+  if (!label.trim() || !href.trim()) {
+    return (
+      <aside
+        className="rounded-2xl border border-dashed border-gray-200 bg-surface-muted/40 px-4 py-3 text-sm text-slate"
+        aria-label="Кнопка действия не настроена"
+      >
+        Кнопка действия будет добавлена в ближайшем обновлении.
+      </aside>
+    );
+  }
 
   const isExternal = href.startsWith("http");
 

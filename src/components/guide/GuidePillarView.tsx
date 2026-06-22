@@ -11,6 +11,7 @@ import GuideRelatedArticlesGrid, {
   type GuideRelatedArticle,
 } from "@/components/guide/GuideRelatedArticlesGrid";
 import GuideSectionNav from "@/components/guide/GuideSectionNav";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import GuideWidgetSlot from "@/components/guide/GuideWidgetSlot";
 import HubHero from "@/components/guide/hub/HubHero";
 import HubSection from "@/components/guide/hub/HubSection";
@@ -89,17 +90,13 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>
-          <nav className="text-sm text-slate" aria-label="Хлебные крошки">
-            <Link href="/" className="transition-colors hover:text-sky">
-              Главная
-            </Link>
-            <span className="mx-2 text-gray-300">/</span>
-            <Link href="/guide" className="transition-colors hover:text-sky">
-              Путеводитель
-            </Link>
-            <span className="mx-2 text-gray-300">/</span>
-            <span className="text-charcoal">{topic.title}</span>
-          </nav>
+          <PageBreadcrumbs
+            items={[
+              { label: "Главная", href: "/" },
+              { label: "Путеводитель", href: "/guide" },
+              { label: topic.title },
+            ]}
+          />
 
           <div className="mt-8 lg:flex lg:items-start lg:gap-8 xl:gap-10">
             <div className="min-w-0 flex-1 space-y-8">

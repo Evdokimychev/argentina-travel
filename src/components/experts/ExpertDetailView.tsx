@@ -3,7 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import { siteContainerClass } from "@/lib/site-container";
@@ -108,15 +109,15 @@ export default function ExpertDetailView({ expert }: ExpertDetailViewProps) {
   return (
     <div className="pb-16">
       <div className={cn(siteContainerClass, "py-8")}>
-        <Link
-          href="/experts"
-          className="mb-6 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-          К каталогу экспертов
-        </Link>
+        <PageBreadcrumbs
+          items={[
+            { label: "Главная", href: "/" },
+            { label: "Локальные эксперты", href: "/experts" },
+            { label: expert.name },
+          ]}
+        />
 
-        <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1fr)_360px]">
           <article>
             <div className="flex items-start gap-4">
               <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-sky/10 text-xl font-bold text-sky">

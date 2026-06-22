@@ -31,6 +31,7 @@ import {
 } from "@/lib/booking-payment-link";
 import { resolveBookingInvoices } from "@/lib/booking-payment";
 import type { BookingInvoice } from "@/types/booking-payment";
+import { tourCover } from "@/lib/seed-media";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getCanonicalTourBySlug } from "@/lib/tour-repository";
@@ -257,8 +258,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       tourId: "4",
       tourSlug: "iguazu-falls",
       tourTitle: "Водопады Игуасу за 1 день: аргентинская и бразильская стороны",
-      tourImage:
-        "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
+      tourImage: tourCover("iguazu-falls"),
       status: "new",
       guests: 2,
       startDate: "2026-09-12",
@@ -290,8 +290,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       tourId: "3",
       tourSlug: "salta-northwest",
       tourTitle: "Сальта и ХуХуй: горные деревни, виноградники и долина Калчакí",
-      tourImage:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
+      tourImage: tourCover("salta-northwest"),
       status: "pending",
       guests: 3,
       startDate: "2026-10-05",
@@ -336,8 +335,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       tourId: "2",
       tourSlug: "mendoza-wine",
       tourTitle: "Мендоса: винные маршруты, Аконкагуа и гастрономические ужины",
-      tourImage:
-        "https://images.unsplash.com/photo-1506377247377-2ecb89819a88?w=800&q=80",
+      tourImage: tourCover("mendoza-wine"),
       status: "completed",
       guests: 2,
       startDate: "2025-11-03",
@@ -417,8 +415,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       tourId: "4",
       tourSlug: "iguazu-falls",
       tourTitle: "Индивидуальный тур: водопады Игуасу (2 дня)",
-      tourImage:
-        "https://images.unsplash.com/photo-1558980664-1db756751b1a?w=800&q=80",
+      tourImage: tourCover("iguazu-falls"),
       status: "confirmed",
       guests: 2,
       startDate: "2026-09-12",

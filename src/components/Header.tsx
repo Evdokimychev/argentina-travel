@@ -26,6 +26,7 @@ import {
   tokenHeaderCircleButtonClass,
   tokenHeaderNavBarClass,
   tokenHeaderShellClass,
+  tokenHeaderShellScrolledClass,
 } from "@/lib/design-tokens";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
@@ -74,6 +75,7 @@ export default function Header() {
   const canGoBack = useCanGoBack();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openMegaMenuId, setOpenMegaMenuId] = useState<string | null>(null);
+  const [headerScrolled, setHeaderScrolled] = useState(false);
   const headerRef = useRef<HTMLElement>(null);
   const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const { t } = useLocaleCurrency();
@@ -103,11 +105,36 @@ export default function Header() {
     setOpenMegaMenuId(null);
   }, [navLayout]);
 
+  useEffect(() => {
+    function onScroll() {
+      setHeaderScrolled(window.scrollY > 8);
+    }
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   const utilityLinks = SITE_NAV_UTILITY_LINKS;
 
   const mobileMenuFooter = (
     <>
-      <div className="sm:hidden">
+      <div className="md:hidden">
+        <nav
+          className="mb-3 flex flex-col gap-1 border-b border-border-subtle pb-3"
+          aria-label={t("header.tagline")}
+        >
+          {utilityLinks.map((link) => (
+            <Link
+              key={link.id}
+              href={link.href}
+              onClick={() => setMobileMenuOpen(false)}
+              className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-sky/5 hover:text-sky"
+            >
+              {resolveNavLabel(link, t)}
+            </Link>
+          ))}
+        </nav>
         <button
           type="button"
           onClick={() => {
@@ -149,7 +176,11 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className={cn(tokenHeaderShellClass, !headerVisible && "-translate-y-full")}
+      className={cn(
+        tokenHeaderShellClass,
+        headerScrolled && tokenHeaderShellScrolledClass,
+        !headerVisible && "-translate-y-full",
+      )}
     >
       <div
         className={cn(
@@ -258,7 +289,6 @@ export default function Header() {
             <CircleButton
               ariaLabel="Поиск по сайту"
               onClick={() => openSiteSearch()}
-              className="lg:hidden"
             >
               <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </CircleButton>

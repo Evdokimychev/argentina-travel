@@ -1,6 +1,13 @@
 import { TourDetail } from "@/types";
+import { getTourCoverImage, getTourGallery } from "@/lib/media-resolver";
+import { tourGalleryImage } from "@/lib/seed-media";
 
-const patagoniaDetail: TourDetail = {
+const PATAGONIA_SLUG = "patagonia-glaciers";
+const patagoniaCover = getTourCoverImage(PATAGONIA_SLUG);
+const patagoniaGallery = getTourGallery(PATAGONIA_SLUG);
+const pg = (index: number) => tourGalleryImage(PATAGONIA_SLUG, index);
+
+const patagoniaDetailRaw: TourDetail = {
   id: "1",
   slug: "patagonia-glaciers",
   title: "Ледники Патагонии",
@@ -8,21 +15,15 @@ const patagoniaDetail: TourDetail = {
   region: "Патагония",
   durationDays: 10,
   durationNights: 9,
-  priceUsd: 2663,
+  priceUsd: 2540,
   originalPriceUsd: 3026,
+  priceFromPrefix: true,
   rating: 0,
   reviewCount: 0,
-  gallery: [
-    "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=1200&q=80",
-    "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80",
-    "https://images.unsplash.com/photo-1551632811-561732d1e306?w=800&q=80",
-    "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80",
-    "https://images.unsplash.com/photo-1519682337058-a94d51933763?w=800&q=80",
-    "https://images.unsplash.com/photo-1589182370481-0de83087320f?w=800&q=80",
-  ],
-  image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=800&q=80",
+  gallery: patagoniaGallery.length ? patagoniaGallery : [patagoniaCover],
+  image: patagoniaCover,
   shortDescription:
-    "Путешествие к леднику Перито-Морено и национальному парку Torres del Paine",
+    "Путешествие к леднику Перито-Морено и национальному парку Torres del Paine (Чили; маршрут пересекает границу)",
   difficulty: "Средняя",
   comfort: "Комфорт",
   accommodationType: "Лодж",
@@ -45,28 +46,28 @@ const patagoniaDetail: TourDetail = {
       title: "Ледник Перито-Морено",
       description:
         "Один из немногих ледников в мире, остающихся в равновесии: он периодически наступает на озеро. Зрелище откалывания льда — незабываемо.",
-      image: "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=600&q=80",
+      image: pg(0),
     },
     {
       id: "p2",
       title: "Torres del Paine",
       description:
         "Гранитные башни, ледниковые озёра и треккинг-маршруты мирового класса в Чили.",
-      image: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80",
+      image: pg(1),
     },
     {
       id: "p3",
       title: "Озеро Аргентино",
       description:
         "Круиз среди ледников Upsala и Spegazzini на фоне Анд.",
-      image: "https://images.unsplash.com/photo-1519682337058-a94d51933763?w=600&q=80",
+      image: pg(4),
     },
     {
       id: "p4",
       title: "Эль-Калафате",
       description:
         "Уютный городок у края ледников — база для исследования южной Патагонии.",
-      image: "https://images.unsplash.com/photo-1589182370481-0de83087320f?w=600&q=80",
+      image: pg(5),
     },
   ],
   descriptionBlocks: [
@@ -97,7 +98,7 @@ const patagoniaDetail: TourDetail = {
     {
       type: "image",
       content: "",
-      image: "https://images.unsplash.com/photo-1551632811-561732d1e306?w=900&q=80",
+      image: pg(2),
       caption: "Треккинг в национальном парке Torres del Paine",
     },
     {
@@ -113,7 +114,7 @@ const patagoniaDetail: TourDetail = {
       title: "Прилёт в Буэнос-Айрес",
       description:
         "Встреча в аэропорту Ezeiza, трансфер в отель. Свободное время для прогулки по городу. Вечерний брифинг с гидом.",
-      images: ["https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=600&q=80"],
+      images: [pg(0)],
       activities: [
         {
           id: "d1-a1",
@@ -143,7 +144,7 @@ const patagoniaDetail: TourDetail = {
       title: "Перелёт в Эль-Калафате",
       description:
         "Утренний перелёт в сердце Патагонии. После заселения — прогулка по набережной озера Аргентино с видом на ледники.",
-      images: ["https://images.unsplash.com/photo-1589182370481-0de83087320f?w=600&q=80"],
+      images: [pg(5)],
       activities: [
         {
           id: "d2-a1",
@@ -173,8 +174,8 @@ const patagoniaDetail: TourDetail = {
       description:
         "Полный день в национальном парке Los Glaciares. Мостки вдоль ледника, наблюдение за откалыванием льда. Опционально — круиз Safari Náutico.",
       images: [
-        "https://images.unsplash.com/photo-1558980664-769d59546b3d?w=600&q=80",
-        "https://images.unsplash.com/photo-1519682337058-a94d51933763?w=600&q=80",
+        pg(0),
+        pg(4),
       ],
       activities: [
         {
@@ -207,7 +208,7 @@ const patagoniaDetail: TourDetail = {
       title: "Круиз по озеру Аргентино",
       description:
         "Круиз к ледникам Upsala и Spegazzini. Близкое знакомство с ледяными стенами высотой до 80 метров.",
-      images: ["https://images.unsplash.com/photo-1519682337058-a94d51933763?w=600&q=80"],
+      images: [pg(4)],
       activities: [
         {
           id: "d4-a1",
@@ -232,7 +233,7 @@ const patagoniaDetail: TourDetail = {
       title: "Переезд в Torres del Paine",
       description:
         "Переезд через границу в Чили. Заселение у входа в парк. Вечерняя прогулка к озеру Pehoé.",
-      images: ["https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&q=80"],
+      images: [pg(1)],
       activities: [
         {
           id: "d5-a1",
@@ -256,7 +257,7 @@ const patagoniaDetail: TourDetail = {
       title: "Треккинг Base Torres",
       description:
         "Классический трек к подножию гранитных башен — 8 часов, набор высоты 800 м. Один из лучших однодневных маршрутов мира.",
-      images: ["https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&q=80"],
+      images: [pg(2)],
       activities: [
         {
           id: "d6-a1",
@@ -284,7 +285,7 @@ const patagoniaDetail: TourDetail = {
       title: "Ледник Грей и катамаран",
       description:
         "Катамаран по озеру Грей к одноимённому леднику, прогулка по смотровым тропам. Запасной вариант на случай непогоды у башен.",
-      images: ["https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&q=80"],
+      images: [pg(3)],
       activities: [
         {
           id: "d7-a1",
@@ -309,7 +310,7 @@ const patagoniaDetail: TourDetail = {
       title: "Возвращение в Эль-Калафате",
       description:
         "Переезд через границу обратно в Аргентину. Свободный вечер в Эль-Калафате — сувениры, музей ледников и патагонская кухня.",
-      images: ["https://images.unsplash.com/photo-1589182370481-0de83087320f?w=600&q=80"],
+      images: [pg(5)],
       activities: [
         {
           id: "d8-a1",
@@ -333,7 +334,7 @@ const patagoniaDetail: TourDetail = {
       title: "Перелёт в Буэнос-Айрес",
       description:
         "Утренний перелёт в столицу. Свободное время и прощальный ужин в традиционной parrilla с аргентинским стейком и вином мальбек.",
-      images: ["https://images.unsplash.com/photo-1589909202800-2f2e1b8a4b8e?w=600&q=80"],
+      images: [pg(0)],
       activities: [
         {
           id: "d9-a1",
@@ -357,7 +358,7 @@ const patagoniaDetail: TourDetail = {
       title: "Вылет домой",
       description:
         "Свободное время до трансфера. Сдача номера и трансфер в аэропорт Ezeiza к обратному рейсу.",
-      images: ["https://images.unsplash.com/photo-1612294037637-ec328d0e075e?w=600&q=80"],
+      images: [pg(1)],
       activities: [
         {
           id: "d10-a1",
@@ -434,8 +435,8 @@ const patagoniaDetail: TourDetail = {
       comfort: "Комфорт",
       amenities: ["Wi-Fi", "Завтрак", "Кондиционер", "Сейф", "Прачечная"],
       images: [
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-        "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80",
+        pg(2),
+        pg(3),
       ],
     },
     {
@@ -444,7 +445,7 @@ const patagoniaDetail: TourDetail = {
       description: "Уютный lodge у входа в парк с панорамными окнами на горы.",
       comfort: "Комфорт",
       amenities: ["Wi-Fi", "Завтрак и ужин", "Отопление", "Общая гостиная"],
-      images: ["https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80"],
+      images: [pg(4)],
     },
   ],
   included: [
@@ -566,6 +567,12 @@ const patagoniaDetail: TourDetail = {
   ],
   tags: ["10 дней (9 ночей)", "Пешие туры", "Природа и приключения"],
   featured: true,
+};
+
+const patagoniaDetail: TourDetail = {
+  ...patagoniaDetailRaw,
+  image: getTourCoverImage("patagonia-glaciers"),
+  gallery: getTourGallery("patagonia-glaciers"),
 };
 
 export const tourDetailsMap: Record<string, TourDetail> = {

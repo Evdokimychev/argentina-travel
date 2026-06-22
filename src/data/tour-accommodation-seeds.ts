@@ -1,4 +1,5 @@
 import type { OrganizerTourAccommodationPlace } from "@/data/tour-accommodation-defaults";
+import { tourGalleryImage } from "@/lib/seed-media";
 
 export interface TourAccommodationSeed {
   /** Общее описание проживания по маршруту. */
@@ -24,10 +25,7 @@ export const TOUR_ACCOMMODATION_SEEDS: Record<string, TourAccommodationSeed> = {
         description:
           "<p>Современный отель в центре Эль-Калафате с видом на озеро Аргентино. Двухместные номера с собственной ванной, завтрак шведский стол.</p>",
         amenities: ["Wi-Fi", "Завтрак", "Кондиционер", "Сейф", "Прачечная"],
-        images: [
-          "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80",
-          "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?w=600&q=80",
-        ],
+        images: [tourGalleryImage("patagonia-glaciers", 2), tourGalleryImage("patagonia-glaciers", 3)],
         roomTypes: [
           {
             id: "room-twin",
@@ -76,7 +74,7 @@ export const TOUR_ACCOMMODATION_SEEDS: Record<string, TourAccommodationSeed> = {
         description:
           "<p>Уютный lodge у входа в парк. Точный номер и категорию можно посмотреть на Booking.com — бронирование там оформляется отдельно, мы поможем с трансфером.</p>",
         amenities: ["Wi-Fi", "Завтрак и ужин", "Отопление"],
-        images: ["https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80"],
+        images: [tourGalleryImage("patagonia-glaciers", 4)],
         roomTypes: [],
         alternatives: [
           {
@@ -107,7 +105,7 @@ export const TOUR_ACCOMMODATION_SEEDS: Record<string, TourAccommodationSeed> = {
         description:
           "<p>Отель среди виноградников с бассейном и дегустационным залом. Завтрак включён, вечером — свободное время в городе.</p>",
         amenities: ["Wi-Fi", "Завтрак", "Бассейн", "Парковка"],
-        images: ["https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80"],
+        images: [tourGalleryImage("mendoza-wine", 0)],
         roomTypes: [
           {
             id: "room-mendoza-double",

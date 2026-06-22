@@ -31,7 +31,7 @@ import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
-import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import { isPartnerTourListing, PARTNER_TRIPSTER_BADGE_HINT, PARTNER_TRIPSTER_BADGE_LABEL } from "@/lib/tripster/partner-tour-utils";
 import { isLowAvailability } from "@/lib/tour-departure-countdown";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
@@ -101,7 +101,11 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
-            {isPartnerTour ? <Badge variant="new">Tripster</Badge> : null}
+            {isPartnerTour ? (
+              <Badge variant="new" title={PARTNER_TRIPSTER_BADGE_HINT}>
+                {PARTNER_TRIPSTER_BADGE_LABEL}
+              </Badge>
+            ) : null}
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий

@@ -22,6 +22,7 @@ export const CONTENT_PLAN_URL_REDIRECTS: Record<string, string> = {
   "/pereezd/bankovskij-schet": "/blog/bankovskij-schet-argentina",
   "/blog/buenos-aires-neighborhoods": "/blog/buenos-aires-rajony",
   "/blog/mendoza-wine-route": "/blog/mendoza-vinnyj-gid",
+  "/map": "/mapa-argentina",
   "/parki/ischigualasto-valle-de-la-luna": "/blog/ischigualasto-valle-de-la-luna",
 };
 

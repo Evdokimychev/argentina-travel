@@ -11,7 +11,7 @@ import type {
   WithContext,
 } from "schema-dts";
 import { DEFAULT_SITE_BRANDING } from "@/lib/cms/site-globals/normalize";
-import { absoluteUrl } from "@/lib/site-url";
+import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 export type JsonLdGraph = WithContext<
   | Organization
@@ -131,13 +131,14 @@ export function buildArticleSchema(input: {
   authorName: string;
   publisherName?: string;
 }): WithContext<Article> {
+  const imageUrl = input.image ? resolvePublicUrl(input.image) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: input.title,
     description: input.excerpt,
     url: absoluteUrl(`/blog/${input.slug}`),
-    ...(input.image ? { image: input.image } : {}),
+    ...(imageUrl ? { image: imageUrl } : {}),
     datePublished: input.datePublished,
     dateModified: input.dateModified ?? input.datePublished,
     inLanguage: "ru",
@@ -162,13 +163,14 @@ export function buildTouristDestinationSchema(input: {
   path: string;
   image?: string;
 }): WithContext<TouristDestination> {
+  const imageUrl = input.image ? resolvePublicUrl(input.image) : undefined;
   return {
     "@context": "https://schema.org",
     "@type": "TouristDestination",
     name: input.name,
     description: input.description,
     url: absoluteUrl(input.path),
-    ...(input.image ? { image: input.image } : {}),
+    ...(imageUrl ? { image: imageUrl } : {}),
     touristType: "Leisure",
   };
 }

@@ -30,6 +30,10 @@ const PAGE_PATHS = [
   "/guide/sezony-i-klimat",
   "/destinations/patagonia",
   "/places/iguazu-falls",
+  "/gallery",
+  "/collections",
+  "/immigration",
+  "/mapa-argentina",
 ];
 
 function loadEnvLocal() {
@@ -112,6 +116,46 @@ async function checkPage(pathname) {
   console.log(`✓ ${pathname}`);
 }
 
+async function checkRedirect(pathname, expectedPathFragment) {
+  const response = await fetch(`${baseUrl}${pathname}`, {
+    method: "GET",
+    redirect: "manual",
+    signal: AbortSignal.timeout(Number.isFinite(timeoutMs) ? timeoutMs : 15000),
+  });
+
+  assert(
+    response.status >= 301 && response.status <= 308,
+    `GET ${pathname} expected redirect, got ${response.status}`
+  );
+  const location = response.headers.get("location") ?? "";
+  assert(
+    location.includes(expectedPathFragment),
+    `GET ${pathname} redirect location ${location} missing ${expectedPathFragment}`
+  );
+  console.log(`✓ ${pathname} → ${location.replace(baseUrl, "")}`);
+}
+
+async function checkBlogPostHasHeroImage(pathname) {
+  const page = await get(pathname);
+  assert(page.status === 200, `GET ${pathname} returned ${page.status}`);
+
+  const ogMatch = page.text.match(
+    /<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i
+  );
+  const ogImage = ogMatch?.[1] ?? "";
+  assert(
+    ogImage && !ogImage.includes("logo-light.svg"),
+    `${pathname}: og:image must not be site logo (${ogImage || "missing"})`
+  );
+
+  const hasBlogMedia =
+    /media\/blog\//i.test(page.text) ||
+    /_next\/image[^"']+media(%2F|%252F)blog/i.test(page.text);
+  assert(hasBlogMedia, `${pathname}: expected blog hero media in HTML`);
+
+  console.log(`✓ ${pathname} hero image (og:image set)`);
+}
+
 async function main() {
   loadEnvLocal();
   console.log(`Production smoke base URL: ${baseUrl}`);
@@ -120,6 +164,10 @@ async function main() {
   for (const pathname of PAGE_PATHS) {
     await checkPage(pathname);
   }
+
+  await checkRedirect("/map", "/mapa-argentina");
+  await checkBlogPostHasHeroImage("/blog/buenos-aires-rajony");
+  await checkBlogPostHasHeroImage("/blog/natsionalnyy-park-iguasu");
 
   console.log("Production smoke checks passed.");
 }

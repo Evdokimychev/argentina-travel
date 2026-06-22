@@ -5,7 +5,6 @@ export default function PlaceDetailContentSections({ place }: { place: PlaceDeta
   const hasExtended =
     place.history ||
     (place.interestingFacts && place.interestingFacts.length > 0) ||
-    place.howToGetThere ||
     (place.nearbyHighlights && place.nearbyHighlights.length > 0) ||
     (place.faq && place.faq.length > 0);
 
@@ -33,13 +32,6 @@ export default function PlaceDetailContentSections({ place }: { place: PlaceDeta
               </li>
             ))}
           </ul>
-        </section>
-      ) : null}
-
-      {place.howToGetThere ? (
-        <section>
-          <h2 className="font-heading text-xl font-bold text-charcoal">Как добраться</h2>
-          <p className="mt-3 text-base leading-relaxed text-charcoal">{place.howToGetThere}</p>
         </section>
       ) : null}
 

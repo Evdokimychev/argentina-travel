@@ -1,9 +1,10 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
-import { TourItineraryDay } from "@/types";
+import { TourItineraryDay, TourRoutePoint } from "@/types";
 import TourSection from "./TourSection";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/cn";
@@ -15,9 +16,21 @@ import {
 } from "@/lib/tour-detail-ui";
 import ItineraryDayDetails from "./ItineraryDayDetails";
 import ItineraryProgramFooter from "./ItineraryProgramFooter";
-import TourItineraryPdfButton from "./TourItineraryPdfButton";
 import type { TourDetail } from "@/types";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
+import { getRoutePointsForDay } from "@/lib/tour-itinerary-map";
+
+const ItineraryDayMiniMap = dynamic(() => import("./ItineraryDayMiniMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="h-36 animate-pulse rounded-xl bg-gray-100" aria-hidden />
+  ),
+});
+
+const TourItineraryPdfButton = dynamic(() => import("./TourItineraryPdfButton"), {
+  ssr: false,
+  loading: () => null,
+});
 
 function ItineraryExpandToggle({
   allExpanded,
@@ -81,14 +94,17 @@ function ItineraryDayCard({
   day,
   isOpen,
   onToggle,
+  routePoints,
 }: {
   day: TourItineraryDay;
   isOpen: boolean;
   onToggle: () => void;
+  routePoints?: TourRoutePoint[];
 }) {
   const images = day.images ?? [];
   const activities = day.activities ?? [];
   const meals = day.meals ?? [];
+  const dayMapPoints = getRoutePointsForDay(routePoints, day.dayNumber);
 
   return (
     <div className="relative min-w-0 pb-6 last:pb-0">
@@ -133,6 +149,13 @@ function ItineraryDayCard({
                 ) : (
                   <p className="break-words text-sm leading-relaxed text-slate">{day.description}</p>
                 )
+              ) : null}
+              {dayMapPoints.length > 0 ? (
+                <ItineraryDayMiniMap
+                  points={dayMapPoints}
+                  dayNumber={day.dayNumber}
+                  className="mt-1"
+                />
               ) : null}
               {images.length > 0 && (
                 <div className="flex min-w-0 gap-2 overflow-x-auto pb-1">
@@ -247,6 +270,7 @@ export default function ItinerarySection({
             day={day}
             isOpen={openDays.has(day.id)}
             onToggle={() => toggleDay(day.id)}
+            routePoints={tour?.routePoints}
           />
         ))}
       </div>

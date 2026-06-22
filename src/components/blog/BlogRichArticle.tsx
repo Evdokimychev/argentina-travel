@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import {
   ArrowUpRight,
@@ -10,12 +8,12 @@ import {
   Star,
 } from "lucide-react";
 import BlogCallout from "@/components/blog/BlogCallout";
-import BlogContentTable from "@/components/blog/BlogContentTable";
-import BlogFaqSection from "@/components/blog/BlogFaqSection";
-import BlogMapBlock from "@/components/blog/BlogMapBlock";
+import BlogRichArticleClientBlock, {
+  BlogRichGallerySection,
+  isBlogRichClientBlock,
+} from "@/components/blog/BlogRichArticleClientBlocks";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
-import { BlogRichGalleryCarousel } from "@/components/blog/BlogRichGalleryCarousel";
 import PageImage from "@/components/media/PageImage";
 import { cn } from "@/lib/cn";
 import { getContentImage, getRichArticleGallery } from "@/lib/media-resolver";
@@ -124,22 +122,6 @@ function RichSpotCard({ spot }: { spot: BlogRichSpot }) {
   );
 }
 
-function RichTable({
-  headers,
-  rows,
-  caption,
-}: {
-  headers: string[];
-  rows: string[][];
-  caption?: string;
-}) {
-  return <BlogContentTable headers={headers} rows={rows} caption={caption} />;
-}
-
-function RichFaqList({ items }: { items: Array<{ question: string; answer: string }> }) {
-  return <BlogFaqSection items={items} />;
-}
-
 function StarRating({ value }: { value: number }) {
   return (
     <span className="inline-flex gap-0.5" aria-label={`${value} из 5`}>
@@ -197,15 +179,7 @@ function RichRatings({
   );
 }
 
-function RichMap({ lat, lng, label }: { lat: number; lng: number; label: string }) {
-  return <BlogMapBlock lat={lat} lng={lng} label={label} />;
-}
-
-function RichTicketLink({ url, label }: { url: string; label: string }) {
-  return <BlogTicketLink url={url} label={label} />;
-}
-
-function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: string }) {
+function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId: string }) {
   switch (block.type) {
     case "paragraphs":
       return (
@@ -237,8 +211,6 @@ function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: stri
           ))}
         </div>
       );
-    case "table":
-      return <RichTable headers={block.headers} rows={block.rows} caption={block.caption} />;
     case "bullets":
       return (
         <div>
@@ -255,15 +227,9 @@ function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: stri
         </div>
       );
     case "seasons":
-      return (
-        <BlogSeasonWidget items={block.items} conclusion={block.conclusion} />
-      );
-    case "faq":
-      return <RichFaqList items={block.items} />;
+      return <BlogSeasonWidget items={block.items} conclusion={block.conclusion} />;
     case "ratings":
-      return (
-        <RichRatings items={block.items} audience={block.audience} note={block.note} />
-      );
+      return <RichRatings items={block.items} audience={block.audience} note={block.note} />;
     case "numbered-tips":
       return (
         <ol className="space-y-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
@@ -277,17 +243,6 @@ function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: stri
           ))}
         </ol>
       );
-    case "gallery":
-      return (
-        <BlogRichGalleryCarousel
-          images={block.images.map((image) => ({
-            src: image.src,
-            alt: image.alt,
-            caption: image.title,
-          }))}
-          ariaLabel="Галерея в статье"
-        />
-      );
     case "section-image": {
       const image = block.slotId
         ? getContentImage(`rich:${articleId}`, `section-${block.slotId}`)
@@ -296,12 +251,7 @@ function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: stri
       return (
         <figure className="mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100">
           <div className="relative aspect-[16/10] w-full">
-            <PageImage
-              image={image}
-              role="section"
-              fill
-              className="object-cover"
-            />
+            <PageImage image={image} role="section" fill className="object-cover" />
           </div>
           {block.caption ? (
             <figcaption className="px-4 py-3 text-sm text-slate">{block.caption}</figcaption>
@@ -311,13 +261,18 @@ function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: stri
         </figure>
       );
     }
-    case "map":
-      return <RichMap lat={block.lat} lng={block.lng} label={block.label} />;
     case "ticket-link":
-      return <RichTicketLink url={block.url} label={block.label} />;
+      return <BlogTicketLink url={block.url} label={block.label} />;
     default:
       return null;
   }
+}
+
+function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: string }) {
+  if (isBlogRichClientBlock(block)) {
+    return <BlogRichArticleClientBlock block={block} />;
+  }
+  return <RichStaticBlock block={block} articleId={articleId} />;
 }
 
 export default function BlogRichArticle({
@@ -331,12 +286,7 @@ export default function BlogRichArticle({
 
   return (
     <div className="space-y-10">
-      {gallery.length > 0 ? (
-        <BlogRichGalleryCarousel
-          images={gallery}
-          ariaLabel="Фотогалерея национального парка"
-        />
-      ) : null}
+      <BlogRichGallerySection images={gallery} ariaLabel="Фотогалерея национального парка" />
 
       <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/[0.07] via-white to-white p-5 shadow-sm sm:p-6">
         <div className="flex items-start gap-3">

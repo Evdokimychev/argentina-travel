@@ -16,9 +16,10 @@ import ExcursionBookingPanel from "@/components/excursions/ExcursionBookingPanel
 import { ExcursionBookingProvider } from "@/components/excursions/ExcursionBookingContext";
 import ExcursionBookingModal from "@/components/excursions/ExcursionBookingModal";
 import ExcursionMobileBookingBar from "@/components/excursions/ExcursionMobileBookingBar";
+import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
 import TourSection from "@/components/tour-detail/TourSection";
-import { ArrowLeft, Clock, MapPin } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
 import { formatExcursionDuration } from "@/lib/excursion-format";
@@ -62,13 +63,17 @@ export default function ExcursionDetailView({
     <ExcursionBookingProvider excursion={excursion}>
     <div className="pb-24 lg:pb-16">
       <div className={siteContainerClass}>
-        <Link
-          href="/excursions"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate transition hover:text-sky"
-        >
-          <ArrowLeft className="h-4 w-4" aria-hidden />
-          {t("excursions.backToAll")}
-        </Link>
+        <PageBreadcrumbs
+          items={[
+            { label: "Главная", href: "/" },
+            { label: "Экскурсии", href: "/excursions" },
+            {
+              label: excursion.cityName,
+              href: `/excursions?query=${encodeURIComponent(excursion.cityName)}`,
+            },
+            { label: excursion.title },
+          ]}
+        />
 
         <div className="mt-6">
           {galleryImages.length > 0 ? (

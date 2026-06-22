@@ -10,6 +10,8 @@ import {
   isImmigrationTopicSlug,
 } from "@/lib/immigration-topics";
 import { getImmigrationFreshnessState } from "@/lib/content-freshness-server";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -27,16 +29,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const topicMeta = getImmigrationTopicMetadata(slug);
   if (topicMeta) {
     return {
-      title: topicMeta.title,
-      description: topicMeta.description,
+      ...buildPublicPageMetadata({
+        title: topicMeta.title,
+        description: topicMeta.description,
+        path: `/immigration/${slug}`,
+      }),
+      alternates: buildHreflangAlternates(`/immigration/${slug}`),
     };
   }
 
   const page = getContentPage("immigration", slug);
   if (!page) return { title: "Иммиграция" };
   return {
-    title: page.title,
-    description: page.description,
+    ...buildPublicPageMetadata({
+      title: page.title,
+      description: page.description,
+      path: `/immigration/${slug}`,
+    }),
+    alternates: buildHreflangAlternates(`/immigration/${slug}`),
   };
 }
 

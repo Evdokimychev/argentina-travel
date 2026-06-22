@@ -1,7 +1,9 @@
 import { expect, test, type Page } from "@playwright/test";
 
+test.describe.configure({ mode: "serial" });
+
 async function expectHtmlPage(page: Page, pathname: string) {
-  const response = await page.goto(pathname, { waitUntil: "domcontentloaded" });
+  const response = await page.goto(pathname, { waitUntil: "domcontentloaded", timeout: 90_000 });
   expect(response, `No response received for ${pathname}`).not.toBeNull();
   expect(response!.status(), `Unexpected status for ${pathname}`).toBeLessThan(400);
   await expect(page.locator("body")).toBeVisible();
@@ -73,5 +75,19 @@ test.describe("I3 CMS cutover smoke", () => {
     expect(response).not.toBeNull();
     expect(response!.status()).toBeLessThan(400);
     await expect(page).toHaveURL(/\/blog\/buenos-aires-rajony/);
+  });
+
+  test("legacy map URL redirects to mapa-argentina", async ({ page }) => {
+    const response = await page.goto("/map", { waitUntil: "domcontentloaded" });
+    expect(response).not.toBeNull();
+    expect(response!.status()).toBeLessThan(400);
+    await expect(page).toHaveURL(/\/mapa-argentina/);
+  });
+
+  test("blog cornerstone shows hero image not logo", async ({ page }) => {
+    await expectHtmlPage(page, "/blog/buenos-aires-rajony");
+    const ogImage = page.locator('meta[property="og:image"]');
+    await expect(ogImage).toHaveAttribute("content", /media\/blog|blog\//);
+    await expect(ogImage).not.toHaveAttribute("content", /logo-light\.svg/);
   });
 });

@@ -182,7 +182,7 @@ export default function DesignSystemShowcase() {
             <article className={cn(tourCardShellClass, tourCardShellInteractiveClass)}>
               <div className="relative aspect-[4/3] bg-gray-100">
                 <Image
-                  src="https://images.unsplash.com/photo-1551524164-6cf2ac7bd851?w=400&q=80"
+                  src="/media/tours/patagonia-glaciers/hero.jpg"
                   alt=""
                   fill
                   className="object-cover"

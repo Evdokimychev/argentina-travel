@@ -7,11 +7,16 @@ import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { Badge } from "@/components/ui/badge";
-import { buttonVariants } from "@/components/ui/button";
 import { StarRating } from "@/components/ui/star-rating";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
-import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
+import {
+  ContentCard,
+  ContentCardBody,
+  ContentCardMedia,
+  ContentCardOverlayLink,
+  ContentCardTitle,
+} from "@/components/content/ContentCard";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { formatExcursionDuration } from "@/lib/excursion-format";
 import {
@@ -43,11 +48,9 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
   const guideLabel = excursion.guide ? formatShortDisplayName(excursion.guide.name) : null;
 
   return (
-    <article
-      className={cn("group relative flex flex-col", tourCardShellClass, tourCardShellInteractiveClass)}
-    >
+    <ContentCard>
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <ContentCardMedia aspect="4/3" gradient="none">
           <TourCardGallery images={galleryImages} alt={excursion.title} />
 
           <div className="absolute left-3 top-3 z-10">
@@ -83,9 +86,9 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
               </span>
             </Link>
           ) : null}
-        </div>
+        </ContentCardMedia>
 
-        <div className="flex flex-1 flex-col p-4">
+        <ContentCardBody>
           <div className="flex items-center justify-between gap-3 text-sm">
             <span className="flex min-w-0 items-center gap-1.5 text-slate">
               <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
@@ -103,9 +106,7 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
             )}
           </div>
 
-          <h3 className="mt-2 line-clamp-2 font-heading text-lg font-bold leading-snug text-charcoal group-hover:text-sky">
-            {excursion.title}
-          </h3>
+          <ContentCardTitle>{excursion.title}</ContentCardTitle>
 
           {excursion.tagline ? (
             <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">{excursion.tagline}</p>
@@ -139,26 +140,13 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
               {t(excursionFormatLabelKey(formatKind))}
             </span>
           </div>
-
-          <div className="pointer-events-auto relative z-20 mt-auto pt-4">
-            <Link
-              href={`/excursions/${excursion.slug}`}
-              className={buttonVariants({
-                variant: "outline",
-                className: "h-10 w-full rounded-xl text-sm font-semibold",
-              })}
-            >
-              {t("excursions.card.open")}
-            </Link>
-          </div>
-        </div>
+        </ContentCardBody>
       </div>
 
-      <Link
+      <ContentCardOverlayLink
         href={`/excursions/${excursion.slug}`}
-        className="absolute inset-0 z-0 rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
-        aria-label={`${t("excursions.card.open")}: ${excursion.title}`}
+        ariaLabel={`${t("excursions.card.open")}: ${excursion.title}`}
       />
-    </article>
+    </ContentCard>
   );
 }

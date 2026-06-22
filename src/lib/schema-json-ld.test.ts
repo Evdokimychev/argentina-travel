@@ -41,6 +41,18 @@ describe("schema-json-ld", () => {
     expect(JSON.stringify(schema)).toContain('"position":2');
   });
 
+  it("builds article schema with absolute image url", () => {
+    const schema = buildArticleSchema({
+      title: "Игуасу",
+      excerpt: "Гид",
+      slug: "iguazu",
+      image: "/media/blog/test/hero.jpg",
+      datePublished: "2026-01-01",
+      authorName: "Редакция",
+    });
+    expect(schema.image).toBe("https://www.goargentina.ru/media/blog/test/hero.jpg");
+  });
+
   it("builds article schema", () => {
     const schema = buildArticleSchema({
       title: "Игуасу",
