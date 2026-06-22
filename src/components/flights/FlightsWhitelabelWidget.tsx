@@ -5,16 +5,10 @@ import {
   TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID,
   TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID,
 } from "@/lib/travelpayouts/whitelabel/config";
-import {
-  FLIGHTS_WL_PAGE_MOUNT_ID,
-  FLIGHTS_WL_SCRIPT_ID,
-  FLIGHTS_WL_SCRIPT_MOUNT_ID,
-} from "@/lib/travelpayouts/whitelabel/flights-dom-ids";
-import { ensureTpwlModalsInteractive } from "@/lib/travelpayouts/whitelabel/ensure-tpwl-modals-interactive";
-import {
-  removeAviasalesInjectedStyles,
-  sanitizeAviasalesInjectedStyles,
-} from "@/lib/travelpayouts/whitelabel/sanitize-aviasales-styles";
+import { FLIGHTS_WL_PAGE_MOUNT_ID } from "@/lib/travelpayouts/whitelabel/flights-dom-ids";
+import { injectTravelpayoutsWhitelabelScript } from "@/lib/travelpayouts/whitelabel/inject-travelpayouts-whitelabel-script";
+import { removeAviasalesInjectedStyles } from "@/lib/travelpayouts/whitelabel/sanitize-aviasales-styles";
+import { syncTravelpayoutsWhitelabelMount } from "@/lib/travelpayouts/whitelabel/sync-travelpayouts-whitelabel";
 import { cn } from "@/lib/utils";
 import "./flights-whitelabel-widget.css";
 
@@ -23,77 +17,6 @@ type FlightsWhitelabelWidgetProps = {
   loadingLabel: string;
   className?: string;
 };
-
-const WL_CONTAINER_IDS = [
-  TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID,
-  TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID,
-] as const;
-
-function normalizeContainer(el: HTMLElement, mount: HTMLElement) {
-  if (!mount.contains(el)) {
-    mount.insertBefore(el, mount.querySelector(`#${FLIGHTS_WL_SCRIPT_MOUNT_ID}`));
-  }
-
-  el.style.position = "relative";
-  el.style.top = "auto";
-  el.style.left = "auto";
-  el.style.right = "auto";
-  el.style.width = "100%";
-  el.style.maxWidth = "100%";
-  el.style.minHeight = "0";
-  el.style.margin = "0";
-  el.style.overflow = "visible";
-}
-
-/** Aviasales popovers must stay on `body` — reparenting breaks positioning. */
-function ensureModalsOnBody() {
-  const modals = document.getElementById("tpwl-modals");
-  if (!modals || modals.parentElement === document.body) return;
-
-  modals.removeAttribute("style");
-  document.body.appendChild(modals);
-}
-
-function ensureWidgetContainers(mount: HTMLElement) {
-  let scriptMount = mount.querySelector<HTMLElement>(`#${FLIGHTS_WL_SCRIPT_MOUNT_ID}`);
-  if (!scriptMount) {
-    scriptMount = document.createElement("div");
-    scriptMount.id = FLIGHTS_WL_SCRIPT_MOUNT_ID;
-    scriptMount.className = "flights-wl-script-mount";
-    mount.appendChild(scriptMount);
-  }
-
-  for (const [id, className] of [
-    [TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID, "w-full"],
-    [TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID, "mt-4 w-full"],
-  ] as const) {
-    let el = mount.querySelector<HTMLElement>(`#${id}`);
-    if (!el) {
-      el = document.createElement("div");
-      el.id = id;
-      el.className = className;
-      mount.insertBefore(el, scriptMount);
-    }
-  }
-}
-
-function syncContainers(mount: HTMLElement) {
-  sanitizeAviasalesInjectedStyles();
-  ensureWidgetContainers(mount);
-  ensureModalsOnBody();
-  ensureTpwlModalsInteractive();
-
-  for (const id of WL_CONTAINER_IDS) {
-    const el = document.getElementById(id);
-    if (el) normalizeContainer(el, mount);
-  }
-}
-
-function mountHasWidgetContent(mount: HTMLElement): boolean {
-  const search = document.getElementById(TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID);
-  if (!search || !mount.contains(search)) return false;
-  return search.offsetHeight > 60 || search.childElementCount > 0;
-}
 
 export default function FlightsWhitelabelWidget({
   scriptUrl,
@@ -113,50 +36,29 @@ export default function FlightsWhitelabelWidget({
       if (!disposed) setReady(true);
     }
 
-    function syncWidgetRoot() {
+    function syncWidget() {
       if (disposed || !mount) return;
-      syncContainers(mount);
-      if (mountHasWidgetContent(mount)) markReady();
+      if (syncTravelpayoutsWhitelabelMount(mount)) markReady();
     }
 
-    function injectScript() {
-      if (!mount) return;
+    const script = injectTravelpayoutsWhitelabelScript(scriptUrl);
+    script?.addEventListener("load", () => {
+      syncWidget();
+      window.setTimeout(syncWidget, 100);
+      window.setTimeout(syncWidget, 500);
+      window.setTimeout(syncWidget, 1500);
+    });
+    script?.addEventListener("error", markReady);
 
-      ensureWidgetContainers(mount);
-      const scriptMount = mount.querySelector<HTMLElement>(`#${FLIGHTS_WL_SCRIPT_MOUNT_ID}`);
-      if (!scriptMount) return;
-
-      if (scriptMount.querySelector(`#${FLIGHTS_WL_SCRIPT_ID}`)) {
-        syncWidgetRoot();
-        return;
-      }
-
-      const script = document.createElement("script");
-      script.id = FLIGHTS_WL_SCRIPT_ID;
-      script.type = "module";
-      script.async = true;
-      script.src = scriptUrl;
-      script.addEventListener("load", () => {
-        syncWidgetRoot();
-        window.setTimeout(syncWidgetRoot, 100);
-        window.setTimeout(syncWidgetRoot, 500);
-        window.setTimeout(syncWidgetRoot, 1500);
-      });
-      script.addEventListener("error", markReady);
-      scriptMount.appendChild(script);
-    }
-
-    injectScript();
-
-    const observer = new MutationObserver(syncWidgetRoot);
+    const observer = new MutationObserver(syncWidget);
     observer.observe(mount, { childList: true, subtree: true });
     observer.observe(document.head, { childList: true, subtree: true });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    const interval = window.setInterval(syncWidgetRoot, 300);
+    const interval = window.setInterval(syncWidget, 300);
     const stopInterval = window.setTimeout(() => window.clearInterval(interval), 60000);
 
-    syncWidgetRoot();
+    syncWidget();
 
     const onScrollReposition = () => {
       window.dispatchEvent(new Event("resize"));
@@ -185,8 +87,9 @@ export default function FlightsWhitelabelWidget({
           {loadingLabel}
         </p>
       ) : null}
-      <div id={TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID} className="w-full" />
-      <div id={TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID} className="mt-4 w-full" />
+      {/* Official Travelpayouts embed containers — see dashboard «Код вставки». */}
+      <div id={TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID} />
+      <div id={TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID} className="mt-4" />
     </div>
   );
 }

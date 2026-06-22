@@ -41,7 +41,3 @@ body:has(.flights-page-root) > #tpwl-modals {
   pointer-events: none !important;
   z-index: 9999 !important;
 }
-
-.flights-wl-mount .flights-wl-script-mount {
-  display: none;
-}
