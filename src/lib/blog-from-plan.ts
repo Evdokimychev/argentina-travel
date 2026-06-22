@@ -18,7 +18,7 @@ import {
 } from "@/data/blog-content-plan";
 import { getTopicLabel } from "@/data/blog-content/topic-labels";
 import { formatBlogReadTime } from "@/lib/blog-utils";
-import { getBlogCategoryImage } from "@/lib/media-resolver";
+import { resolveBlogSemanticHeroImage } from "@/lib/blog-post-image-bindings";
 import {
   buildCanonicalCtaParagraph,
   resolveBlogCanonicalTarget,
@@ -26,8 +26,12 @@ import {
 import { getBlogTourEmbeds } from "@/data/blog-tour-embeds";
 import type { BlogPost, BlogRelatedResource } from "@/types";
 
-function categoryImage(category: BlogContentCategory): string {
-  return getBlogCategoryImage(category);
+function categoryImage(category: BlogContentCategory, slug: string): string {
+  return resolveBlogSemanticHeroImage({
+    slug,
+    category: getBlogPlanCategoryLabel(category),
+    tags: [],
+  });
 }
 
 const PLACE_LABELS: Record<string, string> = {
@@ -186,7 +190,7 @@ export function generateBlogPostFromPlan(
       author: author.name,
       authorBio: author.bio,
       date: staggerDate(index),
-      image: override.image ?? categoryImage(item.category),
+      image: override.image ?? categoryImage(item.category, item.slug),
       category: getBlogPlanCategoryLabel(item.category),
       readTimeMinutes,
       readTime: formatBlogReadTime(readTimeMinutes),
@@ -232,7 +236,7 @@ export function generateBlogPostFromPlan(
     author: author.name,
     authorBio: author.bio,
     date: staggerDate(index),
-    image: categoryImage(item.category),
+    image: categoryImage(item.category, item.slug),
     category: getBlogPlanCategoryLabel(item.category),
     readTimeMinutes,
     readTime: formatBlogReadTime(readTimeMinutes),

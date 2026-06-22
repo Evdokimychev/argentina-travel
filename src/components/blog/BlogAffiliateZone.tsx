@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { Car, Shield, Smartphone } from "lucide-react";
+import BlogAffiliateEmbed from "@/components/blog/BlogAffiliateEmbed";
 import { resolveBlogAffiliateCards, type BlogAffiliateService } from "@/lib/blog-affiliate-zones";
+import { resolveBlogAffiliateEmbedForPost } from "@/lib/blog-affiliate-embeds";
 import { withBlogAffiliateAttribution } from "@/lib/blog-affiliate-attribution";
 import { trackBlogAffiliateClick } from "@/lib/analytics/gtm-events";
 import { cn } from "@/lib/cn";
@@ -21,7 +23,15 @@ type BlogAffiliateZoneProps = {
 
 export default function BlogAffiliateZone({ post, className }: BlogAffiliateZoneProps) {
   const cards = resolveBlogAffiliateCards(post);
-  if (cards.length === 0) return null;
+  const embed = resolveBlogAffiliateEmbedForPost({
+    category: post.category,
+    tags: post.tags,
+  });
+  const cardsWithoutEmbed = embed
+    ? cards.filter((card) => card.service !== embed.service)
+    : cards;
+
+  if (cardsWithoutEmbed.length === 0 && !embed?.embedUrl) return null;
 
   return (
     <aside
@@ -36,7 +46,7 @@ export default function BlogAffiliateZone({ post, className }: BlogAffiliateZone
         Партнёрские сервисы платформы — переход без дополнительной стоимости для вас
       </p>
       <ul className="mt-3 grid gap-3 sm:grid-cols-2">
-        {cards.map((card) => {
+        {cardsWithoutEmbed.map((card) => {
           const Icon = SERVICE_ICONS[card.service];
           return (
             <li key={card.service}>
@@ -67,6 +77,14 @@ export default function BlogAffiliateZone({ post, className }: BlogAffiliateZone
           );
         })}
       </ul>
+      {embed?.embedUrl ? (
+        <BlogAffiliateEmbed
+          category={post.category}
+          tags={post.tags}
+          postSlug={post.slug}
+          className="mt-3"
+        />
+      ) : null}
     </aside>
   );
 }

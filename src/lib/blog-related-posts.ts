@@ -53,7 +53,7 @@ export function getRelatedBlogPosts(
 }
 
 export type SectionRelatedContext = {
-  sectionTitle: string;
+  sectionTitle?: string;
   sectionBody?: string;
   sectionKind?: string;
 };
@@ -62,7 +62,8 @@ const SECTION_TITLE_SCORE = 4;
 const SECTION_BODY_TERM_SCORE = 2;
 const ITINERARY_KIND_BOOST = 5;
 
-function tokenize(text: string): string[] {
+function tokenize(text: string | undefined): string[] {
+  if (!text) return [];
   return text
     .toLowerCase()
     .split(/[^\p{L}\p{N}]+/u)
@@ -71,6 +72,8 @@ function tokenize(text: string): string[] {
 }
 
 function sectionContextScore(context: SectionRelatedContext, candidate: BlogPost): number {
+  if (!context.sectionTitle) return 0;
+
   let score = 0;
   const titleTokens = tokenize(context.sectionTitle);
   const bodyTokens = context.sectionBody ? tokenize(context.sectionBody.slice(0, 600)) : [];

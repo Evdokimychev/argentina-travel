@@ -2,9 +2,12 @@ import { cookies } from "next/headers";
 import BlogIndexView from "@/components/blog/BlogIndexView";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { getPersonalizedBlogPosts } from "@/lib/blog-personalized";
+import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { parseBlogReadingHistoryCookie, BLOG_READING_HISTORY_COOKIE } from "@/lib/blog-reading-history-cookie";
+import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -36,7 +39,22 @@ export default async function BlogPage() {
     fetchMarketplaceTours(),
   ]);
   const indexable = filterIndexableBlogPosts(posts);
-  const initialPersonalized = getPersonalizedBlogPosts(indexable, history, 4);
+
+  let initialPersonalized: typeof indexable = [];
+  if (isSupabaseAuthEnabled()) {
+    const supabase = await createSupabaseServerClient();
+    const sessionUser = await loadSessionUserFromSupabase(supabase);
+    initialPersonalized = await getServerPersonalizedBlogPosts(
+      supabase,
+      indexable,
+      history,
+      sessionUser?.id ?? null,
+      4,
+    );
+  } else {
+    const { getPersonalizedBlogPosts } = await import("@/lib/blog-personalized");
+    initialPersonalized = getPersonalizedBlogPosts(indexable, history, 4);
+  }
 
   return (
     <BlogIndexView

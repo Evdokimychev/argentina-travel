@@ -18,11 +18,9 @@ type BlogHubCatalogProps = {
 };
 
 export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
-  const reviewedId = useId();
   const resultsId = useId();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [reviewedOnly, setReviewedOnly] = useState(false);
 
   const categories = useMemo(() => getBlogHubCategoriesWithCounts(hub, posts), [hub, posts]);
   const tags = useMemo(() => getBlogHubTopTags(hub, posts, 10), [hub, posts]);
@@ -35,25 +33,21 @@ export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
     if (activeTag) {
       result = result.filter((post) => post.tags.includes(activeTag));
     }
-    if (reviewedOnly) {
-      result = result.filter((post) => post.editorialReviewed || Boolean(post.richArticleId));
-    }
     return result;
-  }, [posts, activeCategory, activeTag, reviewedOnly]);
+  }, [posts, activeCategory, activeTag]);
 
-  const hasFilters = Boolean(activeCategory || activeTag || reviewedOnly);
+  const hasFilters = Boolean(activeCategory || activeTag);
   const featuredUsed = { value: false };
 
   function resetFilters() {
     setActiveCategory(null);
     setActiveTag(null);
-    setReviewedOnly(false);
   }
 
   return (
     <>
       {posts.length > 0 && (
-        <div className="mt-6 rounded-3xl border border-gray-100 bg-white p-4 shadow-card sm:p-5" role="search" aria-label={`Фильтры раздела «${hub.shortTitle}»`}>
+        <div className="mt-6 rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm sm:p-5" role="search" aria-label={`Фильтры раздела «${hub.shortTitle}»`}>
           {categories.length > 1 ? (
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-slate">Подкатегории</p>
@@ -104,21 +98,8 @@ export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
             </div>
           ) : null}
 
-          <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-4">
-            <label
-              htmlFor={reviewedId}
-              className="blog-touch-target inline-flex cursor-pointer items-center gap-2 text-sm text-charcoal"
-            >
-              <input
-                id={reviewedId}
-                type="checkbox"
-                checked={reviewedOnly}
-                onChange={(event) => setReviewedOnly(event.target.checked)}
-                className="h-4 w-4 rounded border-gray-300 text-sky focus:ring-sky/30"
-              />
-              Только вычитанные
-            </label>
-            {hasFilters ? (
+          {hasFilters ? (
+            <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-4">
               <button
                 type="button"
                 onClick={resetFilters}
@@ -126,8 +107,8 @@ export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
               >
                 Сбросить
               </button>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           <p id={resultsId} className="mt-3 text-sm text-slate" aria-live="polite" aria-atomic="true">
             {filteredPosts.length === 0
@@ -138,7 +119,7 @@ export default function BlogHubCatalog({ hub, posts }: BlogHubCatalogProps) {
       )}
 
       {filteredPosts.length > 0 ? (
-                  <ul className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
+        <ul className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           {filteredPosts.map((post, index) => {
             const variant = resolveBlogCardVariant(post, index, featuredUsed);
             const spanWide = variant === "featured" || (index === 0 && post.richArticleId);

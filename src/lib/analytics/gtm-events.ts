@@ -16,6 +16,8 @@ export const GTM_EVENTS = {
   blogInlineRelatedClick: "blog_inline_related_click",
   blogArticleView: "blog_article_view",
   blogArticleFeedback: "blog_article_feedback",
+  blogCommentPost: "blog_comment_post",
+  blogAffiliateEmbedView: "blog_affiliate_embed_view",
 } as const;
 
 export type GtmEventName = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
@@ -217,5 +219,22 @@ export function trackBlogArticleFeedback(input: {
     item_id: input.slug,
     item_name: input.title,
     feedback_value: input.value,
+  });
+}
+
+export function trackBlogCommentPost(input: { slug: string; title?: string }): void {
+  trackGtmEvent(GTM_EVENTS.blogCommentPost, {
+    item_id: input.slug,
+    item_name: input.title,
+  });
+}
+
+export function trackBlogAffiliateEmbedView(input: {
+  slug: string;
+  service: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.blogAffiliateEmbedView, {
+    item_id: input.slug,
+    affiliate_service: input.service,
   });
 }

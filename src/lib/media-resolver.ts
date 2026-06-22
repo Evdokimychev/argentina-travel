@@ -20,6 +20,7 @@ import { mediaAssetToResolved } from "@/lib/image-provider/local-fallback";
 import { resolveSlotAssetId } from "@/lib/image-provider/slot-ids";
 import type { ResolvedImage } from "@/lib/image-provider/types";
 import type { MediaAsset } from "@/types/media-asset";
+import { resolveBlogSemanticHeroImage } from "@/lib/blog-post-image-bindings";
 import { blogMediaFolder } from "@/lib/blog-media-path";
 
 const manifest = manifestData as { version: number; assets: MediaAsset[] };
@@ -99,8 +100,20 @@ export function getDestinationImageAlt(destinationId: string): string {
 }
 
 export function getBlogCategoryImage(categoryKey: string): string {
-  const blogAsset = manifest.assets.find((a) => a.blogCategory === categoryKey);
+  const blogAsset = manifest.assets.find(
+    (a) => a.blogCategory === categoryKey && a.role === "hero",
+  );
   if (blogAsset) return assetUrl(blogAsset);
+
+  const blogAssetAny = manifest.assets.find((a) => a.blogCategory === categoryKey);
+  if (blogAssetAny) return assetUrl(blogAssetAny);
+
+  const topicImage = resolveBlogSemanticHeroImage({
+    slug: `category-${categoryKey}`,
+    category: categoryKey,
+    tags: [],
+  });
+  if (!isMediaLogoFallback(topicImage)) return topicImage;
 
   const placeSlug = BLOG_CATEGORY_PLACE_MAP[categoryKey];
   if (placeSlug) return getPlaceCoverImage(placeSlug);
@@ -113,7 +126,24 @@ export function getBlogCategoryAlt(categoryKey: string): string {
   return categoryKey;
 }
 
+const BLOG_HUB_CATEGORY_KEY: Record<string, string> = {
+  "Деньги и обмен валют": "money",
+  "Интернет и связь": "internet",
+  Иммиграция: "relocation",
+  "Переезд и релокация": "relocation",
+  Транспорт: "transport",
+  Безопасность: "safety",
+  "Кухня Аргентины": "food",
+  Винодельни: "wineries",
+};
+
 export function getBlogHubImage(hubLabel: string): string {
+  const categoryKey = BLOG_HUB_CATEGORY_KEY[hubLabel];
+  if (categoryKey) {
+    const categoryImage = getBlogCategoryImage(categoryKey);
+    if (!isMediaLogoFallback(categoryImage)) return categoryImage;
+  }
+
   const placeSlug = BLOG_HUB_PLACE_MAP[hubLabel];
   if (placeSlug) return getPlaceCoverImage(placeSlug);
   return getPlaceCoverImage("buenos-aires");
@@ -262,17 +292,25 @@ export function isMediaLogoFallback(src: string): boolean {
   return src === MEDIA_LOGO_FALLBACK;
 }
 
-/** Card/listing cover: manifest hero → page registry → preset image → category hub → logo. */
+/** Card/listing cover: semantic topic pool → rich → legacy fallbacks. */
 export function resolveBlogPostCardImage(post: {
   slug: string;
   image?: string;
   category: string;
   richArticleId?: string;
+  tags?: string[];
 }): string {
   if (post.richArticleId) {
     const rich = getRichArticleHeroImage(post.richArticleId);
     if (!isMediaLogoFallback(rich)) return rich;
   }
+
+  const semantic = resolveBlogSemanticHeroImage({
+    slug: post.slug,
+    category: post.category,
+    tags: post.tags ?? [],
+  });
+  if (!isMediaLogoFallback(semantic)) return semantic;
 
   const manifestHero = manifestBlogHero(post.slug);
   if (manifestHero) return mediaUrl(manifestHero.localPath);
@@ -317,11 +355,46 @@ export function getManifestThumbnailSrc(src: string): string | undefined {
 export function getBlogPostHeroResolved(post: {
   slug: string;
   title: string;
+  category: string;
+  tags?: string[];
   richArticleId?: string;
 }): ResolvedImage {
   if (post.richArticleId) {
     const richHero = getHeroImage(`rich:${post.richArticleId}`);
     if (!isMediaLogoFallback(richHero.src)) return richHero;
+  }
+
+  const semanticSrc = resolveBlogSemanticHeroImage({
+    slug: post.slug,
+    category: post.category,
+    tags: post.tags ?? [],
+  });
+  if (!isMediaLogoFallback(semanticSrc)) {
+    const manifestHero = manifestBlogHero(post.slug);
+    if (manifestHero && mediaUrl(manifestHero.localPath) === semanticSrc) {
+      return mediaAssetToResolved(manifestHero);
+    }
+
+    const alt = getBlogPostCoverAlt(post.slug) || post.title;
+    const normalized = semanticSrc.replace(/^\//, "");
+    const pathAsset = manifest.assets.find((asset) => {
+      const assetPath = asset.localPath.replace(/^\/+/, "");
+      return assetPath === normalized || mediaUrl(asset.localPath) === semanticSrc;
+    });
+    if (pathAsset) return mediaAssetToResolved(pathAsset);
+
+    return {
+      src: semanticSrc,
+      alt,
+      title: alt,
+      attribution: {
+        authorName: "Пора в Аргентину",
+        sourceUrl: "https://www.goargentina.ru",
+        license: "© Пора в Аргентину",
+        source: "local",
+      },
+      attributionHtml: "© Пора в Аргентину",
+    };
   }
 
   const manifestHero = manifestBlogHero(post.slug);

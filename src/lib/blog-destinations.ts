@@ -27,8 +27,10 @@ export function resolveBlogPostDestinations(
   const explicit = post.relatedDestinations ?? [];
   if (explicit.length > 0) {
     return explicit
-      .map((id) => POPULAR_DESTINATIONS.find((d) => d.id === id))
-      .filter((d): d is Destination => d !== undefined)
+      .flatMap((id) => {
+        const dest = POPULAR_DESTINATIONS.find((d) => d.id === id);
+        return dest ? [dest as Destination] : [];
+      })
       .slice(0, limit);
   }
 

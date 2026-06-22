@@ -1,3 +1,4 @@
+import type { ItemList, WithContext } from "schema-dts";
 import { getBlogHubPosts, getPrimaryBlogHubForPost } from "@/data/blog-hubs";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { absoluteUrl } from "@/lib/site-url";
@@ -34,7 +35,7 @@ export function getBlogTopicClusterSiblings(
 export function buildBlogTopicClusterItemListJsonLd(
   post: BlogPost,
   catalog: BlogPost[],
-) {
+): WithContext<ItemList> | null {
   const hub = getPrimaryBlogHubForPost(post);
   if (!hub) return null;
 

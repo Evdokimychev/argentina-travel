@@ -84,11 +84,6 @@ function CardBadges({ post }: { post: BlogPost }) {
           <span className="rounded-full bg-sky px-2.5 py-1 text-2xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm sm:text-xs">
             Полный гид
           </span>
-        ) : null}
-        {post.editorialReviewed ? (
-          <span className="rounded-full bg-success px-2.5 py-1 text-2xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm sm:text-xs">
-            Вычитано
-          </span>
         ) : isDraft ? (
           <span className="rounded-full bg-slate/80 px-2.5 py-1 text-2xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm sm:text-xs">
             Черновик
@@ -109,11 +104,6 @@ function FeaturedBadges({ post }: { post: BlogPost }) {
         {post.richArticleId ? (
           <span className="rounded-full bg-sky px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
             Полный гид
-          </span>
-        ) : null}
-        {post.editorialReviewed ? (
-          <span className="rounded-full bg-success px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
-            Вычитано
           </span>
         ) : null}
       </div>

@@ -14,7 +14,9 @@ export interface SavedArticlesStore {
   isSaved(slug: string): boolean;
   save(article: SavedArticleRecord): void;
   remove(slug: string): void;
-  toggle(post: Pick<BlogPost, "slug" | "title" | "category" | "image">): boolean;
+  toggle(
+    post: Pick<BlogPost, "slug" | "title"> & Partial<Pick<BlogPost, "category" | "image">>,
+  ): boolean;
 }
 
 export const SAVED_ARTICLES_STORE_KEY = "argentina-travel-saved-articles-v1";

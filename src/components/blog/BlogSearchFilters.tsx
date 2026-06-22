@@ -1,7 +1,7 @@
 "use client";
 
 import { useId } from "react";
-import { Search, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import type { BlogCategoryWithCount } from "@/lib/blog-utils";
 import { pluralizeArticles } from "@/lib/blog-utils";
 import { cn } from "@/lib/cn";
@@ -15,13 +15,12 @@ type BlogSearchFiltersProps = {
   tags: string[];
   activeTag: string | null;
   onTagChange: (tag: string | null) => void;
-  reviewedOnly: boolean;
-  onReviewedOnlyChange: (value: boolean) => void;
   resultCount: number;
   onReset: () => void;
   showDrafts?: boolean;
   onShowDraftsChange?: (value: boolean) => void;
   draftCount?: number;
+  variant?: "spotlight" | "panel";
 };
 
 export default function BlogSearchFilters({
@@ -33,46 +32,86 @@ export default function BlogSearchFilters({
   tags,
   activeTag,
   onTagChange,
-  reviewedOnly,
-  onReviewedOnlyChange,
   resultCount,
   onReset,
   showDrafts = false,
   onShowDraftsChange,
   draftCount = 0,
+  variant = "panel",
 }: BlogSearchFiltersProps) {
   const searchId = useId();
-  const reviewedId = useId();
   const draftsId = useId();
   const resultsId = useId();
-  const hasFilters = Boolean(query.trim() || activeCategory !== "Все" || activeTag || reviewedOnly);
+  const isSpotlight = variant === "spotlight";
+  const totalCount = categories.reduce((sum, category) => sum + category.count, 0);
+  const hasFilters = Boolean(query.trim() || activeCategory !== "Все" || activeTag);
+  const activeLabel = activeTag
+    ? `#${activeTag}`
+    : activeCategory !== "Все"
+      ? activeCategory
+      : query.trim() || null;
 
   return (
     <div
-      className="rounded-3xl border border-gray-100 bg-white p-4 shadow-card sm:p-5"
+      id="blog-search"
+      className={cn(
+        "scroll-mt-24",
+        isSpotlight
+          ? "rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm sm:p-5"
+          : "rounded-3xl border border-gray-100 bg-white p-4 shadow-card sm:p-5",
+      )}
       role="search"
-      aria-label="Фильтры каталога статей"
+      aria-label="Поиск и фильтры блога"
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-heading text-lg font-bold text-charcoal">Каталог статей</h2>
-        {hasFilters ? (
-          <button
-            type="button"
-            onClick={onReset}
-            className="blog-touch-target inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 text-xs font-medium text-slate transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
-          >
-            <X className="h-3.5 w-3.5" aria-hidden />
-            Сбросить фильтры
-          </button>
-        ) : null}
-      </div>
+      {isSpotlight ? (
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+          <div className="flex min-w-0 flex-wrap items-center gap-2">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-sky/8 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-sky">
+              <SlidersHorizontal className="h-3 w-3" aria-hidden />
+              Каталог
+            </span>
+            <p className="text-sm text-slate">
+              <span className="font-semibold tabular-nums text-charcoal">{totalCount}</span>{" "}
+              {totalCount === 1 ? "материал" : totalCount < 5 ? "материала" : "материалов"}
+              <span className="mx-1.5 text-gray-300" aria-hidden>
+                ·
+              </span>
+              {categories.length} {categories.length === 1 ? "категория" : categories.length < 5 ? "категории" : "категорий"}
+            </p>
+          </div>
+          {hasFilters ? (
+            <button
+              type="button"
+              onClick={onReset}
+              className="inline-flex shrink-0 items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium text-slate transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden />
+              Сбросить
+            </button>
+          ) : null}
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="font-heading text-lg font-bold text-charcoal">Каталог статей</h2>
+          {hasFilters ? (
+            <button
+              type="button"
+              onClick={onReset}
+              className="inline-flex items-center gap-1 rounded-full border border-gray-200 px-3 text-xs font-medium text-slate transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            >
+              <X className="h-3.5 w-3.5" aria-hidden />
+              Сбросить
+            </button>
+          ) : null}
+        </div>
+      )}
 
-      <div className="relative mt-4">
+      <div className={cn("relative", isSpotlight ? "mt-3" : "mt-4")}>
         <label htmlFor={searchId} className="sr-only">
           Поиск по блогу
         </label>
         <Search
-          className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
+          className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate"
           aria-hidden
         />
         <input
@@ -80,99 +119,113 @@ export default function BlogSearchFilters({
           type="search"
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
-          placeholder="Поиск: Patagonia, виза, malbec, треккинг…"
-          className="blog-touch-target w-full rounded-2xl border border-gray-200 bg-surface-muted/40 py-3 pl-11 pr-12 text-sm text-charcoal outline-none transition-colors placeholder:text-slate/70 focus:border-sky/40 focus:bg-white focus:ring-2 focus:ring-sky/15"
+          placeholder="Регион, виза, треккинг, бюджет, связь…"
+          className="blog-touch-target w-full rounded-xl border border-gray-200 bg-surface-muted/30 py-2.5 pl-10 pr-10 text-sm text-charcoal outline-none transition-colors placeholder:text-slate/60 focus:border-sky/40 focus:bg-white focus:ring-2 focus:ring-sky/10"
           aria-controls={resultsId}
         />
         {query ? (
           <button
             type="button"
             onClick={() => onQueryChange("")}
-            className="blog-interactive-target absolute right-2 top-1/2 flex -translate-y-1/2 items-center justify-center rounded-full text-slate hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className="absolute right-1.5 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-lg text-slate hover:bg-gray-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Очистить поиск"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5" />
           </button>
         ) : null}
       </div>
 
-      <div className="mt-4">
-        <p id={`${searchId}-categories`} className="text-xs font-semibold uppercase tracking-wider text-slate">
-          Категории
+      <div className="mt-3 flex flex-wrap items-center gap-2">
+        <p
+          id={resultsId}
+          className={cn(
+            "inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium tabular-nums",
+            hasFilters ? "bg-sky/10 text-sky" : "bg-surface-muted text-slate",
+          )}
+          aria-live="polite"
+          aria-atomic="true"
+        >
+          {resultCount === 0
+            ? "Ничего не найдено"
+            : hasFilters
+              ? `Найдено: ${resultCount}`
+              : `${resultCount} в каталоге`}
         </p>
-        <div
-          className="-mx-1 mt-2 flex gap-2 overflow-x-auto overscroll-x-contain px-1 pb-1 scrollbar-thin"
-          role="group"
-          aria-labelledby={`${searchId}-categories`}
-        >
-          <CategoryChip
-            label="Все"
-            count={categories.reduce((sum, c) => sum + c.count, 0)}
-            active={activeCategory === "Все"}
-            onClick={() => onCategoryChange("Все")}
-          />
-          {categories.map(({ category, count }) => (
-            <CategoryChip
-              key={category}
-              label={category}
-              count={count}
-              active={activeCategory === category}
-              onClick={() => onCategoryChange(category)}
-            />
-          ))}
-        </div>
-      </div>
-
-      <div className="mt-4 flex flex-wrap items-center gap-4 border-t border-gray-100 pt-4">
-        <label
-          htmlFor={reviewedId}
-          className="blog-touch-target inline-flex cursor-pointer items-center gap-2 text-sm text-charcoal"
-        >
-          <input
-            id={reviewedId}
-            type="checkbox"
-            checked={reviewedOnly}
-            onChange={(event) => onReviewedOnlyChange(event.target.checked)}
-            className="h-4 w-4 rounded border-gray-300 text-sky focus:ring-sky/30"
-          />
-          Только вычитанные
-        </label>
+        {activeLabel ? (
+          <span className="inline-flex max-w-[14rem] truncate rounded-full border border-sky/20 bg-sky/5 px-2.5 py-1 text-xs font-medium text-sky">
+            {activeLabel}
+          </span>
+        ) : null}
         {onShowDraftsChange && draftCount > 0 ? (
           <label
             htmlFor={draftsId}
-            className="blog-touch-target inline-flex cursor-pointer items-center gap-2 text-sm text-charcoal"
+            className="ml-auto inline-flex cursor-pointer items-center gap-1.5 text-xs text-slate"
           >
             <input
               id={draftsId}
               type="checkbox"
               checked={showDrafts}
               onChange={(event) => onShowDraftsChange(event.target.checked)}
-              className="h-4 w-4 rounded border-gray-300 text-sky focus:ring-sky/30"
+              className="h-3.5 w-3.5 rounded border-gray-300 text-sky focus:ring-sky/30"
             />
-            Показать черновики ({draftCount.toLocaleString("ru-RU")})
+            Черновики ({draftCount})
           </label>
         ) : null}
       </div>
 
+      <div className="mt-3">
+        <div
+          className="-mx-0.5 flex gap-1.5 overflow-x-auto overscroll-x-contain px-0.5 pb-0.5 scrollbar-thin"
+          role="group"
+          aria-label="Категории"
+        >
+          <CategoryChip
+            label="Все"
+            count={totalCount}
+            active={activeCategory === "Все" && !activeTag}
+            onClick={() => {
+              onCategoryChange("Все");
+              onTagChange(null);
+            }}
+          />
+          {categories.map(({ category, count }) => (
+            <CategoryChip
+              key={category}
+              label={category}
+              count={count}
+              active={activeCategory === category && !activeTag}
+              onClick={() => {
+                onCategoryChange(category);
+                onTagChange(null);
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
       {tags.length > 0 ? (
-        <div className="mt-4 border-t border-gray-100 pt-4">
-          <p id={`${searchId}-tags`} className="text-xs font-semibold uppercase tracking-wider text-slate">
-            Популярные теги
-          </p>
-          <div className="mt-2 flex flex-wrap gap-1.5" role="group" aria-labelledby={`${searchId}-tags`}>
-            {tags.map((tag) => {
+        <div className="mt-2.5">
+          <div
+            className="-mx-0.5 flex gap-1 overflow-x-auto overscroll-x-contain px-0.5 pb-0.5 scrollbar-thin"
+            role="group"
+            aria-label="Популярные теги"
+          >
+            {tags.slice(0, 12).map((tag) => {
               const active = activeTag === tag;
               return (
                 <button
                   key={tag}
                   type="button"
-                  onClick={() => onTagChange(active ? null : tag)}
+                  onClick={() => {
+                    onTagChange(active ? null : tag);
+                    if (!active) onCategoryChange("Все");
+                  }}
                   aria-pressed={active}
                   className={cn(
-                    "blog-touch-target rounded-full px-3 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
+                    "shrink-0 rounded-md px-2 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
                     active
                       ? "bg-charcoal text-white"
-                      : "bg-surface-muted text-slate hover:bg-sky/10 hover:text-sky",
+                      : "bg-surface-muted/80 text-slate hover:bg-sky/10 hover:text-sky",
                   )}
                 >
                   #{tag}
@@ -182,12 +235,6 @@ export default function BlogSearchFilters({
           </div>
         </div>
       ) : null}
-
-      <p id={resultsId} className="mt-4 text-sm text-slate" aria-live="polite" aria-atomic="true">
-        {resultCount === 0
-          ? "Ничего не найдено — измените запрос или сбросьте фильтры"
-          : pluralizeArticles(resultCount)}
-      </p>
     </div>
   );
 }
@@ -209,17 +256,17 @@ function CategoryChip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "blog-touch-target inline-flex shrink-0 items-center gap-1.5 rounded-full border px-3 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
+        "inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
         active
-          ? "border-sky bg-sky text-white shadow-sm"
-          : "border-gray-200 bg-white text-charcoal hover:border-sky/30 hover:bg-sky/5",
+          ? "border-sky bg-sky text-white"
+          : "border-transparent bg-surface-muted/70 text-charcoal hover:bg-sky/8 hover:text-sky",
       )}
     >
-      <span className="max-w-[10rem] truncate sm:max-w-none">{label}</span>
+      <span className="max-w-[9rem] truncate sm:max-w-none">{label}</span>
       <span
         className={cn(
-          "rounded-full px-1.5 py-0.5 text-[10px] font-semibold tabular-nums",
-          active ? "bg-white/20 text-white" : "bg-surface-muted text-slate",
+          "rounded px-1 text-[10px] font-semibold tabular-nums",
+          active ? "bg-white/20 text-white" : "text-slate",
         )}
       >
         {count}

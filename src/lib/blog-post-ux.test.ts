@@ -6,7 +6,7 @@ import { planInlineRelatedSections } from "@/lib/blog-inline-related";
 import { resolveBlogAffiliateCards } from "@/lib/blog-affiliate-zones";
 import { resolveBlogPostDestinations } from "@/lib/blog-destinations";
 import { linkifyBlogText, getBlogInternalLinkRules } from "@/lib/blog-internal-links";
-import { getRelatedBlogPostsForSection } from "@/lib/blog-related-posts";
+import { getRelatedBlogPosts, getRelatedBlogPostsForSection } from "@/lib/blog-related-posts";
 import { getBlogTopicClusterSiblings, buildBlogTopicClusterItemListJsonLd } from "@/lib/blog-topic-cluster";
 import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
 import { localSavedArticlesStore } from "@/lib/saved-articles-store";
@@ -113,6 +113,11 @@ describe("section-aware related posts", () => {
     );
     expect(related.some((p) => p.slug === "patagonia-tips")).toBe(true);
   });
+
+  it("getRelatedBlogPosts works without section context", () => {
+    const related = getRelatedBlogPosts(catalog[0], catalog, 2);
+    expect(related.length).toBeGreaterThan(0);
+  });
 });
 
 describe("blog internal links", () => {
@@ -162,7 +167,8 @@ describe("blog topic cluster", () => {
     if (!sample) return;
     const jsonLd = buildBlogTopicClusterItemListJsonLd(sample, blogPosts);
     expect(jsonLd?.["@type"]).toBe("ItemList");
-    expect(jsonLd?.itemListElement?.length).toBeGreaterThan(0);
+    const items = jsonLd?.itemListElement;
+    expect(Array.isArray(items) ? items.length : 0).toBeGreaterThan(0);
   });
 });
 
@@ -404,5 +410,10 @@ describe("blog Phase 5", () => {
 
   it("detects linkifyable text", () => {
     expect(willLinkifyBlogText("Патагония — must see")).toBe(true);
+  });
+
+  it("BlogPostView includes comments section", () => {
+    const source = readFileSync(join(root, "components/blog/BlogPostView.tsx"), "utf8");
+    expect(source).toContain("BlogCommentsSection");
   });
 });

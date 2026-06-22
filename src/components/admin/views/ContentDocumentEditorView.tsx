@@ -814,6 +814,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               <BlogInternalLinksPreview
                 excerpt={excerpt}
                 sections={blogSections}
+                slug={doc?.slug}
               />
             ) : null}
 

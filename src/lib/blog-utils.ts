@@ -157,15 +157,6 @@ export function buildBlogQuickFacts(post: BlogPost): HubQuickFactItem[] {
     });
   }
 
-  if (post.editorialReviewed) {
-    facts.unshift({
-      emoji: "✓",
-      label: "Редакция",
-      headline: "Материал вычитан",
-      detail: "Проверен редакцией «Пора в Аргентину»",
-    });
-  }
-
   return facts.slice(0, 4);
 }
 

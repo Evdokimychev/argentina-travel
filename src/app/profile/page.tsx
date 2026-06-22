@@ -22,6 +22,7 @@ import {
   cabinetLinkClass,
   cabinetPanelClass,
 } from "@/lib/cabinet-ui";
+import { syncBlogReadingHistoryWithRemote } from "@/lib/blog-reading-history-sync";
 
 export default function ProfileDashboardPage() {
   const { user } = useAuth();
@@ -32,6 +33,11 @@ export default function ProfileDashboardPage() {
     reviewsCount: 0,
   });
   const [recentBookings, setRecentBookings] = useState<ReturnType<typeof getRecentBookings>>([]);
+
+  useEffect(() => {
+    if (!user) return;
+    void syncBlogReadingHistoryWithRemote();
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;

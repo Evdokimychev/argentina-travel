@@ -10,6 +10,7 @@ import BlogQuickFacts from "@/components/blog/BlogQuickFacts";
 import BlogShareBar from "@/components/blog/BlogShareBar";
 import BlogNewsletterBlock from "@/components/blog/BlogNewsletterBlock";
 import BlogArticleFeedback from "@/components/blog/BlogArticleFeedback";
+import BlogCommentsSection from "@/components/blog/BlogCommentsSection";
 import BlogEngagementCta from "@/components/blog/BlogEngagementCta";
 import BlogAffiliateZone from "@/components/blog/BlogAffiliateZone";
 import BlogDestinationGallery from "@/components/blog/BlogDestinationGallery";
@@ -208,6 +209,9 @@ export default function BlogPostView({
                 <BlogShareBar post={post} />
                 {!post.noIndex ? (
                   <BlogArticleFeedback slug={post.slug} title={post.title} />
+                ) : null}
+                {!post.noIndex ? (
+                  <BlogCommentsSection slug={post.slug} title={post.title} />
                 ) : null}
                 <BlogAuthorCard post={post} />
                 <BlogPostFooterLinks links={footerLinks} />

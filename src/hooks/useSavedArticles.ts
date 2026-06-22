@@ -35,7 +35,9 @@ export function useSavedArticles() {
   const isSaved = useCallback((slug: string) => store.isSaved(slug), [store]);
 
   const toggle = useCallback(
-    (post: Pick<BlogPost, "slug" | "title" | "category" | "image">) => {
+    (
+      post: Pick<BlogPost, "slug" | "title"> & Partial<Pick<BlogPost, "category" | "image">>,
+    ) => {
       const next = store.toggle(post);
       refresh();
       void syncSavedArticleToggle(

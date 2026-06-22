@@ -1292,6 +1292,150 @@ export interface Database {
         };
         Relationships: [];
       };
+      blog_reading_history: {
+        Row: {
+          id: string;
+          user_id: string;
+          article_slug: string;
+          article_title: string;
+          category: string | null;
+          read_at: string;
+        };
+        Insert: {
+          id?: string;
+          user_id: string;
+          article_slug: string;
+          article_title: string;
+          category?: string | null;
+          read_at?: string;
+        };
+        Update: {
+          id?: string;
+          user_id?: string;
+          article_slug?: string;
+          article_title?: string;
+          category?: string | null;
+          read_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "blog_reading_history_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      blog_article_comments: {
+        Row: {
+          id: string;
+          article_slug: string;
+          user_id: string;
+          body: string;
+          status: string;
+          parent_id: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          article_slug: string;
+          user_id: string;
+          body: string;
+          status?: string;
+          parent_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          article_slug?: string;
+          user_id?: string;
+          body?: string;
+          status?: string;
+          parent_id?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "blog_article_comments_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "blog_article_comments_parent_id_fkey";
+            columns: ["parent_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_article_comments";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      blog_comment_reports: {
+        Row: {
+          id: string;
+          comment_id: string;
+          reporter_user_id: string | null;
+          reason: string;
+          details: string | null;
+          status: string;
+          resolved_by: string | null;
+          resolved_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          comment_id: string;
+          reporter_user_id?: string | null;
+          reason: string;
+          details?: string | null;
+          status?: string;
+          resolved_by?: string | null;
+          resolved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          comment_id?: string;
+          reporter_user_id?: string | null;
+          reason?: string;
+          details?: string | null;
+          status?: string;
+          resolved_by?: string | null;
+          resolved_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "blog_comment_reports_comment_id_fkey";
+            columns: ["comment_id"];
+            isOneToOne: false;
+            referencedRelation: "blog_article_comments";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "blog_comment_reports_reporter_user_id_fkey";
+            columns: ["reporter_user_id"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "blog_comment_reports_resolved_by_fkey";
+            columns: ["resolved_by"];
+            isOneToOne: false;
+            referencedRelation: "profiles";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       newsletter_subscribers: {
         Row: {
           id: string;

@@ -32,7 +32,7 @@
 | Card imagery 3/2 | `BlogCard` standard | aspect 3/2 | ✅ Phase 2 |
 | Topic cluster nav | `BlogTopicClusterNav` + ItemList JSON-LD | Перелинковка хаба | ✅ Phase 3 |
 | Affiliate zones | `BlogAffiliateZone` | car-rental / insurance / esim | ✅ Phase 3 |
-| Reading history | `BlogReadingHistoryPanel` | localStorage в sidebar | ✅ Phase 3 |
+| Reading history | `BlogReadingHistoryPanel` | localStorage + Supabase sync | ✅ Phase 6 |
 | Save article | `useSavedArticles` + store interface | localStorage → будущий Supabase | ✅ Phase 3 (local-first) |
 
 ---
@@ -99,17 +99,31 @@
 
 ---
 
-## 7. Будущие интеграции (Phase 6+)
+## 7. Phase 6 — реализовано
 
-- Полноценные комментарии и модерация
-- Server-side analytics personalization (Metrika/GA4 import)
-- Partner affiliate SDK embeds (LocalRent и др.)
-- CMS AI suggestions pipeline
-- Reading history sync в Supabase
+| Функция | Файлы |
+|---------|-------|
+| Reading history Supabase sync | `supabase/migrations/20250628000000_blog_ux_phase6.sql`, `lib/blog-reading-history-server.ts`, `lib/blog-reading-history-sync.ts`, `app/api/blog/reading-history/route.ts`, `BlogReadingHistoryRecorder.tsx`, `app/profile/page.tsx` |
+| Комментарии + модерация | `blog_article_comments`, `blog_comment_reports`, `lib/blog-comments-server.ts`, `lib/blog-comments-types.ts`, `app/api/blog/comments/*`, `BlogCommentsSection.tsx` |
+| Server-side analytics personalization | `lib/blog-analytics-signals.ts`, `getServerPersonalizedBlogPosts`, `app/blog/page.tsx`, `app/api/blog/recommendations/route.ts`; stub `BLOG_ANALYTICS_IMPORT_ENABLED` для Metrika/GA4 |
+| Partner affiliate SDK embeds | `lib/blog-affiliate-embeds.ts`, `BlogAffiliateEmbed.tsx`, `BlogAffiliateZone.tsx`, env `NEXT_PUBLIC_LOCALRENT_EMBED_URL`, GTM `blog_affiliate_embed_view` |
+| CMS AI suggestions pipeline | `lib/blog-ai-link-suggestions.ts`, `app/api/cms/blog/link-suggestions/route.ts`, `BlogInternalLinksPreview.tsx` (раздел «AI-подсказки») |
+
+Тесты: `src/lib/blog-post-ux.test.ts`, `src/lib/blog-phase6.test.ts`.
 
 ---
 
-## 8. Метрики успеха (рекомендация)
+## 8. Будущие интеграции (Phase 7+)
+
+- Админ-UI очереди модерации комментариев блога (сейчас RLS + reports, без отдельной страницы)
+- Полный импорт Metrika/GA4 в `blog-analytics-signals` (env `BLOG_ANALYTICS_IMPORT_ENABLED`)
+- Дополнительные partner embeds (страховка, eSIM) по аналогии с LocalRent
+- OpenAI-подсказки: кэширование и batch для длинных статей
+- Reading history в ЛК туриста (отдельная вкладка профиля)
+
+---
+
+## 9. Метрики успеха (рекомендация)
 
 - CTR на `BlogEngagementCta`, affiliate zones и tour links
 - Конверсия `BlogNewsletterBlock`
@@ -118,9 +132,9 @@
 
 ---
 
-## 9. Связанные части проекта
+## 10. Связанные части проекта
 
-- **Турист:** saved articles → `/profile/favorites` (stub link); будущая синхронизация ЛК
+- **Турист:** saved articles + reading history sync; комментарии к статьям (auth); `/profile/favorites`
 - **Организатор:** live tours на index → marketplace
-- **Админ/CMS:** `relatedDestinations` на `BlogPost`; Phase 3 linking → preview в CMS
-- **Аналитика:** GTM-события save, affiliate, inline related, article view — настроить триггеры в GTM
+- **Админ/CMS:** AI-подсказки перелинковки; модерация комментариев через RLS (`marketplace.moderation`)
+- **Аналитика:** GTM save, affiliate, embed view, comment post, article view — триггеры в GTM

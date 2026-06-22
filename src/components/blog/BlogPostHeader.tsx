@@ -40,11 +40,6 @@ export default function BlogPostHeader({ post, breadcrumbs, className }: BlogPos
                       Полный гид
                     </span>
                   ) : null}
-                  {post.editorialReviewed ? (
-                    <span className="inline-flex rounded-full bg-success px-3 py-1 text-xs font-semibold uppercase tracking-wider text-white">
-                      Вычитано
-                    </span>
-                  ) : null}
                 </div>
                 <h1
                   data-speakable="headline"

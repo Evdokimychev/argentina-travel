@@ -1,11 +1,14 @@
+import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
-import { getPersonalizedBlogPosts } from "@/lib/blog-personalized";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import type { BlogReadingHistoryEntry } from "@/lib/blog-reading-history";
 
 type RecommendationsBody = {
-  history?: Array<{ slug: string; title: string; category?: string }>;
+  history?: Array<{ slug: string; title: string; category?: string; readAt?: string }>;
   limit?: number;
 };
 
@@ -20,10 +23,25 @@ export async function POST(request: Request) {
       slug: entry.slug,
       title: entry.title,
       category: entry.category,
-      readAt: new Date().toISOString(),
+      readAt: entry.readAt ?? new Date().toISOString(),
     }));
 
-    const posts = getPersonalizedBlogPosts(catalog, history, limit);
+    let posts: typeof catalog = [];
+
+    if (isSupabaseAuthEnabled()) {
+      const supabase = await createSupabaseServerClient();
+      const sessionUser = await loadSessionUserFromSupabase(supabase);
+      posts = await getServerPersonalizedBlogPosts(
+        supabase,
+        catalog,
+        history,
+        sessionUser?.id ?? null,
+        limit,
+      );
+    } else {
+      const { getPersonalizedBlogPosts } = await import("@/lib/blog-personalized");
+      posts = getPersonalizedBlogPosts(catalog, history, limit);
+    }
 
     return Response.json({
       posts: posts.map((post) => ({

@@ -41,6 +41,7 @@
     "fetch-stock-media": "node scripts/fetch-stock-media.mjs",
     "audit-images": "node scripts/audit-images.mjs",
     "audit-blog-heroes": "node scripts/audit-blog-heroes.mjs",
+    "sync:blog-semantic-heroes": "tsx scripts/sync-blog-semantic-heroes.ts",
     "warm-image-cache": "node scripts/warm-image-cache.mjs",
     "page-image-audit": "node scripts/page-image-audit.mjs",
     "blog-image-perf-audit": "node scripts/blog-image-perf-audit.mjs",

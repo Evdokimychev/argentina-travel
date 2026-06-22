@@ -6,7 +6,6 @@ import HubHero from "@/components/guide/hub/HubHero";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogEditorialHubs from "@/components/blog/BlogEditorialHubs";
 import BlogEmptyCatalogState from "@/components/blog/BlogEmptyCatalogState";
-import BlogHeroSearch from "@/components/blog/BlogHeroSearch";
 import BlogHeroVariantCopy from "@/components/blog/BlogHeroVariantCopy";
 import BlogPersonalizedPosts from "@/components/blog/BlogPersonalizedPosts";
 import BlogRecentlyUpdated from "@/components/blog/BlogRecentlyUpdated";
@@ -53,9 +52,9 @@ function BlogIndexViewContent({
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
   const [activeTag, setActiveTag] = useState<string | null>(null);
-  const [reviewedOnly, setReviewedOnly] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const catalogRef = useRef<HTMLElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
 
   const catalogPosts = useMemo(
     () => filterIndexableBlogPosts(sortBlogPostsByDate(posts?.length ? posts : blogPosts)),
@@ -79,21 +78,16 @@ function BlogIndexViewContent({
     [indexableCatalog],
   );
 
-  const hasActiveFilters = Boolean(
-    query.trim() || activeCategory !== "Все" || activeTag || reviewedOnly,
-  );
+  const hasActiveFilters = Boolean(query.trim() || activeCategory !== "Все" || activeTag);
 
   const filteredPosts = useMemo(() => {
-    let result = filterBlogPosts(catalogPosts, {
+    const result = filterBlogPosts(catalogPosts, {
       query,
       category: activeCategory,
       tag: activeTag,
     });
-    if (reviewedOnly) {
-      result = result.filter((post) => post.editorialReviewed || Boolean(post.richArticleId));
-    }
     return sortBlogPostsByDate(result);
-  }, [catalogPosts, query, activeCategory, activeTag, reviewedOnly]);
+  }, [catalogPosts, query, activeCategory, activeTag]);
 
   const displayedPosts = filteredPosts.slice(0, visibleCount);
   const hasMore = visibleCount < filteredPosts.length;
@@ -101,13 +95,13 @@ function BlogIndexViewContent({
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [query, activeCategory, activeTag, reviewedOnly]);
+  }, [query, activeCategory, activeTag]);
 
   useEffect(() => {
     const tagFromUrl = searchParams.get("tag")?.trim();
     if (tagFromUrl) {
       setActiveTag(tagFromUrl);
-      catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [searchParams]);
 
@@ -116,7 +110,7 @@ function BlogIndexViewContent({
     if (categoryFromUrl) {
       setActiveCategory(categoryFromUrl);
       setActiveTag(null);
-      catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [searchParams]);
 
@@ -152,13 +146,67 @@ function BlogIndexViewContent({
     setQuery("");
     setActiveCategory("Все");
     setActiveTag(null);
-    setReviewedOnly(false);
     syncTagInUrl(null);
     syncCategoryInUrl("Все");
   }
 
-  function scrollToCatalog() {
-    catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  function scrollToResults() {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  function renderCatalogResults(showHeading: boolean, className?: string) {
+    featuredUsed.value = false;
+
+    return (
+      <div
+        ref={resultsRef}
+        id="blog-results"
+        className={cn("scroll-mt-24", className)}
+      >
+        {showHeading ? (
+          <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
+            Все статьи
+          </h2>
+        ) : null}
+
+        {displayedPosts.length > 0 ? (
+          <ul className={cn("grid gap-4 sm:grid-cols-2 sm:gap-5", showHeading ? "mt-5" : "mt-0")}>
+            {displayedPosts.map((post, index) => {
+              const variant = resolveBlogCardVariant(post, index, featuredUsed);
+              return (
+                <li
+                  key={post.id}
+                  className={variant === "featured" ? "sm:col-span-2" : undefined}
+                >
+                  <BlogCard
+                    post={post}
+                    variant={variant}
+                    priority={index === 0 && variant === "featured"}
+                  />
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <BlogEmptyCatalogState onReset={resetFilters} className={showHeading ? "mt-5" : undefined} />
+        )}
+
+        {hasMore ? (
+          <div className="mt-8 flex flex-col items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
+              className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-8")}
+            >
+              Показать ещё {Math.min(PAGE_SIZE, filteredPosts.length - visibleCount)}
+            </button>
+            <p className="text-xs text-slate">
+              Показано {displayedPosts.length} из {filteredPosts.length}
+            </p>
+          </div>
+        ) : null}
+      </div>
+    );
   }
 
   return (
@@ -178,19 +226,12 @@ function BlogIndexViewContent({
               variant === "b"
                 ? [
                     { label: copy.primaryCta, href: "/podbor", variant: "primary" as const },
-                    { label: copy.secondaryCta, href: "/blog#blog-catalog", variant: "secondary" as const },
+                    { label: copy.secondaryCta, href: "/blog#blog-search", variant: "secondary" as const },
                   ]
                 : [
                     { label: copy.secondaryCta, href: "/guide", variant: "secondary" as const },
                     { label: copy.primaryCta, href: "/places", variant: "primary" as const },
                   ]
-            }
-            searchSlot={
-              <BlogHeroSearch
-                value={query}
-                onChange={setQuery}
-                onSubmit={scrollToCatalog}
-              />
             }
           />
         )}
@@ -205,14 +246,29 @@ function BlogIndexViewContent({
             ]}
           />
 
-          <BlogStatsOverview
-            stats={stats}
-            editorialCount={editorialPosts.length}
-            className="mt-8"
+          <BlogSearchFilters
+            variant="spotlight"
+            query={query}
+            onQueryChange={setQuery}
+            categories={categoriesWithCounts}
+            activeCategory={activeCategory}
+            onCategoryChange={handleCategoryChange}
+            tags={tags}
+            activeTag={activeTag}
+            onTagChange={handleTagChange}
+            resultCount={filteredPosts.length}
+            onReset={resetFilters}
           />
+
+          {hasActiveFilters ? renderCatalogResults(false, "mt-6") : null}
 
           {!hasActiveFilters ? (
             <>
+              <BlogStatsOverview
+                stats={stats}
+                editorialCount={editorialPosts.length}
+                className="mt-8"
+              />
               <BlogStartHere posts={editorialPosts} className="mt-10" />
               <BlogPersonalizedPosts
                 catalog={indexableCatalog}
@@ -229,83 +285,35 @@ function BlogIndexViewContent({
                 activeCategory={activeCategory}
                 onCategorySelect={(category) => {
                   handleCategoryChange(category);
-                  catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  scrollToResults();
                 }}
                 className="mt-10"
               />
             </>
           ) : null}
 
-          <div className="mt-10 lg:flex lg:items-start lg:gap-8 xl:gap-10">
-            <div className="min-w-0 flex-1">
-              <section ref={catalogRef} id="blog-catalog" className="scroll-mt-24">
-                <BlogSearchFilters
-                  query={query}
-                  onQueryChange={setQuery}
-                  categories={categoriesWithCounts}
-                  activeCategory={activeCategory}
-                  onCategoryChange={handleCategoryChange}
-                  tags={tags}
-                  activeTag={activeTag}
-                  onTagChange={handleTagChange}
-                  reviewedOnly={reviewedOnly}
-                  onReviewedOnlyChange={setReviewedOnly}
-                  resultCount={filteredPosts.length}
-                  onReset={resetFilters}
-                />
+          {!hasActiveFilters ? (
+            <div className="mt-10 lg:flex lg:items-start lg:gap-8 xl:gap-10">
+              <div className="min-w-0 flex-1">
+                <section ref={catalogRef} id="blog-catalog" className="scroll-mt-24">
+                  {renderCatalogResults(true)}
+                </section>
 
-                {displayedPosts.length > 0 ? (
-                  <ul className="mt-6 grid gap-4 sm:grid-cols-2 sm:gap-5">
-                    {displayedPosts.map((post, index) => {
-                      const variant = resolveBlogCardVariant(post, index, featuredUsed);
-                      return (
-                        <li
-                          key={post.id}
-                          className={variant === "featured" ? "sm:col-span-2" : undefined}
-                        >
-                          <BlogCard
-                            post={post}
-                            variant={variant}
-                            priority={index === 0 && variant === "featured"}
-                          />
-                        </li>
-                      );
-                    })}
+                <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-5 shadow-card xl:hidden">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-slate">Недавние</h2>
+                  <ul className="mt-3 space-y-1">
+                    {freshPosts.map((post) => (
+                      <li key={post.id}>
+                        <BlogCard post={post} variant="compact" />
+                      </li>
+                    ))}
                   </ul>
-                ) : (
-                  <BlogEmptyCatalogState onReset={resetFilters} />
-                )}
+                </section>
+              </div>
 
-                {hasMore ? (
-                  <div className="mt-8 flex flex-col items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
-                      className={cn(buttonVariants({ variant: "outline" }), "rounded-full px-8")}
-                    >
-                      Показать ещё {Math.min(PAGE_SIZE, filteredPosts.length - visibleCount)}
-                    </button>
-                    <p className="text-xs text-slate">
-                      Показано {displayedPosts.length} из {filteredPosts.length}
-                    </p>
-                  </div>
-                ) : null}
-              </section>
-
-              <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-5 shadow-card xl:hidden">
-                <h2 className="text-xs font-semibold uppercase tracking-wider text-slate">Недавние</h2>
-                <ul className="mt-3 space-y-1">
-                  {freshPosts.map((post) => (
-                    <li key={post.id}>
-                      <BlogCard post={post} variant="compact" />
-                    </li>
-                  ))}
-                </ul>
-              </section>
+              <BlogSidebar freshPosts={freshPosts} />
             </div>
-
-            <BlogSidebar freshPosts={freshPosts} />
-          </div>
+          ) : null}
         </div>
       </div>
     </>
