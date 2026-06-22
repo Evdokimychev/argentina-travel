@@ -11,8 +11,9 @@ import {
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
 import { navOverflowTriggerClassName } from "@/components/navigation/nav-mega-menu-trigger-styles";
 import { getSiteNavSectionIcon } from "@/data/site-nav-mobile";
+import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import { cn } from "@/lib/cn";
-import { isNavSectionActive, navSectionLabel } from "@/lib/site-nav";
+import { getActiveNavSectionId, isNavSectionActive, navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
@@ -69,7 +70,7 @@ function OverflowMegaMenuPanel({
           {sections.map((section) => {
             const selected = section.id === activeSection.id;
             const label = navSectionLabel(section, t);
-            const sectionActive = isNavSectionActive(pathname, section);
+            const sectionActive = isNavSectionActive(pathname, section, SITE_NAV_SECTIONS);
             const Icon = getSiteNavSectionIcon(section.id);
 
             return (
@@ -183,7 +184,9 @@ export function NavOverflowMegaMenuTrigger({
 
   useEffect(() => {
     if (!open) return;
-    const activeSection = sections.find((section) => isNavSectionActive(pathname, section));
+    const activeSection = sections.find(
+      (section) => getActiveNavSectionId(pathname, SITE_NAV_SECTIONS) === section.id,
+    );
     setActiveSectionId(activeSection?.id ?? sections[0]?.id ?? "");
   }, [open, pathname, sections]);
 

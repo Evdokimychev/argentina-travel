@@ -1,5 +1,5 @@
 export const contentFigureShellClass =
-  "mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100";
+  "relative mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100";
 
 export const CONTENT_FIGURE_SIZES = "(max-width: 768px) 100vw, 720px";
 export const CONTENT_FIGURE_FALLBACK_WIDTH = 1200;

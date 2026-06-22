@@ -35,6 +35,7 @@ const BASE_URL = (process.env.LIGHTHOUSE_BASE_URL ?? "http://127.0.0.1:3000").re
 const SAMPLE_PATHS = (process.env.LIGHTHOUSE_SAMPLE_PATHS?.split(",").map((p) => p.trim()).filter(Boolean) ??
   [
     "/blog",
+    "/blog/authors",
     "/blog/hub/patagonia",
     "/blog/patagonia-packing-list",
     "/blog/argentinian-steak-guide",

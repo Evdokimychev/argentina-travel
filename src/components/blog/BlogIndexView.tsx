@@ -6,6 +6,13 @@ import HubHero from "@/components/guide/hub/HubHero";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogEditorialHubs from "@/components/blog/BlogEditorialHubs";
 import BlogEmptyCatalogState from "@/components/blog/BlogEmptyCatalogState";
+import BlogHeroSearch from "@/components/blog/BlogHeroSearch";
+import BlogHeroVariantCopy from "@/components/blog/BlogHeroVariantCopy";
+import BlogPersonalizedPosts from "@/components/blog/BlogPersonalizedPosts";
+import BlogRecentlyUpdated from "@/components/blog/BlogRecentlyUpdated";
+import BlogRecommendedTours from "@/components/blog/BlogRecommendedTours";
+import BlogTrendingDestinations from "@/components/blog/BlogTrendingDestinations";
+import BlogPopularRoutes from "@/components/blog/BlogPopularRoutes";
 import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogStartHere from "@/components/blog/BlogStartHere";
@@ -26,34 +33,34 @@ import { buttonVariants } from "@/components/ui/button";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
-import type { BlogPost } from "@/types";
+import type { BlogPost, TourListing } from "@/types";
 
 const PAGE_SIZE = 12;
 
 type BlogIndexViewProps = {
   posts?: BlogPost[];
+  initialTours?: TourListing[];
+  initialPersonalizedPosts?: BlogPost[];
 };
 
-function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
+function BlogIndexViewContent({
+  posts,
+  initialTours = [],
+  initialPersonalizedPosts = [],
+}: BlogIndexViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Все");
   const [activeTag, setActiveTag] = useState<string | null>(null);
   const [reviewedOnly, setReviewedOnly] = useState(false);
-  const [showDrafts, setShowDrafts] = useState(false);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const catalogRef = useRef<HTMLElement>(null);
 
-  const allCatalogPosts = useMemo(
-    () => sortBlogPostsByDate(posts?.length ? posts : blogPosts),
+  const catalogPosts = useMemo(
+    () => filterIndexableBlogPosts(sortBlogPostsByDate(posts?.length ? posts : blogPosts)),
     [posts],
   );
-
-  const catalogPosts = useMemo(() => {
-    if (showDrafts) return allCatalogPosts;
-    return filterIndexableBlogPosts(allCatalogPosts);
-  }, [allCatalogPosts, showDrafts]);
 
   const indexableCatalog = useMemo(
     () => filterIndexableBlogPosts(catalogPosts),
@@ -66,7 +73,7 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
     [indexableCatalog],
   );
   const tags = useMemo(() => getTopBlogTags(indexableCatalog, 14), [indexableCatalog]);
-  const stats = useMemo(() => computeBlogStats(allCatalogPosts), [allCatalogPosts]);
+  const stats = useMemo(() => computeBlogStats(catalogPosts), [catalogPosts]);
   const freshPosts = useMemo(
     () => sortBlogPostsByDate(indexableCatalog).slice(0, 4),
     [indexableCatalog],
@@ -94,12 +101,21 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
 
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
-  }, [query, activeCategory, activeTag, reviewedOnly, showDrafts]);
+  }, [query, activeCategory, activeTag, reviewedOnly]);
 
   useEffect(() => {
     const tagFromUrl = searchParams.get("tag")?.trim();
     if (tagFromUrl) {
       setActiveTag(tagFromUrl);
+      catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
+    const categoryFromUrl = searchParams.get("category")?.trim();
+    if (categoryFromUrl) {
+      setActiveCategory(categoryFromUrl);
+      setActiveTag(null);
       catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }, [searchParams]);
@@ -110,6 +126,21 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
     else params.delete("tag");
     const qs = params.toString();
     router.replace(qs ? `/blog?${qs}` : "/blog", { scroll: false });
+  }
+
+  function syncCategoryInUrl(category: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    if (category !== "Все") params.set("category", category);
+    else params.delete("category");
+    params.delete("tag");
+    const qs = params.toString();
+    router.replace(qs ? `/blog?${qs}` : "/blog", { scroll: false });
+  }
+
+  function handleCategoryChange(category: string) {
+    setActiveCategory(category);
+    handleTagChange(null);
+    syncCategoryInUrl(category);
   }
 
   function handleTagChange(tag: string | null) {
@@ -123,20 +154,47 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
     setActiveTag(null);
     setReviewedOnly(false);
     syncTagInUrl(null);
+    syncCategoryInUrl("Все");
+  }
+
+  function scrollToCatalog() {
+    catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   return (
     <>
-      <HubHero
-        title="Блог о путешествиях"
-        subtitle={`${stats.indexablePosts.toLocaleString("ru-RU")} материалов в поиске${stats.draftPosts > 0 ? ` и ${stats.draftPosts.toLocaleString("ru-RU")} в доработке` : ""} — от Патагонии и Игуасу до денег, въезда и районов Буэнос-Айреса. Начните с редакционных материалов или выберите тему ниже.`}
-        image={getServicePageHeroImage("blog-index")}
-        eyebrow={{ label: "Журнал", href: "/blog" }}
-        ctas={[
-          { label: "Путеводитель", href: "/guide", variant: "secondary" },
-          { label: "Справочник мест", href: "/places", variant: "primary" },
-        ]}
-      />
+      <BlogHeroVariantCopy>
+        {(variant, copy) => (
+          <HubHero
+            title="Блог о путешествиях"
+            subtitle={
+              variant === "b"
+                ? copy.subtitle
+                : `${stats.indexablePosts.toLocaleString("ru-RU")} проверенных материалов — ${copy.subtitle}`
+            }
+            image={getServicePageHeroImage("blog-index")}
+            eyebrow={{ label: "Журнал", href: "/blog" }}
+            ctas={
+              variant === "b"
+                ? [
+                    { label: copy.primaryCta, href: "/podbor", variant: "primary" as const },
+                    { label: copy.secondaryCta, href: "/blog#blog-catalog", variant: "secondary" as const },
+                  ]
+                : [
+                    { label: copy.secondaryCta, href: "/guide", variant: "secondary" as const },
+                    { label: copy.primaryCta, href: "/places", variant: "primary" as const },
+                  ]
+            }
+            searchSlot={
+              <BlogHeroSearch
+                value={query}
+                onChange={setQuery}
+                onSubmit={scrollToCatalog}
+              />
+            }
+          />
+        )}
+      </BlogHeroVariantCopy>
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-10")}>
@@ -156,13 +214,21 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
           {!hasActiveFilters ? (
             <>
               <BlogStartHere posts={editorialPosts} className="mt-10" />
+              <BlogPersonalizedPosts
+                catalog={indexableCatalog}
+                initialPosts={initialPersonalizedPosts}
+                className="mt-10"
+              />
+              <BlogRecentlyUpdated posts={indexableCatalog} className="mt-10" />
+              <BlogTrendingDestinations className="mt-10" />
+              <BlogPopularRoutes className="mt-10" />
               <BlogEditorialHubs posts={indexableCatalog} className="mt-10" />
+              <BlogRecommendedTours className="mt-10" initialTours={initialTours} />
               <BlogTopicHubs
                 categories={categoriesWithCounts}
                 activeCategory={activeCategory}
                 onCategorySelect={(category) => {
-                  setActiveCategory(category);
-                  handleTagChange(null);
+                  handleCategoryChange(category);
                   catalogRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }}
                 className="mt-10"
@@ -178,18 +244,12 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
                   onQueryChange={setQuery}
                   categories={categoriesWithCounts}
                   activeCategory={activeCategory}
-                  onCategoryChange={(cat) => {
-                    setActiveCategory(cat);
-                    handleTagChange(null);
-                  }}
+                  onCategoryChange={handleCategoryChange}
                   tags={tags}
                   activeTag={activeTag}
                   onTagChange={handleTagChange}
                   reviewedOnly={reviewedOnly}
                   onReviewedOnlyChange={setReviewedOnly}
-                  showDrafts={showDrafts}
-                  onShowDraftsChange={setShowDrafts}
-                  draftCount={stats.draftPosts}
                   resultCount={filteredPosts.length}
                   onReset={resetFilters}
                 />

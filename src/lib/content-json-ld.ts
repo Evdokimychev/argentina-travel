@@ -8,6 +8,7 @@ import {
   buildFaqPageSchema,
   buildTouristDestinationSchema,
 } from "@/lib/schema-json-ld";
+import { BLOG_EDITORIAL } from "@/data/blog-author";
 import { getBlogUpdatedDate } from "@/lib/blog-utils";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
@@ -75,6 +76,7 @@ export function buildBlogArticleJsonLd(post: BlogPost) {
     datePublished: post.date,
     dateModified: getBlogUpdatedDate(post),
     authorName: post.author,
+    authorAvatar: post.authorAvatar ?? BLOG_EDITORIAL.avatar,
   });
 }
 

@@ -1,5 +1,6 @@
 import type { BlogPost } from "@/types";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
+import type { BlogPostSection } from "@/types";
 
 export type ArticleMapPoint = {
   id: string;
@@ -19,9 +20,17 @@ export function extractArticleMapPoints(post: BlogPost): ArticleMapPoint[] {
   const points: ArticleMapPoint[] = [];
 
   for (const section of post.sections ?? []) {
-    for (const block of section.blocks ?? []) {
-      extractFromBlock(block, points);
-    }
+    points.push(...extractSectionMapPoints(section));
+  }
+
+  return points;
+}
+
+export function extractSectionMapPoints(section: BlogPostSection): ArticleMapPoint[] {
+  const points: ArticleMapPoint[] = [];
+
+  for (const block of section.blocks ?? []) {
+    extractFromBlock(block, points);
   }
 
   return points;

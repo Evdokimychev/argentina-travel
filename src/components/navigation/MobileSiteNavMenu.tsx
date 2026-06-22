@@ -10,6 +10,7 @@ import {
   Home,
 } from "lucide-react";
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import {
   buildMobileNavGroups,
   getSiteNavSectionIcon,
@@ -224,7 +225,7 @@ function MobileNavSectionRow({
 }) {
   const label = navSectionLabel(section, t);
   const Icon = getSiteNavSectionIcon(section.id);
-  const active = isNavSectionActive(pathname, section);
+  const active = isNavSectionActive(pathname, section, SITE_NAV_SECTIONS);
   const hasColumns = (section.columns?.length ?? 0) > 0;
 
   const rowClass = cn(

@@ -33,20 +33,98 @@ export function isNavHrefActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function isNavSectionActive(pathname: string, section: SiteNavSection): boolean {
-  if (section.href && isNavHrefActive(pathname, section.href)) return true;
+/** Primary catalog hubs — cross-linked from other mega-menu columns. */
+const NAV_PRIMARY_HUB_PATHS = new Set([
+  "/tours",
+  "/excursions",
+  "/destinations",
+  "/blog",
+  "/guide",
+  "/immigration",
+]);
 
-  if (
-    section.activePathPrefixes?.some(
-      (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
-    )
-  ) {
-    return true;
+function navLinkPathname(href: string): string {
+  const path = href.split("?")[0]?.split("#")[0] ?? href;
+  return path || href;
+}
+
+function sectionPrefixMatchScore(pathname: string, section: SiteNavSection): number {
+  let best = 0;
+
+  for (const prefix of section.activePathPrefixes ?? []) {
+    if (pathname === prefix || pathname.startsWith(`${prefix}/`)) {
+      best = Math.max(best, 800 + prefix.length);
+    }
   }
 
-  return (section.columns ?? []).some((column) =>
-    column.links.some((link) => isNavHrefActive(pathname, link.href))
+  if (section.href && isNavHrefActive(pathname, section.href)) {
+    best = Math.max(best, 700 + navLinkPathname(section.href).length);
+  }
+
+  return best;
+}
+
+function sectionColumnMatchScore(pathname: string, section: SiteNavSection): number {
+  const sectionHub = section.href ? navLinkPathname(section.href) : null;
+  let best = 0;
+
+  for (const column of section.columns ?? []) {
+    for (const link of column.links) {
+      if (!isNavHrefActive(pathname, link.href)) continue;
+
+      const linkPath = navLinkPathname(link.href);
+      const isCrossListedHub =
+        NAV_PRIMARY_HUB_PATHS.has(linkPath) && linkPath !== sectionHub;
+
+      if (isCrossListedHub) continue;
+
+      best = Math.max(best, 300 + linkPath.length);
+    }
+  }
+
+  return best;
+}
+
+function sectionMatchScore(pathname: string, section: SiteNavSection): number {
+  return Math.max(
+    sectionPrefixMatchScore(pathname, section),
+    sectionColumnMatchScore(pathname, section),
   );
+}
+
+/** Returns the single best-matching nav section for a pathname. */
+export function getActiveNavSectionId(
+  pathname: string,
+  sections: SiteNavSection[],
+): string | null {
+  let winner: { id: string; score: number } | null = null;
+
+  for (const section of sections) {
+    const score = sectionMatchScore(pathname, section);
+    if (score <= 0) continue;
+    if (!winner || score > winner.score) {
+      winner = { id: section.id, score };
+    }
+  }
+
+  return winner?.id ?? null;
+}
+
+export function isNavSectionActive(
+  pathname: string,
+  section: SiteNavSection,
+  sections?: SiteNavSection[],
+): boolean {
+  if (sections) {
+    return getActiveNavSectionId(pathname, sections) === section.id;
+  }
+
+  const score = sectionMatchScore(pathname, section);
+  if (score <= 0) return false;
+
+  // Without the full section list, only treat prefix/hub matches as active.
+  // Column matches can be ambiguous when sections cross-link catalog hubs.
+  return score >= 700;
 }
 
 export function flattenSiteNavSections(sections: SiteNavSection[]): FlatSiteNavLink[] {

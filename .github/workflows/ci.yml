@@ -76,5 +76,6 @@ jobs:
       - name: Lighthouse blog CWV
         env:
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
-          LIGHTHOUSE_SAMPLE_PATHS: /blog,/blog/patagonia-packing-list,/blog/natsionalnyy-park-iguasu
+          LIGHTHOUSE_CATEGORIES: performance,accessibility
+          LIGHTHOUSE_SAMPLE_PATHS: /blog,/blog/authors,/blog/hub/patagonia,/blog/patagonia-packing-list,/blog/natsionalnyy-park-iguasu
         run: node scripts/lighthouse-ci.mjs

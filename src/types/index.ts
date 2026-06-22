@@ -520,6 +520,8 @@ export interface BlogPost {
   /** Канонический slug для дубликата Класса B → pillar */
   canonicalSlug?: string;
   relatedResources?: BlogRelatedResource[];
+  /** Идентификаторы направлений (см. POPULAR_DESTINATIONS) для галереи */
+  relatedDestinations?: string[];
   /** Встраиваемые виджеты туров в теле статьи */
   tourEmbeds?: import("@/types/tour-embed").TourEmbedConfig[];
   /** Идентификатор богатой редакторской вёрстки (см. data/blog-articles) */

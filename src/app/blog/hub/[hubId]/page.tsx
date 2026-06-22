@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import BlogHubView from "@/components/blog/BlogHubView";
 import { getAllBlogHubIds, getBlogHubById, blogHubPath } from "@/data/blog-hubs";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -36,7 +37,10 @@ export default async function BlogHubPage({ params }: BlogHubPageProps) {
   if (!hub) notFound();
 
   const locale = await getServerI18nLocale();
-  const posts = await resolveBlogCatalog(locale);
+  const [posts, initialTours] = await Promise.all([
+    resolveBlogCatalog(locale),
+    fetchMarketplaceTours(),
+  ]);
 
-  return <BlogHubView hub={hub} posts={posts} />;
+  return <BlogHubView hub={hub} posts={posts} initialTours={initialTours} />;
 }

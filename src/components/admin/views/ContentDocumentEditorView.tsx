@@ -31,6 +31,7 @@ import { parseCmsDocumentId } from "@/types/cms-content";
 import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
 import CmsSectionEditor from "@/components/admin/cms/CmsSectionEditor";
 import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
+import BlogInternalLinksPreview from "@/components/admin/cms/BlogInternalLinksPreview";
 import GuideSectionPageBuilder from "@/components/admin/page-builder/GuideSectionPageBuilder";
 import { stageCmsDocumentPreviewDraft } from "@/lib/cms/cms-preview";
 import {
@@ -84,6 +85,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [excerpt, setExcerpt] = useState("");
   const [blogSections, setBlogSections] = useState<BlogPostSection[]>([]);
   const [blogFeatured, setBlogFeatured] = useState(false);
+  const [blogRelatedDestinations, setBlogRelatedDestinations] = useState("");
   const [destinationIntro, setDestinationIntro] = useState("");
   const [destinationRegionGroup, setDestinationRegionGroup] = useState("");
   const [destinationBestSeason, setDestinationBestSeason] = useState("");
@@ -157,6 +159,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       } else if (document.body.kind === "blog") {
         setExcerpt(document.body.excerpt ?? "");
         setBlogFeatured(document.body.featured ?? false);
+        setBlogRelatedDestinations((document.body.relatedDestinations ?? []).join(", "));
         setBlogSections(
           document.body.sections ?? [
             { title: "Основной текст", body: document.body.content ?? "", blocks: [] },
@@ -231,6 +234,10 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         excerpt: excerpt.trim(),
         sections: blogSections,
         featured: blogFeatured,
+        relatedDestinations: blogRelatedDestinations
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean),
       };
     }
     if (doc?.body.kind === "author_article") {
@@ -305,6 +312,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     );
   }, [
     blogSections,
+    blogFeatured,
+    blogRelatedDestinations,
     description,
     destinationBestSeason,
     destinationHighlights,
@@ -733,6 +742,20 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
             ) : null}
 
             {isBlog ? (
+              <label className="block space-y-1 text-sm">
+                <span className="text-slate">Связанные направления (id через запятую)</span>
+                <Input
+                  value={blogRelatedDestinations}
+                  onChange={(e) => setBlogRelatedDestinations(e.target.value)}
+                  placeholder="patagonia, ba, iguazu"
+                />
+                <span className="text-xs text-slate">
+                  Идентификаторы из каталога направлений — для галереи в статье
+                </span>
+              </label>
+            ) : null}
+
+            {isBlog ? (
               <label className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm text-charcoal">
                 <input
                   type="checkbox"
@@ -787,6 +810,13 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           </section>
 
           <aside className="space-y-4">
+            {isBlogLike ? (
+              <BlogInternalLinksPreview
+                excerpt={excerpt}
+                sections={blogSections}
+              />
+            ) : null}
+
             <section className={`${cabinetCardClass} p-4 text-sm`}>
               <Link href="/admin/content/documents" className="text-sky hover:underline">
                 ← К списку документов

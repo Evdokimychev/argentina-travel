@@ -5,6 +5,7 @@ import BlogChecklist from "@/components/blog/BlogChecklist";
 import BlogContentTable from "@/components/blog/BlogContentTable";
 import BlogFaqSection from "@/components/blog/BlogFaqSection";
 import BlogMapBlock from "@/components/blog/BlogMapBlock";
+import { LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
@@ -31,9 +32,10 @@ type BlogSectionBodyProps = {
   section: BlogPostSection;
   postSlug?: string;
   className?: string;
+  linkifyText?: boolean;
 };
 
-function renderBlock(block: BlogBodyBlock, index: number) {
+function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean) {
   switch (block.type) {
     case "paragraph":
       if (block.html?.trim()) {
@@ -45,7 +47,9 @@ function renderBlock(block: BlogBodyBlock, index: number) {
           />
         );
       }
-      return (
+      return linkifyText ? (
+        <LinkifiedText key={index} text={block.text} className="leading-relaxed text-slate" />
+      ) : (
         <p key={index} className="leading-relaxed text-slate">
           {block.text}
         </p>
@@ -191,12 +195,12 @@ function renderBlock(block: BlogBodyBlock, index: number) {
   }
 }
 
-export default function BlogSectionBody({ section, postSlug, className }: BlogSectionBodyProps) {
+export default function BlogSectionBody({ section, postSlug, className, linkifyText }: BlogSectionBodyProps) {
   const blocks = resolveBlogSectionBlocks(section, postSlug);
 
   return (
     <div className={className ?? "blog-section-body space-y-5"}>
-      {blocks.map((block, index) => renderBlock(block, index))}
+      {blocks.map((block, index) => renderBlock(block, index, linkifyText))}
     </div>
   );
 }

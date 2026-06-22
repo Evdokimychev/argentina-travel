@@ -49,12 +49,77 @@ export function getRelatedBlogPosts(
   posts: BlogPost[],
   limit = 4,
 ): BlogPost[] {
-  const candidates = filterIndexableBlogPosts(posts).filter((p) => p.slug !== post.slug);
+  return scoreRelatedCandidates(post, posts, {}, limit);
+}
+
+export type SectionRelatedContext = {
+  sectionTitle: string;
+  sectionBody?: string;
+  sectionKind?: string;
+};
+
+const SECTION_TITLE_SCORE = 4;
+const SECTION_BODY_TERM_SCORE = 2;
+const ITINERARY_KIND_BOOST = 5;
+
+function tokenize(text: string): string[] {
+  return text
+    .toLowerCase()
+    .split(/[^\p{L}\p{N}]+/u)
+    .map((token) => token.trim())
+    .filter((token) => token.length >= 4);
+}
+
+function sectionContextScore(context: SectionRelatedContext, candidate: BlogPost): number {
+  let score = 0;
+  const titleTokens = tokenize(context.sectionTitle);
+  const bodyTokens = context.sectionBody ? tokenize(context.sectionBody.slice(0, 600)) : [];
+  const candidateHaystack = `${candidate.title} ${candidate.excerpt} ${candidate.tags.join(" ")}`.toLowerCase();
+
+  for (const token of titleTokens) {
+    if (candidateHaystack.includes(token)) score += SECTION_TITLE_SCORE;
+  }
+
+  for (const token of bodyTokens.slice(0, 20)) {
+    if (candidateHaystack.includes(token)) score += SECTION_BODY_TERM_SCORE;
+  }
+
+  if (
+    context.sectionKind === "checklist" &&
+    (candidate.slug.includes("checklist") || candidate.slug.includes("чек-лист"))
+  ) {
+    score += ITINERARY_KIND_BOOST;
+  }
+
+  if (
+    context.sectionKind === "mistakes" &&
+    (candidate.slug.includes("ошиб") || candidate.tags.some((tag) => tag.includes("ошиб")))
+  ) {
+    score += ITINERARY_KIND_BOOST;
+  }
+
+  if (context.sectionKind === "faq" && candidate.tags.some((tag) => /faq|вопрос/i.test(tag))) {
+    score += 2;
+  }
+
+  return score;
+}
+
+function scoreRelatedCandidates(
+  post: BlogPost,
+  posts: BlogPost[],
+  context: SectionRelatedContext,
+  limit: number,
+  excludeSlugs: Set<string> = new Set([post.slug]),
+): BlogPost[] {
+  const candidates = filterIndexableBlogPosts(posts).filter(
+    (p) => p.slug !== post.slug && !excludeSlugs.has(p.slug),
+  );
   if (candidates.length === 0) return [];
 
   const scored = candidates.map((candidate) => {
     const tagScore = tagOverlapScore(post, candidate);
-    let score = tagScore;
+    let score = tagScore + sectionContextScore(context, candidate);
 
     if (candidate.category === post.category) {
       score += CATEGORY_MATCH_SCORE;
@@ -87,4 +152,15 @@ export function getRelatedBlogPosts(
   }
 
   return withScore.slice(0, limit);
+}
+
+/** 1–2 статьи с учётом контекста секции для inline-блоков. */
+export function getRelatedBlogPostsForSection(
+  post: BlogPost,
+  posts: BlogPost[],
+  context: SectionRelatedContext,
+  excludeSlugs: Set<string> = new Set([post.slug]),
+  limit = 2,
+): BlogPost[] {
+  return scoreRelatedCandidates(post, posts, context, limit, excludeSlugs);
 }

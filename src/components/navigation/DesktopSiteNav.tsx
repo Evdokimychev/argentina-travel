@@ -3,8 +3,9 @@
 import { useRef } from "react";
 import { MegaMenuTrigger } from "@/components/navigation/MegaMenuTrigger";
 import { NavOverflowMegaMenuTrigger } from "@/components/navigation/NavOverflowMegaMenuTrigger";
+import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import { useSiteNavLayout } from "@/hooks/useSiteNavLayout";
-import { isNavSectionActive } from "@/lib/site-nav";
+import { getActiveNavSectionId } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 
 type DesktopSiteNavProps = {
@@ -29,9 +30,10 @@ export default function DesktopSiteNav({
     registerItemRef,
   } = useSiteNavLayout(navRef);
 
-  const overflowNavActive = overflowSections.some((section) =>
-    isNavSectionActive(pathname, section),
-  );
+  const activeSectionId = getActiveNavSectionId(pathname, SITE_NAV_SECTIONS);
+  const overflowNavActive =
+    activeSectionId != null &&
+    overflowSections.some((section) => section.id === activeSectionId);
 
   return (
     <nav
@@ -48,7 +50,7 @@ export default function DesktopSiteNav({
           <MegaMenuTrigger
             section={section}
             index={index + 1}
-            active={isNavSectionActive(pathname, section)}
+            active={activeSectionId === section.id}
             t={t}
             open={openMegaMenuId === section.id}
             showIndex={showNavIndex}

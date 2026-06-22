@@ -2,6 +2,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import BlogHubCatalog from "@/components/blog/BlogHubCatalog";
 import BlogHubPinnedNav from "@/components/blog/BlogHubPinnedNav";
+import BlogRecommendedTours from "@/components/blog/BlogRecommendedTours";
+import BlogTrendingDestinations from "@/components/blog/BlogTrendingDestinations";
 import HubHero from "@/components/guide/hub/HubHero";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
@@ -18,14 +20,19 @@ import { pluralizeArticles } from "@/lib/blog-utils";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
-import type { BlogPost } from "@/types";
+import type { BlogPost, TourListing } from "@/types";
 
 type BlogHubViewProps = {
   hub: BlogHub;
   posts?: BlogPost[];
+  initialTours?: TourListing[];
 };
 
-export default function BlogHubView({ hub, posts = blogPosts }: BlogHubViewProps) {
+export default function BlogHubView({
+  hub,
+  posts = blogPosts,
+  initialTours = [],
+}: BlogHubViewProps) {
   const hubPosts = getBlogHubPosts(hub, posts);
   const pinnedPosts = getBlogHubPinnedPosts(hub, posts);
   const path = blogHubPath(hub.id);
@@ -66,6 +73,9 @@ export default function BlogHubView({ hub, posts = blogPosts }: BlogHubViewProps
           <p className="mt-6 text-sm text-slate">{pluralizeArticles(total)} в подборке</p>
 
           <BlogHubPinnedNav posts={pinnedPosts} />
+
+          <BlogTrendingDestinations className="mt-10" />
+          <BlogRecommendedTours className="mt-10" initialTours={initialTours} />
 
           {hubPosts.length > 0 ? (
             <BlogHubCatalog hub={hub} posts={hubPosts} />

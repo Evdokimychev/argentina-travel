@@ -8,6 +8,9 @@ import {
   Star,
 } from "lucide-react";
 import BlogCallout from "@/components/blog/BlogCallout";
+import BlogInlineRelatedPosts from "@/components/blog/BlogInlineRelatedPosts";
+import BlogExpandableSection from "@/components/blog/BlogExpandableSection";
+import { LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import BlogRichArticleClientBlock, {
   BlogRichGallerySection,
   isBlogRichClientBlock,
@@ -25,6 +28,7 @@ import type {
   BlogRichCalloutVariant,
   BlogRichSpot,
 } from "@/types/blog-rich-article";
+import type { BlogPost } from "@/types";
 import type { BlogCalloutVariant } from "@/types/blog-content-blocks";
 
 function mapRichCalloutVariant(variant: BlogRichCalloutVariant): BlogCalloutVariant {
@@ -186,9 +190,11 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
       return (
         <div className="space-y-4">
           {block.items.map((paragraph) => (
-            <p key={paragraph.slice(0, 48)} className="leading-relaxed text-slate">
-              {paragraph}
-            </p>
+            <LinkifiedText
+              key={paragraph.slice(0, 48)}
+              text={paragraph}
+              className="leading-relaxed text-slate"
+            />
           ))}
         </div>
       );
@@ -221,7 +227,7 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
           <ul className="list-disc space-y-2 pl-5 text-slate">
             {block.items.map((item) => (
               <li key={item.slice(0, 48)} className="leading-relaxed">
-                {item}
+                <LinkifiedText text={item} as="span" className="leading-relaxed text-slate" />
               </li>
             ))}
           </ul>
@@ -233,16 +239,23 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
       return <RichRatings items={block.items} audience={block.audience} note={block.note} />;
     case "numbered-tips":
       return (
-        <ol className="space-y-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
-          {block.items.map((item, index) => (
-            <li key={item.slice(0, 40)} className="flex gap-3 text-sm leading-relaxed text-slate">
-              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky/10 text-xs font-bold text-sky">
-                {index + 1}
-              </span>
-              <span>{item}</span>
-            </li>
-          ))}
-        </ol>
+        <BlogExpandableSection
+          title="Практические советы"
+          headingId={`rich-tips-${articleId}`}
+          summaryHint="Практические советы — нажмите, чтобы развернуть"
+          accentClass="border-l-4 border-amber-200/80 pl-4 sm:pl-5"
+        >
+          <ol className="space-y-2 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm sm:p-5">
+            {block.items.map((item, index) => (
+              <li key={item.slice(0, 40)} className="flex gap-3 text-sm leading-relaxed text-slate">
+                <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-sky/10 text-xs font-bold text-sky">
+                  {index + 1}
+                </span>
+                <LinkifiedText text={item} className="inline text-sm leading-relaxed text-slate" />
+              </li>
+            ))}
+          </ol>
+        </BlogExpandableSection>
       );
     case "section-image": {
       const image = block.slotId
@@ -286,9 +299,13 @@ function RichBlock({ block, articleId }: { block: BlogRichBlock; articleId: stri
 export default function BlogRichArticle({
   article,
   galleryImages,
+  inlineRelatedBySection,
+  sourceSlug,
 }: {
   article: BlogRichArticle;
   galleryImages?: Array<{ src: string; alt: string }>;
+  inlineRelatedBySection?: Map<number, BlogPost[]>;
+  sourceSlug?: string;
 }) {
   const gallery = galleryImages ?? getRichArticleGallery(article.id);
 
@@ -315,7 +332,7 @@ export default function BlogRichArticle({
         </div>
       </div>
 
-      {article.sections.map((section) => (
+      {article.sections.map((section, sectionIndex) => (
         <section key={section.id} id={section.id} className="space-y-5">
           <h2
             className={cn(
@@ -330,6 +347,12 @@ export default function BlogRichArticle({
               <RichBlock key={`${section.id}-${index}`} block={block} articleId={article.id} />
             ))}
           </div>
+          {inlineRelatedBySection?.get(sectionIndex)?.length ? (
+            <BlogInlineRelatedPosts
+              posts={inlineRelatedBySection.get(sectionIndex)!}
+              sourceSlug={sourceSlug}
+            />
+          ) : null}
         </section>
       ))}
     </div>

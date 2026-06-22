@@ -2921,4 +2921,4 @@ export function formatDate(dateStr: string): string {
   }).format(new Date(dateStr));
 }
 
-export { getBlogCategories, getBlogCategoriesWithCounts, getBlogTags, getTopBlogTags, filterBlogPosts, sortBlogPostsByDate, computeBlogStats, formatBlogReadTime, formatBlogUpdatedLabel, pluralizeArticles } from "@/lib/blog-utils";
+export { getBlogCategories, getBlogCategoriesWithCounts, getBlogTags, getTopBlogTags, filterBlogPosts, sortBlogPostsByDate, sortBlogPostsByUpdated, computeBlogStats, formatBlogReadTime, formatBlogUpdatedLabel, pluralizeArticles, buildBlogQuickFacts } from "@/lib/blog-utils";

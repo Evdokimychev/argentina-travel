@@ -99,4 +99,4 @@ export type BlogBodyBlock =
 export type PageBuilderBlock = BlogBodyBlock;
 
 /** Optional CMS hint for section parsing/rendering (fallback: title heuristics) */
-export type BlogSectionKind = "default" | "faq" | "mistakes" | "checklist";
+export type BlogSectionKind = "default" | "faq" | "mistakes" | "checklist" | "tips";

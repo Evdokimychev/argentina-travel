@@ -1,4 +1,4 @@
-import { blogPosts } from "@/data/blog";
+import { blogPosts, getBlogPostBySlug } from "@/data/blog";
 import type { DestinationPage } from "@/data/destination-pages";
 import { sortBlogPostsByDate } from "@/lib/blog-utils";
 import { getPagesBySection } from "@/lib/content-pages";
@@ -101,7 +101,8 @@ export function blogPostsFromCmsDocuments(docs: CmsDocument[]): BlogPost[] {
   const posts: BlogPost[] = [];
   for (const doc of docs) {
     if (doc.body.kind !== "blog" || !isCmsDocumentComplete(doc)) continue;
-    const post = blogPostFromCms(doc);
+    const fallback = getBlogPostBySlug(doc.slug);
+    const post = blogPostFromCms(doc, fallback ?? undefined);
     if (post) posts.push(post);
   }
   return sortBlogPostsByDate(posts);

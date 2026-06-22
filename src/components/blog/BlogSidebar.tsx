@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import BlogCard from "@/components/blog/BlogCard";
+import BlogReadingHistoryPanel from "@/components/blog/BlogReadingHistoryPanel";
 import CollapsibleAsidePanel from "@/components/content/CollapsibleAsidePanel";
 import { BLOG_HUB_LINKS } from "@/data/blog-hub-links";
 import { cn } from "@/lib/cn";
@@ -15,6 +16,7 @@ type BlogSidebarProps = {
   hubHref?: string;
   /** По умолчанию показывать материалы из хаба, если доступны. */
   defaultHubScope?: boolean;
+  readingHistoryExcludeSlug?: string;
   className?: string;
 };
 
@@ -37,6 +39,7 @@ export default function BlogSidebar({
   hubLabel,
   hubHref,
   defaultHubScope = false,
+  readingHistoryExcludeSlug,
   className,
 }: BlogSidebarProps) {
   const hasHubScope = Boolean(hubFreshPosts?.length && hubLabel);
@@ -56,6 +59,7 @@ export default function BlogSidebar({
 
   return (
     <div className={cn("space-y-4", className)}>
+      <BlogReadingHistoryPanel excludeSlug={readingHistoryExcludeSlug} />
       <CollapsibleAsidePanel
         title="Свежее"
         storageKey="blog-sidebar-fresh-collapsed"

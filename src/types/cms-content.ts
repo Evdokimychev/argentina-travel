@@ -38,6 +38,7 @@ export type CmsBlogBody = {
   sections?: CmsBlogSection[];
   content?: string;
   featured?: boolean;
+  relatedDestinations?: string[];
 };
 
 export type CmsGuideBody = {
@@ -160,6 +161,7 @@ export function blogBodyFromTs(source: BlogPost): CmsBlogBody {
     sections: source.sections,
     content: source.content,
     featured: source.featured,
+    relatedDestinations: source.relatedDestinations,
   };
 }
 
@@ -264,6 +266,7 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     dateModified: fallback?.dateModified,
     richArticleId: fallback?.richArticleId,
     relatedResources: fallback?.relatedResources,
+    relatedDestinations: doc.body.relatedDestinations ?? fallback?.relatedDestinations,
     tourEmbeds: fallback?.tourEmbeds,
   };
 

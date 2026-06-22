@@ -86,13 +86,19 @@ export function ContentCardMedia({
   className,
   children,
 }: {
-  aspect?: "4/3" | "16/10" | "auto";
+  aspect?: "4/3" | "3/2" | "16/10" | "auto";
   gradient?: "bottom" | "featured" | "none";
   className?: string;
   children: React.ReactNode;
 }) {
   const aspectClass =
-    aspect === "4/3" ? "aspect-[4/3]" : aspect === "16/10" ? "aspect-[16/10]" : "";
+    aspect === "4/3"
+      ? "aspect-[4/3]"
+      : aspect === "3/2"
+        ? "aspect-[3/2]"
+        : aspect === "16/10"
+          ? "aspect-[16/10]"
+          : "";
 
   const gradientClass =
     gradient === "bottom"

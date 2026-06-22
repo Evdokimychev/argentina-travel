@@ -55,6 +55,14 @@ export function getBlogSectionKind(
   ) {
     return "checklist";
   }
+  if (
+    t.includes("совет") ||
+    t.includes("рекомендац") ||
+    t.includes("лайфхак") ||
+    t.includes("практическ")
+  ) {
+    return "tips";
+  }
   return "default";
 }
 

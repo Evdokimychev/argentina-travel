@@ -10,6 +10,8 @@ import "leaflet/dist/leaflet.css";
 type Props = {
   points: ArticleMapPoint[];
   className?: string;
+  /** Без шапки и футера — для inline-блоков */
+  embedded?: boolean;
 };
 
 function markerIcon(active = false) {
@@ -21,7 +23,7 @@ function markerIcon(active = false) {
   });
 }
 
-export default function ArticlePlacesMiniMap({ points, className }: Props) {
+export default function ArticlePlacesMiniMap({ points, className, embedded = false }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
 
@@ -68,6 +70,16 @@ export default function ArticlePlacesMiniMap({ points, className }: Props) {
   }, [points]);
 
   if (points.length === 0) return null;
+
+  if (embedded) {
+    return (
+      <div
+        ref={containerRef}
+        className={cn("h-[200px] w-full sm:h-[240px]", className)}
+        aria-label="Мини-карта мест из статьи"
+      />
+    );
+  }
 
   return (
     <aside className={cn("overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm", className)}>

@@ -200,7 +200,7 @@ export default function BlogCard({ post, variant = post.cardVariant ?? "standard
   return (
     <ContentCard radius="panel" className="h-full ring-1 ring-charcoal/[0.04]">
       <ContentCardOverlayLink href={`/blog/${post.slug}`} ariaLabel={post.title} radius="panel" />
-      <ContentCardMedia aspect="16/10" gradient="none">
+      <ContentCardMedia aspect="3/2" gradient="none">
         <SafeImage
           src={post.image}
           alt={post.title}

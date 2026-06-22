@@ -11,6 +11,11 @@ export const GTM_EVENTS = {
   excursionBookingClick: "excursion_booking_click",
   tourView: "tour_view",
   excursionView: "excursion_view",
+  blogArticleSave: "blog_article_save",
+  blogAffiliateClick: "blog_affiliate_click",
+  blogInlineRelatedClick: "blog_inline_related_click",
+  blogArticleView: "blog_article_view",
+  blogArticleFeedback: "blog_article_feedback",
 } as const;
 
 export type GtmEventName = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
@@ -148,5 +153,69 @@ export function trackExcursionView(input: {
     item_category: "excursion",
     partner: input.partner,
     city_name: input.cityName,
+  });
+}
+
+export function trackBlogArticleSave(input: {
+  slug: string;
+  title?: string;
+  action: "add" | "remove";
+  source?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.blogArticleSave, {
+    item_id: input.slug,
+    item_name: input.title,
+    save_action: input.action,
+    source: input.source ?? "blog_article",
+  });
+}
+
+export function trackBlogAffiliateClick(input: {
+  slug: string;
+  service: string;
+  href: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.blogAffiliateClick, {
+    item_id: input.slug,
+    affiliate_service: input.service,
+    link_url: input.href,
+  });
+}
+
+export function trackBlogInlineRelatedClick(input: {
+  sourceSlug: string;
+  targetSlug: string;
+  targetTitle?: string;
+  placement?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.blogInlineRelatedClick, {
+    source_slug: input.sourceSlug,
+    item_id: input.targetSlug,
+    item_name: input.targetTitle,
+    placement: input.placement ?? "inline_related",
+  });
+}
+
+export function trackBlogArticleView(input: {
+  slug: string;
+  title?: string;
+  category?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.blogArticleView, {
+    item_id: input.slug,
+    item_name: input.title,
+    item_category: input.category,
+  });
+}
+
+export function trackBlogArticleFeedback(input: {
+  slug: string;
+  title?: string;
+  value: "helpful" | "not_helpful";
+}): void {
+  trackGtmEvent(GTM_EVENTS.blogArticleFeedback, {
+    item_id: input.slug,
+    item_name: input.title,
+    feedback_value: input.value,
   });
 }

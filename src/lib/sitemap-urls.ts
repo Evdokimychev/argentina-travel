@@ -27,6 +27,7 @@ import { expandI18nSitemapPaths } from "@/lib/i18n/sitemap-locales";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { getBlogSitemapPriority } from "@/lib/blog-sitemap-priority";
 import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
+import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { absoluteUrl } from "@/lib/site-url";
 import type { BlogPost } from "@/types";
 
@@ -167,6 +168,8 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
 
   const blogPaths = [
     "/blog",
+    "/blog/authors",
+    ...buildBlogAuthorProfiles(indexableBlogPosts).map((author) => `/blog/authors/${author.slug}`),
     ...getAllBlogHubIds().map((hubId) => blogHubPath(hubId)),
     ...indexableBlogPosts.map((post) => `/blog/${post.slug}`),
   ];

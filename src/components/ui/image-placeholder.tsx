@@ -46,8 +46,7 @@ export function ImagePlaceholder({
     <div
       className={cn(
         "flex h-full w-full flex-col items-center justify-center gap-2",
-        "bg-gradient-to-br from-sky/30 via-sky/10 to-surface-muted",
-        loading && "animate-pulse",
+        "bg-gradient-to-br from-surface-muted via-surface-elevated to-surface-muted",
         className,
       )}
       aria-hidden={!label}

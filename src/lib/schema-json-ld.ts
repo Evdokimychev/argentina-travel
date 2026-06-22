@@ -129,15 +129,24 @@ export function buildArticleSchema(input: {
   datePublished: string;
   dateModified?: string;
   authorName: string;
+  authorAvatar?: string;
   publisherName?: string;
 }): WithContext<Article> {
   const imageUrl = input.image ? resolvePublicUrl(input.image) : undefined;
+  const authorAvatarUrl = input.authorAvatar ? resolvePublicUrl(input.authorAvatar) : undefined;
+  const pageUrl = absoluteUrl(`/blog/${input.slug}`);
+  const publisherName = input.publisherName ?? DEFAULT_SITE_BRANDING.siteName;
+
   return {
     "@context": "https://schema.org",
     "@type": "Article",
     headline: input.title,
     description: input.excerpt,
-    url: absoluteUrl(`/blog/${input.slug}`),
+    url: pageUrl,
+    mainEntityOfPage: {
+      "@type": "WebPage",
+      "@id": pageUrl,
+    },
     ...(imageUrl ? { image: imageUrl } : {}),
     datePublished: input.datePublished,
     dateModified: input.dateModified ?? input.datePublished,
@@ -146,13 +155,23 @@ export function buildArticleSchema(input: {
       "@type": "SpeakableSpecification",
       cssSelector: [...BLOG_SPEAKABLE_CSS_SELECTORS],
     },
-    author: {
-      "@type": "Organization",
-      name: input.authorName,
-    },
+    author: authorAvatarUrl
+      ? {
+          "@type": "Person",
+          name: input.authorName,
+          image: authorAvatarUrl,
+        }
+      : {
+          "@type": "Organization",
+          name: input.authorName,
+        },
     publisher: {
       "@type": "Organization",
-      name: input.publisherName ?? DEFAULT_SITE_BRANDING.siteName,
+      name: publisherName,
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl(DEFAULT_SITE_BRANDING.defaultOgImage),
+      },
     },
   };
 }

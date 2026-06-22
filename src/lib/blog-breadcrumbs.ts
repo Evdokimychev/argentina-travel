@@ -17,6 +17,11 @@ export function buildBlogPostBreadcrumbJsonLd(post: BlogPost): BreadcrumbJsonLdI
     { name: "Блог", path: "/blog" },
   ];
 
+  items.push({
+    name: post.category,
+    path: `/blog?category=${encodeURIComponent(post.category)}`,
+  });
+
   const hub = getPrimaryBlogHubForPost(post);
   if (hub) {
     items.push({ name: hub.shortTitle, path: blogHubPath(hub.id) });
@@ -31,6 +36,11 @@ export function buildBlogPostUiBreadcrumbs(post: BlogPost): BlogUiBreadcrumbItem
     { label: "Главная", href: "/" },
     { label: "Блог", href: "/blog" },
   ];
+
+  items.push({
+    label: post.category,
+    href: `/blog?category=${encodeURIComponent(post.category)}`,
+  });
 
   const hub = getPrimaryBlogHubForPost(post);
   if (hub) {

@@ -17,9 +17,10 @@ type HubHeroProps = {
   image: string;
   eyebrow?: HubHeroEyebrow;
   ctas?: GuidePillarHeroCta[];
+  searchSlot?: React.ReactNode;
 };
 
-export default function HubHero({ title, subtitle, image, eyebrow, ctas }: HubHeroProps) {
+export default function HubHero({ title, subtitle, image, eyebrow, ctas, searchSlot }: HubHeroProps) {
   return (
     <section
       data-scroll-rail-tone="light"
@@ -92,6 +93,8 @@ export default function HubHero({ title, subtitle, image, eyebrow, ctas }: HubHe
                 ))}
               </div>
             ) : null}
+
+            {searchSlot}
           </div>
 
           <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">

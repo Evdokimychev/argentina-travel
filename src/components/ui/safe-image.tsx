@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 import { ImagePlaceholder, type ImagePlaceholderVariant } from "@/components/ui/image-placeholder";
 import { SKY_IMAGE_BLUR_DATA_URL } from "@/lib/media-blur";
@@ -14,6 +14,16 @@ type SafeImageProps = Omit<ImageProps, "onError" | "onLoad" | "placeholder"> & {
   blurPlaceholder?: boolean;
 };
 
+function hasIntrinsicDimensions(width: ImageProps["width"], height: ImageProps["height"]): boolean {
+  const w = typeof width === "number" ? width : Number(width);
+  const h = typeof height === "number" ? height : Number(height);
+  return Number.isFinite(w) && Number.isFinite(h) && w > 0 && h > 0;
+}
+
+function aspectRatioStyle(width: ImageProps["width"], height: ImageProps["height"]): CSSProperties {
+  return { aspectRatio: `${width} / ${height}` };
+}
+
 export function SafeImage({
   src,
   alt,
@@ -23,6 +33,9 @@ export function SafeImage({
   placeholderCompact = false,
   fallback,
   blurPlaceholder = true,
+  fill,
+  width,
+  height,
   ...props
 }: SafeImageProps) {
   const [failed, setFailed] = useState(false);
@@ -34,35 +47,58 @@ export function SafeImage({
     setLoaded(false);
   }, [resolvedSrc]);
 
+  const intrinsic = hasIntrinsicDimensions(width, height);
+  const useBoundedShell = !fill && intrinsic;
+  const useAbsolutePlaceholder = fill || useBoundedShell;
+
+  const placeholderClassName = useAbsolutePlaceholder ? "absolute inset-0" : undefined;
+
   if (!resolvedSrc || failed) {
     if (fallback) {
       return <>{fallback}</>;
     }
-    return (
+
+    const placeholder = (
       <ImagePlaceholder
         variant={placeholderVariant}
         label={placeholderLabel ?? alt}
         compact={placeholderCompact}
-        className={cn("absolute inset-0", className)}
+        className={cn(placeholderClassName, !useAbsolutePlaceholder && className)}
       />
     );
+
+    if (useBoundedShell) {
+      return (
+        <div
+          className="relative w-full"
+          style={aspectRatioStyle(width, height)}
+        >
+          {placeholder}
+        </div>
+      );
+    }
+
+    return placeholder;
   }
 
   const showSkeleton = !loaded;
 
-  return (
+  const imageNode = (
     <>
       {showSkeleton ? (
         <ImagePlaceholder
           variant={placeholderVariant}
           compact={placeholderCompact}
           loading
-          className="absolute inset-0"
+          className={placeholderClassName}
         />
       ) : null}
       <Image
         src={resolvedSrc}
         alt={alt}
+        fill={fill}
+        width={width}
+        height={height}
         className={cn(
           className,
           showSkeleton && "opacity-0",
@@ -76,4 +112,10 @@ export function SafeImage({
       />
     </>
   );
+
+  if (useBoundedShell) {
+    return <div className="relative w-full">{imageNode}</div>;
+  }
+
+  return imageNode;
 }

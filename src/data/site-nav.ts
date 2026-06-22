@@ -198,7 +198,13 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     labelKey: "nav.geography",
     href: "/destinations",
     description: "Направления для планирования, справочник мест и готовые маршруты",
-    activePathPrefixes: ["/destinations", "/places", "/collections", "/itineraries"],
+    activePathPrefixes: [
+      "/destinations",
+      "/places",
+      "/collections",
+      "/itineraries",
+      "/mapa-argentina",
+    ],
     columns: [
       {
         id: "geo-regions",
@@ -382,6 +388,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     label: "Блог",
     labelKey: "nav.blog",
     href: "/blog",
+    activePathPrefixes: ["/blog"],
     description: "Статьи о путешествиях, жизни и иммиграции",
     columns: [
       {
