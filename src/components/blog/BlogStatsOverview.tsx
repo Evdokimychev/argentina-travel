@@ -2,25 +2,15 @@ import { BookMarked, Clock, Layers, PenLine } from "lucide-react";
 import type { BlogIndexStats } from "@/lib/blog-utils";
 import { cn } from "@/lib/cn";
 
-type EditorialProgress = {
-  planTotal: number;
-  written: number;
-  remaining: number;
-  percent: number;
-  byCategory: Record<string, number>;
-};
-
 type BlogStatsOverviewProps = {
   stats: BlogIndexStats;
   editorialCount: number;
-  editorialProgress?: EditorialProgress;
   className?: string;
 };
 
 export default function BlogStatsOverview({
   stats,
   editorialCount,
-  editorialProgress,
   className,
 }: BlogStatsOverviewProps) {
   const topicCount = stats.categories.length;
@@ -59,32 +49,6 @@ export default function BlogStatsOverview({
           hint="средняя статья"
         />
       </div>
-
-      {editorialProgress && editorialProgress.written > 0 ? (
-        <div className="mt-4 rounded-2xl border border-emerald-200/80 bg-gradient-to-br from-emerald-50/80 to-white p-4 sm:p-5">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs font-semibold uppercase tracking-wider text-emerald-800">
-              Редакционная проработка
-            </p>
-            <p className="text-sm font-medium tabular-nums text-emerald-900">
-              {editorialProgress.written} / {editorialProgress.planTotal} ({editorialProgress.percent}%)
-            </p>
-          </div>
-          <div className="mt-2 h-2 overflow-hidden rounded-full bg-emerald-100">
-            <div
-              className="h-full rounded-full bg-emerald-500 transition-all"
-              style={{ width: `${Math.max(2, editorialProgress.percent)}%` }}
-            />
-          </div>
-          <p className="mt-2 text-xs leading-relaxed text-emerald-900/80">
-            Статьи с полной ручной вычиткой помечены в каталоге. Остальные постепенно обновляются — начали с Патагонии
-            {editorialProgress.byCategory.patagonia
-              ? ` (${editorialProgress.byCategory.patagonia} материалов)`
-              : ""}
-            .
-          </p>
-        </div>
-      ) : null}
 
       {topCategories.length > 0 ? (
         <div className="mt-4 rounded-2xl border border-gray-100 bg-white p-4 shadow-card sm:p-5">

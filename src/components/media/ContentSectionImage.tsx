@@ -1,7 +1,16 @@
 import PageImage from "@/components/media/PageImage";
 import { getContentImage, hasContentSlotImage } from "@/lib/media-resolver";
 import type { ResolvedImage } from "@/lib/image-provider/types";
+import {
+  contentFigureShellClass,
+  contentFigureDimensions,
+  CONTENT_FIGURE_SIZES,
+} from "@/lib/content-figure";
 import { cn } from "@/lib/cn";
+
+function figureDimensions(resolved: ResolvedImage) {
+  return contentFigureDimensions(resolved);
+}
 
 function needsAttributionCaption(resolved: ResolvedImage): boolean {
   const source = resolved.attribution.source;
@@ -15,6 +24,7 @@ type ContentSectionImageProps = {
   caption?: string;
   role?: "content" | "section";
   className?: string;
+  /** @deprecated Intrinsic sizing is default; only pass to force a cropped aspect box. */
   aspectClassName?: string;
 };
 
@@ -23,7 +33,7 @@ export default function ContentSectionImage({
   caption,
   role = "content",
   className,
-  aspectClassName = "aspect-[16/10]",
+  aspectClassName,
   priority,
   loading,
 }: ContentSectionImageProps & {
@@ -33,25 +43,35 @@ export default function ContentSectionImage({
   const resolved = typeof image === "string" ? getContentImage("service:home", image) : image;
   const attributionHtml =
     needsAttributionCaption(resolved) ? resolved.attributionHtml : undefined;
+  const dims = figureDimensions(resolved);
+  const useCropBox = Boolean(aspectClassName);
 
   return (
-    <figure
-      className={cn(
-        "mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100",
-        className,
-      )}
-    >
-      <div className={cn("relative w-full", aspectClassName)}>
+    <figure className={cn(contentFigureShellClass, className)}>
+      {useCropBox ? (
+        <div className={cn("relative w-full", aspectClassName)}>
+          <PageImage
+            image={resolved}
+            role={role}
+            fill
+            className="object-cover"
+            priority={priority}
+            loading={loading}
+            sizes={CONTENT_FIGURE_SIZES}
+          />
+        </div>
+      ) : (
         <PageImage
           image={resolved}
           role={role}
-          fill
-          className="object-cover"
+          width={dims.width}
+          height={dims.height}
+          className="block h-auto w-full"
           priority={priority}
           loading={loading}
-          sizes="(max-width: 768px) 100vw, 720px"
+          sizes={CONTENT_FIGURE_SIZES}
         />
-      </div>
+      )}
       {caption ? (
         <figcaption className="px-4 py-3 text-sm leading-relaxed text-slate">{caption}</figcaption>
       ) : (

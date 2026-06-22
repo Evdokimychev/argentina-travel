@@ -32,9 +32,9 @@ export const tourDetailBadgeSkyClass =
 
 export const tourDetailCardBorderClass = "rounded-2xl border border-gray-100 bg-white shadow-sm";
 
-/** Сетка hero-галереи на десктопе */
+/** Bento-галерея hero на десктопе (колонки/ряды задаются inline из шаблона). */
 export const tourDetailGalleryGridClass =
-  "hidden gap-2 md:grid md:grid-cols-4 md:grid-rows-2 md:aspect-[16/10] md:max-h-[min(52vw,520px)] md:w-full";
+  "hidden gap-2 md:grid md:aspect-[16/10] md:max-h-[min(52vw,520px)] md:min-h-[280px] md:w-full";
 
 /** Карусель hero-галереи на мобильных */
 export const tourDetailGalleryMobileAspectClass = "aspect-[4/3] sm:aspect-[16/10]";

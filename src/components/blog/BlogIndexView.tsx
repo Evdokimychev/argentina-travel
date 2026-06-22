@@ -21,7 +21,6 @@ import {
   getTopBlogTags,
   sortBlogPostsByDate,
 } from "@/data/blog";
-import { getEditorialProgress } from "@/data/blog-editorial";
 import { filterIndexableBlogPosts, resolveBlogCardVariant } from "@/lib/blog-utils";
 import { buttonVariants } from "@/components/ui/button";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
@@ -68,7 +67,6 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
   );
   const tags = useMemo(() => getTopBlogTags(indexableCatalog, 14), [indexableCatalog]);
   const stats = useMemo(() => computeBlogStats(allCatalogPosts), [allCatalogPosts]);
-  const editorialProgress = useMemo(() => getEditorialProgress(), []);
   const freshPosts = useMemo(
     () => sortBlogPostsByDate(indexableCatalog).slice(0, 4),
     [indexableCatalog],
@@ -152,7 +150,6 @@ function BlogIndexViewContent({ posts }: BlogIndexViewProps) {
           <BlogStatsOverview
             stats={stats}
             editorialCount={editorialPosts.length}
-            editorialProgress={editorialProgress}
             className="mt-8"
           />
 

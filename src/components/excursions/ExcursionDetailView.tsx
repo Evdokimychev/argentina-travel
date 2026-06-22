@@ -77,7 +77,12 @@ export default function ExcursionDetailView({
 
         <div className="mt-6">
           {galleryImages.length > 0 ? (
-            <TourDetailGallery images={galleryImages} title={excursion.title} />
+            <TourDetailGallery
+              images={galleryImages}
+              title={excursion.title}
+              layoutSeed={excursion.slug}
+              emptyLabel="Фото экскурсии"
+            />
           ) : null}
 
           <ExcursionSectionNav links={sectionLinks} />

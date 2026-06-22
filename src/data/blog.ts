@@ -2884,20 +2884,27 @@ for (const post of manualBlogPosts) {
 const manualSlugs = new Set(manualBlogPosts.map((p) => p.slug));
 const planPosts = getPublishedPlanPosts(manualSlugs);
 
-export const blogPosts: BlogPost[] = [...manualBlogPosts, ...planPosts].map((post) => ({
-  ...post,
-  image: resolveBlogPostCardImage(post),
-  tourEmbeds: post.tourEmbeds?.length ? post.tourEmbeds : getBlogTourEmbeds(post.slug),
-}));
+const blogPostsBySlug = new Map<string, BlogPost>();
+
+export const blogPosts: BlogPost[] = [...manualBlogPosts, ...planPosts].map((post) => {
+  const resolved: BlogPost = {
+    ...post,
+    image: resolveBlogPostCardImage(post),
+    tourEmbeds: post.tourEmbeds?.length ? post.tourEmbeds : getBlogTourEmbeds(post.slug),
+  };
+  blogPostsBySlug.set(resolved.slug, resolved);
+  return resolved;
+});
 
 export function getEditorialBlogPosts(): BlogPost[] {
-  return manualBlogPosts;
+  return manualBlogPosts
+    .map((post) => blogPostsBySlug.get(post.slug))
+    .filter((post): post is BlogPost => Boolean(post));
 }
 
 /** Фиксированная подборка «С чего начать» — 8 секционных pillar без rich-нацпарков. */
 export function getBlogStartHerePosts(): BlogPost[] {
-  const bySlug = new Map(manualBlogPosts.map((post) => [post.slug, post]));
-  return BLOG_START_HERE_SLUGS.map((slug) => bySlug.get(slug)).filter(
+  return BLOG_START_HERE_SLUGS.map((slug) => blogPostsBySlug.get(slug)).filter(
     (post): post is BlogPost => Boolean(post),
   );
 }

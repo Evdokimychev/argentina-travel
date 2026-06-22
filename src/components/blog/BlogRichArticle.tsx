@@ -15,6 +15,7 @@ import BlogRichArticleClientBlock, {
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
 import PageImage from "@/components/media/PageImage";
+import { contentFigureShellClass, CONTENT_FIGURE_SIZES } from "@/lib/content-figure";
 import { cn } from "@/lib/cn";
 import { getContentImage, getRichArticleGallery } from "@/lib/media-resolver";
 import { siteScrollAnchorClass } from "@/lib/site-container";
@@ -248,11 +249,18 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
         ? getContentImage(`rich:${articleId}`, `section-${block.slotId}`)
         : block.src;
       if (!image) return null;
+      const resolved = typeof image === "string" ? { src: image, alt: block.alt ?? "" } : image;
+      const dims = contentFigureDimensions(typeof image === "string" ? undefined : image);
       return (
-        <figure className="mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100">
-          <div className="relative aspect-[16/10] w-full">
-            <PageImage image={image} role="section" fill className="object-cover" />
-          </div>
+        <figure className={contentFigureShellClass}>
+          <PageImage
+            image={resolved}
+            role="section"
+            width={dims.width}
+            height={dims.height}
+            className="block h-auto w-full"
+            sizes={CONTENT_FIGURE_SIZES}
+          />
           {block.caption ? (
             <figcaption className="px-4 py-3 text-sm text-slate">{block.caption}</figcaption>
           ) : (

@@ -60,12 +60,13 @@ describe("Sprint 7 — tours catalog & detail", () => {
     expect(source).toContain("ContentCard");
   });
 
-  it("TourDetailGallery has carousel keyboard and thumbnail strip", () => {
-    const source = readFileSync(join(root, "components/tour-detail/TourDetailGallery.tsx"), "utf8");
-    expect(source).toContain("useGalleryKeyboard");
-    expect(source).toContain("ArrowLeft");
-    expect(source).toContain("GalleryThumbnailStrip");
-    expect(source).not.toContain("tourDetailGalleryGridClass");
+  it("TourDetailGallery has mobile carousel and desktop mosaic", () => {
+    const gallery = readFileSync(join(root, "components/tour-detail/TourDetailGallery.tsx"), "utf8");
+    const mosaic = readFileSync(join(root, "components/shared/GalleryMosaicDesktop.tsx"), "utf8");
+    expect(gallery).toContain("useGalleryKeyboard");
+    expect(gallery).toContain("GalleryMosaicDesktop");
+    expect(gallery).toContain("md:hidden");
+    expect(mosaic).toContain("tourDetailGalleryGridClass");
   });
 
   it("catalog has sticky filter bar and removable chips", () => {

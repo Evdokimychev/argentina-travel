@@ -1,4 +1,5 @@
 import { SafeImage } from "@/components/ui/safe-image";
+import { contentFigureShellClass, contentFigureDimensions, CONTENT_FIGURE_SIZES } from "@/lib/content-figure";
 import { mediaUrl } from "@/lib/media-resolver";
 
 type Props = {
@@ -9,18 +10,21 @@ type Props = {
 
 export default function BlogMediaBlock({ src, alt, caption }: Props) {
   if (!src.trim()) return null;
+  const dims = contentFigureDimensions();
 
   return (
-    <figure className="mx-auto max-w-prose overflow-hidden rounded-2xl bg-charcoal/5 ring-1 ring-gray-100">
-      <div className="relative aspect-[16/10] w-full">
-        <SafeImage
-          src={mediaUrl(src)}
-          alt={alt || caption || "Иллюстрация"}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, 720px"
-        />
-      </div>
+    <figure className={contentFigureShellClass}>
+      <SafeImage
+        src={mediaUrl(src)}
+        alt={alt || caption || "Иллюстрация"}
+        width={dims.width}
+        height={dims.height}
+        className="block h-auto w-full"
+        sizes={CONTENT_FIGURE_SIZES}
+        placeholderVariant="destination"
+        placeholderLabel={alt || caption || "Иллюстрация"}
+        blurPlaceholder={false}
+      />
       {caption ? (
         <figcaption className="border-t border-gray-100 px-4 py-2 text-xs text-slate">{caption}</figcaption>
       ) : null}

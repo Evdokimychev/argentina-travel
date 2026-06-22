@@ -152,7 +152,11 @@ export default function TourDetailView({
       </Suspense>
 
       <div className={cn(siteContainerClass, "pt-4 sm:pt-5 lg:pt-6")}>
-        <TourDetailGallery images={tour.gallery} title={tour.title} />
+        <TourDetailGallery
+          images={tour.gallery}
+          title={tour.title}
+          layoutSeed={tour.slug}
+        />
       </div>
 
       <TourDetailHeader tour={tour} canonicalTour={canonicalTour} />

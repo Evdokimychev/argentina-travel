@@ -8,10 +8,14 @@ import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
 import { tourDetailGalleryMobileAspectClass } from "@/lib/tour-detail-ui";
+import { GalleryMosaicDesktop } from "@/components/shared/GalleryMosaicDesktop";
 
 interface TourDetailGalleryProps {
   images: string[];
   title: string;
+  /** Stable key for mosaic layout (slug). Falls back to title. */
+  layoutSeed?: string;
+  emptyLabel?: string;
 }
 
 function useGalleryKeyboard(
@@ -185,17 +189,22 @@ function GalleryThumbnailStrip({
   title,
   activeIndex,
   onSelect,
+  className,
 }: {
   images: string[];
   title: string;
   activeIndex: number;
   onSelect: (index: number) => void;
+  className?: string;
 }) {
   if (images.length <= 1) return null;
 
   return (
     <div
-      className="mt-2 flex gap-2 overflow-x-auto pb-1 scrollbar-hide"
+      className={cn(
+        "mt-2 flex gap-2 overflow-x-auto pb-1 scrollbar-hide",
+        className,
+      )}
       role="tablist"
       aria-label="Миниатюры галереи"
     >
@@ -226,11 +235,17 @@ function GalleryThumbnailStrip({
   );
 }
 
-export default function TourDetailGallery({ images, title }: TourDetailGalleryProps) {
+export default function TourDetailGallery({
+  images,
+  title,
+  layoutSeed,
+  emptyLabel = "Фото тура",
+}: TourDetailGalleryProps) {
   const [lightbox, setLightbox] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselScrollRef = useRef<HTMLDivElement>(null);
   const galleryImages = dedupeGalleryImages(images.filter(Boolean));
+  const mosaicSeed = layoutSeed ?? title;
 
   const goPrev = useCallback(
     () => setActiveIndex((index) => (index - 1 + galleryImages.length) % galleryImages.length),
@@ -258,14 +273,14 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
           tourDetailGalleryMobileAspectClass
         )}
       >
-        <p className="text-sm text-slate">Фото тура скоро появятся</p>
+        <p className="text-sm text-slate">{emptyLabel} скоро появятся</p>
       </div>
     );
   }
 
   return (
     <div data-scroll-rail-tone="dark">
-      <div className={cn("w-full", tourDetailGalleryMobileAspectClass)}>
+      <div className={cn("w-full md:hidden", tourDetailGalleryMobileAspectClass)}>
         <GalleryCarousel
           images={galleryImages}
           title={title}
@@ -286,6 +301,17 @@ export default function TourDetailGallery({ images, title }: TourDetailGalleryPr
         title={title}
         activeIndex={activeIndex}
         onSelect={scrollCarouselToIndex}
+        className="md:hidden"
+      />
+
+      <GalleryMosaicDesktop
+        images={galleryImages}
+        title={title}
+        seed={mosaicSeed}
+        onOpenLightbox={(index) => {
+          setActiveIndex(index);
+          setLightbox(true);
+        }}
       />
 
       {lightbox ? (

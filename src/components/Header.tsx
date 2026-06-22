@@ -118,42 +118,42 @@ export default function Header() {
   const utilityLinks = SITE_NAV_UTILITY_LINKS;
 
   const mobileMenuFooter = (
-    <>
-      <div className="md:hidden">
-        <nav
-          className="mb-3 flex flex-col gap-1 border-b border-border-subtle pb-3"
-          aria-label={t("header.tagline")}
-        >
-          {utilityLinks.map((link) => (
-            <Link
-              key={link.id}
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-              className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/80 transition-colors hover:bg-sky/5 hover:text-sky"
-            >
-              {resolveNavLabel(link, t)}
-            </Link>
-          ))}
-        </nav>
-        <button
-          type="button"
-          onClick={() => {
-            setMobileMenuOpen(false);
-            openSiteSearch();
-          }}
-          className="mb-3 flex w-full items-center gap-3 rounded-card border border-border-subtle bg-surface-elevated px-4 py-3 text-sm font-medium text-foreground transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky dark:border-border-subtle dark:bg-surface-elevated"
-        >
-          <Search className="h-4 w-4 shrink-0 text-sky" strokeWidth={1.75} aria-hidden />
-          Поиск по сайту
-        </button>
+    <div className="space-y-3">
+      <button
+        type="button"
+        onClick={() => {
+          setMobileMenuOpen(false);
+          openSiteSearch();
+        }}
+        className="flex w-full items-center gap-3 rounded-2xl border border-border-subtle bg-surface-muted/50 px-4 py-3.5 text-sm font-medium text-foreground transition-colors hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+      >
+        <Search className="h-4 w-4 shrink-0 text-sky" strokeWidth={1.75} aria-hidden />
+        Поиск по сайту
+      </button>
+
+      <nav
+        className="grid grid-cols-1 gap-1 rounded-2xl border border-border-subtle bg-surface-muted/30 p-2"
+        aria-label="Быстрые ссылки"
+      >
+        {utilityLinks.map((link) => (
+          <Link
+            key={link.id}
+            href={link.href}
+            onClick={() => setMobileMenuOpen(false)}
+            className="rounded-xl px-3 py-2.5 text-sm font-medium text-foreground/85 transition-colors hover:bg-surface-elevated hover:text-sky"
+          >
+            {resolveNavLabel(link, t)}
+          </Link>
+        ))}
+      </nav>
+
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border-subtle/80 pt-3">
         <LocaleCurrencySwitcher />
-      </div>
-      <div className="mt-3 border-t border-border-subtle pt-3 sm:mt-0 sm:border-t-0 sm:pt-0">
         {isAuthenticated ? (
           <Link
             href="/profile"
             onClick={() => setMobileMenuOpen(false)}
-            className="inline-flex px-3 py-2 text-sm font-medium text-foreground hover:text-sky"
+            className="inline-flex rounded-xl px-3 py-2 text-sm font-semibold text-sky transition-colors hover:bg-sky/5"
           >
             {t("nav.profile")}
           </Link>
@@ -164,13 +164,13 @@ export default function Header() {
               setMobileMenuOpen(false);
               openAuth();
             }}
-            className="inline-flex px-3 py-2 text-sm font-medium text-foreground hover:text-sky"
+            className="inline-flex rounded-xl bg-charcoal px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-charcoal/90"
           >
             Войти
           </button>
         )}
       </div>
-    </>
+    </div>
   );
 
   return (

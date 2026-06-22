@@ -2,7 +2,7 @@ export const ruDictionary = {
   "header.tagline": "Откройте Аргентину 🇦🇷 вместе с нами",
 
   "nav.home": "Главная",
-  "nav.tours": "Каталог туров",
+  "nav.tours": "Туры",
   "nav.geography": "Регионы и места",
   "nav.guide": "Путеводитель",
   "nav.immigration": "Иммиграция",
