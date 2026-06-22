@@ -10,6 +10,7 @@ import {
   FLIGHTS_WL_SCRIPT_ID,
   FLIGHTS_WL_SCRIPT_MOUNT_ID,
 } from "@/lib/travelpayouts/whitelabel/flights-dom-ids";
+import { ensureTpwlModalsInteractive } from "@/lib/travelpayouts/whitelabel/ensure-tpwl-modals-interactive";
 import {
   removeAviasalesInjectedStyles,
   sanitizeAviasalesInjectedStyles,
@@ -80,6 +81,7 @@ function syncContainers(mount: HTMLElement) {
   sanitizeAviasalesInjectedStyles();
   ensureWidgetContainers(mount);
   ensureModalsOnBody();
+  ensureTpwlModalsInteractive();
 
   for (const id of WL_CONTAINER_IDS) {
     const el = document.getElementById(id);
