@@ -30,7 +30,7 @@ export default function HomeHeroCollage({
         aria-hidden
       />
 
-      <div className="grid grid-cols-12 gap-2 sm:gap-2.5">
+      <div className="grid grid-cols-12 items-stretch gap-2 sm:gap-2.5">
         <div className="relative col-span-8 overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100 sm:col-span-7">
           <div className="relative aspect-[4/5] w-full sm:aspect-[3/4] lg:aspect-[4/5]">
             <Image
@@ -48,29 +48,27 @@ export default function HomeHeroCollage({
           </div>
         </div>
 
-        <div className="col-span-4 flex flex-col gap-2 sm:col-span-5 sm:gap-2.5">
+        <div className="col-span-4 grid min-h-0 grid-rows-2 gap-2 sm:col-span-5 sm:gap-2.5">
           {secondary.map((image, index) => (
             <figure
               key={image.src}
-              className="group relative flex-1 overflow-hidden rounded-xl bg-charcoal/5 shadow-sm ring-1 ring-gray-100"
+              className="group relative min-h-0 overflow-hidden rounded-xl bg-charcoal/5 shadow-sm ring-1 ring-gray-100"
             >
-              <div className="relative aspect-[4/3] min-h-[88px] w-full sm:min-h-[100px] lg:min-h-0 lg:flex-1">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  priority={index === 0}
-                  sizes="(max-width: 1024px) 30vw, 160px"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                />
-                <div
-                  className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent"
-                  aria-hidden
-                />
-                <figcaption className="absolute bottom-0 line-clamp-2 p-2 text-[10px] font-medium leading-tight text-white sm:p-2.5 sm:text-xs">
-                  {image.alt}
-                </figcaption>
-              </div>
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                priority={index === 0}
+                sizes="(max-width: 1024px) 30vw, 160px"
+                className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-charcoal/60 via-charcoal/10 to-transparent"
+                aria-hidden
+              />
+              <figcaption className="absolute bottom-0 line-clamp-2 p-2 text-[10px] font-medium leading-tight text-white sm:p-2.5 sm:text-xs">
+                {image.alt}
+              </figcaption>
             </figure>
           ))}
         </div>
