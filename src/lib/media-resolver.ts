@@ -16,7 +16,10 @@ import {
   getHeroSrc,
   getSectionImage as getProviderSectionImage,
 } from "@/lib/image-provider/image-provider";
-import { mediaAssetToResolved } from "@/lib/image-provider/local-fallback";
+import {
+  mediaAssetToResolved,
+  resolveFromManifestBinding,
+} from "@/lib/image-provider/local-fallback";
 import { resolveSlotAssetId } from "@/lib/image-provider/slot-ids";
 import type { ResolvedImage } from "@/lib/image-provider/types";
 import type { MediaAsset } from "@/types/media-asset";
@@ -83,6 +86,12 @@ export function getPlaceGalleryAlts(slug: string): string[] {
 }
 
 export function getDestinationImage(destinationId: string): string {
+  const fromSection = resolveFromManifestBinding(
+    { destinationId },
+    "section",
+    destinationId,
+  );
+  if (fromSection) return fromSection.src;
   return getHeroSrc(`destination:${destinationId}`);
 }
 
@@ -96,6 +105,12 @@ export function getDestinationGallery(destinationId: string): string[] {
 }
 
 export function getDestinationImageAlt(destinationId: string): string {
+  const fromSection = resolveFromManifestBinding(
+    { destinationId },
+    "section",
+    destinationId,
+  );
+  if (fromSection) return fromSection.alt;
   return getHeroImage(`destination:${destinationId}`).alt;
 }
 
