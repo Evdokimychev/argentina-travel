@@ -3,7 +3,9 @@
 import { useLayoutEffect, useState, type RefObject } from "react";
 
 const VIEWPORT_PADDING_PX = 16;
-const TRIGGER_GAP_PX = 12;
+
+/** Invisible hover bridge above the panel — see MegaMenuDropdown. */
+export const ANCHORED_PANEL_HOVER_BRIDGE_PX = 12;
 
 export type AnchoredPanelCoords = {
   top: number;
@@ -39,7 +41,7 @@ export function useAnchoredPanelPosition(
       );
 
       setCoords({
-        top: triggerRect.bottom + TRIGGER_GAP_PX,
+        top: triggerRect.bottom,
         left,
       });
     }

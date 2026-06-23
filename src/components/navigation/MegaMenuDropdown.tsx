@@ -3,7 +3,10 @@
 import { createPortal } from "react-dom";
 import { useRef, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
-import { useAnchoredPanelPosition } from "@/hooks/useAnchoredPanelPosition";
+import {
+  ANCHORED_PANEL_HOVER_BRIDGE_PX,
+  useAnchoredPanelPosition,
+} from "@/hooks/useAnchoredPanelPosition";
 
 type MegaMenuDropdownProps = {
   open: boolean;
@@ -37,7 +40,7 @@ export function MegaMenuDropdown({
       className={cn(
         "fixed z-[110]",
         widthClass,
-        coords ? "opacity-100" : "pointer-events-none opacity-0"
+        coords ? "opacity-100" : "opacity-0",
       )}
       style={
         coords
@@ -47,9 +50,15 @@ export function MegaMenuDropdown({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseLeave}
     >
+      {/* Shared hover zone — bridges the gap between trigger and panel. */}
+      <div
+        className="pointer-events-auto"
+        style={{ height: ANCHORED_PANEL_HOVER_BRIDGE_PX }}
+        aria-hidden
+      />
       <div
         className={cn(
-          "max-h-[min(70vh,calc(100dvh-var(--site-header-height,4rem)-1.5rem))] overflow-y-auto overscroll-contain rounded-2xl border border-border-subtle bg-surface-elevated shadow-modal"
+          "pointer-events-auto max-h-[min(70vh,calc(100dvh-var(--site-header-height,4rem)-1.5rem))] overflow-y-auto overscroll-contain rounded-2xl border border-border-subtle bg-surface-elevated shadow-modal",
         )}
       >
         {children}

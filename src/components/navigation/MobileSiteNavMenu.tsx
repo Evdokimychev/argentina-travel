@@ -10,6 +10,7 @@ import {
   Home,
 } from "lucide-react";
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { MegaMenuServicesFooter } from "@/components/navigation/MegaMenuServicesFooter";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import {
   buildMobileNavGroups,
@@ -204,6 +205,9 @@ function MobileNavSectionScreen({
               showIcons={showGuideIcons}
             />
           ))}
+          {section.id !== "services" ? (
+            <MegaMenuServicesFooter t={t} onNavigate={onNavigate} className="rounded-xl border border-border-subtle bg-surface-muted/20 px-4 py-3" />
+          ) : null}
         </div>
       ) : null}
     </div>

@@ -51,7 +51,47 @@ const REGION_LINKS: SiteNavLink[] = [
   { id: "region-tierra", label: "Огненная Земля", href: destinationHref("ushuaia") },
 ];
 
-const EXCURSION_SERVICE_LINKS: SiteNavLink[] = [
+/** Compact service links — footer strip in every mega-menu dropdown. */
+export const NAV_FOOTER_SERVICE_LINKS: SiteNavLink[] = [
+  {
+    id: "footer-flights",
+    label: "Авиабилеты",
+    labelKey: "nav.flights",
+    href: "/flights",
+  },
+  {
+    id: "footer-transfers",
+    label: "Трансферы",
+    labelKey: "nav.transfers",
+    href: "/transfers",
+  },
+  {
+    id: "footer-esim",
+    label: "eSIM",
+    labelKey: "nav.esim",
+    href: "/esim",
+  },
+  {
+    id: "footer-insurance",
+    label: "Страховка",
+    labelKey: "nav.insurance",
+    href: "/insurance",
+  },
+  {
+    id: "footer-car-rental",
+    label: "Аренда авто",
+    labelKey: "nav.carRental",
+    href: "/car-rental",
+  },
+  {
+    id: "footer-audio-guides",
+    label: "Аудиогиды",
+    labelKey: "nav.audioGuides",
+    href: "/audio-guides",
+  },
+];
+
+const EXCURSION_BROWSE_LINKS: SiteNavLink[] = [
   {
     id: "excursions-catalog",
     label: "Каталог экскурсий",
@@ -91,7 +131,7 @@ const EXCURSION_SERVICE_LINKS: SiteNavLink[] = [
   },
 ];
 
-const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
+const TOURS_BROWSE_LINKS: SiteNavLink[] = [
   {
     id: "travel-catalog",
     label: "Каталог туров",
@@ -116,48 +156,6 @@ const TRAVEL_SERVICE_LINKS: SiteNavLink[] = [
     label: "Найти заявку",
     href: "/booking/find",
     description: "По email без входа",
-  },
-  {
-    id: "travel-flights",
-    label: "Авиабилеты",
-    labelKey: "nav.flights",
-    href: "/flights",
-    description: "Поиск перелётов в Аргентину",
-  },
-  {
-    id: "travel-transfers",
-    label: "Трансферы",
-    labelKey: "nav.transfers",
-    href: "/transfers",
-    description: "Аэропорт и между городами",
-  },
-  {
-    id: "travel-insurance",
-    label: "Страховка",
-    labelKey: "nav.insurance",
-    href: "/insurance",
-    description: "Медицинская страховка для поездки",
-  },
-  {
-    id: "travel-esim",
-    label: "eSIM",
-    labelKey: "nav.esim",
-    href: "/esim",
-    description: "Мобильный интернет в поездке",
-  },
-  {
-    id: "travel-car-rental",
-    label: "Аренда авто",
-    labelKey: "nav.carRental",
-    href: "/car-rental",
-    description: "Прокат для поездок по регионам",
-  },
-  {
-    id: "travel-audio-guides",
-    label: "Аудиогиды",
-    labelKey: "nav.audioGuides",
-    href: "/audio-guides",
-    description: "Аудиоэкскурсии WeGoTrip",
   },
   {
     id: "travel-join",
@@ -290,7 +288,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         id: "tours-browse",
         title: "Поиск",
         titleKey: "nav.columns.search",
-        links: TRAVEL_SERVICE_LINKS,
+        links: TOURS_BROWSE_LINKS,
       },
       {
         id: "tours-collections",
@@ -314,7 +312,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
         id: "excursions-browse",
         title: "Поиск",
         titleKey: "nav.columns.search",
-        links: EXCURSION_SERVICE_LINKS,
+        links: EXCURSION_BROWSE_LINKS,
       },
       {
         id: "excursions-regions",

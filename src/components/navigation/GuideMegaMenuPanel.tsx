@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, BookOpen, PlaneLanding } from "lucide-react";
 import { GuideNavExchangeHint } from "@/components/navigation/GuideNavExchangeHint";
 import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { MegaMenuServicesFooter } from "@/components/navigation/MegaMenuServicesFooter";
 import { cn } from "@/lib/cn";
 import { getGuideTopicIcon } from "@/lib/guide-nav-icons";
 import {
@@ -153,6 +154,7 @@ export function GuideMegaMenuPanel({
       </div>
 
       <GuideFooterStrip onNavigate={onNavigate} />
+      <MegaMenuServicesFooter t={t} onNavigate={onNavigate} />
     </div>
   );
 }

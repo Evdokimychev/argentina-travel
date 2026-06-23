@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Compass } from "lucide-react";
 import { MegaMenuPanel } from "@/components/navigation/MegaMenuPanel";
+import { MegaMenuServicesFooter } from "@/components/navigation/MegaMenuServicesFooter";
 import { cn } from "@/lib/cn";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavColumn, SiteNavLink } from "@/types/site-nav";
@@ -66,6 +67,7 @@ export function ToursMegaMenuPanel({
           className="p-0 sm:grid-cols-2"
         />
       </div>
+      <MegaMenuServicesFooter t={t} onNavigate={onNavigate} />
     </div>
   );
 }

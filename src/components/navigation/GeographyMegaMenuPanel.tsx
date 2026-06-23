@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, Map, MapPin, Mountain } from "lucide-react";
 import { MegaMenuPanel } from "@/components/navigation/MegaMenuPanel";
+import { MegaMenuServicesFooter } from "@/components/navigation/MegaMenuServicesFooter";
 import { cn } from "@/lib/cn";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavColumn, SiteNavLink } from "@/types/site-nav";
@@ -91,20 +92,21 @@ export function GeographyMegaMenuPanel({
           className="p-0 sm:grid-cols-2 lg:grid-cols-3"
         />
       </div>
-      <div className="border-t border-border-subtle px-5 py-3 text-xs text-slate">
+      <div className="border-t border-border-subtle px-5 py-2.5 text-xs text-slate/70">
         Туры и экскурсии к местам — в{" "}
-        <Link href="/tours" onClick={onNavigate} className="font-medium text-sky hover:underline">
+        <Link href="/tours" onClick={onNavigate} className="transition-colors hover:text-sky">
           каталоге
         </Link>
         {" · "}
-        <Link href="/collections" onClick={onNavigate} className="font-medium text-sky hover:underline">
+        <Link href="/collections" onClick={onNavigate} className="transition-colors hover:text-sky">
           подборки
         </Link>
         {" · "}
-        <Link href="/itineraries" onClick={onNavigate} className="font-medium text-sky hover:underline">
+        <Link href="/itineraries" onClick={onNavigate} className="transition-colors hover:text-sky">
           маршруты
         </Link>
       </div>
+      <MegaMenuServicesFooter t={t} onNavigate={onNavigate} />
     </div>
   );
 }

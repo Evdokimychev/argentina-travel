@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight, FileText, Plane, Stamp } from "lucide-react";
 import { MegaMenuPanel, NavBadge } from "@/components/navigation/MegaMenuPanel";
+import { MegaMenuServicesFooter } from "@/components/navigation/MegaMenuServicesFooter";
 import { cn } from "@/lib/cn";
 import {
   IMMIGRATION_NAV_PROMO_INTRO,
@@ -146,6 +147,7 @@ export function ImmigrationMegaMenuPanel({
       </div>
 
       <ImmigrationFooterStrip onNavigate={onNavigate} />
+      <MegaMenuServicesFooter t={t} onNavigate={onNavigate} />
     </div>
   );
 }
