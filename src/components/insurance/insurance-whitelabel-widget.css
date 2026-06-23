@@ -1,15 +1,27 @@
-/* Cherehapa WL — keep inside page column (same idea as LocalRent). */
+/* Cherehapa WL — white card shell (same pattern as flights search). */
+.insurance-wl-root {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
 .insurance-wl-mount {
+  position: relative;
   isolation: isolate;
   contain: layout style;
   width: 100%;
   overflow: hidden;
-  border-radius: 1rem;
-  background: #e5ecf6;
+  border-radius: var(--insurance-widget-radius, 1.25rem);
+  border: 1px solid rgb(229 231 235 / 0.95);
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 12px 32px rgb(15 23 42 / 0.07),
+    0 24px 48px rgb(15 23 42 / 0.04);
 }
 
-.insurance-wl-mount #che-new_wl,
-.insurance-wl-mount #cherehapa-root {
+.insurance-wl-root #che-new_wl,
+.insurance-wl-root #cherehapa-root {
   position: relative !important;
   top: auto !important;
   left: auto !important;
@@ -21,8 +33,22 @@
   height: auto !important;
   margin: 0 !important;
   transform: none !important;
+  background: transparent !important;
 }
 
-.insurance-wl-mount .insurance-wl-script-mount {
+.insurance-wl-root .insurance-wl-script-mount {
   width: 100%;
+}
+
+/* Soften partner chrome inside the card — container only, widget stays functional. */
+.insurance-page-root .insurance-wl-mount [style*="background-color: rgb(229, 236, 246)"],
+.insurance-page-root .insurance-wl-mount [style*="background-color:#E5ECF6"],
+.insurance-page-root .insurance-wl-mount [style*="background-color: #E5ECF6"] {
+  background-color: rgb(248 250 252) !important;
+}
+
+.insurance-page-root .insurance-wl-mount [style*="background-color: rgb(237, 244, 254)"],
+.insurance-page-root .insurance-wl-mount [style*="background-color:#EDF4FE"],
+.insurance-page-root .insurance-wl-mount [style*="background-color: #EDF4FE"] {
+  background-color: rgb(244 248 252) !important;
 }

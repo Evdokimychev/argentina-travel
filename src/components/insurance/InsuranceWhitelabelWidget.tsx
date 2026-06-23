@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { safeClearElementContent, safeRemoveElement } from "@/lib/dom/safe-partner-dom";
 import {
   INSURANCE_WL_MOUNT_ID,
   INSURANCE_WL_PAGE_MOUNT_ID,
@@ -128,20 +130,30 @@ export default function InsuranceWhitelabelWidget({
       observer.disconnect();
       window.clearInterval(interval);
       window.clearTimeout(stopInterval);
+      safeRemoveElement(document.getElementById(INSURANCE_WL_SCRIPT_ID));
+      safeRemoveElement(findWidgetRoot());
+      safeClearElementContent(mount);
     };
   }, [scriptUrl]);
 
   return (
-    <div
-      id={INSURANCE_WL_PAGE_MOUNT_ID}
-      ref={mountRef}
-      className={cn("insurance-wl-mount relative w-full", className)}
-    >
-      {!ready ? (
-        <p className="px-4 py-3 text-sm text-slate" aria-live="polite">
-          {loadingLabel}
-        </p>
-      ) : null}
+    <div id={INSURANCE_WL_PAGE_MOUNT_ID} className={cn("insurance-wl-root", className)}>
+      <div ref={mountRef} className="insurance-wl-mount">
+        {!ready ? (
+          <div className="px-4 py-5 sm:px-5 sm:py-6" aria-live="polite">
+            <span className="sr-only">{loadingLabel}</span>
+            <div className="space-y-3">
+              <Skeleton className="h-11 w-full rounded-xl" />
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                <Skeleton className="h-11 rounded-xl" />
+                <Skeleton className="h-11 rounded-xl" />
+                <Skeleton className="col-span-2 h-11 rounded-xl sm:col-span-1" />
+              </div>
+              <Skeleton className="h-12 w-full rounded-xl sm:max-w-[220px]" />
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
