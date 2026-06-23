@@ -1,13 +1,43 @@
+import { addDays, addWeeks, format, startOfDay } from "date-fns";
+import type { FlightPopularRoute } from "@/data/flight-popular-routes";
 import {
   findPopularRouteLabel,
   getDestinationFlightRouteIds,
 } from "@/lib/flights/destination-airports";
+import {
+  buildFlightsSearchQueryParams,
+  type FlightsSearchHrefOptions,
+} from "@/lib/flights/wl-search-params";
 
-export function buildFlightsSearchHref(origin: string, destination: string): string {
-  return `/flights?${new URLSearchParams({
-    origin: origin.toUpperCase(),
-    destination: destination.toUpperCase(),
-  })}`;
+const INTERNATIONAL_DEPART_WEEKS = 6;
+const DOMESTIC_DEPART_WEEKS = 3;
+const POPULAR_ROUTE_RETURN_DAYS = 7;
+
+export type { FlightsSearchHrefOptions };
+
+export function buildFlightsSearchHref(
+  origin: string,
+  destination: string,
+  options?: FlightsSearchHrefOptions,
+): string {
+  const params = buildFlightsSearchQueryParams(origin, destination, options);
+  return `/flights?${params}`;
+}
+
+function popularRouteDepartWeeks(route: FlightPopularRoute): number {
+  return route.origin === "BUE" ? DOMESTIC_DEPART_WEEKS : INTERNATIONAL_DEPART_WEEKS;
+}
+
+/** Prefill WL search for a popular route with sensible lead times and auto-search. */
+export function buildFlightPopularRouteSearchHref(route: FlightPopularRoute): string {
+  const depart = addWeeks(startOfDay(new Date()), popularRouteDepartWeeks(route));
+  const returnDate = addDays(depart, POPULAR_ROUTE_RETURN_DAYS);
+
+  return buildFlightsSearchHref(route.origin, route.destination, {
+    departDate: format(depart, "yyyy-MM-dd"),
+    returnDate: format(returnDate, "yyyy-MM-dd"),
+    autoSearch: true,
+  });
 }
 
 /** Map Argentina airport IATA to Aviasales city/route codes for search prefill. */
@@ -24,7 +54,7 @@ export function buildAirportFlightsHref(airportCode: string): string {
   return buildFlightsSearchHref(origin, destination);
 }
 
-/** Primary flight search prefill for a destination hub page (e.g. MOW→IGR for Игуасу). */
+/** Primary flight search prefill for a destination hub page (e.g. MOW→BUE for Игуасу). */
 export function resolveDestinationFlightSearch(destinationId: string): {
   origin: string;
   destination: string;

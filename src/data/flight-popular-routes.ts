@@ -15,13 +15,6 @@ export const FLIGHT_POPULAR_ROUTES: FlightPopularRoute[] = [
     destinationLabel: "Буэнос-Айрес",
   },
   {
-    id: "mow-igr",
-    origin: "MOW",
-    originLabel: "Москва",
-    destination: "IGR",
-    destinationLabel: "Игуасу",
-  },
-  {
     id: "bue-brc",
     origin: "BUE",
     originLabel: "Буэнос-Айрес",
@@ -56,7 +49,24 @@ export const FLIGHT_POPULAR_ROUTES: FlightPopularRoute[] = [
     destination: "MDZ",
     destinationLabel: "Мендоса",
   },
+  {
+    id: "bue-igr",
+    origin: "BUE",
+    originLabel: "Буэнос-Айрес",
+    destination: "IGR",
+    destinationLabel: "Игуасу",
+  },
 ];
+
+export function getFlightPopularRouteGroups(): {
+  international: FlightPopularRoute[];
+  domestic: FlightPopularRoute[];
+} {
+  return {
+    international: FLIGHT_POPULAR_ROUTES.filter((route) => route.origin !== "BUE"),
+    domestic: FLIGHT_POPULAR_ROUTES.filter((route) => route.origin === "BUE"),
+  };
+}
 
 export function getFlightRouteById(routeId: string): FlightPopularRoute | undefined {
   return FLIGHT_POPULAR_ROUTES.find((route) => route.id === routeId);

@@ -1,0 +1,9 @@
+.flight-price-widget-mount {
+  min-height: 280px;
+}
+
+.flight-price-widget-mount iframe,
+.flight-price-widget-mount [class*="tp-widget"],
+.flight-price-widget-mount [id*="tp-widget"] {
+  max-width: 100%;
+}

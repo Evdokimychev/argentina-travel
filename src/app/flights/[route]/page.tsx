@@ -9,7 +9,7 @@ import {
 } from "@/data/flight-popular-routes";
 import { fetchRouteFlightPriceTeaser } from "@/lib/flights/hub-price-teasers";
 import { getFlightRouteLabels } from "@/lib/flights/route-labels";
-import { getRoutePriceCalendar } from "@/lib/flights/route-price-calendar";
+import { buildTravelpayoutsPriceWidgetUrl } from "@/lib/travelpayouts/price-widget-config";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 type PageProps = {
@@ -45,17 +45,20 @@ export default async function FlightRoutePage({ params }: PageProps) {
   if (!route) notFound();
 
   const locale = "ru" as const;
-  const [teaser, calendarMonths] = await Promise.all([
-    fetchRouteFlightPriceTeaser({
-      routeId: route.id,
-      origin: route.origin,
-      destination: route.destination,
-      originLabel: route.originLabel,
-      destinationLabel: route.destinationLabel,
-      locale,
-    }),
-    getRoutePriceCalendar(route.origin, route.destination, locale),
-  ]);
+  const teaser = await fetchRouteFlightPriceTeaser({
+    routeId: route.id,
+    origin: route.origin,
+    destination: route.destination,
+    originLabel: route.originLabel,
+    destinationLabel: route.destinationLabel,
+    locale,
+  });
+
+  const priceWidgetScriptUrl = buildTravelpayoutsPriceWidgetUrl({
+    origin: route.origin,
+    destination: route.destination,
+    locale,
+  });
 
   const relatedRoutes = getRelatedFlightRoutes(route.id);
 
@@ -67,7 +70,7 @@ export default async function FlightRoutePage({ params }: PageProps) {
       <FlightRouteLandingView
         route={route}
         teaser={teaser}
-        calendarMonths={calendarMonths}
+        priceWidgetScriptUrl={priceWidgetScriptUrl}
         relatedRoutes={relatedRoutes}
         locale={locale}
       />

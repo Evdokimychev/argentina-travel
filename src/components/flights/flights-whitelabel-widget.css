@@ -1,18 +1,25 @@
-/* Aviasales WL — search-first card; global reset stripped in sync hook. */
+/* Aviasales WL — search card + inline results below on the same page. */
+.flights-wl-root {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
 .flights-wl-mount {
   position: relative;
   width: 100%;
   overflow: visible;
   border-radius: var(--flights-search-radius, 1.25rem);
-  border: 1px solid rgb(229 231 235 / 0.9);
+  border: 1px solid rgb(229 231 235 / 0.95);
   background: #fff;
   box-shadow:
     0 1px 2px rgb(15 23 42 / 0.04),
-    0 8px 24px rgb(15 23 42 / 0.06);
+    0 12px 32px rgb(15 23 42 / 0.07),
+    0 24px 48px rgb(15 23 42 / 0.04);
 }
 
-.flights-wl-mount #tpwl-search,
-.flights-wl-mount #tpwl-tickets {
+.flights-wl-root #tpwl-search,
+.flights-wl-root #tpwl-tickets {
   position: relative !important;
   top: auto !important;
   left: auto !important;
@@ -25,32 +32,44 @@
   overflow: visible !important;
 }
 
-.flights-wl-mount #tpwl-search {
+.flights-wl-root #tpwl-search {
   padding: 0.75rem 0.5rem 1rem;
 }
 
 @media (min-width: 640px) {
-  .flights-wl-mount #tpwl-search {
+  .flights-wl-root #tpwl-search {
     padding: 1rem 0.75rem 1.25rem;
   }
 }
 
-.flights-wl-mount #tpwl-tickets:not(:empty) {
-  margin-top: 0;
-  padding: 0 0.5rem 1rem;
-  border-top: 1px solid rgb(243 244 246);
+.flights-wl-results {
+  width: 100%;
 }
 
-@media (min-width: 640px) {
-  .flights-wl-mount #tpwl-tickets:not(:empty) {
-    padding: 0 0.75rem 1.25rem;
-  }
+.flights-wl-results:not(:empty) {
+  margin-top: 1.5rem;
+}
+
+.flights-wl-root #tpwl-tickets:not(:empty) .TPWL-template-wrapper {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  transform: none !important;
+}
+
+/* Hide partner header — we already have the page hero. */
+.flights-page-root .TPWL-template-wrapper .TPWL-template-header,
+.flights-page-root div.TPWL-header-content {
+  display: none !important;
 }
 
 /*
  * Partner popovers in #tpwl-modals shadow DOM on body.
  * Full-viewport fixed host — docs/avia-white-label.html.
- * Viewport clamp — ensureTpwlModalsInteractive().
+ * Compact sizing + below-trigger anchoring — ensureTpwlModalsInteractive() (shadow CSS + JS fitter).
  */
 body:has(.flights-page-root) > #tpwl-modals {
   position: fixed !important;

@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight, ExternalLink, Plane } from "lucide-react";
 import HubHero from "@/components/guide/hub/HubHero";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
 import FlightPriceTeaserCard from "@/components/flights/FlightPriceTeaserCard";
-import FlightPriceCalendar from "@/components/flights/FlightPriceCalendar";
+import FlightRoutePriceWidget from "@/components/flights/FlightRoutePriceWidget";
 import { buttonVariants } from "@/components/ui/button";
 import {
   buildFlightRouteHref,
@@ -13,7 +13,6 @@ import type { FlightPriceTeaser } from "@/lib/flights/hub-price-teasers";
 import { getFlightRouteLabels } from "@/lib/flights/route-labels";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { buildFlightsSearchHref } from "@/lib/flights/search-href";
-import type { MonthlyFlightPrice } from "@/lib/travelpayouts/aviasales/data-api";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { cn } from "@/lib/utils";
@@ -23,7 +22,7 @@ import type { LocaleCode } from "@/types/locale";
 type FlightRouteLandingViewProps = {
   route: FlightPopularRoute;
   teaser: FlightPriceTeaser | null;
-  calendarMonths: MonthlyFlightPrice[];
+  priceWidgetScriptUrl: string;
   relatedRoutes: FlightPopularRoute[];
   locale?: LocaleCode;
 };
@@ -31,7 +30,7 @@ type FlightRouteLandingViewProps = {
 export default function FlightRouteLandingView({
   route,
   teaser,
-  calendarMonths,
+  priceWidgetScriptUrl,
   relatedRoutes,
   locale = "ru",
 }: FlightRouteLandingViewProps) {
@@ -85,13 +84,10 @@ export default function FlightRouteLandingView({
                 <p className="text-sm leading-relaxed text-slate">{routeIntro}</p>
               </section>
 
-              <FlightPriceCalendar
+              <FlightRoutePriceWidget
                 origin={route.origin}
                 destination={route.destination}
-                originLabel={route.originLabel}
-                destinationLabel={route.destinationLabel}
-                routeId={route.id}
-                months={calendarMonths}
+                scriptUrl={priceWidgetScriptUrl}
                 locale={locale}
               />
 

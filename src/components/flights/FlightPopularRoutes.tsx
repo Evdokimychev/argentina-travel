@@ -1,6 +1,11 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import { FLIGHT_POPULAR_ROUTES, buildFlightRouteHref } from "@/data/flight-popular-routes";
+import {
+  FlightPopularRoutePillContent,
+  FlightPopularRoutesGrouped,
+} from "@/components/flights/FlightPopularRoutePill";
+import { buildFlightRouteHref } from "@/data/flight-popular-routes";
 import { cn } from "@/lib/utils";
 
 type FlightPopularRoutesProps = {
@@ -24,25 +29,20 @@ export default function FlightPopularRoutes({
       >
         {title}
       </h2>
-      <div className={cn("flex flex-wrap gap-2", compact ? "mt-3 gap-2" : "mt-4 gap-2.5")}>
-        {FLIGHT_POPULAR_ROUTES.map((route) => (
+      <FlightPopularRoutesGrouped
+        compact={compact}
+        className={compact ? "mt-3" : "mt-4"}
+        renderRoute={({ route, className: pillClassName, ariaLabel }) => (
           <Link
             key={route.id}
             href={buildFlightRouteHref(route.id)}
-            className={cn(
-              "group inline-flex items-center gap-2 rounded-xl border border-gray-100 bg-white text-charcoal transition-all hover:border-sky/25 hover:bg-sky/[0.04]",
-              compact
-                ? "px-3 py-2 text-xs shadow-sm"
-                : "px-4 py-2.5 text-sm shadow-card hover:shadow-elevated",
-            )}
+            className={pillClassName}
+            aria-label={ariaLabel}
           >
-            <span>
-              {route.originLabel} → {route.destinationLabel}
-            </span>
-            <ArrowRight className="h-4 w-4 text-slate group-hover:text-sky" />
+            <FlightPopularRoutePillContent route={route} />
           </Link>
-        ))}
-      </div>
+        )}
+      />
     </section>
   );
 }
