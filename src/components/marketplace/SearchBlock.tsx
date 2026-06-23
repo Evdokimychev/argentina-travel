@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Search, Calendar, Navigation, X } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -27,6 +27,8 @@ interface SearchBlockProps {
   onDatesChange: (from: Date | null, to: Date | null) => void;
   onNearMe: (coords: { lat: number; lng: number } | null) => void;
   onSearch: () => void;
+  /** When true, omits outer card chrome (for HomeMultiSearch). */
+  embedded?: boolean;
 }
 
 function ClearButton({
@@ -84,6 +86,7 @@ export default function SearchBlock({
   onDatesChange,
   onNearMe,
   onSearch,
+  embedded = false,
 }: SearchBlockProps) {
   const [destOpen, setDestOpen] = useState(false);
   const [dateOpen, setDateOpen] = useState(false);
@@ -91,6 +94,22 @@ export default function SearchBlock({
   const [draftTo, setDraftTo] = useState(dateTo);
   const [locating, setLocating] = useState(false);
   const [geoError, setGeoError] = useState<string | null>(null);
+  const destPopoverRef = useRef<HTMLDivElement>(null);
+  const destInteractedRef = useRef(false);
+
+  useEffect(() => {
+    if (!destOpen) return;
+
+    const handleScroll = (event: Event) => {
+      if (destInteractedRef.current) return;
+      const target = event.target;
+      if (target instanceof Node && destPopoverRef.current?.contains(target)) return;
+      setDestOpen(false);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true, capture: true });
+    return () => window.removeEventListener("scroll", handleScroll, { capture: true });
+  }, [destOpen]);
 
   const trimmedQuery = query.trim();
   const isSearching = trimmedQuery.length > 0;
@@ -160,10 +179,16 @@ export default function SearchBlock({
     setDestOpen(false);
   }
 
-  return (
-    <div className="rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4">
+  const form = (
+    <>
       <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
-        <Popover open={destOpen} onOpenChange={(open) => setDestOpen(open)}>
+        <Popover
+          open={destOpen}
+          onOpenChange={(open) => {
+            setDestOpen(open);
+            if (open) destInteractedRef.current = false;
+          }}
+        >
           <div className="flex flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50">
             <PopoverTrigger asChild>
               <button
@@ -196,18 +221,25 @@ export default function SearchBlock({
             )}
           </div>
           <PopoverContent
+            ref={destPopoverRef}
             side="bottom"
             align="start"
             avoidCollisions={false}
             sideOffset={8}
             className="flex max-h-[min(420px,calc(100vh-12rem))] w-[min(480px,calc(100vw-2rem))] flex-col overflow-hidden p-0"
+            onPointerDownCapture={() => {
+              destInteractedRef.current = true;
+            }}
           >
             <div className="shrink-0 border-b border-gray-100 p-4">
               <div className="relative">
                 <Input
                   placeholder="Регион, город, парк или достопримечательность"
                   value={query}
-                  onChange={(e) => onQueryChange(e.target.value)}
+                  onChange={(e) => {
+                    destInteractedRef.current = true;
+                    onQueryChange(e.target.value);
+                  }}
                   autoFocus
                   className={query ? "pr-10" : undefined}
                 />
@@ -224,31 +256,36 @@ export default function SearchBlock({
               </div>
             </div>
 
-            <div className="shrink-0 px-4 pt-4">
+            <div className="shrink-0 border-b border-gray-100 px-3 py-1.5">
               <button
                 type="button"
                 onClick={handleNearMe}
                 disabled={locating}
+                aria-describedby="nearby-search-hint"
                 className={cn(
-                  "flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3 text-sm font-semibold transition-colors disabled:opacity-80",
+                  "flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors disabled:opacity-80",
                   nearMe
                     ? "bg-sky/10 text-sky-dark"
-                    : "bg-gray-100 text-charcoal hover:bg-gray-200/80"
+                    : "text-charcoal hover:bg-gray-50"
                 )}
               >
                 {locating ? (
-                  <LoadingSpinner className="h-4 w-4" />
+                  <LoadingSpinner className="h-3.5 w-3.5 shrink-0" />
                 ) : (
-                  <Navigation className="h-4 w-4 shrink-0" />
+                  <Navigation className="h-3.5 w-3.5 shrink-0" aria-hidden />
                 )}
-                {locating ? "Определяем..." : nearMe ? "Рядом со мной ✓" : "Искать поблизости"}
+                <span className="truncate">
+                  {locating ? "Определяем..." : nearMe ? "Рядом со мной ✓" : "Искать поблизости"}
+                </span>
+                {!locating && !nearMe ? (
+                  <span id="nearby-search-hint" className="ml-auto shrink-0 text-[10px] text-slate">
+                    до 1000 км
+                  </span>
+                ) : null}
               </button>
-              <p className="mt-2 px-1 text-center text-xs leading-relaxed text-slate">
-                Покажем все туры на расстоянии до 1000 километров от вас
-              </p>
             </div>
 
-            <div className="shrink-0 px-4 pt-5 pb-2">
+            <div className="shrink-0 px-4 pt-3 pb-2">
               <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate/70">
                 {isSearching ? "Лучшее совпадение" : "Популярное"}
               </p>
@@ -360,6 +397,14 @@ export default function SearchBlock({
           {geoError}
         </p>
       ) : null}
+    </>
+  );
+
+  if (embedded) return form;
+
+  return (
+    <div className="rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4">
+      {form}
     </div>
   );
 }

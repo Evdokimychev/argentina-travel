@@ -14,6 +14,7 @@ import {
   getRecommendedExcursions,
   getRecommendedTours,
 } from "@/lib/personalization/recommendations-server";
+import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
@@ -36,7 +37,7 @@ export default async function HomePage() {
     actorId
   );
 
-  const [tours, testimonials, platformStats, recommendedTours, recommendedExcursions] =
+  const [tours, testimonials, platformStats, recommendedTours, recommendedExcursions, excursionCities] =
     await Promise.all([
       fetchMarketplaceTours(),
       collectTopVerifiedReviewsAsync(3),
@@ -47,6 +48,7 @@ export default async function HomePage() {
       homepageRecommendationsV2Enabled
         ? getRecommendedExcursions({ ...actor, limit: 6 })
         : Promise.resolve({ excursions: [], personalized: false }),
+      fetchExcursionCitiesServer(),
     ]);
 
   return (
@@ -57,6 +59,7 @@ export default async function HomePage() {
         blogPosts={blogPosts}
         testimonials={testimonials}
         platformStats={platformStats}
+        excursionCities={excursionCities}
         travelPrepStrip={<TravelPrepStrip />}
         showHomepageRecommendationsV2={homepageRecommendationsV2Enabled}
         personalizedTours={recommendedTours.tours}

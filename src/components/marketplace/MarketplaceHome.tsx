@@ -13,8 +13,9 @@ import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { destinationHref } from "@/lib/destinations";
-import SearchBlock from "./SearchBlock";
+import HomeMultiSearch, { type HomeSearchTab } from "./HomeMultiSearch";
 import FilterBar from "./FilterBar";
+import HomeExcursionFilterStrip from "./HomeExcursionFilterStrip";
 import MarketplaceTourCard from "./MarketplaceTourCard";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { TourEmbedConfig } from "@/types/tour-embed";
@@ -33,7 +34,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
-import type { ExcursionListing } from "@/types/excursion";
+import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
 
 const HOME_HERO_IMAGE = getHomeHeroImage();
@@ -47,6 +48,7 @@ interface MarketplaceHomeProps {
   blogPosts: BlogPost[];
   testimonials: Testimonial[];
   platformStats: PlatformStats;
+  excursionCities?: ExcursionCity[];
   travelPrepStrip?: React.ReactNode;
   showHomepageRecommendationsV2?: boolean;
   personalizedTours?: TourListing[];
@@ -99,6 +101,7 @@ export default function MarketplaceHome({
   blogPosts,
   testimonials,
   platformStats,
+  excursionCities = [],
   travelPrepStrip,
   showHomepageRecommendationsV2 = false,
   personalizedTours = [],
@@ -112,6 +115,7 @@ export default function MarketplaceHome({
   const [filters, setFilters] = useState<TourFilters>(() =>
     getDefaultFilters(currency, tours)
   );
+  const [searchTab, setSearchTab] = useState<HomeSearchTab>("tours");
 
   useSyncPriceFilters(tours, currency, setFilters);
 
@@ -219,9 +223,9 @@ export default function MarketplaceHome({
           </div>
 
           <div className="mt-8 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20 lg:pb-2">
-            <div className="rounded-2xl bg-white/90 p-1 shadow-card ring-1 ring-gray-100 backdrop-blur-md lg:p-1.5">
-            <SearchBlock
+            <HomeMultiSearch
               tours={tours}
+              excursionCities={excursionCities}
               query={filters.query}
               dateFrom={filters.dateFrom}
               dateTo={filters.dateTo}
@@ -237,7 +241,8 @@ export default function MarketplaceHome({
                   userCoords: coords,
                 }))
               }
-              onSearch={() => {
+              onTabChange={setSearchTab}
+              onToursSearch={() => {
                 const hasCriteria =
                   filters.query.trim() ||
                   filters.dateFrom ||
@@ -251,12 +256,19 @@ export default function MarketplaceHome({
                 router.push("/tours");
               }}
             />
-            </div>
           </div>
 
-          <div className="mt-4">
-            <FilterBar tours={tours} filters={filters} onChange={setFilters} />
-          </div>
+          {searchTab === "tours" ? (
+            <div className="mt-4">
+              <FilterBar tours={tours} filters={filters} onChange={setFilters} />
+            </div>
+          ) : null}
+
+          {searchTab === "excursions" ? (
+            <div className="mt-4">
+              <HomeExcursionFilterStrip />
+            </div>
+          ) : null}
         </div>
       </section>
 
@@ -368,7 +380,7 @@ export default function MarketplaceHome({
             >
               <Image
                 src={dest.image}
-                alt={dest.name}
+                alt={dest.imageAlt ?? dest.name}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
                 sizes="(max-width: 768px) 50vw, 33vw"
