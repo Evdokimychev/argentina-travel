@@ -4,19 +4,13 @@ import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import HubHero from "@/components/guide/hub/HubHero";
 import BlogCard from "@/components/blog/BlogCard";
-import BlogEditorialHubs from "@/components/blog/BlogEditorialHubs";
 import BlogEmptyCatalogState from "@/components/blog/BlogEmptyCatalogState";
 import BlogHeroVariantCopy from "@/components/blog/BlogHeroVariantCopy";
-import BlogPersonalizedPosts from "@/components/blog/BlogPersonalizedPosts";
-import BlogRecentlyUpdated from "@/components/blog/BlogRecentlyUpdated";
-import BlogRecommendedTours from "@/components/blog/BlogRecommendedTours";
-import BlogTrendingDestinations from "@/components/blog/BlogTrendingDestinations";
-import BlogPopularRoutes from "@/components/blog/BlogPopularRoutes";
+import BlogIndexDiscoverySidebar, {
+  BlogIndexSecondaryDiscovery,
+  BlogStartHereStrip,
+} from "@/components/blog/BlogIndexDiscoverySidebar";
 import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
-import BlogSidebar from "@/components/blog/BlogSidebar";
-import BlogStartHere from "@/components/blog/BlogStartHere";
-import BlogStatsOverview from "@/components/blog/BlogStatsOverview";
-import BlogTopicHubs from "@/components/blog/BlogTopicHubs";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import {
   blogPosts,
@@ -33,6 +27,7 @@ import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { BlogPost, TourListing } from "@/types";
+import "@/components/blog/blog-index.css";
 
 const PAGE_SIZE = 12;
 
@@ -154,8 +149,23 @@ function BlogIndexViewContent({
     resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
+  function handleSidebarCategorySelect(category: string) {
+    handleCategoryChange(category);
+    scrollToResults();
+  }
+
   function renderCatalogResults(showHeading: boolean, className?: string) {
     featuredUsed.value = false;
+
+    const headingLabel = hasActiveFilters
+      ? activeTag
+        ? `Тег «${activeTag}»`
+        : activeCategory !== "Все"
+          ? activeCategory
+          : query.trim()
+            ? `Поиск: «${query.trim()}»`
+            : "Результаты"
+      : "Все материалы";
 
     return (
       <div
@@ -164,35 +174,51 @@ function BlogIndexViewContent({
         className={cn("scroll-mt-24", className)}
       >
         {showHeading ? (
-          <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-            Все статьи
-          </h2>
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="font-heading text-lg font-bold text-charcoal sm:text-xl">
+              {headingLabel}
+            </h2>
+            <p className="text-xs tabular-nums text-slate sm:text-sm">
+              {filteredPosts.length}{" "}
+              {filteredPosts.length === 1
+                ? "материал"
+                : filteredPosts.length < 5
+                  ? "материала"
+                  : "материалов"}
+            </p>
+          </div>
         ) : null}
 
         {displayedPosts.length > 0 ? (
-          <ul className={cn("grid gap-4 sm:grid-cols-2 sm:gap-5", showHeading ? "mt-5" : "mt-0")}>
+          <ul
+            className={cn(
+              "grid gap-3 sm:grid-cols-2 sm:gap-4",
+              hasActiveFilters ? "xl:grid-cols-3" : "lg:grid-cols-2",
+              showHeading ? "mt-4" : "mt-0",
+            )}
+          >
             {displayedPosts.map((post, index) => {
               const variant = resolveBlogCardVariant(post, index, featuredUsed);
               return (
                 <li
                   key={post.id}
-                  className={variant === "featured" ? "sm:col-span-2" : undefined}
+                  className={variant === "featured" && !hasActiveFilters ? "sm:col-span-2" : undefined}
                 >
                   <BlogCard
                     post={post}
-                    variant={variant}
-                    priority={index === 0 && variant === "featured"}
+                    variant={hasActiveFilters ? "standard" : variant}
+                    priority={index === 0 && variant === "featured" && !hasActiveFilters}
                   />
                 </li>
               );
             })}
           </ul>
         ) : (
-          <BlogEmptyCatalogState onReset={resetFilters} className={showHeading ? "mt-5" : undefined} />
+          <BlogEmptyCatalogState onReset={resetFilters} className={showHeading ? "mt-4" : undefined} />
         )}
 
         {hasMore ? (
-          <div className="mt-8 flex flex-col items-center gap-2">
+          <div className="mt-6 flex flex-col items-center gap-1.5">
             <button
               type="button"
               onClick={() => setVisibleCount((n) => n + PAGE_SIZE)}
@@ -237,8 +263,8 @@ function BlogIndexViewContent({
         )}
       </BlogHeroVariantCopy>
 
-      <div className="bg-surface-muted pb-16">
-        <div className={cn(siteContainerClass, "py-8 md:py-10")}>
+      <div className="bg-surface-muted pb-12">
+        <div className={cn(siteContainerClass, "blog-index py-5 md:py-6")}>
           <PageBreadcrumbs
             items={[
               { label: "Главная", href: "/" },
@@ -246,74 +272,60 @@ function BlogIndexViewContent({
             ]}
           />
 
-          <BlogSearchFilters
-            variant="spotlight"
-            query={query}
-            onQueryChange={setQuery}
-            categories={categoriesWithCounts}
-            activeCategory={activeCategory}
-            onCategoryChange={handleCategoryChange}
-            tags={tags}
-            activeTag={activeTag}
-            onTagChange={handleTagChange}
-            resultCount={filteredPosts.length}
-            onReset={resetFilters}
-          />
+          <div className="blog-index-toolbar mt-4">
+            <BlogSearchFilters
+              variant="spotlight"
+              query={query}
+              onQueryChange={setQuery}
+              categories={categoriesWithCounts}
+              activeCategory={activeCategory}
+              onCategoryChange={handleCategoryChange}
+              tags={tags}
+              activeTag={activeTag}
+              onTagChange={handleTagChange}
+              resultCount={filteredPosts.length}
+              onReset={resetFilters}
+            />
+          </div>
 
-          {hasActiveFilters ? renderCatalogResults(false, "mt-6") : null}
+          <div
+            className={cn(
+              "mt-5",
+              !hasActiveFilters &&
+                "lg:grid lg:grid-cols-[minmax(0,1fr)_17.5rem] lg:items-start lg:gap-8 xl:grid-cols-[minmax(0,1fr)_20rem] xl:gap-10",
+            )}
+          >
+            <div className="min-w-0">
+              {!hasActiveFilters ? (
+                <BlogStartHereStrip posts={editorialPosts} className="mb-5 lg:hidden" />
+              ) : null}
 
-          {!hasActiveFilters ? (
-            <>
-              <BlogStatsOverview
-                stats={stats}
-                editorialCount={editorialPosts.length}
-                className="mt-8"
-              />
-              <BlogStartHere posts={editorialPosts} className="mt-10" />
-              <BlogPersonalizedPosts
-                catalog={indexableCatalog}
-                initialPosts={initialPersonalizedPosts}
-                className="mt-10"
-              />
-              <BlogRecentlyUpdated posts={indexableCatalog} className="mt-10" />
-              <BlogTrendingDestinations className="mt-10" />
-              <BlogPopularRoutes className="mt-10" />
-              <BlogEditorialHubs posts={indexableCatalog} className="mt-10" />
-              <BlogRecommendedTours className="mt-10" initialTours={initialTours} />
-              <BlogTopicHubs
+              <section ref={catalogRef} id="blog-catalog" className="scroll-mt-24">
+                {renderCatalogResults(true)}
+              </section>
+
+              {!hasActiveFilters ? (
+                <BlogIndexSecondaryDiscovery
+                  catalog={indexableCatalog}
+                  initialTours={initialTours}
+                  className="mt-10 border-t border-gray-200/80 pt-10"
+                />
+              ) : null}
+            </div>
+
+            {!hasActiveFilters ? (
+              <BlogIndexDiscoverySidebar
                 categories={categoriesWithCounts}
                 activeCategory={activeCategory}
-                onCategorySelect={(category) => {
-                  handleCategoryChange(category);
-                  scrollToResults();
-                }}
-                className="mt-10"
+                onCategorySelect={handleSidebarCategorySelect}
+                startHerePosts={editorialPosts}
+                catalog={indexableCatalog}
+                initialPersonalizedPosts={initialPersonalizedPosts}
+                freshPosts={freshPosts}
+                className="hidden lg:block"
               />
-            </>
-          ) : null}
-
-          {!hasActiveFilters ? (
-            <div className="mt-10 lg:flex lg:items-start lg:gap-8 xl:gap-10">
-              <div className="min-w-0 flex-1">
-                <section ref={catalogRef} id="blog-catalog" className="scroll-mt-24">
-                  {renderCatalogResults(true)}
-                </section>
-
-                <section className="mt-10 rounded-3xl border border-gray-100 bg-white p-5 shadow-card xl:hidden">
-                  <h2 className="text-xs font-semibold uppercase tracking-wider text-slate">Недавние</h2>
-                  <ul className="mt-3 space-y-1">
-                    {freshPosts.map((post) => (
-                      <li key={post.id}>
-                        <BlogCard post={post} variant="compact" />
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-              </div>
-
-              <BlogSidebar freshPosts={freshPosts} />
-            </div>
-          ) : null}
+            ) : null}
+          </div>
         </div>
       </div>
     </>

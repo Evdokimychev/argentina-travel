@@ -202,11 +202,10 @@ describe("blog Phase 2/3 wiring", () => {
     expect(source).toContain("BlogReadingHistoryRecorder");
   });
 
-  it("BlogIndexView includes trending destinations and popular routes", () => {
-    const source = readFileSync(join(root, "components/blog/BlogIndexView.tsx"), "utf8");
+  it("blog index includes trending destinations and popular routes", () => {
+    const source = readFileSync(join(root, "components/blog/BlogIndexDiscoverySidebar.tsx"), "utf8");
     expect(source).toContain("BlogTrendingDestinations");
     expect(source).toContain("BlogPopularRoutes");
-    expect(source).toContain("initialTours");
   });
 
   it("BlogShareBar includes save article button", () => {

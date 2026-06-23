@@ -57,26 +57,27 @@ export default function BlogSearchFilters({
       className={cn(
         "scroll-mt-24",
         isSpotlight
-          ? "rounded-2xl border border-gray-200/80 bg-white p-4 shadow-sm sm:p-5"
+          ? "rounded-xl border border-gray-200/80 bg-white p-3 shadow-sm sm:p-4"
           : "rounded-3xl border border-gray-100 bg-white p-4 shadow-card sm:p-5",
       )}
       role="search"
       aria-label="Поиск и фильтры блога"
     >
       {isSpotlight ? (
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2.5">
           <div className="flex min-w-0 flex-wrap items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-sky/8 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-sky">
+            <span className="inline-flex items-center gap-1 rounded-full bg-sky/8 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-sky">
               <SlidersHorizontal className="h-3 w-3" aria-hidden />
               Каталог
             </span>
-            <p className="text-sm text-slate">
+            <p className="text-xs text-slate sm:text-sm">
               <span className="font-semibold tabular-nums text-charcoal">{totalCount}</span>{" "}
               {totalCount === 1 ? "материал" : totalCount < 5 ? "материала" : "материалов"}
-              <span className="mx-1.5 text-gray-300" aria-hidden>
+              <span className="mx-1 text-gray-300" aria-hidden>
                 ·
               </span>
-              {categories.length} {categories.length === 1 ? "категория" : categories.length < 5 ? "категории" : "категорий"}
+              {categories.length}{" "}
+              {categories.length === 1 ? "категория" : categories.length < 5 ? "категории" : "категорий"}
             </p>
           </div>
           {hasFilters ? (
@@ -106,7 +107,7 @@ export default function BlogSearchFilters({
         </div>
       )}
 
-      <div className={cn("relative", isSpotlight ? "mt-3" : "mt-4")}>
+      <div className={cn("relative", isSpotlight ? "mt-2.5" : "mt-4")}>
         <label htmlFor={searchId} className="sr-only">
           Поиск по блогу
         </label>
@@ -120,7 +121,7 @@ export default function BlogSearchFilters({
           value={query}
           onChange={(event) => onQueryChange(event.target.value)}
           placeholder="Регион, виза, треккинг, бюджет, связь…"
-          className="blog-touch-target w-full rounded-xl border border-gray-200 bg-surface-muted/30 py-2.5 pl-10 pr-10 text-sm text-charcoal outline-none transition-colors placeholder:text-slate/60 focus:border-sky/40 focus:bg-white focus:ring-2 focus:ring-sky/10"
+          className="blog-touch-target w-full rounded-lg border border-gray-200 bg-surface-muted/30 py-2 pl-10 pr-10 text-sm text-charcoal outline-none transition-colors placeholder:text-slate/60 focus:border-sky/40 focus:bg-white focus:ring-2 focus:ring-sky/10"
           aria-controls={resultsId}
         />
         {query ? (
@@ -135,7 +136,7 @@ export default function BlogSearchFilters({
         ) : null}
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-2 flex flex-wrap items-center gap-1.5">
         <p
           id={resultsId}
           className={cn(
@@ -173,9 +174,9 @@ export default function BlogSearchFilters({
         ) : null}
       </div>
 
-      <div className="mt-3">
+      <div className="mt-2">
         <div
-          className="-mx-0.5 flex gap-1.5 overflow-x-auto overscroll-x-contain px-0.5 pb-0.5 scrollbar-thin"
+          className="-mx-0.5 flex gap-1 overflow-x-auto overscroll-x-contain px-0.5 pb-0.5 scrollbar-thin"
           role="group"
           aria-label="Категории"
         >
@@ -204,13 +205,13 @@ export default function BlogSearchFilters({
       </div>
 
       {tags.length > 0 ? (
-        <div className="mt-2.5">
+        <div className="mt-2">
           <div
             className="-mx-0.5 flex gap-1 overflow-x-auto overscroll-x-contain px-0.5 pb-0.5 scrollbar-thin"
             role="group"
             aria-label="Популярные теги"
           >
-            {tags.slice(0, 12).map((tag) => {
+            {tags.slice(0, 10).map((tag) => {
               const active = activeTag === tag;
               return (
                 <button
@@ -256,9 +257,9 @@ function CategoryChip({
       onClick={onClick}
       aria-pressed={active}
       className={cn(
-        "inline-flex shrink-0 items-center gap-1 rounded-lg border px-2.5 py-1.5 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
+        "inline-flex shrink-0 items-center gap-1 rounded-md border px-2 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:text-xs sm:px-2.5 sm:py-1.5",
         active
-          ? "border-sky bg-sky text-white"
+          ? "border-sky bg-sky text-white shadow-sm"
           : "border-transparent bg-surface-muted/70 text-charcoal hover:bg-sky/8 hover:text-sky",
       )}
     >

@@ -12,12 +12,14 @@ import type { BlogPost } from "@/types";
 type BlogPersonalizedPostsProps = {
   catalog: BlogPost[];
   initialPosts?: BlogPost[];
+  variant?: "standard" | "compact";
   className?: string;
 };
 
 export default function BlogPersonalizedPosts({
   catalog,
   initialPosts = [],
+  variant = "standard",
   className,
 }: BlogPersonalizedPostsProps) {
   const [posts, setPosts] = useState<BlogPost[]>(initialPosts);
@@ -57,6 +59,26 @@ export default function BlogPersonalizedPosts({
   const visiblePosts = useMemo(() => posts.slice(0, 4), [posts]);
 
   if (visiblePosts.length === 0) return null;
+
+  if (variant === "compact") {
+    return (
+      <div className={cn("blog-index-aside-panel", className)} aria-labelledby="blog-personalized-title">
+        <div className="flex items-center gap-1.5">
+          <Sparkles className="h-3.5 w-3.5 text-sky" aria-hidden />
+          <h2 id="blog-personalized-title" className="blog-index-aside-panel__title">
+            Для вас
+          </h2>
+        </div>
+        <ul className="mt-2 space-y-1">
+          {visiblePosts.map((post) => (
+            <li key={post.id}>
+              <BlogCard post={post} variant="compact" />
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
 
   return (
     <section className={cn(className)} aria-labelledby="blog-personalized-title">

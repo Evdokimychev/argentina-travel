@@ -196,6 +196,14 @@ export function formatActivities(count: number): string {
   return formatWithWord(count, "активность", "активности", "активностей");
 }
 
+export function passengersWord(count: number): string {
+  return pluralRu(count, "пассажир", "пассажира", "пассажиров");
+}
+
+export function formatPassengers(count: number): string {
+  return formatWithWord(count, "пассажир", "пассажира", "пассажиров");
+}
+
 // Фильтры
 export function filtersWord(count: number): string {
   return pluralRu(count, "фильтр", "фильтра", "фильтров");

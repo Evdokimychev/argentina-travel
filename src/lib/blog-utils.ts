@@ -26,6 +26,15 @@ export function formatBlogUpdatedLabel(post: BlogPost): string {
   return `Обновлено ${formatBlogDate(getBlogUpdatedDate(post))}`;
 }
 
+/** Показывать метку «Обновлено» только если правка была недавней и отличается от даты публикации. */
+export function shouldShowBlogUpdatedMeta(post: BlogPost, recentDays = 90): boolean {
+  const updated = getBlogUpdatedDate(post);
+  if (updated === post.date) return false;
+  const ageMs = Date.now() - new Date(updated).getTime();
+  if (Number.isNaN(ageMs)) return false;
+  return ageMs <= recentDays * 24 * 60 * 60 * 1000;
+}
+
 export type BlogCategoryStat = {
   category: string;
   count: number;
