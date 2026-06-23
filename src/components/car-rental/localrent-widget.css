@@ -1,6 +1,22 @@
-/* Keep LocalRent WL inside our page column — widget defaults to body-level full-bleed layout. */
+/* LocalRent WL — search card + inline results (mirrors flights WL mount). */
+.localrent-wl-root {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+
 .localrent-wl-mount {
+  position: relative;
   isolation: isolate;
+  width: 100%;
+  overflow: visible;
+  border-radius: 1.5rem;
+  border: 1px solid rgb(229 231 235 / 0.95);
+  background: #fff;
+  box-shadow:
+    0 1px 2px rgb(15 23 42 / 0.04),
+    0 12px 32px rgb(15 23 42 / 0.07),
+    0 24px 48px rgb(15 23 42 / 0.04);
 }
 
 .localrent-wl-mount #mrc_wl_plhcrd,
@@ -11,11 +27,101 @@
   right: auto !important;
   width: 100% !important;
   max-width: 100% !important;
+  min-height: 0 !important;
   margin: 0 !important;
   transform: none !important;
+  overflow: visible !important;
 }
 
 .localrent-wl-mount #mrc_wl_plhcrd .mrc-wl-search,
 .localrent-wl-mount #mrc_wl_plhcrd [class*="search"] {
   max-width: 100%;
+}
+
+/* Hide partner page chrome — we already have the page hero. */
+.car-rental-page-root [class*="mrc-wl-header"],
+.car-rental-page-root [class*="mrc_wl_header"],
+.car-rental-page-root .mrc-wl-logo-bar,
+.car-rental-page-root [class*="wl-header"] {
+  display: none !important;
+}
+
+/* Neutralize default LocalRent teal/grey shell inside our white card. */
+.car-rental-page-root .localrent-wl-mount [class*="mrc-wl-search"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc_wl_search"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc-wl-wrap"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc_wl_wrap"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc-wl-body"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc_wl_body"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc-wl-content"],
+.car-rental-page-root .localrent-wl-mount [class*="mrc_wl_content"] {
+  background: transparent !important;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Site sky primary — #74acdf */
+.car-rental-page-root .localrent-wl-mount [class*="btn"][class*="primary"],
+.car-rental-page-root .localrent-wl-mount [class*="button"][class*="primary"],
+.car-rental-page-root .localrent-wl-mount [class*="search-btn"],
+.car-rental-page-root .localrent-wl-mount [class*="search_btn"],
+.car-rental-page-root .localrent-wl-mount button[type="submit"],
+.car-rental-page-root .localrent-wl-mount [role="button"][class*="primary"] {
+  background: #74acdf !important;
+  background-color: #74acdf !important;
+  border-color: #74acdf !important;
+  color: #fff !important;
+}
+
+.car-rental-page-root .localrent-wl-mount [class*="btn"][class*="primary"]:hover,
+.car-rental-page-root .localrent-wl-mount [class*="button"][class*="primary"]:hover,
+.car-rental-page-root .localrent-wl-mount [class*="search-btn"]:hover,
+.car-rental-page-root .localrent-wl-mount [class*="search_btn"]:hover,
+.car-rental-page-root .localrent-wl-mount button[type="submit"]:hover,
+.car-rental-page-root .localrent-wl-mount [role="button"][class*="primary"]:hover {
+  background: #5f9bd4 !important;
+  background-color: #5f9bd4 !important;
+  border-color: #5f9bd4 !important;
+}
+
+.car-rental-page-root .localrent-wl-mount a[class*="link"],
+.car-rental-page-root .localrent-wl-mount a[class*="btn"]:not([class*="primary"]),
+.car-rental-page-root .localrent-wl-mount [class*="text-link"],
+.car-rental-page-root .localrent-wl-mount [class*="text_link"] {
+  color: #74acdf !important;
+}
+
+.car-rental-page-root .localrent-wl-mount a[class*="link"]:hover,
+.car-rental-page-root .localrent-wl-mount a[class*="btn"]:not([class*="primary"]):hover,
+.car-rental-page-root .localrent-wl-mount [class*="text-link"]:hover,
+.car-rental-page-root .localrent-wl-mount [class*="text_link"]:hover {
+  color: #5f9bd4 !important;
+}
+
+.car-rental-page-root .localrent-wl-mount #mrc_wl_plhcrd {
+  padding: 0.75rem 0.5rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .car-rental-page-root .localrent-wl-mount #mrc_wl_plhcrd {
+    padding: 1rem 0.75rem 1.25rem;
+  }
+}
+
+/* Partner overlays attached to body while on car-rental page. */
+body:has(.car-rental-page-root) > [id^="mrc_wl"][id*="modal"],
+body:has(.car-rental-page-root) > [class*="mrc-wl-modal"] {
+  position: fixed !important;
+  inset: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 9999 !important;
 }

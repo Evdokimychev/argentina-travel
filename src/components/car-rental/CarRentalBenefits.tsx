@@ -23,7 +23,7 @@ export default function CarRentalBenefits({ title, items }: CarRentalBenefitsPro
     <section
       ref={ref}
       aria-labelledby="car-rental-benefits-title"
-      className="mt-12 rounded-3xl bg-[#d9eef9] px-5 py-10 sm:px-8 sm:py-12 lg:px-10"
+      className="mt-12 rounded-3xl border border-gray-100 bg-white px-5 py-10 shadow-[0_4px_24px_rgba(26,26,46,0.06)] sm:px-8 sm:py-12 lg:px-10"
     >
       <h2
         id="car-rental-benefits-title"

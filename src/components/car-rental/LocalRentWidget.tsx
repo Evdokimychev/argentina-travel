@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { safeRemoveElement } from "@/lib/dom/safe-partner-dom";
 import {
   getLocalRentScriptUrl,
   LOCALRENT_AFFILIATE_ID,
@@ -40,6 +42,7 @@ function normalizeWidgetRoot(root: HTMLElement, mount: HTMLElement) {
   root.style.right = "auto";
   root.style.width = "100%";
   root.style.maxWidth = "100%";
+  root.style.minHeight = "0";
   root.style.margin = "0";
 }
 
@@ -48,6 +51,18 @@ function mountHasWidgetContent(mount: HTMLElement): boolean {
     if (child.id === SCRIPT_ID) return false;
     if (child.getAttribute("data-localrent-loading") === "true") return false;
     return child.tagName !== "SCRIPT";
+  });
+}
+
+function findBodyLevelPartnerOverlays(): HTMLElement[] {
+  return Array.from(document.body.children).filter((child): child is HTMLElement => {
+    if (!(child instanceof HTMLElement)) return false;
+    const id = child.id.toLowerCase();
+    const className = child.className.toString().toLowerCase();
+    return (
+      (id.startsWith("mrc_wl") && id.includes("modal")) ||
+      className.includes("mrc-wl-modal")
+    );
   });
 }
 
@@ -114,10 +129,11 @@ export default function LocalRentWidget({ loadingLabel, className }: LocalRentWi
     }
 
     const observer = new MutationObserver(syncWidgetRoot);
+    observer.observe(mount, { childList: true, subtree: true });
     observer.observe(document.body, { childList: true, subtree: true });
 
-    const interval = window.setInterval(syncWidgetRoot, 200);
-    const stopInterval = window.setTimeout(() => window.clearInterval(interval), 20000);
+    const interval = window.setInterval(syncWidgetRoot, 300);
+    const stopInterval = window.setTimeout(() => window.clearInterval(interval), 60000);
 
     syncWidgetRoot();
 
@@ -126,30 +142,40 @@ export default function LocalRentWidget({ loadingLabel, className }: LocalRentWi
       observer.disconnect();
       window.clearInterval(interval);
       window.clearTimeout(stopInterval);
+      for (const overlay of findBodyLevelPartnerOverlays()) {
+        if (overlay.parentElement === document.body) safeRemoveElement(overlay);
+      }
     };
   }, []);
 
   return (
-    <div
-      id={LOCALRENT_MOUNT_ID}
-      ref={mountRef}
-      className={cn("localrent-wl-mount relative w-full", className)}
-      data-mrc-wl="true"
-      data-affiliate={LOCALRENT_AFFILIATE_ID}
-      data-country={LOCALRENT_COUNTRY_ID}
-      data-city={LOCALRENT_CITY_ID}
-      data-routing={LOCALRENT_WIDGET_ROUTING}
-      data-zindex={LOCALRENT_WIDGET_Z_INDEX}
-    >
-      {!ready ? (
-        <p
-          className="mb-3 text-sm text-slate"
-          data-localrent-loading="true"
-          aria-live="polite"
-        >
-          {loadingLabel}
-        </p>
-      ) : null}
+    <div className={cn("localrent-wl-root", className)}>
+      <div
+        id={LOCALRENT_MOUNT_ID}
+        ref={mountRef}
+        className="localrent-wl-mount"
+        data-mrc-wl="true"
+        data-affiliate={LOCALRENT_AFFILIATE_ID}
+        data-country={LOCALRENT_COUNTRY_ID}
+        data-city={LOCALRENT_CITY_ID}
+        data-routing={LOCALRENT_WIDGET_ROUTING}
+        data-zindex={LOCALRENT_WIDGET_Z_INDEX}
+      >
+        {!ready ? (
+          <div className="px-4 py-5 sm:px-5 sm:py-6" aria-live="polite">
+            <span className="sr-only">{loadingLabel}</span>
+            <div className="space-y-3">
+              <Skeleton className="h-11 w-full rounded-xl" />
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+                <Skeleton className="h-11 rounded-xl" />
+                <Skeleton className="h-11 rounded-xl" />
+                <Skeleton className="h-11 rounded-xl sm:col-span-1" />
+              </div>
+              <Skeleton className="h-12 w-full rounded-xl sm:max-w-[200px]" />
+            </div>
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }

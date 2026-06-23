@@ -1,0 +1,67 @@
+/* /car-rental — gray-to-sky gradient hero + lifted search card (mirrors /flights) */
+
+.car-rental-page-hero {
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid rgb(26 26 46 / 0.08);
+  background: linear-gradient(
+    152deg,
+    var(--token-color-page-band) 0%,
+    var(--token-color-sky-50) 35%,
+    var(--token-color-sky-100) 62%,
+    var(--token-color-white) 100%
+  );
+}
+
+.dark .car-rental-page-hero {
+  border-bottom-color: rgb(255 255 255 / 0.08);
+  background: linear-gradient(
+    152deg,
+    rgb(28 36 48) 0%,
+    rgb(20 28 38) 45%,
+    rgb(13 15 20) 100%
+  );
+}
+
+.car-rental-page-hero__glow {
+  pointer-events: none;
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(64px);
+}
+
+.car-rental-page-hero__glow--primary {
+  top: -3rem;
+  right: -2rem;
+  height: 11rem;
+  width: 11rem;
+  background: rgb(116 172 223 / 0.14);
+}
+
+.car-rental-page-hero__glow--secondary {
+  bottom: -2.5rem;
+  left: 10%;
+  height: 8rem;
+  width: 14rem;
+  background: rgb(116 172 223 / 0.08);
+}
+
+.dark .car-rental-page-hero__glow--primary {
+  background: rgb(116 172 223 / 0.12);
+}
+
+.dark .car-rental-page-hero__glow--secondary {
+  background: rgb(252 191 73 / 0.07);
+}
+
+.car-rental-page-search-shell {
+  position: relative;
+  z-index: 1;
+  margin-top: -1.25rem;
+}
+
+@media (min-width: 640px) {
+  .car-rental-page-search-shell {
+    margin-top: -1.75rem;
+  }
+}
