@@ -25,7 +25,8 @@ import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { avatarAlt, tourCoverAlt } from "@/lib/media-alt-text";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
-import { isPartnerTourListing, PARTNER_TRIPSTER_BADGE_HINT, PARTNER_TRIPSTER_BADGE_LABEL } from "@/lib/tripster/partner-tour-utils";
+import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
@@ -56,6 +57,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
   const cityDisplay = resolveTourCityDisplay(tour);
   const isPartnerTour = isPartnerTourListing(tour);
+  const partnerBadge = resolvePartnerTourBadge(tour);
 
   return (
     <ContentCard>
@@ -64,13 +66,13 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
           <TourCardGallery images={tour.gallery} alt={tourCoverAlt(tour.title)} variant="tour" />
 
           <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-3.5rem)] flex-wrap gap-1.5">
-            {isPartnerTour ? (
+            {partnerBadge ? (
               <Badge
-                variant="new"
-                title={PARTNER_TRIPSTER_BADGE_HINT}
-                className="border-white/30 bg-white/90 backdrop-blur-sm"
+                variant="expedition"
+                title={partnerBadge.hint}
+                className="border-white/25 bg-charcoal/90 text-white backdrop-blur-sm shadow-sm"
               >
-                {PARTNER_TRIPSTER_BADGE_LABEL}
+                {partnerBadge.label}
               </Badge>
             ) : null}
             {tour.isHot && (

@@ -32,6 +32,8 @@
     "tripster:affiliate-links": "node scripts/tripster-affiliate-links.mjs",
     "sputnik8:verify": "node scripts/sputnik8-verify.mjs",
     "sputnik8:sync": "node scripts/sputnik8-sync.mjs",
+    "youtravel:verify": "node scripts/youtravel-verify.mjs",
+    "youtravel:sync": "node scripts/youtravel-sync.mjs",
     "airalo:download-feed": "node scripts/airalo-download-feed.mjs",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

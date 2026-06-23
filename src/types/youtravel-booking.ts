@@ -1,0 +1,20 @@
+export type YouTravelBookingRequestView = {
+  id: string;
+  tourId: number;
+  tourSlug: string;
+  tourTitle: string;
+  tourCoverImage: string | null;
+  userId: string | null;
+  offerId: number | null;
+  startDate: string;
+  endDate: string | null;
+  personsCount: number;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  message: string | null;
+  youtravelOrderId: string | null;
+  youtravelOrderUrl: string | null;
+  youtravelStatus: string | null;
+  createdAt: string;
+};

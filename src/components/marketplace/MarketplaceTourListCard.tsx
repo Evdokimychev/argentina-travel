@@ -31,7 +31,8 @@ import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
-import { isPartnerTourListing, PARTNER_TRIPSTER_BADGE_HINT, PARTNER_TRIPSTER_BADGE_LABEL } from "@/lib/tripster/partner-tour-utils";
+import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { isLowAvailability } from "@/lib/tour-departure-countdown";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
@@ -89,6 +90,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
   const cityDisplay = resolveTourCityDisplay(tour);
   const isPartnerTour = isPartnerTourListing(tour);
+  const partnerBadge = resolvePartnerTourBadge(tour);
 
   return (
     <article className={cn("group transition-shadow hover:shadow-lg", tourCardShellClass)}>
@@ -101,9 +103,13 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           <TourCardGallery images={tour.gallery} alt={tour.title} />
 
           <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5">
-            {isPartnerTour ? (
-              <Badge variant="new" title={PARTNER_TRIPSTER_BADGE_HINT}>
-                {PARTNER_TRIPSTER_BADGE_LABEL}
+            {partnerBadge ? (
+              <Badge
+                variant="expedition"
+                title={partnerBadge.hint}
+                className="border-white/25 bg-charcoal/90 text-white backdrop-blur-sm shadow-sm"
+              >
+                {partnerBadge.label}
               </Badge>
             ) : null}
             {tour.isHot && (

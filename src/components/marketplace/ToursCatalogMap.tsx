@@ -10,6 +10,7 @@ import {
   ARGENTINA_MAP_CENTER,
   escapeMapHtml,
   getTourMapBounds,
+  hasValidTourMapCoordinates,
 } from "@/lib/tour-map";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { cn } from "@/lib/cn";
@@ -107,27 +108,29 @@ export default function ToursCatalogMap({
       return;
     }
 
-    tours.forEach((tour) => {
-      const marker = L.marker([tour.latitude, tour.longitude], {
-        icon: createDotIcon(false),
-        zIndexOffset: 100,
-      });
+    tours
+      .filter((tour) => hasValidTourMapCoordinates(tour.latitude, tour.longitude))
+      .forEach((tour) => {
+        const marker = L.marker([tour.latitude, tour.longitude], {
+          icon: createDotIcon(false),
+          zIndexOffset: 100,
+        });
 
-      const priceLabel = formatPriceUsd(
-        tour.priceUsd,
-        currencyRef.current,
-        localeRef.current
-      );
-      marker.bindPopup(buildPopupHtml(tour, priceLabel), {
-        className: "tours-map-popup-shell",
-        maxWidth: 280,
-        minWidth: 240,
-      });
+        const priceLabel = formatPriceUsd(
+          tour.priceUsd,
+          currencyRef.current,
+          localeRef.current
+        );
+        marker.bindPopup(buildPopupHtml(tour, priceLabel), {
+          className: "tours-map-popup-shell",
+          maxWidth: 280,
+          minWidth: 240,
+        });
 
-      marker.on("click", () => onSelectRef.current(tour.id));
-      marker.addTo(map);
-      markersRef.current.set(tour.id, marker);
-    });
+        marker.on("click", () => onSelectRef.current(tour.id));
+        marker.addTo(map);
+        markersRef.current.set(tour.id, marker);
+      });
 
     const bounds = getTourMapBounds(tours);
     if (bounds) {

@@ -13,6 +13,8 @@ export const SERVICE_ROLE_ONLY_TABLES = [
   "tripster_booking_requests",
   "tripster_sync_runs",
   "url_redirects",
+  "youtravel_booking_requests",
+  "youtravel_sync_runs",
 ] as const;
 
 export type ServiceRoleOnlyTable = (typeof SERVICE_ROLE_ONLY_TABLES)[number];

@@ -31,8 +31,10 @@ import { formatExcursionsFound } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
 import { cn } from "@/lib/cn";
-import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { MapPin } from "lucide-react";
+import CatalogLazyLoadFooter from "@/components/marketplace/CatalogLazyLoadFooter";
+import { useCatalogLazySlice } from "@/hooks/useCatalogLazySlice";
+import "@/components/marketplace/catalog-listing-page.css";
 
 const PAGE_SIZE = 12;
 const EXCURSION_VIEW_MODE_KEY = "argentina-travel-excursion-catalog-view";
@@ -90,7 +92,6 @@ export default function ExcursionsCatalog({
       maxPrice: sanitizeExcursionMaxPrice(parsed.maxPrice, priceBounds.max),
     };
   });
-  const [page, setPage] = useState(Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
   const [viewMode, setViewMode] = useState<CatalogViewMode>("grid");
   const viewModeHydratedRef = useRef(false);
 
@@ -107,7 +108,6 @@ export default function ExcursionsCatalog({
       ...parsed,
       maxPrice: sanitizeExcursionMaxPrice(parsed.maxPrice, priceBounds.max),
     });
-    setPage(Number.parseInt(searchParams.get("page") ?? "1", 10) || 1);
   }, [searchParams, initialCitySlug, priceBounds.max]);
 
   const filtered = useMemo(() => filterExcursions(excursions, filters), [excursions, filters]);
@@ -121,25 +121,28 @@ export default function ExcursionsCatalog({
     });
     return withoutDuration.length - filtered.length;
   }, [excursions, filters, filtered.length]);
-  const totalPages = Math.max(1, Math.ceil(sorted.length / PAGE_SIZE));
-  const currentPage = Math.min(page, totalPages);
-  const pageItems = sorted.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+  const lazyResetKey = useMemo(
+    () => excursionFiltersToSearchParams(filters, 1).toString(),
+    [filters],
+  );
+  const {
+    visibleItems,
+    visibleCount,
+    totalCount,
+    hasMore,
+    remaining,
+    loadMore,
+    sentinelRef,
+  } = useCatalogLazySlice(sorted, PAGE_SIZE, { resetKey: lazyResetKey });
   const selectedCityName = uniqueCities.find((city) => city.slug === filters.citySlug)?.name;
 
   const basePath =
     catalogBasePath ??
     (initialCitySlug ? `/excursions/city/${initialCitySlug}` : "/excursions");
 
-  const updateUrl = (nextFilters: ExcursionCatalogFilters, nextPage = 1) => {
-    const params = excursionFiltersToSearchParams(nextFilters, nextPage);
-    const qs = params.toString();
-    router.replace(qs ? `${basePath}?${qs}` : basePath, { scroll: false });
-  };
-
   const applyFilters = useCallback(
     (next: ExcursionCatalogFilters) => {
       setFilters(next);
-      setPage(1);
       const params = excursionFiltersToSearchParams(next, 1);
       const qs = params.toString();
       router.replace(qs ? `${basePath}?${qs}` : basePath, { scroll: false });
@@ -150,7 +153,6 @@ export default function ExcursionsCatalog({
   const resetFilters = useCallback(() => {
     const next = getDefaultExcursionCatalogFilters({ citySlug: initialCitySlug ?? "" });
     setFilters(next);
-    setPage(1);
     const params = excursionFiltersToSearchParams(next, 1);
     const qs = params.toString();
     router.replace(qs ? `${basePath}?${qs}` : basePath, { scroll: false });
@@ -187,15 +189,34 @@ export default function ExcursionsCatalog({
   }, [activeFilterCount, resetFilters, t, uniqueCities]);
 
   return (
-    <div className="pb-16">
-      <section className="border-b border-gray-100 bg-gradient-to-b from-sky/[0.06] via-white to-white">
-        <div className={cn(siteContainerClass, "py-8 sm:py-10")}>
-          <div className="max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky">Tripster · Sputnik8</p>
-            <h1 className="mt-2 font-display text-3xl font-bold text-charcoal sm:text-4xl">{resolvedTitle}</h1>
-            <p className="mt-2 text-base leading-relaxed text-slate">{resolvedSubtitle}</p>
-          </div>
+    <div className="catalog-listing-page-root w-full pb-16">
+      <header className="catalog-listing-page-hero" data-scroll-rail-tone="light">
+        <div
+          className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--primary"
+          aria-hidden
+        />
+        <div
+          className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
+          aria-hidden
+        />
+        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky/90">
+            Tripster · Sputnik8
+          </p>
+          <h1 className="mt-2 max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
+            {resolvedTitle}
+          </h1>
+          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
+            {resolvedSubtitle}
+          </p>
+        </div>
+      </header>
 
+      <div className={siteContainerClass}>
+        <div
+          id="excursions-search"
+          className="catalog-listing-page-search-shell scroll-mt-[calc(var(--site-header-height,72px)+1rem)] space-y-4"
+        >
           <ExcursionSearchPanel
             filters={filters}
             cities={uniqueCities}
@@ -208,7 +229,7 @@ export default function ExcursionsCatalog({
             }}
           />
 
-          <CatalogStickyBar inset={false} className="-mx-4 mt-4 px-4 sm:-mx-6 sm:px-6">
+          <CatalogStickyBar inset={false}>
             <div className="flex flex-col gap-3">
               <div className="flex items-start gap-3">
                 <ExcursionCatalogFiltersSheet
@@ -235,9 +256,8 @@ export default function ExcursionsCatalog({
             </div>
           </CatalogStickyBar>
         </div>
-      </section>
 
-      <div className={cn(siteContainerClass, "mt-8")}>
+        <div className="mt-8">
         <div className={cn(flightSidebar ? "lg:grid lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-8 lg:items-start" : undefined)}>
           <div className="min-w-0">
             {sorted.length === 0 ? (
@@ -295,61 +315,45 @@ export default function ExcursionsCatalog({
                   <>
                     <ExcursionCatalogMapNotice cityName={selectedCityName} />
                     <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                      {pageItems.map((excursion) => (
+                      {visibleItems.map((excursion) => (
                         <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
                       ))}
                     </div>
+                    <CatalogLazyLoadFooter
+                      hasMore={hasMore}
+                      pageSize={PAGE_SIZE}
+                      remaining={remaining}
+                      visibleCount={visibleCount}
+                      totalCount={totalCount}
+                      onLoadMore={loadMore}
+                      sentinelRef={sentinelRef}
+                    />
                   </>
                 ) : (
-                  <div
-                    className={cn(
-                      "mt-6",
-                      viewMode === "grid"
-                        ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
-                        : "flex flex-col gap-5",
-                    )}
-                  >
-                    {pageItems.map((excursion) => (
-                      <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
-                    ))}
-                  </div>
+                  <>
+                    <div
+                      className={cn(
+                        "mt-6",
+                        viewMode === "grid"
+                          ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                          : "flex flex-col gap-5",
+                      )}
+                    >
+                      {visibleItems.map((excursion) => (
+                        <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
+                      ))}
+                    </div>
+                    <CatalogLazyLoadFooter
+                      hasMore={hasMore}
+                      pageSize={PAGE_SIZE}
+                      remaining={remaining}
+                      visibleCount={visibleCount}
+                      totalCount={totalCount}
+                      onLoadMore={loadMore}
+                      sentinelRef={sentinelRef}
+                    />
+                  </>
                 )}
-
-                {viewMode !== "map" && totalPages > 1 ? (
-                  <div className="mt-8 flex items-center justify-center gap-3">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      disabled={currentPage <= 1}
-                      onClick={() => {
-                        const next = currentPage - 1;
-                        setPage(next);
-                        updateUrl(filters, next);
-                      }}
-                    >
-                      <ChevronLeft className="h-4 w-4" aria-hidden />
-                      {t("excursions.prev")}
-                    </Button>
-                    <span className="text-sm text-slate">
-                      {currentPage} / {totalPages}
-                    </span>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      disabled={currentPage >= totalPages}
-                      onClick={() => {
-                        const next = currentPage + 1;
-                        setPage(next);
-                        updateUrl(filters, next);
-                      }}
-                    >
-                      {t("excursions.next")}
-                      <ChevronRight className="h-4 w-4" aria-hidden />
-                    </Button>
-                  </div>
-                ) : null}
               </>
             )}
 
@@ -373,6 +377,7 @@ export default function ExcursionsCatalog({
           {flightSidebar ? (
             <aside className="mt-8 lg:mt-0 lg:sticky lg:top-24">{flightSidebar}</aside>
           ) : null}
+        </div>
         </div>
       </div>
     </div>

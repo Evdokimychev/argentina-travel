@@ -15,6 +15,7 @@ import {
   rowToExcursionListing,
   mapSputnik8ReviewRow,
 } from "@/lib/sputnik8/mapper";
+import { enrichSputnik8ExcursionDetail } from "@/lib/sputnik8/detail-enrichment";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -186,8 +187,15 @@ export async function fetchSputnik8ExcursionBySlug(
     .maybeSingle();
 
   const detail = rowToExcursionDetail(data, city);
+  const enriched = await enrichSputnik8ExcursionDetail(detail, data.id, data.payload, city);
   const reviews = await fetchSputnik8ExcursionReviews(supabase, data.id);
-  return { ...detail, reviews };
+  const mergedReviews =
+    reviews.length > 0
+      ? reviews
+      : enriched.reviews && enriched.reviews.length > 0
+        ? enriched.reviews
+        : reviews;
+  return { ...enriched, reviews: mergedReviews };
 }
 
 export async function fetchSputnik8ExcursionReviews(

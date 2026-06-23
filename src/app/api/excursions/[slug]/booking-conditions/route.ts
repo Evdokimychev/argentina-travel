@@ -6,6 +6,7 @@ import {
   buildExcursionBookingConditions,
   pickFirstScheduleSlot,
 } from "@/lib/tripster/booking-conditions";
+import { buildSputnik8BookingConditions } from "@/lib/sputnik8/booking-conditions";
 import {
   fetchTripsterPriceQuote,
   fetchTripsterSchedule,
@@ -30,14 +31,10 @@ export async function GET(_request: Request, context: RouteContext) {
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {
+    const staticConditions = buildSputnik8BookingConditions(excursion);
+
     if (!isSputnik8Configured()) {
-      return NextResponse.json(
-        buildExcursionBookingConditions({
-          quote: null,
-          instantBooking: excursion.instantBooking,
-          isBookable: false,
-        })
-      );
+      return NextResponse.json(staticConditions);
     }
 
     try {
@@ -46,30 +43,26 @@ export async function GET(_request: Request, context: RouteContext) {
         ? { date: schedule.dates[0].date, time: schedule.dates[0].slots[0].time }
         : null;
 
-      const conditions = buildExcursionBookingConditions({
-        quote: slot
-          ? {
+      if (slot && staticConditions.items.length === 0) {
+        return NextResponse.json(
+          buildExcursionBookingConditions({
+            quote: {
               value: excursion.priceValue,
               currency: excursion.priceCurrency,
               value_string: excursion.priceDisplay,
-            }
-          : null,
-        instantBooking: excursion.instantBooking,
-        isBookable: excursion.isBookable,
-      });
-
-      return NextResponse.json(conditions);
-    } catch (error) {
-      if (error instanceof Sputnik8BookingError && (error.status === 401 || error.status === 403)) {
-        return NextResponse.json(
-          buildExcursionBookingConditions({
-            quote: null,
+            },
             instantBooking: excursion.instantBooking,
-            isBookable: false,
+            isBookable: excursion.isBookable,
           })
         );
       }
-      return NextResponse.json({ error: "Failed to load booking conditions." }, { status: 502 });
+
+      return NextResponse.json(staticConditions);
+    } catch (error) {
+      if (error instanceof Sputnik8BookingError && (error.status === 401 || error.status === 403)) {
+        return NextResponse.json(staticConditions);
+      }
+      return NextResponse.json(staticConditions);
     }
   }
 

@@ -14,6 +14,10 @@ import {
   validateGuestsForScheduledBooking,
 } from "@/lib/tour-booking-spots";
 import { formatCompactUsd } from "@/lib/tour-date-pricing";
+import {
+  resolvePartnerDatesBookingLinkLabel,
+  resolvePartnerScheduleSubtitle,
+} from "@/lib/partner-tours/booking-brand";
 
 function formatDateLabel(date: TourDatePrice): string {
   const start = formatDateShortWithYear(date.startDate);
@@ -73,9 +77,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
       subtitle={
         selectedDate
           ? "Выбранная дата применена в блоке бронирования справа"
-          : tour.partnerPriceDisplay
-            ? `Стоимость на Tripster: ${tour.partnerPriceDisplay} · выберите дату заезда`
-            : "Выберите дату заезда — стоимость обновится в карточке бронирования"
+          : resolvePartnerScheduleSubtitle(tour)
       }
     >
       {scheduleLoading && dates.length === 0 ? (
@@ -175,7 +177,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
         rel="noopener noreferrer"
         className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-sky hover:text-sky-dark"
       >
-        {selectedDate ? "Забронировать на Tripster" : "Выбрать дату и забронировать на Tripster"}
+        {resolvePartnerDatesBookingLinkLabel(tour, Boolean(selectedDate))}
         <ExternalLink className="h-4 w-4" aria-hidden />
       </Link>
     </TourSection>

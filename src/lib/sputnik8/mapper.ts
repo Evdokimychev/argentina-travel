@@ -3,6 +3,8 @@ import { normalizeExcursionCitySlug } from "@/data/excursion-city-links";
 import {
   extractPhotosFromProduct,
   mapPhotos,
+  mapSputnik8ReviewsList,
+  mergeSputnik8ProductSources,
   parseSputnik8Payload,
   resolveCoverImage,
   resolveDurationMinutes,
@@ -18,7 +20,7 @@ import type {
   ExcursionTag,
 } from "@/types/excursion";
 
-export { resolveCoverImage, resolveDurationMinutes, resolvePrice, mapPhotos, extractPhotosFromProduct };
+export { resolveCoverImage, resolveDurationMinutes, resolvePrice, mapPhotos, extractPhotosFromProduct, mergeSputnik8ProductSources };
 
 export function generateProductSlug(title: string, productId: number): string {
   return generateSputnik8ExperienceSlug(title, productId);
@@ -29,7 +31,13 @@ function resolveProductTitle(product: Sputnik8Product): string {
 }
 
 function resolveProductTagline(product: Sputnik8Product): string | undefined {
-  return product.tagline?.trim() || product.short_description?.trim() || product.annotation?.trim() || undefined;
+  return (
+    product.tagline?.trim() ||
+    product.short_info?.trim() ||
+    product.short_description?.trim() ||
+    product.annotation?.trim() ||
+    undefined
+  );
 }
 
 function resolveCitySlug(city: Sputnik8City): string {
@@ -59,7 +67,7 @@ export function productToListingRow(
     city_id: city.id,
     title: resolveProductTitle(product),
     tagline: resolveProductTagline(product) ?? null,
-    annotation: product.annotation ?? product.short_description ?? null,
+    annotation: product.annotation ?? product.short_info ?? product.short_description ?? null,
     description: product.description ?? null,
     status: product.status ?? "active",
     experience_type: product.activity_type ?? product.type ?? null,
@@ -241,10 +249,17 @@ export function rowToExcursionDetail(row: ProductRow, city?: CityRow | null): Ex
   const parsed = parseSputnik8Payload(payload);
 
   const rowPhotos: ExcursionPhoto[] = Array.isArray(row.photos) ? (row.photos as ExcursionPhoto[]) : [];
-  const photos = rowPhotos.length > 0 ? rowPhotos : parsed.photos;
+  const payloadPhotos = parsed.photos;
+  const photos =
+    payloadPhotos.length >= rowPhotos.length && payloadPhotos.length > 0
+      ? payloadPhotos
+      : rowPhotos.length > 0
+        ? rowPhotos
+        : payloadPhotos;
 
   const tags = resolveTags(payload);
   const partnerUrl = (row.partner_url?.trim() || row.sputnik8_url) ?? "";
+  const maxPersons = payload?.group_size_max ?? payload?.max_persons ?? undefined;
 
   return {
     ...listing,
@@ -254,8 +269,8 @@ export function rowToExcursionDetail(row: ProductRow, city?: CityRow | null): Ex
     tripsterUrl: "",
     partnerUrl,
     bookingHref: `/api/affiliate/go/${row.slug}`,
-    experienceType: row.experience_type ?? undefined,
-    maxPersons: payload?.max_persons ?? undefined,
+    experienceType: row.experience_type ?? payload?.type ?? payload?.activity_type ?? undefined,
+    maxPersons,
     childFriendly: payload?.child_friendly ?? undefined,
     instantBooking: payload?.instant_booking ?? undefined,
     isBookable: parsed.isBookable,
@@ -269,7 +284,11 @@ export function rowToExcursionDetail(row: ProductRow, city?: CityRow | null): Ex
     guide: parsed.guide
       ? {
           ...parsed.guide,
-          rating: payload?.guide?.rating ?? payload?.host?.rating,
+          rating:
+            payload?.guide?.rating ??
+            payload?.guide?.review_rating ??
+            payload?.host?.rating ??
+            payload?.host?.review_rating,
           reviewCount: payload?.guide?.review_count ?? payload?.host?.review_count,
         }
       : undefined,
@@ -280,7 +299,9 @@ export function rowToExcursionDetail(row: ProductRow, city?: CityRow | null): Ex
     languages: parsed.languages,
     payTypeInText: parsed.payTypeInText,
     minimumBookPeriod: parsed.minimumBookPeriod,
-    coverImage: listing.coverImage ?? parsed.coverImage,
+    refundPolicy: parsed.refundPolicy,
+    coverImage: listing.coverImage ?? parsed.coverImage ?? photos[0]?.medium,
+    reviews: mapSputnik8ReviewsList(payload?.reviews_list),
   };
 }
 

@@ -1,6 +1,6 @@
 import { TourListing, TourFilters } from "@/types";
 import { CurrencyCode } from "@/types/locale";
-import { resolveTourFilterPriceUsd } from "@/lib/tour-price-public";
+import { resolveListingFilterPriceUsd } from "@/lib/partner-tours/filter-price";
 import { convertFromUsd, getFilterPriceMax, getSliderPriceBounds, getSliderPriceStep } from "@/lib/currency";
 
 export function getTourPriceBounds(
@@ -8,9 +8,7 @@ export function getTourPriceBounds(
   currency: CurrencyCode
 ): { min: number; max: number } {
   const prices = tours
-    .map((t) =>
-      resolveTourFilterPriceUsd({ priceUsd: t.priceUsd, priceOnRequest: t.priceOnRequest })
-    )
+    .map((t) => resolveListingFilterPriceUsd(t))
     .filter((price): price is number => price != null)
     .map((price) => convertFromUsd(price, currency));
 

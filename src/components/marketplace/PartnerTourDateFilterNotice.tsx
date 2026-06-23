@@ -1,6 +1,6 @@
 import { Info } from "lucide-react";
 
-/** Shown when date filters are active but partner (Tripster) tours ignore them in the catalog. */
+/** Shown when date filters are active but Tripster partner tours ignore them in the catalog. */
 export default function PartnerTourDateFilterNotice() {
   return (
     <div

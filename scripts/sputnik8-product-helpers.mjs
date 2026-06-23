@@ -174,7 +174,13 @@ export function extractPhotosFromProduct(product) {
   }
 
   for (const photo of product.photos ?? product.images ?? []) {
-    const medium = (photo.medium || photo.big || photo.original || photo.url || photo.photo_url)?.trim();
+    const medium = (
+      photo.original ||
+      photo.big ||
+      photo.medium ||
+      photo.url ||
+      photo.photo_url
+    )?.trim();
     if (!medium || seen.has(medium)) continue;
     seen.add(medium);
     collected.push({

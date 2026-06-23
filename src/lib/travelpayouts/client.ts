@@ -103,6 +103,25 @@ export async function createTripsterAffiliateLink(input: {
   );
 }
 
+/** Wrap a YouTravel.me tour URL with Travelpayouts attribution. */
+export async function createYouTravelAffiliateLink(input: {
+  youtravelUrl: string;
+  tourId?: string | number;
+  country?: string;
+  shorten?: boolean;
+}): Promise<TravelpayoutsLinkResult> {
+  const subIdParts = ["youtravel"];
+  if (input.country) subIdParts.push(input.country.toLowerCase().replace(/\s+/g, "-"));
+  if (input.tourId != null) subIdParts.push(String(input.tourId));
+
+  return createTravelpayoutsPartnerLink(
+    {
+      url: input.youtravelUrl,
+      subId: subIdParts.join(":"),
+    },
+    { shorten: input.shorten }
+  );
+}
 /** Wrap a Sputnik8 product URL with Travelpayouts attribution. */
 export async function createSputnik8AffiliateLink(input: {
   sputnik8Url: string;

@@ -85,6 +85,20 @@ export type Sputnik8Guide = {
   url?: string;
   rating?: number;
   review_count?: number;
+  review_rating?: number;
+};
+
+export type Sputnik8ReviewListItem = {
+  id?: number;
+  activity_id?: number;
+  content?: string;
+  text?: string;
+  rating?: number;
+  name?: string;
+  author_name?: string;
+  date?: string;
+  created_at?: string;
+  photos?: string[];
 };
 
 export type Sputnik8LocationPoint = {
@@ -128,11 +142,20 @@ export type Sputnik8Product = {
   guide?: Sputnik8Guide;
   host?: Sputnik8Guide;
   max_persons?: number;
+  group_size_max?: number;
   child_friendly?: boolean;
   instant_booking?: boolean;
   is_bookable?: boolean;
+  available_for_booking?: boolean;
   movement_type?: string;
   transport_type?: string;
+  short_info?: string;
+  important_info?: string;
+  required_info?: string | Record<string, unknown>;
+  refund_info?: string;
+  document?: string | Record<string, unknown>;
+  legal_info?: { title?: string | null; address?: string | null; inn?: string | null };
+  reviews_list?: Sputnik8ReviewListItem[];
   meeting_point?: string | Sputnik8LocationPoint;
   begin_place?: Sputnik8LocationPoint;
   finish_point?: string | Sputnik8LocationPoint;

@@ -182,10 +182,52 @@ async function fetchAllProducts(apiKey, username, apiBase, cityId, lang, currenc
 async function fetchProductReviews(apiKey, username, apiBase, productId) {
   try {
     const data = await sputnik8Get(apiKey, username, apiBase, `/products/${productId}/reviews`);
-    return unwrapResults(data).slice(0, 5);
+    return unwrapResults(data).slice(0, 20);
   } catch {
     return [];
   }
+}
+
+async function fetchProductDetail(apiKey, username, apiBase, productId, lang, currency) {
+  return sputnik8Get(
+    apiKey,
+    username,
+    apiBase,
+    `/products/${productId}?lang=${lang}&currency=${currency}`
+  );
+}
+
+function mergeSputnik8ProductSources(listProduct, detailProduct) {
+  const detailPhotos = detailProduct.photos ?? detailProduct.images;
+  const listPhotos = listProduct.photos ?? listProduct.images;
+
+  return {
+    ...listProduct,
+    ...detailProduct,
+    city_id: detailProduct.city_id ?? listProduct.city_id,
+    photos: detailPhotos?.length ? detailPhotos : listPhotos,
+    images: detailPhotos?.length ? detailPhotos : listPhotos,
+    cover_photo: detailProduct.cover_photo ?? listProduct.cover_photo,
+    description: detailProduct.description?.trim() || listProduct.description,
+    short_info: detailProduct.short_info?.trim() || listProduct.short_info,
+    important_info: detailProduct.important_info?.trim() || listProduct.important_info,
+    refund_info: detailProduct.refund_info?.trim() || listProduct.refund_info,
+    what_included: detailProduct.what_included ?? listProduct.what_included,
+    what_not_included: detailProduct.what_not_included ?? listProduct.what_not_included,
+    places_to_see: detailProduct.places_to_see?.trim() || listProduct.places_to_see,
+    begin_place: detailProduct.begin_place ?? listProduct.begin_place,
+    finish_point: detailProduct.finish_point ?? listProduct.finish_point,
+    host: detailProduct.host ?? listProduct.host,
+    guide: detailProduct.guide ?? listProduct.guide,
+    group_size_max: detailProduct.group_size_max ?? listProduct.group_size_max,
+    max_persons: detailProduct.max_persons ?? detailProduct.group_size_max ?? listProduct.max_persons,
+    reviews_list: detailProduct.reviews_list?.length
+      ? detailProduct.reviews_list
+      : listProduct.reviews_list,
+    order_options: detailProduct.order_options?.length
+      ? detailProduct.order_options
+      : listProduct.order_options,
+  };
 }
 
 async function sleep(ms) {
@@ -257,8 +299,8 @@ function productToRow(product, countryId, city, slug, partnerUrl) {
     country_id: countryId,
     city_id: city.id,
     title: resolveProductTitle(product),
-    tagline: product.tagline ?? product.short_description ?? null,
-    annotation: product.annotation ?? product.short_description ?? null,
+    tagline: product.tagline ?? product.short_info ?? product.short_description ?? null,
+    annotation: product.annotation ?? product.short_info ?? product.short_description ?? null,
     description: product.description ?? null,
     status: product.status ?? "active",
     experience_type: product.activity_type ?? product.type ?? null,
@@ -392,6 +434,8 @@ async function main() {
     const pendingLinks = [];
     const productRows = [];
 
+    const skipDetailFetch = process.env.SPUTNIK8_SKIP_DETAIL_FETCH === "true";
+
     for (const city of cities) {
       citiesSynced += 1;
       pushLog(`Syncing city ${city.name_ru ?? city.name_en ?? city.name}…`);
@@ -399,15 +443,33 @@ async function main() {
       pushLog(`  ${products.length} products`);
 
       for (const product of products) {
-        const slug = generateProductSlug(resolveProductTitle(product), product.id);
-        const sputnik8Url = resolveSputnik8Url(product, city);
+        let mergedProduct = product;
+        if (!skipDetailFetch) {
+          try {
+            const detail = await fetchProductDetail(
+              apiKey,
+              username,
+              apiBase,
+              product.id,
+              lang,
+              currency
+            );
+            mergedProduct = mergeSputnik8ProductSources(product, detail);
+            await sleep(120);
+          } catch (error) {
+            pushLog(`  detail fetch failed for product ${product.id}: ${error.message ?? error}`);
+          }
+        }
+
+        const slug = generateProductSlug(resolveProductTitle(mergedProduct), mergedProduct.id);
+        const sputnik8Url = resolveSputnik8Url(mergedProduct, city);
 
         pendingLinks.push({
-          product,
+          product: mergedProduct,
           city,
           slug,
           sputnik8Url,
-          sub_id: `sputnik8:${resolveCitySlug(city)}:${product.id}`,
+          sub_id: `sputnik8:${resolveCitySlug(city)}:${mergedProduct.id}`,
         });
       }
     }

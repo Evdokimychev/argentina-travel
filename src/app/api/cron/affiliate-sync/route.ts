@@ -28,7 +28,10 @@ export async function GET(request: Request) {
     const sputnikRes = await fetch(`${origin}/api/cron/sputnik8-sync`, { headers });
     const sputnik8 = await sputnikRes.json();
 
-    const ok = tripsterRes.ok && sputnikRes.ok;
+    const youtravelRes = await fetch(`${origin}/api/cron/youtravel-sync`, { headers });
+    const youtravel = await youtravelRes.json();
+
+    const ok = tripsterRes.ok && sputnikRes.ok && youtravelRes.ok;
     await logCronResult(CRON_ROUTE, {
       ok,
       ranAt,
@@ -38,11 +41,12 @@ export async function GET(request: Request) {
       details: {
         tripsterOk: tripsterRes.ok,
         sputnik8Ok: sputnikRes.ok,
+        youtravelOk: youtravelRes.ok,
       },
     });
 
     return NextResponse.json(
-      { ok, tripster, sputnik8 },
+      { ok, tripster, sputnik8, youtravel },
       { status: ok ? 200 : 500 }
     );
   } catch (error) {

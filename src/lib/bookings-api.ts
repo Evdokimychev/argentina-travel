@@ -1,6 +1,7 @@
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import type { PaymentTransactionReceiptView } from "@/types/payment-platform";
 import type { TripsterBookingRequestView } from "@/types/tripster-booking";
+import type { YouTravelBookingRequestView } from "@/types/youtravel-booking";
 import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
 
 async function parseJson<T>(response: Response): Promise<T> {
@@ -185,6 +186,13 @@ export async function apiLookupBookingsByEmail(email: string): Promise<Booking[]
 export async function apiFetchTripsterBookingRequests(): Promise<TripsterBookingRequestView[]> {
   const data = await parseJson<{ requests: TripsterBookingRequestView[] }>(
     await fetch("/api/tripster/booking-request", { cache: "no-store" })
+  );
+  return data.requests ?? [];
+}
+
+export async function apiFetchYouTravelBookingRequests(): Promise<YouTravelBookingRequestView[]> {
+  const data = await parseJson<{ requests: YouTravelBookingRequestView[] }>(
+    await fetch("/api/youtravel/booking-request", { cache: "no-store" })
   );
   return data.requests ?? [];
 }

@@ -5,7 +5,8 @@ import { ARGENTINA_TRANSPORT_HUBS } from "@/data/argentina-transport-hubs";
 import { TOUR_PLACE_MAP } from "@/data/media-library/maps";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getTourRoutePoints } from "@/data/tour-routes";
-import { resolveArgentinaCityName, resolveTourCityDisplay } from "@/lib/argentina-cities";
+import { resolveTourCityDisplay } from "@/lib/argentina-cities";
+import { hasValidTourMapCoordinates } from "@/lib/tour-map";
 import { fetchPlacesServer, placeHref } from "@/lib/places-repository";
 import type {
   MapMarkerKind,
@@ -185,7 +186,11 @@ export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapO
   }
 
   if (!activeKinds || activeKinds.includes("tour")) {
-    objects.push(...tours.map(tourToMapObject));
+    objects.push(
+      ...tours
+        .filter((tour) => hasValidTourMapCoordinates(tour.latitude, tour.longitude))
+        .map(tourToMapObject)
+    );
   }
 
   if (!activeKinds || activeKinds.includes("airport")) {

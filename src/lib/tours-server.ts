@@ -10,6 +10,8 @@ import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import {
   fetchPartnerTourDetailServer,
 } from "@/lib/tripster/partner-tour-server";
+import { fetchYouTravelTourDetailServer } from "@/lib/youtravel/partner-tour-server";
+import { isYouTravelTourSlug } from "@/lib/youtravel/partner-tour-mapper";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchCutoverTourDetailBySlug } from "@/lib/tours-server-cutover";
 
@@ -77,6 +79,10 @@ export async function fetchTourDetail(
 ): Promise<TourDetail | null> {
   const native = await fetchNativeTourDetail(slug, opts);
   if (native) return enrichTourWithPublicReviews(native);
+  if (isYouTravelTourSlug(slug)) {
+    const youtravel = await fetchYouTravelTourDetailServer(slug);
+    if (youtravel) return enrichTourWithPublicReviews(youtravel);
+  }
   const partner = await fetchPartnerTourDetailServer(slug);
   return enrichTourWithPublicReviews(partner);
 }

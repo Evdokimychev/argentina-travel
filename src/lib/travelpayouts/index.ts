@@ -2,6 +2,7 @@ export {
   createTravelpayoutsPartnerLink,
   createTravelpayoutsPartnerLinks,
   createTripsterAffiliateLink,
+  createYouTravelAffiliateLink,
   createSputnik8AffiliateLink,
   TravelpayoutsError,
   isTravelpayoutsConfigured,

@@ -4,6 +4,7 @@ import { resolveArgentinaCityName, resolveTourCityDisplay } from "@/lib/argentin
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchPlacesServer } from "@/lib/places-repository";
 import { getTourRoutePoints } from "@/data/tour-routes";
+import { hasValidTourMapCoordinates } from "@/lib/tour-map";
 import type {
   MapLayersPayload,
   MapPlacePoint,
@@ -85,6 +86,7 @@ function matchesCityFilter(value: string, city: string): boolean {
 
 function filterTours(tours: TourListing[], query: MapLayersQuery): TourListing[] {
   return tours.filter((tour) => {
+    if (!hasValidTourMapCoordinates(tour.latitude, tour.longitude)) return false;
     if (!inBbox(tour.latitude, tour.longitude, query.bbox)) return false;
     if (query.city) {
       const cityName = resolveArgentinaCityName(tour.destination || tour.region);

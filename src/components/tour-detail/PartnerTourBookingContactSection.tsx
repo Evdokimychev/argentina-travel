@@ -23,7 +23,12 @@ import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-conta
 import {
   openPartnerBookingUrl,
   resolveTripsterFallbackDescription,
+  resolveYouTravelFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
+import {
+  isYouTravelPartnerDetail,
+  parseYouTravelOfferDateId,
+} from "@/lib/youtravel/partner-tour-utils";
 import type { TourDetail } from "@/types";
 import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
 
@@ -165,6 +170,8 @@ export default function PartnerTourBookingContactSection({
 }: {
   tour: TourDetail;
 }) {
+  const isYouTravel = isYouTravelPartnerDetail(tour);
+  const partnerLabel = isYouTravel ? "YouTravel.me" : "Tripster";
   const { user } = useAuth();
   const feedback = useSiteFeedback();
   const {
@@ -204,7 +211,7 @@ export default function PartnerTourBookingContactSection({
       ? partnerBookingPrice.displayFallback
       : partnerBookingPrice?.totalValue
         ? `${Math.round(partnerBookingPrice.totalValue).toLocaleString("ru-RU")} ${partnerBookingPrice.currency}`
-        : tour.partnerPriceDisplay ?? "Уточняется на Tripster";
+        : tour.partnerPriceDisplay ?? (isYouTravel ? "Уточняется на YouTravel.me" : "Уточняется на Tripster");
 
     return {
       dateLabel,
@@ -289,7 +296,11 @@ export default function PartnerTourBookingContactSection({
       dateMode === "custom" && customDate
         ? customDate.toISOString().slice(0, 10)
         : parsedSlot?.startDate ?? selectedDate?.startDate;
-    const time = parsedSlot?.time ?? "08:00";
+    const endDate = selectedDate?.endDate ?? undefined;
+    const time = isYouTravel ? undefined : parsedSlot?.time ?? "08:00";
+    const offerId = selectedDateId
+      ? parseYouTravelOfferDateId(selectedDateId)?.offerId
+      : undefined;
 
     if (!date) {
       setError("Выберите дату заезда.");
@@ -300,22 +311,41 @@ export default function PartnerTourBookingContactSection({
     setError(null);
 
     try {
-      const response = await fetch("/api/tripster/booking-request", {
+      const bookingEndpoint = isYouTravel
+        ? "/api/youtravel/booking-request"
+        : "/api/tripster/booking-request";
+
+      const bookingBody = isYouTravel
+        ? {
+            slug: tour.slug,
+            startDate: date,
+            endDate,
+            offerId,
+            personsCount: guests,
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone,
+            message: contact.messageToGuide,
+            userId: user?.id,
+          }
+        : {
+            slug: tour.slug,
+            date,
+            time,
+            personsCount: guests,
+            name: contact.name,
+            email: contact.email,
+            phone: contact.phone,
+            messageToGuide: contact.messageToGuide,
+            productType: "tour",
+            userId: user?.id,
+          };
+
+      const response = await fetch(bookingEndpoint, {
         method: "POST",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          slug: tour.slug,
-          date,
-          time,
-          personsCount: guests,
-          name: contact.name,
-          email: contact.email,
-          phone: contact.phone,
-          messageToGuide: contact.messageToGuide,
-          productType: "tour",
-          userId: user?.id,
-        }),
+        body: JSON.stringify(bookingBody),
       });
 
       const data = (await response.json()) as {
@@ -329,9 +359,11 @@ export default function PartnerTourBookingContactSection({
       };
 
       if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
-        const description = resolveTripsterFallbackDescription(data.fallbackReason);
+        const description = isYouTravel
+          ? resolveYouTravelFallbackDescription(data.fallbackReason)
+          : resolveTripsterFallbackDescription(data.fallbackReason);
         feedback.loading({
-          title: "Открываем Tripster",
+          title: isYouTravel ? "Открываем YouTravel.me" : "Открываем Tripster",
           description,
         });
         openPartnerBookingUrl(data.fallbackUrl);
@@ -353,13 +385,15 @@ export default function PartnerTourBookingContactSection({
         productType: "tour",
         slug: tour.slug,
         title: tour.title,
-        partner: "tripster",
+        partner: isYouTravel ? "youtravel" : "tripster",
         guests,
         source: "partner_booking",
       });
       feedback.success({
         title: "Заявка отправлена",
-        description: "Переходим к оформлению на Tripster…",
+        description: isYouTravel
+          ? "Переходим к оформлению на YouTravel.me…"
+          : "Переходим к оформлению на Tripster…",
       });
 
       if (data.orderUrl) {
@@ -367,7 +401,11 @@ export default function PartnerTourBookingContactSection({
         return;
       }
 
-      throw new Error("Tripster не вернул ссылку на заказ. Попробуйте ещё раз.");
+      throw new Error(
+        isYouTravel
+          ? "YouTravel.me не вернул ссылку на заказ. Попробуйте ещё раз."
+          : "Tripster не вернул ссылку на заказ. Попробуйте ещё раз."
+      );
     } catch (submitError) {
       const normalized = normalizeSiteError(submitError, {
         title: "Не удалось отправить заявку",
@@ -383,8 +421,8 @@ export default function PartnerTourBookingContactSection({
     return (
       <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Заявка принята. Проверьте почту{" "}
-        <span className="font-medium">{form.contactEmail}</span> и завершите бронирование на
-        Tripster.
+        <span className="font-medium">{form.contactEmail}</span> и завершите бронирование на{" "}
+        {partnerLabel}.
       </div>
     );
   }
@@ -488,7 +526,7 @@ export default function PartnerTourBookingContactSection({
               rel="noopener noreferrer"
               className="text-sky hover:underline"
             >
-              открыть Tripster вручную
+              открыть {partnerLabel} вручную
             </a>{" "}
             — дата и число туристов подставятся, контакты нужно будет ввести снова.
           </p>

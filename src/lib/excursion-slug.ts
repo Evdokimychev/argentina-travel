@@ -1,4 +1,4 @@
-export type ExcursionPartner = "tripster" | "sputnik8";
+export type ExcursionPartner = "tripster" | "sputnik8" | "youtravel";
 
 export type ParsedExcursionSlug = {
   partner: ExcursionPartner;
@@ -8,10 +8,19 @@ export type ParsedExcursionSlug = {
 
 const TRIPSTER_SUFFIX = /-t(\d+)$/i;
 const SPUTNIK8_SUFFIX = /-s(\d+)$/i;
+const YOUTRAVEL_SUFFIX = /-yt(\d+)$/i;
 
 export function parseExcursionSlug(slug: string): ParsedExcursionSlug | null {
   const normalized = slug?.trim();
   if (!normalized) return null;
+
+  const youtravelMatch = normalized.match(YOUTRAVEL_SUFFIX);
+  if (youtravelMatch) {
+    const id = Number.parseInt(youtravelMatch[1], 10);
+    if (Number.isFinite(id)) {
+      return { partner: "youtravel", id, slug: normalized };
+    }
+  }
 
   const sputnikMatch = normalized.match(SPUTNIK8_SUFFIX);
   if (sputnikMatch) {

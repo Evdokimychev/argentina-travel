@@ -5,7 +5,7 @@ import {
   buildTourSearchItems,
   type SearchIndexItem,
 } from "@/lib/site-search-index";
-import { fetchPublishedListings } from "@/lib/tour-content-server";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
@@ -61,13 +61,16 @@ export async function collectSearchIndexItems(): Promise<SearchIndexItem[]> {
 
 async function collectTourItems(): Promise<SearchIndexItem[]> {
   if (!isSupabaseConfigured()) {
-    const { getMarketplaceListings } = await import("@/lib/tour-repository");
-    return buildTourSearchItems(getMarketplaceListings());
+    try {
+      return buildTourSearchItems(await fetchMarketplaceTours());
+    } catch {
+      const { getMarketplaceListings } = await import("@/lib/tour-repository");
+      return buildTourSearchItems(getMarketplaceListings());
+    }
   }
 
   try {
-    const supabase = createSupabaseAdminClient();
-    const listings = await fetchPublishedListings(supabase);
+    const listings = await fetchMarketplaceTours();
     if (listings.length > 0) {
       return buildTourSearchItems(listings);
     }

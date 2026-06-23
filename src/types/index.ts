@@ -159,8 +159,8 @@ export interface TourListing {
   isNew?: boolean;
   isBestOfMonth?: boolean;
   featured?: boolean;
-  /** Партнёрский тур (Tripster) — не редактируется в кабинете организатора */
-  partnerSource?: "tripster";
+  /** Партнёрский тур (Tripster / YouTravel) — не редактируется в кабинете организатора */
+  partnerSource?: "tripster" | "youtravel";
   /** Отображение цены от Tripster, если валюта не USD */
   partnerPriceDisplay?: string;
   /** Числовая цена от Tripster в исходной валюте */
@@ -435,7 +435,7 @@ export interface TourDetail {
   /** Внешняя ссылка на бронирование вместо checkout. */
   customBookingLink?: TourCustomBookingLinkPublic;
   /** Партнёрский тур Tripster */
-  partnerSource?: "tripster";
+  partnerSource?: "tripster" | "youtravel";
   partnerExperienceId?: number;
   partnerPriceDisplay?: string;
   partnerPriceValue?: number;

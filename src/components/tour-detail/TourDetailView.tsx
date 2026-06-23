@@ -52,6 +52,7 @@ import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 import { tourUsesExternalBooking } from "@/lib/tour-custom-booking-link";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibility";
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
@@ -133,7 +134,9 @@ export default function TourDetailView({
     tour.reviews.length > 0 ? tour.reviews : (tour.partnerGuideReviews ?? []);
   const partnerReviewHeadingNote =
     tour.reviews.length === 0 && (tour.partnerGuideReviews?.length ?? 0) > 0
-      ? "о гиде на других турах Tripster"
+      ? isYouTravelPartnerDetail(tour)
+        ? "о тревел-эксперте на YouTravel.me"
+        : "о гиде на других турах Tripster"
       : undefined;
 
   return (
@@ -167,7 +170,7 @@ export default function TourDetailView({
       ) : null}
       {isPartnerTour ? (
         <div className={cn(siteContainerClass, "mt-4")}>
-          <PartnerTourBanner />
+          <PartnerTourBanner partnerSource={tour.partnerSource ?? null} />
         </div>
       ) : null}
 

@@ -46,6 +46,21 @@ type ExcursionAdminStats = {
     tripsterOrderUrl: string | null;
     createdAt: string;
   }>;
+  youtravelBookingRequestsTotal: number;
+  youtravelBookingRequestsByStatus: Record<string, number>;
+  recentYouTravelBookingRequests: Array<{
+    id: string;
+    tourSlug: string;
+    tourTitle: string;
+    startDate: string;
+    endDate: string | null;
+    personsCount: number;
+    customerName: string;
+    customerEmail: string;
+    youtravelStatus: string | null;
+    youtravelOrderUrl: string | null;
+    createdAt: string;
+  }>;
 };
 
 type ExcursionsResponse = { stats?: ExcursionAdminStats };
@@ -84,6 +99,7 @@ export default function ExcursionsView() {
                 { label: "Отзывы", value: stats.reviews },
                 { label: "Клики (7 дн.)", value: stats.clicksLast7Days },
                 { label: "Заявки Tripster", value: stats.tripsterBookingRequestsTotal },
+                { label: "Заявки YouTravel", value: stats.youtravelBookingRequestsTotal ?? 0 },
               ].map((item) => (
                 <div key={item.label} className={`${cabinetCardClass} p-5`}>
                   <p className="text-xs font-medium uppercase tracking-wide text-slate">{item.label}</p>
@@ -202,6 +218,69 @@ export default function ExcursionsView() {
                         {request.tripsterOrderUrl ? (
                           <a
                             href={request.tripsterOrderUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-sky hover:underline"
+                          >
+                            Открыть заказ
+                          </a>
+                        ) : null}
+                      </div>
+                    </li>
+                  ))
+                )}
+              </ul>
+            </section>
+
+            <section className={`${cabinetCardClass} overflow-hidden`}>
+              <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
+                Заявки YouTravel.me
+              </h2>
+              {Object.keys(stats.youtravelBookingRequestsByStatus ?? {}).length > 0 ? (
+                <div className="flex flex-wrap gap-2 border-b border-gray-100 px-5 py-3">
+                  {Object.entries(stats.youtravelBookingRequestsByStatus ?? {})
+                    .sort(([left], [right]) => left.localeCompare(right))
+                    .map(([status, count]) => (
+                      <span
+                        key={status}
+                        className="rounded-full bg-sky/10 px-2.5 py-1 text-xs font-medium text-sky"
+                      >
+                        {status}: {count}
+                      </span>
+                    ))}
+                </div>
+              ) : null}
+              <ul className="divide-y divide-gray-100">
+                {(stats.recentYouTravelBookingRequests ?? []).length === 0 ? (
+                  <li className="px-5 py-8 text-sm text-slate">Заявок YouTravel.me пока нет</li>
+                ) : (
+                  (stats.recentYouTravelBookingRequests ?? []).map((request) => (
+                    <li key={request.id} className="space-y-1 px-5 py-3 text-sm">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <div className="min-w-0">
+                          <Link
+                            href={`/tours/${request.tourSlug}`}
+                            className="font-medium text-sky hover:underline"
+                          >
+                            {request.tourTitle}
+                          </Link>
+                          <p className="text-xs text-slate">
+                            {request.startDate}
+                            {request.endDate ? ` — ${request.endDate}` : ""} · {request.personsCount} чел.
+                          </p>
+                        </div>
+                        <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-charcoal">
+                          {request.youtravelStatus ?? "unknown"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate">
+                        {request.customerName} · {request.customerEmail}
+                      </p>
+                      <div className="flex flex-wrap items-center gap-3 text-xs text-slate">
+                        <span>{formatAdminWhen(request.createdAt)}</span>
+                        {request.youtravelOrderUrl ? (
+                          <a
+                            href={request.youtravelOrderUrl}
                             target="_blank"
                             rel="noreferrer"
                             className="text-sky hover:underline"

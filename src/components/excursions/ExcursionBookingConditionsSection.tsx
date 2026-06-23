@@ -21,13 +21,14 @@ import {
 } from "@/lib/tripster/booking-conditions";
 import type { ExcursionDetail } from "@/types/excursion";
 
-const ICONS: Record<ExcursionBookingConditionKind, LucideIcon> = {
+const ICONS: Partial<Record<ExcursionBookingConditionKind, LucideIcon>> = {
   prepayment: CreditCard,
   bestPrice: Shield,
   cards: Globe,
   cancellation: RotateCcw,
   instantBooking: Zap,
   askOrganizer: MessageCircle,
+  custom: Shield,
 };
 
 type ExcursionBookingConditionsSectionProps = {
@@ -81,6 +82,8 @@ function ConditionText({
       return <>{t("excursions.bookingConditions.instantBooking")}</>;
     case "askOrganizer":
       return <>{t("excursions.bookingConditions.askOrganizer")}</>;
+    case "custom":
+      return <>{item.text}</>;
     default:
       return null;
   }
@@ -142,10 +145,10 @@ export default function ExcursionBookingConditionsSection({
         <p className="text-sm text-slate">{t("excursions.bookingConditions.loading")}</p>
       ) : (
         <ul className="space-y-4">
-          {items.map((item) => {
-            const Icon = ICONS[item.kind];
+          {items.map((item, index) => {
+            const Icon = ICONS[item.kind] ?? Shield;
             return (
-              <li key={item.kind} className="flex gap-4">
+              <li key={`${item.kind}-${index}`} className="flex gap-4">
                 <div
                   className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sky/10"
                   aria-hidden

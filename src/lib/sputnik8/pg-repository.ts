@@ -7,6 +7,7 @@ import {
   rowToExcursionListing,
   mapSputnik8ReviewRow,
 } from "@/lib/sputnik8/mapper";
+import { enrichSputnik8ExcursionDetail } from "@/lib/sputnik8/detail-enrichment";
 import type {
   ExcursionCity,
   ExcursionDetail,
@@ -127,7 +128,7 @@ export async function pgFetchSputnik8ExcursionsServer(
 }
 
 export async function pgFetchSputnik8ExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
-  const result = await withPgClient(async (client) => {
+  const fetched = await withPgClient(async (client) => {
     const product = await client.query(`select * from public.sputnik8_products where slug = $1 limit 1`, [
       slug,
     ]);
@@ -140,22 +141,40 @@ export async function pgFetchSputnik8ExcursionDetailServer(slug: string): Promis
       [row.city_id]
     );
 
-    return rowToExcursionDetail(row, city.rows[0] ?? null);
+    return {
+      detail: rowToExcursionDetail(row, city.rows[0] ?? null),
+      payload: row.payload,
+      city: city.rows[0] ?? null,
+    };
   });
 
-  if (!result) return null;
+  if (!fetched) return null;
+
+  const enriched = await enrichSputnik8ExcursionDetail(
+    fetched.detail,
+    fetched.detail.id,
+    fetched.payload,
+    fetched.city
+  );
 
   const reviewsResult = await withPgClient(async (client) => {
     const { rows } = await client.query(
       `select id, rating, author_name, review_text, created_at, payload
        from public.sputnik8_reviews where product_id = $1
        order by created_at desc nulls last limit 20`,
-      [result.id]
+      [fetched.detail.id]
     );
     return rows.map((row) => mapSputnik8ReviewRow(row));
   });
 
-  return { ...result, reviews: reviewsResult ?? [] };
+  const mergedReviews =
+    reviewsResult && reviewsResult.length > 0
+      ? reviewsResult
+      : enriched.reviews && enriched.reviews.length > 0
+        ? enriched.reviews
+        : reviewsResult ?? [];
+
+  return { ...enriched, reviews: mergedReviews };
 }
 
 export async function pgFetchSputnik8ExcursionSlugsServer(): Promise<string[]> {

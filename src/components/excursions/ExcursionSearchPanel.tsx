@@ -67,7 +67,7 @@ export default function ExcursionSearchPanel({
   const patch = (next: Partial<ExcursionCatalogFilters>) => onChange({ ...filters, ...next });
 
   return (
-    <div className="mt-6">
+    <div>
       <div className="relative rounded-3xl border border-gray-200/80 bg-white p-3 shadow-lg shadow-charcoal/5 sm:p-4">
         <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
           <div className="relative flex min-w-0 flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50">

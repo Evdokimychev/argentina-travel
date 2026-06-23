@@ -26,13 +26,19 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
+import { siteContainerClass } from "@/lib/site-container";
 import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
 import { formatToursFound } from "@/lib/pluralize";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import PartnerTourDateFilterNotice from "@/components/marketplace/PartnerTourDateFilterNotice";
-import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import CatalogLazyLoadFooter from "@/components/marketplace/CatalogLazyLoadFooter";
+import { useCatalogLazySlice } from "@/hooks/useCatalogLazySlice";
+import { isTripsterPartnerListing } from "@/lib/tripster/partner-tour-utils";
+import "./catalog-listing-page.css";
+
+const PAGE_SIZE = 12;
 
 const CATALOG_VIEW_MODE_KEY = "argentina-travel-catalog-view";
 
@@ -130,6 +136,19 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
   );
 
   const sorted = useMemo(() => sortTours(filtered, sort), [filtered, sort]);
+  const lazyResetKey = useMemo(
+    () => buildCatalogFilterSearchParams(filters, sort, currency, tours, viewMode).toString(),
+    [filters, sort, currency, tours, viewMode],
+  );
+  const {
+    visibleItems,
+    visibleCount,
+    totalCount,
+    hasMore,
+    remaining,
+    loadMore,
+    sentinelRef,
+  } = useCatalogLazySlice(sorted, PAGE_SIZE, { resetKey: lazyResetKey });
   const activeFilterCount = countActiveFilters(filters, currency, tours);
   const organizerProfile = filters.organizerSlug.trim()
     ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
@@ -147,7 +166,7 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
 
   const hasDateFilter = Boolean(filters.dateFrom || filters.dateTo);
   const showPartnerDateNotice =
-    hasDateFilter && sorted.some((tour) => isPartnerTourListing(tour));
+    hasDateFilter && sorted.some((tour) => isTripsterPartnerListing(tour));
 
   const filterChips = useMemo(
     () => buildTourFilterChips(filters, handleFiltersChange, { currency, locale, tours }),
@@ -167,35 +186,31 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
   }, [activeFilterCount, resetFilters]);
 
   return (
-    <div className="pb-16">
-      <div className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
-        <h1 className="font-display text-3xl font-bold text-charcoal">Каталог туров</h1>
-        <p className="mt-2 text-slate">Все авторские путешествия по Аргентине</p>
+    <div className="catalog-listing-page-root w-full pb-16">
+      <header className="catalog-listing-page-hero" data-scroll-rail-tone="light">
+        <div
+          className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--primary"
+          aria-hidden
+        />
+        <div
+          className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
+          aria-hidden
+        />
+        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
+          <h1 className="max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
+            Каталог туров
+          </h1>
+          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
+            Все авторские путешествия по Аргентине
+          </p>
+        </div>
+      </header>
 
-        {organizerProfile ? (
-          <div className="mt-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-3">
-            <p className="text-sm text-charcoal">
-              Туры организатора{" "}
-              <Link
-                href={`/organizers/${organizerProfile.slug}`}
-                className="font-semibold text-brand hover:underline"
-              >
-                {organizerProfile.name}
-              </Link>
-            </p>
-            <button
-              type="button"
-              onClick={() =>
-                setFilters((current) => ({ ...current, organizerSlug: "" }))
-              }
-              className="text-sm font-medium text-slate hover:text-charcoal"
-            >
-              Сбросить фильтр
-            </button>
-          </div>
-        ) : null}
-
-        <div className="mt-6 space-y-4">
+      <div className={siteContainerClass}>
+        <div
+          id="tours-search"
+          className="catalog-listing-page-search-shell scroll-mt-[calc(var(--site-header-height,72px)+1rem)] space-y-4"
+        >
           <SearchBlock
             tours={tours}
             query={filters.query}
@@ -230,6 +245,29 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
           </CatalogStickyBar>
         </div>
 
+        {organizerProfile ? (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-3">
+            <p className="text-sm text-charcoal">
+              Туры организатора{" "}
+              <Link
+                href={`/organizers/${organizerProfile.slug}`}
+                className="font-semibold text-brand hover:underline"
+              >
+                {organizerProfile.name}
+              </Link>
+            </p>
+            <button
+              type="button"
+              onClick={() =>
+                setFilters((current) => ({ ...current, organizerSlug: "" }))
+              }
+              className="text-sm font-medium text-slate hover:text-charcoal"
+            >
+              Сбросить фильтр
+            </button>
+          </div>
+        ) : null}
+
         <div className="mt-8" ref={resultsRef}>
           <CatalogToolbar
             countLabel={formatToursFound(sorted.length)}
@@ -259,22 +297,33 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
           ) : viewMode === "map" ? (
             <CatalogMapView tours={sorted} />
           ) : (
-            <div
-              className={cn(
-                "mt-6",
-                viewMode === "grid"
-                  ? "grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
-                  : "flex flex-col gap-5"
-              )}
-            >
-              {sorted.map((t) =>
-                viewMode === "list" ? (
-                  <MarketplaceTourListCard key={t.id} tour={t} />
-                ) : (
-                  <MarketplaceTourCard key={t.id} tour={t} />
-                )
-              )}
-            </div>
+            <>
+              <div
+                className={cn(
+                  "mt-6",
+                  viewMode === "grid"
+                    ? "grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
+                    : "flex flex-col gap-5"
+                )}
+              >
+                {visibleItems.map((t) =>
+                  viewMode === "list" ? (
+                    <MarketplaceTourListCard key={t.id} tour={t} />
+                  ) : (
+                    <MarketplaceTourCard key={t.id} tour={t} />
+                  )
+                )}
+              </div>
+              <CatalogLazyLoadFooter
+                hasMore={hasMore}
+                pageSize={PAGE_SIZE}
+                remaining={remaining}
+                visibleCount={visibleCount}
+                totalCount={totalCount}
+                onLoadMore={loadMore}
+                sentinelRef={sentinelRef}
+              />
+            </>
           )}
         </div>
       </div>

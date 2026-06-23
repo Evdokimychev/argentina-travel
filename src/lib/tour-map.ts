@@ -1,5 +1,13 @@
 import { TourListing } from "@/types";
 
+export function hasValidTourMapCoordinates(latitude: number, longitude: number): boolean {
+  return (
+    Number.isFinite(latitude) &&
+    Number.isFinite(longitude) &&
+    !(latitude === 0 && longitude === 0)
+  );
+}
+
 export function escapeMapHtml(text: string): string {
   return text
     .replace(/&/g, "&amp;")
@@ -31,7 +39,9 @@ export function getLatLngBounds(
 }
 
 export function getTourMapBounds(tours: TourListing[]): [[number, number], [number, number]] | null {
-  return getLatLngBounds(tours);
+  return getLatLngBounds(
+    tours.filter((tour) => hasValidTourMapCoordinates(tour.latitude, tour.longitude))
+  );
 }
 
 export const ARGENTINA_MAP_CENTER: [number, number] = [-38.5, -63.5];

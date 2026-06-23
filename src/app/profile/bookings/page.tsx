@@ -10,6 +10,7 @@ import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
 import {
   apiCancelBooking,
   apiFetchTripsterBookingRequests,
+  apiFetchYouTravelBookingRequests,
   apiFetchUserBookings,
   apiLookupBookingsByEmail,
   isRemoteBookingsMode,
@@ -17,6 +18,7 @@ import {
 import { buildTourMessageHref } from "@/lib/messages-store";
 import { BOOKINGS_UPDATED_EVENT, type Booking } from "@/types/tourist";
 import type { TripsterBookingRequestView } from "@/types/tripster-booking";
+import type { YouTravelBookingRequestView } from "@/types/youtravel-booking";
 import BookingStatusBadge from "@/components/booking/BookingStatusBadge";
 import { EmptyState } from "@/components/ui/empty-state";
 import { formatBookingCreatedAt } from "@/lib/booking-datetime";
@@ -34,19 +36,21 @@ import {
   cabinetPanelClass,
 } from "@/lib/cabinet-ui";
 
-const TRIPSTER_STATUS_LABELS: Record<string, string> = {
+const PARTNER_STATUS_LABELS: Record<string, string> = {
   pending: "В обработке",
+  submitted: "Отправлена",
   confirmed: "Подтверждена",
   cancelled: "Отменена",
   completed: "Завершена",
   affiliate_fallback: "Перенаправлена на сайт",
   failed: "Ошибка отправки",
+  api_unavailable: "API недоступен",
   unknown: "Статус уточняется",
 };
 
-function formatTripsterStatus(status: string | null): string {
+function formatPartnerBookingStatus(status: string | null): string {
   const key = status?.trim().toLowerCase() || "unknown";
-  return TRIPSTER_STATUS_LABELS[key] ?? status ?? TRIPSTER_STATUS_LABELS.unknown;
+  return PARTNER_STATUS_LABELS[key] ?? status ?? PARTNER_STATUS_LABELS.unknown;
 }
 
 export default function ProfileBookingsPage() {
@@ -56,8 +60,10 @@ export default function ProfileBookingsPage() {
   const [tab, setTab] = useState<"bookings" | "waitlist">(initialTab);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [tripsterRequests, setTripsterRequests] = useState<TripsterBookingRequestView[]>([]);
+  const [youtravelRequests, setYoutravelRequests] = useState<YouTravelBookingRequestView[]>([]);
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [loadingTripsterRequests, setLoadingTripsterRequests] = useState(true);
+  const [loadingYoutravelRequests, setLoadingYoutravelRequests] = useState(true);
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -66,26 +72,36 @@ export default function ProfileBookingsPage() {
     function refresh() {
       setLoadingBookings(true);
       setLoadingTripsterRequests(true);
+      setLoadingYoutravelRequests(true);
       if (isRemoteBookingsMode()) {
-        void Promise.all([apiFetchUserBookings(), apiFetchTripsterBookingRequests()])
-          .then(([nextBookings, nextTripster]) => {
+        void Promise.all([
+          apiFetchUserBookings(),
+          apiFetchTripsterBookingRequests(),
+          apiFetchYouTravelBookingRequests(),
+        ])
+          .then(([nextBookings, nextTripster, nextYoutravel]) => {
             setBookings(nextBookings);
             setTripsterRequests(nextTripster);
+            setYoutravelRequests(nextYoutravel);
           })
           .catch(() => {
             setBookings([]);
             setTripsterRequests([]);
+            setYoutravelRequests([]);
           })
           .finally(() => {
             setLoadingBookings(false);
             setLoadingTripsterRequests(false);
+            setLoadingYoutravelRequests(false);
           });
         return;
       }
       setBookings(getUserBookings(user!.id));
       setTripsterRequests([]);
+      setYoutravelRequests([]);
       setLoadingBookings(false);
       setLoadingTripsterRequests(false);
+      setLoadingYoutravelRequests(false);
     }
 
     refresh();
@@ -113,22 +129,31 @@ export default function ProfileBookingsPage() {
     if (!user) return;
     setLoadingBookings(true);
     setLoadingTripsterRequests(true);
+    setLoadingYoutravelRequests(true);
     if (isRemoteBookingsMode()) {
-      void Promise.all([apiFetchUserBookings(), apiFetchTripsterBookingRequests()])
-        .then(([nextBookings, nextTripster]) => {
+      void Promise.all([
+        apiFetchUserBookings(),
+        apiFetchTripsterBookingRequests(),
+        apiFetchYouTravelBookingRequests(),
+      ])
+        .then(([nextBookings, nextTripster, nextYoutravel]) => {
           setBookings(nextBookings);
           setTripsterRequests(nextTripster);
+          setYoutravelRequests(nextYoutravel);
         })
         .finally(() => {
           setLoadingBookings(false);
           setLoadingTripsterRequests(false);
+          setLoadingYoutravelRequests(false);
         });
       return;
     }
     setBookings(getUserBookings(user.id));
     setTripsterRequests([]);
+    setYoutravelRequests([]);
     setLoadingBookings(false);
     setLoadingTripsterRequests(false);
+    setLoadingYoutravelRequests(false);
   }
 
   return (
@@ -292,7 +317,7 @@ export default function ProfileBookingsPage() {
                     </p>
                   </div>
                   <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
-                    {formatTripsterStatus(request.tripsterStatus)}
+                    {formatPartnerBookingStatus(request.tripsterStatus)}
                   </span>
                 </div>
 
@@ -303,6 +328,66 @@ export default function ProfileBookingsPage() {
                   {request.tripsterOrderUrl ? (
                     <a
                       href={request.tripsterOrderUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={cabinetLinkClass}
+                    >
+                      Открыть заказ на сайте
+                    </a>
+                  ) : null}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+      </section>
+
+      <section className={cn(cabinetCardClass, "mt-6 p-4 sm:p-5")}>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="font-heading text-lg font-bold text-charcoal">Заявки YouTravel.me</h2>
+          {!loadingYoutravelRequests ? (
+            <span className="text-xs text-slate">Всего: {youtravelRequests.length}</span>
+          ) : null}
+        </div>
+
+        {loadingYoutravelRequests ? (
+          <p className="mt-3 text-sm text-slate">Загружаем статусы заявок…</p>
+        ) : youtravelRequests.length === 0 ? (
+          <p className="mt-3 text-sm text-slate">
+            Пока нет заявок YouTravel.me. После отправки формы на партнёрском туре они появятся здесь.
+          </p>
+        ) : (
+          <div className="mt-4 space-y-3">
+            {youtravelRequests.map((request) => (
+              <article key={request.id} className="rounded-2xl border border-gray-100 p-4">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <Link
+                      href={`/tours/${request.tourSlug}`}
+                      className="font-medium text-charcoal transition-colors hover:text-sky"
+                    >
+                      {request.tourTitle}
+                    </Link>
+                    <p className="mt-1 text-sm text-slate">
+                      {request.startDate}
+                      {request.endDate ? ` — ${request.endDate}` : ""} · {request.personsCount} чел.
+                    </p>
+                    <p className="mt-1 text-xs text-slate">
+                      Отправлено {formatBookingCreatedAt(request.createdAt)}
+                    </p>
+                  </div>
+                  <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
+                    {formatPartnerBookingStatus(request.youtravelStatus)}
+                  </span>
+                </div>
+
+                <div className="mt-3 flex flex-wrap gap-3">
+                  <Link href={`/tours/${request.tourSlug}`} className={cabinetLinkClass}>
+                    К туру
+                  </Link>
+                  {request.youtravelOrderUrl ? (
+                    <a
+                      href={request.youtravelOrderUrl}
                       target="_blank"
                       rel="noreferrer"
                       className={cabinetLinkClass}

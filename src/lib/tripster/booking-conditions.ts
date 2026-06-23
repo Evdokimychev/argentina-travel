@@ -9,7 +9,8 @@ export type ExcursionBookingConditionKind =
   | "cards"
   | "cancellation"
   | "instantBooking"
-  | "askOrganizer";
+  | "askOrganizer"
+  | "custom";
 
 export type ExcursionBookingConditionItem = {
   kind: ExcursionBookingConditionKind;
@@ -17,6 +18,8 @@ export type ExcursionBookingConditionItem = {
   restPercent?: number;
   cancellationHours?: number;
   linkHref?: string;
+  /** Произвольный текст (Sputnik8 и другие партнёры). */
+  text?: string;
 };
 
 export type ExcursionBookingConditions = {

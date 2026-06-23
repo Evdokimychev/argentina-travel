@@ -138,6 +138,13 @@ export default function MarketplaceHome({
     () => getRecommendedListings(homepageTours, 6),
     [homepageTours]
   );
+  const youtravelTours = useMemo(
+    () =>
+      homepageTours
+        .filter((t) => t.partnerSource === "youtravel")
+        .slice(0, 6),
+    [homepageTours]
+  );
 
   const valueProps = [
     {
@@ -436,6 +443,13 @@ export default function MarketplaceHome({
             subtitle="По рейтингу и актуальности"
             tours={recommendedTours}
           />
+          {youtravelTours.length > 0 ? (
+            <TourGrid
+              title="Авторские туры YouTravel"
+              subtitle="Партнёрские путешествия с датами заезда на YouTravel.me"
+              tours={youtravelTours}
+            />
+          ) : null}
           <TourGrid
             title="Горящие даты"
             subtitle="Только туры с реальной скидкой и ближайшими датами"

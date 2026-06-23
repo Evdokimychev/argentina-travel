@@ -112,6 +112,8 @@ export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   languages?: string[];
   payTypeInText?: string;
   minimumBookPeriod?: string;
+  /** Текст условий отмены из Sputnik8 (refund_info). */
+  refundPolicy?: string;
   reviews?: ExcursionReview[];
 };
 

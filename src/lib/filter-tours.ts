@@ -6,7 +6,7 @@ import {
   DEFAULT_FILTERS,
 } from "@/types";
 import { CurrencyCode } from "@/types/locale";
-import { resolveTourFilterPriceUsd } from "@/lib/tour-price-public";
+import { resolveListingFilterPriceUsd } from "@/lib/partner-tours/filter-price";
 import { convertFromUsd, getFilterPriceMax } from "@/lib/currency";
 import {
   DURATION_PRESETS,
@@ -19,7 +19,10 @@ import {
 import { matchesTourFormat } from "@/lib/tour-format";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { resolveListingOwnerUserId } from "@/lib/organizer-public";
-import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
+import {
+  isPartnerTourListing,
+  isTripsterPartnerListing,
+} from "@/lib/tripster/partner-tour-utils";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -45,8 +48,8 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 
 function matchesDateRange(tour: TourListing, from: Date | null, to: Date | null) {
   if (!from && !to) return true;
-  // Партнёрские туры Tripster не имеют дат заезда в нашей БД — не отсекаем по календарю.
-  if (isPartnerTourListing(tour)) return true;
+  // Tripster не имеет дат заезда в нашей БД — не отсекаем по календарю.
+  if (isTripsterPartnerListing(tour)) return true;
 
   const rangeStart = from ? startOfDay(from) : null;
   const rangeEnd = to ? startOfDay(to) : null;
@@ -110,13 +113,10 @@ export function filterTours(
   let result = tours.filter((tour) => {
     if (!matchesQuery(tour, filters.query)) return false;
     if (!matchesDateRange(tour, filters.dateFrom, filters.dateTo)) return false;
-    const filterPrice = resolveTourFilterPriceUsd({
-      priceUsd: tour.priceUsd,
-      priceOnRequest: tour.priceOnRequest,
-    });
+    const filterPrice = resolveListingFilterPriceUsd(tour);
     if (filterPrice == null) {
-      // Туры «цена по запросу» без ориентира не отсекаются фильтром по цене.
-    } else if (!isPartnerTourListing(tour)) {
+      // Туры «цена по запросу» / Tripster без ориентира не отсекаются фильтром по цене.
+    } else if (!isTripsterPartnerListing(tour)) {
       const displayPrice = convertFromUsd(filterPrice, currency);
       if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
     }

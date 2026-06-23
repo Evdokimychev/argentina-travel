@@ -26,11 +26,16 @@ export const dynamicParams = true;
 export async function generateStaticParams() {
   const platformSlugs = await fetchCutoverPublishedTourSlugs();
 
-  const partnerSlugs = await import("@/lib/tripster/partner-tour-server").then((mod) =>
-    mod.fetchPartnerTourSlugsServer().catch(() => [] as string[])
-  );
+  const [tripsterSlugs, youtravelSlugs] = await Promise.all([
+    import("@/lib/tripster/partner-tour-server").then((mod) =>
+      mod.fetchPartnerTourSlugsServer().catch(() => [] as string[])
+    ),
+    import("@/lib/youtravel/partner-tour-server").then((mod) =>
+      mod.fetchYouTravelTourSlugsServer().catch(() => [] as string[])
+    ),
+  ]);
 
-  const merged = new Set([...platformSlugs, ...partnerSlugs]);
+  const merged = new Set([...platformSlugs, ...tripsterSlugs, ...youtravelSlugs]);
   return Array.from(merged).map((slug) => ({ slug }));
 }
 

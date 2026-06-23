@@ -1,14 +1,16 @@
-import { sanitizeHtml } from "@/lib/rich-text";
+import { isHtmlContent, sanitizeHtml } from "@/lib/rich-text";
 import type {
   Sputnik8OrderLine,
   Sputnik8Photo,
   Sputnik8Product,
+  Sputnik8ReviewListItem,
 } from "@/lib/sputnik8/types";
 import type {
   ExcursionDescriptionBlock,
   ExcursionGuide,
   ExcursionLocationPoint,
   ExcursionPhoto,
+  ExcursionReview,
   ExcursionTicketOption,
 } from "@/types/excursion";
 
@@ -29,6 +31,7 @@ export type ParsedSputnik8Payload = {
   languages?: string[];
   payTypeInText?: string;
   minimumBookPeriod?: string;
+  refundPolicy?: string;
 };
 
 export type ResolvedSputnik8Price = {
@@ -209,7 +212,12 @@ export function mapPhotos(photos?: Sputnik8Photo[]): ExcursionPhoto[] {
   if (!photos?.length) return [];
   return photos.map((photo) => ({
     thumbnail: photo.thumbnail || photo.small || photo.photo_url || photo.url,
-    medium: photo.medium || photo.big || photo.original || photo.url || photo.photo_url,
+    medium:
+      photo.original ||
+      photo.big ||
+      photo.medium ||
+      photo.url ||
+      photo.photo_url,
     type: "photo",
   }));
 }
@@ -246,6 +254,62 @@ export function extractPhotosFromProduct(product: Sputnik8Product): ExcursionPho
   }
 
   return collected;
+}
+
+/** Объединяет краткую запись из списка с полной карточкой из /products/:id. */
+export function mergeSputnik8ProductSources(
+  listProduct: Sputnik8Product,
+  detailProduct: Sputnik8Product
+): Sputnik8Product {
+  const detailPhotos = detailProduct.photos ?? detailProduct.images;
+  const listPhotos = listProduct.photos ?? listProduct.images;
+
+  return {
+    ...listProduct,
+    ...detailProduct,
+    city_id: detailProduct.city_id ?? listProduct.city_id,
+    city: detailProduct.city ?? listProduct.city,
+    photos: detailPhotos?.length ? detailPhotos : listPhotos,
+    images: detailPhotos?.length ? detailPhotos : listPhotos,
+    cover_photo: detailProduct.cover_photo ?? listProduct.cover_photo,
+    description: detailProduct.description?.trim() || listProduct.description,
+    short_info: detailProduct.short_info?.trim() || listProduct.short_info,
+    important_info: detailProduct.important_info?.trim() || listProduct.important_info,
+    refund_info: detailProduct.refund_info?.trim() || listProduct.refund_info,
+    what_included: detailProduct.what_included ?? listProduct.what_included,
+    what_not_included: detailProduct.what_not_included ?? listProduct.what_not_included,
+    places_to_see: detailProduct.places_to_see?.trim() || listProduct.places_to_see,
+    begin_place: detailProduct.begin_place ?? listProduct.begin_place,
+    finish_point: detailProduct.finish_point ?? listProduct.finish_point,
+    host: detailProduct.host ?? listProduct.host,
+    guide: detailProduct.guide ?? listProduct.guide,
+    group_size_max: detailProduct.group_size_max ?? listProduct.group_size_max,
+    max_persons: detailProduct.max_persons ?? detailProduct.group_size_max ?? listProduct.max_persons,
+    reviews_list: detailProduct.reviews_list?.length
+      ? detailProduct.reviews_list
+      : listProduct.reviews_list,
+    reviews_count:
+      detailProduct.reviews_count ??
+      detailProduct.review_count ??
+      listProduct.reviews_count ??
+      listProduct.review_count,
+    review_count:
+      detailProduct.review_count ??
+      detailProduct.reviews_count ??
+      listProduct.review_count ??
+      listProduct.reviews_count,
+    rating: detailProduct.rating ?? listProduct.rating,
+    order_options: detailProduct.order_options?.length
+      ? detailProduct.order_options
+      : listProduct.order_options,
+  };
+}
+
+export function productNeedsDetailEnrichment(product: Sputnik8Product): boolean {
+  const photos = extractPhotosFromProduct(product);
+  if (photos.length <= 1) return true;
+  if (!product.important_info?.trim() && !product.refund_info?.trim()) return true;
+  return false;
 }
 
 export function resolveCoverImage(product: Sputnik8Product): string | undefined {
@@ -385,21 +449,100 @@ function parseGuide(product: Sputnik8Product): ExcursionGuide | undefined {
   };
 }
 
-function buildPlacesDescriptionBlock(placesToSee?: string): ExcursionDescriptionBlock | null {
-  const text = placesToSee?.trim();
+function buildRichTextBlock(title: string, raw?: string | null): ExcursionDescriptionBlock | null {
+  const text = raw?.trim();
   if (!text) return null;
 
-  const html = sanitizeHtml(
-    text
-      .split("\n")
-      .map((line) => line.trim())
-      .filter(Boolean)
-      .map((line) => (line.startsWith("•") ? line : `• ${line}`))
-      .join("<br>")
-  );
+  const html = isHtmlContent(text)
+    ? sanitizeHtml(text.replace(/\r\n/g, "\n"))
+    : sanitizeHtml(
+        text
+          .split(/\r?\n/)
+          .map((line) => line.trim())
+          .filter(Boolean)
+          .map((line) => (line.startsWith("•") ? line : line))
+          .join("<br>")
+      );
 
   if (!html) return null;
-  return { title: "Что увидим", html };
+  return { title, html };
+}
+
+function parseInfoObject(raw: unknown): string | undefined {
+  if (typeof raw === "string" && raw.trim()) return raw.trim();
+  if (!raw || typeof raw !== "object") return undefined;
+
+  const record = raw as Record<string, unknown>;
+  const parts = Object.values(record)
+    .map((value) => (typeof value === "string" ? value.trim() : ""))
+    .filter(Boolean);
+
+  return parts.length ? parts.join("\n") : undefined;
+}
+
+function appendUniqueBlock(
+  blocks: ExcursionDescriptionBlock[],
+  block: ExcursionDescriptionBlock | null
+) {
+  if (!block?.html) return;
+  const normalizedHtml = block.html.replace(/\s+/g, " ").trim();
+  if (blocks.some((existing) => existing.html.replace(/\s+/g, " ").trim() === normalizedHtml)) {
+    return;
+  }
+  blocks.push(block);
+}
+
+function buildDescriptionBlocks(product: Sputnik8Product): ExcursionDescriptionBlock[] {
+  const blocks: ExcursionDescriptionBlock[] = [];
+
+  for (const block of parseDescriptionBlocks(product.description_blocks)) {
+    appendUniqueBlock(blocks, block);
+  }
+
+  appendUniqueBlock(blocks, buildRichTextBlock("Об экскурсии", product.description));
+  appendUniqueBlock(blocks, buildRichTextBlock("Важная информация", product.important_info));
+  appendUniqueBlock(
+    blocks,
+    buildRichTextBlock("Что взять с собой", parseInfoObject(product.required_info))
+  );
+  appendUniqueBlock(
+    blocks,
+    buildRichTextBlock("Документы", parseInfoObject(product.document))
+  );
+
+  return blocks;
+}
+
+export function mapSputnik8ReviewsList(raw: unknown): ExcursionReview[] {
+  if (!Array.isArray(raw)) return [];
+
+  const reviews: ExcursionReview[] = [];
+
+  raw.forEach((entry, index) => {
+    const review = entry as Sputnik8ReviewListItem;
+    const text = review.content?.trim() || review.text?.trim();
+    const authorName = review.name?.trim() || review.author_name?.trim();
+    const createdAt = review.date?.trim() || review.created_at?.trim();
+    const id =
+      typeof review.id === "number"
+        ? review.id
+        : typeof review.activity_id === "number"
+          ? review.activity_id * 1000 + index
+          : index + 1;
+
+    if (!text && review.rating == null) return;
+
+    reviews.push({
+      id,
+      rating: review.rating ?? undefined,
+      authorName: authorName || undefined,
+      text: text || undefined,
+      createdAt: createdAt || undefined,
+      photos: review.photos?.filter(Boolean),
+    });
+  });
+
+  return reviews;
 }
 
 export function parseSputnik8Payload(payload: unknown): ParsedSputnik8Payload {
@@ -415,17 +558,15 @@ export function parseSputnik8Payload(payload: unknown): ParsedSputnik8Payload {
 
   const photos = extractPhotosFromProduct(product);
   const placesToSee = product.places_to_see?.trim() || undefined;
-  const descriptionBlocks = parseDescriptionBlocks(product.description_blocks);
-  const placesBlock = buildPlacesDescriptionBlock(placesToSee);
-  if (placesBlock) {
-    descriptionBlocks.unshift(placesBlock);
-  }
+  const descriptionBlocks = buildDescriptionBlocks(product);
 
   const price =
     product.price && typeof product.price === "object" ? product.price : undefined;
 
   const minimumBookPeriod =
     product.minimum_book_period != null ? String(product.minimum_book_period).trim() : undefined;
+
+  const refundPolicy = product.refund_info?.trim() || undefined;
 
   return {
     guide: parseGuide(product),
@@ -448,7 +589,8 @@ export function parseSputnik8Payload(payload: unknown): ParsedSputnik8Payload {
       product.movement_type?.trim() ||
       product.transport_type?.trim() ||
       undefined,
-    isBookable: product.is_bookable !== false,
+    isBookable:
+      product.is_bookable !== false && product.available_for_booking !== false,
     ticketOptions: parseTicketOptionsFromProduct(product),
     priceDescription: price?.price_description?.trim() || undefined,
     coverImage: resolveCoverImage(product),
@@ -457,5 +599,6 @@ export function parseSputnik8Payload(payload: unknown): ParsedSputnik8Payload {
     languages: parseLanguages(product.languages),
     payTypeInText: product.pay_type_in_text?.trim() || undefined,
     minimumBookPeriod: minimumBookPeriod || undefined,
+    refundPolicy,
   };
 }

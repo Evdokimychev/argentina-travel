@@ -25,16 +25,31 @@ export function isTripsterTourExperience(
   return resolveTripsterExperienceKind(row) === TRIPSTER_PARTNER_TOUR_TYPE;
 }
 
-export function isPartnerTourListing(
+export function isTripsterPartnerListing(
   tour: Pick<TourListing, "partnerSource" | "id">
 ): boolean {
   return tour.partnerSource === "tripster" || tour.id.startsWith("tripster-");
 }
 
+export function isPartnerTourListing(
+  tour: Pick<TourListing, "partnerSource" | "id">
+): boolean {
+  return (
+    isTripsterPartnerListing(tour) ||
+    tour.partnerSource === "youtravel" ||
+    tour.id.startsWith("youtravel-")
+  );
+}
+
 export function isPartnerTourDetail(
   tour: Pick<TourDetail, "partnerSource" | "id">
 ): boolean {
-  return tour.partnerSource === "tripster" || tour.id.startsWith("tripster-");
+  return (
+    tour.partnerSource === "tripster" ||
+    tour.partnerSource === "youtravel" ||
+    tour.id.startsWith("tripster-") ||
+    tour.id.startsWith("youtravel-")
+  );
 }
 
 const PARTNER_COUNTRY_BY_ID: Record<number, string> = {
@@ -82,13 +97,26 @@ export function resolvePartnerTourCityName(
   return "Аргентина";
 }
 
+/**
+ * Merges partner batches after platform listings. Platform slugs win on collision;
+ * YouTravel uses `{title}-yt{id}` slugs, Tripster uses its own slug namespace.
+ */
 export function mergeMarketplaceTourListings(
   platform: TourListing[],
-  partner: TourListing[]
+  ...partnerBatches: TourListing[][]
 ): TourListing[] {
   const platformSlugs = new Set(platform.map((item) => item.slug));
-  const partnerOnly = partner.filter((item) => !platformSlugs.has(item.slug));
-  return [...platform, ...partnerOnly];
+  const merged = [...platform];
+
+  for (const partner of partnerBatches) {
+    for (const item of partner) {
+      if (!platformSlugs.has(item.slug)) {
+        merged.push(item);
+      }
+    }
+  }
+
+  return merged;
 }
 
 /** SQL fragment for Postgres — tours only */
