@@ -35,11 +35,14 @@ const SERVICE_ROLE_ONLY_TABLES = new Set([
   "tripster_booking_requests",
   "tripster_sync_runs",
   "url_redirects",
+  "youtravel_affise_snapshots",
+  "youtravel_booking_requests",
+  "youtravel_sync_runs",
 ]);
 
 const TABLE_RE = /create\s+table\s+if\s+not\s+exists\s+public\.([a-z0-9_]+)/gi;
 const RLS_RE = /alter\s+table\s+public\.([a-z0-9_]+)\s+enable\s+row\s+level\s+security/gi;
-const POLICY_RE = /create\s+policy\s+"[^"]+"\s+on\s+public\.([a-z0-9_]+)/gi;
+const POLICY_RE = /create\s+policy\s+(?:"[^"]+"|[a-z0-9_]+)\s+on\s+public\.([a-z0-9_]+)/gi;
 
 function loadEnvLocal() {
   for (const file of [".env.local", ".env"]) {

@@ -1,9 +1,9 @@
 {
   "ok": true,
   "source": "static",
-  "ranAt": "2026-06-22T00:15:19.883Z",
+  "ranAt": "2026-06-24T23:13:23.476Z",
   "gitSha": null,
-  "tableCount": 73,
+  "tableCount": 81,
   "criticalIssueCount": 0,
   "criticalIssues": [],
   "tables": [
@@ -17,6 +17,9 @@
     "analytics_events",
     "api_key_usage_log",
     "api_keys",
+    "blog_article_comments",
+    "blog_comment_reports",
+    "blog_reading_history",
     "booking_attribution",
     "booking_commission_snapshots",
     "bookings",
@@ -79,6 +82,11 @@
     "typing_presence",
     "url_redirects",
     "user_favorites",
-    "user_interactions"
+    "user_interactions",
+    "youtravel_affise_snapshots",
+    "youtravel_booking_requests",
+    "youtravel_offers",
+    "youtravel_sync_runs",
+    "youtravel_tours"
   ]
 }
