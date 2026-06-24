@@ -30,7 +30,9 @@ export type PartnerTourSectionFlags = {
   comfort: boolean;
   meeting: boolean;
   important: boolean;
+  arrivalInfo: boolean;
   reviews: boolean;
+  routeMap: boolean;
 };
 
 export function resolvePartnerTourSections(
@@ -56,15 +58,23 @@ export function resolvePartnerTourSections(
     included: Boolean(content.includedHtml?.trim() || content.excludedHtml?.trim()),
     orgDetails: hasOrgDetails,
     accommodations: hasAccommodations,
-    comfort: Boolean(content.comfortHtml?.trim()),
+    comfort: Boolean(content.comfortHtml?.trim() || content.comfortDescription?.trim()),
     meeting: Boolean(content.meetingPoint?.trim() || content.finishPoint?.trim()),
     important:
+      (content.importantToKnowItems?.length ?? 0) > 0 ||
       (tour.importantInfo ?? []).some((item) => item.trim()) ||
       Boolean(content.additionalInfoHtml?.trim()),
+    arrivalInfo: Boolean(
+      content.arrivalInfo?.startCity?.trim() ||
+        content.arrivalInfo?.finishCity?.trim() ||
+        content.arrivalInfo?.startDate?.trim() ||
+        content.arrivalInfo?.finishDate?.trim()
+    ),
     reviews:
       tour.reviews.length > 0 ||
       tour.reviewCount > 0 ||
       (tour.partnerGuideReviews?.length ?? 0) > 0 ||
       (tour.organizer.reviewCount ?? 0) > 0,
+    routeMap: (tour.routePoints?.length ?? 0) > 0,
   };
 }

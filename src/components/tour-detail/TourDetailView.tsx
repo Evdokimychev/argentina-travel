@@ -41,6 +41,9 @@ import PartnerTourOrgDetailsSection from "./PartnerTourOrgDetailsSection";
 import PartnerTourAccommodationSection from "./PartnerTourAccommodationSection";
 import PartnerTourMeetingSection from "./PartnerTourMeetingSection";
 import PartnerTourDatesSection from "./PartnerTourDatesSection";
+import PartnerTourBookingConditionsSection from "./PartnerTourBookingConditionsSection";
+import PartnerTourImportantSection from "./PartnerTourImportantSection";
+import PartnerTourArrivalInfoSection from "./PartnerTourArrivalInfoSection";
 import PartnerTourProgramNotice from "./PartnerTourProgramNotice";
 import TourPreviewBanner from "./TourPreviewBanner";
 import ReviewPromptBanner from "./ReviewPromptBanner";
@@ -138,6 +141,22 @@ export default function TourDetailView({
         ? "о тревел-эксперте на YouTravel.me"
         : "о гиде на других турах Tripster"
       : undefined;
+  const youTravelActivityFooter =
+    isYouTravelPartnerDetail(tour) && partnerContent?.activityLevel
+      ? {
+          sectionLabel: "Активность",
+          levelLabel: partnerContent.activityLabel,
+          levelDescription: partnerContent.activityDescription,
+          dotCount: partnerContent.activityLevel,
+          hideHelpPopover: true,
+          organizerComment:
+            partnerContent.activityExpertComment?.trim() ||
+            tour.itineraryOrganizerComment?.trim() ||
+            undefined,
+          organizerCommentLabel: "Комментарий тревел-эксперта",
+        }
+      : undefined;
+  const isYouTravel = isYouTravelPartnerDetail(tour);
 
   return (
     <TourBookingProvider tour={tour}>
@@ -193,12 +212,13 @@ export default function TourDetailView({
                       days={tour.itinerary}
                       tour={tour}
                       showPdfDownload={false}
-                      hideProgramFooter
+                      hideProgramFooter={!youTravelActivityFooter}
+                      programFooter={youTravelActivityFooter}
                     />
                   ) : partnerSections.programNotice ? (
                     <PartnerTourProgramNotice bookingHref={partnerBookingHref} />
                   ) : null}
-                  {(partnerSections.dates || isPartnerTour) ? (
+                  {!isYouTravel && (partnerSections.dates || isPartnerTour) ? (
                     <PartnerTourDatesSection tour={tour} />
                   ) : null}
                   {partnerSections.included ? (
@@ -220,10 +240,30 @@ export default function TourDetailView({
                   {partnerSections.comfort ? (
                     <PartnerTourComfortSection content={partnerContent} />
                   ) : null}
-                  {partnerSections.meeting ? (
+                  {partnerSections.meeting && !(isYouTravel && partnerSections.arrivalInfo) ? (
                     <PartnerTourMeetingSection content={partnerContent} />
                   ) : null}
-                  {partnerSections.important ? (
+                  {partnerSections.important && isYouTravel ? (
+                    <PartnerTourImportantSection content={partnerContent} />
+                  ) : null}
+                  {isYouTravel && partnerSections.arrivalInfo ? (
+                    <PartnerTourArrivalInfoSection tour={tour} content={partnerContent} />
+                  ) : null}
+                  {isYouTravel && partnerSections.routeMap ? (
+                    <RouteMapSection
+                      points={tour.routePoints}
+                      arrival={tour.arrival}
+                      tourSlug={tour.slug}
+                      tourId={tour.id}
+                    />
+                  ) : null}
+                  {isYouTravel && (partnerSections.dates || isPartnerTour) ? (
+                    <PartnerTourDatesSection tour={tour} />
+                  ) : null}
+                  {isYouTravel && partnerContent ? (
+                    <PartnerTourBookingConditionsSection tour={tour} content={partnerContent} />
+                  ) : null}
+                  {partnerSections.important && !isYouTravel ? (
                     <ImportantSection
                       items={tour.importantInfo}
                       organizerComment={getTourSectionOrganizerComment(tour, "important")}
@@ -233,6 +273,7 @@ export default function TourDetailView({
                     <PartnerTourOrganizerSection
                       guide={tour.partnerGuideProfile}
                       organizer={tour.organizer}
+                      partnerSource={isYouTravelPartnerDetail(tour) ? "youtravel" : "tripster"}
                     />
                   ) : (
                     <OrganizerSection

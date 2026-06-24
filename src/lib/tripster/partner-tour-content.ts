@@ -55,6 +55,17 @@ export type PartnerTourOrgDetailItem = {
   html: string;
 };
 
+export type PartnerTourArrivalInfo = {
+  startLabel?: string;
+  startDate?: string;
+  startTime?: string;
+  startCity?: string;
+  finishLabel?: string;
+  finishDate?: string;
+  finishTime?: string;
+  finishCity?: string;
+};
+
 export type PartnerTourContent = {
   summary?: string;
   introHtml?: string;
@@ -78,10 +89,30 @@ export type PartnerTourContent = {
   priceDescription?: string;
   scheduleText?: string;
   instantBooking?: boolean;
+  /** YouTravel: тур состоится в любом случае. */
+  tourGuaranteed?: boolean;
   isBookable?: boolean;
   visitorsCount?: number;
+  /** YouTravel: участники, уже записавшиеся на ближайший заезд. */
+  travelersGoingCount?: number;
   childFriendly?: boolean;
   languages?: string[];
+  /** YouTravel activity level (1–5). */
+  activityLevel?: number;
+  activityLabel?: string;
+  activityDescription?: string;
+  activityExpertComment?: string;
+  comfortLevel?: number;
+  comfortLabel?: string;
+  comfortDescription?: string;
+  accommodationTypesSummary?: string;
+  accommodationPhotos?: string[];
+  accommodationRoomTypes?: Array<{ id: string; name: string }>;
+  childrenSummary?: string;
+  /** YouTravel «Важно знать» accordion items scraped from public page. */
+  importantToKnowItems?: PartnerTourOrgDetailItem[];
+  /** YouTravel «Информация по прибытию» start/finish grid. */
+  arrivalInfo?: PartnerTourArrivalInfo;
 };
 
 const ORG_DETAILS_TITLE_PATTERN = /организационн/i;

@@ -12,9 +12,11 @@ import { getLocaleFromPathname, stripLocalePrefix } from "@/lib/i18n/locale-path
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { matchUrlRedirect } from "@/lib/redirects/url-redirect-server";
+import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
+const TOUR_PRIVATE_ACCESS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
 function applyFirstTouchAttributionCookie(
   request: NextRequest,
@@ -49,6 +51,38 @@ function applyFirstTouchAttributionCookie(
   });
 
   return response;
+}
+
+function applyTourPrivateAccessCookie(
+  request: NextRequest,
+  response: NextResponse,
+): NextResponse {
+  const pathname = stripLocalePrefix(request.nextUrl.pathname);
+  const tourMatch = pathname.match(/^\/tours\/([^/]+)$/);
+  if (!tourMatch) return response;
+
+  const access = request.nextUrl.searchParams.get("access")?.trim();
+  if (!access) return response;
+
+  response.cookies.set(tourPrivateAccessCookieName(tourMatch[1]!), access, {
+    path: "/",
+    maxAge: TOUR_PRIVATE_ACCESS_COOKIE_MAX_AGE,
+    sameSite: "lax",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+  });
+
+  return response;
+}
+
+function finalizeMiddlewareResponse(
+  request: NextRequest,
+  response: NextResponse,
+): NextResponse {
+  return applyTourPrivateAccessCookie(
+    request,
+    applyFirstTouchAttributionCookie(request, response),
+  );
 }
 
 function createSupabaseMiddlewareClient(request: NextRequest, response: NextResponse) {
@@ -171,7 +205,7 @@ export async function middleware(request: NextRequest) {
 
   if (!isSupabaseAuthEnabled() || !isProtected) {
     const response = localeResponse ?? NextResponse.next();
-    return applyFirstTouchAttributionCookie(request, response);
+    return finalizeMiddlewareResponse(request, response);
   }
 
   const isOrganizer = routePathname.startsWith("/organizer");
@@ -249,7 +283,7 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(redirectUrl);
   }
 
-  return applyFirstTouchAttributionCookie(request, response);
+  return finalizeMiddlewareResponse(request, response);
 }
 
 export const config = {

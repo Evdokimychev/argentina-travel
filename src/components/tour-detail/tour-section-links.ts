@@ -2,6 +2,7 @@ import { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
+import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibility";
 import {
   hasArrivalDepartureLogistics,
@@ -43,10 +44,13 @@ export function buildTourSectionLinks(
     if (sections.description) {
       links.push({ id: "description", label: "Описание" });
     }
+    if (isYouTravelPartnerDetail(tour) && sections.stats) {
+      links.push({ id: "tour-details", label: "Детали" });
+    }
     if (sections.itinerary || sections.programNotice) {
       links.push({ id: "itinerary", label: "Программа" });
     }
-    if (sections.dates) {
+    if (sections.dates && !sections.arrivalInfo) {
       links.push({ id: "dates", label: "Даты" });
     }
     if (sections.included) {
@@ -66,6 +70,15 @@ export function buildTourSectionLinks(
     }
     if (sections.important) {
       links.push({ id: "important", label: "Важно" });
+    }
+    if (sections.arrivalInfo) {
+      links.push({ id: "arrival-info", label: "Прибытие" });
+    }
+    if (sections.routeMap) {
+      links.push({ id: "route-map", label: "Карта" });
+    }
+    if (sections.dates && sections.arrivalInfo) {
+      links.push({ id: "dates", label: "Даты" });
     }
     links.push({ id: "organizer", label: "Организатор" });
     if (sections.reviews) {

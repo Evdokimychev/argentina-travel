@@ -14,6 +14,7 @@ import {
   formatLatestArrivalTime,
   getTransportDayShortLabel,
 } from "@/data/tour-logistics-defaults";
+import TourArrivalFlightSearch from "@/components/tour-detail/TourArrivalFlightSearch";
 import { cn } from "@/lib/cn";
 
 function EmptyValue() {
@@ -178,6 +179,8 @@ export default function ArrivalDetails({
   const hasTransfers = arrival.transfers.length > 0;
   const hasMeetingPoint = Boolean(arrival.meetingPoint.trim());
   const hasPracticalInfo = hasAirports || hasFlights || hasTransfers || hasMeetingPoint;
+  const showFlightSearch = hasMeetingPoint && !hasAirports && !hasFlights;
+  const showEmptyPartnerFields = hasPracticalInfo && !showFlightSearch;
 
   return (
     <div className="rounded-2xl border border-sky-200/70 bg-sky-50/50 p-6">
@@ -194,7 +197,26 @@ export default function ArrivalDetails({
           <div className="border-t border-sky-200/70 pt-7" aria-hidden />
         ) : null}
 
-        {hasPracticalInfo ? (
+        {showFlightSearch ? (
+          <TourArrivalFlightSearch
+            startCity={arrival.meetingPoint.trim()}
+            finishCity={arrival.finishPoint?.trim()}
+            startTime={arrival.startTime}
+            finishTime={arrival.finishTime}
+          />
+        ) : null}
+
+        {showFlightSearch && hasTransfers ? (
+          <DetailCell title="Трансферы" isEmpty={false}>
+            <ul className="space-y-1">
+              {arrival.transfers.map((transfer) => (
+                <li key={transfer}>{transfer}</li>
+              ))}
+            </ul>
+          </DetailCell>
+        ) : null}
+
+        {showEmptyPartnerFields ? (
           <div className="grid grid-cols-1 gap-x-12 gap-y-7 sm:grid-cols-2">
             <DetailCell title="Аэропорты" isEmpty={!hasAirports}>
               {hasAirports ? (

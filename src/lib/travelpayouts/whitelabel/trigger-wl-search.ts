@@ -2,10 +2,21 @@ import { TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID } from "@/lib/travelpayout
 
 const WL_SUBMIT_SELECTORS = [
   'button[type="submit"]',
+  'input[type="submit"]',
   ".search-form__submit",
   ".submit-button",
   ".button-primary",
+  '[class*="submit"]',
+  '[class*="Submit"]',
 ] as const;
+
+function isClickableSubmit(element: Element): element is HTMLElement {
+  if (!(element instanceof HTMLElement)) return false;
+  if (element instanceof HTMLButtonElement || element instanceof HTMLInputElement) {
+    return !element.disabled;
+  }
+  return true;
+}
 
 /** Click the partner search form submit button when URL params alone did not auto-start. */
 export function triggerTravelpayoutsWhitelabelSearch(): boolean {
@@ -13,15 +24,18 @@ export function triggerTravelpayoutsWhitelabelSearch(): boolean {
   if (!search) return false;
 
   for (const selector of WL_SUBMIT_SELECTORS) {
-    const candidate = search.querySelector(selector);
-    if (candidate instanceof HTMLButtonElement && !candidate.disabled) {
+    const candidates = search.querySelectorAll(selector);
+    for (const candidate of candidates) {
+      if (!isClickableSubmit(candidate)) continue;
       candidate.click();
       return true;
     }
-    if (candidate instanceof HTMLElement) {
-      candidate.click();
-      return true;
-    }
+  }
+
+  const form = search.querySelector("form");
+  if (form instanceof HTMLFormElement && typeof form.requestSubmit === "function") {
+    form.requestSubmit();
+    return true;
   }
 
   return false;

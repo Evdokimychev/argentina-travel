@@ -85,6 +85,8 @@ interface TourBookingContextValue {
 
 const TourBookingContext = createContext<TourBookingContextValue | null>(null);
 
+export { TourBookingContext };
+
 function resolveInitialDateMode(
   mode: TourBookingMode | undefined,
   datesLength: number

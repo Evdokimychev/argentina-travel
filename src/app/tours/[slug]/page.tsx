@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { cookies } from "next/headers";
 import TourDetailView from "@/components/tour-detail/TourDetailView";
 import TourJsonLd from "@/components/seo/TourJsonLd";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
@@ -13,6 +14,7 @@ import { getFlightPriceTeasers } from "@/lib/flights/hub-price-teasers";
 import { getFlightTeaserLabels } from "@/lib/flights/teaser-labels";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 import { resolveTourCoverImage } from "@/lib/tour-metadata";
+import { getTourPrivateAccessFromCookies } from "@/lib/tour-private-access";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +43,9 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params, searchParams }: TourPageProps) {
   const { slug } = await params;
-  const { access } = await searchParams;
+  const { access: accessFromQuery } = await searchParams;
+  const cookieStore = await cookies();
+  const access = accessFromQuery ?? getTourPrivateAccessFromCookies(cookieStore, slug);
   const tour = await fetchTourDetail(slug, { accessToken: access });
   if (!tour) return { title: "Тур не найден" };
   const pageUrl = absoluteUrl(`/tours/${slug}`);
@@ -74,9 +78,10 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
   };
 }
 
-export default async function TourDetailPage({ params, searchParams }: TourPageProps) {
+export default async function TourDetailPage({ params }: Pick<TourPageProps, "params">) {
   const { slug } = await params;
-  const { access } = await searchParams;
+  const cookieStore = await cookies();
+  const access = getTourPrivateAccessFromCookies(cookieStore, slug);
   const tour = await fetchTourDetail(slug, { accessToken: access });
   const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
   const initialCanonicalTour = await fetchCutoverCanonicalTourBySlug(slug);

@@ -1,5 +1,19 @@
 import type { Tour } from "@/types/tour";
 
+const TOUR_PRIVATE_ACCESS_COOKIE_PREFIX = "tour_private_access_";
+
+export function tourPrivateAccessCookieName(slug: string): string {
+  return `${TOUR_PRIVATE_ACCESS_COOKIE_PREFIX}${slug}`;
+}
+
+/** Read private tour access token set by middleware (httpOnly cookie). */
+export function getTourPrivateAccessFromCookies(
+  cookieStore: { get(name: string): { value: string } | undefined },
+  slug: string,
+): string | undefined {
+  return cookieStore.get(tourPrivateAccessCookieName(slug))?.value;
+}
+
 export function generatePrivateAccessToken(): string {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID().replace(/-/g, "").slice(0, 24);
