@@ -3,9 +3,14 @@
 import Image from "next/image";
 import { useState } from "react";
 import AccommodationsSection from "./AccommodationsSection";
+import YouTravelAccommodationSection from "./YouTravelAccommodationSection";
 import TourSection from "./TourSection";
 import type { PartnerTourContent } from "@/lib/tripster/partner-tour-content";
 import type { TourAccommodation, TourDetail } from "@/types";
+import {
+  hasYouTravelAccommodationContent,
+} from "@/lib/youtravel/partner-tour-accommodation";
+import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { resolveTourComfortLevel } from "@/lib/tour-accommodation";
 import { tourDetailCardBorderClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
@@ -84,13 +89,31 @@ export default function PartnerTourAccommodationSection({
   const items = content.accommodationItems ?? [];
   const fallbackHtml = content.accommodationHtml?.trim();
 
+  if (isYouTravelPartnerDetail(tour) && (accommodations.length > 0 || hasYouTravelAccommodationContent(content))) {
+    return (
+      <YouTravelAccommodationSection
+        tour={tour}
+        content={content}
+        accommodations={accommodations}
+      />
+    );
+  }
+
   if (accommodations.length > 0) {
+    const comfortDescription =
+      content.comfortDescription?.trim() ||
+      intro ||
+      tour.descriptionExtra?.comfort?.trim();
+
     return (
       <AccommodationsSection
         accommodations={accommodations}
         durationNights={tour.durationNights}
         comfortLevel={resolveTourComfortLevel(tour)}
-        comfortDescriptionHtml={intro}
+        comfortDescriptionHtml={comfortDescription ? `<p>${comfortDescription}</p>` : undefined}
+        comfortLevelLabel={content.comfortLabel}
+        comfortDotCount={content.comfortLevel}
+        hideComfortHelpPopover={Boolean(content.comfortLabel)}
       />
     );
   }

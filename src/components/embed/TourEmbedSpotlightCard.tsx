@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, MapPin, Star } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import type { TourListing } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -64,10 +65,11 @@ export default function TourEmbedSpotlightCard({ tour, className }: TourEmbedSpo
           {rating.hasReviews ? (
             <>
               <span aria-hidden>·</span>
-              <span className="inline-flex items-center gap-1">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" aria-hidden />
-                {rating.ratingText}
-              </span>
+              <ReviewRatingBadge
+                score={rating.ratingText}
+                reviewCount={tour.reviewCount}
+                size="sm"
+              />
             </>
           ) : null}
         </div>

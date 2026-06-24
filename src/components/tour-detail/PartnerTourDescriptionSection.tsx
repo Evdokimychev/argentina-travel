@@ -1,6 +1,7 @@
 "use client";
 
 import ExcursionContentBlocks from "@/components/excursions/ExcursionContentBlocks";
+import { ExpandableRichHtml } from "@/components/ui/expandable-text";
 import {
   isPartnerOrgDetailsBlockTitle,
   type PartnerTourContent,
@@ -19,12 +20,7 @@ export default function PartnerTourDescriptionSection({
 
   return (
     <div className="space-y-8">
-      {content.introHtml ? (
-        <div
-          className="rich-text-editor-content leading-relaxed text-charcoal/90"
-          dangerouslySetInnerHTML={{ __html: content.introHtml }}
-        />
-      ) : null}
+      {content.introHtml ? <ExpandableRichHtml html={content.introHtml} /> : null}
       {blocks.length ? (
         <ExcursionContentBlocks
           blocks={blocks}

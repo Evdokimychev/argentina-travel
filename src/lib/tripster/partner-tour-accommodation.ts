@@ -217,6 +217,11 @@ export function partnerContentHasAccommodation(
       content.accommodationItems?.length ||
       content.accommodationOvernights?.length ||
       content.accommodationHtml?.trim() ||
+      content.accommodationTypesSummary?.trim() ||
+      content.accommodationPhotos?.length ||
+      content.accommodationRoomTypes?.length ||
+      content.comfortLevel != null ||
+      content.comfortDescription?.trim() ||
       htmlToPlainText(content.includedHtml ?? "").includes("Проживание")
   );
 }

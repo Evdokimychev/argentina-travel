@@ -2,11 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { TourItineraryDay, TourRoutePoint } from "@/types";
 import TourSection from "./TourSection";
-import { Switch } from "@/components/ui/switch";
+import TourSectionExpandToggle from "./TourSectionExpandToggle";
+import { SafeImage } from "@/components/ui/safe-image";
+import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { cn } from "@/lib/cn";
 import { formatOpenedDaysLabel, formatDaysOpenOfTotal } from "@/lib/pluralize";
 import {
@@ -15,10 +16,14 @@ import {
   tourDetailTimelineClass,
 } from "@/lib/tour-detail-ui";
 import ItineraryDayDetails from "./ItineraryDayDetails";
-import ItineraryProgramFooter from "./ItineraryProgramFooter";
+import ItineraryProgramFooter, {
+  type ItineraryProgramFooterOverrides,
+} from "./ItineraryProgramFooter";
 import type { TourDetail } from "@/types";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
 import { getRoutePointsForDay } from "@/lib/tour-itinerary-map";
+
+export type { ItineraryProgramFooterOverrides };
 
 const ItineraryDayMiniMap = dynamic(() => import("./ItineraryDayMiniMap"), {
   ssr: false,
@@ -31,64 +36,6 @@ const TourItineraryPdfButton = dynamic(() => import("./TourItineraryPdfButton"),
   ssr: false,
   loading: () => null,
 });
-
-function ItineraryExpandToggle({
-  allExpanded,
-  openCount,
-  totalDays,
-  openSegments,
-  onToggle,
-}: {
-  allExpanded: boolean;
-  openCount: number;
-  totalDays: number;
-  openSegments: boolean[];
-  onToggle: () => void;
-}) {
-  return (
-    <div
-      role="group"
-      aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
-      className="flex max-w-full min-h-[44px] items-center gap-3 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30 sm:min-h-0"
-    >
-      <button
-        type="button"
-        onClick={onToggle}
-        className="min-w-0 flex-1 text-left"
-        aria-label={allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"}
-      >
-        <div className="flex items-baseline justify-between gap-3">
-          <span className="text-sm font-medium text-charcoal">
-            {allExpanded ? "Свернуть все" : "Раскрыть все"}
-          </span>
-          <span className="shrink-0 text-xs tabular-nums text-slate">
-            {openCount}/{totalDays}
-          </span>
-        </div>
-
-        <div
-          className="mt-2 flex gap-0.5"
-          aria-hidden
-          title={formatDaysOpenOfTotal(openCount, totalDays)}
-        >
-          {openSegments.map((isOpen, index) => (
-            <span
-              key={index}
-              className={cn(
-                "h-1 flex-1 rounded-full transition-colors",
-                isOpen ? "bg-sky" : "bg-gray-200"
-              )}
-            />
-          ))}
-        </div>
-
-        <p className="mt-1.5 text-xs text-slate">{formatOpenedDaysLabel(openCount, allExpanded)}</p>
-      </button>
-
-      <Switch checked={allExpanded} onCheckedChange={() => onToggle()} aria-hidden />
-    </div>
-  );
-}
 
 function ItineraryDayCard({
   day,
@@ -138,6 +85,19 @@ function ItineraryDayCard({
               )}
             />
           </div>
+          {day.routeLocationNames?.length ? (
+            <div className="mt-2 flex min-w-0 flex-wrap items-center gap-1.5">
+              <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" strokeWidth={1.75} aria-hidden />
+              {day.routeLocationNames.map((name) => (
+                <span
+                  key={name}
+                  className="inline-flex max-w-full rounded-full bg-gray-50/90 px-2 py-0.5 text-xs leading-snug text-slate ring-1 ring-gray-100/90"
+                >
+                  <span className="truncate">{name}</span>
+                </span>
+              ))}
+            </div>
+          ) : null}
           {isOpen && (
             <div className="mt-4 min-w-0 space-y-4 border-t border-gray-100 pt-4 animate-fade-in-up">
               {day.description ? (
@@ -159,12 +119,19 @@ function ItineraryDayCard({
               ) : null}
               {images.length > 0 && (
                 <div className="flex min-w-0 gap-2 overflow-x-auto pb-1">
-                  {images.map((img) => (
+                  {images.map((img, imageIndex) => (
                     <div
-                      key={img}
+                      key={`${img}-${imageIndex}`}
                       className="relative h-24 w-36 shrink-0 overflow-hidden rounded-xl ring-1 ring-gray-100"
                     >
-                      <Image src={img} alt="" fill className="object-cover" sizes="144px" />
+                      <SafeImage
+                        src={buildSupabaseCdnUrl(img, { width: 480, quality: 78 })}
+                        alt=""
+                        fill
+                        placeholderVariant="tour"
+                        className="object-cover"
+                        sizes="144px"
+                      />
                     </div>
                   ))}
                 </div>
@@ -187,6 +154,7 @@ interface ItinerarySectionProps {
   tour?: TourDetail | null;
   showPdfDownload?: boolean;
   hideProgramFooter?: boolean;
+  programFooter?: ItineraryProgramFooterOverrides;
 }
 
 export default function ItinerarySection({
@@ -194,6 +162,7 @@ export default function ItinerarySection({
   tour,
   showPdfDownload = true,
   hideProgramFooter = false,
+  programFooter,
 }: ItinerarySectionProps) {
   const itineraryDays = useMemo(() => days ?? [], [days]);
   const firstDayId = itineraryDays[0]?.id;
@@ -251,12 +220,17 @@ export default function ItinerarySection({
       defaultMobileExpanded
       headerAddon={
         totalDays > 1 ? (
-          <ItineraryExpandToggle
+          <TourSectionExpandToggle
             allExpanded={allExpanded}
             openCount={openCount}
-            totalDays={totalDays}
+            totalCount={totalDays}
             openSegments={openSegments}
             onToggle={handleExpandAll}
+            groupAriaLabel={
+              allExpanded ? "Свернуть все дни программы" : "Раскрыть все дни программы"
+            }
+            segmentsTitle={formatDaysOpenOfTotal(openCount, totalDays)}
+            statusLabel={formatOpenedDaysLabel(openCount, allExpanded)}
           />
         ) : undefined
       }
@@ -277,10 +251,21 @@ export default function ItinerarySection({
 
       {tour && !hideProgramFooter ? (
         <ItineraryProgramFooter
-          difficulty={tour.difficulty}
-          difficultyDescriptionHtml={tour.descriptionExtra?.difficulty}
-          organizerComment={tour ? getTourSectionOrganizerComment(tour, "itinerary") : undefined}
+          difficulty={programFooter?.difficulty ?? tour.difficulty}
+          difficultyDescriptionHtml={
+            programFooter?.difficultyDescriptionHtml ?? tour.descriptionExtra?.difficulty
+          }
+          organizerComment={
+            programFooter?.organizerComment ??
+            getTourSectionOrganizerComment(tour, "itinerary")
+          }
+          organizerCommentLabel={programFooter?.organizerCommentLabel}
           travelRisks={tour.travelRisks}
+          sectionLabel={programFooter?.sectionLabel}
+          levelLabel={programFooter?.levelLabel}
+          levelDescription={programFooter?.levelDescription}
+          dotCount={programFooter?.dotCount}
+          hideHelpPopover={programFooter?.hideHelpPopover}
         />
       ) : null}
     </TourSection>

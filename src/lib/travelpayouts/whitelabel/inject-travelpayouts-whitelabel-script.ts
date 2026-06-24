@@ -7,11 +7,14 @@ export function injectTravelpayoutsWhitelabelScript(scriptUrl: string): HTMLScri
   const existing = document.getElementById(FLIGHTS_WL_SCRIPT_ID);
   if (existing instanceof HTMLScriptElement) return existing;
 
+  const scriptParent = document.head ?? document.documentElement;
+  if (!scriptParent) return null;
+
   const script = document.createElement("script");
   script.id = FLIGHTS_WL_SCRIPT_ID;
   script.async = true;
   script.type = "module";
   script.src = scriptUrl;
-  document.head.appendChild(script);
+  scriptParent.appendChild(script);
   return script;
 }

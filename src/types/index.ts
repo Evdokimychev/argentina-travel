@@ -170,6 +170,12 @@ export interface TourListing {
   partnerOriginalPriceValue?: number;
   /** За человека или за группу/тур */
   partnerPriceUnit?: "per_person" | "per_group";
+  /** Мгновенная бронь (партнёрский тур) */
+  partnerInstantBooking?: boolean;
+  /** Гарантия проведения тура (партнёрский тур) */
+  partnerTourGuaranteed?: boolean;
+  /** Тематические метки для каталога (до 4) */
+  partnerThematicTags?: string[];
 }
 
 export interface TourFilters {
@@ -194,6 +200,8 @@ export interface TourFilters {
   userCoords: { lat: number; lng: number } | null;
   /** Filter by organizer public profile slug (account id). */
   organizerSlug: string;
+  /** YouTravel partner tours with instant booking only. */
+  instantBookingOnly: boolean;
 }
 
 export const DEFAULT_FILTERS: TourFilters = {
@@ -217,6 +225,7 @@ export const DEFAULT_FILTERS: TourFilters = {
   nearMe: false,
   userCoords: null,
   organizerSlug: "",
+  instantBookingOnly: false,
 };
 
 // --- Detail page types (unchanged subset) ---
@@ -236,6 +245,8 @@ export interface TourRoutePoint {
   lat: number;
   lng: number;
   dayNumber?: number;
+  /** Фото локации для popup на карте маршрута */
+  imageUrl?: string;
 }
 
 export interface TourFeature {
@@ -256,6 +267,8 @@ export interface TourItineraryDay {
   description: string;
   /** HTML-описание дня (партнёрские туры Tripster) */
   descriptionHtml?: string;
+  /** Точки маршрута дня (партнёрские туры YouTravel) */
+  routeLocationNames?: string[];
   images: string[];
   activities: TourDayActivity[];
   meals: string[];
@@ -318,8 +331,8 @@ export interface TourReview {
   photos: string[];
   /** Review from a verified booking / completed trip. */
   verifiedTrip?: boolean;
-  /** Source of the review: platform DB, Tripster partner API, or static seed. */
-  source?: "platform" | "tripster" | "static";
+  /** Source of the review: platform DB, Tripster partner API, YouTravel, or static seed. */
+  source?: "platform" | "tripster" | "youtravel" | "static";
   /** Organizer reply shown under the tourist review. */
   organizerReply?: string;
   /** ISO date when organizer published a reply. */
@@ -342,6 +355,9 @@ export interface TourArrivalInfo {
   flights: string[];
   transfers: string[];
   meetingPoint: string;
+  finishPoint?: string;
+  startTime?: string;
+  finishTime?: string;
 }
 
 export interface TourFAQ {
@@ -360,6 +376,18 @@ export interface TourDatePrice {
   /** Цена заезда от партнёра (если валюта не USD) */
   partnerPriceValue?: number;
   partnerPriceCurrency?: string;
+  /** YouTravel: доля предоплаты в процентах (например, 15). */
+  partnerPrepayPercent?: number;
+  /** YouTravel: фиксированная сумма предоплаты в валюте партнёра. */
+  partnerPrepayValue?: number;
+  partnerPrepayCurrency?: string;
+  /** Цена до скидки заезда (партнёр) */
+  partnerOriginalPriceValue?: number;
+  partnerOriginalPriceCurrency?: string;
+  /** YouTravel: сколько человек уже записалось на этот заезд */
+  travelersGoingCount?: number;
+  /** YouTravel: размер группы на заезд (из оффера) */
+  seatsTotal?: number;
 }
 
 export interface TourDetail {
@@ -444,6 +472,8 @@ export interface TourDetail {
   partnerPriceUnit?: "per_person" | "per_group";
   /** Контент партнёрского тура Tripster (HTML-блоки, условия) */
   partnerContent?: import("@/lib/tripster/partner-tour-content").PartnerTourContent;
+  /** Тематические метки партнёрского тура (основная — первая) */
+  partnerThematicTags?: string[];
   /** Профиль гида Tripster (обогащение с API) */
   partnerGuideProfile?: import("@/types/excursion").ExcursionGuideProfile;
   /** Отзывы гида с других туров Tripster, если у текущего тура отзывов нет */

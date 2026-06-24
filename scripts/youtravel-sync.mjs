@@ -1,12 +1,21 @@
 #!/usr/bin/env node
 /**
- * Sync YouTravel.me partner catalog into Supabase.
+ * Sync YouTravel.me partner catalog into Supabase (v2 partner API).
  * Usage: npm run youtravel:sync
  */
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveYouTravelAuthHeaders } from "./youtravel-auth.mjs";
+import {
+  discoverYouTravelTourIds,
+  fetchPartnerTourDetail,
+  fetchPartnerTourOffers,
+  fetchPartnerTourReviews,
+  parseOfferDate,
+  resolvePartnerOfferLink,
+} from "./youtravel-api.mjs";
+import { fetchPublicTourPageData } from "./youtravel-public-description.mjs";
 import {
   createPgClientFromEnv,
   pgDeleteOffersForTour,
@@ -15,6 +24,7 @@ import {
   pgUpsertOffers,
   pgUpsertTours,
 } from "./youtravel-db-pg.mjs";
+import { normalizeYouTravelPartnerPrice } from "./youtravel-price.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -36,43 +46,20 @@ function loadEnvLocal() {
   }
 }
 
-function unwrapList(body) {
-  if (!body) return [];
-  if (Array.isArray(body)) return body;
-  return body.data ?? body.items ?? body.tours ?? body.offers ?? [];
-}
-
 function getSyncCountryMatchers() {
   const custom = process.env.YOUTRAVEL_SYNC_COUNTRY?.trim();
-  if (custom) {
-    return custom
-      .split(",")
-      .map((part) => part.trim().toLowerCase())
-      .filter(Boolean);
-  }
-  return ["argentina", "аргентина"];
-}
+  const matchers = custom
+    ? custom
+        .split(",")
+        .map((part) => part.trim().toLowerCase())
+        .filter(Boolean)
+    : ["argentina", "аргентина"];
 
-function resolveCountryName(tour) {
-  if (typeof tour.country === "string") return tour.country.trim() || null;
-  if (tour.country && typeof tour.country === "object") {
-    return tour.country.nameRu?.trim() || tour.country.name?.trim() || null;
+  if (matchers.includes("argentina") && !matchers.includes("аргентина")) {
+    matchers.push("аргентина");
   }
-  return tour.destination?.trim() || null;
-}
 
-function matchesCountry(tour, matchers) {
-  if (!matchers.length) return true;
-  const haystack = [
-    resolveCountryName(tour),
-    typeof tour.region === "string" ? tour.region : tour.region?.nameRu ?? tour.region?.name,
-    typeof tour.city === "string" ? tour.city : tour.city?.nameRu ?? tour.city?.name,
-    tour.destination,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-  return matchers.some((matcher) => haystack.includes(matcher));
+  return matchers;
 }
 
 function slugifyTitle(title) {
@@ -98,160 +85,153 @@ function buildSlug(title, id) {
   return `${slugifyTitle(title)}-yt${id}`;
 }
 
-function resolveTourId(tour) {
-  const raw = tour.id ?? tour.externalId;
-  const parsed = typeof raw === "number" ? raw : Number.parseInt(String(raw), 10);
-  return Number.isFinite(parsed) ? parsed : null;
-}
-
-function resolveCoverImage(tour) {
-  if (tour.coverImage?.trim()) return tour.coverImage.trim();
-  if (tour.image?.trim()) return tour.image.trim();
-  if (tour.previewImage?.trim()) return tour.previewImage.trim();
-  const first = tour.photos?.[0];
-  if (typeof first === "string") return first;
-  if (first && typeof first === "object") {
-    return first.medium || first.url || first.src || null;
+function resolveCoverImage(tour, serpItem) {
+  const preview = serpItem?.preview_image;
+  if (typeof preview === "string" && preview.trim()) {
+    return preview.startsWith("http")
+      ? preview.trim()
+      : `https://cf.youtravel.me/${preview.replace(/^\//, "")}`;
   }
+  const gallery = tour.gallery ?? [];
+  const first = gallery[0];
+  if (first && typeof first === "object" && first.src) return first.src;
+  if (typeof first === "string") return first;
   return null;
 }
 
 function resolvePhotos(tour) {
-  const photos = tour.photos ?? tour.gallery ?? [];
-  if (!Array.isArray(photos)) return [];
-  return photos
+  const gallery = tour.gallery ?? tour.photos ?? tour.photo_allocation ?? [];
+  if (!Array.isArray(gallery)) return [];
+  return gallery
     .map((item) => {
-      if (typeof item === "string") return item;
+      if (typeof item === "string") {
+        const trimmed = item.trim();
+        if (!trimmed) return null;
+        return /^https?:\/\//i.test(trimmed)
+          ? trimmed
+          : `https://cf.youtravel.me/${trimmed.replace(/^\//, "")}`;
+      }
       if (item && typeof item === "object") {
-        return item.medium || item.url || item.src || null;
+        const raw =
+          item.src?.trim() || item.url?.trim() || item.medium?.trim() || item.thumbnail?.trim();
+        if (!raw) return null;
+        if (/^https?:\/\//i.test(raw)) return raw;
+        const host = item.host?.trim() || "cf.youtravel.me";
+        return `https://${host.replace(/^\//, "")}/${raw.replace(/^\//, "")}`;
       }
       return null;
     })
     .filter(Boolean);
 }
 
-function mapTourRow(tour) {
-  const id = resolveTourId(tour);
+function mapTourRow(tour, serpItem, offers, publicPageData, apiReviews = []) {
+  const id = tour?.id;
   if (id == null) return null;
 
-  const title = tour.title?.trim() || tour.name?.trim() || `Tour ${id}`;
-  const durationDays = tour.durationDays ?? tour.duration ?? null;
+  const title = tour.name?.trim() || tour.title?.trim() || serpItem?.title?.trim() || `Tour ${id}`;
+  const durationDays = tour.days?.length ?? tour.durationDays ?? tour.duration ?? null;
   const durationNights =
-    tour.durationNights ??
-    (durationDays != null ? Math.max(durationDays - 1, 0) : null);
+    tour.durationNights ?? (durationDays != null ? Math.max(durationDays - 1, 0) : null);
+  const partnerUrl =
+    offers.map((offer) => resolvePartnerOfferLink(offer)).find(Boolean) ?? null;
+  const minOffer = offers.find((offer) => offer.priceValue != null) ?? offers[0];
+  const rawPriceValue =
+    minOffer?.priceValue ?? minOffer?.price ?? serpItem?.priceValue ?? null;
+  const rawPriceCurrency = minOffer?.currency ?? serpItem?.currency ?? null;
+  const normalizedPrice = normalizeYouTravelPartnerPrice(rawPriceValue, rawPriceCurrency);
+  const reviews =
+    apiReviews.length > 0
+      ? apiReviews
+      : publicPageData?.reviews?.length
+        ? publicPageData.reviews
+        : Array.isArray(tour.reviews)
+          ? tour.reviews
+          : [];
 
   return {
     id,
     slug: tour.slug?.trim() || buildSlug(title, id),
     title,
-    country: resolveCountryName(tour),
+    country:
+      (Array.isArray(tour.countries) && tour.countries[0]) ||
+      (Array.isArray(serpItem?.countries) && serpItem.countries[0]) ||
+      tour.country ||
+      null,
     region:
-      typeof tour.region === "string"
-        ? tour.region
-        : tour.region?.nameRu ?? tour.region?.name ?? null,
+      tour.region ||
+      (Array.isArray(tour.regions) && tour.regions[0]) ||
+      (Array.isArray(serpItem?.regions) && serpItem.regions[0]) ||
+      null,
     city:
-      typeof tour.city === "string" ? tour.city : tour.city?.nameRu ?? tour.city?.name ?? null,
-    status: tour.status ?? (tour.isPublished === false ? "draft" : "published"),
+      typeof tour.start_point_city === "object"
+        ? tour.start_point_city?.name
+        : tour.start_point_city ?? tour.city ?? null,
+    status: tour.status ?? "published",
     durationDays,
     durationNights,
-    rating: tour.rating ?? null,
-    reviewCount: tour.reviewCount ?? tour.reviewsCount ?? 0,
-    priceValue: tour.priceFrom ?? tour.minPrice ?? tour.price ?? null,
-    priceCurrency: tour.currency ?? null,
+    rating: Number.parseFloat(String(tour.rating ?? serpItem?.rating ?? "")) || null,
+    reviewCount: Number.parseInt(String(tour.count_reviews ?? serpItem?.reviewCount ?? 0), 10) || 0,
+    priceValue: normalizedPrice.value,
+    priceCurrency: normalizedPrice.currency,
     priceDisplay: null,
-    youtravelUrl: tour.url?.trim() || `https://youtravel.me/tours/${tour.slug ?? id}`,
-    partnerUrl: null,
-    coverImage: resolveCoverImage(tour),
+    youtravelUrl: tour.url?.trim() || `https://youtravel.me/tours/${id}`,
+    partnerUrl,
+    coverImage: resolveCoverImage(tour, serpItem),
     photos: resolvePhotos(tour),
-    payload: tour,
+    payload: {
+      ...tour,
+      public_description: publicPageData?.schemaDescription ?? undefined,
+      public_page_extras: publicPageData
+        ? {
+            descriptionHtml: publicPageData.descriptionHtml,
+            schemaDescription: publicPageData.schemaDescription,
+            activityComment: publicPageData.activityComment,
+            activityDescription: publicPageData.activityDescription,
+            activityLabel: publicPageData.activityLabel,
+            comfortDescription: publicPageData.comfortDescription,
+            accommodationPhotos: publicPageData.accommodationPhotos,
+            importantToKnowItems: publicPageData.importantToKnowItems,
+            arrivalInfo: publicPageData.arrivalInfo,
+            reviews: publicPageData.reviews?.length ? publicPageData.reviews : reviews,
+          }
+        : undefined,
+      reviews,
+      public_activity_comment: publicPageData?.activityComment ?? undefined,
+      public_activity_description: publicPageData?.activityDescription ?? undefined,
+      public_activity_label: publicPageData?.activityLabel ?? undefined,
+      countries: serpItem?.countries ?? tour.countries,
+      serp: serpItem ?? null,
+    },
   };
 }
 
 function mapOfferRow(tourId, offer, index) {
-  const idRaw = offer.id ?? offer.externalId ?? `${tourId}-${index}`;
+  const idRaw = offer.id ?? `${tourId}-${index}`;
   const id =
     typeof idRaw === "number"
       ? idRaw
       : Number.parseInt(String(idRaw).replace(/\D/g, "").slice(0, 12), 10) ||
         Number(`${tourId}${index}`);
 
+  const normalizedPrice = normalizeYouTravelPartnerPrice(
+    offer.priceValue ?? offer.price ?? null,
+    offer.currency ?? null
+  );
+
   return {
     id,
     tourId,
-    startDate: (offer.startDate ?? offer.date ?? null)?.slice?.(0, 10) ?? offer.startDate ?? offer.date,
-    endDate: (offer.endDate ?? offer.startDate ?? offer.date ?? null)?.slice?.(0, 10) ?? null,
-    priceValue: offer.priceFrom ?? offer.price ?? null,
-    priceCurrency: offer.currency ?? null,
-    seatsAvailable: offer.seatsAvailable ?? offer.placesLeft ?? offer.seatsTotal ?? null,
+    startDate: parseOfferDate(offer.dateFrom ?? offer.startDate ?? offer.date),
+    endDate: parseOfferDate(offer.dateTo ?? offer.endDate ?? offer.dateFrom ?? offer.startDate),
+    priceValue: normalizedPrice.value,
+    priceCurrency: normalizedPrice.currency,
+    seatsAvailable: offer.freeSpaces ?? offer.seatsAvailable ?? offer.placesLeft ?? null,
     payload: offer,
   };
 }
 
 async function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-async function fetchAllTours(apiBase, authHeaders) {
-  const pageSize = 200;
-  const maxPages = 50;
-  const all = [];
-
-  for (let page = 0; page < maxPages; page += 1) {
-    const skip = page * pageSize;
-    const response = await fetch(`${apiBase}/v1/tours?take=${pageSize}&skip=${skip}`, {
-      headers: { ...authHeaders, Accept: "application/json" },
-    });
-    const body = await response.json().catch(() => null);
-    if (!response.ok) {
-      throw new Error(`YouTravel tours fetch failed (${response.status})`);
-    }
-    if (body?.success === false && !unwrapList(body).length) {
-      throw new Error("YouTravel auth failed — check credentials");
-    }
-
-    const batch = unwrapList(body);
-    if (!batch.length) break;
-    all.push(...batch);
-    if (batch.length < pageSize) break;
-    await sleep(120);
-  }
-
-  return all;
-}
-
-async function fetchTourOffers(apiBase, authHeaders, tourId) {
-  const response = await fetch(`${apiBase}/v1/tours/${encodeURIComponent(String(tourId))}/offers`, {
-    headers: { ...authHeaders, Accept: "application/json" },
-  });
-  const body = await response.json().catch(() => null);
-  if (!response.ok) return [];
-  return unwrapList(body);
-}
-
-async function createAffiliateLink(youtravelUrl, tourId, country) {
-  const tpKey = process.env.TRAVELPAYOUTS_API_KEY?.trim();
-  const marker = process.env.TRAVELPAYOUTS_MARKER?.trim();
-  const trs = process.env.TRAVELPAYOUTS_TRS?.trim();
-  if (!tpKey || !marker || !trs) return null;
-
-  const response = await fetch("https://api.travelpayouts.com/links/v1/create", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Access-Token": tpKey,
-    },
-    body: JSON.stringify({
-      trs: Number(trs),
-      marker: Number(marker),
-      shorten: process.env.TRAVELPAYOUTS_SHORTEN_LINKS !== "false",
-      links: [{ url: youtravelUrl, sub_id: `youtravel:${country ?? "tour"}:${tourId}` }],
-    }),
-  });
-
-  const body = await response.json().catch(() => null);
-  const link = body?.result?.links?.[0];
-  if (!response.ok || link?.code !== "success") return null;
-  return link.partner_url || link.url || null;
 }
 
 async function main() {
@@ -261,7 +241,6 @@ async function main() {
     /\/$/,
     ""
   );
-  const skipAffiliate = process.env.YOUTRAVEL_SKIP_AFFILIATE_LINKS === "true";
   const countryMatchers = getSyncCountryMatchers();
   const pg = createPgClientFromEnv();
   await pg.connect();
@@ -274,34 +253,49 @@ async function main() {
     runId = await pgInsertSyncRun(pg, { countryMatchers, authMode: mode });
     console.log("YouTravel sync run:", runId);
 
-    const rawTours = await fetchAllTours(apiBase, authHeaders);
-    console.log("Fetched tours:", rawTours.length);
+    console.log("Discovering tours via /v2/serp/tours …");
+    const discovered = await discoverYouTravelTourIds(apiBase, authHeaders, countryMatchers, {
+      onPage: (page, matched, total) => {
+        console.log(`  serp page ${page}: matched ${matched}${total != null ? ` / catalog ${total}` : ""}`);
+      },
+    });
+    console.log("Matched tours:", discovered.size, countryMatchers);
 
-    const scoped = rawTours.filter((tour) => matchesCountry(tour, countryMatchers));
-    console.log("After country filter:", scoped.length, countryMatchers);
-
-    const rows = scoped.map(mapTourRow).filter(Boolean);
+    const rows = [];
     let offersUpserted = 0;
 
-    for (const row of rows) {
-      if (!skipAffiliate && !row.partnerUrl) {
-        const partnerUrl = await createAffiliateLink(row.youtravelUrl, row.id, row.country);
-        if (partnerUrl) row.partnerUrl = partnerUrl;
-        await sleep(700);
-      }
+    for (const [tourId, serpItem] of discovered) {
+      try {
+        const detail = await fetchPartnerTourDetail(apiBase, authHeaders, tourId);
+        if (!detail) {
+          console.warn("  skip tour", tourId, "— detail unavailable");
+          continue;
+        }
 
-      const offers = await fetchTourOffers(apiBase, authHeaders, row.id);
-      await pgDeleteOffersForTour(pg, row.id);
-      const offerRows = offers.map((offer, index) => mapOfferRow(row.id, offer, index));
-      offersUpserted += await pgUpsertOffers(pg, offerRows);
+        const offers = await fetchPartnerTourOffers(apiBase, authHeaders, tourId);
+        const apiReviews = await fetchPartnerTourReviews(apiBase, authHeaders, tourId);
+        const publicPageData = await fetchPublicTourPageData(tourId, serpItem?.link);
+        const row = mapTourRow(detail, serpItem, offers, publicPageData, apiReviews);
+        if (!row) continue;
+        rows.push(row);
+        await pgUpsertTours(pg, [row]);
+
+        await pgDeleteOffersForTour(pg, row.id);
+        const offerRows = offers
+          .map((offer, index) => mapOfferRow(row.id, offer, index))
+          .filter((offer) => offer.startDate);
+        offersUpserted += await pgUpsertOffers(pg, offerRows);
+      } catch (error) {
+        console.warn("  skip tour", tourId, "—", error.message);
+      }
       await sleep(120);
     }
 
-    const upserted = await pgUpsertTours(pg, rows);
+    const upserted = rows.length;
 
     await pgFinishSyncRun(pg, runId, {
       status: "success",
-      toursFetched: rawTours.length,
+      toursFetched: discovered.size,
       toursUpserted: upserted,
       offersUpserted,
     });

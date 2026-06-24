@@ -412,6 +412,17 @@ export function ensureWlSearchParamsInUrl(
  * Never call ensureWlSearchParamsInUrl on tour pages: it changes searchParams and
  * triggers Next.js RSC refresh (tour page is force-dynamic).
  */
+/** Stable key for remounting inline WL when search intent changes. */
+export function buildWlWidgetRemountKey(params: ParsedFlightsSearch): string {
+  if (params.segments?.length) {
+    return params.segments
+      .map((segment) => `${segment.origin}-${segment.destination}-${segment.departDate}`)
+      .join("|");
+  }
+
+  return `${params.origin}-${params.destination}-${params.departDate ?? ""}-${params.returnDate ?? ""}-${params.tripType}`;
+}
+
 export function buildFlightsWlEmbedHref(params: ParsedFlightsSearch): string {
   const qs = buildFlightsSearchQueryParams(params.origin, params.destination, {
     departDate: params.departDate,

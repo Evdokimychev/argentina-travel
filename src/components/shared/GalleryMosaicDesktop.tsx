@@ -27,12 +27,12 @@ export function GalleryMosaicDesktop({
   className,
 }: GalleryMosaicDesktopProps) {
   const plan = useMemo(
-    () => buildGalleryMosaicPlan(images.length, seed),
-    [images.length, seed],
+    () => buildGalleryMosaicPlan(images, seed),
+    [images, seed],
   );
 
-  const { layout, slots } = plan;
-  const hasMultiple = images.length > 1;
+  const { layout, slots, images: mosaicImages } = plan;
+  const hasMultiple = mosaicImages.length > 1;
 
   return (
     <div
@@ -48,7 +48,7 @@ export function GalleryMosaicDesktop({
       aria-label={hasMultiple ? "Галерея фото" : undefined}
     >
       {slots.map(({ cell, imageIndex }, slotIndex) => {
-        const src = images[imageIndex];
+        const src = mosaicImages[imageIndex];
         if (!src) return null;
 
         return (
@@ -73,7 +73,7 @@ export function GalleryMosaicDesktop({
             {cell.showAllOverlay && hasMultiple ? (
               <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-charcoal shadow-md backdrop-blur-sm">
                 <Images className="h-4 w-4 text-sky" strokeWidth={1.75} aria-hidden />
-                Все фото ({images.length})
+                Все фото ({mosaicImages.length})
               </span>
             ) : null}
           </button>

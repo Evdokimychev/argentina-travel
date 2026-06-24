@@ -40,7 +40,7 @@ describe("resolveTourFlightPrefill", () => {
     expect(result.form.origin).toBe("MOW");
     expect(result.form.destination).toBe("RIO");
     expect(result.form.departDate).toEqual(date("2025-11-15"));
-    expect(result.form.returnDate).toEqual(date("2025-11-24"));
+    expect(result.form.returnDate).toEqual(date("2025-11-25"));
     expect(result.isOpenJaw).toBe(false);
     expect(result.hints[0]).toMatch(/Вылет за 2 дня/);
   });
@@ -112,9 +112,10 @@ describe("resolveTourFlightPrefill", () => {
       kind: "return",
       origin: "BUE",
       destination: "MOW",
-      departDate: date("2025-11-28"),
+      departDate: date("2025-11-29"),
     });
     expect(result.hints.some((hint) => hint.includes("open-jaw"))).toBe(true);
+    expect(result.briefing.recommendations.return?.reason).toMatch(/на следующий день после финиша/);
   });
 
   it("early start time increases outbound buffer by 1 day", () => {
@@ -136,8 +137,16 @@ describe("resolveTourFlightPrefill", () => {
     expect(normal.form.departDate).toEqual(date("2025-11-15"));
   });
 
-  it("late finish time shifts return by 1 day", () => {
-    const result = resolveTourFlightPrefill({
+  it("return flight defaults to day after tour finish", () => {
+    const onFinishDay = resolveTourFlightPrefill({
+      userOriginCode: "MOW",
+      startCity: "Буэнос-Айрес",
+      tourStartDate: date("2025-03-10"),
+      tourEndDate: date("2025-03-17"),
+      finishTime: "14:00",
+    });
+
+    const lateFinish = resolveTourFlightPrefill({
       userOriginCode: "MOW",
       startCity: "Буэнос-Айрес",
       tourStartDate: date("2025-03-10"),
@@ -145,7 +154,9 @@ describe("resolveTourFlightPrefill", () => {
       finishTime: "19:00",
     });
 
-    expect(result.form.returnDate).toEqual(date("2025-03-18"));
+    expect(onFinishDay.form.returnDate).toEqual(date("2025-03-18"));
+    expect(lateFinish.form.returnDate).toEqual(date("2025-03-18"));
+    expect(onFinishDay.briefing.recommendations.return?.reason).not.toMatch(/в день финиша/);
   });
 });
 
@@ -194,7 +205,7 @@ describe("resolveTourFlightFormSegments", () => {
       origin: "MOW",
       destination: "BUE",
     });
-    expect(segments[0]?.returnDate).toEqual(date("2025-03-17"));
+    expect(segments[0]?.returnDate).toEqual(date("2025-03-18"));
   });
 });
 

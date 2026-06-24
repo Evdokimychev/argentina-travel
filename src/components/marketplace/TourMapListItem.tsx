@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Star, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { TourListing } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import { cn } from "@/lib/cn";
@@ -62,15 +63,13 @@ export default function TourMapListItem({
             </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate">
               {ratingDisplay.hasReviews ? (
-                <span className="inline-flex items-center gap-0.5 font-medium text-charcoal">
-                  <Star className="h-3 w-3 fill-sun text-sun" aria-hidden />
-                  {ratingDisplay.ratingText}
-                </span>
+                <ReviewRatingBadge
+                  score={ratingDisplay.ratingText}
+                  reviewCount={tour.reviewCount}
+                  size="sm"
+                />
               ) : (
-                <span className="inline-flex items-center gap-0.5 font-medium text-sky">
-                  <Star className="h-3 w-3 text-sky" aria-hidden />
-                  {ratingDisplay.badgeLabel}
-                </span>
+                <ReviewRatingBadge isNew newLabel={ratingDisplay.badgeLabel} size="sm" />
               )}
               <span>{formatDays(tour.durationDays)}</span>
             </div>

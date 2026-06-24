@@ -56,7 +56,7 @@ describe("Sprint 7 — tours catalog & detail", () => {
   it("MarketplaceTourCard v2 has 4/3 aspect and partner badge", () => {
     const source = readFileSync(join(root, "components/marketplace/MarketplaceTourCard.tsx"), "utf8");
     expect(source).toContain('aspect="4/3"');
-    expect(source).toContain("PARTNER_TRIPSTER_BADGE_LABEL");
+    expect(source).toContain("resolvePartnerTourBadge");
     expect(source).toContain("ContentCard");
   });
 

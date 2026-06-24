@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import type { TourFlightBriefing } from "@/lib/flights/tour-flight-prefill";
 import {
+  buildWlWidgetRemountKey,
   hasMinimumFlightsSearchParams,
   mergeTourFlightSearchesIntoComplex,
   restoreInlineWlSearchParams,
@@ -51,7 +52,11 @@ function WhitelabelResults({ parsedSearch }: { parsedSearch: ParsedFlightsSearch
   }, [parsedSearch]);
 
   return (
-    <TravelpayoutsFlightsWidgets parsedSearch={widgetSearch} urlSync="inline" />
+    <TravelpayoutsFlightsWidgets
+      key={buildWlWidgetRemountKey(widgetSearch)}
+      parsedSearch={widgetSearch}
+      urlSync="inline"
+    />
   );
 }
 
@@ -152,11 +157,11 @@ export default function TourFlightResultsModal({
         className="fixed inset-0 z-[116] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col overflow-hidden rounded-none border-0 p-0 sm:max-h-none sm:rounded-none"
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
-        {activeSubtitle || activeDateLabel ? (
-          <DialogDescription className="sr-only">
-            {[activeSubtitle, activeDateLabel].filter(Boolean).join(" · ")}
-          </DialogDescription>
-        ) : null}
+        <DialogDescription className="sr-only">
+          {[activeSubtitle, activeDateLabel].filter(Boolean).join(" · ")}
+          {[activeSubtitle, activeDateLabel].some(Boolean) ? " · " : ""}
+          Выбирайте, пожалуйста, даты с запасом.
+        </DialogDescription>
 
         <Button
           type="button"
@@ -169,30 +174,29 @@ export default function TourFlightResultsModal({
           <X className="h-4 w-4" />
         </Button>
 
-        <header className="tour-flight-modal-hero">
-          <div className="tour-flight-modal-hero__glow tour-flight-modal-hero__glow--primary" aria-hidden />
-          <div className="tour-flight-modal-hero__inner mx-auto w-full max-w-5xl">
-            <h2 className="pr-10 text-base font-bold leading-tight text-charcoal sm:text-lg">
-              {title}
-            </h2>
-            {activeSubtitle || activeDateLabel ? (
-              <p className="mt-0.5 truncate text-xs text-slate sm:text-sm">
-                {[activeSubtitle, activeDateLabel ? `Даты: ${activeDateLabel}` : null]
-                  .filter(Boolean)
-                  .join(" · ")}
+        <div className="tour-flight-modal-scroll min-h-0 flex-1 overflow-y-auto">
+          <header className="tour-flight-modal-hero">
+            <div
+              className="tour-flight-modal-hero__glow tour-flight-modal-hero__glow--primary"
+              aria-hidden
+            />
+            <div className="tour-flight-modal-hero__inner mx-auto w-full max-w-5xl">
+              <h2 className="pr-10 text-base font-bold leading-tight text-charcoal sm:text-lg">
+                {title}
+              </h2>
+              <p className="mt-0.5 text-xs text-slate sm:text-sm">
+                Выбирайте, пожалуйста, даты с запасом
               </p>
-            ) : null}
-            {briefing ? (
-              <TourFlightModalTourContext
-                briefing={briefing}
-                variant="minimal"
-                className="mt-2"
-              />
-            ) : null}
-          </div>
-        </header>
+              {briefing ? (
+                <TourFlightModalTourContext
+                  briefing={briefing}
+                  variant="minimal"
+                  className="mt-2"
+                />
+              ) : null}
+            </div>
+          </header>
 
-        <div className="tour-flight-modal-body">
           <div className="tour-flight-modal-search-shell mx-auto w-full max-w-5xl px-4 sm:px-6">
             {showTabs ? (
               <div
@@ -235,7 +239,7 @@ export default function TourFlightResultsModal({
               </p>
             ) : null}
 
-            {widgetSearch ? <WhitelabelResults parsedSearch={widgetSearch} /> : null}
+            {open && widgetSearch ? <WhitelabelResults parsedSearch={widgetSearch} /> : null}
           </div>
         </div>
       </DialogContent>

@@ -12,6 +12,7 @@ import { NativeSelect } from "@/components/ui/native-select";
 import { SwitchField, SwitchRow } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { StarRating } from "@/components/ui/star-rating";
 import { EmptyState } from "@/components/ui/empty-state";
 import {
@@ -357,6 +358,9 @@ export default function DesignSystemShowcase() {
         <div className="mt-16">
           <h3 className="font-heading text-xl font-bold text-charcoal">Рейтинг</h3>
           <div className="mt-6 flex flex-wrap items-center gap-6 rounded-2xl border border-gray-100 bg-surface-muted/50 p-6">
+            <ReviewRatingBadge score="4,8" reviewCount={24} size="sm" />
+            <ReviewRatingBadge score="4,8" reviewCount={24} size="md" />
+            <ReviewRatingBadge isNew newLabel="Новый" size="sm" />
             <StarRating layout="badge" score="4.8" count={24} size="sm" />
             <StarRating layout="badge" isNew newLabel="Новый" size="sm" />
             <StarRating stars={5} size="md" />

@@ -11,6 +11,11 @@ export type YouTravelConfig = {
   password: string;
   apiKey: string | null;
   authMode: YouTravelAuthMode;
+  partnerPid: string;
+  apiLang: string;
+  serpCurrency: string;
+  detailCurrency: string;
+  serpMaxPages: number;
 };
 
 function resolveEmail(): string | null {
@@ -87,6 +92,14 @@ export function getYouTravelConfig(): YouTravelConfig {
     password: password || secret,
     apiKey,
     authMode,
+    partnerPid: process.env.YOUTRAVEL_PARTNER_PID?.trim() || "1173",
+    apiLang: process.env.YOUTRAVEL_API_LANG?.trim() || "ru",
+    serpCurrency: (process.env.YOUTRAVEL_SERP_CURRENCY?.trim() || "usd").toLowerCase(),
+    detailCurrency: (process.env.YOUTRAVEL_DETAIL_CURRENCY?.trim() || "USD").toUpperCase(),
+    serpMaxPages: Math.max(
+      1,
+      Number.parseInt(process.env.YOUTRAVEL_SERP_MAX_PAGES ?? "60", 10) || 60
+    ),
   };
 }
 
@@ -114,12 +127,16 @@ export function getYouTravelAuthAttempts(): Array<{
 /** Country / region filter for sync scope (comma-separated). */
 export function getYouTravelSyncCountryMatchers(): string[] {
   const custom = process.env.YOUTRAVEL_SYNC_COUNTRY?.trim();
-  if (custom) {
-    return custom
-      .split(",")
-      .map((part) => part.trim().toLowerCase())
-      .filter(Boolean);
+  const matchers = custom
+    ? custom
+        .split(",")
+        .map((part) => part.trim().toLowerCase())
+        .filter(Boolean)
+    : ["argentina", "аргентина"];
+
+  if (matchers.includes("argentina") && !matchers.includes("аргентина")) {
+    matchers.push("аргентина");
   }
 
-  return ["argentina", "аргентина"];
+  return matchers;
 }

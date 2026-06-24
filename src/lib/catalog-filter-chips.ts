@@ -8,6 +8,7 @@ import { isPriceFilterActive } from "@/lib/tour-price-bounds";
 import { getDefaultFilters } from "@/lib/filter-tours";
 import { formatCurrencyAmount } from "@/lib/currency";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import type { CatalogFilterChip } from "@/components/marketplace/CatalogActiveFilterChips";
 
 function formatRuDate(date: Date): string {
@@ -160,11 +161,25 @@ export function buildTourFilterChips(
     });
   }
 
+  if (filters.instantBookingOnly) {
+    chips.push({
+      id: "instant-booking",
+      label: "Мгновенная бронь",
+      onRemove: () => patch({ instantBookingOnly: false }),
+    });
+  }
+
   if (filters.organizerSlug.trim()) {
-    const profile = buildPublicOrganizerProfile(filters.organizerSlug.trim());
+    const slug = filters.organizerSlug.trim();
+    const profile = buildPublicOrganizerProfile(slug);
+    const youtravelExpertLabel = resolveYouTravelExpertOrganizerLabel(slug, tours);
     chips.push({
       id: "organizer",
-      label: profile ? `Организатор: ${profile.name}` : "Организатор",
+      label: profile
+        ? `Организатор: ${profile.name}`
+        : youtravelExpertLabel
+          ? `Эксперт: ${youtravelExpertLabel}`
+          : "Организатор",
       onRemove: () => patch({ organizerSlug: "" }),
     });
   }

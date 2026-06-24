@@ -4,6 +4,7 @@ import { useEffect, useRef, type RefObject } from "react";
 import { createPortal } from "react-dom";
 import { X } from "lucide-react";
 import { MobileSiteNavMenu } from "@/components/navigation/MobileSiteNavMenu";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
@@ -35,6 +36,8 @@ export function SiteNavFullScreenOverlay({
   const scrollRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const mounted = typeof document !== "undefined";
+
+  useSiteHeaderOverlayLock(open);
 
   useEffect(() => {
     if (!open) return;

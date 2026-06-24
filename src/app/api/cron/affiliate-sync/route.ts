@@ -31,6 +31,16 @@ export async function GET(request: Request) {
     const youtravelRes = await fetch(`${origin}/api/cron/youtravel-sync`, { headers });
     const youtravel = await youtravelRes.json();
 
+    const youtravelAffiseRes = await fetch(`${origin}/api/cron/youtravel-affise-snapshot`, {
+      headers,
+    });
+    const youtravelAffise = await youtravelAffiseRes.json().catch(() => null);
+
+    const youtravelBookingRes = await fetch(`${origin}/api/cron/youtravel-booking-status`, {
+      headers,
+    });
+    const youtravelBooking = await youtravelBookingRes.json().catch(() => null);
+
     const ok = tripsterRes.ok && sputnikRes.ok && youtravelRes.ok;
     await logCronResult(CRON_ROUTE, {
       ok,
@@ -42,11 +52,13 @@ export async function GET(request: Request) {
         tripsterOk: tripsterRes.ok,
         sputnik8Ok: sputnikRes.ok,
         youtravelOk: youtravelRes.ok,
+        youtravelAffiseOk: youtravelAffiseRes.ok,
+        youtravelBookingOk: youtravelBookingRes.ok,
       },
     });
 
     return NextResponse.json(
-      { ok, tripster, sputnik8, youtravel },
+      { ok, tripster, sputnik8, youtravel, youtravelAffise, youtravelBooking },
       { status: ok ? 200 : 500 }
     );
   } catch (error) {

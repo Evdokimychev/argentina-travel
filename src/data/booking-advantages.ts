@@ -1,7 +1,8 @@
-import type { TourDetail } from "@/types";
+import type { TourDetail, TourDatePrice } from "@/types";
 import type { Tour } from "@/types/tour";
 import { hasVisibleGuides, resolveCancellationText } from "@/lib/tour-public-display";
 import { resolveTourCheckoutPaymentOptionsFromTour } from "@/lib/tour-checkout-payment";
+import { formatYouTravelPrepaymentAdvantage } from "@/lib/youtravel/prepayment";
 import { daysWord } from "@/lib/pluralize";
 
 const GUIDE_MENTION_PATTERN = /\bгид\b/i;
@@ -56,13 +57,36 @@ function tourHasVisibleGuides(tour: TourDetail, canonicalTour?: Tour | null): bo
 
 export function resolveTourBookingAdvantages(
   tour: TourDetail,
-  options?: { canonicalTour?: Tour | null }
+  options?: {
+    canonicalTour?: Tour | null;
+    selectedDate?: TourDatePrice;
+    guests?: number;
+    totalPriceUsd?: number;
+  }
 ): readonly string[] {
   const canonicalTour = options?.canonicalTour;
   const advantages: string[] = [];
   const paymentOptions = resolveTourCheckoutPaymentOptionsFromTour(tour);
 
-  if (paymentOptions.payLaterEnabled) {
+  if (tour.partnerSource === "youtravel") {
+    if (tour.partnerContent?.instantBooking) {
+      advantages.push("Моментальное бронирование — без ожидания подтверждения");
+    }
+    if (tour.partnerContent?.tourGuaranteed) {
+      advantages.push("Тур гарантирован — состоится в любом случае");
+    }
+    const prepaymentAdvantage = formatYouTravelPrepaymentAdvantage({
+      tour,
+      selectedDate: options?.selectedDate,
+      guests: options?.guests ?? 1,
+      totalPriceUsd: options?.totalPriceUsd ?? 0,
+    });
+    if (prepaymentAdvantage) {
+      advantages.push(prepaymentAdvantage);
+    }
+  }
+
+  if (tour.partnerSource !== "youtravel" && paymentOptions.payLaterEnabled) {
     advantages.push("Не требует оплаты сейчас");
   }
 

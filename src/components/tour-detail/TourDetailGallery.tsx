@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -246,6 +247,8 @@ export default function TourDetailGallery({
   const carouselScrollRef = useRef<HTMLDivElement>(null);
   const galleryImages = dedupeGalleryImages(images.filter(Boolean));
   const mosaicSeed = layoutSeed ?? title;
+
+  useSiteHeaderOverlayLock(lightbox);
 
   const goPrev = useCallback(
     () => setActiveIndex((index) => (index - 1 + galleryImages.length) % galleryImages.length),

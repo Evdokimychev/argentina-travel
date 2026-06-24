@@ -183,6 +183,9 @@ export default function AccommodationsSection({
   comfortLevels,
   comfortDescriptionHtml,
   organizerComment,
+  comfortLevelLabel,
+  comfortDotCount,
+  hideComfortHelpPopover,
 }: {
   accommodations: TourAccommodation[];
   durationNights: number;
@@ -190,6 +193,9 @@ export default function AccommodationsSection({
   comfortLevels?: ComfortLevel[];
   comfortDescriptionHtml?: string;
   organizerComment?: string;
+  comfortLevelLabel?: string;
+  comfortDotCount?: number;
+  hideComfortHelpPopover?: boolean;
 }) {
   const showComfortFooter = Boolean(
     comfortLevel || comfortDescriptionHtml?.trim()
@@ -222,6 +228,9 @@ export default function AccommodationsSection({
           comfortLevel={comfortLevel}
           comfortLevels={comfortLevels}
           comfortDescriptionHtml={comfortDescriptionHtml}
+          levelLabel={comfortLevelLabel}
+          dotCount={comfortDotCount}
+          hideHelpPopover={hideComfortHelpPopover}
         />
       ) : null}
     </TourSection>

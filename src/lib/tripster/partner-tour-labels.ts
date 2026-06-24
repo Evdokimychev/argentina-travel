@@ -68,21 +68,76 @@ export function formatPartnerChildrenSummary(childFriendly?: boolean): string {
   return childFriendly ? "Можно с детьми" : "Нельзя с детьми";
 }
 
+/** Является ли текст ограничением по возрасту группы, а не политикой «можно с детьми». */
+export function isPartnerAgeRangeSummary(summary: string): boolean {
+  const value = summary.trim();
+  if (!value) return false;
+  if (value === "Только взрослые") return true;
+  if (/^\d+[–-]\d+\s*лет$/u.test(value)) return true;
+  if (/^От\s+\d+\s+лет$/u.test(value)) return true;
+  return false;
+}
+
+export type PartnerAgeChipMeta = {
+  label: "Возраст" | "Дети";
+  value: string;
+  kind: "age" | "children";
+};
+
+/** Подпись и значение чипа: возрастной диапазон группы или политика по детям. */
+export function resolvePartnerAgeChipMeta(input: {
+  childrenSummary?: string;
+  childFriendly?: boolean;
+}): PartnerAgeChipMeta {
+  const summary = input.childrenSummary?.trim();
+  if (summary && isPartnerAgeRangeSummary(summary)) {
+    return { label: "Возраст", value: summary, kind: "age" };
+  }
+
+  return {
+    label: "Дети",
+    value: summary || formatPartnerChildrenSummary(input.childFriendly),
+    kind: "children",
+  };
+}
+
+function formatPartnerLanguageName(primary: string): string {
+  const lower = primary.trim().toLowerCase();
+  if (!lower) return primary;
+  if (lower.includes("рус") || lower === "ru" || lower === "russian") return "Русский";
+  if (lower.includes("англ") || lower === "en" || lower === "english") return "Английский";
+  if (lower.includes("исп") || lower === "es" || lower === "spanish") return "Испанский";
+  if (lower.includes("порту") || lower === "pt" || lower === "portuguese") return "Португальский";
+  if (lower.includes("фран") || lower === "fr" || lower === "french") return "Французский";
+  if (lower.includes("нем") || lower === "de" || lower === "german") return "Немецкий";
+  if (lower.includes("итал") || lower === "it" || lower === "italian") return "Итальянский";
+  return primary.charAt(0).toUpperCase() + primary.slice(1);
+}
+
+/** Все языки тура через запятую — как на YouTravel.me. */
+export function formatPartnerLanguagesList(languages?: string[]): string | undefined {
+  const normalized = (languages ?? [])
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .map(formatPartnerLanguageName);
+
+  if (!normalized.length) return undefined;
+  return [...new Set(normalized)].join(", ");
+}
+
 /** Язык проведения — «На русском языке» и т.п. */
 export function formatPartnerLanguageSummary(languages?: string[]): string {
-  const primary = languages?.[0]?.trim();
-  if (!primary) return "На русском языке";
+  const list = formatPartnerLanguagesList(languages);
+  if (!list) return "На русском языке";
 
-  const lower = primary.toLowerCase();
-  if (lower.includes("рус") || lower === "ru" || lower === "russian") {
-    return "На русском языке";
-  }
-  if (lower.includes("англ") || lower === "en" || lower === "english") {
-    return "На английском языке";
-  }
-  if (lower.includes("исп") || lower === "es" || lower === "spanish") {
-    return "На испанском языке";
+  const names = list.split(", ").filter(Boolean);
+  if (names.length === 1) {
+    const name = names[0]!;
+    if (name === "Русский") return "На русском языке";
+    if (name === "Английский") return "На английском языке";
+    if (name === "Испанский") return "На испанском языке";
+    return `На ${name.toLowerCase()} языке`;
   }
 
-  return `На ${primary.toLowerCase()} языке`;
+  return list;
 }

@@ -1,12 +1,17 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import type { TourRoutePoint } from "@/types";
 import {
+  buildRouteMapClusterPopupHtml,
+  buildRouteMapPopupHtml,
+  buildRouteMapSpiderfyPositions,
+  clusterRoutePointsByScreenDistance,
+  formatRouteMapClusterLabel,
   getRoutePointRole,
   interpolateRoutePosition,
-  type RoutePointRole,
+  ROUTE_MAP_POPUP_OPTIONS,
 } from "@/lib/tour-route-map";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
@@ -20,16 +25,31 @@ interface RouteMapProps {
   className?: string;
 }
 
-function createMarkerIcon(role: RoutePointRole, order: number, active: boolean) {
+function createMarkerIcon(
+  role: ReturnType<typeof getRoutePointRole>,
+  order: number,
+  active: boolean,
+  spiderfied = false,
+) {
   const label =
     role === "start" ? "С" : role === "finish" ? "Ф" : String(order);
 
   return L.divIcon({
     className: "",
-    html: `<div class="route-map-marker route-map-marker--${role}${active ? " route-map-marker--active" : ""}">${label}</div>`,
-    iconSize: role === "waypoint" ? [34, 34] : [38, 38],
-    iconAnchor: role === "waypoint" ? [17, 17] : [19, 19],
-    popupAnchor: [0, -20],
+    html: `<div class="route-map-marker route-map-marker--${role}${active ? " route-map-marker--active" : ""}${spiderfied ? " route-map-marker--spider" : ""}">${label}</div>`,
+    iconSize: role === "waypoint" ? [32, 32] : [36, 36],
+    iconAnchor: role === "waypoint" ? [16, 16] : [18, 18],
+    popupAnchor: [0, -18],
+  });
+}
+
+function createClusterIcon(label: string, active: boolean) {
+  return L.divIcon({
+    className: "",
+    html: `<div class="route-map-cluster${active ? " route-map-cluster--active" : ""}"><span class="route-map-cluster-stack" aria-hidden="true"></span><span class="route-map-cluster-count">${label}</span></div>`,
+    iconSize: [44, 44],
+    iconAnchor: [22, 22],
+    popupAnchor: [0, -22],
   });
 }
 
@@ -40,23 +60,6 @@ function createRunnerIcon() {
     iconSize: [22, 22],
     iconAnchor: [11, 11],
   });
-}
-
-function roleLabel(role: RoutePointRole): string {
-  if (role === "start") return "Старт тура";
-  if (role === "finish") return "Финиш тура";
-  return "";
-}
-
-function buildPopupHtml(point: TourRoutePoint, role: RoutePointRole): string {
-  const roleText = roleLabel(role);
-  const dayText =
-    point.dayNumber != null ? `<span>День ${point.dayNumber}</span>` : "";
-  const roleBadge = roleText
-    ? `<span class="route-map-popup-role route-map-popup-role--${role}">${roleText}</span>`
-    : "";
-
-  return `<strong>${point.name}</strong>${roleBadge}${dayText}`;
 }
 
 export default function RouteMap({
@@ -70,24 +73,37 @@ export default function RouteMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
+  const spiderLinesRef = useRef<L.Polyline | null>(null);
   const completedLineRef = useRef<L.Polyline | null>(null);
   const remainingLineRef = useRef<L.Polyline | null>(null);
   const runnerRef = useRef<L.Marker | null>(null);
   const boundsRef = useRef<L.LatLngBounds | null>(null);
   const onSelectRef = useRef(onSelect);
+  const [layoutRevision, setLayoutRevision] = useState(0);
+  const [expandedClusterKey, setExpandedClusterKey] = useState<string | null>(null);
 
   onSelectRef.current = onSelect;
+
+  const requestLayoutRefresh = useCallback(() => {
+    setExpandedClusterKey(null);
+    setLayoutRevision((value) => value + 1);
+  }, []);
 
   useEffect(() => {
     if (!containerRef.current || points.length === 0) return;
 
     if (mapRef.current) {
-      mapRef.current.remove();
+      try {
+        mapRef.current.remove();
+      } catch {
+        /* Leaflet may touch detached DOM nodes during teardown */
+      }
       mapRef.current = null;
       markersRef.current.clear();
       completedLineRef.current = null;
       remainingLineRef.current = null;
       runnerRef.current = null;
+      spiderLinesRef.current = null;
     }
 
     const map = L.map(containerRef.current, {
@@ -102,7 +118,7 @@ export default function RouteMap({
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
         subdomains: "abcd",
         maxZoom: 19,
-      }
+      },
     ).addTo(map);
 
     const coords: L.LatLngExpression[] = points.map((point) => [point.lat, point.lng]);
@@ -118,12 +134,19 @@ export default function RouteMap({
     }).addTo(map);
 
     remainingLineRef.current = L.polyline(coords, {
-      color: "#d4533b",
+      color: "#c45a47",
       weight: 3,
-      opacity: 0.55,
-      dashArray: "8 10",
+      opacity: 0.45,
+      dashArray: "7 9",
       lineCap: "round",
       lineJoin: "round",
+    }).addTo(map);
+
+    spiderLinesRef.current = L.polyline([], {
+      color: "#d4533b",
+      weight: 1.5,
+      opacity: 0.35,
+      dashArray: "3 6",
     }).addTo(map);
 
     runnerRef.current = L.marker([points[0].lat, points[0].lng], {
@@ -132,32 +155,147 @@ export default function RouteMap({
       interactive: false,
     }).addTo(map);
 
-    points.forEach((point, index) => {
-      const role = getRoutePointRole(index, points.length);
-      const marker = L.marker([point.lat, point.lng], {
-        icon: createMarkerIcon(role, index + 1, false),
-        zIndexOffset: 200 + index,
-      });
-
-      marker.bindPopup(buildPopupHtml(point, role), { className: "route-map-popup" });
-      marker.on("click", () => onSelectRef.current?.(point.id));
-      marker.addTo(map);
-      markersRef.current.set(point.id, marker);
-    });
+    map.on("zoomend", requestLayoutRefresh);
+    map.on("click", () => setExpandedClusterKey(null));
 
     map.fitBounds(bounds, { padding: [48, 48], maxZoom: 9 });
     mapRef.current = map;
+    setExpandedClusterKey(null);
+    setLayoutRevision((value) => value + 1);
 
     return () => {
+      map.off("zoomend", requestLayoutRefresh);
       markersRef.current.clear();
-      map.remove();
+      try {
+        if (mapRef.current) {
+          mapRef.current.remove();
+        }
+      } catch {
+        /* ignore teardown when container is already gone */
+      }
       mapRef.current = null;
       completedLineRef.current = null;
       remainingLineRef.current = null;
       runnerRef.current = null;
+      spiderLinesRef.current = null;
       boundsRef.current = null;
     };
-  }, [points]);
+  }, [points, requestLayoutRefresh]);
+
+  useEffect(() => {
+    if (!selectedId || !mapRef.current || points.length === 0) return;
+
+    const selectedIndex = points.findIndex((point) => point.id === selectedId);
+    if (selectedIndex < 0) return;
+
+    const map = mapRef.current;
+    const project = (index: number) => {
+      const point = points[index]!;
+      return map.latLngToContainerPoint([point.lat, point.lng]);
+    };
+    const groups = clusterRoutePointsByScreenDistance(points, project);
+    const group = groups.find((item) => item.indices.includes(selectedIndex));
+    if (group && group.indices.length > 1) {
+      setExpandedClusterKey((current) => (current === group.key ? current : group.key));
+    }
+  }, [points, selectedId, layoutRevision]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || points.length === 0) return;
+
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current.clear();
+    spiderLinesRef.current?.setLatLngs([]);
+
+    const project = (index: number) => {
+      const point = points[index]!;
+      return map.latLngToContainerPoint([point.lat, point.lng]);
+    };
+
+    const groups = clusterRoutePointsByScreenDistance(points, project);
+    const selectedIndex = selectedId
+      ? points.findIndex((point) => point.id === selectedId)
+      : -1;
+
+    for (const group of groups) {
+      const isExpanded = expandedClusterKey === group.key && group.indices.length > 1;
+
+      if (group.indices.length > 1 && !isExpanded) {
+        const label = formatRouteMapClusterLabel(group.indices);
+        const containsSelected = selectedIndex >= 0 && group.indices.includes(selectedIndex);
+        const marker = L.marker([group.lat, group.lng], {
+          icon: createClusterIcon(label, containsSelected),
+          zIndexOffset: 600,
+        });
+
+        marker.bindPopup(
+          buildRouteMapClusterPopupHtml(points, group.indices),
+          { ...ROUTE_MAP_POPUP_OPTIONS, maxWidth: 300 },
+        );
+        marker.on("click", (event) => {
+          L.DomEvent.stopPropagation(event);
+          setExpandedClusterKey(group.key);
+          const clusterBounds = L.latLngBounds(
+            group.indices.map((index) => [points[index]!.lat, points[index]!.lng]),
+          );
+          map.fitBounds(clusterBounds, {
+            padding: [72, 72],
+            maxZoom: Math.min(map.getZoom() + 1, 11),
+            animate: true,
+          });
+        });
+        marker.addTo(map);
+        markersRef.current.set(`cluster-${group.key}`, marker);
+        continue;
+      }
+
+      const centerPx = map.latLngToContainerPoint([group.lat, group.lng]);
+      const spiderPositions =
+        isExpanded && group.indices.length > 1
+          ? buildRouteMapSpiderfyPositions(centerPx, group.indices.length)
+          : null;
+
+      if (spiderPositions) {
+        const centerLatLng = map.containerPointToLatLng([centerPx.x, centerPx.y]);
+        const spiderLegs: L.LatLngExpression[][] = spiderPositions.map((position) => [
+          centerLatLng,
+          map.containerPointToLatLng([position.x, position.y]),
+        ]);
+        spiderLinesRef.current?.setLatLngs(spiderLegs);
+      }
+
+      group.indices.forEach((pointIndex, spiderIndex) => {
+        const point = points[pointIndex]!;
+        const role = getRoutePointRole(pointIndex, points.length);
+        const active = point.id === selectedId;
+        const latLng = spiderPositions
+          ? map.containerPointToLatLng([
+              spiderPositions[spiderIndex]!.x,
+              spiderPositions[spiderIndex]!.y,
+            ])
+          : L.latLng(point.lat, point.lng);
+
+        const marker = L.marker(latLng, {
+          icon: createMarkerIcon(role, pointIndex + 1, active, Boolean(spiderPositions)),
+          zIndexOffset: 200 + pointIndex,
+        });
+
+        marker.bindPopup(buildRouteMapPopupHtml(point, role), ROUTE_MAP_POPUP_OPTIONS);
+        marker.on("click", (event) => {
+          L.DomEvent.stopPropagation(event);
+          onSelectRef.current?.(point.id);
+        });
+        marker.addTo(map);
+        markersRef.current.set(point.id, marker);
+
+        if (active) {
+          marker.openPopup();
+          map.panTo(latLng, { animate: true, duration: 0.4 });
+        }
+      });
+    }
+  }, [points, selectedId, expandedClusterKey, layoutRevision]);
 
   useEffect(() => {
     if (!mapRef.current || points.length === 0) return;
@@ -182,24 +320,10 @@ export default function RouteMap({
   }, [progress, points]);
 
   useEffect(() => {
-    if (!mapRef.current) return;
-
-    points.forEach((point, index) => {
-      const marker = markersRef.current.get(point.id);
-      if (!marker) return;
-      const role = getRoutePointRole(index, points.length);
-      marker.setIcon(createMarkerIcon(role, index + 1, point.id === selectedId));
-      if (point.id === selectedId) {
-        marker.openPopup();
-        mapRef.current?.panTo([point.lat, point.lng], { animate: true, duration: 0.4 });
-      }
-    });
-  }, [selectedId, points]);
-
-  useEffect(() => {
     if (!mapRef.current || !boundsRef.current || fitToken === 0) return;
     mapRef.current.fitBounds(boundsRef.current, { padding: [48, 48], maxZoom: 9 });
-  }, [fitToken]);
+    requestLayoutRefresh();
+  }, [fitToken, requestLayoutRefresh]);
 
   return (
     <div

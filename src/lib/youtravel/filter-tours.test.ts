@@ -100,4 +100,90 @@ describe("YouTravel catalog filters", () => {
       )
     ).toHaveLength(1);
   });
+
+  it("filters by instant booking when instantBookingOnly is active", () => {
+    const instant = { ...youtravel, partnerInstantBooking: true };
+    const regular = { ...youtravel, id: "youtravel-2", slug: "patagonia-yt2" };
+    const native = stubListing({ id: "native-1", slug: "native-tour" });
+    const filters = {
+      ...getDefaultFilters("USD", [instant, regular, native]),
+      instantBookingOnly: true,
+    };
+
+    const result = filterTours([instant, regular, native], filters, "USD");
+    expect(result).toHaveLength(1);
+    expect(result[0]?.id).toBe("youtravel-1");
+  });
+
+  it("filters YouTravel by comfort level", () => {
+    const premium = { ...youtravel, comfortLevel: "Премиум" as const };
+    const standard = {
+      ...youtravel,
+      id: "youtravel-2",
+      slug: "patagonia-yt2",
+      comfortLevel: "Стандарт" as const,
+    };
+    const filters = {
+      ...getDefaultFilters("USD", [premium, standard]),
+      comfortLevels: ["Премиум" as const],
+    };
+
+    const result = filterTours([premium, standard], filters, "USD");
+    expect(result).toHaveLength(1);
+    expect(result[0]?.id).toBe("youtravel-1");
+  });
+
+  it("filters YouTravel by difficulty level", () => {
+    const intense = { ...youtravel, difficultyLevel: "Высокая" as const };
+    const moderate = {
+      ...youtravel,
+      id: "youtravel-2",
+      slug: "patagonia-yt2",
+      difficultyLevel: "Умеренная" as const,
+    };
+    const filters = {
+      ...getDefaultFilters("USD", [intense, moderate]),
+      difficultyLevels: ["Высокая" as const],
+    };
+
+    const result = filterTours([intense, moderate], filters, "USD");
+    expect(result).toHaveLength(1);
+    expect(result[0]?.id).toBe("youtravel-1");
+  });
+
+  it("skips comfort filter for Tripster partner tours", () => {
+    const tripsterComfort = {
+      ...tripster,
+      comfortLevel: "Базовый" as const,
+    };
+    const filters = {
+      ...getDefaultFilters("USD", [tripsterComfort]),
+      comfortLevels: ["Премиум" as const],
+    };
+
+    expect(filterTours([tripsterComfort], filters, "USD")).toHaveLength(1);
+  });
+
+  it("filters YouTravel by organizer slug", () => {
+    const expertTour = {
+      ...youtravel,
+      organizerOwnerId: "youtravel-expert-51497",
+      organizer: { name: "Мария", avatar: "", slug: "youtravel-expert-51497" },
+    };
+    const otherTour = {
+      ...youtravel,
+      id: "youtravel-2",
+      slug: "other-yt2",
+      organizerOwnerId: "youtravel-expert-999",
+      organizer: { name: "Другой", avatar: "", slug: "youtravel-expert-999" },
+    };
+    const filters = {
+      ...getDefaultFilters("USD", [expertTour, otherTour]),
+      organizerSlug: "youtravel-expert-51497",
+    };
+
+    const result = filterTours([expertTour, otherTour], filters, "USD");
+    expect(result).toHaveLength(1);
+    expect(result[0]?.organizerOwnerId).toBe("youtravel-expert-51497");
+  });
 });

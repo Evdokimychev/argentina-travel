@@ -290,6 +290,27 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
           onApply={apply}
         />
       </FilterPopover>
+
+      <FilterPopover label="Мгновенная бронь" active={draft.instantBookingOnly}>
+        <ul className="p-2">
+          <li>
+            <label className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 hover:bg-gray-50">
+              <input
+                type="checkbox"
+                checked={draft.instantBookingOnly}
+                onChange={(event) => patch({ instantBookingOnly: event.target.checked })}
+                className="h-4 w-4 accent-brand"
+              />
+              <span className="text-sm text-charcoal">Только с мгновенным бронированием</span>
+            </label>
+          </li>
+        </ul>
+        <FilterFooter
+          onClear={() => commit({ instantBookingOnly: false })}
+          onApply={apply}
+          applyAfterClear={false}
+        />
+      </FilterPopover>
     </FilterScrollRow>
   );
 }

@@ -14,6 +14,24 @@ type SafeImageProps = Omit<ImageProps, "onError" | "onLoad" | "placeholder"> & {
   blurPlaceholder?: boolean;
 };
 
+/** Coerce partner CDN objects (`{ src, host }`) and bare strings to a URL for next/image. */
+function resolveImageSrc(src: ImageProps["src"]): ImageProps["src"] {
+  if (typeof src === "string") {
+    const trimmed = src.trim();
+    return trimmed || "";
+  }
+
+  if (!src || typeof src !== "object" || !("src" in src)) return src;
+
+  const record = src as { src?: string; host?: string };
+  const raw = record.src?.trim();
+  if (!raw) return "";
+  if (/^https?:\/\//i.test(raw)) return raw;
+
+  const host = record.host?.trim() || "cf.youtravel.me";
+  return `https://${host.replace(/^\//, "")}/${raw.replace(/^\//, "")}`;
+}
+
 function hasIntrinsicDimensions(width: ImageProps["width"], height: ImageProps["height"]): boolean {
   const w = typeof width === "number" ? width : Number(width);
   const h = typeof height === "number" ? height : Number(height);
@@ -40,7 +58,7 @@ export function SafeImage({
 }: SafeImageProps) {
   const [failed, setFailed] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const resolvedSrc = typeof src === "string" ? src.trim() : src;
+  const resolvedSrc = resolveImageSrc(src);
 
   useEffect(() => {
     setFailed(false);

@@ -196,3 +196,14 @@ export async function apiFetchYouTravelBookingRequests(): Promise<YouTravelBooki
   );
   return data.requests ?? [];
 }
+
+export async function apiRefreshYouTravelBookingRequest(
+  id: string
+): Promise<YouTravelBookingRequestView> {
+  const data = await parseJson<{ request: YouTravelBookingRequestView }>(
+    await fetch(`/api/youtravel/booking-request/${encodeURIComponent(id)}/refresh`, {
+      method: "POST",
+    })
+  );
+  return data.request;
+}

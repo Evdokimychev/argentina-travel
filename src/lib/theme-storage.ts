@@ -47,9 +47,11 @@ export function resolveTheme(preference: ThemePreference | null): ResolvedTheme 
 
 export function applyThemeToDocument(theme: ResolvedTheme): void {
   if (typeof document === "undefined") return;
-  document.documentElement.classList.toggle("dark", theme === "dark");
-  document.documentElement.dataset.theme = theme;
-  document.documentElement.style.colorScheme = theme;
+  const root = document.documentElement;
+  if (!root) return;
+  root.classList.toggle("dark", theme === "dark");
+  root.dataset.theme = theme;
+  root.style.colorScheme = theme;
 }
 
 export function persistThemePreference(preference: ThemePreference): void {

@@ -11,12 +11,30 @@ import type { TourTravelRisk } from "@/types/tour-travel-risk";
 import TourTravelRisksPanel from "./TourTravelRisksPanel";
 import TourSectionOrganizerNote from "./TourSectionOrganizerNote";
 
+export type ItineraryProgramFooterOverrides = {
+  difficulty?: DifficultyLevel;
+  difficultyDescriptionHtml?: string;
+  organizerComment?: string;
+  organizerCommentLabel?: string;
+  sectionLabel?: string;
+  levelLabel?: string;
+  levelDescription?: string;
+  dotCount?: number;
+  hideHelpPopover?: boolean;
+};
+
 interface ItineraryProgramFooterProps {
   difficulty: DifficultyLevel;
   difficultyDescriptionHtml?: string;
   organizerComment?: string;
+  organizerCommentLabel?: string;
   travelRisks?: TourTravelRisk[];
   className?: string;
+  sectionLabel?: string;
+  levelLabel?: string;
+  levelDescription?: string;
+  dotCount?: number;
+  hideHelpPopover?: boolean;
 }
 
 function DifficultyHelpButton() {
@@ -54,14 +72,23 @@ export default function ItineraryProgramFooter({
   difficulty,
   difficultyDescriptionHtml = "",
   organizerComment = "",
+  organizerCommentLabel,
   travelRisks = [],
   className,
+  sectionLabel = "Сложность",
+  levelLabel,
+  levelDescription,
+  dotCount,
+  hideHelpPopover = false,
 }: ItineraryProgramFooterProps) {
   const levelMeta = DIFFICULTY_LEVELS.find((item) => item.level === difficulty);
   const extendedDescription = difficultyDescriptionHtml.trim();
   const comment = organizerComment.trim();
   const showComment = comment.length > 0;
   const showRisks = travelRisks.length > 0;
+  const displayLabel = levelLabel?.trim() || difficulty;
+  const filledDots = dotCount ?? DIFFICULTY_DOT_COUNT[difficulty];
+  const staticDescription = levelDescription?.trim();
 
   return (
     <div
@@ -72,16 +99,18 @@ export default function ItineraryProgramFooter({
     >
       <div>
         <div className="flex items-center gap-1.5">
-          <p className="text-sm font-semibold text-charcoal">Сложность</p>
-          <DifficultyHelpButton />
+          <p className="text-sm font-semibold text-charcoal">{sectionLabel}</p>
+          {!hideHelpPopover ? <DifficultyHelpButton /> : null}
         </div>
 
         <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">
-          <span className="text-sm font-medium text-slate">{difficulty}</span>
-          <DifficultyDotRating filled={DIFFICULTY_DOT_COUNT[difficulty]} />
+          <span className="text-sm font-medium text-slate">{displayLabel}</span>
+          <DifficultyDotRating filled={filledDots} />
         </div>
 
-        {levelMeta ? (
+        {staticDescription ? (
+          <p className="mt-2 text-sm leading-relaxed text-slate">{staticDescription}</p>
+        ) : levelMeta && !levelLabel ? (
           <p className="mt-2 text-sm leading-relaxed text-slate">{levelMeta.description}</p>
         ) : null}
 
@@ -98,7 +127,11 @@ export default function ItineraryProgramFooter({
       ) : null}
 
       {showComment ? (
-        <TourSectionOrganizerNote comment={comment} embedded />
+        <TourSectionOrganizerNote
+          comment={comment}
+          embedded
+          title={organizerCommentLabel}
+        />
       ) : null}
     </div>
   );

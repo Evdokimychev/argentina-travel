@@ -138,14 +138,14 @@ export function filterTours(
 
     if (
       filters.comfortLevels.length &&
-      !isPartnerTourListing(tour) &&
+      !isTripsterPartnerListing(tour) &&
       !filters.comfortLevels.includes(resolveListingComfortLevel(tour))
     )
       return false;
 
     if (
       filters.difficultyLevels.length &&
-      !isPartnerTourListing(tour) &&
+      !isTripsterPartnerListing(tour) &&
       !filters.difficultyLevels.includes(tour.difficultyLevel)
     )
       return false;
@@ -173,6 +173,10 @@ export function filterTours(
       resolveListingOwnerUserId(tour) !== filters.organizerSlug.trim() &&
       tour.organizer.slug !== filters.organizerSlug.trim()
     ) {
+      return false;
+    }
+
+    if (filters.instantBookingOnly && tour.partnerInstantBooking !== true) {
       return false;
     }
 
@@ -220,6 +224,7 @@ export function countActiveFilters(
   if (filters.tourFormats.length) n++;
   if (filters.nearMe) n++;
   if (filters.organizerSlug.trim()) n++;
+  if (filters.instantBookingOnly) n++;
   return n;
 }
 

@@ -10,7 +10,7 @@ import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisp
 import TourCardGallery from "./TourCardGallery";
 import { formatDurationShort } from "@/lib/pluralize";
 import { Badge } from "@/components/ui/badge";
-import { StarRating } from "@/components/ui/star-rating";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
 import {
@@ -28,8 +28,15 @@ import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/to
 import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { formatShortDisplayName } from "@/lib/full-name";
+import { plainTextFromRichContent } from "@/lib/rich-text";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
+import { formatTourGroupSizeLabel } from "@/lib/tour-group-size-display";
+import { formatYouTravelListedPrice } from "@/lib/youtravel/offers-mapper";
+import {
+  TourListingOverlayBadges,
+  TourListingThematicTags,
+} from "./TourListingCatalogBadges";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -75,6 +82,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
                 {partnerBadge.label}
               </Badge>
             ) : null}
+            <TourListingOverlayBadges tour={tour} className="border-white/20 backdrop-blur-sm" />
             {tour.isHot && (
               <Badge variant="hot" className="border-white/20 backdrop-blur-sm">
                 <Flame className="h-3 w-3" /> Горящий
@@ -138,14 +146,13 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               <span className="truncate">{cityDisplay}</span>
             </span>
             {ratingDisplay.hasReviews ? (
-              <StarRating
-                layout="badge"
+              <ReviewRatingBadge
                 score={ratingDisplay.ratingText}
-                count={tour.reviewCount}
+                reviewCount={tour.reviewCount}
                 size="sm"
               />
             ) : (
-              <StarRating layout="badge" isNew newLabel={ratingDisplay.badgeLabel} size="sm" />
+              <ReviewRatingBadge isNew newLabel={ratingDisplay.badgeLabel} size="sm" />
             )}
           </div>
 
@@ -153,7 +160,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
 
           {tour.shortDescription ? (
             <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">
-              {tour.shortDescription}
+              {plainTextFromRichContent(tour.shortDescription)}
             </p>
           ) : null}
 
@@ -172,7 +179,23 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               </p>
             </div>
             {tour.partnerPriceDisplay ? (
-              <p className="text-[11px] text-slate">{tour.partnerPriceDisplay}</p>
+              <p className="text-[11px] text-slate">
+                {tour.partnerOriginalPriceValue != null &&
+                tour.partnerPriceValue != null &&
+                tour.partnerOriginalPriceValue > tour.partnerPriceValue ? (
+                  <>
+                    <span className="mr-1.5 line-through decoration-brand/50">
+                      {formatYouTravelListedPrice(
+                        tour.partnerOriginalPriceValue,
+                        tour.partnerPriceCurrency,
+                      )}
+                    </span>
+                    <span className="font-medium text-charcoal">{tour.partnerPriceDisplay}</span>
+                  </>
+                ) : (
+                  tour.partnerPriceDisplay
+                )}
+              </p>
             ) : null}
           </div>
 
@@ -202,11 +225,15 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
               </span>
             )}
             <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
-              {tour.activityType}
+              {formatTourGroupSizeLabel(tour)}
             </span>
-            <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
-              {tour.groupSizeBucket}
-            </span>
+            {isPartnerTour && (tour.partnerThematicTags?.length ?? 0) > 0 ? (
+              <TourListingThematicTags tour={tour} />
+            ) : (
+              <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">
+                {tour.activityType}
+              </span>
+            )}
             {!isPartnerTour ? (
               <>
                 <span className="rounded-md bg-gray-50 px-2 py-0.5 text-[11px] text-slate">

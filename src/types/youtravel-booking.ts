@@ -17,4 +17,6 @@ export type YouTravelBookingRequestView = {
   youtravelOrderUrl: string | null;
   youtravelStatus: string | null;
   createdAt: string;
+  updatedAt: string;
+  statusSyncedAt: string | null;
 };

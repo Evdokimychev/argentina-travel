@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import { favoriteActionButtonClass } from "@/lib/favorite-button-styles";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import {
-  Star,
   Flame,
   MapPin,
   Sun,
@@ -31,6 +31,11 @@ import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { formatShortDisplayName } from "@/lib/full-name";
 import TourDepartureDatesModal from "./TourDepartureDatesModal";
 import TourCardDepartureSchedule from "./TourCardDepartureSchedule";
+import { formatTourGroupSizeLabel } from "@/lib/tour-group-size-display";
+import {
+  TourListingOverlayBadges,
+  TourListingThematicTags,
+} from "./TourListingCatalogBadges";
 import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { isLowAvailability } from "@/lib/tour-departure-countdown";
@@ -112,6 +117,7 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
                 {partnerBadge.label}
               </Badge>
             ) : null}
+            <TourListingOverlayBadges tour={tour} />
             {tour.isHot && (
               <Badge variant="hot">
                 <Flame className="h-3 w-3" /> Горящий
@@ -148,22 +154,23 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
               {tour.title}
             </h3>
 
-            <p className="mt-1.5 flex flex-wrap items-center gap-x-1.5 text-sm text-slate">
+            <p className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-slate">
               {ratingDisplay.hasReviews ? (
-                <>
-                  <Star className="h-3.5 w-3.5 fill-sun text-sun" aria-hidden />
-                  <span className="font-semibold text-charcoal">{ratingDisplay.ratingText}</span>
-                  <span>({tour.reviewCount})</span>
-                </>
+                <ReviewRatingBadge
+                  score={ratingDisplay.ratingText}
+                  reviewCount={tour.reviewCount}
+                  size="sm"
+                />
               ) : (
-                <>
-                  <Star className="h-3.5 w-3.5 fill-sky text-sky" aria-hidden />
-                  <span className="font-medium text-sky">{ratingDisplay.badgeLabel}</span>
-                </>
+                <ReviewRatingBadge isNew newLabel={ratingDisplay.badgeLabel} size="sm" />
               )}
-              <span aria-hidden>·</span>
-              <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
-              <span>{cityDisplay}</span>
+              <span aria-hidden className="text-slate/40">
+                ·
+              </span>
+              <span className="inline-flex min-w-0 items-center gap-1.5">
+                <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                <span>{cityDisplay}</span>
+              </span>
             </p>
 
             <p className="mt-3 line-clamp-3 text-sm leading-relaxed text-slate">
@@ -171,12 +178,16 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
             </p>
 
             <div className="mt-3 flex flex-wrap gap-2">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-3 py-1 text-xs font-medium text-charcoal">
-                {ActivityIcon && <ActivityIcon className="h-3.5 w-3.5 text-slate" aria-hidden />}
-                {tour.activityType}
-              </span>
+              {isPartnerTour && (tour.partnerThematicTags?.length ?? 0) > 0 ? (
+                <TourListingThematicTags tour={tour} />
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-gray-100 bg-gray-50 px-3 py-1 text-xs font-medium text-charcoal">
+                  {ActivityIcon && <ActivityIcon className="h-3.5 w-3.5 text-slate" aria-hidden />}
+                  {tour.activityType}
+                </span>
+              )}
               <span className="inline-flex items-center rounded-full border border-gray-100 bg-gray-50 px-3 py-1 text-xs font-medium text-charcoal">
-                {tour.groupSizeBucket}
+                {formatTourGroupSizeLabel(tour)}
               </span>
             </div>
           </Link>
@@ -184,8 +195,10 @@ export default function MarketplaceTourListCard({ tour }: { tour: TourListing })
           <div className="mt-4 grid grid-cols-2 gap-4 border-t border-gray-100 pt-4 sm:grid-cols-4">
             {isPartnerTour ? (
               <>
-                <StatCell label="Формат">{tour.activityType}</StatCell>
-                <StatCell label="Группа">{tour.groupSizeBucket}</StatCell>
+                <StatCell label="Формат">
+                  {tour.partnerThematicTags?.[0] ?? tour.activityType}
+                </StatCell>
+                <StatCell label="Группа">{formatTourGroupSizeLabel(tour)}</StatCell>
                 <StatCell label="Длительность">
                   {formatDays(tour.durationDays)}
                   {tour.durationNights > 0 ? ` · ${formatNights(tour.durationNights)}` : null}

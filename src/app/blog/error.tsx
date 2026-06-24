@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { siteContainerClass } from "@/lib/site-container";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
 
 export default function BlogRouteError({
   error,
@@ -12,6 +13,8 @@ export default function BlogRouteError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const handleRetry = useRouteErrorRetry(reset);
+
   useEffect(() => {
     console.error("Blog route error:", error);
   }, [error]);
@@ -25,7 +28,7 @@ export default function BlogRouteError({
         Попробуйте обновить страницу или вернитесь к списку статей.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button type="button" onClick={reset}>
+        <Button type="button" onClick={handleRetry}>
           Попробовать снова
         </Button>
         <Link href="/blog" className={buttonVariants({ variant: "outline" })}>

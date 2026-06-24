@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { AlertCircle } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
 import { cabinetPanelClass } from "@/lib/cabinet-ui";
 import { cn } from "@/lib/cn";
 
@@ -24,6 +25,8 @@ export default function CabinetRouteError({
   homeHref = "/profile",
   homeLabel = "На главную кабинета",
 }: CabinetRouteErrorProps) {
+  const handleRetry = useRouteErrorRetry(reset);
+
   useEffect(() => {
     console.error("Cabinet route error:", error);
   }, [error]);
@@ -36,7 +39,7 @@ export default function CabinetRouteError({
       <h1 className="mt-4 font-heading text-xl font-bold text-charcoal">{title}</h1>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-slate">{description}</p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button type="button" onClick={reset}>
+        <Button type="button" onClick={handleRetry}>
           Попробовать снова
         </Button>
         <Link href={homeHref} className={buttonVariants({ variant: "outline" })}>

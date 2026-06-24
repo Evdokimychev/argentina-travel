@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import { Check, ExternalLink } from "lucide-react";
 import type { TourDetail, TourDatePrice } from "@/types";
 import TourSection from "./TourSection";
 import { useTourBooking } from "./TourBookingContext";
-import { formatDateShortWithYear } from "@/lib/utils";
+import { formatDateRange } from "@/lib/utils";
 import { formatSpots } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import {
@@ -18,12 +17,7 @@ import {
   resolvePartnerDatesBookingLinkLabel,
   resolvePartnerScheduleSubtitle,
 } from "@/lib/partner-tours/booking-brand";
-
-function formatDateLabel(date: TourDatePrice): string {
-  const start = formatDateShortWithYear(date.startDate);
-  if (!date.endDate || date.endDate === date.startDate) return start;
-  return `${start} — ${formatDateShortWithYear(date.endDate)}`;
-}
+import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 
 export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) {
   const {
@@ -33,6 +27,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
     setDateMode,
     scheduleDates,
     scheduleLoading,
+    externalBookingHref,
   } = useTourBooking();
 
   const dates = scheduleDates.filter((item) => item.startDate);
@@ -50,7 +45,10 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
 
   if (!dates.length && !scheduleLoading) return null;
 
-  const bookingHref = tour.customBookingLink?.url ?? `/api/affiliate/go/${tour.slug}`;
+  const bookingHref =
+    externalBookingHref ??
+    tour.customBookingLink?.url ??
+    `/api/affiliate/go/${tour.slug}`;
   const selectedDate = dates.find((date) => date.id === selectedDateId);
 
   function handleSelect(date: TourDatePrice) {
@@ -76,34 +74,44 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
       title="Ближайшие даты"
       subtitle={
         selectedDate
-          ? "Выбранная дата применена в блоке бронирования справа"
+          ? isYouTravelPartnerDetail(tour)
+            ? "Выбранная дата обновляет информацию по прибытию и блок бронирования"
+            : "Выбранная дата применена в блоке бронирования справа"
           : resolvePartnerScheduleSubtitle(tour)
       }
     >
       {scheduleLoading && dates.length === 0 ? (
-        <div className="grid gap-3 sm:grid-cols-2">
+        <div className="flex flex-col gap-2">
           {[1, 2, 3, 4].map((item) => (
             <div
               key={item}
-              className="h-[70px] animate-pulse rounded-2xl border border-gray-100 bg-gray-50"
+              className="h-14 animate-pulse rounded-2xl border border-gray-100 bg-gray-50"
             />
           ))}
         </div>
       ) : (
         <ul
-          className="grid gap-3 sm:grid-cols-2"
+          className="flex flex-col gap-2"
           role="radiogroup"
           aria-label="Ближайшие даты заезда"
         >
           {dates.slice(0, visibleCount).map((date) => {
             const selected = date.id === selectedDateId;
             const bookable = dateFitsGuestCount(date, guests, tour.groupMin);
+            const hasPartnerDiscount =
+              date.partnerOriginalPriceValue != null &&
+              date.partnerPriceValue != null &&
+              date.partnerOriginalPriceValue > date.partnerPriceValue;
             const priceLabel =
               !tour.priceOnRequest && date.priceUsd > 0
                 ? formatCompactUsd(date.priceUsd)
-                : date.partnerPriceValue != null
-                  ? `${Math.round(date.partnerPriceValue)} ${date.partnerPriceCurrency ?? ""}`.trim()
-                  : null;
+                : hasPartnerDiscount
+                  ? null
+                  : date.partnerPriceValue != null
+                    ? `${Math.round(date.partnerPriceValue)} ${date.partnerPriceCurrency ?? ""}`.trim()
+                    : null;
+            const spotsLabel =
+              date.spotsLeft > 0 ? formatSpots(date.spotsLeft) : "Мест нет";
 
             return (
               <li key={date.id}>
@@ -114,7 +122,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
                   disabled={!bookable}
                   onClick={() => handleSelect(date)}
                   className={cn(
-                    "flex w-full items-start gap-3 rounded-2xl border px-4 py-3 text-left shadow-sm transition-all",
+                    "flex w-full items-center gap-3 rounded-2xl border px-4 py-3.5 text-left shadow-sm transition-all",
                     selected
                       ? "border-sky bg-sky/5 ring-2 ring-sky/20"
                       : bookable
@@ -124,7 +132,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
                 >
                   <span
                     className={cn(
-                      "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
+                      "flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2",
                       selected ? "border-sky bg-sky text-white" : "border-gray-300 bg-white",
                     )}
                     aria-hidden
@@ -132,20 +140,42 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
                     {selected ? <Check className="h-3 w-3" strokeWidth={2.5} /> : null}
                   </span>
 
-                  <span className="min-w-0 flex-1">
-                    <p className={cn("font-medium", selected ? "text-sky-dark" : "text-charcoal")}>
-                      {formatDateLabel(date)}
-                    </p>
-                    {date.spotsLeft > 0 ? (
-                      <p className="mt-1 text-xs text-slate">{formatSpots(date.spotsLeft)}</p>
-                    ) : (
-                      <p className="mt-1 text-xs text-wine">Мест нет</p>
+                  <span
+                    className={cn(
+                      "min-w-0 flex-1 whitespace-nowrap text-sm font-medium sm:text-base",
+                      selected ? "text-sky-dark" : "text-charcoal",
                     )}
+                  >
+                    {formatDateRange(date.startDate, date.endDate)}
+                  </span>
+
+                  <span
+                    className={cn(
+                      "shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium",
+                      !bookable || date.spotsLeft <= 0
+                        ? "bg-wine/10 text-wine"
+                        : date.spotsLeft <= 3
+                          ? "bg-amber-50 text-amber-800"
+                          : "bg-emerald-50 text-emerald-700",
+                    )}
+                  >
+                    {spotsLabel}
                   </span>
 
                   {priceLabel ? (
-                    <span className="shrink-0 pt-0.5 text-xs font-semibold text-charcoal">
+                    <span className="shrink-0 text-sm font-semibold tabular-nums text-charcoal">
                       {priceLabel}
+                    </span>
+                  ) : hasPartnerDiscount ? (
+                    <span className="flex shrink-0 items-baseline gap-1.5 tabular-nums">
+                      <span className="text-xs text-slate line-through">
+                        {Math.round(date.partnerOriginalPriceValue!)}{" "}
+                        {date.partnerOriginalPriceCurrency ?? date.partnerPriceCurrency ?? ""}
+                      </span>
+                      <span className="text-sm font-semibold text-charcoal">
+                        {Math.round(date.partnerPriceValue!)}{" "}
+                        {date.partnerPriceCurrency ?? ""}
+                      </span>
                     </span>
                   ) : null}
                 </button>
@@ -171,7 +201,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
         </button>
       ) : null}
 
-      <Link
+      <a
         href={bookingHref}
         target="_blank"
         rel="noopener noreferrer"
@@ -179,7 +209,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
       >
         {resolvePartnerDatesBookingLinkLabel(tour, Boolean(selectedDate))}
         <ExternalLink className="h-4 w-4" aria-hidden />
-      </Link>
+      </a>
     </TourSection>
   );
 }

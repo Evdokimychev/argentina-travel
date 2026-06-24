@@ -1,14 +1,21 @@
 "use client";
 
+import { useEffect } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { motionClass } from "@/lib/motion";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 
 const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogClose = DialogPrimitive.Close;
 const DialogPortal = DialogPrimitive.Portal;
+
+function SiteHeaderOverlayLockEffect() {
+  useSiteHeaderOverlayLock(true);
+  return null;
+}
 
 function DialogOverlay({
   className,
@@ -42,6 +49,7 @@ function DialogContent({
 }: DialogContentProps) {
   return (
     <DialogPortal>
+      <SiteHeaderOverlayLockEffect />
       <DialogOverlay />
       <DialogPrimitive.Content
         onOpenAutoFocus={onOpenAutoFocus}

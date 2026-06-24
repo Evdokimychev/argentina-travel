@@ -7,7 +7,7 @@ import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { Badge } from "@/components/ui/badge";
-import { StarRating } from "@/components/ui/star-rating";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
 import {
@@ -95,14 +95,13 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
               <span className="truncate">{excursion.cityName}</span>
             </span>
             {hasReviews ? (
-              <StarRating
-                layout="badge"
-                score={excursion.rating!.toFixed(1)}
-                count={excursion.reviewCount}
+              <ReviewRatingBadge
+                score={excursion.rating!.toFixed(1).replace(".", ",")}
+                reviewCount={excursion.reviewCount}
                 size="sm"
               />
             ) : (
-              <StarRating layout="badge" isNew newLabel={t("excursions.card.new")} size="sm" />
+              <ReviewRatingBadge isNew newLabel={t("excursions.card.new")} size="sm" />
             )}
           </div>
 

@@ -30,6 +30,7 @@ import { siteContainerClass } from "@/lib/site-container";
 import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
 import { formatToursFound } from "@/lib/pluralize";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import PartnerTourDateFilterNotice from "@/components/marketplace/PartnerTourDateFilterNotice";
@@ -153,6 +154,9 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
   const organizerProfile = filters.organizerSlug.trim()
     ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
     : null;
+  const youtravelExpertLabel = filters.organizerSlug.trim()
+    ? resolveYouTravelExpertOrganizerLabel(filters.organizerSlug.trim(), tours)
+    : null;
 
   const resetFilters = useCallback(
     () => setFilters(getDefaultFilters(currency, tours)),
@@ -255,6 +259,22 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
               >
                 {organizerProfile.name}
               </Link>
+            </p>
+            <button
+              type="button"
+              onClick={() =>
+                setFilters((current) => ({ ...current, organizerSlug: "" }))
+              }
+              className="text-sm font-medium text-slate hover:text-charcoal"
+            >
+              Сбросить фильтр
+            </button>
+          </div>
+        ) : youtravelExpertLabel ? (
+          <div className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-3">
+            <p className="text-sm text-charcoal">
+              Туры эксперта{" "}
+              <span className="font-semibold text-brand">{youtravelExpertLabel}</span>
             </p>
             <button
               type="button"

@@ -1,9 +1,19 @@
+function normalizePathname(pathname: string): string {
+  return pathname.replace(/\/+/g, "/").toLowerCase();
+}
+
 function normalizePhotoPath(pathname: string): string {
-  return pathname
+  return normalizePathname(pathname)
     .replace(/\/\d+x\d+\//g, "/")
-    .replace(/\/(thumbnail|medium|large|small|preview|original|scaled|thumbs2)\//gi, "/")
-    .replace(/_(thumb|thumbnail|medium|large|small|preview|scaled)(?=\.[a-z0-9]+$)/i, "")
-    .toLowerCase();
+    .replace(/\/(thumbnail|medium|large|small|preview|original|scaled|thumbs2|resize_cache)\//gi, "/")
+    .replace(/_(thumb|thumbnail|medium|large|small|preview|scaled)(?=\.[a-z0-9]+$)/i, "");
+}
+
+function youtravelFileIdentityKey(pathname: string): string | null {
+  const normalized = normalizePathname(pathname);
+  const match = normalized.match(/\/([a-z0-9]{16,})\.[a-z0-9]+$/i);
+  if (match?.[1]) return `youtravel:${match[1]}`;
+  return null;
 }
 
 export function galleryImageIdentityKey(url: string): string {
@@ -21,6 +31,11 @@ export function galleryImageIdentityKey(url: string): string {
     if (parsed.hostname.includes("resize.tripster.ru")) {
       const hash = parsed.pathname.split("/").filter(Boolean)[0];
       if (hash) return `tripster-resize:${hash.toLowerCase()}`;
+    }
+
+    if (parsed.hostname.includes("youtravel.me")) {
+      const youtravelKey = youtravelFileIdentityKey(parsed.pathname);
+      if (youtravelKey) return youtravelKey;
     }
 
     return normalizePhotoPath(parsed.pathname);

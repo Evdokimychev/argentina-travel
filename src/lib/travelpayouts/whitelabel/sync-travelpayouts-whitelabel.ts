@@ -42,6 +42,8 @@ function getSearchCardMount(root: HTMLElement): HTMLElement {
  * Keep search in the card and results directly below it on the same page — see docs/avia-white-label.html.
  */
 function ensureContainerInMount(root: HTMLElement, id: string) {
+  if (!root.isConnected) return null;
+
   const el = document.getElementById(id);
   if (!el) return null;
 
@@ -50,7 +52,11 @@ function ensureContainerInMount(root: HTMLElement, id: string) {
   if (id === TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID) {
     if (!searchCard.contains(el)) searchCard.appendChild(el);
   } else if (!root.contains(el) || el.parentElement !== root || el.previousElementSibling !== searchCard) {
-    root.insertBefore(el, searchCard.nextSibling);
+    if (searchCard.parentElement === root) {
+      root.insertBefore(el, searchCard.nextSibling);
+    } else {
+      root.appendChild(el);
+    }
   }
 
   normalizeContainer(el);
@@ -60,6 +66,8 @@ function ensureContainerInMount(root: HTMLElement, id: string) {
 
 /** Popovers render in #tpwl-modals on body — same as WordPress / official embed. */
 function ensureModalsOnBody() {
+  if (!document.body) return;
+
   const modals = document.getElementById("tpwl-modals");
   if (!modals || modals.parentElement === document.body) return;
 
@@ -68,6 +76,7 @@ function ensureModalsOnBody() {
 }
 
 export function syncTravelpayoutsWhitelabelMount(mount: HTMLElement): boolean {
+  if (!mount.isConnected) return false;
   sanitizeAviasalesInjectedStyles();
   ensureModalsOnBody();
   ensureTpwlModalsInteractive();

@@ -1,15 +1,17 @@
 "use client";
 
-import { Baby, Clock3, Languages, Users } from "lucide-react";
+import { Baby, Clock3, Languages, UserRound, Users } from "lucide-react";
 import type { TourDetail } from "@/types";
 import type { PartnerTourContent } from "@/lib/tripster/partner-tour-content";
 import { formatDays } from "@/lib/pluralize";
 import {
-  formatPartnerChildrenSummary,
   formatPartnerLanguageSummary,
   formatPartnerMaxGroupLabel,
+  resolvePartnerAgeChipMeta,
 } from "@/lib/tripster/partner-tour-labels";
+import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { cn } from "@/lib/cn";
+import YouTravelTourDetailsSection from "./YouTravelTourDetailsSection";
 
 function MetaChip({
   icon: Icon,
@@ -33,7 +35,7 @@ function MetaChip({
   );
 }
 
-/** Краткие параметры тура — те же поля, что на карточке Tripster. */
+/** Краткие параметры тура — Tripster-чипы или блок «Детали тура» для YouTravel. */
 export default function PartnerTourStatsSection({
   tour,
   content,
@@ -41,6 +43,12 @@ export default function PartnerTourStatsSection({
   tour: TourDetail;
   content: PartnerTourContent;
 }) {
+  if (isYouTravelPartnerDetail(tour)) {
+    return <YouTravelTourDetailsSection tour={tour} content={content} />;
+  }
+
+  const ageChip = resolvePartnerAgeChipMeta(content);
+
   const chips: Array<{ icon: typeof Users; label: string; value: string }> = [
     {
       icon: Users,
@@ -53,9 +61,9 @@ export default function PartnerTourStatsSection({
       value: formatDays(tour.durationDays),
     },
     {
-      icon: Baby,
-      label: "Дети",
-      value: formatPartnerChildrenSummary(content.childFriendly),
+      icon: ageChip.kind === "age" ? UserRound : Baby,
+      label: ageChip.label,
+      value: ageChip.value,
     },
     {
       icon: Languages,

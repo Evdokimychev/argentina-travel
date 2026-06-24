@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { siteContainerClass } from "@/lib/site-container";
+import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
 import { Button, buttonVariants } from "@/components/ui/button";
 
 /**
@@ -18,6 +19,8 @@ export default function TourDetailError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const handleRetry = useRouteErrorRetry(reset);
+
   useEffect(() => {
     console.error("Tour detail render failed:", error);
   }, [error]);
@@ -32,7 +35,9 @@ export default function TourDetailError({
         это решает проблему.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button onClick={reset}>Попробовать снова</Button>
+        <Button type="button" onClick={handleRetry}>
+          Попробовать снова
+        </Button>
         <Link href="/tours" className={buttonVariants({ variant: "ghost" })}>
           Вернуться в каталог
         </Link>

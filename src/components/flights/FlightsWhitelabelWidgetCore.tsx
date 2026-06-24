@@ -13,6 +13,7 @@ import {
 } from "@/lib/travelpayouts/whitelabel/config";
 import { safeRemoveElement } from "@/lib/dom/safe-partner-dom";
 import { injectTravelpayoutsWhitelabelScript } from "@/lib/travelpayouts/whitelabel/inject-travelpayouts-whitelabel-script";
+import { resetTravelpayoutsWhitelabelWidget } from "@/lib/travelpayouts/whitelabel/reset-travelpayouts-whitelabel-widget";
 import { removeAviasalesInjectedStyles } from "@/lib/travelpayouts/whitelabel/sanitize-aviasales-styles";
 import {
   scrollTravelpayoutsWhitelabelResultsIntoView,
@@ -56,11 +57,15 @@ export default function FlightsWhitelabelWidgetCore({
   }, [parsedSearch]);
 
   useEffect(() => {
-    const mount = mountRef.current;
-    if (!mount || !scriptUrl) return;
+    const mountEl = mountRef.current;
+    if (!mountEl || !scriptUrl) return;
 
     let disposed = false;
     const autoSearchTimers: number[] = [];
+
+    if (urlSync === "inline") {
+      resetTravelpayoutsWhitelabelWidget();
+    }
 
     if (parsedSearch && urlSync !== "none") {
       ensureWlSearchParamsInUrl(parsedSearch, urlSync);
@@ -125,8 +130,9 @@ export default function FlightsWhitelabelWidgetCore({
     }
 
     function syncWidget() {
-      if (disposed || !mount) return;
-      const widgetReady = syncTravelpayoutsWhitelabelMount(mount);
+      const root = mountRef.current;
+      if (disposed || !root?.isConnected) return;
+      const widgetReady = syncTravelpayoutsWhitelabelMount(root);
       if (widgetReady) {
         markReady();
         maybeAutoStartSearch(true);
@@ -137,6 +143,7 @@ export default function FlightsWhitelabelWidgetCore({
 
     const script = injectTravelpayoutsWhitelabelScript(scriptUrl);
     script?.addEventListener("load", () => {
+      if (disposed || !mountRef.current?.isConnected) return;
       const widgetReady = syncWidget();
       window.setTimeout(syncWidget, 100);
       window.setTimeout(syncWidget, 500);
@@ -148,7 +155,7 @@ export default function FlightsWhitelabelWidgetCore({
     script?.addEventListener("error", markReady);
 
     const observer = new MutationObserver(syncWidget);
-    observer.observe(mount, { childList: true, subtree: true });
+    observer.observe(mountEl, { childList: true, subtree: true });
     observer.observe(document.head, { childList: true, subtree: true });
     observer.observe(document.body, { childList: true, subtree: true });
 
@@ -181,8 +188,12 @@ export default function FlightsWhitelabelWidgetCore({
       for (const timer of autoSearchTimers) window.clearTimeout(timer);
       window.removeEventListener("scroll", onScrollReposition, { capture: true });
       removeAviasalesInjectedStyles();
-      const modals = document.getElementById("tpwl-modals");
-      if (modals?.parentElement === document.body) safeRemoveElement(modals);
+      if (urlSync === "inline") {
+        resetTravelpayoutsWhitelabelWidget();
+      } else {
+        const modals = document.getElementById("tpwl-modals");
+        if (modals?.parentElement === document.body) safeRemoveElement(modals);
+      }
     };
   }, [scriptUrl, parsedSearch, urlSync]);
 

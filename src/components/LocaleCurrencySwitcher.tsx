@@ -14,6 +14,7 @@ import {
 import { addLocalePrefix } from "@/lib/i18n/locale-path";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import { CurrencyCode, LocaleCode } from "@/types/locale";
 
 type Tab = "language" | "currency";
@@ -212,6 +213,8 @@ export default function LocaleCurrencySwitcher({
   const { locale, language, currencyInfo, ready, t } = useLocaleCurrency();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [desktopOpen, setDesktopOpen] = useState(false);
+
+  useSiteHeaderOverlayLock(mobileOpen);
 
   useEffect(() => {
     if (mobileOpen) document.body.style.overflow = "hidden";

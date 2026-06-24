@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import UserAvatar from "@/components/auth/UserAvatar";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { TourDetail, TourOrganizerDetail } from "@/types";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
 import { buildTourContactHref } from "@/lib/tour-contact";
@@ -24,6 +25,7 @@ import { formatTours } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import TourSection from "./TourSection";
 import { buildExcursionGuideHref } from "@/lib/tripster/guide-mapper";
+import ExpandableText from "@/components/ui/expandable-text";
 import { tourDetailBadgeSkyClass, tourDetailCardBorderClass, tourDetailInsetMutedClass } from "@/lib/tour-detail-ui";
 
 function resolveTripsterGuideId(organizer: TourOrganizerDetail): number | null {
@@ -108,16 +110,13 @@ function OrganizerStats({ organizer }: { organizer: TourOrganizerDetail }) {
     <>
       <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate">
         {rating.show ? (
-          <span
-            className={`flex items-center gap-1 font-medium ${rating.isNew ? "text-sky" : "text-charcoal"}`}
-          >
-            {!rating.isNew ? (
-              <svg className="h-4 w-4 text-sun" fill="currentColor" viewBox="0 0 20 20" aria-hidden>
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00-.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            ) : null}
-            {rating.label}
-          </span>
+          <ReviewRatingBadge
+            isNew={rating.isNew}
+            score={rating.isNew ? undefined : rating.label}
+            reviewCount={rating.isNew ? undefined : organizer.reviewCount}
+            newLabel={rating.label}
+            size="sm"
+          />
         ) : null}
         <span>{tourCountFallback ?? formatTours(organizer.tourCount)}</span>
         {travelerLabel ? <span>{travelerLabel}</span> : null}
@@ -204,7 +203,10 @@ function OrganizerCardBody({
   return (
     <div className="mt-6 border-t border-gray-100 pt-6">
       {extendedText ? (
-        <p className="leading-relaxed text-slate">{extendedText}</p>
+        <ExpandableText
+          text={extendedText}
+          paragraphClassName="leading-relaxed text-slate"
+        />
       ) : null}
 
       {authorBio ? (
@@ -212,7 +214,11 @@ function OrganizerCardBody({
           <p className="text-xs font-semibold uppercase tracking-wide text-sky">
             О гиде на маршруте
           </p>
-          <p className="mt-2 text-sm leading-relaxed text-charcoal">{authorBio}</p>
+          <ExpandableText
+            text={authorBio}
+            className="mt-2"
+            paragraphClassName="text-sm leading-relaxed text-charcoal"
+          />
         </div>
       ) : null}
 

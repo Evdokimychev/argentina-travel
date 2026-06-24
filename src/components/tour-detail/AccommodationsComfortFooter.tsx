@@ -14,6 +14,9 @@ interface AccommodationsComfortFooterProps {
   comfortLevels?: ComfortLevel[];
   comfortDescriptionHtml?: string;
   className?: string;
+  levelLabel?: string;
+  dotCount?: number;
+  hideHelpPopover?: boolean;
 }
 
 function ComfortHelpButton() {
@@ -52,6 +55,9 @@ export default function AccommodationsComfortFooter({
   comfortLevels = [],
   comfortDescriptionHtml = "",
   className,
+  levelLabel,
+  dotCount,
+  hideHelpPopover = false,
 }: AccommodationsComfortFooterProps) {
   const levelMeta = COMFORT_LEVELS.find((item) => item.level === comfortLevel);
   const extendedDescription = comfortDescriptionHtml.trim();
@@ -59,6 +65,8 @@ export default function AccommodationsComfortFooter({
   const hasMultipleLevels = uniqueLevels.length > 1;
   const hasExpandableContent = Boolean(extendedDescription);
   const [expanded, setExpanded] = useState(false);
+  const displayLabel = levelLabel?.trim() || comfortLevel;
+  const filledDots = dotCount ?? COMFORT_DOT_COUNT[comfortLevel];
 
   const previewText = extendedDescription
     .replace(/<[^>]+>/g, " ")
@@ -75,12 +83,12 @@ export default function AccommodationsComfortFooter({
     >
       <div className="flex items-center gap-1.5">
         <p className="text-sm font-semibold text-charcoal">Уровень комфорта</p>
-        <ComfortHelpButton />
+        {!hideHelpPopover ? <ComfortHelpButton /> : null}
       </div>
 
       <div className="mt-2 flex flex-wrap items-center gap-x-2.5 gap-y-1">
-        <span className="text-sm font-medium text-slate">{comfortLevel}</span>
-        <ComfortDotRating filled={COMFORT_DOT_COUNT[comfortLevel]} />
+        <span className="text-sm font-medium text-slate">{displayLabel}</span>
+        <ComfortDotRating filled={filledDots} />
       </div>
 
       {hasMultipleLevels ? (
@@ -99,7 +107,7 @@ export default function AccommodationsComfortFooter({
         </div>
       ) : null}
 
-      {levelMeta ? (
+      {levelMeta && !levelLabel ? (
         <p className="mt-2 text-sm leading-relaxed text-slate">{levelMeta.description}</p>
       ) : null}
 

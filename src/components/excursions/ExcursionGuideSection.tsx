@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { StarRating } from "@/components/ui/star-rating";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { formatGuideSinceDisplay } from "@/lib/excursion-format";
 import { buildExcursionGuideHref } from "@/lib/tripster/guide-mapper";
@@ -86,14 +86,13 @@ export default function ExcursionGuideSection({
 
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
               {hasReviews ? (
-                <StarRating
-                  layout="badge"
-                  score={guide.rating!.toFixed(1)}
-                  count={guide.reviewCount ?? 0}
+                <ReviewRatingBadge
+                  score={guide.rating!.toFixed(1).replace(".", ",")}
+                  reviewCount={guide.reviewCount ?? 0}
                   size="sm"
                 />
               ) : (
-                <StarRating layout="badge" isNew newLabel={t("excursions.card.new")} size="sm" />
+                <ReviewRatingBadge isNew newLabel={t("excursions.card.new")} size="sm" />
               )}
               {excursionCountLabel ? (
                 <span className="text-slate">{excursionCountLabel}</span>

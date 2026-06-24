@@ -33,6 +33,8 @@ function CommentParagraphs({ text, className }: { text: string; className?: stri
 interface TourSectionOrganizerNoteProps {
   comment?: string;
   className?: string;
+  /** Заголовок блока (по умолчанию «Комментарий организатора»). */
+  title?: string;
   /** Встроенный в другой footer — без верхней границы */
   embedded?: boolean;
 }
@@ -40,6 +42,7 @@ interface TourSectionOrganizerNoteProps {
 export default function TourSectionOrganizerNote({
   comment = "",
   className,
+  title = "Комментарий организатора",
   embedded = false,
 }: TourSectionOrganizerNoteProps) {
   const trimmed = comment.trim();
@@ -55,7 +58,7 @@ export default function TourSectionOrganizerNote({
         <MessageSquareQuote className="h-4 w-4 text-brand" strokeWidth={1.75} aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="text-sm font-semibold text-charcoal">Комментарий организатора</span>
+        <span className="text-sm font-semibold text-charcoal">{title}</span>
         {needsExpand ? (
           <>
             {!expanded ? (

@@ -5,7 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, MapPin } from "lucide-react";
 import ExcursionCard from "@/components/excursions/ExcursionCard";
 import { EmptyState } from "@/components/ui/empty-state";
-import { StarRating } from "@/components/ui/star-rating";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { formatGuideSinceDisplay } from "@/lib/excursion-format";
 import { pluralRu } from "@/lib/pluralize";
@@ -74,14 +74,13 @@ export default function ExcursionGuideProfileView({
 
               <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
                 {hasReviews ? (
-                  <StarRating
-                    layout="badge"
-                    score={profile.rating!.toFixed(1)}
-                    count={profile.reviewCount ?? 0}
+                  <ReviewRatingBadge
+                    score={profile.rating!.toFixed(1).replace(".", ",")}
+                    reviewCount={profile.reviewCount ?? 0}
                     size="sm"
                   />
                 ) : (
-                  <StarRating layout="badge" isNew newLabel={t("excursions.card.new")} size="sm" />
+                  <ReviewRatingBadge isNew newLabel={t("excursions.card.new")} size="sm" />
                 )}
                 <span className="text-slate">{excursionCountLabel}</span>
                 {profile.isLicensed ? (

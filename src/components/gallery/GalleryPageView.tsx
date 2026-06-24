@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useCallback, useMemo, useState } from "react";
 import { ArrowRight, MapPin, X } from "lucide-react";
 import Hero from "@/components/Hero";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import {
   GALLERY_REGIONS,
   galleryItems,
@@ -23,6 +24,8 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
     initialRegion && GALLERY_REGIONS.some((r) => r.slug === initialRegion) ? initialRegion : null
   );
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
+
+  useSiteHeaderOverlayLock(lightboxItem != null);
 
   const filteredItems = useMemo(
     () =>

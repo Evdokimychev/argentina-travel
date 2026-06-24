@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import TourSection from "./TourSection";
 
@@ -17,7 +16,7 @@ export default function PartnerTourProgramNotice({
           оформить бронирование. Мы показываем описание, условия и отзывы, чтобы вы могли
           спокойно оценить тур до перехода на партнёрскую площадку.
         </p>
-        <Link
+        <a
           href={bookingHref}
           target="_blank"
           rel="noopener noreferrer"
@@ -25,7 +24,7 @@ export default function PartnerTourProgramNotice({
         >
           Открыть программу на Tripster
           <ExternalLink className="h-4 w-4" aria-hidden />
-        </Link>
+        </a>
       </div>
     </TourSection>
   );

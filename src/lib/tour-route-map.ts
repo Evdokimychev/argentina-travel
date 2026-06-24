@@ -1,4 +1,5 @@
 import type { TourRoutePoint } from "@/types";
+import { escapeHtml } from "@/lib/rich-text";
 
 const EARTH_RADIUS_KM = 6371;
 
@@ -101,3 +102,188 @@ export function getRoutePointRole(index: number, total: number): RoutePointRole 
   if (index === total - 1) return "finish";
   return "waypoint";
 }
+
+export function routePointRoleLabel(role: RoutePointRole): string {
+  if (role === "start") return "Старт тура";
+  if (role === "finish") return "Финиш тура";
+  return "";
+}
+
+/** HTML-содержимое Leaflet-popup для точки маршрута. */
+export function buildRouteMapPopupHtml(
+  point: TourRoutePoint,
+  role: RoutePointRole,
+): string {
+  const roleText = routePointRoleLabel(role);
+  const name = escapeHtml(point.name);
+  const imageUrl = point.imageUrl?.trim();
+  const safeImageUrl =
+    imageUrl && /^https?:\/\//i.test(imageUrl) ? escapeHtml(imageUrl) : null;
+
+  const roleBadge = roleText
+    ? `<span class="route-map-popup-role route-map-popup-role--${role}">${escapeHtml(roleText)}</span>`
+    : "";
+  const dayLine =
+    point.dayNumber != null
+      ? `<p class="route-map-popup-day">День ${point.dayNumber}</p>`
+      : "";
+  const photo = safeImageUrl
+    ? `<div class="route-map-popup-photo"><img src="${safeImageUrl}" alt="${name}" loading="lazy" decoding="async" /></div>`
+    : "";
+
+  return `<div class="route-map-popup-card">${photo}<div class="route-map-popup-body"><p class="route-map-popup-title">${name}</p>${roleBadge ? `<div class="route-map-popup-meta">${roleBadge}</div>` : ""}${dayLine}</div></div>`;
+}
+
+export const ROUTE_MAP_POPUP_OPTIONS = {
+  className: "route-map-popup",
+  maxWidth: 280,
+  minWidth: 180,
+} as const;
+
+/** Порог перекрытия маркеров на экране (px). */
+export const ROUTE_MAP_CLUSTER_PIXEL_THRESHOLD = 34;
+
+export type RouteMapMarkerGroup = {
+  key: string;
+  indices: number[];
+  lat: number;
+  lng: number;
+};
+
+type RouteMapPointProjection = {
+  x: number;
+  y: number;
+};
+
+function clusterKey(indices: number[]): string {
+  return indices.slice().sort((a, b) => a - b).join("-");
+}
+
+function groupCenter(
+  points: Pick<TourRoutePoint, "lat" | "lng">[],
+  indices: number[],
+): { lat: number; lng: number } {
+  let latSum = 0;
+  let lngSum = 0;
+  for (const index of indices) {
+    latSum += points[index]!.lat;
+    lngSum += points[index]!.lng;
+  }
+  return { lat: latSum / indices.length, lng: lngSum / indices.length };
+}
+
+/** Группирует точки, чьи маркеры перекрываются на текущем масштабе карты. */
+export function clusterRoutePointsByScreenDistance(
+  points: Pick<TourRoutePoint, "id" | "lat" | "lng">[],
+  project: (index: number) => RouteMapPointProjection,
+  thresholdPx: number = ROUTE_MAP_CLUSTER_PIXEL_THRESHOLD,
+): RouteMapMarkerGroup[] {
+  if (!points.length) return [];
+
+  const parent = points.map((_, index) => index);
+
+  function find(index: number): number {
+    if (parent[index] === index) return index;
+    parent[index] = find(parent[index]!);
+    return parent[index]!;
+  }
+
+  function union(a: number, b: number) {
+    const rootA = find(a);
+    const rootB = find(b);
+    if (rootA !== rootB) parent[rootB] = rootA;
+  }
+
+  for (let left = 0; left < points.length; left += 1) {
+    const a = project(left);
+    for (let right = left + 1; right < points.length; right += 1) {
+      const b = project(right);
+      const dx = a.x - b.x;
+      const dy = a.y - b.y;
+      if (Math.hypot(dx, dy) <= thresholdPx) {
+        union(left, right);
+      }
+    }
+  }
+
+  const grouped = new Map<number, number[]>();
+  for (let index = 0; index < points.length; index += 1) {
+    const root = find(index);
+    const bucket = grouped.get(root) ?? [];
+    bucket.push(index);
+    grouped.set(root, bucket);
+  }
+
+  return Array.from(grouped.values()).map((indices) => {
+    const sorted = indices.slice().sort((a, b) => a - b);
+    const center = groupCenter(points, sorted);
+    return {
+      key: clusterKey(sorted),
+      indices: sorted,
+      lat: center.lat,
+      lng: center.lng,
+    };
+  });
+}
+
+/** Подпись кластера: «6–8» для подряд идущих точек или «×3» иначе. */
+export function formatRouteMapClusterLabel(indices: number[]): string {
+  if (indices.length <= 1) return "";
+
+  const sorted = indices.slice().sort((a, b) => a - b);
+  const consecutive = sorted.every(
+    (value, index) => index === 0 || value === sorted[index - 1]! + 1,
+  );
+
+  if (consecutive) {
+    const first = sorted[0]! + 1;
+    const last = sorted[sorted.length - 1]! + 1;
+    return first === last ? String(first) : `${first}–${last}`;
+  }
+
+  return `×${sorted.length}`;
+}
+
+export function buildRouteMapClusterPopupHtml(
+  points: TourRoutePoint[],
+  indices: number[],
+): string {
+  const items = indices
+    .slice()
+    .sort((a, b) => a - b)
+    .map((index) => {
+      const point = points[index]!;
+      const role = getRoutePointRole(index, points.length);
+      const day =
+        point.dayNumber != null
+          ? `<span class="route-map-popup-day">День ${point.dayNumber}</span>`
+          : "";
+      const roleBadge = role !== "waypoint"
+        ? `<span class="route-map-popup-role route-map-popup-role--${role}">${escapeHtml(routePointRoleLabel(role))}</span>`
+        : "";
+      const label =
+        role === "start" ? "С" : role === "finish" ? "Ф" : String(index + 1);
+      return `<li class="route-map-cluster-item"><span class="route-map-cluster-item-badge">${label}</span><div class="route-map-cluster-item-body"><p class="route-map-popup-title">${escapeHtml(point.name)}</p>${roleBadge}${day}</div></li>`;
+    })
+    .join("");
+
+  return `<div class="route-map-cluster-popup"><p class="route-map-cluster-popup-title">${indices.length} ${indices.length === 1 ? "точка" : indices.length < 5 ? "точки" : "точек"} рядом</p><ul class="route-map-cluster-list">${items}</ul><p class="route-map-cluster-hint">Нажмите, чтобы раскрыть</p></div>`;
+}
+
+/** Координаты «паутины» вокруг центра кластера (в пикселях карты). */
+export function buildRouteMapSpiderfyPositions(
+  center: RouteMapPointProjection,
+  count: number,
+  radiusPx = 42,
+): RouteMapPointProjection[] {
+  if (count <= 1) return [center];
+
+  return Array.from({ length: count }, (_, index) => {
+    const angle = (2 * Math.PI * index) / count - Math.PI / 2;
+    return {
+      x: center.x + radiusPx * Math.cos(angle),
+      y: center.y + radiusPx * Math.sin(angle),
+    };
+  });
+}
+

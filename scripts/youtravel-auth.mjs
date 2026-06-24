@@ -50,22 +50,22 @@ export async function resolveYouTravelAuthHeaders(apiBase) {
     throw new Error("Set YOUTRAVEL_API_EMAIL and credentials in .env.local");
   }
 
+  const { fetchSerpPage } = await import("./youtravel-api.mjs");
   const attempts = getYouTravelAuthAttempts();
   let lastStatus = null;
 
   for (const attempt of attempts) {
     const headers = buildYouTravelAuthHeader(attempt.mode, email, password, apiKey);
-    const response = await fetch(`${apiBase}/v1/tours?take=1`, {
-      headers: { ...headers, Accept: "application/json" },
-    });
-    const body = await response.json().catch(() => null);
-    const items = Array.isArray(body) ? body : body?.data ?? [];
-    lastStatus = response.status;
-
-    if (response.ok && !(body?.success === false && !items.length)) {
-      return { headers, mode: attempt.mode };
+    try {
+      const { items } = await fetchSerpPage(apiBase, headers, { take: 1, skip: 0 });
+      lastStatus = 200;
+      if (items.length >= 0) {
+        return { headers, mode: attempt.mode };
+      }
+    } catch (error) {
+      lastStatus = Number.parseInt(String(error.message).match(/\((\d+)\)/)?.[1] ?? "", 10) || null;
     }
   }
 
-  throw new Error(`YouTravel auth failed (last status ${lastStatus})`);
+  throw new Error(`YouTravel auth failed (last status ${lastStatus ?? "unknown"})`);
 }

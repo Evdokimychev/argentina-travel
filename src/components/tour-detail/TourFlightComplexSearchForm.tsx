@@ -312,6 +312,37 @@ function buildActiveRows(
   }));
 }
 
+function optionalSameDay(a: Date | null | undefined, b: Date | null | undefined): boolean {
+  if (!a && !b) return true;
+  if (!a || !b) return false;
+  return isSameDay(a, b);
+}
+
+function userEditedSegmentRoute(state: SegmentState, segment: TourFlightFormSegment): boolean {
+  return state.origin !== segment.origin || state.destination !== segment.destination;
+}
+
+/** True when picker dates differ from the last tour-driven prefill on this segment. */
+function userEditedSegmentDates(state: SegmentState, segment: TourFlightFormSegment): boolean {
+  if (
+    state.departDate != null &&
+    segment.departDate != null &&
+    !optionalSameDay(state.departDate, segment.departDate)
+  ) {
+    return true;
+  }
+
+  if (
+    state.returnDate != null &&
+    segment.returnDate != null &&
+    !optionalSameDay(state.returnDate, segment.returnDate)
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function syncActiveRowsWithSegments(
   prev: ActiveRow[],
   segmentList: TourFlightFormSegment[],
@@ -325,14 +356,22 @@ function syncActiveRowsWithSegments(
       const nextSegment = segmentById.get(row.segment.id)!;
       const freshState = buildInitialSegmentState(nextSegment, emptyDates);
       const keepUserState =
-        row.state.origin !== row.segment.origin ||
-        row.state.destination !== row.segment.destination ||
-        row.state.departDate != null ||
-        row.state.returnDate != null;
+        userEditedSegmentRoute(row.state, row.segment) ||
+        userEditedSegmentDates(row.state, row.segment);
 
       return {
         segment: nextSegment,
-        state: keepUserState ? row.state : freshState,
+        state: keepUserState
+          ? {
+              ...row.state,
+              origin: userEditedSegmentRoute(row.state, row.segment)
+                ? row.state.origin
+                : nextSegment.origin,
+              destination: userEditedSegmentRoute(row.state, row.segment)
+                ? row.state.destination
+                : nextSegment.destination,
+            }
+          : freshState,
       };
     });
 

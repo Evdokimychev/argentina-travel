@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { siteContainerClass } from "@/lib/site-container";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
 
 export default function ExcursionDetailError({
   error,
@@ -12,6 +13,8 @@ export default function ExcursionDetailError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const handleRetry = useRouteErrorRetry(reset);
+
   useEffect(() => {
     console.error("Excursion detail render failed:", error);
   }, [error]);
@@ -27,7 +30,7 @@ export default function ExcursionDetailError({
         Возможно, данные партнёра временно недоступны. Попробуйте обновить страницу.
       </p>
       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button onClick={reset}>Попробовать снова</Button>
+        <Button type="button" onClick={handleRetry}>Попробовать снова</Button>
         <Link href="/excursions" className={buttonVariants({ variant: "ghost" })}>
           Каталог экскурсий
         </Link>

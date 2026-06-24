@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CalendarDays, ListOrdered } from "lucide-react";
+import { CalendarDays, ListOrdered, RefreshCw } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings, cancelBookingByTourist } from "@/lib/bookings-store";
 import {
@@ -13,6 +13,7 @@ import {
   apiFetchYouTravelBookingRequests,
   apiFetchUserBookings,
   apiLookupBookingsByEmail,
+  apiRefreshYouTravelBookingRequest,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
 import { buildTourMessageHref } from "@/lib/messages-store";
@@ -29,6 +30,11 @@ import BookingListSkeleton from "@/components/profile/BookingListSkeleton";
 import ProfileWaitlistSection from "@/components/profile/ProfileWaitlistSection";
 import { cn } from "@/lib/cn";
 import {
+  formatYouTravelBookingStatus,
+  isYouTravelBookingStatusTerminal,
+  resolveYouTravelBookingStatusTone,
+} from "@/lib/youtravel/booking-status";
+import {
   cabinetCardClass,
   cabinetLinkClass,
   cabinetPageSubtitleClass,
@@ -38,19 +44,55 @@ import {
 
 const PARTNER_STATUS_LABELS: Record<string, string> = {
   pending: "В обработке",
-  submitted: "Отправлена",
+  submitted: "Заявка отправлена",
   confirmed: "Подтверждена",
   cancelled: "Отменена",
   completed: "Завершена",
-  affiliate_fallback: "Перенаправлена на сайт",
+  affiliate_fallback: "На сайте партнёра",
   failed: "Ошибка отправки",
   api_unavailable: "API недоступен",
   unknown: "Статус уточняется",
 };
 
+const YOUTRAVEL_STATUS_HINTS: Record<string, string> = {
+  affiliate_fallback: "Продолжите бронирование на сайте партнёра",
+  submitted: "Заявка принята партнёром — статус обновится на YouTravel.me.",
+  confirmed: "Организатор подтвердил бронирование на YouTravel.me.",
+  pending: "Заявка обрабатывается на YouTravel.me.",
+  api_unavailable: "API бронирования временно недоступен — используйте сайт партнёра.",
+  api_unauthorized: "API бронирования не активирован — используйте сайт партнёра.",
+  failed: "Не удалось отправить заявку автоматически — попробуйте на сайте партнёра.",
+};
+
 function formatPartnerBookingStatus(status: string | null): string {
   const key = status?.trim().toLowerCase() || "unknown";
   return PARTNER_STATUS_LABELS[key] ?? status ?? PARTNER_STATUS_LABELS.unknown;
+}
+
+const YOUTRAVEL_STATUS_BADGE_CLASS: Record<
+  ReturnType<typeof resolveYouTravelBookingStatusTone>,
+  string
+> = {
+  success: "bg-emerald-50 text-emerald-700",
+  warning: "bg-amber-50 text-amber-700",
+  neutral: "bg-gray-100 text-slate",
+  error: "bg-red-50 text-red-700",
+};
+
+function formatYouTravelStatusBadgeClass(status: string | null): string {
+  return YOUTRAVEL_STATUS_BADGE_CLASS[resolveYouTravelBookingStatusTone(status)];
+}
+
+function canRefreshYouTravelRequest(request: YouTravelBookingRequestView): boolean {
+  return Boolean(
+    request.youtravelOrderId?.trim() &&
+      !isYouTravelBookingStatusTerminal(request.youtravelStatus)
+  );
+}
+
+function resolveYouTravelStatusHint(status: string | null): string | null {
+  const key = status?.trim().toLowerCase() || "";
+  return YOUTRAVEL_STATUS_HINTS[key] ?? null;
 }
 
 export default function ProfileBookingsPage() {
@@ -64,6 +106,8 @@ export default function ProfileBookingsPage() {
   const [loadingBookings, setLoadingBookings] = useState(true);
   const [loadingTripsterRequests, setLoadingTripsterRequests] = useState(true);
   const [loadingYoutravelRequests, setLoadingYoutravelRequests] = useState(true);
+  const [refreshingYoutravelIds, setRefreshingYoutravelIds] = useState<Set<string>>(new Set());
+  const [youtravelRefreshError, setYoutravelRefreshError] = useState<string | null>(null);
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -155,6 +199,50 @@ export default function ProfileBookingsPage() {
     setLoadingTripsterRequests(false);
     setLoadingYoutravelRequests(false);
   }
+
+  async function refreshYouTravelRequest(requestId: string) {
+    setYoutravelRefreshError(null);
+    setRefreshingYoutravelIds((prev) => new Set(prev).add(requestId));
+    try {
+      const updated = await apiRefreshYouTravelBookingRequest(requestId);
+      setYoutravelRequests((prev) =>
+        prev.map((item) => (item.id === updated.id ? updated : item))
+      );
+    } catch (error) {
+      setYoutravelRefreshError(
+        error instanceof Error ? error.message : "Не удалось обновить статус заявки."
+      );
+    } finally {
+      setRefreshingYoutravelIds((prev) => {
+        const next = new Set(prev);
+        next.delete(requestId);
+        return next;
+      });
+    }
+  }
+
+  async function refreshAllYouTravelRequests() {
+    const refreshable = youtravelRequests.filter(canRefreshYouTravelRequest);
+    if (refreshable.length === 0) return;
+
+    setYoutravelRefreshError(null);
+    setRefreshingYoutravelIds(new Set(refreshable.map((item) => item.id)));
+    try {
+      const updated = await Promise.all(
+        refreshable.map((item) => apiRefreshYouTravelBookingRequest(item.id))
+      );
+      const updatedMap = new Map(updated.map((item) => [item.id, item]));
+      setYoutravelRequests((prev) => prev.map((item) => updatedMap.get(item.id) ?? item));
+    } catch (error) {
+      setYoutravelRefreshError(
+        error instanceof Error ? error.message : "Не удалось обновить статусы заявок."
+      );
+    } finally {
+      setRefreshingYoutravelIds(new Set());
+    }
+  }
+
+  const refreshableYoutravelCount = youtravelRequests.filter(canRefreshYouTravelRequest).length;
 
   return (
     <div className={cabinetPanelClass}>
@@ -343,12 +431,34 @@ export default function ProfileBookingsPage() {
       </section>
 
       <section className={cn(cabinetCardClass, "mt-6 p-4 sm:p-5")}>
-        <div className="flex items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="font-heading text-lg font-bold text-charcoal">Заявки YouTravel.me</h2>
-          {!loadingYoutravelRequests ? (
-            <span className="text-xs text-slate">Всего: {youtravelRequests.length}</span>
-          ) : null}
+          <div className="flex flex-wrap items-center gap-2">
+            {!loadingYoutravelRequests ? (
+              <span className="text-xs text-slate">Всего: {youtravelRequests.length}</span>
+            ) : null}
+            {refreshableYoutravelCount > 0 ? (
+              <button
+                type="button"
+                onClick={() => void refreshAllYouTravelRequests()}
+                disabled={refreshingYoutravelIds.size > 0}
+                className="inline-flex items-center gap-1.5 text-xs font-medium text-sky transition-colors hover:text-sky-dark disabled:opacity-50"
+              >
+                <RefreshCw
+                  className={cn("h-3.5 w-3.5", refreshingYoutravelIds.size > 0 && "animate-spin")}
+                  aria-hidden
+                />
+                Обновить все
+              </button>
+            ) : null}
+          </div>
         </div>
+
+        {youtravelRefreshError ? (
+          <p role="alert" className="mt-3 rounded-xl bg-red-50 px-3 py-2 text-sm text-red-700">
+            {youtravelRefreshError}
+          </p>
+        ) : null}
 
         {loadingYoutravelRequests ? (
           <p className="mt-3 text-sm text-slate">Загружаем статусы заявок…</p>
@@ -358,7 +468,12 @@ export default function ProfileBookingsPage() {
           </p>
         ) : (
           <div className="mt-4 space-y-3">
-            {youtravelRequests.map((request) => (
+            {youtravelRequests.map((request) => {
+              const statusHint = resolveYouTravelStatusHint(request.youtravelStatus);
+              const isRefreshing = refreshingYoutravelIds.has(request.id);
+              const showRefresh = canRefreshYouTravelRequest(request);
+
+              return (
               <article key={request.id} className="rounded-2xl border border-gray-100 p-4">
                 <div className="flex flex-wrap items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -375,9 +490,22 @@ export default function ProfileBookingsPage() {
                     <p className="mt-1 text-xs text-slate">
                       Отправлено {formatBookingCreatedAt(request.createdAt)}
                     </p>
+                    {request.statusSyncedAt ? (
+                      <p className="mt-1 text-xs text-slate">
+                        Обновлено {formatBookingCreatedAt(request.statusSyncedAt)}
+                      </p>
+                    ) : null}
+                    {statusHint ? (
+                      <p className="mt-2 text-xs leading-relaxed text-slate">{statusHint}</p>
+                    ) : null}
                   </div>
-                  <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
-                    {formatPartnerBookingStatus(request.youtravelStatus)}
+                  <span
+                    className={cn(
+                      "rounded-full px-3 py-1 text-xs font-medium",
+                      formatYouTravelStatusBadgeClass(request.youtravelStatus)
+                    )}
+                  >
+                    {formatYouTravelBookingStatus(request.youtravelStatus)}
                   </span>
                 </div>
 
@@ -392,12 +520,27 @@ export default function ProfileBookingsPage() {
                       rel="noreferrer"
                       className={cabinetLinkClass}
                     >
-                      Открыть заказ на сайте
+                      Открыть на YouTravel.me
                     </a>
+                  ) : request.youtravelStatus === "affiliate_fallback" ? (
+                    <Link href={`/tours/${request.tourSlug}`} className={cabinetLinkClass}>
+                      Продолжить на YouTravel.me
+                    </Link>
+                  ) : null}
+                  {showRefresh ? (
+                    <button
+                      type="button"
+                      onClick={() => void refreshYouTravelRequest(request.id)}
+                      disabled={isRefreshing}
+                      className={cn(cabinetLinkClass, "disabled:opacity-50")}
+                    >
+                      {isRefreshing ? "Обновляем…" : "Обновить статус"}
+                    </button>
                   ) : null}
                 </div>
               </article>
-            ))}
+            );
+            })}
           </div>
         )}
       </section>

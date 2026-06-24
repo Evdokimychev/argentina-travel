@@ -1,6 +1,5 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
@@ -13,12 +12,11 @@ import {
   navMegaMenuIndexClassName,
   navMegaMenuTriggerClassName,
 } from "@/components/navigation/nav-mega-menu-trigger-styles";
+import { useMegaMenuHoverIntent } from "@/hooks/useMegaMenuHoverIntent";
 import { cn } from "@/lib/cn";
 import { navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
-
-const CLOSE_DELAY_MS = 350;
 
 export function MegaMenuTrigger({
   section,
@@ -39,62 +37,12 @@ export function MegaMenuTrigger({
   showIndex?: boolean;
   compact?: boolean;
 }) {
-  const rootRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { rootRef, panelRef, openMenu, scheduleClose, closeMenu, rememberPointer } =
+    useMegaMenuHoverIntent(open, onOpenChange);
 
   const label = navSectionLabel(section, t);
   const num = String(index).padStart(2, "0");
   const indexClassName = navMegaMenuIndexClassName(compact);
-
-  const clearCloseTimer = useCallback(() => {
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  }, []);
-
-  const openMenu = useCallback(() => {
-    clearCloseTimer();
-    onOpenChange(true);
-  }, [clearCloseTimer, onOpenChange]);
-
-  const scheduleClose = useCallback(() => {
-    clearCloseTimer();
-    closeTimerRef.current = setTimeout(() => onOpenChange(false), CLOSE_DELAY_MS);
-  }, [clearCloseTimer, onOpenChange]);
-
-  const closeMenu = useCallback(() => {
-    clearCloseTimer();
-    onOpenChange(false);
-  }, [clearCloseTimer, onOpenChange]);
-
-  useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      const root = rootRef.current;
-      const panel = panelRef.current;
-      if (root?.contains(target) || panel?.contains(target)) return;
-      closeMenu();
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open, closeMenu]);
 
   if (!section.columns?.length && section.href) {
     return (
@@ -103,7 +51,7 @@ export function MegaMenuTrigger({
         className={cn(
           navMegaMenuTriggerClassName,
           "shrink-0",
-          active ? "text-sky" : "text-foreground/70 hover:text-sky"
+          active ? "text-sky" : "text-foreground/70 hover:text-sky",
         )}
       >
         <span className="truncate">{label}</span>
@@ -114,18 +62,28 @@ export function MegaMenuTrigger({
 
   const hasHubLink = Boolean(section.href && section.columns?.length);
 
+  const handleMouseEnter = (event: React.MouseEvent) => {
+    rememberPointer(event.clientX, event.clientY);
+    openMenu();
+  };
+
+  const handleMouseLeave = (event: React.MouseEvent) => {
+    rememberPointer(event.clientX, event.clientY);
+    scheduleClose();
+  };
+
   return (
     <div
       ref={rootRef}
       className="relative shrink-0"
-      onMouseEnter={openMenu}
-      onMouseLeave={scheduleClose}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {hasHubLink ? (
         <div
           className={cn(
             navMegaMenuTriggerClassName,
-            active || open ? "text-sky" : "text-foreground/70"
+            active || open ? "text-sky" : "text-foreground/70",
           )}
         >
           <Link
@@ -147,7 +105,7 @@ export function MegaMenuTrigger({
             <ChevronDown
               className={cn(
                 "h-3.5 w-3.5 transition-transform duration-200",
-                open && "rotate-180"
+                open && "rotate-180",
               )}
               aria-hidden
             />
@@ -161,7 +119,7 @@ export function MegaMenuTrigger({
           onClick={() => (open ? closeMenu() : openMenu())}
           className={cn(
             navMegaMenuTriggerClassName,
-            active || open ? "text-sky" : "text-foreground/70 hover:text-sky"
+            active || open ? "text-sky" : "text-foreground/70 hover:text-sky",
           )}
         >
           <span className="truncate">{label}</span>
@@ -169,7 +127,7 @@ export function MegaMenuTrigger({
           <ChevronDown
             className={cn(
               "h-3.5 w-3.5 shrink-0 transition-transform duration-200",
-              open && "rotate-180"
+              open && "rotate-180",
             )}
             aria-hidden
           />
@@ -182,8 +140,8 @@ export function MegaMenuTrigger({
         triggerRef={rootRef}
         panelRef={panelRef}
         widthClass={megaMenuWidthClass(section.id)}
-        onMouseEnter={openMenu}
-        onMouseLeave={scheduleClose}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <MegaMenuSectionContent section={section} t={t} onNavigate={closeMenu} />
       </MegaMenuDropdown>

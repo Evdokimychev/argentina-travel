@@ -23,7 +23,30 @@ type RawYouTravelBookingRequestRow = {
   youtravel_order_url: string | null;
   youtravel_status: string | null;
   created_at: string;
+  updated_at: string;
+  status_synced_at: string | null;
 };
+
+const BOOKING_REQUEST_SELECT_COLUMNS = [
+  "id",
+  "tour_id",
+  "tour_slug",
+  "user_id",
+  "offer_id",
+  "start_date",
+  "end_date",
+  "persons_count",
+  "customer_name",
+  "customer_email",
+  "customer_phone",
+  "message",
+  "youtravel_order_id",
+  "youtravel_order_url",
+  "youtravel_status",
+  "created_at",
+  "updated_at",
+  "status_synced_at",
+].join(",");
 
 type YouTravelTourBrief = {
   id: number;
@@ -111,6 +134,8 @@ async function enrichYouTravelRequests(
       youtravelOrderUrl: row.youtravel_order_url,
       youtravelStatus: row.youtravel_status,
       createdAt: row.created_at,
+      updatedAt: row.updated_at ?? row.created_at,
+      statusSyncedAt: row.status_synced_at,
     };
   });
 }
@@ -125,26 +150,7 @@ async function selectYouTravelRequests(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let query = (supabase as any)
     .from("youtravel_booking_requests")
-    .select(
-      [
-        "id",
-        "tour_id",
-        "tour_slug",
-        "user_id",
-        "offer_id",
-        "start_date",
-        "end_date",
-        "persons_count",
-        "customer_name",
-        "customer_email",
-        "customer_phone",
-        "message",
-        "youtravel_order_id",
-        "youtravel_order_url",
-        "youtravel_status",
-        "created_at",
-      ].join(",")
-    )
+    .select(BOOKING_REQUEST_SELECT_COLUMNS)
     .order("created_at", { ascending: false })
     .limit(limit);
 
@@ -227,6 +233,101 @@ export async function fetchYouTravelBookingRequestsAdmin(
     limit: filters.limit,
   });
   return enrichYouTravelRequests(supabase, rows);
+}
+
+export async function fetchYouTravelBookingRequestById(
+  supabase: DbClient,
+  id: string
+): Promise<YouTravelBookingRequestView | null> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("youtravel_booking_requests")
+    .select(BOOKING_REQUEST_SELECT_COLUMNS)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error || !data) return null;
+  const [view] = await enrichYouTravelRequests(supabase, [data as RawYouTravelBookingRequestRow]);
+  return view ?? null;
+}
+
+export async function updateYouTravelBookingRequestStatus(
+  supabase: DbClient,
+  id: string,
+  input: {
+    status: string;
+    orderUrl?: string | null;
+    statusSyncedAt?: string | null;
+  }
+): Promise<void> {
+  const patch: Record<string, unknown> = {
+    youtravel_status: input.status,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (input.orderUrl !== undefined) {
+    patch.youtravel_order_url = input.orderUrl;
+  }
+  if (input.statusSyncedAt !== undefined) {
+    patch.status_synced_at = input.statusSyncedAt;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  await (supabase as any).from("youtravel_booking_requests").update(patch).eq("id", id);
+}
+
+export async function updateYouTravelBookingRequestByOrderId(
+  supabase: DbClient,
+  orderId: string,
+  input: {
+    status: string;
+    orderUrl?: string | null;
+    statusSyncedAt?: string | null;
+  }
+): Promise<number> {
+  const patch: Record<string, unknown> = {
+    youtravel_status: input.status,
+    updated_at: new Date().toISOString(),
+  };
+
+  if (input.orderUrl !== undefined) {
+    patch.youtravel_order_url = input.orderUrl;
+  }
+  if (input.statusSyncedAt !== undefined) {
+    patch.status_synced_at = input.statusSyncedAt;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("youtravel_booking_requests")
+    .update(patch)
+    .eq("youtravel_order_id", orderId.trim())
+    .select("id");
+
+  if (error || !Array.isArray(data)) return 0;
+  return data.length;
+}
+
+export async function fetchYouTravelBookingRequestsForStatusSync(
+  supabase: DbClient,
+  options: { limit?: number; createdAfter: string }
+): Promise<YouTravelBookingRequestView[]> {
+  const limit = Math.max(1, Math.min(options.limit ?? 20, 100));
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
+    .from("youtravel_booking_requests")
+    .select(BOOKING_REQUEST_SELECT_COLUMNS)
+    .not("youtravel_order_id", "is", null)
+    .gte("created_at", options.createdAfter)
+    .order("created_at", { ascending: false })
+    .limit(limit * 3);
+
+  if (error || !Array.isArray(data)) return [];
+
+  const rows = data as RawYouTravelBookingRequestRow[];
+  const views = await enrichYouTravelRequests(supabase, rows);
+  return views.slice(0, limit);
 }
 
 export async function fetchYouTravelBookingRequestsStatusStats(

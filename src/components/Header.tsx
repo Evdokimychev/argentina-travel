@@ -18,6 +18,7 @@ import {
 } from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
 import { useSiteHeaderAutoHide } from "@/hooks/useSiteHeaderAutoHide";
+import { useSiteHeaderOverlayLocked } from "@/hooks/useSiteHeaderOverlayLock";
 import { cn } from "@/lib/cn";
 import {
   tokenFocusRingClass,
@@ -80,10 +81,12 @@ export default function Header() {
   const { isAuthenticated, openAuth } = useAuth();
 
   const headerAutoHideDisabled = mobileMenuOpen || openMegaMenuId !== null;
+  const overlayLocked = useSiteHeaderOverlayLocked();
 
   const { headerVisible } = useSiteHeaderAutoHide({
     headerRef,
     disabled: headerAutoHideDisabled,
+    forceHidden: overlayLocked,
   });
 
   useEffect(() => {

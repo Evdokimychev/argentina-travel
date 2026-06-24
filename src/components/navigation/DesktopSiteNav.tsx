@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, type Dispatch, type SetStateAction } from "react";
 import { MegaMenuTrigger } from "@/components/navigation/MegaMenuTrigger";
 import { NavOverflowMegaMenuTrigger } from "@/components/navigation/NavOverflowMegaMenuTrigger";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
@@ -12,7 +12,7 @@ type DesktopSiteNavProps = {
   pathname: string;
   t: NavTranslate;
   openMegaMenuId: string | null;
-  onOpenMegaMenuChange: (id: string | null) => void;
+  onOpenMegaMenuChange: Dispatch<SetStateAction<string | null>>;
 };
 
 export default function DesktopSiteNav({
@@ -60,7 +60,7 @@ export default function DesktopSiteNav({
                 onOpenMegaMenuChange(section.id);
                 return;
               }
-              onOpenMegaMenuChange(openMegaMenuId === section.id ? null : openMegaMenuId);
+              onOpenMegaMenuChange((current) => (current === section.id ? null : current));
             }}
           />
         </div>
@@ -79,7 +79,7 @@ export default function DesktopSiteNav({
                 onOpenMegaMenuChange("more");
                 return;
               }
-              onOpenMegaMenuChange(openMegaMenuId === "more" ? null : openMegaMenuId);
+              onOpenMegaMenuChange((current) => (current === "more" ? null : current));
             }}
           />
         </div>

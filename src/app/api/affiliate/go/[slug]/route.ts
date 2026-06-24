@@ -16,6 +16,7 @@ import {
 } from "@/lib/tripster/repository";
 import {
   buildYouTravelPartnerBookingUrl,
+  isUsableYouTravelAffiliateRedirectUrl,
 } from "@/lib/youtravel/partner-tour-utils";
 import { buildTripsterPartnerBookingUrl } from "@/lib/tripster/partner-tour-utils";
 import {
@@ -61,9 +62,11 @@ export async function GET(request: Request, context: RouteContext) {
       startDate || endDate || (guests != null && guests > 0) || offerId
     );
 
-    let partnerUrl = tour.partner_url?.trim() || null;
+    let partnerUrl = isUsableYouTravelAffiliateRedirectUrl(tour.partner_url)
+      ? tour.partner_url!.trim()
+      : null;
 
-    if (wantsBookingDeepLink) {
+    if (wantsBookingDeepLink || !partnerUrl) {
       const bookingTarget = buildYouTravelPartnerBookingUrl(tour.id, {
         tourSlug: tour.slug,
         startDate,
@@ -84,36 +87,24 @@ export async function GET(request: Request, context: RouteContext) {
             country: tour.country ?? undefined,
           });
           partnerUrl = link.partnerUrl || link.url;
-        } catch {
-          partnerUrl = bookingTarget;
-        }
-      } else {
-        partnerUrl = bookingTarget;
-      }
-    } else if (!partnerUrl) {
-      if (!isTravelpayoutsConfigured()) {
-        partnerUrl = tour.youtravel_url;
-      } else {
-        try {
-          const link = await createYouTravelAffiliateLink({
-            youtravelUrl: tour.youtravel_url,
-            tourId: tour.id,
-            country: tour.country ?? undefined,
-          });
-          partnerUrl = link.partnerUrl || link.url;
-          if (partnerUrl) {
+          if (partnerUrl && !wantsBookingDeepLink) {
             await supabase
               .from("youtravel_tours")
               .update({ partner_url: partnerUrl })
               .eq("id", tour.id);
           }
         } catch (error) {
-          const message =
-            error instanceof TravelpayoutsError
-              ? error.message
-              : "Failed to generate affiliate link";
-          return NextResponse.json({ error: message }, { status: 500 });
+          if (!wantsBookingDeepLink) {
+            const message =
+              error instanceof TravelpayoutsError
+                ? error.message
+                : "Failed to generate affiliate link";
+            return NextResponse.json({ error: message }, { status: 500 });
+          }
+          partnerUrl = bookingTarget;
         }
+      } else {
+        partnerUrl = bookingTarget;
       }
     }
 

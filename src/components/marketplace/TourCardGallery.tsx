@@ -20,9 +20,25 @@ export default function TourCardGallery({
   variant = "tour",
 }: TourCardGalleryProps) {
   const [index, setIndex] = useState(0);
-  const displayImages = images
-    .map((src) => buildSupabaseCdnUrl(src?.trim() ?? "", { width: 960, quality: 76 }))
-    .filter(Boolean);
+  const displayImages = [...new Set(
+    images
+      .map((src) => {
+        let normalized = "";
+        if (typeof src === "string") {
+          normalized = src.trim();
+        } else if (src && typeof src === "object" && "src" in src) {
+          const record = src as { src?: string; host?: string };
+          const raw = record.src?.trim() ?? "";
+          if (raw) {
+            normalized = /^https?:\/\//i.test(raw)
+              ? raw
+              : `https://${(record.host?.trim() || "cf.youtravel.me").replace(/^\//, "")}/${raw.replace(/^\//, "")}`;
+          }
+        }
+        return buildSupabaseCdnUrl(normalized, { width: 960, quality: 76 });
+      })
+      .filter(Boolean),
+  )];
 
   if (displayImages.length === 0) {
     return <ImagePlaceholder variant={variant} className="absolute inset-0" label={alt} />;
@@ -70,18 +86,26 @@ export default function TourCardGallery({
           </button>
 
           <div
-            className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-1"
+            className="absolute bottom-3 left-1/2 z-10 -translate-x-1/2"
             aria-hidden
           >
-            {displayImages.map((_, i) => (
-              <span
-                key={i}
-                className={cn(
-                  "rounded-full bg-white transition-all",
-                  i === index ? "h-1.5 w-4 opacity-100" : "h-1.5 w-1.5 opacity-60",
-                )}
-              />
-            ))}
+            {count <= 6 ? (
+              <div className="flex items-center gap-1">
+                {displayImages.map((_, i) => (
+                  <span
+                    key={i}
+                    className={cn(
+                      "rounded-full bg-white transition-all",
+                      i === index ? "h-1.5 w-4 opacity-100" : "h-1.5 w-1.5 opacity-60",
+                    )}
+                  />
+                ))}
+              </div>
+            ) : (
+              <span className="rounded-full bg-charcoal/55 px-2 py-0.5 text-[10px] font-medium tabular-nums text-white backdrop-blur-sm">
+                {index + 1}/{count}
+              </span>
+            )}
           </div>
         </>
       )}

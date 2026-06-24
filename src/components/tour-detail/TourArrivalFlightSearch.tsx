@@ -14,7 +14,7 @@ import {
   resolveTourFlightFormSegments,
   resolveTourFlightPrefill,
 } from "@/lib/flights/tour-flight-prefill";
-import { buildParsedFlightsSearchFromSubmit } from "@/lib/flights/wl-search-params";
+import { buildParsedFlightsSearchFromSubmit, mergeTourFlightSearchesIntoComplex } from "@/lib/flights/wl-search-params";
 import { useFlightOriginGeolocation } from "@/hooks/useFlightOriginGeolocation";
 
 type TourArrivalFlightSearchProps = {
@@ -74,7 +74,24 @@ export default function TourArrivalFlightSearch({
   const segments = useMemo(() => resolveTourFlightFormSegments(prefill), [prefill]);
 
   const openResults = (searches: TourFlightResultsEntry[]) => {
-    setResultSearches(searches);
+    const parsed = searches.map((entry) => entry.parsedSearch);
+    const complex = mergeTourFlightSearchesIntoComplex(parsed);
+
+    if (complex) {
+      setResultSearches([
+        {
+          id: "complex",
+          tabLabel: "Маршрут тура",
+          subtitle: searches
+            .map((entry) => entry.subtitle ?? `${entry.parsedSearch.origin} → ${entry.parsedSearch.destination}`)
+            .join(" · "),
+          parsedSearch: complex,
+        },
+      ]);
+    } else {
+      setResultSearches(searches);
+    }
+
     setResultsTitle(
       prefill.isOpenJaw ? "Авиабилеты по маршруту тура" : "Авиабилеты до места встречи",
     );

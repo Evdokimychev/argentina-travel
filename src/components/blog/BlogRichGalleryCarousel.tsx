@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, Expand } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import { SafeImage } from "@/components/ui/safe-image";
 
 export type BlogGallerySlide = {
@@ -39,6 +40,8 @@ export function BlogRichGalleryCarousel({
   const returnFocusRef = useRef<HTMLElement | null>(null);
   const hasMultiple = images.length > 1;
   const activeSlide = images[activeIndex];
+
+  useSiteHeaderOverlayLock(lightboxOpen);
 
   const scrollToIndex = useCallback(
     (index: number) => {

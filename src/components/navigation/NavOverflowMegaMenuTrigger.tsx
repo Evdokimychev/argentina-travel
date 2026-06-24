@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
@@ -12,12 +12,11 @@ import { NavBadge } from "@/components/navigation/MegaMenuPanel";
 import { navOverflowTriggerClassName } from "@/components/navigation/nav-mega-menu-trigger-styles";
 import { getSiteNavSectionIcon } from "@/data/site-nav-mobile";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
+import { useMegaMenuHoverIntent } from "@/hooks/useMegaMenuHoverIntent";
 import { cn } from "@/lib/cn";
 import { getActiveNavSectionId, isNavSectionActive, navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
-
-const CLOSE_DELAY_MS = 350;
 
 function overflowTriggerLabel(t: NavTranslate): string {
   const translated = t("nav.more");
@@ -147,10 +146,9 @@ export function NavOverflowMegaMenuTrigger({
   compact?: boolean;
 }) {
   const pathname = usePathname();
-  const rootRef = useRef<HTMLDivElement>(null);
-  const panelRef = useRef<HTMLDivElement>(null);
-  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? "");
+  const { rootRef, panelRef, openMenu, scheduleClose, closeMenu, rememberPointer } =
+    useMegaMenuHoverIntent(open, onOpenChange);
 
   const label = overflowTriggerLabel(t);
   const ariaSections = useMemo(
@@ -158,29 +156,15 @@ export function NavOverflowMegaMenuTrigger({
     [sections, t],
   );
 
-  const clearCloseTimer = useCallback(() => {
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-  }, []);
+  const handleMouseEnter = (event: React.MouseEvent) => {
+    rememberPointer(event.clientX, event.clientY);
+    openMenu();
+  };
 
-  const openMenu = useCallback(() => {
-    clearCloseTimer();
-    onOpenChange(true);
-  }, [clearCloseTimer, onOpenChange]);
-
-  const scheduleClose = useCallback(() => {
-    clearCloseTimer();
-    closeTimerRef.current = setTimeout(() => onOpenChange(false), CLOSE_DELAY_MS);
-  }, [clearCloseTimer, onOpenChange]);
-
-  const closeMenu = useCallback(() => {
-    clearCloseTimer();
-    onOpenChange(false);
-  }, [clearCloseTimer, onOpenChange]);
-
-  useEffect(() => () => clearCloseTimer(), [clearCloseTimer]);
+  const handleMouseLeave = (event: React.MouseEvent) => {
+    rememberPointer(event.clientX, event.clientY);
+    scheduleClose();
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -190,37 +174,12 @@ export function NavOverflowMegaMenuTrigger({
     setActiveSectionId(activeSection?.id ?? sections[0]?.id ?? "");
   }, [open, pathname, sections]);
 
-  useEffect(() => {
-    if (!open) return;
-
-    const onPointerDown = (event: PointerEvent) => {
-      const target = event.target as Node;
-      const root = rootRef.current;
-      const panel = panelRef.current;
-      if (root?.contains(target) || panel?.contains(target)) return;
-      closeMenu();
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-    };
-
-    document.addEventListener("pointerdown", onPointerDown);
-    document.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.removeEventListener("pointerdown", onPointerDown);
-      document.removeEventListener("keydown", onKeyDown);
-    };
-  }, [open, closeMenu]);
-
   return (
     <div
       ref={rootRef}
       className="relative shrink-0"
-      onMouseEnter={openMenu}
-      onMouseLeave={scheduleClose}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       <button
         type="button"
@@ -257,8 +216,8 @@ export function NavOverflowMegaMenuTrigger({
         triggerRef={rootRef}
         panelRef={panelRef}
         widthClass={megaMenuWidthClass(activeSectionId || "more")}
-        onMouseEnter={openMenu}
-        onMouseLeave={scheduleClose}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
         <OverflowMegaMenuPanel
           sections={sections}

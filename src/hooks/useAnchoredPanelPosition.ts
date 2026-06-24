@@ -41,7 +41,7 @@ export function useAnchoredPanelPosition(
       );
 
       setCoords({
-        top: triggerRect.bottom,
+        top: triggerRect.bottom - ANCHORED_PANEL_HOVER_BRIDGE_PX,
         left,
       });
     }

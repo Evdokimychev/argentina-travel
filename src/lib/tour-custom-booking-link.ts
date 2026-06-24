@@ -126,9 +126,15 @@ function appendBookingContextSearchParams(
     params.set("guests", String(context.guests));
   }
 
+  const selected = context.dates?.find((item) => item.id === context.selectedDateId);
   const startDate = resolveExternalBookingStartDate(context);
   if (startDate) {
     params.set("start_date", startDate);
+  }
+
+  const endDate = selected?.endDate?.trim();
+  if (endDate && endDate !== startDate) {
+    params.set("end_date", endDate);
   }
 
   const slotTime = resolveExternalBookingSlotTime(context);

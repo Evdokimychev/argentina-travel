@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { captureException } from "@/lib/monitoring/sentry";
+import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
 
 export default function GlobalError({
   error,
@@ -11,6 +12,8 @@ export default function GlobalError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const handleRetry = useRouteErrorRetry(reset);
+
   useEffect(() => {
     captureException(error);
   }, [error]);
@@ -25,7 +28,7 @@ export default function GlobalError({
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
             type="button"
-            onClick={reset}
+            onClick={handleRetry}
             className="rounded-full bg-charcoal px-5 py-2.5 text-sm font-medium text-white hover:bg-charcoal/90"
           >
             Повторить

@@ -25,6 +25,8 @@ import {
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import BookingWaitlistPrompt from "./BookingWaitlistPrompt";
 import ExternalBookingButton from "./ExternalBookingButton";
+import PartnerTourPrepaymentNotice from "./PartnerTourPrepaymentNotice";
+import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import { trackTourBookingClick } from "@/lib/analytics/gtm-events";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
@@ -50,6 +52,7 @@ export default function TourBookingPanel({
 }: TourBookingPanelProps) {
   const bookingMode = tour.bookingMode ?? "scheduled";
   const isPartnerTour = isPartnerTourDetail(tour);
+  const isYouTravel = isYouTravelPartnerDetail(tour);
   const [bookingError, setBookingErrorState] = useState<SiteFeedbackMessage | null>(null);
 
   const setBookingError = (value: string | SiteFeedbackMessage | null) => {
@@ -348,6 +351,7 @@ export default function TourBookingPanel({
                 className="mt-3"
                 onClick={handleExternalBookingClick}
               />
+              {isYouTravel ? <PartnerTourPrepaymentNotice tour={tour} className="mt-4" /> : null}
             </>
           ) : isPartnerTour ? null : (
             <Button

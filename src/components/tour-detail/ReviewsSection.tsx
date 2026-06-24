@@ -2,46 +2,21 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { MessageSquare } from "lucide-react";
-import { SafeImage } from "@/components/ui/safe-image";
 import { TourReview } from "@/types";
-import { formatDateOptional } from "@/lib/utils";
-import { formatReviews } from "@/lib/pluralize";
 import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
 import { EmptyState } from "@/components/ui/empty-state";
-import { StarRating } from "@/components/ui/star-rating";
 import TourSection from "./TourSection";
-import ReviewReportButton from "./ReviewReportButton";
+import TourReviewCard from "./TourReviewCard";
+import TourReviewsSummary from "./TourReviewsSummary";
 import {
   tourDetailContentStackClass,
   tourDetailFilterChipClass,
-  tourDetailReviewCardClass,
   tourDetailSecondaryButtonClass,
 } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
 
-const PER_PAGE = 3;
+const PER_PAGE = 5;
 const FILTER_STARS = [5, 4, 3] as const;
-
-type ReviewSourceBadge = {
-  label: string;
-  className: string;
-};
-
-function resolveReviewSourceBadge(source?: TourReview["source"]): ReviewSourceBadge | null {
-  if (source === "platform") {
-    return {
-      label: "Отзыв с платформы",
-      className: "bg-sky/10 text-sky",
-    };
-  }
-  if (source === "tripster") {
-    return {
-      label: "Отзыв партнёра",
-      className: "bg-amber-100 text-amber-800",
-    };
-  }
-  return null;
-}
 
 function countReviewsByStar(reviews: TourReview[]): Map<number, number> {
   const counts = new Map<number, number>();
@@ -89,12 +64,17 @@ export default function ReviewsSection({
 
   const filtered = useMemo(() => {
     if (filter === "all") return visibleReviews;
-    return visibleReviews.filter((r) => r.rating === filter);
+    return visibleReviews.filter((review) => Math.round(review.rating) === filter);
   }, [visibleReviews, filter]);
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / PER_PAGE));
   const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE);
   const { rating: displayRating, reviewCount: displayCount } = deriveTourReviewStats(visibleReviews);
+
+  const scrollToFirstReviewWithPhotos = () => {
+    const target = document.querySelector<HTMLElement>("[data-review-with-photos]");
+    target?.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
 
   if (visibleReviews.length === 0) {
     return (
@@ -111,118 +91,56 @@ export default function ReviewsSection({
   }
 
   return (
-    <TourSection
-      id="reviews"
-      title="Отзывы"
-      collapsibleOnMobile={false}
-      subtitle={
-        headingNote
-          ? `${displayRating} · ${formatReviews(displayCount)} · ${headingNote}`
-          : `${displayRating} · ${formatReviews(displayCount)}`
-      }
-    >
-      <div className="mb-5 flex flex-wrap gap-2">
-        {filterOptions.map((f) => (
-          <button
-            key={String(f)}
-            type="button"
-            onClick={() => {
-              setFilter(f);
-              setPage(1);
-            }}
-            className={cn(
-              tourDetailFilterChipClass,
-              filter === f
-                ? "bg-sky text-white"
-                : "border border-gray-200 bg-white text-slate hover:border-gray-300"
-            )}
-          >
-            {f === "all" ? "Все" : `${f} ★`}
-          </button>
+    <TourSection id="reviews" title="Отзывы" collapsibleOnMobile={false}>
+      <TourReviewsSummary
+        reviews={visibleReviews}
+        rating={displayRating}
+        reviewCount={displayCount}
+        ratingCounts={ratingCounts}
+        headingNote={headingNote}
+        onPhotosClick={scrollToFirstReviewWithPhotos}
+        className="mb-5"
+      />
+
+      {filterOptions.length > 1 ? (
+        <div className="mb-5 flex flex-wrap gap-2">
+          {filterOptions.map((value) => {
+            const count =
+              value === "all" ? visibleReviews.length : (ratingCounts.get(value) ?? 0);
+
+            return (
+              <button
+                key={String(value)}
+                type="button"
+                onClick={() => {
+                  setFilter(value);
+                  setPage(1);
+                }}
+                className={cn(
+                  tourDetailFilterChipClass,
+                  filter === value
+                    ? "bg-sky text-white"
+                    : "border border-gray-200 bg-white text-slate hover:border-gray-300",
+                )}
+              >
+                {value === "all" ? `Все (${count})` : `${value} ★ (${count})`}
+              </button>
+            );
+          })}
+        </div>
+      ) : null}
+
+      <div className={tourDetailContentStackClass}>
+        {paginated.map((review, index) => (
+          <TourReviewCard
+            key={review.id}
+            review={review}
+            withPhotosAnchor={index === 0 && review.photos.length > 0}
+          />
         ))}
       </div>
 
-      <div className={tourDetailContentStackClass}>
-        {paginated.map((review) => {
-          const tripDateLabel = formatDateOptional(review.tripDate);
-          const reviewDateLabel = formatDateOptional(review.date);
-          const organizerRepliedAtLabel = formatDateOptional(review.organizerRepliedAt);
-          const sourceBadge = resolveReviewSourceBadge(review.source);
-          const dateLine = [tripDateLabel ? `Поездка: ${tripDateLabel}` : null, reviewDateLabel ? `Отзыв: ${reviewDateLabel}` : null]
-            .filter(Boolean)
-            .join(" · ");
-
-          return (
-          <article key={review.id} className={tourDetailReviewCardClass}>
-            <div className="flex items-start gap-3">
-              <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full">
-                <SafeImage
-                  src={review.avatar}
-                  alt={review.author}
-                  fill
-                  placeholderVariant="avatar"
-                  className="object-cover"
-                  sizes="40px"
-                />
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="flex min-w-0 flex-wrap items-center justify-between gap-2">
-                  <div className="flex min-w-0 flex-wrap items-center gap-2">
-                    <p className="font-semibold text-charcoal">{review.author}</p>
-                    {review.verifiedTrip ? (
-                      <span className="rounded-full bg-sky/10 px-2 py-0.5 text-[11px] font-medium text-sky">
-                        Подтверждённый путешественник
-                      </span>
-                    ) : null}
-                    {sourceBadge ? (
-                      <span
-                        className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${sourceBadge.className}`}
-                      >
-                        {sourceBadge.label}
-                      </span>
-                    ) : null}
-                  </div>
-                  <StarRating stars={review.rating} size="md" />
-                </div>
-                {dateLine ? (
-                  <p className="mt-1 break-words text-xs text-slate">{dateLine}</p>
-                ) : null}
-                {review.text ? (
-                  <p className="mt-3 break-words text-sm leading-relaxed text-slate">{review.text}</p>
-                ) : null}
-                {review.organizerReply ? (
-                  <div className="mt-3 rounded-xl border border-sky/20 bg-sky/5 p-3">
-                    <p className="text-xs font-semibold uppercase tracking-wide text-sky">
-                      Ответ организатора
-                    </p>
-                    {organizerRepliedAtLabel ? (
-                      <p className="mt-1 text-[11px] text-slate">
-                        Опубликован: {organizerRepliedAtLabel}
-                      </p>
-                    ) : null}
-                    <p className="mt-2 break-words text-sm leading-relaxed text-slate">{review.organizerReply}</p>
-                  </div>
-                ) : null}
-                {review.photos.length > 0 && (
-                  <div className="mt-3 flex min-w-0 flex-wrap gap-2">
-                    {review.photos.map((photo) => (
-                      <div key={photo} className="relative h-20 w-28 overflow-hidden rounded-lg">
-                        <SafeImage src={photo} alt="" fill className="object-cover" sizes="112px" />
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {review.source === "platform" ? (
-                  <ReviewReportButton reviewId={review.id} />
-                ) : null}
-              </div>
-            </div>
-          </article>
-        );
-        })}
-      </div>
-
-      {totalPages > 1 && (
+      {totalPages > 1 ? (
         <div className="mt-6 flex items-center justify-center gap-2">
           <button
             type="button"
@@ -244,7 +162,7 @@ export default function ReviewsSection({
             Далее
           </button>
         </div>
-      )}
+      ) : null}
     </TourSection>
   );
 }

@@ -184,11 +184,6 @@ function isEarlyStart(time?: string): boolean {
   return parsed != null && parsed.hours < 10;
 }
 
-function isLateFinish(time?: string): boolean {
-  const parsed = parseClockTime(time);
-  return parsed != null && parsed.hours >= 18;
-}
-
 export function resolveTravelDays(origin: string, destination: string): number {
   if (INTERCONTINENTAL_ORIGINS.has(origin) && SOUTH_AMERICA_CODES.has(destination)) {
     return 2;
@@ -266,7 +261,6 @@ function buildReturnReason(
   tourEndDate: Date,
   finishTime: string | undefined,
   returnDate: Date,
-  lateFinish: boolean,
   finishCity: string,
 ): string {
   const finishWhen = [
@@ -277,25 +271,10 @@ function buildReturnReason(
     .filter(Boolean)
     .join(", ");
 
-  if (lateFinish) {
-    return (
-      `Тур заканчивается ${finishWhen}. ` +
-      `Вылет в тот же день маловероятен — подставили ${formatTourDateLong(returnDate)}. ` +
-      `Можно выбрать и день финиша, если рейс поздним вечером.`
-    );
-  }
-
-  if (finishTime) {
-    return (
-      `Тур заканчивается ${finishWhen}. ` +
-      `Можно лететь ${formatTourDateLong(returnDate)} — в день финиша, если рейс не раньше чем через 2–3 часа после окончания. ` +
-      `Или на следующий день, если хотите без спешки.`
-    );
-  }
-
   return (
     `Тур заканчивается ${finishWhen}. ` +
-    `Подставили вылет ${formatTourDateLong(returnDate)} — скорректируйте под своё расписание.`
+    `Рекомендуем улететь ${formatTourDateLong(returnDate)} — на следующий день после финиша, ` +
+    `чтобы был запас на дорогу в аэропорт и сдачу багажа.`
   );
 }
 
@@ -329,7 +308,7 @@ function buildBriefingWithoutDates(
         flightTip: isOpenJaw
           ? `Обратный рейс — из ${finishDestination.label}, не из города старта.`
           : "Дата обратного вылета появится после выбора заезда.",
-        reason: "При выборе рейса учитывайте время окончания тура — в тот же день или на следующий.",
+        reason: "Рекомендуем планировать обратный вылет на день после окончания тура — так останется запас времени.",
       },
     },
     routeNote: isOpenJaw
@@ -351,7 +330,6 @@ function buildBriefingWithDates(input: {
   returnDate?: Date;
   outboundBuffer: number;
   earlyStart: boolean;
-  lateFinish: boolean;
 }): TourFlightBriefing {
   const {
     tourStartDate,
@@ -365,7 +343,6 @@ function buildBriefingWithDates(input: {
     returnDate,
     outboundBuffer,
     earlyStart,
-    lateFinish,
   } = input;
 
   const startSchedule = buildSchedulePoint(
@@ -413,7 +390,7 @@ function buildBriefingWithDates(input: {
       .join(", ");
 
     returnLine = isOpenJaw
-      ? `Обратно: тур заканчивается (${finishWhen}). Ищите билеты из ${finishDestination.label} на ${formatTourDateLong(returnDate)}${lateFinish ? " или на следующий день" : ""}.`
+      ? `Обратно: тур заканчивается (${finishWhen}). Ищите билеты из ${finishDestination.label} на ${formatTourDateLong(returnDate)}.`
       : `Обратно: тур заканчивается (${finishWhen}). Вылет ${formatTourDateLong(returnDate)} из ${finishDestination.label}.`;
 
     returnAdvice = {
@@ -422,18 +399,16 @@ function buildBriefingWithDates(input: {
       tourDateLabel: finishSchedule.dateLabel,
       tourTimeLabel: finishSchedule.timeLabel,
       suggestedDepartDateLabel: formatTourDateLong(returnDate),
-      flightTip: lateFinish
-        ? `Рекомендуем вылет ${formatTourDateLong(returnDate)} — тур заканчивается поздно.`
-        : `Рекомендуем вылет ${formatTourDateLong(returnDate)} из ${finishDestination.label}.`,
+      flightTip: `Рекомендуем вылет ${formatTourDateLong(returnDate)} из ${finishDestination.label} — на следующий день после финиша.`,
       reason: buildReturnReason(
         tourEndDate,
         finishTime,
         returnDate,
-        lateFinish,
         finishDestination.label,
       ),
     };
   } else if (tourEndDate) {
+    const suggestedReturn = addDays(tourEndDate, 1);
     returnAdvice = {
       role: "return",
       city: finishDestination.label,
@@ -443,8 +418,7 @@ function buildBriefingWithDates(input: {
       reason: buildReturnReason(
         tourEndDate,
         finishTime,
-        tourEndDate,
-        lateFinish,
+        suggestedReturn,
         finishDestination.label,
       ),
     };
@@ -561,12 +535,8 @@ function buildOutboundHint(
 function buildReturnHint(
   returnDate: Date,
   finishDestination: MeetingPointFlightDestination,
-  lateFinish: boolean,
 ): string {
-  if (lateFinish) {
-    return `Обратный вылет ${formatTourDate(returnDate)} из ${finishDestination.label} — после позднего финиша тура`;
-  }
-  return `Обратный вылет ${formatTourDate(returnDate)} из ${finishDestination.label}`;
+  return `Обратный вылет ${formatTourDate(returnDate)} из ${finishDestination.label} — на следующий день после финиша тура`;
 }
 
 export function resolveTourFlightPrefill(input: TourFlightPrefillInput): TourFlightPrefillResult {
@@ -618,22 +588,18 @@ export function resolveTourFlightPrefill(input: TourFlightPrefillInput): TourFli
 
   const travelDays = resolveTravelDays(input.userOriginCode, startDestination.code);
   const earlyStart = isEarlyStart(input.startTime);
-  const lateFinish = isLateFinish(input.finishTime);
 
-  let outboundBuffer = travelDays + (earlyStart ? 1 : 0);
+  const outboundBuffer = travelDays + (earlyStart ? 1 : 0);
   const departDate = subDays(input.tourStartDate, outboundBuffer);
 
-  let returnDate = input.tourEndDate;
-  if (returnDate && lateFinish) {
-    returnDate = addDays(returnDate, 1);
-  }
+  const returnDate = input.tourEndDate ? addDays(input.tourEndDate, 1) : undefined;
 
   const hints: string[] = [
     buildOutboundHint(departDate, startDestination, input.tourStartDate, travelDays, earlyStart),
   ];
 
   if (returnDate) {
-    hints.push(buildReturnHint(returnDate, finishDestination, lateFinish));
+    hints.push(buildReturnHint(returnDate, finishDestination));
   }
 
   if (isOpenJaw) {
@@ -692,7 +658,6 @@ export function resolveTourFlightPrefill(input: TourFlightPrefillInput): TourFli
       returnDate,
       outboundBuffer,
       earlyStart,
-      lateFinish,
     }),
     startDestination,
     finishDestination,

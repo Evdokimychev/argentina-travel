@@ -109,6 +109,13 @@ export function normalizeEditorValue(value: string): string {
   return isHtmlContent(trimmed) ? sanitizeHtml(trimmed) : sanitizeHtml(markdownLiteToHtml(trimmed));
 }
 
+/** Plain text for cards and headers: strips markup and decodes entities (`&nbsp;`, `&amp;`, …). */
+export function plainTextFromRichContent(value: string | undefined | null): string {
+  const trimmed = value?.trim();
+  if (!trimmed) return "";
+  return htmlToPlainText(trimmed);
+}
+
 export function htmlToPlainText(html: string): string {
   if (!html.trim()) return "";
   if (typeof document === "undefined") {

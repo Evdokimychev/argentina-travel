@@ -969,6 +969,8 @@ export interface Database {
           youtravel_status: string | null;
           price_snapshot: Json | null;
           created_at: string;
+          updated_at: string;
+          status_synced_at: string | null;
         };
         Insert: {
           id?: string;
@@ -988,6 +990,8 @@ export interface Database {
           youtravel_status?: string | null;
           price_snapshot?: Json | null;
           created_at?: string;
+          updated_at?: string;
+          status_synced_at?: string | null;
         };
         Update: {
           id?: string;
@@ -1006,6 +1010,35 @@ export interface Database {
           youtravel_order_url?: string | null;
           youtravel_status?: string | null;
           price_snapshot?: Json | null;
+          created_at?: string;
+          updated_at?: string;
+          status_synced_at?: string | null;
+        };
+        Relationships: [];
+      };
+      youtravel_affise_snapshots: {
+        Row: {
+          id: string;
+          snapshot_date: string;
+          conversions: number;
+          clicks: number | null;
+          source: string;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          snapshot_date: string;
+          conversions?: number;
+          clicks?: number | null;
+          source?: string;
+          created_at?: string;
+        };
+        Update: {
+          id?: string;
+          snapshot_date?: string;
+          conversions?: number;
+          clicks?: number | null;
+          source?: string;
           created_at?: string;
         };
         Relationships: [];

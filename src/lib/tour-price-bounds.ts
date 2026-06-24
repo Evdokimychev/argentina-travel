@@ -26,10 +26,11 @@ export function getDefaultPriceRange(
   tours: TourListing[],
   currency: CurrencyCode
 ): Pick<TourFilters, "priceMin" | "priceMax"> {
-  const { min } = getTourPriceBounds(tours, currency);
+  const { min, max: catalogMax } = getTourPriceBounds(tours, currency);
   const priceMaxLimit = getFilterPriceMax(currency);
-  const step = getSliderPriceStep(min, priceMaxLimit);
-  const { max } = getSliderPriceBounds(min, priceMaxLimit, step);
+  const sliderCeiling = Math.max(catalogMax, priceMaxLimit);
+  const step = getSliderPriceStep(min, sliderCeiling);
+  const { max } = getSliderPriceBounds(min, sliderCeiling, step);
   return {
     priceMin: min,
     priceMax: max,
@@ -60,10 +61,11 @@ export function syncPriceFilters(
   currency: CurrencyCode,
   prevCatalogMin: number | null
 ): { filters: TourFilters; catalogMin: number } {
-  const { min: catalogMin } = getTourPriceBounds(tours, currency);
+  const { min: catalogMin, max: catalogMax } = getTourPriceBounds(tours, currency);
   const priceMaxLimit = getFilterPriceMax(currency);
-  const step = getSliderPriceStep(catalogMin, priceMaxLimit);
-  const { max: sliderMaxLimit } = getSliderPriceBounds(catalogMin, priceMaxLimit, step);
+  const sliderCeiling = Math.max(catalogMax, priceMaxLimit);
+  const step = getSliderPriceStep(catalogMin, sliderCeiling);
+  const { max: sliderMaxLimit } = getSliderPriceBounds(catalogMin, sliderCeiling, step);
   const effectiveMax = filters.priceMax || sliderMaxLimit;
 
   const wasFullRange =

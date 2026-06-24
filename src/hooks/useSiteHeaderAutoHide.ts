@@ -13,6 +13,8 @@ import {
 type UseSiteHeaderAutoHideOptions = {
   headerRef: React.RefObject<HTMLElement | null>;
   disabled?: boolean;
+  /** Force header hidden (e.g. modal overlay open). */
+  forceHidden?: boolean;
 };
 
 export type SiteHeaderChromeState = {
@@ -22,6 +24,7 @@ export type SiteHeaderChromeState = {
 export function useSiteHeaderAutoHide({
   headerRef,
   disabled = false,
+  forceHidden = false,
 }: UseSiteHeaderAutoHideOptions): SiteHeaderChromeState {
   const pathname = usePathname();
   const [visible, setVisible] = useState(true);
@@ -61,7 +64,10 @@ export function useSiteHeaderAutoHide({
     if (!header) return;
 
     const syncFullHeight = () => {
-      applySiteHeaderChrome(header.offsetHeight, visibleRef.current || disabled);
+      applySiteHeaderChrome(
+        header.offsetHeight,
+        (visibleRef.current || disabled) && !forceHidden,
+      );
     };
 
     syncFullHeight();
@@ -74,16 +80,16 @@ export function useSiteHeaderAutoHide({
       observer.disconnect();
       window.removeEventListener("resize", syncFullHeight);
     };
-  }, [disabled, headerRef]);
+  }, [disabled, forceHidden, headerRef]);
 
   // Reflect the visible state into CSS vars / data attribute.
   useLayoutEffect(() => {
     const header = headerRef.current;
     if (!header) return;
 
-    const nextVisible = visible || disabled;
+    const nextVisible = (visible || disabled) && !forceHidden;
     lastScrollYRef.current = applySiteHeaderChrome(header.offsetHeight, nextVisible);
-  }, [disabled, headerRef, visible]);
+  }, [disabled, forceHidden, headerRef, visible]);
 
   // Distance-based auto-hide: hide after sustained downward scroll, reveal on the
   // slightest upward scroll. Predictable and free of timer/flicker artefacts.
@@ -154,5 +160,5 @@ export function useSiteHeaderAutoHide({
     };
   }, []);
 
-  return { headerVisible: visible };
+  return { headerVisible: visible && !forceHidden };
 }

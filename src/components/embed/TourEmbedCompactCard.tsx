@@ -5,6 +5,7 @@ import { MapPin } from "lucide-react";
 import type { TourListing } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import { SafeImage } from "@/components/ui/safe-image";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { formatDurationShort } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass, tourCardShellInteractiveClass } from "@/lib/tour-card-shell";
@@ -67,8 +68,14 @@ export default function TourEmbedCompactCard({
               density="compact"
             />
             {rating.hasReviews ? (
-              <span className="text-xs text-slate">{rating.ratingText}</span>
-            ) : null}
+              <ReviewRatingBadge
+                score={rating.ratingText}
+                reviewCount={tour.reviewCount}
+                size="sm"
+              />
+            ) : (
+              <ReviewRatingBadge isNew newLabel={rating.badgeLabel} size="sm" />
+            )}
           </div>
         </div>
       </Link>

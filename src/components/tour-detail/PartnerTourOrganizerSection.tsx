@@ -1,22 +1,21 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { StarRating } from "@/components/ui/star-rating";
+import ExpandableText from "@/components/ui/expandable-text";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { formatGuideSinceDisplay } from "@/lib/excursion-format";
 import {
   buildPartnerGuideCatalogHref,
   splitGuideDescriptionParagraphs,
 } from "@/lib/tripster/guide-mapper";
+import { buildYouTravelExpertCatalogHref } from "@/lib/youtravel/partner-tour-guide";
 import { formatYears, pluralRu } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 import TourSection from "./TourSection";
 import { tourDetailCardBorderClass } from "@/lib/tour-detail-ui";
 import type { ExcursionGuideProfile } from "@/types/excursion";
 import type { TourOrganizerDetail } from "@/types";
-
-const DESCRIPTION_PREVIEW_LENGTH = 280;
 
 function yearsOnPlatform(rawSince: string, now = new Date()): number | null {
   const parsed = new Date(rawSince.trim());
@@ -30,23 +29,28 @@ function yearsOnPlatform(rawSince: string, now = new Date()): number | null {
   return Math.max(0, years);
 }
 
-function resolveGuideTenureLabel(guideSince: string | undefined, locale: string): string | null {
+function resolveGuideTenureLabel(
+  guideSince: string | undefined,
+  locale: string,
+  partnerSource: "tripster" | "youtravel"
+): string | null {
   if (!guideSince?.trim()) return null;
 
+  const platformName = partnerSource === "youtravel" ? "YouTravel.me" : "Tripster";
   const trimmed = guideSince.trim();
   if (/^\d{4}$/.test(trimmed)) {
     const years = new Date().getFullYear() - Number.parseInt(trimmed, 10);
-    if (years >= 1) return `${formatYears(years)} на Tripster`;
+    if (years >= 1) return `${formatYears(years)} на ${platformName}`;
   }
 
   const years = yearsOnPlatform(trimmed);
   if (years != null && years >= 1) {
-    return `${formatYears(years)} на Tripster`;
+    return `${formatYears(years)} на ${platformName}`;
   }
 
   const formatted = formatGuideSinceDisplay(trimmed, locale);
   if (!formatted) return null;
-  return `На Tripster с ${formatted}`;
+  return `На ${platformName} с ${formatted}`;
 }
 
 function resolveVisitorLabel(count: number): string | null {
@@ -54,19 +58,23 @@ function resolveVisitorLabel(count: number): string | null {
   return `${count} ${pluralRu(count, "посетил", "посетили", "посетили")}`;
 }
 
-function resolveOfferLabel(count: number): string {
+function resolveOfferLabel(count: number, partnerSource: "tripster" | "youtravel"): string {
+  if (partnerSource === "youtravel") {
+    return `${count} ${pluralRu(count, "тур", "тура", "туров")}`;
+  }
   return `${count} ${pluralRu(count, "предложение", "предложения", "предложений")}`;
 }
 
 export default function PartnerTourOrganizerSection({
   guide,
   organizer,
+  partnerSource = "tripster",
 }: {
   guide: ExcursionGuideProfile;
   organizer: TourOrganizerDetail;
+  partnerSource?: "tripster" | "youtravel";
 }) {
   const locale = "ru-RU";
-  const [expanded, setExpanded] = useState(false);
 
   const paragraphs =
     guide.descriptionParagraphs?.length
@@ -74,42 +82,40 @@ export default function PartnerTourOrganizerSection({
       : splitGuideDescriptionParagraphs(
           guide.description?.trim() || organizer.extendedDescription?.trim() || ""
         );
-  const descriptionPlain = paragraphs.join("\n\n");
-  const canExpand = descriptionPlain.length > DESCRIPTION_PREVIEW_LENGTH;
-  const visibleParagraphs =
-    expanded || !canExpand
-      ? paragraphs
-      : (() => {
-          let budget = DESCRIPTION_PREVIEW_LENGTH;
-          const visible: string[] = [];
-          for (const paragraph of paragraphs) {
-            if (budget <= 0) break;
-            if (paragraph.length <= budget) {
-              visible.push(paragraph);
-              budget -= paragraph.length + 2;
-              continue;
-            }
-            visible.push(`${paragraph.slice(0, budget).trim()}…`);
-            break;
-          }
-          return visible.length ? visible : paragraphs.slice(0, 1);
-        })();
 
   const offerCount = Math.max(guide.excursionCount ?? 0, organizer.tourCount);
   const hasReviews = (organizer.reviewCount ?? 0) > 0 && organizer.rating > 0;
   const visitorLabel = resolveVisitorLabel(organizer.travelerCount);
-  const tenureLabel = resolveGuideTenureLabel(guide.guideSince ?? organizer.platformRegisteredAt, locale);
-  const catalogHref = buildPartnerGuideCatalogHref(guide.id);
+  const tenureLabel = resolveGuideTenureLabel(
+    guide.guideSince ?? organizer.platformRegisteredAt,
+    locale,
+    partnerSource
+  );
+  const catalogHref =
+    partnerSource === "youtravel"
+      ? buildYouTravelExpertCatalogHref(guide.id)
+      : buildPartnerGuideCatalogHref(guide.id);
   const profileHref = guide.url?.trim() || catalogHref;
   const profileIsExternal = Boolean(guide.url?.trim());
   const roleLabel = organizer.role?.trim() || guide.roleLabel || "Гид";
   const statusLine =
     guide.tagline?.trim() ||
     organizer.shortDescription?.trim() ||
-    "Партнёрский многодневный тур · бронирование на Tripster";
+    (partnerSource === "youtravel"
+      ? "Авторский многодневный тур · бронирование на YouTravel.me"
+      : "Партнёрский многодневный тур · бронирование на Tripster");
+  const sectionTitle = partnerSource === "youtravel" ? "Организатор туров" : "Организатор";
+  const catalogButtonLabel =
+    partnerSource === "youtravel"
+      ? offerCount > 0
+        ? `Все туры эксперта · ${offerCount}`
+        : "Все туры эксперта"
+      : offerCount > 0
+        ? `Все предложения · ${offerCount}`
+        : "Туры в Аргентине";
 
   return (
-    <TourSection id="organizer" title="Организатор">
+    <TourSection id="organizer" title={sectionTitle}>
       <div className={cn(tourDetailCardBorderClass, "bg-surface-muted/30 p-6 sm:p-8")}>
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
           <Link
@@ -149,19 +155,18 @@ export default function PartnerTourOrganizerSection({
 
             <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
               {hasReviews ? (
-                <StarRating
-                  layout="badge"
+                <ReviewRatingBadge
                   score={organizer.rating.toFixed(1).replace(".", ",")}
-                  count={organizer.reviewCount ?? 0}
+                  reviewCount={organizer.reviewCount ?? 0}
                   size="sm"
                 />
               ) : (
-                <StarRating layout="badge" isNew newLabel="Новый гид" size="sm" />
+                <ReviewRatingBadge isNew newLabel="Новый гид" size="sm" />
               )}
               {visitorLabel ? <span className="text-slate">{visitorLabel}</span> : null}
               {tenureLabel ? <span className="text-slate">{tenureLabel}</span> : null}
               {offerCount > 0 ? (
-                <span className="text-slate">{resolveOfferLabel(offerCount)}</span>
+                <span className="text-slate">{resolveOfferLabel(offerCount, partnerSource)}</span>
               ) : null}
             </div>
 
@@ -169,23 +174,12 @@ export default function PartnerTourOrganizerSection({
               <p className="mt-2 text-sm text-slate">Языки: {organizer.languages.join(", ")}</p>
             ) : null}
 
-            {visibleParagraphs.length ? (
-              <div className="mt-4 space-y-3">
-                {visibleParagraphs.map((paragraph, index) => (
-                  <p key={`${index}-${paragraph.slice(0, 24)}`} className="text-sm leading-relaxed text-charcoal/90">
-                    {paragraph}
-                  </p>
-                ))}
-                {canExpand ? (
-                  <button
-                    type="button"
-                    onClick={() => setExpanded((value) => !value)}
-                    className="text-sm font-medium text-sky hover:text-sky-dark"
-                  >
-                    {expanded ? "Свернуть" : "Ещё"}
-                  </button>
-                ) : null}
-              </div>
+            {paragraphs.length ? (
+              <ExpandableText
+                paragraphs={paragraphs}
+                className="mt-4"
+                paragraphClassName="text-sm leading-relaxed text-charcoal/90"
+              />
             ) : statusLine ? (
               <p className="mt-4 text-sm leading-relaxed text-charcoal/90">{statusLine}</p>
             ) : null}
@@ -212,9 +206,7 @@ export default function PartnerTourOrganizerSection({
                 href={catalogHref}
                 className="rounded-xl bg-sky px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-dark"
               >
-                {offerCount > 0
-                  ? `Все предложения · ${offerCount}`
-                  : "Туры в Аргентине"}
+                {catalogButtonLabel}
               </Link>
             </div>
           </div>

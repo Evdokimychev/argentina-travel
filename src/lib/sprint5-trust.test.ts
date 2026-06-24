@@ -60,9 +60,11 @@ describe("Sprint 5 — trust gate", () => {
   });
 
   it("MarketplaceTourCard uses partner badge constants", () => {
-    const source = readFileSync(join(root, "components/marketplace/MarketplaceTourCard.tsx"), "utf8");
-    expect(source).toContain("PARTNER_TRIPSTER_BADGE_LABEL");
-    expect(source).toContain("PARTNER_TRIPSTER_BADGE_HINT");
+    const cardSource = readFileSync(join(root, "components/marketplace/MarketplaceTourCard.tsx"), "utf8");
+    const badgeSource = readFileSync(join(root, "lib/partner-tours/badge.ts"), "utf8");
+    expect(cardSource).toContain("resolvePartnerTourBadge");
+    expect(badgeSource).toContain("PARTNER_TRIPSTER_BADGE_LABEL");
+    expect(badgeSource).toContain("PARTNER_TRIPSTER_BADGE_HINT");
   });
 
   it("podbor iguazu uses ~275 waterfalls copy", () => {

@@ -25,6 +25,7 @@ import {
   shouldUseSupabaseToursAsSourceOfTruth,
 } from "@/lib/auth-mode";
 import { apiFetchPublishedTourListings } from "@/lib/tour-content-api";
+import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 
 let seedToursCache: Tour[] | null = null;
 
@@ -333,7 +334,7 @@ export function getClientSyncedMarketplaceListings(
 
   const local = getMarketplaceListings();
   const localSlugs = new Set(local.map((item) => item.slug));
-  const partnerFromServer = serverListings.filter((item) => item.partnerSource === "tripster");
+  const partnerFromServer = serverListings.filter((item) => isPartnerTourListing(item));
   return [...local, ...partnerFromServer.filter((item) => !localSlugs.has(item.slug))];
 }
 

@@ -1,11 +1,30 @@
-import { htmlToPlainText } from "@/lib/rich-text";
+import { htmlToPlainText, isHtmlContent, plainTextFromRichContent, sanitizeHtml, escapeHtml } from "@/lib/rich-text";
 import type { PartnerTourContent } from "@/lib/tripster/partner-tour-content";
 import {
   buildYouTravelPartnerContent,
+  resolveYouTravelDayPhotos,
   resolveYouTravelGallery,
+  resolveYouTravelMediaUrl,
   resolveYouTravelProgram,
 } from "@/lib/youtravel/partner-tour-content";
+import {
+  mapYouTravelExpertToGuideProfile,
+  resolveYouTravelExpert,
+  resolveYouTravelExpertRating,
+  resolveYouTravelExpertReviewCount,
+  resolveYouTravelExpertTourCount,
+} from "@/lib/youtravel/partner-tour-guide";
+import { mapYouTravelActivityToDifficulty } from "@/lib/youtravel/activity-levels";
+import { mapYouTravelComfortToComfortLevel } from "@/lib/youtravel/partner-levels";
+import { mapYouTravelAccommodations } from "@/lib/youtravel/partner-tour-accommodation";
+import { resolveYouTravelTravelersGoing } from "@/lib/youtravel/partner-tour-details";
+import {
+  resolveYouTravelDayLocationNames,
+  resolveYouTravelRoutePoints,
+} from "@/lib/youtravel/partner-tour-route";
+import { mapYouTravelOffersToTourDates } from "@/lib/youtravel/offers-mapper";
 import { formatYouTravelListedPrice } from "@/lib/youtravel/offers-mapper";
+import { parseYouTravelOfferDate } from "@/lib/youtravel/response";
 import { youtravelTourListingId } from "@/lib/youtravel/partner-tour-utils";
 import type { YouTravelOffer, YouTravelProgramDay, YouTravelTour } from "@/lib/youtravel/types";
 import type {
@@ -26,14 +45,22 @@ function mapProgramDays(payload: YouTravelTour): TourItineraryDay[] {
   return program.map((day, index) => {
     const dayNumber = day.day ?? day.dayNumber ?? index + 1;
     const title = day.title?.trim() || day.name?.trim() || `День ${dayNumber}`;
-    const description =
+    const rawDescription =
       day.description?.trim() || day.text?.trim() || day.content?.trim() || "";
+    const descriptionHtml =
+      rawDescription && isHtmlContent(rawDescription) ? sanitizeHtml(rawDescription) : undefined;
+    const routeLocationNames = resolveYouTravelDayLocationNames(day);
+
     return {
       id: `yt-day-${dayNumber}`,
       dayNumber,
       title,
-      description,
-      images: [],
+      description: descriptionHtml
+        ? htmlToPlainText(descriptionHtml)
+        : plainTextFromRichContent(rawDescription),
+      descriptionHtml,
+      ...(routeLocationNames.length ? { routeLocationNames } : {}),
+      images: resolveYouTravelDayPhotos(day),
       activities: [],
       meals: [],
       accommodation: "",
@@ -54,23 +81,21 @@ function mapDescriptionBlocks(payload: YouTravelTour, content: PartnerTourConten
 function mapOffersToDates(offers: YouTravelOffer[]): TourDate[] {
   return offers
     .map((offer) => {
-      const start = offer.startDate ?? offer.date;
+      const start = parseYouTravelOfferDate(offer.startDate ?? offer.dateFrom ?? offer.date);
       if (!start) return null;
-      const end = offer.endDate ?? start;
+      const end =
+        parseYouTravelOfferDate(offer.endDate ?? offer.dateTo ?? offer.dateFrom ?? offer.startDate) ??
+        start;
       const spots =
-        offer.seatsAvailable ?? offer.placesLeft ?? offer.seatsTotal ?? 0;
+        offer.freeSpaces ?? offer.seatsAvailable ?? offer.placesLeft ?? offer.seatsTotal ?? 0;
       return {
-        start: String(start).slice(0, 10),
-        end: String(end).slice(0, 10),
+        start,
+        end,
         spotsLeft: Math.max(spots, 0),
       };
     })
     .filter((item): item is TourDate => item != null)
     .sort((a, b) => a.start.localeCompare(b.start));
-}
-
-function resolveExpert(payload: YouTravelTour) {
-  return payload.expert ?? payload.organizer ?? payload.travelExpert ?? null;
 }
 
 export function youtravelRowToListing(row: YouTravelTourRow): TourListing {
@@ -93,8 +118,19 @@ export function youtravelRowToDetail(
       null,
   });
 
-  const partnerContent = buildYouTravelPartnerContent(payload, row);
-  const expert = resolveExpert(payload);
+  const partnerContent = {
+    ...buildYouTravelPartnerContent(payload, row),
+    travelersGoingCount: resolveYouTravelTravelersGoing(payload, options?.offers),
+  };
+  const expert = resolveYouTravelExpert(payload);
+  const partnerGuideProfile = expert ? mapYouTravelExpertToGuideProfile(expert) : undefined;
+  const expertRating = resolveYouTravelExpertRating(expert);
+  const expertReviewCount = resolveYouTravelExpertReviewCount(expert);
+  const expertTourCount = resolveYouTravelExpertTourCount(expert);
+  const expertId = expert?.id != null ? String(expert.id) : "youtravel";
+  const expertSlug =
+    expert?.id != null ? `youtravel-expert-${expert.id}` : listing.organizer.slug;
+  const personalNotes = expert?.personal_notes?.trim();
   const included = partnerContent.includedHtml
     ? htmlToPlainText(partnerContent.includedHtml)
       .split("\n")
@@ -115,30 +151,61 @@ export function youtravelRowToDetail(
     : [];
 
   const itinerary = mapProgramDays(payload);
+  const routePoints = resolveYouTravelRoutePoints(payload);
+  const datePrices = mapYouTravelOffersToTourDates({
+    tourId: row.id,
+    offers: options?.offers ?? [],
+    fallbackPriceUsd: listing.priceUsd,
+    fallbackCurrency: listing.partnerPriceCurrency,
+    fallbackPriceValue: listing.partnerPriceValue,
+  });
   const dates = mapOffersToDates(options?.offers ?? []);
+  const activityDifficulty =
+    partnerContent.activityLevel != null
+      ? mapYouTravelActivityToDifficulty(
+          partnerContent.activityLevel as 1 | 2 | 3 | 4 | 5
+        )
+      : listing.difficultyLevel;
+  const comfortLevel =
+    partnerContent.comfortLevel != null
+      ? mapYouTravelComfortToComfortLevel(partnerContent.comfortLevel)
+      : listing.comfortLevel;
+  const accommodations = mapYouTravelAccommodations(partnerContent, payload);
+  const itineraryOrganizerComment = partnerContent.activityExpertComment?.trim() || undefined;
+  const minimumAgeRaw = payload.age_from ?? payload.ageFrom;
+  const minimumAge =
+    minimumAgeRaw != null && Number.isFinite(Number(minimumAgeRaw))
+      ? Number(minimumAgeRaw)
+      : listing.minimumAge;
 
   return {
     ...listing,
     gallery: gallery.length ? gallery : listing.gallery,
     image: gallery[0] ?? listing.image,
     country: listing.country ?? listing.region,
-    difficulty: listing.difficultyLevel,
-    comfort: listing.comfortLevel,
+    difficulty: activityDifficulty,
+    comfort: comfortLevel,
+    minimumAge,
     groupMin: listing.groupSizeMin,
     groupMax: listing.groupSizeMax,
     places: [],
     descriptionBlocks: mapDescriptionBlocks(payload, partnerContent),
-    routePoints: [],
+    routePoints,
     descriptionExtra: {
       difficulty: "",
       seasonality: "",
       packing: [],
       flights: "",
       meals: "",
-      comfort: partnerContent.comfortHtml ? htmlToPlainText(partnerContent.comfortHtml) : "",
+      comfort: partnerContent.comfortDescription
+        ? `<p>${escapeHtml(partnerContent.comfortDescription)}</p>`
+        : partnerContent.comfortHtml
+          ? htmlToPlainText(partnerContent.comfortHtml)
+          : "",
       transfers: partnerContent.meetingPoint ?? "",
     },
     itinerary,
+    itineraryOrganizerComment,
     organizerComment: {
       greeting: expert?.name
         ? `Тур проводит ${expert.name} — тревел-эксперт на YouTravel.me.`
@@ -147,23 +214,32 @@ export function youtravelRowToDetail(
       routeNotes: partnerContent.finishPoint ? `Финиш: ${partnerContent.finishPoint}` : "",
     },
     organizer: {
-      id: expert?.id ? String(expert.id) : "youtravel",
+      id: expertId,
       name: expert?.name ?? expert?.fullName ?? "YouTravel.me",
       role: "Тревел-эксперт YouTravel.me",
-      avatar: expert?.avatar ?? expert?.photo ?? "",
+      avatar:
+        partnerGuideProfile?.avatar ??
+        resolveYouTravelMediaUrl(expert?.avatar) ??
+        resolveYouTravelMediaUrl(expert?.photo) ??
+        "",
       shortDescription:
         "Авторский многодневный тур. Бронирование оформляется на YouTravel.me.",
-      rating: listing.rating,
-      tourCount: 1,
+      extendedDescription: personalNotes || undefined,
+      rating: expertRating > 0 ? expertRating : listing.rating,
+      reviewCount: expertReviewCount > 0 ? expertReviewCount : listing.reviewCount,
+      tourCount: expertTourCount > 0 ? expertTourCount : 1,
       travelerCount: 0,
       languages: partnerContent.languages ?? ["Русский"],
       experienceYears: 0,
+      platformRegisteredAt:
+        expert?.registered_at?.trim() || expert?.guide_since?.trim() || undefined,
       phone: "",
       email: "",
-      slug: expert?.slug ?? listing.organizer.slug,
+      slug: expertSlug,
     },
+    partnerGuideProfile: partnerGuideProfile ?? undefined,
     reviews: options?.reviews ?? [],
-    accommodations: [],
+    accommodations,
     included,
     excluded,
     arrival: {
@@ -171,18 +247,23 @@ export function youtravelRowToDetail(
       flights: [],
       transfers: [],
       meetingPoint: partnerContent.meetingPoint ?? "",
+      finishPoint: partnerContent.finishPoint ?? partnerContent.arrivalInfo?.finishCity,
+      startTime: partnerContent.arrivalInfo?.startTime,
+      finishTime: partnerContent.arrivalInfo?.finishTime,
     },
     importantInfo,
     faq: [],
-    dates: dates.map((date, index) => ({
-      id: `yt-offer-${row.id}-${index}`,
-      startDate: date.start,
-      endDate: date.end,
-      spotsLeft: date.spotsLeft,
-      priceUsd: listing.priceUsd,
-      partnerPriceValue: listing.partnerPriceValue,
-      partnerPriceCurrency: listing.partnerPriceCurrency,
-    })),
+    dates: datePrices.length
+      ? datePrices
+      : dates.map((date, index) => ({
+          id: `yt-offer-${row.id}-${index}`,
+          startDate: date.start,
+          endDate: date.end,
+          spotsLeft: date.spotsLeft,
+          priceUsd: listing.priceUsd,
+          partnerPriceValue: listing.partnerPriceValue,
+          partnerPriceCurrency: listing.partnerPriceCurrency,
+        })),
     tags: ["YouTravel.me", "Партнёрский тур"],
     customBookingLink: {
       url: `/api/affiliate/go/${row.slug}`,

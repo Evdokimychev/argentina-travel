@@ -2,7 +2,7 @@
 
 import { ChevronRight } from "lucide-react";
 import { SafeImage } from "@/components/ui/safe-image";
-import { StarRating } from "@/components/ui/star-rating";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { cn } from "@/lib/cn";
 import { formatReviews } from "@/lib/pluralize";
 import type { LocaleCode } from "@/types/locale";
@@ -48,36 +48,30 @@ export default function ExcursionReviewsSummary({
 }: ExcursionReviewsSummaryProps) {
   const photos = collectTravelerReviewPhotos(reviews);
   const previewPhotos = photos.slice(0, 5);
-  const filledStars = rating != null ? Math.min(5, Math.max(0, Math.round(rating))) : 0;
 
   const metaParts: string[] = [];
-  if (reviewCount != null && reviewCount > 0) {
-    metaParts.push(formatReviews(reviewCount));
-  }
   if (visitorsCount != null && visitorsCount > 0) {
     metaParts.push(t("excursions.reviews.visited").replace("{count}", String(visitorsCount)));
   }
 
-  const ratingLabel =
+  const ratingScore =
     rating != null
       ? rating.toLocaleString(LOCALE_NUMBER[locale], {
           minimumFractionDigits: 1,
           maximumFractionDigits: 1,
         })
-      : null;
+      : undefined;
+  const hasReviews = ratingScore != null && (reviewCount ?? 0) > 0;
 
   return (
     <div className={cn("flex flex-wrap items-start justify-between gap-4", className)}>
       <div className="min-w-0">
-        {ratingLabel ? (
-          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="font-heading text-4xl font-bold leading-none text-charcoal sm:text-[2.75rem]">
-              {ratingLabel}
-            </span>
-            {filledStars > 0 ? (
-              <StarRating layout="inline" stars={filledStars} size="lg" className="text-sun" />
-            ) : null}
-          </div>
+        {hasReviews ? (
+          <ReviewRatingBadge score={ratingScore} reviewCount={reviewCount} size="lg" />
+        ) : ratingScore ? (
+          <ReviewRatingBadge score={ratingScore} size="lg" />
+        ) : reviewCount != null && reviewCount > 0 ? (
+          <ReviewRatingBadge isNew newLabel={formatReviews(reviewCount)} size="lg" />
         ) : null}
         {metaParts.length > 0 ? (
           <p className="mt-1.5 text-sm text-slate">{metaParts.join(", ")}</p>

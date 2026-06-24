@@ -68,10 +68,21 @@ export default function FilterScrollRow({ children, className }: FilterScrollRow
   }
 
   function endDrag(e: ReactPointerEvent<HTMLDivElement>) {
-    if (!dragRef.current.active || !scrollRef.current) return;
+    if (!dragRef.current.active) return;
+
+    const el = scrollRef.current;
     dragRef.current.active = false;
-    scrollRef.current.releasePointerCapture(e.pointerId);
-    scrollRef.current.classList.remove("cursor-grabbing");
+    if (!el) return;
+
+    try {
+      if (el.hasPointerCapture(e.pointerId)) {
+        el.releasePointerCapture(e.pointerId);
+      }
+    } catch {
+      /* element may already be detached */
+    }
+
+    el.classList.remove("cursor-grabbing");
     updateScrollState();
   }
 

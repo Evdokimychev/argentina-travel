@@ -30,6 +30,9 @@ export function resolveYouTravelTourId(tour: YouTravelTour): number | null {
 }
 
 export function resolveYouTravelCountryName(tour: YouTravelTour): string | null {
+  if (Array.isArray(tour.countries) && tour.countries.length) {
+    return tour.countries[0]?.trim() || null;
+  }
   const country = tour.country;
   if (typeof country === "string") return country.trim() || null;
   if (country && typeof country === "object") {
@@ -45,6 +48,7 @@ export function matchesYouTravelSyncCountry(
   if (!matchers.length) return true;
 
   const haystack = [
+    ...(Array.isArray(tour.countries) ? tour.countries : []),
     resolveYouTravelCountryName(tour),
     typeof tour.region === "string" ? tour.region : tour.region?.nameRu ?? tour.region?.name,
     typeof tour.city === "string" ? tour.city : tour.city?.nameRu ?? tour.city?.name,
@@ -134,6 +138,26 @@ export function buildYouTravelPartnerBookingUrl(
     return url.toString();
   } catch {
     return fallback || buildYouTravelTourUrl(tourId, slug);
+  }
+}
+
+/** Cached partner_url from sync may be a YouTravel offer payment deep link — not a tourist booking URL. */
+export function isUsableYouTravelAffiliateRedirectUrl(url: string | null | undefined): boolean {
+  if (!url?.trim()) return false;
+
+  try {
+    const parsed = new URL(url.trim());
+    const embeddedPath = parsed.searchParams.get("path") ?? "";
+    if (embeddedPath.includes("/lk/pay")) return false;
+
+    if (parsed.hostname.endsWith("youtravel.me")) return true;
+    if (parsed.hostname.includes("tp.media")) return true;
+    if (parsed.hostname.includes("travelpayouts")) return true;
+    if (parsed.hostname.includes("g2afse.com") && !embeddedPath.includes("/lk/pay")) return true;
+
+    return false;
+  } catch {
+    return false;
   }
 }
 

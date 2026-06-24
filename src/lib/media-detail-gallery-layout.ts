@@ -1,3 +1,5 @@
+import { dedupeGalleryImages, galleryImageIdentityKey } from "@/lib/gallery-images";
+
 export type MosaicCell = {
   colStart: number;
   colEnd: number;
@@ -153,20 +155,46 @@ function pickLayoutTemplate(imageCount: number, seed: string): MosaicLayoutTempl
 
 /** Stable pseudo-random mosaic: layout + which photos fill slots change per seed. */
 export function buildGalleryMosaicPlan(
-  imageCount: number,
+  images: string[],
   seed: string,
   maxVisible = 5,
-): { layout: MosaicLayoutTemplate; slots: MosaicSlot[] } {
+): { layout: MosaicLayoutTemplate; slots: MosaicSlot[]; images: string[] } {
+  const deduped = dedupeGalleryImages(images.filter(Boolean));
+  const imageCount = deduped.length;
   const layout = pickLayoutTemplate(imageCount, seed);
   const visibleCount = Math.min(maxVisible, imageCount, layout.cells.length);
-  const offset = imageCount > visibleCount ? hashString(`${seed}:offset`) % imageCount : 0;
+
+  if (imageCount === 0) {
+    return { layout, slots: [], images: deduped };
+  }
+
+  const start = imageCount > visibleCount ? hashString(`${seed}:offset`) % imageCount : 0;
+  const pickedIndices: number[] = [];
+  const usedKeys = new Set<string>();
+  let cursor = start;
+  let guard = 0;
+
+  while (pickedIndices.length < visibleCount && guard < imageCount * 2) {
+    const imageIndex = cursor % imageCount;
+    const key = galleryImageIdentityKey(deduped[imageIndex]!);
+    if (!usedKeys.has(key)) {
+      usedKeys.add(key);
+      pickedIndices.push(imageIndex);
+    }
+    cursor += 1;
+    guard += 1;
+  }
+
+  while (pickedIndices.length < visibleCount) {
+    pickedIndices.push(pickedIndices.length % imageCount);
+  }
 
   const slots: MosaicSlot[] = layout.cells.slice(0, visibleCount).map((cell, slotIndex) => ({
     cell,
-    imageIndex: (offset + slotIndex) % imageCount,
+    imageIndex: pickedIndices[slotIndex] ?? slotIndex,
   }));
 
-  return { layout, slots };
+  return { layout, slots, images: deduped };
 }
 
 export function mosaicCellStyle(cell: MosaicCell): {

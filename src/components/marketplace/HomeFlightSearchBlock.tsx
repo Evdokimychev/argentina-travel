@@ -12,18 +12,16 @@ import {
 } from "date-fns";
 import { ru } from "date-fns/locale";
 import {
-  ArrowRightLeft,
   Calendar,
   ChevronLeft,
   ChevronRight,
   Minus,
-  Plane,
   Plus,
   Users,
   X,
 } from "lucide-react";
+import { FlightRouteRow } from "@/components/flights/flight-hub-picker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import CalendarMonthGrid from "@/components/ui/calendar-month-grid";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
@@ -32,10 +30,6 @@ import type { FlightTripClass } from "@/lib/flights/wl-search-params";
 import {
   DEFAULT_HOME_FLIGHT_DESTINATION,
   DEFAULT_HOME_FLIGHT_ORIGIN,
-  getFlightHubLabel,
-  getFlightHubPickerSections,
-  type FlightHubOption,
-  type FlightHubPickerSections,
 } from "@/lib/flights/home-flight-hubs";
 import { cn } from "@/lib/cn";
 import { formatPassengers } from "@/lib/pluralize";
@@ -43,6 +37,31 @@ import type { LocaleCode } from "@/types/locale";
 
 type HomeFlightSearchBlockProps = {
   routePreset?: { origin: string; destination: string } | null;
+  initialAdults?: number;
+  initialDepartDate?: Date | null;
+  initialReturnDate?: Date | null;
+  /** Не подставлять даты по умолчанию — только явные initialDepartDate/initialReturnDate. */
+  emptyDates?: boolean;
+  /** Встроенный блок на странице тура — вертикальная раскладка. */
+  layout?: "default" | "embedded";
+  /** Односторонний перелёт — без обратной даты в поиске. */
+  oneWay?: boolean;
+  /** Подсказка под полем дат. */
+  dateHint?: string;
+  /** Текст кнопки поиска. */
+  searchLabel?: string;
+  /** Вместо перехода на /flights — callback (модальное окно на странице тура). */
+  onSearch?: (params: {
+    origin: string;
+    destination: string;
+    departDate?: string;
+    returnDate?: string;
+    adults: number;
+    children: number;
+    infants: number;
+    tripClass: FlightTripClass;
+    oneWay: boolean;
+  }) => void;
 };
 
 function defaultDepartDate(): Date {
@@ -175,183 +194,6 @@ function FlightClassRadio({
   );
 }
 
-function HubOptionButton({
-  hub,
-  onSelect,
-}: {
-  hub: FlightHubOption;
-  onSelect: (code: string) => void;
-}) {
-  return (
-    <li>
-      <button
-        type="button"
-        className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50"
-        onClick={() => onSelect(hub.code)}
-      >
-        <span className="font-medium text-charcoal">{hub.label}</span>
-        <span className="shrink-0 rounded-md bg-slate/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold leading-none tracking-wide text-slate">
-          {hub.code}
-        </span>
-      </button>
-    </li>
-  );
-}
-
-function HubSectionHeading({ children }: { children: string }) {
-  return (
-    <li className="sticky top-0 z-10 bg-white px-3 pb-1 pt-2">
-      <p className="text-[11px] font-semibold uppercase tracking-wide text-slate">{children}</p>
-    </li>
-  );
-}
-
-function filterHubSections(
-  sections: FlightHubPickerSections,
-  query: string,
-): FlightHubPickerSections | null {
-  const q = query.trim().toLowerCase();
-  if (!q) return sections;
-
-  const match = (hub: FlightHubOption) =>
-    hub.label.toLowerCase().includes(q) || hub.code.toLowerCase().includes(q);
-
-  return {
-    popular: sections.popular.filter(match),
-    all: sections.all.filter(match),
-  };
-}
-
-function HubOptionsList({
-  sections,
-  onSelect,
-}: {
-  sections: FlightHubPickerSections;
-  onSelect: (code: string) => void;
-}) {
-  const hasResults = sections.popular.length > 0 || sections.all.length > 0;
-
-  if (!hasResults) {
-    return <li className="px-3 py-6 text-center text-sm text-slate">Ничего не нашли</li>;
-  }
-
-  return (
-    <>
-      {sections.popular.length > 0 ? (
-        <>
-          <HubSectionHeading>Популярные</HubSectionHeading>
-          {sections.popular.map((hub) => (
-            <HubOptionButton key={`popular-${hub.code}`} hub={hub} onSelect={onSelect} />
-          ))}
-        </>
-      ) : null}
-      {sections.all.length > 0 ? (
-        <>
-          <HubSectionHeading>Все аэропорты</HubSectionHeading>
-          {sections.all.map((hub) => (
-            <HubOptionButton key={`all-${hub.code}`} hub={hub} onSelect={onSelect} />
-          ))}
-        </>
-      ) : null}
-    </>
-  );
-}
-
-function HubValue({ code }: { code: string }) {
-  return (
-    <span className="truncate">
-      {getFlightHubLabel(code)}
-      <span className="ml-1 text-xs tabular-nums text-slate">{code}</span>
-    </span>
-  );
-}
-
-function HubPicker({
-  kind,
-  value,
-  onChange,
-  label,
-  placeholder,
-  compact,
-}: {
-  kind: "origin" | "destination";
-  value: string;
-  onChange: (code: string) => void;
-  label: string;
-  placeholder: string;
-  compact?: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  const [query, setQuery] = useState("");
-  const sections = useMemo(() => getFlightHubPickerSections(kind), [kind]);
-  const filteredSections = useMemo(
-    () => filterHubSections(sections, query),
-    [sections, query],
-  );
-
-  return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <button
-          type="button"
-          className={cn(
-            "flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-gray-50/80 sm:px-4 lg:py-3",
-            compact && "lg:py-2.5",
-          )}
-        >
-          <Plane
-            className={cn(
-              "h-4 w-4 shrink-0 text-sky",
-              kind === "destination" && "rotate-90",
-            )}
-            aria-hidden
-          />
-          <div className="min-w-0 flex-1">
-            <p className="text-[11px] font-medium text-slate">{label}</p>
-            <p
-              className={cn(
-                "truncate text-sm font-medium leading-snug",
-                value ? "text-charcoal" : "text-slate/70",
-              )}
-            >
-              {value ? <HubValue code={value} /> : placeholder}
-            </p>
-          </div>
-        </button>
-      </PopoverTrigger>
-      <PopoverContent
-        side="bottom"
-        align="start"
-        avoidCollisions={false}
-        sideOffset={8}
-        className="flex max-h-[min(360px,calc(100vh-12rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden p-0"
-      >
-        <div className="shrink-0 border-b border-gray-100 p-3">
-          <Input
-            placeholder={placeholder}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            autoFocus
-            className="h-9"
-          />
-        </div>
-        <ul className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
-          {filteredSections ? (
-            <HubOptionsList
-              sections={filteredSections}
-              onSelect={(code) => {
-                onChange(code);
-                setOpen(false);
-                setQuery("");
-              }}
-            />
-          ) : null}
-        </ul>
-      </PopoverContent>
-    </Popover>
-  );
-}
-
 function FlightDateRangePicker({
   from,
   to,
@@ -447,16 +289,41 @@ function FlightDateRangePicker({
   );
 }
 
-export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchBlockProps) {
+export default function HomeFlightSearchBlock({
+  routePreset,
+  initialAdults,
+  initialDepartDate,
+  initialReturnDate,
+  emptyDates = false,
+  layout = "default",
+  oneWay = false,
+  dateHint,
+  searchLabel,
+  onSearch,
+}: HomeFlightSearchBlockProps) {
   const router = useRouter();
   const { t, locale } = useLocaleCurrency();
-  const [origin, setOrigin] = useState(DEFAULT_HOME_FLIGHT_ORIGIN);
-  const [destination, setDestination] = useState(DEFAULT_HOME_FLIGHT_DESTINATION);
-  const [departDate, setDepartDate] = useState<Date | null>(() => defaultDepartDate());
-  const [returnDate, setReturnDate] = useState<Date | null>(() =>
-    defaultReturnDate(defaultDepartDate()),
+  const embedded = layout === "embedded";
+  const [origin, setOrigin] = useState(
+    () => routePreset?.origin ?? DEFAULT_HOME_FLIGHT_ORIGIN,
   );
-  const [adults, setAdults] = useState(1);
+  const [destination, setDestination] = useState(
+    () => routePreset?.destination ?? DEFAULT_HOME_FLIGHT_DESTINATION,
+  );
+  const [departDate, setDepartDate] = useState<Date | null>(() => {
+    if (emptyDates) return initialDepartDate ?? null;
+    return initialDepartDate ?? defaultDepartDate();
+  });
+  const [returnDate, setReturnDate] = useState<Date | null>(() => {
+    if (oneWay) return null;
+    if (initialReturnDate) return initialReturnDate;
+    if (emptyDates) return null;
+    const depart = initialDepartDate ?? defaultDepartDate();
+    return defaultReturnDate(depart);
+  });
+  const [adults, setAdults] = useState(() =>
+    Math.min(MAX_PASSENGERS, Math.max(1, initialAdults ?? 1)),
+  );
   const [children, setChildren] = useState(0);
   const [infants, setInfants] = useState(0);
   const [tripClass, setTripClass] = useState<FlightTripClass>(0);
@@ -469,7 +336,39 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
     if (!routePreset) return;
     setOrigin(routePreset.origin);
     setDestination(routePreset.destination);
-  }, [routePreset]);
+  }, [routePreset?.origin, routePreset?.destination, routePreset]);
+
+  useEffect(() => {
+    if (initialAdults == null) return;
+    setAdults(Math.min(MAX_PASSENGERS, Math.max(1, initialAdults)));
+  }, [initialAdults]);
+
+  useEffect(() => {
+    if (initialDepartDate) {
+      setDepartDate(initialDepartDate);
+      setDraftDepart(initialDepartDate);
+      if (oneWay) {
+        setReturnDate(null);
+        setDraftReturn(null);
+        return;
+      }
+      if (initialReturnDate) {
+        setReturnDate(initialReturnDate);
+        setDraftReturn(initialReturnDate);
+      } else if (!emptyDates) {
+        setReturnDate(defaultReturnDate(initialDepartDate));
+        setDraftReturn(defaultReturnDate(initialDepartDate));
+      }
+      return;
+    }
+
+    if (emptyDates) {
+      setDepartDate(null);
+      setReturnDate(null);
+      setDraftDepart(null);
+      setDraftReturn(null);
+    }
+  }, [initialDepartDate, initialReturnDate, oneWay, emptyDates]);
 
   const totalPassengers = adults + children + infants;
 
@@ -505,7 +404,7 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
   }
 
   const hasDates = Boolean(departDate);
-  const roundTrip = isRoundTrip(departDate, returnDate);
+  const roundTrip = !oneWay && isRoundTrip(departDate, returnDate);
 
   const dateLabel = useMemo(() => {
     if (!departDate) return t("flights.form.datesPlaceholder");
@@ -534,14 +433,26 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
       children,
       infants,
       tripClass,
+      oneWay: oneWay || !returnIso,
       autoSearch: Boolean(departIso),
     });
-    router.push(href);
-  }
 
-  function swapEndpoints() {
-    setOrigin(destination);
-    setDestination(origin);
+    if (onSearch) {
+      onSearch({
+        origin,
+        destination,
+        departDate: departIso,
+        returnDate: returnIso,
+        adults,
+        children,
+        infants,
+        tripClass,
+        oneWay: oneWay || !returnIso,
+      });
+      return;
+    }
+
+    router.push(href);
   }
 
   function clearDates(e: React.MouseEvent) {
@@ -553,40 +464,23 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
   }
 
   return (
-    <div className="flex flex-col gap-2 lg:flex-row lg:items-stretch">
-      {/* Origin ↔ destination */}
-      <div className="flex min-w-0 flex-1 flex-col rounded-2xl border border-sky/15 bg-sky/[0.03] sm:flex-row sm:items-stretch lg:max-w-none">
-        <HubPicker
-          kind="origin"
-          value={origin}
-          onChange={setOrigin}
-          label={t("flights.form.origin")}
-          placeholder={t("flights.form.originPlaceholder")}
-          compact
-        />
-        <div className="relative flex shrink-0 items-center justify-center sm:w-10">
-          <div className="absolute inset-x-3 top-0 h-px bg-gray-200 sm:inset-y-0 sm:left-1/2 sm:h-auto sm:w-px sm:-translate-x-1/2" />
-          <button
-            type="button"
-            onClick={swapEndpoints}
-            className="relative z-10 my-1 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5 sm:my-0"
-            aria-label={t("flights.form.swap")}
-          >
-            <ArrowRightLeft className="h-3.5 w-3.5" />
-          </button>
-        </div>
-        <HubPicker
-          kind="destination"
-          value={destination}
-          onChange={setDestination}
-          label={t("flights.form.destination")}
-          placeholder={t("flights.form.destinationPlaceholder")}
-          compact
-        />
-      </div>
+    <div
+      className={cn(
+        "flex flex-col gap-2",
+        !embedded && "lg:flex-row lg:items-stretch",
+        embedded && "gap-3",
+      )}
+    >
+      <FlightRouteRow
+        origin={origin}
+        destination={destination}
+        onOriginChange={setOrigin}
+        onDestinationChange={setDestination}
+        compact
+        className="lg:max-w-none"
+      />
 
-      <div className="hidden w-px bg-gray-200 lg:block" />
-
+      <div className={cn("hidden w-px bg-gray-200", !embedded && "lg:block")} />
       {/* Dates */}
       <Popover
         open={dateOpen}
@@ -598,7 +492,12 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
           }
         }}
       >
-        <div className="flex min-w-0 flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50 lg:max-w-[240px] xl:max-w-[260px]">
+        <div
+          className={cn(
+            "flex min-w-0 flex-1 items-center rounded-2xl transition-colors hover:bg-gray-50",
+            !embedded && "lg:max-w-[240px] xl:max-w-[260px]",
+          )}
+        >
           <PopoverTrigger asChild>
             <button
               type="button"
@@ -617,6 +516,9 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
                 </p>
                 {dateSubLabel ? (
                   <p className="truncate text-[10px] font-medium text-sky-dark/80">{dateSubLabel}</p>
+                ) : null}
+                {dateHint ? (
+                  <p className="mt-0.5 line-clamp-2 text-[10px] leading-snug text-slate">{dateHint}</p>
                 ) : null}
               </div>
             </button>
@@ -658,11 +560,16 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
         </PopoverContent>
       </Popover>
 
-      <div className="hidden w-px bg-gray-200 lg:block" />
+      <div className={cn("hidden w-px bg-gray-200", !embedded && "lg:block")} />
 
       {/* Passengers */}
       <Popover open={passengersOpen} onOpenChange={setPassengersOpen}>
-        <div className="flex min-w-0 items-center rounded-2xl transition-colors hover:bg-gray-50 lg:w-auto lg:min-w-[150px] lg:flex-none">
+        <div
+          className={cn(
+            "flex min-w-0 items-center rounded-2xl transition-colors hover:bg-gray-50",
+            !embedded && "lg:w-auto lg:min-w-[150px] lg:flex-none",
+          )}
+        >
           <PopoverTrigger asChild>
             <button
               type="button"
@@ -739,11 +646,14 @@ export default function HomeFlightSearchBlock({ routePreset }: HomeFlightSearchB
       <Button
         type="button"
         size="lg"
-        className="h-auto w-full rounded-2xl px-8 py-3 text-base lg:w-auto lg:min-w-[200px] lg:flex-none lg:py-3.5"
+        className={cn(
+          "h-auto w-full rounded-2xl px-8 py-3 text-base",
+          !embedded && "lg:w-auto lg:min-w-[200px] lg:flex-none lg:py-3.5",
+        )}
         onClick={handleSearch}
         disabled={!origin || !destination}
       >
-        {t("flights.form.search")}
+        {searchLabel ?? t("flights.form.search")}
       </Button>
     </div>
   );

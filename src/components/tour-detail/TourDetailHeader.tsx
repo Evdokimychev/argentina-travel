@@ -8,9 +8,12 @@ import type { Tour } from "@/types/tour";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
-import { StarRating } from "@/components/ui/star-rating";
+import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { cn } from "@/lib/cn";
-import { formatReviews } from "@/lib/pluralize";
+import {
+  hasTourEndpointLabels,
+  resolveTourEndpointLabels,
+} from "@/lib/tour-route-endpoints";
 import { siteContainerClass } from "@/lib/site-container";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import {
@@ -19,8 +22,10 @@ import {
 } from "@/lib/argentina-cities";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
+import { plainTextFromRichContent } from "@/lib/rich-text";
 import TourClassificationBar from "./TourClassificationBar";
 import TourDurationInfo from "./TourDurationInfo";
+import TourRouteEndpointsChip from "./TourRouteEndpointsChip";
 import { SafeImage } from "@/components/ui/safe-image";
 import { isPartnerTourDetail } from "@/lib/tripster/partner-tour-utils";
 
@@ -42,6 +47,8 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
     country: tour.country,
   });
   const provinceLabel = resolveArgentinaProvinceName(tour.region);
+  const routeEndpoints = resolveTourEndpointLabels(tour);
+  const showRouteEndpoints = hasTourEndpointLabels(routeEndpoints);
 
   async function handleShare() {
     const url = window.location.href;
@@ -128,7 +135,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
 
             {tour.shortDescription?.trim() ? (
               <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
-                {tour.shortDescription}
+                {plainTextFromRichContent(tour.shortDescription)}
               </p>
             ) : null}
 
@@ -144,31 +151,24 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
                 {cityDisplay}
               </p>
 
+              {showRouteEndpoints ? (
+                <TourRouteEndpointsChip endpoints={routeEndpoints} />
+              ) : null}
+
               {ratingDisplay.hasReviews ? (
-                <>
-                  <button
-                    type="button"
-                    onClick={scrollToReviews}
-                    className="flex items-center gap-1.5 rounded-full border border-sun/20 bg-sun/10 px-2.5 py-1 transition-colors hover:bg-sun/15"
-                  >
-                    <StarRating layout="badge" score={ratingDisplay.ratingText} size="md" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={scrollToReviews}
-                    className="text-sm font-medium text-sky hover:underline"
-                  >
-                    {formatReviews(reviewStats.reviewCount)}
-                  </button>
-                </>
-              ) : (
-                <button
-                  type="button"
+                <ReviewRatingBadge
+                  score={ratingDisplay.ratingText}
+                  reviewCount={reviewStats.reviewCount}
+                  size="md"
                   onClick={scrollToReviews}
-                  className="transition-colors hover:text-sky-dark"
-                >
-                  <StarRating layout="badge" isNew newLabel={ratingDisplay.badgeLabel} size="md" />
-                </button>
+                />
+              ) : (
+                <ReviewRatingBadge
+                  isNew
+                  newLabel={ratingDisplay.badgeLabel}
+                  size="md"
+                  onClick={scrollToReviews}
+                />
               )}
             </div>
 
