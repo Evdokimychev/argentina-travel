@@ -38,11 +38,23 @@ export async function GET(request: Request, context: RouteContext) {
   const supabase = createSupabaseAdminClient();
 
   if (parsed?.partner === "youtravel") {
-    const { data: tour } = await supabase
+    const tourSelect =
+      "id, slug, youtravel_url, partner_url, country" as const;
+
+    let { data: tour } = await supabase
       .from("youtravel_tours")
-      .select("id, slug, youtravel_url, partner_url, country")
+      .select(tourSelect)
       .eq("slug", normalizedSlug)
       .maybeSingle();
+
+    if (!tour) {
+      const byId = await supabase
+        .from("youtravel_tours")
+        .select(tourSelect)
+        .eq("id", parsed.id)
+        .maybeSingle();
+      tour = byId.data;
+    }
 
     if (!tour) {
       return NextResponse.json({ error: "Tour not found" }, { status: 404 });
@@ -68,7 +80,6 @@ export async function GET(request: Request, context: RouteContext) {
 
     if (wantsBookingDeepLink || !partnerUrl) {
       const bookingTarget = buildYouTravelPartnerBookingUrl(tour.id, {
-        tourSlug: tour.slug,
         startDate,
         endDate,
         guests: Number.isFinite(guests) ? guests : null,

@@ -86,11 +86,33 @@ export function buildYouTravelTourSlug(title: string, id: number): string {
   return `${slugifyYouTravelTitle(title)}-yt${id}`;
 }
 
-export function buildYouTravelTourUrl(id: number, slug?: string | null): string {
-  if (slug?.trim()) {
-    return `https://youtravel.me/tours/${slug.trim()}`;
-  }
+export function buildYouTravelTourUrl(id: number, _slug?: string | null): string {
   return `https://youtravel.me/tours/${id}`;
+}
+
+export function parseYouTravelTourPathFromUrl(url: string | null | undefined): string | null {
+  if (!url?.trim()) return null;
+
+  try {
+    const parsed = new URL(url.trim());
+    const hostname = parsed.hostname.replace(/^www\./i, "");
+    if (hostname !== "youtravel.me") return null;
+
+    const match = parsed.pathname.match(/\/tours\/([^/?#]+)/i);
+    const segment = match?.[1]?.trim();
+    return segment || null;
+  } catch {
+    return null;
+  }
+}
+
+export function resolveYouTravelBookingPathSegment(
+  tourId: number,
+  options?: { youtravelUrl?: string | null }
+): string {
+  const fromPartnerUrl = parseYouTravelTourPathFromUrl(options?.youtravelUrl);
+  if (fromPartnerUrl) return fromPartnerUrl;
+  return String(tourId);
 }
 
 export function parseYouTravelOfferDateId(dateId: string): {
@@ -119,8 +141,9 @@ export function buildYouTravelPartnerBookingUrl(
   const fallback = options?.fallbackUrl?.trim();
   if (!tourId) return fallback || "https://youtravel.me/";
 
-  const slug = options?.tourSlug?.trim();
-  const pathSegment = slug || String(tourId);
+  const pathSegment = resolveYouTravelBookingPathSegment(tourId, {
+    youtravelUrl: fallback,
+  });
 
   try {
     const url = new URL(`https://youtravel.me/tours/${pathSegment}`);
@@ -137,7 +160,7 @@ export function buildYouTravelPartnerBookingUrl(
     if (options?.phone?.trim()) url.searchParams.set("phone", options.phone.trim());
     return url.toString();
   } catch {
-    return fallback || buildYouTravelTourUrl(tourId, slug);
+    return fallback || buildYouTravelTourUrl(tourId);
   }
 }
 
@@ -169,12 +192,14 @@ export function buildYouTravelAffiliateFallbackPath(input: {
   name?: string;
   email?: string;
   phone?: string;
+  offerId?: number | null;
 }): string {
   const search = new URLSearchParams({
     start_date: input.startDate,
     guests: String(input.guests),
   });
   if (input.endDate) search.set("end_date", input.endDate);
+  if (input.offerId && input.offerId > 0) search.set("offer_id", String(input.offerId));
   if (input.name) search.set("name", input.name);
   if (input.email) search.set("email", input.email);
   if (input.phone) search.set("phone", input.phone);

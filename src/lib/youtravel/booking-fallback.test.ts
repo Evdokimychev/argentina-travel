@@ -4,6 +4,8 @@ import {
   buildYouTravelPartnerBookingUrl,
   isUsableYouTravelAffiliateRedirectUrl,
   parseYouTravelOfferDateId,
+  parseYouTravelTourPathFromUrl,
+  resolveYouTravelBookingPathSegment,
 } from "@/lib/youtravel/partner-tour-utils";
 
 describe("YouTravel booking fallback URLs", () => {
@@ -16,12 +18,14 @@ describe("YouTravel booking fallback URLs", () => {
       name: "Иван Иванов",
       email: "ivan@example.com",
       phone: "+79991234567",
+      offerId: 123,
     });
 
     expect(path).toContain("/api/affiliate/go/patagonia-yt42");
     expect(path).toContain("start_date=2026-08-01");
     expect(path).toContain("end_date=2026-08-10");
     expect(path).toContain("guests=2");
+    expect(path).toContain("offer_id=123");
     expect(path).toContain("email=ivan%40example.com");
   });
 
@@ -47,8 +51,9 @@ describe("YouTravel booking fallback URLs", () => {
   });
 
   it("builds partner booking URL with query params", () => {
-    const url = buildYouTravelPartnerBookingUrl(42, {
-      tourSlug: "patagonia-yt42",
+    const url = buildYouTravelPartnerBookingUrl(52537, {
+      fallbackUrl: "https://youtravel.me/tours/52537",
+      tourSlug: "patagonia-yt52537",
       startDate: "2026-08-01",
       endDate: "2026-08-10",
       guests: 3,
@@ -58,10 +63,19 @@ describe("YouTravel booking fallback URLs", () => {
       phone: "+541112345678",
     });
 
-    expect(url).toContain("https://youtravel.me/tours/patagonia-yt42");
+    expect(url).toContain("https://youtravel.me/tours/52537");
+    expect(url).not.toContain("patagonia-yt52537");
     expect(url).toContain("start_date=2026-08-01");
     expect(url).toContain("end_date=2026-08-10");
     expect(url).toContain("guests=3");
     expect(url).toContain("offer_id=99");
+  });
+
+  it("prefers youtravel_url path over internal marketplace slug", () => {
+    expect(parseYouTravelTourPathFromUrl("https://youtravel.me/tours/52537")).toBe("52537");
+    expect(resolveYouTravelBookingPathSegment(52537, { youtravelUrl: "https://youtravel.me/tours/52537" })).toBe(
+      "52537"
+    );
+    expect(resolveYouTravelBookingPathSegment(52537)).toBe("52537");
   });
 });

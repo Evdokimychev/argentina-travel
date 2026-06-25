@@ -142,6 +142,7 @@ async function postYouTravelBookingRequest(request: Request) {
     name,
     email,
     phone,
+    offerId,
   });
 
   const persistBase = {
@@ -210,37 +211,27 @@ async function postYouTravelBookingRequest(request: Request) {
     }
   } catch (error) {
     if (error instanceof YouTravelBookingError) {
-      if (error.status === 401 || error.status === 404 || error.status === 503) {
-        await persistYouTravelRequest({
-          ...persistBase,
-          status: "affiliate_fallback",
-          priceSnapshot: error.details,
-        });
-        return NextResponse.json({
-          ok: false,
-          mode: "affiliate_fallback",
-          fallbackUrl,
-          fallbackReason: resolveAffiliateFallbackReason(error.status),
-          youtravelStatus: error.status,
-          error:
-            "Автоматическое бронирование через API YouTravel.me недоступно — переходим на сайт партнёра с выбранной датой и числом туристов.",
-        });
-      }
+      const isInfraError =
+        error.status === 401 || error.status === 404 || error.status === 503;
 
       await persistYouTravelRequest({
         ...persistBase,
-        status: "failed",
+        status: "affiliate_fallback",
         priceSnapshot: error.details,
       });
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "Booking failed.",
-          details: error.details,
-        },
-        { status: error.status >= 400 && error.status < 600 ? error.status : 400 }
-      );
+      return NextResponse.json({
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl,
+        fallbackReason: isInfraError
+          ? resolveAffiliateFallbackReason(error.status)
+          : "api_booking_rejected",
+        youtravelStatus: error.status,
+        error: isInfraError
+          ? "Автоматическое бронирование через API YouTravel.me недоступно — переходим на сайт партнёра с выбранной датой и числом туристов."
+          : "Не удалось создать заказ через API YouTravel.me — переходим на сайт партнёра с заполненными данными.",
+      });
     }
   }
 

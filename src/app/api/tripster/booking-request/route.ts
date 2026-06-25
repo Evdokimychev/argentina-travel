@@ -279,34 +279,8 @@ async function postTripsterBookingRequest(request: Request) {
     });
   } catch (error) {
     if (error instanceof TripsterBookingError) {
-      if (error.status === 401 || error.status === 403 || error.status === 503) {
-        await persistTripsterRequest({
-          ...body,
-          slug,
-          experienceId,
-          userId: authUser?.id ?? userId,
-          date,
-          time,
-          personsCount,
-          tickets,
-          name,
-          email,
-          phone,
-          status: "affiliate_fallback",
-          priceSnapshot: error.details,
-        });
-        return NextResponse.json({
-          ok: false,
-          mode: "affiliate_fallback",
-          fallbackUrl,
-          fallbackReason: resolveAffiliateFallbackReason(error.status),
-          tripsterStatus: error.status,
-          error:
-            error.status === 403
-              ? "API создания заказов Tripster не подключён к партнёрскому аккаунту."
-              : "Сервис бронирования Tripster временно недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
-        });
-      }
+      const isInfraError =
+        error.status === 401 || error.status === 403 || error.status === 503;
 
       await persistTripsterRequest({
         ...body,
@@ -320,18 +294,24 @@ async function postTripsterBookingRequest(request: Request) {
         name,
         email,
         phone,
-        status: "failed",
+        status: "affiliate_fallback",
         priceSnapshot: error.details,
       });
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "Booking failed.",
-          details: error.details,
-        },
-        { status: error.status >= 400 && error.status < 600 ? error.status : 400 }
-      );
+      return NextResponse.json({
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl,
+        fallbackReason: isInfraError
+          ? resolveAffiliateFallbackReason(error.status)
+          : "api_booking_rejected",
+        tripsterStatus: error.status,
+        error: isInfraError
+          ? error.status === 403
+            ? "API создания заказов Tripster не подключён к партнёрскому аккаунту."
+            : "Сервис бронирования Tripster временно недоступен — переходим на сайт партнёра с выбранной датой и числом туристов."
+          : "Не удалось создать заказ через API Tripster — переходим на сайт партнёра с заполненными данными.",
+      });
     }
 
     await persistTripsterRequest({
@@ -346,10 +326,16 @@ async function postTripsterBookingRequest(request: Request) {
       name,
       email,
       phone,
-      status: "failed",
+      status: "affiliate_fallback",
     });
 
-    return NextResponse.json({ error: "Booking failed." }, { status: 502 });
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "api_unavailable",
+      error: "Сервис бронирования Tripster временно недоступен — переходим на сайт партнёра с заполненными данными.",
+    });
   }
 }
 

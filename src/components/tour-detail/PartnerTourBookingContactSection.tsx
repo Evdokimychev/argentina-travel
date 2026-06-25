@@ -20,6 +20,7 @@ import { formatDateRange } from "@/lib/utils";
 import { formatTourists } from "@/lib/pluralize";
 import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
 import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-contact";
+import { buildPartnerTourAffiliateFallbackPath } from "@/lib/partner-tour/affiliate-fallback";
 import {
   openPartnerBookingUrl,
   resolveTripsterFallbackDescription,
@@ -193,6 +194,8 @@ export default function PartnerTourBookingContactSection({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [partnerFallbackUrl, setPartnerFallbackUrl] = useState<string | null>(null);
+  const [partnerFallbackReason, setPartnerFallbackReason] = useState<string | null>(null);
   const [form, setForm] = useState(() => createPartnerContactForm(guests, user));
 
   const previewSummary = useMemo(() => {
@@ -229,6 +232,51 @@ export default function PartnerTourBookingContactSection({
     tour.partnerPriceDisplay,
   ]);
 
+  const prefilledBookingHref = useMemo(() => {
+    const startDate =
+      dateMode === "custom" && customDate
+        ? customDate.toISOString().slice(0, 10)
+        : parsedSlot?.startDate ?? selectedDate?.startDate;
+    if (!startDate) return externalBookingHref;
+
+    const contact = buildTripsterBookingContactPayload({
+      name: form.contactFullName,
+      email: form.contactEmail,
+      phone: form.contactPhone,
+      profileCountry: user?.country,
+    });
+    if ("error" in contact) return externalBookingHref;
+
+    return buildPartnerTourAffiliateFallbackPath({
+      slug: tour.slug,
+      partner: isYouTravel ? "youtravel" : "tripster",
+      startDate,
+      endDate: selectedDate?.endDate,
+      guests,
+      name: contact.name,
+      email: contact.email,
+      phone: contact.phone,
+      offerId: selectedDateId ? parseYouTravelOfferDateId(selectedDateId)?.offerId : undefined,
+      time: isYouTravel ? undefined : parsedSlot?.time ?? "08:00",
+    });
+  }, [
+    customDate,
+    dateMode,
+    externalBookingHref,
+    form.contactEmail,
+    form.contactFullName,
+    form.contactPhone,
+    guests,
+    isYouTravel,
+    parsedSlot?.startDate,
+    parsedSlot?.time,
+    selectedDate?.endDate,
+    selectedDate?.startDate,
+    selectedDateId,
+    tour.slug,
+    user?.country,
+  ]);
+
   useEffect(() => {
     if (!user) return;
     const autofill = contactFieldsFromAuthUser(user);
@@ -247,6 +295,33 @@ export default function PartnerTourBookingContactSection({
   function handleClosePreview() {
     closePartnerBookingPreview();
     setError(null);
+    setPartnerFallbackUrl(null);
+    setPartnerFallbackReason(null);
+  }
+
+  function openPartnerAffiliateFallback(fallbackUrl: string, reason?: string | null) {
+    const description = isYouTravel
+      ? resolveYouTravelFallbackDescription(reason)
+      : resolveTripsterFallbackDescription(reason);
+
+    setPartnerFallbackUrl(fallbackUrl);
+    setPartnerFallbackReason(reason ?? null);
+    setError(null);
+
+    trackBookingSubmit({
+      productType: "tour",
+      slug: tour.slug,
+      title: tour.title,
+      partner: isYouTravel ? "youtravel" : "tripster",
+      guests,
+      source: "partner_affiliate_fallback",
+    });
+
+    feedback.loading({
+      title: isYouTravel ? "Открываем YouTravel.me" : "Открываем Tripster",
+      description,
+    });
+    openPartnerBookingUrl(fallbackUrl);
   }
 
   function handleEditDate() {
@@ -260,6 +335,11 @@ export default function PartnerTourBookingContactSection({
   }
 
   async function handleConfirmBooking() {
+    if (partnerFallbackUrl) {
+      openPartnerAffiliateFallback(partnerFallbackUrl, partnerFallbackReason);
+      return;
+    }
+
     const bookingTour = { ...tour, dates: availableDates };
     const dateError = validateBookingDates(
       bookingTour,
@@ -309,6 +389,21 @@ export default function PartnerTourBookingContactSection({
 
     setSubmitting(true);
     setError(null);
+    setPartnerFallbackUrl(null);
+    setPartnerFallbackReason(null);
+
+    const clientFallbackUrl = buildPartnerTourAffiliateFallbackPath({
+      slug: tour.slug,
+      partner: isYouTravel ? "youtravel" : "tripster",
+      startDate: date,
+      endDate,
+      guests,
+      name: contact.name,
+      email: contact.email,
+      phone: contact.phone,
+      offerId,
+      time,
+    });
 
     try {
       const bookingEndpoint = isYouTravel
@@ -359,14 +454,7 @@ export default function PartnerTourBookingContactSection({
       };
 
       if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
-        const description = isYouTravel
-          ? resolveYouTravelFallbackDescription(data.fallbackReason)
-          : resolveTripsterFallbackDescription(data.fallbackReason);
-        feedback.loading({
-          title: isYouTravel ? "Открываем YouTravel.me" : "Открываем Tripster",
-          description,
-        });
-        openPartnerBookingUrl(data.fallbackUrl);
+        openPartnerAffiliateFallback(data.fallbackUrl, data.fallbackReason);
         return;
       }
 
@@ -377,7 +465,16 @@ export default function PartnerTourBookingContactSection({
           Object.values(details)
             .flatMap((value) => (Array.isArray(value) ? value : value.non_field_errors ?? []))
             .find(Boolean);
-        throw new Error(firstFieldError || data.error || "Не удалось отправить заявку");
+
+        if (firstFieldError) {
+          throw new Error(firstFieldError);
+        }
+
+        openPartnerAffiliateFallback(
+          data.fallbackUrl ?? clientFallbackUrl,
+          data.fallbackReason ?? "partner_site_fallback"
+        );
+        return;
       }
 
       setSubmitted(true);
@@ -401,11 +498,7 @@ export default function PartnerTourBookingContactSection({
         return;
       }
 
-      throw new Error(
-        isYouTravel
-          ? "YouTravel.me не вернул ссылку на заказ. Попробуйте ещё раз."
-          : "Tripster не вернул ссылку на заказ. Попробуйте ещё раз."
-      );
+      openPartnerAffiliateFallback(clientFallbackUrl, "partner_site_fallback");
     } catch (submitError) {
       const normalized = normalizeSiteError(submitError, {
         title: "Не удалось отправить заявку",
@@ -510,25 +603,39 @@ export default function PartnerTourBookingContactSection({
 
       {error ? (
         <InlineFeedback variant="error" title="Проверьте форму" description={error} />
+      ) : partnerFallbackUrl ? (
+        <InlineFeedback
+          variant="info"
+          title="Автоматическое оформление недоступно"
+          description={
+            isYouTravel
+              ? resolveYouTravelFallbackDescription(partnerFallbackReason)
+              : resolveTripsterFallbackDescription(partnerFallbackReason)
+          }
+        />
       ) : null}
 
       <div className="flex flex-col gap-2">
         <Button type="button" className="w-full gap-2" loading={submitting} onClick={handleConfirmBooking}>
-          Подтвердить и забронировать
+          {partnerFallbackUrl
+            ? isYouTravel
+              ? "Продолжить на YouTravel.me"
+              : "Продолжить на Tripster"
+            : "Подтвердить и забронировать"}
           <ExternalLink className="h-4 w-4" aria-hidden />
         </Button>
-        {externalBookingHref ? (
+        {prefilledBookingHref ? (
           <p className="text-center text-xs leading-relaxed text-slate">
             Если автоматическая отправка не сработала, можно{" "}
             <a
-              href={externalBookingHref}
+              href={prefilledBookingHref}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sky hover:underline"
             >
               открыть {partnerLabel} вручную
             </a>{" "}
-            — дата и число туристов подставятся, контакты нужно будет ввести снова.
+            — дата, число туристов и контакты подставятся автоматически.
           </p>
         ) : null}
         <Button
