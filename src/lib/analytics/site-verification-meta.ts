@@ -7,15 +7,17 @@ export function resolveSiteVerificationMeta(seo: SiteSeoGlobal): Metadata["verif
   const google = seo.googleSiteVerification?.trim() || env.googleSiteVerification;
   const bing = seo.bingSiteVerification?.trim() || env.bingSiteVerification;
   const ahrefs = seo.ahrefsSiteVerification?.trim() || env.ahrefsSiteVerification;
+  const yandex = seo.yandexSiteVerification?.trim() || env.yandexSiteVerification;
 
   const other: Record<string, string> = {};
   if (bing) other["msvalidate.01"] = bing;
   if (ahrefs) other["ahrefs-site-verification"] = ahrefs;
 
-  if (!google && Object.keys(other).length === 0) return undefined;
+  if (!google && !yandex && Object.keys(other).length === 0) return undefined;
 
   return {
     ...(google ? { google } : {}),
+    ...(yandex ? { yandex } : {}),
     ...(Object.keys(other).length > 0 ? { other } : {}),
   };
 }

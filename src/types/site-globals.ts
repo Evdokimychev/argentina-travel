@@ -44,6 +44,8 @@ export type SiteSeoGlobal = {
   bingSiteVerification?: string;
   /** Ahrefs Webmaster Tools verification token. */
   ahrefsSiteVerification?: string;
+  /** Yandex Webmaster / Distribution verification token (content value only). */
+  yandexSiteVerification?: string;
 };
 
 export type SiteContactGlobal = {

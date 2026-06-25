@@ -107,6 +107,12 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         type: "text",
         hint: "Значение content из meta ahrefs-site-verification",
       },
+      {
+        name: "yandexSiteVerification",
+        label: "Yandex Webmaster / Дистрибуция (verification token)",
+        type: "text",
+        hint: "Значение content из meta yandex-verification или код партнёрской верификации",
+      },
     ],
   },
   {

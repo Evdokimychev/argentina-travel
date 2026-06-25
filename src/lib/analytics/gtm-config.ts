@@ -8,6 +8,7 @@ export type GtmPublicConfig = {
   googleSiteVerification: string | null;
   bingSiteVerification: string | null;
   ahrefsSiteVerification: string | null;
+  yandexSiteVerification: string | null;
 };
 
 function readEnv(name: string): string | null {
@@ -24,6 +25,7 @@ export function getGtmPublicConfig(): GtmPublicConfig {
     googleSiteVerification: readEnv("NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION"),
     bingSiteVerification: readEnv("NEXT_PUBLIC_BING_SITE_VERIFICATION"),
     ahrefsSiteVerification: readEnv("NEXT_PUBLIC_AHREFS_SITE_VERIFICATION"),
+    yandexSiteVerification: readEnv("NEXT_PUBLIC_YANDEX_SITE_VERIFICATION"),
   };
 }
 

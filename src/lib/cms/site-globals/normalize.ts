@@ -108,6 +108,7 @@ export function normalizeSiteSeo(value: unknown): SiteSeoGlobal {
     googleSiteVerification: asString(r.googleSiteVerification) || undefined,
     bingSiteVerification: asString(r.bingSiteVerification) || undefined,
     ahrefsSiteVerification: asString(r.ahrefsSiteVerification) || undefined,
+    yandexSiteVerification: asString(r.yandexSiteVerification) || undefined,
   };
 }
 
