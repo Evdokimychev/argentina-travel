@@ -33,7 +33,7 @@ export default function SiteToastHost() {
     <div
       aria-live="polite"
       aria-relevant="additions"
-      className="pointer-events-none fixed inset-x-0 bottom-4 z-[120] flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:bottom-6 sm:right-6 sm:items-end sm:px-0"
+      className="pointer-events-none fixed inset-x-0 bottom-4 z-toast site-toast-host flex flex-col items-center gap-2 px-4 sm:inset-x-auto sm:bottom-6 sm:right-6 sm:items-end sm:px-0"
     >
       {toasts.map((toast) => {
         const { Icon, className: iconClassName } = iconByVariant[toast.variant];
@@ -89,7 +89,7 @@ export default function SiteToastHost() {
                 <button
                   type="button"
                   onClick={() => dismiss(toast.id)}
-                  className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+                  className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
                   aria-label="Закрыть уведомление"
                 >
                   <X className="h-4 w-4" />

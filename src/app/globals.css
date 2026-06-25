@@ -75,17 +75,39 @@
   --z-index-dropdown: var(--token-z-dropdown);
   --z-index-sticky: var(--token-z-sticky);
   --z-index-header: var(--token-z-header);
+  --z-index-mega-menu: var(--token-z-mega-menu);
   --z-index-overlay: var(--token-z-overlay);
-  --z-index-modal: var(--token-z-modal);
+  --z-index-nav-drawer: var(--token-z-nav-drawer);
+  --z-index-cookie: var(--token-z-cookie);
+  --z-index-floating-widget: var(--token-z-floating-widget);
+  --z-index-scroll-rail: var(--token-z-scroll-rail);
+  --z-index-lightbox: var(--token-z-lightbox);
+  --z-index-popover: var(--token-z-popover);
+  --z-index-dialog: var(--token-z-dialog);
+  --z-index-dialog-elevated: var(--token-z-dialog-elevated);
+  --z-index-partner-modals: var(--token-z-partner-modals);
+  --z-index-modal: var(--token-z-dialog);
   --z-index-toast: var(--token-z-toast);
+  --z-index-progress: var(--token-z-progress);
 
   /* Legacy aliases (kept for any direct var() references) */
   --z-dropdown: var(--token-z-dropdown);
   --z-sticky: var(--token-z-sticky);
   --z-header: var(--token-z-header);
+  --z-mega-menu: var(--token-z-mega-menu);
   --z-overlay: var(--token-z-overlay);
-  --z-modal: var(--token-z-modal);
+  --z-nav-drawer: var(--token-z-nav-drawer);
+  --z-cookie: var(--token-z-cookie);
+  --z-floating-widget: var(--token-z-floating-widget);
+  --z-scroll-rail: var(--token-z-scroll-rail);
+  --z-lightbox: var(--token-z-lightbox);
+  --z-popover: var(--token-z-popover);
+  --z-dialog: var(--token-z-dialog);
+  --z-dialog-elevated: var(--token-z-dialog-elevated);
+  --z-partner-modals: var(--token-z-partner-modals);
+  --z-modal: var(--token-z-dialog);
   --z-toast: var(--token-z-toast);
+  --z-progress: var(--token-z-progress);
 
   /* Site chrome */
   --site-header-full-height: var(--token-site-header-full-height);
@@ -202,6 +224,14 @@ html[data-site-header="hidden"] .site-header-utility-bar {
 html[data-site-overlay-lock="locked"] .site-header {
   transform: translateY(-100%);
   pointer-events: none;
+}
+
+html[data-site-overlay-lock="locked"] .site-toast-host,
+html[data-site-overlay-lock="locked"] .site-progress-bar {
+  z-index: var(--token-z-overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--transition-fast);
 }
 
 body {
@@ -797,6 +827,7 @@ body {
   box-shadow: 0 8px 24px rgba(26, 26, 46, 0.15);
   padding: 0;
   overflow: hidden;
+  max-width: calc(100dvw - 2rem);
 }
 
 .route-map-popup .leaflet-popup-content {
@@ -811,7 +842,7 @@ body {
   display: flex;
   flex-direction: column;
   min-width: 168px;
-  max-width: 260px;
+  max-width: min(260px, calc(100dvw - 2rem));
 }
 
 .route-map-popup-photo {

@@ -10,7 +10,7 @@ import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedPrice from "@/components/FormattedPrice";
@@ -696,9 +696,14 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
               <p className="text-xs font-medium uppercase tracking-wide text-slate">
                 Бронирование
               </p>
-              <h2 id="checkout-title" className="font-heading text-xl font-bold text-charcoal">
+              <DialogTitle className="font-heading text-xl font-bold text-charcoal">
                 {submitted ? "Заявка отправлена" : "Подтверждение и оплата"}
-              </h2>
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                {submitted
+                  ? "Заявка на бронирование тура отправлена организатору"
+                  : "Пошаговое оформление заявки на бронирование тура"}
+              </DialogDescription>
               {!submitted && (
                 <div className="mt-3 space-y-3">
                   <BookingCheckoutStepper

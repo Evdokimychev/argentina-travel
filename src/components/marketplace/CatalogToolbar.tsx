@@ -153,7 +153,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
                 <ChevronDown className="h-3.5 w-3.5 opacity-60 sm:h-4 sm:w-4" />
               </button>
             </PopoverTrigger>
-            <PopoverContent className="w-52 p-1" align="start">
+            <PopoverContent className="sm:w-52 p-1" align="start">
               <ul>
                 {secondarySortOptions.map((option) => (
                   <li key={option.value}>

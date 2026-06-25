@@ -6,6 +6,8 @@ import { Receipt } from "lucide-react";
 import FormattedPrice from "@/components/FormattedPrice";
 import AdminStatusChip from "@/components/admin/AdminStatusChip";
 import { AdminTableState } from "@/components/admin/AdminTableState";
+import { EmptyState } from "@/components/ui/empty-state";
+import { AdminTableRowsSkeleton } from "@/components/ui/skeleton";
 import { NativeSelect } from "@/components/ui/native-select";
 import {
   Dialog,
@@ -213,6 +215,46 @@ export function AdminPaymentLedgerPanel() {
 
   const receiptMeta = detail?.receipt?.receipt ?? null;
 
+  function renderLedgerRowActions(row: PaymentTransactionRow) {
+    return (
+      <div className="flex flex-wrap gap-2">
+        <button
+          type="button"
+          onClick={() => setSelectedId(row.id)}
+          className="text-sm font-medium text-brand hover:underline"
+        >
+          Детали
+        </button>
+        <Link
+          href={`/admin/operations/bookings?bookingId=${encodeURIComponent(row.bookingId)}`}
+          className="text-sm font-medium text-sky hover:underline"
+        >
+          Заявка
+        </Link>
+        {row.type === "refund" && row.status === "pending" ? (
+          <>
+            <button
+              type="button"
+              disabled={actionLoadingId === row.id}
+              onClick={() => void handleRefundAction(row.id, "approve")}
+              className="text-sm font-medium text-success hover:underline disabled:opacity-60"
+            >
+              Одобрить
+            </button>
+            <button
+              type="button"
+              disabled={actionLoadingId === row.id}
+              onClick={() => void handleRefundAction(row.id, "reject")}
+              className="text-sm font-medium text-red-600 hover:underline disabled:opacity-60"
+            >
+              Отклонить
+            </button>
+          </>
+        ) : null}
+      </div>
+    );
+  }
+
   return (
     <>
       <div className="flex flex-wrap gap-2">
@@ -276,7 +318,60 @@ export function AdminPaymentLedgerPanel() {
       {actionError ? <p className="text-sm text-red-600">{actionError}</p> : null}
 
       <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
-        <div className={cabinetTableWrapClass}>
+        {loading ? (
+          <div className="md:hidden">
+            <AdminTableRowsSkeleton columns={1} rows={4} />
+          </div>
+        ) : transactions.length === 0 ? (
+          <div className="md:hidden">
+            <EmptyState
+              variant="admin"
+              icon={Receipt}
+              title="Операции не найдены"
+              description="Измените фильтры периода или статуса транзакции."
+            />
+          </div>
+        ) : (
+          <div className="space-y-3 md:hidden">
+            {transactions.map((row) => (
+              <article
+                key={row.id}
+                className={cn(
+                  "rounded-2xl border border-gray-100 bg-white p-4 shadow-sm",
+                  selectedId === row.id && "ring-2 ring-sky/25"
+                )}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs text-slate">
+                      {new Date(row.createdAt).toLocaleString("ru-RU")}
+                    </p>
+                    <p className="mt-1 font-medium text-charcoal">
+                      {PAYMENT_TRANSACTION_TYPE_LABELS[row.type]}
+                    </p>
+                    <p className="mt-1 truncate text-sm text-charcoal">
+                      {row.tourTitle ?? row.bookingId}
+                    </p>
+                    <p className="mt-0.5 text-xs text-slate">{row.bookingId}</p>
+                  </div>
+                  <AdminStatusChip domain="payment-transaction" value={row.status} />
+                </div>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-3">
+                  <div>
+                    <p className="text-xs text-slate">{PAYMENT_PROVIDER_LABELS[row.provider]}</p>
+                    <p className="mt-0.5 font-medium text-charcoal">
+                      <FormattedPrice priceUsd={row.amount} />{" "}
+                      <span className="text-xs text-slate">{row.currency}</span>
+                    </p>
+                  </div>
+                  {renderLedgerRowActions(row)}
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
+
+        <div className={cn(cabinetTableWrapClass, "hidden md:block")}>
           <table className={cn("w-full min-w-[1100px] text-left", tableClass)}>
             <thead className={cabinetTableHeaderClass}>
               <tr>
@@ -329,43 +424,7 @@ export function AdminPaymentLedgerPanel() {
                     <td className={tdClass}>
                       <AdminStatusChip domain="payment-transaction" value={row.status} />
                     </td>
-                    <td className={tdClass}>
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setSelectedId(row.id)}
-                          className="text-sm font-medium text-brand hover:underline"
-                        >
-                          Детали
-                        </button>
-                        <Link
-                          href={`/admin/operations/bookings?bookingId=${encodeURIComponent(row.bookingId)}`}
-                          className="text-sm font-medium text-sky hover:underline"
-                        >
-                          Заявка
-                        </Link>
-                        {row.type === "refund" && row.status === "pending" ? (
-                          <>
-                            <button
-                              type="button"
-                              disabled={actionLoadingId === row.id}
-                              onClick={() => void handleRefundAction(row.id, "approve")}
-                              className="text-sm font-medium text-success hover:underline disabled:opacity-60"
-                            >
-                              Одобрить
-                            </button>
-                            <button
-                              type="button"
-                              disabled={actionLoadingId === row.id}
-                              onClick={() => void handleRefundAction(row.id, "reject")}
-                              className="text-sm font-medium text-red-600 hover:underline disabled:opacity-60"
-                            >
-                              Отклонить
-                            </button>
-                          </>
-                        ) : null}
-                      </div>
-                    </td>
+                    <td className={tdClass}>{renderLedgerRowActions(row)}</td>
                   </tr>
                 ))
               )}

@@ -142,7 +142,7 @@ export default function TourLeisureTypesBlock({
               </div>
             </PopoverFieldTrigger>
           </PopoverTrigger>
-          <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
+          <PopoverContent align="start" className="p-0 sm:min-w-[var(--radix-popover-trigger-width)]">
             <ul className="max-h-72 overflow-y-auto p-1">
               {ACTIVITY_TYPE_OPTIONS.map(({ type, icon: Icon }) => (
                 <li key={type}>
@@ -205,7 +205,7 @@ export default function TourLeisureTypesBlock({
               </div>
             </PopoverFieldTrigger>
           </PopoverTrigger>
-          <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
+          <PopoverContent align="start" className="p-0 sm:min-w-[var(--radix-popover-trigger-width)]">
             <ActivityOptionList
               selected={tourActivities}
               onToggle={(type) => onTourActivitiesChange(toggleItem(tourActivities, type))}
@@ -248,7 +248,7 @@ export default function TourLeisureTypesBlock({
               </div>
             </PopoverFieldTrigger>
           </PopoverTrigger>
-          <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
+          <PopoverContent align="start" className="p-0 sm:min-w-[var(--radix-popover-trigger-width)]">
             <CollectionOptionList
               selected={collections}
               onToggle={(collection) => onCollectionsChange(toggleItem(collections, collection))}

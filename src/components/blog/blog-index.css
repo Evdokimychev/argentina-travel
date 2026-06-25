@@ -114,6 +114,17 @@
   gap: 2.5rem;
 }
 
+/* Reserve catalog height to reduce CLS while client grid hydrates */
+#blog-catalog {
+  min-height: 28rem;
+}
+
+@media (min-width: 640px) {
+  #blog-catalog {
+    min-height: 32rem;
+  }
+}
+
 @media (min-width: 1024px) {
   .blog-index-secondary {
     gap: 3rem;

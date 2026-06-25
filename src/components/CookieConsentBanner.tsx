@@ -36,7 +36,7 @@ export default function CookieConsentBanner() {
       role="dialog"
       aria-label="Уведомление о cookie"
       className={cn(
-        "fixed bottom-4 left-1/2 z-[80] w-[min(calc(100%-2rem),40rem)] -translate-x-1/2",
+        "fixed bottom-4 left-1/2 z-cookie w-[min(calc(100%-2rem),40rem)] -translate-x-1/2",
         "rounded-2xl border border-gray-200/80 bg-white/95 p-4 shadow-lg backdrop-blur-md sm:p-5"
       )}
     >

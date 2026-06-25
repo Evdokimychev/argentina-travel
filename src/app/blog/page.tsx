@@ -1,10 +1,15 @@
 import { cookies } from "next/headers";
 import BlogIndexView from "@/components/blog/BlogIndexView";
+import BlogIndexHero from "@/components/blog/BlogIndexHero";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { parseBlogReadingHistoryCookie, BLOG_READING_HISTORY_COOKIE } from "@/lib/blog-reading-history-cookie";
+import {
+  BLOG_HERO_VARIANT_COOKIE,
+  resolveBlogHeroVariantFromCookie,
+} from "@/lib/blog-hero-variant-cookie";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
@@ -40,6 +45,19 @@ export default async function BlogPage() {
   ]);
   const indexable = filterIndexableBlogPosts(posts);
 
+  const heroVariantCookie = cookieStore.get(BLOG_HERO_VARIANT_COOKIE)?.value;
+  const heroVariant = resolveBlogHeroVariantFromCookie(
+    heroVariantCookie,
+    cookieStore.get("ga-session-id")?.value ?? "blog-index",
+  );
+  if (!heroVariantCookie) {
+    cookieStore.set(BLOG_HERO_VARIANT_COOKIE, heroVariant, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365,
+      sameSite: "lax",
+    });
+  }
+
   let initialPersonalized: typeof indexable = [];
   if (isSupabaseAuthEnabled()) {
     const supabase = await createSupabaseServerClient();
@@ -57,10 +75,14 @@ export default async function BlogPage() {
   }
 
   return (
-    <BlogIndexView
-      posts={posts}
-      initialTours={initialTours}
-      initialPersonalizedPosts={initialPersonalized}
-    />
+    <>
+      <BlogIndexHero variant={heroVariant} indexablePostsCount={indexable.length} />
+      <BlogIndexView
+        posts={posts}
+        initialTours={initialTours}
+        initialPersonalizedPosts={initialPersonalized}
+        heroVariant={heroVariant}
+      />
+    </>
   );
 }

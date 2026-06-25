@@ -139,9 +139,21 @@
   --token-z-dropdown: 40;
   --token-z-sticky: 50;
   --token-z-header: 50;
+  --token-z-mega-menu: 55;
   --token-z-overlay: 60;
-  --token-z-modal: 70;
-  --token-z-toast: 80;
+  --token-z-nav-drawer: 60;
+  --token-z-cookie: 80;
+  --token-z-floating-widget: 88;
+  --token-z-scroll-rail: 85;
+  --token-z-lightbox: 100;
+  --token-z-popover: 110;
+  --token-z-dialog: 115;
+  --token-z-dialog-elevated: 116;
+  --token-z-partner-modals: 120;
+  --token-z-toast: 120;
+  --token-z-progress: 130;
+  /* Legacy alias */
+  --token-z-modal: var(--token-z-dialog);
 
   /* ── Motion ───────────────────────────────────────────────────────────── */
 

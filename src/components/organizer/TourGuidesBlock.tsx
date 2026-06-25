@@ -261,7 +261,7 @@ export default function TourGuidesBlock({ guides, onChange }: TourGuidesBlockPro
               <ChevronDown className={cn("h-4 w-4 transition-transform", pickerOpen && "rotate-180")} />
             </button>
           </PopoverTrigger>
-          <PopoverContent align="start" className="w-[min(100vw-2rem,320px)] p-2">
+          <PopoverContent align="start" className="p-2 sm:max-w-[320px]">
             <div className="space-y-1">
               {showAuthorInPicker && user ? (
                 <button

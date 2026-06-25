@@ -88,7 +88,7 @@ export default function ExcursionFilterBar({
 
   const filterBody = (
     <>
-      <FilterPopover label={formatLabel} active={draft.formats.length > 0} width="min-w-[280px]" inline={inline}>
+      <FilterPopover label={formatLabel} active={draft.formats.length > 0} width="sm:min-w-[280px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Формат экскурсии</p>
           <div className="mt-3 space-y-2">
@@ -132,7 +132,7 @@ export default function ExcursionFilterBar({
         />
       </FilterPopover>
 
-      <FilterPopover label={durationLabel} active={draft.durationBuckets.length > 0} width="min-w-[300px]" inline={inline}>
+      <FilterPopover label={durationLabel} active={draft.durationBuckets.length > 0} width="sm:min-w-[300px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Длительность</p>
           <div className="mt-3 space-y-2">
@@ -171,7 +171,7 @@ export default function ExcursionFilterBar({
         />
       </FilterPopover>
 
-      <FilterPopover label={ratingLabel} active={draft.minRating != null} width="min-w-[260px]" inline={inline}>
+      <FilterPopover label={ratingLabel} active={draft.minRating != null} width="sm:min-w-[260px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Минимальный рейтинг</p>
           <div className="mt-3 space-y-2">
@@ -204,7 +204,7 @@ export default function ExcursionFilterBar({
       </FilterPopover>
 
       {hasUsdPrices ? (
-        <FilterPopover label={priceLabel} active={draft.maxPrice != null} width="min-w-[320px]" inline={inline}>
+        <FilterPopover label={priceLabel} active={draft.maxPrice != null} width="sm:min-w-[320px]" inline={inline}>
           <div className="p-4">
             <p className="text-sm font-semibold text-charcoal">Максимальная цена</p>
             <p className="mt-1 text-xs text-slate">USD за человека или экскурсию — по данным партнёра</p>
@@ -233,7 +233,7 @@ export default function ExcursionFilterBar({
         </FilterPopover>
       ) : null}
 
-      <FilterPopover label={partnerLabel} active={draft.partners.length > 0} width="min-w-[260px]" inline={inline}>
+      <FilterPopover label={partnerLabel} active={draft.partners.length > 0} width="sm:min-w-[260px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Площадка партнёра</p>
           <div className="mt-3 space-y-2">

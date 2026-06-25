@@ -99,7 +99,7 @@ export function SiteNavFullScreenOverlay({
   if (!open || !mounted) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[60] lg:hidden">
+    <div className="fixed inset-0 z-nav-drawer lg:hidden">
       <div
         className="absolute inset-0 bg-charcoal/45 backdrop-blur-sm"
         aria-hidden

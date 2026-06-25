@@ -18,6 +18,7 @@
     "test:e2e": "playwright test",
     "test:e2e:smoke": "playwright test tests/e2e/smoke.spec.ts",
     "test:e2e:visual": "playwright test tests/e2e/visual-smoke.spec.ts",
+    "test:e2e:ux-audit": "playwright test -c playwright.ux-audit.config.ts",
     "seo-audit": "node scripts/seo-audit.mjs",
     "backup:schema": "node scripts/backup-supabase-schema.mjs",
     "smoke": "node scripts/smoke-test.mjs",

@@ -10,12 +10,42 @@
   width: 100%;
   overflow: visible;
   border-radius: var(--flights-search-radius, 1.25rem);
-  border: 1px solid rgb(229 231 235 / 0.95);
-  background: #fff;
+  border: 1px solid var(--token-color-border-subtle, rgb(229 231 235 / 0.95));
+  background: var(--token-color-surface-elevated, #fff);
   box-shadow:
     0 1px 2px rgb(15 23 42 / 0.04),
     0 12px 32px rgb(15 23 42 / 0.07),
     0 24px 48px rgb(15 23 42 / 0.04);
+}
+
+html.dark .flights-wl-mount {
+  border-color: var(--token-color-border-subtle);
+  background: var(--token-color-surface-elevated);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.25),
+    0 12px 32px rgb(0 0 0 / 0.35);
+}
+
+html.dark .flights-wl-root #tpwl-search,
+html.dark .flights-wl-root #tpwl-tickets {
+  color-scheme: dark;
+}
+
+html.dark .flights-page-root .TPWL-template-wrapper,
+html.dark .tour-flight-modal-scroll .TPWL-template-wrapper {
+  --wl-surface: var(--token-color-surface-elevated);
+  --wl-text: var(--token-color-foreground);
+  --wl-muted: var(--token-color-muted);
+  --wl-border: var(--token-color-border-subtle);
+  background-color: var(--wl-surface) !important;
+  color: var(--wl-text) !important;
+}
+
+html.dark .flights-page-root .TPWL-template-wrapper input,
+html.dark .flights-page-root .TPWL-template-wrapper button,
+html.dark .tour-flight-modal-scroll .TPWL-template-wrapper input,
+html.dark .tour-flight-modal-scroll .TPWL-template-wrapper button {
+  color: inherit;
 }
 
 .flights-wl-root #tpwl-search,
@@ -125,5 +155,5 @@ body:has(.tour-flight-modal-scroll) > #tpwl-modals {
   transform: none !important;
   overflow: visible !important;
   pointer-events: none !important;
-  z-index: 120 !important;
+  z-index: var(--token-z-partner-modals, 120) !important;
 }

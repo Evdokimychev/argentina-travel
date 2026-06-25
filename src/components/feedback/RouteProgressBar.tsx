@@ -53,7 +53,7 @@ export default function RouteProgressBar() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-x-0 top-0 z-[130] h-0.5 overflow-hidden bg-transparent"
+      className="pointer-events-none fixed inset-x-0 top-0 z-progress site-progress-bar h-0.5 overflow-hidden bg-transparent"
       aria-hidden
     >
       <div

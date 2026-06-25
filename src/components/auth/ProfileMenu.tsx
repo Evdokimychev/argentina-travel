@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import { userHasRole } from "@/types/auth";
 import UserAvatar from "@/components/auth/UserAvatar";
+import { tokenFocusRingClass, tokenHeaderCircleButtonClass } from "@/lib/design-tokens";
 
 function getFirstName(fullName: string): string {
   return fullName.trim().split(/\s+/)[0] || fullName;
@@ -97,9 +98,13 @@ export default function ProfileMenu() {
         type="button"
         onClick={() => openAuth()}
         aria-label="Войти в профиль"
-        className="flex h-10 shrink-0 items-center gap-1.5 rounded-full bg-charcoal/[0.04] px-2.5 text-sm font-medium text-charcoal ring-1 ring-charcoal/10 transition-colors hover:bg-sky/5 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:px-3"
+        className={cn(
+          tokenHeaderCircleButtonClass,
+          tokenFocusRingClass,
+          "sm:w-auto sm:gap-1.5 sm:px-3 sm:text-sm sm:font-medium",
+        )}
       >
-        <User className="h-4 w-4 shrink-0 text-slate" strokeWidth={1.75} />
+        <User className="h-4 w-4 shrink-0 text-slate sm:text-inherit" strokeWidth={1.75} />
         <span className="hidden sm:inline">Войти</span>
       </button>
     );
@@ -142,7 +147,7 @@ export default function ProfileMenu() {
       {open ? (
         <div
           role="menu"
-          className="absolute right-0 top-[calc(100%+0.5rem)] z-[60] w-[min(280px,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
+          className="absolute right-0 top-[calc(100%+0.5rem)] z-overlay max-sm:fixed max-sm:inset-x-4 max-sm:top-auto max-sm:bottom-[max(1rem,env(safe-area-inset-bottom,0px))] max-sm:w-auto max-sm:max-h-[min(70dvh,calc(100dvh-env(keyboard-inset-height,0px)-6rem))] max-sm:overflow-y-auto w-[min(320px,calc(100dvw-2rem))] overflow-hidden rounded-2xl border border-gray-200 bg-white p-2 shadow-xl"
         >
           <div className="rounded-xl bg-gray-50 px-3 py-3">
             <div className="flex items-center gap-3">

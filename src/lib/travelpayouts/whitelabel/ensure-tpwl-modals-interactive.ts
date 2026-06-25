@@ -13,16 +13,16 @@ const SHADOW_INTERACTIVE_STYLE = `
 [class*="Popup-module__root"],
 [class*="Dropdown-module__root"] {
   box-sizing: border-box !important;
-  width: min(380px, calc(100vw - 1rem)) !important;
-  max-width: min(380px, calc(100vw - 1rem)) !important;
+  width: min(380px, calc(100dvw - 1rem)) !important;
+  max-width: min(380px, calc(100dvw - 1rem)) !important;
   min-width: 0 !important;
 }
 @media (max-width: 639px) {
   [class*="Popover-module__root"],
   [class*="Popup-module__root"],
   [class*="Dropdown-module__root"] {
-    width: calc(100vw - 1rem) !important;
-    max-width: calc(100vw - 1rem) !important;
+    width: calc(100dvw - 1rem) !important;
+    max-width: calc(100dvw - 1rem) !important;
   }
 }
 [class*="Popover-module__root"] [class*="module__content"],

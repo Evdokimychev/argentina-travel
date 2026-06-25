@@ -97,7 +97,7 @@ export default function AdminNotificationsMenu() {
           ) : null}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="min-w-[360px] max-w-[420px]">
+      <PopoverContent align="end" className="p-0 sm:min-w-[360px] sm:max-w-[420px]">
         <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
           <div>
             <p className="text-sm font-semibold text-charcoal">Уведомления</p>

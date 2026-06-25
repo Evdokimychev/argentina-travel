@@ -3,27 +3,45 @@
 import * as PopoverPrimitive from "@radix-ui/react-popover";
 import { cn } from "@/lib/cn";
 import { motionClass } from "@/lib/motion";
+import {
+  popoverContentShellClass,
+  popoverScrollMaxHeightClass,
+} from "@/lib/responsive-ui";
+import { useMaxSm } from "@/hooks/useMaxSm";
 
 const Popover = PopoverPrimitive.Root;
 const PopoverTrigger = PopoverPrimitive.Trigger;
 
+type PopoverContentProps = React.ComponentProps<typeof PopoverPrimitive.Content> & {
+  /** Full-width centered panel on mobile (default true). */
+  mobileFullWidth?: boolean;
+};
+
 function PopoverContent({
   className,
-  align = "start",
+  align,
   side = "bottom",
   sideOffset = 8,
+  collisionPadding = 16,
+  mobileFullWidth = true,
   ...props
-}: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+}: PopoverContentProps) {
+  const isMobile = useMaxSm();
+  const resolvedAlign = isMobile && mobileFullWidth ? "center" : (align ?? "start");
+
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Content
-        align={align}
+        align={resolvedAlign}
         side={side}
         sideOffset={sideOffset}
+        collisionPadding={collisionPadding}
         className={cn(
-          "z-[110] w-[var(--radix-popover-trigger-width)] min-w-0 max-w-[min(100%,calc(100dvw-2rem))] rounded-card border border-border-subtle bg-surface-elevated p-0 shadow-modal outline-none sm:min-w-[20rem]",
+          "z-popover rounded-card border border-border-subtle bg-surface-elevated p-0 shadow-modal outline-none",
+          mobileFullWidth && popoverContentShellClass,
+          mobileFullWidth && popoverScrollMaxHeightClass,
           motionClass.dropdown,
-          className
+          className,
         )}
         {...props}
       />

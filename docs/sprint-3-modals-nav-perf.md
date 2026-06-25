@@ -41,15 +41,20 @@
 
 ## 3. Оставшиеся проблемы
 
-| Приоритет | Проблема |
-|-----------|----------|
-| High | Blog LCP/CLS (CI Lighthouse perf ~57) — hero aspect-ratio, image priority |
-| High | `/about` — design system вместо публичной страницы |
-| Medium | Admin ledger — card layout на `<md` |
-| Medium | Единый z-index token file |
-| Medium | Swipe-down to dismiss (не реализован — только back/Escape/кнопка) |
-| Low | ~15 popover файлов с legacy `100vw` |
-| Low | TourCheckoutModal — h2 вместо DialogTitle (крупный refactor) |
+_Все пункты Sprint 4 закрыты (см. §5)._
+
+## 5. Sprint 4 — закрытие открытых задач
+
+| Задача | Решение |
+|--------|---------|
+| Blog LCP/CLS | SSR `BlogIndexHero`, cookie-based A/B без client flash, `#blog-catalog` min-height |
+| Z-index tokens | Расширен `--token-z-*` в `tokens.css`, Tailwind `z-dialog`, `z-toast`, …; миграция ключевых компонентов |
+| Swipe-down dismiss | `useDialogSwipeDismiss` + drag handle в `DialogContent` (mobile) |
+| Toast 44px | `SiteToastHost` dismiss `h-11 w-11` |
+| Calendar touch | `calendar-month-grid` `h-10 w-10` на touch, `sm:h-8` на desktop |
+| WL dark mode | `html.dark` tokens в `flights-whitelabel-widget.css` |
+| Overlay lock | Toast/progress скрываются при `data-site-overlay-lock="locked"` |
+| E2E UX audit | `tests/e2e/ux-audit.spec.ts`, reporter → `docs/sprint-4-backlog-e2e.md`, CI step |
 
 ## 4. Рекомендации по Lighthouse / CWV
 

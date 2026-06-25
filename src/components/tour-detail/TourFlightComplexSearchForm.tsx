@@ -621,7 +621,7 @@ export default function TourFlightComplexSearchForm({
               <PopoverContent
                 align="start"
                 collisionPadding={16}
-                className="max-h-[min(90vh,var(--radix-popover-content-available-height))] w-[min(calc(100dvw-2rem),580px)] max-w-[min(100%,calc(100dvw-2rem))] overflow-y-auto overflow-x-hidden p-0"
+                className="overflow-x-hidden p-0 sm:max-w-[580px]"
               >
                 <SegmentDateRangePicker
                   from={draftDates.depart}
@@ -680,7 +680,7 @@ export default function TourFlightComplexSearchForm({
               </button>
             </PopoverTrigger>
           </div>
-          <PopoverContent align="start" className="w-[min(calc(100dvw-2rem),320px)] max-w-[min(100%,calc(100dvw-2rem))] p-0">
+          <PopoverContent align="start" className="p-0 sm:max-w-[320px]">
             <div className="px-4 pt-3 pb-1">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate">
                 {t("flights.form.passengersCountSection")}

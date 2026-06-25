@@ -32,7 +32,7 @@ export default function GroupDiscountAppliedBadge({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="min-w-[240px] max-w-[min(300px,calc(100vw-2rem))] p-3 text-sm leading-relaxed text-charcoal"
+        className="p-3 text-sm leading-relaxed text-charcoal sm:min-w-[240px] sm:max-w-[300px]"
         side="top"
         align="start"
         sideOffset={6}

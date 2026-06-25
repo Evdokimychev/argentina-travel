@@ -133,7 +133,7 @@ export default function ExcursionSearchPanel({
                 />
               ) : null}
             </div>
-            <PopoverContent className="w-[min(100vw-2rem,320px)] p-0" align="start">
+            <PopoverContent className="p-0" align="start">
               <div className="border-b border-gray-100 p-3">
                 <Input
                   value={cityQuery}

@@ -295,7 +295,7 @@ export function BlogRichGalleryCarousel({
       {lightboxOpen ? (
         <div
           ref={lightboxRef}
-          className="fixed inset-0 z-[100] flex flex-col bg-charcoal/95"
+          className="fixed inset-0 z-lightbox flex flex-col bg-charcoal/95"
           role="dialog"
           aria-modal="true"
           aria-label="Просмотр фото"

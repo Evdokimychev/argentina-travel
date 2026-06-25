@@ -111,6 +111,7 @@ export function HubPicker({
   label,
   placeholder,
   compact,
+  triggerClassName,
 }: {
   kind: "origin" | "destination";
   value: string;
@@ -118,6 +119,7 @@ export function HubPicker({
   label: string;
   placeholder: string;
   compact?: boolean;
+  triggerClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -135,6 +137,7 @@ export function HubPicker({
           className={cn(
             "flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-gray-50/80 sm:px-4 lg:py-3",
             compact && "lg:py-2.5",
+            triggerClassName,
           )}
         >
           <Plane
@@ -162,7 +165,7 @@ export function HubPicker({
         align="start"
         avoidCollisions={false}
         sideOffset={8}
-        className="flex max-h-[min(360px,calc(100vh-12rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden p-0"
+        className="flex max-h-[min(360px,calc(100vh-12rem))] flex-col overflow-hidden p-0 sm:w-[min(360px,calc(100dvw-2rem))]"
       >
         <div className="shrink-0 border-b border-gray-100 p-3">
           <Input
@@ -217,7 +220,7 @@ export function FlightRouteRow({
   return (
     <div
       className={cn(
-        "flex min-w-0 flex-1 flex-col rounded-2xl border border-sky/15 bg-sky/[0.03] sm:flex-row sm:items-stretch",
+        "relative flex min-w-0 flex-1 flex-col rounded-2xl border border-sky/15 bg-sky/[0.03] sm:flex-row sm:items-stretch",
         className,
       )}
     >
@@ -228,13 +231,14 @@ export function FlightRouteRow({
         label={t("flights.form.origin")}
         placeholder={t("flights.form.originPlaceholder")}
         compact={compact}
+        triggerClassName="max-sm:border-b max-sm:border-gray-200 max-sm:pr-11"
       />
-      <div className="relative flex shrink-0 items-center justify-center sm:w-10">
-        <div className="absolute inset-x-3 top-0 h-px bg-gray-200 sm:inset-y-0 sm:left-1/2 sm:h-auto sm:w-px sm:-translate-x-1/2" />
+      <div className="relative hidden shrink-0 items-center justify-center sm:flex sm:w-10">
+        <div className="absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-gray-200" />
         <button
           type="button"
           onClick={swapEndpoints}
-          className="relative z-10 my-1 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5 sm:my-0"
+          className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5"
           aria-label={t("flights.form.swap")}
         >
           <ArrowRightLeft className="h-3.5 w-3.5" />
@@ -247,7 +251,16 @@ export function FlightRouteRow({
         label={t("flights.form.destination")}
         placeholder={t("flights.form.destinationPlaceholder")}
         compact={compact}
+        triggerClassName="max-sm:pr-11"
       />
+      <button
+        type="button"
+        onClick={swapEndpoints}
+        className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5 sm:hidden"
+        aria-label={t("flights.form.swap")}
+      >
+        <ArrowRightLeft className="h-3.5 w-3.5" />
+      </button>
     </div>
   );
 }

@@ -323,7 +323,7 @@ export default function LocaleCurrencySwitcher({
             />
             <div
               className={cn(
-                "fixed inset-x-0 bottom-0 z-[70] max-h-[85vh] overflow-hidden rounded-t-3xl bg-white shadow-2xl",
+                "fixed inset-x-0 bottom-0 z-[70] max-h-[min(85dvh,calc(100dvh-env(keyboard-inset-height,0px)-1rem))] overflow-hidden rounded-t-3xl bg-white shadow-2xl",
                 motionClass.enterSheet
               )}
             >

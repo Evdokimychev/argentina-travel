@@ -32,7 +32,7 @@ function ComfortHelpButton() {
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="max-w-[min(320px,calc(100vw-2rem))] p-3 text-sm leading-relaxed text-charcoal"
+        className="p-3 text-sm leading-relaxed text-charcoal sm:max-w-[320px]"
         side="top"
         align="start"
       >

@@ -296,7 +296,7 @@ export default function SingleDatePicker({
           />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-[280px] min-w-[280px] p-0" align="start" sideOffset={6}>
+      <PopoverContent className="p-0 sm:w-[280px] sm:min-w-[280px]" align="start" sideOffset={6}>
         {birthDatePicker ? (
           <>
             <BirthDateMonthYearControls

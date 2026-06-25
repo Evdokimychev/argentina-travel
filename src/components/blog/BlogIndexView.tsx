@@ -2,19 +2,16 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import HubHero from "@/components/guide/hub/HubHero";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogEmptyCatalogState from "@/components/blog/BlogEmptyCatalogState";
-import BlogHeroVariantCopy from "@/components/blog/BlogHeroVariantCopy";
 import BlogIndexDiscoverySidebar, {
   BlogIndexSecondaryDiscovery,
   BlogStartHereStrip,
 } from "@/components/blog/BlogIndexDiscoverySidebar";
-import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
+import { buttonVariants } from "@/components/ui/button";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import {
   blogPosts,
-  computeBlogStats,
   filterBlogPosts,
   getBlogCategoriesWithCounts,
   getBlogStartHerePosts,
@@ -22,8 +19,8 @@ import {
   sortBlogPostsByDate,
 } from "@/data/blog";
 import { filterIndexableBlogPosts, resolveBlogCardVariant } from "@/lib/blog-utils";
-import { buttonVariants } from "@/components/ui/button";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
+import { BLOG_HERO_VARIANT_KEY, type BlogHeroVariant } from "@/lib/blog-hero-variant";
+import BlogSearchFilters from "@/components/blog/BlogSearchFilters";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import type { BlogPost, TourListing } from "@/types";
@@ -35,12 +32,14 @@ type BlogIndexViewProps = {
   posts?: BlogPost[];
   initialTours?: TourListing[];
   initialPersonalizedPosts?: BlogPost[];
+  heroVariant?: BlogHeroVariant;
 };
 
 function BlogIndexViewContent({
   posts,
   initialTours = [],
   initialPersonalizedPosts = [],
+  heroVariant = "a",
 }: BlogIndexViewProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -67,7 +66,6 @@ function BlogIndexViewContent({
     [indexableCatalog],
   );
   const tags = useMemo(() => getTopBlogTags(indexableCatalog, 14), [indexableCatalog]);
-  const stats = useMemo(() => computeBlogStats(catalogPosts), [catalogPosts]);
   const freshPosts = useMemo(
     () => sortBlogPostsByDate(indexableCatalog).slice(0, 4),
     [indexableCatalog],
@@ -91,6 +89,11 @@ function BlogIndexViewContent({
   useEffect(() => {
     setVisibleCount(PAGE_SIZE);
   }, [query, activeCategory, activeTag]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(BLOG_HERO_VARIANT_KEY, heroVariant);
+  }, [heroVariant]);
 
   useEffect(() => {
     const tagFromUrl = searchParams.get("tag")?.trim();
@@ -236,34 +239,7 @@ function BlogIndexViewContent({
   }
 
   return (
-    <>
-      <BlogHeroVariantCopy>
-        {(variant, copy) => (
-          <HubHero
-            title="Блог о путешествиях"
-            subtitle={
-              variant === "b"
-                ? copy.subtitle
-                : `${stats.indexablePosts.toLocaleString("ru-RU")} проверенных материалов — ${copy.subtitle}`
-            }
-            image={getServicePageHeroImage("blog-index")}
-            eyebrow={{ label: "Журнал", href: "/blog" }}
-            ctas={
-              variant === "b"
-                ? [
-                    { label: copy.primaryCta, href: "/podbor", variant: "primary" as const },
-                    { label: copy.secondaryCta, href: "/blog#blog-search", variant: "secondary" as const },
-                  ]
-                : [
-                    { label: copy.secondaryCta, href: "/guide", variant: "secondary" as const },
-                    { label: copy.primaryCta, href: "/places", variant: "primary" as const },
-                  ]
-            }
-          />
-        )}
-      </BlogHeroVariantCopy>
-
-      <div className="bg-surface-muted pb-12">
+    <div className="bg-surface-muted pb-12">
         <div className={cn(siteContainerClass, "blog-index py-5 md:py-6")}>
           <PageBreadcrumbs
             items={[
@@ -328,7 +304,6 @@ function BlogIndexViewContent({
           </div>
         </div>
       </div>
-    </>
   );
 }
 

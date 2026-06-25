@@ -64,7 +64,7 @@ function MultiSelectField({
           </div>
         </PopoverFieldTrigger>
       </PopoverTrigger>
-      <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
+      <PopoverContent align="start" className="p-0 sm:min-w-[var(--radix-popover-trigger-width)]">
         <ul className="max-h-72 overflow-y-auto p-1">
           {options.map((option) => {
             const active = selected.includes(option);
@@ -136,7 +136,7 @@ function SingleSelectField({
             </div>
           </PopoverFieldTrigger>
         </PopoverTrigger>
-        <PopoverContent align="start" className="min-w-[var(--radix-popover-trigger-width)] p-0">
+        <PopoverContent align="start" className="p-0 sm:min-w-[var(--radix-popover-trigger-width)]">
           <ul className="max-h-72 overflow-y-auto p-1">
             {options.map((option) => (
               <li key={option}>

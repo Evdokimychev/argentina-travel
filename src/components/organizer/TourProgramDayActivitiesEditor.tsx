@@ -80,7 +80,7 @@ function ActivityKindPicker({
           />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-[min(100vw-2rem,360px)] p-0">
+      <PopoverContent align="start" className="p-0 sm:max-w-[360px]">
         <div className="border-b border-gray-100 p-2">
           <Input
             value={query}

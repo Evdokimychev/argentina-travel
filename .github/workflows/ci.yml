@@ -79,3 +79,7 @@ jobs:
           LIGHTHOUSE_CATEGORIES: performance,accessibility
           LIGHTHOUSE_SAMPLE_PATHS: /blog,/blog/authors,/blog/hub/patagonia,/blog/patagonia-packing-list,/blog/natsionalnyy-park-iguasu
         run: node scripts/lighthouse-ci.mjs
+
+      - name: E2E UX audit
+        run: npm run test:e2e:ux-audit
+        continue-on-error: true

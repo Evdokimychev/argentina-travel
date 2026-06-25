@@ -49,7 +49,7 @@ export default function PriceOtherCurrenciesPopover({
           />
         </button>
       </PopoverTrigger>
-      <PopoverContent align="start" className="w-auto min-w-[220px] max-w-[280px] p-3">
+      <PopoverContent align="start" className="p-3 sm:min-w-[220px] sm:max-w-[280px]">
         <p className="text-xs font-semibold text-charcoal">Цена в других валютах</p>
         <p className="mt-0.5 text-[11px] leading-relaxed text-slate">
           Ориентировочно по текущему курсу

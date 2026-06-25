@@ -168,7 +168,7 @@ export default function TourFlightResultsModal({
       <DialogContent
         bottomSheet={false}
         showClose={false}
-        className="fixed inset-0 z-[116] flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col overflow-hidden rounded-none border-0 p-0 sm:max-h-none sm:rounded-none"
+        className="fixed inset-0 z-dialog-elevated flex h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col overflow-hidden rounded-none border-0 p-0 sm:max-h-none sm:rounded-none"
       >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">

@@ -8,7 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import { apiCreateShopOrder } from "@/lib/shop-order-api";
 import type { ShopOrder } from "@/types/shop-order";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import FormattedPrice from "@/components/FormattedPrice";
@@ -91,7 +91,12 @@ export default function ShopCheckoutModal({
           <form onSubmit={handleSubmit} className="flex flex-col">
             <div className="border-b border-gray-100 px-6 py-5">
               <p className="text-xs font-medium uppercase tracking-wide text-slate">Заказ PDF</p>
-              <h2 className="mt-1 font-heading text-xl font-bold text-charcoal">{product.title}</h2>
+              <DialogTitle className="mt-1 font-heading text-xl font-bold text-charcoal">
+                {product.title}
+              </DialogTitle>
+              <DialogDescription className="sr-only">
+                Оформление заказа PDF-материала «{product.title}»
+              </DialogDescription>
               <p className="mt-2 text-sm text-slate">{product.format}</p>
               <FormattedPrice priceUsd={product.price} className="mt-3 text-lg font-bold" />
             </div>
@@ -183,7 +188,12 @@ export default function ShopCheckoutModal({
             <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
               <Check className="h-7 w-7" aria-hidden />
             </div>
-            <h2 className="mt-4 font-heading text-xl font-bold text-charcoal">Заказ принят</h2>
+            <DialogTitle className="mt-4 font-heading text-xl font-bold text-charcoal">
+              Заказ принят
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              Заказ PDF успешно создан, менеджер свяжется с вами для оплаты
+            </DialogDescription>
             <p className="mt-2 text-sm leading-relaxed text-slate">
               Номер заказа: <span className="font-medium text-charcoal">{order?.id}</span>.
               Менеджер свяжется с вами для оплаты и отправит PDF на{" "}

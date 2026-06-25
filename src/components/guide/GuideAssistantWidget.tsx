@@ -189,7 +189,7 @@ export default function GuideAssistantWidget() {
         type="button"
         onClick={() => setOpen(true)}
         className={cn(
-          "fixed right-3 z-[88] flex h-12 w-12 items-center justify-center rounded-full border border-sky/25",
+          "fixed right-3 z-floating-widget flex h-12 w-12 items-center justify-center rounded-full border border-sky/25",
           "bg-sky text-white shadow-elevated transition-transform hover:scale-[1.03] hover:bg-sky-dark",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
           "bottom-[calc(5.25rem+env(safe-area-inset-bottom,0px))] sm:bottom-6"

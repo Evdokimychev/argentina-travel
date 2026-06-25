@@ -226,7 +226,7 @@ export default function SearchBlock({
             align="start"
             avoidCollisions={false}
             sideOffset={8}
-            className="flex max-h-[min(420px,calc(100vh-12rem))] w-[min(480px,calc(100vw-2rem))] flex-col overflow-hidden p-0"
+            className="flex max-h-[min(65dvh,calc(100dvh-env(keyboard-inset-height,0px)-6rem))] flex-col overflow-hidden p-0 sm:max-h-[min(420px,calc(100vh-12rem))] sm:w-[min(480px,calc(100dvw-2rem))]"
             onPointerDownCapture={() => {
               destInteractedRef.current = true;
             }}
@@ -357,7 +357,7 @@ export default function SearchBlock({
           <PopoverContent
             align="start"
             collisionPadding={16}
-            className="max-h-[min(90vh,var(--radix-popover-content-available-height))] w-[calc(100vw-2rem)] max-w-[580px] overflow-y-auto p-0"
+            className="overflow-y-auto p-0 sm:max-w-[580px]"
           >
             <DateRangePicker
               from={draftFrom}

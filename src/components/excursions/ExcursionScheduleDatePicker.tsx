@@ -136,7 +136,7 @@ export default function ExcursionScheduleDatePicker({
           </button>
         </PopoverTrigger>
 
-        <PopoverContent className="w-[280px] min-w-[280px] p-0" align="start" sideOffset={6}>
+        <PopoverContent className="p-0 sm:w-[280px] sm:min-w-[280px]" align="start" sideOffset={6}>
           <div className="border-b border-gray-100 px-2 py-2">
             <div className="mb-1 flex items-center justify-between gap-1">
               <button

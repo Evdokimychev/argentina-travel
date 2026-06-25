@@ -84,7 +84,7 @@ export default function CalendarMonthGrid({
       </div>
       <div className="grid grid-cols-7">
         {Array.from({ length: startPad }).map((_, i) => (
-          <div key={`pad-${i}`} className="h-8" />
+          <div key={`pad-${i}`} className="h-10 sm:h-8" />
         ))}
         {days.map((day) => {
           const isRangeStart = rangeFrom ? isSameDay(day, rangeFrom) : false;
@@ -103,7 +103,7 @@ export default function CalendarMonthGrid({
               disabled={disabled}
               onClick={() => onDayClick(day)}
               className={cn(
-                "mx-auto flex h-8 w-8 items-center justify-center rounded-full text-sm transition-colors",
+                "mx-auto flex h-10 w-10 items-center justify-center rounded-full text-sm transition-colors touch-manipulation sm:h-8 sm:w-8",
                 isSelected && "bg-sky text-white",
                 inRange && !isSelected && "bg-sky/10 text-sky-dark",
                 !isSelected && !inRange && !disabled && "hover:bg-gray-100",
