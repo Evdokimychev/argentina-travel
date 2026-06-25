@@ -12,11 +12,19 @@ export function useSyncPriceFilters(
   setFilters: React.Dispatch<React.SetStateAction<TourFilters>>
 ) {
   const catalogMinRef = useRef<number | null>(null);
+  const currencyRef = useRef(currency);
 
   useEffect(() => {
     setFilters((f) => {
-      const result = syncPriceFilters(f, tours, currency, catalogMinRef.current);
+      const result = syncPriceFilters(
+        f,
+        tours,
+        currency,
+        catalogMinRef.current,
+        currencyRef.current
+      );
       catalogMinRef.current = result.catalogMin;
+      currencyRef.current = currency;
       return result.filters;
     });
   }, [tours, currency, setFilters]);

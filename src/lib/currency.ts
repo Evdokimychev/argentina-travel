@@ -85,6 +85,29 @@ export function formatCurrencyAmount(
   }
 }
 
+const LOCALE_NUMBER: Record<LocaleCode, string> = {
+  ru: "ru-RU",
+  es: "es-ES",
+  en: "en-US",
+  pt: "pt-BR",
+};
+
+/** Plain amount for filter inputs (no currency symbol, grouped thousands). */
+export function formatFilterAmount(amount: number, locale: LocaleCode): string {
+  if (!Number.isFinite(amount)) return "";
+  return Math.round(amount).toLocaleString(LOCALE_NUMBER[locale], {
+    maximumFractionDigits: 0,
+  });
+}
+
+/** Parses filter input with optional thousand separators. */
+export function parseFilterAmount(raw: string): number | null {
+  const normalized = raw.replace(/[\s\u00a0\u202f]/g, "").replace(/,/g, "").trim();
+  if (!normalized) return null;
+  const next = Number(normalized);
+  return Number.isFinite(next) ? next : null;
+}
+
 export function formatPriceUsd(
   priceUsd: number,
   currency: CurrencyCode,

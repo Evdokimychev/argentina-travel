@@ -85,6 +85,39 @@ describe("YouTravel catalog filters", () => {
     expect(isYouTravelPartnerListing(youtravel)).toBe(true);
   });
 
+  it("filters Tripster by priceUsd in selected currency", () => {
+    const expensive = { ...tripster, priceUsd: 3500 };
+    const filters = {
+      ...getDefaultFilters("RUB", [expensive]),
+      priceMin: 5_628,
+      priceMax: 26_188,
+    };
+    expect(filterTours([expensive], filters, "RUB")).toHaveLength(0);
+    expect(
+      filterTours(
+        [expensive],
+        { ...filters, priceMin: 0, priceMax: 500_000 },
+        "RUB"
+      )
+    ).toHaveLength(1);
+  });
+
+  it("filters Tripster by RUB partner price", () => {
+    const expensive = {
+      ...tripster,
+      priceUsd: 0,
+      priceOnRequest: true,
+      partnerPriceValue: 300_000,
+      partnerPriceCurrency: "RUB",
+    };
+    const filters = {
+      ...getDefaultFilters("RUB", [expensive]),
+      priceMin: 5_628,
+      priceMax: 26_188,
+    };
+    expect(filterTours([expensive], filters, "RUB")).toHaveLength(0);
+  });
+
   it("filters YouTravel by partner price in USD", () => {
     const filters = {
       ...getDefaultFilters("USD", [youtravel]),
@@ -151,7 +184,7 @@ describe("YouTravel catalog filters", () => {
     expect(result[0]?.id).toBe("youtravel-1");
   });
 
-  it("skips comfort filter for Tripster partner tours", () => {
+  it("filters Tripster by comfort level", () => {
     const tripsterComfort = {
       ...tripster,
       comfortLevel: "Базовый" as const,
@@ -161,7 +194,31 @@ describe("YouTravel catalog filters", () => {
       comfortLevels: ["Премиум" as const],
     };
 
-    expect(filterTours([tripsterComfort], filters, "USD")).toHaveLength(1);
+    expect(filterTours([tripsterComfort], filters, "USD")).toHaveLength(0);
+    expect(
+      filterTours(
+        [tripsterComfort],
+        { ...filters, comfortLevels: ["Базовый" as const] },
+        "USD"
+      )
+    ).toHaveLength(1);
+  });
+
+  it("filters partner tours by accommodation and language", () => {
+    const filters = {
+      ...getDefaultFilters("USD", [youtravel, tripster]),
+      accommodations: ["Палатка" as const],
+    };
+    expect(filterTours([youtravel, tripster], filters, "USD")).toHaveLength(0);
+
+    const englishOnly = {
+      ...getDefaultFilters("USD", [youtravel]),
+      languages: ["Английский" as const],
+    };
+    expect(filterTours([youtravel], englishOnly, "USD")).toHaveLength(0);
+    expect(
+      filterTours([youtravel], { ...englishOnly, languages: ["Русский" as const] }, "USD")
+    ).toHaveLength(1);
   });
 
   it("filters YouTravel by organizer slug", () => {

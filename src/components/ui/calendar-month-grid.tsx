@@ -26,6 +26,8 @@ interface CalendarMonthGridProps {
   hideTitle?: boolean;
   /** When set, only days passing this check stay enabled (in addition to min/max/past rules). */
   isDateSelectable?: (day: Date) => boolean;
+  /** yyyy-MM-dd → number of departures starting on that day (shows a dot under the date). */
+  markedDayCounts?: ReadonlyMap<string, number>;
   onDayClick: (day: Date) => void;
   className?: string;
 }
@@ -59,6 +61,7 @@ export default function CalendarMonthGrid({
   disablePast = false,
   hideTitle = false,
   isDateSelectable,
+  markedDayCounts,
   onDayClick,
   className,
 }: CalendarMonthGridProps) {
@@ -95,22 +98,38 @@ export default function CalendarMonthGrid({
           const disabled =
             isDayDisabled(day, minDate, maxDate, disablePast) ||
             (isDateSelectable ? !isDateSelectable(day) : false);
+          const dayKey = format(day, "yyyy-MM-dd");
+          const departureCount = markedDayCounts?.get(dayKey) ?? 0;
+          const hasDepartures = departureCount > 0;
 
           return (
             <button
-              key={format(day, "yyyy-MM-dd")}
+              key={dayKey}
               type="button"
               disabled={disabled}
               onClick={() => onDayClick(day)}
               className={cn(
-                "mx-auto flex h-10 w-10 items-center justify-center rounded-full text-sm transition-colors touch-manipulation sm:h-8 sm:w-8",
+                "relative mx-auto flex h-10 w-10 flex-col items-center justify-center rounded-full text-sm transition-colors touch-manipulation sm:h-9 sm:w-9",
                 isSelected && "bg-sky text-white",
                 inRange && !isSelected && "bg-sky/10 text-sky-dark",
-                !isSelected && !inRange && !disabled && "hover:bg-gray-100",
+                !isSelected && !inRange && !disabled && hasDepartures && "font-semibold text-charcoal hover:bg-sky/10",
+                !isSelected && !inRange && !disabled && !hasDepartures && "hover:bg-gray-100",
                 disabled && "cursor-not-allowed text-gray-300"
               )}
             >
-              {format(day, "d")}
+              <span>{format(day, "d")}</span>
+              {hasDepartures ? (
+                <span
+                  className={cn(
+                    "absolute bottom-0.5 h-1 min-w-[0.35rem] rounded-full px-0.5 text-[8px] leading-none",
+                    isSelected ? "bg-white/90 text-sky" : "bg-sky text-white",
+                    departureCount > 1 && "min-w-[0.65rem]"
+                  )}
+                  aria-hidden
+                >
+                  {departureCount > 1 ? departureCount : ""}
+                </span>
+              ) : null}
             </button>
           );
         })}

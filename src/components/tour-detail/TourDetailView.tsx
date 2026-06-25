@@ -61,8 +61,7 @@ import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import PlacesSection from "./PlacesSection";
 import type { Tour } from "@/types/tour";
-import type { ReactNode } from "react";
-import { Suspense } from "react";
+import { Suspense, useEffect, type ReactNode } from "react";
 import { useTrackEntityView } from "@/hooks/useInteractionTracking";
 
 interface TourDetailViewProps {
@@ -78,6 +77,7 @@ interface TourDetailViewProps {
   previewEditHref?: string;
   previewIsPublished?: boolean;
   previewPublishBlockingCount?: number;
+  initialDepartureDate?: string | null;
 }
 
 export default function TourDetailView({
@@ -92,6 +92,7 @@ export default function TourDetailView({
   previewEditHref,
   previewIsPublished = false,
   previewPublishBlockingCount = 0,
+  initialDepartureDate = null,
 }: TourDetailViewProps) {
   useTrackEntityView("tour", previewMode ? null : slug, {
     title: initialTour?.title,
@@ -158,8 +159,17 @@ export default function TourDetailView({
       : undefined;
   const isYouTravel = isYouTravelPartnerDetail(tour);
 
+  useEffect(() => {
+    if (!initialDepartureDate?.trim()) return;
+    const target = document.getElementById("booking");
+    if (!target) return;
+    window.requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [initialDepartureDate, tour.slug]);
+
   return (
-    <TourBookingProvider tour={tour}>
+    <TourBookingProvider tour={tour} initialDepartureDate={initialDepartureDate}>
       {previewMode && previewEditHref ? (
         <TourPreviewBanner
           title={tour.title}

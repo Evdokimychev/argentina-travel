@@ -1,5 +1,6 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { ChevronDown, LayoutGrid, LayoutList, Map } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -30,6 +31,7 @@ interface CatalogToolbarProps<V extends string = TourSortOption> {
   showViewToggle?: boolean;
   activeFilterCount?: number;
   onResetFilters?: () => void;
+  trailingAction?: ReactNode;
 }
 
 function ViewToggle({
@@ -102,6 +104,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
   showViewToggle = true,
   activeFilterCount = 0,
   onResetFilters,
+  trailingAction,
 }: CatalogToolbarProps<V>) {
   const isSecondary = secondarySortOptions.some((option) => option.value === sort);
   const secondaryLabel =
@@ -176,6 +179,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
+        {trailingAction}
         {activeFilterCount > 0 && onResetFilters ? (
           <Button
             variant="ghost"

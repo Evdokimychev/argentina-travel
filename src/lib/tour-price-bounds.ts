@@ -1,7 +1,7 @@
 import { TourListing, TourFilters } from "@/types";
 import { CurrencyCode } from "@/types/locale";
 import { resolveListingFilterPriceUsd } from "@/lib/partner-tours/filter-price";
-import { convertFromUsd, getFilterPriceMax, getSliderPriceBounds, getSliderPriceStep } from "@/lib/currency";
+import { convertFromUsd, getFilterPriceMax, getSliderPriceBounds, getSliderPriceStep, convertToUsd } from "@/lib/currency";
 
 export function getTourPriceBounds(
   tours: TourListing[],
@@ -59,23 +59,36 @@ export function syncPriceFilters(
   filters: TourFilters,
   tours: TourListing[],
   currency: CurrencyCode,
-  prevCatalogMin: number | null
+  prevCatalogMin: number | null,
+  prevCurrency: CurrencyCode | null = null
 ): { filters: TourFilters; catalogMin: number } {
+  let nextFilters = filters;
+
+  if (prevCurrency && prevCurrency !== currency) {
+    const prevMax =
+      filters.priceMax > 0 ? filters.priceMax : getFilterPriceMax(prevCurrency);
+    nextFilters = {
+      ...filters,
+      priceMin: convertFromUsd(convertToUsd(filters.priceMin, prevCurrency), currency),
+      priceMax: convertFromUsd(convertToUsd(prevMax, prevCurrency), currency),
+    };
+  }
+
   const { min: catalogMin, max: catalogMax } = getTourPriceBounds(tours, currency);
   const priceMaxLimit = getFilterPriceMax(currency);
   const sliderCeiling = Math.max(catalogMax, priceMaxLimit);
   const step = getSliderPriceStep(catalogMin, sliderCeiling);
   const { max: sliderMaxLimit } = getSliderPriceBounds(catalogMin, sliderCeiling, step);
-  const effectiveMax = filters.priceMax || sliderMaxLimit;
+  const effectiveMax = nextFilters.priceMax || sliderMaxLimit;
 
   const wasFullRange =
     prevCatalogMin != null &&
-    filters.priceMin >= prevCatalogMin &&
+    nextFilters.priceMin >= prevCatalogMin &&
     effectiveMax >= sliderMaxLimit;
 
   const active = isPriceFilterActive(
-    filters.priceMin,
-    filters.priceMax,
+    nextFilters.priceMin,
+    nextFilters.priceMax,
     currency,
     tours
   );
@@ -83,7 +96,7 @@ export function syncPriceFilters(
   if (prevCatalogMin == null || wasFullRange || !active) {
     return {
       filters: {
-        ...filters,
+        ...nextFilters,
         priceMin: catalogMin,
         priceMax: sliderMaxLimit,
       },
@@ -93,12 +106,32 @@ export function syncPriceFilters(
 
   return {
     filters: {
-      ...filters,
-      priceMin: Math.max(filters.priceMin, catalogMin),
+      ...nextFilters,
+      priceMin: Math.max(nextFilters.priceMin, catalogMin),
       priceMax: Math.min(effectiveMax, sliderMaxLimit),
     },
     catalogMin,
   };
+}
+
+export function resolvePriceFilterSliderTrackMax(input: {
+  priceMin: number;
+  priceMax: number;
+  catalogMin: number;
+  fullSliderMax: number;
+  filterCap: number;
+}): number {
+  const effectiveMax = input.priceMax || input.fullSliderMax;
+  const narrowed =
+    effectiveMax < input.fullSliderMax * 0.9 &&
+    input.fullSliderMax > input.filterCap * 1.2;
+
+  if (!narrowed) return input.fullSliderMax;
+
+  return Math.min(
+    input.fullSliderMax,
+    Math.max(effectiveMax, input.priceMin, input.catalogMin, input.filterCap)
+  );
 }
 
 export function clampPriceRange(

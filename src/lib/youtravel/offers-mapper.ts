@@ -13,12 +13,16 @@ import {
 } from "@/lib/youtravel/partner-offer-occupancy";
 
 /** RUB-scale amounts mislabeled as USD/EUR when detail currency=RUB. */
-const YOUTRAVEL_MISLABELED_LOW_DENOMINATION_THRESHOLD = 10000;
+const YOUTRAVEL_MISLABELED_HIGH_DENOMINATION_THRESHOLD = 10000;
+/** USD-scale amounts mislabeled as RUB (typical partner offer band). */
+const YOUTRAVEL_MISLABELED_USD_IN_RUB_RANGE_MIN = 300;
 const HIGH_DENOMINATION_CURRENCIES = new Set(["ARS", "CLP", "RUB"]);
 
 /**
  * YouTravel partner offers sometimes return RUB-scale amounts with a USD/EUR label
  * when detail currency=RUB. Re-label as RUB so conversion and display stay correct.
+ *
+ * The inverse also happens: USD/EUR-scale amounts (e.g. 5628) arrive with currency=RUB.
  */
 export function normalizeYouTravelPartnerPrice(
   value: number | null | undefined,
@@ -31,9 +35,17 @@ export function normalizeYouTravelPartnerPrice(
   const normalizedCurrency = currency?.trim().toUpperCase() || "USD";
   if (
     !HIGH_DENOMINATION_CURRENCIES.has(normalizedCurrency) &&
-    value >= YOUTRAVEL_MISLABELED_LOW_DENOMINATION_THRESHOLD
+    value >= YOUTRAVEL_MISLABELED_HIGH_DENOMINATION_THRESHOLD
   ) {
     return { value, currency: "RUB" };
+  }
+
+  if (
+    normalizedCurrency === "RUB" &&
+    value >= YOUTRAVEL_MISLABELED_USD_IN_RUB_RANGE_MIN &&
+    value < YOUTRAVEL_MISLABELED_HIGH_DENOMINATION_THRESHOLD
+  ) {
+    return { value, currency: "USD" };
   }
 
   return { value, currency: normalizedCurrency };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { TourFilters, TourListing, TourFormat } from "@/types";
 import { CHILDREN_OPTIONS } from "@/data/filters";
 import { pruneGroupSizes } from "@/data/group-format-options";
@@ -42,55 +42,69 @@ function toggle<T>(arr: T[], item: T): T[] {
 
 export default function FilterBar({ tours, filters, onChange, inline = false }: FilterBarProps) {
   const { currency } = useLocaleCurrency();
-  const { priceMin: catalogMin, priceMax } = usePriceFilterLimits(tours);
+  const { priceMin: catalogMin, priceMax, sliderCeiling } = usePriceFilterLimits(tours);
   const [draft, setDraft] = useState(filters);
+  const draftRef = useRef(filters);
 
   useEffect(() => {
+    draftRef.current = filters;
     setDraft(filters);
   }, [filters]);
 
+  const buildNext = useCallback(
+    (current: TourFilters, patch?: Partial<TourFilters>): TourFilters => ({
+      ...current,
+      ...patch,
+      priceMax: (patch?.priceMax ?? current.priceMax) || priceMax,
+    }),
+    [priceMax]
+  );
+
+  const replaceDraft = useCallback((next: TourFilters) => {
+    draftRef.current = next;
+    setDraft(next);
+  }, []);
+
   const commit = useCallback(
     (patch?: Partial<TourFilters>) => {
-      setDraft((d) => {
-        const next = {
-          ...d,
-          ...patch,
-          priceMax: (patch?.priceMax ?? d.priceMax) || priceMax,
-        };
-        onChange(next);
-        return next;
-      });
+      const next = buildNext(draftRef.current, patch);
+      replaceDraft(next);
+      onChange(next);
     },
-    [onChange, priceMax]
+    [buildNext, onChange, replaceDraft]
   );
 
   const apply = useCallback(() => commit(), [commit]);
 
   const patch = useCallback(
-    (p: Partial<TourFilters>) => setDraft((d) => ({ ...d, ...p })),
-    []
+    (p: Partial<TourFilters>) => {
+      replaceDraft(buildNext(draftRef.current, p));
+    },
+    [buildNext, replaceDraft]
   );
 
   const toggleDraft = useCallback(
     <K extends keyof TourFilters>(key: K, item: TourFilters[K] extends (infer U)[] ? U : never) => {
-      setDraft((d) => ({
-        ...d,
-        [key]: toggle(d[key] as typeof item[], item),
-      }));
+      replaceDraft({
+        ...draftRef.current,
+        [key]: toggle(draftRef.current[key] as typeof item[], item),
+      });
     },
-    []
+    [replaceDraft]
   );
 
-  const toggleFormat = useCallback((format: TourFormat) => {
-    setDraft((d) => {
-      const nextFormats = toggle(d.tourFormats, format);
-      return {
-        ...d,
+  const toggleFormat = useCallback(
+    (format: TourFormat) => {
+      const current = draftRef.current;
+      const nextFormats = toggle(current.tourFormats, format);
+      replaceDraft({
+        ...current,
         tourFormats: nextFormats,
-        groupSizes: pruneGroupSizes(d.groupSizes, nextFormats),
-      };
-    });
-  }, []);
+        groupSizes: pruneGroupSizes(current.groupSizes, nextFormats),
+      });
+    },
+    [replaceDraft]
+  );
 
   const accommodationCounts = useMemo(
     () => countToursByAccommodation(tours),
@@ -163,6 +177,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
             priceMin={draft.priceMin}
             priceMax={draft.priceMax}
             priceMinLimit={catalogMin}
+            sliderCeiling={sliderCeiling}
             onChange={(p) => patch(p)}
           />
         </div>
@@ -186,7 +201,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
           selectedPresets={draft.durations}
           dayTripsCount={dayTripsCount}
           counts={durationCounts}
-          onChange={(updates) => setDraft((d) => ({ ...d, ...updates }))}
+          onChange={(updates) => replaceDraft({ ...draftRef.current, ...updates })}
           onClear={() =>
             commit({
               durationMin: null,

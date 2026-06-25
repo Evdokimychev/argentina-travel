@@ -27,6 +27,13 @@ describe("normalizeYouTravelPartnerPrice", () => {
       currency: "RUB",
     });
   });
+
+  it("relabels USD-scale amounts mislabeled as RUB", () => {
+    expect(normalizeYouTravelPartnerPrice(5628, "RUB")).toEqual({
+      value: 5628,
+      currency: "USD",
+    });
+  });
 });
 
 describe("resolveYouTravelPartnerPriceUsd", () => {
@@ -35,6 +42,10 @@ describe("resolveYouTravelPartnerPriceUsd", () => {
     expect(usd).not.toBeNull();
     expect(usd!).toBeGreaterThan(300);
     expect(usd!).toBeLessThan(600);
+  });
+
+  it("treats sub-10k RUB labels as USD denomination", () => {
+    expect(resolveYouTravelPartnerPriceUsd(5628, "RUB")).toBe(5628);
   });
 });
 

@@ -34,6 +34,7 @@ import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-to
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import PartnerTourDateFilterNotice from "@/components/marketplace/PartnerTourDateFilterNotice";
+import CatalogDepartureCalendarButton from "@/components/marketplace/CatalogDepartureCalendarButton";
 import CatalogLazyLoadFooter from "@/components/marketplace/CatalogLazyLoadFooter";
 import { useCatalogLazySlice } from "@/hooks/useCatalogLazySlice";
 import { isTripsterPartnerListing } from "@/lib/tripster/partner-tour-utils";
@@ -297,6 +298,7 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
             onViewModeChange={handleViewModeChange}
             activeFilterCount={activeFilterCount}
             onResetFilters={resetFilters}
+            trailingAction={<CatalogDepartureCalendarButton tours={sorted} />}
           />
 
           {showPartnerDateNotice ? <PartnerTourDateFilterNotice /> : null}

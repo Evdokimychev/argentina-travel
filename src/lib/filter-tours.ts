@@ -20,7 +20,6 @@ import { matchesTourFormat } from "@/lib/tour-format";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { resolveListingOwnerUserId } from "@/lib/organizer-public";
 import {
-  isPartnerTourListing,
   isTripsterPartnerListing,
 } from "@/lib/tripster/partner-tour-utils";
 
@@ -76,6 +75,9 @@ function matchesQuery(tour: TourListing, query: string) {
 function matchesChildren(tour: TourListing, policy: ChildrenPolicy | null) {
   if (!policy) return true;
   const requiredAge = CHILD_AGE_MAP[policy];
+  if (policy === "Только взрослые") {
+    return tour.minimumAge >= requiredAge;
+  }
   return tour.minimumAge <= requiredAge;
 }
 
@@ -113,11 +115,9 @@ export function filterTours(
   let result = tours.filter((tour) => {
     if (!matchesQuery(tour, filters.query)) return false;
     if (!matchesDateRange(tour, filters.dateFrom, filters.dateTo)) return false;
-    const filterPrice = resolveListingFilterPriceUsd(tour);
-    if (filterPrice == null) {
-      // Туры «цена по запросу» / Tripster без ориентира не отсекаются фильтром по цене.
-    } else if (!isTripsterPartnerListing(tour)) {
-      const displayPrice = convertFromUsd(filterPrice, currency);
+    const filterPriceUsd = resolveListingFilterPriceUsd(tour);
+    if (filterPriceUsd != null) {
+      const displayPrice = convertFromUsd(filterPriceUsd, currency);
       if (displayPrice < filters.priceMin || displayPrice > priceMax) return false;
     }
 
@@ -131,28 +131,24 @@ export function filterTours(
 
     if (
       filters.accommodations.length &&
-      !isPartnerTourListing(tour) &&
       !filters.accommodations.includes(tour.accommodationType)
     )
       return false;
 
     if (
       filters.comfortLevels.length &&
-      !isTripsterPartnerListing(tour) &&
       !filters.comfortLevels.includes(resolveListingComfortLevel(tour))
     )
       return false;
 
     if (
       filters.difficultyLevels.length &&
-      !isTripsterPartnerListing(tour) &&
       !filters.difficultyLevels.includes(tour.difficultyLevel)
     )
       return false;
 
     if (
       filters.languages.length &&
-      !isPartnerTourListing(tour) &&
       !filters.languages.some((l) => tour.language.includes(l))
     )
       return false;

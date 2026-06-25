@@ -36,6 +36,7 @@ import type { TourCustomBookingLinkPublic } from "@/types/tour-custom-booking-li
 import { usePartnerTourPriceQuote } from "@/hooks/usePartnerTourPriceQuote";
 import { resolvePartnerTourBookingPrice } from "@/lib/tripster/partner-tour-price";
 import type { PartnerTourBookingPrice } from "@/lib/tripster/partner-tour-price";
+import { resolveYouTravelPartnerPriceUsd } from "@/lib/youtravel/offers-mapper";
 
 export type { BookingDateMode } from "@/lib/tour-booking-spots";
 
@@ -98,9 +99,11 @@ function resolveInitialDateMode(
 
 export function TourBookingProvider({
   tour,
+  initialDepartureDate,
   children,
 }: {
   tour: TourDetail;
+  initialDepartureDate?: string | null;
   children: ReactNode;
 }) {
   const bookingMode = tour.bookingMode ?? "scheduled";
@@ -168,6 +171,17 @@ export function TourBookingProvider({
   useEffect(() => {
     setPartnerEditRequest(null);
   }, [tour.slug]);
+
+  const normalizedInitialDeparture = initialDepartureDate?.trim() || null;
+
+  useEffect(() => {
+    if (!normalizedInitialDeparture || scheduleLoading) return;
+    const match = effectiveDates.find((date) => date.startDate === normalizedInitialDeparture);
+    if (!match) return;
+    setSelectedDateId(match.id);
+    setDateMode("scheduled");
+    setCustomDate(null);
+  }, [normalizedInitialDeparture, scheduleLoading, effectiveDates]);
 
   useEffect(() => {
     if (requiresManualDate || scheduleLoading || effectiveDates.length === 0) return;
@@ -330,8 +344,18 @@ export function TourBookingProvider({
 
   const value = useMemo((): TourBookingContextValue => {
     const selectedDate = effectiveDates.find((d) => d.id === selectedDateId);
+    const partnerUnitPrice =
+      selectedDate?.partnerPriceValue ?? tour.partnerPriceValue;
+    const partnerUnitCurrency =
+      selectedDate?.partnerPriceCurrency ?? tour.partnerPriceCurrency;
+    const partnerPriceUsd =
+      tour.partnerSource === "youtravel"
+        ? resolveYouTravelPartnerPriceUsd(partnerUnitPrice, partnerUnitCurrency)
+        : null;
     const datePriceUsd = selectedDate?.priceUsd ?? 0;
-    const basePricePerPersonUsd = datePriceUsd > 0 ? datePriceUsd : tour.priceUsd;
+    const basePricePerPersonUsd =
+      partnerPriceUsd ??
+      (datePriceUsd > 0 ? datePriceUsd : tour.priceUsd);
     const quote = priceOnRequest
       ? {
           pricePerPersonUsd: basePricePerPersonUsd,

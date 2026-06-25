@@ -357,7 +357,12 @@ export default function SearchBlock({
           <PopoverContent
             align="start"
             collisionPadding={16}
-            className="overflow-y-auto p-0 sm:max-w-[580px]"
+            mobileFullWidth={false}
+            className={cn(
+              "overflow-y-auto overflow-x-hidden p-0",
+              "max-sm:w-[calc(100dvw-2rem)] max-sm:max-w-[calc(100dvw-2rem)]",
+              "sm:w-[42rem] sm:max-w-[min(calc(100dvw-2rem),42rem)]"
+            )}
           >
             <DateRangePicker
               from={draftFrom}

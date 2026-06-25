@@ -20,7 +20,7 @@ export const dynamic = "force-dynamic";
 
 interface TourPageProps {
   params: Promise<{ slug: string }>;
-  searchParams: Promise<{ access?: string }>;
+  searchParams: Promise<{ access?: string; departure?: string }>;
 }
 
 export const dynamicParams = true;
@@ -78,8 +78,12 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
   };
 }
 
-export default async function TourDetailPage({ params }: Pick<TourPageProps, "params">) {
+export default async function TourDetailPage({
+  params,
+  searchParams,
+}: Pick<TourPageProps, "params" | "searchParams">) {
   const { slug } = await params;
+  const { departure } = await searchParams;
   const cookieStore = await cookies();
   const access = getTourPrivateAccessFromCookies(cookieStore, slug);
   const tour = await fetchTourDetail(slug, { accessToken: access });
@@ -120,6 +124,7 @@ export default async function TourDetailPage({ params }: Pick<TourPageProps, "pa
         initialCanonicalTour={initialCanonicalTour}
         flightLogisticsSection={flightLogisticsSection}
         flightLogisticsNavLabel={flightLogisticsSection ? labels.tourTitle : undefined}
+        initialDepartureDate={departure?.trim() || null}
       />
     </>
   );

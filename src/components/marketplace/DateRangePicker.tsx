@@ -85,8 +85,8 @@ export default function DateRangePicker({
   }
 
   return (
-    <div className="w-full max-w-[580px]">
-      <div className="flex items-start border-b border-gray-100 py-2">
+    <div className="w-full">
+      <div className="flex items-start border-b border-gray-100 px-1 py-2 sm:px-2">
         <button
           type="button"
           onClick={() => setMonth(subMonths(month, 1))}
@@ -96,23 +96,23 @@ export default function DateRangePicker({
           <ChevronLeft className="h-5 w-5 text-charcoal" />
         </button>
 
-        <div className="flex min-w-0 flex-1 justify-center md:divide-x md:divide-gray-100">
+        <div className="flex min-w-0 flex-1 items-start justify-center gap-2 md:gap-4 md:divide-x md:divide-gray-100">
           <CalendarMonthGrid
             month={month}
             rangeFrom={from}
             rangeTo={to}
             disablePast
             onDayClick={handleDayClick}
-            className="w-full min-w-0 px-2 sm:px-3 md:w-[252px] md:shrink-0"
+            className="w-full min-w-0 flex-1 px-1 sm:px-2 md:max-w-[15.75rem]"
           />
-          <div className="hidden md:block">
+          <div className="hidden min-w-0 flex-1 md:block md:max-w-[15.75rem]">
             <CalendarMonthGrid
               month={secondMonth}
               rangeFrom={from}
               rangeTo={to}
               disablePast
               onDayClick={handleDayClick}
-              className="w-full min-w-0 px-2 sm:px-3 md:w-[252px] md:shrink-0"
+              className="w-full min-w-0 px-1 sm:px-2"
             />
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function DateRangePicker({
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-1.5 px-4 py-3">
+      <div className="flex flex-wrap gap-2 px-4 py-3.5 sm:px-5">
         {DATE_PRESETS.map((p) => (
           <button
             key={p.id}

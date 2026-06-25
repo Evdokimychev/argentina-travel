@@ -1,22 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { TourListing } from "@/types";
 import {
+  formatFilterAmount,
   getFilterPriceMax,
   getSliderPriceBounds,
   getSliderPriceStep,
+  parseFilterAmount,
   snapPriceToStep,
 } from "@/lib/currency";
-import { clampPriceRange, getDefaultPriceRange, getTourPriceBounds } from "@/lib/tour-price-bounds";
+import { clampPriceRange, getDefaultPriceRange, getTourPriceBounds, resolvePriceFilterSliderTrackMax } from "@/lib/tour-price-bounds";
 import { cn } from "@/lib/cn";
 
 interface PriceFilterFieldsProps {
   priceMin: number;
   priceMax: number;
   priceMinLimit: number;
+  /** Upper bound for slider (catalog max or filter cap). */
+  sliderCeiling?: number;
   onChange: (patch: { priceMin: number; priceMax: number }) => void;
   className?: string;
   showCurrencyHeader?: boolean;
@@ -37,18 +42,49 @@ function PriceInput({
   max: number;
   onChange: (value: number) => void;
 }) {
+  const { locale } = useLocaleCurrency();
+  const [focused, setFocused] = useState(false);
+  const [draft, setDraft] = useState(() => formatFilterAmount(value, locale));
+
+  useEffect(() => {
+    if (!focused) {
+      setDraft(formatFilterAmount(value, locale));
+    }
+  }, [focused, locale, value]);
+
+  function commitDraft(raw: string) {
+    const parsed = parseFilterAmount(raw);
+    if (parsed == null) {
+      setDraft(formatFilterAmount(value, locale));
+      return;
+    }
+    onChange(Math.max(min, Math.min(max, parsed)));
+  }
+
   return (
     <div className="flex-1">
       <label className="text-xs text-slate">{label}</label>
       <div className="relative mt-1">
         <Input
-          type="number"
-          min={min}
-          max={max}
-          value={value}
+          type="text"
+          inputMode="numeric"
+          autoComplete="off"
+          value={focused ? draft : formatFilterAmount(value, locale)}
+          onFocus={() => {
+            setFocused(true);
+            setDraft(formatFilterAmount(value, locale));
+          }}
+          onBlur={() => {
+            setFocused(false);
+            commitDraft(draft);
+          }}
           onChange={(e) => {
-            const next = Number(e.target.value);
-            if (Number.isFinite(next)) onChange(next);
+            const next = e.target.value;
+            setDraft(next);
+            const parsed = parseFilterAmount(next);
+            if (parsed != null) {
+              onChange(Math.max(min, Math.min(max, parsed)));
+            }
           }}
           className="h-9 pr-10 tabular-nums"
         />
@@ -67,19 +103,29 @@ export default function PriceFilterFields({
   priceMin,
   priceMax,
   priceMinLimit,
+  sliderCeiling,
   onChange,
   className,
   showCurrencyHeader = true,
 }: PriceFilterFieldsProps) {
   const { currency, currencyInfo, locale } = useLocaleCurrency();
-  const priceMaxLimit = getFilterPriceMax(currency);
-  const sliderStep = getSliderPriceStep(priceMinLimit, priceMaxLimit);
-  const { min: sliderMin, max: sliderMax } = getSliderPriceBounds(
+  const filterCap = getFilterPriceMax(currency);
+  const ceiling = sliderCeiling ?? filterCap;
+  const sliderStep = getSliderPriceStep(priceMinLimit, ceiling);
+  const { min: sliderMin, max: fullSliderMax } = getSliderPriceBounds(
     priceMinLimit,
-    priceMaxLimit,
+    ceiling,
     sliderStep
   );
-  const effectiveMax = priceMax || sliderMax;
+  const effectiveMax = priceMax || fullSliderMax;
+  const sliderTrackMax = resolvePriceFilterSliderTrackMax({
+    priceMin,
+    priceMax,
+    catalogMin: priceMinLimit,
+    fullSliderMax,
+    filterCap,
+  });
+  const { max: sliderMax } = getSliderPriceBounds(priceMinLimit, sliderTrackMax, sliderStep);
   const currencyName = currencyInfo.name[locale];
 
   const sliderMinValue = snapPriceToStep(
@@ -94,7 +140,7 @@ export default function PriceFilterFields({
   );
 
   function applyRange(nextMin: number, nextMax: number) {
-    onChange(clampPriceRange(nextMin, nextMax, priceMinLimit, sliderMax));
+    onChange(clampPriceRange(nextMin, nextMax, priceMinLimit, fullSliderMax));
   }
 
   return (
@@ -122,7 +168,7 @@ export default function PriceFilterFields({
           value={effectiveMax}
           symbol={currencyInfo.symbol}
           min={priceMin}
-          max={sliderMax}
+          max={fullSliderMax}
           onChange={(max) => applyRange(priceMin, max)}
         />
       </div>
@@ -142,11 +188,13 @@ export default function PriceFilterFields({
 
 export function usePriceFilterLimits(tours: TourListing[] = []) {
   const { currency } = useLocaleCurrency();
-  const { min } = getTourPriceBounds(tours, currency);
+  const { min, max: catalogMax } = getTourPriceBounds(tours, currency);
+  const filterCap = getFilterPriceMax(currency);
   const { priceMax } = getDefaultPriceRange(tours, currency);
   return {
     currency,
     priceMin: min,
     priceMax,
+    sliderCeiling: Math.max(catalogMax, filterCap),
   };
 }
