@@ -70,7 +70,8 @@
     "prune-legacy-blog-media:check": "node scripts/prune-legacy-blog-media.mjs --check",
     "cms-media:deploy-check": "node scripts/cms-media-deploy-check.mjs",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:partner-regression": "vitest run src/lib/youtravel/partner-pipeline.test.ts src/lib/youtravel/partner-invariants.test.ts src/lib/youtravel/partner-offer-occupancy.test.ts src/lib/youtravel/partner-tour-details.test.ts src/lib/youtravel/partner-tour-mapper.test.ts src/lib/partner-tours/filter-price.test.ts src/lib/youtravel/offers-mapper.test.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

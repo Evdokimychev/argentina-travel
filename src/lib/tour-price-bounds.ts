@@ -33,7 +33,8 @@ export function getDefaultPriceRange(
   const { max } = getSliderPriceBounds(min, sliderCeiling, step);
   return {
     priceMin: min,
-    priceMax: max,
+    // Slider snap can round below the true catalog max — never exclude the priciest tour by default.
+    priceMax: Math.max(max, catalogMax),
   };
 }
 
@@ -98,7 +99,7 @@ export function syncPriceFilters(
       filters: {
         ...nextFilters,
         priceMin: catalogMin,
-        priceMax: sliderMaxLimit,
+        priceMax: Math.max(sliderMaxLimit, catalogMax),
       },
       catalogMin,
     };

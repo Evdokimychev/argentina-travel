@@ -1,4 +1,5 @@
 import { TourListing } from "@/types";
+import { resolveNearestUpcomingDepartureTimestamp } from "@/lib/tour-departure-dates";
 
 export type TourSortOption =
   | "recommended"
@@ -17,18 +18,13 @@ export const PRIMARY_SORT_OPTIONS: { value: TourSortOption; label: string }[] = 
 ];
 
 export const SECONDARY_SORT_OPTIONS: { value: TourSortOption; label: string }[] = [
+  { value: "date_asc", label: "По дате отправления" },
   { value: "duration_asc", label: "Короткие сначала" },
   { value: "duration_desc", label: "Длинные сначала" },
-  { value: "date_asc", label: "Ближайшая дата" },
 ];
 
 /** @deprecated Use PRIMARY_SORT_OPTIONS + SECONDARY_SORT_OPTIONS */
 export const SORT_OPTIONS = [...PRIMARY_SORT_OPTIONS, ...SECONDARY_SORT_OPTIONS];
-
-function nearestDate(tour: TourListing): number {
-  const first = tour.availableDates[0]?.start;
-  return first ? new Date(first).getTime() : Number.MAX_SAFE_INTEGER;
-}
 
 function reviewScore(tour: TourListing): number {
   if (tour.reviewCount <= 0) return 0;
@@ -52,7 +48,11 @@ export function sortTours(tours: TourListing[], sort: TourSortOption): TourListi
     case "duration_desc":
       return sorted.sort((a, b) => b.durationDays - a.durationDays);
     case "date_asc":
-      return sorted.sort((a, b) => nearestDate(a) - nearestDate(b));
+      return sorted.sort(
+        (a, b) =>
+          resolveNearestUpcomingDepartureTimestamp(a) -
+          resolveNearestUpcomingDepartureTimestamp(b),
+      );
     case "recommended":
     default:
       return sorted.sort((a, b) => {

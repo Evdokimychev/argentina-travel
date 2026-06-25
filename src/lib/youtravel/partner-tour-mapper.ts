@@ -22,14 +22,11 @@ import {
   resolveYouTravelDayLocationNames,
   resolveYouTravelRoutePoints,
 } from "@/lib/youtravel/partner-tour-route";
-import { mapYouTravelOffersToTourDates } from "@/lib/youtravel/offers-mapper";
-import { formatYouTravelListedPrice } from "@/lib/youtravel/offers-mapper";
-import { parseYouTravelOfferDate } from "@/lib/youtravel/response";
+import { formatYouTravelListedPrice, mapYouTravelOffersToTourDates } from "@/lib/youtravel/offers-mapper";
 import { youtravelTourListingId } from "@/lib/youtravel/partner-tour-utils";
 import type { YouTravelOffer, YouTravelProgramDay, YouTravelTour } from "@/lib/youtravel/types";
 import type {
   RichTextBlock,
-  TourDate,
   TourDetail,
   TourItineraryDay,
   TourListing,
@@ -76,26 +73,6 @@ function mapDescriptionBlocks(payload: YouTravelTour, content: PartnerTourConten
   const summary = content.summary?.trim();
   if (summary) return [{ type: "paragraph", content: summary }];
   return [];
-}
-
-function mapOffersToDates(offers: YouTravelOffer[]): TourDate[] {
-  return offers
-    .map((offer) => {
-      const start = parseYouTravelOfferDate(offer.startDate ?? offer.dateFrom ?? offer.date);
-      if (!start) return null;
-      const end =
-        parseYouTravelOfferDate(offer.endDate ?? offer.dateTo ?? offer.dateFrom ?? offer.startDate) ??
-        start;
-      const spots =
-        offer.freeSpaces ?? offer.seatsAvailable ?? offer.placesLeft ?? offer.seatsTotal ?? 0;
-      return {
-        start,
-        end,
-        spotsLeft: Math.max(spots, 0),
-      };
-    })
-    .filter((item): item is TourDate => item != null)
-    .sort((a, b) => a.start.localeCompare(b.start));
 }
 
 export function youtravelRowToListing(row: YouTravelTourRow): TourListing {
@@ -159,7 +136,6 @@ export function youtravelRowToDetail(
     fallbackCurrency: listing.partnerPriceCurrency,
     fallbackPriceValue: listing.partnerPriceValue,
   });
-  const dates = mapOffersToDates(options?.offers ?? []);
   const activityDifficulty =
     partnerContent.activityLevel != null
       ? mapYouTravelActivityToDifficulty(
@@ -253,17 +229,7 @@ export function youtravelRowToDetail(
     },
     importantInfo,
     faq: [],
-    dates: datePrices.length
-      ? datePrices
-      : dates.map((date, index) => ({
-          id: `yt-offer-${row.id}-${index}`,
-          startDate: date.start,
-          endDate: date.end,
-          spotsLeft: date.spotsLeft,
-          priceUsd: listing.priceUsd,
-          partnerPriceValue: listing.partnerPriceValue,
-          partnerPriceCurrency: listing.partnerPriceCurrency,
-        })),
+    dates: datePrices,
     tags: ["YouTravel.me", "Партнёрский тур"],
     customBookingLink: {
       url: `/api/affiliate/go/${row.slug}`,

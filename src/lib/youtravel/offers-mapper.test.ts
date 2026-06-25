@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { PRICE_NORMALIZATION_REGRESSION_CASES } from "@/lib/youtravel/__fixtures__/regression-payloads";
 import {
   mapYouTravelOffersToTourDates,
   normalizeYouTravelPartnerPrice,
@@ -7,33 +8,17 @@ import {
 } from "@/lib/youtravel/offers-mapper";
 
 describe("normalizeYouTravelPartnerPrice", () => {
-  it("relabels RUB-scale amounts mislabeled as USD", () => {
-    expect(normalizeYouTravelPartnerPrice(37766.3, "usd")).toEqual({
-      value: 37766.3,
-      currency: "RUB",
-    });
-  });
-
-  it("keeps normal USD amounts", () => {
-    expect(normalizeYouTravelPartnerPrice(489, "USD")).toEqual({
-      value: 489,
-      currency: "USD",
-    });
-  });
-
-  it("keeps RUB amounts unchanged", () => {
-    expect(normalizeYouTravelPartnerPrice(750000, "RUB")).toEqual({
-      value: 750000,
-      currency: "RUB",
-    });
-  });
-
-  it("relabels USD-scale amounts mislabeled as RUB", () => {
-    expect(normalizeYouTravelPartnerPrice(5628, "RUB")).toEqual({
-      value: 5628,
-      currency: "USD",
-    });
-  });
+  describe.each(PRICE_NORMALIZATION_REGRESSION_CASES)(
+    "regression $id",
+    ({ value, currency, expectedCurrency }) => {
+      it("normalizes mislabeled partner currency", () => {
+        expect(normalizeYouTravelPartnerPrice(value, currency)).toEqual({
+          value,
+          currency: expectedCurrency,
+        });
+      });
+    }
+  );
 });
 
 describe("resolveYouTravelPartnerPriceUsd", () => {
@@ -46,6 +31,11 @@ describe("resolveYouTravelPartnerPriceUsd", () => {
 
   it("treats sub-10k RUB labels as USD denomination", () => {
     expect(resolveYouTravelPartnerPriceUsd(5628, "RUB")).toBe(5628);
+  });
+
+  it("treats 10k–20k RUB labels as USD denomination", () => {
+    expect(resolveYouTravelPartnerPriceUsd(10050, "RUB")).toBe(10050);
+    expect(resolveYouTravelPartnerPriceUsd(10050, "USD")).toBe(10050);
   });
 });
 
@@ -178,6 +168,30 @@ describe("mapYouTravelOffersToTourDates", () => {
     expect(dates[0].travelersGoingCount).toBe(5);
     expect(dates[0].seatsTotal).toBe(14);
     expect(dates[0].spotsLeft).toBe(9);
+  });
+
+  it("ignores capacity fields misread as booked when all seats are free", () => {
+    const dates = mapYouTravelOffersToTourDates({
+      tourId: 55478,
+      offers: [
+        {
+          id: 11,
+          startDate: "2026-08-01",
+          endDate: "2026-08-13",
+          travelers_count: 8,
+          participants_count: 8,
+          seatsTotal: 8,
+          freeSpaces: 8,
+          priceValue: 2000,
+          currency: "USD",
+        },
+      ],
+      fallbackPriceUsd: 2000,
+    });
+
+    expect(dates[0].travelersGoingCount).toBe(0);
+    expect(dates[0].spotsLeft).toBe(8);
+    expect(dates[0].seatsTotal).toBe(8);
   });
 });
 

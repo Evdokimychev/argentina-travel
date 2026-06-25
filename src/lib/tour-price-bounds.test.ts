@@ -123,4 +123,37 @@ describe("tour price filter bounds", () => {
     };
     expect(filterTours(tours, midRange, "RUB")).toEqual([cheap]);
   });
+
+  it("includes the most expensive tour in default range after slider snap", () => {
+    const cheapYt = stubListing({
+      id: "youtravel-1",
+      slug: "cheap-yt1",
+      priceUsd: 5628,
+      partnerPriceValue: 5628,
+      partnerPriceCurrency: "USD",
+      partnerSource: "youtravel",
+    });
+    const aconcagua = stubListing({
+      id: "youtravel-66206",
+      slug: "voshozhdenie-na-akonkagua-yt66206",
+      priceUsd: 10050,
+      partnerPriceValue: 10050,
+      partnerPriceCurrency: "USD",
+      partnerSource: "youtravel",
+      difficultyLevel: "Экстремальная",
+    });
+    const catalog = [cheapYt, aconcagua];
+
+    const { max: catalogMax } = getTourPriceBounds(catalog, "RUB");
+    const defaults = getDefaultFilters("RUB", catalog);
+    expect(defaults.priceMax).toBeGreaterThanOrEqual(catalogMax);
+
+    const filtered = filterTours(
+      catalog,
+      { ...defaults, difficultyLevels: ["Экстремальная"] },
+      "RUB",
+    );
+    expect(filtered).toHaveLength(1);
+    expect(filtered[0]?.slug).toBe("voshozhdenie-na-akonkagua-yt66206");
+  });
 });

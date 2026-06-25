@@ -71,10 +71,7 @@ export function resolveYouTravelTravelersGoing(
   const payloadCandidates = [
     payload.travelers_going,
     payload.travelersGoing,
-    payload.count_travelers,
     payload.booked_travelers,
-    payload.participants_count,
-    payload.participantsCount,
     payload.booked_count,
     payload.visitors_count,
   ];
@@ -129,12 +126,30 @@ export function resolveYouTravelReferenceDate(
   return upcoming[0] ?? dates[0];
 }
 
+function resolveDateSeatsTotal(
+  tour: Pick<TourDetail, "groupMax">,
+  date?: TourDatePrice,
+): number | undefined {
+  if (date?.seatsTotal != null && date.seatsTotal > 0) return date.seatsTotal;
+  if (tour.groupMax > 0) return tour.groupMax;
+  return undefined;
+}
+
 /** Число записавшихся на конкретный заезд (оффер или оценка по местам). */
 export function resolveYouTravelTravelersGoingForDate(
   tour: Pick<TourDetail, "groupMax">,
   date?: TourDatePrice,
 ): number | undefined {
-  if (date?.travelersGoingCount != null) return date.travelersGoingCount;
+  if (!date) return undefined;
+
+  const total = resolveDateSeatsTotal(tour, date);
+  if (total != null && date.spotsLeft >= 0) {
+    if (date.spotsLeft >= total) return 0;
+    const booked = total - date.spotsLeft;
+    return booked > 0 ? booked : undefined;
+  }
+
+  if (date.travelersGoingCount != null) return date.travelersGoingCount;
   return estimateTravelersGoingFromDate(tour, date);
 }
 
@@ -151,12 +166,15 @@ export function resolveYouTravelDepartureCapacity(
 ): YouTravelDepartureCapacity | null {
   if (!date) return null;
 
-  const total =
-    (date.seatsTotal != null && date.seatsTotal > 0 ? date.seatsTotal : undefined) ??
-    (tour.groupMax > 0 ? tour.groupMax : undefined);
+  const total = resolveDateSeatsTotal(tour, date);
+  const freeFromOffer = date.spotsLeft >= 0 ? date.spotsLeft : undefined;
+
+  if (total != null && total > 0 && freeFromOffer != null) {
+    const free = Math.min(Math.max(0, freeFromOffer), total);
+    return { total, booked: Math.max(0, total - free), free };
+  }
 
   const bookedExplicit = resolveYouTravelTravelersGoingForDate(tour, date);
-  const freeFromOffer = date.spotsLeft >= 0 ? date.spotsLeft : undefined;
 
   if (total != null && total > 0) {
     const booked =
@@ -174,8 +192,9 @@ export function resolveYouTravelDepartureCapacity(
   }
 
   if (bookedExplicit != null && freeFromOffer != null && freeFromOffer >= 0) {
+    const inferredTotal = Math.max(bookedExplicit + freeFromOffer, bookedExplicit, freeFromOffer);
     return {
-      total: bookedExplicit + freeFromOffer,
+      total: inferredTotal,
       booked: bookedExplicit,
       free: freeFromOffer,
     };

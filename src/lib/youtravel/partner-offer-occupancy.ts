@@ -6,29 +6,37 @@ function parsePositiveInt(value: unknown): number | undefined {
   return Number.isFinite(parsed) && parsed > 0 ? parsed : undefined;
 }
 
-export function resolveTravelersGoingFromOffer(offer: YouTravelOffer): number | undefined {
-  const explicit =
+function parseNonNegativeInt(value: unknown): number | undefined {
+  if (value == null) return undefined;
+  const parsed = typeof value === "number" ? value : Number.parseInt(String(value), 10);
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : undefined;
+}
+
+function readOfferFreeSpacesRaw(offer: YouTravelOffer): number | undefined {
+  const raw = offer.freeSpaces ?? offer.seatsAvailable ?? offer.placesLeft;
+  return parseNonNegativeInt(raw);
+}
+
+function readDedicatedBookedCount(offer: YouTravelOffer): number | undefined {
+  return (
     parsePositiveInt(offer.booked_spaces) ??
     parsePositiveInt(offer.bookedSpaces) ??
     parsePositiveInt(offer.booked_count) ??
-    parsePositiveInt(offer.bookedCount) ??
-    parsePositiveInt(offer.travelers_count) ??
-    parsePositiveInt(offer.travelersCount) ??
-    parsePositiveInt(offer.participants_count);
+    parsePositiveInt(offer.bookedCount)
+  );
+}
 
-  if (explicit != null) return explicit;
+export function resolveTravelersGoingFromOffer(offer: YouTravelOffer): number | undefined {
+  const total = resolveOfferSeatsTotal(offer);
+  const free = readOfferFreeSpacesRaw(offer);
 
-  const total =
-    parsePositiveInt(offer.seatsTotal) ??
-    parsePositiveInt(offer.max_group_size) ??
-    parsePositiveInt(offer.group_size);
-  const free =
-    parsePositiveInt(offer.freeSpaces) ??
-    parsePositiveInt(offer.seatsAvailable) ??
-    parsePositiveInt(offer.placesLeft);
+  // Free seats from the partner API are authoritative when total is known.
+  if (total != null && free != null) {
+    if (free >= total) return 0;
+    return total - free;
+  }
 
-  if (total != null && free != null && total > free) return total - free;
-  return undefined;
+  return readDedicatedBookedCount(offer);
 }
 
 export function resolveOfferSeatsTotal(offer: YouTravelOffer): number | undefined {
@@ -40,10 +48,14 @@ export function resolveOfferSeatsTotal(offer: YouTravelOffer): number | undefine
 }
 
 export function resolveOfferFreeSpaces(offer: YouTravelOffer): number {
-  const raw = offer.freeSpaces ?? offer.seatsAvailable ?? offer.placesLeft;
-  if (raw != null) {
-    const parsed = typeof raw === "number" ? raw : Number.parseInt(String(raw), 10);
-    return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+  const free = readOfferFreeSpacesRaw(offer);
+  if (free != null) return free;
+
+  const total = resolveOfferSeatsTotal(offer);
+  const booked = readDedicatedBookedCount(offer);
+  if (total != null && booked != null) {
+    return Math.max(0, total - booked);
   }
-  return resolveOfferSeatsTotal(offer) ?? 0;
+
+  return 0;
 }

@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { CAPACITY_REGRESSION_CASES } from "@/lib/youtravel/__fixtures__/regression-payloads";
+import { assertDepartureCapacityConsistent } from "@/lib/youtravel/partner-invariants";
+import { mapYouTravelOffersToTourDates } from "@/lib/youtravel/offers-mapper";
 import {
   buildYouTravelTourDetailItems,
   listYouTravelUpcomingDepartureDates,
@@ -134,7 +137,7 @@ describe("resolveYouTravelTravelersGoingForDate", () => {
     ).toBe(5);
   });
 
-  it("estimates from spots left when counter is missing", () => {
+  it("derives booked from free seats when counter is missing", () => {
     expect(
       resolveYouTravelTravelersGoingForDate(
         { groupMax: 14 },
@@ -147,6 +150,23 @@ describe("resolveYouTravelTravelersGoingForDate", () => {
         },
       ),
     ).toBe(5);
+  });
+
+  it("returns zero when all seats are free", () => {
+    expect(
+      resolveYouTravelTravelersGoingForDate(
+        { groupMax: 8 },
+        {
+          id: "d1",
+          startDate: "2026-07-01",
+          endDate: "2026-07-13",
+          spotsLeft: 8,
+          seatsTotal: 8,
+          priceUsd: 1000,
+          travelersGoingCount: 8,
+        },
+      ),
+    ).toBe(0);
   });
 });
 
@@ -181,6 +201,36 @@ describe("resolveYouTravelDepartureCapacity", () => {
         },
       ),
     ).toEqual({ total: 14, booked: 5, free: 9 });
+  });
+
+  it("reconciles misread booked counter when all seats are free", () => {
+    expect(
+      resolveYouTravelDepartureCapacity(
+        { groupMax: 8 },
+        {
+          id: "d1",
+          startDate: "2026-07-01",
+          endDate: "2026-07-13",
+          spotsLeft: 8,
+          seatsTotal: 8,
+          priceUsd: 1000,
+          travelersGoingCount: 8,
+        },
+      ),
+    ).toEqual({ total: 8, booked: 0, free: 8 });
+  });
+
+  describe.each(CAPACITY_REGRESSION_CASES)("$id UI capacity", ({ offer, groupMax, expected }) => {
+    it("matches departure capacity panel values", () => {
+      const [date] = mapYouTravelOffersToTourDates({
+        tourId: 1,
+        offers: [offer],
+        fallbackPriceUsd: 1000,
+      });
+      const capacity = resolveYouTravelDepartureCapacity({ groupMax }, date);
+      expect(capacity).toEqual(expected.capacity);
+      assertDepartureCapacityConsistent(expected.capacity);
+    });
   });
 });
 
