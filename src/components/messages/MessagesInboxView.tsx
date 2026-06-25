@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { MessageCircle, Send } from "lucide-react";
+import { ArrowLeft, MessageCircle, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -509,7 +509,7 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
       ) : null}
 
       <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <div className="space-y-2">
+        <div className={cn("space-y-2", activeThreadId ? "hidden lg:block" : undefined)}>
           {threads.length === 0 ? (
             <EmptyState
               icon={MessageCircle}
@@ -538,10 +538,31 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
           )}
         </div>
 
-        <div className={cn(cabinetCardClass, "flex min-h-[420px] flex-col overflow-hidden")}>
+        <div
+          className={cn(
+            cabinetCardClass,
+            "flex min-h-[420px] flex-col overflow-hidden",
+            !activeThreadId && threads.length > 0 ? "hidden lg:flex" : "flex",
+          )}
+        >
           {activeThread ? (
             <>
               <div className="border-b border-gray-100 px-4 py-4 sm:px-5">
+                <div className="flex items-start gap-2">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    className="lg:hidden"
+                    aria-label="Назад к списку диалогов"
+                    onClick={() => {
+                      setActiveThreadId(null);
+                      router.replace(basePath, { scroll: false });
+                    }}
+                  >
+                    <ArrowLeft className="h-4 w-4" />
+                  </Button>
+                  <div className="min-w-0 flex-1">
                 <p className="font-semibold text-charcoal">
                   {role === "organizer" ? activeThread.touristName : activeThread.organizerName}
                 </p>
@@ -555,6 +576,8 @@ export default function MessagesInboxView({ role, basePath }: MessagesInboxViewP
                     </span>
                   ) : null}
                 </p>
+                  </div>
+                </div>
               </div>
 
               <div className="flex-1 space-y-3 overflow-y-auto px-4 py-4 pb-24 sm:px-5 sm:pb-5">

@@ -532,7 +532,7 @@ export default function HomeFlightSearchBlock({
         <PopoverContent
           align="start"
           collisionPadding={16}
-          className="max-h-[min(90vh,var(--radix-popover-content-available-height))] w-[calc(100vw-2rem)] max-w-[580px] overflow-y-auto p-0"
+          className="max-h-[min(90vh,var(--radix-popover-content-available-height))] w-[min(calc(100dvw-2rem),580px)] max-w-[min(100%,calc(100dvw-2rem))] overflow-y-auto overflow-x-hidden p-0"
         >
           <FlightDateRangePicker
             from={draftDepart}
@@ -586,7 +586,7 @@ export default function HomeFlightSearchBlock({
             </button>
           </PopoverTrigger>
         </div>
-        <PopoverContent align="start" className="w-[min(100vw-2rem,320px)] p-0">
+        <PopoverContent align="start" className="w-[min(calc(100dvw-2rem),320px)] max-w-[min(100%,calc(100dvw-2rem))] p-0">
           <div className="px-4 pt-3 pb-1">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate">
               {t("flights.form.passengersCountSection")}

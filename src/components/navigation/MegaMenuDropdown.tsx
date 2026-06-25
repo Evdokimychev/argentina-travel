@@ -38,7 +38,7 @@ export function MegaMenuDropdown({
     <div
       ref={panelRef}
       className={cn(
-        "fixed z-[110]",
+        "fixed z-[55]",
         widthClass,
         coords ? "opacity-100" : "pointer-events-none opacity-0",
       )}

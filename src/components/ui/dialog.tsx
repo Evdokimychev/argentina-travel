@@ -1,16 +1,30 @@
 "use client";
 
-import { useEffect } from "react";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { motionClass } from "@/lib/motion";
 import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
+import { useDialogBackClose } from "@/hooks/useDialogBackClose";
 
-const Dialog = DialogPrimitive.Root;
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogClose = DialogPrimitive.Close;
 const DialogPortal = DialogPrimitive.Portal;
+
+type DialogRootProps = React.ComponentProps<typeof DialogPrimitive.Root> & {
+  /** Browser/gesture back closes the dialog. Default true. */
+  closeOnBackNavigation?: boolean;
+};
+
+function Dialog({
+  closeOnBackNavigation = true,
+  open,
+  onOpenChange,
+  ...props
+}: DialogRootProps) {
+  useDialogBackClose(Boolean(open), onOpenChange ?? (() => {}), closeOnBackNavigation && Boolean(open));
+  return <DialogPrimitive.Root open={open} onOpenChange={onOpenChange} {...props} />;
+}
 
 function SiteHeaderOverlayLockEffect() {
   useSiteHeaderOverlayLock(true);
@@ -26,7 +40,7 @@ function DialogOverlay({
       className={cn(
         "fixed inset-0 z-[115] bg-charcoal/50 backdrop-blur-sm",
         motionClass.overlay,
-        className
+        className,
       )}
       {...props}
     />
@@ -34,16 +48,24 @@ function DialogOverlay({
 }
 
 interface DialogContentProps extends React.ComponentProps<typeof DialogPrimitive.Content> {
-  /** Mobile bottom sheet + centered panel on sm+ (default). */
+  /** Full-screen on mobile, centered panel from `sm` (default). */
   bottomSheet?: boolean;
+  /** Visible close control (44×44px). Default true. */
   showClose?: boolean;
 }
+
+/** Mobile-first shell: full viewport on phones, centered panel on sm+. */
+const dialogMobileFullscreenClass =
+  "inset-0 h-[100dvh] max-h-[100dvh] w-full max-w-[100dvw] rounded-none";
+
+const dialogDesktopCenteredClass =
+  "sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-auto sm:max-h-[85vh] sm:w-[min(calc(100dvw-2rem),32rem)] sm:max-w-[calc(100dvw-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl";
 
 function DialogContent({
   className,
   children,
   bottomSheet = true,
-  showClose = false,
+  showClose = true,
   onOpenAutoFocus,
   ...props
 }: DialogContentProps) {
@@ -54,19 +76,27 @@ function DialogContent({
       <DialogPrimitive.Content
         onOpenAutoFocus={onOpenAutoFocus}
         className={cn(
-          "fixed z-[115] bg-surface-elevated shadow-modal outline-none",
+          "fixed z-[115] flex flex-col bg-surface-elevated shadow-modal outline-none",
           motionClass.modalContent,
+          "overflow-y-auto overflow-x-hidden overscroll-contain",
           bottomSheet
-            ? "inset-x-0 bottom-0 max-h-[92vh] w-full overflow-y-auto rounded-t-2xl pb-[env(safe-area-inset-bottom,0px)] sm:inset-auto sm:left-1/2 sm:top-1/2 sm:max-h-[85vh] sm:w-[calc(100%-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl sm:pb-0"
-            : "left-1/2 top-1/2 w-[calc(100%-2rem)] max-h-[85vh] -translate-x-1/2 -translate-y-1/2 overflow-y-auto rounded-2xl",
-          className
+            ? cn(
+                dialogMobileFullscreenClass,
+                dialogDesktopCenteredClass,
+                "pb-[env(safe-area-inset-bottom,0px)] sm:pb-0",
+              )
+            : cn(
+                dialogMobileFullscreenClass,
+                "sm:inset-auto sm:left-1/2 sm:top-1/2 sm:h-auto sm:max-h-[85vh] sm:w-[min(calc(100dvw-2rem),32rem)] sm:max-w-[calc(100dvw-2rem)] sm:-translate-x-1/2 sm:-translate-y-1/2 sm:rounded-2xl",
+              ),
+          className,
         )}
         {...props}
       >
         {children}
         {showClose ? (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Закрыть"
           >
             <X className="h-4 w-4" />
@@ -86,7 +116,7 @@ function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
       className={cn(
         "flex flex-col gap-1.5 border-b border-border-subtle",
         dialogSectionPaddingClass,
-        className
+        className,
       )}
       {...props}
     />
@@ -103,7 +133,7 @@ function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
       className={cn(
         "flex flex-col-reverse gap-2 border-t border-border-subtle sm:flex-row sm:justify-end",
         dialogSectionPaddingClass,
-        className
+        className,
       )}
       {...props}
     />

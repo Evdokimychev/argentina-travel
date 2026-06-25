@@ -92,7 +92,7 @@ export default function OrganizerPaymentsView() {
         />
       ) : (
         <div className={cabinetTableWrapClass}>
-          <Table>
+          <Table className="min-w-[720px]">
             <TableHeader>
               <TableRow className={cabinetTableHeaderClass}>
                 <TableHead>Заявка</TableHead>

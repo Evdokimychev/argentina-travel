@@ -111,3 +111,19 @@ body:has(.flights-page-root) > #tpwl-modals {
   pointer-events: none !important;
   z-index: 9999 !important;
 }
+
+/* Tour flight modal — partner popovers above dialog (z-116). */
+body:has(.tour-flight-modal-scroll) > #tpwl-modals {
+  position: fixed !important;
+  inset: 0 !important;
+  width: auto !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: none !important;
+  overflow: visible !important;
+  pointer-events: none !important;
+  z-index: 120 !important;
+}

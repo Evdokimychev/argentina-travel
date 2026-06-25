@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { format, parseISO } from "date-fns";
 import { ru } from "date-fns/locale";
 import { X } from "lucide-react";
-import TravelpayoutsFlightsWidgets from "@/components/flights/TravelpayoutsFlightsWidgets";
 import TourFlightModalTourContext from "@/components/tour-detail/TourFlightModalTourContext";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +24,19 @@ import {
 } from "@/lib/flights/wl-search-params";
 import { cn } from "@/lib/cn";
 import "./tour-flight-modal.css";
+
+const TravelpayoutsFlightsWidgets = dynamic(
+  () => import("@/components/flights/TravelpayoutsFlightsWidgets"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="space-y-3 px-4 py-5">
+        <Skeleton className="h-11 w-full rounded-xl" />
+        <Skeleton className="h-24 w-full rounded-xl" />
+      </div>
+    ),
+  },
+);
 
 export type TourFlightResultsEntry = {
   id: string;
@@ -167,7 +181,7 @@ export default function TourFlightResultsModal({
           type="button"
           variant="secondary"
           size="icon"
-          className="tour-flight-modal-close h-9 w-9 rounded-full bg-white/95 shadow-md backdrop-blur-sm"
+          className="tour-flight-modal-close h-11 w-11 rounded-full bg-white/95 shadow-md backdrop-blur-sm"
           onClick={() => onOpenChange(false)}
           aria-label="Закрыть"
         >

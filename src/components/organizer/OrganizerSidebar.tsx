@@ -406,7 +406,7 @@ export function OrganizerMobileNav() {
         key={item.id}
         href={item.href}
         className={cn(
-          "relative flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+          "relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
           active ? "text-sky" : "text-slate hover:text-foreground"
         )}
       >
@@ -438,7 +438,7 @@ export function OrganizerMobileNav() {
           aria-label="Ещё разделы"
           onClick={() => setMoreOpen((prev) => !prev)}
           className={cn(
-            "relative flex flex-col items-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+            "relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
             isMoreActive || moreOpen ? "text-sky" : "text-slate hover:text-foreground"
           )}
         >

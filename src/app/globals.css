@@ -131,6 +131,8 @@ html.dark {
 
 html {
   scroll-behavior: smooth;
+  overflow-x: clip;
+  max-width: 100%;
   scroll-padding-top: calc(
     var(--site-header-height, 72px) + var(--site-section-nav-height, 0px) +
       var(--tour-section-nav-height, 0px) + var(--site-scroll-anchor-gap, 1rem)
@@ -206,6 +208,8 @@ body {
   font-family: var(--font-body);
   color: var(--color-foreground);
   background-color: var(--color-background);
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 /* WCAG 2.1 AA — consistent keyboard focus ring (components may override with ring utilities) */
@@ -1132,6 +1136,20 @@ body {
 
 .content-reading-prose table {
   font-size: 0.9375rem;
+}
+
+.rich-text-editor-content table,
+.content-reading-prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.rich-text-editor-content img,
+.content-reading-prose img {
+  max-width: 100%;
+  height: auto;
 }
 
 .content-reading-prose .blog-section-body > * + * {

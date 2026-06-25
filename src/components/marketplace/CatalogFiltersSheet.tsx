@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import FilterBar from "@/components/marketplace/FilterBar";
@@ -34,7 +35,7 @@ export default function CatalogFiltersSheet({
         type="button"
         variant="outline"
         size="sm"
-        className="lg:hidden"
+        className="lg:hidden min-h-11"
         onClick={() => setOpen(true)}
       >
         <SlidersHorizontal className="h-4 w-4" aria-hidden />
@@ -50,9 +51,12 @@ export default function CatalogFiltersSheet({
         <DialogContent className="max-w-lg sm:max-w-xl" showClose>
           <DialogHeader>
             <DialogTitle>Фильтры каталога</DialogTitle>
+            <DialogDescription className="sr-only">
+              Настройте параметры поиска туров и примените фильтры
+            </DialogDescription>
           </DialogHeader>
-          <div className="px-5 pb-2 sm:px-6">
-            <FilterBar tours={tours} filters={filters} onChange={onChange} />
+          <div className="max-w-full overflow-x-hidden px-5 pb-2 sm:px-6">
+            <FilterBar tours={tours} filters={filters} onChange={onChange} inline />
           </div>
           <DialogFooter>
             <Button type="button" className="w-full sm:w-auto" onClick={() => setOpen(false)}>

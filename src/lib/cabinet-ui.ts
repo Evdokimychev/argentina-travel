@@ -28,8 +28,9 @@ export const cabinetSidebarSkeletonClass =
 export const cabinetMobileHeaderClass =
   "flex items-center justify-between border-b border-border-subtle bg-surface-elevated/95 px-4 py-3 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
 
+/** Horizontal section nav — sticky below site header on mobile cabinets. */
 export const cabinetMobileNavClass =
-  "scrollbar-hide flex gap-1 overflow-x-auto border-b border-border-subtle bg-surface-elevated px-3 py-2 md:hidden dark:border-border-subtle dark:bg-surface-elevated";
+  "scrollbar-hide sticky top-[var(--site-header-full-height,72px)] z-30 flex gap-1 overflow-x-auto border-b border-border-subtle bg-surface-elevated/95 px-3 py-2 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
 
 export const cabinetMobileBottomNavClass =
   "fixed inset-x-0 bottom-0 z-40 border-t border-border-subtle bg-surface-elevated/95 px-2 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";

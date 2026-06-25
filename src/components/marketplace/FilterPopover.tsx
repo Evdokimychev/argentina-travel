@@ -5,6 +5,7 @@ import { ChevronDown } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { touchTargetMinClass } from "@/lib/responsive-ui";
 
 const FilterPopoverCloseContext = createContext<(() => void) | null>(null);
 
@@ -17,6 +18,34 @@ interface FilterPopoverProps {
   active?: boolean;
   children: React.ReactNode;
   width?: string;
+  /** Inline accordion — for mobile filter sheet (no portaled popover). */
+  inline?: boolean;
+}
+
+function FilterInlineSection({
+  label,
+  active,
+  children,
+}: {
+  label: string;
+  active?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <details className="group rounded-2xl border border-border-subtle bg-surface-elevated">
+      <summary
+        className={cn(
+          "flex cursor-pointer list-none items-center justify-between gap-2 px-4 py-3 text-sm font-medium [&::-webkit-details-marker]:hidden",
+          touchTargetMinClass,
+          active ? "text-brand" : "text-charcoal",
+        )}
+      >
+        <span>{label}</span>
+        <ChevronDown className="h-4 w-4 shrink-0 opacity-60 transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="border-t border-border-subtle">{children}</div>
+    </details>
+  );
 }
 
 export function FilterPopover({
@@ -24,9 +53,20 @@ export function FilterPopover({
   active,
   children,
   width = "sm:min-w-[340px]",
+  inline = false,
 }: FilterPopoverProps) {
   const [open, setOpen] = useState(false);
   const close = () => setOpen(false);
+
+  if (inline) {
+    return (
+      <FilterInlineSection label={label} active={active}>
+        <FilterPopoverCloseContext.Provider value={close}>
+          {children}
+        </FilterPopoverCloseContext.Provider>
+      </FilterInlineSection>
+    );
+  }
 
   return (
     <FilterPopoverCloseContext.Provider value={close}>
@@ -36,9 +76,10 @@ export function FilterPopover({
             type="button"
             className={cn(
               "flex shrink-0 items-center gap-1.5 rounded-full border px-4 py-2.5 text-sm font-medium transition-colors",
+              touchTargetMinClass,
               active
                 ? "border-brand bg-brand-light text-brand"
-                : "border-border-subtle bg-surface-elevated text-charcoal hover:border-slate/40"
+                : "border-border-subtle bg-surface-elevated text-charcoal hover:border-slate/40",
             )}
           >
             {label}
@@ -46,7 +87,7 @@ export function FilterPopover({
           </button>
         </PopoverTrigger>
         <PopoverContent
-          className={cn("max-w-[calc(100vw-2rem)] p-0", width)}
+          className={cn("max-w-[min(100%,calc(100dvw-2rem))] p-0", width)}
           align="start"
           collisionPadding={16}
         >

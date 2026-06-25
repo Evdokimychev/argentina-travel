@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
+  DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
 import ExcursionFilterBar from "@/components/excursions/ExcursionFilterBar";
@@ -36,7 +37,7 @@ export default function ExcursionCatalogFiltersSheet({
         type="button"
         variant="outline"
         size="sm"
-        className="lg:hidden"
+        className="lg:hidden min-h-11"
         onClick={() => setOpen(true)}
       >
         <SlidersHorizontal className="h-4 w-4" aria-hidden />
@@ -52,13 +53,17 @@ export default function ExcursionCatalogFiltersSheet({
         <DialogContent className="max-w-lg sm:max-w-xl" showClose>
           <DialogHeader>
             <DialogTitle>Фильтры экскурсий</DialogTitle>
+            <DialogDescription className="sr-only">
+              Настройте параметры поиска экскурсий
+            </DialogDescription>
           </DialogHeader>
-          <div className="px-5 pb-2 sm:px-6">
+          <div className="max-w-full overflow-x-hidden px-5 pb-2 sm:px-6">
             <ExcursionFilterBar
               filters={filters}
               priceMax={priceMax}
               hasUsdPrices={hasUsdPrices}
               onChange={onChange}
+              inline
             />
           </div>
           <DialogFooter>

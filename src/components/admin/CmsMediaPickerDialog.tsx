@@ -1,7 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogBody,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { SafeImage } from "@/components/ui/safe-image";
 import { mediaUrl } from "@/lib/media-resolver";
 import type { MediaAsset } from "@/types/media-asset";
@@ -28,25 +35,21 @@ export default function CmsMediaPickerDialog({ open, onClose, onSelect }: Props)
       .finally(() => setLoading(false));
   }, [open]);
 
-  if (!open) return null;
-
   return (
-    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-black/50 p-4" role="dialog" aria-modal="true">
-      <div className="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-gray-100 px-4 py-3">
-          <h3 className="font-heading text-sm font-bold text-charcoal">Выбор изображения</h3>
-          <Button type="button" variant="ghost" size="sm" onClick={onClose}>
-            Закрыть
-          </Button>
-        </div>
-        <div className="max-h-[60vh] overflow-y-auto p-4">
+    <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
+      <DialogContent className="max-w-2xl p-0 sm:max-w-2xl">
+        <DialogHeader>
+          <DialogTitle>Выбор изображения</DialogTitle>
+          <DialogDescription className="sr-only">Библиотека медиа CMS</DialogDescription>
+        </DialogHeader>
+        <DialogBody className="max-h-[min(60vh,calc(100dvh-12rem))] overflow-y-auto pt-0">
           {loading ? <p className="text-sm text-slate">Загрузка…</p> : null}
           <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
             {assets.map((asset) => (
               <button
                 key={asset.id}
                 type="button"
-                className="overflow-hidden rounded-xl border border-gray-200 hover:border-sky/50"
+                className="min-h-11 overflow-hidden rounded-xl border border-gray-200 hover:border-sky/50"
                 onClick={() => {
                   onSelect(asset.localPath);
                   onClose();
@@ -65,10 +68,10 @@ export default function CmsMediaPickerDialog({ open, onClose, onSelect }: Props)
             ))}
           </div>
           {!loading && assets.length === 0 ? (
-            <p className="text-sm text-slate">Нет загруженных изображений. Добавьте в медиатеке.</p>
+            <p className="text-sm text-slate">Нет загруженных изображений.</p>
           ) : null}
-        </div>
-      </div>
-    </div>
+        </DialogBody>
+      </DialogContent>
+    </Dialog>
   );
 }

@@ -21,7 +21,7 @@ function PopoverContent({
         side={side}
         sideOffset={sideOffset}
         className={cn(
-          "z-[110] w-[var(--radix-popover-trigger-width)] min-w-0 max-w-[calc(100vw-2rem)] rounded-card border border-border-subtle bg-surface-elevated p-0 shadow-modal outline-none sm:min-w-[20rem]",
+          "z-[110] w-[var(--radix-popover-trigger-width)] min-w-0 max-w-[min(100%,calc(100dvw-2rem))] rounded-card border border-border-subtle bg-surface-elevated p-0 shadow-modal outline-none sm:min-w-[20rem]",
           motionClass.dropdown,
           className
         )}

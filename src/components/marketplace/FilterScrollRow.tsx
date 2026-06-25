@@ -98,7 +98,7 @@ export default function FilterScrollRow({ children, className }: FilterScrollRow
             type="button"
             onClick={() => scrollBy(-220)}
             aria-label="Прокрутить фильтры влево"
-            className="absolute left-0 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-sm transition-colors hover:bg-gray-50"
+            className="absolute left-0 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-sm transition-colors hover:bg-gray-50"
           >
             <ChevronLeft className="h-4 w-4" />
           </button>
@@ -130,7 +130,7 @@ export default function FilterScrollRow({ children, className }: FilterScrollRow
             type="button"
             onClick={() => scrollBy(220)}
             aria-label="Прокрутить фильтры вправо"
-            className="absolute right-0 top-1/2 z-20 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-sm transition-colors hover:bg-gray-50"
+            className="absolute right-0 top-1/2 z-20 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-charcoal shadow-sm transition-colors hover:bg-gray-50"
           >
             <ChevronRight className="h-4 w-4" />
           </button>

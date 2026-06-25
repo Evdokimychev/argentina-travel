@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Phone, X } from "lucide-react";
 import { cn } from "@/lib/cn";
+import { touchTargetIconClass } from "@/lib/responsive-ui";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -777,6 +778,7 @@ export default function AuthModal() {
     <Dialog open={authOpen} onOpenChange={(next) => !next && closeAuth()}>
       <DialogContent
         className="max-h-[92vh] max-w-md overflow-y-auto p-0 shadow-2xl"
+        showClose={false}
         onPointerDownOutside={closeAuth}
         onEscapeKeyDown={closeAuth}
       >
@@ -792,7 +794,7 @@ export default function AuthModal() {
           <button
             type="button"
             onClick={closeAuth}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-gray-200 text-slate transition-colors hover:bg-gray-50 hover:text-charcoal"
+            className={cn(touchTargetIconClass, "shrink-0 rounded-full border border-gray-200 text-slate transition-colors hover:bg-gray-50 hover:text-charcoal")}
             aria-label="Закрыть"
           >
             <X className="h-4 w-4" />

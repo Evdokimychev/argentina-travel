@@ -32,13 +32,15 @@ interface FilterBarProps {
   tours: TourListing[];
   filters: TourFilters;
   onChange: (filters: TourFilters) => void;
+  /** Stack inline accordions — mobile filter sheet (no portaled popovers). */
+  inline?: boolean;
 }
 
 function toggle<T>(arr: T[], item: T): T[] {
   return arr.includes(item) ? arr.filter((x) => x !== item) : [...arr, item];
 }
 
-export default function FilterBar({ tours, filters, onChange }: FilterBarProps) {
+export default function FilterBar({ tours, filters, onChange, inline = false }: FilterBarProps) {
   const { currency } = useLocaleCurrency();
   const { priceMin: catalogMin, priceMax } = usePriceFilterLimits(tours);
   const [draft, setDraft] = useState(filters);
@@ -138,12 +140,13 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
     draft.groupSizes
   );
 
-  return (
-    <FilterScrollRow>
+  const filterBody = (
+    <>
       <FilterPopover
         label="Виды отдыха"
         active={draft.activityTypes.length > 0}
         width="sm:min-w-[520px] sm:max-w-[560px]"
+        inline={inline}
       >
         <ActivityTypesFilter
           selected={draft.activityTypes}
@@ -154,7 +157,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         />
       </FilterPopover>
 
-      <FilterPopover label="Цена" active={priceActive}>
+      <FilterPopover label="Цена" active={priceActive} inline={inline}>
         <div className="p-4">
           <PriceFilterFields
             priceMin={draft.priceMin}
@@ -174,6 +177,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         label="Продолжительность"
         active={isDurationFilterActive(draft)}
         width="sm:min-w-[340px]"
+        inline={inline}
       >
         <DurationFilter
           durationMin={draft.durationMin}
@@ -199,6 +203,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         label="Проживание"
         active={draft.accommodations.length > 0}
         width="sm:min-w-[360px]"
+        inline={inline}
       >
         <AccommodationFilter
           selected={draft.accommodations}
@@ -213,6 +218,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         label="Комфорт"
         active={draft.comfortLevels.length > 0}
         width="sm:min-w-[360px]"
+        inline={inline}
       >
         <ComfortFilter
           selected={draft.comfortLevels}
@@ -227,6 +233,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         label="Нагрузка"
         active={draft.difficultyLevels.length > 0}
         width="sm:min-w-[360px]"
+        inline={inline}
       >
         <DifficultyFilter
           selected={draft.difficultyLevels}
@@ -241,6 +248,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         label="Язык"
         active={draft.languages.length > 0}
         width="sm:min-w-[360px]"
+        inline={inline}
       >
         <LanguageFilter
           selected={draft.languages}
@@ -251,7 +259,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         />
       </FilterPopover>
 
-      <FilterPopover label="С детьми" active={!!draft.childrenPolicy}>
+      <FilterPopover label="С детьми" active={!!draft.childrenPolicy} inline={inline}>
         <ul className="p-2">
           {CHILDREN_OPTIONS.map((opt) => (
             <li key={opt}>
@@ -279,6 +287,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         label={groupFormatLabel}
         active={groupFormatActive}
         width="sm:min-w-[400px]"
+        inline={inline}
       >
         <GroupFormatFilter
           tours={tours}
@@ -291,7 +300,7 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
         />
       </FilterPopover>
 
-      <FilterPopover label="Мгновенная бронь" active={draft.instantBookingOnly}>
+      <FilterPopover label="Мгновенная бронь" active={draft.instantBookingOnly} inline={inline}>
         <ul className="p-2">
           <li>
             <label className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 hover:bg-gray-50">
@@ -311,6 +320,12 @@ export default function FilterBar({ tours, filters, onChange }: FilterBarProps) 
           applyAfterClear={false}
         />
       </FilterPopover>
-    </FilterScrollRow>
+    </>
   );
+
+  if (inline) {
+    return <div className="flex max-w-full flex-col gap-2">{filterBody}</div>;
+  }
+
+  return <FilterScrollRow>{filterBody}</FilterScrollRow>;
 }

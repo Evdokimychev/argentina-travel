@@ -88,11 +88,11 @@ function AdminAccessGate({
   return (
     <div className={cabinetShellClass}>
       <AdminMobileHeader buildVersionChip={buildVersionChip} />
+      <AdminMobileNav />
       <div className={cabinetContentGapClass}>
         <AdminSidebar buildVersionChip={buildVersionChip} />
         <main className="min-w-0 flex-1 px-4 md:px-0">{children}</main>
       </div>
-      <AdminMobileNav />
     </div>
   );
 }

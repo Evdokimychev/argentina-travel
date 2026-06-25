@@ -12,13 +12,14 @@ import { ToursMegaMenuPanel } from "@/components/navigation/ToursMegaMenuPanel";
 import { navSectionLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
+import { megaMenuPanelWidthClass } from "@/lib/responsive-ui";
 
 export function megaMenuWidthClass(sectionId: string): string {
   if (sectionId === "guide" || sectionId === "immigration" || sectionId === "more") {
-    return "w-[min(calc(100vw-2rem),64rem)]";
+    return megaMenuPanelWidthClass(64);
   }
   if (sectionId === "geography") {
-    return "w-[min(calc(100vw-2rem),64rem)]";
+    return megaMenuPanelWidthClass(64);
   }
   if (
     sectionId === "tours" ||
@@ -26,9 +27,9 @@ export function megaMenuWidthClass(sectionId: string): string {
     sectionId === "services" ||
     sectionId === "journal"
   ) {
-    return "w-[min(calc(100vw-2rem),56rem)]";
+    return megaMenuPanelWidthClass(56);
   }
-  return "w-[min(calc(100vw-2rem),48rem)]";
+  return megaMenuPanelWidthClass(48);
 }
 
 function HubOnlySectionPanel({

@@ -18,6 +18,7 @@ type ExcursionFilterBarProps = {
   priceMax: number;
   hasUsdPrices: boolean;
   onChange: (filters: ExcursionCatalogFilters) => void;
+  inline?: boolean;
 };
 
 function toggle<T>(arr: T[], item: T): T[] {
@@ -29,6 +30,7 @@ export default function ExcursionFilterBar({
   priceMax,
   hasUsdPrices,
   onChange,
+  inline = false,
 }: ExcursionFilterBarProps) {
   const [draft, setDraft] = useState(filters);
 
@@ -84,9 +86,9 @@ export default function ExcursionFilterBar({
 
   const sliderStep = sliderMax <= 150 ? 5 : 10;
 
-  return (
-    <FilterScrollRow className="min-w-0 flex-1">
-      <FilterPopover label={formatLabel} active={draft.formats.length > 0} width="min-w-[280px]">
+  const filterBody = (
+    <>
+      <FilterPopover label={formatLabel} active={draft.formats.length > 0} width="min-w-[280px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Формат экскурсии</p>
           <div className="mt-3 space-y-2">
@@ -130,7 +132,7 @@ export default function ExcursionFilterBar({
         />
       </FilterPopover>
 
-      <FilterPopover label={durationLabel} active={draft.durationBuckets.length > 0} width="min-w-[300px]">
+      <FilterPopover label={durationLabel} active={draft.durationBuckets.length > 0} width="min-w-[300px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Длительность</p>
           <div className="mt-3 space-y-2">
@@ -169,7 +171,7 @@ export default function ExcursionFilterBar({
         />
       </FilterPopover>
 
-      <FilterPopover label={ratingLabel} active={draft.minRating != null} width="min-w-[260px]">
+      <FilterPopover label={ratingLabel} active={draft.minRating != null} width="min-w-[260px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Минимальный рейтинг</p>
           <div className="mt-3 space-y-2">
@@ -202,7 +204,7 @@ export default function ExcursionFilterBar({
       </FilterPopover>
 
       {hasUsdPrices ? (
-        <FilterPopover label={priceLabel} active={draft.maxPrice != null} width="min-w-[320px]">
+        <FilterPopover label={priceLabel} active={draft.maxPrice != null} width="min-w-[320px]" inline={inline}>
           <div className="p-4">
             <p className="text-sm font-semibold text-charcoal">Максимальная цена</p>
             <p className="mt-1 text-xs text-slate">USD за человека или экскурсию — по данным партнёра</p>
@@ -231,7 +233,7 @@ export default function ExcursionFilterBar({
         </FilterPopover>
       ) : null}
 
-      <FilterPopover label={partnerLabel} active={draft.partners.length > 0} width="min-w-[260px]">
+      <FilterPopover label={partnerLabel} active={draft.partners.length > 0} width="min-w-[260px]" inline={inline}>
         <div className="p-4">
           <p className="text-sm font-semibold text-charcoal">Площадка партнёра</p>
           <div className="mt-3 space-y-2">
@@ -271,6 +273,12 @@ export default function ExcursionFilterBar({
           onApply={() => commit()}
         />
       </FilterPopover>
-    </FilterScrollRow>
+    </>
   );
+
+  if (inline) {
+    return <div className="flex max-w-full flex-col gap-2">{filterBody}</div>;
+  }
+
+  return <FilterScrollRow className="min-w-0 flex-1">{filterBody}</FilterScrollRow>;
 }

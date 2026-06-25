@@ -1,7 +1,9 @@
 "use client";
 
 import { X } from "lucide-react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { cn } from "@/lib/cn";
+import { touchTargetIconClass } from "@/lib/responsive-ui";
 import type { TourDetail } from "@/types";
 import { tourDetailPromoHeadingClass } from "@/lib/tour-detail-ui";
 import { useTourBooking } from "./TourBookingContext";
@@ -21,12 +23,16 @@ export default function PartnerTourBookingModal({ tour }: PartnerTourBookingModa
         if (!open) closePartnerBookingPreview();
       }}
     >
-      <DialogContent bottomSheet className="max-w-lg p-0">
-        <div className="border-b border-gray-100 px-5 py-4">
+      <DialogContent bottomSheet showClose={false} className="max-w-lg p-0">
+        <DialogTitle className="sr-only">Подтверждение заявки на тур Tripster</DialogTitle>
+        <DialogDescription className="sr-only">
+          Проверьте дату, состав группы и контакты перед отправкой.
+        </DialogDescription>
+        <div className="border-b border-gray-100 px-5 py-4 pr-14">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className={tourDetailPromoHeadingClass}>Tripster</p>
-              <h2 className="font-heading text-xl font-bold text-charcoal">Подтверждение заявки</h2>
+              <p className="font-heading text-xl font-bold text-charcoal">Подтверждение заявки</p>
               <p className="mt-1 text-sm text-slate">
                 Проверьте дату, состав группы и контакты перед отправкой на Tripster.
               </p>
@@ -34,7 +40,7 @@ export default function PartnerTourBookingModal({ tour }: PartnerTourBookingModa
             <button
               type="button"
               onClick={closePartnerBookingPreview}
-              className="rounded-lg p-1 text-slate hover:bg-gray-100"
+              className={cn(touchTargetIconClass, "rounded-lg text-slate hover:bg-gray-100")}
               aria-label="Закрыть"
             >
               <X className="h-5 w-5" />

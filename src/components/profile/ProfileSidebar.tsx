@@ -374,7 +374,7 @@ export function ProfileMobileNav() {
             href={item.href}
             className={cn(
               cabinetNavLinkClass,
-              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors",
+              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium transition-colors min-h-11",
               active ? cn(cabinetNavActiveClass, "before:hidden") : cabinetNavIdleClass
             )}
           >

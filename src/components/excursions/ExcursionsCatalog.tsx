@@ -189,7 +189,7 @@ export default function ExcursionsCatalog({
   }, [activeFilterCount, resetFilters, t, uniqueCities]);
 
   return (
-    <div className="catalog-listing-page-root w-full pb-16">
+    <div className="catalog-listing-page-root w-full max-w-full overflow-x-clip pb-16">
       <header className="catalog-listing-page-hero" data-scroll-rail-tone="light">
         <div
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--primary"

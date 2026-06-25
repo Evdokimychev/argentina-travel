@@ -5,7 +5,8 @@ import { Moon, Sun, X } from "lucide-react";
 import { useMemo } from "react";
 import type { TourDate, TourListing } from "@/types";
 import FormattedPrice from "@/components/FormattedPrice";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { touchTargetIconClass } from "@/lib/responsive-ui";
 import { SafeImage } from "@/components/ui/safe-image";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -98,19 +99,20 @@ export default function TourDepartureDatesModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent
-        bottomSheet={false}
-        showClose={false}
-        className="max-w-xl gap-0 overflow-hidden rounded-3xl p-0 sm:max-w-xl"
-      >
-        <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-6 py-5">
-          <DialogTitle className="font-heading text-2xl font-bold leading-tight text-charcoal">
-            Варианты заезда
-          </DialogTitle>
+      <DialogContent showClose={false} className="max-w-xl gap-0 overflow-hidden p-0 sm:max-w-xl sm:rounded-3xl">
+        <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-6 py-5 pr-16">
+          <div>
+            <DialogTitle className="font-heading text-2xl font-bold leading-tight text-charcoal">
+              Варианты заезда
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              Даты заезда тура {tour.title}
+            </DialogDescription>
+          </div>
           <button
             type="button"
             onClick={() => onOpenChange(false)}
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+            className={cn(touchTargetIconClass, "shrink-0 rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal")}
             aria-label="Закрыть"
           >
             <X className="h-5 w-5" />

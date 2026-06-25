@@ -51,7 +51,7 @@ function ViewToggle({
         aria-pressed={viewMode === "list"}
         aria-label="Список"
         className={cn(
-          "flex h-8 w-9 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
+          "flex h-11 w-11 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
           viewMode === "list"
             ? "bg-white text-charcoal shadow-sm"
             : "text-slate hover:text-charcoal",
@@ -65,7 +65,7 @@ function ViewToggle({
         aria-pressed={viewMode === "grid"}
         aria-label="Сетка"
         className={cn(
-          "flex h-8 w-9 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
+          "flex h-11 w-11 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
           viewMode === "grid"
             ? "bg-white text-charcoal shadow-sm"
             : "text-slate hover:text-charcoal",
@@ -79,7 +79,7 @@ function ViewToggle({
         aria-pressed={viewMode === "map"}
         aria-label="Карта"
         className={cn(
-          "flex h-8 w-9 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
+          "flex h-11 w-11 items-center justify-center rounded-full transition-all sm:h-9 sm:w-10",
           viewMode === "map"
             ? "bg-white text-charcoal shadow-sm"
             : "text-slate hover:text-charcoal",
