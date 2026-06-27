@@ -70,6 +70,8 @@ export default function ExcursionMobileBookingBar({
         {prefersAffiliate && excursion.bookingHref ? (
           <a
             href={excursion.bookingHref}
+            target="_blank"
+            rel="noopener noreferrer"
             className={cn(buttonVariants(), "shrink-0 rounded-xl px-5")}
           >
             {ctaLabel}

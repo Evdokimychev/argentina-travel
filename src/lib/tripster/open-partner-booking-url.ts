@@ -4,16 +4,32 @@ export const PARTNER_EXCURSION_BOOKING_THANK_YOU =
 export const PARTNER_TOUR_BOOKING_THANK_YOU =
   "Спасибо за бронирование тура. Вы перешли на сайт партнёра — дальнейшее оформление будет осуществляться там.";
 
+import {
+  isBrokenTripsterOrderPath,
+  isUsableTripsterCheckoutUrl,
+} from "@/lib/tripster/checkout-url";
+
 /** Resolves relative Tripster paths and same-origin affiliate redirect URLs. */
 export function normalizePartnerBookingUrl(url: string, origin?: string): string {
   const trimmed = url.trim();
   if (!trimmed) return trimmed;
 
-  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  if (/^https?:\/\//i.test(trimmed)) {
+    if (isBrokenTripsterOrderPath(trimmed)) return trimmed;
+    return trimmed;
+  }
 
   if (trimmed.startsWith("/api/affiliate/go/")) {
     const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
     return base ? new URL(trimmed, base).toString() : trimmed;
+  }
+
+  if (isBrokenTripsterOrderPath(trimmed)) {
+    return trimmed;
+  }
+
+  if (trimmed.startsWith("/mfs/") || trimmed.startsWith("/experience/")) {
+    return `https://experience.tripster.ru${trimmed}`;
   }
 
   if (trimmed.startsWith("/")) {
@@ -23,8 +39,14 @@ export function normalizePartnerBookingUrl(url: string, origin?: string): string
   return trimmed;
 }
 
+export function isOpenablePartnerCheckoutUrl(url: string): boolean {
+  const absolute = normalizePartnerBookingUrl(url);
+  return isUsableTripsterCheckoutUrl(absolute) || absolute.includes("/api/affiliate/go/");
+}
+
 /** Opens partner checkout in a new tab. Returns false when the popup was blocked. */
 export function openPartnerBookingUrl(url: string): boolean {
+  if (!isOpenablePartnerCheckoutUrl(url)) return false;
   const absolute = normalizePartnerBookingUrl(url);
   const opened = window.open(absolute, "_blank", "noopener,noreferrer");
   return opened != null;

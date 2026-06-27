@@ -28,6 +28,7 @@ import {
   resolveTripsterFallbackDescription,
   resolveYouTravelFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
+import { resolveTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
 import {
   isYouTravelPartnerDetail,
   parseYouTravelOfferDateId,
@@ -479,7 +480,20 @@ export default function PartnerTourBookingContactSection({
         source: "partner_booking",
       });
 
-      const checkoutUrl = data.orderUrl ?? clientFallbackUrl;
+      const checkoutUrl = isYouTravel
+        ? (data.orderUrl ?? clientFallbackUrl)
+        : resolveTripsterCheckoutUrl(
+            tour.partnerExperienceId ?? 0,
+            data.orderUrl ?? clientFallbackUrl,
+            {
+              startDate: date,
+              time,
+              guests,
+              name: contact.name,
+              email: contact.email,
+              phone: contact.phone,
+            }
+          );
       setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
       setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
       feedback.success({

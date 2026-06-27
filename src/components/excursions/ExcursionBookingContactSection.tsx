@@ -16,6 +16,7 @@ import {
   PARTNER_EXCURSION_BOOKING_THANK_YOU,
   resolveTripsterFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
+import { resolveTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
 import BookingGuestLoginHint from "@/components/booking/BookingGuestLoginHint";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -309,7 +310,19 @@ export default function ExcursionBookingContactSection() {
         source: "excursion_booking",
       });
 
-      const checkoutUrl = data.orderUrl ?? data.fallbackUrl;
+      const checkoutUrl = resolveTripsterCheckoutUrl(
+        excursion.id,
+        data.orderUrl ?? data.fallbackUrl,
+        {
+          startDate: selectedDate,
+          time: selectedTime,
+          guests: persons,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          fallbackUrl: excursion.tripsterUrl,
+        }
+      );
       if (checkoutUrl) {
         setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
         setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));

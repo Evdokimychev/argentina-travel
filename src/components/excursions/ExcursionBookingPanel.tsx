@@ -187,6 +187,8 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
         <>
           <a
             href={excursion.bookingHref}
+            target="_blank"
+            rel="noopener noreferrer"
             className="mt-5 flex w-full items-center justify-center rounded-xl bg-sky px-4 py-3 text-center text-sm font-semibold text-white transition hover:bg-sky/90"
           >
             {affiliateButtonLabel}

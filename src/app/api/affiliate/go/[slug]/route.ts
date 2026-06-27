@@ -19,6 +19,8 @@ import {
   isUsableYouTravelAffiliateRedirectUrl,
 } from "@/lib/youtravel/partner-tour-utils";
 import { buildTripsterPartnerBookingUrl } from "@/lib/tripster/partner-tour-utils";
+import { isUsableTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
+import { resolveTripsterAffiliateCheckoutUrl } from "@/lib/tripster/checkout-url-server";
 import {
   fetchSputnik8ProductForAffiliate,
   logSputnik8AffiliateClick,
@@ -222,40 +224,24 @@ export async function GET(request: Request, context: RouteContext) {
   const customerPhone = requestUrl.searchParams.get("phone");
   const wantsBookingDeepLink = Boolean(startDate || slotTime || (guests != null && guests > 0));
 
-  let partnerUrl = experience.partner_url?.trim() || null;
+  let partnerUrl =
+    experience.partner_url?.trim() && isUsableTripsterCheckoutUrl(experience.partner_url)
+      ? experience.partner_url.trim()
+      : null;
 
   if (wantsBookingDeepLink) {
-    const bookingTarget = buildTripsterPartnerBookingUrl(experience.id, {
+    partnerUrl = await resolveTripsterAffiliateCheckoutUrl(supabase, {
+      experienceId: experience.id,
+      experienceSlug: normalizedSlug,
+      cityId: experience.city_id,
+      tripsterUrl: experience.tripster_url,
       startDate,
       time: slotTime,
       guests: Number.isFinite(guests) ? guests : null,
-      fallbackUrl: experience.tripster_url,
       name: customerName,
       email: customerEmail,
       phone: customerPhone,
     });
-
-    if (isTravelpayoutsConfigured()) {
-      try {
-        const { data: city } = await supabase
-          .from("tripster_cities")
-          .select("slug")
-          .eq("id", experience.city_id)
-          .maybeSingle();
-
-        const link = await createTripsterAffiliateLink({
-          tripsterUrl: bookingTarget,
-          experienceId: experience.id,
-          citySlug: city?.slug,
-        });
-
-        partnerUrl = link.partnerUrl || link.url;
-      } catch {
-        partnerUrl = bookingTarget;
-      }
-    } else {
-      partnerUrl = bookingTarget;
-    }
   } else if (!partnerUrl) {
     if (!isTravelpayoutsConfigured()) {
       return NextResponse.json({ error: "Affiliate link is not available" }, { status: 503 });

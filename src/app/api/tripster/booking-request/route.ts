@@ -21,6 +21,8 @@ import {
 import {
   buildTripsterBookingContactPayload,
 } from "@/lib/tripster/booking-contact";
+import { resolveTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
+import { resolveTripsterAffiliateCheckoutUrl } from "@/lib/tripster/checkout-url-server";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 type BookingRequestBody = {
@@ -59,24 +61,31 @@ async function resolveBookingTicketOptions(input: {
   }
 }
 
-function buildAffiliateFallbackUrl(input: {
+async function buildAffiliateFallbackUrl(input: {
+  supabase: ReturnType<typeof createSupabaseAdminClient> | null;
+  experienceId: number;
   slug: string;
+  cityId?: number | null;
+  tripsterUrl?: string | null;
   date: string;
   time: string;
   personsCount: number;
   name?: string;
   email?: string;
   phone?: string;
-}): string {
-  const search = new URLSearchParams({
-    start_date: input.date,
+}): Promise<string> {
+  return resolveTripsterAffiliateCheckoutUrl(input.supabase, {
+    experienceId: input.experienceId,
+    experienceSlug: input.slug,
+    cityId: input.cityId,
+    tripsterUrl: input.tripsterUrl,
+    startDate: input.date,
     time: input.time,
-    guests: String(input.personsCount),
+    guests: input.personsCount,
+    name: input.name,
+    email: input.email,
+    phone: input.phone,
   });
-  if (input.name) search.set("name", input.name);
-  if (input.email) search.set("email", input.email);
-  if (input.phone) search.set("phone", input.phone);
-  return `/api/affiliate/go/${input.slug}?${search.toString()}`;
 }
 
 function resolveAffiliateFallbackReason(status?: number): string {
@@ -193,8 +202,31 @@ async function postTripsterBookingRequest(request: Request) {
     return NextResponse.json({ error: "Tripster product not found." }, { status: 404 });
   }
 
-  const fallbackUrl = buildAffiliateFallbackUrl({
+  let admin: ReturnType<typeof createSupabaseAdminClient> | null = null;
+  if (isSupabaseConfigured()) {
+    try {
+      admin = createSupabaseAdminClient();
+    } catch {
+      admin = null;
+    }
+  }
+
+  const checkoutContext = {
+    startDate: date,
+    time,
+    guests: personsCount,
+    name,
+    email,
+    phone,
+    fallbackUrl: excursion?.tripsterUrl ?? null,
+  };
+
+  const fallbackUrl = await buildAffiliateFallbackUrl({
+    supabase: admin,
+    experienceId,
     slug,
+    cityId: excursion?.cityId ?? null,
+    tripsterUrl: excursion?.tripsterUrl ?? null,
     date,
     time,
     personsCount,
@@ -265,7 +297,7 @@ async function postTripsterBookingRequest(request: Request) {
       phone,
       status: order.status ?? "pending",
       orderId: order.id,
-      orderUrl: order.url ?? null,
+      orderUrl: resolveTripsterCheckoutUrl(experienceId, order.url ?? null, checkoutContext),
       priceSnapshot: order.price ?? null,
     });
 
@@ -274,7 +306,7 @@ async function postTripsterBookingRequest(request: Request) {
       mode: "tripster_order",
       orderId: order.id,
       status: order.status,
-      orderUrl: order.url,
+      orderUrl: resolveTripsterCheckoutUrl(experienceId, order.url ?? null, checkoutContext),
       price: order.price,
     });
   } catch (error) {
