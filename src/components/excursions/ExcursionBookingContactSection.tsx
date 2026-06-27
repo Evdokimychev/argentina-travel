@@ -21,6 +21,7 @@ import {
   resolveTripsterBookingRedirectFromApi,
 } from "@/lib/tripster/checkout-url";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
+import { ENABLE_PARTNER_CONTACT_FORM } from "@/lib/booking/partner-contact-form-flag";
 import BookingGuestLoginHint from "@/components/booking/BookingGuestLoginHint";
 import PartnerBookingSuccessPanel from "@/components/booking/PartnerBookingSuccessPanel";
 import BookingPreviewCard, {
@@ -96,23 +97,26 @@ export default function ExcursionBookingContactSection() {
       return excursion.bookingHref ? normalizePartnerBookingUrl(excursion.bookingHref) : null;
     }
 
-    const contact = buildTripsterBookingContactPayload({
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      messageToGuide: form.message,
-      profileCountry: user?.country,
-    });
+    const contact = ENABLE_PARTNER_CONTACT_FORM
+      ? buildTripsterBookingContactPayload({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          messageToGuide: form.message,
+          profileCountry: user?.country,
+        })
+      : null;
+    const contactParams = contact && !("error" in contact) ? contact : null;
 
     return normalizePartnerBookingUrl(
       buildTripsterPartnerOpenUrl(excursion.id, {
         startDate: selectedDate,
         time: selectedTime,
         guests: persons,
-        name: "error" in contact ? undefined : contact.name,
-        email: "error" in contact ? undefined : contact.email,
-        phone: "error" in contact ? undefined : contact.phone,
-        messageToGuide: "error" in contact ? undefined : contact.messageToGuide,
+        name: contactParams?.name,
+        email: contactParams?.email,
+        phone: contactParams?.phone,
+        messageToGuide: contactParams?.messageToGuide,
         fallbackUrl: excursion.tripsterUrl,
       })
     );
@@ -237,18 +241,20 @@ export default function ExcursionBookingContactSection() {
       return;
     }
 
-    if (!form.name.trim()) {
+    if (ENABLE_PARTNER_CONTACT_FORM && !form.name.trim()) {
       setError(t("excursions.booking.name"));
       return;
     }
 
-    const contact = buildTripsterBookingContactPayload({
-      name: form.name,
-      email: form.email,
-      phone: form.phone,
-      messageToGuide: form.message,
-      profileCountry: user?.country,
-    });
+    const contact = ENABLE_PARTNER_CONTACT_FORM
+      ? buildTripsterBookingContactPayload({
+          name: form.name,
+          email: form.email,
+          phone: form.phone,
+          messageToGuide: form.message,
+          profileCountry: user?.country,
+        })
+      : { name: "", email: "", phone: "", messageToGuide: undefined as string | undefined };
 
     if ("error" in contact) {
       setError(contact.error);
@@ -367,6 +373,8 @@ export default function ExcursionBookingContactSection() {
   return (
     <div className="space-y-5">
       <BookingPreviewCard
+        productTitle={excursion.title}
+        imageUrl={excursion.coverImage}
         description="Проверьте дату, время, состав группы и сумму перед отправкой"
         fields={excursionPreviewFields({
           dateLabel: previewSummary.dateLabel,
@@ -379,61 +387,70 @@ export default function ExcursionBookingContactSection() {
 
       <BookingGuestLoginHint />
 
-      <div className="space-y-3">
-        <div>
-          <label htmlFor="excursion-contact-name" className="mb-1.5 block text-xs font-medium text-charcoal">
-            {t("excursions.booking.name")}
-            <RequiredMark />
-          </label>
-          <Input
-            id="excursion-contact-name"
-            value={form.name}
-            onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
-            autoComplete="name"
-          />
-        </div>
+      {/*
+        Контактные поля (имя, email, телефон, сообщение гиду) заархивированы:
+        для анонимных пользователей контакты не передаются Tripster, поэтому
+        форма убрана. Бронирование передаёт дату, время и число туристов.
+        Восстановление: ENABLE_PARTNER_CONTACT_FORM = true
+        (@/lib/booking/partner-contact-form-flag).
+      */}
+      {ENABLE_PARTNER_CONTACT_FORM ? (
+        <div className="space-y-3">
+          <div>
+            <label htmlFor="excursion-contact-name" className="mb-1.5 block text-xs font-medium text-charcoal">
+              {t("excursions.booking.name")}
+              <RequiredMark />
+            </label>
+            <Input
+              id="excursion-contact-name"
+              value={form.name}
+              onChange={(event) => setForm((prev) => ({ ...prev, name: event.target.value }))}
+              autoComplete="name"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="excursion-contact-email" className="mb-1.5 block text-xs font-medium text-charcoal">
-            {t("excursions.booking.email")}
-            <RequiredMark />
-          </label>
-          <Input
-            id="excursion-contact-email"
-            type="email"
-            value={form.email}
-            onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
-            autoComplete="email"
-          />
-        </div>
+          <div>
+            <label htmlFor="excursion-contact-email" className="mb-1.5 block text-xs font-medium text-charcoal">
+              {t("excursions.booking.email")}
+              <RequiredMark />
+            </label>
+            <Input
+              id="excursion-contact-email"
+              type="email"
+              value={form.email}
+              onChange={(event) => setForm((prev) => ({ ...prev, email: event.target.value }))}
+              autoComplete="email"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="excursion-contact-phone" className="mb-1.5 block text-xs font-medium text-charcoal">
-            {t("excursions.booking.phone")}
-            <RequiredMark />
-          </label>
-          <Input
-            id="excursion-contact-phone"
-            type="tel"
-            placeholder="+7 999 123 45 67"
-            value={form.phone}
-            onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
-            autoComplete="tel"
-          />
-        </div>
+          <div>
+            <label htmlFor="excursion-contact-phone" className="mb-1.5 block text-xs font-medium text-charcoal">
+              {t("excursions.booking.phone")}
+              <RequiredMark />
+            </label>
+            <Input
+              id="excursion-contact-phone"
+              type="tel"
+              placeholder="+7 999 123 45 67"
+              value={form.phone}
+              onChange={(event) => setForm((prev) => ({ ...prev, phone: event.target.value }))}
+              autoComplete="tel"
+            />
+          </div>
 
-        <div>
-          <label htmlFor="excursion-contact-message" className="mb-1.5 block text-xs font-medium text-charcoal">
-            {t("excursions.booking.message")}
-          </label>
-          <Textarea
-            id="excursion-contact-message"
-            value={form.message}
-            onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
-            rows={3}
-          />
+          <div>
+            <label htmlFor="excursion-contact-message" className="mb-1.5 block text-xs font-medium text-charcoal">
+              {t("excursions.booking.message")}
+            </label>
+            <Textarea
+              id="excursion-contact-message"
+              value={form.message}
+              onChange={(event) => setForm((prev) => ({ ...prev, message: event.target.value }))}
+              rows={3}
+            />
+          </div>
         </div>
-      </div>
+      ) : null}
 
       {error ? <InlineFeedback variant="error" title="Проверьте форму" description={error} /> : null}
 

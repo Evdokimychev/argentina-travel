@@ -2,6 +2,7 @@
 
 import type { LucideIcon } from "lucide-react";
 import { CalendarDays, CircleDollarSign, ClipboardCheck, Clock3, Pencil, Users, UsersRound } from "lucide-react";
+import { SafeImage } from "@/components/ui/safe-image";
 import { cn } from "@/lib/cn";
 import { formatExcursionDuration } from "@/lib/excursion-format";
 import { addMinutesToScheduleTime } from "@/lib/excursion-schedule";
@@ -17,8 +18,13 @@ export type BookingPreviewField = {
 };
 
 type BookingPreviewCardProps = {
+  /** Section heading, e.g. «Предпросмотр заявки». */
   title?: string;
   description?: string;
+  /** Excursion or tour cover image. */
+  imageUrl?: string | null;
+  /** Excursion or tour name shown beside the cover. */
+  productTitle?: string;
   fields: BookingPreviewField[];
   priceLabel: string;
   priceHint?: string;
@@ -138,9 +144,42 @@ function PreviewFieldRow({
   );
 }
 
+function PreviewProductHeader({
+  imageUrl,
+  productTitle,
+}: {
+  imageUrl?: string | null;
+  productTitle?: string;
+}) {
+  if (!imageUrl && !productTitle) return null;
+
+  return (
+    <div className="flex items-center gap-3 border-b border-gray-100 px-4 py-3.5">
+      {imageUrl ? (
+        <div className="relative h-[4.5rem] w-[5.5rem] shrink-0 overflow-hidden rounded-xl bg-gray-100 ring-1 ring-black/[0.04]">
+          <SafeImage
+            src={imageUrl}
+            alt={productTitle ?? ""}
+            fill
+            className="object-cover"
+            sizes="88px"
+          />
+        </div>
+      ) : null}
+      {productTitle ? (
+        <p className="min-w-0 flex-1 font-heading text-sm font-semibold leading-snug text-charcoal line-clamp-3">
+          {productTitle}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
 export default function BookingPreviewCard({
   title = "Предпросмотр заявки",
   description,
+  imageUrl,
+  productTitle,
   fields,
   priceLabel,
   priceHint,
@@ -156,17 +195,14 @@ export default function BookingPreviewCard({
   ].filter(Boolean);
   const priceDetail = priceDetailParts.length > 0 ? priceDetailParts.join(" · ") : undefined;
 
-  const rows: BookingPreviewField[] = [
-    ...fields,
-    {
-      id: "price",
-      label: "Стоимость",
-      value: amount,
-      detail: priceDetail,
-      emphasize: true,
-      icon: CircleDollarSign,
-    },
-  ];
+  const priceField: BookingPreviewField = {
+    id: "price",
+    label: "Стоимость",
+    value: amount,
+    detail: priceDetail,
+    emphasize: true,
+    icon: CircleDollarSign,
+  };
 
   return (
     <section
@@ -185,16 +221,23 @@ export default function BookingPreviewCard({
         </div>
       </div>
 
-      <dl className="divide-y divide-gray-100">
-        {rows.map((field) => (
-          <div key={field.id}>
-            <PreviewFieldRow
-              field={field}
-              className={field.id === "price" ? "bg-sky/[0.03]" : undefined}
-            />
+      <PreviewProductHeader imageUrl={imageUrl} productTitle={productTitle} />
+
+      <div className="grid divide-y divide-gray-100 sm:grid-cols-2 sm:divide-x sm:divide-y-0">
+        <dl className="divide-y divide-gray-100">
+          {fields.map((field) => (
+            <div key={field.id}>
+              <PreviewFieldRow field={field} />
+            </div>
+          ))}
+        </dl>
+
+        <dl className="sm:flex sm:flex-col sm:justify-center">
+          <div className="sm:flex-1">
+            <PreviewFieldRow field={priceField} className="h-full bg-sky/[0.03] sm:min-h-full sm:py-4" />
           </div>
-        ))}
-      </dl>
+        </dl>
+      </div>
     </section>
   );
 }

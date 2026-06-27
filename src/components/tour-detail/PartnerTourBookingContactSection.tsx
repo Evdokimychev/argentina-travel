@@ -12,6 +12,7 @@ import { createInitialCheckoutForm } from "@/components/tour-detail/checkout/typ
 import type { SessionUser } from "@/types/user";
 import { validateBookingDates } from "@/components/tour-detail/BookingDateSelector";
 import { useTourBooking } from "@/components/tour-detail/TourBookingContext";
+import { ENABLE_PARTNER_CONTACT_FORM } from "@/lib/booking/partner-contact-form-flag";
 import BookingGuestLoginHint from "@/components/booking/BookingGuestLoginHint";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
@@ -142,14 +143,17 @@ export default function PartnerTourBookingContactSection({
         : parsedSlot?.startDate ?? selectedDate?.startDate;
     if (!startDate) return externalBookingHref;
 
-    const contact = buildTripsterBookingContactPayload({
-      name: form.contactFullName,
-      email: form.contactEmail,
-      phone: form.contactPhone,
-      messageToGuide: form.comments,
-      profileCountry: user?.country,
-    });
-    if ("error" in contact) return externalBookingHref;
+    const contact = ENABLE_PARTNER_CONTACT_FORM
+      ? buildTripsterBookingContactPayload({
+          name: form.contactFullName,
+          email: form.contactEmail,
+          phone: form.contactPhone,
+          messageToGuide: form.comments,
+          profileCountry: user?.country,
+        })
+      : null;
+    if (contact && "error" in contact) return externalBookingHref;
+    const contactParams = contact && !("error" in contact) ? contact : null;
 
     if (!isYouTravel) {
       return normalizePartnerBookingUrl(
@@ -157,10 +161,10 @@ export default function PartnerTourBookingContactSection({
           startDate,
           time: parsedSlot?.time ?? "08:00",
           guests,
-          name: contact.name,
-          email: contact.email,
-          phone: contact.phone,
-          messageToGuide: contact.messageToGuide,
+          name: contactParams?.name,
+          email: contactParams?.email,
+          phone: contactParams?.phone,
+          messageToGuide: contactParams?.messageToGuide,
           fallbackUrl: externalBookingHref,
         })
       );
@@ -172,9 +176,9 @@ export default function PartnerTourBookingContactSection({
       startDate,
       endDate: selectedDate?.endDate,
       guests,
-      name: contact.name,
-      email: contact.email,
-      phone: contact.phone,
+      name: contactParams?.name,
+      email: contactParams?.email,
+      phone: contactParams?.phone,
       offerId: selectedDateId ? parseYouTravelOfferDateId(selectedDateId)?.offerId : undefined,
       time: isYouTravel ? undefined : parsedSlot?.time ?? "08:00",
     });
@@ -304,19 +308,23 @@ export default function PartnerTourBookingContactSection({
       return;
     }
 
-    const { firstName } = splitFullName(form.contactFullName);
-    if (!firstName.trim()) {
-      setError("Укажите имя и фамилию контактного лица.");
-      return;
+    if (ENABLE_PARTNER_CONTACT_FORM) {
+      const { firstName } = splitFullName(form.contactFullName);
+      if (!firstName.trim()) {
+        setError("Укажите имя и фамилию контактного лица.");
+        return;
+      }
     }
 
-    const contact = buildTripsterBookingContactPayload({
-      name: form.contactFullName,
-      email: form.contactEmail,
-      phone: form.contactPhone,
-      messageToGuide: form.comments,
-      profileCountry: user?.country,
-    });
+    const contact = ENABLE_PARTNER_CONTACT_FORM
+      ? buildTripsterBookingContactPayload({
+          name: form.contactFullName,
+          email: form.contactEmail,
+          phone: form.contactPhone,
+          messageToGuide: form.comments,
+          profileCountry: user?.country,
+        })
+      : { name: "", email: "", phone: "", messageToGuide: undefined as string | undefined };
 
     if ("error" in contact) {
       setError(contact.error);
@@ -486,6 +494,8 @@ export default function PartnerTourBookingContactSection({
   return (
     <div className="space-y-4">
       <BookingPreviewCard
+        productTitle={tour.title}
+        imageUrl={tour.image}
         description="Проверьте дату, состав группы и сумму перед отправкой"
         fields={partnerTourPreviewFields({
           dateLabel: previewSummary.dateLabel,
@@ -498,74 +508,86 @@ export default function PartnerTourBookingContactSection({
         priceHint={previewSummary.perPersonLabel}
       />
 
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <h3 className="text-sm font-semibold text-charcoal">Контактные данные</h3>
-          <p className="mt-0.5 text-xs text-slate">Шаг 2 — заполните форму и подтвердите заявку</p>
-        </div>
-        <span className="shrink-0 rounded-full bg-surface-muted px-2.5 py-1 text-[11px] font-medium text-slate">
-          2 / 2
-        </span>
-      </div>
-
       <BookingGuestLoginHint />
 
-      <div>
-        <label htmlFor="partner-contact-full-name" className="mb-1.5 block text-xs font-medium text-charcoal">
-          Имя и фамилия
-          <RequiredMark />
-        </label>
-        <Input
-          id="partner-contact-full-name"
-          placeholder="Иван Иванов"
-          autoComplete="name"
-          value={form.contactFullName}
-          onChange={(event) =>
-            setForm((prev) => ({ ...prev, contactFullName: event.target.value }))
-          }
-        />
-      </div>
+      {/*
+        Контактные поля (имя и фамилия, email, телефон, вопросы и пожелания)
+        заархивированы: для анонимных пользователей контакты не передаются
+        партнёру (Tripster / YouTravel), поэтому форма убрана. Бронирование
+        передаёт дату, состав группы (и время для Tripster).
+        Восстановление: ENABLE_PARTNER_CONTACT_FORM = true
+        (@/lib/booking/partner-contact-form-flag).
+      */}
+      {ENABLE_PARTNER_CONTACT_FORM ? (
+        <>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 className="text-sm font-semibold text-charcoal">Контактные данные</h3>
+              <p className="mt-0.5 text-xs text-slate">Шаг 2 — заполните форму и подтвердите заявку</p>
+            </div>
+            <span className="shrink-0 rounded-full bg-surface-muted px-2.5 py-1 text-[11px] font-medium text-slate">
+              2 / 2
+            </span>
+          </div>
 
-      <div>
-        <label htmlFor="partner-contact-email" className="mb-1.5 block text-xs font-medium text-charcoal">
-          Email
-          <RequiredMark />
-        </label>
-        <Input
-          id="partner-contact-email"
-          type="email"
-          placeholder="email@example.com"
-          value={form.contactEmail}
-          onChange={(event) => setForm((prev) => ({ ...prev, contactEmail: event.target.value }))}
-        />
-      </div>
+          <div>
+            <label htmlFor="partner-contact-full-name" className="mb-1.5 block text-xs font-medium text-charcoal">
+              Имя и фамилия
+              <RequiredMark />
+            </label>
+            <Input
+              id="partner-contact-full-name"
+              placeholder="Иван Иванов"
+              autoComplete="name"
+              value={form.contactFullName}
+              onChange={(event) =>
+                setForm((prev) => ({ ...prev, contactFullName: event.target.value }))
+              }
+            />
+          </div>
 
-      <div>
-        <label htmlFor="partner-contact-phone" className="mb-1.5 block text-xs font-medium text-charcoal">
-          Телефон
-          <RequiredMark />
-        </label>
-        <Input
-          id="partner-contact-phone"
-          type="tel"
-          placeholder="+54 9 11 1234-5678"
-          value={form.contactPhone}
-          onChange={(event) => setForm((prev) => ({ ...prev, contactPhone: event.target.value }))}
-        />
-      </div>
+          <div>
+            <label htmlFor="partner-contact-email" className="mb-1.5 block text-xs font-medium text-charcoal">
+              Email
+              <RequiredMark />
+            </label>
+            <Input
+              id="partner-contact-email"
+              type="email"
+              placeholder="email@example.com"
+              value={form.contactEmail}
+              onChange={(event) => setForm((prev) => ({ ...prev, contactEmail: event.target.value }))}
+            />
+          </div>
 
-      <div>
-        <label htmlFor="partner-contact-comments" className="mb-1.5 block text-xs font-medium text-charcoal">
-          Вопросы и пожелания
-        </label>
-        <Textarea
-          id="partner-contact-comments"
-          placeholder="Состав группы, особые даты, пожелания по программе…"
-          value={form.comments}
-          onChange={(event) => setForm((prev) => ({ ...prev, comments: event.target.value }))}
-          rows={3}
-        />
-      </div>
+          <div>
+            <label htmlFor="partner-contact-phone" className="mb-1.5 block text-xs font-medium text-charcoal">
+              Телефон
+              <RequiredMark />
+            </label>
+            <Input
+              id="partner-contact-phone"
+              type="tel"
+              placeholder="+54 9 11 1234-5678"
+              value={form.contactPhone}
+              onChange={(event) => setForm((prev) => ({ ...prev, contactPhone: event.target.value }))}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="partner-contact-comments" className="mb-1.5 block text-xs font-medium text-charcoal">
+              Вопросы и пожелания
+            </label>
+            <Textarea
+              id="partner-contact-comments"
+              placeholder="Состав группы, особые даты, пожелания по программе…"
+              value={form.comments}
+              onChange={(event) => setForm((prev) => ({ ...prev, comments: event.target.value }))}
+              rows={3}
+            />
+          </div>
+        </>
+      ) : null}
 
       {error ? (
         <InlineFeedback variant="error" title="Проверьте форму" description={error} />
@@ -587,7 +609,7 @@ export default function PartnerTourBookingContactSection({
             >
               открыть {partnerLabel} вручную
             </a>{" "}
-            — дата, состав группы и контакты подставятся автоматически.
+            — дата и состав группы подставятся автоматически, контактные данные заполните на сайте партнёра.
           </p>
         ) : null}
         <Button
