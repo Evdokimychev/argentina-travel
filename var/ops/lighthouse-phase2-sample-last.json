@@ -1,0 +1,100 @@
+{
+  "at": "2026-06-27T17:09:40.847Z",
+  "baseUrl": "http://127.0.0.1:3000",
+  "categories": [
+    "performance",
+    "accessibility"
+  ],
+  "budget": {
+    "performance": 90,
+    "accessibility": 95,
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  },
+  "medianPerformance": 59,
+  "medianAccessibility": 94,
+  "results": [
+    {
+      "path": "/",
+      "url": "http://127.0.0.1:3000/",
+      "performance": 42,
+      "accessibility": 94,
+      "lcpMs": 11282,
+      "cls": 0.086,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours",
+      "url": "http://127.0.0.1:3000/tours",
+      "performance": 59,
+      "accessibility": 92,
+      "lcpMs": 8823,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours/patagonia-glaciers",
+      "url": "http://127.0.0.1:3000/tours/patagonia-glaciers",
+      "performance": 49,
+      "accessibility": 95,
+      "lcpMs": 9035,
+      "cls": 0.323,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog",
+      "url": "http://127.0.0.1:3000/blog",
+      "performance": 52,
+      "accessibility": 93,
+      "lcpMs": 9354,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog/natsionalnyy-park-iguasu",
+      "url": "http://127.0.0.1:3000/blog/natsionalnyy-park-iguasu",
+      "performance": 57,
+      "accessibility": 89,
+      "lcpMs": 7172,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/mapa-argentina",
+      "url": "http://127.0.0.1:3000/mapa-argentina",
+      "performance": 61,
+      "accessibility": 96,
+      "lcpMs": 9615,
+      "cls": 0.01,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/immigration",
+      "url": "http://127.0.0.1:3000/immigration",
+      "performance": 69,
+      "accessibility": 97,
+      "lcpMs": 7726,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/destinations/patagonia",
+      "url": "http://127.0.0.1:3000/destinations/patagonia",
+      "performance": 64,
+      "accessibility": 93,
+      "lcpMs": 8718,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "pass": false
+}

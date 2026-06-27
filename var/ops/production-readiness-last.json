@@ -1,6 +1,6 @@
 {
   "ok": false,
-  "ranAt": "2026-06-21T20:31:44.664Z",
+  "ranAt": "2026-06-27T15:34:42.160Z",
   "gitSha": null,
   "checks": [
     {
@@ -112,21 +112,21 @@
       "id": "migrations:files",
       "label": "Миграции в репозитории",
       "status": "ok",
-      "message": "49 файлов, последняя: 20250627000011_author_article_doc_type",
+      "message": "54 файлов, последняя: 20250630200000_youtravel_affise_snapshots",
       "category": "database"
     },
     {
       "id": "security:rls-audit",
       "label": "Статический RLS-аудит",
       "status": "ok",
-      "message": "73 таблиц, критичных проблем нет",
+      "message": "81 таблиц, критичных проблем нет",
       "category": "security"
     },
     {
       "id": "migrations:db-count",
-      "label": "Миграции в БД",
-      "status": "warn",
-      "message": "Таблиц public: 73. schema_migrations недоступна — сверьте вручную с 49 файлами (последняя: 20250627000011_author_article_doc_type)",
+      "label": "Подключение к Postgres",
+      "status": "fail",
+      "message": "getaddrinfo ENOTFOUND aws-1-us-east-2.pooler.supabase.com",
       "category": "database"
     },
     {
@@ -146,8 +146,8 @@
   ],
   "summary": {
     "ok": 7,
-    "warn": 5,
-    "fail": 1,
+    "warn": 4,
+    "fail": 2,
     "skip": 7
   }
 }

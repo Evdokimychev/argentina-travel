@@ -1,0 +1,100 @@
+{
+  "at": "2026-06-27T17:30:03.953Z",
+  "baseUrl": "https://www.goargentina.ru",
+  "categories": [
+    "performance",
+    "accessibility"
+  ],
+  "budget": {
+    "performance": 90,
+    "accessibility": 95,
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  },
+  "medianPerformance": 67,
+  "medianAccessibility": 93,
+  "results": [
+    {
+      "path": "/",
+      "url": "https://www.goargentina.ru/",
+      "performance": 43,
+      "accessibility": 94,
+      "lcpMs": 8565,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours",
+      "url": "https://www.goargentina.ru/tours",
+      "performance": 57,
+      "accessibility": 92,
+      "lcpMs": 14465,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours/patagonia-glaciers",
+      "url": "https://www.goargentina.ru/tours/patagonia-glaciers",
+      "performance": 68,
+      "accessibility": 95,
+      "lcpMs": 6608,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog",
+      "url": "https://www.goargentina.ru/blog",
+      "performance": 28,
+      "accessibility": 93,
+      "lcpMs": 9065,
+      "cls": 1.091,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog/natsionalnyy-park-iguasu",
+      "url": "https://www.goargentina.ru/blog/natsionalnyy-park-iguasu",
+      "performance": 75,
+      "accessibility": 89,
+      "lcpMs": 3816,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/mapa-argentina",
+      "url": "https://www.goargentina.ru/mapa-argentina",
+      "performance": 63,
+      "accessibility": 85,
+      "lcpMs": 6741,
+      "cls": 0.01,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/immigration",
+      "url": "https://www.goargentina.ru/immigration",
+      "performance": 67,
+      "accessibility": 97,
+      "lcpMs": 6744,
+      "cls": 0.088,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/destinations/patagonia",
+      "url": "https://www.goargentina.ru/destinations/patagonia",
+      "performance": 69,
+      "accessibility": 93,
+      "lcpMs": 6958,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "pass": false
+}

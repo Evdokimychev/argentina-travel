@@ -1,0 +1,43 @@
+{
+  "ranAt": "2026-06-27T17:38:15.651Z",
+  "overall": 9.2,
+  "grade": "A",
+  "dimensions": {
+    "code": {
+      "score": 9.9,
+      "note": "OK 14, warn 1, fail 0"
+    },
+    "cms": {
+      "score": 10,
+      "note": "4/4 lanes @100%, cutover=true"
+    },
+    "production": {
+      "score": 10,
+      "note": "https://www.goargentina.ru"
+    },
+    "analytics": {
+      "score": null,
+      "manual": true,
+      "note": "ops-only: OK 2, fail 4 (Vercel env + GTM publish)"
+    },
+    "performance": {
+      "score": 3.5,
+      "note": "median perf 67, a11y 93, worst CLS 1.091 (prod CDN)"
+    }
+  },
+  "blockers": [],
+  "manualNext": [
+    "Vercel: NEXT_PUBLIC_GTM_ID + verification tokens → redeploy",
+    "GTM: опубликовать контейнер (GA4, Метрика, Clarity)",
+    "GSC: верификация + sitemap",
+    "Visual sign-off S11 (375/768/1280/1440)",
+    "Lighthouse perf sprint (local lab median ~59 vs budget 90)",
+    "F2 i18n globals ES/EN (E77)"
+  ],
+  "reports": {
+    "publish": "var/ops/publish-turnkey-last.json",
+    "analytics": "var/ops/analytics-readiness-last.json",
+    "cms": "var/ops/cms-cutover-readiness-last.json",
+    "lighthouse": "var/ops/lighthouse-phase2-sample-last.json"
+  }
+}
