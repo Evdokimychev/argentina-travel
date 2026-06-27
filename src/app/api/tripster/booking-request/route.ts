@@ -216,19 +216,33 @@ async function postTripsterBookingRequest(request: Request) {
     profileCountry = profile?.country ?? null;
   }
 
-  const contact = buildTripsterBookingContactPayload({
-    name: body.name ?? "",
-    email: body.email ?? "",
-    phone: body.phone ?? "",
-    messageToGuide,
-    profileCountry,
-  });
+  // Контактные данные больше не собираются в форме бронирования
+  // (см. ENABLE_PARTNER_CONTACT_FORM). Если контакты всё же переданы
+  // (например, восстановленной формой) — валидируем их; иначе бронируем
+  // без контактов и отправляем туриста дозаполнять данные на сайте партнёра.
+  const hasContactInput = Boolean(
+    body.name?.trim() || body.email?.trim() || body.phone?.trim()
+  );
 
-  if ("error" in contact) {
-    return NextResponse.json({ error: contact.error }, { status: 400 });
+  let name = "";
+  let email = "";
+  let phone = "";
+
+  if (hasContactInput) {
+    const contact = buildTripsterBookingContactPayload({
+      name: body.name ?? "",
+      email: body.email ?? "",
+      phone: body.phone ?? "",
+      messageToGuide,
+      profileCountry,
+    });
+
+    if ("error" in contact) {
+      return NextResponse.json({ error: contact.error }, { status: 400 });
+    }
+
+    ({ name, email, phone } = contact);
   }
-
-  const { name, email, phone } = contact;
 
   const excursion = await fetchExcursionDetailServer(slug);
   const partnerTour =
@@ -312,6 +326,33 @@ async function postTripsterBookingRequest(request: Request) {
       fallbackReason: "api_not_configured",
       error:
         "Сервис бронирования Tripster сейчас недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
+    });
+  }
+
+  // Без контактов заказ через External Orders создать нельзя — сразу
+  // открываем сайт партнёра с датой, временем и числом туристов.
+  if (!hasContactInput) {
+    await persistTripsterRequest({
+      ...body,
+      slug,
+      experienceId,
+      userId: authUser?.id ?? userId,
+      date,
+      time,
+      personsCount,
+      tickets,
+      name,
+      email,
+      phone,
+      status: "affiliate_fallback",
+    });
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "contact_on_partner_site",
+      error:
+        "Контактные данные заполняются на сайте партнёра — открываем Tripster с выбранной датой, временем и числом туристов.",
     });
   }
 

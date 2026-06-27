@@ -69,19 +69,24 @@ export async function POST(request: Request, context: RouteContext) {
   const date = body.date?.trim();
   const time = body.time?.trim();
   const personsCount = body.personsCount ?? 1;
-  const name = body.name?.trim();
-  const email = body.email?.trim();
-  const phone = body.phone?.trim();
+  const name = body.name?.trim() ?? "";
+  const email = body.email?.trim() ?? "";
+  const phone = body.phone?.trim() ?? "";
   const messageToGuide = body.messageToGuide?.trim();
 
-  if (!date || !time || !name || !email || !phone || personsCount < 1) {
+  if (!date || !time || personsCount < 1) {
     return NextResponse.json({ error: "Missing required booking fields." }, { status: 400 });
   }
+
+  // Контактные данные больше не собираются в форме (см. ENABLE_PARTNER_CONTACT_FORM).
+  // Без них заказ через External Orders создать нельзя — отправляем туриста
+  // на сайт партнёра, где он заполнит контакты сам.
+  const hasContactInput = Boolean(name || email || phone);
 
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {
-    if (!isSputnik8Configured()) {
+    if (!hasContactInput || !isSputnik8Configured()) {
       return NextResponse.json({
         ok: false,
         mode: "affiliate_fallback",
@@ -179,7 +184,7 @@ export async function POST(request: Request, context: RouteContext) {
     }
   }
 
-  if (!isTripsterConfigured()) {
+  if (!hasContactInput || !isTripsterConfigured()) {
     return NextResponse.json({
       ok: false,
       mode: "affiliate_fallback",

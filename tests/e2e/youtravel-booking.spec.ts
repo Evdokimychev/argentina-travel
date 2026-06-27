@@ -57,10 +57,8 @@ test.describe("YouTravel booking smoke", () => {
     await page.getByRole("link", { name: /Забронировать на YouTravel\.me/i }).click();
     await expect(page.getByRole("dialog")).toBeVisible();
 
-    await page.locator("#partner-contact-full-name").fill("Иван Тестов");
-    await page.locator("#partner-contact-email").fill("e2e-youtravel@example.com");
-    await page.locator("#partner-contact-phone").fill("+5491112345678");
-
+    // Контактные поля больше не собираются в форме (см. ENABLE_PARTNER_CONTACT_FORM):
+    // дата и число туристов передаются партнёру, контакты турист заполняет на YouTravel.me.
     await page.getByRole("button", { name: /Подтвердить и забронировать/i }).click();
 
     const bookingResponse = await bookingRequestPromise;
