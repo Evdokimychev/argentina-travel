@@ -48,13 +48,6 @@ export default async function BlogPage() {
     heroVariantCookie,
     cookieStore.get("ga-session-id")?.value ?? "blog-index",
   );
-  if (!heroVariantCookie) {
-    cookieStore.set(BLOG_HERO_VARIANT_COOKIE, heroVariant, {
-      path: "/",
-      maxAge: 60 * 60 * 24 * 365,
-      sameSite: "lax",
-    });
-  }
 
   let initialPersonalized: typeof indexable = [];
   if (isSupabaseAuthEnabled()) {
