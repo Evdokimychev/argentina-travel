@@ -1,5 +1,5 @@
 import { slugifyTourTitle } from "@/lib/tour-slug";
-import { parseExcursionPayload } from "@/lib/tripster/excursion-payload";
+import { parseExcursionLanguages, parseExcursionPayload } from "@/lib/tripster/excursion-payload";
 import { parseExcursionListingMeta } from "@/lib/excursion-listing-meta";
 import type {
   TripsterCity,
@@ -212,6 +212,7 @@ export function rowToExcursionDetail(
     descriptionBlocks: parsed.descriptionBlocks,
     ticketOptions: parsed.ticketOptions,
     tags,
+    languages: parseExcursionLanguages(payload),
     coverImage: listing.coverImage ?? parsed.coverImage,
   };
 }

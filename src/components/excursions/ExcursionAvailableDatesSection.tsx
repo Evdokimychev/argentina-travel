@@ -3,7 +3,6 @@
 import TourSection from "@/components/tour-detail/TourSection";
 import ExcursionDepartureCalendar from "@/components/excursions/ExcursionDepartureCalendar";
 import ExcursionBookingPricingSection from "@/components/excursions/ExcursionBookingPricingSection";
-import ExcursionAdditionalServicesSection from "@/components/excursions/ExcursionAdditionalServicesSection";
 import ExcursionPrepaymentNotice from "@/components/excursions/ExcursionPrepaymentNotice";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
@@ -46,10 +45,6 @@ export default function ExcursionAvailableDatesSection() {
         <ExcursionBookingPricingSection
           excursion={excursion}
           quotePriceDescription={quote?.price_description}
-        />
-        <ExcursionAdditionalServicesSection
-          ticketOptions={excursion.ticketOptions}
-          priceCurrency={excursion.priceCurrency}
         />
         <ExcursionPrepaymentNotice
           excursionSlug={excursion.slug}

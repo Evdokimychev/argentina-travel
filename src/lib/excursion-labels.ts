@@ -1,4 +1,5 @@
 import type { ExcursionDetail } from "@/types/excursion";
+import { hasExcursionDetailItems } from "@/lib/excursion-detail-items";
 
 const MOVEMENT_LABELS: Record<string, string> = {
   foot: "Пешком",
@@ -22,6 +23,10 @@ export function formatMovementType(value: string | undefined, t: (key: string) =
 
 export function buildExcursionSectionLinks(excursion: ExcursionDetail) {
   const links: Array<{ id: string; labelKey: string }> = [];
+
+  if (hasExcursionDetailItems(excursion)) {
+    links.push({ id: "excursion-details", labelKey: "excursions.section.details" });
+  }
 
   if (
     excursion.descriptionBlocks.length > 0 ||

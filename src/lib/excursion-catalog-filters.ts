@@ -149,7 +149,7 @@ export function filterExcursions(
     }
 
     if (filters.formats.length > 0) {
-      const kind = item.formatKind ?? "group";
+      const kind = item.formatKind ?? "individual";
       if (!filters.formats.includes(kind)) return false;
     }
 

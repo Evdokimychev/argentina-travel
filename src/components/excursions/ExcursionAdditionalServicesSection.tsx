@@ -12,12 +12,14 @@ type ExcursionAdditionalServicesSectionProps = {
   ticketOptions: ExcursionTicketOption[];
   priceCurrency?: string;
   className?: string;
+  id?: string;
 };
 
 export default function ExcursionAdditionalServicesSection({
   ticketOptions,
   priceCurrency,
   className,
+  id = "excursion-additional-services",
 }: ExcursionAdditionalServicesSectionProps) {
   const { t } = useLocaleCurrency();
   const services = useMemo(
@@ -32,8 +34,8 @@ export default function ExcursionAdditionalServicesSection({
   const currency = priceCurrency?.trim().toUpperCase() || "USD";
 
   return (
-    <section className={className} aria-labelledby="excursion-additional-services">
-      <h3 id="excursion-additional-services" className="text-sm font-medium text-charcoal">
+    <section className={className} id={id} aria-labelledby="excursion-additional-services-heading">
+      <h3 id="excursion-additional-services-heading" className="text-sm font-medium text-charcoal">
         {t("excursions.section.additionalServices")}
       </h3>
       <ul className="mt-2 space-y-2">

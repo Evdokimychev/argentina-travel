@@ -42,7 +42,7 @@ export default function ExcursionCard({ excursion }: { excursion: ExcursionListi
   const priceUsd = resolveExcursionPriceUsd(excursion);
   const showFrom = excursion.priceFrom !== false;
   const priceUnit = excursion.priceUnit ?? "per_person";
-  const formatKind = excursion.formatKind ?? "group";
+  const formatKind = excursion.formatKind ?? "individual";
   const galleryImages = excursion.coverImage ? [excursion.coverImage] : [];
   const hasReviews = excursion.rating != null && excursion.reviewCount > 0;
   const guideLabel = excursion.guide ? formatShortDisplayName(excursion.guide.name) : null;

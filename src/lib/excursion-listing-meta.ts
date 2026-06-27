@@ -52,26 +52,39 @@ function resolvePriceUnit(experience: TripsterExperience): ExcursionPriceUnit {
 }
 
 function resolveFormatKind(experience: TripsterExperience): ExcursionFormatKind {
+  if (experience.exp_format === 2) {
+    return "individual";
+  }
+  if (experience.exp_format === 1) {
+    return "group";
+  }
+
   const format = (experience.format ?? "").toLowerCase();
   const scheduleType = (experience.schedule_type ?? "").toLowerCase();
 
   if (
+    format === "private" ||
+    format === "individual" ||
     format.includes("индивид") ||
     format.includes("individual") ||
-    scheduleType.includes("individual") ||
-    experience.exp_format === 2 ||
-    experience.max_persons === 1
+    scheduleType.includes("individual")
   ) {
     return "individual";
   }
 
   if (
+    format === "group" ||
+    format === "group_tour" ||
     format.includes("групп") ||
     format.includes("group") ||
-    scheduleType.includes("group") ||
-    experience.exp_format === 1
+    scheduleType.includes("group")
   ) {
     return "group";
+  }
+
+  const productType = (experience.type ?? "").trim().toLowerCase();
+  if (productType && productType !== "tour") {
+    return "individual";
   }
 
   return "group";

@@ -43,6 +43,24 @@ function parseDescriptionBlocks(raw: unknown): ExcursionDescriptionBlock[] {
     .filter((block) => block.html.length > 0);
 }
 
+export function parseExcursionLanguages(payload: unknown): string[] | undefined {
+  const experience = payload as TripsterExperience | null | undefined;
+  const raw = experience?.languages;
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
+
+  const parsed = raw
+    .map((item) => {
+      if (typeof item === "string") return item.trim();
+      if (item && typeof item === "object") {
+        return item.name?.trim() || item.code?.trim() || "";
+      }
+      return "";
+    })
+    .filter(Boolean);
+
+  return parsed.length > 0 ? parsed : undefined;
+}
+
 function parseTicketOptions(experience: TripsterExperience): ExcursionTicketOption[] {
   const perPerson = experience.price?.per_person;
   if (!Array.isArray(perPerson) || perPerson.length === 0) return [];

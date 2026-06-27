@@ -13,6 +13,7 @@ import ExcursionBookingConditionsSection from "@/components/excursions/Excursion
 import ExcursionMeetingSection from "@/components/excursions/ExcursionMeetingSection";
 import ExcursionIncludedSection from "@/components/excursions/ExcursionIncludedSection";
 import ExcursionMetaBadges from "@/components/excursions/ExcursionMetaBadges";
+import ExcursionStatsSection from "@/components/excursions/ExcursionStatsSection";
 import ExcursionSectionNav from "@/components/excursions/ExcursionSectionNav";
 import ExcursionBookingPanel from "@/components/excursions/ExcursionBookingPanel";
 import { ExcursionBookingProvider } from "@/components/excursions/ExcursionBookingContext";
@@ -149,6 +150,10 @@ export default function ExcursionDetailView({
 
               <div className="mt-4">
                 <ExcursionMetaBadges excursion={excursion} t={t} />
+              </div>
+
+              <div className="mt-6">
+                <ExcursionStatsSection excursion={excursion} />
               </div>
 
               <div className="mt-6 lg:hidden">

@@ -35,7 +35,7 @@ export default function ExcursionMetaBadges({
   t: (key: string) => string;
 }) {
   const movement = formatMovementType(excursion.movementType, t);
-  const formatKind = excursion.formatKind ?? "group";
+  const formatKind = excursion.formatKind ?? "individual";
   const formatLabel = t(excursionFormatLabelKey(formatKind));
 
   const badges: Array<{ key: string; label: string; node: React.ReactNode }> = [];
