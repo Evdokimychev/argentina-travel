@@ -1,5 +1,7 @@
 import "server-only";
 
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
@@ -190,7 +192,7 @@ async function enrichTripsterGuideProfile(detail: ExcursionDetail): Promise<Excu
   };
 }
 
-export async function fetchExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
+async function loadExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8") {
@@ -205,6 +207,17 @@ export async function fetchExcursionDetailServer(slug: string): Promise<Excursio
   if (tripster) return tripster;
   return fetchSputnik8Detail(slug);
 }
+
+const cachedExcursionDetailBySlug = unstable_cache(
+  loadExcursionDetailServer,
+  ["excursion-detail"],
+  { revalidate: 600, tags: ["excursions"] }
+);
+
+/** Request-scoped memoization on top of the time-based cache for API routes and RSC. */
+export const fetchExcursionDetailServer = cache(
+  (slug: string): Promise<ExcursionDetail | null> => cachedExcursionDetailBySlug(slug)
+);
 
 export async function fetchExcursionCityServer(citySlug: string): Promise<ExcursionCity | null> {
   const supabase = getClient();

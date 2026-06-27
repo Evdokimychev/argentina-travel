@@ -1,6 +1,6 @@
 "use client";
 
-import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import PartnerTourBookingPriceSummary from "@/components/tour-detail/PartnerTourBookingPriceSummary";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
@@ -17,14 +17,16 @@ export default function ExcursionMobileBookingBar({
   const { t } = useLocaleCurrency();
   const {
     excursion,
-    priceUsd,
+    bookingPrice,
     priceSuffix,
-    showFrom,
+    quoteLoading,
     selectedDate,
     selectedTime,
     openBookingPreview,
     submitButtonLabel,
   } = useExcursionBooking();
+
+  const hasDateAndTime = Boolean(selectedDate && selectedTime);
 
   const listedPriceLabel =
     excursion.priceDisplay?.trim() ||
@@ -52,12 +54,12 @@ export default function ExcursionMobileBookingBar({
     <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white/95 shadow-lg backdrop-blur-sm lg:hidden">
       <div className={cn(siteContainerClass, "flex items-center justify-between gap-4 py-4")}>
         <div className="min-w-0">
-          {priceUsd != null ? (
-            <TourPriceDisplay
-              priceUsd={priceUsd}
-              size="sm"
-              showFrom={showFrom}
+          {bookingPrice ? (
+            <PartnerTourBookingPriceSummary
+              price={bookingPrice}
               suffix={priceSuffix}
+              size="sm"
+              loading={quoteLoading && hasDateAndTime}
             />
           ) : listedPriceLabel ? (
             <p className="truncate font-heading text-lg font-bold text-charcoal">{listedPriceLabel}</p>

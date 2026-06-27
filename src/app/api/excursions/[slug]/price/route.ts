@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { buildDefaultTickets } from "@/lib/excursion-schedule";
+import { resolveExcursionBookingPrice } from "@/lib/excursion-price-display";
 import { fetchExcursionDetailServer } from "@/lib/excursion-server";
 import { fetchTripsterPriceQuote, TripsterBookingError } from "@/lib/tripster/booking-api";
 import { isTripsterConfigured } from "@/lib/tripster/env";
@@ -11,6 +12,33 @@ import {
 import { isSputnik8Configured } from "@/lib/sputnik8/env";
 
 type RouteContext = { params: Promise<{ slug: string }> };
+
+function buildEstimateQuote(
+  excursion: NonNullable<Awaited<ReturnType<typeof fetchExcursionDetailServer>>>,
+  personsCount: number,
+  slotPriceValue?: number
+) {
+  const estimate = resolveExcursionBookingPrice({
+    excursion,
+    persons: personsCount,
+    quoteMatchesRequest: false,
+    hasDateAndTime: true,
+    slotPriceValue,
+  });
+
+  if (!estimate) {
+    return { quote: null, estimate: true as const };
+  }
+
+  return {
+    quote: {
+      value: estimate.totalValue > 0 ? estimate.totalValue : undefined,
+      currency: estimate.currency,
+      value_string: estimate.displayFallback,
+    },
+    estimate: true as const,
+  };
+}
 
 export async function GET(request: Request, context: RouteContext) {
   const { slug } = await context.params;
@@ -24,8 +52,12 @@ export async function GET(request: Request, context: RouteContext) {
   const time = url.searchParams.get("time")?.trim();
   const personsCount = Number.parseInt(url.searchParams.get("persons") ?? "1", 10);
 
-  if (!date || !time || !Number.isFinite(personsCount) || personsCount < 1) {
+  if (!Number.isFinite(personsCount) || personsCount < 1) {
     return NextResponse.json({ error: "Invalid query parameters." }, { status: 400 });
+  }
+
+  if (!date || !time) {
+    return NextResponse.json(buildEstimateQuote(excursion, personsCount));
   }
 
   const parsed = parseExcursionSlug(slug);
@@ -55,6 +87,7 @@ export async function GET(request: Request, context: RouteContext) {
           value_string: excursion.priceDisplay,
           event_id: event?.id,
         },
+        estimate: false,
       });
     } catch (error) {
       const status = error instanceof Sputnik8ApiError ? error.status : 502;
@@ -72,7 +105,7 @@ export async function GET(request: Request, context: RouteContext) {
   }
 
   if (!isTripsterConfigured()) {
-    return NextResponse.json({ error: "Tripster is not configured." }, { status: 503 });
+    return NextResponse.json(buildEstimateQuote(excursion, personsCount));
   }
 
   const tickets = buildDefaultTickets(excursion.ticketOptions, personsCount);
@@ -84,9 +117,12 @@ export async function GET(request: Request, context: RouteContext) {
       time,
       tickets: tickets.length > 0 ? tickets : undefined,
     });
-    return NextResponse.json({ quote });
+    return NextResponse.json({ quote, estimate: false });
   } catch (error) {
     const status = error instanceof TripsterBookingError ? error.status : 502;
+    if (status === 404 || status === 422) {
+      return NextResponse.json(buildEstimateQuote(excursion, personsCount));
+    }
     return NextResponse.json(
       { error: "Failed to calculate price." },
       { status: status >= 400 && status < 600 ? status : 502 }

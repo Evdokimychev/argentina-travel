@@ -1,7 +1,7 @@
 "use client";
 
 import GuestCounter from "@/components/tour-detail/GuestCounter";
-import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
+import PartnerTourBookingPriceSummary from "@/components/tour-detail/PartnerTourBookingPriceSummary";
 import ExcursionScheduleDatePicker from "@/components/excursions/ExcursionScheduleDatePicker";
 import ExcursionBookingPanelSkeleton from "@/components/excursions/ExcursionBookingPanelSkeleton";
 import { Button } from "@/components/ui/button";
@@ -44,13 +44,10 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
     persons,
     setPersons,
     maxPersons,
-    quote,
     quoteLoading,
-    priceIsEstimate,
-    priceUsd,
+    bookingPrice,
     priceSuffix,
     partnerPriceFootnote,
-    showFrom,
     listedPriceLabel,
     hasListedPrice,
     canBookOnSite,
@@ -58,6 +55,7 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
     openBookingPreview,
   } = useExcursionBooking();
 
+  const hasDateAndTime = Boolean(selectedDate && selectedTime);
   const scheduleDateKeys = scheduleDates.map((entry) => entry.date);
 
   const partnerDisclaimerKey =
@@ -93,16 +91,12 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
         className
       )}
     >
-      {priceUsd != null ? (
-        <div className={quoteLoading && priceIsEstimate ? "opacity-70 transition-opacity" : undefined}>
-          <TourPriceDisplay
-            priceUsd={priceUsd}
-            size="lg"
-            showFrom={showFrom}
-            suffix={priceSuffix}
-            showDiscountRibbon={false}
-          />
-        </div>
+      {bookingPrice ? (
+        <PartnerTourBookingPriceSummary
+          price={bookingPrice}
+          suffix={priceSuffix}
+          loading={quoteLoading && hasDateAndTime}
+        />
       ) : hasListedPrice && listedPriceLabel ? (
         <p className="font-heading text-2xl font-bold text-charcoal">{listedPriceLabel}</p>
       ) : (

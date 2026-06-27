@@ -6,16 +6,18 @@ import {
   useContext,
   useEffect,
   useMemo,
-  useRef,
   useState,
   type ReactNode,
 } from "react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { useExcursionPriceQuote } from "@/hooks/useExcursionPriceQuote";
 import { excursionPriceSuffixKey } from "@/lib/excursion-listing-meta";
 import {
+  excursionBookingPriceToUsd,
   isExcursionBookingPriceEstimate,
-  resolveExcursionBookingPriceUsd,
+  resolveExcursionBookingPrice,
   resolvePartnerPriceFootnote,
+  type ExcursionBookingPrice,
 } from "@/lib/excursion-price-display";
 import type { ExcursionScheduleDate } from "@/lib/excursion-schedule";
 import type { ExcursionDetail } from "@/types/excursion";
@@ -38,6 +40,7 @@ export type ExcursionBookingContextValue = {
   quote: TripsterPriceQuote | null;
   quoteLoading: boolean;
   priceIsEstimate: boolean;
+  bookingPrice: ExcursionBookingPrice | null;
   priceUsd: number | null;
   priceSuffix: string;
   partnerPriceFootnote: string | null;
@@ -72,18 +75,19 @@ export function ExcursionBookingProvider({
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [persons, setPersons] = useState(1);
-  const [quote, setQuote] = useState<TripsterPriceQuote | null>(null);
-  const [quoteRequest, setQuoteRequest] = useState<{
-    date: string;
-    time: string;
-    persons: number;
-  } | null>(null);
-  const [quoteLoading, setQuoteLoading] = useState(false);
   const [bookingPreviewOpen, setBookingPreviewOpen] = useState(false);
-  const quoteFetchContextRef = useRef<{ date: string; time: string } | null>(null);
 
   const isTripsterPartnerApiConfigured =
     excursion.partner === "tripster" ? excursion.tripsterPartnerApiConfigured !== false : false;
+
+  const { quote, loading: quoteLoading, quoteMatchesRequest } = useExcursionPriceQuote({
+    slug: excursion.slug,
+    partner: excursion.partner,
+    tripsterPartnerApiConfigured: isTripsterPartnerApiConfigured,
+    selectedDate,
+    selectedTime,
+    persons,
+  });
 
   useEffect(() => {
     setSelectedDate("");
@@ -152,87 +156,38 @@ export function ExcursionBookingProvider({
     }
   }, [selectedDate, selectedSlots, selectedTime]);
 
-  useEffect(() => {
-    if (excursion.partner === "tripster" && !isTripsterPartnerApiConfigured) {
-      setQuote(null);
-      setQuoteRequest(null);
-      setQuoteLoading(false);
-      return;
-    }
-
-    if (!selectedDate || !selectedTime) {
-      setQuote(null);
-      setQuoteRequest(null);
-      return;
-    }
-
-    let cancelled = false;
-    const previousContext = quoteFetchContextRef.current;
-    const personsOnlyChange =
-      previousContext?.date === selectedDate && previousContext?.time === selectedTime;
-    quoteFetchContextRef.current = { date: selectedDate, time: selectedTime };
-    const debounceMs = personsOnlyChange ? 60 : 120;
-
-    const timer = window.setTimeout(async () => {
-      setQuoteLoading(true);
-      try {
-        const params = new URLSearchParams({
-          date: selectedDate,
-          time: selectedTime,
-          persons: String(persons),
-        });
-        const response = await fetch(`/api/excursions/${excursion.slug}/price?${params}`);
-        const data = (await response.json()) as { quote?: TripsterPriceQuote; error?: string };
-        if (!response.ok) throw new Error(data.error ?? "Price unavailable");
-        if (!cancelled) {
-          setQuote(data.quote ?? null);
-          setQuoteRequest({ date: selectedDate, time: selectedTime, persons });
-        }
-      } catch {
-        if (!cancelled) {
-          setQuote(null);
-          setQuoteRequest(null);
-        }
-      } finally {
-        if (!cancelled) setQuoteLoading(false);
-      }
-    }, debounceMs);
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(timer);
-    };
-  }, [
-    excursion.partner,
-    excursion.slug,
-    isTripsterPartnerApiConfigured,
-    selectedDate,
-    selectedTime,
-    persons,
-  ]);
-
   const maxPersons = scheduleMaxPersons ?? excursion.maxPersons ?? 10;
   const selectedSlot = selectedSlots.find((slot) => slot.time === selectedTime);
   const hasDateAndTime = Boolean(selectedDate && selectedTime);
-  const quoteMatchesRequest =
-    quoteRequest != null &&
-    quoteRequest.date === selectedDate &&
-    quoteRequest.time === selectedTime &&
-    quoteRequest.persons === persons;
-  const priceUsd = resolveExcursionBookingPriceUsd({
-    excursion,
-    persons,
-    quote,
-    quoteMatchesRequest,
-    slotPriceValue: selectedSlot?.priceValue,
-  });
+
+  const bookingPrice = useMemo(
+    () =>
+      resolveExcursionBookingPrice({
+        excursion,
+        persons,
+        quote,
+        quoteMatchesRequest,
+        slotPriceValue: selectedSlot?.priceValue,
+        hasDateAndTime,
+      }),
+    [
+      excursion,
+      persons,
+      quote,
+      quoteMatchesRequest,
+      selectedSlot?.priceValue,
+      hasDateAndTime,
+    ]
+  );
+
+  const priceUsd = excursionBookingPriceToUsd(bookingPrice);
   const priceIsEstimate = isExcursionBookingPriceEstimate({
     hasDateAndTime,
     quoteMatchesRequest,
     quote,
   });
   const priceUnit = excursion.priceUnit ?? "per_excursion";
-  const showFrom = excursion.priceFrom !== false && !hasDateAndTime && !quoteMatchesRequest;
+  const showFrom = bookingPrice?.showFrom ?? (excursion.priceFrom !== false && !hasDateAndTime);
   const priceSuffix = t(excursionPriceSuffixKey(priceUnit));
   const partnerPriceFootnote = resolvePartnerPriceFootnote(
     excursion,
@@ -260,7 +215,7 @@ export function ExcursionBookingProvider({
     (excursion.priceValue != null
       ? `${Math.round(excursion.priceValue)}${excursion.priceCurrency ? ` ${excursion.priceCurrency}` : ""}`
       : null);
-  const hasListedPrice = priceUsd != null || Boolean(listedPriceLabel);
+  const hasListedPrice = bookingPrice != null || Boolean(listedPriceLabel);
 
   const openBookingPreview = useCallback((): boolean => {
     if (!selectedDate || !selectedTime) {
@@ -292,6 +247,7 @@ export function ExcursionBookingProvider({
       quote,
       quoteLoading,
       priceIsEstimate,
+      bookingPrice,
       priceUsd,
       priceSuffix,
       partnerPriceFootnote,
@@ -320,6 +276,7 @@ export function ExcursionBookingProvider({
       quote,
       quoteLoading,
       priceIsEstimate,
+      bookingPrice,
       priceUsd,
       priceSuffix,
       partnerPriceFootnote,

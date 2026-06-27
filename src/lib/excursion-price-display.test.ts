@@ -4,6 +4,7 @@ import {
   isExcursionBookingPriceEstimate,
   resolveExcursionBookingPreviewPrepaymentHint,
   resolveExcursionBookingPreviewPrice,
+  resolveExcursionBookingPrice,
   resolveExcursionBookingPriceUsd,
   stripExcursionPriceFromPrefix,
 } from "@/lib/excursion-price-display";
@@ -94,5 +95,40 @@ describe("excursion booking sidebar price", () => {
         quote: { value: 90, currency: "USD" },
       })
     ).toBe(false);
+  });
+
+  it("computes instant native-currency total for RUB listings", () => {
+    const rubExcursion = {
+      priceValue: 4500,
+      priceCurrency: "RUB",
+      priceUnit: "per_person" as const,
+      ticketOptions: [{ id: 1, title: "Взрослый", isDefault: true, value: 4500 }],
+    };
+
+    expect(
+      resolveExcursionBookingPrice({
+        excursion: rubExcursion,
+        persons: 2,
+        quoteMatchesRequest: false,
+        hasDateAndTime: true,
+      })
+    ).toEqual({
+      totalValue: 9000,
+      currency: "RUB",
+      showFrom: false,
+      perPersonLabel: "4 500 ₽ за туриста",
+    });
+  });
+
+  it("prefers live quote over listing estimate when params match", () => {
+    expect(
+      resolveExcursionBookingPrice({
+        excursion: perPersonExcursion,
+        persons: 2,
+        quote: { value: 88, currency: "USD" },
+        quoteMatchesRequest: true,
+        hasDateAndTime: true,
+      })?.totalValue
+    ).toBe(88);
   });
 });
