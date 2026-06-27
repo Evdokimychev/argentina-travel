@@ -37,7 +37,7 @@ import SectionShell from "@/components/layout/SectionShell";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
-import { siteCatalogContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
+import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -193,7 +193,7 @@ export default function MarketplaceHome({
         <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl" aria-hidden />
 
-        <div className={cn(siteCatalogContainerClass, "relative py-10 md:py-12 lg:py-16")}>
+        <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-16")}>
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,380px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
             <div className="min-w-0">
               <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
@@ -284,7 +284,7 @@ export default function MarketplaceHome({
       {!hasActiveSearch && travelPrepStrip ? travelPrepStrip : null}
 
       {hasActiveSearch ? (
-        <section id="tour-results" className={cn(siteCatalogContainerClass, "py-8", siteScrollAnchorClass)}>
+        <section id="tour-results" className={cn(siteContainerClass, "py-8", siteScrollAnchorClass)}>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-6">
             <p className="text-sm text-slate">
               Найдено{" "}
@@ -439,7 +439,7 @@ export default function MarketplaceHome({
 
       {/* Tour collections */}
       <section className="border-y border-gray-100 bg-white py-12 md:py-14">
-        <div className={cn(siteCatalogContainerClass, "space-y-14")}>
+        <div className={cn(siteContainerClass, "space-y-14")}>
           <TourGrid
             id="recommended"
             title="Рекомендуем"

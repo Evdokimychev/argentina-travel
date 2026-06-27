@@ -5,6 +5,7 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchPublishedExperts } from "@/lib/local-experts-server";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { createSupabaseServerClientIfConfigured } from "@/lib/supabase/server";
+import { siteContainerClass } from "@/lib/site-container";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -28,7 +29,7 @@ export default async function ExpertsPage() {
       />
       <Suspense
         fallback={
-          <div className="mx-auto max-w-7xl px-4 py-24 text-center text-slate">
+          <div className={`${siteContainerClass} py-24 text-center text-slate`}>
             Загрузка каталога…
           </div>
         }

@@ -3,6 +3,7 @@
 import TourPriceDisplay from "@/components/tour-detail/TourPriceDisplay";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { excursionPriceSuffixKey } from "@/lib/excursion-listing-meta";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
@@ -50,7 +51,7 @@ export default function ExcursionMobileBookingBar({
 
   return (
     <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white/95 shadow-lg backdrop-blur-sm lg:hidden">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 p-4">
+      <div className={cn(siteContainerClass, "flex items-center justify-between gap-4 py-4")}>
         <div className="min-w-0">
           {priceUsd != null ? (
             <TourPriceDisplay

@@ -13,6 +13,7 @@ import {
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { evaluatePublishReadiness } from "@/lib/publish-readiness";
 import type { OrganizerTourDraft } from "@/types/organizer-tour";
+import { siteContainerClass } from "@/lib/site-container";
 
 interface OrganizerTourPreviewViewProps {
   tourId: string;
@@ -46,7 +47,7 @@ export default function OrganizerTourPreviewView({ tourId }: OrganizerTourPrevie
 
   if (!user || !draft || !preview) {
     return (
-      <div className="mx-auto max-w-7xl px-4 py-24 text-center sm:px-6 lg:px-8">
+      <div className={`${siteContainerClass} py-24 text-center`}>
         <p className="text-sm text-slate">Загружаем предпросмотр тура…</p>
       </div>
     );

@@ -1,4 +1,5 @@
 import { cn } from "@/lib/cn";
+import { siteContainerClass } from "@/lib/site-container";
 import {
   cabinetCardClass,
   cabinetPanelClass,
@@ -38,7 +39,7 @@ export function CatalogCardSkeleton() {
 
 export function CatalogLoadingFallback({ title = "Загружаем каталог…" }: { title?: string }) {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8" aria-busy="true" aria-live="polite">
+    <div className={cn(siteContainerClass, "py-10")} aria-busy="true" aria-live="polite">
       <span className="sr-only">{title}</span>
       <Skeleton className="h-9 w-64 max-w-full" />
       <Skeleton className="mt-3 h-4 w-96 max-w-full" />

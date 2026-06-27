@@ -9,6 +9,7 @@ import PartnerTourBookingPriceSummary from "./PartnerTourBookingPriceSummary";
 import { formatMinimumAgeSummary } from "@/lib/tour-age";
 import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
+import { siteContainerClass } from "@/lib/site-container";
 import { tourDetailMobileBarClass } from "@/lib/tour-detail-ui";
 import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
@@ -213,8 +214,8 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   return (
     <div className={tourDetailMobileBarClass}>
       {expanded ? (
-        <div className="border-b border-gray-100 px-4 py-3">
-          <div className="mx-auto max-w-7xl space-y-3">
+        <div className="border-b border-gray-100 py-3">
+          <div className={cn(siteContainerClass, "space-y-3")}>
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm font-medium text-charcoal">Дата и туристы</p>
               <button
@@ -252,8 +253,8 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
         </div>
       ) : null}
 
-      <div className="p-4">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2">
+      <div className="py-4">
+        <div className={cn(siteContainerClass, "flex flex-col gap-2")}>
           {error ? (
             <InlineFeedback
               variant="error"

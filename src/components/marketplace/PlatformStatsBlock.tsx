@@ -10,7 +10,7 @@ import {
 } from "@/lib/organizer-public";
 import { useRevealAnimation } from "@/hooks/useRevealAnimation";
 import { tripsWord } from "@/lib/pluralize";
-import { siteCatalogContainerClass } from "@/lib/site-container";
+import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
 function countCompletedBookings(): number {
@@ -79,7 +79,7 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
   if (stats.isNewPlatform && stats.tourCount <= 3) {
     return (
       <section ref={ref} className="border-y border-gray-100 bg-gradient-to-b from-white to-surface-muted/40 py-10">
-        <div className={siteCatalogContainerClass}>
+        <div className={siteContainerClass}>
           <StatTile
             revealed={revealed}
             card={{
@@ -137,7 +137,7 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
       ref={ref}
       className="border-y border-gray-100 bg-gradient-to-b from-surface-muted/30 via-white to-surface-muted/20 py-10 md:py-12"
     >
-      <div className={siteCatalogContainerClass}>
+      <div className={siteContainerClass}>
         <div
           className={cn(
             "grid gap-4",

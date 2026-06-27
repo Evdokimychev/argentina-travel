@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import { siteContainerClass } from "@/lib/site-container";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 
 type ReviewPromptBannerProps = {
@@ -25,7 +26,7 @@ function ReviewPromptBannerInner({ tourSlug, isPartnerTour }: ReviewPromptBanner
   if (isPartnerTour || dismissed) return null;
 
   return (
-    <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
+    <div className={cn(siteContainerClass, "pt-4")}>
       <div className="flex flex-col gap-3 rounded-2xl border border-sky/20 bg-sky/5 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5">
         <div>
           <p className="font-medium text-charcoal">

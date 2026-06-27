@@ -27,7 +27,7 @@ import {
 } from "@/lib/excursion-catalog-filters";
 import { buildExcursionFilterChips } from "@/lib/catalog-filter-chips";
 import { formatExcursionsFound } from "@/lib/pluralize";
-import { siteCatalogContainerClass } from "@/lib/site-container";
+import { siteContainerClass } from "@/lib/site-container";
 import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
 import { cn } from "@/lib/cn";
 import { MapPin } from "lucide-react";
@@ -199,7 +199,7 @@ export default function ExcursionsCatalog({
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
           aria-hidden
         />
-        <div className={cn(siteCatalogContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
+        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky/90">
             Tripster · Sputnik8
           </p>
@@ -212,7 +212,7 @@ export default function ExcursionsCatalog({
         </div>
       </header>
 
-      <div className={siteCatalogContainerClass}>
+      <div className={siteContainerClass}>
         <div
           id="excursions-search"
           className="catalog-listing-page-search-shell scroll-mt-[calc(var(--site-header-height,72px)+1rem)] space-y-4"

@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { MapPin } from "lucide-react";
 import { tripsWord } from "@/lib/pluralize";
+import { siteContainerClass } from "@/lib/site-container";
 
 interface OrganizerPublicViewProps {
   profile: PublicOrganizerProfile;
@@ -36,7 +37,7 @@ export default function OrganizerPublicView({
     : "/contacts";
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+    <div className={siteContainerClass + " py-10"}>
       <div className="rounded-3xl border border-gray-200 bg-white p-6 shadow-sm sm:p-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start">
           {profile.avatar?.trim() ? (

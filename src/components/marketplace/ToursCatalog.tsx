@@ -26,7 +26,7 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useSyncPriceFilters } from "@/hooks/useSyncPriceFilters";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { cn } from "@/lib/cn";
-import { siteCatalogContainerClass } from "@/lib/site-container";
+import { siteContainerClass } from "@/lib/site-container";
 import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
 import { formatToursFound } from "@/lib/pluralize";
 import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
@@ -201,7 +201,7 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
           aria-hidden
         />
-        <div className={cn(siteCatalogContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
+        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
           <h1 className="max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
             Каталог туров
           </h1>
@@ -211,7 +211,7 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
         </div>
       </header>
 
-      <div className={siteCatalogContainerClass}>
+      <div className={siteContainerClass}>
         <div
           id="tours-search"
           className="catalog-listing-page-search-shell scroll-mt-[calc(var(--site-header-height,72px)+1rem)] space-y-4"

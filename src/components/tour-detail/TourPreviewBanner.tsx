@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { cn } from "@/lib/cn";
+import { siteContainerClass } from "@/lib/site-container";
 import { ArrowLeft, Eye } from "lucide-react";
 
 interface TourPreviewBannerProps {
@@ -18,7 +20,7 @@ export default function TourPreviewBanner({
 }: TourPreviewBannerProps) {
   return (
     <div className="border-b border-warning/20 bg-warning-muted">
-      <div className="mx-auto flex max-w-7xl flex-col gap-3 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <div className={cn(siteContainerClass, "flex flex-col gap-3 py-3 sm:flex-row sm:items-center sm:justify-between")}>
         <div className="flex min-w-0 items-start gap-3">
           <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white text-warning shadow-sm ring-1 ring-warning/20">
             <Eye className="h-4 w-4" aria-hidden />
