@@ -8,7 +8,7 @@ import {
   siteStickyBelowHeaderClass,
 } from "@/lib/site-container";
 import { sectionNavBarClass, sectionNavLinkClass, sectionNavTrackClass } from "@/lib/section-nav-ui";
-import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
+import { SITE_HEADER_CHROME_CHANGE_EVENT } from "@/lib/site-header-chrome";
 
 type SectionLink = {
   id: string;
@@ -19,7 +19,37 @@ export default function ExcursionSectionNav({ links }: { links: SectionLink[] })
   const navRef = useRef<HTMLElement>(null);
   const [activeId, setActiveId] = useState(links[0]?.id ?? "");
 
-  useSyncSiteSectionNavHeight(navRef);
+  useEffect(() => {
+    if (links.length <= 1) {
+      document.documentElement.style.setProperty("--tour-section-nav-height", "0px");
+      return () => {
+        document.documentElement.style.removeProperty("--tour-section-nav-height");
+      };
+    }
+
+    const nav = navRef.current;
+    if (!nav) return;
+
+    const syncNavHeight = () => {
+      const height = nav.offsetHeight;
+      if (height > 0) {
+        document.documentElement.style.setProperty("--tour-section-nav-height", `${height}px`);
+      }
+    };
+
+    syncNavHeight();
+    const observer = new ResizeObserver(syncNavHeight);
+    observer.observe(nav);
+    window.addEventListener("resize", syncNavHeight);
+    window.addEventListener(SITE_HEADER_CHROME_CHANGE_EVENT, syncNavHeight);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", syncNavHeight);
+      window.removeEventListener(SITE_HEADER_CHROME_CHANGE_EVENT, syncNavHeight);
+      document.documentElement.style.removeProperty("--tour-section-nav-height");
+    };
+  }, [links.length]);
 
   useEffect(() => {
     if (links.length === 0) return;

@@ -7,7 +7,6 @@ import ExcursionBookingPanelSkeleton from "@/components/excursions/ExcursionBook
 import { Button } from "@/components/ui/button";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { cn } from "@/lib/cn";
-import { siteStickyPanelMaxHeightClass, siteStickyPanelTopClass } from "@/lib/site-container";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
@@ -82,12 +81,10 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
   }
 
   return (
-    <aside
+    <div
       id="booking"
       className={cn(
-        "rounded-2xl border border-gray-100 bg-white p-5 shadow-sm lg:sticky lg:z-30 lg:self-start lg:overflow-y-auto",
-        siteStickyPanelTopClass,
-        siteStickyPanelMaxHeightClass,
+        "relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6",
         className
       )}
     >
@@ -192,6 +189,6 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
           <p className="mt-3 text-xs leading-relaxed text-slate">{t(partnerDisclaimerKey)}</p>
         </>
       )}
-    </aside>
+    </div>
   );
 }

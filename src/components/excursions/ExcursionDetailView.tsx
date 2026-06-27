@@ -27,7 +27,12 @@ import { Clock, MapPin, Share2 } from "lucide-react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
 import { formatExcursionDuration } from "@/lib/excursion-format";
-import { siteContainerClass } from "@/lib/site-container";
+import {
+  siteContainerClass,
+  siteStickyPanelMaxHeightClass,
+  siteStickyPanelTopClass,
+} from "@/lib/site-container";
+import { tourDetailStickyPanelClass } from "@/lib/tour-detail-ui";
 import { cn } from "@/lib/cn";
 import type { ExcursionDetail, ExcursionListing } from "@/types/excursion";
 import { useTrackEntityView } from "@/hooks/useInteractionTracking";
@@ -248,7 +253,15 @@ export default function ExcursionDetailView({
             </div>
 
             <aside className="hidden lg:block lg:w-full">
-              <ExcursionBookingPanel />
+              <div
+                className={cn(
+                  tourDetailStickyPanelClass,
+                  siteStickyPanelTopClass,
+                  siteStickyPanelMaxHeightClass
+                )}
+              >
+                <ExcursionBookingPanel />
+              </div>
             </aside>
           </div>
 
