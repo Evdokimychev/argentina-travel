@@ -65,6 +65,8 @@ function ReviewPromptBannerInner({ tourSlug, isPartnerTour }: ReviewPromptBanner
 }
 
 export default function ReviewPromptBanner(props: ReviewPromptBannerProps) {
+  if (props.isPartnerTour) return null;
+
   return (
     <Suspense fallback={null}>
       <ReviewPromptBannerInner {...props} />

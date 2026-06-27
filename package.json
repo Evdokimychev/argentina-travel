@@ -65,6 +65,7 @@
     "publish:verify": "node scripts/publish-turnkey.mjs",
     "publish:verify:full": "node scripts/publish-turnkey.mjs -- --full",
     "publish:verify:pre-deploy": "node scripts/publish-turnkey.mjs -- --full --pre-deploy",
+    "project:readiness": "node scripts/project-readiness-score.mjs",
     "sync-cms-media-manifest": "node scripts/sync-cms-media-manifest.mjs",
     "prune-legacy-blog-media": "node scripts/prune-legacy-blog-media.mjs",
     "prune-legacy-blog-media:check": "node scripts/prune-legacy-blog-media.mjs --check",
