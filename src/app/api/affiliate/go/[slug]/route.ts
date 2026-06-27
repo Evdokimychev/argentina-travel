@@ -183,17 +183,36 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.redirect(partnerUrl, 302);
   }
 
+  const requestUrl = new URL(request.url);
+
   const experience = await fetchExperienceForAffiliate(supabase, normalizedSlug);
 
   if (!experience) {
     const excursion = await fetchExcursionDetailServer(normalizedSlug);
+    if (excursion?.partner === "tripster" && excursion.id) {
+      return NextResponse.redirect(
+        buildTripsterPartnerBookingUrl(excursion.id, {
+          startDate: requestUrl.searchParams.get("start_date"),
+          time: requestUrl.searchParams.get("time"),
+          guests: (() => {
+            const raw = requestUrl.searchParams.get("guests");
+            const parsed = raw ? Number.parseInt(raw, 10) : null;
+            return Number.isFinite(parsed) ? parsed : null;
+          })(),
+          fallbackUrl: excursion.partnerUrl || excursion.tripsterUrl,
+          name: requestUrl.searchParams.get("name"),
+          email: requestUrl.searchParams.get("email"),
+          phone: requestUrl.searchParams.get("phone"),
+        }),
+        302
+      );
+    }
     if (excursion?.partner === "sputnik8" && excursion.partnerUrl) {
       return NextResponse.redirect(excursion.partnerUrl, 302);
     }
     return NextResponse.json({ error: "Experience not found" }, { status: 404 });
   }
 
-  const requestUrl = new URL(request.url);
   const startDate = requestUrl.searchParams.get("start_date");
   const slotTime = requestUrl.searchParams.get("time");
   const guestsRaw = requestUrl.searchParams.get("guests");

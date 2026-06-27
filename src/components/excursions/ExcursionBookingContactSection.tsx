@@ -11,7 +11,9 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { contactFieldsFromAuthUser } from "@/components/tour-detail/checkout/checkout-contact";
 import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-contact";
 import {
+  normalizePartnerBookingUrl,
   openPartnerBookingUrl,
+  PARTNER_EXCURSION_BOOKING_THANK_YOU,
   resolveTripsterFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
@@ -139,6 +141,8 @@ export default function ExcursionBookingContactSection() {
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [partnerBookingUrl, setPartnerBookingUrl] = useState<string | null>(null);
+  const [popupBlocked, setPopupBlocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState(() => createExcursionContactForm(user));
 
@@ -198,6 +202,26 @@ export default function ExcursionBookingContactSection() {
   function handleClosePreview() {
     closeBookingPreview();
     setError(null);
+    setPartnerBookingUrl(null);
+    setPopupBlocked(false);
+  }
+
+  function completePartnerBookingTransition(fallbackUrl: string, fallbackReason?: string | null) {
+    setSubmitted(true);
+    setPartnerBookingUrl(normalizePartnerBookingUrl(fallbackUrl));
+    setPopupBlocked(!openPartnerBookingUrl(fallbackUrl));
+    trackBookingSubmit({
+      productType: "excursion",
+      slug: excursion.slug,
+      title: excursion.title,
+      partner: excursion.partner,
+      guests: persons,
+      source: "excursion_affiliate_fallback",
+    });
+    feedback.success({
+      title: "Заявка принята",
+      description: resolveTripsterFallbackDescription(fallbackReason),
+    });
   }
 
   async function handleConfirmBooking() {
@@ -261,12 +285,7 @@ export default function ExcursionBookingContactSection() {
       };
 
       if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
-        const description = resolveTripsterFallbackDescription(data.fallbackReason);
-        feedback.loading({
-          title: "Открываем Tripster",
-          description,
-        });
-        openPartnerBookingUrl(data.fallbackUrl);
+        completePartnerBookingTransition(data.fallbackUrl, data.fallbackReason);
         return;
       }
 
@@ -289,13 +308,15 @@ export default function ExcursionBookingContactSection() {
         guests: persons,
         source: "excursion_booking",
       });
-      feedback.success({
-        title: "Заявка отправлена",
-        description: "Переходим к оформлению…",
-      });
 
-      if (data.orderUrl) {
-        openPartnerBookingUrl(data.orderUrl);
+      const checkoutUrl = data.orderUrl ?? data.fallbackUrl;
+      if (checkoutUrl) {
+        setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
+        setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
+        feedback.success({
+          title: "Заявка принята",
+          description: PARTNER_EXCURSION_BOOKING_THANK_YOU,
+        });
         return;
       }
 
@@ -313,10 +334,24 @@ export default function ExcursionBookingContactSection() {
 
   if (submitted) {
     return (
-      <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
-        Заявка принята. Проверьте почту{" "}
-        <span className="font-medium">{form.email}</span> и завершите бронирование на сайте
-        партнёра.
+      <div className="space-y-3">
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
+          {PARTNER_EXCURSION_BOOKING_THANK_YOU}
+        </div>
+        {popupBlocked && partnerBookingUrl ? (
+          <p className="text-sm leading-relaxed text-slate">
+            Если вкладка с Tripster не открылась,{" "}
+            <a
+              href={partnerBookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-sky hover:underline"
+            >
+              откройте сайт партнёра вручную
+            </a>
+            .
+          </p>
+        ) : null}
       </div>
     );
   }

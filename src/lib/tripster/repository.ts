@@ -15,6 +15,7 @@ import {
   rowToExcursionListing,
 } from "@/lib/tripster/mapper";
 import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
+import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { isTripsterTourExperience } from "@/lib/tripster/partner-tour-utils";
 
 type DbClient = SupabaseClient<Database>;
@@ -299,24 +300,42 @@ export async function fetchExcursionListingBySlug(
   };
 }
 
-export async function fetchExperienceForAffiliate(
-  supabase: DbClient,
-  slug: string
-): Promise<{
+export type TripsterAffiliateExperience = {
   id: number;
   slug: string;
   tripster_url: string;
   partner_url: string | null;
   city_id: number;
-} | null> {
+};
+
+const TRIPSTER_AFFILIATE_SELECT = "id, slug, tripster_url, partner_url, city_id";
+
+export async function fetchExperienceForAffiliate(
+  supabase: DbClient,
+  slug: string
+): Promise<TripsterAffiliateExperience | null> {
+  const normalized = slug.trim();
+  if (!normalized) return null;
+
   const { data, error } = await supabase
     .from("tripster_experiences")
-    .select("id, slug, tripster_url, partner_url, city_id")
-    .eq("slug", slug)
+    .select(TRIPSTER_AFFILIATE_SELECT)
+    .eq("slug", normalized)
     .maybeSingle();
 
-  if (error || !data) return null;
-  return data;
+  if (!error && data) return data;
+
+  const parsed = parseExcursionSlug(normalized);
+  if (parsed?.partner !== "tripster") return null;
+
+  const byId = await supabase
+    .from("tripster_experiences")
+    .select(TRIPSTER_AFFILIATE_SELECT)
+    .eq("id", parsed.id)
+    .maybeSingle();
+
+  if (byId.error || !byId.data) return null;
+  return byId.data;
 }
 
 export async function updateExperiencePartnerUrl(

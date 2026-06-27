@@ -22,7 +22,9 @@ import { parsePartnerTourDateId } from "@/lib/tripster/partner-tour-price";
 import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-contact";
 import { buildPartnerTourAffiliateFallbackPath } from "@/lib/partner-tour/affiliate-fallback";
 import {
+  normalizePartnerBookingUrl,
   openPartnerBookingUrl,
+  PARTNER_TOUR_BOOKING_THANK_YOU,
   resolveTripsterFallbackDescription,
   resolveYouTravelFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
@@ -193,9 +195,9 @@ export default function PartnerTourBookingContactSection({
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [partnerBookingUrl, setPartnerBookingUrl] = useState<string | null>(null);
+  const [popupBlocked, setPopupBlocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [partnerFallbackUrl, setPartnerFallbackUrl] = useState<string | null>(null);
-  const [partnerFallbackReason, setPartnerFallbackReason] = useState<string | null>(null);
   const [form, setForm] = useState(() => createPartnerContactForm(guests, user));
 
   const previewSummary = useMemo(() => {
@@ -295,19 +297,14 @@ export default function PartnerTourBookingContactSection({
   function handleClosePreview() {
     closePartnerBookingPreview();
     setError(null);
-    setPartnerFallbackUrl(null);
-    setPartnerFallbackReason(null);
+    setPartnerBookingUrl(null);
+    setPopupBlocked(false);
   }
 
-  function openPartnerAffiliateFallback(fallbackUrl: string, reason?: string | null) {
-    const description = isYouTravel
-      ? resolveYouTravelFallbackDescription(reason)
-      : resolveTripsterFallbackDescription(reason);
-
-    setPartnerFallbackUrl(fallbackUrl);
-    setPartnerFallbackReason(reason ?? null);
-    setError(null);
-
+  function completePartnerBookingTransition(fallbackUrl: string, reason?: string | null) {
+    setSubmitted(true);
+    setPartnerBookingUrl(normalizePartnerBookingUrl(fallbackUrl));
+    setPopupBlocked(!openPartnerBookingUrl(fallbackUrl));
     trackBookingSubmit({
       productType: "tour",
       slug: tour.slug,
@@ -316,12 +313,12 @@ export default function PartnerTourBookingContactSection({
       guests,
       source: "partner_affiliate_fallback",
     });
-
-    feedback.loading({
-      title: isYouTravel ? "Открываем YouTravel.me" : "Открываем Tripster",
-      description,
+    feedback.success({
+      title: "Заявка принята",
+      description: isYouTravel
+        ? resolveYouTravelFallbackDescription(reason)
+        : resolveTripsterFallbackDescription(reason),
     });
-    openPartnerBookingUrl(fallbackUrl);
   }
 
   function handleEditDate() {
@@ -335,11 +332,6 @@ export default function PartnerTourBookingContactSection({
   }
 
   async function handleConfirmBooking() {
-    if (partnerFallbackUrl) {
-      openPartnerAffiliateFallback(partnerFallbackUrl, partnerFallbackReason);
-      return;
-    }
-
     const bookingTour = { ...tour, dates: availableDates };
     const dateError = validateBookingDates(
       bookingTour,
@@ -389,8 +381,8 @@ export default function PartnerTourBookingContactSection({
 
     setSubmitting(true);
     setError(null);
-    setPartnerFallbackUrl(null);
-    setPartnerFallbackReason(null);
+    setPartnerBookingUrl(null);
+    setPopupBlocked(false);
 
     const clientFallbackUrl = buildPartnerTourAffiliateFallbackPath({
       slug: tour.slug,
@@ -454,7 +446,7 @@ export default function PartnerTourBookingContactSection({
       };
 
       if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
-        openPartnerAffiliateFallback(data.fallbackUrl, data.fallbackReason);
+        completePartnerBookingTransition(data.fallbackUrl, data.fallbackReason);
         return;
       }
 
@@ -470,7 +462,7 @@ export default function PartnerTourBookingContactSection({
           throw new Error(firstFieldError);
         }
 
-        openPartnerAffiliateFallback(
+        completePartnerBookingTransition(
           data.fallbackUrl ?? clientFallbackUrl,
           data.fallbackReason ?? "partner_site_fallback"
         );
@@ -486,19 +478,14 @@ export default function PartnerTourBookingContactSection({
         guests,
         source: "partner_booking",
       });
+
+      const checkoutUrl = data.orderUrl ?? clientFallbackUrl;
+      setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
+      setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
       feedback.success({
-        title: "Заявка отправлена",
-        description: isYouTravel
-          ? "Переходим к оформлению на YouTravel.me…"
-          : "Переходим к оформлению на Tripster…",
+        title: "Заявка принята",
+        description: PARTNER_TOUR_BOOKING_THANK_YOU,
       });
-
-      if (data.orderUrl) {
-        openPartnerBookingUrl(data.orderUrl);
-        return;
-      }
-
-      openPartnerAffiliateFallback(clientFallbackUrl, "partner_site_fallback");
     } catch (submitError) {
       const normalized = normalizeSiteError(submitError, {
         title: "Не удалось отправить заявку",
@@ -512,10 +499,24 @@ export default function PartnerTourBookingContactSection({
 
   if (submitted) {
     return (
-      <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
-        Заявка принята. Проверьте почту{" "}
-        <span className="font-medium">{form.contactEmail}</span> и завершите бронирование на{" "}
-        {partnerLabel}.
+      <div className="space-y-3">
+        <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
+          {PARTNER_TOUR_BOOKING_THANK_YOU}
+        </div>
+        {popupBlocked && partnerBookingUrl ? (
+          <p className="text-sm leading-relaxed text-slate">
+            Если вкладка с {partnerLabel} не открылась,{" "}
+            <a
+              href={partnerBookingUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-sky hover:underline"
+            >
+              откройте сайт партнёра вручную
+            </a>
+            .
+          </p>
+        ) : null}
       </div>
     );
   }
@@ -603,25 +604,11 @@ export default function PartnerTourBookingContactSection({
 
       {error ? (
         <InlineFeedback variant="error" title="Проверьте форму" description={error} />
-      ) : partnerFallbackUrl ? (
-        <InlineFeedback
-          variant="info"
-          title="Автоматическое оформление недоступно"
-          description={
-            isYouTravel
-              ? resolveYouTravelFallbackDescription(partnerFallbackReason)
-              : resolveTripsterFallbackDescription(partnerFallbackReason)
-          }
-        />
       ) : null}
 
       <div className="flex flex-col gap-2">
         <Button type="button" className="w-full gap-2" loading={submitting} onClick={handleConfirmBooking}>
-          {partnerFallbackUrl
-            ? isYouTravel
-              ? "Продолжить на YouTravel.me"
-              : "Продолжить на Tripster"
-            : "Подтвердить и забронировать"}
+          Подтвердить и забронировать
           <ExternalLink className="h-4 w-4" aria-hidden />
         </Button>
         {prefilledBookingHref ? (

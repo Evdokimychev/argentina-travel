@@ -1,9 +1,33 @@
-/** Открывает страницу оформления Tripster в новой вкладке; при блокировке — в текущей. */
-export function openPartnerBookingUrl(url: string): void {
-  const opened = window.open(url, "_blank", "noopener,noreferrer");
-  if (!opened) {
-    window.location.assign(url);
+export const PARTNER_EXCURSION_BOOKING_THANK_YOU =
+  "Спасибо за бронирование экскурсии. Вы перешли на сайт партнёра — дальнейшее бронирование будет осуществляться там.";
+
+export const PARTNER_TOUR_BOOKING_THANK_YOU =
+  "Спасибо за бронирование тура. Вы перешли на сайт партнёра — дальнейшее оформление будет осуществляться там.";
+
+/** Resolves relative Tripster paths and same-origin affiliate redirect URLs. */
+export function normalizePartnerBookingUrl(url: string, origin?: string): string {
+  const trimmed = url.trim();
+  if (!trimmed) return trimmed;
+
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+
+  if (trimmed.startsWith("/api/affiliate/go/")) {
+    const base = origin ?? (typeof window !== "undefined" ? window.location.origin : "");
+    return base ? new URL(trimmed, base).toString() : trimmed;
   }
+
+  if (trimmed.startsWith("/")) {
+    return `https://experience.tripster.ru${trimmed}`;
+  }
+
+  return trimmed;
+}
+
+/** Opens partner checkout in a new tab. Returns false when the popup was blocked. */
+export function openPartnerBookingUrl(url: string): boolean {
+  const absolute = normalizePartnerBookingUrl(url);
+  const opened = window.open(absolute, "_blank", "noopener,noreferrer");
+  return opened != null;
 }
 
 export function resolveTripsterFallbackDescription(
