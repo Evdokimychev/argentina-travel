@@ -190,11 +190,39 @@ export function buildGalleryMosaicPlan(
   }
 
   const slots: MosaicSlot[] = layout.cells.slice(0, visibleCount).map((cell, slotIndex) => ({
-    cell,
+    cell: { ...cell, showAllOverlay: false },
     imageIndex: pickedIndices[slotIndex] ?? slotIndex,
   }));
 
+  if (imageCount > 1 && slots.length > 1) {
+    const overlayIndex = pickShowAllOverlaySlotIndex(slots);
+    slots[overlayIndex] = {
+      ...slots[overlayIndex]!,
+      cell: { ...slots[overlayIndex]!.cell, showAllOverlay: true },
+    };
+  }
+
   return { layout, slots, images: deduped };
+}
+
+/** Bottom-right visible tile — where «Все фото» belongs in the bento grid. */
+function pickShowAllOverlaySlotIndex(slots: MosaicSlot[]): number {
+  let bestIndex = 0;
+  for (let index = 1; index < slots.length; index += 1) {
+    const best = slots[bestIndex]!.cell;
+    const current = slots[index]!.cell;
+    const currentIsMoreRight =
+      current.colEnd > best.colEnd ||
+      (current.colEnd === best.colEnd && current.rowEnd > best.rowEnd) ||
+      (current.colEnd === best.colEnd &&
+        current.rowEnd === best.rowEnd &&
+        current.colStart > best.colStart);
+
+    if (currentIsMoreRight) {
+      bestIndex = index;
+    }
+  }
+  return bestIndex;
 }
 
 export function mosaicCellStyle(cell: MosaicCell): {

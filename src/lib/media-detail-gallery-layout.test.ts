@@ -41,6 +41,25 @@ describe("media-detail-gallery-layout", () => {
     expect(plan.slots.some((slot) => slot.cell.showAllOverlay)).toBe(true);
   });
 
+  it("places the all-photos overlay on the bottom-right visible tile", () => {
+    const plan = buildGalleryMosaicPlan(sampleImages(12), "right-hero-seed");
+    const overlaySlot = plan.slots.find((slot) => slot.cell.showAllOverlay);
+    expect(overlaySlot).toBeDefined();
+
+    for (const slot of plan.slots) {
+      if (slot === overlaySlot) continue;
+      const overlayCell = overlaySlot!.cell;
+      const cell = slot.cell;
+      const overlayIsMoreRight =
+        overlayCell.colEnd > cell.colEnd ||
+        (overlayCell.colEnd === cell.colEnd && overlayCell.rowEnd > cell.rowEnd) ||
+        (overlayCell.colEnd === cell.colEnd &&
+          overlayCell.rowEnd === cell.rowEnd &&
+          overlayCell.colStart > cell.colStart);
+      expect(overlayIsMoreRight).toBe(true);
+    }
+  });
+
   it("does not repeat the same image in mosaic slots", () => {
     const duplicate = "https://cf.youtravel.me/upload/main/9f1/abc123def456ghi789.JPG";
     const images = [

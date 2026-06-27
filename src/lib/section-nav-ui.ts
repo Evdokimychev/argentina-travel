@@ -2,7 +2,7 @@ import { cn } from "@/lib/cn";
 
 /** Общая «капсула» для горизонтального меню разделов страницы. */
 export const sectionNavTrackClass =
-  "inline-flex min-w-max items-center gap-0.5 rounded-full border border-gray-200 bg-gray-50/90 p-1 shadow-sm";
+  "flex w-full min-w-max items-center justify-start gap-0.5 rounded-full border border-gray-200 bg-gray-50/90 p-1 shadow-sm";
 
 export function sectionNavLinkClass(active: boolean, withTouchTarget = false) {
   return cn(

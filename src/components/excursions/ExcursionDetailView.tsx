@@ -28,6 +28,7 @@ import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
 import { formatExcursionDuration } from "@/lib/excursion-format";
 import { siteContainerClass } from "@/lib/site-container";
+import { cn } from "@/lib/cn";
 import type { ExcursionDetail, ExcursionListing } from "@/types/excursion";
 import { useTrackEntityView } from "@/hooks/useInteractionTracking";
 
@@ -95,20 +96,23 @@ export default function ExcursionDetailView({
           ]}
         />
 
-        <div className="mt-6">
-          {galleryImages.length > 0 ? (
+        {galleryImages.length > 0 ? (
+          <div className="mt-6">
             <TourDetailGallery
               images={galleryImages}
               title={excursion.title}
               layoutSeed={excursion.slug}
               emptyLabel="Фото экскурсии"
             />
-          ) : null}
+          </div>
+        ) : null}
+      </div>
 
-          <ExcursionSectionNav links={sectionLinks} />
+      <ExcursionSectionNav links={sectionLinks} />
 
-          <div className="grid gap-8 lg:grid-cols-[1fr_22rem]">
-            <div>
+      <div className={cn(siteContainerClass, "pt-6")}>
+          <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-start">
+            <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 text-sm text-slate">
                 <span className="inline-flex items-center gap-1">
                   <MapPin className="h-4 w-4" aria-hidden />
@@ -243,16 +247,15 @@ export default function ExcursionDetailView({
               </div>
             </div>
 
-            <div className="hidden lg:block">
+            <aside className="hidden lg:block lg:w-full">
               <ExcursionBookingPanel />
-            </div>
+            </aside>
           </div>
 
           <ExcursionSimilarSection
             excursions={similarExcursions}
             cityName={excursion.cityName}
           />
-        </div>
       </div>
 
       <ExcursionMobileBookingBar prefersAffiliate={prefersAffiliate} />

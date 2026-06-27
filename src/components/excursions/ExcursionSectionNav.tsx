@@ -2,7 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
-import { siteScrollAnchorClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
+import {
+  siteContainerClass,
+  siteScrollAnchorClass,
+  siteStickyBelowHeaderClass,
+} from "@/lib/site-container";
 import { sectionNavBarClass, sectionNavLinkClass, sectionNavTrackClass } from "@/lib/section-nav-ui";
 import { useSyncSiteSectionNavHeight } from "@/hooks/useSyncSiteSectionNavHeight";
 
@@ -49,13 +53,14 @@ export default function ExcursionSectionNav({ links }: { links: SectionLink[] })
       ref={navRef}
       className={cn(
         sectionNavBarClass,
-        "-mx-4 mb-6 px-4 sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0",
         siteStickyBelowHeaderClass,
         siteScrollAnchorClass
       )}
       aria-label="Разделы экскурсии"
     >
-      <div className="overflow-x-auto py-2.5">
+      <div
+        className={cn(siteContainerClass, "overflow-x-auto overscroll-x-contain py-2.5 sm:py-3")}
+      >
         <div className={sectionNavTrackClass}>
           <ul className="flex min-w-max items-center">
             {links.map((link) => (
