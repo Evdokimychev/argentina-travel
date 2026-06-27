@@ -779,8 +779,6 @@ export default function AuthModal() {
       <DialogContent
         className="max-h-[92vh] max-w-md overflow-y-auto p-0 shadow-2xl"
         showClose={false}
-        onPointerDownOutside={closeAuth}
-        onEscapeKeyDown={closeAuth}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
           <div>

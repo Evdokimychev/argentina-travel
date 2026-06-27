@@ -132,6 +132,14 @@ export function partnerTourListingId(tripsterId: number): string {
   return `tripster-${tripsterId}`;
 }
 
+export function parsePartnerTourListingExperienceId(listingId: string): number | null {
+  const match = listingId.match(/^tripster-(\d+)$/);
+  if (!match?.[1]) return null;
+
+  const experienceId = Number.parseInt(match[1], 10);
+  return Number.isFinite(experienceId) && experienceId > 0 ? experienceId : null;
+}
+
 export function buildTripsterPartnerBookingUrl(
   experienceId: number,
   options?: {

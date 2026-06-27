@@ -38,12 +38,13 @@ describe("Sprint 3 UX stabilization", () => {
     expect(source).toMatch(/\/blog\?tag=/);
   });
 
-  it("excursion catalog map mode uses inline list fallback", () => {
+  it("excursion catalog hides map mode until interactive map ships", () => {
     const catalog = readFileSync(
       resolve(process.cwd(), "src/components/excursions/ExcursionsCatalog.tsx"),
       "utf8",
     );
-    expect(catalog).toMatch(/viewMode === "map"/);
+    expect(catalog).toContain("enableMapView={false}");
+    expect(catalog).not.toMatch(/viewMode === "map"/);
     expect(catalog).not.toMatch(/ExcursionCatalogMapStub/);
   });
 

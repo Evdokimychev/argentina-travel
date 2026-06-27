@@ -9,9 +9,11 @@ import {
   formatPartnerMaxGroupLabel,
   resolvePartnerAgeChipMeta,
 } from "@/lib/tripster/partner-tour-labels";
+import { isTripsterPartnerListing } from "@/lib/tripster/partner-tour-utils";
 import { isYouTravelPartnerDetail } from "@/lib/youtravel/partner-tour-utils";
 import { cn } from "@/lib/cn";
 import YouTravelTourDetailsSection from "./YouTravelTourDetailsSection";
+import TripsterTourDetailsSection from "./TripsterTourDetailsSection";
 
 function MetaChip({
   icon: Icon,
@@ -45,6 +47,10 @@ export default function PartnerTourStatsSection({
 }) {
   if (isYouTravelPartnerDetail(tour)) {
     return <YouTravelTourDetailsSection tour={tour} content={content} />;
+  }
+
+  if (isTripsterPartnerListing(tour)) {
+    return <TripsterTourDetailsSection tour={tour} content={content} />;
   }
 
   const ageChip = resolvePartnerAgeChipMeta(content);

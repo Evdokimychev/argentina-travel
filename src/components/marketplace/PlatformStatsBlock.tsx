@@ -8,9 +8,9 @@ import {
   mergePlatformStats,
   type PlatformStats,
 } from "@/lib/organizer-public";
-import { useAnimatedValue, useRevealAnimation } from "@/hooks/useRevealAnimation";
+import { useRevealAnimation } from "@/hooks/useRevealAnimation";
 import { tripsWord } from "@/lib/pluralize";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteCatalogContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
 function countCompletedBookings(): number {
@@ -43,7 +43,6 @@ function StatTile({
   revealed: boolean;
   delayClass?: string;
 }) {
-  const animated = useAnimatedValue(card.value, revealed);
   const Icon = card.icon;
 
   return (
@@ -61,7 +60,7 @@ function StatTile({
         <span className="text-xs font-semibold uppercase tracking-wider text-slate">{card.label}</span>
       </div>
       <p className="mt-4 font-heading text-3xl font-bold tabular-nums text-charcoal sm:text-4xl">
-        {card.formatValue(animated)}
+        {card.formatValue(card.value)}
       </p>
       <p className="mt-2 text-sm leading-relaxed text-slate">{card.detail}</p>
     </div>
@@ -80,7 +79,7 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
   if (stats.isNewPlatform && stats.tourCount <= 3) {
     return (
       <section ref={ref} className="border-y border-gray-100 bg-gradient-to-b from-white to-surface-muted/40 py-10">
-        <div className={siteContainerClass}>
+        <div className={siteCatalogContainerClass}>
           <StatTile
             revealed={revealed}
             card={{
@@ -138,7 +137,7 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
       ref={ref}
       className="border-y border-gray-100 bg-gradient-to-b from-surface-muted/30 via-white to-surface-muted/20 py-10 md:py-12"
     >
-      <div className={siteContainerClass}>
+      <div className={siteCatalogContainerClass}>
         <div
           className={cn(
             "grid gap-4",

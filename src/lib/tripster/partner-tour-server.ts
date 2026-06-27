@@ -27,6 +27,7 @@ import {
 } from "@/lib/tripster/partner-tour-repository";
 import { resolvePartnerTourDuration, resolvePartnerTourScheduleDurationDays } from "@/lib/tripster/partner-tour-mapper";
 import { resolvePartnerTourBookingMode } from "@/lib/tripster/partner-tour-booking";
+import { enrichTripsterListingsWithSchedule } from "@/lib/tripster/partner-tour-listing-schedule";
 import { rankSimilarListings } from "@/lib/tour-recommendations";
 import type { TourDetail, TourListing } from "@/types";
 import type { TripsterExperience } from "@/lib/tripster/types";
@@ -115,7 +116,8 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
     const dates = mapScheduleToPartnerDates(
       schedule,
       scheduleDurationDays,
-      tour.partnerPriceCurrency
+      enriched.partnerPriceCurrency,
+      enriched.groupMax,
     );
     scheduleDatesCount = dates.length;
     if (dates.length) {
@@ -218,7 +220,7 @@ async function enrichPartnerTourDetail(tour: TourDetail): Promise<TourDetail> {
   return enriched;
 }
 
-export async function fetchPartnerTourListingsServer(): Promise<TourListing[]> {
+async function loadPartnerTourListings(): Promise<TourListing[]> {
   const supabase = getClient();
   let fromSupabase: TourListing[] = [];
 
@@ -238,6 +240,16 @@ export async function fetchPartnerTourListingsServer(): Promise<TourListing[]> {
   } catch {
     return [];
   }
+}
+
+const cachedPartnerTourListings = unstable_cache(
+  async () => enrichTripsterListingsWithSchedule(await loadPartnerTourListings()),
+  ["partner-tour-listings"],
+  { revalidate: 600, tags: ["partner-tours"] },
+);
+
+export async function fetchPartnerTourListingsServer(): Promise<TourListing[]> {
+  return cachedPartnerTourListings();
 }
 
 async function loadPartnerTourDetail(slug: string): Promise<TourDetail | null> {

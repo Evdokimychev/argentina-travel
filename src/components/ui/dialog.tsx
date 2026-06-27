@@ -8,6 +8,7 @@ import { motionClass } from "@/lib/motion";
 import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import { useDialogBackClose } from "@/hooks/useDialogBackClose";
 import { useDialogSwipeDismiss } from "@/hooks/useDialogSwipeDismiss";
+import { composeDialogOutsideHandler } from "@/lib/dialog-outside-events";
 
 const DialogTrigger = DialogPrimitive.Trigger;
 const DialogClose = DialogPrimitive.Close;
@@ -72,6 +73,8 @@ function DialogContent({
   showClose = true,
   swipeToDismiss = true,
   onOpenAutoFocus,
+  onPointerDownOutside,
+  onInteractOutside,
   style,
   ...props
 }: DialogContentProps) {
@@ -87,6 +90,20 @@ function DialogContent({
       <DialogOverlay />
       <DialogPrimitive.Content
         onOpenAutoFocus={onOpenAutoFocus}
+        onPointerDownOutside={(event) => {
+          // Mobile keyboards and nested widgets fire spurious pointer-outside events.
+          event.preventDefault();
+        }}
+        onInteractOutside={(event) => {
+          composeDialogOutsideHandler((outsideEvent) => {
+            onInteractOutside?.(outsideEvent);
+            if ("detail" in event && event.detail.originalEvent instanceof PointerEvent) {
+              onPointerDownOutside?.(
+                event as Parameters<NonNullable<DialogContentProps["onPointerDownOutside"]>>[0],
+              );
+            }
+          }, event);
+        }}
         style={style}
         className={cn(
           "fixed z-dialog flex flex-col bg-surface-elevated shadow-modal outline-none",

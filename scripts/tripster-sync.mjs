@@ -178,6 +178,14 @@ async function fetchExperiencePlan(token, partner, apiBase, experienceId) {
   }
 }
 
+async function fetchExperienceSchedule(token, partner, apiBase, experienceId) {
+  try {
+    return await tripsterGet(token, partner, apiBase, `/experiences/${experienceId}/schedule/`);
+  } catch {
+    return null;
+  }
+}
+
 async function fetchWebExperienceFields(token, apiBase, experienceId) {
   try {
     const response = await fetch(`${apiBase}/web/v2/experiences/${experienceId}/`, {
@@ -594,6 +602,21 @@ async function main() {
         pendingLinks[i] = {
           ...item,
           experience: { ...item.experience, plan_days_count: plan.length },
+        };
+      }
+      await sleep(80);
+    }
+
+    pushLog("Fetching tour schedules for catalog dates…");
+    for (let i = 0; i < pendingLinks.length; i += 1) {
+      const item = pendingLinks[i];
+      const type = item.experience.type ?? item.experience.experience_type;
+      if (type !== "tour") continue;
+      const schedule = await fetchExperienceSchedule(token, partner, apiBase, item.experience.id);
+      if (schedule?.schedule && Object.keys(schedule.schedule).length > 0) {
+        pendingLinks[i] = {
+          ...item,
+          experience: { ...item.experience, schedule_snapshot: schedule },
         };
       }
       await sleep(80);

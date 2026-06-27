@@ -3,7 +3,6 @@ import {
   Calculator,
   Info,
   Lightbulb,
-  MapPin,
   Megaphone,
   Sparkles,
 } from "lucide-react";
@@ -121,25 +120,12 @@ function PillarTable({ headers, rows }: { headers: string[]; rows: string[][] })
   );
 }
 
-function ImagePlaceholder({ caption }: { caption?: string }) {
-  return (
-    <figure className="mt-5 overflow-hidden rounded-2xl border border-dashed border-gray-200 bg-surface-muted/40">
-      <div className="flex aspect-[16/9] items-center justify-center px-6 text-center">
-        <p className="text-sm text-slate">{caption ?? "Фото — скоро"}</p>
-      </div>
-    </figure>
-  );
+function ImagePlaceholder() {
+  return null;
 }
 
 function MapPlaceholder() {
-  return (
-    <div className="mt-5 flex aspect-[16/9] items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-surface-muted/40">
-      <div className="flex items-center gap-2 text-sm text-slate">
-        <MapPin className="h-4 w-4" aria-hidden />
-        Интерактивная карта — скоро
-      </div>
-    </div>
-  );
+  return null;
 }
 
 type GuidePillarSectionProps = {

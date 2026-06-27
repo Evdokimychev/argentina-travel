@@ -33,7 +33,9 @@ export default async function OrganizerPublicPage({ params }: OrganizerPageProps
   if (!profile) notFound();
 
   const allTours = await fetchMarketplaceTours();
-  const tours = allTours.filter((listing) => resolveListingOwnerUserId(listing) === slug);
+  const tours = allTours.filter(
+    (listing) => listing && resolveListingOwnerUserId(listing) === slug,
+  );
 
   return <OrganizerPublicView profile={profile} initialTours={tours} />;
 }

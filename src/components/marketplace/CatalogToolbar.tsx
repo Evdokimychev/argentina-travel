@@ -29,6 +29,7 @@ interface CatalogToolbarProps<V extends string = TourSortOption> {
   viewMode?: CatalogViewMode;
   onViewModeChange?: (mode: CatalogViewMode) => void;
   showViewToggle?: boolean;
+  enableMapView?: boolean;
   activeFilterCount?: number;
   onResetFilters?: () => void;
   trailingAction?: ReactNode;
@@ -37,9 +38,11 @@ interface CatalogToolbarProps<V extends string = TourSortOption> {
 function ViewToggle({
   viewMode,
   onViewModeChange,
+  enableMapView = true,
 }: {
   viewMode: CatalogViewMode;
   onViewModeChange: (mode: CatalogViewMode) => void;
+  enableMapView?: boolean;
 }) {
   return (
     <div
@@ -75,6 +78,7 @@ function ViewToggle({
       >
         <LayoutGrid className="h-[18px] w-[18px]" />
       </button>
+      {enableMapView ? (
       <button
         type="button"
         onClick={() => onViewModeChange("map")}
@@ -89,6 +93,7 @@ function ViewToggle({
       >
         <Map className="h-[18px] w-[18px]" />
       </button>
+      ) : null}
     </div>
   );
 }
@@ -102,6 +107,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
   viewMode = "grid",
   onViewModeChange,
   showViewToggle = true,
+  enableMapView = true,
   activeFilterCount = 0,
   onResetFilters,
   trailingAction,
@@ -191,7 +197,11 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
           </Button>
         ) : null}
         {showViewToggle && onViewModeChange ? (
-          <ViewToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
+          <ViewToggle
+            viewMode={viewMode}
+            onViewModeChange={onViewModeChange}
+            enableMapView={enableMapView}
+          />
         ) : null}
       </div>
     </div>

@@ -157,17 +157,8 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
               <HubSection
                 id="airports"
                 title="Главные аэропорты Аргентины"
-                subtitle="Интерактивная карта — ключевые точки въезда и внутренних перелётов."
+                subtitle="Ключевые точки въезда и внутренних перелётов."
               >
-                <div className="mb-6 rounded-2xl border border-dashed border-sky/30 bg-sky/5 p-8 text-center">
-                  <MapPin className="mx-auto h-10 w-10 text-sky/60" aria-hidden />
-                  <p className="mt-3 font-heading text-sm font-semibold text-charcoal">
-                    Карта аэропортов — скоро
-                  </p>
-                  <p className="mt-1 text-xs text-slate">
-                    EZE и AEP — главные точки; региональные хабы ниже
-                  </p>
-                </div>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {hub.airports.map((airport) => (
                     <div

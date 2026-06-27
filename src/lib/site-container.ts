@@ -2,6 +2,10 @@
 export const siteContainerClass =
   "mx-auto w-full max-w-7xl overflow-x-clip px-4 sm:px-6 lg:px-8";
 
+/** Каталог и главная — шире на больших экранах (1440–1920px) */
+export const siteCatalogContainerClass =
+  "mx-auto w-full max-w-screen-2xl overflow-x-clip px-4 sm:px-6 lg:px-8";
+
 /** Хедер и full-bleed полосы — на всю ширину окна с боковыми отступами */
 export const siteViewportInsetClass = "w-full px-4 sm:px-6 lg:px-8";
 

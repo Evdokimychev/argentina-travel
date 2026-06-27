@@ -46,6 +46,13 @@ import {
 } from "@/lib/tripster/partner-tour-utils";
 import { normalizeTourDuration } from "@/lib/tour-duration";
 import { resolvePartnerTourBookingMode } from "@/lib/tripster/partner-tour-booking";
+import {
+  resolveTripsterComfortLevel,
+  resolveTripsterDifficultyLevelFromPayload,
+  resolveTripsterInstantBooking,
+  resolveTripsterThematicTags,
+} from "@/lib/tripster/partner-tour-levels";
+import { resolveTripsterCatalogAvailableDates } from "@/lib/tripster/partner-tour-listing-schedule";
 
 type PartnerTourCityRow = {
   id: number;
@@ -353,6 +360,9 @@ export function partnerTourRowToListing(
   const originalPerPerson = experience.price?.discount?.original_price;
   const gallery = resolvePartnerGallery(row, experience);
   const cover = gallery[0] ?? "";
+  const difficultyLevel = resolveTripsterDifficultyLevelFromPayload(experience);
+  const comfortLevel = resolveTripsterComfortLevel(experience);
+  const availableDates = resolveTripsterCatalogAvailableDates(row, experience);
 
   return {
     id: partnerTourListingId(row.id),
@@ -378,15 +388,15 @@ export function partnerTourRowToListing(
     priceFromPrefix: price.priceFromPrefix,
     bookingMode: resolvePartnerTourBookingMode(experience, 0),
     accommodationType: "Отель" as AccommodationType,
-    comfortLevel: "Стандарт" as ComfortLevel,
-    difficultyLevel: "Умеренная" as DifficultyLevel,
+    comfortLevel,
+    difficultyLevel,
     language: ["Русский"] as TourLanguage[],
     childrenAllowed: childPolicyFromChildFriendly(experience.child_friendly),
     minimumAge: experience.child_friendly ? 0 : 12,
     groupSizeMin: groupMin,
     groupSizeMax: groupMax,
     groupSizeBucket: groupBucket(groupMin, groupMax),
-    availableDates: [] as TourDate[],
+    availableDates,
     latitude: -34.6,
     longitude: -58.4,
     rating: row.rating != null ? Number(row.rating) : 0,
@@ -408,6 +418,8 @@ export function partnerTourRowToListing(
         ? originalPerPerson
         : undefined,
     partnerPriceUnit: priceUnit,
+    partnerInstantBooking: resolveTripsterInstantBooking(experience),
+    partnerThematicTags: resolveTripsterThematicTags(experience),
   };
 }
 

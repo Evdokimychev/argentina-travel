@@ -23,6 +23,7 @@ import { resolveGroupDiscountQuote } from "@/lib/group-discount";
 import {
   resolveTourExternalBookingHref,
   tourUsesExternalBooking,
+  appendExternalBookingContextToHref,
 } from "@/lib/tour-custom-booking-link";
 import {
   canOpenWaitlist,
@@ -77,6 +78,8 @@ interface TourBookingContextValue {
   partnerPriceIsEstimate: boolean;
   scheduleDates: TourDetail["dates"];
   scheduleLoading: boolean;
+  scheduleAffiliateHref: string | null;
+  scheduleConfigured: boolean;
   partnerPreviewOpen: boolean;
   openPartnerBookingPreview: () => boolean;
   closePartnerBookingPreview: () => void;
@@ -112,6 +115,8 @@ export function TourBookingProvider({
     dates: scheduleDates,
     loading: scheduleLoading,
     maxPersons: scheduleMaxPersons,
+    affiliateFallback: scheduleAffiliateFallback,
+    configured: scheduleConfigured,
   } = usePartnerTourSchedule(tour);
   const effectiveDates = scheduleDates.length > 0 ? scheduleDates : tour.dates;
   const effectiveBookingMode =
@@ -241,6 +246,29 @@ export function TourBookingProvider({
         dates: effectiveDates,
       })
     : null;
+
+  const scheduleAffiliateHref = useMemo(() => {
+    if (!isPartnerTour || !scheduleAffiliateFallback) return null;
+    return appendExternalBookingContextToHref(
+      scheduleAffiliateFallback,
+      { passContext: true },
+      {
+        guests,
+        selectedDateId,
+        customDate,
+        slotTime: partnerSlotTime,
+        dates: effectiveDates,
+      }
+    );
+  }, [
+    isPartnerTour,
+    scheduleAffiliateFallback,
+    guests,
+    selectedDateId,
+    customDate,
+    partnerSlotTime,
+    effectiveDates,
+  ]);
 
   const openPartnerBookingPreview = useCallback((): boolean => {
     if (
@@ -415,6 +443,8 @@ export function TourBookingProvider({
       partnerPriceIsEstimate,
       scheduleDates: effectiveDates,
       scheduleLoading,
+      scheduleAffiliateHref,
+      scheduleConfigured,
       partnerPreviewOpen,
       openPartnerBookingPreview,
       closePartnerBookingPreview,
@@ -425,6 +455,8 @@ export function TourBookingProvider({
     tour,
     effectiveDates,
     scheduleLoading,
+    scheduleAffiliateHref,
+    scheduleConfigured,
     selectedDateId,
     guests,
     dateMode,

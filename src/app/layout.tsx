@@ -15,7 +15,8 @@ import "./globals.css";
 const unbounded = Unbounded({
   subsets: ["latin", "cyrillic"],
   variable: "--font-unbounded",
-  display: "swap",
+  display: "optional",
+  adjustFontFallback: true,
 });
 
 function resolveOgImageUrl(pathOrUrl: string): string {

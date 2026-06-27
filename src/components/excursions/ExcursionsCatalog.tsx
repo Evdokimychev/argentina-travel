@@ -7,7 +7,6 @@ import ExcursionCard from "@/components/excursions/ExcursionCard";
 import ExcursionSearchPanel from "@/components/excursions/ExcursionSearchPanel";
 import ExcursionFilterBar from "@/components/excursions/ExcursionFilterBar";
 import ExcursionCatalogFiltersSheet from "@/components/excursions/ExcursionCatalogFiltersSheet";
-import ExcursionCatalogMapNotice from "@/components/excursions/ExcursionCatalogMapNotice";
 import CatalogToolbar, { type CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
 import CatalogStickyBar from "@/components/marketplace/CatalogStickyBar";
 import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
@@ -28,7 +27,7 @@ import {
 } from "@/lib/excursion-catalog-filters";
 import { buildExcursionFilterChips } from "@/lib/catalog-filter-chips";
 import { formatExcursionsFound } from "@/lib/pluralize";
-import { siteContainerClass } from "@/lib/site-container";
+import { siteCatalogContainerClass } from "@/lib/site-container";
 import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
 import { cn } from "@/lib/cn";
 import { MapPin } from "lucide-react";
@@ -50,7 +49,8 @@ function readStoredExcursionViewMode(): CatalogViewMode {
   if (typeof window === "undefined") return "grid";
   try {
     const stored = window.localStorage.getItem(EXCURSION_VIEW_MODE_KEY);
-    if (stored === "grid" || stored === "list" || stored === "map") return stored;
+    if (stored === "grid" || stored === "list") return stored;
+    if (stored === "map") return "grid";
   } catch {
     // ignore
   }
@@ -199,7 +199,7 @@ export default function ExcursionsCatalog({
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
           aria-hidden
         />
-        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
+        <div className={cn(siteCatalogContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky/90">
             Tripster · Sputnik8
           </p>
@@ -212,7 +212,7 @@ export default function ExcursionsCatalog({
         </div>
       </header>
 
-      <div className={siteContainerClass}>
+      <div className={siteCatalogContainerClass}>
         <div
           id="excursions-search"
           className="catalog-listing-page-search-shell scroll-mt-[calc(var(--site-header-height,72px)+1rem)] space-y-4"
@@ -309,51 +309,30 @@ export default function ExcursionsCatalog({
                   onViewModeChange={handleViewModeChange}
                   activeFilterCount={activeFilterCount}
                   onResetFilters={resetFilters}
+                  enableMapView={false}
                 />
 
-                {viewMode === "map" ? (
-                  <>
-                    <ExcursionCatalogMapNotice cityName={selectedCityName} />
-                    <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                      {visibleItems.map((excursion) => (
-                        <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
-                      ))}
-                    </div>
-                    <CatalogLazyLoadFooter
-                      hasMore={hasMore}
-                      pageSize={PAGE_SIZE}
-                      remaining={remaining}
-                      visibleCount={visibleCount}
-                      totalCount={totalCount}
-                      onLoadMore={loadMore}
-                      sentinelRef={sentinelRef}
-                    />
-                  </>
-                ) : (
-                  <>
-                    <div
-                      className={cn(
-                        "mt-6",
-                        viewMode === "grid"
-                          ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
-                          : "flex flex-col gap-5",
-                      )}
-                    >
-                      {visibleItems.map((excursion) => (
-                        <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
-                      ))}
-                    </div>
-                    <CatalogLazyLoadFooter
-                      hasMore={hasMore}
-                      pageSize={PAGE_SIZE}
-                      remaining={remaining}
-                      visibleCount={visibleCount}
-                      totalCount={totalCount}
-                      onLoadMore={loadMore}
-                      sentinelRef={sentinelRef}
-                    />
-                  </>
-                )}
+                <div
+                  className={cn(
+                    "mt-6",
+                    viewMode === "grid"
+                      ? "grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
+                      : "flex flex-col gap-5",
+                  )}
+                >
+                  {visibleItems.map((excursion) => (
+                    <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
+                  ))}
+                </div>
+                <CatalogLazyLoadFooter
+                  hasMore={hasMore}
+                  pageSize={PAGE_SIZE}
+                  remaining={remaining}
+                  visibleCount={visibleCount}
+                  totalCount={totalCount}
+                  onLoadMore={loadMore}
+                  sentinelRef={sentinelRef}
+                />
               </>
             )}
 

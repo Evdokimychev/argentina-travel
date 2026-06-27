@@ -74,7 +74,7 @@ describe("YouTravel catalog filters", () => {
     ).toHaveLength(1);
   });
 
-  it("skips date filter for Tripster only", () => {
+  it("skips date filter for Tripster without catalog dates", () => {
     const filters = {
       ...getDefaultFilters("USD", [tripster]),
       dateFrom: new Date("2026-08-01"),
@@ -83,6 +83,31 @@ describe("YouTravel catalog filters", () => {
     expect(filterTours([tripster], filters, "USD")).toHaveLength(1);
     expect(isTripsterPartnerListing(tripster)).toBe(true);
     expect(isYouTravelPartnerListing(youtravel)).toBe(true);
+  });
+
+  it("filters Tripster by availableDates when catalog dates are present", () => {
+    const tripsterWithDates = {
+      ...tripster,
+      availableDates: [{ start: "2026-07-10", end: "2026-07-15", spotsLeft: 4 }],
+    };
+    const filters = {
+      ...getDefaultFilters("USD", [tripsterWithDates]),
+      dateFrom: new Date("2026-08-01"),
+      dateTo: new Date("2026-08-31"),
+    };
+
+    expect(filterTours([tripsterWithDates], filters, "USD")).toHaveLength(0);
+    expect(
+      filterTours(
+        [tripsterWithDates],
+        {
+          ...filters,
+          dateFrom: new Date("2026-07-01"),
+          dateTo: new Date("2026-07-31"),
+        },
+        "USD",
+      ),
+    ).toHaveLength(1);
   });
 
   it("filters Tripster by priceUsd in selected currency", () => {

@@ -17,6 +17,10 @@ import type { ExcursionListing } from "@/types/excursion";
 
 export type RecommendationContext = InteractionActor & {
   limit?: number;
+  /** Preloaded catalog — avoids duplicate fetchMarketplaceTours() on the same page. */
+  allTours?: TourListing[];
+  /** Preloaded excursions pool for ranking. */
+  allExcursions?: ExcursionListing[];
 };
 
 function scoreExcursionSimilarity(base: ExcursionListing, candidate: ExcursionListing): number {
@@ -102,7 +106,7 @@ export async function getRecommendedTours(
   context: RecommendationContext = {}
 ): Promise<{ tours: TourListing[]; personalized: boolean }> {
   const limit = context.limit ?? 6;
-  const allTours = await fetchMarketplaceTours();
+  const allTours = context.allTours ?? (await fetchMarketplaceTours());
 
   const rows = await fetchRecentInteractions(context, "tour");
   if (!rows.length) {
@@ -155,7 +159,10 @@ export async function getRecommendedExcursions(
   context: RecommendationContext = {}
 ): Promise<{ excursions: ExcursionListing[]; personalized: boolean }> {
   const limit = context.limit ?? 6;
-  const { items: allExcursions } = await fetchExcursionsServer({ page: 1, pageSize: 500 });
+  const { items: allExcursions } =
+    context.allExcursions != null
+      ? { items: context.allExcursions }
+      : await fetchExcursionsServer({ page: 1, pageSize: 120 });
 
   const rows = await fetchRecentInteractions(context, "excursion");
   if (!rows.length || !allExcursions.length) {

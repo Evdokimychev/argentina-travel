@@ -28,6 +28,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
     scheduleDates,
     scheduleLoading,
     externalBookingHref,
+    scheduleAffiliateHref,
   } = useTourBooking();
 
   const dates = scheduleDates.filter((item) => item.startDate);
@@ -47,6 +48,7 @@ export default function PartnerTourDatesSection({ tour }: { tour: TourDetail }) 
 
   const bookingHref =
     externalBookingHref ??
+    scheduleAffiliateHref ??
     tour.customBookingLink?.url ??
     `/api/affiliate/go/${tour.slug}`;
   const selectedDate = dates.find((date) => date.id === selectedDateId);

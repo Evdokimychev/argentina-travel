@@ -63,9 +63,19 @@ export function useSiteHeaderAutoHide({
     const header = headerRef.current;
     if (!header) return;
 
+    let lastMeasuredHeight = 0;
+
     const syncFullHeight = () => {
+      const nextHeight = header.offsetHeight;
+      if (
+        lastMeasuredHeight > 0 &&
+        Math.abs(nextHeight - lastMeasuredHeight) < 4
+      ) {
+        return;
+      }
+      lastMeasuredHeight = nextHeight;
       applySiteHeaderChrome(
-        header.offsetHeight,
+        nextHeight,
         (visibleRef.current || disabled) && !forceHidden,
       );
     };

@@ -105,6 +105,15 @@ export default function TourDetailView({
   const tour = previewMode ? initialTour ?? null : syncedTour;
   const canonicalTour = previewMode ? previewCanonicalTour : liveCanonicalTour;
 
+  useEffect(() => {
+    if (!tour || !initialDepartureDate?.trim()) return;
+    const target = document.getElementById("booking");
+    if (!target) return;
+    window.requestAnimationFrame(() => {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  }, [initialDepartureDate, tour?.slug]);
+
   if (!tour) {
     return (
       <div className={cn(siteContainerClass, "py-24 text-center")}>
@@ -158,15 +167,6 @@ export default function TourDetailView({
         }
       : undefined;
   const isYouTravel = isYouTravelPartnerDetail(tour);
-
-  useEffect(() => {
-    if (!initialDepartureDate?.trim()) return;
-    const target = document.getElementById("booking");
-    if (!target) return;
-    window.requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: "smooth", block: "start" });
-    });
-  }, [initialDepartureDate, tour.slug]);
 
   return (
     <TourBookingProvider tour={tour} initialDepartureDate={initialDepartureDate}>

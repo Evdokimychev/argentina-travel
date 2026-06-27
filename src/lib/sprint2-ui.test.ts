@@ -39,12 +39,12 @@ describe("Sprint 2 UI stabilization", () => {
     expect(source).not.toMatch(/return null/);
   });
 
-  it("GuideWidgetSlot shows coming-soon stub for unimplemented slots", () => {
+  it("GuideWidgetSlot hides unimplemented slots", () => {
     const source = readFileSync(
       resolve(process.cwd(), "src/components/guide/GuideWidgetSlot.tsx"),
       "utf8"
     );
-    expect(source).toMatch(/GuideWidgetComingSoon/);
-    expect(source).not.toMatch(/return null/);
+    expect(source).toContain("return null");
+    expect(source).not.toMatch(/GuideWidgetComingSoon/);
   });
 });

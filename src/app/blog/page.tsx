@@ -1,8 +1,9 @@
+import { Suspense } from "react";
 import { cookies } from "next/headers";
 import BlogIndexView from "@/components/blog/BlogIndexView";
 import BlogIndexHero from "@/components/blog/BlogIndexHero";
+import BlogIndexWithTours from "@/components/blog/BlogIndexWithTours";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
-import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { parseBlogReadingHistoryCookie, BLOG_READING_HISTORY_COOKIE } from "@/lib/blog-reading-history-cookie";
@@ -39,10 +40,7 @@ export default async function BlogPage() {
   const locale = await getServerI18nLocale();
   const cookieStore = await cookies();
   const history = parseBlogReadingHistoryCookie(cookieStore.get(BLOG_READING_HISTORY_COOKIE)?.value);
-  const [posts, initialTours] = await Promise.all([
-    resolveBlogCatalog(locale),
-    fetchMarketplaceTours(),
-  ]);
+  const posts = await resolveBlogCatalog(locale);
   const indexable = filterIndexableBlogPosts(posts);
 
   const heroVariantCookie = cookieStore.get(BLOG_HERO_VARIANT_COOKIE)?.value;
@@ -77,12 +75,22 @@ export default async function BlogPage() {
   return (
     <>
       <BlogIndexHero variant={heroVariant} indexablePostsCount={indexable.length} />
-      <BlogIndexView
-        posts={posts}
-        initialTours={initialTours}
-        initialPersonalizedPosts={initialPersonalized}
-        heroVariant={heroVariant}
-      />
+      <Suspense
+        fallback={
+          <BlogIndexView
+            posts={posts}
+            initialTours={[]}
+            initialPersonalizedPosts={initialPersonalized}
+            heroVariant={heroVariant}
+          />
+        }
+      >
+        <BlogIndexWithTours
+          posts={posts}
+          initialPersonalizedPosts={initialPersonalized}
+          heroVariant={heroVariant}
+        />
+      </Suspense>
     </>
   );
 }

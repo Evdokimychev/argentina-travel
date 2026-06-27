@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { ArrowRight, Compass, Search } from "lucide-react";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
@@ -14,33 +15,36 @@ import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { destinationHref } from "@/lib/destinations";
 import HomeMultiSearch, { type HomeSearchTab } from "./HomeMultiSearch";
-import FilterBar from "./FilterBar";
+
+const FilterBar = dynamic(() => import("./FilterBar"), {
+  loading: () => (
+    <div
+      className="h-11 min-h-[44px] w-full max-w-full overflow-hidden rounded-full bg-surface-muted/60"
+      aria-hidden
+    />
+  ),
+});
 import HomeExcursionFilterStrip from "./HomeExcursionFilterStrip";
 import MarketplaceTourCard from "./MarketplaceTourCard";
+import CatalogDepartureCalendarButton from "./CatalogDepartureCalendarButton";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { TourEmbedConfig } from "@/types/tour-embed";
 import BlogCard from "@/components/BlogCard";
 import { tripsWord, filtersWord } from "@/lib/pluralize";
 import PlatformStatsBlock from "./PlatformStatsBlock";
-import HomeHeroCollage from "./HomeHeroCollage";
 import HomeTestimonialsSection from "./HomeTestimonialsSection";
 import SectionShell from "@/components/layout/SectionShell";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
-import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
+import { siteCatalogContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
 import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
-import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
 
-const HOME_HERO_IMAGE = getHomeHeroImage();
-const HOME_HERO_ALT = getHomeHeroAlt();
-const HOME_SHOWCASE = getHomeShowcaseImages();
-/** Витрина регионов на главной — 6 карточек с локальными cover */
 const HOME_FEATURED_REGIONS = POPULAR_DESTINATIONS.slice(0, 6);
 
 interface MarketplaceHomeProps {
@@ -50,6 +54,7 @@ interface MarketplaceHomeProps {
   platformStats: PlatformStats;
   excursionCities?: ExcursionCity[];
   travelPrepStrip?: React.ReactNode;
+  heroCollage?: React.ReactNode;
   showHomepageRecommendationsV2?: boolean;
   personalizedTours?: TourListing[];
   personalizedExcursions?: ExcursionListing[];
@@ -103,6 +108,7 @@ export default function MarketplaceHome({
   platformStats,
   excursionCities = [],
   travelPrepStrip,
+  heroCollage,
   showHomepageRecommendationsV2 = false,
   personalizedTours = [],
   personalizedExcursions = [],
@@ -187,7 +193,7 @@ export default function MarketplaceHome({
         <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl" aria-hidden />
         <div className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl" aria-hidden />
 
-        <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-16")}>
+        <div className={cn(siteCatalogContainerClass, "relative py-10 md:py-12 lg:py-16")}>
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,380px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
             <div className="min-w-0">
               <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
@@ -222,11 +228,7 @@ export default function MarketplaceHome({
               </div>
             </div>
 
-            <HomeHeroCollage
-              heroSrc={HOME_HERO_IMAGE}
-              heroAlt={HOME_HERO_ALT}
-              showcase={HOME_SHOWCASE}
-            />
+            {heroCollage}
           </div>
 
           <div className="mt-8 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20 lg:pb-2">
@@ -266,7 +268,7 @@ export default function MarketplaceHome({
           </div>
 
           {searchTab === "tours" ? (
-            <div className="mt-4">
+            <div className="mt-4 min-h-11">
               <FilterBar tours={tours} filters={filters} onChange={setFilters} />
             </div>
           ) : null}
@@ -282,7 +284,7 @@ export default function MarketplaceHome({
       {!hasActiveSearch && travelPrepStrip ? travelPrepStrip : null}
 
       {hasActiveSearch ? (
-        <section id="tour-results" className={cn(siteContainerClass, "py-8", siteScrollAnchorClass)}>
+        <section id="tour-results" className={cn(siteCatalogContainerClass, "py-8", siteScrollAnchorClass)}>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-6">
             <p className="text-sm text-slate">
               Найдено{" "}
@@ -293,6 +295,7 @@ export default function MarketplaceHome({
               ) : null}
             </p>
             <div className="flex items-center gap-2">
+              <CatalogDepartureCalendarButton tours={filtered} />
               {activeCount > 0 ? (
                 <Button
                   variant="ghost"
@@ -436,7 +439,7 @@ export default function MarketplaceHome({
 
       {/* Tour collections */}
       <section className="border-y border-gray-100 bg-white py-12 md:py-14">
-        <div className={cn(siteContainerClass, "space-y-14")}>
+        <div className={cn(siteCatalogContainerClass, "space-y-14")}>
           <TourGrid
             id="recommended"
             title="Рекомендуем"

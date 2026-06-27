@@ -534,13 +534,40 @@ export function resolveScheduleSlotSpotsLeft(
     return fromDefaults;
   }
 
-  return 12;
+  return 0;
+}
+
+export function mapScheduleToAvailableDates(
+  schedule: TripsterScheduleResponse,
+  durationDays: number,
+): import("@/types").TourDate[] {
+  const byStart = new Map<string, number>();
+
+  for (const startDate of Object.keys(schedule.schedule ?? {}).sort()) {
+    const slots = schedule.schedule?.[startDate] ?? [];
+    let bestSpots = 0;
+    for (const slot of slots) {
+      bestSpots = Math.max(bestSpots, resolveScheduleSlotSpotsLeft(slot, schedule.defaults));
+    }
+    byStart.set(startDate, bestSpots);
+  }
+
+  return [...byStart.entries()].map(([start, spotsLeft]) => {
+    let end = start;
+    try {
+      end = format(addDays(parseISO(start), Math.max(1, durationDays) - 1), "yyyy-MM-dd");
+    } catch {
+      end = start;
+    }
+    return { start, end, spotsLeft };
+  });
 }
 
 export function mapScheduleToPartnerDates(
   schedule: TripsterScheduleResponse,
   durationDays: number,
-  priceCurrency?: string | null
+  priceCurrency?: string | null,
+  seatsTotal?: number | null,
 ): TourDatePrice[] {
   const dates: TourDatePrice[] = [];
   const scheduleMap = schedule.schedule ?? {};
@@ -565,6 +592,7 @@ export function mapScheduleToPartnerDates(
         startDate,
         endDate,
         spotsLeft: resolveScheduleSlotSpotsLeft(slot, schedule.defaults),
+        seatsTotal: seatsTotal != null && seatsTotal > 0 ? seatsTotal : undefined,
         priceUsd: hasSlotPrice && currency === "USD" ? slotValue : 0,
         partnerPriceValue: hasSlotPrice ? slotValue : undefined,
         partnerPriceCurrency: hasSlotPrice ? currency : undefined,

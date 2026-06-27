@@ -67,24 +67,24 @@ describe("buildMarketplaceDepartureIndex", () => {
     expect(index.earliestDate).toBe("2027-03-10");
   });
 
-  it("counts tripster tours without cached dates", () => {
+  it("includes tripster tours when cached dates exist", () => {
     const index = buildMarketplaceDepartureIndex([
-      stubTour({
-        id: "yt-1",
-        slug: "patagonia-yt42",
-        partnerSource: "youtravel",
-        availableDates: [{ start: "2027-04-01", end: "2027-04-08", spotsLeft: 3 }],
-      }),
       stubTour({
         id: "ts-1",
         slug: "buenos-aires-t99",
+        partnerSource: "tripster",
+        availableDates: [{ start: "2027-04-01", end: "2027-04-08", spotsLeft: 3 }],
+      }),
+      stubTour({
+        id: "ts-2",
+        slug: "patagonia-t100",
         partnerSource: "tripster",
         availableDates: [],
       }),
     ]);
 
-    expect(index.tripsterWithoutDates).toBe(1);
     expect(index.totalDepartures).toBe(1);
+    expect(index.tripsterWithoutDates).toBe(1);
   });
 });
 

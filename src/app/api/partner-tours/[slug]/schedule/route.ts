@@ -54,12 +54,14 @@ export async function GET(_request: Request, context: RouteContext) {
     const dates = mapScheduleToPartnerDates(
       schedule,
       scheduleDurationDays,
-      tour.partnerPriceCurrency
+      tour.partnerPriceCurrency,
+      tour.groupMax,
     );
 
     return NextResponse.json({
       dates: dates.length > 0 ? dates : tour.dates,
       maxPersons: schedule.defaults?.available_persons,
+      affiliateFallback: `/api/affiliate/go/${slug}`,
       configured: true,
     });
   } catch (error) {

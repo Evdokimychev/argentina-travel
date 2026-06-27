@@ -28,7 +28,7 @@ export default function OrganizerPublicView({
   const allTours = useRepositoryTourListings(initialTours);
   const tours = allTours.filter(
     (tour) =>
-      tour.organizerOwnerId === profile.slug || tour.organizer.slug === profile.slug
+      tour.organizerOwnerId === profile.slug || tour.organizer?.slug === profile.slug,
   );
   const sampleTourSlug = tours[0]?.slug;
   const contactHref = sampleTourSlug

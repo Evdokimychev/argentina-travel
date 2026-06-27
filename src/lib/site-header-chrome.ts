@@ -23,8 +23,8 @@ function dispatchSiteHeaderChromeChange() {
 
 /**
  * Sync CSS vars for fixed header + document spacer.
- * Spacer always keeps full height; only transform hides the header visually.
- * `--site-header-height` drives sticky offsets (0 when hidden).
+ * Spacer uses `--site-header-full-height` (always full — no document CLS).
+ * Sticky chrome uses `--site-header-height` (0 when header hidden — fills the gap).
  */
 export function applySiteHeaderChrome(fullHeightPx: number, visible: boolean): number {
   if (typeof document === "undefined") return 0;

@@ -8,7 +8,7 @@ const root = join(process.cwd(), "src");
 describe("Sprint 6 — premium homepage", () => {
   it("MarketplaceHome wires hero collage, SectionShell and testimonials", () => {
     const source = readFileSync(join(root, "components/marketplace/MarketplaceHome.tsx"), "utf8");
-    expect(source).toContain("HomeHeroCollage");
+    expect(source).toContain("heroCollage");
     expect(source).toContain("HomeTestimonialsSection");
     expect(source).toContain("SectionShell");
     expect(source).toContain("HOME_FEATURED_REGIONS");
@@ -31,17 +31,16 @@ describe("Sprint 6 — premium homepage", () => {
     expect(source).toContain("data-scroll-rail-tone");
   });
 
-  it("PlatformStatsBlock has icon tiles and count-up animation", () => {
+  it("PlatformStatsBlock has icon tiles and reveal animation", () => {
     const source = readFileSync(join(root, "components/marketplace/PlatformStatsBlock.tsx"), "utf8");
-    expect(source).toContain("useAnimatedValue");
     expect(source).toContain("useRevealAnimation");
     expect(source).toMatch(/Map|Users|CheckCircle2|Sparkles/);
   });
 
-  it("HomeTestimonialsSection uses EmptyState when no verified reviews", () => {
+  it("HomeTestimonialsSection hides when no verified reviews", () => {
     const source = readFileSync(join(root, "components/marketplace/HomeTestimonialsSection.tsx"), "utf8");
-    expect(source).toContain("Первые отзывы скоро");
-    expect(source).toContain("MessageCircleHeart");
+    expect(source).toContain("return null");
+    expect(source).not.toContain("Первые отзывы скоро");
     expect(source).toContain('reveal');
   });
 

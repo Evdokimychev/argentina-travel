@@ -1,5 +1,7 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import MarketplaceHome from "@/components/marketplace/MarketplaceHome";
+import HomeHeroCollage from "@/components/marketplace/HomeHeroCollage";
 import TravelPrepStrip from "@/components/flights/TravelPrepStrip";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
@@ -15,6 +17,8 @@ import {
   getRecommendedTours,
 } from "@/lib/personalization/recommendations-server";
 import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
+import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
+import { absoluteUrl } from "@/lib/site-url";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
@@ -37,13 +41,15 @@ export default async function HomePage() {
     actorId
   );
 
-  const [tours, testimonials, platformStats, recommendedTours, recommendedExcursions, excursionCities] =
+  const tours = await fetchMarketplaceTours();
+  const heroSrc = getHomeHeroImage();
+
+  const [testimonials, platformStats, recommendedTours, recommendedExcursions, excursionCities] =
     await Promise.all([
-      fetchMarketplaceTours(),
       collectTopVerifiedReviewsAsync(3),
       Promise.resolve(getPlatformStatsFromRepository()),
       homepageRecommendationsV2Enabled
-        ? getRecommendedTours({ ...actor, limit: 6 })
+        ? getRecommendedTours({ ...actor, limit: 6, allTours: tours })
         : Promise.resolve({ tours: [], personalized: false }),
       homepageRecommendationsV2Enabled
         ? getRecommendedExcursions({ ...actor, limit: 6 })
@@ -53,6 +59,7 @@ export default async function HomePage() {
 
   return (
     <>
+      <link rel="preload" as="image" href={absoluteUrl(heroSrc)} fetchPriority="high" />
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/" />
       <MarketplaceHome
         tours={tours}
@@ -60,7 +67,18 @@ export default async function HomePage() {
         testimonials={testimonials}
         platformStats={platformStats}
         excursionCities={excursionCities}
-        travelPrepStrip={<TravelPrepStrip />}
+        travelPrepStrip={
+          <Suspense fallback={null}>
+            <TravelPrepStrip />
+          </Suspense>
+        }
+        heroCollage={
+          <HomeHeroCollage
+            heroSrc={heroSrc}
+            heroAlt={getHomeHeroAlt()}
+            showcase={getHomeShowcaseImages()}
+          />
+        }
         showHomepageRecommendationsV2={homepageRecommendationsV2Enabled}
         personalizedTours={recommendedTours.tours}
         personalizedExcursions={recommendedExcursions.excursions}

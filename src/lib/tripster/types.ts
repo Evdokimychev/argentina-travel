@@ -120,6 +120,8 @@ export type TripsterExperience = {
   status?: string;
   type?: string;
   format?: string;
+  /** Tripster activity grade (1–5), when present on partner API payload. */
+  grade?: number | null;
   exp_format?: number;
   pricing_model?: string;
   movement_type?: string;
@@ -164,6 +166,8 @@ export type TripsterExperience = {
     [key: string]: unknown;
   };
   languages?: Array<string | { name?: string | null; code?: string | null }>;
+  /** Cached schedule from nightly sync — used for catalog availableDates. */
+  schedule_snapshot?: TripsterScheduleResponse | null;
 };
 
 export type TripsterReview = {

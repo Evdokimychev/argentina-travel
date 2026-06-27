@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { ReadonlyURLSearchParams } from "next/navigation";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import {
   buildCatalogFilterSearchParams,
@@ -254,7 +255,11 @@ describe("catalog tour filters", () => {
     });
 
     const params = buildCatalogFilterSearchParams(filters, "price_asc", "RUB", tourSet, "list");
-    const parsed = parseCatalogFiltersFromSearchParams(params, "RUB", tourSet);
+    const parsed = parseCatalogFiltersFromSearchParams(
+      params as ReadonlyURLSearchParams,
+      "RUB",
+      tourSet,
+    );
 
     expect(parsed.query).toBe("ледники");
     expect(parsed.dateFrom?.toISOString().slice(0, 10)).toBe("2026-09-01");

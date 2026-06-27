@@ -47,8 +47,8 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number) {
 
 function matchesDateRange(tour: TourListing, from: Date | null, to: Date | null) {
   if (!from && !to) return true;
-  // Tripster не имеет дат заезда в нашей БД — не отсекаем по календарю.
-  if (isTripsterPartnerListing(tour)) return true;
+  // Tripster без дат в каталоге — не отсекаем по календарю (расписание подгружается отдельно).
+  if (isTripsterPartnerListing(tour) && tour.availableDates.length === 0) return true;
 
   const rangeStart = from ? startOfDay(from) : null;
   const rangeEnd = to ? startOfDay(to) : null;

@@ -5,6 +5,9 @@ import { useEffect, useRef } from "react";
 /**
  * Mobile browser back / gesture back closes an open dialog.
  * Pushes a history entry while open; popstate triggers close.
+ *
+ * Callback is stored in a ref so parent re-renders (e.g. typing in a form)
+ * do not re-run cleanup → history.back() → accidental modal close.
  */
 export function useDialogBackClose(
   open: boolean,
@@ -13,6 +16,11 @@ export function useDialogBackClose(
 ): void {
   const pushedRef = useRef(false);
   const closingFromPopRef = useRef(false);
+  const onOpenChangeRef = useRef(onOpenChange);
+
+  useEffect(() => {
+    onOpenChangeRef.current = onOpenChange;
+  });
 
   useEffect(() => {
     if (!enabled || !open) return;
@@ -23,7 +31,7 @@ export function useDialogBackClose(
 
     const onPopState = () => {
       closingFromPopRef.current = true;
-      onOpenChange(false);
+      onOpenChangeRef.current(false);
     };
 
     window.addEventListener("popstate", onPopState);
@@ -36,5 +44,5 @@ export function useDialogBackClose(
         pushedRef.current = false;
       }
     };
-  }, [open, enabled, onOpenChange]);
+  }, [open, enabled]);
 }
