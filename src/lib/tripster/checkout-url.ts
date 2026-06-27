@@ -11,6 +11,42 @@ export type TripsterCheckoutContext = {
   fallbackUrl?: string | null;
 };
 
+function safelyDecodeURIComponent(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+function unwrapTripsterWrapperUrl(url: string): string {
+  let current = url.trim();
+  for (let depth = 0; depth < 3; depth += 1) {
+    try {
+      const parsed = new URL(current, "https://experience.tripster.ru");
+      const wrapped = parsed.searchParams.get("u")?.trim();
+      if (!wrapped) return parsed.toString();
+      current = safelyDecodeURIComponent(wrapped);
+    } catch {
+      return current;
+    }
+  }
+  return current;
+}
+
+function hasRequiredBookingPrefillParams(url: string): boolean {
+  try {
+    const unwrapped = unwrapTripsterWrapperUrl(url);
+    const parsed = new URL(unwrapped, "https://experience.tripster.ru");
+    const date = parsed.searchParams.get("date")?.trim();
+    const time = parsed.searchParams.get("time")?.trim();
+    const personsCount = parsed.searchParams.get("persons_count")?.trim();
+    return Boolean(date && time && personsCount);
+  } catch {
+    return false;
+  }
+}
+
 /** Tripster `/orders/{id}/` links 404 for anonymous users — rewrite to `/experience/order/{id}/`. */
 export function isBrokenTripsterOrderPath(url: string): boolean {
   try {
@@ -180,7 +216,7 @@ export function resolveTripsterBookingRedirectFromApi(input: {
 
   if (response.mode === "affiliate_fallback" || !response.ok) {
     const serverFallback = response.fallbackUrl?.trim();
-    if (serverFallback) {
+    if (serverFallback && hasRequiredBookingPrefillParams(serverFallback)) {
       return serverFallback;
     }
     return buildTripsterPartnerOpenUrl(experienceId, context);

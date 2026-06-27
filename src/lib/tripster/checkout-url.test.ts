@@ -129,7 +129,7 @@ describe("tripster checkout url", () => {
 
   it("prefers server fallback url over client-built booking url", () => {
     const serverFallback =
-      "https://tp.media/r?u=https%3A%2F%2Fexperience.tripster.ru%2Fexperience%2Fbooking%2F50900%2F%3Fdate%3D2026-09-01";
+      "https://tp.media/r?u=https%3A%2F%2Fexperience.tripster.ru%2Fexperience%2Fbooking%2F50900%2F%3Fdate%3D2026-09-01%26time%3D10%253A00%253A00%26persons_count%3D2";
     const url = resolveTripsterBookingRedirectFromApi({
       response: { ok: false, mode: "affiliate_fallback", fallbackUrl: serverFallback },
       experienceId: 50900,
@@ -144,6 +144,27 @@ describe("tripster checkout url", () => {
     });
 
     expect(url).toBe(serverFallback);
+  });
+
+  it("rebuilds fallback checkout when server fallback misses prefill params", () => {
+    const url = resolveTripsterBookingRedirectFromApi({
+      response: {
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl: "https://tp.media/r?u=https%3A%2F%2Fexperience.tripster.ru%2Fexperience%2Fbooking%2F50900%2F",
+      },
+      experienceId: 50900,
+      context: {
+        startDate: "2026-09-01",
+        time: "10:00",
+        guests: 2,
+      },
+    });
+
+    expect(url).toContain("/experience/booking/50900/");
+    expect(url).toContain("date=2026-09-01");
+    expect(url).toContain("time=10%3A00%3A00");
+    expect(url).toContain("persons_count=2");
   });
 
   it("uses order checkout url on successful api response", () => {
