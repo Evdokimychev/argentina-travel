@@ -74,8 +74,14 @@ export function buildExcursionBookingConditions(input: {
   closesBeforeMinutes?: number;
   instantBooking?: boolean;
   isBookable?: boolean;
+  priceDescription?: string | null;
 }): ExcursionBookingConditions {
   const items: ExcursionBookingConditionItem[] = [];
+
+  const pricingRules = input.priceDescription?.trim();
+  if (pricingRules) {
+    items.push({ kind: "custom", text: pricingRules });
+  }
 
   if (input.quote) {
     const prepayment = computePrepaymentPercents(input.quote);

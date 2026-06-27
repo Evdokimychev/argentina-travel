@@ -7,29 +7,9 @@ import { ru } from "date-fns/locale";
 import CalendarMonthGrid from "@/components/ui/calendar-month-grid";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/cn";
+import { formatExcursionScheduleDayLabel } from "@/lib/excursion-date-label";
 
-const RU_WEEKDAY_2: Record<number, string> = {
-  0: "вс",
-  1: "пн",
-  2: "вт",
-  3: "ср",
-  4: "чт",
-  5: "пт",
-  6: "сб",
-};
-
-export function formatExcursionScheduleDayLabel(dateStr: string, locale: string): string {
-  const date = new Date(`${dateStr}T12:00:00`);
-  const dayMonth = format(date, "d MMM", {
-    locale: locale.startsWith("ru") ? ru : undefined,
-  }).replace(/\.$/, "");
-
-  if (locale.startsWith("ru")) {
-    return `${dayMonth}, ${RU_WEEKDAY_2[date.getDay()]}`;
-  }
-
-  return format(date, "d MMM, EE");
-}
+export { formatExcursionScheduleDayLabel } from "@/lib/excursion-date-label";
 
 type ExcursionScheduleDatePickerProps = {
   dates: string[];

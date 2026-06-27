@@ -44,7 +44,9 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
     persons,
     setPersons,
     maxPersons,
+    quote,
     quoteLoading,
+    priceIsEstimate,
     priceUsd,
     priceSuffix,
     partnerPriceFootnote,
@@ -92,7 +94,7 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
       )}
     >
       {priceUsd != null ? (
-        <div className={quoteLoading ? "opacity-70 transition-opacity" : undefined}>
+        <div className={quoteLoading && priceIsEstimate ? "opacity-70 transition-opacity" : undefined}>
           <TourPriceDisplay
             priceUsd={priceUsd}
             size="lg"

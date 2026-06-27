@@ -132,6 +132,15 @@ export function partnerTourListingId(tripsterId: number): string {
   return `tripster-${tripsterId}`;
 }
 
+/** Tripster booking form expects HH:MM:SS in the time query param. */
+export function normalizeTripsterBookingTime(time?: string | null): string | undefined {
+  const trimmed = time?.trim();
+  if (!trimmed) return undefined;
+  if (/^\d{1,2}:\d{2}:\d{2}$/.test(trimmed)) return trimmed;
+  if (/^\d{1,2}:\d{2}$/.test(trimmed)) return `${trimmed}:00`;
+  return trimmed;
+}
+
 export function parsePartnerTourListingExperienceId(listingId: string): number | null {
   const match = listingId.match(/^tripster-(\d+)$/);
   if (!match?.[1]) return null;
@@ -150,21 +159,30 @@ export function buildTripsterPartnerBookingUrl(
     name?: string | null;
     email?: string | null;
     phone?: string | null;
+    messageToGuide?: string | null;
   }
 ): string {
   const fallback = options?.fallbackUrl?.trim();
   if (!experienceId) return fallback || "https://experience.tripster.ru/";
 
   try {
-    const url = new URL(`https://experience.tripster.ru/mfs/experience/booking/${experienceId}/`);
+    const url = new URL(`https://experience.tripster.ru/experience/booking/${experienceId}/`);
     if (options?.startDate) url.searchParams.set("date", options.startDate);
-    if (options?.time?.trim()) url.searchParams.set("time", options.time.trim());
+    const normalizedTime = normalizeTripsterBookingTime(options?.time);
+    if (normalizedTime) url.searchParams.set("time", normalizedTime);
     if (options?.guests && options.guests > 0) {
       url.searchParams.set("persons_count", String(options.guests));
     }
-    if (options?.name?.trim()) url.searchParams.set("name", options.name.trim());
+    if (options?.name?.trim()) {
+      const name = options.name.trim();
+      url.searchParams.set("name", name);
+      url.searchParams.set("full_name", name);
+    }
     if (options?.email?.trim()) url.searchParams.set("email", options.email.trim());
     if (options?.phone?.trim()) url.searchParams.set("phone", options.phone.trim());
+    if (options?.messageToGuide?.trim()) {
+      url.searchParams.set("message_to_guide", options.messageToGuide.trim());
+    }
     return url.toString();
   } catch {
     return fallback || `https://experience.tripster.ru/experience/${experienceId}/`;

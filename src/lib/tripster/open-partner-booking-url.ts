@@ -5,8 +5,9 @@ export const PARTNER_TOUR_BOOKING_THANK_YOU =
   "Спасибо за бронирование тура. Вы перешли на сайт партнёра — дальнейшее оформление будет осуществляться там.";
 
 import {
+  extractTripsterOrderId,
   isBrokenTripsterOrderPath,
-  isUsableTripsterCheckoutUrl,
+  normalizeTripsterOrderUrl,
 } from "@/lib/tripster/checkout-url";
 
 /** Resolves relative Tripster paths and same-origin affiliate redirect URLs. */
@@ -15,7 +16,9 @@ export function normalizePartnerBookingUrl(url: string, origin?: string): string
   if (!trimmed) return trimmed;
 
   if (/^https?:\/\//i.test(trimmed)) {
-    if (isBrokenTripsterOrderPath(trimmed)) return trimmed;
+    if (extractTripsterOrderId(trimmed) || isBrokenTripsterOrderPath(trimmed)) {
+      return normalizeTripsterOrderUrl(trimmed);
+    }
     return trimmed;
   }
 
@@ -24,8 +27,11 @@ export function normalizePartnerBookingUrl(url: string, origin?: string): string
     return base ? new URL(trimmed, base).toString() : trimmed;
   }
 
-  if (isBrokenTripsterOrderPath(trimmed)) {
-    return trimmed;
+  if (extractTripsterOrderId(trimmed) || isBrokenTripsterOrderPath(trimmed)) {
+    const absolute = trimmed.startsWith("/")
+      ? `https://experience.tripster.ru${trimmed}`
+      : trimmed;
+    return normalizeTripsterOrderUrl(absolute);
   }
 
   if (trimmed.startsWith("/mfs/") || trimmed.startsWith("/experience/")) {
@@ -39,15 +45,10 @@ export function normalizePartnerBookingUrl(url: string, origin?: string): string
   return trimmed;
 }
 
-export function isOpenablePartnerCheckoutUrl(url: string): boolean {
-  const absolute = normalizePartnerBookingUrl(url);
-  return isUsableTripsterCheckoutUrl(absolute) || absolute.includes("/api/affiliate/go/");
-}
-
 /** Opens partner checkout in a new tab. Returns false when the popup was blocked. */
 export function openPartnerBookingUrl(url: string): boolean {
-  if (!isOpenablePartnerCheckoutUrl(url)) return false;
   const absolute = normalizePartnerBookingUrl(url);
+  if (!absolute.trim() || isBrokenTripsterOrderPath(absolute)) return false;
   const opened = window.open(absolute, "_blank", "noopener,noreferrer");
   return opened != null;
 }

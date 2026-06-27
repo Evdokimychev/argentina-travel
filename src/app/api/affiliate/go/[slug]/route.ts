@@ -4,7 +4,6 @@ import { fetchExcursionDetailServer } from "@/lib/excursion-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   createSputnik8AffiliateLink,
-  createTripsterAffiliateLink,
   createYouTravelAffiliateLink,
   isTravelpayoutsConfigured,
   TravelpayoutsError,
@@ -18,9 +17,7 @@ import {
   buildYouTravelPartnerBookingUrl,
   isUsableYouTravelAffiliateRedirectUrl,
 } from "@/lib/youtravel/partner-tour-utils";
-import { buildTripsterPartnerBookingUrl } from "@/lib/tripster/partner-tour-utils";
-import { isUsableTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
-import { resolveTripsterAffiliateCheckoutUrl } from "@/lib/tripster/checkout-url-server";
+import { resolveTripsterAffiliateCheckoutUrl, resolveTripsterAffiliateExperienceUrl } from "@/lib/tripster/checkout-url-server";
 import {
   fetchSputnik8ProductForAffiliate,
   logSputnik8AffiliateClick,
@@ -192,22 +189,33 @@ export async function GET(request: Request, context: RouteContext) {
   if (!experience) {
     const excursion = await fetchExcursionDetailServer(normalizedSlug);
     if (excursion?.partner === "tripster" && excursion.id) {
-      return NextResponse.redirect(
-        buildTripsterPartnerBookingUrl(excursion.id, {
-          startDate: requestUrl.searchParams.get("start_date"),
-          time: requestUrl.searchParams.get("time"),
-          guests: (() => {
-            const raw = requestUrl.searchParams.get("guests");
-            const parsed = raw ? Number.parseInt(raw, 10) : null;
-            return Number.isFinite(parsed) ? parsed : null;
-          })(),
-          fallbackUrl: excursion.partnerUrl || excursion.tripsterUrl,
-          name: requestUrl.searchParams.get("name"),
-          email: requestUrl.searchParams.get("email"),
-          phone: requestUrl.searchParams.get("phone"),
-        }),
-        302
-      );
+      const startDate = requestUrl.searchParams.get("start_date");
+      const slotTime = requestUrl.searchParams.get("time");
+      const guestsRaw = requestUrl.searchParams.get("guests");
+      const guests = guestsRaw ? Number.parseInt(guestsRaw, 10) : null;
+      const wantsBookingDeepLink = Boolean(startDate || slotTime || (guests != null && guests > 0));
+
+      const partnerUrl = wantsBookingDeepLink
+        ? await resolveTripsterAffiliateCheckoutUrl(supabase, {
+            experienceId: excursion.id,
+            experienceSlug: normalizedSlug,
+            cityId: excursion.cityId,
+            tripsterUrl: excursion.tripsterUrl,
+            startDate,
+            time: slotTime,
+            guests: Number.isFinite(guests) ? guests : null,
+            name: requestUrl.searchParams.get("name"),
+            email: requestUrl.searchParams.get("email"),
+            phone: requestUrl.searchParams.get("phone"),
+          })
+        : await resolveTripsterAffiliateExperienceUrl(supabase, {
+            experienceId: excursion.id,
+            experienceSlug: normalizedSlug,
+            cityId: excursion.cityId,
+            tripsterUrl: excursion.tripsterUrl,
+          });
+
+      return NextResponse.redirect(partnerUrl, 302);
     }
     if (excursion?.partner === "sputnik8" && excursion.partnerUrl) {
       return NextResponse.redirect(excursion.partnerUrl, 302);
@@ -224,10 +232,7 @@ export async function GET(request: Request, context: RouteContext) {
   const customerPhone = requestUrl.searchParams.get("phone");
   const wantsBookingDeepLink = Boolean(startDate || slotTime || (guests != null && guests > 0));
 
-  let partnerUrl =
-    experience.partner_url?.trim() && isUsableTripsterCheckoutUrl(experience.partner_url)
-      ? experience.partner_url.trim()
-      : null;
+  let partnerUrl: string;
 
   if (wantsBookingDeepLink) {
     partnerUrl = await resolveTripsterAffiliateCheckoutUrl(supabase, {
@@ -242,34 +247,20 @@ export async function GET(request: Request, context: RouteContext) {
       email: customerEmail,
       phone: customerPhone,
     });
-  } else if (!partnerUrl) {
-    if (!isTravelpayoutsConfigured()) {
-      return NextResponse.json({ error: "Affiliate link is not available" }, { status: 503 });
-    }
+  } else {
+    partnerUrl = await resolveTripsterAffiliateExperienceUrl(supabase, {
+      experienceId: experience.id,
+      experienceSlug: normalizedSlug,
+      cityId: experience.city_id,
+      tripsterUrl: experience.tripster_url,
+    });
+  }
 
+  if (partnerUrl && isTravelpayoutsConfigured()) {
     try {
-      const { data: city } = await supabase
-        .from("tripster_cities")
-        .select("slug")
-        .eq("id", experience.city_id)
-        .maybeSingle();
-
-      const link = await createTripsterAffiliateLink({
-        tripsterUrl: experience.tripster_url,
-        experienceId: experience.id,
-        citySlug: city?.slug,
-      });
-
-      partnerUrl = link.partnerUrl || link.url;
-      if (partnerUrl) {
-        await updateExperiencePartnerUrl(supabase, experience.id, partnerUrl);
-      }
-    } catch (error) {
-      const message =
-        error instanceof TravelpayoutsError
-          ? error.message
-          : "Failed to generate affiliate link";
-      return NextResponse.json({ error: message }, { status: 500 });
+      await updateExperiencePartnerUrl(supabase, experience.id, partnerUrl);
+    } catch {
+      // Cache refresh is best-effort.
     }
   }
 

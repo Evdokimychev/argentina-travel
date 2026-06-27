@@ -97,6 +97,7 @@ export async function GET(_request: Request, context: RouteContext) {
       closesBeforeMinutes,
       instantBooking: excursion.instantBooking,
       isBookable: excursion.isBookable,
+      priceDescription: excursion.priceDescription,
     });
 
     return NextResponse.json(conditions);

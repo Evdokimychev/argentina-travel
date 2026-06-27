@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import ExcursionReviewsSection from "@/components/excursions/ExcursionReviewsSection";
 import ExcursionSimilarSection from "@/components/excursions/ExcursionSimilarSection";
@@ -7,6 +8,7 @@ import ExcursionFavoriteButton from "@/components/excursions/ExcursionFavoriteBu
 import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import ExcursionContentBlocks from "@/components/excursions/ExcursionContentBlocks";
 import ExcursionGuideSection from "@/components/excursions/ExcursionGuideSection";
+import ExcursionAvailableDatesSection from "@/components/excursions/ExcursionAvailableDatesSection";
 import ExcursionBookingConditionsSection from "@/components/excursions/ExcursionBookingConditionsSection";
 import ExcursionMeetingSection from "@/components/excursions/ExcursionMeetingSection";
 import ExcursionIncludedSection from "@/components/excursions/ExcursionIncludedSection";
@@ -19,7 +21,7 @@ import ExcursionMobileBookingBar from "@/components/excursions/ExcursionMobileBo
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
 import TourSection from "@/components/tour-detail/TourSection";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, MapPin, Share2 } from "lucide-react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { buildExcursionSectionLinks } from "@/lib/excursion-labels";
 import { formatExcursionDuration } from "@/lib/excursion-format";
@@ -35,6 +37,7 @@ export default function ExcursionDetailView({
   similarExcursions?: ExcursionListing[];
 }) {
   const { t } = useLocaleCurrency();
+  const [shared, setShared] = useState(false);
   useTrackEntityView("excursion", excursion.slug, {
     title: excursion.title,
     partner: excursion.partner,
@@ -58,6 +61,21 @@ export default function ExcursionDetailView({
   const prefersAffiliate =
     (excursion.partner === "sputnik8" && excursion.isBookable !== false) ||
     (excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured === false);
+
+  async function handleShare() {
+    const url = window.location.href;
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: excursion.title, url });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShared(true);
+        setTimeout(() => setShared(false), 2000);
+      }
+    } catch {
+      // User cancelled share or clipboard unavailable
+    }
+  }
 
   return (
     <ExcursionBookingProvider excursion={excursion}>
@@ -104,21 +122,30 @@ export default function ExcursionDetailView({
                 ) : null}
               </div>
 
-              <h1 className="mt-3 font-display text-3xl font-bold text-charcoal lg:text-4xl">
-                {excursion.title}
-              </h1>
+              <div className="mt-3 flex items-start justify-between gap-4">
+                <h1 className="min-w-0 flex-1 font-display text-3xl font-bold text-charcoal lg:text-4xl">
+                  {excursion.title}
+                </h1>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <ExcursionFavoriteButton
+                    excursion={excursion}
+                    className={favoriteHeaderButtonClass}
+                    iconClassName="h-4 w-4"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleShare}
+                    aria-label={shared ? "Ссылка скопирована" : "Поделиться"}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200/80 bg-white/90 text-charcoal shadow-sm transition-colors hover:border-sky/30 hover:bg-white"
+                  >
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
 
               {excursion.tagline ? (
                 <p className="mt-3 text-lg text-slate">{excursion.tagline}</p>
               ) : null}
-
-              <div className="mt-4 flex flex-wrap items-center gap-4">
-                <ExcursionFavoriteButton
-                  excursion={excursion}
-                  className={favoriteHeaderButtonClass}
-                  iconClassName="h-4 w-4"
-                />
-              </div>
 
               <div className="mt-4">
                 <ExcursionMetaBadges excursion={excursion} t={t} />
@@ -187,6 +214,8 @@ export default function ExcursionDetailView({
                     }
                   />
                 ) : null}
+
+                <ExcursionAvailableDatesSection />
 
                 <ExcursionBookingConditionsSection excursion={excursion} />
 

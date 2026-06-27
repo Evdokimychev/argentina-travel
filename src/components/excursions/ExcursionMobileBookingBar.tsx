@@ -5,7 +5,6 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
-import { excursionPriceSuffixKey } from "@/lib/excursion-listing-meta";
 import { useExcursionBooking } from "@/components/excursions/ExcursionBookingContext";
 
 type ExcursionMobileBookingBarProps = {
@@ -19,14 +18,14 @@ export default function ExcursionMobileBookingBar({
   const {
     excursion,
     priceUsd,
+    priceSuffix,
+    showFrom,
     selectedDate,
     selectedTime,
     openBookingPreview,
     submitButtonLabel,
   } = useExcursionBooking();
 
-  const showFrom = excursion.priceFrom !== false;
-  const priceUnit = excursion.priceUnit ?? "per_person";
   const listedPriceLabel =
     excursion.priceDisplay?.trim() ||
     (excursion.priceValue != null
@@ -58,7 +57,7 @@ export default function ExcursionMobileBookingBar({
               priceUsd={priceUsd}
               size="sm"
               showFrom={showFrom}
-              suffix={t(excursionPriceSuffixKey(priceUnit))}
+              suffix={priceSuffix}
             />
           ) : listedPriceLabel ? (
             <p className="truncate font-heading text-lg font-bold text-charcoal">{listedPriceLabel}</p>

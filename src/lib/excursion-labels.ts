@@ -42,6 +42,9 @@ export function buildExcursionSectionLinks(excursion: ExcursionDetail) {
   if (excursion.guide) {
     links.push({ id: "guide", labelKey: "excursions.section.guide" });
   }
+  if (excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured !== false) {
+    links.push({ id: "available-dates", labelKey: "excursions.section.availableDates" });
+  }
   links.push({ id: "booking-conditions", labelKey: "excursions.section.bookingConditions" });
   if ((excursion.reviews?.length ?? 0) > 0) {
     links.push({ id: "reviews", labelKey: "excursions.section.reviews" });

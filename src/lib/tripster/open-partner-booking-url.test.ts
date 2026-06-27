@@ -3,7 +3,7 @@ import { normalizePartnerBookingUrl } from "@/lib/tripster/open-partner-booking-
 
 describe("normalizePartnerBookingUrl", () => {
   it("keeps absolute Tripster checkout URLs unchanged", () => {
-    const url = "https://experience.tripster.ru/mfs/experience/booking/92278/?date=2026-09-01";
+    const url = "https://experience.tripster.ru/experience/booking/92278/?date=2026-09-01";
     expect(normalizePartnerBookingUrl(url)).toBe(url);
   });
 
@@ -16,7 +16,12 @@ describe("normalizePartnerBookingUrl", () => {
     ).toBe("https://goargentina.ru/api/affiliate/go/patagonia-t92278?start_date=2026-09-01&guests=2");
   });
 
-  it("does not treat Tripster order paths as openable checkout urls", () => {
-    expect(normalizePartnerBookingUrl("/orders/12345/")).toBe("/orders/12345/");
+  it("rewrites broken order paths to experience order checkout", () => {
+    expect(normalizePartnerBookingUrl("/orders/12345/")).toBe(
+      "https://experience.tripster.ru/experience/order/12345/"
+    );
+    expect(normalizePartnerBookingUrl("https://experience.tripster.ru/orders/12345/")).toBe(
+      "https://experience.tripster.ru/experience/order/12345/"
+    );
   });
 });

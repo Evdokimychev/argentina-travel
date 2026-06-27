@@ -119,6 +119,7 @@ export default function ExcursionBookingConditionsSection({
               quote: null,
               instantBooking: excursion.instantBooking,
               isBookable: excursion.isBookable,
+              priceDescription: excursion.priceDescription,
             })
           );
         }
@@ -131,7 +132,7 @@ export default function ExcursionBookingConditionsSection({
     return () => {
       cancelled = true;
     };
-  }, [excursion.slug, excursion.instantBooking, excursion.isBookable]);
+  }, [excursion.slug, excursion.instantBooking, excursion.isBookable, excursion.priceDescription]);
 
   const items = conditions?.items ?? [];
 

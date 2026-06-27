@@ -21,8 +21,11 @@ import {
 import {
   buildTripsterBookingContactPayload,
 } from "@/lib/tripster/booking-contact";
-import { resolveTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
-import { resolveTripsterAffiliateCheckoutUrl } from "@/lib/tripster/checkout-url-server";
+import { resolveTripsterCheckoutUrl, buildTripsterExperiencePageUrl } from "@/lib/tripster/checkout-url";
+import {
+  resolveTripsterAffiliateCheckoutUrl,
+  wrapTripsterUrlWithAffiliate,
+} from "@/lib/tripster/checkout-url-server";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 type BookingRequestBody = {
@@ -73,6 +76,7 @@ async function buildAffiliateFallbackUrl(input: {
   name?: string;
   email?: string;
   phone?: string;
+  messageToGuide?: string;
 }): Promise<string> {
   return resolveTripsterAffiliateCheckoutUrl(input.supabase, {
     experienceId: input.experienceId,
@@ -85,6 +89,7 @@ async function buildAffiliateFallbackUrl(input: {
     name: input.name,
     email: input.email,
     phone: input.phone,
+    messageToGuide: input.messageToGuide,
   });
 }
 
@@ -92,6 +97,47 @@ function resolveAffiliateFallbackReason(status?: number): string {
   if (status === 403) return "external_orders_forbidden";
   if (status === 401) return "external_orders_unauthorized";
   return "api_unavailable";
+}
+
+async function resolveTripsterExperienceMeta(
+  supabase: ReturnType<typeof createSupabaseAdminClient> | null,
+  experienceId: number
+): Promise<{ cityId: number | null; tripsterUrl: string }> {
+  const fallbackPageUrl = buildTripsterExperiencePageUrl(experienceId);
+
+  if (!supabase) {
+    return { cityId: null, tripsterUrl: fallbackPageUrl };
+  }
+
+  try {
+    const { data } = await supabase
+      .from("tripster_experiences")
+      .select("city_id, tripster_url")
+      .eq("id", experienceId)
+      .maybeSingle();
+
+    return {
+      cityId: data?.city_id ?? null,
+      tripsterUrl: data?.tripster_url?.trim() || fallbackPageUrl,
+    };
+  } catch {
+    return { cityId: null, tripsterUrl: fallbackPageUrl };
+  }
+}
+
+async function resolveAffiliateOrderUrl(
+  supabase: ReturnType<typeof createSupabaseAdminClient> | null,
+  input: {
+    experienceId: number;
+    cityId: number | null;
+    orderUrl: string;
+  }
+): Promise<string> {
+  return wrapTripsterUrlWithAffiliate(supabase, {
+    experienceId: input.experienceId,
+    cityId: input.cityId,
+    tripsterUrl: input.orderUrl,
+  });
 }
 
 async function persistTripsterRequest(
@@ -211,6 +257,8 @@ async function postTripsterBookingRequest(request: Request) {
     }
   }
 
+  const experienceMeta = await resolveTripsterExperienceMeta(admin, experienceId);
+
   const checkoutContext = {
     startDate: date,
     time,
@@ -218,21 +266,23 @@ async function postTripsterBookingRequest(request: Request) {
     name,
     email,
     phone,
-    fallbackUrl: excursion?.tripsterUrl ?? null,
+    messageToGuide,
+    fallbackUrl: experienceMeta.tripsterUrl,
   };
 
   const fallbackUrl = await buildAffiliateFallbackUrl({
     supabase: admin,
     experienceId,
     slug,
-    cityId: excursion?.cityId ?? null,
-    tripsterUrl: excursion?.tripsterUrl ?? null,
+    cityId: excursion?.cityId ?? experienceMeta.cityId,
+    tripsterUrl: experienceMeta.tripsterUrl,
     date,
     time,
     personsCount,
     name,
     email,
     phone,
+    messageToGuide,
   });
   const ticketOptions = await resolveBookingTicketOptions({
     excursionTicketOptions: excursion?.ticketOptions,
@@ -283,6 +333,18 @@ async function postTripsterBookingRequest(request: Request) {
       idempotencyKey
     );
 
+    const rawOrderUrl = resolveTripsterCheckoutUrl(
+      experienceId,
+      order.url ?? null,
+      checkoutContext,
+      order.id
+    );
+    const orderUrl = await resolveAffiliateOrderUrl(admin, {
+      experienceId,
+      cityId: excursion?.cityId ?? experienceMeta.cityId,
+      orderUrl: rawOrderUrl,
+    });
+
     await persistTripsterRequest({
       ...body,
       slug,
@@ -297,7 +359,7 @@ async function postTripsterBookingRequest(request: Request) {
       phone,
       status: order.status ?? "pending",
       orderId: order.id,
-      orderUrl: resolveTripsterCheckoutUrl(experienceId, order.url ?? null, checkoutContext),
+      orderUrl,
       priceSnapshot: order.price ?? null,
     });
 
@@ -306,13 +368,23 @@ async function postTripsterBookingRequest(request: Request) {
       mode: "tripster_order",
       orderId: order.id,
       status: order.status,
-      orderUrl: resolveTripsterCheckoutUrl(experienceId, order.url ?? null, checkoutContext),
+      orderUrl,
       price: order.price,
     });
   } catch (error) {
     if (error instanceof TripsterBookingError) {
       const isInfraError =
         error.status === 401 || error.status === 403 || error.status === 503;
+
+      console.warn("[tripster/booking-request] external_orders failed", {
+        status: error.status,
+        experienceId,
+        slug,
+        reason: isInfraError
+          ? resolveAffiliateFallbackReason(error.status)
+          : "api_booking_rejected",
+        details: error.details,
+      });
 
       await persistTripsterRequest({
         ...body,

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { CalendarDays, ClipboardCheck, ExternalLink, Pencil, Users, UsersRound } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,6 @@ import { validateBookingDates } from "@/components/tour-detail/BookingDateSelect
 import { useTourBooking } from "@/components/tour-detail/TourBookingContext";
 import BookingGuestLoginHint from "@/components/booking/BookingGuestLoginHint";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
-import { cn } from "@/lib/cn";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import { formatDateRange } from "@/lib/utils";
 import { formatTourists } from "@/lib/pluralize";
@@ -28,7 +27,9 @@ import {
   resolveTripsterFallbackDescription,
   resolveYouTravelFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
-import { resolveTripsterCheckoutUrl } from "@/lib/tripster/checkout-url";
+import { resolveTripsterBookingRedirectFromApi, buildTripsterPartnerOpenUrl } from "@/lib/tripster/checkout-url";
+import PartnerBookingSuccessPanel from "@/components/booking/PartnerBookingSuccessPanel";
+import BookingPreviewCard, { partnerTourPreviewFields } from "@/components/booking/BookingPreviewCard";
 import {
   isYouTravelPartnerDetail,
   parseYouTravelOfferDateId,
@@ -45,108 +46,6 @@ function RequiredMark() {
   );
 }
 
-
-function PreviewEditButton({ label, onClick }: { label: string; onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={label}
-      className="absolute right-1.5 top-1.5 rounded-lg p-1.5 text-slate opacity-0 transition-opacity hover:bg-white/90 hover:text-sky focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 group-hover:opacity-100 group-focus-within:opacity-100"
-    >
-      <Pencil className="h-3.5 w-3.5" aria-hidden />
-    </button>
-  );
-}
-
-function PartnerTourBookingPreviewCard({
-  dateLabel,
-  guestsLabel,
-  spotsLeft,
-  priceLabel,
-  perPersonLabel,
-  onEditDate,
-  onEditGuests,
-}: {
-  dateLabel: string;
-  guestsLabel: string;
-  spotsLeft?: number;
-  priceLabel: string;
-  perPersonLabel?: string;
-  onEditDate?: () => void;
-  onEditGuests?: () => void;
-}) {
-  return (
-    <section
-      aria-label="Предпросмотр заявки"
-      className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card"
-    >
-      <div className="flex items-start gap-3 border-b border-gray-100 bg-gradient-to-r from-sky/[0.06] to-white px-4 py-3.5">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky/10 text-sky">
-          <ClipboardCheck className="h-4 w-4" aria-hidden />
-        </span>
-        <div className="min-w-0">
-          <h3 className="text-sm font-semibold text-charcoal">Предпросмотр заявки</h3>
-          <p className="mt-0.5 text-xs leading-relaxed text-slate">
-            Проверьте дату, состав группы и сумму перед отправкой
-          </p>
-        </div>
-      </div>
-
-      <div className="space-y-3 p-4">
-        <div className="group relative flex items-start gap-3 rounded-xl border border-sky/15 bg-sky/[0.04] px-3.5 py-3 pr-10">
-          <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white text-sky shadow-sm">
-            <CalendarDays className="h-4 w-4" aria-hidden />
-          </span>
-          <div className="min-w-0">
-            <p className="text-xs text-slate">Дата заезда</p>
-            <p className="mt-0.5 text-sm font-semibold leading-snug text-charcoal">{dateLabel}</p>
-          </div>
-          {onEditDate ? <PreviewEditButton label="Изменить дату заезда" onClick={onEditDate} /> : null}
-        </div>
-
-        <div className="rounded-xl border border-gray-100 bg-surface-muted/35 px-3.5 py-3">
-          <div
-            className={cn(
-              "flex items-stretch",
-              spotsLeft != null && "divide-x divide-gray-200/80"
-            )}
-          >
-            <div className="group relative flex min-w-0 flex-1 items-start gap-2.5 pr-3">
-              <Users className="mt-0.5 h-4 w-4 shrink-0 text-slate" aria-hidden />
-              <div className="min-w-0 pr-6">
-                <p className="text-[11px] font-medium uppercase tracking-wide text-slate">Туристы</p>
-                <p className="mt-0.5 text-sm font-semibold leading-snug text-charcoal">{guestsLabel}</p>
-              </div>
-              {onEditGuests ? (
-                <PreviewEditButton label="Изменить число туристов" onClick={onEditGuests} />
-              ) : null}
-            </div>
-            {spotsLeft != null ? (
-              <div className="flex min-w-0 flex-1 items-start gap-2.5 pl-3">
-                <UsersRound className="mt-0.5 h-4 w-4 shrink-0 text-slate" aria-hidden />
-                <div className="min-w-0">
-                  <p className="text-[11px] font-medium uppercase tracking-wide text-slate">Свободно</p>
-                  <p className="mt-0.5 text-sm font-semibold leading-snug text-charcoal">{spotsLeft}</p>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </div>
-
-      <div className="flex items-end justify-between gap-3 border-t border-gray-100 bg-gray-50/70 px-4 py-3.5">
-        <div>
-          <p className="text-xs font-medium uppercase tracking-wide text-slate">Стоимость</p>
-          {perPersonLabel ? (
-            <p className="mt-1 text-[11px] leading-snug text-slate">{perPersonLabel}</p>
-          ) : null}
-        </div>
-        <p className="text-right font-heading text-xl font-bold leading-none text-charcoal">{priceLabel}</p>
-      </div>
-    </section>
-  );
-}
 
 function createPartnerContactForm(guests: number, user?: SessionUser | null) {
   const base = createInitialCheckoutForm(guests);
@@ -246,9 +145,25 @@ export default function PartnerTourBookingContactSection({
       name: form.contactFullName,
       email: form.contactEmail,
       phone: form.contactPhone,
+      messageToGuide: form.comments,
       profileCountry: user?.country,
     });
     if ("error" in contact) return externalBookingHref;
+
+    if (!isYouTravel) {
+      return normalizePartnerBookingUrl(
+        buildTripsterPartnerOpenUrl(tour.partnerExperienceId ?? 0, {
+          startDate,
+          time: parsedSlot?.time ?? "08:00",
+          guests,
+          name: contact.name,
+          email: contact.email,
+          phone: contact.phone,
+          messageToGuide: contact.messageToGuide,
+          fallbackUrl: externalBookingHref,
+        })
+      );
+    }
 
     return buildPartnerTourAffiliateFallbackPath({
       slug: tour.slug,
@@ -266,6 +181,7 @@ export default function PartnerTourBookingContactSection({
     customDate,
     dateMode,
     externalBookingHref,
+    form.comments,
     form.contactEmail,
     form.contactFullName,
     form.contactPhone,
@@ -277,6 +193,7 @@ export default function PartnerTourBookingContactSection({
     selectedDate?.startDate,
     selectedDateId,
     tour.slug,
+    tour.partnerExperienceId,
     user?.country,
   ]);
 
@@ -302,10 +219,50 @@ export default function PartnerTourBookingContactSection({
     setPopupBlocked(false);
   }
 
-  function completePartnerBookingTransition(fallbackUrl: string, reason?: string | null) {
+  function buildTripsterCheckoutContext(
+    contact: { name: string; email: string; phone: string; messageToGuide?: string },
+    startDate: string,
+    slotTime?: string
+  ) {
+    return {
+      startDate,
+      time: slotTime,
+      guests,
+      name: contact.name,
+      email: contact.email,
+      phone: contact.phone,
+      messageToGuide: contact.messageToGuide,
+      fallbackUrl: externalBookingHref,
+    };
+  }
+
+  function resolveTripsterRedirectUrl(
+    data: {
+      ok?: boolean;
+      mode?: string;
+      orderId?: number;
+      orderUrl?: string;
+      fallbackUrl?: string;
+      fallbackReason?: string;
+    },
+    contact: { name: string; email: string; phone: string; messageToGuide?: string },
+    startDate: string,
+    slotTime?: string
+  ): string {
+    return normalizePartnerBookingUrl(
+      resolveTripsterBookingRedirectFromApi({
+        response: data,
+        experienceId: tour.partnerExperienceId ?? 0,
+        context: buildTripsterCheckoutContext(contact, startDate, slotTime),
+      })
+    );
+  }
+
+  function completePartnerBookingTransition(openUrl: string, reason?: string | null) {
+    const normalized = normalizePartnerBookingUrl(openUrl);
     setSubmitted(true);
-    setPartnerBookingUrl(normalizePartnerBookingUrl(fallbackUrl));
-    setPopupBlocked(!openPartnerBookingUrl(fallbackUrl));
+    setPartnerBookingUrl(normalized);
+    setPopupBlocked(!openPartnerBookingUrl(normalized));
     trackBookingSubmit({
       productType: "tour",
       slug: tour.slug,
@@ -439,6 +396,7 @@ export default function PartnerTourBookingContactSection({
       const data = (await response.json()) as {
         ok?: boolean;
         mode?: string;
+        orderId?: number;
         orderUrl?: string;
         fallbackUrl?: string;
         fallbackReason?: string;
@@ -446,8 +404,13 @@ export default function PartnerTourBookingContactSection({
         details?: Record<string, string[] | { non_field_errors?: string[] }>;
       };
 
-      if (data.mode === "affiliate_fallback" && data.fallbackUrl) {
-        completePartnerBookingTransition(data.fallbackUrl, data.fallbackReason);
+      if (data.mode === "affiliate_fallback") {
+        completePartnerBookingTransition(
+          isYouTravel
+            ? (data.fallbackUrl ?? clientFallbackUrl)
+            : resolveTripsterRedirectUrl(data, contact, date, time),
+          data.fallbackReason
+        );
         return;
       }
 
@@ -464,7 +427,9 @@ export default function PartnerTourBookingContactSection({
         }
 
         completePartnerBookingTransition(
-          data.fallbackUrl ?? clientFallbackUrl,
+          isYouTravel
+            ? (data.fallbackUrl ?? clientFallbackUrl)
+            : resolveTripsterRedirectUrl(data, contact, date, time),
           data.fallbackReason ?? "partner_site_fallback"
         );
         return;
@@ -482,18 +447,7 @@ export default function PartnerTourBookingContactSection({
 
       const checkoutUrl = isYouTravel
         ? (data.orderUrl ?? clientFallbackUrl)
-        : resolveTripsterCheckoutUrl(
-            tour.partnerExperienceId ?? 0,
-            data.orderUrl ?? clientFallbackUrl,
-            {
-              startDate: date,
-              time,
-              guests,
-              name: contact.name,
-              email: contact.email,
-              phone: contact.phone,
-            }
-          );
+        : resolveTripsterRedirectUrl(data, contact, date, time);
       setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
       setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
       feedback.success({
@@ -513,38 +467,30 @@ export default function PartnerTourBookingContactSection({
 
   if (submitted) {
     return (
-      <div className="space-y-3">
-        <div className="rounded-xl border border-emerald-100 bg-emerald-50/60 px-4 py-3 text-sm leading-relaxed text-charcoal">
-          {PARTNER_TOUR_BOOKING_THANK_YOU}
-        </div>
-        {popupBlocked && partnerBookingUrl ? (
-          <p className="text-sm leading-relaxed text-slate">
-            Если вкладка с {partnerLabel} не открылась,{" "}
-            <a
-              href={partnerBookingUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-sky hover:underline"
-            >
-              откройте сайт партнёра вручную
-            </a>
-            .
-          </p>
-        ) : null}
-      </div>
+      <PartnerBookingSuccessPanel
+        message={PARTNER_TOUR_BOOKING_THANK_YOU}
+        partnerLabel={partnerLabel}
+        partnerBookingUrl={partnerBookingUrl}
+        popupBlocked={popupBlocked}
+        productType="tour"
+        onClose={closePartnerBookingPreview}
+      />
     );
   }
 
   return (
     <div className="space-y-4">
-      <PartnerTourBookingPreviewCard
-        dateLabel={previewSummary.dateLabel}
-        guestsLabel={previewSummary.guestsLabel}
-        spotsLeft={previewSummary.spotsLeft}
+      <BookingPreviewCard
+        description="Проверьте дату, состав группы и сумму перед отправкой"
+        fields={partnerTourPreviewFields({
+          dateLabel: previewSummary.dateLabel,
+          guestsLabel: previewSummary.guestsLabel,
+          spotsLeft: previewSummary.spotsLeft,
+          onEditDate: handleEditDate,
+          onEditGuests: handleEditGuests,
+        })}
         priceLabel={previewSummary.priceLabel}
-        perPersonLabel={previewSummary.perPersonLabel}
-        onEditDate={handleEditDate}
-        onEditGuests={handleEditGuests}
+        priceHint={previewSummary.perPersonLabel}
       />
 
       <div className="flex items-center justify-between gap-3">

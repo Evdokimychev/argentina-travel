@@ -43,6 +43,13 @@ function minutesToScheduleTime(totalMinutes: number): string {
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 }
 
+/** Adds minutes to HH:MM and wraps within a 24-hour day. */
+export function addMinutesToScheduleTime(time: string, minutesToAdd: number): string | null {
+  const startMinutes = parseTimeToMinutes(time);
+  if (startMinutes == null || minutesToAdd <= 0) return null;
+  return minutesToScheduleTime((startMinutes + minutesToAdd) % (24 * 60));
+}
+
 function slotPriceFields(slot: TripsterScheduleSlot): Pick<ExcursionScheduleSlot, "priceText" | "priceValue"> {
   return {
     priceText: slot.price?.price_text,

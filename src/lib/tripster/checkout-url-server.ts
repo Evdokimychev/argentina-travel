@@ -7,6 +7,7 @@ import {
 } from "@/lib/travelpayouts";
 import { buildTripsterPartnerBookingUrl } from "@/lib/tripster/partner-tour-utils";
 import {
+  buildTripsterExperiencePageUrl,
   isUsableTripsterCheckoutUrl,
   type TripsterCheckoutContext,
 } from "@/lib/tripster/checkout-url";
@@ -33,6 +34,39 @@ async function resolveTripsterCitySlug(
   return data?.slug ?? undefined;
 }
 
+/** Wraps any Tripster URL with Travelpayouts attribution when configured. */
+export async function wrapTripsterUrlWithAffiliate(
+  supabase: SupabaseClient | null,
+  input: {
+    experienceId: number;
+    cityId?: number | null;
+    tripsterUrl: string;
+  }
+): Promise<string> {
+  const target = input.tripsterUrl.trim();
+  if (!target || !isTravelpayoutsConfigured()) {
+    return target;
+  }
+
+  try {
+    const citySlug = supabase ? await resolveTripsterCitySlug(supabase, input.cityId) : undefined;
+    const link = await createTripsterAffiliateLink({
+      tripsterUrl: target,
+      experienceId: input.experienceId,
+      citySlug,
+    });
+
+    const wrapped = link.partnerUrl?.trim() || link.url?.trim() || "";
+    if (isUsableTripsterCheckoutUrl(wrapped)) {
+      return wrapped;
+    }
+  } catch {
+    // Fall back to direct Tripster URL.
+  }
+
+  return target;
+}
+
 /** Builds prefilled Tripster checkout and optionally wraps it with Travelpayouts attribution. */
 export async function resolveTripsterAffiliateCheckoutUrl(
   supabase: SupabaseClient | null,
@@ -46,16 +80,38 @@ export async function resolveTripsterAffiliateCheckoutUrl(
     name: input.name,
     email: input.email,
     phone: input.phone,
+    messageToGuide: input.messageToGuide,
   });
 
+  return wrapTripsterUrlWithAffiliate(supabase, {
+    experienceId: input.experienceId,
+    cityId: input.cityId,
+    tripsterUrl: bookingTarget,
+  });
+}
+
+type TripsterAffiliateExperienceInput = {
+  experienceId: number;
+  experienceSlug: string;
+  cityId?: number | null;
+  tripsterUrl?: string | null;
+};
+
+/** Opens the public Tripster experience page with optional Travelpayouts attribution. */
+export async function resolveTripsterAffiliateExperienceUrl(
+  supabase: SupabaseClient | null,
+  input: TripsterAffiliateExperienceInput
+): Promise<string> {
+  const pageTarget = buildTripsterExperiencePageUrl(input.experienceId, input.tripsterUrl);
+
   if (!isTravelpayoutsConfigured()) {
-    return bookingTarget;
+    return pageTarget;
   }
 
   try {
     const citySlug = supabase ? await resolveTripsterCitySlug(supabase, input.cityId) : undefined;
     const link = await createTripsterAffiliateLink({
-      tripsterUrl: bookingTarget,
+      tripsterUrl: pageTarget,
       experienceId: input.experienceId,
       citySlug,
     });
@@ -65,8 +121,8 @@ export async function resolveTripsterAffiliateCheckoutUrl(
       return wrapped;
     }
   } catch {
-    // Fall back to direct Tripster checkout.
+    // Fall back to direct Tripster page.
   }
 
-  return bookingTarget;
+  return pageTarget;
 }
