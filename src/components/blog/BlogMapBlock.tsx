@@ -3,8 +3,6 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
-import L from "leaflet";
-import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
 type BlogMapBlockProps = {
@@ -15,31 +13,40 @@ type BlogMapBlockProps = {
 
 export default function BlogMapBlock({ lat, lng, label }: BlogMapBlockProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
+  const mapRef = useRef<import("leaflet").Map | null>(null);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
-    const map = L.map(containerRef.current, { scrollWheelZoom: false, zoomControl: false });
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
-      maxZoom: 18,
-    }).addTo(map);
+    let cancelled = false;
 
-    L.marker([lat, lng], {
-      icon: L.divIcon({
-        className: "",
-        html: `<div class="places-detail-map-marker places-detail-map-marker--main"></div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
-      }),
-    }).addTo(map);
+    void import("leaflet").then((leafletModule) => {
+      if (cancelled || !containerRef.current || mapRef.current) return;
 
-    map.setView([lat, lng], 11);
-    mapRef.current = map;
+      const L = leafletModule.default;
+
+      const map = L.map(containerRef.current, { scrollWheelZoom: false, zoomControl: false });
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+        maxZoom: 18,
+      }).addTo(map);
+
+      L.marker([lat, lng], {
+        icon: L.divIcon({
+          className: "",
+          html: `<div class="places-detail-map-marker places-detail-map-marker--main"></div>`,
+          iconSize: [24, 24],
+          iconAnchor: [12, 12],
+        }),
+      }).addTo(map);
+
+      map.setView([lat, lng], 11);
+      mapRef.current = map;
+    });
 
     return () => {
-      map.remove();
+      cancelled = true;
+      mapRef.current?.remove();
       mapRef.current = null;
     };
   }, [lat, lng]);
