@@ -353,6 +353,41 @@ body {
   display: none;
 }
 
+@keyframes partner-info-gallery-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.partner-info-gallery-marquee {
+  animation: partner-info-gallery-marquee var(--marquee-duration, 60s) linear infinite;
+  will-change: transform;
+}
+
+.partner-info-gallery-marquee-paused {
+  animation-play-state: paused;
+}
+
+.partner-info-gallery-mask {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 2.5rem,
+    #000 calc(100% - 2.5rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 2.5rem,
+    #000 calc(100% - 2.5rem),
+    transparent 100%
+  );
+}
+
 /* E61 — motion keyframes */
 @keyframes motion-fade-in {
   from {

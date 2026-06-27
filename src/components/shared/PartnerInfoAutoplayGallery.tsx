@@ -1,11 +1,12 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { prefersReducedMotion } from "@/lib/motion";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
+import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
 
 type PartnerInfoAutoplayGalleryProps = {
   images: string[];
@@ -13,8 +14,44 @@ type PartnerInfoAutoplayGalleryProps = {
   className?: string;
 };
 
-const AUTOPLAY_MS = 5500;
-const SCROLL_ADVANCE_THROTTLE_MS = 1400;
+const SECONDS_PER_TILE = 4.5;
+
+type GalleryTileProps = {
+  src: string;
+  alt: string;
+  index: number;
+  priority?: boolean;
+  onOpen: (index: number) => void;
+};
+
+function GalleryTile({ src, alt, index, priority, onOpen }: GalleryTileProps) {
+  return (
+    <button
+      type="button"
+      className={cn(
+        "group relative aspect-[4/3] w-[9.25rem] shrink-0 snap-start overflow-hidden rounded-xl",
+        "bg-gray-100 ring-1 ring-black/[0.05] shadow-sm",
+        "transition-[transform,box-shadow] duration-300 ease-out",
+        "hover:scale-[1.03] hover:shadow-md motion-reduce:transform-none",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/50 focus-visible:ring-offset-2",
+        "sm:w-[10.75rem] md:w-[12rem] lg:w-[13rem]",
+      )}
+      onClick={() => onOpen(index)}
+      aria-label={`Открыть фото ${index + 1}`}
+    >
+      <SafeImage
+        src={buildSupabaseCdnUrl(src, { width: 640, quality: 80 })}
+        alt={alt}
+        fill
+        placeholderVariant="tour"
+        className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
+        sizes="(max-width: 640px) 152px, (max-width: 1024px) 172px, 208px"
+        loading={priority ? undefined : "lazy"}
+        priority={priority}
+      />
+    </button>
+  );
+}
 
 export function PartnerInfoAutoplayGallery({
   images,
@@ -22,155 +59,115 @@ export function PartnerInfoAutoplayGallery({
   className,
 }: PartnerInfoAutoplayGalleryProps) {
   const galleryImages = dedupeGalleryImages(images.filter(Boolean));
-  const [activeIndex, setActiveIndex] = useState(0);
-  const activeIndexRef = useRef(0);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  const [paused, setPaused] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const isVisibleRef = useRef(false);
-  const pausedRef = useRef(false);
-  const lastScrollAdvanceRef = useRef(0);
-  const hasMultiple = galleryImages.length > 1;
+  const isVisibleRef = useRef(true);
 
-  activeIndexRef.current = activeIndex;
+  const openLightbox = useCallback((index: number) => {
+    setLightboxIndex(index);
+  }, []);
 
-  const scrollToIndex = useCallback((index: number, behavior: ScrollBehavior = "smooth") => {
-    const el = scrollRef.current;
-    if (!el || el.clientWidth === 0) return;
-    const nextIndex = (index + galleryImages.length) % galleryImages.length;
-    el.scrollTo({
-      left: nextIndex * el.clientWidth,
-      behavior: prefersReducedMotion() ? "auto" : behavior,
-    });
-    setActiveIndex(nextIndex);
-  }, [galleryImages.length]);
-
-  const advance = useCallback(() => {
-    scrollToIndex(activeIndexRef.current + 1);
-  }, [scrollToIndex]);
-
-  const handleScroll = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el || el.clientWidth === 0) return;
-    const index = Math.round(el.scrollLeft / el.clientWidth);
-    if (index >= 0 && index < galleryImages.length && index !== activeIndex) {
-      setActiveIndex(index);
-    }
-  }, [activeIndex, galleryImages.length]);
+  useEffect(() => {
+    setReduceMotion(prefersReducedMotion());
+  }, []);
 
   useEffect(() => {
     const el = containerRef.current;
-    if (!el) return;
+    if (!el || reduceMotion) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         isVisibleRef.current = entry.isIntersecting;
+        setPaused(!entry.isIntersecting);
       },
-      { threshold: 0.35 },
+      { threshold: 0.2 },
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
-    if (!hasMultiple || prefersReducedMotion()) return;
-
-    const timer = window.setInterval(() => {
-      if (!isVisibleRef.current || pausedRef.current) return;
-      advance();
-    }, AUTOPLAY_MS);
-
-    return () => window.clearInterval(timer);
-  }, [advance, hasMultiple]);
-
-  useEffect(() => {
-    if (!hasMultiple || prefersReducedMotion()) return;
-
-    const onPageScroll = () => {
-      if (!isVisibleRef.current || pausedRef.current) return;
-      const now = Date.now();
-      if (now - lastScrollAdvanceRef.current < SCROLL_ADVANCE_THROTTLE_MS) return;
-      lastScrollAdvanceRef.current = now;
-      advance();
-    };
-
-    window.addEventListener("scroll", onPageScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onPageScroll);
-  }, [advance, hasMultiple]);
+  }, [reduceMotion]);
 
   if (galleryImages.length < 2) return null;
 
+  const marqueeDuration = galleryImages.length * SECONDS_PER_TILE;
+  const marqueeTrack = [...galleryImages, ...galleryImages];
+
   return (
-    <div
-      ref={containerRef}
-      className={cn("relative overflow-hidden rounded-2xl bg-gray-100 ring-1 ring-black/[0.04]", className)}
-      onMouseEnter={() => {
-        pausedRef.current = true;
-      }}
-      onMouseLeave={() => {
-        pausedRef.current = false;
-      }}
-      onFocusCapture={() => {
-        pausedRef.current = true;
-      }}
-      onBlurCapture={(event) => {
-        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
-          pausedRef.current = false;
-        }
-      }}
-    >
+    <>
       <div
-        ref={scrollRef}
-        onScroll={handleScroll}
-        className="scrollbar-hide flex aspect-[16/10] max-h-[280px] w-full snap-x snap-mandatory overflow-x-auto scroll-smooth motion-reduce:scroll-auto overscroll-x-contain sm:max-h-[320px]"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label={`Фото: ${title}`}
-        aria-live="polite"
+        ref={containerRef}
+        className={cn("relative", className)}
+        onMouseEnter={() => {
+          setPaused(true);
+        }}
+        onMouseLeave={() => {
+          if (isVisibleRef.current) setPaused(false);
+        }}
+        onFocusCapture={() => {
+          setPaused(true);
+        }}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null) && isVisibleRef.current) {
+            setPaused(false);
+          }
+        }}
       >
-        {galleryImages.map((src, index) => (
+        <div
+          className={cn(
+            "overflow-hidden rounded-2xl",
+            !reduceMotion && "partner-info-gallery-mask",
+            reduceMotion && "scrollbar-hide overflow-x-auto overscroll-x-contain",
+          )}
+          role="region"
+          aria-roledescription={reduceMotion ? "галерея" : "бегущая строка"}
+          aria-label={`Фото: ${title}`}
+        >
           <div
-            key={`${src}-info-${index}`}
-            className="relative h-full min-w-full shrink-0 snap-center snap-always overflow-hidden"
+            className={cn(
+              "flex w-max gap-3 py-0.5",
+              !reduceMotion && "partner-info-gallery-marquee gallery-carousel-autoplay",
+              !reduceMotion && paused && "partner-info-gallery-marquee-paused",
+            )}
+            style={
+              reduceMotion
+                ? undefined
+                : ({ "--marquee-duration": `${marqueeDuration}s` } as CSSProperties)
+            }
           >
-            <SafeImage
-              src={buildSupabaseCdnUrl(src, { width: 1200, quality: 82 })}
-              alt={index === 0 ? title : `${title} — ${index + 1}`}
-              fill
-              placeholderVariant="tour"
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 640px"
-              loading={index === 0 ? undefined : "lazy"}
-              priority={index === 0}
-            />
+            {(reduceMotion ? galleryImages : marqueeTrack).map((src, trackIndex) => {
+              const imageIndex = trackIndex % galleryImages.length;
+              return (
+                <GalleryTile
+                  key={`${src}-${trackIndex}`}
+                  src={src}
+                  alt={imageIndex === 0 ? title : `${title} — ${imageIndex + 1}`}
+                  index={imageIndex}
+                  priority={trackIndex === 0}
+                  onOpen={openLightbox}
+                />
+              );
+            })}
           </div>
-        ))}
+        </div>
+
+        <div
+          className="pointer-events-none absolute bottom-2.5 left-2.5 rounded-full bg-charcoal/55 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm"
+          aria-hidden
+        >
+          {galleryImages.length} фото
+        </div>
       </div>
 
-      {hasMultiple ? (
-        <div
-          className="pointer-events-none absolute bottom-3 left-3 rounded-full bg-charcoal/55 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm"
-          aria-hidden
-        >
-          {activeIndex + 1} / {galleryImages.length}
-        </div>
+      {lightboxIndex !== null ? (
+        <DetailGalleryLightbox
+          images={galleryImages}
+          title={title}
+          activeIndex={lightboxIndex}
+          onActiveIndexChange={setLightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+        />
       ) : null}
-
-      {hasMultiple ? (
-        <div
-          className="pointer-events-none absolute bottom-3 right-3 flex items-center gap-1.5"
-          aria-hidden
-        >
-          {galleryImages.map((_, index) => (
-            <span
-              key={index}
-              className={cn(
-                "rounded-full bg-white shadow-sm transition-all",
-                index === activeIndex ? "h-1.5 w-4 opacity-100" : "h-1.5 w-1.5 opacity-70",
-              )}
-            />
-          ))}
-        </div>
-      ) : null}
-    </div>
+    </>
   );
 }
