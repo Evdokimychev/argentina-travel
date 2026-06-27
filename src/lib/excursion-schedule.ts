@@ -38,9 +38,29 @@ function parseTimeToMinutes(time: string): number | null {
 }
 
 function minutesToScheduleTime(totalMinutes: number): string {
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+  const normalized = ((totalMinutes % (24 * 60)) + 24 * 60) % (24 * 60);
+  const hours = Math.floor(normalized / 60);
+  const minutes = normalized % 60;
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
+}
+
+/** First bookable grid point on or after `totalMinutes` (Tripster range slots use 30-min steps). */
+export function ceilMinutesToScheduleStep(
+  totalMinutes: number,
+  step = TRIPSTER_RANGE_SLOT_STEP_MINUTES
+): number {
+  if (step <= 0) return totalMinutes;
+  const remainder = totalMinutes % step;
+  return remainder === 0 ? totalMinutes : totalMinutes + (step - remainder);
+}
+
+/** Tripster `time_end: "00:00"` means end of the operating day, not start of day. */
+function resolveRangeEndMinutes(startMinutes: number, timeEnd: string): number | null {
+  const endMinutes = parseTimeToMinutes(timeEnd);
+  if (endMinutes == null) return null;
+  if (endMinutes === 0 && startMinutes > 0) return 24 * 60;
+  if (endMinutes < startMinutes) return 24 * 60;
+  return endMinutes;
 }
 
 /** Adds minutes to HH:MM and wraps within a 24-hour day. */
@@ -70,30 +90,40 @@ function expandRangeSlot(
   timeEnd: string
 ): ExcursionScheduleSlot[] {
   const startMinutes = parseTimeToMinutes(timeStart);
-  const endMinutes = parseTimeToMinutes(timeEnd);
+  const endMinutes = resolveRangeEndMinutes(startMinutes ?? -1, timeEnd);
   const priceFields = slotPriceFields(slot);
 
-  if (startMinutes == null || endMinutes == null || endMinutes < startMinutes) {
+  if (startMinutes == null || endMinutes == null) {
     return [
       {
         time: normalizeScheduleTime(timeStart),
-        timeEnd: normalizeScheduleTime(timeEnd),
+        timeEnd: timeEnd ? normalizeScheduleTime(timeEnd) : undefined,
         ...priceFields,
       },
     ];
   }
 
+  const gridStart = ceilMinutesToScheduleStep(startMinutes);
+  const lastMinute =
+    endMinutes >= 24 * 60 ? 24 * 60 - TRIPSTER_RANGE_SLOT_STEP_MINUTES : endMinutes;
+
+  if (gridStart > lastMinute) {
+    return [mapDiscreteSlot(slot, timeStart)];
+  }
+
   const slots: ExcursionScheduleSlot[] = [];
-  for (let minutes = startMinutes; minutes <= endMinutes; minutes += TRIPSTER_RANGE_SLOT_STEP_MINUTES) {
+  for (
+    let minutes = gridStart;
+    minutes <= lastMinute;
+    minutes += TRIPSTER_RANGE_SLOT_STEP_MINUTES
+  ) {
     slots.push({
       time: minutesToScheduleTime(minutes),
       ...priceFields,
     });
   }
 
-  return slots.length > 0
-    ? slots
-    : [mapDiscreteSlot(slot, timeStart)];
+  return slots.length > 0 ? slots : [mapDiscreteSlot(slot, timeStart)];
 }
 
 export function mapTripsterScheduleSlot(slot: TripsterScheduleSlot): ExcursionScheduleSlot[] {
