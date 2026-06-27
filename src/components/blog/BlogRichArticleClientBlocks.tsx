@@ -1,9 +1,18 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import BlogContentTable from "@/components/blog/BlogContentTable";
 import BlogFaqSection from "@/components/blog/BlogFaqSection";
-import BlogMapBlock from "@/components/blog/BlogMapBlock";
 import { BlogRichGalleryCarousel } from "@/components/blog/BlogRichGalleryCarousel";
+
+const BlogMapBlock = dynamic(() => import("@/components/blog/BlogMapBlock"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex h-[200px] items-center justify-center rounded-2xl border border-gray-100 bg-surface-muted text-sm text-slate sm:h-[240px]">
+      Загрузка карты…
+    </div>
+  ),
+});
 import type { BlogRichBlock } from "@/types/blog-rich-article";
 
 export function BlogRichGallerySection({
@@ -39,8 +48,4 @@ export default function BlogRichArticleClientBlock({ block }: { block: BlogRichB
     default:
       return null;
   }
-}
-
-export function isBlogRichClientBlock(block: BlogRichBlock): boolean {
-  return block.type === "table" || block.type === "faq" || block.type === "gallery" || block.type === "map";
 }

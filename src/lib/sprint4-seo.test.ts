@@ -31,6 +31,20 @@ describe("Sprint 4 SEO and performance", () => {
     expect(source).toMatch(/BlogRichArticleClientBlock/);
   });
 
+  it("BlogRichArticle uses server-safe rich block guard", () => {
+    const article = readFileSync(
+      resolve(process.cwd(), "src/components/blog/BlogRichArticle.tsx"),
+      "utf8",
+    );
+    expect(article).toMatch(/@\/lib\/blog-rich-client-blocks/);
+    expect(article).not.toMatch(/isBlogRichClientBlock[\s\S]*BlogRichArticleClientBlocks/);
+  });
+
+  it("blog index page does not mutate cookies during RSC render", () => {
+    const source = readFileSync(resolve(process.cwd(), "src/app/blog/page.tsx"), "utf8");
+    expect(source).not.toMatch(/cookieStore\.set\(/);
+  });
+
   it("CI runs lighthouse without SKIP_LIGHTHOUSE", () => {
     const ci = readFileSync(resolve(process.cwd(), ".github/workflows/ci.yml"), "utf8");
     expect(ci).toMatch(/lighthouse-ci\.mjs/);

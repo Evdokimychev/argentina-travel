@@ -13,8 +13,8 @@ import BlogExpandableSection from "@/components/blog/BlogExpandableSection";
 import { LinkifiedText } from "@/components/blog/BlogLinkifiedText";
 import BlogRichArticleClientBlock, {
   BlogRichGallerySection,
-  isBlogRichClientBlock,
 } from "@/components/blog/BlogRichArticleClientBlocks";
+import { isBlogRichClientBlock } from "@/lib/blog-rich-client-blocks";
 import BlogSeasonWidget from "@/components/blog/BlogSeasonWidget";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
 import PageImage from "@/components/media/PageImage";
