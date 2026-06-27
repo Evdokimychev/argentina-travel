@@ -25,8 +25,18 @@ export default function MapObjectPopup({ object, onClose }: Props) {
 
   if (isMobile) {
     return (
-      <Dialog open onOpenChange={(open) => !open && onClose()}>
-        <DialogContent bottomSheet className="max-w-lg p-0">
+      <Dialog
+        open
+        onOpenChange={(open) => {
+          if (!open) onClose();
+        }}
+      >
+        <DialogContent
+          bottomSheet
+          swipeToDismiss
+          showClose={false}
+          className="max-w-lg gap-0 overflow-hidden p-0 sm:max-h-[min(85vh,520px)]"
+        >
           <MapObjectCard object={object} onClose={onClose} variant="sheet" />
         </DialogContent>
       </Dialog>

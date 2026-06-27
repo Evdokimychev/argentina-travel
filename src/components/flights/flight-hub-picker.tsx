@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ArrowRightLeft, Plane } from "lucide-react";
+import { ArrowRightLeft, Plane, Search } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
@@ -11,6 +11,7 @@ import {
   type FlightHubOption,
   type FlightHubPickerSections,
 } from "@/lib/flights/home-flight-hubs";
+import { formatAirportPickerFromIata } from "@/lib/geo/format";
 import { cn } from "@/lib/cn";
 
 function HubOptionButton({
@@ -20,14 +21,19 @@ function HubOptionButton({
   hub: FlightHubOption;
   onSelect: (code: string) => void;
 }) {
+  const lines = formatAirportPickerFromIata(hub.code);
+
   return (
     <li>
       <button
         type="button"
-        className="flex w-full items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50"
+        className="flex w-full items-start justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50"
         onClick={() => onSelect(hub.code)}
       >
-        <span className="font-medium text-charcoal">{hub.label}</span>
+        <span className="min-w-0">
+          <span className="block text-sm font-medium text-charcoal">{lines.cityLine}</span>
+          <span className="mt-0.5 block text-xs text-slate">{lines.airportLine}</span>
+        </span>
         <span className="shrink-0 rounded-md bg-slate/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold leading-none tracking-wide text-slate">
           {hub.code}
         </span>
@@ -51,8 +57,11 @@ function filterHubSections(
   const q = query.trim().toLowerCase();
   if (!q) return sections;
 
-  const match = (hub: FlightHubOption) =>
-    hub.label.toLowerCase().includes(q) || hub.code.toLowerCase().includes(q);
+  const match = (hub: FlightHubOption) => {
+    const lines = formatAirportPickerFromIata(hub.code);
+    const haystack = [hub.label, hub.code, lines.cityLine, lines.airportLine].join(" ").toLowerCase();
+    return haystack.includes(q);
+  };
 
   return {
     popular: sections.popular.filter(match),
@@ -96,10 +105,12 @@ function HubOptionsList({
 }
 
 function HubValue({ code }: { code: string }) {
+  const lines = formatAirportPickerFromIata(code);
+
   return (
     <span className="truncate">
-      {getFlightHubLabel(code)}
-      <span className="ml-1 text-xs tabular-nums text-slate">{code}</span>
+      <span className="block truncate">{lines.cityLine}</span>
+      <span className="block truncate text-xs font-normal text-slate">{lines.airportLine}</span>
     </span>
   );
 }
@@ -122,6 +133,7 @@ export function HubPicker({
   triggerClassName?: string;
 }) {
   const [open, setOpen] = useState(false);
+  const [searchEnabled, setSearchEnabled] = useState(false);
   const [query, setQuery] = useState("");
   const sections = useMemo(() => getFlightHubPickerSections(kind), [kind]);
   const filteredSections = useMemo(
@@ -129,8 +141,27 @@ export function HubPicker({
     [sections, query],
   );
 
+  function handleOpenChange(nextOpen: boolean) {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setSearchEnabled(false);
+      setQuery("");
+    }
+  }
+
+  function handleSelect(code: string) {
+    onChange(code);
+    setOpen(false);
+    setSearchEnabled(false);
+    setQuery("");
+  }
+
+  function enableSearch() {
+    setSearchEnabled(true);
+  }
+
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <button
           type="button"
@@ -167,25 +198,30 @@ export function HubPicker({
         sideOffset={8}
         className="flex max-h-[min(360px,calc(100vh-12rem))] flex-col overflow-hidden p-0 sm:w-[min(360px,calc(100dvw-2rem))]"
       >
-        <div className="shrink-0 border-b border-gray-100 p-3">
-          <Input
-            placeholder={placeholder}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            autoFocus
-            className="h-9"
-          />
-        </div>
+        {searchEnabled ? (
+          <div className="shrink-0 border-b border-gray-100 p-3">
+            <Input
+              placeholder={placeholder}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              className="h-9"
+            />
+          </div>
+        ) : (
+          <div className="shrink-0 border-b border-gray-100 p-3">
+            <button
+              type="button"
+              onClick={enableSearch}
+              className="flex h-9 w-full items-center gap-2 rounded-lg border border-gray-200 px-3 text-sm text-slate transition-colors hover:border-sky/30 hover:bg-sky/[0.03]"
+            >
+              <Search className="h-4 w-4 shrink-0" aria-hidden />
+              Искать…
+            </button>
+          </div>
+        )}
         <ul className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
           {filteredSections ? (
-            <HubOptionsList
-              sections={filteredSections}
-              onSelect={(code) => {
-                onChange(code);
-                setOpen(false);
-                setQuery("");
-              }}
-            />
+            <HubOptionsList sections={filteredSections} onSelect={handleSelect} />
           ) : null}
         </ul>
       </PopoverContent>

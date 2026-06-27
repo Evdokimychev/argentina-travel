@@ -1,4 +1,5 @@
 import type { AviasalesPlace } from "@/lib/travelpayouts/aviasales/types";
+import { formatAirportPickerFromIata, getAirportByIata } from "@/lib/geo";
 
 const AUTocomplete_URL = "https://autocomplete.travelpayouts.com/places2";
 
@@ -34,8 +35,17 @@ function mapPlace(item: RawPlace): AviasalesPlace | null {
 }
 
 export function formatPlaceLabel(place: AviasalesPlace): string {
-  const parts = [place.name, place.countryName].filter(Boolean);
-  return `${parts.join(", ")} (${place.code})`;
+  const localAirport = getAirportByIata(place.code);
+  if (localAirport) {
+    const lines = formatAirportPickerFromIata(place.code);
+    return `${lines.cityLine}\n${lines.airportLine}`;
+  }
+
+  const city = place.cityName?.trim() || place.name.trim();
+  const country = place.countryName?.trim();
+  const airportName = place.type === "airport" ? place.name.trim() : place.name.trim();
+  const cityLine = country ? `${city}, ${country}` : city;
+  return `${cityLine}\n${airportName} (${place.code})`;
 }
 
 export async function searchAviasalesPlaces(

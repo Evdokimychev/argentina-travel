@@ -18,8 +18,8 @@ import { siteContainerClass } from "@/lib/site-container";
 import { scrollToSiteAnchor } from "@/lib/scroll-anchor";
 import {
   resolveArgentinaProvinceName,
-  resolveTourCityDisplay,
 } from "@/lib/argentina-cities";
+import { formatTourLocationCompactPlain } from "@/lib/geo";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 import { deriveTourReviewStats, stripStaticSeedReviews } from "@/lib/tour-review-stats";
 import { plainTextFromRichContent } from "@/lib/rich-text";
@@ -39,12 +39,13 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
   const isPartnerTour = isPartnerTourDetail(tour);
   const reviewStats = deriveTourReviewStats(stripStaticSeedReviews(tour.reviews));
   const ratingDisplay = resolveTourRatingLabel(reviewStats);
-  const cityDisplay = resolveTourCityDisplay({
+  const cityDisplay = formatTourLocationCompactPlain({
     destination: canonicalTour?.geography.destination,
     mainLocation: canonicalTour?.geography.mainLocation,
     cities: canonicalTour?.geography.cities,
     region: tour.region,
     country: tour.country,
+    title: tour.title,
   });
   const provinceLabel = resolveArgentinaProvinceName(tour.region);
   const routeEndpoints = resolveTourEndpointLabels(tour);
@@ -148,7 +149,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
 
               <p className="inline-flex items-center gap-1.5 text-sm text-slate">
                 <MapPin className="h-4 w-4 shrink-0 text-sky/70" aria-hidden />
-                {cityDisplay}
+                <span>{cityDisplay}</span>
               </p>
 
               {showRouteEndpoints ? (

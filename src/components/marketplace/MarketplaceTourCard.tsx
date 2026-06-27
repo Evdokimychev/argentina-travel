@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Flame, MapPin, UserRound } from "lucide-react";
+import { Flame, UserRound } from "lucide-react";
 import FavoriteButton from "@/components/profile/FavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { TourListing, TourBadge } from "@/types";
@@ -20,7 +20,7 @@ import {
   ContentCardOverlayLink,
   ContentCardTitle,
 } from "@/components/content/ContentCard";
-import { resolveTourCityDisplay } from "@/lib/argentina-cities";
+import { formatTourLocationCompactPlain } from "@/lib/geo";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { buildOrganizerPublicHref } from "@/lib/organizer-public";
 import { avatarAlt, tourCoverAlt } from "@/lib/media-alt-text";
@@ -62,7 +62,7 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
       ? buildOrganizerPublicHref(tour.organizer.slug ?? tour.organizerOwnerId!)
       : null;
   const organizerLabel = formatShortDisplayName(tour.organizer.name);
-  const cityDisplay = resolveTourCityDisplay(tour);
+  const cityDisplay = formatTourLocationCompactPlain(tour);
   const isPartnerTour = isPartnerTourListing(tour);
   const partnerBadge = resolvePartnerTourBadge(tour);
 
@@ -142,7 +142,6 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
         <ContentCardBody>
           <div className="flex items-center justify-between gap-3 text-sm">
             <span className="flex min-w-0 items-center gap-1.5 text-slate">
-              <MapPin className="h-3.5 w-3.5 shrink-0 text-slate/70" aria-hidden />
               <span className="truncate">{cityDisplay}</span>
             </span>
             {ratingDisplay.hasReviews ? (

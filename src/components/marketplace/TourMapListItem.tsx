@@ -2,14 +2,13 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
 import { ReviewRatingBadge } from "@/components/ui/review-rating-badge";
 import { TourListing } from "@/types";
 import TourPublicPriceDisplay from "@/components/tour-detail/TourPublicPriceDisplay";
 import { cn } from "@/lib/cn";
 import { tourCardShellClass } from "@/lib/tour-card-shell";
 import { formatDays } from "@/lib/pluralize";
-import { resolveTourCityDisplay } from "@/lib/argentina-cities";
+import { formatTourLocationCompactPlain } from "@/lib/geo";
 import { resolveTourRatingLabel } from "@/lib/tour-public-display";
 
 interface TourMapListItemProps {
@@ -26,7 +25,7 @@ export default function TourMapListItem({
   listItemRef,
 }: TourMapListItemProps) {
   const ratingDisplay = resolveTourRatingLabel(tour);
-  const cityDisplay = resolveTourCityDisplay(tour);
+  const cityDisplay = formatTourLocationCompactPlain(tour);
 
   return (
     <li ref={listItemRef} data-tour-id={tour.id}>
@@ -57,10 +56,7 @@ export default function TourMapListItem({
             <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-charcoal">
               {tour.title}
             </h3>
-            <p className="mt-1 flex items-center gap-1 text-xs text-slate">
-              <MapPin className="h-3 w-3 shrink-0" aria-hidden />
-              <span className="truncate">{cityDisplay}</span>
-            </p>
+            <p className="mt-1 truncate text-xs text-slate">{cityDisplay}</p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs text-slate">
               {ratingDisplay.hasReviews ? (
                 <ReviewRatingBadge

@@ -4,6 +4,14 @@ import {
   ARGENTINA_PROVINCE_ALIASES,
   type ArgentinaCity,
 } from "@/data/argentina-cities";
+import {
+  formatTourLocationCompactPlain,
+  resolveTourPrimaryLocation,
+  type TourLocationInput,
+} from "@/lib/geo";
+
+export type { TourLocationInput };
+export { resolveTourPrimaryLocation };
 
 export const ARGENTINA_COUNTRY_LABEL = "Аргентина";
 
@@ -90,13 +98,7 @@ export const ARGENTINA_CITY_NAMES = ARGENTINA_CITIES.map((city) => city.nameRu).
   a.localeCompare(b, "ru")
 );
 
-export function resolveTourCityDisplay(input: {
-  destination?: string | null;
-  region?: string | null;
-  country?: string | null;
-  cities?: string[] | null;
-  mainLocation?: string | null;
-}): string {
+export function resolveTourCityDisplay(input: TourLocationInput): string {
   const country = input.country?.trim() || ARGENTINA_COUNTRY_LABEL;
 
   const rawCandidate =
@@ -109,7 +111,12 @@ export function resolveTourCityDisplay(input: {
     return rawCandidate;
   }
 
-  const cityName = resolveArgentinaCityName(rawCandidate || input.region || "");
+  const { primary, locationCount } = resolveTourPrimaryLocation(input);
+  if (locationCount > 1) {
+    return formatTourLocationCompactPlain(input);
+  }
+
+  const cityName = primary || resolveArgentinaCityName(rawCandidate || input.region || "");
   return formatCityWithCountry(cityName, country);
 }
 

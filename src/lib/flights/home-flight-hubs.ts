@@ -1,5 +1,6 @@
 import { FLIGHT_POPULAR_ROUTES } from "@/data/flight-popular-routes";
 import { ARGENTINA_DOMESTIC_AIRPORTS } from "@/data/argentina-domestic-routes";
+import { getAirportDisplayName, getAirportByIata } from "@/lib/geo/airports";
 
 export type FlightHubOption = {
   code: string;
@@ -169,7 +170,15 @@ export function getFlightHubOptions(kind: "origin" | "destination" = "destinatio
 export function getFlightHubLabel(code: string): string {
   const normalized = code.trim().toUpperCase();
   if (normalized === "AEP" || normalized === "EZE") return BUE_METRO.label;
+  const geoName = getAirportDisplayName(normalized);
+  if (geoName !== normalized) return geoName;
   return ALL_HUB_BY_CODE.get(normalized)?.label ?? normalized;
+}
+
+export function getFlightHubAirportName(code: string): string | undefined {
+  const normalized = code.trim().toUpperCase();
+  const airport = getAirportByIata(normalized === "AEP" || normalized === "EZE" ? normalized : normalized);
+  return airport?.nameRu;
 }
 
 export const DEFAULT_HOME_FLIGHT_ORIGIN = "MOW";
