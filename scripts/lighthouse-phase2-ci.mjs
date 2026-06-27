@@ -2,18 +2,24 @@
 /**
  * Sprint 11 — full public-route Lighthouse sample (perf + a11y).
  *
- * Usage (after npm run build):
+ * Usage (local, after npm run build):
  *   node scripts/lighthouse-phase2-ci.mjs
+ *
+ * Usage (production CDN — no local server):
+ *   LIGHTHOUSE_BASE_URL=https://www.goargentina.ru node scripts/lighthouse-phase2-ci.mjs
+ *   npm run lighthouse:phase2:prod
  */
-import { spawn } from "node:child_process";
-import fs from "node:fs";
+import { spawn, spawnSync } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const PORT = Number(process.env.LIGHTHOUSE_PORT ?? 3000);
-const BASE_URL = `http://127.0.0.1:${PORT}`;
+const envBase = process.env.LIGHTHOUSE_BASE_URL?.replace(/\/$/, "");
+const isExternalBase =
+  Boolean(envBase) && !/^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(envBase);
+const BASE_URL = envBase ?? `http://127.0.0.1:${PORT}`;
 const START_TIMEOUT_MS = 90_000;
 
 export const LIGHTHOUSE_PHASE2_PATHS = [
@@ -45,22 +51,8 @@ async function waitForServer(url) {
   return false;
 }
 
-const server = spawn("npm", ["run", "start", "--", "-p", String(PORT)], {
-  cwd: root,
-  stdio: "ignore",
-  env: { ...process.env, PORT: String(PORT) },
-});
-
-let auditStatus = 1;
-
-try {
-  const ready = await waitForServer(`${BASE_URL}/`);
-  if (!ready) {
-    console.error(`Server did not become ready at ${BASE_URL}/ within ${START_TIMEOUT_MS}ms`);
-    process.exit(1);
-  }
-
-  const audit = spawn("node", ["scripts/lighthouse-blog-cwv.mjs"], {
+function runAudit() {
+  return spawnSync("node", ["scripts/lighthouse-blog-cwv.mjs"], {
     cwd: root,
     stdio: "inherit",
     env: {
@@ -68,15 +60,42 @@ try {
       LIGHTHOUSE_BASE_URL: BASE_URL,
       LIGHTHOUSE_SAMPLE_PATHS: LIGHTHOUSE_PHASE2_PATHS.join(","),
       LIGHTHOUSE_CATEGORIES: "performance,accessibility",
-      LIGHTHOUSE_REPORT_FILE: "lighthouse-phase2-sample-last.json",
+      LIGHTHOUSE_REPORT_FILE: isExternalBase
+        ? "lighthouse-phase2-prod-last.json"
+        : "lighthouse-phase2-sample-last.json",
     },
-  });
+  }).status ?? 1;
+}
 
-  auditStatus = await new Promise((resolve) => {
-    audit.on("close", (code) => resolve(code ?? 1));
-  });
+let auditStatus = 1;
+let server = null;
+
+try {
+  if (isExternalBase) {
+    console.log(`Lighthouse phase2 against ${BASE_URL} (external, no local server)`);
+    const ready = await waitForServer(`${BASE_URL}/`);
+    if (!ready) {
+      console.error(`Target not reachable: ${BASE_URL}/`);
+      process.exit(1);
+    }
+    auditStatus = runAudit();
+  } else {
+    server = spawn("npm", ["run", "start", "--", "-p", String(PORT)], {
+      cwd: root,
+      stdio: "ignore",
+      env: { ...process.env, PORT: String(PORT) },
+    });
+
+    const ready = await waitForServer(`${BASE_URL}/`);
+    if (!ready) {
+      console.error(`Server did not become ready at ${BASE_URL}/ within ${START_TIMEOUT_MS}ms`);
+      process.exit(1);
+    }
+
+    auditStatus = runAudit();
+  }
 } finally {
-  server.kill("SIGTERM");
+  server?.kill("SIGTERM");
 }
 
 process.exit(auditStatus);

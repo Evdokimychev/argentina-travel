@@ -1,11 +1,8 @@
-import { COOKIE_CONSENT_EVENT, hasCookieConsent } from "@/lib/cookie-consent";
+import { COOKIE_CONSENT_EVENT, hasPersonalizationConsent } from "@/lib/cookie-consent";
 
-/**
- * E79 stub — E80 расширит категории согласия (аналитика / персонализация).
- * Сейчас персонализация привязана к общему баннеру cookies.
- */
+/** Персонализация и interaction-tracking — только при явном согласии на категорию. */
 export function hasInteractionTrackingConsent(): boolean {
-  return hasCookieConsent();
+  return hasPersonalizationConsent();
 }
 
 export { COOKIE_CONSENT_EVENT };

@@ -51,6 +51,7 @@
     "lighthouse:blog": "node scripts/lighthouse-blog-cwv.mjs",
     "lighthouse:blog:ci": "node scripts/lighthouse-ci.mjs",
     "lighthouse:phase2": "node scripts/lighthouse-phase2-ci.mjs",
+    "lighthouse:phase2:prod": "LIGHTHOUSE_BASE_URL=https://www.goargentina.ru node scripts/lighthouse-phase2-ci.mjs",
     "bundle:report": "node scripts/bundle-report.mjs",
     "sync-rich-articles": "node scripts/sync-blog-rich-articles-from-md.mjs",
     "sync-rich-articles:check": "node scripts/sync-blog-rich-articles-from-md.mjs --check",

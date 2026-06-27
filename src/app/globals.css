@@ -112,6 +112,8 @@
   /* Site chrome */
   --site-header-full-height: var(--token-site-header-full-height);
   --site-header-height: var(--token-site-header-height);
+  /* Резерв высоты до hydrate TourSectionNav — снижает CLS sticky-панелей */
+  --tour-section-nav-height: 52px;
   --site-header-offset-ease: var(--token-transition-header);
   --transition-fast: var(--token-transition-fast);
   --transition-base: var(--token-transition-base);
