@@ -116,7 +116,7 @@ export default function ExcursionDetailView({
       <ExcursionSectionNav links={sectionLinks} />
 
       <div className={cn(siteContainerClass, "pt-6")}>
-          <div className="grid gap-8 lg:grid-cols-[1fr_22rem] lg:items-start">
+          <div className="grid gap-6 lg:grid-cols-[1fr_360px] xl:gap-10">
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-3 text-sm text-slate">
                 <span className="inline-flex items-center gap-1">
