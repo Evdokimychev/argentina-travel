@@ -67,7 +67,7 @@ export default function PartnerBookingSuccessPanel({
             rel="noopener noreferrer"
             className="font-medium text-sky hover:underline"
           >
-            откройте сайт партнёра вручную
+            откройте страницу оформления вручную
           </a>
           .
         </p>

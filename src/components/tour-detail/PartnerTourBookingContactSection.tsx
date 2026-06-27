@@ -34,6 +34,7 @@ import {
   isYouTravelPartnerDetail,
   parseYouTravelOfferDateId,
 } from "@/lib/youtravel/partner-tour-utils";
+import { resolveYouTravelBookingRedirectFromApi } from "@/lib/youtravel/checkout-url";
 import type { TourDetail } from "@/types";
 import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
 
@@ -396,7 +397,7 @@ export default function PartnerTourBookingContactSection({
       const data = (await response.json()) as {
         ok?: boolean;
         mode?: string;
-        orderId?: number;
+        orderId?: number | string;
         orderUrl?: string;
         fallbackUrl?: string;
         fallbackReason?: string;
@@ -446,7 +447,11 @@ export default function PartnerTourBookingContactSection({
       });
 
       const checkoutUrl = isYouTravel
-        ? (data.orderUrl ?? clientFallbackUrl)
+        ? resolveYouTravelBookingRedirectFromApi({
+            response: data,
+            tourId: tour.partnerExperienceId ?? 0,
+            fallbackUrl: clientFallbackUrl,
+          })
         : resolveTripsterRedirectUrl(data, contact, date, time);
       setPartnerBookingUrl(normalizePartnerBookingUrl(checkoutUrl));
       setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
@@ -573,7 +578,7 @@ export default function PartnerTourBookingContactSection({
         </Button>
         {prefilledBookingHref ? (
           <p className="text-center text-xs leading-relaxed text-slate">
-            Если автоматическая отправка не сработала, можно{" "}
+            Если не удалось открыть страницу оформления автоматически, можно{" "}
             <a
               href={prefilledBookingHref}
               target="_blank"
@@ -582,7 +587,7 @@ export default function PartnerTourBookingContactSection({
             >
               открыть {partnerLabel} вручную
             </a>{" "}
-            — дата, число туристов и контакты подставятся автоматически.
+            — дата, состав группы и контакты подставятся автоматически.
           </p>
         ) : null}
         <Button

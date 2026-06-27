@@ -15,6 +15,10 @@ import {
 import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-contact";
 import { buildYouTravelAffiliateFallbackPath } from "@/lib/youtravel/partner-tour-utils";
 import { parseYouTravelTourSlug } from "@/lib/youtravel/partner-tour-mapper";
+import {
+  buildYouTravelCheckoutUrl,
+  resolveYouTravelBookingRedirectFromApi,
+} from "@/lib/youtravel/checkout-url";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 type BookingRequestBody = {
@@ -190,22 +194,37 @@ async function postYouTravelBookingRequest(request: Request) {
 
     const orderId = order.id != null ? String(order.id) : null;
     const orderStatus = order.status?.trim() || "submitted";
+    const orderUrl =
+      orderId && tourId > 0
+        ? buildYouTravelCheckoutUrl(tourId, orderId)
+        : order.url?.trim() || null;
 
     await persistYouTravelRequest({
       ...persistBase,
       status: orderStatus,
       orderId,
-      orderUrl: order.url ?? null,
+      orderUrl,
       priceSnapshot: order.price ?? null,
     });
 
-    if (order.url) {
+    const redirectUrl = resolveYouTravelBookingRedirectFromApi({
+      response: {
+        ok: true,
+        mode: "youtravel_order",
+        orderId,
+        orderUrl,
+      },
+      tourId,
+      fallbackUrl,
+    });
+
+    if (redirectUrl) {
       return NextResponse.json({
         ok: true,
         mode: "youtravel_order",
         orderId,
         status: orderStatus,
-        orderUrl: order.url,
+        orderUrl: redirectUrl,
         price: order.price,
       });
     }
