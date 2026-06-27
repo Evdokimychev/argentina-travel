@@ -4,11 +4,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
-import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
 import { tourDetailGalleryMobileAspectClass } from "@/lib/tour-detail-ui";
+import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
 import { GalleryMosaicDesktop } from "@/components/shared/GalleryMosaicDesktop";
 
 interface TourDetailGalleryProps {
@@ -248,19 +248,6 @@ export default function TourDetailGallery({
   const galleryImages = dedupeGalleryImages(images.filter(Boolean));
   const mosaicSeed = layoutSeed ?? title;
 
-  useSiteHeaderOverlayLock(lightbox);
-
-  const goPrev = useCallback(
-    () => setActiveIndex((index) => (index - 1 + galleryImages.length) % galleryImages.length),
-    [galleryImages.length]
-  );
-  const goNext = useCallback(
-    () => setActiveIndex((index) => (index + 1) % galleryImages.length),
-    [galleryImages.length]
-  );
-
-  useGalleryKeyboard(lightbox, goPrev, goNext, () => setLightbox(false));
-
   const scrollCarouselToIndex = useCallback((index: number) => {
     setActiveIndex(index);
     const el = carouselScrollRef.current;
@@ -318,61 +305,14 @@ export default function TourDetailGallery({
       />
 
       {lightbox ? (
-        <div
-          className="fixed inset-0 z-[100] flex flex-col bg-charcoal/95"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Просмотр фото тура"
-        >
-          <div className="flex items-center justify-between p-4 text-white">
-            <span className="text-sm tabular-nums">
-              {activeIndex + 1} / {galleryImages.length}
-            </span>
-            <button
-              type="button"
-              onClick={() => setLightbox(false)}
-              className="min-h-[44px] rounded-full bg-white/10 px-4 py-2 text-sm hover:bg-white/20"
-            >
-              Закрыть
-            </button>
-          </div>
-          <div className="relative flex-1">
-            {galleryImages.length > 1 ? (
-              <>
-                <button
-                  type="button"
-                  onClick={goPrev}
-                  aria-label="Предыдущее фото"
-                  className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:left-6"
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </button>
-                <button
-                  type="button"
-                  onClick={goNext}
-                  aria-label="Следующее фото"
-                  className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20 md:right-6"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              </>
-            ) : null}
-            <Image
-              src={buildSupabaseCdnUrl(galleryImages[activeIndex], { width: 2200, quality: 84 })}
-              alt={`${title} — ${activeIndex + 1}`}
-              fill
-              className="object-contain p-4"
-              sizes="100vw"
-              priority
-            />
-          </div>
-          <GalleryThumbnailStrip
-            images={galleryImages}
-            title={title}
-            activeIndex={activeIndex}
-            onSelect={setActiveIndex}
-          />
-        </div>
+        <DetailGalleryLightbox
+          images={galleryImages}
+          title={title}
+          activeIndex={activeIndex}
+          onActiveIndexChange={setActiveIndex}
+          onClose={() => setLightbox(false)}
+          ariaLabel="Просмотр фото тура"
+        />
       ) : null}
     </div>
   );

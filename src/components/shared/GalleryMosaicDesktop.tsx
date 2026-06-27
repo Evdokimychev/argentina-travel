@@ -71,7 +71,7 @@ export function GalleryMosaicDesktop({
             <span className="pointer-events-none absolute inset-0 bg-charcoal/0 transition-colors group-hover:bg-charcoal/[0.06]" />
 
             {cell.showAllOverlay && hasMultiple ? (
-              <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-charcoal shadow-md backdrop-blur-sm">
+              <span className="pointer-events-none absolute bottom-0 right-0 inline-flex items-center gap-2 rounded-tl-2xl bg-white/95 px-4 py-2.5 text-sm font-medium text-charcoal shadow-md backdrop-blur-sm">
                 <Images className="h-4 w-4 text-sky" strokeWidth={1.75} aria-hidden />
                 Все фото ({mosaicImages.length})
               </span>

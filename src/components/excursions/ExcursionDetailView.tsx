@@ -21,6 +21,7 @@ import ExcursionBookingModal from "@/components/excursions/ExcursionBookingModal
 import ExcursionMobileBookingBar from "@/components/excursions/ExcursionMobileBookingBar";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import TourDetailGallery from "@/components/tour-detail/TourDetailGallery";
+import { PartnerInfoAutoplayGallery } from "@/components/shared/PartnerInfoAutoplayGallery";
 import TourSection from "@/components/tour-detail/TourSection";
 import { Clock, MapPin, Share2 } from "lucide-react";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
@@ -155,6 +156,15 @@ export default function ExcursionDetailView({
               <div className="mt-6">
                 <ExcursionStatsSection excursion={excursion} />
               </div>
+
+              {excursion.partner && galleryImages.length >= 2 ? (
+                <div className="mt-6">
+                  <PartnerInfoAutoplayGallery
+                    images={galleryImages}
+                    title={excursion.title}
+                  />
+                </div>
+              ) : null}
 
               <div className="mt-6 lg:hidden">
                 <ExcursionBookingPanel />

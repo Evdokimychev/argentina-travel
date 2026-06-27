@@ -50,6 +50,7 @@ import ReviewPromptBanner from "./ReviewPromptBanner";
 import TourReviewPanel from "./TourReviewPanel";
 import TourDetailHeader from "./TourDetailHeader";
 import TourDetailGallery from "./TourDetailGallery";
+import { PartnerInfoAutoplayGallery } from "@/components/shared/PartnerInfoAutoplayGallery";
 import { buildTourSectionLinks } from "./tour-section-links";
 import { tourHasAccommodation } from "@/lib/tour-accommodation";
 import { getTourSectionOrganizerComment } from "@/lib/tour-detail-section-comments";
@@ -213,6 +214,9 @@ export default function TourDetailView({
                 <>
                   {partnerSections.stats ? (
                     <PartnerTourStatsSection tour={tour} content={partnerContent} />
+                  ) : null}
+                  {tour.gallery.length >= 2 ? (
+                    <PartnerInfoAutoplayGallery images={tour.gallery} title={tour.title} />
                   ) : null}
                   {partnerSections.description ? (
                     <PartnerTourDescriptionSection content={partnerContent} />
