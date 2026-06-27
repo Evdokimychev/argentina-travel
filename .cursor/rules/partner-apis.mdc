@@ -1,0 +1,46 @@
+---
+description: Правила работы с партнёрскими API (Tripster, Travelpayouts, YouTravel, Sputnik8). Читать перед изменениями интеграций, checkout URL и prefilling.
+globs:
+  - src/lib/tripster/**
+  - src/lib/travelpayouts/**
+  - src/lib/youtravel/**
+  - src/lib/sputnik8/**
+  - src/app/api/tripster/**
+  - src/app/api/youtravel/**
+  - src/app/api/affiliate/**
+  - src/components/excursions/ExcursionBooking*
+  - src/components/tour-detail/PartnerTourBooking*
+  - scripts/tripster-*.mjs
+  - scripts/youtravel-*.mjs
+  - scripts/sputnik8-*.mjs
+alwaysApply: false
+---
+
+# Партнёрские API — обязательный контекст
+
+Перед изменениями кода интеграций **прочитай** соответствующий справочник:
+
+- `docs/integrations/README.md` — обзор
+- `docs/integrations/tripster.md` — **External Orders, prefilling, /orders/ vs /experience/order/**
+- `docs/integrations/travelpayouts.md` — Links API, tp.media wrapper
+- `docs/integrations/youtravel.md` — booking + fallback
+- `docs/integrations/sputnik8.md` — affiliate-only UX
+
+## Tripster — критические правила
+
+1. **Никогда** открывать `/orders/{id}/` — только `/experience/order/{id}/` (`checkout-url.ts`).
+2. Fallback checkout: `/experience/booking/{id}/` + query params; `time` в формате `HH:MM:SS`.
+3. При `affiliate_fallback` клиент использует **server `fallbackUrl` as-is** — не пересобирать локально.
+4. Успешный order URL оборачивать в Travelpayouts на сервере (`wrapTripsterUrlWithAffiliate`).
+5. External Orders требует заголовок `Idempotency-Key`.
+
+## Travelpayouts
+
+- Production URL партнёров — через `createTripsterAffiliateLink` / Links API, не «голые» ссылки.
+- tp.media: целевой URL в параметре `u`, сохранять query string prefilling.
+
+## Тесты после изменений
+
+- `src/lib/tripster/checkout-url.test.ts`
+- `src/lib/tripster/open-partner-booking-url.test.ts`
+- `tests/e2e/tripster-partner-invariants.spec.ts` (если менялся checkout flow)
