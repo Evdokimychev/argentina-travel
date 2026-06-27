@@ -47,6 +47,32 @@ function hasRequiredBookingPrefillParams(url: string): boolean {
   }
 }
 
+function isTripsterBookingCheckoutUrl(url: string): boolean {
+  try {
+    const unwrapped = unwrapTripsterWrapperUrl(url);
+    const parsed = new URL(unwrapped, "https://experience.tripster.ru");
+    return /\/(?:mfs\/)?experience\/booking\/\d+\/?$/i.test(parsed.pathname);
+  } catch {
+    return /\/(?:mfs\/)?experience\/booking\/\d+\/?$/i.test(url.trim());
+  }
+}
+
+function rebuildTripsterBookingUrlFromContext(
+  experienceId: number,
+  context: TripsterCheckoutContext,
+  sourceUrl?: string | null
+): string {
+  const sourceExperienceId = extractTripsterExperienceId(sourceUrl);
+  const contextExperienceId = extractTripsterExperienceId(context.fallbackUrl);
+  const resolvedExperienceId =
+    sourceExperienceId ?? (experienceId > 0 ? experienceId : contextExperienceId ?? 0);
+
+  return buildTripsterPartnerOpenUrl(resolvedExperienceId, {
+    ...context,
+    fallbackUrl: context.fallbackUrl ?? sourceUrl ?? null,
+  });
+}
+
 /** Tripster `/orders/{id}/` links 404 for anonymous users — rewrite to `/experience/order/{id}/`. */
 export function isBrokenTripsterOrderPath(url: string): boolean {
   try {
@@ -172,10 +198,13 @@ export function resolveTripsterCheckoutUrl(
 
   const trimmed = orderOrPartnerUrl?.trim();
   if (trimmed && isUsableTripsterCheckoutUrl(trimmed)) {
+    if (isTripsterBookingCheckoutUrl(trimmed) && !hasRequiredBookingPrefillParams(trimmed)) {
+      return rebuildTripsterBookingUrlFromContext(experienceId, context, trimmed);
+    }
     return trimmed;
   }
 
-  return buildTripsterPartnerOpenUrl(experienceId, context);
+  return rebuildTripsterBookingUrlFromContext(experienceId, context, trimmed);
 }
 
 /** Direct Tripster checkout URL with form context — reliable client-side open target. */
@@ -219,7 +248,7 @@ export function resolveTripsterBookingRedirectFromApi(input: {
     if (serverFallback && hasRequiredBookingPrefillParams(serverFallback)) {
       return serverFallback;
     }
-    return buildTripsterPartnerOpenUrl(experienceId, context);
+    return rebuildTripsterBookingUrlFromContext(experienceId, context, serverFallback);
   }
 
   return resolveTripsterCheckoutUrl(

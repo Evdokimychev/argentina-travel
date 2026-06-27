@@ -167,6 +167,30 @@ describe("tripster checkout url", () => {
     expect(url).toContain("persons_count=2");
   });
 
+  it("rebuilds excursion redirect url when checkout params are incomplete", () => {
+    const url = resolveTripsterBookingRedirectFromApi({
+      response: {
+        ok: true,
+        mode: "tripster_order",
+        orderUrl: "https://experience.tripster.ru/experience/booking/50900/?date=2026-09-01",
+      },
+      experienceId: 50900,
+      context: {
+        startDate: "2026-09-01",
+        time: "12:00",
+        guests: 2,
+        name: "Иван",
+        email: "ivan@example.com",
+        phone: "+79991234567",
+      },
+    });
+
+    expect(url).toContain("/experience/booking/50900/");
+    expect(url).toContain("date=2026-09-01");
+    expect(url).toContain("time=12%3A00%3A00");
+    expect(url).toContain("persons_count=2");
+  });
+
   it("uses order checkout url on successful api response", () => {
     const url = resolveTripsterBookingRedirectFromApi({
       response: {
