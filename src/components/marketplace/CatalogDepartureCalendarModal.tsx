@@ -12,10 +12,11 @@ import {
   subMonths,
 } from "date-fns";
 import { ru } from "date-fns/locale";
-import { ChevronLeft, ChevronRight, MapPin, Moon, Sun, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, MapPin, Moon, Sun } from "lucide-react";
 import type { TourListing } from "@/types";
 import FormattedPrice from "@/components/FormattedPrice";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription } from "@/components/ui/dialog";
+import { DialogPanelHeader } from "@/components/ui/dialog-panel-header";
 import CalendarMonthGrid from "@/components/ui/calendar-month-grid";
 import { buttonVariants } from "@/components/ui/button";
 import { SafeImage } from "@/components/ui/safe-image";
@@ -153,29 +154,15 @@ export default function CatalogDepartureCalendarModal({
           "sm:min-h-[min(88vh,44rem)]"
         )}
       >
-        <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6 sm:py-5">
-          <div className="min-w-0">
-            <DialogTitle className="font-heading text-xl font-bold leading-tight text-charcoal sm:text-2xl">
-              Календарь отправлений
-            </DialogTitle>
-            <DialogDescription className="mt-1 text-sm text-slate">
-              {hasDepartures
-                ? `${index.totalDepartures} заезд${index.totalDepartures === 1 ? "" : index.totalDepartures < 5 ? "а" : "ов"} в ${index.tourCountWithDates} турах`
-                : "Пока нет групповых дат в выбранной подборке"}
-            </DialogDescription>
-          </div>
-          <button
-            type="button"
-            onClick={() => onOpenChange(false)}
-            className={cn(
-              touchTargetIconClass,
-              "shrink-0 rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
-            )}
-            aria-label="Закрыть"
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+        <DialogPanelHeader
+          onClose={() => onOpenChange(false)}
+          title="Календарь отправлений"
+          description={
+            hasDepartures
+              ? `${index.totalDepartures} заезд${index.totalDepartures === 1 ? "" : index.totalDepartures < 5 ? "а" : "ов"} в ${index.tourCountWithDates} турах`
+              : "Пока нет групповых дат в выбранной подборке"
+          }
+        />
 
         {!hasDepartures ? (
           <div className="px-6 py-10 text-center text-sm leading-relaxed text-slate">

@@ -3,7 +3,26 @@ import {
   buildRouteMapPopupHtml,
   clusterRoutePointsByScreenDistance,
   formatRouteMapClusterLabel,
+  formatRoutePointDisplayName,
 } from "@/lib/tour-route-map";
+
+describe("formatRoutePointDisplayName", () => {
+  it("returns the primary segment from geocoded partner labels", () => {
+    expect(
+      formatRoutePointDisplayName(
+        "Глясиар Перито Морено, Национальный парк Лос-Гласьярес, департамент Лаго-Архентино, Санта-Крус, Аргентина",
+      ),
+    ).toBe("Глясиар Перито Морено");
+  });
+
+  it("strips trailing country from city labels", () => {
+    expect(formatRoutePointDisplayName("Эль-Калафате, Аргентина")).toBe("Эль-Калафате");
+  });
+
+  it("keeps short names unchanged", () => {
+    expect(formatRoutePointDisplayName("Буэнос-Айрес")).toBe("Буэнос-Айрес");
+  });
+});
 
 describe("buildRouteMapPopupHtml", () => {
   it("separates title and day on distinct lines", () => {

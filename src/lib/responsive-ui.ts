@@ -23,9 +23,9 @@ export const sitePopoverWidthClass = "w-[calc(100dvw-2rem)]";
 export const mobilePopoverContentClass =
   "max-sm:w-[calc(100dvw-2rem)] max-sm:min-w-[calc(100dvw-2rem)] max-sm:max-w-[calc(100dvw-2rem)] max-sm:max-h-[min(70dvh,calc(100dvh-env(keyboard-inset-height,0px)-5rem))] max-sm:overflow-y-auto max-sm:overscroll-contain";
 
-/** Desktop: anchor width from trigger, capped to viewport. */
+/** Desktop: at least trigger width, grow with content, capped to viewport. */
 export const desktopPopoverContentClass =
-  "sm:w-[var(--radix-popover-trigger-width)] sm:min-w-0 sm:max-w-[min(100%,calc(100dvw-2rem))]";
+  "sm:w-auto sm:min-w-[var(--radix-popover-trigger-width)] sm:max-w-[min(100%,calc(100dvw-2rem))]";
 
 export const popoverContentShellClass = `${mobilePopoverContentClass} ${desktopPopoverContentClass}`;
 

@@ -109,13 +109,47 @@ export function routePointRoleLabel(role: RoutePointRole): string {
   return "";
 }
 
+const ROUTE_POINT_COUNTRY_SUFFIX =
+  /^(?:аргентина|argentina|republica\s+argentina|rep(?:[úu]blica\s+)?argentina)$/iu;
+
+const ROUTE_POINT_ADMIN_SUFFIX =
+  /^(?:департамент|departamento|department|provincia|province|provincia\s+de|region|regi[oó]n|область|район|comuna|partido|municipio|distrito)\b/iu;
+
+/** Короткое имя точки маршрута для списка и popup (без хвоста адреса/региона). */
+export function formatRoutePointDisplayName(name: string): string {
+  const trimmed = name.trim();
+  if (!trimmed) return trimmed;
+
+  const parts = trimmed
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 1) return parts[0] ?? trimmed;
+
+  const meaningful = [...parts];
+  while (meaningful.length > 1) {
+    const last = meaningful[meaningful.length - 1]!;
+    if (
+      ROUTE_POINT_COUNTRY_SUFFIX.test(last) ||
+      ROUTE_POINT_ADMIN_SUFFIX.test(last)
+    ) {
+      meaningful.pop();
+      continue;
+    }
+    break;
+  }
+
+  return meaningful[0] ?? trimmed;
+}
+
 /** HTML-содержимое Leaflet-popup для точки маршрута. */
 export function buildRouteMapPopupHtml(
   point: TourRoutePoint,
   role: RoutePointRole,
 ): string {
   const roleText = routePointRoleLabel(role);
-  const name = escapeHtml(point.name);
+  const name = escapeHtml(formatRoutePointDisplayName(point.name));
   const imageUrl = point.imageUrl?.trim();
   const safeImageUrl =
     imageUrl && /^https?:\/\//i.test(imageUrl) ? escapeHtml(imageUrl) : null;
@@ -125,19 +159,23 @@ export function buildRouteMapPopupHtml(
     : "";
   const dayLine =
     point.dayNumber != null
-      ? `<p class="route-map-popup-day">День ${point.dayNumber}</p>`
+      ? `<span class="route-map-popup-day">День ${point.dayNumber}</span>`
       : "";
+  const metaParts = [roleBadge, dayLine].filter(Boolean).join("");
+  const metaBlock = metaParts ? `<div class="route-map-popup-meta">${metaParts}</div>` : "";
   const photo = safeImageUrl
     ? `<div class="route-map-popup-photo"><img src="${safeImageUrl}" alt="${name}" loading="lazy" decoding="async" /></div>`
     : "";
 
-  return `<div class="route-map-popup-card">${photo}<div class="route-map-popup-body"><p class="route-map-popup-title">${name}</p>${roleBadge ? `<div class="route-map-popup-meta">${roleBadge}</div>` : ""}${dayLine}</div></div>`;
+  return `<div class="route-map-popup-card">${photo}<div class="route-map-popup-body"><p class="route-map-popup-title">${name}</p>${metaBlock}</div></div>`;
 }
 
 export const ROUTE_MAP_POPUP_OPTIONS = {
   className: "route-map-popup",
-  maxWidth: 280,
-  minWidth: 180,
+  maxWidth: 220,
+  minWidth: 140,
+  autoPan: true,
+  autoPanPadding: [12, 12] as [number, number],
 } as const;
 
 /** Порог перекрытия маркеров на экране (px). */
@@ -263,7 +301,7 @@ export function buildRouteMapClusterPopupHtml(
         : "";
       const label =
         role === "start" ? "С" : role === "finish" ? "Ф" : String(index + 1);
-      return `<li class="route-map-cluster-item"><span class="route-map-cluster-item-badge">${label}</span><div class="route-map-cluster-item-body"><p class="route-map-popup-title">${escapeHtml(point.name)}</p>${roleBadge}${day}</div></li>`;
+      return `<li class="route-map-cluster-item"><span class="route-map-cluster-item-badge">${label}</span><div class="route-map-cluster-item-body"><p class="route-map-popup-title">${escapeHtml(formatRoutePointDisplayName(point.name))}</p>${roleBadge}${day}</div></li>`;
     })
     .join("");
 

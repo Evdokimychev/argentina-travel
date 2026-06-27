@@ -52,10 +52,17 @@ function resolvePriceUnit(experience: TripsterExperience): ExcursionPriceUnit {
 }
 
 function resolveFormatKind(experience: TripsterExperience): ExcursionFormatKind {
-  if (experience.exp_format === 2) {
+  const productType = (experience.type ?? "").trim().toLowerCase();
+
+  // Tripster partner API: type=private → индивидуальный формат, type=group → групповой.
+  // exp_format is a product category code (often 1 for both); do not use it for formatKind.
+  if (productType === "private") {
     return "individual";
   }
-  if (experience.exp_format === 1) {
+  if (productType === "group") {
+    return "group";
+  }
+  if (productType === "tour") {
     return "group";
   }
 
@@ -82,8 +89,14 @@ function resolveFormatKind(experience: TripsterExperience): ExcursionFormatKind 
     return "group";
   }
 
-  const productType = (experience.type ?? "").trim().toLowerCase();
-  if (productType && productType !== "tour") {
+  if (scheduleType === "weekly_range") {
+    return "individual";
+  }
+  if (scheduleType === "weekly_slots" || scheduleType === "fixed_slots") {
+    return "group";
+  }
+
+  if (productType === "experience") {
     return "individual";
   }
 

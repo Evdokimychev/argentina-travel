@@ -114,7 +114,7 @@ export default function TourReviewsSummary({
                 </div>
               ))}
             </div>
-            <span className="absolute bottom-0 right-0 inline-flex items-center gap-0.5 rounded-full border border-gray-100 bg-white px-3 py-1.5 text-sm font-medium text-charcoal shadow-md transition group-hover:border-sky/30 group-hover:text-sky">
+            <span className="absolute bottom-0 right-0 z-10 inline-flex items-center gap-0.5 rounded-full border border-gray-100 bg-white px-3 py-1.5 text-sm font-medium text-charcoal shadow-md transition group-hover:border-sky/30 group-hover:text-sky">
               {photos.length} фото
               <ChevronRight className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
             </span>

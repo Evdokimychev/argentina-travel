@@ -29,7 +29,7 @@ alwaysApply: false
 ## Tripster — критические правила
 
 1. **Никогда** открывать `/orders/{id}/` — только `/experience/order/{id}/` (`checkout-url.ts`).
-2. Fallback checkout: `/experience/booking/{id}/` + query params; `time` в формате `HH:MM:SS`.
+2. Fallback checkout: `/experience/booking/{id}/` + query params. **`time` в формате `HH:MM`** (НЕ `HH:MM:SS` — страница бронирования молча игнорирует секунды и не выбирает слот; проверено вживую). Число туристов страница из URL **не читает** (`persons_count`/`persons`/`participants` все игнорируются) — гарантированный prefill участников только через External Orders. NB: сам External Orders POST требует `HH:MM:SS` (`normalizeTimeForApi`).
 3. При `affiliate_fallback` клиент использует **server `fallbackUrl` as-is** — не пересобирать локально.
 4. Успешный order URL оборачивать в Travelpayouts на сервере (`wrapTripsterUrlWithAffiliate`).
 5. External Orders POST требует **оба** заголовка: `Idempotency-Key` (хранится 1 час) и `X-REQUESTID` в формате `{uuid}_{unix_timestamp}` (отклоняется, если старше 30 минут).

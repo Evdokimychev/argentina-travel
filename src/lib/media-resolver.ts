@@ -7,6 +7,7 @@ import {
   DESTINATION_PLACE_MAP,
   GUIDE_PAGE_PLACE_MAP,
   GUIDE_TOPIC_PLACE_MAP,
+  PLACE_COVER_FALLBACK_MAP,
   RICH_ARTICLE_PLACE_MAP,
   TOUR_PLACE_MAP,
 } from "@/data/media-library/maps";
@@ -64,16 +65,33 @@ export function getMediaAsset(id: string): MediaAsset | undefined {
   return assetsById.get(id);
 }
 
+function placeHeroAsset(slug: string): MediaAsset | undefined {
+  const own = assetsForPlace(slug);
+  return own.find((a) => a.role === "hero") ?? own[0];
+}
+
 export function getPlaceCoverImage(slug: string): string {
-  const hero =
-    assetsForPlace(slug).find((a) => a.role === "hero") ?? assetsForPlace(slug)[0];
-  return assetUrl(hero);
+  const hero = placeHeroAsset(slug);
+  if (hero) return assetUrl(hero);
+
+  const fallbackSlug = PLACE_COVER_FALLBACK_MAP[slug];
+  if (fallbackSlug) {
+    const fallbackHero = placeHeroAsset(fallbackSlug);
+    if (fallbackHero) return assetUrl(fallbackHero);
+  }
+  return FALLBACK;
 }
 
 export function getPlaceCoverAlt(slug: string): string {
-  const hero =
-    assetsForPlace(slug).find((a) => a.role === "hero") ?? assetsForPlace(slug)[0];
-  return hero?.alt ?? slug;
+  const hero = placeHeroAsset(slug);
+  if (hero?.alt) return hero.alt;
+
+  const fallbackSlug = PLACE_COVER_FALLBACK_MAP[slug];
+  if (fallbackSlug) {
+    const fallbackHero = placeHeroAsset(fallbackSlug);
+    if (fallbackHero?.alt) return fallbackHero.alt;
+  }
+  return slug;
 }
 
 export function getPlaceGallery(slug: string): string[] {

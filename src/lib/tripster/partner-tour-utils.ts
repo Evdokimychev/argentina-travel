@@ -132,13 +132,22 @@ export function partnerTourListingId(tripsterId: number): string {
   return `tripster-${tripsterId}`;
 }
 
-/** Tripster booking form expects HH:MM:SS in the time query param. */
+/**
+ * Tripster's public booking page (`/experience/booking/{id}/`) reads the `time`
+ * query param ТОЛЬКО в формате `HH:MM`. Если передать `HH:MM:SS`, страница
+ * молча игнорирует параметр и слот времени не выбирается (проверено вживую на
+ * experience 92634/50900). Поэтому для URL-страницы секунды отбрасываются.
+ *
+ * NB: External Orders API (создание заказа, метод цены) — наоборот, требует
+ * `HH:MM:SS`. Для API используется отдельная нормализация (`normalizeTimeForApi`
+ * в `src/app/api/tripster/booking-request/route.ts`).
+ */
 export function normalizeTripsterBookingTime(time?: string | null): string | undefined {
   const trimmed = time?.trim();
   if (!trimmed) return undefined;
-  if (/^\d{1,2}:\d{2}:\d{2}$/.test(trimmed)) return trimmed;
-  if (/^\d{1,2}:\d{2}$/.test(trimmed)) return `${trimmed}:00`;
-  return trimmed;
+  const match = trimmed.match(/^(\d{1,2}):(\d{2})(?::\d{2})?$/);
+  if (!match) return trimmed;
+  return `${match[1].padStart(2, "0")}:${match[2]}`;
 }
 
 export function parsePartnerTourListingExperienceId(listingId: string): number | null {

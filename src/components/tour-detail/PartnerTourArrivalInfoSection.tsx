@@ -233,10 +233,10 @@ function ArrivalPointCard({
             aria-hidden
           />
         </span>
-        <div className="min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 flex-col gap-3">
           <span
             className={cn(
-              "inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide",
+              "inline-flex w-fit rounded-full px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide",
               styles.badge,
             )}
           >
@@ -245,27 +245,31 @@ function ArrivalPointCard({
           {dateLabel ? (
             <p
               className={cn(
-                "mt-2 text-lg font-semibold leading-snug sm:text-xl",
+                "text-lg font-semibold leading-snug sm:text-xl",
                 pendingDateSelection ? "text-slate/70" : "text-charcoal",
               )}
             >
               {dateLabel}
             </p>
           ) : null}
-          {timeLabel ? (
-            <p className="mt-1.5 inline-flex items-center gap-1.5 text-sm text-slate">
-              <Clock3 className={cn("h-3.5 w-3.5 shrink-0", styles.icon)} aria-hidden />
-              <span>
-                {timeLabel}
-                <span className="text-slate/80"> · местное время</span>
-              </span>
-            </p>
-          ) : null}
-          {point.city ? (
-            <p className="mt-3 inline-flex items-start gap-1.5 text-sm font-medium text-charcoal/85">
-              <MapPin className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", styles.icon)} aria-hidden />
-              <span>{point.city}</span>
-            </p>
+          {timeLabel || point.city ? (
+            <div className="flex flex-col gap-2">
+              {timeLabel ? (
+                <p className="inline-flex items-center gap-1.5 text-sm text-slate">
+                  <Clock3 className={cn("h-3.5 w-3.5 shrink-0", styles.icon)} aria-hidden />
+                  <span>
+                    {timeLabel}
+                    <span className="text-slate/80"> · местное время</span>
+                  </span>
+                </p>
+              ) : null}
+              {point.city ? (
+                <p className="inline-flex items-start gap-1.5 text-sm font-medium text-charcoal/85">
+                  <MapPin className={cn("mt-0.5 h-3.5 w-3.5 shrink-0", styles.icon)} aria-hidden />
+                  <span>{point.city}</span>
+                </p>
+              ) : null}
+            </div>
           ) : null}
         </div>
       </div>

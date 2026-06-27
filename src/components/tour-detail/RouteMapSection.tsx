@@ -10,8 +10,10 @@ import {
   Flag,
   MapPin,
   Maximize2,
+  Minimize2,
   Pause,
   Play,
+  X,
 } from "lucide-react";
 import { buildMapTourDeepLink } from "@/lib/map-argentina-url-state";
 import type { TourArrivalInfo, TourRoutePoint } from "@/types";
@@ -19,11 +21,13 @@ import type { TourLogistics } from "@/types/tour";
 import {
   computeRouteDistanceKm,
   formatRouteDistanceKm,
+  formatRoutePointDisplayName,
   getRoutePointRole,
   pointIndexToProgress,
   progressToPointIndex,
 } from "@/lib/tour-route-map";
 import { cn } from "@/lib/cn";
+import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
 import TourSection from "./TourSection";
 import ArrivalDetails, { getArrivalScheduleCities } from "./ArrivalDetails";
 
@@ -61,6 +65,29 @@ export default function RouteMapSection({
   const [progress, setProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
   const [fitToken, setFitToken] = useState(0);
+  const [isMapFullscreen, setIsMapFullscreen] = useState(false);
+  const [mapResizeToken, setMapResizeToken] = useState(0);
+
+  useSiteHeaderOverlayLock(isMapFullscreen);
+
+  useEffect(() => {
+    if (!isMapFullscreen) return;
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setIsMapFullscreen(false);
+        setMapResizeToken((value) => value + 1);
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [isMapFullscreen]);
+
+  useEffect(() => {
+    if (!isMapFullscreen) return;
+    setMapResizeToken((value) => value + 1);
+  }, [isMapFullscreen]);
 
   const hasMap = points.length > 0;
   const routeDistanceKm = useMemo(() => computeRouteDistanceKm(points), [points]);
@@ -152,11 +179,226 @@ export default function RouteMapSection({
     setIsPlaying(false);
   }
 
+  function closeMapFullscreen() {
+    setIsMapFullscreen(false);
+    setMapResizeToken((value) => value + 1);
+  }
+
+  function openMapFullscreen() {
+    setIsMapFullscreen(true);
+    setIsPlaying(false);
+  }
+
+  const activePointLabel = activePoint ? formatRoutePointDisplayName(activePoint.name) : "—";
+
   function stepBy(delta: number) {
     const baseIndex = selectedIndex >= 0 ? selectedIndex : 0;
     selectByIndex(Math.min(points.length - 1, Math.max(0, baseIndex + delta)));
     setIsPlaying(false);
   }
+
+  const mapPanel = (
+    <>
+      <div
+        className={cn(
+          "grid",
+          isMapFullscreen ? "min-h-0 flex-1 lg:grid-cols-[1fr_280px]" : "lg:grid-cols-[1fr_260px]",
+        )}
+      >
+        <div className="relative min-h-0">
+          <RouteMap
+            points={points}
+            selectedId={selectedId}
+            progress={progress}
+            onSelect={handleSelect}
+            fitToken={fitToken}
+            resizeToken={mapResizeToken}
+            scrollWheelZoom={isMapFullscreen}
+            className={cn(
+              "h-72 lg:h-[420px]",
+              isMapFullscreen && "h-full min-h-[240px] lg:min-h-0 lg:h-full",
+            )}
+          />
+          <button
+            type="button"
+            onClick={isMapFullscreen ? closeMapFullscreen : openMapFullscreen}
+            className="absolute right-3 top-3 z-[500] inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200/90 bg-white/95 text-charcoal shadow-sm backdrop-blur-sm transition-colors hover:bg-white"
+            aria-label={isMapFullscreen ? "Свернуть карту" : "Развернуть карту на весь экран"}
+          >
+            {isMapFullscreen ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+          </button>
+        </div>
+
+        <ol
+          className={cn(
+            "flex flex-col gap-1 border-t border-gray-100 p-4 lg:border-l lg:border-t-0",
+            isMapFullscreen
+              ? "min-h-0 overflow-y-auto lg:max-h-none"
+              : "lg:max-h-[420px] lg:overflow-y-auto",
+          )}
+        >
+          {points.map((point, index) => {
+            const active = point.id === selectedId;
+            const role = getRoutePointRole(index, points.length);
+            const displayName = formatRoutePointDisplayName(point.name);
+            return (
+              <li key={point.id}>
+                <button
+                  type="button"
+                  onClick={() => handleSelect(point.id)}
+                  title={point.name !== displayName ? point.name : undefined}
+                  className={cn(
+                    "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
+                    active
+                      ? "bg-brand-light text-charcoal"
+                      : "text-slate hover:bg-gray-50 hover:text-charcoal",
+                  )}
+                >
+                  <span
+                    className={cn(
+                      "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
+                      role === "start" && (active ? "bg-success text-white" : "bg-success/15 text-success"),
+                      role === "finish" &&
+                        (active ? "bg-charcoal text-white" : "bg-charcoal/10 text-charcoal"),
+                      role === "waypoint" && (active ? "bg-brand text-white" : "bg-gray-100 text-charcoal"),
+                    )}
+                    aria-hidden
+                  >
+                    {role === "start" ? "С" : role === "finish" ? "Ф" : index + 1}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="flex flex-wrap items-center gap-1.5">
+                      <span className="text-sm font-medium leading-snug">{displayName}</span>
+                      {role === "start" ? (
+                        <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-success">
+                          Старт
+                        </span>
+                      ) : null}
+                      {role === "finish" ? (
+                        <span className="rounded-full bg-charcoal/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal">
+                          Финиш
+                        </span>
+                      ) : null}
+                    </span>
+                    {point.dayNumber != null ? (
+                      <span className="mt-0.5 flex items-center gap-1 text-xs text-slate">
+                        <MapPin className="h-3 w-3 shrink-0" aria-hidden />
+                        День {point.dayNumber}
+                      </span>
+                    ) : null}
+                  </span>
+                </button>
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+
+      <div className="space-y-3 border-t border-gray-100 px-4 py-4">
+        <div className="flex items-center justify-between gap-3">
+          <p
+            className="min-w-0 truncate text-sm font-semibold text-charcoal"
+            title={activePoint && activePoint.name !== activePointLabel ? activePoint.name : undefined}
+          >
+            {activePointLabel}
+            {activePoint?.dayNumber != null ? (
+              <span className="font-normal text-slate"> · День {activePoint.dayNumber}</span>
+            ) : null}
+          </p>
+          <div className="flex shrink-0 items-center gap-1">
+            <button
+              type="button"
+              onClick={() => stepBy(-1)}
+              disabled={selectedIndex <= 0}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50 disabled:opacity-40"
+              aria-label="Предыдущая точка"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsPlaying((value) => !value)}
+              disabled={points.length < 2}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white transition-colors hover:bg-brand/90 disabled:opacity-40"
+              aria-label={isPlaying ? "Пауза" : "Проиграть маршрут"}
+            >
+              {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            </button>
+            <button
+              type="button"
+              onClick={() => stepBy(1)}
+              disabled={selectedIndex >= points.length - 1}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50 disabled:opacity-40"
+              aria-label="Следующая точка"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setFitToken((value) => value + 1);
+                setIsPlaying(false);
+              }}
+              className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50"
+              aria-label="Показать весь маршрут"
+            >
+              <Maximize2 className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="flex shrink-0 items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-success">
+            <Flag className="h-3 w-3" aria-hidden />
+            Старт
+          </span>
+          <input
+            type="range"
+            min={0}
+            max={100}
+            step={points.length > 2 ? 100 / (points.length - 1) / 4 : 1}
+            value={Math.round(progress * 100)}
+            onChange={(event) => handleProgressChange(Number(event.target.value))}
+            className="route-map-progress h-1.5 min-w-0 flex-1 cursor-pointer appearance-none rounded-full bg-gray-200 accent-brand"
+            aria-label="Прогресс по маршруту"
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={Math.round(progress * 100)}
+          />
+          <span className="flex shrink-0 items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-charcoal">
+            Финиш
+            <Flag className="h-3 w-3 rotate-180" aria-hidden />
+          </span>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate">
+          <span>
+            Пройдено:{" "}
+            <strong className="text-charcoal">
+              {selectedIndex >= 0 ? selectedIndex + 1 : 0} из {points.length}
+            </strong>
+          </span>
+          <span className="inline-flex items-center gap-3">
+            <span className="inline-flex items-center gap-1.5">
+              <span className="h-0.5 w-4 rounded-full bg-success" aria-hidden />
+              пройдено
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <span
+                className="h-0.5 w-4 rounded-full bg-brand/50"
+                style={{
+                  backgroundImage:
+                    "repeating-linear-gradient(90deg, #d4533b 0 3px, transparent 3px 6px)",
+                }}
+                aria-hidden
+              />
+              впереди
+            </span>
+          </span>
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <TourSection id="route-map" title="Маршрут и дорога" organizerComment={organizerComment}>
@@ -209,177 +451,30 @@ export default function RouteMapSection({
             </div>
           </div>
 
-          <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm">
-            <div className="grid lg:grid-cols-[1fr_260px]">
-              <RouteMap
-                points={points}
-                selectedId={selectedId}
-                progress={progress}
-                onSelect={handleSelect}
-                fitToken={fitToken}
-                className="h-72 lg:h-[420px]"
-              />
-
-              <ol className="flex flex-col gap-1 border-t border-gray-100 p-4 lg:max-h-[420px] lg:overflow-y-auto lg:border-l lg:border-t-0">
-                {points.map((point, index) => {
-                  const active = point.id === selectedId;
-                  const role = getRoutePointRole(index, points.length);
-                  return (
-                    <li key={point.id}>
-                      <button
-                        type="button"
-                        onClick={() => handleSelect(point.id)}
-                        className={cn(
-                          "flex w-full items-start gap-3 rounded-xl px-3 py-2.5 text-left transition-colors",
-                          active
-                            ? "bg-brand-light text-charcoal"
-                            : "text-slate hover:bg-gray-50 hover:text-charcoal"
-                        )}
-                      >
-                        <span
-                          className={cn(
-                            "flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold",
-                            role === "start" && (active ? "bg-success text-white" : "bg-success/15 text-success"),
-                            role === "finish" &&
-                              (active ? "bg-charcoal text-white" : "bg-charcoal/10 text-charcoal"),
-                            role === "waypoint" && (active ? "bg-brand text-white" : "bg-gray-100 text-charcoal")
-                          )}
-                          aria-hidden
-                        >
-                          {role === "start" ? "С" : role === "finish" ? "Ф" : index + 1}
-                        </span>
-                        <span className="min-w-0 flex-1">
-                          <span className="flex flex-wrap items-center gap-1.5">
-                            <span className="text-sm font-medium leading-snug">{point.name}</span>
-                            {role === "start" ? (
-                              <span className="rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-success">
-                                Старт
-                              </span>
-                            ) : null}
-                            {role === "finish" ? (
-                              <span className="rounded-full bg-charcoal/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-charcoal">
-                                Финиш
-                              </span>
-                            ) : null}
-                          </span>
-                          {point.dayNumber != null ? (
-                            <span className="mt-0.5 flex items-center gap-1 text-xs text-slate">
-                              <MapPin className="h-3 w-3 shrink-0" aria-hidden />
-                              День {point.dayNumber}
-                            </span>
-                          ) : null}
-                        </span>
-                      </button>
-                    </li>
-                  );
-                })}
-              </ol>
-            </div>
-
-            <div className="space-y-3 border-t border-gray-100 px-4 py-4">
-              <div className="flex items-center justify-between gap-3">
-                <p className="min-w-0 truncate text-sm font-semibold text-charcoal">
-                  {activePoint?.name ?? "—"}
-                  {activePoint?.dayNumber != null ? (
-                    <span className="font-normal text-slate"> · День {activePoint.dayNumber}</span>
-                  ) : null}
-                </p>
-                <div className="flex shrink-0 items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => stepBy(-1)}
-                    disabled={selectedIndex <= 0}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50 disabled:opacity-40"
-                    aria-label="Предыдущая точка"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsPlaying((value) => !value)}
-                    disabled={points.length < 2}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-white transition-colors hover:bg-brand/90 disabled:opacity-40"
-                    aria-label={isPlaying ? "Пауза" : "Проиграть маршрут"}
-                  >
-                    {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => stepBy(1)}
-                    disabled={selectedIndex >= points.length - 1}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50 disabled:opacity-40"
-                    aria-label="Следующая точка"
-                  >
-                    <ChevronRight className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setFitToken((value) => value + 1);
-                      setIsPlaying(false);
-                    }}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50"
-                    aria-label="Показать весь маршрут"
-                  >
-                    <Maximize2 className="h-4 w-4" />
-                  </button>
+          <div
+            className={cn(
+              "overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm",
+              isMapFullscreen &&
+                "fixed inset-0 z-[120] flex flex-col overflow-hidden rounded-none border-0 shadow-none",
+            )}
+          >
+            {isMapFullscreen ? (
+              <div className="flex items-center justify-between gap-3 border-b border-gray-100 px-4 py-3">
+                <div>
+                  <p className="font-heading text-base font-bold text-charcoal">Маршрут на карте</p>
+                  <p className="text-xs text-slate">Esc — свернуть · колёсико — масштаб</p>
                 </div>
+                <button
+                  type="button"
+                  onClick={closeMapFullscreen}
+                  className="inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-charcoal transition-colors hover:bg-gray-50"
+                  aria-label="Закрыть полноэкранный режим"
+                >
+                  <X className="h-4 w-4" />
+                </button>
               </div>
-
-              <div className="flex items-center gap-3">
-                <span className="flex shrink-0 items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-success">
-                  <Flag className="h-3 w-3" aria-hidden />
-                  Старт
-                </span>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  step={points.length > 2 ? 100 / (points.length - 1) / 4 : 1}
-                  value={Math.round(progress * 100)}
-                  onChange={(event) => handleProgressChange(Number(event.target.value))}
-                  className="route-map-progress h-1.5 min-w-0 flex-1 cursor-pointer appearance-none rounded-full bg-gray-200 accent-brand"
-                  aria-label="Прогресс по маршруту"
-                  aria-valuemin={0}
-                  aria-valuemax={100}
-                  aria-valuenow={Math.round(progress * 100)}
-                />
-                <span className="flex shrink-0 items-center gap-1 text-[11px] font-bold uppercase tracking-wide text-charcoal">
-                  Финиш
-                  <Flag className="h-3 w-3 rotate-180" aria-hidden />
-                </span>
-              </div>
-
-              <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate">
-                <span>
-                  Пройдено:{" "}
-                  <strong className="text-charcoal">
-                    {selectedIndex >= 0 ? selectedIndex + 1 : 0} из {points.length}
-                  </strong>
-                </span>
-                <span className="inline-flex items-center gap-3">
-                  <span className="inline-flex items-center gap-1.5">
-                    <span className="h-0.5 w-4 rounded-full bg-success" aria-hidden />
-                    пройдено
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <span
-                      className="h-0.5 w-4 rounded-full bg-brand/50"
-                      style={{
-                        backgroundImage:
-                          "repeating-linear-gradient(90deg, #d4533b 0 3px, transparent 3px 6px)",
-                      }}
-                      aria-hidden
-                    />
-                    впереди
-                  </span>
-                </span>
-              </div>
-            </div>
-
-            <p className="border-t border-gray-100 px-4 py-2.5 text-[11px] leading-relaxed text-slate/80">
-              Карта построена по OpenStreetMap и CARTO — бесплатные сервисы с открытыми данными.
-            </p>
+            ) : null}
+            {mapPanel}
           </div>
         </div>
       ) : null}

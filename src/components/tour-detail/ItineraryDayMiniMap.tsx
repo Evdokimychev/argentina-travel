@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import type { TourRoutePoint } from "@/types";
+import { formatRoutePointDisplayName } from "@/lib/tour-route-map";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -54,7 +55,7 @@ export default function ItineraryDayMiniMap({ points, dayNumber, className }: Pr
             iconAnchor: index === 0 ? [11, 11] : [8, 8],
           }),
         })
-          .bindPopup(point.name)
+          .bindPopup(formatRoutePointDisplayName(point.name))
           .addTo(map);
       });
 

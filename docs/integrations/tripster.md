@@ -176,21 +176,70 @@ Content-Type: application/json
 
 | Param | Формат | Надёжность для анонима |
 |-------|--------|------------------------|
-| `date` | `YYYY-MM-DD` | ✅ высокая |
-| `time` | `HH:MM:SS` (не `HH:MM`) | ✅ высокая |
-| `persons_count` | число | ✅ обычно |
+| `date` | `YYYY-MM-DD` | ✅ высокая (страница выбирает дату) |
+| `time` | **`HH:MM`** (НЕ `HH:MM:SS`) | ✅ высокая — но **только** в формате `HH:MM` |
+| `persons_count` | число | ❌ **игнорируется** страницей бронирования (см. ниже) |
 | `name`, `full_name` | строка | ⚠️ может игнорироваться MFE |
 | `email`, `phone` | строка | ⚠️ может игнорироваться MFE |
 | `message_to_guide` | строка | ⚠️ может игнорироваться MFE |
 
-> **Правило для агентов:** для анонимного fallback считайте надёжными только **date + time + persons_count**. Контакты передаём в URL на случай поддержки со стороны Tripster, но не гарантируем prefilling без External Orders.
+> **⚠️ Критично (проверено вживую 2026-06, experience 92634/50900):**
+> - Страница `/experience/booking/{id}/` читает `time` **только как `HH:MM`**. При `HH:MM:SS` слот времени **не выбирается** (параметр молча игнорируется). Это и есть многократно воспроизводимая регрессия «время не подставляется».
+> - Число участников страница бронирования **не читает ни из какого URL-параметра** (`persons_count`, `persons`, `participants`, `tourists` — все проверены, степпер остаётся на `1`). Гарантированно число туристов подставляется **только** через External Orders (путь A). Параметр `persons_count` оставляем в URL для совместимости и валидации, но он не влияет на prefilling на странице.
+>
+> **Правило для агентов:** для анонимного fallback гарантированно подставляются только **date + time (`HH:MM`)**. `persons_count` передаём, но не обещаем prefilling без External Orders.
+
+### Реверс-инжиниринг `travelers-booking-mfe` (white-box, 2026-06-27)
+
+Форма бронирования рендерится микрофронтендом Tripster:
+
+- Бандл: `https://experience.tripster.ru/mfs/travelers-booking-mfe/assets/wc-*.js` (Vue 3 + vue-router).
+
+Что MFE **реально** читает из query-строки URL:
+
+| Параметр в URL | Куда подставляется | Как читается в бандле |
+|----------------|--------------------|------------------------|
+| `date` | дата заказа | `if (d.query?.date) { … v.date = … }` (функция инициализации `t8`) |
+| `time` | слот времени | `if (d.query?.time) { … ae.value = … }` (функция `n8`); парсится только как `HH:MM` |
+| `utm_source`, `utm_campaign`, `utm_medium`, `utm_term`, `exp_partner`, `erid` | маркетинговые метки в `sessionStorage` (`partner-marks`, TTL 30 дней) | whitelist `KE` → `ZE(window.location.search, KE)` |
+
+Что MFE из URL **НЕ читает** (подтверждено по исходнику бандла):
+
+- **Число участников.** Степпер «Участники» имеет внутренний `id: "persons_count"` (это его id в форме, а **не** URL-параметр) и инициализируется значением по умолчанию из данных экскурсии (`min`/`max_persons`). Чтения `d.query.persons_count` / `persons` / `participants` / `tourists` / `guests` / `adults` в бандле **нет**. Поэтому ни один URL-параметр количества туристов не сработает.
+- **Контакты.** Поля контактов (`["email","phone","name","full_name"]`) заполняются из сохранённых данных профиля/сессии (`e8 → s(ie.value, …)`), **а не из `window.location.search`**. Для анонимного партнёрского пользователя они из URL не подставляются.
+
+> **Итог для вопроса «как у date/time подставить число туристов через URL»:** имени поля для извлечения **не существует** — у `date`/`time` есть явные ридеры `d.query?.date` / `d.query?.time`, а аналогичного ридера для участников/контактов в MFE нет. Единственный способ предзаполнить число туристов и контакты — путь A (External Orders, передаётся в теле заказа). Наш код уже отправляет канонический `persons_count` (совпадает с External Orders и методом цены) — это корректно и менять не нужно.
+
+### Эмпирическая перепроверка (2026-06-27, живой браузер + бандл + API)
+
+Поскольку вопрос «контакты раньше подставлялись» поднимался многократно, проведена сквозная проверка на реальной экскурсии каталога **50248** (Буэнос-Айрес, «Район Сан-Тельмо»), реальный слот `2026-07-01 10:00`:
+
+1. **Бандл MFE** `wc-BzXpPnug.js` (1 046 604 байт) скачан и проверен поиском: единственные чтения query-строки — `d.query?.date` и `d.query?.time`. Чтений `persons_count` / `persons` / `participants` / `tourists` / `guests` / `adults` / `name` / `full_name` / `email` / `phone` / `message_to_guide` из `query` **нет**. Контакты заполняет функция `e8`: `if(!se.value||!ie.value)return; const U=s(ie.value,$); Object.assign(v,U)` — то есть из **сохранённого профиля/сессии залогиненного пользователя Tripster**, а не из URL.
+2. **Живой браузер** (анонимная сессия):
+   - `…/experience/booking/50248/?date=2026-07-01&time=10:00` → дата = «1 июля 2026, ср» ✅, слот «10:00–12:30» выбран ✅, «Участник» = 1 (по умолчанию), контакты пусты.
+   - С добавлением `persons_count=3` → степпер всё равно **1** (параметр проигнорирован).
+   - С добавлением `name`/`email`/`phone`/`full_name`/`message_to_guide` → поля «Как вас зовут / Ваша эл. почта / Ваш телефон» **остаются пустыми** (параметры проигнорированы; страницу не ломают).
+3. **External Orders** (`node scripts/tripster-verify.mjs`) → **403 FORBIDDEN** для партнёра `travelpayoutsapi` (общий партнёр Travelpayouts). Это и есть единственная причина, по которой полный prefill (участники + контакты) сейчас невозможен.
+4. **Официальные affiliate-docs Tripster** («2.1 Формирование ссылок») перечисляют для URL только `exp_partner`, `utm_source`, `utm_campaign`, `utm_medium`, `utm_term`. Параметров для контактов/участников **нет**. Reseller Booking API у Tripster — «coming soon», т.е. доступ к созданию заказов выдаётся отдельно (что согласуется с 403).
+
+> **Вывод:** «рабочий способ» из памяти пользователя = **путь A (External Orders)**, который отдавал `/experience/order/{id}/` с полным prefill даже анонимному посетителю (заказ создаётся нашим сервером по партнёрскому токену). Он перестал работать не из-за регрессии в нашем коде, а потому что External Orders отвечает **403** (у общего партнёрского аккаунта Travelpayouts нет прав на создание заказов). Через URL контакты и число участников подставить нельзя — это ограничение MFE Tripster, подтверждённое исходником бандла, живым браузером и официальной документацией.
+>
+> **Как восстановить полный prefill:** получить у Tripster доступ к External Orders для отдельного партнёрского аккаунта и прописать его `TRIPSTER_PARTNER`/`TRIPSTER_SECRET`. После этого `external_orders` начнёт возвращать `201`, и достаточно включить `ENABLE_PARTNER_CONTACT_FORM = true` — поток сам пойдёт по пути A.
+
+**Проверенная рабочая ссылка (date + time, анонимно, prefill подтверждён в браузере):**
+
+```
+https://experience.tripster.ru/experience/booking/50248/?date=2026-07-01&time=10%3A00&persons_count=3
+```
+
+Партнёрская (Travelpayouts) обёртка той же ссылки: `https://tripster.tpx.li/fkVcjNIq`
 
 Построение URL: `buildTripsterPartnerBookingUrl` в `src/lib/tripster/partner-tour-utils.ts`
 
 Пример:
 
 ```
-https://experience.tripster.ru/experience/booking/50900/?date=2026-09-01&time=10%3A00%3A00&persons_count=3&name=…&email=…&phone=…
+https://experience.tripster.ru/experience/booking/50900/?date=2026-09-01&time=10%3A00&persons_count=3&name=…&email=…&phone=…
 ```
 
 ### Travelpayouts-обёртка fallback / order URL
@@ -216,7 +265,7 @@ https://tp.media/r?marker=434047&u=https%3A%2F%2Fexperience.tripster.ru%2Fexperi
 | URL | Статус | Комментарий |
 |-----|--------|-------------|
 | `/experience/{id}/` | ✅ | Карточка экскурсии |
-| `/experience/booking/{id}/?date&time&persons_count` | ✅ | Fallback checkout с prefilling даты/времени |
+| `/experience/booking/{id}/?date&time` | ✅ | Fallback checkout: подставляются дата и время (`time` только `HH:MM`); `persons_count` страницей игнорируется |
 | `/experience/order/{id}/` | ✅ | Checkout после External Orders |
 | `/orders/{id}/` | ❌ 404 | Legacy path из API; **переписывать** в `/experience/order/{id}/` |
 | `/mfs/experience/booking/{id}/` | ⚠️ | MFE-вариант; проект использует канонический `/experience/booking/` |
@@ -269,10 +318,19 @@ https://tp.media/r?marker=434047&u=https%3A%2F%2Fexperience.tripster.ru%2Fexperi
 **Симптом:** prefilling контактов невозможен — только путь B.  
 **Действие:** запросить подключение External Orders у Tripster; до этого UX честно предупреждает (`resolveTripsterFallbackDescription`).
 
+### 6. `time=HH:MM:SS` в fallback-URL → время не подставляется (до текущего фикса)
+
+**Симптом (повторяющаяся регрессия):** при «Подтвердить и забронировать» дата подставлялась, а **время и число туристов — нет**.  
+**Истинная причина (проверено вживую в браузере на experience 92634 и 50900):**
+- `buildTripsterPartnerBookingUrl` через `normalizeTripsterBookingTime` добавлял к времени секунды (`21:30` → `21:30:00`). Страница бронирования Tripster читает `time` **только как `HH:MM`** и при `HH:MM:SS` молча игнорирует параметр — слот времени не выбирается. Прошлые «фиксы» (`5feb755`, `b13710d`, `4865505`) правили выбор серверного fallback и валидацию параметров, но **формат времени оставался `HH:MM:SS`**, поэтому время по-прежнему не подставлялось.
+- Число участников страница бронирования **не читает из URL вообще** (проверены `persons_count`, `persons`, `participants`, `tourists` — степпер всегда `1`). Это не баг нашего кода: на стороне Tripster без External Orders prefill участников через URL невозможен.
+
+**Исправление:** `normalizeTripsterBookingTime` теперь отдаёт `HH:MM` (отбрасывает секунды) для URL-страницы бронирования. External Orders POST по-прежнему использует `HH:MM:SS` (отдельная функция `normalizeTimeForApi`). Регресс-тесты в `checkout-url.test.ts` фиксируют `HH:MM` в финальном URL и явно запрещают `HH:MM:SS`.
+
 ## Чеклист для изменений кода
 
 - [ ] Успешный order → `/experience/order/{id}/`, не `/orders/`
-- [ ] Fallback → `/experience/booking/{id}/` + `time` в формате `HH:MM:SS`
+- [ ] Fallback → `/experience/booking/{id}/` + `time` в формате **`HH:MM`** (НЕ `HH:MM:SS` — страница бронирования игнорирует секунды); `persons_count` не подставляется страницей
 - [ ] При `affiliate_fallback` клиент использует `response.fallbackUrl` as-is
 - [ ] Успешный order URL оборачивается в Travelpayouts на сервере
 - [ ] External Orders POST содержит заголовки `Idempotency-Key` **и** `X-REQUESTID` (`{uuid}_{unix_timestamp}`)

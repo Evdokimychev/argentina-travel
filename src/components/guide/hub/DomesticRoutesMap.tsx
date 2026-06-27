@@ -16,6 +16,7 @@ import {
 } from "@/data/argentina-domestic-routes";
 import { resolveDomesticRouteLabels } from "@/lib/flights/destination-airports";
 import { buildFlightsSearchHref } from "@/lib/flights/search-href";
+import { ROUTE_MAP_POPUP_OPTIONS } from "@/lib/tour-route-map";
 import "leaflet/dist/leaflet.css";
 
 type HubCode = "AEP" | "EZE";
@@ -125,7 +126,7 @@ export default function DomesticRoutesMap() {
       });
       marker.bindPopup(
         `<strong>${dest.code}</strong> ${dest.city}<br><span>${route.duration} · ${FREQUENCY_META[route.frequency].label}</span>`,
-        { className: "route-map-popup" }
+        ROUTE_MAP_POPUP_OPTIONS,
       );
       marker.on("click", () => setSelectedCode(route.to));
       marker.addTo(map);
@@ -138,7 +139,7 @@ export default function DomesticRoutesMap() {
     });
     hubMarker.bindPopup(
       `<strong>${hub}</strong> ${hubAirport.city}<br><span>Хаб внутренних рейсов</span>`,
-      { className: "route-map-popup" }
+      ROUTE_MAP_POPUP_OPTIONS,
     );
     hubMarker.addTo(map);
     layersRef.current.markers.set(hub, hubMarker);
@@ -158,7 +159,7 @@ export default function DomesticRoutesMap() {
         });
         line.bindPopup(
           `<strong>${route.from} ↔ ${route.to}</strong><br><span>${route.duration} · ${route.season}</span>`,
-          { className: "route-map-popup" }
+          ROUTE_MAP_POPUP_OPTIONS,
         );
         line.addTo(map);
         layersRef.current.regionalLines.push(line);

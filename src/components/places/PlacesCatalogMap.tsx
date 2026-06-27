@@ -38,6 +38,17 @@ function getPlaceBounds(places: PlaceListing[]): [[number, number], [number, num
   ];
 }
 
+/** Custom pin marker — Leaflet's default PNG icons don't resolve under bundlers. */
+function createPlaceIcon(): L.DivIcon {
+  return L.divIcon({
+    className: "",
+    html: `<div class="places-map-marker"></div>`,
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
+    popupAnchor: [0, -12],
+  });
+}
+
 function buildPopupHtml(place: PlaceListing): string {
   const category = PLACE_CATEGORY_LABELS[place.category];
   return `
@@ -57,7 +68,7 @@ function clusterPlaces(map: L.Map, places: PlaceListing[]): L.LayerGroup {
   const zoom = map.getZoom();
   if (zoom >= 8 || places.length <= 30) {
     for (const place of places) {
-      const marker = L.marker([place.latitude, place.longitude]);
+      const marker = L.marker([place.latitude, place.longitude], { icon: createPlaceIcon() });
       marker.bindPopup(buildPopupHtml(place));
       group.addLayer(marker);
     }
@@ -81,7 +92,7 @@ function clusterPlaces(map: L.Map, places: PlaceListing[]): L.LayerGroup {
     const avgLng = cellPlaces.reduce((s, p) => s + p.longitude, 0) / cellPlaces.length;
 
     if (cellPlaces.length === 1) {
-      const marker = L.marker([avgLat, avgLng]);
+      const marker = L.marker([avgLat, avgLng], { icon: createPlaceIcon() });
       marker.bindPopup(buildPopupHtml(cellPlaces[0]));
       group.addLayer(marker);
     } else {

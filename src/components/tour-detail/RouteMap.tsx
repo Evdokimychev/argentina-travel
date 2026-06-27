@@ -22,6 +22,8 @@ interface RouteMapProps {
   progress?: number;
   onSelect?: (id: string) => void;
   fitToken?: number;
+  resizeToken?: number;
+  scrollWheelZoom?: boolean;
   className?: string;
 }
 
@@ -68,6 +70,8 @@ export default function RouteMap({
   progress = 0,
   onSelect,
   fitToken = 0,
+  resizeToken = 0,
+  scrollWheelZoom = false,
   className,
 }: RouteMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -107,7 +111,7 @@ export default function RouteMap({
     }
 
     const map = L.map(containerRef.current, {
-      scrollWheelZoom: false,
+      scrollWheelZoom,
       zoomControl: true,
     });
 
@@ -158,7 +162,11 @@ export default function RouteMap({
     map.on("zoomend", requestLayoutRefresh);
     map.on("click", () => setExpandedClusterKey(null));
 
-    map.fitBounds(bounds, { padding: [48, 48], maxZoom: 9 });
+    if (points.length === 1) {
+      map.setView([points[0]!.lat, points[0]!.lng], 10);
+    } else {
+      map.fitBounds(bounds, { padding: [48, 48], maxZoom: 9 });
+    }
     mapRef.current = map;
     setExpandedClusterKey(null);
     setLayoutRevision((value) => value + 1);
@@ -180,7 +188,19 @@ export default function RouteMap({
       spiderLinesRef.current = null;
       boundsRef.current = null;
     };
-  }, [points, requestLayoutRefresh]);
+  }, [points, requestLayoutRefresh, scrollWheelZoom]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    if (map.scrollWheelZoom.enabled() !== scrollWheelZoom) {
+      if (scrollWheelZoom) {
+        map.scrollWheelZoom.enable();
+      } else {
+        map.scrollWheelZoom.disable();
+      }
+    }
+  }, [scrollWheelZoom]);
 
   useEffect(() => {
     if (!selectedId || !mapRef.current || points.length === 0) return;
@@ -231,7 +251,7 @@ export default function RouteMap({
 
         marker.bindPopup(
           buildRouteMapClusterPopupHtml(points, group.indices),
-          { ...ROUTE_MAP_POPUP_OPTIONS, maxWidth: 300 },
+          { ...ROUTE_MAP_POPUP_OPTIONS, maxWidth: 240, minWidth: 160 },
         );
         marker.on("click", (event) => {
           L.DomEvent.stopPropagation(event);
@@ -289,9 +309,8 @@ export default function RouteMap({
         marker.addTo(map);
         markersRef.current.set(point.id, marker);
 
-        if (active) {
+        if (active && !marker.isPopupOpen()) {
           marker.openPopup();
-          map.panTo(latLng, { animate: true, duration: 0.4 });
         }
       });
     }
@@ -321,9 +340,33 @@ export default function RouteMap({
 
   useEffect(() => {
     if (!mapRef.current || !boundsRef.current || fitToken === 0) return;
-    mapRef.current.fitBounds(boundsRef.current, { padding: [48, 48], maxZoom: 9 });
+    const map = mapRef.current;
+    if (points.length === 1) {
+      map.setView([points[0]!.lat, points[0]!.lng], 10);
+    } else {
+      map.fitBounds(boundsRef.current, { padding: [48, 48], maxZoom: 9 });
+    }
     requestLayoutRefresh();
-  }, [fitToken, requestLayoutRefresh]);
+  }, [fitToken, points, requestLayoutRefresh]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || resizeToken === 0) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      map.invalidateSize({ animate: false });
+      if (boundsRef.current) {
+        if (points.length === 1) {
+          map.setView([points[0]!.lat, points[0]!.lng], Math.max(map.getZoom(), 10));
+        } else {
+          map.fitBounds(boundsRef.current, { padding: [48, 48], maxZoom: 9 });
+        }
+      }
+      requestLayoutRefresh();
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [resizeToken, points, requestLayoutRefresh]);
 
   return (
     <div

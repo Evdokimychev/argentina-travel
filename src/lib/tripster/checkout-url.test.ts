@@ -64,7 +64,7 @@ describe("tripster checkout url", () => {
     });
 
     expect(url).toBe(
-      "https://experience.tripster.ru/experience/booking/50900/?date=2026-09-01&time=10%3A00%3A00&persons_count=3&name=%D0%98%D0%B2%D0%B0%D0%BD&full_name=%D0%98%D0%B2%D0%B0%D0%BD&email=ivan%40example.com&phone=%2B79991234567&message_to_guide=%D0%9D%D1%83%D0%B6%D0%B5%D0%BD+%D0%B4%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B9+%D1%81%D1%82%D1%83%D0%BB%D1%8C%D1%87%D0%B8%D0%BA"
+      "https://experience.tripster.ru/experience/booking/50900/?date=2026-09-01&time=10%3A00&persons_count=3&name=%D0%98%D0%B2%D0%B0%D0%BD&full_name=%D0%98%D0%B2%D0%B0%D0%BD&email=ivan%40example.com&phone=%2B79991234567&message_to_guide=%D0%9D%D1%83%D0%B6%D0%B5%D0%BD+%D0%B4%D0%B5%D1%82%D1%81%D0%BA%D0%B8%D0%B9+%D1%81%D1%82%D1%83%D0%BB%D1%8C%D1%87%D0%B8%D0%BA"
     );
   });
 
@@ -163,7 +163,8 @@ describe("tripster checkout url", () => {
 
     expect(url).toContain("/experience/booking/50900/");
     expect(url).toContain("date=2026-09-01");
-    expect(url).toContain("time=10%3A00%3A00");
+    expect(url).toContain("time=10%3A00");
+    expect(url).not.toContain("time=10%3A00%3A00");
     expect(url).toContain("persons_count=2");
   });
 
@@ -187,7 +188,8 @@ describe("tripster checkout url", () => {
 
     expect(url).toContain("/experience/booking/50900/");
     expect(url).toContain("date=2026-09-01");
-    expect(url).toContain("time=12%3A00%3A00");
+    expect(url).toContain("time=12%3A00");
+    expect(url).not.toContain("time=12%3A00%3A00");
     expect(url).toContain("persons_count=2");
   });
 
@@ -204,5 +206,39 @@ describe("tripster checkout url", () => {
     });
 
     expect(url).toBe("https://experience.tripster.ru/experience/order/77777/");
+  });
+
+  it("excursion affiliate fallback keeps date + HH:MM time + persons_count (regression: time was HH:MM:SS)", () => {
+    // Полный сценарий «Подтвердить и забронировать» для архивной контактной
+    // формы: сервер вернул affiliate_fallback без готовых query-параметров,
+    // клиент пересобирает URL из контекста брони (дата/время/туристы).
+    // Время приходит из расписания в формате HH:MM ("21:30").
+    const url = resolveTripsterBookingRedirectFromApi({
+      response: {
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl: "https://experience.tripster.ru/experience/booking/92634/",
+      },
+      experienceId: 92634,
+      context: { startDate: "2026-06-27", time: "21:30", guests: 3 },
+    });
+
+    expect(url).toContain("/experience/booking/92634/");
+    expect(url).toContain("date=2026-06-27");
+    // Страница бронирования Tripster принимает время только как HH:MM.
+    expect(url).toContain("time=21%3A30");
+    expect(url).not.toContain("time=21%3A30%3A00");
+    expect(url).toContain("persons_count=3");
+  });
+
+  it("strips seconds from time even when context provides HH:MM:SS", () => {
+    const url = buildTripsterPartnerOpenUrl(92634, {
+      startDate: "2026-06-27",
+      time: "21:30:00",
+      guests: 2,
+    });
+
+    expect(url).toContain("time=21%3A30");
+    expect(url).not.toContain("%3A00%3A00");
   });
 });

@@ -28,7 +28,11 @@ import {
   resolveTripsterFallbackDescription,
   resolveYouTravelFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
-import { resolveTripsterBookingRedirectFromApi, buildTripsterPartnerOpenUrl } from "@/lib/tripster/checkout-url";
+import {
+  resolveTripsterBookingRedirectFromApi,
+  buildTripsterPartnerOpenUrl,
+  type TripsterBookingApiResponse,
+} from "@/lib/tripster/checkout-url";
 import PartnerBookingSuccessPanel from "@/components/booking/PartnerBookingSuccessPanel";
 import BookingPreviewCard, { partnerTourPreviewFields } from "@/components/booking/BookingPreviewCard";
 import {
@@ -241,11 +245,33 @@ export default function PartnerTourBookingContactSection({
     };
   }
 
+  function toTripsterBookingApiResponse(data: {
+    ok?: boolean;
+    mode?: string;
+    orderId?: number | string;
+    orderUrl?: string;
+    fallbackUrl?: string;
+    fallbackReason?: string;
+  }): TripsterBookingApiResponse {
+    const orderIdRaw = data.orderId;
+    const orderId =
+      typeof orderIdRaw === "string"
+        ? Number.parseInt(orderIdRaw, 10)
+        : orderIdRaw;
+    return {
+      ok: data.ok,
+      mode: data.mode,
+      orderId: Number.isFinite(orderId) ? orderId : undefined,
+      orderUrl: data.orderUrl,
+      fallbackUrl: data.fallbackUrl,
+    };
+  }
+
   function resolveTripsterRedirectUrl(
     data: {
       ok?: boolean;
       mode?: string;
-      orderId?: number;
+      orderId?: number | string;
       orderUrl?: string;
       fallbackUrl?: string;
       fallbackReason?: string;
@@ -256,7 +282,7 @@ export default function PartnerTourBookingContactSection({
   ): string {
     return normalizePartnerBookingUrl(
       resolveTripsterBookingRedirectFromApi({
-        response: data,
+        response: toTripsterBookingApiResponse(data),
         experienceId: tour.partnerExperienceId ?? 0,
         context: buildTripsterCheckoutContext(contact, startDate, slotTime),
       })

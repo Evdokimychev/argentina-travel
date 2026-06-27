@@ -82,10 +82,10 @@ export default function ExcursionReviewsSummary({
         <button
           type="button"
           onClick={onPhotosClick}
-          className="group relative shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
+          className="group relative shrink-0 self-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2"
           aria-label={t("excursions.reviews.photoCount").replace("{count}", String(photos.length))}
         >
-          <div className="flex items-center pb-1 pl-1 pr-16 pt-3">
+          <div className="flex items-center pl-1 pb-5">
             {previewPhotos.map((photo, index) => (
               <div
                 key={photo}
@@ -105,7 +105,7 @@ export default function ExcursionReviewsSummary({
               </div>
             ))}
           </div>
-          <span className="absolute bottom-0 right-0 inline-flex items-center gap-0.5 rounded-full border border-gray-100 bg-white px-3 py-1.5 text-sm font-medium text-charcoal shadow-md transition group-hover:border-sky/30 group-hover:text-sky">
+          <span className="absolute bottom-0 right-0 z-10 inline-flex items-center gap-0.5 rounded-full border border-gray-100 bg-white px-3 py-1.5 text-sm font-medium text-charcoal shadow-md transition group-hover:border-sky/30 group-hover:text-sky">
             {t("excursions.reviews.photoCount").replace("{count}", String(photos.length))}
             <ChevronRight className="h-4 w-4 shrink-0 opacity-70" aria-hidden />
           </span>
