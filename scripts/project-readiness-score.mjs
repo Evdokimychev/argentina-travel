@@ -99,7 +99,7 @@ function scoreCms(cms) {
 }
 
 function scoreLighthouse(lh) {
-  if (!lh) return { score: null, note: "нет lighthouse-phase2-sample-last.json (npm run lighthouse:phase2)" };
+  if (!lh) return { score: null, note: "нет lighthouse report (npm run lighthouse:phase2:prod)" };
   const perf = lh.medianPerformance ?? 0;
   const a11y = lh.medianAccessibility ?? 0;
   const budget = lh.budget ?? { performance: 90, accessibility: 95 };
@@ -108,10 +108,15 @@ function scoreLighthouse(lh) {
   const clsWorst = Math.max(...(lh.results ?? []).map((r) => r.cls ?? 0), 0);
   const clsPenalty = clsWorst > 0.1 ? (clsWorst - 0.1) * 5 : 0;
   const raw = (perfRatio * 0.55 + a11yRatio * 0.45) * 10 - clsPenalty;
+  const source = lh.baseUrl?.includes("goargentina") ? "prod CDN" : "local lab";
   return {
     score: clamp(raw, 0, 10),
-    note: `median perf ${perf}, a11y ${a11y}, worst CLS ${clsWorst.toFixed(3)} (local lab)`,
+    note: `median perf ${perf}, a11y ${a11y}, worst CLS ${clsWorst.toFixed(3)} (${source})`,
   };
+}
+
+function readLighthouseReport() {
+  return readJson("lighthouse-phase2-prod-last.json") ?? readJson("lighthouse-phase2-sample-last.json");
 }
 
 function overallScore(dimensions) {
@@ -162,7 +167,7 @@ function main() {
   const publish = readJson("publish-turnkey-last.json");
   const analytics = readJson("analytics-readiness-last.json");
   const cms = readJson("cms-cutover-readiness-last.json");
-  const lighthouse = readJson("lighthouse-phase2-sample-last.json");
+  const lighthouse = readLighthouseReport();
 
   const dimensions = {
     code: scorePublish(publish),
