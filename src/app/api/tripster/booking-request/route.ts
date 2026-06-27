@@ -398,7 +398,7 @@ async function postTripsterBookingRequest(request: Request) {
       name,
       email,
       phone,
-      status: order.status ?? "pending",
+      status: order.status ?? "confirmation",
       orderId: order.id,
       orderUrl,
       priceSnapshot: order.price ?? null,

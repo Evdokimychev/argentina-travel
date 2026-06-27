@@ -127,28 +127,56 @@ async function verifyTripster() {
     );
   }
 
-  const orderProbe = await fetch(
-    `${apiBase}/partners/${encodeURIComponent(tripsterPartner)}/external_orders/`,
-    {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        "Idempotency-Key": "tripster-verify-probe",
-      },
-      body: JSON.stringify({}),
-    }
-  );
-  if (orderProbe.status === 403) {
-    console.log(
-      "External orders API: FORBIDDEN — у партнёра нет доступа к созданию заказов (нужен отдельный доступ у Tripster)"
+  // External Orders требует заголовки Idempotency-Key и X-REQUESTID
+  // (формат `{uuid}_{unix_timestamp}`). Пустое тело → 400 (валидация),
+  // если доступ есть; 403/401 — проблемы авторизации/доступа.
+  const buildRequestId = () =>
+    `${(globalThis.crypto?.randomUUID?.() ?? `probe-${Date.now()}`)}_${Math.floor(Date.now() / 1000)}`;
+
+  const probeExternalOrders = async (authScheme) => {
+    const response = await fetch(
+      `${apiBase}/partners/${encodeURIComponent(tripsterPartner)}/external_orders/`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `${authScheme} ${token}`,
+          "Content-Type": "application/json",
+          "Idempotency-Key": `tripster-verify-probe-${Date.now()}`,
+          "X-REQUESTID": buildRequestId(),
+        },
+        body: JSON.stringify({}),
+      }
     );
-  } else if (orderProbe.status === 400) {
-    console.log("External orders API: ok (доступ есть, валидация сработала как ожидалось)");
-  } else if (orderProbe.status === 401) {
-    console.log("External orders API: unauthorized (401)");
+    return response.status;
+  };
+
+  let orderStatus = await probeExternalOrders("Bearer");
+  let usedScheme = "Bearer";
+
+  // Документация создания заказа (2021) показывает схему `Token`.
+  // Если Bearer вернул проблему авторизации — пробуем legacy-схему.
+  if (orderStatus === 401 || orderStatus === 403) {
+    const tokenStatus = await probeExternalOrders("Token");
+    if (tokenStatus === 400) {
+      orderStatus = tokenStatus;
+      usedScheme = "Token";
+    }
+  }
+
+  if (orderStatus === 400) {
+    console.log(
+      `External orders API: ok (доступ есть, валидация сработала как ожидалось; схема авторизации: ${usedScheme})`
+    );
+  } else if (orderStatus === 403) {
+    console.log(
+      "External orders API: FORBIDDEN — нет доступа к созданию заказов или невалидная авторизация (нужен отдельный доступ у Tripster)"
+    );
+  } else if (orderStatus === 401) {
+    console.log("External orders API: unauthorized (401) — учётные данные не приняты");
+  } else if (orderStatus === 405) {
+    console.log("External orders API: 405 — метод не разрешён (ожидался POST)");
   } else {
-    console.log(`External orders API: unexpected status ${orderProbe.status}`);
+    console.log(`External orders API: unexpected status ${orderStatus}`);
   }
 
   return true;

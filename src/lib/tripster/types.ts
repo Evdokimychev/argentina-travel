@@ -285,9 +285,26 @@ export type TripsterExternalOrderRequest = {
   message_to_guide?: string;
 };
 
+/**
+ * Статусы заказа External Orders (официальная документация «Создание заказа»):
+ * - `confirmation` — ожидание подтверждения гидом (в течение суток);
+ * - `pending_payment` — ожидание оплаты путешественником;
+ * - `paid` — заказ оплачен;
+ * - `cancelled` — заказ отменён.
+ */
+export type TripsterOrderStatus =
+  | "confirmation"
+  | "pending_payment"
+  | "paid"
+  | "cancelled";
+
 export type TripsterExternalOrderResponse = {
   id: number;
-  status: string;
+  status: TripsterOrderStatus | string;
+  /** Кол-во участников из заказа. */
+  persons_count?: number;
+  /** Сумма комиссии партнёра по заказу. */
+  profit?: number;
   url?: string;
   price?: TripsterPriceQuote;
   event?: { date?: string; time?: string };

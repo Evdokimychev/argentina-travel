@@ -32,7 +32,8 @@ alwaysApply: false
 2. Fallback checkout: `/experience/booking/{id}/` + query params; `time` в формате `HH:MM:SS`.
 3. При `affiliate_fallback` клиент использует **server `fallbackUrl` as-is** — не пересобирать локально.
 4. Успешный order URL оборачивать в Travelpayouts на сервере (`wrapTripsterUrlWithAffiliate`).
-5. External Orders требует заголовок `Idempotency-Key`.
+5. External Orders POST требует **оба** заголовка: `Idempotency-Key` (хранится 1 час) и `X-REQUESTID` в формате `{uuid}_{unix_timestamp}` (отклоняется, если старше 30 минут).
+6. Авторизация — `Authorization: Bearer {token}` (актуальные docs 2025). При `401/403` создание заказа повторяется со схемой `Token` (legacy docs 2021). Методы каталога (экскурсии/расписание/цены) официально публичны.
 
 ## Travelpayouts
 

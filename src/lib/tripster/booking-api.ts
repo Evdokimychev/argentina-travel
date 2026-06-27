@@ -37,12 +37,35 @@ function buildQuery(params: Record<string, string | number | undefined>): string
   return query ? `?${query}` : "";
 }
 
-async function tripsterFetch<T>(path: string, init?: RequestInit, retryOnAuth = true): Promise<T> {
+/**
+ * Уникальный идентификатор запроса для заголовка `X-REQUESTID`.
+ * Формат из официальной документации External Orders: `{uuid}_{unix_timestamp}`.
+ * Запросы с request_id старше 30 минут отклоняются (HTTP 400), поэтому он
+ * генерируется непосредственно перед отправкой.
+ */
+export function buildTripsterRequestId(): string {
+  const nowTimestamp = Math.floor(Date.now() / 1000);
+  return `${randomUUID()}_${nowTimestamp}`;
+}
+
+type TripsterAuthScheme = "Bearer" | "Token";
+
+type TripsterFetchOptions = {
+  retryOnAuth?: boolean;
+  authScheme?: TripsterAuthScheme;
+};
+
+async function tripsterFetch<T>(
+  path: string,
+  init?: RequestInit,
+  options: TripsterFetchOptions = {}
+): Promise<T> {
+  const { retryOnAuth = true, authScheme = "Bearer" } = options;
   const token = await getTripsterAccessToken(!retryOnAuth);
   const response = await fetch(`${partnerBasePath()}${path}`, {
     ...init,
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `${authScheme} ${token}`,
       "Content-Type": "application/json",
       ...(init?.headers ?? {}),
     },
@@ -51,7 +74,7 @@ async function tripsterFetch<T>(path: string, init?: RequestInit, retryOnAuth = 
 
   if (response.status === 401 && retryOnAuth) {
     clearTripsterTokenCache();
-    return tripsterFetch<T>(path, init, false);
+    return tripsterFetch<T>(path, init, { retryOnAuth: false, authScheme });
   }
 
   const body = await response.json().catch(() => null);
@@ -95,13 +118,38 @@ export async function fetchTripsterPriceQuote(
 
 export async function createTripsterExternalOrder(
   payload: TripsterExternalOrderRequest,
-  idempotencyKey = randomUUID()
+  idempotencyKey: string = randomUUID(),
+  requestId: string = buildTripsterRequestId()
 ): Promise<TripsterExternalOrderResponse> {
-  return tripsterFetch<TripsterExternalOrderResponse>("/external_orders/", {
+  // Официальная документация External Orders требует заголовки уникальности
+  // запроса (`Idempotency-Key`, результат хранится 1 час) и идентификатора
+  // запроса (`X-REQUESTID` в формате `{uuid}_{unix_timestamp}`).
+  const init: RequestInit = {
     method: "POST",
     headers: {
       "Idempotency-Key": idempotencyKey,
+      "X-REQUESTID": requestId,
     },
     body: JSON.stringify(payload),
-  });
+  };
+
+  try {
+    return await tripsterFetch<TripsterExternalOrderResponse>("/external_orders/", init, {
+      authScheme: "Bearer",
+    });
+  } catch (error) {
+    // Документация авторизации (2025) использует `Authorization: Bearer`,
+    // но страница создания заказа (2021) показывает `Authorization: Token`.
+    // На 401/403 повторяем запрос со схемой `Token` для совместимости.
+    if (
+      error instanceof TripsterBookingError &&
+      (error.status === 401 || error.status === 403)
+    ) {
+      return tripsterFetch<TripsterExternalOrderResponse>("/external_orders/", init, {
+        authScheme: "Token",
+        retryOnAuth: false,
+      });
+    }
+    throw error;
+  }
 }

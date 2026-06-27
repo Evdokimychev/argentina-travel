@@ -5,6 +5,7 @@
 | Раздел | URL |
 |--------|-----|
 | API создания ссылок | https://support.travelpayouts.com/hc/ru/articles/360016804119 (Links API) |
+| Раздел «API и данные экскурсий» | https://support.travelpayouts.com/hc/ru/sections/360004561331 |
 | Tripster API через Travelpayouts | https://support.travelpayouts.com/hc/ru/articles/360028527251 |
 | Whitelabel (авиа) | https://support.travelpayouts.com/hc/ru/articles/203956163 |
 | Intui transfers API | https://support.travelpayouts.com/hc/ru/articles/360016804119 |
@@ -61,7 +62,7 @@ X-Access-Token: {TRAVELPAYOUTS_API_KEY}
 }
 ```
 
-> **Важно (из документации Travelpayouts):** ссылки на Tripster **обязательно** создавать через Links API или кабинет Travelpayouts. Прямые URL без marker не учитывают продажи.
+> **Важно (из официальной статьи Travelpayouts «API от Трипстер»):** ключ API Tripster получают POST-запросом на `https://experience.tripster.ru/api/auth/obtain_token/partner/` с `partner` и `secret` (для Travelpayouts `partner = travelpayoutsapi`). При формировании **ссылок на экскурсии обязательно** использовать форму создания партнёрских ссылок в Личном кабинете Travelpayouts / Links API — иначе переходы не отслеживаются и продажи не учитываются.
 
 Реализация: `src/lib/travelpayouts/client.ts`
 

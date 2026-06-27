@@ -5,14 +5,16 @@
 | Раздел | URL |
 |--------|-----|
 | Каталог (Partner API NEW) | https://tripster.atlassian.net/wiki/spaces/affiliates/pages/3688235009 |
-| External Orders — обзор | https://tripster.atlassian.net/wiki/spaces/PEO/overview |
-| External Orders — API | https://tripster.atlassian.net/wiki/spaces/PEO/pages/3035136001 |
+| Travelpayouts → раздел «API и данные экскурсий» | https://support.travelpayouts.com/hc/ru/sections/360004561331 |
+| External Orders — API (общий workflow) | https://tripster.atlassian.net/wiki/spaces/PEO/pages/3035136001 |
 | Авторизация (affiliate) | https://tripster.atlassian.net/wiki/spaces/affiliates/pages/3736502353 |
 | Авторизация (External Orders) | https://tripster.atlassian.net/wiki/spaces/PEO/pages/3034841206 |
 | Создание заказа | https://tripster.atlassian.net/wiki/spaces/PEO/pages/3034546421 |
 | Travelpayouts → Tripster API | https://support.travelpayouts.com/hc/ru/articles/360028527251 |
 
-> **Важно из официальной документации External Orders:** пользователь партнёра **не может авторизоваться** на сайте Tripster. Заказ создаётся через API; checkout открывается по ссылке из ответа.
+> **Важно из официальной документации External Orders:** пользователь партнёра **не может авторизоваться** на сайте Tripster, не получает уведомлений и не переписывается с гидом. Заказ создаётся через API; checkout открывается по ссылке из ответа. Если гид не подтвердил заказ за 24 часа — заказ автоматически отменяется. Цена при создании заказа — **полная цена в рублях**.
+
+> **Доступ к методам (официально):** методы каталога (экскурсии, расписание, цены) **общедоступны и не требуют авторизации**. Авторизация (токен) обязательна только для методов работы с заказами: создание, оплата, получение статуса. В проекте к каталогу всё равно передаётся `Authorization: Bearer` — это допустимо и не мешает публичным методам.
 
 ## Переменные окружения
 
@@ -46,6 +48,8 @@ Content-Type: application/json
 
 Дальнейшие запросы: `Authorization: Bearer {token}`.
 
+> **Расхождение в официальных документах по схеме авторизации:** страницы «Авторизация партнёра» (affiliate) и «Авторизация» (External Orders), обновлённые в 2025, показывают `Authorization: Bearer {token}`. Более старая страница «Создание заказа» (2021) показывает `Authorization: Token {token}`. Проект использует **`Bearer`** как актуальную схему, но при создании заказа на ответ `401/403` **автоматически повторяет запрос со схемой `Token`** для совместимости (`createTripsterExternalOrder` в `src/lib/tripster/booking-api.ts`).
+
 Реализация: `src/lib/tripster/auth.ts`
 
 ## Ключевые endpoints (каталог)
@@ -59,28 +63,49 @@ Content-Type: application/json
 | GET | `/experiences/?city={id}&page=…` | Bearer | Листинг |
 | GET | `/experiences/{id}/?detailed=true&price_format=detailed` | Bearer | Карточка |
 | GET | `/experiences/{id}/schedule/` | Bearer | Расписание |
-| GET | `/experiences/{id}/price/?persons_count=&date=&time=` | Bearer | Котировка |
+| GET | `/experiences/{id}/price/?persons_count=&tickets=&date=&time=` | публичный | Котировка цены |
 | GET | `/experiences/{id}/reviews/` | Bearer | Отзывы |
 | GET | `/experiences/{id}/plan/` | Bearer | Программа тура |
 | GET | `/web/v2/experiences/{id}/` | Bearer | Доп. поля (не partner API) |
 
 Реализация: `src/lib/tripster/client.ts`, `src/lib/tripster/booking-api.ts`
 
+### Уточнение цены перед заказом (официально)
+
+`GET /api/partners/{partner}/experiences/{experience_id}/price/` с query: `persons_count`, `tickets` (`[{"id":int,"count":int}]`), `date`, `time`.
+
+Ответ:
+
+```json
+{
+  "value": 3500.0,
+  "pre_pay": 810.0,
+  "payment_to_guide": 2690.0,
+  "per_ticket": [{ "id": 3917702062, "title": "Стандартный билет", "count": 2, "price": 3500.0 }],
+  "currency": "RUB",
+  "currency_rate": 1.0
+}
+```
+
 ## External Orders API (бронирование)
 
 | Метод | Путь | Заголовки |
 |-------|------|-----------|
-| POST | `/external_orders/` | `Authorization`, `Content-Type: application/json`, **`Idempotency-Key: {uuid}`** |
+| POST | `/external_orders/` | `Authorization`, `Content-Type: application/json`, **`Idempotency-Key: {uuid}`**, **`X-REQUESTID: {uuid}_{unix_timestamp}`** |
+
+- **`Idempotency-Key`** — обязателен. При отсутствии официально возвращается `400 {"Idempotency-Key": "Отсутствует заголовок уникальности запроса"}`. Обработанный результат хранится в системе **1 час**.
+- **`X-REQUESTID`** — по общему workflow External Orders заголовок обязателен в каждом запросе. Формат: `{uuid}_{unix_timestamp}` (целое число секунд). Запросы с request_id **старше 30 минут** возвращаются с кодом `400`, поэтому он генерируется непосредственно перед отправкой (`buildTripsterRequestId`).
+- Все обязательные поля тела: `experience`, `date`, `time`, `persons_count`, `tickets`, `name`, `email`, `phone`. Необязательное: `message_to_guide`.
 
 ### Request body (пример)
 
 ```json
 {
   "experience": 276,
-  "persons_count": 2,
+  "persons_count": 1,
+  "tickets": [{ "id": 3917702062, "count": 2 }, { "id": 193973751, "count": 1 }],
   "date": "2026-09-15",
   "time": "12:00:00",
-  "tickets": [{"id": 39177020, "count": 2}],
   "name": "Иван Иванов",
   "email": "ivan@example.com",
   "phone": "+79991234567",
@@ -88,32 +113,46 @@ Content-Type: application/json
 }
 ```
 
-### Response (пример)
+### Response (пример, HTTP 201)
 
 ```json
 {
   "id": 123,
-  "status": "pending",
+  "status": "confirmation",
+  "persons_count": 1,
+  "profit": 600,
+  "price": {
+    "value": 6200.0,
+    "pre_pay": 1430.0,
+    "payment_to_guide": 4770.0,
+    "currency": "RUB",
+    "currency_rate": 1.0
+  },
   "url": "https://experience.tripster.ru/experience/order/123/",
-  "price": { "value": 5000, "currency": "RUB" },
-  "event": { "date": "2026-09-15", "time": "12:00:00" },
+  "message_to_guide": "Привет, гид!",
+  "event": { "date": "2026-09-15", "time": "12:00" },
   "experience": { "id": 276, "title": "…" },
   "traveler": { "name": "…", "email": "…", "phone": "…" }
 }
 ```
 
-> В документации и в ответах API поле `url` должно указывать на **`/experience/order/{id}/`**. Иногда встречается legacy-путь **`/orders/{id}/`** — для анонимного пользователя он **даёт 404**.
+Возможные значения `status`: **`confirmation`** (ожидание подтверждения гидом), **`pending_payment`** (ожидание оплаты), **`paid`** (оплачен), **`cancelled`** (отменён).
+
+> В документации и в ответах API поле `url` указывает на **`/experience/order/{id}/`**. Иногда встречается legacy-путь **`/orders/{id}/`** — для анонимного пользователя он **даёт 404**, поэтому в проекте переписывается на `/experience/order/{id}/`.
 
 Реализация: `src/lib/tripster/booking-api.ts`, `src/app/api/tripster/booking-request/route.ts`
 
-### Типичные ошибки External Orders
+### Коды ошибок External Orders (официально)
 
-| HTTP | Причина | Поведение проекта |
-|------|---------|-------------------|
-| 401 | Неверный token/secret | `affiliate_fallback`, reason `external_orders_unauthorized` |
-| 403 | External Orders не подключён к аккаунту | `affiliate_fallback`, reason `external_orders_forbidden` |
-| 422 | Невалидные поля, занятое время, лимит участников | `affiliate_fallback`, reason `api_booking_rejected` |
+| HTTP | Причина (официальная формулировка) | Поведение проекта |
+|------|------------------------------------|-------------------|
+| 400 | Отсутствуют/невалидны обязательные поля; занятое время; превышен лимит участников; отсутствует `Idempotency-Key` | `affiliate_fallback`, reason `api_booking_rejected` |
+| 401 | «Учетные данные не были предоставлены» (нет авторизации) | `affiliate_fallback`, reason `external_orders_unauthorized` |
+| 403 | «У вас нет прав…» (невалидная авторизация / нет доступа к External Orders) | `affiliate_fallback`, reason `external_orders_forbidden` |
+| 405 | Использован `GET` вместо `POST` | (не должно возникать — проект всегда `POST`) |
 | 503 | Инфраструктура | `affiliate_fallback`, reason `api_unavailable` |
+
+> Официальная документация использует **400** (Bad Request) для всех ошибок валидации (ранее в этом документе ошибочно упоминался `422`).
 
 ## Два пути prefilling checkout (критично)
 
@@ -236,5 +275,7 @@ https://tp.media/r?marker=434047&u=https%3A%2F%2Fexperience.tripster.ru%2Fexperi
 - [ ] Fallback → `/experience/booking/{id}/` + `time` в формате `HH:MM:SS`
 - [ ] При `affiliate_fallback` клиент использует `response.fallbackUrl` as-is
 - [ ] Успешный order URL оборачивается в Travelpayouts на сервере
-- [ ] Тесты: `checkout-url.test.ts`, `open-partner-booking-url.test.ts`
+- [ ] External Orders POST содержит заголовки `Idempotency-Key` **и** `X-REQUESTID` (`{uuid}_{unix_timestamp}`)
+- [ ] Авторизация: `Bearer`, с автоповтором на `Token` при `401/403`
+- [ ] Тесты: `checkout-url.test.ts`, `open-partner-booking-url.test.ts`, `booking-api.test.ts`
 - [ ] E2E: `tests/e2e/tripster-partner-invariants.spec.ts`
