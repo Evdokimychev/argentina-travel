@@ -57,6 +57,12 @@ async function fetchListingAvailableDates(
 export async function enrichTripsterListingsWithSchedule(
   listings: TourListing[],
 ): Promise<TourListing[]> {
+  // Catalog uses schedule_snapshot from DB sync. Live API enrichment is opt-in only
+  // (many concurrent schedule calls can exceed serverless timeouts on home/catalog).
+  if (process.env.TRIPSTER_ENRICH_LISTING_SCHEDULE !== "true") {
+    return listings;
+  }
+
   if (!isTripsterConfigured() || listings.length === 0) {
     return listings;
   }
