@@ -1,0 +1,10 @@
+{
+  "recommendations": [
+    "dbaeumer.vscode-eslint",
+    "bradlc.vscode-tailwindcss",
+    "ms-playwright.playwright",
+    "Prisma.prisma",
+    "supabase.supabase-vscode"
+  ],
+  "unwantedRecommendations": []
+}

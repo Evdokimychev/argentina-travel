@@ -1,0 +1,41 @@
+---
+description: Quality gates — tests, security, UX, performance before merge
+globs: src/**/*.{ts,tsx},supabase/**/*
+alwaysApply: false
+---
+
+# Quality gates
+
+Перед завершением задачи с изменением кода:
+
+## Обязательно
+
+- [ ] TypeScript: `npx tsc --noEmit`
+- [ ] Lint: `npm run lint` на затронутых файлах
+- [ ] Unit tests: `npm test` или targeted `vitest run path/to/test.ts`
+- [ ] Нет секретов в diff (.env, keys, tokens)
+
+## При изменении UI
+
+- [ ] Responsive (mobile + desktop)
+- [ ] Состояния: loading, empty, error
+- [ ] Keyboard / focus visible
+- [ ] Русский текст по editorial-standard
+
+## При изменении API / БД
+
+- [ ] RLS policies (Supabase) — `npm run rls-audit`
+- [ ] Миграция + `migration-meta` при schema change
+- [ ] Типы и mappers синхронизированы
+
+## При изменении бронирования / партнёров
+
+- [ ] `src/lib/tripster/checkout-url.test.ts`
+- [ ] `docs/integrations/` при новом поведении URL
+- [ ] Excursion + Partner tour flows оба проверены
+
+## Performance (по возможности)
+
+- [ ] Нет лишних fetch в client components
+- [ ] Карты: `invalidateSize` при resize/fullscreen
+- [ ] Bundle: не импортировать тяжёлые lib в server components без need

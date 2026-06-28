@@ -1,0 +1,15 @@
+# Cursor indexing — exclude noise and secrets
+.env
+.env.*
+!.env.example
+var/
+test-results/
+playwright-report/
+.next/
+node_modules/
+*.log
+docs/articles/
+docs/audit/
+docs/tmp-*
+var/ops/lh-*.json
+**/*.trace.zip

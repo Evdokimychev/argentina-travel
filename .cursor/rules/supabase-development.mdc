@@ -1,0 +1,31 @@
+---
+description: Supabase — migrations, RLS, auth, types
+globs: supabase/**/*,src/lib/supabase/**/*,src/app/api/**/*
+alwaysApply: false
+---
+
+# Supabase development
+
+Используй skill `supabase` и `supabase-postgres-best-practices`.
+
+## Checklist
+
+- Новая таблица → RLS enable + policies для anon/authenticated/service
+- Изменение schema → migration в `supabase/migrations/`, не ручной SQL в prod
+- После migration → `npm run supabase:verify`, `node scripts/write-migration-meta.mjs`
+- Client: `@supabase/ssr` patterns для Next.js App Router
+- Server-only keys: никогда в `NEXT_PUBLIC_*`
+
+## Команды
+
+```bash
+npm run supabase:migrate
+npm run supabase:verify
+npm run rls-audit
+npm run backup:schema   # перед крупными изменениями
+```
+
+## Auth
+
+- `getUser()` / claims на server, не доверять client-only session
+- Admin routes — отдельная проверка роли

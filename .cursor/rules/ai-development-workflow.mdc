@@ -1,0 +1,31 @@
+---
+description: AI-first workflow — analyze, plan, implement, verify, document
+alwaysApply: true
+---
+
+# AI-first workflow
+
+## Порядок для любой нетривиальной задачи
+
+1. **Контекст** — прочитай `AGENTS.md`, релевантные `.cursor/rules/`, `docs/ai-first/`
+2. **Влияние** — перечисли сущности, страницы, кабинеты (см. global-system-approach)
+3. **План** — кратко: подход, файлы, риски
+4. **Код** — минимальный diff, существующие абстракции
+5. **Проверки** — `npm run audit:quick` минимум; partner changes → tripster tests
+6. **Синхронизация** — что отображается, редактируется, будущие интеграции
+
+## Партнёрские интеграции
+
+Перед правками Tripster/Travelpayouts/YouTravel:
+
+- Прочитать `docs/integrations/*.md` и `.cursor/rules/partner-apis.mdc`
+- Не пересобирать checkout URL локально, если сервер отдал `fallbackUrl`
+- Время на странице бронирования Tripster: **`HH:MM`**, не `HH:MM:SS`
+
+## Коммиты
+
+Только по явной просьбе пользователя. Conventional Commits — кратко, «why» важнее «what».
+
+## Объяснение решений
+
+После значимых изменений — 1–2 предложения: **почему** выбран подход, не только что сделано.
