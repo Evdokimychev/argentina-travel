@@ -36,3 +36,15 @@ export function resolveTourPriceFromPrefix(input: TourPublicPriceInput): boolean
   }
   return Boolean(input.priceFromPrefix);
 }
+
+export function isTourPriceOnRequest(input: TourPublicPriceInput): boolean {
+  return Boolean(input.priceOnRequest) || input.priceUsd <= 0;
+}
+
+export function formatTourCatalogSeoPriceLabel(input: TourPublicPriceInput): string {
+  if (isTourPriceOnRequest(input)) {
+    return TOUR_PRICE_ON_REQUEST_LABEL;
+  }
+  const prefix = resolveTourPriceFromPrefix(input) ? "от " : "";
+  return `${prefix}${input.priceUsd} USD`;
+}

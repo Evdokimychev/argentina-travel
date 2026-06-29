@@ -25,6 +25,8 @@ export const SITE_FOOTER_NAV = [
   { href: "/contacts", label: "Контакты", labelKey: "nav.contacts" },
 ] as const;
 
+import { SITE_INSTAGRAM_URL, SITE_TELEGRAM_URL } from "@/data/site-contacts";
+
 export const SITE_FOOTER_CONTACTS = [
   { href: "/contacts", label: "Написать нам", labelKey: "footer.contact.write" },
   { href: "/join", label: "Стать организатором", labelKey: "footer.contact.organizer" },
@@ -37,7 +39,10 @@ export type SiteSocialLink = {
   external: true;
 };
 
-/** Empty until real channel URLs are configured (avoids placeholder t.me/ links). */
-export const SITE_SOCIAL_LINKS: readonly SiteSocialLink[] = [];
+/** Fallback when CMS contact globals omit social URLs. */
+export const SITE_SOCIAL_LINKS: readonly SiteSocialLink[] = [
+  { href: SITE_TELEGRAM_URL, label: "Telegram", external: true },
+  { href: SITE_INSTAGRAM_URL, label: "Instagram", external: true },
+];
 
 /** Primary public navigation lives in `@/data/site-nav`. Footer mirrors main sections. */

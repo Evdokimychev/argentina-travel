@@ -19,9 +19,8 @@ import {
 import { matchesTourFormat } from "@/lib/tour-format";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
 import { resolveListingOwnerUserId } from "@/lib/organizer-public";
-import {
-  isTripsterPartnerListing,
-} from "@/lib/tripster/partner-tour-utils";
+import { matchesCatalogCountryScope } from "@/lib/catalog-country-relevance";
+import { isTripsterPartnerListing } from "@/lib/tripster/partner-tour-utils";
 
 const CHILD_AGE_MAP: Record<ChildrenPolicy, number> = {
   "Без ограничений": 0,
@@ -176,6 +175,10 @@ export function filterTours(
       return false;
     }
 
+    if (!matchesCatalogCountryScope(tour, filters.includeNeighboringCountries)) {
+      return false;
+    }
+
     return true;
   });
 
@@ -221,6 +224,7 @@ export function countActiveFilters(
   if (filters.nearMe) n++;
   if (filters.organizerSlug.trim()) n++;
   if (filters.instantBookingOnly) n++;
+  if (filters.includeNeighboringCountries) n++;
   return n;
 }
 

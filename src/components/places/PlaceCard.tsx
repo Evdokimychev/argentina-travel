@@ -8,6 +8,7 @@ import type { PlaceListing } from "@/types/place";
 import { placeHref } from "@/lib/places-repository";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
+import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { cn } from "@/lib/cn";
 
 export default function PlaceCard({
@@ -35,7 +36,7 @@ export default function PlaceCard({
             sizes="(max-width: 768px) 100vw, 25vw"
           />
         ) : (
-          <div className="flex h-full items-center justify-center bg-gray-100 text-slate">Нет фото</div>
+          <ImagePlaceholder className="absolute inset-0" ariaLabel={place.name} />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/20 to-transparent" />
         <div className="absolute left-3 top-3">

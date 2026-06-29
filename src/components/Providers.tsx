@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import type { LocaleCode } from "@/types/locale";
 import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
@@ -24,10 +25,16 @@ const GuideAssistantWidget = dynamic(() => import("@/components/guide/GuideAssis
   ssr: false,
 });
 
-export default function Providers({ children }: { children: React.ReactNode }) {
+export default function Providers({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale?: LocaleCode;
+}) {
   return (
     <ThemeProvider>
-      <LocaleCurrencyProvider>
+      <LocaleCurrencyProvider initialLocale={locale}>
         <SiteFeedbackProvider>
           <AuthProvider>
             <InteractionTrackingProvider>

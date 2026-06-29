@@ -21,10 +21,12 @@ import { tourExtra } from "@/data/tour-extra";
 const root = join(process.cwd(), "src");
 
 describe("Sprint 5 — trust gate", () => {
-  it("platform stats tourCount matches Argentina homepage filter", () => {
+  it("platform stats match Argentina catalog counts", () => {
     const stats = getPlatformStatsFromRepository();
     const argentinaCount = filterArgentinaHomepageTours(getMarketplaceListings()).length;
     expect(stats.tourCount).toBe(argentinaCount);
+    expect(stats.partnerTourCount).toBe(0);
+    expect(stats.totalTourCount).toBe(argentinaCount);
   });
 
   it("seed tour extras have zero fake review counts", () => {
@@ -41,7 +43,19 @@ describe("Sprint 5 — trust gate", () => {
     expect(stats.reviewCount).toBe(0);
     const label = resolveTourRatingLabel(stats);
     expect(label.hasReviews).toBe(false);
-    expect(label.badgeLabel).toBe("Новый");
+    expect(label.badgeLabel).toBe("Новый тур");
+  });
+
+  it("native marketplace listings use real organizer without fake demo names", () => {
+    const natives = getMarketplaceListings();
+    for (const tour of natives) {
+      expect(tour.rating).toBe(0);
+      expect(tour.reviewCount).toBe(0);
+      expect(tour.organizer.avatar).toBe("");
+      expect(tour.organizer.name).toBe("Иван Евдокимычев");
+      expect(tour.organizerOwnerId).toBe("ivan-evdokimychev");
+      expect(tour.organizer.name).not.toMatch(/^(Мария|Карлос|Ана|Пабло|София|Диего|Лусия)/);
+    }
   });
 
   it("blog indexable count is consistent with filterIndexableBlogPosts", () => {
@@ -75,6 +89,7 @@ describe("Sprint 5 — trust gate", () => {
 
   it("no Unsplash hotlinks in public seed data files", () => {
     const files = [
+      "data/marketplace-tours.ts",
       "data/tour-details/patagonia.ts",
       "data/tour-extra.ts",
       "components/tour-detail/checkout/checkout-addons.ts",

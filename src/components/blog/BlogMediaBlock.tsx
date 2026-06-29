@@ -21,8 +21,7 @@ export default function BlogMediaBlock({ src, alt, caption }: Props) {
         height={dims.height}
         className="block h-auto w-full"
         sizes={CONTENT_FIGURE_SIZES}
-        placeholderVariant="destination"
-        placeholderLabel={alt || caption || "Иллюстрация"}
+        placeholderVariant="generic"
         blurPlaceholder={false}
       />
       {caption ? (

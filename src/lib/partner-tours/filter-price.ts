@@ -1,11 +1,9 @@
-import { CURRENCIES } from "@/data/locale-config";
-import { convertToUsd } from "@/lib/currency";
 import { resolveTourFilterPriceUsd } from "@/lib/tour-price-public";
+import { resolvePartnerListingPriceUsd } from "@/lib/tripster/partner-tour-price";
 import { isTripsterPartnerListing } from "@/lib/tripster/partner-tour-utils";
 import { resolveYouTravelPartnerPriceUsd } from "@/lib/youtravel/offers-mapper";
 import { isYouTravelPartnerListing } from "@/lib/youtravel/partner-tour-utils";
 import type { TourListing } from "@/types";
-import type { CurrencyCode } from "@/types/locale";
 
 type TourFilterPriceInput = Pick<
   TourListing,
@@ -23,24 +21,6 @@ export function resolvePartnerTourFilterPriceUsd(tour: TourFilterPriceInput): nu
   if (fromPartner != null) return fromPartner;
 
   if (tour.priceUsd > 0) return tour.priceUsd;
-  return null;
-}
-
-function isSupportedFilterCurrency(code: string): code is CurrencyCode {
-  return CURRENCIES.some((entry) => entry.code === code);
-}
-
-function resolvePartnerListingPriceUsd(
-  value: number | null | undefined,
-  currency: string | null | undefined
-): number | null {
-  if (value == null || !Number.isFinite(value) || value <= 0) return null;
-
-  const normalized = currency?.trim().toUpperCase() || "USD";
-  if (normalized === "USD") return value;
-  if (isSupportedFilterCurrency(normalized)) {
-    return convertToUsd(value, normalized);
-  }
   return null;
 }
 

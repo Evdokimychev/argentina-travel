@@ -30,7 +30,8 @@ import CatalogDepartureCalendarButton from "./CatalogDepartureCalendarButton";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { TourEmbedConfig } from "@/types/tour-embed";
 import BlogCard from "@/components/BlogCard";
-import { tripsWord, filtersWord } from "@/lib/pluralize";
+import { formatCatalogHeadline } from "@/lib/catalog-stats";
+import { filtersWord, tripsWord } from "@/lib/pluralize";
 import PlatformStatsBlock from "./PlatformStatsBlock";
 import HomeTestimonialsSection from "./HomeTestimonialsSection";
 import SectionShell from "@/components/layout/SectionShell";
@@ -357,9 +358,14 @@ export default function MarketplaceHome({
             <p className="text-center text-sm text-slate">
               В каталоге{" "}
               <span className="font-semibold text-charcoal">
-                {homepageTours.length} {tripsWord(homepageTours.length)}
+                {formatCatalogHeadline({
+                  nativeCount: platformStats.tourCount,
+                  partnerCount: platformStats.partnerTourCount,
+                  totalCount: platformStats.totalTourCount,
+                  organizerCount: platformStats.organizerCount,
+                })}
               </span>{" "}
-              — выбирайте даты и отправляйте заявку
+              по Аргентине — выбирайте даты и отправляйте заявку
             </p>
             <Link href="/tours">
               <Button size="lg" className="rounded-full px-8">

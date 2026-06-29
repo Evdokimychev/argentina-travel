@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
 import { SafeImage } from "@/components/ui/safe-image";
+import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { tourDetailGalleryMobileAspectClass } from "@/lib/tour-detail-ui";
 import { DetailGalleryLightbox } from "@/components/shared/DetailGalleryLightbox";
 import { GalleryMosaicDesktop } from "@/components/shared/GalleryMosaicDesktop";
@@ -16,7 +17,6 @@ interface TourDetailGalleryProps {
   title: string;
   /** Stable key for mosaic layout (slug). Falls back to title. */
   layoutSeed?: string;
-  emptyLabel?: string;
 }
 
 function useGalleryKeyboard(
@@ -240,7 +240,6 @@ export default function TourDetailGallery({
   images,
   title,
   layoutSeed,
-  emptyLabel = "Фото тура",
 }: TourDetailGalleryProps) {
   const [lightbox, setLightbox] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
@@ -259,11 +258,11 @@ export default function TourDetailGallery({
     return (
       <div
         className={cn(
-          "flex items-center justify-center rounded-2xl border border-dashed border-gray-200 bg-gray-50",
-          tourDetailGalleryMobileAspectClass
+          "overflow-hidden rounded-2xl border border-dashed border-gray-200",
+          tourDetailGalleryMobileAspectClass,
         )}
       >
-        <p className="text-sm text-slate">{emptyLabel} скоро появятся</p>
+        <ImagePlaceholder className="h-full min-h-[12rem]" ariaLabel={title} />
       </div>
     );
   }

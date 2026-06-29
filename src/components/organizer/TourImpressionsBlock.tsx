@@ -3,9 +3,10 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Camera, Eye, GripVertical, ImageIcon, Plus, Trash2, X } from "lucide-react";
+import { Camera, Eye, GripVertical, Plus, Trash2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import OrganizerRichTextField from "@/components/organizer/OrganizerRichTextField";
 import {
   ORGANIZER_TOUR_IMPRESSION_DESCRIPTION_MAX,
@@ -109,10 +110,7 @@ function ImpressionPhotoUpload({
             </button>
           </div>
         ) : (
-          <div className="flex aspect-square flex-col items-center justify-center rounded-xl border-2 border-dashed border-gray-300 bg-white px-2 text-center">
-            <ImageIcon className="h-6 w-6 text-gray-300" aria-hidden />
-            <p className="mt-1 text-[10px] text-slate">Нет фото</p>
-          </div>
+          <ImagePlaceholder compact className="aspect-square rounded-xl border-2 border-dashed border-gray-300" />
         )}
       </div>
 

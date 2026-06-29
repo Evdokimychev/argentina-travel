@@ -8,7 +8,7 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
 import { collectTopVerifiedReviewsAsync } from "@/lib/homepage-reviews";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
-import { getPlatformStatsFromRepository } from "@/lib/organizer-public";
+import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getFlag } from "@/lib/feature-flags/server";
 import { resolveInteractionActor } from "@/lib/personalization/interaction-context-server";
@@ -43,11 +43,11 @@ export default async function HomePage() {
 
   const tours = await fetchMarketplaceTours();
   const heroSrc = getHomeHeroImage();
+  const platformStats = getPlatformStatsFromMarketplace(tours);
 
-  const [testimonials, platformStats, recommendedTours, recommendedExcursions, excursionCities] =
+  const [testimonials, recommendedTours, recommendedExcursions, excursionCities] =
     await Promise.all([
       collectTopVerifiedReviewsAsync(3),
-      Promise.resolve(getPlatformStatsFromRepository()),
       homepageRecommendationsV2Enabled
         ? getRecommendedTours({ ...actor, limit: 6, allTours: tours })
         : Promise.resolve({ tours: [], personalized: false }),

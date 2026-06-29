@@ -1,57 +1,55 @@
 "use client";
 
-import { Compass, ImageIcon, MapPin, Mountain, UserRound } from "lucide-react";
+import { ImageIcon, UserRound } from "lucide-react";
 import { cn } from "@/lib/cn";
+
+/** Единая подпись заглушки для туров, блога, мест и прочих медиа. */
+export const IMAGE_PLACEHOLDER_LABEL = "Нет фото";
 
 type ImagePlaceholderVariant = "tour" | "excursion" | "avatar" | "destination" | "generic";
 
 export type { ImagePlaceholderVariant };
 
-const VARIANT_CONFIG: Record<
-  ImagePlaceholderVariant,
-  { icon: typeof ImageIcon; label: string; iconSize: string }
-> = {
-  tour: { icon: MapPin, label: "Фото тура", iconSize: "h-8 w-8" },
-  excursion: { icon: Compass, label: "Фото экскурсии", iconSize: "h-8 w-8" },
-  avatar: { icon: UserRound, label: "Фото профиля", iconSize: "h-5 w-5" },
-  destination: { icon: Mountain, label: "Фото направления", iconSize: "h-9 w-9" },
-  generic: { icon: ImageIcon, label: "Изображение", iconSize: "h-8 w-8" },
-};
-
 interface ImagePlaceholderProps {
+  /** @deprecated Все контентные варианты выглядят одинаково; оставлено для совместимости API. */
   variant?: ImagePlaceholderVariant;
+  /** Видимая подпись; по умолчанию «Нет фото». */
   label?: string;
+  /** Имя для screen readers, если подпись скрыта (compact). */
+  ariaLabel?: string;
   className?: string;
   iconClassName?: string;
-  /** Hide caption — for small crops (avatars, thumbnails). */
+  /** Скрыть подпись — для миниатюр и аватаров. */
   compact?: boolean;
-  /** Pulse animation while the real image loads. */
+  /** Пульсация, пока грузится реальное изображение. */
   loading?: boolean;
 }
 
 export function ImagePlaceholder({
   variant = "generic",
   label,
+  ariaLabel,
   className,
   iconClassName,
   compact = false,
   loading = false,
 }: ImagePlaceholderProps) {
-  const config = VARIANT_CONFIG[variant];
-  const Icon = config.icon;
-  const text = label ?? config.label;
-  const showCaption = !compact && Boolean(text);
+  const isAvatar = variant === "avatar";
+  const Icon = isAvatar ? UserRound : ImageIcon;
+  const displayLabel = label ?? IMAGE_PLACEHOLDER_LABEL;
+  const showCaption = !compact;
+  const accessibleName = ariaLabel ?? displayLabel;
 
   return (
     <div
       className={cn(
         "flex h-full w-full flex-col items-center justify-center gap-2",
         "bg-gradient-to-br from-surface-muted via-surface-elevated to-surface-muted",
+        loading && "animate-pulse",
         className,
       )}
-      aria-hidden={!label}
-      role={label ? "img" : undefined}
-      aria-label={label}
+      role="img"
+      aria-label={accessibleName}
     >
       <span
         className={cn(
@@ -60,15 +58,17 @@ export function ImagePlaceholder({
         )}
       >
         <Icon
-          className={cn(compact ? "h-4 w-4" : config.iconSize, iconClassName)}
+          className={cn(compact ? "h-4 w-4" : "h-8 w-8", iconClassName)}
           strokeWidth={1.5}
         />
       </span>
       {showCaption ? (
         <span className="max-w-[90%] truncate px-2 text-center text-xs font-medium text-slate/80">
-          {text}
+          {displayLabel}
         </span>
       ) : null}
     </div>
   );
 }
+
+export default ImagePlaceholder;

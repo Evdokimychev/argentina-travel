@@ -6,6 +6,7 @@ import CatalogSeoLinks from "@/components/seo/CatalogSeoLinks";
 import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { buildCatalogMetadata, getServerCatalogView } from "@/lib/catalog-seo";
+import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
 
 type ToursPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -20,6 +21,7 @@ export async function generateMetadata({ searchParams }: ToursPageProps): Promis
 export default async function ToursPage({ searchParams }: ToursPageProps) {
   const params = await searchParams;
   const tours = await fetchMarketplaceTours();
+  const platformStats = getPlatformStatsFromMarketplace(tours);
   const view = getServerCatalogView(params, tours);
 
   return (
@@ -32,7 +34,7 @@ export default async function ToursPage({ searchParams }: ToursPageProps) {
       />
       <CatalogSeoLinks tours={view.filtered} />
       <Suspense fallback={<CatalogLoadingFallback title="Загружаем каталог туров…" />}>
-        <ToursCatalog tours={tours} />
+        <ToursCatalog tours={tours} platformStats={platformStats} />
       </Suspense>
     </>
   );

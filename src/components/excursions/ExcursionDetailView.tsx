@@ -107,7 +107,6 @@ export default function ExcursionDetailView({
               images={galleryImages}
               title={excursion.title}
               layoutSeed={excursion.slug}
-              emptyLabel="Фото экскурсии"
             />
           </div>
         ) : null}

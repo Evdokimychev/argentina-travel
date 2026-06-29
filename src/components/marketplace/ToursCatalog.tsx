@@ -29,7 +29,8 @@ import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import { buildTourFilterChips } from "@/lib/catalog-filter-chips";
 import { formatToursFound } from "@/lib/pluralize";
-import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import { formatCatalogBrowseHint } from "@/lib/catalog-stats";
+import { buildPublicOrganizerProfile, type PlatformStats } from "@/lib/organizer-public";
 import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
@@ -69,9 +70,10 @@ const CatalogMapView = dynamic(
 
 interface ToursCatalogProps {
   tours: TourListing[];
+  platformStats?: PlatformStats;
 }
 
-export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps) {
+export default function ToursCatalog({ tours: initialTours, platformStats }: ToursCatalogProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const tours = useRepositoryTourListings(initialTours);
@@ -152,6 +154,15 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
     sentinelRef,
   } = useCatalogLazySlice(sorted, PAGE_SIZE, { resetKey: lazyResetKey });
   const activeFilterCount = countActiveFilters(filters, currency, tours);
+  const catalogBrowseHint =
+    platformStats && activeFilterCount === 0 && !filters.query.trim()
+      ? formatCatalogBrowseHint({
+          nativeCount: platformStats.tourCount,
+          partnerCount: platformStats.partnerTourCount,
+          totalCount: platformStats.totalTourCount,
+          organizerCount: platformStats.organizerCount,
+        })
+      : null;
   const organizerProfile = filters.organizerSlug.trim()
     ? buildPublicOrganizerProfile(filters.organizerSlug.trim())
     : null;
@@ -290,6 +301,9 @@ export default function ToursCatalog({ tours: initialTours }: ToursCatalogProps)
         ) : null}
 
         <div className="mt-8" ref={resultsRef}>
+          {catalogBrowseHint ? (
+            <p className="mb-3 text-sm text-slate">{catalogBrowseHint}</p>
+          ) : null}
           <CatalogToolbar
             countLabel={formatToursFound(sorted.length)}
             sort={sort}

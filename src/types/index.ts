@@ -202,6 +202,8 @@ export interface TourFilters {
   organizerSlug: string;
   /** YouTravel partner tours with instant booking only. */
   instantBookingOnly: boolean;
+  /** Include tours with primary country Brazil/Paraguay etc. (off by default). */
+  includeNeighboringCountries: boolean;
 }
 
 export const DEFAULT_FILTERS: TourFilters = {
@@ -226,6 +228,7 @@ export const DEFAULT_FILTERS: TourFilters = {
   userCoords: null,
   organizerSlug: "",
   instantBookingOnly: false,
+  includeNeighboringCountries: false,
 };
 
 // --- Detail page types (unchanged subset) ---

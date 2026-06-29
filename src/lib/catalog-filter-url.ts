@@ -110,6 +110,7 @@ export function parseCatalogFiltersFromSearchParams(
     userCoords: null,
     organizerSlug: params.get("organizer")?.trim() ?? "",
     instantBookingOnly: params.get("instantBooking") === "1",
+    includeNeighboringCountries: params.get("neighbors") === "1",
   };
 }
 
@@ -174,6 +175,8 @@ export function buildCatalogFilterSearchParams(
   if (filters.nearMe) params.set("nearMe", "1");
 
   if (filters.instantBookingOnly) params.set("instantBooking", "1");
+
+  if (filters.includeNeighboringCountries) params.set("neighbors", "1");
 
   if (filters.organizerSlug.trim()) {
     params.set("organizer", filters.organizerSlug.trim());

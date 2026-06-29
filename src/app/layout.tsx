@@ -6,6 +6,8 @@ import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import GtmHeadScripts from "@/components/analytics/GtmHeadScripts";
 import { loadSiteFooterInfo } from "@/lib/site-footer-info";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
+import { localeCodeFromI18n } from "@/lib/i18n/sync-messages";
 import { siteRobotsMetadata } from "@/lib/cms/site-globals/robots-meta";
 import { resolveSiteVerificationMeta } from "@/lib/analytics/site-verification-meta";
 import { fetchSiteBranding, fetchSitePublicMeta } from "@/lib/site-settings-server";
@@ -93,9 +95,11 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const siteFooter = await loadSiteFooterInfo();
+  const i18nLocale = await getServerI18nLocale();
+  const locale = localeCodeFromI18n(i18nLocale);
 
   return (
-    <html lang="ru" className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
+    <html lang={locale} className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
       <head>
         <GtmHeadScripts />
         <script
@@ -107,7 +111,7 @@ export default async function RootLayout({
       <body className="min-h-screen flex flex-col bg-background text-foreground antialiased">
         <ThemeScript />
         <SiteJsonLd />
-        <Providers>
+        <Providers locale={locale}>
           <SiteChrome siteFooter={siteFooter}>{children}</SiteChrome>
         </Providers>
       </body>

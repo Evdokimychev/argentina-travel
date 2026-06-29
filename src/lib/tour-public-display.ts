@@ -97,7 +97,7 @@ export function resolveTourRatingLabel(tour: {
 }): { hasReviews: boolean; ratingText: string; badgeLabel: string } {
   const hasReviews = tour.reviewCount > 0;
   if (!hasReviews) {
-    return { hasReviews: false, ratingText: "", badgeLabel: "Новый" };
+    return { hasReviews: false, ratingText: "", badgeLabel: "Новый тур" };
   }
   return {
     hasReviews: true,

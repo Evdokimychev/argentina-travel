@@ -68,8 +68,7 @@ export default function PageImage({
       loading={resolvedLoading}
       sizes={resolvedSizes}
       className={cn(className)}
-      placeholderVariant={role === "card" ? "tour" : "destination"}
-      placeholderLabel={resolved.alt}
+      placeholderVariant="generic"
     />
   );
 }

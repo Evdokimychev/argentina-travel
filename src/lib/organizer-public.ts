@@ -3,7 +3,7 @@ import { SEED_USERS } from "@/lib/auth-store";
 import { joinFullName } from "@/lib/full-name";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
-import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
+import { computeCatalogStats, type CatalogStats } from "@/lib/catalog-stats";
 import {
   getAllCanonicalTours,
   getMarketplaceListings,
@@ -39,10 +39,39 @@ export interface PublicOrganizerProfile {
 }
 
 export interface PlatformStats {
+  /** Авторские туры организаторов площадки (Аргентина) */
   tourCount: number;
+  /** Партнёрские листинги Tripster / YouTravel (Аргентина) */
+  partnerTourCount: number;
+  /** tourCount + partnerTourCount */
+  totalTourCount: number;
   organizerCount: number;
   completedBookingsCount: number | null;
   isNewPlatform: boolean;
+}
+
+function catalogStatsToPlatformStats(
+  stats: CatalogStats,
+  completedBookingsCount: number | null = null
+): PlatformStats {
+  return {
+    tourCount: stats.nativeCount,
+    partnerTourCount: stats.partnerCount,
+    totalTourCount: stats.totalCount,
+    organizerCount: stats.organizerCount,
+    completedBookingsCount,
+    isNewPlatform: stats.nativeCount <= 3 && stats.totalCount <= 3,
+  };
+}
+
+/** Sync stats from local repository only (native tours; partners = 0). */
+export function getPlatformStatsFromRepository(): PlatformStats {
+  return catalogStatsToPlatformStats(computeCatalogStats(getMarketplaceListings()));
+}
+
+/** Stats from merged marketplace feed (platform + partner APIs). Prefer on SSR pages. */
+export function getPlatformStatsFromMarketplace(tours: TourListing[]): PlatformStats {
+  return catalogStatsToPlatformStats(computeCatalogStats(tours));
 }
 
 export function getOrganizerSlug(ownerUserId: string): string {
@@ -170,18 +199,6 @@ export function getPublishedToursByOrganizer(slug: string): TourListing[] {
   );
 }
 
-export function getPlatformStatsFromRepository(): PlatformStats {
-  const listings = filterArgentinaHomepageTours(getMarketplaceListings());
-  const organizerIds = new Set(listings.map((listing) => resolveListingOwnerUserId(listing)));
-
-  return {
-    tourCount: listings.length,
-    organizerCount: organizerIds.size,
-    completedBookingsCount: null,
-    isNewPlatform: listings.length <= 3,
-  };
-}
-
 export function mergePlatformStats(
   base: PlatformStats,
   completedBookingsCount: number
@@ -189,7 +206,7 @@ export function mergePlatformStats(
   return {
     ...base,
     completedBookingsCount,
-    isNewPlatform: base.tourCount <= 3 && completedBookingsCount === 0,
+    isNewPlatform: base.tourCount <= 3 && base.totalTourCount <= 3 && completedBookingsCount === 0,
   };
 }
 

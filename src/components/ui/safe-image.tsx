@@ -2,7 +2,11 @@
 
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
-import { ImagePlaceholder, type ImagePlaceholderVariant } from "@/components/ui/image-placeholder";
+import {
+  ImagePlaceholder,
+  IMAGE_PLACEHOLDER_LABEL,
+  type ImagePlaceholderVariant,
+} from "@/components/ui/image-placeholder";
 import { SKY_IMAGE_BLUR_DATA_URL } from "@/lib/media-blur";
 import { cn } from "@/lib/cn";
 
@@ -79,7 +83,8 @@ export function SafeImage({
     const placeholder = (
       <ImagePlaceholder
         variant={placeholderVariant}
-        label={placeholderLabel ?? alt}
+        label={placeholderLabel ?? IMAGE_PLACEHOLDER_LABEL}
+        ariaLabel={alt}
         compact={placeholderCompact}
         className={cn(placeholderClassName, !useAbsolutePlaceholder && className)}
       />
@@ -108,6 +113,7 @@ export function SafeImage({
           variant={placeholderVariant}
           compact={placeholderCompact}
           loading
+          ariaLabel={alt}
           className={placeholderClassName}
         />
       ) : null}

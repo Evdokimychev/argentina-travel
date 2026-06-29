@@ -1,18 +1,14 @@
+import { NATIVE_SEED_ORGANIZER_EXTRA } from "@/data/tour-organizer-display-defaults";
+
 interface TourFeature {
   title: string;
   description: string;
 }
 
-interface TourOrganizer {
-  name: string;
-  role: string;
-  avatar: string;
-}
-
 export interface TourExtra {
   rating: number;
   reviewCount: number;
-  organizer: TourOrganizer;
+  organizer: typeof NATIVE_SEED_ORGANIZER_EXTRA;
   comfort: "Простой" | "Средний" | "Высокий";
   startLocation: string;
   features: TourFeature[];
@@ -29,11 +25,7 @@ export const tourExtra: Record<string, TourExtra> = {
   "patagonia-glaciers": {
     rating: 0,
     reviewCount: 0,
-    organizer: {
-      name: "Мария Г.",
-      role: "Организатор путешествия",
-      avatar: "",
-    },
+    organizer: { ...NATIVE_SEED_ORGANIZER_EXTRA },
     comfort: "Средний",
     startLocation: "Буэнос-Айрес, аэропорт Ezeiza",
     features: [
@@ -65,11 +57,7 @@ export const tourExtra: Record<string, TourExtra> = {
   "buenos-aires-tango": {
     rating: 0,
     reviewCount: 0,
-    organizer: {
-      name: "Карлос Р.",
-      role: "Организатор путешествия",
-      avatar: "",
-    },
+    organizer: { ...NATIVE_SEED_ORGANIZER_EXTRA },
     comfort: "Высокий",
     startLocation: "Буэнос-Айрес, аэропорт Aeroparque",
     features: [
@@ -109,11 +97,7 @@ export const tourExtra: Record<string, TourExtra> = {
   "mendoza-wine": {
     rating: 0,
     reviewCount: 0,
-    organizer: {
-      name: "Ана Л.",
-      role: "Организатор путешествия",
-      avatar: "",
-    },
+    organizer: { ...NATIVE_SEED_ORGANIZER_EXTRA },
     comfort: "Высокий",
     startLocation: "Мендоса, аэропорт El Plumerillo",
     features: [
@@ -143,11 +127,7 @@ export const tourExtra: Record<string, TourExtra> = {
   "iguazu-falls": {
     rating: 0,
     reviewCount: 0,
-    organizer: {
-      name: "Пабло М.",
-      role: "Организатор путешествия",
-      avatar: "",
-    },
+    organizer: { ...NATIVE_SEED_ORGANIZER_EXTRA },
     comfort: "Средний",
     startLocation: "Пуэрто-Игуасу, Аргентина, аэропорт Катаратас-дель-Игуасу",
     features: [
@@ -177,11 +157,7 @@ export const tourExtra: Record<string, TourExtra> = {
   "salta-northwest": {
     rating: 0,
     reviewCount: 0,
-    organizer: {
-      name: "София Т.",
-      role: "Организатор путешествия",
-      avatar: "",
-    },
+    organizer: { ...NATIVE_SEED_ORGANIZER_EXTRA },
     comfort: "Средний",
     startLocation: "Сальта, аэропорт Martín Miguel de Güemes",
     features: [
@@ -211,11 +187,7 @@ export const tourExtra: Record<string, TourExtra> = {
   "ushuaia-end-of-world": {
     rating: 0,
     reviewCount: 0,
-    organizer: {
-      name: "Диего Ф.",
-      role: "Организатор путешествия",
-      avatar: "",
-    },
+    organizer: { ...NATIVE_SEED_ORGANIZER_EXTRA },
     comfort: "Средний",
     startLocation: "Ушуайя, аэропорт Malvinas Argentinas",
     features: [

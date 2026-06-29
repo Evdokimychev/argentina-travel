@@ -1,3 +1,4 @@
+import { formatTourCatalogSeoPriceLabel } from "@/lib/tour-price-public";
 import type { TourListing } from "@/types";
 
 export default function CatalogSeoLinks({ tours }: { tours: TourListing[] }) {
@@ -9,7 +10,8 @@ export default function CatalogSeoLinks({ tours }: { tours: TourListing[] }) {
         {tours.map((tour) => (
           <li key={tour.id}>
             <a href={`/tours/${tour.slug}`}>
-              {tour.title} — {tour.region}, от {tour.priceUsd} USD
+              {tour.title} — {tour.region},{" "}
+              {formatTourCatalogSeoPriceLabel(tour)}
             </a>
           </li>
         ))}

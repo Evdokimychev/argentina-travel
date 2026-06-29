@@ -251,6 +251,7 @@ describe("catalog tour filters", () => {
       groupSizes: ["До 8 человек" as const],
       tourFormats: ["group" as const],
       instantBookingOnly: true,
+      includeNeighboringCountries: true,
       organizerSlug: "guide-1",
     });
 
@@ -276,6 +277,28 @@ describe("catalog tour filters", () => {
     expect(parsed.groupSizes).toEqual(["До 8 человек"]);
     expect(parsed.tourFormats).toEqual(["group"]);
     expect(parsed.instantBookingOnly).toBe(true);
+    expect(parsed.includeNeighboringCountries).toBe(true);
     expect(parsed.organizerSlug).toBe("guide-1");
+  });
+
+  it("excludes neighboring-country tours from default catalog filter", () => {
+    const argentina = stubListing({ id: "ar-1", slug: "ar-tour", country: "Argentina" });
+    const brazil = stubListing({
+      id: "br-1",
+      slug: "rio-carnival",
+      country: "Brazil",
+      title: "Карнавал в Рио",
+      destination: "Rio de Janeiro",
+      region: "Rio de Janeiro",
+      partnerSource: "tripster",
+    });
+    const filters = filtersFor([argentina, brazil]);
+    expect(filterTours([argentina, brazil], filters, "USD").map((t) => t.id)).toEqual(["ar-1"]);
+
+    const withNeighbors = filtersFor([argentina, brazil], { includeNeighboringCountries: true });
+    expect(filterTours([argentina, brazil], withNeighbors, "USD").map((t) => t.id)).toEqual([
+      "ar-1",
+      "br-1",
+    ]);
   });
 });

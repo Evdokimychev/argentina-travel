@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import AboutPageView from "@/components/about/AboutPageView";
-import { getPlatformStatsFromRepository } from "@/lib/organizer-public";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 export const metadata: Metadata = buildPublicPageMetadata({
@@ -10,8 +11,9 @@ export const metadata: Metadata = buildPublicPageMetadata({
   path: "/about",
 });
 
-export default function AboutPage() {
-  const platformStats = getPlatformStatsFromRepository();
+export default async function AboutPage() {
+  const tours = await fetchMarketplaceTours();
+  const platformStats = getPlatformStatsFromMarketplace(tours);
 
   return <AboutPageView platformStats={platformStats} />;
 }

@@ -1,3 +1,4 @@
+import { SITE_INSTAGRAM_URL, SITE_TELEGRAM_URL } from "@/data/site-contacts";
 import type {
   SiteBrandingGlobal,
   SiteContactGlobal,
@@ -26,9 +27,9 @@ export const DEFAULT_SITE_SEO: SiteSeoGlobal = {
 
 export const DEFAULT_SITE_CONTACT: SiteContactGlobal = {
   supportEmail: "hello@goargentina.ru",
-  telegramUrl: "",
+  telegramUrl: SITE_TELEGRAM_URL,
   whatsAppUrl: "",
-  instagramUrl: "",
+  instagramUrl: SITE_INSTAGRAM_URL,
   contactPageIntro: "",
 };
 
@@ -119,9 +120,9 @@ export function normalizeSiteContact(value: unknown): SiteContactGlobal {
   const r = value as Record<string, unknown>;
   return {
     supportEmail: asString(r.supportEmail, DEFAULT_SITE_CONTACT.supportEmail),
-    telegramUrl: asString(r.telegramUrl) || undefined,
-    whatsAppUrl: asString(r.whatsAppUrl) || undefined,
-    instagramUrl: asString(r.instagramUrl) || undefined,
+    telegramUrl: asString(r.telegramUrl).trim() || DEFAULT_SITE_CONTACT.telegramUrl || undefined,
+    whatsAppUrl: asString(r.whatsAppUrl).trim() || undefined,
+    instagramUrl: asString(r.instagramUrl).trim() || DEFAULT_SITE_CONTACT.instagramUrl || undefined,
     contactPageIntro: asString(r.contactPageIntro) || undefined,
   };
 }

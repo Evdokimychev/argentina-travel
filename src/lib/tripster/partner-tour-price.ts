@@ -1,9 +1,11 @@
-import { resolveExcursionPriceUsd } from "@/lib/excursion-price-display";
+import { CURRENCIES } from "@/data/locale-config";
+import { convertToUsd } from "@/lib/currency";
 import { parseExcursionListingMeta } from "@/lib/excursion-listing-meta";
 import { getDiscountPercent } from "@/lib/discount";
 import type { PartnerTourExperienceRow } from "@/lib/tripster/partner-tour-mapper";
 import type { TripsterExperience, TripsterPriceQuote } from "@/lib/tripster/types";
 import type { TourDatePrice, TourDetail, TourListing } from "@/types";
+import type { CurrencyCode } from "@/types/locale";
 
 export type PartnerTourPriceUnit = "per_person" | "per_group";
 
@@ -428,16 +430,32 @@ export function resolvePartnerTourBookingPriceDisplay(options: {
   };
 }
 
+export function isSupportedFilterCurrency(code: string): code is CurrencyCode {
+  return CURRENCIES.some((entry) => entry.code === code);
+}
+
+/** USD amount from partner listing value/currency (supports RUB, EUR, etc.). */
+export function resolvePartnerListingPriceUsd(
+  value: number | null | undefined,
+  currency: string | null | undefined
+): number | null {
+  if (value == null || !Number.isFinite(value) || value <= 0) return null;
+
+  const normalized = currency?.trim().toUpperCase() || "USD";
+  if (normalized === "USD") return value;
+  if (isSupportedFilterCurrency(normalized)) {
+    return convertToUsd(value, normalized);
+  }
+  return null;
+}
+
 export function resolvePartnerTourPriceUsd(row: PartnerTourExperienceRow): {
   priceUsd: number;
   priceOnRequest: boolean;
   priceFromPrefix: boolean;
 } {
   const fields = resolvePartnerTourPriceFields(row);
-  const usd = resolveExcursionPriceUsd({
-    priceValue: fields.value ?? undefined,
-    priceCurrency: fields.currency ?? undefined,
-  });
+  const usd = resolvePartnerListingPriceUsd(fields.value, fields.currency);
 
   if (usd != null && usd > 0) {
     return {

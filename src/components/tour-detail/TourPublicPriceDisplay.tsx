@@ -5,6 +5,7 @@ import TourPriceDisplay from "./TourPriceDisplay";
 import PriceOnRequestInfoButton from "./PriceOnRequestInfoButton";
 import {
   TOUR_PRICE_ON_REQUEST_LABEL,
+  isTourPriceOnRequest,
   resolveTourPriceFromPrefix,
 } from "@/lib/tour-price-public";
 import { cn } from "@/lib/cn";
@@ -35,15 +36,16 @@ export default function TourPublicPriceDisplay({
   density = "default",
   className,
 }: TourPublicPriceDisplayProps) {
-  const effectiveShowFrom =
-    showFrom ?? resolveTourPriceFromPrefix({ priceUsd, priceOnRequest, priceFromPrefix });
+  const priceInput = { priceUsd, priceOnRequest, priceFromPrefix };
+  const onRequest = isTourPriceOnRequest(priceInput);
+  const effectiveShowFrom = showFrom ?? resolveTourPriceFromPrefix(priceInput);
   const isCompact = density === "compact";
   const priceValueClass =
     size === "lg" && !isCompact
       ? "font-heading text-xl font-bold text-charcoal sm:text-2xl"
       : "font-bold text-charcoal text-lg";
 
-  if (priceOnRequest) {
+  if (onRequest) {
     return (
       <div className={cn("relative min-w-0", className)}>
         <div
@@ -96,7 +98,7 @@ export function TourPriceCell({
   priceOnRequest?: boolean;
   className?: string;
 }) {
-  if (priceOnRequest) {
+  if (isTourPriceOnRequest({ priceUsd, priceOnRequest })) {
     return (
       <span className={cn("inline-flex items-center gap-1 text-slate", className)}>
         {TOUR_PRICE_ON_REQUEST_LABEL}

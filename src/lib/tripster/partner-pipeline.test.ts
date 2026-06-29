@@ -14,6 +14,7 @@ import { resolveTripsterDepartureCapacity } from "@/lib/tripster/partner-tour-de
 import { resolveTripsterDifficultyLevelFromPayload } from "@/lib/tripster/partner-tour-levels";
 import { resolveTripsterCatalogAvailableDates } from "@/lib/tripster/partner-tour-listing-schedule";
 import { partnerTourRowToListing } from "@/lib/tripster/partner-tour-mapper";
+import { resolvePartnerTourPriceUsd } from "@/lib/tripster/partner-tour-price";
 
 describe("Tripster partner pipeline regressions", () => {
   it("maps catalog availableDates from cached schedule snapshot", () => {
@@ -78,5 +79,25 @@ describe("Tripster partner pipeline regressions", () => {
     const available = mapScheduleToAvailableDates(TRIPSTER_SCHEDULE_REGRESSION, 14);
     expect(available).toHaveLength(2);
     expect(available[0]?.spotsLeft).toBe(4);
+  });
+
+  it("maps RUB listing price to positive USD in catalog listing", () => {
+    const row = {
+      ...TRIPSTER_LISTING_ROW,
+      price_value: 373_099,
+      price_currency: "RUB",
+      payload: {
+        ...(TRIPSTER_LISTING_ROW.payload as object),
+        price: { value: 373_099, currency: "RUB", price_from: true },
+      },
+    };
+
+    const price = resolvePartnerTourPriceUsd(row);
+    expect(price.priceOnRequest).toBe(false);
+    expect(price.priceUsd).toBeGreaterThan(3000);
+
+    const listing = partnerTourRowToListing(row, null);
+    expect(listing.priceOnRequest).toBe(false);
+    expect(listing.priceUsd).toBeGreaterThan(3000);
   });
 });

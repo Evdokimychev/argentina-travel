@@ -4,14 +4,15 @@ import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { buildSupabaseCdnUrl } from "@/lib/media/cdn-url";
-import { ImagePlaceholder, type ImagePlaceholderVariant } from "@/components/ui/image-placeholder";
+import { ImagePlaceholder } from "@/components/ui/image-placeholder";
 import { SafeImage } from "@/components/ui/safe-image";
 import TourCardImageVignette from "./TourCardImageVignette";
 
 interface TourCardGalleryProps {
   images: string[];
   alt: string;
-  variant?: Extract<ImagePlaceholderVariant, "tour" | "excursion">;
+  /** @deprecated Используйте единый ImagePlaceholder без вариантов. */
+  variant?: "tour" | "excursion";
 }
 
 export default function TourCardGallery({
@@ -41,7 +42,7 @@ export default function TourCardGallery({
   )];
 
   if (displayImages.length === 0) {
-    return <ImagePlaceholder variant={variant} className="absolute inset-0" label={alt} />;
+    return <ImagePlaceholder className="absolute inset-0" ariaLabel={alt} />;
   }
 
   const count = displayImages.length;

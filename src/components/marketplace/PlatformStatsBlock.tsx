@@ -2,14 +2,11 @@
 
 import { useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
-import { CheckCircle2, Map, Sparkles, Users } from "lucide-react";
-import {
-  getPlatformStatsFromRepository,
-  mergePlatformStats,
-  type PlatformStats,
-} from "@/lib/organizer-public";
+import { CheckCircle2, Handshake, Map, Sparkles, Users } from "lucide-react";
+import { mergePlatformStats, type PlatformStats } from "@/lib/organizer-public";
+import { formatCatalogStatsDetail } from "@/lib/catalog-stats";
 import { useRevealAnimation } from "@/hooks/useRevealAnimation";
-import { tripsWord } from "@/lib/pluralize";
+import { formatTours, tripsWord } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
@@ -73,10 +70,10 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
 
   useEffect(() => {
     const completed = countCompletedBookings();
-    setStats(mergePlatformStats(getPlatformStatsFromRepository(), completed));
+    setStats((prev) => mergePlatformStats(prev, completed));
   }, []);
 
-  if (stats.isNewPlatform && stats.tourCount <= 3) {
+  if (stats.isNewPlatform && stats.totalTourCount <= 3) {
     return (
       <section ref={ref} className="border-y border-gray-100 bg-gradient-to-b from-white to-surface-muted/40 py-10">
         <div className={siteContainerClass}>
@@ -85,10 +82,10 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
             card={{
               icon: Sparkles,
               label: "Площадка",
-              value: stats.tourCount,
+              value: stats.totalTourCount,
               formatValue: (n: number) => (n > 0 ? `${n} ${tripsWord(n)}` : "Старт"),
               detail:
-                stats.tourCount > 0
+                stats.totalTourCount > 0
                   ? "Авторские маршруты уже в каталоге — отзывы появятся после реальных поездок"
                   : "Первые маршруты уже в каталоге — отзывы появятся после реальных поездок",
             }}
@@ -98,14 +95,38 @@ export default function PlatformStatsBlock({ initialStats }: { initialStats: Pla
     );
   }
 
+  const catalogDetail = formatCatalogStatsDetail({
+    nativeCount: stats.tourCount,
+    partnerCount: stats.partnerTourCount,
+    totalCount: stats.totalTourCount,
+    organizerCount: stats.organizerCount,
+  });
+
   const cards: StatCard[] = [
-    stats.tourCount > 0
+    stats.partnerTourCount > 0 && stats.tourCount > 0
       ? {
           icon: Map,
-          label: "Каталог",
+          label: "Авторские",
           value: stats.tourCount,
-          formatValue: (n: number) => `${n} ${tripsWord(n)}`,
-          detail: "Авторские маршруты по Аргентине",
+          formatValue: (n: number) => formatTours(n),
+          detail: "Маршруты организаторов площадки",
+        }
+      : stats.totalTourCount > 0
+        ? {
+            icon: Map,
+            label: "Каталог",
+            value: stats.totalTourCount,
+            formatValue: (n: number) => formatTours(n),
+            detail: catalogDetail,
+          }
+        : null,
+    stats.partnerTourCount > 0
+      ? {
+          icon: Handshake,
+          label: "Партнёрские",
+          value: stats.partnerTourCount,
+          formatValue: (n: number) => formatTours(n),
+          detail: "Tripster и YouTravel — бронирование на стороне партнёра",
         }
       : null,
     stats.organizerCount > 0

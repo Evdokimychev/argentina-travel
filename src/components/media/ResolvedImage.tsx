@@ -76,8 +76,7 @@ export default function ResolvedImage({
       loading={isHero ? undefined : "lazy"}
       sizes={resolvedSizes}
       className={cn(className)}
-      placeholderVariant={role === "card" ? "tour" : "destination"}
-      placeholderLabel={resolved.alt}
+      placeholderVariant="generic"
     />
   );
 

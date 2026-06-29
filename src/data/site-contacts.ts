@@ -30,3 +30,6 @@ export const SITE_WORKING_HOURS =
   "Понедельник – суббота: 10:00–18:00 (Буэнос-Айрес), 16:00–00:00 (Москва)";
 
 export const SITE_WHATSAPP_URL = SITE_PHONES[0].whatsapp;
+
+export const SITE_TELEGRAM_URL = "https://t.me/ivievd";
+export const SITE_INSTAGRAM_URL = "https://instagram.com/iv.evd";

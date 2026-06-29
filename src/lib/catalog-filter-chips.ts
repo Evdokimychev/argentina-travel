@@ -169,6 +169,14 @@ export function buildTourFilterChips(
     });
   }
 
+  if (filters.includeNeighboringCountries) {
+    chips.push({
+      id: "neighboring-countries",
+      label: "Соседние страны",
+      onRemove: () => patch({ includeNeighboringCountries: false }),
+    });
+  }
+
   if (filters.organizerSlug.trim()) {
     const slug = filters.organizerSlug.trim();
     const profile = buildPublicOrganizerProfile(slug);
