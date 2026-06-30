@@ -17,6 +17,7 @@ import type { CronHealthReport } from "@/lib/ops/ops-status";
 import {
   SITE_CONTENT_GLOBAL_KEYS,
   SITE_GLOBAL_DEFINITIONS,
+  SITE_MAINTENANCE_GLOBAL_KEYS,
   SITE_OPS_GLOBAL_KEYS,
 } from "@/lib/cms/site-globals/registry";
 import type { ProductionReadinessSnapshot } from "@/lib/ops/production-readiness-types";
@@ -96,6 +97,7 @@ function emptyGlobalsState(): Record<SiteGlobalKey, Record<string, unknown>> {
     "site.contact": {},
     "site.legal": {},
     "site.features": {},
+    "site.maintenance": {},
   };
 }
 
@@ -148,6 +150,11 @@ export default function SettingsView() {
 
   const opsDefinitions = useMemo(() => {
     const keys = new Set<string>(SITE_OPS_GLOBAL_KEYS);
+    return SITE_GLOBAL_DEFINITIONS.filter((def) => keys.has(def.key));
+  }, []);
+
+  const maintenanceDefinitions = useMemo(() => {
+    const keys = new Set<string>(SITE_MAINTENANCE_GLOBAL_KEYS);
     return SITE_GLOBAL_DEFINITIONS.filter((def) => keys.has(def.key));
   }, []);
 
@@ -227,6 +234,19 @@ export default function SettingsView() {
               cronHealth={data?.cronHealth}
               onRefresh={() => void refresh()}
             />
+            {maintenanceDefinitions.map((definition) => (
+              <SiteGlobalForm
+                key={definition.key}
+                definition={definition}
+                values={globals[definition.key]}
+                onChange={(values) =>
+                  setGlobals((prev) => ({ ...prev, [definition.key]: values }))
+                }
+                onSave={() => void saveGlobal(definition.key)}
+                saving={savingKey === definition.key}
+                updatedAt={data?.updatedAt?.[definition.key] ?? null}
+              />
+            ))}
             <ThemeSettingsSection />
 
             <ProductionReadinessPanel snapshot={data?.productionReadiness} />

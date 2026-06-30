@@ -3,11 +3,13 @@ import {
   DEFAULT_SITE_BRANDING,
   DEFAULT_SITE_CONTACT,
   DEFAULT_SITE_FEATURES,
+  DEFAULT_SITE_MAINTENANCE,
   DEFAULT_SITE_SEO,
   normalizeSiteBranding,
   normalizeSiteContact,
   normalizeSiteFeatures,
   normalizeSiteLegal,
+  normalizeSiteMaintenance,
   normalizeSiteSeo,
   sanitizeGlobalForSave,
 } from "@/lib/cms/site-globals/normalize";
@@ -107,6 +109,27 @@ describe("normalizeSiteContact", () => {
     ).toMatchObject({
       supportEmail: "a@b.c",
       telegramUrl: "https://t.me/test",
+    });
+  });
+});
+
+describe("normalizeSiteMaintenance", () => {
+  it("uses defaults for invalid input", () => {
+    expect(normalizeSiteMaintenance(undefined)).toEqual(DEFAULT_SITE_MAINTENANCE);
+  });
+
+  it("merges custom copy and countdown", () => {
+    expect(
+      normalizeSiteMaintenance({
+        headline: "Скоро вернёмся",
+        countdownEnabled: true,
+        countdownTarget: "2026-08-01T10:00:00.000Z",
+      })
+    ).toMatchObject({
+      headline: "Скоро вернёмся",
+      countdownEnabled: true,
+      countdownTarget: "2026-08-01T10:00:00.000Z",
+      showContacts: true,
     });
   });
 });

@@ -71,6 +71,8 @@
     "audit:quick": "node scripts/audit.mjs --quick",
     "audit:security": "node scripts/audit.mjs --security",
     "audit:perf": "node scripts/audit.mjs --perf",
+    "media:integrity": "node scripts/media-manifest-integrity.mjs",
+    "media:integrity:prod": "node scripts/media-manifest-integrity.mjs --prod",
     "setup:git-hooks": "node scripts/setup-git-hooks.mjs",
     "sync-cms-media-manifest": "node scripts/sync-cms-media-manifest.mjs",
     "prune-legacy-blog-media": "node scripts/prune-legacy-blog-media.mjs",

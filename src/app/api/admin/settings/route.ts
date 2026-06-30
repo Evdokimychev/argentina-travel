@@ -55,6 +55,7 @@ export async function GET(request: Request) {
       "site.branding": normalized["site.branding"],
       "site.seo": normalized["site.seo"],
       "site.contact": normalized["site.contact"],
+      "site.maintenance": normalized["site.maintenance"],
     },
     updatedAt,
     globalsMeta: Object.values(SITE_GLOBAL_BY_KEY).map((g) => ({

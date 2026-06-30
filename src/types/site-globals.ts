@@ -56,12 +56,28 @@ export type SiteContactGlobal = {
   contactPageIntro?: string;
 };
 
+export type SiteMaintenanceGlobal = {
+  /** Короткая метка над заголовком, например «Скоро откроемся». */
+  badgeLabel: string;
+  headline: string;
+  message: string;
+  /** Подпись над кнопкой связи. */
+  notifyLabel: string;
+  /** Путь или URL фонового изображения; пусто — hero главной. */
+  backgroundImage?: string;
+  showContacts: boolean;
+  countdownEnabled: boolean;
+  /** ISO-дата окончания работ, например 2026-07-15T12:00:00.000Z */
+  countdownTarget?: string;
+};
+
 export type SiteGlobalKey =
   | "site.legal"
   | "site.features"
   | "site.branding"
   | "site.seo"
-  | "site.contact";
+  | "site.contact"
+  | "site.maintenance";
 
 export type SiteGlobalsMap = {
   "site.legal": SiteLegalGlobal;
@@ -69,6 +85,7 @@ export type SiteGlobalsMap = {
   "site.branding": SiteBrandingGlobal;
   "site.seo": SiteSeoGlobal;
   "site.contact": SiteContactGlobal;
+  "site.maintenance": SiteMaintenanceGlobal;
 };
 
 export const SITE_GLOBAL_KEYS = [
@@ -77,4 +94,5 @@ export const SITE_GLOBAL_KEYS = [
   "site.contact",
   "site.legal",
   "site.features",
+  "site.maintenance",
 ] as const satisfies readonly SiteGlobalKey[];

@@ -83,14 +83,22 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
             <p className="font-medium">Режим обслуживания включён</p>
             <p className="mt-0.5 text-xs text-amber-800">
               Публичный сайт перенаправляется на{" "}
-              <Link href="/maintenance" className="underline">
+              <Link href="/maintenance" className="underline" target="_blank" rel="noopener noreferrer">
                 /maintenance
               </Link>
-              . Админка и API доступны.
+              . Текст и таймер — в блоке «Заглушка при работах» ниже. Админка и API доступны.
             </p>
           </div>
         </div>
-      ) : null}
+      ) : (
+        <p className="text-xs text-slate">
+          Предпросмотр заглушки:{" "}
+          <Link href="/maintenance" className="text-sky underline" target="_blank" rel="noopener noreferrer">
+            /maintenance
+          </Link>
+          . Включите «Режим обслуживания» в разделе «Юридическое и функции», чтобы закрыть публичный сайт.
+        </p>
+      )}
 
       <dl className="grid gap-3 text-sm sm:grid-cols-2">
         <div>

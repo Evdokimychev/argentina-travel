@@ -23,9 +23,10 @@ export default function SiteChrome({
 }) {
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
+  const isMaintenance = pathname === "/maintenance";
   const footerInfo = siteFooter ?? siteLegal;
 
-  if (isEmbed) {
+  if (isEmbed || isMaintenance) {
     return <>{children}</>;
   }
 

@@ -1,13 +1,11 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import {
   DEFAULT_SITE_BRANDING,
-  DEFAULT_SITE_CONTACT,
-  DEFAULT_SITE_FEATURES,
-  DEFAULT_SITE_SEO,
   normalizeSiteBranding,
   normalizeSiteContact,
   normalizeSiteFeatures,
   normalizeSiteLegal,
+  normalizeSiteMaintenance,
   normalizeSiteSeo,
 } from "@/lib/cms/site-globals/normalize";
 import type { Json } from "@/types/database";
@@ -17,6 +15,7 @@ import type {
   SiteFeaturesGlobal,
   SiteGlobalKey,
   SiteLegalGlobal,
+  SiteMaintenanceGlobal,
   SiteSeoGlobal,
 } from "@/types/site-globals";
 
@@ -111,6 +110,14 @@ export async function fetchSiteContact(): Promise<SiteContactGlobal> {
   return parsed;
 }
 
+export async function fetchSiteMaintenance(): Promise<SiteMaintenanceGlobal> {
+  const cached = readCache<SiteMaintenanceGlobal>("site.maintenance");
+  if (cached) return cached;
+  const parsed = normalizeSiteMaintenance(await loadSettingsKey("site.maintenance"));
+  writeCache("site.maintenance", parsed);
+  return parsed;
+}
+
 /** Combined read for layout metadata. */
 export async function fetchSitePublicMeta(): Promise<{
   branding: SiteBrandingGlobal;
@@ -140,6 +147,7 @@ export async function fetchAllSiteGlobalsForAdmin(): Promise<Record<SiteGlobalKe
     "site.branding": normalizeSiteBranding(settings["site.branding"]) as unknown as Json,
     "site.seo": normalizeSiteSeo(settings["site.seo"]) as unknown as Json,
     "site.contact": normalizeSiteContact(settings["site.contact"]) as unknown as Json,
+    "site.maintenance": normalizeSiteMaintenance(settings["site.maintenance"]) as unknown as Json,
   };
 }
 

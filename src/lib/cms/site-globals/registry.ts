@@ -144,6 +144,32 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
     ],
   },
   {
+    key: "site.maintenance",
+    label: "Заглушка при работах",
+    description: "Полноэкранная страница /maintenance при включённом режиме обслуживания",
+    fields: [
+      { name: "badgeLabel", label: "Метка над заголовком", type: "text", placeholder: "Скоро откроемся" },
+      { name: "headline", label: "Заголовок", type: "text", required: true },
+      { name: "message", label: "Описание", type: "textarea" },
+      { name: "notifyLabel", label: "Подпись над кнопкой связи", type: "text" },
+      {
+        name: "backgroundImage",
+        label: "Фоновое изображение",
+        type: "media",
+        hint: "Пусто — hero главной страницы",
+      },
+      { name: "showContacts", label: "Показывать контакты внизу", type: "checkbox" },
+      { name: "countdownEnabled", label: "Показывать обратный отсчёт", type: "checkbox" },
+      {
+        name: "countdownTarget",
+        label: "Дата окончания работ (ISO)",
+        type: "text",
+        placeholder: "2026-07-15T12:00:00.000Z",
+        hint: "UTC или локальное время в формате ISO",
+      },
+    ],
+  },
+  {
     key: "site.features",
     label: "Функции",
     description: "Feature flags и режим обслуживания",
@@ -189,3 +215,5 @@ export const SITE_CONTENT_GLOBAL_KEYS = [
 ] as const satisfies readonly SiteGlobalKey[];
 
 export const SITE_OPS_GLOBAL_KEYS = ["site.legal", "site.features"] as const satisfies readonly SiteGlobalKey[];
+
+export const SITE_MAINTENANCE_GLOBAL_KEYS = ["site.maintenance"] as const satisfies readonly SiteGlobalKey[];

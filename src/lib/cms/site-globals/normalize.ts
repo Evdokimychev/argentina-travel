@@ -4,6 +4,7 @@ import type {
   SiteContactGlobal,
   SiteFeaturesGlobal,
   SiteLegalGlobal,
+  SiteMaintenanceGlobal,
   SiteSeoGlobal,
 } from "@/types/site-globals";
 
@@ -42,6 +43,16 @@ export const DEFAULT_SITE_FEATURES: SiteFeaturesGlobal = {
   cmsPlaceCutover: false,
 };
 
+export const DEFAULT_SITE_MAINTENANCE: SiteMaintenanceGlobal = {
+  badgeLabel: "Скоро откроемся",
+  headline: "Готовим кое-что особенное",
+  message:
+    "Сейчас мы обновляем сайт — скоро вернёмся с улучшенным каталогом туров и сервисов по Аргентине.",
+  notifyLabel: "Узнайте о запуске первыми:",
+  showContacts: true,
+  countdownEnabled: false,
+};
+
 function asString(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
 }
@@ -74,6 +85,23 @@ export function normalizeSiteFeatures(value: unknown): SiteFeaturesGlobal {
     cmsGuideCutover: r.cmsGuideCutover === true,
     cmsDestinationCutover: r.cmsDestinationCutover === true,
     cmsPlaceCutover: r.cmsPlaceCutover === true,
+  };
+}
+
+export function normalizeSiteMaintenance(value: unknown): SiteMaintenanceGlobal {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return DEFAULT_SITE_MAINTENANCE;
+  }
+  const r = value as Record<string, unknown>;
+  return {
+    badgeLabel: asString(r.badgeLabel, DEFAULT_SITE_MAINTENANCE.badgeLabel),
+    headline: asString(r.headline, DEFAULT_SITE_MAINTENANCE.headline),
+    message: asString(r.message, DEFAULT_SITE_MAINTENANCE.message),
+    notifyLabel: asString(r.notifyLabel, DEFAULT_SITE_MAINTENANCE.notifyLabel),
+    backgroundImage: asString(r.backgroundImage) || undefined,
+    showContacts: r.showContacts !== false,
+    countdownEnabled: r.countdownEnabled === true,
+    countdownTarget: asString(r.countdownTarget) || undefined,
   };
 }
 
