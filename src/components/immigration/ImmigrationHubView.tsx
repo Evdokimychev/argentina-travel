@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { AlertTriangle, ArrowRight } from "lucide-react";
 import ImmigrationFlightHint from "@/components/flights/ImmigrationFlightHint";
@@ -10,12 +12,19 @@ import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { IMMIGRATION_HUB } from "@/data/immigration-hub-content";
 import { cn } from "@/lib/cn";
 import { getImmigrationHubTopicIcon } from "@/lib/immigration-nav-icons";
 import { siteContainerClass } from "@/lib/site-container";
 
-function HubTopicGrid({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) {
+function HubTopicGrid({
+  topics,
+  linkLabel,
+}: {
+  topics: typeof IMMIGRATION_HUB.hubTopics;
+  linkLabel: string;
+}) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {topics.map((topic) => {
@@ -34,7 +43,7 @@ function HubTopicGrid({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) 
             </h3>
             <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
             <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky">
-              Перейти
+              {linkLabel}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </span>
           </Link>
@@ -44,7 +53,13 @@ function HubTopicGrid({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) 
   );
 }
 
-function TopicTeaserList({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics }) {
+function TopicTeaserList({
+  topics,
+  moreLabel,
+}: {
+  topics: typeof IMMIGRATION_HUB.hubTopics;
+  moreLabel: string;
+}) {
   return (
     <div className="space-y-4">
       {topics.map((topic) => {
@@ -65,7 +80,7 @@ function TopicTeaserList({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics 
                   href={topic.href}
                   className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
                 >
-                  Подробнее
+                  {moreLabel}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -78,19 +93,22 @@ function TopicTeaserList({ topics }: { topics: typeof IMMIGRATION_HUB.hubTopics 
 }
 
 export default function ImmigrationHubView() {
+  const { t } = useLocaleCurrency();
   const hub = IMMIGRATION_HUB;
   const path = "/immigration";
+  const heroTitle = t("immigration.hub.hero.title");
+  const heroSubtitle = t("immigration.hub.hero.subtitle");
 
   return (
     <>
-      <WebPageJsonLd name={hub.heroTitle} description={hub.heroSubtitle} path={path} />
+      <WebPageJsonLd name={heroTitle} description={heroSubtitle} path={path} />
       <FAQPageJsonLd questions={hub.faq} path={path} />
 
       <HubHero
-        title={hub.heroTitle}
-        subtitle={hub.heroSubtitle}
+        title={heroTitle}
+        subtitle={heroSubtitle}
         image={hub.heroImage}
-        eyebrow={{ label: "Иммиграция" }}
+        eyebrow={{ label: t("immigration.hub.hero.eyebrow") }}
         ctas={hub.heroCtas}
       />
 
@@ -98,36 +116,36 @@ export default function ImmigrationHubView() {
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>
-          <nav className="text-sm text-slate" aria-label="Хлебные крошки">
+          <nav className="text-sm text-slate" aria-label={t("immigration.hub.breadcrumbAria")}>
             <Link href="/" className="transition-colors hover:text-sky">
-              Главная
+              {t("nav.home")}
             </Link>
             <span className="mx-2 text-gray-300">/</span>
-            <span className="text-charcoal">Иммиграция</span>
+            <span className="text-charcoal">{t("nav.immigration")}</span>
           </nav>
 
           <div className="mt-8 lg:flex lg:items-start lg:gap-8 xl:gap-10">
             <div className="min-w-0 flex-1 space-y-8">
               <HubToc items={hub.toc} variant="mobile" />
 
-              <HubSection id="quick-30" title="Кратко за 30 секунд">
+              <HubSection id="quick-30" title={t("immigration.hub.section.quick30")}>
                 <HubQuickFactsGrid facts={hub.quickFacts30} columns={4} />
               </HubSection>
 
               <HubSection
                 id="hub-overview"
-                title="Разделы справочника"
-                subtitle="Основные блоки — от жизни в стране до гражданства и полезных ссылок."
+                title={t("immigration.hub.section.overview")}
+                subtitle={t("immigration.hub.section.overviewSubtitle")}
               >
-                <HubTopicGrid topics={hub.hubTopics} />
+                <HubTopicGrid topics={hub.hubTopics} linkLabel={t("immigration.hub.link.open")} />
               </HubSection>
 
               <HubSection
                 id="topic-summaries"
-                title="Обзор тем"
-                subtitle="Краткие выжимки — полные материалы на отдельных страницах."
+                title={t("immigration.hub.section.summaries")}
+                subtitle={t("immigration.hub.section.summariesSubtitle")}
               >
-                <TopicTeaserList topics={hub.hubTopics} />
+                <TopicTeaserList topics={hub.hubTopics} moreLabel={t("immigration.hub.link.more")} />
               </HubSection>
 
               <ImmigrationFlightHint />
@@ -146,14 +164,11 @@ export default function ImmigrationHubView() {
 
               <p className="text-sm text-slate">{hub.disclaimer}</p>
 
-              <GuidePillarFaq
-                items={hub.faq}
-                intro="15 ответов о ВНЖ, RADEX, гражданстве, родах и правилах въезда."
-              />
+              <GuidePillarFaq items={hub.faq} intro={t("immigration.hub.faqIntro")} />
 
               <GuidePillarCta
-                title="Остались вопросы об иммиграции?"
-                subtitle="Запросите контакты партнёров или задайте вопрос о турах и платформе — мы не оказываем юридических услуг."
+                title={t("immigration.hub.cta.title")}
+                subtitle={t("immigration.hub.cta.subtitle")}
               />
             </div>
 

@@ -45,7 +45,7 @@ type PageProps = {
 
 export default async function ContactsPage({ searchParams }: PageProps) {
   const locale = await getServerI18nLocale();
-  const contact = await fetchSiteContact();
+  const contact = await fetchSiteContact(locale);
   const params = await searchParams;
   const pageTitle = resolveStaticPageCopy("contacts.meta.title", PAGE_TITLE_FALLBACK, locale);
   const pageDescription = resolveStaticPageCopy(

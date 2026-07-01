@@ -1,11 +1,19 @@
 /** Site globals — Payload Globals pattern mapped to site_settings keys. */
 
+export type SiteGlobalLocaleOverrides<T> = Partial<Record<"en" | "es", Partial<T>>>;
+
+export type SiteLegalTranslatable = Pick<
+  { companyName?: string },
+  "companyName"
+>;
+
 export type SiteLegalGlobal = {
   companyName?: string;
   inn?: string;
   ogrn?: string;
   address?: string;
   supportEmail?: string;
+  locales?: SiteGlobalLocaleOverrides<SiteLegalTranslatable>;
 };
 
 export type SiteFeaturesGlobal = {
@@ -21,7 +29,9 @@ export type SiteFeaturesGlobal = {
   cmsPlaceCutover?: boolean;
 };
 
-export type SiteBrandingGlobal = {
+export type SiteBrandingTranslatable = Pick<SiteBrandingGlobalBase, "tagline" | "defaultTitle">;
+
+type SiteBrandingGlobalBase = {
   siteName: string;
   tagline: string;
   defaultTitle: string;
@@ -34,7 +44,13 @@ export type SiteBrandingGlobal = {
   appleTouchIconUrl?: string;
 };
 
-export type SiteSeoGlobal = {
+export type SiteBrandingGlobal = SiteBrandingGlobalBase & {
+  locales?: SiteGlobalLocaleOverrides<SiteBrandingTranslatable>;
+};
+
+export type SiteSeoTranslatable = Pick<SiteSeoGlobalBase, "defaultDescription">;
+
+type SiteSeoGlobalBase = {
   defaultDescription: string;
   twitterHandle?: string;
   allowIndexing: boolean;
@@ -48,7 +64,13 @@ export type SiteSeoGlobal = {
   yandexSiteVerification?: string;
 };
 
-export type SiteContactGlobal = {
+export type SiteSeoGlobal = SiteSeoGlobalBase & {
+  locales?: SiteGlobalLocaleOverrides<SiteSeoTranslatable>;
+};
+
+export type SiteContactTranslatable = Pick<SiteContactGlobalBase, "contactPageIntro">;
+
+type SiteContactGlobalBase = {
   supportEmail: string;
   telegramUrl?: string;
   whatsAppUrl?: string;
@@ -56,7 +78,16 @@ export type SiteContactGlobal = {
   contactPageIntro?: string;
 };
 
-export type SiteMaintenanceGlobal = {
+export type SiteContactGlobal = SiteContactGlobalBase & {
+  locales?: SiteGlobalLocaleOverrides<SiteContactTranslatable>;
+};
+
+export type SiteMaintenanceTranslatable = Pick<
+  SiteMaintenanceGlobalBase,
+  "badgeLabel" | "headline" | "message" | "notifyLabel"
+>;
+
+type SiteMaintenanceGlobalBase = {
   /** Короткая метка над заголовком, например «Скоро откроемся». */
   badgeLabel: string;
   headline: string;
@@ -70,6 +101,17 @@ export type SiteMaintenanceGlobal = {
   /** ISO-дата окончания работ, например 2026-07-15T12:00:00.000Z */
   countdownTarget?: string;
 };
+
+export type SiteMaintenanceGlobal = SiteMaintenanceGlobalBase & {
+  locales?: SiteGlobalLocaleOverrides<SiteMaintenanceTranslatable>;
+};
+
+/** Resolved public shapes — locales stripped after resolveSiteGlobalForLocale. */
+export type SiteBrandingGlobalResolved = SiteBrandingGlobalBase;
+export type SiteSeoGlobalResolved = SiteSeoGlobalBase;
+export type SiteContactGlobalResolved = SiteContactGlobalBase;
+export type SiteMaintenanceGlobalResolved = SiteMaintenanceGlobalBase;
+export type SiteLegalGlobalResolved = Omit<SiteLegalGlobal, "locales">;
 
 export type SiteGlobalKey =
   | "site.legal"

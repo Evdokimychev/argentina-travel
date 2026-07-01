@@ -9,6 +9,7 @@ export function isI18nSitemapPath(path: string): boolean {
   if (path.includes("?")) return false;
 
   if (path === "/" || path === "/tours" || path === "/excursions") return true;
+  if (path === "/guide" || path === "/immigration") return true;
   if (path === "/blog" || path.startsWith("/blog/")) return true;
   if (path === "/destinations" || path.startsWith("/destinations/")) return true;
   if (path === "/places" || path.startsWith("/places/")) return true;

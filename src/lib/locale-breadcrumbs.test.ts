@@ -25,6 +25,16 @@ describe("resolveLocaleBreadcrumbItems", () => {
     expect(items.some((item) => item.name === "Главная")).toBe(false);
   });
 
+  it("resolves Spanish breadcrumbs for /es locale", () => {
+    const items = resolveLocaleBreadcrumbItems("es", [
+      { labelKey: "nav.home", path: "/" },
+      { labelKey: "places.title", path: "/places", fallback: "Места Аргентины" },
+    ]);
+
+    expect(items[0]?.name).toBe("Inicio");
+    expect(items[1]?.name).toBe("Lugares de Argentina");
+  });
+
   it("uses fallback when key is missing from bundle", () => {
     const items = resolveLocaleBreadcrumbItems("es", [
       { labelKey: "missing.key", path: "/test", fallback: "Fallback label" },

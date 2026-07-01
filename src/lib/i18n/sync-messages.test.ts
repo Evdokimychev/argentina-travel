@@ -40,6 +40,26 @@ const CONTACTS_KEYS = [
   "contacts.office.title",
 ] as const;
 
+const GUIDE_HUB_KEYS = [
+  "guide.hub.meta.title",
+  "guide.hub.meta.description",
+  "guide.hub.hero.title",
+  "guide.hub.hero.subtitle",
+  "guide.hub.section.quick30",
+  "guide.hub.section.planning",
+  "guide.hub.cta.title",
+] as const;
+
+const IMMIGRATION_HUB_KEYS = [
+  "immigration.hub.meta.title",
+  "immigration.hub.meta.description",
+  "immigration.hub.hero.title",
+  "immigration.hub.hero.subtitle",
+  "immigration.hub.section.overview",
+  "immigration.hub.section.summaries",
+  "immigration.hub.cta.title",
+] as const;
+
 function expectKeysResolved(locale: "ru" | "en" | "es", keys: readonly string[]) {
   const messages = getSyncMessages(locale);
   for (const key of keys) {
@@ -72,5 +92,15 @@ describe("getSyncMessages", () => {
   it("resolves contacts page keys for en and es", () => {
     expectKeysResolved("en", CONTACTS_KEYS);
     expectKeysResolved("es", CONTACTS_KEYS);
+  });
+
+  it("resolves guide hub keys for en and es", () => {
+    expectKeysResolved("en", GUIDE_HUB_KEYS);
+    expectKeysResolved("es", GUIDE_HUB_KEYS);
+  });
+
+  it("resolves immigration hub keys for en and es", () => {
+    expectKeysResolved("en", IMMIGRATION_HUB_KEYS);
+    expectKeysResolved("es", IMMIGRATION_HUB_KEYS);
   });
 });

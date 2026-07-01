@@ -3,6 +3,7 @@ import {
   DEFAULT_SITE_BRANDING,
   DEFAULT_SITE_CONTACT,
   DEFAULT_SITE_FEATURES,
+  DEFAULT_SITE_LEGAL_LOCALES,
   DEFAULT_SITE_MAINTENANCE,
   DEFAULT_SITE_SEO,
   normalizeSiteBranding,
@@ -20,16 +21,17 @@ describe("normalizeSiteLegal", () => {
     expect(normalizeSiteLegal([])).toEqual({});
   });
 
-  it("trims string fields", () => {
+  it("trims string fields and merges default locale overrides", () => {
     expect(
       normalizeSiteLegal({
         companyName: "  ООО Тест  ",
         inn: "123",
         supportEmail: "",
       })
-    ).toEqual({
+    ).toMatchObject({
       companyName: "  ООО Тест  ",
       inn: "123",
+      locales: DEFAULT_SITE_LEGAL_LOCALES,
     });
   });
 });
@@ -81,6 +83,24 @@ describe("normalizeSiteBranding", () => {
     expect(normalizeSiteBranding({ siteName: "Новый бренд" })).toMatchObject({
       siteName: "Новый бренд",
       tagline: DEFAULT_SITE_BRANDING.tagline,
+    });
+  });
+
+  it("parses locales object for branding", () => {
+    expect(
+      normalizeSiteBranding({
+        tagline: "RU слоган",
+        locales: {
+          en: { tagline: "EN tagline" },
+          es: { defaultTitle: "ES title" },
+        },
+      }),
+    ).toMatchObject({
+      tagline: "RU слоган",
+      locales: {
+        en: expect.objectContaining({ tagline: "EN tagline" }),
+        es: expect.objectContaining({ defaultTitle: "ES title" }),
+      },
     });
   });
 });
@@ -147,6 +167,23 @@ describe("sanitizeGlobalForSave", () => {
       siteName: "Бренд",
       supportEmail: "",
       tagline: "ok",
+    });
+  });
+
+  it("strips empty locale override strings", () => {
+    expect(
+      sanitizeGlobalForSave({
+        tagline: "RU",
+        locales: {
+          en: { tagline: "  ", defaultTitle: "EN title" },
+          es: { tagline: "" },
+        },
+      }),
+    ).toEqual({
+      tagline: "RU",
+      locales: {
+        en: { defaultTitle: "EN title" },
+      },
     });
   });
 });

@@ -1,4 +1,5 @@
 import type { ImmigrationHubContent } from "@/types/immigration-hub";
+// TODO(E77 Phase 5+): translate IMMIGRATION_HUB topics, FAQ, warnings via CMS or i18n bundles.
 import { getImmigrationHubHeroImage } from "@/lib/media-resolver";
 import {
   IMMIGRATION_BIRTH,

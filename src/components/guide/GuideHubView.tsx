@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import HubHero from "@/components/guide/hub/HubHero";
@@ -11,25 +13,29 @@ import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInf
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { GUIDE_HUB } from "@/data/guide-hub-index-content";
 import { getGuideTopicIcon } from "@/lib/guide-nav-icons";
 import { cn } from "@/lib/cn";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 
 export default function GuideHubView() {
+  const { t } = useLocaleCurrency();
   const hub = GUIDE_HUB;
   const path = "/guide";
+  const heroTitle = t("guide.hub.hero.title");
+  const heroSubtitle = t("guide.hub.hero.subtitle");
 
   return (
     <>
-      <WebPageJsonLd name={hub.heroTitle} description={hub.heroSubtitle} path={path} />
+      <WebPageJsonLd name={heroTitle} description={heroSubtitle} path={path} />
       <FAQPageJsonLd questions={hub.faq} path={path} />
 
       <HubHero
-        title={hub.heroTitle}
-        subtitle={hub.heroSubtitle}
+        title={heroTitle}
+        subtitle={heroSubtitle}
         image={hub.heroImage}
-        eyebrow={{ label: "Путеводитель" }}
+        eyebrow={{ label: t("guide.hub.hero.eyebrow") }}
         ctas={hub.heroCtas}
       />
 
@@ -37,31 +43,31 @@ export default function GuideHubView() {
 
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>
-          <nav className="text-sm text-slate" aria-label="Хлебные крошки">
+          <nav className="text-sm text-slate" aria-label={t("guide.hub.breadcrumbAria")}>
             <Link href="/" className="transition-colors hover:text-sky">
-              Главная
+              {t("nav.home")}
             </Link>
             <span className="mx-2 text-gray-300">/</span>
-            <span className="text-charcoal">Путеводитель</span>
+            <span className="text-charcoal">{t("nav.guide")}</span>
           </nav>
 
           <div className="mt-8 lg:flex lg:items-start lg:gap-8 xl:gap-10">
             <div className="min-w-0 flex-1 space-y-8">
               <HubToc items={hub.toc} variant="mobile" />
 
-              <HubSection id="quick-30" title="Кратко за 30 секунд">
+              <HubSection id="quick-30" title={t("guide.hub.section.quick30")}>
                 <HubQuickFactsGrid facts={hub.quickFacts30} />
               </HubSection>
 
-              <HubSection id="country-overview" title="Аргентина в цифрах">
+              <HubSection id="country-overview" title={t("guide.hub.section.countryOverview")}>
                 <ArgentinaTourismInfographic compact />
               </HubSection>
 
-              <HubSection id="tourism-evolution" title="Эволюция туризма">
+              <HubSection id="tourism-evolution" title={t("guide.hub.section.tourismEvolution")}>
                 <ArgentinaTourismTimeline />
               </HubSection>
 
-              <HubSection id="planning" title="Планирование поездки" subtitle={hub.planning.intro}>
+              <HubSection id="planning" title={t("guide.hub.section.planning")} subtitle={hub.planning.intro}>
                 <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {hub.planning.cards.map((card) => (
                     <article
@@ -111,7 +117,7 @@ export default function GuideHubView() {
                           </h3>
                           <p className="mt-1 flex-1 text-sm text-slate">{topic.description}</p>
                           <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-sky">
-                            Подробнее
+                            {t("guide.hub.link.more")}
                             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                           </span>
                         </Link>
@@ -121,7 +127,7 @@ export default function GuideHubView() {
                 </HubSection>
               ))}
 
-              <HubSection id="all-topics" title="Все темы путеводителя">
+              <HubSection id="all-topics" title={t("guide.hub.section.allTopics")}>
                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {hub.topicGroups.flatMap((group) => group.topics).map((topic) => {
                     const Icon = getGuideTopicIcon(topic.slug);
@@ -150,7 +156,7 @@ export default function GuideHubView() {
                 id="related"
                 className={cn(siteScrollAnchorClass, "rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8")}
               >
-                <h2 className="font-heading text-xl font-bold text-charcoal">См. также</h2>
+                <h2 className="font-heading text-xl font-bold text-charcoal">{t("guide.hub.section.related")}</h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
                   {hub.relatedLinks.map((link) => (
                     <Link
@@ -172,14 +178,11 @@ export default function GuideHubView() {
 
               <p className="text-sm text-slate">{hub.disclaimer}</p>
 
-              <GuidePillarFaq
-                items={hub.faq}
-                intro="12 ответов о планировании поездки: сезоны, бюджет, визы, логистика и выбор между туром и самостоятельной поездкой."
-              />
+              <GuidePillarFaq items={hub.faq} intro={t("guide.hub.faqIntro")} />
 
               <GuidePillarCta
-                title="Готовы спланировать поездку?"
-                subtitle="Подберите авторский тур, задайте вопрос менеджеру или изучите раздел об иммиграции, если планируете длительное пребывание."
+                title={t("guide.hub.cta.title")}
+                subtitle={t("guide.hub.cta.subtitle")}
               />
             </div>
 

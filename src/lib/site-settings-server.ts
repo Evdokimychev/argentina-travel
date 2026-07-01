@@ -1,4 +1,5 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { resolveSiteGlobalForLocale } from "@/lib/cms/site-globals/locale-resolve";
 import {
   DEFAULT_SITE_BRANDING,
   normalizeSiteBranding,
@@ -8,18 +9,25 @@ import {
   normalizeSiteMaintenance,
   normalizeSiteSeo,
 } from "@/lib/cms/site-globals/normalize";
+import { DEFAULT_I18N_LOCALE, type I18nLocale } from "@/lib/i18n/config";
 import type { Json } from "@/types/database";
 import type {
   SiteBrandingGlobal,
+  SiteBrandingGlobalResolved,
   SiteContactGlobal,
+  SiteContactGlobalResolved,
   SiteFeaturesGlobal,
   SiteGlobalKey,
+  SiteGlobalLocaleOverrides,
   SiteLegalGlobal,
+  SiteLegalGlobalResolved,
   SiteMaintenanceGlobal,
+  SiteMaintenanceGlobalResolved,
   SiteSeoGlobal,
+  SiteSeoGlobalResolved,
 } from "@/types/site-globals";
 
-export type { SiteFeaturesGlobal as SiteFeatures, SiteLegalGlobal as SiteLegal };
+export type { SiteFeaturesGlobal as SiteFeatures, SiteLegalGlobalResolved as SiteLegal };
 
 const CACHE_TTL_MS = 60_000;
 
@@ -52,6 +60,14 @@ function writeCache<T>(key: SiteGlobalKey, value: T): void {
   cache[key] = { value, at: Date.now() };
 }
 
+function resolveStoredGlobal<T extends Record<string, unknown>>(
+  stored: T & { locales?: SiteGlobalLocaleOverrides<Partial<T>> },
+  locale: I18nLocale = DEFAULT_I18N_LOCALE,
+): T {
+  const { locales, ...base } = stored;
+  return resolveSiteGlobalForLocale(base as T, locales, locale);
+}
+
 export function invalidateSiteGlobalCache(key?: SiteGlobalKey): void {
   if (key) {
     delete cache[key];
@@ -78,57 +94,55 @@ export async function fetchSiteFeatures(): Promise<SiteFeaturesGlobal> {
   return parsed;
 }
 
-export async function fetchSiteLegal(): Promise<SiteLegalGlobal> {
+export async function fetchSiteLegal(locale?: I18nLocale): Promise<SiteLegalGlobalResolved> {
   const cached = readCache<SiteLegalGlobal>("site.legal");
-  if (cached) return cached;
-  const parsed = normalizeSiteLegal(await loadSettingsKey("site.legal"));
-  writeCache("site.legal", parsed);
-  return parsed;
+  const stored = cached ?? normalizeSiteLegal(await loadSettingsKey("site.legal"));
+  if (!cached) writeCache("site.legal", stored);
+  return resolveStoredGlobal(stored, locale);
 }
 
-export async function fetchSiteBranding(): Promise<SiteBrandingGlobal> {
+export async function fetchSiteBranding(locale?: I18nLocale): Promise<SiteBrandingGlobalResolved> {
   const cached = readCache<SiteBrandingGlobal>("site.branding");
-  if (cached) return cached;
-  const parsed = normalizeSiteBranding(await loadSettingsKey("site.branding"));
-  writeCache("site.branding", parsed);
-  return parsed;
+  const stored = cached ?? normalizeSiteBranding(await loadSettingsKey("site.branding"));
+  if (!cached) writeCache("site.branding", stored);
+  return resolveStoredGlobal(stored, locale);
 }
 
-export async function fetchSiteSeo(): Promise<SiteSeoGlobal> {
+export async function fetchSiteSeo(locale?: I18nLocale): Promise<SiteSeoGlobalResolved> {
   const cached = readCache<SiteSeoGlobal>("site.seo");
-  if (cached) return cached;
-  const parsed = normalizeSiteSeo(await loadSettingsKey("site.seo"));
-  writeCache("site.seo", parsed);
-  return parsed;
+  const stored = cached ?? normalizeSiteSeo(await loadSettingsKey("site.seo"));
+  if (!cached) writeCache("site.seo", stored);
+  return resolveStoredGlobal(stored, locale);
 }
 
-export async function fetchSiteContact(): Promise<SiteContactGlobal> {
+export async function fetchSiteContact(locale?: I18nLocale): Promise<SiteContactGlobalResolved> {
   const cached = readCache<SiteContactGlobal>("site.contact");
-  if (cached) return cached;
-  const parsed = normalizeSiteContact(await loadSettingsKey("site.contact"));
-  writeCache("site.contact", parsed);
-  return parsed;
+  const stored = cached ?? normalizeSiteContact(await loadSettingsKey("site.contact"));
+  if (!cached) writeCache("site.contact", stored);
+  return resolveStoredGlobal(stored, locale);
 }
 
-export async function fetchSiteMaintenance(): Promise<SiteMaintenanceGlobal> {
+export async function fetchSiteMaintenance(locale?: I18nLocale): Promise<SiteMaintenanceGlobalResolved> {
   const cached = readCache<SiteMaintenanceGlobal>("site.maintenance");
-  if (cached) return cached;
-  const parsed = normalizeSiteMaintenance(await loadSettingsKey("site.maintenance"));
-  writeCache("site.maintenance", parsed);
-  return parsed;
+  const stored = cached ?? normalizeSiteMaintenance(await loadSettingsKey("site.maintenance"));
+  if (!cached) writeCache("site.maintenance", stored);
+  return resolveStoredGlobal(stored, locale);
 }
 
 /** Combined read for layout metadata. */
-export async function fetchSitePublicMeta(): Promise<{
-  branding: SiteBrandingGlobal;
-  seo: SiteSeoGlobal;
+export async function fetchSitePublicMeta(locale?: I18nLocale): Promise<{
+  branding: SiteBrandingGlobalResolved;
+  seo: SiteSeoGlobalResolved;
 }> {
-  const [branding, seo] = await Promise.all([fetchSiteBranding(), fetchSiteSeo()]);
+  const [branding, seo] = await Promise.all([
+    fetchSiteBranding(locale),
+    fetchSiteSeo(locale),
+  ]);
   return { branding, seo };
 }
 
-export async function getSiteBrandName(): Promise<string> {
-  const branding = await fetchSiteBranding();
+export async function getSiteBrandName(locale?: I18nLocale): Promise<string> {
+  const branding = await fetchSiteBranding(locale);
   return branding.siteName || DEFAULT_SITE_BRANDING.siteName;
 }
 

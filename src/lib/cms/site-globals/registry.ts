@@ -16,6 +16,8 @@ export type SiteGlobalFieldDef = {
   placeholder?: string;
   hint?: string;
   required?: boolean;
+  /** When true, field supports RU base + locales.en/es overrides. */
+  translatable?: boolean;
 };
 
 export type SiteGlobalDefinition = {
@@ -33,12 +35,13 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
     description: "Название, слоган и базовые OG-настройки сайта",
     fields: [
       { name: "siteName", label: "Название сайта", type: "text", required: true },
-      { name: "tagline", label: "Слоган", type: "text", placeholder: "путешествия по Аргентине" },
+      { name: "tagline", label: "Слоган", type: "text", placeholder: "путешествия по Аргентине", translatable: true },
       {
         name: "defaultTitle",
         label: "Title по умолчанию",
         type: "text",
         hint: "Когда у страницы нет своего title",
+        translatable: true,
       },
       {
         name: "titleTemplate",
@@ -78,6 +81,7 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         label: "Meta description",
         type: "textarea",
         required: true,
+        translatable: true,
       },
       {
         name: "twitterHandle",
@@ -128,6 +132,7 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         name: "contactPageIntro",
         label: "Текст на странице контактов",
         type: "textarea",
+        translatable: true,
       },
     ],
   },
@@ -136,7 +141,7 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
     label: "Юридическая информация",
     description: "Реквизиты в footer и legal-страницах",
     fields: [
-      { name: "companyName", label: "Название организации", type: "text" },
+      { name: "companyName", label: "Название организации", type: "text", translatable: true },
       { name: "inn", label: "ИНН", type: "text" },
       { name: "ogrn", label: "ОГРН", type: "text" },
       { name: "address", label: "Адрес", type: "textarea" },
@@ -148,10 +153,10 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
     label: "Заглушка при работах",
     description: "Полноэкранная страница /maintenance при включённом режиме обслуживания",
     fields: [
-      { name: "badgeLabel", label: "Метка над заголовком", type: "text", placeholder: "Скоро откроемся" },
-      { name: "headline", label: "Заголовок", type: "text", required: true },
-      { name: "message", label: "Описание", type: "textarea" },
-      { name: "notifyLabel", label: "Подпись над кнопкой связи", type: "text" },
+      { name: "badgeLabel", label: "Метка над заголовком", type: "text", placeholder: "Скоро откроемся", translatable: true },
+      { name: "headline", label: "Заголовок", type: "text", required: true, translatable: true },
+      { name: "message", label: "Описание", type: "textarea", translatable: true },
+      { name: "notifyLabel", label: "Подпись над кнопкой связи", type: "text", translatable: true },
       {
         name: "backgroundImage",
         label: "Фоновое изображение",

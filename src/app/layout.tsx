@@ -29,7 +29,8 @@ function resolveOgImageUrl(pathOrUrl: string): string {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const { branding, seo } = await fetchSitePublicMeta();
+  const locale = await getServerI18nLocale();
+  const { branding, seo } = await fetchSitePublicMeta(locale);
   const ogImageUrl = resolveOgImageUrl(branding.defaultOgImage);
   const twitterTitle = branding.defaultTitle;
   const twitterDescription = seo.defaultDescription;

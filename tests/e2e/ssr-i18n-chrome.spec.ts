@@ -3,7 +3,20 @@ import { expect, test } from "@playwright/test";
 /** Dotted footer keys that must never appear as visible footer text in SSR HTML. */
 const RAW_FOOTER_KEY = /\bfooter\.[a-zA-Z][\w.]*/g;
 
-const PUBLIC_SSR_PATHS = ["/", "/tours", "/places", "/faq", "/en/tours", "/en/places"] as const;
+const PUBLIC_SSR_PATHS = [
+  "/",
+  "/tours",
+  "/places",
+  "/faq",
+  "/en/",
+  "/en/tours",
+  "/en/places",
+  "/es/tours",
+  "/en/destinations",
+  "/en/about",
+  "/en/guide",
+  "/en/immigration",
+] as const;
 
 function extractBreadcrumbJsonLdNames(pageHtml: string): string[] {
   const names: string[] = [];
@@ -51,6 +64,16 @@ test.describe("SSR i18n chrome", () => {
     });
   }
 
+  test("/es/ footer SSR does not expose raw footer.* keys", async ({ request }) => {
+    const response = await request.get("/es/", { timeout: 90_000 });
+    expect(response.status()).toBeLessThan(400);
+
+    const html = await response.text();
+    const footerHtml = extractFooterHtml(html);
+    const rawKeys = footerHtml.match(RAW_FOOTER_KEY) ?? [];
+    expect(rawKeys).toEqual([]);
+  });
+
   test("/en/places breadcrumb JSON-LD uses English labels", async ({ request }) => {
     const response = await request.get("/en/places", { timeout: 90_000 });
     expect(response.status()).toBeLessThan(400);
@@ -61,5 +84,13 @@ test.describe("SSR i18n chrome", () => {
     expect(breadcrumbNames.length).toBeGreaterThan(0);
     expect(breadcrumbNames).toContain("Home");
     expect(breadcrumbNames).not.toContain("Главная");
+  });
+
+  test("/en/places sets html lang=en", async ({ request }) => {
+    const response = await request.get("/en/places", { timeout: 90_000 });
+    expect(response.status()).toBeLessThan(400);
+
+    const html = await response.text();
+    expect(html).toMatch(/<html[^>]*\slang=["']en["']/i);
   });
 });
