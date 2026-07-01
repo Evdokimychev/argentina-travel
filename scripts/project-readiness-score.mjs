@@ -52,18 +52,26 @@ function scorePublish(publish) {
 function scoreAnalytics(analytics) {
   if (!analytics?.summary) return { score: null, note: "нет analytics-readiness-last.json", manual: true };
   const { ok = 0, warn = 0, fail = 0, skip = 0 } = analytics.summary;
+  const failedChecks = (analytics.checks ?? []).filter((c) => c.status === "fail");
+  const opsOnlyFailIds = new Set([
+    "env:gtm",
+    "env:verification",
+    "live:gtm",
+    "live:google-verification",
+    "manual:gtm-publish",
+    "manual:ga4-conversions",
+  ]);
   const envOnly =
     fail > 0 &&
-    analytics.checks?.every(
-      (c) =>
-        c.status !== "fail" ||
-        /env|GTM|verification|Live GTM|google-site-verification/i.test(String(c.label ?? c.id ?? "")),
+    failedChecks.every((c) =>
+      opsOnlyFailIds.has(c.id) ||
+      /env|GTM|verification|Live GTM|google-site-verification/i.test(String(c.label ?? c.id ?? "")),
     );
   if (envOnly) {
     return {
       score: null,
       manual: true,
-      note: `ops-only: OK ${ok}, fail ${fail} (Vercel env + GTM publish)`,
+      note: `ops-only: OK ${ok}, fail ${fail} (Vercel env + GTM publish + ручные конверсии)`,
     };
   }
   const weighted = ok * 1 + warn * 0.5 + skip * 0.25;
@@ -72,7 +80,7 @@ function scoreAnalytics(analytics) {
   return {
     score: clamp((weighted / total) * 10 - penalty, 0, 10),
     manual: false,
-    note: `OK ${ok}, warn ${warn}, fail ${fail}`,
+    note: fail > 0 ? `OK ${ok}, warn ${warn}, fail ${fail} — блокеры аналитики` : `OK ${ok}, warn ${warn}, fail ${fail}`,
   };
 }
 
@@ -214,7 +222,7 @@ function main() {
   if (publish?.summary?.fail > 0) {
     payload.blockers.push("publish:verify has blocking failures");
   } else if (analytics?.summary?.fail > 0 && !payload.dimensions.analytics?.manual) {
-    payload.blockers.push("analytics: configuration failures");
+    payload.blockers.push(`analytics: ${analytics.summary.fail} blocking failure(s)`);
   }
 
   fs.mkdirSync(opsDir, { recursive: true });

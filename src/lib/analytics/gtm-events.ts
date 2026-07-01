@@ -18,6 +18,7 @@ export const GTM_EVENTS = {
   blogArticleFeedback: "blog_article_feedback",
   blogCommentPost: "blog_comment_post",
   blogAffiliateEmbedView: "blog_affiliate_embed_view",
+  localeSwitch: "locale_switch",
 } as const;
 
 export type GtmEventName = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
@@ -236,5 +237,17 @@ export function trackBlogAffiliateEmbedView(input: {
   trackGtmEvent(GTM_EVENTS.blogAffiliateEmbedView, {
     item_id: input.slug,
     affiliate_service: input.service,
+  });
+}
+
+export function trackLocaleSwitch(input: {
+  from: string;
+  to: string;
+  path: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.localeSwitch, {
+    locale_from: input.from,
+    locale_to: input.to,
+    page_path: input.path,
   });
 }

@@ -4,6 +4,7 @@ import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { sanitizeGlobalForSave } from "@/lib/cms/site-globals/normalize";
 import { SITE_GLOBAL_BY_KEY } from "@/lib/cms/site-globals/registry";
 import { fetchPublicHealthSnapshot } from "@/lib/monitoring/health-public";
+import { fetchAnalyticsReadinessSnapshot } from "@/lib/ops/analytics-readiness-server";
 import { fetchProductionReadinessSnapshot } from "@/lib/ops/production-readiness-server";
 import { readOpsStatusSnapshot } from "@/lib/ops/ops-status";
 import {
@@ -67,6 +68,7 @@ export async function GET(request: Request) {
     cmsOps,
     cronHealth: readCronHealthReport(12),
     productionReadiness: fetchProductionReadinessSnapshot(),
+    analyticsReadiness: fetchAnalyticsReadinessSnapshot(),
     publicHealth: await fetchPublicHealthSnapshot({ includeSearchIndexCount: false }),
   });
 }

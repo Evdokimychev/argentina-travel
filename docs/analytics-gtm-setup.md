@@ -49,7 +49,7 @@ npm run gtm-events:audit
 - **Trigger:** Custom Event — regex:
 
 ```
-(booking_submit|contact_form_submit|newsletter_subscribe|whatsapp_click|telegram_click|tour_booking_click|excursion_booking_click|tour_view|excursion_view|blog_article_save|blog_affiliate_click|blog_inline_related_click|blog_article_view|blog_article_feedback|blog_comment_post|blog_affiliate_embed_view)
+(booking_submit|contact_form_submit|newsletter_subscribe|whatsapp_click|telegram_click|tour_booking_click|excursion_booking_click|tour_view|excursion_view|blog_article_save|blog_affiliate_click|blog_inline_related_click|blog_article_view|blog_article_feedback|blog_comment_post|blog_affiliate_embed_view|locale_switch)
 ```
 
 Дополнительно создайте **GA4 Conversions** в интерфейсе GA4 для:
@@ -97,6 +97,7 @@ ym(COUNTER_ID, "init", {
 | Оценка «полезно» | `blog_article_feedback` |
 | Комментарий | `blog_comment_post` |
 | Показ affiliate-блока | `blog_affiliate_embed_view` |
+| Смена языка | `locale_switch` |
 
 ### Microsoft Clarity
 
@@ -155,6 +156,7 @@ ym(COUNTER_ID, "init", {
 | `blog_article_feedback` | «Полезно» / «Не помогло» | `item_id`, `item_name`, `feedback_value` |
 | `blog_comment_post` | Отправка комментария | `item_id`, `item_name` |
 | `blog_affiliate_embed_view` | Показ affiliate-блока (in-view) | `item_id`, `affiliate_service` |
+| `locale_switch` | Смена языка в переключателе | `locale_from`, `locale_to`, `page_path` |
 
 ## 7. Публикация контейнера GTM (ручная ops)
 

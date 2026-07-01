@@ -18,6 +18,9 @@ const opsDir = path.join(root, "var/ops");
 const reportFile = path.join(opsDir, "analytics-readiness-last.json");
 
 const GTM_ENV = "NEXT_PUBLIC_GTM_ID";
+const SITE_URL_ENV = "NEXT_PUBLIC_SITE_URL";
+const EXPECTED_GTM_EVENTS_COUNT = 17;
+const CONVERSIONS_RECOMMENDED = ["booking_submit", "contact_form_submit", "newsletter_subscribe"];
 const ANALYTICS_ENV = [
   "NEXT_PUBLIC_GA4_MEASUREMENT_ID",
   "NEXT_PUBLIC_YM_COUNTER_ID",
@@ -49,6 +52,45 @@ function summarize(checks) {
   const summary = { ok: 0, warn: 0, fail: 0, skip: 0 };
   for (const check of checks) summary[check.status] += 1;
   return summary;
+}
+
+function extractGtmEventValues(source) {
+  const objectBlock = source.match(/export const GTM_EVENTS = \{([\s\S]*?)\} as const;/);
+  if (!objectBlock) return [];
+  return [...new Set([...objectBlock[1].matchAll(/:\s*"([a-z0-9_]+)"/g)].map((m) => m[1]))];
+}
+
+function countGtmEventsInCode() {
+  const eventsFile = path.join(root, "src/lib/analytics/gtm-events.ts");
+  const source = fs.readFileSync(eventsFile, "utf8");
+  return extractGtmEventValues(source);
+}
+
+function hostFromUrl(url) {
+  try {
+    return new URL(url).host;
+  } catch {
+    return null;
+  }
+}
+
+function printGoLiveChecklist({ baseUrl, gtmEventsCount, summary, envGtmPresent, liveGtmOk }) {
+  console.log("");
+  console.log("GTM go-live checklist");
+  console.log("=====================");
+  console.log(`Vercel ${GTM_ENV}: ${envGtmPresent ? "задан локально/env" : "не задан"}`);
+  console.log(`Live GTM snippet (${baseUrl}): ${liveGtmOk ? "да" : "нет"}`);
+  console.log(`События dataLayer в коде: ${gtmEventsCount ?? "—"}`);
+  console.log(`Автопроверки: OK ${summary.ok}, warn ${summary.warn}, fail ${summary.fail}`);
+  console.log("");
+  console.log("Ручные шаги:");
+  console.log("  1. Vercel Production: NEXT_PUBLIC_GTM_ID + verification tokens → Redeploy");
+  console.log("  2. GTM: GA4 Configuration + GA4 Event (regex в docs/analytics-gtm-setup.md)");
+  console.log("  3. GTM: Consent Mode на всех тегах аналитики");
+  console.log("  4. GA4: конверсии — booking_submit, contact_form_submit, newsletter_subscribe");
+  console.log("  5. Метрика: цели по событиям dataLayer");
+  console.log("  6. Submit + Publish контейнера в tagmanager.google.com");
+  console.log("  7. Tag Assistant + GA4 DebugView после согласия на cookie");
 }
 
 async function fetchText(url, timeoutMs = 15000) {
@@ -144,6 +186,8 @@ async function main() {
   ).replace(/\/$/, "");
 
   const checks = [];
+  let gtmEventsCount = null;
+  let liveGtmOk = false;
 
   const gtmPresent = Boolean(process.env[GTM_ENV]?.trim());
   checks.push({
@@ -179,6 +223,48 @@ async function main() {
 
   checks.push(await checkCmsSeoVerification());
 
+  const siteUrl = process.env[SITE_URL_ENV]?.trim()?.replace(/\/$/, "") ?? "";
+  const siteHost = siteUrl ? hostFromUrl(siteUrl) : null;
+  const baseHost = hostFromUrl(baseUrl);
+  checks.push({
+    id: "env:site-url-host",
+    label: `${SITE_URL_ENV} совпадает с baseUrl`,
+    status: !siteHost ? "warn" : siteHost === baseHost ? "ok" : "fail",
+    message: !siteHost
+      ? "NEXT_PUBLIC_SITE_URL не задан — сравнение пропущено"
+      : siteHost === baseHost
+        ? `${siteHost} = ${baseHost}`
+        : `Хост env (${siteHost}) ≠ baseUrl (${baseHost})`,
+    category: "env",
+  });
+
+  try {
+    const eventValues = countGtmEventsInCode();
+    gtmEventsCount = eventValues.length;
+    const unique = new Set(eventValues);
+    checks.push({
+      id: "code:gtm-events-count",
+      label: "GTM_EVENTS в gtm-events.ts",
+      status:
+        unique.size === eventValues.length && eventValues.length === EXPECTED_GTM_EVENTS_COUNT
+          ? "ok"
+          : "fail",
+      message:
+        unique.size === eventValues.length
+          ? `${eventValues.length} событий (ожидается ${EXPECTED_GTM_EVENTS_COUNT})`
+          : `Дубликаты или неверное число: ${eventValues.length}`,
+      category: "code",
+    });
+  } catch (error) {
+    checks.push({
+      id: "code:gtm-events-count",
+      label: "GTM_EVENTS в gtm-events.ts",
+      status: "fail",
+      message: error instanceof Error ? error.message : String(error),
+      category: "code",
+    });
+  }
+
   try {
     const home = await fetchText(`${baseUrl}/`);
     const googleMeta = metaContent(home.text, "google-site-verification");
@@ -186,12 +272,39 @@ async function main() {
     const ahrefsMeta = metaContent(home.text, "ahrefs-site-verification");
     const hasGtm =
       /googletagmanager\.com/i.test(home.text) || /GTM-[A-Z0-9]+/.test(home.text);
+    liveGtmOk = hasGtm;
 
     checks.push({
       id: "live:gtm",
       label: `Live GTM snippet (${baseUrl})`,
       status: hasGtm ? "ok" : "fail",
       message: hasGtm ? "googletagmanager.com найден в HTML" : "GTM не в HTML — проверьте env на хостинге и redeploy",
+      category: "live",
+    });
+
+    const hasConsentDefault =
+      /id=["']gtm-consent-default["']/i.test(home.text) ||
+      /gtag\s*\(\s*['"]consent['"]\s*,\s*['"]default['"]/i.test(home.text);
+    checks.push({
+      id: "live:gtm-consent-default",
+      label: "Live Consent Mode default (gtm-consent-default)",
+      status: hasConsentDefault ? "ok" : "fail",
+      message: hasConsentDefault
+        ? "Скрипт consent default найден в HTML"
+        : "Consent default отсутствует — GTM может загрузиться до denied",
+      category: "live",
+    });
+
+    const hasDataLayerInit =
+      /window\.dataLayer\s*=\s*window\.dataLayer\s*\|\|\s*\[\]/i.test(home.text) ||
+      /w\[l\]\s*=\s*w\[l\]\s*\|\|\s*\[\]/i.test(home.text);
+    checks.push({
+      id: "live:datalayer-init",
+      label: "Live dataLayer initialization",
+      status: hasDataLayerInit ? "ok" : "fail",
+      message: hasDataLayerInit
+        ? "Инициализация dataLayer найдена"
+        : "dataLayer не инициализирован в HTML",
       category: "live",
     });
 
@@ -256,6 +369,22 @@ async function main() {
       message: `Search Console → Sitemaps → ${expectedSitemap} (после верификации google-site-verification)`,
       category: "manual",
     });
+
+    checks.push({
+      id: "manual:gtm-publish",
+      label: "GTM: контейнер опубликован",
+      status: "skip",
+      message: "Submit + Publish в tagmanager.google.com (GA4, Метрика, Clarity)",
+      category: "manual",
+    });
+
+    checks.push({
+      id: "manual:ga4-conversions",
+      label: "GA4 / Метрика: конверсии и цели",
+      status: "skip",
+      message: `Настроить: ${CONVERSIONS_RECOMMENDED.join(", ")}`,
+      category: "manual",
+    });
   } catch (error) {
     checks.push({
       id: "live:fetch",
@@ -274,6 +403,8 @@ async function main() {
     checks,
     summary,
     runbook: "docs/i2-analytics-gsc-runbook.md",
+    gtmEventsCount,
+    conversionsRecommended: CONVERSIONS_RECOMMENDED,
   };
 
   fs.mkdirSync(opsDir, { recursive: true });
@@ -293,6 +424,13 @@ async function main() {
   console.log("");
   console.log(`Report: ${path.relative(root, reportFile)}`);
   console.log("Runbook: docs/i2-analytics-gsc-runbook.md");
+  printGoLiveChecklist({
+    baseUrl,
+    gtmEventsCount,
+    summary,
+    envGtmPresent: gtmPresent,
+    liveGtmOk,
+  });
 
   if (summary.fail > 0) process.exit(1);
 }

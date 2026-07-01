@@ -4,6 +4,7 @@ import {
   GTM_EVENTS,
   pushDataLayer,
   trackGtmEvent,
+  trackLocaleSwitch,
   trackTourView,
   type GtmEventName,
 } from "@/lib/analytics/gtm-events";
@@ -35,6 +36,7 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
   blog_article_feedback: ["item_id", "item_name", "feedback_value"],
   blog_comment_post: ["item_id", "item_name"],
   blog_affiliate_embed_view: ["item_id", "affiliate_service"],
+  locale_switch: ["locale_from", "locale_to", "page_path"],
 };
 
 describe("gtm-events", () => {
@@ -96,6 +98,16 @@ describe("gtm-events", () => {
       item_id: "patagonia-14",
       item_category: "tour",
       value: 1200,
+    });
+  });
+
+  it("trackLocaleSwitch sends locale_switch after consent", () => {
+    trackLocaleSwitch({ from: "ru", to: "en", path: "/tours/patagonia" });
+    expect(window.dataLayer?.[0]).toMatchObject({
+      event: GTM_EVENTS.localeSwitch,
+      locale_from: "ru",
+      locale_to: "en",
+      page_path: "/tours/patagonia",
     });
   });
 });

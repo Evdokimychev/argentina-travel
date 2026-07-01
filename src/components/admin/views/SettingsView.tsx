@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import SiteGlobalForm from "@/components/admin/site-globals/SiteGlobalForm";
+import AnalyticsReadinessPanel from "@/components/admin/AnalyticsReadinessPanel";
 import ProductionReadinessPanel from "@/components/admin/ProductionReadinessPanel";
 import CutoverChecklistPanel from "@/components/admin/CutoverChecklistPanel";
 import CmsCutoverPanel from "@/components/admin/CmsCutoverPanel";
@@ -21,6 +22,7 @@ import {
   SITE_MAINTENANCE_GLOBAL_KEYS,
   SITE_OPS_GLOBAL_KEYS,
 } from "@/lib/cms/site-globals/registry";
+import type { AnalyticsReadinessSnapshot } from "@/lib/ops/analytics-readiness-types";
 import type { ProductionReadinessSnapshot } from "@/lib/ops/production-readiness-types";
 import type { SiteGlobalKey } from "@/types/site-globals";
 
@@ -54,6 +56,7 @@ type SettingsResponse = {
     };
   };
   productionReadiness?: ProductionReadinessSnapshot;
+  analyticsReadiness?: AnalyticsReadinessSnapshot;
   publicHealth?: {
     ok: boolean;
     environment: {
@@ -255,6 +258,7 @@ export default function SettingsView() {
             />
             <ThemeSettingsSection />
 
+            <AnalyticsReadinessPanel snapshot={data?.analyticsReadiness} />
             <ProductionReadinessPanel snapshot={data?.productionReadiness} />
             <CutoverChecklistPanel health={data?.publicHealth} readiness={data?.productionReadiness} />
 

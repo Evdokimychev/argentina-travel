@@ -15,6 +15,7 @@ import { addLocalePrefix } from "@/lib/i18n/locale-path";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
+import { trackLocaleSwitch } from "@/lib/analytics/gtm-events";
 import { CurrencyCode, LocaleCode } from "@/types/locale";
 
 type Tab = "language" | "currency";
@@ -56,6 +57,9 @@ function SwitcherPanel({ onClose }: { onClose?: () => void }) {
   );
 
   function selectLanguage(code: LocaleCode) {
+    if (code !== locale) {
+      trackLocaleSwitch({ from: locale, to: code, path: pathname });
+    }
     setLocale(code);
     router.push(addLocalePrefix(pathname, code));
     onClose?.();
