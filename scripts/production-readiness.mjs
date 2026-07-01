@@ -409,6 +409,57 @@ async function main() {
   checks.push(await checkHealthEndpoint());
   checks.push(checkTsc());
 
+  const f3Migration = "20250627000010_cms_scheduled_publish.sql";
+  const f3Path = path.join(migrationsDir, f3Migration);
+  checks.push({
+    id: "migrations:f3-scheduled-publish",
+    label: "F3: scheduled publish migration",
+    status: fs.existsSync(f3Path) ? "ok" : "fail",
+    message: fs.existsSync(f3Path)
+      ? `${f3Migration} найден — npm run supabase:migrate на staging/prod перед cutover`
+      : `Отсутствует ${f3Migration}`,
+    category: "database",
+  });
+
+  if (!process.env.NEXT_PUBLIC_GTM_ID?.trim() && isProdLike) {
+    const gtmCheck = checks.find((c) => c.id === "env:recommended:NEXT_PUBLIC_GTM_ID");
+    if (gtmCheck) {
+      gtmCheck.message = "Не задана — GTM не загрузится на staging/production";
+    }
+  }
+
+  const lhReportCandidates = [
+    path.join(opsDir, "lighthouse-phase2-sample-last.json"),
+    path.join(opsDir, "lighthouse-phase2-prod-last.json"),
+  ];
+  const lhReportPath = lhReportCandidates.find((p) => fs.existsSync(p));
+  if (lhReportPath) {
+    try {
+      const lh = JSON.parse(fs.readFileSync(lhReportPath, "utf8"));
+      const medianPerf = lh.medianPerformance ?? null;
+      const medianA11y = lh.medianAccessibility ?? null;
+      const failing = (lh.results ?? []).filter((r) => r.pass === false).length;
+      checks.push({
+        id: "perf:lighthouse-phase2",
+        label: "Lighthouse phase2 (последний отчёт)",
+        status: medianPerf != null && medianPerf >= 90 ? "ok" : medianPerf != null ? "warn" : "skip",
+        message:
+          medianPerf != null
+            ? `median perf ${medianPerf}, a11y ${medianA11y ?? "—"}; ${failing} URL ниже бюджета — npm run lighthouse:phase2:prod`
+            : "Отчёт без medianPerformance",
+        category: "perf",
+      });
+    } catch {
+      checks.push({
+        id: "perf:lighthouse-phase2",
+        label: "Lighthouse phase2 (последний отчёт)",
+        status: "warn",
+        message: "Не удалось прочитать JSON — перезапустите lighthouse:phase2",
+        category: "perf",
+      });
+    }
+  }
+
   const summary = summarize(checks);
   const payload = {
     ok: summary.fail === 0,

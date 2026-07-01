@@ -48,9 +48,11 @@ const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | 
 
 interface MarketplaceTourCardProps {
   tour: TourListing;
+  /** First grid card on catalog — LCP hint for /tours. */
+  imagePriority?: boolean;
 }
 
-export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) {
+export default function MarketplaceTourCard({ tour, imagePriority = false }: MarketplaceTourCardProps) {
   const router = useRouter();
   const [datesModalOpen, setDatesModalOpen] = useState(false);
   const schedule = resolveTourCardScheduleDisplay(tour);
@@ -70,7 +72,12 @@ export default function MarketplaceTourCard({ tour }: MarketplaceTourCardProps) 
     <ContentCard>
       <div className="pointer-events-none relative z-10 flex flex-1 flex-col">
         <ContentCardMedia aspect="4/3" gradient="none">
-          <TourCardGallery images={tour.gallery} alt={tourCoverAlt(tour.title)} variant="tour" />
+          <TourCardGallery
+            images={tour.gallery}
+            alt={tourCoverAlt(tour.title)}
+            variant="tour"
+            priority={imagePriority}
+          />
 
           <div className="absolute left-3 top-3 z-10 flex max-w-[calc(100%-3.5rem)] flex-wrap gap-1.5">
             {partnerBadge ? (

@@ -13,12 +13,15 @@ interface TourCardGalleryProps {
   alt: string;
   /** @deprecated Используйте единый ImagePlaceholder без вариантов. */
   variant?: "tour" | "excursion";
+  /** First visible catalog card — improves LCP on /tours. */
+  priority?: boolean;
 }
 
 export default function TourCardGallery({
   images,
   alt,
   variant = "tour",
+  priority = false,
 }: TourCardGalleryProps) {
   const [index, setIndex] = useState(0);
   const displayImages = [...new Set(
@@ -60,6 +63,8 @@ export default function TourCardGallery({
         src={displayImages[index]}
         alt={alt}
         fill
+        priority={priority}
+        fetchPriority={priority ? "high" : undefined}
         placeholderVariant={variant}
         className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

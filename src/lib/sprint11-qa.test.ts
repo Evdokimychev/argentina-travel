@@ -26,6 +26,11 @@ const LIGHTHOUSE_PHASE2_PATHS = [
   "/mapa-argentina",
   "/immigration",
   "/destinations/patagonia",
+  "/places",
+  "/destinations",
+  "/about",
+  "/contacts",
+  "/en/places",
 ];
 
 const VISUAL_SMOKE_PATHS = [
@@ -130,11 +135,11 @@ describe("Sprint 11 — final QA gate (S5–S10 regression)", () => {
     expect(Object.keys(MAP_KIND_COLORS).length).toBeGreaterThanOrEqual(7);
   });
 
-  it("phase-2 Lighthouse automation covers 8 public URLs with perf + a11y", () => {
+  it("phase-2 Lighthouse automation covers 13 public URLs with perf + a11y", () => {
     const script = readFileSync(join(scriptsRoot, "lighthouse-phase2-ci.mjs"), "utf8");
     expect(script).toContain("LIGHTHOUSE_PHASE2_PATHS");
     expect(script).toContain("performance,accessibility");
-    expect(LIGHTHOUSE_PHASE2_PATHS.length).toBe(8);
+    expect(LIGHTHOUSE_PHASE2_PATHS.length).toBe(13);
     for (const path of LIGHTHOUSE_PHASE2_PATHS) {
       expect(script).toContain(path);
     }

@@ -31,6 +31,11 @@ export const LIGHTHOUSE_PHASE2_PATHS = [
   "/mapa-argentina",
   "/immigration",
   "/destinations/patagonia",
+  "/places",
+  "/destinations",
+  "/about",
+  "/contacts",
+  "/en/places",
 ];
 
 function sleep(ms) {
@@ -69,6 +74,11 @@ function runAudit() {
 
 let auditStatus = 1;
 let server = null;
+
+if (process.env.SKIP_LIGHTHOUSE === "1") {
+  console.log("SKIP_LIGHTHOUSE=1 — skipping Lighthouse phase2 audit.");
+  process.exit(0);
+}
 
 try {
   if (isExternalBase) {

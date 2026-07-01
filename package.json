@@ -63,6 +63,7 @@
     "sync-content-plan-redirects": "tsx scripts/sync-content-plan-redirects.mjs",
     "sync-content-plan-redirects:check": "tsx scripts/sync-content-plan-redirects.mjs --check",
     "analytics-readiness": "node scripts/analytics-readiness.mjs",
+    "gtm-events:audit": "node scripts/gtm-events-audit.mjs",
     "publish:verify": "node scripts/publish-turnkey.mjs",
     "publish:verify:full": "node scripts/publish-turnkey.mjs -- --full",
     "publish:verify:pre-deploy": "node scripts/publish-turnkey.mjs -- --full --pre-deploy",

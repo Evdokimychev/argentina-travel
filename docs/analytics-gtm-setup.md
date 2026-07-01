@@ -16,6 +16,14 @@
 | `NEXT_PUBLIC_BING_SITE_VERIFICATION` | Токен Bing (`msvalidate.01`) |
 | `NEXT_PUBLIC_AHREFS_SITE_VERIFICATION` | Токен Ahrefs |
 
+Проверка env и live-сниппета:
+
+```bash
+npm run analytics-readiness
+ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
+npm run gtm-events:audit
+```
+
 ## 2. Consent Mode (уже в коде)
 
 - До согласия: `analytics_storage`, `functionality_storage` — **denied**
@@ -38,7 +46,11 @@
 - **Tag type:** Google Analytics: GA4 Event
 - **Configuration Tag:** GA4 Configuration (выше)
 - **Event name:** `{{Event}}` (встроенная переменная Event)
-- **Trigger:** Custom Event — regex `(booking_submit|contact_form_submit|newsletter_subscribe|whatsapp_click|telegram_click|tour_booking_click|excursion_booking_click|tour_view|excursion_view)`
+- **Trigger:** Custom Event — regex:
+
+```
+(booking_submit|contact_form_submit|newsletter_subscribe|whatsapp_click|telegram_click|tour_booking_click|excursion_booking_click|tour_view|excursion_view|blog_article_save|blog_affiliate_click|blog_inline_related_click|blog_article_view|blog_article_feedback|blog_comment_post|blog_affiliate_embed_view)
+```
 
 Дополнительно создайте **GA4 Conversions** в интерфейсе GA4 для:
 
@@ -78,6 +90,13 @@ ym(COUNTER_ID, "init", {
 | Клик «Забронировать» (экскурсия) | `excursion_booking_click` |
 | Просмотр тура | `tour_view` |
 | Просмотр экскурсии | `excursion_view` |
+| Сохранение статьи | `blog_article_save` |
+| Клик партнёра в статье | `blog_affiliate_click` |
+| Клик inline «Читайте также» | `blog_inline_related_click` |
+| Просмотр статьи | `blog_article_view` |
+| Оценка «полезно» | `blog_article_feedback` |
+| Комментарий | `blog_comment_post` |
+| Показ affiliate-блока | `blog_affiliate_embed_view` |
 
 ### Microsoft Clarity
 
@@ -116,14 +135,39 @@ ym(COUNTER_ID, "init", {
 
 ## 6. Карта dataLayer-событий
 
+Источник правды в коде: `src/lib/analytics/gtm-events.ts`. Тест уникальности и схемы параметров: `src/lib/analytics/gtm-events.test.ts`.
+
 | Событие | Когда | Ключевые поля |
 |---------|-------|---------------|
-| `booking_submit` | Успешная заявка на тур/экскурсию | `product_type`, `item_id`, `item_name`, `value`, `guests` |
-| `contact_form_submit` | Форма на `/contacts` | `tour_slug`, `product_slug`, `service_slug` |
-| `newsletter_subscribe` | Подписка в footer | `source` |
-| `whatsapp_click` | Клик по ссылке wa.me / whatsapp.com | `link_url`, `channel` |
-| `telegram_click` | Клик по t.me / telegram | `link_url`, `channel` |
-| `tour_booking_click` | Кнопка «Забронировать» на странице тура | `item_id`, `booking_action`, `placement` |
-| `excursion_booking_click` | Кнопка бронирования экскурсии | `item_id`, `booking_action` |
-| `tour_view` | Просмотр `/tours/[slug]` | `item_id`, `item_name`, `value` |
-| `excursion_view` | Просмотр `/excursions/[slug]` | `item_id`, `partner`, `city_name` |
+| `booking_submit` | Успешная заявка на тур/экскурсию | `product_type`, `item_id`, `item_name`, `partner`, `guests`, `value`, `currency`, `source` |
+| `contact_form_submit` | Форма на `/contacts` | `form_name`, `source`, `tour_slug`, `product_slug`, `service_slug` |
+| `newsletter_subscribe` | Подписка в footer / блоке блога | `form_name`, `source` |
+| `whatsapp_click` | Клик по ссылке wa.me / whatsapp.com | `link_url`, `link_text`, `channel` |
+| `telegram_click` | Клик по t.me / telegram | `link_url`, `link_text`, `channel` |
+| `tour_booking_click` | Кнопка «Забронировать» на странице тура | `item_id`, `item_name`, `booking_action`, `placement` |
+| `excursion_booking_click` | Кнопка бронирования экскурсии | `item_id`, `item_name`, `booking_action`, `placement` |
+| `tour_view` | Просмотр `/tours/[slug]` | `item_id`, `item_name`, `item_category`, `value`, `currency`, `organizer_id` |
+| `excursion_view` | Просмотр `/excursions/[slug]` | `item_id`, `item_name`, `item_category`, `partner`, `city_name` |
+| `blog_article_save` | Сохранение статьи в «Мои материалы» | `item_id`, `item_name`, `save_action`, `source` |
+| `blog_affiliate_click` | Клик по партнёрской ссылке в статье | `item_id`, `affiliate_service`, `link_url` |
+| `blog_inline_related_click` | Клик «Читайте также» в теле статьи | `source_slug`, `item_id`, `item_name`, `placement` |
+| `blog_article_view` | Просмотр статьи блога | `item_id`, `item_name`, `item_category` |
+| `blog_article_feedback` | «Полезно» / «Не помогло» | `item_id`, `item_name`, `feedback_value` |
+| `blog_comment_post` | Отправка комментария | `item_id`, `item_name` |
+| `blog_affiliate_embed_view` | Показ affiliate-блока (in-view) | `item_id`, `affiliate_service` |
+
+## 7. Публикация контейнера GTM (ручная ops)
+
+Код и env подготавливают `dataLayer`; **Publish в GTM — вручную** после настройки тегов.
+
+Чек-лист перед go-live маркетинга:
+
+- [ ] `NEXT_PUBLIC_GTM_ID` задан в Vercel Production → **Redeploy**
+- [ ] GA4 Configuration + универсальный GA4 Event (regex выше)
+- [ ] Consent Mode на всех тегах аналитики
+- [ ] Метрика + цели по таблице выше
+- [ ] Clarity (опционально)
+- [ ] **Submit + Publish** контейнера в [tagmanager.google.com](https://tagmanager.google.com/)
+- [ ] `npm run gtm-events:audit` — без ошибок
+- [ ] `ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness`
+- [ ] Tag Assistant + GA4 DebugView на `/`, `/tours`, `/blog`

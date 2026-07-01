@@ -249,8 +249,8 @@ export default function PlacesCatalog({
           />
         ) : (
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {sorted.map((place) => (
-              <PlaceCard key={place.slug} place={place} />
+            {sorted.map((place, index) => (
+              <PlaceCard key={place.slug} place={place} imagePriority={index === 0} />
             ))}
           </div>
         )}

@@ -69,7 +69,12 @@ npm run publish:verify:pre-deploy   # code-ready: build + stale /map на prod �
 
 ```bash
 # 1. Убедиться что DATABASE_URL → production
-npm run supabase:migrate
+npm run supabase:migrate   # staging, затем production
+
+# F3: scheduled publish (миграция 20250627000010_cms_scheduled_publish.sql)
+# Cron публикации: /api/cron/cms/publish-scheduled (вызывается из platform-maintenance)
+npm run production-readiness
+npm run lighthouse:phase2:prod
 
 # 2. Импорт CMS (идемпотентно)
 npm run supabase:seed-cms
@@ -171,7 +176,9 @@ ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
 В `vercel.json` настроены:
 
 - `0 4 * * *` → `/api/cron/affiliate-sync`
-- `0 3 * * *` → `/api/cron/platform-maintenance`
+- `0 3 * * *` → `/api/cron/platform-maintenance` (в т.ч. `/api/cron/cms/publish-scheduled`, digest, backup-hint по воскресеньям)
+
+Отдельный cron для CMS publish **не требуется** — subtask в `platform-maintenance`.
 
 Ручная проверка:
 

@@ -342,11 +342,15 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
                     : "flex flex-col gap-5"
                 )}
               >
-                {visibleItems.map((t) =>
+                {visibleItems.map((t, index) =>
                   viewMode === "list" ? (
                     <MarketplaceTourListCard key={t.id} tour={t} />
                   ) : (
-                    <MarketplaceTourCard key={t.id} tour={t} />
+                    <MarketplaceTourCard
+                      key={t.id}
+                      tour={t}
+                      imagePriority={index === 0 && viewMode === "grid"}
+                    />
                   )
                 )}
               </div>

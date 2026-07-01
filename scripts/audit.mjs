@@ -4,8 +4,11 @@
  * Usage: node scripts/audit.mjs [--quick|--security|--perf|--full]
  */
 import { spawnSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 const mode = process.argv[2]?.replace(/^--/, "") || "full";
+const root = process.cwd();
 
 const run = (label, cmd, args = [], opts = {}) => {
   console.log(`\n▶ ${label}`);
@@ -30,7 +33,14 @@ const security = () => {
 
 const perf = () => {
   run("Bundle report", "npm", ["run", "bundle:report"]);
-  console.log("\nℹ Lighthouse: npm run lighthouse:blog (requires dev server)");
+  run("GTM events audit", "node", ["scripts/gtm-events-audit.mjs"]);
+  const hasBuild = fs.existsSync(path.join(root, ".next/BUILD_ID"));
+  const hasExternalBase = Boolean(process.env.LIGHTHOUSE_BASE_URL?.trim());
+  if (!hasBuild && !hasExternalBase) {
+    console.log("\nℹ Skip Lighthouse — npm run build && npm run lighthouse:phase2 (or lighthouse:phase2:prod)");
+    return;
+  }
+  run("Lighthouse phase2", "node", ["scripts/lighthouse-phase2-ci.mjs"]);
 };
 
 const full = () => {

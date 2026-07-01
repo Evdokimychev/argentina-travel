@@ -124,6 +124,7 @@ export default function HubHero({
                   alt={title}
                   fill
                   priority
+                  fetchPriority="high"
                   sizes="(max-width: 1024px) 100vw, 360px"
                   className="object-cover"
                 />

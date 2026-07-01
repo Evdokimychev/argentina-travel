@@ -65,6 +65,7 @@ export default function PageImage({
       width={width}
       height={height}
       priority={resolvedPriority}
+      fetchPriority={resolvedPriority ? "high" : undefined}
       loading={resolvedLoading}
       sizes={resolvedSizes}
       className={cn(className)}

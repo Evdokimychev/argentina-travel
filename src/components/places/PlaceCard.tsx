@@ -14,9 +14,11 @@ import { cn } from "@/lib/cn";
 export default function PlaceCard({
   place,
   className,
+  imagePriority = false,
 }: {
   place: PlaceListing;
   className?: string;
+  imagePriority?: boolean;
 }) {
   return (
     <Link
@@ -32,6 +34,8 @@ export default function PlaceCard({
             src={place.coverImage}
             alt={place.name}
             fill
+            priority={imagePriority}
+            fetchPriority={imagePriority ? "high" : undefined}
             className="object-cover transition-transform duration-700 group-hover:scale-105"
             sizes="(max-width: 768px) 100vw, 25vw"
           />

@@ -192,6 +192,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
                   alt={tour.title}
                   fill
                   priority
+                  fetchPriority="high"
                   placeholderVariant="tour"
                   sizes="(max-width: 1024px) 100vw, 420px"
                   className="object-cover"
