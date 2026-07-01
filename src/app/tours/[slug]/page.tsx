@@ -5,6 +5,7 @@ import TourJsonLd from "@/components/seo/TourJsonLd";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
 import TourFlightLogisticsSection from "@/components/flights/TourFlightLogisticsSection";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours-server";
+import { fetchPlacesServer } from "@/lib/places-repository";
 import {
   fetchCutoverCanonicalTourBySlug,
   fetchCutoverPublishedTourSlugs,
@@ -87,8 +88,11 @@ export default async function TourDetailPage({
   const cookieStore = await cookies();
   const access = getTourPrivateAccessFromCookies(cookieStore, slug);
   const tour = await fetchTourDetail(slug, { accessToken: access });
-  const similarTours = tour ? await fetchSimilarTours(slug, 3) : [];
-  const initialCanonicalTour = await fetchCutoverCanonicalTourBySlug(slug);
+  const [similarTours, initialCanonicalTour, catalogPlaces] = await Promise.all([
+    tour ? fetchSimilarTours(slug, 3) : Promise.resolve([]),
+    fetchCutoverCanonicalTourBySlug(slug),
+    fetchPlacesServer(),
+  ]);
 
   const locale = "ru" as const;
   const labels = getFlightTeaserLabels(locale);
@@ -125,6 +129,7 @@ export default async function TourDetailPage({
         flightLogisticsSection={flightLogisticsSection}
         flightLogisticsNavLabel={flightLogisticsSection ? labels.tourTitle : undefined}
         initialDepartureDate={departure?.trim() || null}
+        catalogPlaces={catalogPlaces}
       />
     </>
   );

@@ -61,9 +61,12 @@ import { resolvePartnerTourSections } from "@/lib/tripster/partner-tour-visibili
 import { useRepositoryTourDetail } from "@/hooks/useRepositoryTourDetail";
 import { useCanonicalTour } from "@/hooks/useCanonicalTour";
 import PlacesSection from "./PlacesSection";
+import TourRelatedPlacesSection from "./TourRelatedPlacesSection";
 import type { Tour } from "@/types/tour";
-import { Suspense, useEffect, type ReactNode } from "react";
+import type { PlaceListing } from "@/types/place";
+import { Suspense, useEffect, useMemo, type ReactNode } from "react";
 import { useTrackEntityView } from "@/hooks/useInteractionTracking";
+import { matchCatalogPlacesForTour } from "@/lib/tour-place-match";
 
 interface TourDetailViewProps {
   slug: string;
@@ -79,6 +82,7 @@ interface TourDetailViewProps {
   previewIsPublished?: boolean;
   previewPublishBlockingCount?: number;
   initialDepartureDate?: string | null;
+  catalogPlaces?: PlaceListing[];
 }
 
 export default function TourDetailView({
@@ -94,6 +98,7 @@ export default function TourDetailView({
   previewIsPublished = false,
   previewPublishBlockingCount = 0,
   initialDepartureDate = null,
+  catalogPlaces = [],
 }: TourDetailViewProps) {
   useTrackEntityView("tour", previewMode ? null : slug, {
     title: initialTour?.title,
@@ -105,6 +110,10 @@ export default function TourDetailView({
   const liveCanonicalTour = useCanonicalTour(slug, initialCanonicalTour);
   const tour = previewMode ? initialTour ?? null : syncedTour;
   const canonicalTour = previewMode ? previewCanonicalTour : liveCanonicalTour;
+  const relatedCatalogPlaces = useMemo(
+    () => (tour ? matchCatalogPlacesForTour(tour, catalogPlaces) : []),
+    [tour, catalogPlaces],
+  );
 
   useEffect(() => {
     if (!tour || !initialDepartureDate?.trim()) return;
@@ -322,6 +331,7 @@ export default function TourDetailView({
                 places={tour.places}
                 organizerComment={getTourSectionOrganizerComment(tour, "places")}
               />
+              <TourRelatedPlacesSection places={relatedCatalogPlaces} />
               {tour.itinerary?.length ? (
                 <ItinerarySection
                   days={tour.itinerary}

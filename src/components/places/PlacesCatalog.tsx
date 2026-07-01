@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { LayoutGrid, Map as MapIcon, MapPin } from "lucide-react";
+import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
 import PlaceCard from "@/components/places/PlaceCard";
 import PlaceSearchPanel from "@/components/places/PlaceSearchPanel";
 import PlacesFeaturedCollections from "@/components/places/PlacesFeaturedCollections";
@@ -21,6 +22,7 @@ import {
   sortPlaces,
   type PlaceCatalogFilters,
 } from "@/lib/places-catalog-filters";
+import { buildPlaceFilterChips, countPlaceFilterChips } from "@/lib/places-filter-chips";
 import { getRegionSummaries } from "@/lib/places-region-stats";
 import { siteContainerClass } from "@/lib/site-container";
 import type { PlaceCollection, PlaceListing } from "@/types/place";
@@ -85,6 +87,21 @@ export default function PlacesCatalog({
     updateUrl(next);
   };
 
+  const filterChips = useMemo(
+    () =>
+      buildPlaceFilterChips(filters, applyFilters, {
+        searchPrefix: t("places.filters.search"),
+        categoryPrefix: t("places.filters.category"),
+        regionPrefix: t("places.filters.region"),
+        provincePrefix: t("places.filters.province"),
+        seasonPrefix: t("places.filters.season"),
+        tagPrefix: t("places.filters.tag"),
+      }),
+    [filters, t, viewMode],
+  );
+
+  const activeChipCount = useMemo(() => countPlaceFilterChips(filters), [filters]);
+
   const resetFilters = () => {
     const next = getDefaultPlaceCatalogFilters();
     setFilters(next);
@@ -145,6 +162,13 @@ export default function PlacesCatalog({
               reset: t("places.filters.reset"),
               filters: t("places.filters.title"),
             }}
+          />
+
+          <CatalogActiveFilterChips
+            chips={filterChips}
+            onClearAll={activeChipCount > 1 ? resetFilters : undefined}
+            clearAllLabel={t("places.filters.reset")}
+            className="mt-4"
           />
 
           <PlacesRegionExplorer
@@ -209,19 +233,6 @@ export default function PlacesCatalog({
             {t("places.linkItineraries")}
           </Link>
         </div>
-
-        {filters.tag ? (
-          <div className="mb-6 flex flex-wrap items-center gap-2 rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm">
-            <span className="text-slate">{t("places.tagFilter").replace("{tag}", filters.tag)}</span>
-            <button
-              type="button"
-              onClick={() => applyFilters({ ...filters, tag: "" })}
-              className="font-medium text-sky hover:underline"
-            >
-              {t("places.tagFilterClear")}
-            </button>
-          </div>
-        ) : null}
 
         {sorted.length === 0 ? (
           <EmptyState

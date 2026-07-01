@@ -9,6 +9,7 @@ import CutoverChecklistPanel from "@/components/admin/CutoverChecklistPanel";
 import CmsCutoverPanel from "@/components/admin/CmsCutoverPanel";
 import CmsOpsPanel from "@/components/admin/cms/CmsOpsPanel";
 import SiteGlobalsSeoPreview from "@/components/admin/cms/SiteGlobalsSeoPreview";
+import MaintenancePreviewPanel from "@/components/admin/cms/MaintenancePreviewPanel";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
@@ -247,6 +248,11 @@ export default function SettingsView() {
                 updatedAt={data?.updatedAt?.[definition.key] ?? null}
               />
             ))}
+            <MaintenancePreviewPanel
+              maintenance={globals["site.maintenance"]}
+              branding={globals["site.branding"]}
+              contact={globals["site.contact"]}
+            />
             <ThemeSettingsSection />
 
             <ProductionReadinessPanel snapshot={data?.productionReadiness} />

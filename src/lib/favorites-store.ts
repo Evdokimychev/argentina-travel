@@ -10,6 +10,7 @@ import type { SessionUser } from "@/types/user";
 
 type FavoritesStore = Record<string, FavoriteTour[]>;
 type FavoriteRemoteKind = "tour" | "excursion";
+/** Места (`kind: "place"`) хранятся только в localStorage — без синхронизации в user_favorites. */
 type FavoriteSyncAction = "add" | "remove";
 
 interface FavoriteSyncQueueItem {
