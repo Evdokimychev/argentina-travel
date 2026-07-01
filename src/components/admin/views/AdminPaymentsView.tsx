@@ -60,7 +60,7 @@ export default function AdminPaymentsView({ initialTab = "bookings" }: { initial
 
   const subtitle =
     tab === "bookings"
-      ? "Сводка по оплатам без проведения списаний и интеграции с платёжным шлюзом"
+      ? "Сводка по оплатам бронирований и статусам payment_status"
       : tab === "ledger"
         ? "Read-only реестр списаний, возвратов и выплат"
         : tab === "payouts"

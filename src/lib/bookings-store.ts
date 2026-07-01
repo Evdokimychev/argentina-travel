@@ -17,6 +17,7 @@ import {
   resolveBookingPaymentStatus,
   resolveOrganizerParams,
 } from "@/lib/booking-params";
+import { resolveBookingAmounts } from "@/lib/booking-payment-display";
 import {
   buildCheckoutDisplaySnapshot,
   type CheckoutCurrencyCode,
@@ -1354,6 +1355,79 @@ export function completeBookingPaymentFromLink(input: {
       paymentStatus: paymentStatus === "paid" ? "paid" : "partial",
     });
   }
+  return { booking: draft };
+}
+
+/** Local demo: simulate payment without Supabase (development / sandbox UI). */
+export function simulateSandboxPaymentLocal(input: {
+  bookingId: string;
+  asPartial?: boolean;
+}): { booking: Booking } | { error: string } {
+  const all = getAllBookings();
+  const index = all.findIndex((booking) => booking.id === input.bookingId);
+  if (index === -1) return { error: "Бронирование не найдено" };
+
+  const current = normalizeBooking(all[index]);
+  const organizerParams = resolveOrganizerParams(current);
+  const amounts = resolveBookingAmounts(current);
+
+  if (amounts.due <= 0 && resolveBookingPaymentStatus(current) === "paid") {
+    return { error: "Заявка уже полностью оплачена" };
+  }
+
+  let chargeAmount = amounts.due;
+  if (chargeAmount <= 0 && current.paymentLink?.amountUsd) {
+    chargeAmount = current.paymentLink.amountUsd;
+  }
+  if (chargeAmount <= 0) {
+    chargeAmount = amounts.total;
+  }
+
+  if (input.asPartial) {
+    const deposit = computePrepaymentAmount(amounts.total, organizerParams);
+    chargeAmount = deposit > 0 ? deposit : Math.max(1, Math.round(amounts.total * 0.1));
+  }
+
+  chargeAmount = Math.min(Math.max(0, Math.round(chargeAmount)), amounts.due > 0 ? amounts.due : amounts.total);
+  if (chargeAmount <= 0) return { error: "Нет суммы для симуляции оплаты" };
+
+  const now = new Date().toISOString();
+  const nextPaid = Math.min(amounts.total, amounts.paid + chargeAmount);
+  const paymentStatus: BookingPaymentStatus =
+    nextPaid >= amounts.total ? "paid" : nextPaid > 0 ? "partial" : "pending";
+
+  const paymentSummary = buildPaymentSummaryFromStatus(
+    amounts.total,
+    paymentStatus,
+    organizerParams
+  );
+  paymentSummary.paidAmountUsd = nextPaid;
+  paymentSummary.remainingAmountUsd = Math.max(0, amounts.total - nextPaid);
+
+  const link = current.paymentLink;
+  const draft: Booking = {
+    ...current,
+    paymentStatus,
+    paymentSummary,
+    amountPaid: nextPaid,
+    amountDue: paymentSummary.remainingAmountUsd,
+    paymentLink:
+      link && (paymentStatus === "paid" || paymentStatus === "partial")
+        ? { ...link, status: "paid", paidAt: now }
+        : link,
+    invoices: syncInvoicesAfterPayment({
+      ...current,
+      paymentStatus,
+      paymentSummary,
+    }),
+    updatedAt: now,
+  };
+
+  persistBookingUpdate(index, draft);
+  notifyPaymentStatusChanged(
+    draft,
+    paymentStatus === "paid" ? "paid" : "partial"
+  );
   return { booking: draft };
 }
 

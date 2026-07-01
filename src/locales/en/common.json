@@ -655,5 +655,11 @@
   "immigration.hub.link.more": "Read more",
   "immigration.hub.faqIntro": "15 answers on residency, RADEX, citizenship, birth, and entry rules.",
   "immigration.hub.cta.title": "Questions about immigration?",
-  "immigration.hub.cta.subtitle": "Request partner contacts or ask about tours and the platform — we do not provide legal services."
+  "immigration.hub.cta.subtitle": "Request partner contacts or ask about tours and the platform — we do not provide legal services.",
+  "booking.payment.sandbox.title": "Payment sandbox (demo)",
+  "booking.payment.sandbox.description": "Simulates a successful charge without Mercado Pago or Stripe.",
+  "booking.payment.sandbox.simulateFull": "Simulate full payment",
+  "booking.payment.sandbox.simulateDeposit": "Simulate deposit",
+  "booking.payment.commission.title": "Payment commission snapshot",
+  "booking.payment.commission.empty": "Commission entries appear after the tourist pays successfully."
 }

@@ -44,11 +44,17 @@ import {
   formatAttributionSourceLabel,
 } from "@/types/booking-attribution";
 import { computeTripProgress } from "@/lib/trip-operations";
+import {
+  BOOKING_PAYMENT_STATUS_LABELS,
+  resolveBookingPaymentStatus,
+} from "@/lib/booking-params";
+import type { BookingPaymentStatus } from "@/types/booking-params";
 
 type InboxTab = "bookings" | "waitlist";
 type ViewMode = "kanban" | "table";
 
 type StatusFilter = "all" | BookingStatusActive;
+type PaymentStatusFilter = "all" | BookingPaymentStatus;
 type SourceFilter = "all" | string;
 type SortOption = "newest" | "oldest" | "tourDate" | "amountDesc" | "amountAsc";
 
@@ -76,6 +82,7 @@ export default function OrganizerBookingsView() {
       ? (initialStatus as StatusFilter)
       : "all"
   );
+  const [paymentStatusFilter, setPaymentStatusFilter] = useState<PaymentStatusFilter>("all");
   const [sourceFilter, setSourceFilter] = useState<SourceFilter>("all");
   const [sort, setSort] = useState<SortOption>("newest");
   const [viewMode, setViewMode] = useState<ViewMode>("kanban");
@@ -129,6 +136,12 @@ export default function OrganizerBookingsView() {
 
     let list = bookings.filter((booking) => {
       if (statusFilter !== "all" && booking.status !== statusFilter) return false;
+      if (
+        paymentStatusFilter !== "all" &&
+        resolveBookingPaymentStatus(booking) !== paymentStatusFilter
+      ) {
+        return false;
+      }
       if (sourceFilter !== "all" && attributionSourceKey(booking.attribution) !== sourceFilter) {
         return false;
       }
@@ -159,7 +172,7 @@ export default function OrganizerBookingsView() {
     });
 
     return list;
-  }, [bookings, search, sort, statusFilter, sourceFilter]);
+  }, [bookings, search, sort, statusFilter, paymentStatusFilter, sourceFilter]);
 
   return (
     <div className={cn(cabinetCardClass, "overflow-hidden")}>
@@ -214,7 +227,7 @@ export default function OrganizerBookingsView() {
           <OrganizerWaitlistView />
         ) : (
           <>
-        <div className="grid gap-3 lg:grid-cols-3">
+        <div className="grid gap-3 lg:grid-cols-4">
           <div className="relative lg:col-span-1">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate" />
             <Input
@@ -240,6 +253,28 @@ export default function OrganizerBookingsView() {
                   {BOOKING_STATUS_LABELS[status]}
                 </option>
               ))}
+            </NativeSelect>
+          </div>
+
+          <div>
+            <label htmlFor="booking-payment-status-filter" className="sr-only">
+              Статус оплаты
+            </label>
+            <NativeSelect
+              id="booking-payment-status-filter"
+              value={paymentStatusFilter}
+              onChange={(event) =>
+                setPaymentStatusFilter(event.target.value as PaymentStatusFilter)
+              }
+            >
+              <option value="all">Все оплаты</option>
+              {(Object.keys(BOOKING_PAYMENT_STATUS_LABELS) as BookingPaymentStatus[]).map(
+                (status) => (
+                  <option key={status} value={status}>
+                    {BOOKING_PAYMENT_STATUS_LABELS[status]}
+                  </option>
+                )
+              )}
             </NativeSelect>
           </div>
 

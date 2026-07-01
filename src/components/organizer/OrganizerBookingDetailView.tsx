@@ -48,6 +48,7 @@ import FormattedPrice from "@/components/FormattedPrice";
 import BookingLedgerAmount from "@/components/booking/BookingLedgerAmount";
 import BookingPaymentStatusBadge from "@/components/booking/BookingPaymentStatusBadge";
 import BookingRefundRequestSection from "@/components/booking/BookingRefundRequestSection";
+import OrganizerBookingCommissionSection from "@/components/organizer/OrganizerBookingCommissionSection";
 import { resolveBookingAmounts } from "@/lib/booking-payment-display";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { formatBookingCheckoutPaymentOption } from "@/lib/booking-display";
@@ -322,6 +323,10 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
                     role="organizer"
                   />
                 </DetailRow>
+
+                <div className="border-b border-gray-100 py-3">
+                  <OrganizerBookingCommissionSection bookingId={booking.id} />
+                </div>
 
                 <DetailRow label="Даты">{formatBookingTourDates(booking)}</DetailRow>
 

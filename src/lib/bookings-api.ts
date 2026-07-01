@@ -1,5 +1,9 @@
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import type { PaymentTransactionReceiptView } from "@/types/payment-platform";
+import type {
+  BookingCommissionSnapshotRow,
+  PlatformCommissionRuleRow,
+} from "@/types/platform-commission";
 import type { TripsterBookingRequestView } from "@/types/tripster-booking";
 import type { YouTravelBookingRequestView } from "@/types/youtravel-booking";
 import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
@@ -166,6 +170,52 @@ export async function apiFetchBookingPaymentReceipt(bookingId: string): Promise<
     receipt: PaymentTransactionReceiptView | null;
     paymentStatus: string;
   }>(await fetch(`/api/bookings/${encodeURIComponent(bookingId)}/payment/receipt`, { cache: "no-store" }));
+}
+
+export async function apiFetchPaymentSandboxMode(): Promise<{ enabled: boolean }> {
+  return parseJson<{ enabled: boolean }>(
+    await fetch("/api/payments/sandbox-mode", { cache: "no-store" })
+  );
+}
+
+export async function apiSimulateSandboxPayment(input: {
+  bookingId: string;
+  asPartial?: boolean;
+  amountUsd?: number;
+}): Promise<{
+  booking: Booking;
+  paymentStatus: string;
+  amountUsd: number;
+  externalId: string;
+  sandbox: boolean;
+}> {
+  return parseJson<{
+    booking: Booking;
+    paymentStatus: string;
+    amountUsd: number;
+    externalId: string;
+    sandbox: boolean;
+  }>(
+    await fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}/payment/sandbox`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        asPartial: input.asPartial === true,
+        amountUsd: input.amountUsd,
+      }),
+    })
+  );
+}
+
+export async function apiFetchOrganizerBookingCommission(bookingId: string): Promise<{
+  snapshots: BookingCommissionSnapshotRow[];
+  rule: PlatformCommissionRuleRow | null;
+}> {
+  return parseJson(
+    await fetch(`/api/organizer/bookings/${encodeURIComponent(bookingId)}/commission`, {
+      cache: "no-store",
+    })
+  );
 }
 
 export function isRemoteBookingsMode(): boolean {

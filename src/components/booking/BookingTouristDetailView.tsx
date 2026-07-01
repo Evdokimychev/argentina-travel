@@ -14,6 +14,7 @@ import BookingPaymentReceiptSection from "@/components/booking/BookingPaymentRec
 import BookingStatusTimeline from "@/components/booking/BookingStatusTimeline";
 import BookingProgressSteps from "@/components/booking/BookingProgressSteps";
 import BookingPaymentStatusTimeline from "@/components/booking/BookingPaymentStatusTimeline";
+import BookingSandboxPaymentButton from "@/components/booking/BookingSandboxPaymentButton";
 import BookingOrganizerCommentsJournal from "@/components/booking/BookingOrganizerCommentsJournal";
 import FormattedPrice from "@/components/FormattedPrice";
 import { Button } from "@/components/ui/button";
@@ -280,6 +281,8 @@ export default function BookingTouristDetailView({ bookingId }: { bookingId: str
               Ссылка на оплату появится после подтверждения заявки организатором.
             </p>
           ) : null}
+
+          <BookingSandboxPaymentButton booking={booking} onUpdated={setBooking} />
 
           {paymentReceipt ? (
             <div className="mt-6">

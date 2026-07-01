@@ -105,17 +105,17 @@ export interface Booking {
   travelersFormToken?: string;
   /** When participant data was submitted. */
   travelersCompletedAt?: string;
-  /** Payment invoices (optional until payment integration). */
+  /** Payment invoices (prepayment, balance, full). */
   invoices?: BookingInvoice[];
-  /** Aggregated payment totals (optional until payment integration). */
+  /** Aggregated payment totals synced with payment_status. */
   paymentSummary?: BookingPaymentSummary;
-  /** Organizer-editable payment status (UI stub until payment integration). */
+  /** Payment status in booking CRM (pending / partial / paid / refunded). */
   paymentStatus?: BookingPaymentStatus;
   /** Organizer-editable booking parameters (dates, pricing, prepayment). */
   organizerParams?: BookingOrganizerParams;
   /** Payment choice at checkout (full / deposit / pay later). */
   checkoutPaymentOption?: BookingCheckoutPaymentOption;
-  /** Public payment link for pay-later and manual collection (webhook-ready stub). */
+  /** Public payment link for pay-later and platform checkout. */
   paymentLink?: BookingPaymentLink;
   /** Denormalized for lists — synced from paymentSummary on read/write. */
   amountDue?: number;

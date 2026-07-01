@@ -192,6 +192,20 @@ export async function createCommissionSnapshotForCharge(
   return mapSnapshotRow(data);
 }
 
+export async function listCommissionSnapshotsForBooking(
+  supabase: DbClient,
+  bookingId: string
+): Promise<BookingCommissionSnapshotRow[]> {
+  const { data, error } = await supabase
+    .from("booking_commission_snapshots")
+    .select("*")
+    .eq("booking_id", bookingId)
+    .order("created_at", { ascending: false });
+
+  if (error || !data) return [];
+  return data.map((row) => mapSnapshotRow(row));
+}
+
 export async function listCommissionSnapshotsForOrganizer(
   supabase: DbClient,
   organizerUserId: string,

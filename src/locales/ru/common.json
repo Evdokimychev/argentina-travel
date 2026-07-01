@@ -656,5 +656,11 @@
   "immigration.hub.link.more": "Подробнее",
   "immigration.hub.faqIntro": "15 ответов о ВНЖ, RADEX, гражданстве, родах и правилах въезда.",
   "immigration.hub.cta.title": "Остались вопросы об иммиграции?",
-  "immigration.hub.cta.subtitle": "Запросите контакты партнёров или задайте вопрос о турах и платформе — мы не оказываем юридических услуг."
+  "immigration.hub.cta.subtitle": "Запросите контакты партнёров или задайте вопрос о турах и платформе — мы не оказываем юридических услуг.",
+  "booking.payment.sandbox.title": "Песочница оплат (демо)",
+  "booking.payment.sandbox.description": "Симулирует успешное списание без Mercado Pago и Stripe.",
+  "booking.payment.sandbox.simulateFull": "Симулировать полную оплату",
+  "booking.payment.sandbox.simulateDeposit": "Симулировать депозит",
+  "booking.payment.commission.title": "Начисление по оплате",
+  "booking.payment.commission.empty": "Начисления появятся после успешной оплаты туриста."
 }

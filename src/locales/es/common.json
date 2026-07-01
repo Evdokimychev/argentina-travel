@@ -617,5 +617,11 @@
   "immigration.hub.link.more": "Más detalles",
   "immigration.hub.faqIntro": "15 respuestas sobre residencia, RADEX, ciudadanía, nacimientos y reglas de entrada.",
   "immigration.hub.cta.title": "¿Preguntas sobre inmigración?",
-  "immigration.hub.cta.subtitle": "Solicite contactos de socios o pregunte sobre tours y la plataforma — no prestamos servicios jurídicos."
+  "immigration.hub.cta.subtitle": "Solicite contactos de socios o pregunte sobre tours y la plataforma — no prestamos servicios jurídicos.",
+  "booking.payment.sandbox.title": "Sandbox de pagos (demo)",
+  "booking.payment.sandbox.description": "Simula un cobro exitoso sin Mercado Pago ni Stripe.",
+  "booking.payment.sandbox.simulateFull": "Simular pago completo",
+  "booking.payment.sandbox.simulateDeposit": "Simular depósito",
+  "booking.payment.commission.title": "Comisión por pago",
+  "booking.payment.commission.empty": "Los registros de comisión aparecerán tras el pago del turista."
 }

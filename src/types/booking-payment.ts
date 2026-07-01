@@ -1,4 +1,4 @@
-/** Booking payment entities — UI stubs until payment integration. */
+/** Booking payment entities — invoices, links, gateway metadata. */
 
 export type BookingInvoiceStatus = "pending" | "paid" | "partial" | "cancelled";
 
@@ -28,7 +28,7 @@ export interface BookingPaymentSummary {
   serviceFeeUsd: number;
 }
 
-/** Payment link lifecycle — webhook-ready stub until gateway integration. */
+/** Payment link lifecycle — checkout URLs and webhook status sync. */
 export type BookingPaymentLinkStatus = "active" | "paid" | "expired" | "cancelled";
 
 export type BookingPaymentLinkTarget = "full" | "deposit" | "remaining";

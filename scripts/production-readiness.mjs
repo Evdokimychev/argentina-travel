@@ -52,7 +52,14 @@ const RECOMMENDED_ENV = [
   "NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION",
 ];
 
-const FORBIDDEN_TRUE = ["NEXT_PUBLIC_ENABLE_DEMO_SEED"];
+const FORBIDDEN_TRUE = ["NEXT_PUBLIC_ENABLE_DEMO_SEED", "PAYMENT_SANDBOX_MODE"];
+
+const PAYMENT_PRODUCTION_ENV = [
+  "MERCADOPAGO_ACCESS_TOKEN",
+  "MERCADOPAGO_WEBHOOK_SECRET",
+  "STRIPE_SECRET_KEY",
+  "STRIPE_WEBHOOK_SECRET",
+];
 
 const SERVICE_ROLE_ONLY_TABLES = new Set([
   "api_key_usage_log",
@@ -376,8 +383,24 @@ async function main() {
       id: `env:forbidden:${key}`,
       label: `${key}=false`,
       status: enabled ? "fail" : "ok",
-      message: enabled ? "Демо-данные включены" : "Отключено",
+      message:
+        enabled && key === "PAYMENT_SANDBOX_MODE"
+          ? "Песочница оплат включена — отключите перед production cutover"
+          : enabled
+            ? "Демо-данные включены"
+            : "Отключено",
       category: "security",
+    });
+  }
+
+  for (const key of PAYMENT_PRODUCTION_ENV) {
+    const present = Boolean(process.env[key]?.trim());
+    checks.push({
+      id: `env:payment:${key}`,
+      label: `Платежи: ${key}`,
+      status: present ? "ok" : isProdLike ? "warn" : "skip",
+      message: present ? "Задана" : "Не задана — live checkout/webhooks недоступны",
+      category: "env",
     });
   }
 
