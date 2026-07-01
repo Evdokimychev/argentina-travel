@@ -8,6 +8,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getHomeHeroImage } from "@/lib/media-resolver";
+import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
 
 const PAGE_TITLE_FALLBACK = "О проекте";
@@ -45,14 +46,14 @@ export default async function AboutPage() {
     locale
   );
 
+  const breadcrumbItems = resolveLocaleBreadcrumbItems(locale, [
+    { labelKey: "nav.home", path: "/", fallback: "Главная" },
+    { labelKey: "about.meta.title", path: "/about", fallback: PAGE_TITLE_FALLBACK },
+  ]);
+
   return (
     <>
-      <BreadcrumbListJsonLd
-        items={[
-          { name: "Главная", path: "/" },
-          { name: pageTitle, path: "/about" },
-        ]}
-      />
+      <BreadcrumbListJsonLd items={breadcrumbItems} />
       <WebPageJsonLd name={pageTitle} description={pageDescription} path="/about" />
       <AboutPageView platformStats={platformStats} />
     </>

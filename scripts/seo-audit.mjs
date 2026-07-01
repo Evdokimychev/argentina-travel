@@ -249,6 +249,65 @@ async function auditJsonLdSample(sample) {
   };
 }
 
+function extractBreadcrumbNames(html) {
+  const blocks = extractJsonLdBlocks(html);
+  const names = [];
+
+  for (const block of blocks) {
+    if (block._parseError) continue;
+    if (block["@type"] !== "BreadcrumbList") continue;
+    for (const element of block.itemListElement ?? []) {
+      if (element?.name) names.push(String(element.name));
+    }
+  }
+
+  return names;
+}
+
+async function auditDestinationsHub() {
+  const issues = [];
+  const { status, text } = await fetchText("/destinations");
+
+  if (status !== 200) {
+    return { path: "/destinations", ok: false, issues: [`HTTP ${status}`] };
+  }
+
+  const hasSrOnlyNav =
+    /aria-label=["'][^"']*поисковых систем["']/i.test(text) ||
+    /class=["'][^"']*sr-only["'][^>]*>[\s\S]*<a href=["']\/destinations\//i.test(text);
+  const types = new Set();
+  for (const block of extractJsonLdBlocks(text)) {
+    if (!block._parseError) collectSchemaTypes(block, types);
+  }
+  const hasItemList = types.has("ItemList");
+
+  if (!hasSrOnlyNav && !hasItemList) {
+    issues.push("/destinations: missing sr-only nav links and ItemList JSON-LD");
+  }
+
+  return { path: "/destinations", ok: issues.length === 0, issues, hasSrOnlyNav, hasItemList };
+}
+
+async function auditEnPlacesBreadcrumbs() {
+  const issues = [];
+  const { status, text } = await fetchText("/en/places");
+
+  if (status !== 200) {
+    return { path: "/en/places", ok: false, issues: [`HTTP ${status}`] };
+  }
+
+  const names = extractBreadcrumbNames(text);
+  if (names.length === 0) {
+    issues.push("/en/places: missing BreadcrumbList JSON-LD");
+  } else if (names.includes("Главная")) {
+    issues.push(`/en/places: breadcrumb still in Russian (${names.join(" › ")})`);
+  } else if (!names.includes("Home")) {
+    issues.push(`/en/places: expected English home crumb (found: ${names.join(" › ")})`);
+  }
+
+  return { path: "/en/places", ok: issues.length === 0, issues, breadcrumbNames: names };
+}
+
 async function main() {
   loadEnvLocal();
   fs.mkdirSync(opsDir, { recursive: true });
@@ -259,6 +318,7 @@ async function main() {
     sitemap: { urlCount: 0, statusIssues: [], i18nIssues: [] },
     metadata: [],
     jsonLd: [],
+    hubPages: [],
     staticChecks: [],
     ok: true,
   };
@@ -344,6 +404,17 @@ async function main() {
     } else {
       report.ok = false;
       for (const issue of result.issues) console.error(`✗ ${sample.label}: ${issue}`);
+    }
+  }
+
+  for (const audit of [auditDestinationsHub, auditEnPlacesBreadcrumbs]) {
+    const result = await audit();
+    report.hubPages.push(result);
+    if (result.ok) {
+      console.log(`✓ hub page SEO: ${result.path}`);
+    } else {
+      report.ok = false;
+      for (const issue of result.issues) console.error(`✗ ${issue}`);
     }
   }
 

@@ -27,6 +27,13 @@ function toSearchParams(
   return params as ReadonlyURLSearchParams;
 }
 
+export function hasActivePlaceCatalogFilters(
+  searchParams: Record<string, string | string[] | undefined>
+): boolean {
+  const params = toSearchParams(searchParams);
+  return describeActivePlaceFilters(params).length > 0;
+}
+
 function describeActivePlaceFilters(params: ReadonlyURLSearchParams): string[] {
   const filters = parsePlaceFiltersFromSearchParams(params);
   const parts: string[] = [];

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildPlacesCatalogPageMetadata, getServerPlacesCatalogView } from "@/lib/places-catalog-seo";
+import { buildPlacesCatalogPageMetadata, getServerPlacesCatalogView, hasActivePlaceCatalogFilters } from "@/lib/places-catalog-seo";
 import type { PlaceListing } from "@/types/place";
 
 function samplePlace(partial: Partial<PlaceListing> = {}): PlaceListing {
@@ -72,5 +72,12 @@ describe("buildPlacesCatalogPageMetadata", () => {
     const meta = buildPlacesCatalogPageMetadata({ region: "Патагония" }, places);
     expect(meta.robots).toEqual({ index: false, follow: true });
     expect(meta.title).toContain("Патагония");
+  });
+});
+
+describe("hasActivePlaceCatalogFilters", () => {
+  it("detects active filters", () => {
+    expect(hasActivePlaceCatalogFilters({})).toBe(false);
+    expect(hasActivePlaceCatalogFilters({ region: "Патагония" })).toBe(true);
   });
 });

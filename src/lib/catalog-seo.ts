@@ -27,6 +27,14 @@ function toSearchParams(
   return params as ReadonlyURLSearchParams;
 }
 
+export function hasActiveCatalogFilters(
+  searchParams: Record<string, string | string[] | undefined>,
+  tours: TourListing[]
+): boolean {
+  const params = toSearchParams(searchParams);
+  return describeActiveFilters(params, tours).length > 0;
+}
+
 function describeActiveFilters(
   params: ReadonlyURLSearchParams,
   tours: TourListing[]

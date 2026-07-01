@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import ContactsPageClient from "@/components/contacts/ContactsPageClient";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
+import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { fetchSiteContact } from "@/lib/site-settings-server";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
@@ -41,22 +44,37 @@ type PageProps = {
 };
 
 export default async function ContactsPage({ searchParams }: PageProps) {
+  const locale = await getServerI18nLocale();
   const contact = await fetchSiteContact();
   const params = await searchParams;
+  const pageTitle = resolveStaticPageCopy("contacts.meta.title", PAGE_TITLE_FALLBACK, locale);
+  const pageDescription = resolveStaticPageCopy(
+    "contacts.meta.description",
+    PAGE_DESCRIPTION_FALLBACK,
+    locale
+  );
+  const breadcrumbItems = resolveLocaleBreadcrumbItems(locale, [
+    { labelKey: "nav.home", path: "/", fallback: "Главная" },
+    { labelKey: "contacts.meta.title", path: "/contacts", fallback: PAGE_TITLE_FALLBACK },
+  ]);
 
   return (
-    <ContactsPageClient
-      contactPageIntro={contact.contactPageIntro}
-      whatsAppUrl={contact.whatsAppUrl}
-      telegramUrl={contact.telegramUrl}
-      instagramUrl={contact.instagramUrl}
-      supportEmail={contact.supportEmail}
-      formContext={{
-        tourSlug: params.tour,
-        productSlug: params.product,
-        serviceSlug: params.service,
-        topic: params.topic,
-      }}
-    />
+    <>
+      <BreadcrumbListJsonLd items={breadcrumbItems} />
+      <WebPageJsonLd name={pageTitle} description={pageDescription} path="/contacts" />
+      <ContactsPageClient
+        contactPageIntro={contact.contactPageIntro}
+        whatsAppUrl={contact.whatsAppUrl}
+        telegramUrl={contact.telegramUrl}
+        instagramUrl={contact.instagramUrl}
+        supportEmail={contact.supportEmail}
+        formContext={{
+          tourSlug: params.tour,
+          productSlug: params.product,
+          serviceSlug: params.service,
+          topic: params.topic,
+        }}
+      />
+    </>
   );
 }

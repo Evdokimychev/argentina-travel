@@ -1,6 +1,9 @@
 {
   "nav.home": "Home",
   "nav.tours": "Tours",
+  "tours.catalog.title": "Argentina tours catalog",
+  "excursions.catalog.title": "Excursions in Argentina",
+  "destinations.meta.description": "Eight regions to plan your trip plus a directory of places in Argentina — parks, glaciers, waterfalls and cities with map, collections and tours.",
   "nav.excursions": "Excursions",
   "nav.about": "About",
   "nav.faq": "FAQ",

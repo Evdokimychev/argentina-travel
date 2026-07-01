@@ -1,6 +1,9 @@
 {
   "nav.home": "Inicio",
   "nav.tours": "Tours",
+  "tours.catalog.title": "Catálogo de tours en Argentina",
+  "excursions.catalog.title": "Excursiones en Argentina",
+  "destinations.meta.description": "Ocho regiones para planificar el viaje y un directorio de lugares en Argentina: parques, glaciares, cascadas y ciudades con mapa, colecciones y tours.",
   "nav.excursions": "Excursiones",
   "nav.about": "Nosotros",
   "nav.faq": "FAQ",
