@@ -1,4 +1,5 @@
 import type { BookingAttribution } from "@/types/booking-attribution";
+import { SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
 import { shouldSeedDemoData } from "@/lib/demo-mode";
@@ -265,7 +266,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       endDate: "2026-09-13",
       totalPriceUsd: 1180,
       contactName: "Иван Евдокимычев",
-      contactEmail: "IAEvdokimychev@ya.ru",
+      contactEmail: "SITE_SUPPORT_EMAIL",
       contactPhone: "+79999226564",
       touristComment: "Прилетаем утренним рейсом.",
       organizerComments: [],
@@ -297,7 +298,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       endDate: "2026-10-08",
       totalPriceUsd: 2100,
       contactName: "Иван Евдокимычев",
-      contactEmail: "IAEvdokimychev@ya.ru",
+      contactEmail: "SITE_SUPPORT_EMAIL",
       contactPhone: "+79999226564",
       organizerComments: [
         {
@@ -342,7 +343,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
       endDate: "2025-11-05",
       totalPriceUsd: 1560,
       contactName: "Иван Евдокимычев",
-      contactEmail: "IAEvdokimychev@ya.ru",
+      contactEmail: "SITE_SUPPORT_EMAIL",
       contactPhone: "+79999226564",
       organizerComments: [
         {
@@ -394,7 +395,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
           dateOfBirth: "1990-05-15",
           passportNumber: "4510 123456",
           dietaryRestrictions: "Без ограничений",
-          email: "IAEvdokimychev@ya.ru",
+          email: "SITE_SUPPORT_EMAIL",
           phone: "+79999226564",
         },
         {

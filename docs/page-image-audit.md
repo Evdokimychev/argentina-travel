@@ -1,16 +1,16 @@
 # Page image audit
 
-Generated: 2026-06-21T23:55:01.660Z
+Generated: 2026-06-29T00:55:35.140Z
 
 ## Summary
 
 | Metric | Value |
 | --- | ---: |
 | Manifest assets | 635 |
-| Stock (Unsplash/Pexels local) | 387 |
-| Wikimedia local | 244 |
+| Stock (Unsplash/Pexels local) | 385 |
+| Wikimedia local | 246 |
 | Pages audited | 21 |
-| Pages with local/resolver images | 20 |
+| Pages with local/resolver images | 15 |
 | Pages with Unsplash hotlinks in view | 0 |
 | Global Unsplash refs in src/ (excl. archive) | 1 in 1 files |
 
@@ -18,18 +18,18 @@ Generated: 2026-06-21T23:55:01.660Z
 
 | Route | Status | Resolver | Local URLs | Unsplash hotlinks |
 | --- | --- | --- | ---: | ---: |
-| / | local-resolver | yes | 0 | 0 |
-| /blog | local-resolver | yes | 0 | 0 |
+| / | no-static-image | no | 0 | 0 |
+| /blog | no-static-image | no | 0 | 0 |
 | /blog/[slug] | local-resolver | yes | 0 | 0 |
 | /guide | local-resolver | yes | 0 | 0 |
 | /guide/[slug] | local-resolver | yes | 1 | 0 |
 | /immigration | local-resolver | yes | 0 | 0 |
 | /immigration/[slug] | local-resolver | yes | 1 | 0 |
-| /flights | local-resolver | yes | 0 | 0 |
+| /flights | no-static-image | no | 0 | 0 |
 | /transfers | local-resolver | yes | 0 | 0 |
-| /insurance | local-resolver | yes | 0 | 0 |
+| /insurance | no-static-image | no | 0 | 0 |
 | /esim | local-resolver | yes | 0 | 0 |
-| /car-rental | local-resolver | yes | 0 | 0 |
+| /car-rental | no-static-image | no | 0 | 0 |
 | /services | local-resolver | yes | 1 | 0 |
 | /shop | local-resolver | yes | 0 | 0 |
 | /audio-guides | local-resolver | yes | 0 | 0 |

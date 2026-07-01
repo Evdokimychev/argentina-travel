@@ -16,6 +16,7 @@ import {
   ORGANIZER_TEAM_GUIDES_MAX,
   TOUR_GUIDE_CATALOG,
 } from "@/data/tour-guides-defaults";
+import { SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
 
 const PROFILES_KEY = "argentina-travel-organizer-profiles";
 
@@ -23,8 +24,8 @@ export const ORGANIZER_PROFILE_UPDATED_EVENT = "organizer-profile-updated";
 
 const IVAN_CONTACTS = createDefaultOrganizerContacts({
   website: "https://barilochetrip.tilda.ws/",
-  contactEmail: "IAEvdokimychev@ya.ru",
-  documentsEmail: "IAEvdokimychev@ya.ru",
+  contactEmail: SITE_SUPPORT_EMAIL,
+  documentsEmail: SITE_SUPPORT_EMAIL,
   reviewUrls: ["https://www.instagram.com/p/C8xJqJ2R9kL/"],
 });
 

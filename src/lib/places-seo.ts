@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import type { PlaceDetail, PlaceListing } from "@/types/place";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 import { placeHref } from "@/lib/places-repository";
+import { getPlacesCatalogHeroImage } from "@/lib/media-resolver";
 
 export function buildPlaceMetadata(place: PlaceDetail): Metadata {
   const pageUrl = absoluteUrl(placeHref(place.slug));
@@ -52,15 +53,26 @@ export function buildPlaceProductJsonLd(place: PlaceDetail) {
 
 export function buildPlacesCatalogMetadata(count: number): Metadata {
   const pageUrl = absoluteUrl("/places");
+  const heroImage = resolvePublicUrl(getPlacesCatalogHeroImage());
+  const title = "Места Аргентины — справочник путешественника";
+  const description = `${count} мест: национальные парки, города, ледники, водопады и заповедники. Поиск, карта и подборки маршрутов.`;
+
   return {
-    title: "Места Аргентины — справочник путешественника",
-    description: `${count} мест: национальные парки, города, ледники, водопады и заповедники. Поиск, карта и подборки маршрутов.`,
+    title,
+    description,
     alternates: { canonical: pageUrl },
     openGraph: {
-      title: "Места Аргентины — справочник путешественника",
+      title,
       description: `${count} мест: национальные парки, города, ледники, водопады и заповедники.`,
       type: "website",
       url: pageUrl,
+      images: [{ url: heroImage }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [heroImage],
     },
   };
 }

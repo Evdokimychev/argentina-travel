@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 /** Dotted footer keys that must never appear as visible footer text in SSR HTML. */
 const RAW_FOOTER_KEY = /\bfooter\.[a-zA-Z][\w.]*/g;
 
-const PUBLIC_SSR_PATHS = ["/tours", "/faq"] as const;
+const PUBLIC_SSR_PATHS = ["/", "/tours", "/places", "/faq", "/en/tours"] as const;
 
 function extractFooterHtml(pageHtml: string): string {
   const match = pageHtml.match(

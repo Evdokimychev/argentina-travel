@@ -254,6 +254,7 @@ const STATIC_ENTRIES: PageRegistryEntry[] = [
       destinationId: id,
     }),
   ),
+  entry("places:index", "/places", "Справочник мест", { placeId: "iguazu-falls" }),
   entry("tours:index", "/tours", "Каталог туров", { placeId: "perito-moreno-glacier" }),
   entry("excursions:index", "/excursions", "Экскурсии", { placeId: "buenos-aires" }),
   entry("destinations:hub", "/destinations", "География", { placeId: "el-chalten" }),

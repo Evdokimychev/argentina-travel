@@ -25,8 +25,7 @@ import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackContactFormSubmit } from "@/lib/analytics/gtm-events";
 import { siteContainerClass } from "@/lib/site-container";
-
-const DEFAULT_FORM_INTRO = "Заполните форму, и мы свяжемся с вами в течение 24 часов";
+import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 
 type ContactFormContext = {
   tourSlug?: string;
@@ -38,6 +37,8 @@ type ContactFormContext = {
 type ContactsPageClientProps = {
   contactPageIntro?: string | null;
   whatsAppUrl?: string | null;
+  telegramUrl?: string | null;
+  instagramUrl?: string | null;
   supportEmail?: string;
   formContext?: ContactFormContext;
 };
@@ -248,19 +249,24 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
 export default function ContactsPageClient({
   contactPageIntro,
   whatsAppUrl,
+  telegramUrl,
+  instagramUrl,
   supportEmail,
   formContext = {},
 }: ContactsPageClientProps) {
+  const { t } = useLocaleCurrency();
   const whatsAppHref = whatsAppUrl?.trim() || SITE_WHATSAPP_URL;
+  const telegramHref = telegramUrl?.trim() || undefined;
+  const instagramHref = instagramUrl?.trim() || undefined;
   const emailDisplay = supportEmail?.trim() || SITE_EMAIL.display;
   const emailHref = `mailto:${emailDisplay}`;
-  const formIntro = contactPageIntro?.trim() || DEFAULT_FORM_INTRO;
+  const formIntro = contactPageIntro?.trim() || t("contacts.form.defaultIntro");
 
   return (
     <>
       <Hero
-        title="Контакты"
-        subtitle="Оставьте сообщение или задайте вопрос — мы с радостью ответим"
+        title={t("contacts.hero.title")}
+        subtitle={t("contacts.hero.subtitle")}
         image={getServicePageHeroImage("contacts")}
         compact
       />
@@ -274,7 +280,7 @@ export default function ContactsPageClient({
               rel="noopener noreferrer"
               className={cn(buttonVariants({ variant: "default" }), "inline-flex sm:px-8")}
             >
-              Написать в WhatsApp
+              {t("contacts.whatsapp.cta")}
             </a>
           </div>
         ) : null}
@@ -283,13 +289,13 @@ export default function ContactsPageClient({
 
         <div className="mt-10 grid gap-12 lg:grid-cols-2">
           <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8">
-            <h2 className="font-heading text-2xl font-bold text-charcoal">Напишите нам</h2>
+            <h2 className="font-heading text-2xl font-bold text-charcoal">{t("contacts.form.title")}</h2>
             <p className="mt-3 text-slate">{formIntro}</p>
             <ContactsForm formContext={formContext} />
           </div>
 
           <div>
-            <h2 className="font-heading text-2xl font-bold text-charcoal">Как нас найти</h2>
+            <h2 className="font-heading text-2xl font-bold text-charcoal">{t("contacts.find.title")}</h2>
 
             <div className="mt-8 space-y-4">
               <div className="flex gap-4 rounded-2xl border border-gray-100 bg-white p-5 shadow-sm">
@@ -297,7 +303,7 @@ export default function ContactsPageClient({
                   <MessageCircle className="h-6 w-6" strokeWidth={1.75} aria-hidden />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="font-semibold text-charcoal">WhatsApp и Telegram</p>
+                  <p className="font-semibold text-charcoal">{t("contacts.messengers.title")}</p>
                   <ul className="mt-2 space-y-1.5">
                     {SITE_PHONES.map((phone) => (
                       <li key={phone.tel}>
@@ -307,11 +313,35 @@ export default function ContactsPageClient({
                           rel="noopener noreferrer"
                           className="text-slate transition-colors hover:text-sky"
                         >
-                          {phone.display}
+                          WhatsApp: {phone.display}
                         </a>
                         <span className="ml-2 text-xs text-slate/60">{phone.label}</span>
                       </li>
                     ))}
+                    {telegramHref ? (
+                      <li>
+                        <a
+                          href={telegramHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate transition-colors hover:text-sky"
+                        >
+                          Telegram
+                        </a>
+                      </li>
+                    ) : null}
+                    {instagramHref ? (
+                      <li>
+                        <a
+                          href={instagramHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate transition-colors hover:text-sky"
+                        >
+                          Instagram
+                        </a>
+                      </li>
+                    ) : null}
                   </ul>
                 </div>
               </div>
@@ -321,14 +351,14 @@ export default function ContactsPageClient({
                   <Mail className="h-6 w-6" strokeWidth={1.75} aria-hidden />
                 </span>
                 <div>
-                  <p className="font-semibold text-charcoal">Email</p>
+                  <p className="font-semibold text-charcoal">{t("contacts.email.title")}</p>
                   <a
                     href={emailHref}
                     className="mt-1 block text-slate transition-colors hover:text-sky"
                   >
                     {emailDisplay}
                   </a>
-                  <p className="mt-0.5 text-sm text-slate/70">{SITE_EMAIL.note}</p>
+                  <p className="mt-0.5 text-sm text-slate/70">{t("contacts.email.note")}</p>
                 </div>
               </div>
 
@@ -337,7 +367,7 @@ export default function ContactsPageClient({
                   <MapPin className="h-6 w-6" strokeWidth={1.75} aria-hidden />
                 </span>
                 <div>
-                  <p className="font-semibold text-charcoal">Где мы находимся</p>
+                  <p className="font-semibold text-charcoal">{t("contacts.office.title")}</p>
                   <p className="mt-1 text-slate">{SITE_OFFICE.display}</p>
                   <p className="mt-0.5 text-sm text-slate/70">{SITE_OFFICE.note}</p>
                 </div>

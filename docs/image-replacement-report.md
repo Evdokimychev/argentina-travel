@@ -1,15 +1,15 @@
 # Image replacement report
 
-Generated: 2026-06-21T23:55:01.663Z
+Generated: 2026-06-29T00:55:35.152Z
 
 ## Summary counts
 
 | Metric | Count |
 | --- | ---: |
 | Manifest assets (local) | 635 |
-| Stock downloaded (Unsplash/Pexels) | 387 |
-| Wikimedia in manifest | 244 |
-| Pages migrated to media-resolver | 20 |
+| Stock downloaded (Unsplash/Pexels) | 385 |
+| Wikimedia in manifest | 246 |
+| Pages migrated to media-resolver | 15 |
 | Pages with remaining hotlinks | 0 |
 | Global Unsplash refs in src/ | 1 |
 | Files with Unsplash refs | 1 |

@@ -1,3 +1,7 @@
+import { SITE_EMAIL, SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
+
+export { SITE_EMAIL, SITE_SUPPORT_EMAIL };
+
 export const SITE_PHONES = [
   {
     label: "Россия",
@@ -12,12 +16,6 @@ export const SITE_PHONES = [
     whatsapp: "https://wa.me/5491166863994",
   },
 ] as const;
-
-export const SITE_EMAIL = {
-  display: "IAEvdokimychev@ya.ru",
-  href: "mailto:IAEvdokimychev@ya.ru",
-  note: "Почта для связи, предложений и сотрудничества",
-} as const;
 
 export const SITE_OFFICE = {
   display: "Буэнос-Айрес, Аргентина",

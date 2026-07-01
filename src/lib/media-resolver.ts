@@ -279,6 +279,14 @@ export function getHomeHeroAlt(): string {
   return getServicePageHeroAlt("home");
 }
 
+export function getPlacesCatalogHeroImage(): string {
+  return getHeroSrc("places:index");
+}
+
+export function getPlacesCatalogHeroAlt(): string {
+  return getHeroImage("places:index").alt;
+}
+
 export function getServicePageHeroImage(pageId: string): string {
   return getHeroSrc(`service:${pageId}`);
 }

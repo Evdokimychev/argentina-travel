@@ -1,7 +1,9 @@
 import type { SiteLegal } from "@/lib/site-settings-server";
 import { loadSiteFooterInfo } from "@/lib/site-footer-info";
 
-export const DEFAULT_SUPPORT_EMAIL = "IAEvdokimychev@ya.ru";
+import { SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
+
+export const DEFAULT_SUPPORT_EMAIL = SITE_SUPPORT_EMAIL;
 
 export function formatSiteLegalLine(legal: SiteLegal): string | null {
   const parts: string[] = [];
