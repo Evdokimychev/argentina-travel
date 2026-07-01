@@ -147,6 +147,8 @@ export interface OrganizerTourDraft extends OrganizerTourListing {
   sectionOrganizerComments: TourSectionOrganizerComments;
   /** Предупреждения и факторы маршрута для участников. */
   travelRisks: TourTravelRisk[];
+  /** Slug мест из справочника для блока «Места рядом». */
+  relatedPlaceSlugs?: string[];
 }
 
 export const ORGANIZER_TOUR_TITLE_MAX = 120;

@@ -77,6 +77,7 @@ function parseBody(value: Json): CmsDocumentBody {
       faq: Array.isArray(record.faq)
         ? (record.faq as { question: string; answer: string }[])
         : undefined,
+      relatedTourSlugs: stringArray(record.relatedTourSlugs),
     };
   }
   return {

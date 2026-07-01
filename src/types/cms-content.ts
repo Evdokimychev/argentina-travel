@@ -69,6 +69,7 @@ export type CmsPlaceBody = {
   howToGetThere?: string;
   interestingFacts?: string[];
   faq?: PlaceFaqItem[];
+  relatedTourSlugs?: string[];
 };
 
 export type CmsAuthorArticleBody = {
@@ -203,6 +204,7 @@ export function placeBodyFromTs(
     howToGetThere: source.howToGetThere,
     interestingFacts: source.interestingFacts,
     faq: source.faq,
+    relatedTourSlugs: (source as { relatedTourSlugs?: string[] }).relatedTourSlugs,
   };
 }
 
@@ -363,5 +365,6 @@ export function placeDetailFromCms(doc: CmsDocument, fallback?: PlaceDetail): Pl
     howToGetThere: doc.body.howToGetThere ?? fallback?.howToGetThere,
     nearbyHighlights: fallback?.nearbyHighlights,
     faq: doc.body.faq ?? fallback?.faq,
+    relatedTourSlugs: doc.body.relatedTourSlugs ?? fallback?.relatedTourSlugs,
   };
 }

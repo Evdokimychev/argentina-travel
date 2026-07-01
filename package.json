@@ -27,6 +27,7 @@
     "supabase:seed-cms": "tsx scripts/seed-cms-from-ts.mjs",
     "cms:cutover-enable": "tsx scripts/cms-cutover-enable.mjs",
     "cms:readiness": "tsx scripts/cms-cutover-readiness.mjs",
+    "search:readiness": "node scripts/search-readiness.mjs",
     "cms:archive-orphan-blog-slugs": "tsx scripts/archive-cms-orphan-blog-slugs.mjs",
     "tripster:verify": "node scripts/tripster-verify.mjs",
     "tripster:sync": "node scripts/tripster-sync.mjs",

@@ -86,6 +86,8 @@ export interface PlaceDetail extends PlaceListing {
   howToGetThere?: string;
   nearbyHighlights?: string[];
   faq?: PlaceFaqItem[];
+  /** Явные связи CMS place → tours (slug каталога). */
+  relatedTourSlugs?: string[];
 }
 
 export interface PlaceCollectionRef {

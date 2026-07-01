@@ -19,6 +19,8 @@ export const GTM_EVENTS = {
   blogCommentPost: "blog_comment_post",
   blogAffiliateEmbedView: "blog_affiliate_embed_view",
   localeSwitch: "locale_switch",
+  searchSubmit: "search_submit",
+  searchResultClick: "search_result_click",
 } as const;
 
 export type GtmEventName = (typeof GTM_EVENTS)[keyof typeof GTM_EVENTS];
@@ -249,5 +251,35 @@ export function trackLocaleSwitch(input: {
     locale_from: input.from,
     locale_to: input.to,
     page_path: input.path,
+  });
+}
+
+export function trackSearchSubmit(input: {
+  query: string;
+  resultsCount: number;
+  source: "meilisearch" | "postgres" | "static";
+  kind?: string;
+}): void {
+  trackGtmEvent(GTM_EVENTS.searchSubmit, {
+    search_term: input.query,
+    results_count: input.resultsCount,
+    search_source: input.source,
+    search_kind: input.kind ?? "all",
+  });
+}
+
+export function trackSearchResultClick(input: {
+  query: string;
+  itemId: string;
+  itemKind: string;
+  position: number;
+  source: "meilisearch" | "postgres" | "static";
+}): void {
+  trackGtmEvent(GTM_EVENTS.searchResultClick, {
+    search_term: input.query,
+    item_id: input.itemId,
+    item_kind: input.itemKind,
+    position: input.position,
+    search_source: input.source,
   });
 }

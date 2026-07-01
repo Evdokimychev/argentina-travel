@@ -5,6 +5,7 @@ import {
   pushDataLayer,
   trackGtmEvent,
   trackLocaleSwitch,
+  trackSearchSubmit,
   trackTourView,
   type GtmEventName,
 } from "@/lib/analytics/gtm-events";
@@ -37,6 +38,8 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
   blog_comment_post: ["item_id", "item_name"],
   blog_affiliate_embed_view: ["item_id", "affiliate_service"],
   locale_switch: ["locale_from", "locale_to", "page_path"],
+  search_submit: ["search_term", "results_count", "search_source", "search_kind"],
+  search_result_click: ["search_term", "item_id", "item_kind", "position", "search_source"],
 };
 
 describe("gtm-events", () => {
@@ -108,6 +111,22 @@ describe("gtm-events", () => {
       locale_from: "ru",
       locale_to: "en",
       page_path: "/tours/patagonia",
+    });
+  });
+
+  it("trackSearchSubmit sends search metadata", () => {
+    trackSearchSubmit({
+      query: "патагония",
+      resultsCount: 3,
+      source: "meilisearch",
+      kind: "tour",
+    });
+    expect(window.dataLayer?.[0]).toMatchObject({
+      event: GTM_EVENTS.searchSubmit,
+      search_term: "патагония",
+      results_count: 3,
+      search_source: "meilisearch",
+      search_kind: "tour",
     });
   });
 });

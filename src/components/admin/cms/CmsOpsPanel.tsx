@@ -6,11 +6,13 @@ import { AlertTriangle, RefreshCw, Search, Wrench } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { CmsOpsSummary } from "@/lib/cms/cms-ops";
+import type { SearchOpsSnapshot } from "@/lib/search/search-ops-types";
 import type { CronHealthReport } from "@/lib/ops/ops-status";
 
 type Props = {
   cmsOps?: CmsOpsSummary;
   cronHealth?: CronHealthReport;
+  searchOps?: SearchOpsSnapshot;
   onRefresh?: () => void;
 };
 
@@ -21,7 +23,7 @@ function formatCronRoute(report: CronHealthReport | undefined, route: string): s
   return `${entry.ranAt} — ${status}: ${entry.message}`;
 }
 
-export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
+export default function CmsOpsPanel({ cmsOps, cronHealth, searchOps, onRefresh }: Props) {
   const [reindexing, setReindexing] = useState(false);
   const [syncingManifest, setSyncingManifest] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -31,9 +33,20 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
     setMessage(null);
     try {
       const res = await fetch("/api/admin/search/reindex", { method: "POST" });
-      const json = (await res.json()) as { ok?: boolean; indexed?: number; error?: string };
+      const json = (await res.json()) as {
+        ok?: boolean;
+        indexed?: number;
+        meilisearch?: { ok?: boolean; synced?: number; error?: string };
+        error?: string;
+      };
       if (!res.ok) throw new Error(json.error ?? "Ошибка переиндексации");
-      setMessage(`Поиск обновлён: ${json.indexed ?? 0} документов.`);
+      const meiliNote =
+        json.meilisearch?.ok === false
+          ? ` Meili: ${json.meilisearch.error ?? "ошибка синхронизации"}.`
+          : json.meilisearch?.synced
+            ? ` Meili: ${json.meilisearch.synced} док.`
+            : "";
+      setMessage(`Поиск обновлён: ${json.indexed ?? 0} документов.${meiliNote}`);
       onRefresh?.();
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Ошибка");
@@ -63,6 +76,10 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
       setSyncingManifest(false);
     }
   }
+
+  const meiliConfigured = searchOps?.meilisearchConfigured ?? false;
+  const lastReindex = searchOps?.lastReindex;
+  const readiness = searchOps?.readiness;
 
   return (
     <section className={`${cabinetCardClass} space-y-4 p-5`}>
@@ -102,6 +119,26 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
 
       <dl className="grid gap-3 text-sm sm:grid-cols-2">
         <div>
+          <dt className="text-slate">Meilisearch</dt>
+          <dd className="mt-1 font-medium text-charcoal">
+            {meiliConfigured ? "Настроен (MEILISEARCH_*)" : "Не настроен — Postgres/static"}
+          </dd>
+        </div>
+        <div>
+          <dt className="text-slate">Последняя переиндексация</dt>
+          <dd className="mt-1 font-medium text-charcoal">
+            {lastReindex
+              ? `${lastReindex.ranAt} — ${lastReindex.ok ? "OK" : "ошибка"} (${lastReindex.indexed} док.)`
+              : "—"}
+          </dd>
+        </div>
+        {readiness?.documentCount != null ? (
+          <div>
+            <dt className="text-slate">Документов в Meili</dt>
+            <dd className="mt-1 font-medium text-charcoal">{readiness.documentCount}</dd>
+          </div>
+        ) : null}
+        <div>
           <dt className="text-slate">Запланировано к публикации</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {cmsOps?.scheduledPublishCount ?? "—"} док.
@@ -117,6 +154,12 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
           <dt className="text-slate">Cron: отложенная публикация CMS</dt>
           <dd className="mt-1 font-medium text-charcoal">
             {formatCronRoute(cronHealth, "/api/cron/cms/publish-scheduled")}
+          </dd>
+        </div>
+        <div className="sm:col-span-2">
+          <dt className="text-slate">Cron: переиндексация поиска</dt>
+          <dd className="mt-1 font-medium text-charcoal">
+            {formatCronRoute(cronHealth, "/api/cron/search/reindex")}
           </dd>
         </div>
       </dl>
@@ -147,9 +190,9 @@ export default function CmsOpsPanel({ cmsOps, cronHealth, onRefresh }: Props) {
       {message ? <p className="text-xs text-slate">{message}</p> : null}
 
       <p className="text-xs text-slate">
-        Поиск обновляется автоматически при публикации CMS-документов. Полная переиндексация нужна
-        после cutover или массового импорта. Manifest на Vercel read-only — синхронизация работает
-        локально и в CI с записью в репозиторий.
+        Поиск обновляется автоматически при публикации CMS-документов и ежедневно через platform-maintenance.
+        Полная переиндексация нужна после cutover Meilisearch или массового импорта. Проверка:{" "}
+        <code className="rounded bg-muted/10 px-1">npm run search:readiness</code>.
       </p>
     </section>
   );

@@ -15,7 +15,7 @@ import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { CmsOpsSummary } from "@/lib/cms/cms-ops";
-import type { CronHealthReport } from "@/lib/ops/ops-status";
+import type { SearchOpsSnapshot } from "@/lib/search/search-ops-types";
 import {
   SITE_CONTENT_GLOBAL_KEYS,
   SITE_GLOBAL_DEFINITIONS,
@@ -23,6 +23,7 @@ import {
   SITE_OPS_GLOBAL_KEYS,
 } from "@/lib/cms/site-globals/registry";
 import type { AnalyticsReadinessSnapshot } from "@/lib/ops/analytics-readiness-types";
+import type { CronHealthReport } from "@/lib/ops/ops-status";
 import type { ProductionReadinessSnapshot } from "@/lib/ops/production-readiness-types";
 import type { SiteGlobalKey } from "@/types/site-globals";
 
@@ -78,6 +79,7 @@ type SettingsResponse = {
   };
   cmsOps?: CmsOpsSummary;
   cronHealth?: CronHealthReport;
+  searchOps?: SearchOpsSnapshot;
 };
 
 type SettingsTab = "content" | "ops" | "maintenance";
@@ -236,6 +238,7 @@ export default function SettingsView() {
             <CmsOpsPanel
               cmsOps={data?.cmsOps}
               cronHealth={data?.cronHealth}
+              searchOps={data?.searchOps}
               onRefresh={() => void refresh()}
             />
             {maintenanceDefinitions.map((definition) => (

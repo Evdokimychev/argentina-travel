@@ -481,6 +481,8 @@ export interface TourDetail {
   partnerGuideProfile?: import("@/types/excursion").ExcursionGuideProfile;
   /** Отзывы гида с других туров Tripster, если у текущего тура отзывов нет */
   partnerGuideReviews?: TourReview[];
+  /** Явные связи tour → places (slug справочника). */
+  relatedPlaceSlugs?: string[];
 }
 
 /** @deprecated Use TourListing for marketplace */

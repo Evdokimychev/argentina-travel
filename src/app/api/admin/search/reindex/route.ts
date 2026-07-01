@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { reindexSearchDocuments } from "@/lib/search/search-indexer";
+import { writeSearchReindexStatus } from "@/lib/search/search-reindex-status";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request: Request) {
@@ -10,6 +11,7 @@ export async function POST(request: Request) {
 
   const supabase = createSupabaseAdminClient();
   const result = await reindexSearchDocuments(supabase);
+  writeSearchReindexStatus(result, "admin");
 
   await writeAdminAuditLog({
     actorUserId: auth.actorId,

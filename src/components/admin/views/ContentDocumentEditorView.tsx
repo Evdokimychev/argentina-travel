@@ -13,6 +13,7 @@ import { useAdminContext } from "@/context/AdminContext";
 import { formatAdminWhen } from "@/lib/admin/format";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import { buildCmsRevisionDiff } from "@/lib/cms/revision-diff";
+import { parseContentSlugList } from "@/lib/cms-content-cross-links";
 import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
 import { isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
 import type { BlogPostSection } from "@/types";
@@ -97,6 +98,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const [placeFullDescription, setPlaceFullDescription] = useState("");
   const [placeHowToGetThere, setPlaceHowToGetThere] = useState("");
   const [placeInterestingFacts, setPlaceInterestingFacts] = useState<string[]>([]);
+  const [placeRelatedTourSlugs, setPlaceRelatedTourSlugs] = useState("");
   const [status, setStatus] = useState<CmsDocument["status"]>("draft");
   const [revisions, setRevisions] = useState<CmsRevisionListItem[]>([]);
   const [selectedRevision, setSelectedRevision] = useState<CmsRevision | null>(null);
@@ -184,6 +186,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         setPlaceFullDescription(document.body.fullDescription ?? "");
         setPlaceHowToGetThere(document.body.howToGetThere ?? "");
         setPlaceInterestingFacts(document.body.interestingFacts ?? []);
+        setPlaceRelatedTourSlugs((document.body.relatedTourSlugs ?? []).join(", "));
       }
 
       setRevisions(revJson.revisions ?? []);
@@ -279,6 +282,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
         howToGetThere: placeHowToGetThere.trim() || undefined,
         interestingFacts: placeInterestingFacts,
         faq: doc.body.faq,
+        relatedTourSlugs: parseContentSlugList(placeRelatedTourSlugs),
       } satisfies CmsPlaceBody;
     }
     return {
@@ -328,6 +332,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     placeFullDescription,
     placeHowToGetThere,
     placeInterestingFacts,
+    placeRelatedTourSlugs,
     placeShortDescription,
     sections,
     selectedRevision,
@@ -730,6 +735,17 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
                     value={listToLines(placeInterestingFacts)}
                     onChange={(e) => setPlaceInterestingFacts(linesToList(e.target.value))}
                   />
+                </label>
+                <label className="block space-y-1 text-sm">
+                  <span className="text-slate">Связанные туры (slug через запятую)</span>
+                  <Input
+                    value={placeRelatedTourSlugs}
+                    onChange={(e) => setPlaceRelatedTourSlugs(e.target.value)}
+                    placeholder="patagonia-glaciers, el-calafate-trek"
+                  />
+                  <span className="text-xs text-slate">
+                    Slug из каталога туров — блок «Туры рядом» на странице места
+                  </span>
                 </label>
               </>
             ) : null}

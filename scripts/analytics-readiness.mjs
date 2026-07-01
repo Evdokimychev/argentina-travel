@@ -19,7 +19,7 @@ const reportFile = path.join(opsDir, "analytics-readiness-last.json");
 
 const GTM_ENV = "NEXT_PUBLIC_GTM_ID";
 const SITE_URL_ENV = "NEXT_PUBLIC_SITE_URL";
-const EXPECTED_GTM_EVENTS_COUNT = 17;
+const EXPECTED_GTM_EVENTS_COUNT = 19;
 const CONVERSIONS_RECOMMENDED = ["booking_submit", "contact_form_submit", "newsletter_subscribe"];
 const ANALYTICS_ENV = [
   "NEXT_PUBLIC_GA4_MEASUREMENT_ID",

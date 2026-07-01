@@ -66,7 +66,7 @@ import type { Tour } from "@/types/tour";
 import type { PlaceListing } from "@/types/place";
 import { Suspense, useEffect, useMemo, type ReactNode } from "react";
 import { useTrackEntityView } from "@/hooks/useInteractionTracking";
-import { matchCatalogPlacesForTour } from "@/lib/tour-place-match";
+import { resolveRelatedPlacesForTour } from "@/lib/cms-content-cross-links";
 
 interface TourDetailViewProps {
   slug: string;
@@ -111,7 +111,7 @@ export default function TourDetailView({
   const tour = previewMode ? initialTour ?? null : syncedTour;
   const canonicalTour = previewMode ? previewCanonicalTour : liveCanonicalTour;
   const relatedCatalogPlaces = useMemo(
-    () => (tour ? matchCatalogPlacesForTour(tour, catalogPlaces) : []),
+    () => (tour ? resolveRelatedPlacesForTour(tour, catalogPlaces) : []),
     [tour, catalogPlaces],
   );
 

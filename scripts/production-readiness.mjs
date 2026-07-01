@@ -451,6 +451,55 @@ async function main() {
     }
   }
 
+  const meiliHost = Boolean(process.env.MEILISEARCH_HOST?.trim());
+  const meiliKey = Boolean(process.env.MEILISEARCH_API_KEY?.trim());
+  checks.push({
+    id: "search:meili-env",
+    label: "Meilisearch (MEILISEARCH_HOST + API_KEY)",
+    status: meiliHost && meiliKey ? "ok" : isProdLike ? "warn" : "skip",
+    message:
+      meiliHost && meiliKey
+        ? "Заданы — site search через Meilisearch"
+        : isProdLike
+          ? "Не заданы — поиск через Postgres/static; npm run search:readiness"
+          : "Не заданы (локально допустимо)",
+    category: "search",
+  });
+
+  const searchReadinessFile = path.join(opsDir, "search-readiness-last.json");
+  if (fs.existsSync(searchReadinessFile)) {
+    try {
+      const searchReport = JSON.parse(fs.readFileSync(searchReadinessFile, "utf8"));
+      const docCount = searchReport.documentCount;
+      checks.push({
+        id: "search:readiness-report",
+        label: "Search readiness (последний отчёт)",
+        status: searchReport.ok ? "ok" : "warn",
+        message:
+          docCount != null
+            ? `ok=${searchReport.ok}, docs=${docCount} — npm run search:readiness`
+            : `ok=${searchReport.ok} — npm run search:readiness`,
+        category: "search",
+      });
+    } catch {
+      checks.push({
+        id: "search:readiness-report",
+        label: "Search readiness (последний отчёт)",
+        status: "warn",
+        message: "Не удалось прочитать JSON — npm run search:readiness",
+        category: "search",
+      });
+    }
+  } else if (isProdLike) {
+    checks.push({
+      id: "search:readiness-report",
+      label: "Search readiness (последний отчёт)",
+      status: "warn",
+      message: "Запустите: npm run search:readiness",
+      category: "search",
+    });
+  }
+
   const lhReportCandidates = [
     path.join(opsDir, "lighthouse-phase2-sample-last.json"),
     path.join(opsDir, "lighthouse-phase2-prod-last.json"),

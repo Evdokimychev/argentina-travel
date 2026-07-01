@@ -1473,6 +1473,30 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             ) : null}
 
             {activeTab === "main" ? (
+              <section className="rounded-2xl border border-gray-100 bg-white p-4 shadow-card">
+                <h3 className="font-heading text-base font-bold text-charcoal">Справочник мест</h3>
+                <p className="mt-1 text-sm text-slate">
+                  Slug мест из /places — для блока «Места рядом с маршрутом» на странице тура.
+                </p>
+                <label className="mt-3 block space-y-1 text-sm">
+                  <span className="text-slate">Связанные места (slug через запятую)</span>
+                  <Input
+                    value={(draft.relatedPlaceSlugs ?? []).join(", ")}
+                    onChange={(event) =>
+                      updateDraft({
+                        relatedPlaceSlugs: event.target.value
+                          .split(/[,\n]+/)
+                          .map((slug) => slug.trim())
+                          .filter(Boolean),
+                      })
+                    }
+                    placeholder="el-calafate, perito-moreno-glacier"
+                  />
+                </label>
+              </section>
+            ) : null}
+
+            {activeTab === "main" ? (
               <TourTicketRecommendationsBlock
                 enabled={draft.ticketRecommendationsEnabled}
                 text={draft.ticketRecommendationsText}

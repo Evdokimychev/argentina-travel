@@ -650,6 +650,7 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
     updatedAt: draft.updatedAt,
     isPrivate: draft.isPrivate ?? false,
     privateAccessToken: draft.isPrivate ? draft.privateAccessToken : undefined,
+    relatedPlaceSlugs: draft.relatedPlaceSlugs?.length ? draft.relatedPlaceSlugs : base.relatedPlaceSlugs,
   };
 }
 
@@ -882,6 +883,7 @@ export function tourToDetail(tour: Tour, enrichment?: TourDetailEnrichment): Tou
     travelRisks: tour.levels.travelRisks?.length
       ? tour.levels.travelRisks
       : legacy?.travelRisks,
+    relatedPlaceSlugs: tour.relatedPlaceSlugs ?? legacy?.relatedPlaceSlugs,
   };
 }
 
@@ -1062,6 +1064,7 @@ export function createMinimalTourFromDraft(
     updatedAt: draft.updatedAt,
     isPrivate: draft.isPrivate ?? false,
     privateAccessToken: draft.isPrivate ? draft.privateAccessToken : undefined,
+    relatedPlaceSlugs: draft.relatedPlaceSlugs,
   };
 }
 

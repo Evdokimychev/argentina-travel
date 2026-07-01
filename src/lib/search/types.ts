@@ -30,6 +30,7 @@ export type SearchResponse = {
   source: SearchSource;
   query: string;
   kind?: string;
+  tookMs?: number;
 };
 
 export type ReindexResult = {

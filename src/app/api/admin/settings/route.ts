@@ -6,7 +6,7 @@ import { SITE_GLOBAL_BY_KEY } from "@/lib/cms/site-globals/registry";
 import { fetchPublicHealthSnapshot } from "@/lib/monitoring/health-public";
 import { fetchAnalyticsReadinessSnapshot } from "@/lib/ops/analytics-readiness-server";
 import { fetchProductionReadinessSnapshot } from "@/lib/ops/production-readiness-server";
-import { readOpsStatusSnapshot } from "@/lib/ops/ops-status";
+import { readCronHealthReport, readOpsStatusSnapshot } from "@/lib/ops/ops-status";
 import {
   fetchAllSiteGlobalsForAdmin,
   invalidateSiteGlobal,
@@ -17,7 +17,7 @@ import {
 } from "@/lib/cms/cms-cutover";
 import { fetchCmsOpsSummary } from "@/lib/cms/cms-ops";
 import { normalizeSiteFeatures } from "@/lib/cms/site-globals/normalize";
-import { readCronHealthReport } from "@/lib/ops/ops-status";
+import { fetchSearchOpsSnapshot } from "@/lib/search/search-ops-server";
 import type { Json } from "@/types/database";
 import type { SiteGlobalKey } from "@/types/site-globals";
 import { SITE_GLOBAL_KEYS } from "@/types/site-globals";
@@ -67,6 +67,7 @@ export async function GET(request: Request) {
     ops: readOpsStatusSnapshot(),
     cmsOps,
     cronHealth: readCronHealthReport(12),
+    searchOps: fetchSearchOpsSnapshot(),
     productionReadiness: fetchProductionReadinessSnapshot(),
     analyticsReadiness: fetchAnalyticsReadinessSnapshot(),
     publicHealth: await fetchPublicHealthSnapshot({ includeSearchIndexCount: false }),

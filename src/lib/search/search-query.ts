@@ -109,9 +109,12 @@ export async function executeSiteSearch(
   query: string,
   options?: { kind?: string; limit?: number }
 ): Promise<SearchResponse> {
+  const startedAt = Date.now();
   const trimmed = query.trim();
   const kind = options?.kind?.trim() || undefined;
   const limit = Math.min(Math.max(options?.limit ?? MAX_LIMIT, 1), MAX_LIMIT);
+
+  const tookMs = () => Date.now() - startedAt;
 
   if (!trimmed) {
     const defaultSource = isMeilisearchConfigured()
@@ -119,17 +122,17 @@ export async function executeSiteSearch(
       : isSupabaseConfigured()
         ? "postgres"
         : "static";
-    return { results: [], source: defaultSource, query: trimmed, kind };
+    return { results: [], source: defaultSource, query: trimmed, kind, tookMs: tookMs() };
   }
 
   const meiliResults = await searchMeilisearch(trimmed, kind, limit);
   if (meiliResults.length > 0) {
-    return { results: meiliResults, source: "meilisearch", query: trimmed, kind };
+    return { results: meiliResults, source: "meilisearch", query: trimmed, kind, tookMs: tookMs() };
   }
 
   if (!isSupabaseConfigured()) {
     const results = await searchStatic(trimmed, kind, limit);
-    return { results, source: "static", query: trimmed, kind };
+    return { results, source: "static", query: trimmed, kind, tookMs: tookMs() };
   }
 
   try {
@@ -150,20 +153,26 @@ export async function executeSiteSearch(
         if (results.length === 0 && isMeilisearchConfigured()) {
           const retryMeili = await searchMeilisearch(trimmed, kind, limit);
           if (retryMeili.length > 0) {
-            return { results: retryMeili, source: "meilisearch", query: trimmed, kind };
+            return {
+              results: retryMeili,
+              source: "meilisearch",
+              query: trimmed,
+              kind,
+              tookMs: tookMs(),
+            };
           }
         }
       }
     }
 
     if (results.length > 0) {
-      return { results, source: "postgres", query: trimmed, kind };
+      return { results, source: "postgres", query: trimmed, kind, tookMs: tookMs() };
     }
 
     const fallback = await searchStatic(trimmed, kind, limit);
-    return { results: fallback, source: "static", query: trimmed, kind };
+    return { results: fallback, source: "static", query: trimmed, kind, tookMs: tookMs() };
   } catch {
     const fallback = await searchStatic(trimmed, kind, limit);
-    return { results: fallback, source: "static", query: trimmed, kind };
+    return { results: fallback, source: "static", query: trimmed, kind, tookMs: tookMs() };
   }
 }

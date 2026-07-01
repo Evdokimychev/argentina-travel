@@ -26,6 +26,7 @@ import type { TourListing } from "@/types";
 import { destinationHref } from "@/lib/destinations";
 import { pairedDestinationIdForPlace } from "@/lib/geography-links";
 import { matchToursForPlace } from "@/lib/places-tour-match";
+import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { collectionHref, itineraryHref } from "@/lib/places-repository";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
@@ -44,7 +45,7 @@ export default function PlaceDetailView({
   initialTours?: TourListing[];
 }) {
   const tours = useRepositoryTourListings(initialTours);
-  const matchedTours = matchToursForPlace(tours, place);
+  const matchedTours = resolveRelatedToursForPlace(place, tours);
   const galleryAlts = getPlaceGalleryAlts(place.slug);
   const destinationId = pairedDestinationIdForPlace(place.slug);
   const destinationPage = destinationId ? getDestinationPageById(destinationId) : undefined;

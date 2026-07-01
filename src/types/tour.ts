@@ -224,6 +224,8 @@ export interface Tour {
   updatedAt?: string;
   isPrivate?: boolean;
   privateAccessToken?: string;
+  /** Явные связи tour → places (slug справочника). */
+  relatedPlaceSlugs?: string[];
 }
 
 export const TOURS_REPOSITORY_STORE_KEY = "argentina-travel-tour-repository";

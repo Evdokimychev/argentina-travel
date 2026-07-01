@@ -4,6 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
+  trackSearchResultClick,
+  trackSearchSubmit,
+} from "@/lib/analytics/gtm-events";
+import {
   BookOpen,
   Compass,
   FileText,
@@ -169,6 +173,7 @@ export default function SiteSearch() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const abortRef = useRef<AbortController | null>(null);
+  const lastTrackedSubmitRef = useRef<string>("");
   const tone = useAdaptiveFloatingTone(buttonRef);
 
   useEffect(() => {
@@ -246,6 +251,17 @@ export default function SiteSearch() {
           if (controller.signal.aborted) return;
           setApiHits(payload.results);
           setSearchSource(payload.source);
+
+          const trackKey = `${trimmedQuery}|${kindFilter}|${payload.results.length}|${payload.source}`;
+          if (lastTrackedSubmitRef.current !== trackKey) {
+            lastTrackedSubmitRef.current = trackKey;
+            trackSearchSubmit({
+              query: trimmedQuery,
+              resultsCount: payload.results.length,
+              source: payload.source,
+              kind: kindFilter === "all" ? undefined : kindFilter,
+            });
+          }
         })
         .catch(() => {
           if (controller.signal.aborted) return;
@@ -308,7 +324,17 @@ export default function SiteSearch() {
     }
   }, []);
 
-  function handleSelect(href: string) {
+  function handleSelect(href: string, item?: SearchResultItem, position?: number) {
+    if (item && position != null) {
+      trackSearchResultClick({
+        query: trimmedQuery,
+        itemId: item.id,
+        itemKind: item.type,
+        position: position + 1,
+        source: searchSource ?? "static",
+      });
+    }
+
     setOpen(false);
     setQuery("");
     setKindFilter("all");
@@ -334,7 +360,19 @@ export default function SiteSearch() {
 
     if (event.key === "Enter" && activeIndex >= 0) {
       event.preventDefault();
-      handleSelect(flatItems[activeIndex].href);
+      handleSelect(flatItems[activeIndex].href, flatItems[activeIndex], activeIndex);
+      return;
+    }
+
+    if (event.key === "Enter" && hasQuery) {
+      event.preventDefault();
+      const source = searchSource ?? "static";
+      trackSearchSubmit({
+        query: trimmedQuery,
+        resultsCount: flatItems.length,
+        source,
+        kind: kindFilter === "all" ? undefined : kindFilter,
+      });
     }
   }
 
@@ -463,7 +501,7 @@ export default function SiteSearch() {
                               }}
                               id={`site-search-option-${currentIndex}`}
                               type="button"
-                              onClick={() => handleSelect(item.href)}
+                              onClick={() => handleSelect(item.href, resultItem, currentIndex)}
                               onMouseEnter={() => setActiveIndex(currentIndex)}
                               aria-label={`${item.title}, ${group.label}`}
                               className={cn(
