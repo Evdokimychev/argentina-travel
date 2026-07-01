@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import ImmigrationFlightHint from "@/components/flights/ImmigrationFlightHint";
 import ImmigrationHubView from "@/components/immigration/ImmigrationHubView";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
@@ -42,7 +43,7 @@ export default async function ImmigrationPage() {
   return (
     <>
       <BreadcrumbListJsonLd items={breadcrumbItems} />
-      <ImmigrationHubView />
+      <ImmigrationHubView flightHint={<ImmigrationFlightHint locale={locale} />} />
     </>
   );
 }

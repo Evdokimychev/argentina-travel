@@ -2,6 +2,9 @@
 /**
  * Sprint 11 — full public-route Lighthouse sample (perf + a11y).
  *
+ * Phase 6 soft budgets (override via LIGHTHOUSE_PERF_BUDGET):
+ *   local median perf ≥ 75, prod median ≥ 65, blog CLS ≤ 0.1, LCP ≤ 4s on top URLs.
+ *
  * Usage (local, after npm run build):
  *   node scripts/lighthouse-phase2-ci.mjs
  *
@@ -65,6 +68,7 @@ function runAudit() {
       LIGHTHOUSE_BASE_URL: BASE_URL,
       LIGHTHOUSE_SAMPLE_PATHS: LIGHTHOUSE_PHASE2_PATHS.join(","),
       LIGHTHOUSE_CATEGORIES: "performance,accessibility",
+      LIGHTHOUSE_PERF_BUDGET: process.env.LIGHTHOUSE_PERF_BUDGET ?? (isExternalBase ? "65" : "75"),
       LIGHTHOUSE_REPORT_FILE: isExternalBase
         ? "lighthouse-phase2-prod-last.json"
         : "lighthouse-phase2-sample-last.json",

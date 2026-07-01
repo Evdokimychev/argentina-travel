@@ -60,9 +60,15 @@ export default function BlogPersonalizedPosts({
 
   if (visiblePosts.length === 0) return null;
 
+  const compactReserveClass =
+    variant === "compact" && initialPosts.length > 0 ? "min-h-[12rem]" : undefined;
+
   if (variant === "compact") {
     return (
-      <div className={cn("blog-index-aside-panel", className)} aria-labelledby="blog-personalized-title">
+      <div
+        className={cn("blog-index-aside-panel", compactReserveClass, className)}
+        aria-labelledby="blog-personalized-title"
+      >
         <div className="flex items-center gap-1.5">
           <Sparkles className="h-3.5 w-3.5 text-sky" aria-hidden />
           <h2 id="blog-personalized-title" className="blog-index-aside-panel__title">

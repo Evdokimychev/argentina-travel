@@ -7,12 +7,16 @@ type BlogIndexWithToursProps = {
   posts: BlogPost[];
   initialPersonalizedPosts: BlogPost[];
   heroVariant: BlogHeroVariant;
+  initialTag?: string | null;
+  initialCategory?: string | null;
 };
 
 export default async function BlogIndexWithTours({
   posts,
   initialPersonalizedPosts,
   heroVariant,
+  initialTag = null,
+  initialCategory = null,
 }: BlogIndexWithToursProps) {
   const initialTours = await fetchMarketplaceTours();
 
@@ -22,6 +26,8 @@ export default async function BlogIndexWithTours({
       initialTours={initialTours}
       initialPersonalizedPosts={initialPersonalizedPosts}
       heroVariant={heroVariant}
+      initialTag={initialTag}
+      initialCategory={initialCategory}
     />
   );
 }

@@ -2,6 +2,7 @@
 
 import { MAP_MARKER_KIND_LABELS, type MapMarkerKind } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
+import MapKindIcon from "@/components/map/MapKindIcon";
 import { cn } from "@/lib/cn";
 
 const LEGEND_KINDS: MapMarkerKind[] = [
@@ -28,20 +29,22 @@ export default function MapLegend({ activeKinds, className }: Props) {
       )}
       aria-label="Легенда карты"
     >
-      <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate">Обозначения</p>
-      <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1.5">
+      <ul className="flex flex-wrap gap-x-3 gap-y-1.5">
         {LEGEND_KINDS.map((kind) => {
           const active = activeKinds.includes(kind);
+          const color = MAP_KIND_COLORS[kind];
           return (
             <li key={kind} className="flex items-center gap-1.5 text-[11px] text-charcoal">
               <span
                 className={cn(
-                  "h-2.5 w-2.5 shrink-0 rounded-full ring-1 ring-white",
+                  "flex h-5 w-5 items-center justify-center rounded-md ring-1 ring-white",
                   !active && "opacity-40"
                 )}
-                style={{ backgroundColor: MAP_KIND_COLORS[kind] }}
+                style={{ backgroundColor: `${color}22`, color }}
                 aria-hidden
-              />
+              >
+                <MapKindIcon kind={kind} className="h-3 w-3" style={{ color }} />
+              </span>
               <span className={cn(!active && "text-slate")}>{MAP_MARKER_KIND_LABELS[kind]}</span>
             </li>
           );

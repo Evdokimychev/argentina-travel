@@ -19,6 +19,7 @@ const unbounded = Unbounded({
   variable: "--font-unbounded",
   display: "optional",
   adjustFontFallback: true,
+  weight: ["700"],
 });
 
 function resolveOgImageUrl(pathOrUrl: string): string {

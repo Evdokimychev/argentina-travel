@@ -1,7 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import BlogIndexUrlSync from "@/components/blog/BlogIndexUrlSync";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogEmptyCatalogState from "@/components/blog/BlogEmptyCatalogState";
 import BlogIndexDiscoverySidebar, {
@@ -33,19 +34,22 @@ type BlogIndexViewProps = {
   initialTours?: TourListing[];
   initialPersonalizedPosts?: BlogPost[];
   heroVariant?: BlogHeroVariant;
+  initialTag?: string | null;
+  initialCategory?: string | null;
 };
 
-function BlogIndexViewContent({
+export default function BlogIndexView({
   posts,
   initialTours = [],
   initialPersonalizedPosts = [],
   heroVariant = "a",
+  initialTag = null,
+  initialCategory = null,
 }: BlogIndexViewProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
-  const [activeCategory, setActiveCategory] = useState("Все");
-  const [activeTag, setActiveTag] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState(initialCategory?.trim() || "Все");
+  const [activeTag, setActiveTag] = useState<string | null>(initialTag?.trim() || null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const catalogRef = useRef<HTMLElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -95,25 +99,22 @@ function BlogIndexViewContent({
     window.localStorage.setItem(BLOG_HERO_VARIANT_KEY, heroVariant);
   }, [heroVariant]);
 
-  useEffect(() => {
-    const tagFromUrl = searchParams.get("tag")?.trim();
-    if (tagFromUrl) {
-      setActiveTag(tagFromUrl);
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [searchParams]);
+  const scrollToResults = useCallback(() => {
+    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
 
-  useEffect(() => {
-    const categoryFromUrl = searchParams.get("category")?.trim();
-    if (categoryFromUrl) {
-      setActiveCategory(categoryFromUrl);
-      setActiveTag(null);
-      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-  }, [searchParams]);
+  const handleTagFromUrl = useCallback((tag: string | null) => {
+    setActiveTag(tag);
+  }, []);
+
+  const handleCategoryFromUrl = useCallback((category: string | null) => {
+    if (!category) return;
+    setActiveCategory(category);
+    setActiveTag(null);
+  }, []);
 
   function syncTagInUrl(tag: string | null) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     if (tag) params.set("tag", tag);
     else params.delete("tag");
     const qs = params.toString();
@@ -121,7 +122,7 @@ function BlogIndexViewContent({
   }
 
   function syncCategoryInUrl(category: string) {
-    const params = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     if (category !== "Все") params.set("category", category);
     else params.delete("category");
     params.delete("tag");
@@ -146,10 +147,6 @@ function BlogIndexViewContent({
     setActiveTag(null);
     syncTagInUrl(null);
     syncCategoryInUrl("Все");
-  }
-
-  function scrollToResults() {
-    resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function handleSidebarCategorySelect(category: string) {
@@ -239,7 +236,13 @@ function BlogIndexViewContent({
   }
 
   return (
-    <div className="bg-surface-muted pb-12">
+    <>
+      <BlogIndexUrlSync
+        onTagFromUrl={handleTagFromUrl}
+        onCategoryFromUrl={handleCategoryFromUrl}
+        onScrollToResults={scrollToResults}
+      />
+      <div className="bg-surface-muted pb-12">
         <div className={cn(siteContainerClass, "blog-index py-5 md:py-6")}>
           <PageBreadcrumbs
             items={[
@@ -304,13 +307,6 @@ function BlogIndexViewContent({
           </div>
         </div>
       </div>
-  );
-}
-
-export default function BlogIndexView(props: BlogIndexViewProps) {
-  return (
-    <Suspense fallback={null}>
-      <BlogIndexViewContent {...props} />
-    </Suspense>
+    </>
   );
 }

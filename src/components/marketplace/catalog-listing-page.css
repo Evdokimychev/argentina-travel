@@ -58,10 +58,15 @@
   position: relative;
   z-index: 1;
   margin-top: -1.25rem;
+  min-height: 11.5rem;
 }
 
 @media (min-width: 640px) {
   .catalog-listing-page-search-shell {
     margin-top: -1.75rem;
   }
+}
+
+.catalog-listing-page-results-grid {
+  min-height: 24rem;
 }

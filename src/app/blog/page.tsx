@@ -1,8 +1,6 @@
-import { Suspense } from "react";
 import { cookies } from "next/headers";
 import BlogIndexView from "@/components/blog/BlogIndexView";
 import BlogIndexHero from "@/components/blog/BlogIndexHero";
-import BlogIndexWithTours from "@/components/blog/BlogIndexWithTours";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
@@ -19,6 +17,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { absoluteUrl } from "@/lib/site-url";
+import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 
 const PAGE_TITLE = "Блог — советы и маршруты по Аргентине";
 const PAGE_DESCRIPTION =
@@ -38,11 +37,29 @@ export const metadata = {
   },
 };
 
-export default async function BlogPage() {
+type BlogPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function readSearchParam(
+  params: Record<string, string | string[] | undefined>,
+  key: string,
+): string | null {
+  const value = params[key];
+  if (typeof value === "string") return value.trim() || null;
+  if (Array.isArray(value) && typeof value[0] === "string") return value[0].trim() || null;
+  return null;
+}
+
+export default async function BlogPage({ searchParams }: BlogPageProps) {
+  const params = await searchParams;
   const locale = await getServerI18nLocale();
   const cookieStore = await cookies();
   const history = parseBlogReadingHistoryCookie(cookieStore.get(BLOG_READING_HISTORY_COOKIE)?.value);
-  const posts = await resolveBlogCatalog(locale);
+  const [posts, initialTours] = await Promise.all([
+    resolveBlogCatalog(locale),
+    fetchMarketplaceTours(),
+  ]);
   const indexable = filterIndexableBlogPosts(posts);
 
   const heroVariantCookie = cookieStore.get(BLOG_HERO_VARIANT_COOKIE)?.value;
@@ -76,22 +93,14 @@ export default async function BlogPage() {
         fetchPriority="high"
       />
       <BlogIndexHero variant={heroVariant} indexablePostsCount={indexable.length} />
-      <Suspense
-        fallback={
-          <BlogIndexView
-            posts={posts}
-            initialTours={[]}
-            initialPersonalizedPosts={initialPersonalized}
-            heroVariant={heroVariant}
-          />
-        }
-      >
-        <BlogIndexWithTours
-          posts={posts}
-          initialPersonalizedPosts={initialPersonalized}
-          heroVariant={heroVariant}
-        />
-      </Suspense>
+      <BlogIndexView
+        posts={posts}
+        initialTours={initialTours}
+        initialPersonalizedPosts={initialPersonalized}
+        heroVariant={heroVariant}
+        initialTag={readSearchParam(params, "tag")}
+        initialCategory={readSearchParam(params, "category")}
+      />
     </>
   );
 }

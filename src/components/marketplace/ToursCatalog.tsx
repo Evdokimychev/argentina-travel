@@ -5,9 +5,6 @@ import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import MarketplaceTourListCard from "@/components/marketplace/MarketplaceTourListCard";
-import SearchBlock from "@/components/marketplace/SearchBlock";
-import FilterBar from "@/components/marketplace/FilterBar";
-import CatalogFiltersSheet from "@/components/marketplace/CatalogFiltersSheet";
 import CatalogToolbar, { CatalogViewMode } from "@/components/marketplace/CatalogToolbar";
 import CatalogStickyBar from "@/components/marketplace/CatalogStickyBar";
 import CatalogActiveFilterChips from "@/components/marketplace/CatalogActiveFilterChips";
@@ -44,6 +41,23 @@ import "./catalog-listing-page.css";
 const PAGE_SIZE = 12;
 
 const CATALOG_VIEW_MODE_KEY = "argentina-travel-catalog-view";
+
+const catalogFilterShellClass =
+  "animate-pulse rounded-2xl border border-gray-100 bg-white/80";
+
+const SearchBlock = dynamic(() => import("@/components/marketplace/SearchBlock"), {
+  loading: () => (
+    <div className={cn(catalogFilterShellClass, "min-h-[7.75rem]")} aria-hidden />
+  ),
+});
+
+const FilterBar = dynamic(() => import("@/components/marketplace/FilterBar"), {
+  loading: () => <div className={cn(catalogFilterShellClass, "min-h-[3.25rem]")} aria-hidden />,
+});
+
+const CatalogFiltersSheet = dynamic(() => import("@/components/marketplace/CatalogFiltersSheet"), {
+  loading: () => <div className={cn(catalogFilterShellClass, "h-11 w-11 shrink-0")} aria-hidden />,
+});
 
 function readStoredViewMode(): CatalogViewMode {
   if (typeof window === "undefined") return "grid";
@@ -336,7 +350,7 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
             <>
               <div
                 className={cn(
-                  "mt-6",
+                  "catalog-listing-page-results-grid mt-6",
                   viewMode === "grid"
                     ? "grid gap-5 sm:grid-cols-2 xl:grid-cols-3"
                     : "flex flex-col gap-5"

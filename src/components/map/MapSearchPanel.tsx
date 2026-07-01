@@ -9,6 +9,7 @@ type Props = {
   onSubmit: () => void;
   suggestions?: string[];
   className?: string;
+  compact?: boolean;
 };
 
 export default function MapSearchPanel({
@@ -17,17 +18,21 @@ export default function MapSearchPanel({
   onSubmit,
   suggestions = [],
   className,
+  compact = false,
 }: Props) {
   return (
-    <div className={cn("relative w-full max-w-md", className)}>
+    <div className={cn("relative w-full", compact ? "max-w-none" : "max-w-md", className)}>
       <form
         onSubmit={(event) => {
           event.preventDefault();
           onSubmit();
         }}
-        className="flex items-center gap-2 rounded-2xl border border-gray-200/80 bg-white/95 px-3 py-2 shadow-sm backdrop-blur-sm"
+        className={cn(
+          "flex items-center gap-2 rounded-xl border border-gray-200/80 bg-white/95 shadow-sm backdrop-blur-sm",
+          compact ? "px-2.5 py-1.5" : "rounded-2xl px-3 py-2"
+        )}
       >
-        <Search className="h-4 w-4 shrink-0 text-slate" aria-hidden />
+        <Search className="h-3.5 w-3.5 shrink-0 text-slate" aria-hidden />
         <input
           type="search"
           value={value}
@@ -38,7 +43,7 @@ export default function MapSearchPanel({
         />
         <button
           type="submit"
-          className="rounded-lg bg-sky px-3 py-1.5 text-xs font-semibold text-white hover:bg-sky-dark"
+          className="rounded-lg bg-sky px-2.5 py-1 text-[11px] font-semibold text-white hover:bg-sky-dark"
         >
           Найти
         </button>

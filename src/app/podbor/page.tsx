@@ -1,6 +1,15 @@
 import type { Metadata } from "next";
-import PodborView from "@/components/podbor/PodborView";
+import dynamic from "next/dynamic";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+
+const PodborView = dynamic(() => import("@/components/podbor/PodborView"), {
+  loading: () => (
+    <div
+      className="mx-auto min-h-[60vh] max-w-3xl animate-pulse rounded-3xl bg-surface-muted"
+      aria-hidden
+    />
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Подбор маршрута по Аргентине",

@@ -46,6 +46,7 @@ const CATEGORIES = (
   process.env.LIGHTHOUSE_CATEGORIES?.split(",").map((c) => c.trim()).filter(Boolean) ?? ["performance"]
 );
 
+/** Phase 6: local median ≥75, prod step ≥65; CLS ≤0.1; LCP ≤2500ms (soft fail). */
 const BUDGET = {
   performance: Number(process.env.LIGHTHOUSE_PERF_BUDGET ?? 90),
   accessibility: Number(process.env.LIGHTHOUSE_A11Y_BUDGET ?? 95),

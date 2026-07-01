@@ -167,6 +167,10 @@ function filterObject(obj: MapObject, query: MapObjectsQuery): boolean {
 }
 
 export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapObjectsPayload> {
+  if (query.kinds !== undefined && query.kinds.length === 0) {
+    return { objects: [], routes: [], totals: {} };
+  }
+
   const limit = query.limit ?? DEFAULT_LIMIT;
   const activeKinds = query.kinds?.length ? query.kinds : undefined;
 

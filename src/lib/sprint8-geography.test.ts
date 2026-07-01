@@ -12,11 +12,13 @@ const root = join(process.cwd(), "src");
 describe("Sprint 8 — geography & map", () => {
   it("map hub has legend, popup v2 and mobile bottom sheet", () => {
     const hub = readFileSync(join(root, "components/map/ArgentinaMapFullscreenHub.tsx"), "utf8");
-    expect(hub).toContain("MapLegend");
+    expect(hub).toContain("MapControlsPanel");
     expect(hub).toContain("MapObjectPopup");
+    const controls = readFileSync(join(root, "components/map/MapControlsPanel.tsx"), "utf8");
+    expect(controls).toContain("MapLegend");
     const card = readFileSync(join(root, "components/map/MapObjectCard.tsx"), "utf8");
     expect(card).toContain("Страница тура");
-    expect(card).toContain("Статья");
+    expect(card).toContain("Подробнее");
     const popup = readFileSync(join(root, "components/map/MapObjectPopup.tsx"), "utf8");
     expect(popup).toContain("bottomSheet");
     expect(popup).toContain("max-width: 767px");
@@ -25,6 +27,8 @@ describe("Sprint 8 — geography & map", () => {
   it("map kind colors shared between canvas and legend", () => {
     const canvas = readFileSync(join(root, "components/map/ArgentinaMapLibreCanvas.tsx"), "utf8");
     expect(canvas).toContain("MAP_KIND_COLORS");
+    expect(canvas).toContain("registerMapMarkerImages");
+    expect(canvas).toContain("unclustered-marker");
     expect(Object.keys(MAP_KIND_COLORS).length).toBeGreaterThanOrEqual(7);
   });
 

@@ -1,8 +1,8 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
 import { AlertTriangle, ArrowRight } from "lucide-react";
-import ImmigrationFlightHint from "@/components/flights/ImmigrationFlightHint";
 import HubHero from "@/components/guide/hub/HubHero";
 import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNav";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
@@ -92,7 +92,12 @@ function TopicTeaserList({
   );
 }
 
-export default function ImmigrationHubView() {
+type ImmigrationHubViewProps = {
+  /** Server-rendered flight teaser — must not be imported from this client module. */
+  flightHint?: ReactNode;
+};
+
+export default function ImmigrationHubView({ flightHint }: ImmigrationHubViewProps) {
   const { t } = useLocaleCurrency();
   const hub = IMMIGRATION_HUB;
   const path = "/immigration";
@@ -148,7 +153,7 @@ export default function ImmigrationHubView() {
                 <TopicTeaserList topics={hub.hubTopics} moreLabel={t("immigration.hub.link.more")} />
               </HubSection>
 
-              <ImmigrationFlightHint />
+              {flightHint}
 
               <div className="space-y-3">
                 {hub.warnings.map((warning) => (
