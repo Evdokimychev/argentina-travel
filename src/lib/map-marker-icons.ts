@@ -1,4 +1,5 @@
-import type { Map as MaplibreMap } from "maplibre-gl";
+"use client";
+
 import type { MapMarkerKind } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
 
@@ -20,6 +21,11 @@ const MARKER_KINDS_WITH_ICONS: MapMarkerKind[] = [
   "airport",
   "transport",
 ];
+
+type MapImageHost = {
+  hasImage(id: string): boolean;
+  addImage(id: string, image: HTMLImageElement, options?: { pixelRatio?: number }): void;
+};
 
 function buildPinSvg(kind: MapMarkerKind, color: string, selected: boolean): string {
   const iconPaths = KIND_ICON_PATHS[kind] ?? `<circle cx="12" cy="12" r="4" fill="#fff"/>`;
@@ -53,7 +59,7 @@ export function markerImageId(kind: MapMarkerKind, selected = false): string {
 }
 
 /** Register pin icons for all marker kinds on a MapLibre map instance. */
-export async function registerMapMarkerImages(map: MaplibreMap): Promise<void> {
+export async function registerMapMarkerImages(map: MapImageHost): Promise<void> {
   for (const kind of MARKER_KINDS_WITH_ICONS) {
     const color = MAP_KIND_COLORS[kind];
     for (const selected of [false, true]) {

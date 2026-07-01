@@ -5,8 +5,9 @@ import { ChevronDown, ChevronUp, Map, Search, X } from "lucide-react";
 import MapCategoryFilters from "@/components/map/MapCategoryFilters";
 import MapLegend from "@/components/map/MapLegend";
 import MapSearchPanel from "@/components/map/MapSearchPanel";
-import MapThemePicker from "@/components/map/MapThemePicker";
+import MapAppearancePanel from "@/components/map/MapAppearancePanel";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
+import type { MapOverlayLayerId, MapOverlayState } from "@/lib/map-overlay-layers";
 import type { MapMarkerKind } from "@/lib/map-types";
 
 type Props = {
@@ -24,6 +25,8 @@ type Props = {
   onResetKinds: () => void;
   mapTheme: MapBasemapThemeId;
   onMapThemeChange: (theme: MapBasemapThemeId) => void;
+  overlays: MapOverlayState;
+  onToggleOverlay: (layerId: MapOverlayLayerId) => void;
   loading?: boolean;
 };
 
@@ -42,6 +45,8 @@ export default function MapControlsPanel({
   onResetKinds,
   mapTheme,
   onMapThemeChange,
+  overlays,
+  onToggleOverlay,
   loading = false,
 }: Props) {
   const [panelOpen, setPanelOpen] = useState(false);
@@ -107,7 +112,12 @@ export default function MapControlsPanel({
               </button>
             </div>
           ) : null}
-          <MapThemePicker value={mapTheme} onChange={onMapThemeChange} />
+          <MapAppearancePanel
+            mapTheme={mapTheme}
+            onMapThemeChange={onMapThemeChange}
+            overlays={overlays}
+            onToggleOverlay={onToggleOverlay}
+          />
         </div>
       ) : null}
 

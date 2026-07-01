@@ -1,6 +1,6 @@
 "use client";
 
-import { Leaf, Map, Moon, Sun, type LucideIcon } from "lucide-react";
+import { Leaf, Map, Moon, Satellite, Sun, type LucideIcon } from "lucide-react";
 import {
   MAP_BASEMAP_THEMES,
   MAP_BASEMAP_THEME_IDS,
@@ -12,6 +12,7 @@ const THEME_ICONS: Record<MapBasemapThemeId, LucideIcon> = {
   tourist: Map,
   light: Sun,
   nature: Leaf,
+  satellite: Satellite,
   contrast: Moon,
 };
 

@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import ArgentinaMapFullscreenHub from "@/components/map/ArgentinaMapFullscreenHub";
+import MapaArgentinaClient from "@/components/map/MapaArgentinaClient";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchMapObjects } from "@/lib/map-objects-server";
@@ -70,7 +70,7 @@ export default async function MapaArgentinaPage({ searchParams }: PageProps) {
           <div className="flex h-[60vh] items-center justify-center text-slate">Загрузка карты…</div>
         }
       >
-        <ArgentinaMapFullscreenHub initialData={initialData} initialState={urlState} />
+        <MapaArgentinaClient initialData={initialData} initialState={urlState} />
       </Suspense>
     </>
   );

@@ -1,9 +1,9 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import dynamic from "next/dynamic";
-import { useRouter, useSearchParams } from "next/navigation";
+import ArgentinaMapLibreCanvas from "@/components/map/ArgentinaMapLibreCanvas";
 import MapControlsPanel from "@/components/map/MapControlsPanel";
+import { useRouter, useSearchParams } from "next/navigation";
 import MapObjectPopup from "@/components/map/MapObjectPopup";
 import { MAP_BASEMAP_THEMES } from "@/lib/map-basemap-themes";
 import {
@@ -16,20 +16,10 @@ import {
   toggleMapArgentinaKind,
   type MapArgentinaUrlState,
 } from "@/lib/map-argentina-url-state";
+import { collectMapOverlayAttributions, toggleMapOverlayLayer } from "@/lib/map-overlay-layers";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
+import type { MapOverlayLayerId } from "@/lib/map-overlay-layers";
 import type { MapMarkerKind, MapObject, MapObjectsPayload } from "@/lib/map-types";
-
-const ArgentinaMapLibreCanvas = dynamic(
-  () => import("@/components/map/ArgentinaMapLibreCanvas"),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-full items-center justify-center bg-[#e8eef4] text-sm text-slate">
-        Загрузка карты…
-      </div>
-    ),
-  }
-);
 
 type Props = {
   initialData: MapObjectsPayload;
@@ -116,6 +106,16 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   const visibleRoutes = state.kinds.includes("route") ? data.routes : [];
 
+  const mapSelectedId = useMemo(() => {
+    if (selected?.id && visibleObjects.some((obj) => obj.id === selected.id)) {
+      return selected.id;
+    }
+    if (state.selected && visibleObjects.some((obj) => obj.id === state.selected)) {
+      return state.selected;
+    }
+    return null;
+  }, [selected, state.selected, visibleObjects]);
+
   function handleSearchSubmit() {
     const q = searchDraft.trim();
     const match = q
@@ -139,7 +139,18 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   }
 
   function handleToggleKind(kind: MapMarkerKind) {
-    applyState({ ...state, kinds: toggleMapArgentinaKind(state.kinds, kind) });
+    const nextKinds = toggleMapArgentinaKind(state.kinds, kind);
+    const keepSelected =
+      state.selected &&
+      data.objects.some((obj) => obj.id === state.selected && nextKinds.includes(obj.kind));
+    if (!keepSelected) {
+      setSelected(null);
+    }
+    applyState({
+      ...state,
+      kinds: nextKinds,
+      selected: keepSelected ? state.selected : "",
+    });
   }
 
   function handleSelectAllKinds() {
@@ -161,12 +172,24 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     replaceUrl(nextState);
   }
 
+  function handleToggleOverlay(layerId: MapOverlayLayerId) {
+    const nextState = {
+      ...state,
+      overlays: toggleMapOverlayLayer(state.overlays, layerId),
+    };
+    setState(nextState);
+    replaceUrl(nextState);
+  }
+
   function handleSelectObject(obj: MapObject | null) {
     setSelected(obj);
     replaceUrl({ ...state, selected: obj?.id ?? "" });
   }
 
-  const attribution = MAP_BASEMAP_THEMES[state.theme].attribution;
+  const attribution = [
+    MAP_BASEMAP_THEMES[state.theme].attribution,
+    ...collectMapOverlayAttributions(state.overlays),
+  ].join(" · ");
 
   return (
     <div className="relative h-[calc(100dvh-var(--site-header-full-height,72px))] min-h-[520px] w-full">
@@ -174,8 +197,9 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         objects={visibleObjects}
         routes={visibleRoutes}
         activeKinds={state.kinds}
-        selectedId={selected?.id ?? (state.selected || null)}
+        selectedId={mapSelectedId}
         theme={state.theme}
+        overlays={state.overlays}
         onSelect={handleSelectObject}
         className="absolute inset-0"
       />
@@ -197,6 +221,8 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
             onResetKinds={handleResetKinds}
             mapTheme={state.theme}
             onMapThemeChange={handleThemeChange}
+            overlays={state.overlays}
+            onToggleOverlay={handleToggleOverlay}
             loading={loading}
           />
         </div>

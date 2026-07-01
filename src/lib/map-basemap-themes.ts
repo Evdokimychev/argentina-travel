@@ -1,4 +1,4 @@
-export type MapBasemapThemeId = "tourist" | "light" | "nature" | "contrast";
+export type MapBasemapThemeId = "tourist" | "light" | "nature" | "satellite" | "contrast";
 
 export interface MapBasemapTheme {
   id: MapBasemapThemeId;
@@ -33,6 +33,16 @@ export const MAP_BASEMAP_THEMES: Record<MapBasemapThemeId, MapBasemapTheme> = {
     tiles: ["https://tile.opentopomap.org/{z}/{x}/{y}.png"],
     attribution: "© OpenStreetMap · © OpenTopoMap",
     backgroundColor: "#e5ebe0",
+  },
+  satellite: {
+    id: "satellite",
+    label: "Спутник",
+    description: "Спутниковые снимки — ландшафт и застройка как на фото",
+    tiles: [
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    ],
+    attribution: "© Esri · © Maxar · © OpenStreetMap",
+    backgroundColor: "#1c1917",
   },
   contrast: {
     id: "contrast",
