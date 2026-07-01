@@ -24,6 +24,7 @@ import {
   syncFavoritesOnLogin,
   toggleFavoriteWithServerSync,
 } from "@/lib/favorites-store";
+import { syncBlogReadingHistoryWithRemote } from "@/lib/blog-reading-history-sync";
 import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { canAccessOrganizerPanel } from "@/lib/permissions";
 import AuthModal from "@/components/auth/AuthModal";
@@ -191,6 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return;
 
     void syncFavoritesOnLogin(user, user.id);
+    void syncBlogReadingHistoryWithRemote();
 
     const onOnline = () => {
       void flushFavoriteSyncQueue(user, user.id);

@@ -9,8 +9,7 @@ import { assertPermission, canSaveFavorite } from "@/lib/permissions";
 import type { SessionUser } from "@/types/user";
 
 type FavoritesStore = Record<string, FavoriteTour[]>;
-type FavoriteRemoteKind = "tour" | "excursion";
-/** Места (`kind: "place"`) хранятся только в localStorage — без синхронизации в user_favorites. */
+type FavoriteRemoteKind = "tour" | "excursion" | "place";
 type FavoriteSyncAction = "add" | "remove";
 
 interface FavoriteSyncQueueItem {
@@ -90,7 +89,7 @@ function canUseServerFavorites() {
 }
 
 function isRemoteFavoriteKind(kind: FavoriteKind): kind is FavoriteRemoteKind {
-  return kind === "tour" || kind === "excursion";
+  return kind === "tour" || kind === "excursion" || kind === "place";
 }
 
 function favoriteKey(kind: FavoriteKind, tourSlug: string): string {
@@ -113,9 +112,7 @@ function setUserFavorites(userId: string, favorites: FavoriteTour[]) {
 }
 
 function replaceRemoteFavorites(userId: string, remoteFavorites: FavoriteTour[]) {
-  const localFavorites = getUserFavorites(userId);
-  const localPlaces = localFavorites.filter((item) => (item.kind ?? "tour") === "place");
-  setUserFavorites(userId, [...remoteFavorites, ...localPlaces]);
+  setUserFavorites(userId, remoteFavorites);
 }
 
 function upsertLocalFavorite(userId: string, tour: Omit<FavoriteTour, "addedAt">): FavoriteTour {
@@ -288,8 +285,23 @@ export async function refreshRemoteFavorites(
   if (!canUseServerFavorites()) return { ok: true };
 
   try {
-    const favorites = await fetchFavoritesFromApi();
-    replaceRemoteFavorites(userId, favorites);
+    const localFavorites = getUserFavorites(userId);
+    let remote = await fetchFavoritesFromApi();
+    const remoteKeys = new Set(
+      remote.map((item) => favoriteKey(item.kind ?? "tour", item.tourSlug))
+    );
+
+    const localOnlyRemoteItems = localFavorites
+      .map(toRemoteItem)
+      .filter((item): item is NonNullable<typeof item> => item != null)
+      .filter((item) => !remoteKeys.has(favoriteKey(item.itemType, item.itemSlug)));
+
+    if (localOnlyRemoteItems.length) {
+      await addFavoritesToApi(localOnlyRemoteItems);
+      remote = await fetchFavoritesFromApi();
+    }
+
+    replaceRemoteFavorites(userId, remote);
     return { ok: true };
   } catch (error) {
     if (error instanceof FavoriteApiError) {

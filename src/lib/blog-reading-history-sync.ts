@@ -31,7 +31,8 @@ async function pushReadingHistoryEntry(entry: BlogReadingHistoryEntry): Promise<
   });
 }
 
-function mergeReadingHistory(
+/** Объединяет local и remote, оставляя более поздний readAt для каждого slug. */
+export function mergeReadingHistory(
   local: BlogReadingHistoryEntry[],
   remote: BlogReadingHistoryEntry[],
 ): BlogReadingHistoryEntry[] {
@@ -67,7 +68,8 @@ export async function syncBlogReadingHistoryWithRemote(): Promise<void> {
     const merged = mergeReadingHistory(local, remote);
 
     for (const entry of local) {
-      if (!remote.some((remoteEntry) => remoteEntry.slug === entry.slug)) {
+      const remoteEntry = remote.find((remoteItem) => remoteItem.slug === entry.slug);
+      if (!remoteEntry || entry.readAt > remoteEntry.readAt) {
         await pushReadingHistoryEntry(entry);
       }
     }

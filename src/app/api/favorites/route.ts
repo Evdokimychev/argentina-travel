@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     const items = parseItemsFromBody(body);
     if (!items.length) {
       return NextResponse.json(
-        { error: "Передайте itemType (tour|excursion), itemSlug и itemId" },
+        { error: "Передайте itemType (tour|excursion|place), itemSlug и itemId" },
         { status: 400 }
       );
     }
@@ -115,7 +115,7 @@ export async function DELETE(request: Request) {
     const item = parseFavoriteItemInput(body);
     if (!item) {
       return NextResponse.json(
-        { error: "Передайте itemType (tour|excursion) и itemSlug" },
+        { error: "Передайте itemType (tour|excursion|place) и itemSlug" },
         { status: 400 }
       );
     }

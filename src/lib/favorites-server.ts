@@ -3,10 +3,11 @@ import "server-only";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import type { FavoriteTour } from "@/types/tourist";
+import { resolvePlacePage } from "@/lib/cms/place-resolver";
 import { fetchTourDetail } from "@/lib/tours-server";
 import { fetchExcursionDetailServer } from "@/lib/excursion-server";
 
-export type FavoriteItemType = "tour" | "excursion";
+export type FavoriteItemType = "tour" | "excursion" | "place";
 
 export interface FavoriteItemInput {
   itemType: FavoriteItemType;
@@ -18,7 +19,7 @@ type DbClient = SupabaseClient<Database>;
 type UserFavoriteRow = Database["public"]["Tables"]["user_favorites"]["Row"];
 
 function isFavoriteItemType(value: unknown): value is FavoriteItemType {
-  return value === "tour" || value === "excursion";
+  return value === "tour" || value === "excursion" || value === "place";
 }
 
 function normalizeText(value: unknown): string | null {
@@ -116,15 +117,29 @@ async function hydrateFavoriteRow(row: UserFavoriteRow): Promise<FavoriteTour> {
     };
   }
 
-  const detail = await fetchExcursionDetailServer(row.item_slug);
+  if (row.item_type === "excursion") {
+    const detail = await fetchExcursionDetailServer(row.item_slug);
+    return {
+      tourId: row.item_id,
+      tourSlug: row.item_slug,
+      tourTitle: detail?.title ?? row.item_slug,
+      tourImage: detail?.coverImage ?? "",
+      cityName: detail?.cityName,
+      country: "Аргентина",
+      kind: "excursion",
+      addedAt: row.created_at,
+    };
+  }
+
+  const detail = await resolvePlacePage(row.item_slug);
   return {
     tourId: row.item_id,
     tourSlug: row.item_slug,
-    tourTitle: detail?.title ?? row.item_slug,
+    tourTitle: detail?.name ?? row.item_slug,
     tourImage: detail?.coverImage ?? "",
-    cityName: detail?.cityName,
+    region: detail?.region,
     country: "Аргентина",
-    kind: "excursion",
+    kind: "place",
     addedAt: row.created_at,
   };
 }
