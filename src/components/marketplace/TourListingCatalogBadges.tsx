@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/cn";
 
 const MAIN_TAG_CLASS =
-  "inline-flex items-center rounded-full border border-sky/25 bg-sky/10 px-2.5 py-0.5 text-[11px] font-semibold text-sky-dark sm:px-3 sm:py-1 sm:text-xs";
+  "inline-flex items-center rounded-full border border-sky/25 bg-sky/10 px-2.5 py-0.5 text-[11px] font-semibold text-sky-ink sm:px-3 sm:py-1 sm:text-xs";
 
 const SECONDARY_TAG_CLASS =
   "inline-flex items-center rounded-full border border-gray-100 bg-gray-50 px-2.5 py-0.5 text-[11px] font-medium text-slate sm:px-3 sm:py-1 sm:text-xs sm:text-charcoal";

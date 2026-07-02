@@ -30,7 +30,7 @@ import { formatCatalogBrowseHint } from "@/lib/catalog-stats";
 import { buildPublicOrganizerProfile, type PlatformStats } from "@/lib/organizer-public";
 import { resolveYouTravelExpertOrganizerLabel } from "@/lib/youtravel/partner-tour-guide";
 import Link from "next/link";
-import { MapPin } from "lucide-react";
+import { MapPin, RefreshCw } from "lucide-react";
 import PartnerTourDateFilterNotice from "@/components/marketplace/PartnerTourDateFilterNotice";
 import CatalogDepartureCalendarButton from "@/components/marketplace/CatalogDepartureCalendarButton";
 import CatalogLazyLoadFooter from "@/components/marketplace/CatalogLazyLoadFooter";
@@ -215,6 +215,8 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
     return items;
   }, [activeFilterCount, resetFilters]);
 
+  const catalogUnavailable = tours.length === 0 && activeFilterCount === 0;
+
   return (
     <div className="catalog-listing-page-root w-full max-w-full overflow-x-clip pb-16">
       <header className="catalog-listing-page-hero" data-scroll-rail-tone="light">
@@ -333,21 +335,36 @@ export default function ToursCatalog({ tours: initialTours, platformStats }: Tou
 
           {sorted.length === 0 ? (
             <CatalogEmptyResults
-              icon={MapPin}
-              title="Туры не найдены"
-              description="Попробуйте изменить фильтры или сбросить поиск."
-              action={
-                activeFilterCount > 0
-                  ? { label: "Сбросить фильтры", onClick: resetFilters }
-                  : undefined
+              icon={catalogUnavailable ? RefreshCw : MapPin}
+              title={catalogUnavailable ? "Каталог временно недоступен" : "Туры не найдены"}
+              description={
+                catalogUnavailable
+                  ? "Не удалось загрузить туры с сервера. Попробуйте обновить страницу или зайти позже."
+                  : "Попробуйте изменить фильтры или сбросить поиск."
               }
-              secondaryAction={{ label: "Смотреть экскурсии", href: "/excursions" }}
+              action={
+                catalogUnavailable
+                  ? {
+                      label: "Обновить страницу",
+                      onClick: () => window.location.reload(),
+                    }
+                  : activeFilterCount > 0
+                    ? { label: "Сбросить фильтры", onClick: resetFilters }
+                    : undefined
+              }
+              secondaryAction={
+                catalogUnavailable
+                  ? { label: "Написать в поддержку", href: "/contacts" }
+                  : { label: "Смотреть экскурсии", href: "/excursions" }
+              }
               suggestions={emptySuggestions}
             />
           ) : viewMode === "map" ? (
             <CatalogMapView tours={sorted} />
           ) : (
             <>
+              {/* h2 между h1 страницы и h3 карточек — корректная иерархия заголовков (a11y heading-order) */}
+              <h2 className="sr-only">Результаты поиска туров</h2>
               <div
                 className={cn(
                   "catalog-listing-page-results-grid mt-6",

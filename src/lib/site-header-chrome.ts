@@ -11,9 +11,14 @@ export const SITE_HEADER_REVEAL_DISTANCE_PX = 8;
 
 export const SITE_HEADER_CHROME_CHANGE_EVENT = "site-header-chrome-change";
 
-/** Conservative spacer height before React measures the real header. */
+/**
+ * Conservative spacer height before React measures the real header.
+ * Держим в синхроне с inline-скриптом в src/app/layout.tsx: значения подобраны
+ * по реальным замерам (mobile ≈ 89px, desktop ≈ 131–137px), чтобы первый
+ * measured-sync не сдвигал документ (CLS).
+ */
 export function estimateSiteHeaderFullHeightPx(viewportWidth = 0): number {
-  return viewportWidth >= 768 ? 140 : 84;
+  return viewportWidth >= 768 ? 132 : 88;
 }
 
 function dispatchSiteHeaderChromeChange() {

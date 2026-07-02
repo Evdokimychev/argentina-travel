@@ -4,27 +4,13 @@
  * Galleries are intentionally NOT borrowed — only the single cover image.
  * Replace with dedicated assets in the media manifest as they become available.
  */
-export const PLACE_COVER_FALLBACK_MAP: Record<string, string> = {
-  // Винный регион Куйо → Мендоса
-  maipu: "mendoza",
-  "lujan-de-cuyo": "mendoza",
-  "uco-valley": "mendoza",
-  potrerillos: "mendoza",
-  aconcagua: "mendoza",
-  // Северо-запад (Humahuaca / altiplano / красные каньоны)
-  cafayate: "salta",
-  tilcara: "purmamarca",
-  "quebrada-de-humahuaca": "cerro-de-los-7-colores",
-  "salinas-grandes": "purmamarca",
-  talampaya: "cerro-de-los-7-colores",
-  // Район озёр Патагонии
-  "san-martin-de-los-andes": "bariloche",
-  "villa-la-angostura": "bariloche",
-  // Литораль / северо-восток
-  "estero-ibera": "iguazu-falls",
-  // Центр — колониальный город
-  cordoba: "buenos-aires",
-};
+/**
+ * Заимствование обложки другого места — только крайняя мера.
+ * После ревизии медиатеки (scripts/fetch-place-media.mjs) у каждого места
+ * есть собственное фото, поэтому карта пуста. Не добавляйте сюда «визуальные
+ * аналоги» из других городов: пользователь видит не то место, которое выбрал.
+ */
+export const PLACE_COVER_FALLBACK_MAP: Record<string, string> = {};
 
 /** Destination id → place slug for hero/gallery reuse */
 export const DESTINATION_PLACE_MAP: Record<string, string> = {

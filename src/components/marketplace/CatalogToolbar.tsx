@@ -138,7 +138,7 @@ export default function CatalogToolbar<V extends string = TourSortOption>({
             className={cn(
               "shrink-0 whitespace-nowrap rounded-full px-2.5 py-1.5 text-xs font-medium transition-colors sm:px-3 sm:text-sm",
               sort === option.value
-                ? "bg-white text-brand shadow-sm"
+                ? "bg-white text-brand-dark shadow-sm"
                 : "text-slate hover:text-charcoal",
             )}
           >

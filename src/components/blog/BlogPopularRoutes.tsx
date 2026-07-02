@@ -24,7 +24,7 @@ export default function BlogPopularRoutes({ className }: BlogPopularRoutesProps)
         </div>
         <Link
           href="/blog/hub/putevoditel"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-sky hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-sky-ink hover:underline"
         >
           Раздел «Путеводитель»
           <ArrowRight className="h-4 w-4" aria-hidden />

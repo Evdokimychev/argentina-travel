@@ -175,11 +175,11 @@ export default function Footer({
               <p className="mt-1 text-xs text-slate/80">{footerInfo.legalLine}</p>
             ) : null}
           </div>
-          <p className="text-xs text-slate/70">
+          <p className="text-xs text-slate">
             {footerInfo?.supportEmail ? (
               <>
                 {t("footer.support")}{" "}
-                <a href={`mailto:${footerInfo.supportEmail}`} className="text-sky hover:underline">
+                <a href={`mailto:${footerInfo.supportEmail}`} className="text-sky-ink hover:underline">
                   {footerInfo.supportEmail}
                 </a>
               </>

@@ -96,8 +96,8 @@ export default function HomeMultiSearch({
             className={cn(
               "shrink-0 rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
               activeTab === tab
-                ? "border-sky bg-sky text-white shadow-sm"
-                : "border-gray-200/80 bg-white/90 text-charcoal shadow-sm backdrop-blur-sm hover:border-sky/30 hover:bg-white hover:text-sky",
+                ? "border-sky-ink bg-sky-ink text-white shadow-sm"
+                : "border-gray-200/80 bg-white/90 text-charcoal shadow-sm backdrop-blur-sm hover:border-sky/30 hover:bg-white hover:text-sky-ink",
             )}
           >
             {tabLabels[tab]}

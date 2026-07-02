@@ -49,7 +49,7 @@ export default function BlogInlineRelatedPosts({
       </ul>
       <Link
         href={`/blog?category=${encodeURIComponent(posts[0].category)}`}
-        className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-sky hover:underline"
+        className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-sky-ink hover:underline"
       >
         Ещё в разделе «{posts[0].category}»
         <ArrowRight className="h-3.5 w-3.5" aria-hidden />

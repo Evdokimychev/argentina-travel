@@ -58,7 +58,7 @@ export default function TourEmbedSection({
       {toneStyle.showMobileCatalog && config.catalogHref ? (
         <Link
           href={config.catalogHref}
-          className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline sm:hidden"
+          className="mt-5 inline-flex items-center gap-1 text-sm font-medium text-sky-ink hover:underline sm:hidden"
         >
           {config.catalogLabel ?? "Все туры"}
           <ArrowRight className="h-4 w-4" aria-hidden />

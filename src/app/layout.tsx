@@ -106,7 +106,7 @@ export default async function RootLayout({
         <GtmHeadScripts />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var h=w?140:84;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var h=w?132:88;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
           }}
         />
       </head>

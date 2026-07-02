@@ -25,6 +25,11 @@ export default function GlobalError({
         <p className="mt-2 max-w-md text-sm text-slate">
           Произошла непредвиденная ошибка. Попробуйте обновить страницу или вернитесь на главную.
         </p>
+        <ul className="mx-auto mt-4 max-w-md list-disc space-y-1 pl-5 text-left text-sm text-slate">
+          <li>Обновите страницу</li>
+          <li>Проверьте интернет-соединение</li>
+          <li>Если ошибка повторяется — напишите нам через форму контактов</li>
+        </ul>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
           <button
             type="button"
@@ -38,6 +43,12 @@ export default function GlobalError({
             className="rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-charcoal hover:border-sky hover:text-sky"
           >
             На главную
+          </Link>
+          <Link
+            href="/contacts"
+            className="rounded-full border border-gray-200 bg-white px-5 py-2.5 text-sm font-medium text-charcoal hover:border-sky hover:text-sky"
+          >
+            Контакты
           </Link>
         </div>
       </body>

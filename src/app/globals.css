@@ -7,6 +7,7 @@
   /* E49 — palette mapped from tokens (legacy class names preserved) */
   --color-sky: var(--token-color-sky);
   --color-sky-dark: var(--token-color-sky-dark);
+  --color-sky-ink: var(--token-color-sky-ink);
   --color-primary: var(--token-color-primary);
   --color-primary-dark: var(--token-color-primary-dark);
 
@@ -181,13 +182,13 @@ html {
 }
 
 .site-header-spacer {
-  height: var(--site-header-full-height, var(--site-header-spacer-fallback, 84px));
+  height: var(--site-header-full-height, var(--site-header-spacer-fallback, 88px));
   flex-shrink: 0;
 }
 
 @media (min-width: 768px) {
   :root {
-    --site-header-spacer-fallback: 140px;
+    --site-header-spacer-fallback: 132px;
   }
 }
 

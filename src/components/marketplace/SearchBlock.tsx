@@ -201,7 +201,7 @@ export default function SearchBlock({
                   <p
                     className={cn(
                       "truncate text-sm font-medium",
-                      hasDestination ? "text-charcoal" : "text-slate/70"
+                      hasDestination ? "text-charcoal" : "text-slate"
                     )}
                   >
                     {nearMe && !trimmedQuery
@@ -286,7 +286,7 @@ export default function SearchBlock({
             </div>
 
             <div className="shrink-0 px-4 pt-3 pb-2">
-              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate/70">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate">
                 {isSearching ? "Лучшее совпадение" : "Популярное"}
               </p>
             </div>
@@ -340,7 +340,7 @@ export default function SearchBlock({
                   <p
                     className={cn(
                       "text-sm font-medium",
-                      hasDates ? "text-charcoal" : "text-slate/70"
+                      hasDates ? "text-charcoal" : "text-slate"
                     )}
                   >
                     {dateLabel}

@@ -15,6 +15,7 @@ import {
 import {
   apiCreateBookingPaymentPreference,
   apiCreateBookingStripeSession,
+  apiFetchPaymentLinkStatus,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";
 import {
@@ -41,6 +42,8 @@ import {
 
 export default function BookingPaymentLinkView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
+  const [loadingBooking, setLoadingBooking] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const [checkoutError, setCheckoutErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [redirecting, setRedirecting] = useState(false);
@@ -63,18 +66,56 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
   };
 
   useEffect(() => {
-    function load() {
+    let cancelled = false;
+
+    async function loadRemote() {
+      setLoadingBooking(true);
+      setLoadError(null);
+      try {
+        const payload = await apiFetchPaymentLinkStatus(token);
+        if (cancelled) return;
+        setBooking(payload.booking ?? null);
+      } catch (error) {
+        if (cancelled) return;
+        setBooking(null);
+        setLoadError(
+          error instanceof Error ? error.message : "Не удалось загрузить ссылку на оплату"
+        );
+      } finally {
+        if (!cancelled) setLoadingBooking(false);
+      }
+    }
+
+    function loadLocal() {
       const found = getBookingByPaymentLinkToken(token);
       setBooking(found ?? null);
+      setLoadingBooking(false);
+      setLoadError(null);
       if (found?.paymentLink?.token === token && found.paymentLink.status === "active") {
         markBookingPaymentLinkOpened(token);
       }
     }
 
-    load();
-    window.addEventListener(BOOKINGS_UPDATED_EVENT, load);
-    return () => window.removeEventListener(BOOKINGS_UPDATED_EVENT, load);
-  }, [token]);
+    if (remoteMode) {
+      void loadRemote();
+    } else {
+      loadLocal();
+    }
+
+    function refreshLocal() {
+      if (remoteMode) {
+        void loadRemote();
+        return;
+      }
+      loadLocal();
+    }
+
+    window.addEventListener(BOOKINGS_UPDATED_EVENT, refreshLocal);
+    return () => {
+      cancelled = true;
+      window.removeEventListener(BOOKINGS_UPDATED_EVENT, refreshLocal);
+    };
+  }, [token, remoteMode]);
 
   useEffect(() => {
     if (booking?.metadata?.checkoutCurrency) {
@@ -103,6 +144,45 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     setRedirecting(true);
     window.location.assign(booking.paymentLink.checkoutUrl);
   }, [booking, redirecting]);
+
+  if (loadingBooking) {
+    return (
+      <BookingCheckoutShell
+        currentStep="payment"
+        eyebrow="Оплата бронирования"
+        title="Загружаем данные оплаты…"
+        description="Подождите несколько секунд."
+      >
+        <div className="mt-6 h-32 animate-pulse rounded-2xl bg-gray-100" aria-hidden />
+      </BookingCheckoutShell>
+    );
+  }
+
+  if (loadError) {
+    return (
+      <BookingCheckoutShell
+        currentStep="payment"
+        eyebrow="Оплата бронирования"
+        title="Не удалось загрузить оплату"
+        description={loadError}
+      >
+        <BookingPaymentErrorRecovery
+          onRetry={() => {
+            setLoadError(null);
+            setLoadingBooking(true);
+            void apiFetchPaymentLinkStatus(token)
+              .then((payload) => setBooking(payload.booking ?? null))
+              .catch((error) =>
+                setLoadError(
+                  error instanceof Error ? error.message : "Не удалось загрузить ссылку на оплату"
+                )
+              )
+              .finally(() => setLoadingBooking(false));
+          }}
+        />
+      </BookingCheckoutShell>
+    );
+  }
 
   if (!booking?.paymentLink) {
     return (

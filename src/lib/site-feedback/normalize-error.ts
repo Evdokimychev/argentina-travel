@@ -21,14 +21,55 @@ const GENERIC_HINT: SiteFeedbackMessage = {
   action: { label: "Написать в поддержку", href: "/contacts" },
 };
 
+const SERVICE_UNAVAILABLE_HINT: SiteFeedbackMessage = {
+  title: "Сервис временно недоступен",
+  description: "Данные с сервера сейчас недоступны. Попробуйте обновить страницу позже.",
+  steps: [
+    "Подождите минуту и обновите страницу",
+    "Если каталог пуст или карта не загружается — это может быть временный сбой",
+    "Напишите нам, если проблема не исчезает",
+  ],
+  action: { label: "Контакты", href: "/contacts" },
+};
+
+const RATE_LIMIT_HINT: SiteFeedbackMessage = {
+  title: "Слишком много запросов",
+  description: "Подождите немного и попробуйте снова.",
+  steps: ["Сделайте паузу на 30–60 секунд", "Обновите страницу"],
+};
+
 function isNetworkError(message: string): boolean {
   const lower = message.toLowerCase();
   return (
     lower.includes("failed to fetch") ||
     lower.includes("network") ||
     lower.includes("load failed") ||
-    lower.includes("networkerror")
+    lower.includes("networkerror") ||
+    lower.includes("aborted") ||
+    lower.includes("timeout")
   );
+}
+
+function isServiceUnavailable(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("503") ||
+    lower.includes("502") ||
+    lower.includes("504") ||
+    lower.includes("service unavailable") ||
+    lower.includes("exceed_egress") ||
+    lower.includes("egress quota") ||
+    lower.includes("database") ||
+    lower.includes("supabase") ||
+    lower.includes("connection") ||
+    lower.includes("temporarily unavailable") ||
+    lower.includes("ошибка сервера")
+  );
+}
+
+function isRateLimited(message: string): boolean {
+  const lower = message.toLowerCase();
+  return lower.includes("429") || lower.includes("too many") || lower.includes("rate limit");
 }
 
 const KNOWN_MESSAGES: Record<string, SiteFeedbackMessage> = {
@@ -116,6 +157,14 @@ export function normalizeSiteError(
 
   if (isNetworkError(raw)) {
     return { ...NETWORK_HINT, ...context };
+  }
+
+  if (isRateLimited(raw)) {
+    return { ...RATE_LIMIT_HINT, ...context };
+  }
+
+  if (isServiceUnavailable(raw)) {
+    return { ...SERVICE_UNAVAILABLE_HINT, ...context };
   }
 
   const matched = matchKnownMessage(raw);

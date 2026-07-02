@@ -136,7 +136,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
               <button
                 type="button"
                 onClick={() => router.push(organizerHref)}
-                className="pointer-events-auto text-xs font-medium text-white hover:underline"
+                className="pointer-events-auto -my-1.5 min-h-6 py-1.5 text-xs font-medium text-white hover:underline"
               >
                 {organizerLabel}
               </button>
@@ -218,14 +218,14 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
           ) : null}
 
           {groupDiscountHint && !tour.priceOnRequest ? (
-            <p className="mt-1.5 text-[11px] font-medium text-sky-dark">
+            <p className="mt-1.5 text-[11px] font-medium text-sky-ink">
               Групповая скидка: {groupDiscountHint}
             </p>
           ) : null}
 
           <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
             {tour.bookingMode === "on_request" && (
-              <span className="inline-flex items-center gap-1 rounded-md border border-sky/15 bg-sky/5 px-2 py-0.5 text-[11px] font-medium text-sky">
+              <span className="inline-flex items-center gap-1 rounded-md border border-sky/15 bg-sky/5 px-2 py-0.5 text-[11px] font-medium text-sky-ink">
                 <UserRound className="h-3 w-3 shrink-0" aria-hidden />
                 Индивидуально
               </span>

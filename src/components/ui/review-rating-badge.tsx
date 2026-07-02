@@ -97,7 +97,7 @@ export function ReviewRatingBadge({
     sizeClass.root,
     rated
       ? "rounded-full border border-sun/20 bg-sun/10 text-charcoal transition-colors hover:bg-sun/15"
-      : "rounded-full border border-sky/15 bg-sky/5 text-sky",
+      : "rounded-full border border-sky/15 bg-sky/5 text-sky-ink",
     onClick && "cursor-pointer",
     className,
   );

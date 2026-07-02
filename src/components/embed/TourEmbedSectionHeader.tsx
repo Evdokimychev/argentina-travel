@@ -44,7 +44,7 @@ export default function TourEmbedSectionHeader({
       {catalogHref ? (
         <Link
           href={catalogHref}
-          className="hidden shrink-0 items-center gap-1 text-sm font-medium text-sky hover:underline sm:inline-flex"
+          className="hidden shrink-0 items-center gap-1 text-sm font-medium text-sky-ink hover:underline sm:inline-flex"
         >
           {catalogLabel}
           <ArrowRight className="h-4 w-4" aria-hidden />

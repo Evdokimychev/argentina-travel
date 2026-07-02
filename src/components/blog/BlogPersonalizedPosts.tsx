@@ -27,7 +27,6 @@ export default function BlogPersonalizedPosts({
   useEffect(() => {
     const history = getBlogReadingHistory(8);
     if (history.length === 0) {
-      setPosts([]);
       return;
     }
 

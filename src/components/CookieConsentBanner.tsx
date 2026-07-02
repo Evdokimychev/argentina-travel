@@ -31,9 +31,10 @@ export default function CookieConsentBanner() {
 
   if (!visible) return null;
 
+  // Немодальное уведомление: role="region", а не dialog — не перехватывает фокус и не требует кнопки «Закрыть»
   return (
     <div
-      role="dialog"
+      role="region"
       aria-label="Уведомление о cookie"
       className={cn(
         "fixed bottom-4 left-1/2 z-cookie w-[min(calc(100%-2rem),40rem)] -translate-x-1/2",
@@ -52,7 +53,7 @@ export default function CookieConsentBanner() {
           <p className="text-sm leading-relaxed text-charcoal sm:text-base">
             Мы используем куки и рекомендательные технологии — без них сайт «Пора в Аргентину» просто не
             сможет нормально работать.{" "}
-            <Link href="/legal/cookies" className="font-medium text-sky hover:underline">
+            <Link href="/legal/cookies" className="font-medium text-sky-ink hover:underline">
               Подробнее
             </Link>
           </p>

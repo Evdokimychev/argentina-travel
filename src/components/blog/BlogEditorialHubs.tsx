@@ -72,7 +72,7 @@ export default function BlogEditorialHubs({ posts, className }: BlogEditorialHub
                 <Link
                   href={blogHubPath(hub.id)}
                   className={cn(
-                    "blog-touch-target inline-flex items-center gap-1 text-sm font-semibold text-sky hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
+                    "blog-touch-target inline-flex items-center gap-1 text-sm font-semibold text-sky-ink hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 focus-visible:ring-offset-2",
                   )}
                 >
                   Все материалы

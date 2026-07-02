@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { ChevronDown, ChevronUp, Map, Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Check, ChevronDown, ChevronUp, Map, Search, Share2, X } from "lucide-react";
 import MapCategoryFilters from "@/components/map/MapCategoryFilters";
 import MapLegend from "@/components/map/MapLegend";
 import MapSearchPanel from "@/components/map/MapSearchPanel";
-import MapAppearancePanel from "@/components/map/MapAppearancePanel";
-import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
-import type { MapOverlayLayerId, MapOverlayState } from "@/lib/map-overlay-layers";
 import type { MapMarkerKind } from "@/lib/map-types";
 
 type Props = {
@@ -23,10 +20,6 @@ type Props = {
   onSelectAllKinds: () => void;
   onClearAllKinds: () => void;
   onResetKinds: () => void;
-  mapTheme: MapBasemapThemeId;
-  onMapThemeChange: (theme: MapBasemapThemeId) => void;
-  overlays: MapOverlayState;
-  onToggleOverlay: (layerId: MapOverlayLayerId) => void;
   loading?: boolean;
 };
 
@@ -43,14 +36,29 @@ export default function MapControlsPanel({
   onSelectAllKinds,
   onClearAllKinds,
   onResetKinds,
-  mapTheme,
-  onMapThemeChange,
-  overlays,
-  onToggleOverlay,
   loading = false,
 }: Props) {
   const [panelOpen, setPanelOpen] = useState(false);
   const [legendOpen, setLegendOpen] = useState(false);
+  const [shareCopied, setShareCopied] = useState(false);
+  const shareResetTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (shareResetTimer.current) clearTimeout(shareResetTimer.current);
+    };
+  }, []);
+
+  async function handleShare() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setShareCopied(true);
+      if (shareResetTimer.current) clearTimeout(shareResetTimer.current);
+      shareResetTimer.current = setTimeout(() => setShareCopied(false), 2000);
+    } catch {
+      // clipboard недоступен (например, http без TLS) — молча пропускаем
+    }
+  }
 
   return (
     <div className="rounded-2xl border border-white/60 bg-white/88 shadow-md backdrop-blur-md">
@@ -68,6 +76,25 @@ export default function MapControlsPanel({
             </span>
           </div>
         </div>
+
+        <button
+          type="button"
+          onClick={handleShare}
+          className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-[11px] font-semibold text-slate hover:bg-sky/5 hover:text-sky"
+          title="Скопировать ссылку на текущий вид карты"
+        >
+          {shareCopied ? (
+            <>
+              <Check className="h-3.5 w-3.5 text-emerald-600" aria-hidden />
+              Скопировано
+            </>
+          ) : (
+            <>
+              <Share2 className="h-3.5 w-3.5" aria-hidden />
+              <span className="hidden sm:inline">Поделиться</span>
+            </>
+          )}
+        </button>
 
         <button
           type="button"
@@ -112,12 +139,11 @@ export default function MapControlsPanel({
               </button>
             </div>
           ) : null}
-          <MapAppearancePanel
-            mapTheme={mapTheme}
-            onMapThemeChange={onMapThemeChange}
-            overlays={overlays}
-            onToggleOverlay={onToggleOverlay}
-          />
+          <p className="text-[10px] leading-snug text-slate">
+            Стиль карты и слои (рельеф, 3D, спутник) — в кнопке
+            <span className="mx-1 inline-flex h-4 w-4 items-center justify-center rounded bg-sky/10 align-middle text-sky">▣</span>
+            у правого края карты.
+          </p>
         </div>
       ) : null}
 

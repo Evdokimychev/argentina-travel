@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, MapPin, X } from "lucide-react";
+import { ArrowRight, BookOpen, MapPin, Plane, X } from "lucide-react";
 import type { MapObject } from "@/lib/map-types";
 import { MAP_MARKER_KIND_LABELS } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
@@ -11,6 +11,7 @@ import { cn } from "@/lib/cn";
 type Props = {
   object: MapObject;
   onClose: () => void;
+  onSelectObjectId?: (id: string) => void;
   className?: string;
   variant?: "floating" | "sheet";
 };
@@ -38,7 +39,13 @@ function resolveArticleCta(object: MapObject): { label: string; href: string } |
   return { label: article.title, href: article.href };
 }
 
-export default function MapObjectCard({ object, onClose, className, variant = "floating" }: Props) {
+export default function MapObjectCard({
+  object,
+  onClose,
+  onSelectObjectId,
+  className,
+  variant = "floating",
+}: Props) {
   const tourCta = resolveTourCta(object);
   const primaryCta = resolvePrimaryCta(object);
   const articleCta = resolveArticleCta(object);
@@ -112,6 +119,32 @@ export default function MapObjectCard({ object, onClose, className, variant = "f
 
         {object.description ? (
           <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">{object.description}</p>
+        ) : null}
+
+        {object.flightDestinations && object.flightDestinations.length > 0 ? (
+          <div className="mt-3 rounded-xl bg-sky/5 p-2.5">
+            <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-sky">
+              <Plane className="h-3.5 w-3.5" aria-hidden />
+              Прямые рейсы · {object.flightDestinations.length}
+            </p>
+            <div className="mt-1.5 flex max-h-28 flex-wrap gap-1.5 overflow-y-auto">
+              {object.flightDestinations.map((dest) => (
+                <button
+                  key={dest.iata}
+                  type="button"
+                  title={dest.airportName}
+                  onClick={() => onSelectObjectId?.(dest.mapObjectId)}
+                  className="inline-flex items-center gap-1 rounded-full border border-sky/20 bg-white px-2 py-1 text-[11px] font-semibold text-charcoal transition hover:border-sky hover:text-sky"
+                >
+                  {dest.city}
+                  <span className="text-[9px] font-bold text-slate">{dest.iata}</span>
+                </button>
+              ))}
+            </div>
+            <p className="mt-1.5 text-[10px] leading-snug text-slate">
+              Направления ориентировочные — расписание меняется по сезонам, уточняйте у авиакомпаний.
+            </p>
+          </div>
         ) : null}
 
         {(tourCta || primaryCta || articleCta) && (

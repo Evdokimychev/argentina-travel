@@ -277,7 +277,12 @@ export default function LocaleCurrencySwitcher({
       <div
         className={cn(
           "animate-pulse rounded-full bg-gray-100",
-          variant === "header" ? "h-8 w-[5.5rem]" : variant === "compact" ? "h-9 w-[7.5rem]" : "h-10 w-28 rounded-xl"
+          // header/compact видимы только с sm — скелетон повторяет финальную видимость, иначе шапка меняет высоту (CLS)
+          variant === "header"
+            ? "hidden h-8 w-[5.5rem] sm:block"
+            : variant === "compact"
+              ? "hidden h-9 w-[7.5rem] sm:block"
+              : "h-10 w-28 rounded-xl"
         )}
       />
     );

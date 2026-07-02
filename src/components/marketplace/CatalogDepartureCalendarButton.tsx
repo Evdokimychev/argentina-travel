@@ -33,7 +33,7 @@ export default function CatalogDepartureCalendarButton({
         <CalendarDays className="h-4 w-4" aria-hidden />
         Календарь отправлений
         {index.totalDepartures > 0 ? (
-          <span className="rounded-full bg-sky/10 px-1.5 py-0.5 text-[11px] font-semibold text-sky">
+          <span className="rounded-full bg-sky/10 px-1.5 py-0.5 text-[11px] font-semibold text-sky-ink">
             {index.totalDepartures}
           </span>
         ) : null}

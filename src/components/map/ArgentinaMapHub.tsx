@@ -21,6 +21,8 @@ import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 import { ARGENTINA_REGIONS_GEOJSON } from "@/data/argentina-regions";
 import type { MapRegionFeatureProperties } from "@/lib/map-types";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { assertOkResponse } from "@/lib/site-feedback/parse-api-error";
 
 const ArgentinaMapCanvas = dynamic(() => import("@/components/map/ArgentinaMapCanvas"), {
   ssr: false,
@@ -57,6 +59,7 @@ export default function ArgentinaMapHub({ initialData, initialState }: Argentina
   const [selectedRouteSlug, setSelectedRouteSlug] = useState<string | null>(
     initialData.routes[0]?.slug ?? null
   );
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   const itemRefs = useRef<Map<string, HTMLLIElement>>(new Map());
 
@@ -79,12 +82,15 @@ export default function ArgentinaMapHub({ initialData, initialState }: Argentina
     if (nextState.category) params.set("category", nextState.category);
 
     try {
+      setLoadError(null);
       const response = await fetch(`/api/map/layers?${params.toString()}`);
-      if (!response.ok) return;
+      await assertOkResponse(response);
       const payload = (await response.json()) as MapLayersPayload;
       setData(payload);
-    } catch {
-      // keep previous data
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Не удалось обновить данные карты";
+      setLoadError(message);
     }
   }, []);
 
@@ -163,6 +169,20 @@ export default function ArgentinaMapHub({ initialData, initialState }: Argentina
             Туры, места, провинции и маршруты на одной интерактивной карте. Переключайте слои и
             выбирайте объект в списке или на карте.
           </p>
+
+          {loadError ? (
+            <InlineFeedback
+              variant="error"
+              title="Не удалось обновить данные"
+              description={loadError}
+              steps={["Проверьте интернет", "Измените фильтры или обновите страницу"]}
+              action={{
+                label: "Повторить",
+                onClick: () => void refreshData(state),
+              }}
+              className="mt-4"
+            />
+          ) : null}
 
           <div className="mt-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <MapLayerToggles activeLayers={state.layers} onToggle={handleToggleLayer} />

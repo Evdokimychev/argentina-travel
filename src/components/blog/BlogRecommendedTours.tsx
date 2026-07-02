@@ -40,7 +40,7 @@ export default function BlogRecommendedTours({
         </div>
         <Link
           href="/tours"
-          className="inline-flex items-center gap-1 text-sm font-semibold text-sky hover:underline"
+          className="inline-flex items-center gap-1 text-sm font-semibold text-sky-ink hover:underline"
         >
           Весь каталог
           <ArrowRight className="h-4 w-4" aria-hidden />

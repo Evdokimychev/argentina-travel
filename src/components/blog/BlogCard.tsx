@@ -47,7 +47,7 @@ function MetaRow({ post, className, showAuthor = false }: { post: BlogPost; clas
       {showUpdated ? (
         <>
           <span aria-hidden>·</span>
-          <span className="text-sky/80">{formatBlogUpdatedLabel(post)}</span>
+          <span className="text-sky-ink">{formatBlogUpdatedLabel(post)}</span>
         </>
       ) : null}
       {isDraft ? (
@@ -69,7 +69,7 @@ function TagList({ tags, limit = 3 }: { tags: string[]; limit?: number }) {
         <li key={tag}>
           <Link
             href={`/blog?tag=${encodeURIComponent(tag)}`}
-            className="rounded-full border border-border-subtle bg-surface-elevated/80 px-2 py-0.5 text-2xs font-medium uppercase tracking-wide text-slate transition-colors hover:border-sky/30 hover:text-sky"
+            className="inline-flex min-h-6 items-center rounded-full border border-border-subtle bg-surface-elevated/80 px-2 py-0.5 text-2xs font-medium uppercase tracking-wide text-slate transition-colors hover:border-sky/30 hover:text-sky-ink"
           >
             {tag}
           </Link>
@@ -96,7 +96,7 @@ function CardBadges({ post }: { post: BlogPost }) {
       </span>
       <div className="flex max-w-[45%] flex-col items-end gap-1.5 sm:max-w-none sm:flex-row sm:flex-wrap sm:justify-end">
         {post.richArticleId ? (
-          <span className="rounded-full bg-sky px-2.5 py-1 text-2xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm sm:text-xs">
+          <span className="rounded-full bg-sky-ink px-2.5 py-1 text-2xs font-semibold uppercase tracking-wide text-white backdrop-blur-sm sm:text-xs">
             Полный гид
           </span>
         ) : isDraft ? (
@@ -112,12 +112,12 @@ function CardBadges({ post }: { post: BlogPost }) {
 function FeaturedBadges({ post }: { post: BlogPost }) {
   return (
     <div className="pointer-events-none absolute inset-x-4 top-4 z-10 flex flex-wrap items-start justify-between gap-2">
-      <span className="rounded-full border border-sky/20 bg-sky/90 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+      <span className="rounded-full border border-sky/20 bg-sky-ink/90 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
         {post.category}
       </span>
       <div className="flex flex-col items-end gap-1.5 sm:flex-row sm:flex-wrap sm:justify-end">
         {post.richArticleId ? (
-          <span className="rounded-full bg-sky px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+          <span className="rounded-full bg-sky-ink px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
             Полный гид
           </span>
         ) : null}

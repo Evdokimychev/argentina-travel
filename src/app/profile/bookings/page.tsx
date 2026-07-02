@@ -28,6 +28,7 @@ import FormattedPrice from "@/components/FormattedPrice";
 import BookingReviewCta from "@/components/profile/BookingReviewCta";
 import BookingListSkeleton from "@/components/profile/BookingListSkeleton";
 import ProfileWaitlistSection from "@/components/profile/ProfileWaitlistSection";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { cn } from "@/lib/cn";
 import {
   formatYouTravelBookingStatus,
@@ -109,6 +110,7 @@ export default function ProfileBookingsPage() {
   const [refreshingYoutravelIds, setRefreshingYoutravelIds] = useState<Set<string>>(new Set());
   const [youtravelRefreshError, setYoutravelRefreshError] = useState<string | null>(null);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [bookingsLoadError, setBookingsLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -127,11 +129,12 @@ export default function ProfileBookingsPage() {
             setBookings(nextBookings);
             setTripsterRequests(nextTripster);
             setYoutravelRequests(nextYoutravel);
+            setBookingsLoadError(null);
           })
-          .catch(() => {
-            setBookings([]);
-            setTripsterRequests([]);
-            setYoutravelRequests([]);
+          .catch((error: unknown) => {
+            setBookingsLoadError(
+              error instanceof Error ? error.message : "Не удалось загрузить бронирования"
+            );
           })
           .finally(() => {
             setLoadingBookings(false);
@@ -184,6 +187,12 @@ export default function ProfileBookingsPage() {
           setBookings(nextBookings);
           setTripsterRequests(nextTripster);
           setYoutravelRequests(nextYoutravel);
+          setBookingsLoadError(null);
+        })
+        .catch((error: unknown) => {
+          setBookingsLoadError(
+            error instanceof Error ? error.message : "Не удалось загрузить бронирования"
+          );
         })
         .finally(() => {
           setLoadingBookings(false);
@@ -285,6 +294,16 @@ export default function ProfileBookingsPage() {
         </p>
       ) : null}
 
+      {bookingsLoadError ? (
+        <InlineFeedback
+          variant="error"
+          title="Не удалось загрузить бронирования"
+          description={bookingsLoadError}
+          action={{ label: "Повторить", onClick: refreshBookings }}
+          className="mt-4"
+        />
+      ) : null}
+
       {loadingBookings ? (
         <BookingListSkeleton className="mt-6" />
       ) : bookings.length > 0 ? (
@@ -359,7 +378,7 @@ export default function ProfileBookingsPage() {
             );
           })}
         </div>
-      ) : (
+      ) : bookingsLoadError ? null : (
         <EmptyState
           variant="cabinet"
           icon={CalendarDays}

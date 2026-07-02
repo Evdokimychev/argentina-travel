@@ -45,6 +45,7 @@ export async function GET(
       expired,
       paidAt: link.paidAt ?? receipt?.paidAt ?? null,
       receipt,
+      booking,
     });
   } catch (error) {
     return NextResponse.json(

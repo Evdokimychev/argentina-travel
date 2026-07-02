@@ -197,12 +197,12 @@ export default function MarketplaceHome({
         <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-16")}>
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,380px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
             <div className="min-w-0">
-              <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
+              <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink">
                 {t("home.hero.eyebrow")}
               </span>
               <h1 className="mt-4 max-w-2xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.65rem]">
                 {t("home.hero.title")}{" "}
-                <span className="text-sky">{t("home.hero.titleAccent")}</span>
+                <span className="text-sky-dark">{t("home.hero.titleAccent")}</span>
               </h1>
               <p className="mt-3 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
                 {t("home.hero.subtitle")}
@@ -221,7 +221,7 @@ export default function MarketplaceHome({
                 </Link>
                 <Link
                   href="/podbor"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+                  className="inline-flex items-center gap-1 text-sm font-medium text-sky-ink hover:underline"
                 >
                   {t("home.hero.ctaHint")}
                   <ArrowRight className="h-4 w-4" aria-hidden />
@@ -292,7 +292,7 @@ export default function MarketplaceHome({
               <span className="font-semibold text-charcoal">{filtered.length}</span>{" "}
               {tripsWord(filtered.length)}
               {activeCount > 0 ? (
-                <span className="ml-2 text-sky">· {filtersWord(activeCount)}</span>
+                <span className="ml-2 text-sky-ink">· {filtersWord(activeCount)}</span>
               ) : null}
             </p>
             <div className="flex items-center gap-2">
@@ -308,7 +308,7 @@ export default function MarketplaceHome({
               ) : null}
               <Link
                 href={buildCatalogFilterHref(filters, "recommended", currency, tours)}
-                className="text-sm font-medium text-sky hover:underline"
+                className="text-sm font-medium text-sky-ink hover:underline"
               >
                 Открыть каталог →
               </Link>

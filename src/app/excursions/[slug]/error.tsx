@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { siteContainerClass } from "@/lib/site-container";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
+import SiteRouteError from "@/components/site/SiteRouteError";
 
 export default function ExcursionDetailError({
   error,
@@ -13,28 +9,16 @@ export default function ExcursionDetailError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const handleRetry = useRouteErrorRetry(reset);
-
-  useEffect(() => {
-    console.error("Excursion detail render failed:", error);
-  }, [error]);
-
   return (
-    <div
-      className={`${siteContainerClass} flex min-h-[50vh] flex-col items-center justify-center py-16 text-center`}
-    >
-      <h1 className="font-heading text-2xl font-bold text-charcoal">
-        Не удалось загрузить экскурсию
-      </h1>
-      <p className="mt-3 max-w-md text-sm text-slate">
-        Возможно, данные партнёра временно недоступны. Попробуйте обновить страницу.
-      </p>
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button type="button" onClick={handleRetry}>Попробовать снова</Button>
-        <Link href="/excursions" className={buttonVariants({ variant: "ghost" })}>
-          Каталог экскурсий
-        </Link>
-      </div>
-    </div>
+    <SiteRouteError
+      error={error}
+      reset={reset}
+      title="Не удалось загрузить экскурсию"
+      description="Возможно, данные партнёра временно недоступны. Попробуйте обновить страницу."
+      homeHref="/excursions"
+      homeLabel="Каталог экскурсий"
+      secondaryHref="/tours"
+      secondaryLabel="Каталог туров"
+    />
   );
 }

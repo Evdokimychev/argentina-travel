@@ -72,9 +72,13 @@ describe("Sprint 10 — Design System v2 & performance trim", () => {
     expect(itinerary).toContain('dynamic(() => import("./TourItineraryPdfButton")');
     expect(itinerary).not.toMatch(/import TourItineraryPdfButton from/);
 
-    const mapHub = readFileSync(join(root, "components/map/ArgentinaMapFullscreenHub.tsx"), "utf8");
-    expect(mapHub).toContain("dynamic(");
-    expect(mapHub).toContain("ArgentinaMapLibreCanvas");
+    const mapClient = readFileSync(join(root, "components/map/MapaArgentinaClient.tsx"), "utf8");
+    expect(mapClient).toContain("dynamic(");
+    expect(mapClient).toContain("ArgentinaMapFullscreenHub");
+
+    const mapCanvas = readFileSync(join(root, "components/map/ArgentinaMapLibreCanvas.tsx"), "utf8");
+    expect(mapCanvas).toContain("dynamic(");
+    expect(mapCanvas).toContain("ArgentinaMapLibreCanvasInner");
 
     const pdfBtn = readFileSync(join(root, "components/tour-detail/TourItineraryPdfButton.tsx"), "utf8");
     expect(pdfBtn).toContain('await import(');

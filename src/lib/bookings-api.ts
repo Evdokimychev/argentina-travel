@@ -154,6 +154,8 @@ export type PaymentLinkStatusResponse = {
   expired: boolean;
   paidAt: string | null;
   receipt: PaymentTransactionReceiptView | null;
+  /** Полная заявка для страницы оплаты по ссылке (remote mode). */
+  booking?: Booking;
 };
 
 export async function apiFetchPaymentLinkStatus(token: string): Promise<PaymentLinkStatusResponse> {

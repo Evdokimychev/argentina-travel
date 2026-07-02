@@ -25,10 +25,10 @@ describe("Sprint 8 — geography & map", () => {
   });
 
   it("map kind colors shared between canvas and legend", () => {
-    const canvas = readFileSync(join(root, "components/map/ArgentinaMapLibreCanvas.tsx"), "utf8");
-    expect(canvas).toContain("MAP_KIND_COLORS");
-    expect(canvas).toContain("registerMapMarkerImages");
-    expect(canvas).toContain("unclustered-marker");
+    const inner = readFileSync(join(root, "components/map/ArgentinaMapLibreCanvasInner.tsx"), "utf8");
+    expect(inner).toContain("MAP_KIND_COLORS");
+    expect(inner).toContain("registerMapMarkerImages");
+    expect(inner).toContain("unclustered-marker");
     expect(Object.keys(MAP_KIND_COLORS).length).toBeGreaterThanOrEqual(7);
   });
 

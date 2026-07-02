@@ -16,7 +16,7 @@ export default function BlogStartHere({ posts, className }: BlogStartHereProps) 
   return (
     <section className={className} aria-labelledby="blog-start-here-title">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink">
           <Sparkles className="h-3.5 w-3.5" aria-hidden />
           Редакция
         </span>

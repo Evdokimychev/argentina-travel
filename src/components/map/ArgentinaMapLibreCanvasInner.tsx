@@ -26,9 +26,13 @@ const ARGENTINA_ZOOM = 4;
 /** Below this count markers are shown individually; above — clustered. */
 const MAP_CLUSTER_MIN_OBJECTS = 25;
 
-/** MapLibre symbol layers need a glyph source; raster-only styles omit it by default. */
-const MAP_STYLE_GLYPHS = "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf";
-const MAP_CLUSTER_TEXT_FONT = ["Open Sans Bold", "Arial Unicode MS Bold"] as const;
+/**
+ * MapLibre symbol layers need a glyph source; raster-only styles omit it by default.
+ * CARTO hosts the full Open Sans family (demotiles lacks "Open Sans Bold" → 404
+ * breaks the whole GeoJSON source, and markers disappear).
+ */
+const MAP_STYLE_GLYPHS = "https://basemaps.cartocdn.com/fonts/{fontstack}/{range}.pbf";
+const MAP_CLUSTER_TEXT_FONT = ["Open Sans Bold"] as const;
 
 function clusterCountLabel(): maplibregl.ExpressionSpecification {
   return [
@@ -70,7 +74,6 @@ function objectsToGeoJson(objects: MapObject[], selectedId: string | null): Feat
     type: "FeatureCollection",
     features: objects.map((obj) => ({
       type: "Feature",
-      id: obj.id,
       geometry: { type: "Point", coordinates: [obj.longitude, obj.latitude] },
       properties: {
         id: obj.id,
@@ -100,6 +103,54 @@ function routesToGeoJson(routes: MapRouteItem[]): FeatureCollection<LineString> 
   };
 }
 
+/** Дуга (квадратичная кривая Безье) между двумя точками для линий перелётов. */
+function buildArcCoordinates(
+  from: [number, number],
+  to: [number, number],
+  segments = 32
+): [number, number][] {
+  const [x1, y1] = from;
+  const [x2, y2] = to;
+  const midX = (x1 + x2) / 2;
+  const midY = (y1 + y2) / 2;
+  // Перпендикулярное смещение контрольной точки — дуга «выгибается» вбок
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  const ctrlX = midX - dy * 0.18;
+  const ctrlY = midY + dx * 0.18;
+
+  const coords: [number, number][] = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const mt = 1 - t;
+    coords.push([
+      mt * mt * x1 + 2 * mt * t * ctrlX + t * t * x2,
+      mt * mt * y1 + 2 * mt * t * ctrlY + t * t * y2,
+    ]);
+  }
+  return coords;
+}
+
+function flightArcsToGeoJson(selected: MapObject | undefined): FeatureCollection<LineString> {
+  if (!selected || selected.kind !== "airport" || !selected.flightDestinations?.length) {
+    return { type: "FeatureCollection", features: [] };
+  }
+  return {
+    type: "FeatureCollection",
+    features: selected.flightDestinations.map((dest) => ({
+      type: "Feature",
+      geometry: {
+        type: "LineString",
+        coordinates: buildArcCoordinates(
+          [selected.longitude, selected.latitude],
+          [dest.longitude, dest.latitude]
+        ),
+      },
+      properties: { iata: dest.iata, city: dest.city },
+    })),
+  };
+}
+
 export default function ArgentinaMapLibreCanvas({
   objects,
   routes,
@@ -124,7 +175,8 @@ export default function ArgentinaMapLibreCanvas({
   const layersReadyRef = useRef(false);
   const [mapLayersReady, setMapLayersReady] = useState(false);
   const lastObjectsKeyRef = useRef("");
-  const clusterModeRef = useRef<boolean | null>(null);
+  const lastRoutesKeyRef = useRef<string | null>(null);
+  const lastArcsKeyRef = useRef<string | null>(null);
 
   onSelectRef.current = onSelect;
   objectsRef.current = objects;
@@ -135,101 +187,38 @@ export default function ArgentinaMapLibreCanvas({
   overlaysRef.current = overlays;
 
   const applyLayerData = useCallback((map: maplibregl.Map) => {
+    const objectsSource = map.getSource("objects") as maplibregl.GeoJSONSource | undefined;
     const routesSource = map.getSource("routes") as maplibregl.GeoJSONSource | undefined;
-    if (!routesSource) return false;
+    if (!objectsSource || !routesSource) return false;
 
-    const shouldCluster = objectsRef.current.length > MAP_CLUSTER_MIN_OBJECTS;
-    if (clusterModeRef.current !== shouldCluster) {
-      const markerLayers = ["unclustered-marker", "object-markers-dot", "cluster-count", "clusters"];
-      for (const layerId of markerLayers) {
-        if (map.getLayer(layerId)) map.removeLayer(layerId);
-      }
-      if (map.getSource("objects")) map.removeSource("objects");
-
-      map.addSource("objects", {
-        type: "geojson",
-        data: objectsToGeoJson(objectsRef.current, selectedIdRef.current),
-        ...(shouldCluster
-          ? { cluster: true, clusterMaxZoom: 13, clusterRadius: 28 }
-          : { cluster: false }),
-      });
-
-      if (shouldCluster) {
-        map.addLayer({
-          id: "clusters",
-          type: "circle",
-          source: "objects",
-          filter: ["has", "point_count"],
-          paint: {
-            "circle-color": [
-              "step",
-              ["get", "point_count"],
-              "#7dd3fc",
-              8,
-              "#38bdf8",
-              20,
-              "#0284c7",
-            ],
-            "circle-radius": ["step", ["get", "point_count"], 14, 8, 18, 20, 24],
-            "circle-stroke-width": 2.5,
-            "circle-stroke-color": "#ffffff",
-            "circle-opacity": 0.92,
-          },
-        });
-        map.addLayer({
-          id: "cluster-count",
-          type: "symbol",
-          source: "objects",
-          filter: ["has", "point_count"],
-          layout: {
-            "text-field": clusterCountLabel(),
-            "text-font": [...MAP_CLUSTER_TEXT_FONT],
-            "text-size": ["step", ["get", "point_count"], 12, 10, 13, 25, 14],
-            "text-allow-overlap": true,
-            "text-ignore-placement": true,
-          },
-          paint: {
-            "text-color": "#0f172a",
-            "text-halo-color": "#ffffff",
-            "text-halo-width": 1.75,
-          },
-        });
-      }
-
-      map.addLayer({
-        id: "object-markers-dot",
-        type: "circle",
-        source: "objects",
-        filter: ["!", ["has", "point_count"]],
-        paint: {
-          "circle-color": ["get", "color"],
-          "circle-radius": ["case", ["==", ["get", "selected"], 1], 10, 7],
-          "circle-stroke-width": 2,
-          "circle-stroke-color": "#ffffff",
-          "circle-opacity": 0.95,
-        },
-      });
-
-      if (map.getLayer("unclustered-marker")) {
-        map.setPaintProperty("object-markers-dot", "circle-opacity", 0);
-      }
-
-      clusterModeRef.current = shouldCluster;
-    } else {
-      const objectsSource = map.getSource("objects") as maplibregl.GeoJSONSource | undefined;
-      if (!objectsSource) return false;
-      objectsSource.setData(objectsToGeoJson(objectsRef.current, selectedIdRef.current));
-    }
-
-    routesSource.setData(routesToGeoJson(routesRef.current));
-
+    // setData только при реальном изменении данных: повторный вызов сразу после
+    // addSource ломает clustered-источник MapLibre (worker теряет данные).
     const objectsKey = objectsRef.current
-      .map((obj) => obj.id)
+      .map((obj) => `${obj.id}${obj.id === selectedIdRef.current ? "*" : ""}`)
       .sort()
       .join("|");
     if (objectsKey !== lastObjectsKeyRef.current) {
+      const isNewObjectSet =
+        objectsKey.replace(/\*/g, "") !== lastObjectsKeyRef.current.replace(/\*/g, "");
       lastObjectsKeyRef.current = objectsKey;
-      didFitBoundsRef.current = false;
+      objectsSource.setData(objectsToGeoJson(objectsRef.current, selectedIdRef.current));
+      if (isNewObjectSet) didFitBoundsRef.current = false;
+    }
+
+    const routesKey = routesRef.current.map((r) => r.slug).join("|");
+    if (routesKey !== lastRoutesKeyRef.current) {
+      lastRoutesKeyRef.current = routesKey;
+      routesSource.setData(routesToGeoJson(routesRef.current));
+    }
+
+    const flightArcsSource = map.getSource("flight-arcs") as maplibregl.GeoJSONSource | undefined;
+    if (flightArcsSource) {
+      const selectedObject = objectsRef.current.find((obj) => obj.id === selectedIdRef.current);
+      const arcsKey = selectedObject?.kind === "airport" ? selectedObject.id : "";
+      if (arcsKey !== lastArcsKeyRef.current) {
+        lastArcsKeyRef.current = arcsKey;
+        flightArcsSource.setData(flightArcsToGeoJson(selectedObject));
+      }
     }
 
     map.setPaintProperty(
@@ -247,13 +236,6 @@ export default function ArgentinaMapLibreCanvas({
       "line-opacity",
       activeKindsRef.current.includes("route") ? 0.8 : 0
     );
-
-    const useClusters = objectsRef.current.length > MAP_CLUSTER_MIN_OBJECTS;
-    for (const layerId of ["clusters", "cluster-count"]) {
-      if (map.getLayer(layerId)) {
-        map.setLayoutProperty(layerId, "visibility", useClusters ? "visible" : "none");
-      }
-    }
 
     if (
       !didFitBoundsRef.current &&
@@ -341,6 +323,16 @@ export default function ArgentinaMapLibreCanvas({
       new maplibregl.NavigationControl({ showCompass: true, visualizePitch: true }),
       "top-right"
     );
+    map.addControl(new maplibregl.FullscreenControl(), "top-right");
+    map.addControl(
+      new maplibregl.GeolocateControl({
+        positionOptions: { enableHighAccuracy: true },
+        trackUserLocation: false,
+        showUserLocation: true,
+      }),
+      "top-right"
+    );
+    map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }), "bottom-right");
 
     const bindClusterInteractions = () => {
       const handleClusterClick = (event: maplibregl.MapLayerMouseEvent) => {
@@ -371,6 +363,13 @@ export default function ArgentinaMapLibreCanvas({
       }
     };
 
+    const hoverPopup = new maplibregl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: 18,
+      className: "map-hover-tooltip",
+    });
+
     const bindMarkerInteractions = (layerId: string) => {
       map.on("click", layerId, (event) => {
         const feature = event.features?.[0] as Feature<Point> | undefined;
@@ -379,11 +378,24 @@ export default function ArgentinaMapLibreCanvas({
         const obj = objectsRef.current.find((item) => item.id === id) ?? null;
         onSelectRef.current(obj);
       });
-      map.on("mouseenter", layerId, () => {
+      map.on("mouseenter", layerId, (event) => {
         map.getCanvas().style.cursor = "pointer";
+        const feature = event.features?.[0] as Feature<Point> | undefined;
+        const title = feature?.properties?.title as string | undefined;
+        if (!title || feature?.geometry?.type !== "Point") return;
+        const [lng, lat] = feature.geometry.coordinates;
+        hoverPopup
+          .setLngLat([lng, lat])
+          .setHTML(
+            `<span style="font: 600 12px/1.3 system-ui, sans-serif; color: #0f172a;">${title
+              .replace(/&/g, "&amp;")
+              .replace(/</g, "&lt;")}</span>`
+          )
+          .addTo(map);
       });
       map.on("mouseleave", layerId, () => {
         map.getCanvas().style.cursor = "";
+        hoverPopup.remove();
       });
     };
 
@@ -465,6 +477,20 @@ export default function ArgentinaMapLibreCanvas({
         paint: { "line-color": "#64748b", "line-width": 1.2, "line-opacity": 0 },
       });
 
+      map.addSource("flight-arcs", { type: "geojson", data: flightArcsToGeoJson(undefined) });
+      map.addLayer({
+        id: "flight-arcs-line",
+        type: "line",
+        source: "flight-arcs",
+        paint: {
+          "line-color": "#0ea5e9",
+          "line-width": 2,
+          "line-opacity": 0.75,
+          "line-dasharray": [1.5, 1.5],
+        },
+        layout: { "line-cap": "round" },
+      });
+
       map.addSource("routes", { type: "geojson", data: routesToGeoJson([]) });
       map.addLayer({
         id: "routes-line",
@@ -486,11 +512,81 @@ export default function ArgentinaMapLibreCanvas({
         paint: { "raster-opacity": 0.92 },
       });
 
+      // Данные кладём сразу при создании источника; applyLayerData не будет
+      // дублировать setData благодаря lastObjectsKeyRef (см. комментарий там)
+      lastObjectsKeyRef.current = objectsRef.current
+        .map((obj) => `${obj.id}${obj.id === selectedIdRef.current ? "*" : ""}`)
+        .sort()
+        .join("|");
+      map.addSource("objects", {
+        type: "geojson",
+        data: objectsToGeoJson(objectsRef.current, selectedIdRef.current),
+        cluster: true,
+        clusterMaxZoom: 13,
+        clusterRadius: 28,
+        clusterMinPoints: 3,
+      });
+
+      map.addLayer({
+        id: "object-markers-dot",
+        type: "circle",
+        source: "objects",
+        filter: ["!", ["has", "point_count"]],
+        paint: {
+          "circle-color": ["get", "color"],
+          "circle-radius": ["case", ["==", ["get", "selected"], 1], 10, 7],
+          "circle-stroke-width": 2,
+          "circle-stroke-color": "#ffffff",
+          "circle-opacity": 0.95,
+        },
+      });
+
+      map.addLayer({
+        id: "clusters",
+        type: "circle",
+        source: "objects",
+        filter: ["has", "point_count"],
+        paint: {
+          "circle-color": [
+            "step",
+            ["get", "point_count"],
+            "#7dd3fc",
+            8,
+            "#38bdf8",
+            20,
+            "#0284c7",
+          ],
+          "circle-radius": ["step", ["get", "point_count"], 14, 8, 18, 20, 24],
+          "circle-stroke-width": 2.5,
+          "circle-stroke-color": "#ffffff",
+          "circle-opacity": 0.92,
+        },
+      });
+
+      map.addLayer({
+        id: "cluster-count",
+        type: "symbol",
+        source: "objects",
+        filter: ["has", "point_count"],
+        layout: {
+          "text-field": clusterCountLabel(),
+          "text-font": [...MAP_CLUSTER_TEXT_FONT],
+          "text-size": ["step", ["get", "point_count"], 12, 10, 13, 25, 14],
+          "text-allow-overlap": true,
+          "text-ignore-placement": true,
+        },
+        paint: {
+          "text-color": "#0f172a",
+          "text-halo-color": "#ffffff",
+          "text-halo-width": 1.75,
+        },
+      });
+
       bindClusterInteractions();
+      bindMarkerInteractions("object-markers-dot");
       layersReadyRef.current = true;
       setMapLayersReady(true);
       applyLayerData(map);
-      bindMarkerInteractions("object-markers-dot");
 
       void registerMapMarkerImages(map)
         .then(() => {
@@ -525,6 +621,9 @@ export default function ArgentinaMapLibreCanvas({
     });
 
     mapRef.current = map;
+    if (process.env.NODE_ENV !== "production") {
+      (window as unknown as Record<string, unknown>).__argMap = map;
+    }
 
     return () => {
       map.remove();
@@ -532,8 +631,9 @@ export default function ArgentinaMapLibreCanvas({
       layersReadyRef.current = false;
       setMapLayersReady(false);
       lastObjectsKeyRef.current = "";
+      lastRoutesKeyRef.current = null;
+      lastArcsKeyRef.current = null;
       didFitBoundsRef.current = false;
-      clusterModeRef.current = null;
     };
   }, [applyLayerData, applyMapOverlays]);
 
@@ -560,6 +660,22 @@ export default function ArgentinaMapLibreCanvas({
     if (!map || !selectedId) return;
     const obj = objects.find((item) => item.id === selectedId);
     if (!obj) return;
+
+    if (obj.kind === "airport" && obj.flightDestinations?.length) {
+      // Показать аэропорт вместе со всеми направлениями перелётов
+      const bounds = new maplibregl.LngLatBounds();
+      bounds.extend([obj.longitude, obj.latitude]);
+      for (const dest of obj.flightDestinations) {
+        bounds.extend([dest.longitude, dest.latitude]);
+      }
+      map.fitBounds(bounds, {
+        padding: { top: 140, bottom: 80, left: 64, right: 64 },
+        maxZoom: 8,
+        duration: 900,
+      });
+      return;
+    }
+
     map.flyTo({
       center: [obj.longitude, obj.latitude],
       zoom: Math.max(map.getZoom(), 9),

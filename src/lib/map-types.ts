@@ -33,6 +33,17 @@ export interface MapRelatedLink {
   image?: string;
 }
 
+/** Направление прямого рейса из аэропорта (для карточки аэропорта на карте). */
+export interface MapFlightDestination {
+  iata: string;
+  city: string;
+  airportName: string;
+  latitude: number;
+  longitude: number;
+  /** id объекта-аэропорта на карте, чтобы перейти к нему по клику */
+  mapObjectId: string;
+}
+
 export interface MapObject {
   id: string;
   slug: string;
@@ -47,6 +58,8 @@ export interface MapObject {
   meta?: string;
   relatedArticles?: MapRelatedLink[];
   relatedTours?: MapRelatedLink[];
+  /** Только для kind === "airport": куда можно улететь прямым рейсом */
+  flightDestinations?: MapFlightDestination[];
 }
 
 export interface MapTourPoint {

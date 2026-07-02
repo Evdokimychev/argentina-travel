@@ -1,10 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
-import Link from "next/link";
-import { siteContainerClass } from "@/lib/site-container";
-import { useRouteErrorRetry } from "@/hooks/useRouteErrorRetry";
-import { Button, buttonVariants } from "@/components/ui/button";
+import SiteRouteError from "@/components/site/SiteRouteError";
 
 /**
  * Segment-level error boundary for a tour page. The partner (Tripster) detail
@@ -19,29 +15,16 @@ export default function TourDetailError({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
-  const handleRetry = useRouteErrorRetry(reset);
-
-  useEffect(() => {
-    console.error("Tour detail render failed:", error);
-  }, [error]);
-
   return (
-    <div className={`${siteContainerClass} flex min-h-[50vh] flex-col items-center justify-center py-16 text-center`}>
-      <h1 className="font-heading text-2xl font-bold text-charcoal">
-        Не удалось загрузить путешествие
-      </h1>
-      <p className="mt-3 max-w-md text-sm text-slate">
-        Возможно, данные временно недоступны. Попробуйте обновить страницу — обычно
-        это решает проблему.
-      </p>
-      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-        <Button type="button" onClick={handleRetry}>
-          Попробовать снова
-        </Button>
-        <Link href="/tours" className={buttonVariants({ variant: "ghost" })}>
-          Вернуться в каталог
-        </Link>
-      </div>
-    </div>
+    <SiteRouteError
+      error={error}
+      reset={reset}
+      title="Не удалось загрузить путешествие"
+      description="Возможно, данные партнёра или каталога временно недоступны. Обычно помогает обновление страницы."
+      homeHref="/tours"
+      homeLabel="Каталог туров"
+      secondaryHref="/excursions"
+      secondaryLabel="Экскурсии"
+    />
   );
 }

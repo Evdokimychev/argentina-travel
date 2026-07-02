@@ -44,14 +44,14 @@ export default async function TravelPrepStrip({ locale = "ru" }: TravelPrepStrip
       <div className={siteContainerClass}>
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-sky">
+            <p className="text-xs font-semibold uppercase tracking-wide text-sky-ink">
               {labels.travelPrepEyebrow}
             </p>
             <h2 className="mt-1 font-heading text-xl font-bold text-charcoal sm:text-2xl">
               {labels.travelPrepTitle}
             </h2>
           </div>
-          <Link href="/services" className="text-sm font-medium text-sky hover:underline">
+          <Link href="/services" className="text-sm font-medium text-sky-ink hover:underline">
             {labels.allServices} →
           </Link>
         </div>
@@ -75,7 +75,7 @@ export default async function TravelPrepStrip({ locale = "ru" }: TravelPrepStrip
                     {labels.travelPrepFrom} {formatTeaserPrice(mowBue, locale)}
                   </p>
                 ) : null}
-                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky">
+                <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky-ink">
                   {labels.travelPrepOpen}
                   <ArrowUpRight className="h-4 w-4" />
                 </span>

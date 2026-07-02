@@ -78,7 +78,7 @@ export default function SectionShell({
               <p
                 className={cn(
                   "text-xs font-semibold uppercase tracking-wider",
-                  isDark ? "text-sky-light/90" : "text-sky"
+                  isDark ? "text-sky-light/90" : "text-sky-ink"
                 )}
               >
                 {eyebrow}
@@ -109,7 +109,7 @@ export default function SectionShell({
               href={href}
               className={cn(
                 "hidden shrink-0 items-center gap-1 text-sm font-medium hover:underline sm:inline-flex",
-                isDark ? "text-white/90 hover:text-white" : "text-sky"
+                isDark ? "text-white/90 hover:text-white" : "text-sky-ink"
               )}
             >
               {linkLabel}

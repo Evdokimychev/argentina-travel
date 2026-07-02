@@ -98,7 +98,7 @@ export default function TourDetailHeader({ tour, canonicalTour }: TourDetailHead
           <div className="min-w-0">
             <Link
               href="/tours"
-              className="group inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky transition-colors hover:border-sky/30 hover:bg-sky/10"
+              className="group inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink transition-colors hover:border-sky/30 hover:bg-sky/10"
             >
               {cityDisplay}
               <ArrowUpRight

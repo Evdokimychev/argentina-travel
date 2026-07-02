@@ -46,7 +46,7 @@ export default function TourCardDepartureSchedule({
             type="button"
             className={cn(
               schedulePillClass,
-              "pointer-events-auto relative z-10 rounded-full border border-sky/20 bg-sky/5 font-semibold text-sky transition-colors hover:border-sky/35 hover:bg-sky/10"
+              "pointer-events-auto relative z-10 rounded-full border border-sky/20 bg-sky/5 font-semibold text-sky-ink transition-colors hover:border-sky/35 hover:bg-sky/10"
             )}
             onClick={(event) => {
               event.preventDefault();

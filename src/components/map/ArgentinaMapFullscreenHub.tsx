@@ -1,10 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ArgentinaMapLibreCanvas from "@/components/map/ArgentinaMapLibreCanvas";
 import MapControlsPanel from "@/components/map/MapControlsPanel";
+import MapStyleLayersControl from "@/components/map/MapStyleLayersControl";
 import { useRouter, useSearchParams } from "next/navigation";
 import MapObjectPopup from "@/components/map/MapObjectPopup";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { assertOkResponse } from "@/lib/site-feedback/parse-api-error";
 import { MAP_BASEMAP_THEMES } from "@/lib/map-basemap-themes";
 import {
   buildMapArgentinaPath,
@@ -32,9 +35,12 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   const [data, setData] = useState(initialData);
   const [state, setState] = useState<MapArgentinaUrlState>(initialState);
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const [searchDraft, setSearchDraft] = useState(initialState.q);
   const [selected, setSelected] = useState<MapObject | null>(null);
   const [loading, setLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
 
   useEffect(() => {
     const next = parseMapArgentinaUrlState(searchParams);
@@ -58,6 +64,18 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     [router]
   );
 
+  useEffect(() => {
+    if (!selected) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelected(null);
+        replaceUrl({ ...stateRef.current, selected: "" });
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selected, replaceUrl]);
+
   const refreshData = useCallback(async (nextState: MapArgentinaUrlState) => {
     if (nextState.kinds.length === 0) {
       setData({ objects: [], routes: [], totals: {} });
@@ -70,13 +88,16 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     if (nextState.q) params.set("q", nextState.q);
 
     setLoading(true);
+    setLoadError(null);
     try {
       const response = await fetch(`/api/map/objects?${params.toString()}`);
-      if (!response.ok) return;
+      await assertOkResponse(response);
       const payload = (await response.json()) as MapObjectsPayload;
       setData(payload);
-    } catch {
-      // keep previous
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Не удалось обновить данные карты";
+      setLoadError(message);
     } finally {
       setLoading(false);
     }
@@ -186,6 +207,11 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     replaceUrl({ ...state, selected: obj?.id ?? "" });
   }
 
+  function handleSelectObjectById(id: string) {
+    const obj = data.objects.find((item) => item.id === id) ?? null;
+    if (obj) handleSelectObject(obj);
+  }
+
   const attribution = [
     MAP_BASEMAP_THEMES[state.theme].attribution,
     ...collectMapOverlayAttributions(state.overlays),
@@ -205,7 +231,19 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
       />
 
       <div className="pointer-events-none absolute inset-x-0 top-0 z-20 p-3 sm:p-4">
-        <div className="pointer-events-auto mx-auto w-full max-w-6xl">
+        <div className="pointer-events-auto mx-auto w-full max-w-6xl space-y-2">
+          {loadError ? (
+            <InlineFeedback
+              variant="error"
+              title="Не удалось обновить карту"
+              description={loadError}
+              steps={["Проверьте интернет", "Попробуйте изменить фильтры или обновить страницу"]}
+              action={{
+                label: "Повторить",
+                onClick: () => void refreshData(stateRef.current),
+              }}
+            />
+          ) : null}
           <MapControlsPanel
             objectCount={visibleObjects.length}
             searchDraft={searchDraft}
@@ -219,16 +257,24 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
             onSelectAllKinds={handleSelectAllKinds}
             onClearAllKinds={handleClearAllKinds}
             onResetKinds={handleResetKinds}
-            mapTheme={state.theme}
-            onMapThemeChange={handleThemeChange}
-            overlays={state.overlays}
-            onToggleOverlay={handleToggleOverlay}
             loading={loading}
           />
         </div>
       </div>
 
-      <MapObjectPopup object={selected} onClose={() => handleSelectObject(null)} />
+      <MapStyleLayersControl
+        theme={state.theme}
+        onThemeChange={handleThemeChange}
+        overlays={state.overlays}
+        onToggleOverlay={handleToggleOverlay}
+        className="absolute right-2.5 top-[248px] z-20 sm:right-[9px]"
+      />
+
+      <MapObjectPopup
+        object={selected}
+        onClose={() => handleSelectObject(null)}
+        onSelectObjectId={handleSelectObjectById}
+      />
 
       <p className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-lg bg-white/75 px-2 py-1 text-[10px] text-slate backdrop-blur-sm sm:left-4">
         {attribution}

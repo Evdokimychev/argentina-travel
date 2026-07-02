@@ -1,5 +1,3 @@
-import { isMeilisearchConfigured } from "@/lib/search/meilisearch-client";
-
 export type SearchReadinessCheck = {
   id: string;
   label: string;
@@ -17,6 +15,12 @@ export type SearchReadinessReport = {
 };
 
 const MEILI_ENV = ["MEILISEARCH_HOST", "MEILISEARCH_API_KEY"] as const;
+
+function isMeilisearchConfigured(): boolean {
+  return Boolean(
+    process.env.MEILISEARCH_HOST?.trim() && process.env.MEILISEARCH_API_KEY?.trim(),
+  );
+}
 
 function isProdLike(deployEnv: string | undefined, nodeEnv: string | undefined): boolean {
   return deployEnv === "production" || deployEnv === "staging" || nodeEnv === "production";

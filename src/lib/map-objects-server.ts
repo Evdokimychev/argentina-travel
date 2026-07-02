@@ -1,6 +1,7 @@
 import type { TourListing } from "@/types";
 import type { PlaceCategory, PlaceListing } from "@/types/place";
 import { ARGENTINA_AIRPORTS } from "@/data/argentina-airports";
+import { getFlightDestinations } from "@/data/argentina-flight-routes";
 import { ARGENTINA_TRANSPORT_HUBS } from "@/data/argentina-transport-hubs";
 import { TOUR_PLACE_MAP } from "@/data/media-library/maps";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
@@ -8,6 +9,7 @@ import { getTourRoutePoints } from "@/data/tour-routes";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { hasValidTourMapCoordinates } from "@/lib/tour-map";
 import { fetchPlacesServer, placeHref } from "@/lib/places-repository";
+import { MEDIA_LOGO_FALLBACK } from "@/lib/media-resolver";
 import type {
   MapMarkerKind,
   MapObject,
@@ -70,13 +72,15 @@ function relatedToursForPlace(placeSlug: string, tours: TourListing[]): MapObjec
 
 function placeToMapObject(place: PlaceListing, tours: TourListing[]): MapObject {
   const kind = placeKind(place.category);
+  // Логотип-заглушка в карточке карты выглядит хуже, чем градиент по цвету категории
+  const image = place.coverImage === MEDIA_LOGO_FALLBACK ? undefined : place.coverImage;
   return {
     id: `place:${place.id}`,
     slug: place.slug,
     kind,
     title: place.name,
     description: place.shortDescription,
-    image: place.coverImage,
+    image,
     latitude: place.latitude,
     longitude: place.longitude,
     region: place.region,
@@ -104,6 +108,15 @@ function tourToMapObject(tour: TourListing): MapObject {
 }
 
 function airportToMapObject(airport: (typeof ARGENTINA_AIRPORTS)[number]): MapObject {
+  const destinations = getFlightDestinations(airport.iata).map((dest) => ({
+    iata: dest.iata,
+    city: dest.city,
+    airportName: dest.name,
+    latitude: dest.latitude,
+    longitude: dest.longitude,
+    mapObjectId: dest.id,
+  }));
+
   return {
     id: airport.id,
     slug: airport.slug,
@@ -113,8 +126,12 @@ function airportToMapObject(airport: (typeof ARGENTINA_AIRPORTS)[number]): MapOb
     latitude: airport.latitude,
     longitude: airport.longitude,
     region: airport.region,
-    href: `/mapa-argentina?kind=airport&q=${encodeURIComponent(airport.iata)}`,
+    href: "/guide/kak-dobratsya",
     meta: `${airport.iata} · ${airport.city}`,
+    relatedArticles: [
+      { title: "Как добраться по Аргентине", href: "/guide/kak-dobratsya" },
+    ],
+    flightDestinations: destinations.length > 0 ? destinations : undefined,
   };
 }
 

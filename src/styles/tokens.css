@@ -11,6 +11,8 @@
   --token-color-sky-100: #dceef9;
   --token-color-sky: #74acdf;
   --token-color-sky-dark: #5a8fc4;
+  /* Accessible text blue: ≥5.3:1 on white, sky-50, sky/10 (WCAG AA for текстовых ссылок и бейджей) */
+  --token-color-sky-ink: #35699f;
 
   --token-color-charcoal: #1a1a2e;
   --token-color-charcoal-90: rgb(26 26 46 / 0.9);
@@ -164,12 +166,12 @@
 
   /* ── Layout chrome ────────────────────────────────────────────────────── */
 
-  --token-site-header-full-height: 84px;
+  --token-site-header-full-height: 88px;
   --token-site-header-height: var(--token-site-header-full-height);
 }
 
 @media (min-width: 768px) {
   :root {
-    --token-site-header-full-height: 140px;
+    --token-site-header-full-height: 132px;
   }
 }

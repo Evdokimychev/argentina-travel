@@ -32,9 +32,13 @@ export const tokenCardInteractiveClass =
 export const tokenFocusRingClass =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40";
 
-/** Primary button surface */
+/**
+ * Primary button surface.
+ * sky-ink вместо sky: белый текст на #74acdf давал 2.41:1 (провал WCAG AA);
+ * на #35699f — 5.7:1. Фирменный светло-голубой остаётся в акцентах/фонах.
+ */
 export const tokenButtonPrimaryClass =
-  "bg-sky text-white hover:bg-sky-dark shadow-sm";
+  "bg-sky-ink text-white hover:bg-sky-ink/90 shadow-sm";
 
 /** Outline / secondary button surface */
 export const tokenButtonOutlineClass =

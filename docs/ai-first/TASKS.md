@@ -15,6 +15,11 @@
 
 ## Backlog — продукт
 
+- [ ] **P0: Supabase egress quota** — проект заблокирован (`exceed_egress_quota`), БД недоступна в production: каталог пуст, CMS отдаёт 402. Поднять тариф или снять spend cap в панели Supabase
+- [ ] **YouTravel обложки** — Vercel Image Optimizer получает пустое тело от cf.youtravel.me (`OPTIMIZED_EXTERNAL_IMAGE_RESPONSE_BODY_EMPTY`). Варианты: кешировать обложки в Supabase Storage при sync или собственный proxy-роут
+- [ ] Досведение контраста: второстепенные поверхности с `bg-sky text-white` (кабинеты организатора/админа, section-nav, badge `new`) → `bg-sky-ink` по аналогии с primary-кнопкой
+- [ ] Home performance: bootup JS ~3s в лаборатории, TTI высокий — code-splitting нижних секций главной
+- [ ] Dev-only React warning «unique key prop» в `<MarketplaceHome>` — найти источник
 - [ ] E2E: Tripster checkout URL invariants
 - [ ] Visual regression baseline для tour/excursion detail
 - [ ] Sentry / error tracking
