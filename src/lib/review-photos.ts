@@ -1,4 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { buildReviewPhotoPublicUrl } from "@/lib/media/media-cdn";
+import {
+  isRegRuFtpStorageEnabled,
+  uploadReviewPhotoToStaticStorage,
+} from "@/lib/media/static-media-storage";
 import type { Database } from "@/types/database";
 
 export const TOURIST_REVIEW_PHOTOS_BUCKET = "tourist-review-photos";
@@ -21,6 +26,10 @@ export function resolveReviewPhotoPublicUrl(
   supabase: DbClient,
   storagePath: string
 ): string {
+  if (isRegRuFtpStorageEnabled()) {
+    return buildReviewPhotoPublicUrl(storagePath);
+  }
+
   const { data } = supabase.storage.from(TOURIST_REVIEW_PHOTOS_BUCKET).getPublicUrl(storagePath);
   return data.publicUrl;
 }
@@ -40,6 +49,16 @@ export async function uploadReviewPhoto(
 
   const storagePath = buildReviewPhotoStoragePath(userId, sanitizeFileName(file.name));
   onProgress?.(10);
+
+  if (isRegRuFtpStorageEnabled()) {
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const uploadResult = await uploadReviewPhotoToStaticStorage(buffer, storagePath);
+    if ("error" in uploadResult) {
+      return { error: uploadResult.error };
+    }
+    onProgress?.(100);
+    return { url: uploadResult.publicUrl };
+  }
 
   const { error } = await supabase.storage
     .from(TOURIST_REVIEW_PHOTOS_BUCKET)

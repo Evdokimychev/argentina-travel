@@ -1,3 +1,5 @@
+import { rewriteLegacySupabaseMediaUrl } from "@/lib/media/media-cdn";
+
 const SUPABASE_HOST_SUFFIXES = [".supabase.co", ".supabase.in"] as const;
 const SUPABASE_STORAGE_PREFIX = "/storage/v1/";
 const PUBLIC_OBJECT_PREFIX = "/storage/v1/object/public/";
@@ -37,15 +39,18 @@ export function buildSupabaseCdnUrl(src: string, options: SupabaseCdnOptions = {
   const input = src.trim();
   if (!input || !/^https?:\/\//i.test(input)) return src;
 
+  const rewritten = rewriteLegacySupabaseMediaUrl(input);
+
   let url: URL;
   try {
-    url = new URL(input);
+    url = new URL(rewritten);
   } catch {
     return src;
   }
 
-  if (!isSupabaseStorageHostname(url.hostname)) return src;
-  if (!url.pathname.startsWith(SUPABASE_STORAGE_PREFIX)) return src;
+  // Reg.ru / external CDN — no Supabase image transform API; next/image handles resize.
+  if (!isSupabaseStorageHostname(url.hostname)) return rewritten;
+  if (!url.pathname.startsWith(SUPABASE_STORAGE_PREFIX)) return rewritten;
 
   url.pathname = upgradeToRenderPath(url.pathname);
 

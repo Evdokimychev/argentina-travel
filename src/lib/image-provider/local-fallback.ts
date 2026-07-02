@@ -1,13 +1,11 @@
+import { mediaUrl } from "@/lib/media/media-cdn";
 import manifestData from "@/data/media-library/manifest.json";
 import { DESTINATION_PLACE_MAP } from "@/data/media-library/maps";
 import { buildAttributionHtml } from "./attribution";
 import type { ImageRole, ResolvedImage } from "./types";
 import type { MediaAsset } from "@/types/media-asset";
 
-function mediaUrl(localPath: string): string {
-  const normalized = localPath.replace(/^\/+/, "");
-  return normalized.startsWith("media/") ? `/${normalized}` : `/media/${normalized}`;
-}
+export { mediaUrl } from "@/lib/media/media-cdn";
 
 const manifest = manifestData as { version: number; assets: MediaAsset[] };
 const assetsById = new Map(manifest.assets.map((a) => [a.id, a]));

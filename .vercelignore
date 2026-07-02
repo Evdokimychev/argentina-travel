@@ -1,0 +1,5 @@
+var/
+test-results/
+.playwright/
+*.tar
+*.tar.gz

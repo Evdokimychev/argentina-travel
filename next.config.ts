@@ -104,6 +104,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "goargentina.ru",
+      },
+      {
+        protocol: "https",
+        hostname: "media.goargentina.ru",
+      },
+      {
+        protocol: "https",
         hostname: "cf.youtravel.me",
       },
       {

@@ -3,6 +3,11 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { processCmsUploadImage } from "@/lib/media/cms-media-image";
+import {
+  deleteFromStaticStorage,
+  isRegRuFtpStorageEnabled,
+  uploadCmsMediaToStaticStorage,
+} from "@/lib/media/static-media-storage";
 import type { Database } from "@/types/database";
 import type { MediaAsset, MediaCategory, MediaAssetRole } from "@/types/media-asset";
 
@@ -104,20 +109,30 @@ export async function uploadCmsMediaAsset(
   const baseName = sanitizeFilename(input.file.name.replace(/\.[^.]+$/, "")) || "upload";
   const storagePath = `uploads/${new Date().getFullYear()}/${id}-${baseName}.${processed.extension}`;
 
-  const { error: uploadError } = await supabase.storage
-    .from(CMS_MEDIA_BUCKET)
-    .upload(storagePath, processed.buffer, {
-      contentType: processed.mimeType,
-      upsert: false,
-      cacheControl: "31536000",
-    });
+  let publicUrl: string;
 
-  if (uploadError) {
-    return { error: uploadError.message };
+  if (isRegRuFtpStorageEnabled()) {
+    const uploadResult = await uploadCmsMediaToStaticStorage(processed.buffer, storagePath);
+    if ("error" in uploadResult) {
+      return { error: uploadResult.error };
+    }
+    publicUrl = uploadResult.publicUrl;
+  } else {
+    const { error: uploadError } = await supabase.storage
+      .from(CMS_MEDIA_BUCKET)
+      .upload(storagePath, processed.buffer, {
+        contentType: processed.mimeType,
+        upsert: false,
+        cacheControl: "31536000",
+      });
+
+    if (uploadError) {
+      return { error: uploadError.message };
+    }
+
+    const { data: publicData } = supabase.storage.from(CMS_MEDIA_BUCKET).getPublicUrl(storagePath);
+    publicUrl = publicData.publicUrl;
   }
-
-  const { data: publicData } = supabase.storage.from(CMS_MEDIA_BUCKET).getPublicUrl(storagePath);
-  const publicUrl = publicData.publicUrl;
 
   const row = {
     id,
@@ -139,7 +154,11 @@ export async function uploadCmsMediaAsset(
 
   const { error: insertError } = await supabase.from("cms_media_assets").insert(row);
   if (insertError) {
-    await supabase.storage.from(CMS_MEDIA_BUCKET).remove([storagePath]);
+    if (isRegRuFtpStorageEnabled()) {
+      await deleteFromStaticStorage(storagePath, "cms");
+    } else {
+      await supabase.storage.from(CMS_MEDIA_BUCKET).remove([storagePath]);
+    }
     return { error: insertError.message };
   }
 
@@ -186,7 +205,11 @@ export async function deleteCmsMediaAsset(
 
   if (fetchError || !data) return { error: fetchError?.message ?? "Asset не найден" };
 
-  await supabase.storage.from(CMS_MEDIA_BUCKET).remove([data.storage_path]);
+  if (isRegRuFtpStorageEnabled()) {
+    await deleteFromStaticStorage(data.storage_path, "cms");
+  } else {
+    await supabase.storage.from(CMS_MEDIA_BUCKET).remove([data.storage_path]);
+  }
 
   const { error } = await supabase.from("cms_media_assets").delete().eq("id", id);
   if (error) return { error: error.message };
