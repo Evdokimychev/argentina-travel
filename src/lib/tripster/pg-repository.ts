@@ -8,6 +8,7 @@ import {
 } from "@/lib/tripster/mapper";
 import { mapTripsterReviewRow } from "@/lib/tripster/review-mapper";
 import { TRIPSTER_EXCURSION_WHERE_SQL } from "@/lib/tripster/partner-tour-utils";
+import { resolveDatabaseUrl } from "@/lib/database-url";
 import type {
   ExcursionCity,
   ExcursionDetail,
@@ -16,12 +17,8 @@ import type {
   ExcursionListing,
 } from "@/types/excursion";
 
-function getDatabaseUrl(): string | null {
-  return process.env.DATABASE_URL?.trim() ?? null;
-}
-
 async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T | null> {
-  const connectionString = getDatabaseUrl();
+  const connectionString = resolveDatabaseUrl();
   if (!connectionString) return null;
 
   const client = new pg.Client({

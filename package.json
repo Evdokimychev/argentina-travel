@@ -83,6 +83,7 @@
     "prune-legacy-blog-media:check": "node scripts/prune-legacy-blog-media.mjs --check",
     "cms-media:deploy-check": "node scripts/cms-media-deploy-check.mjs",
     "media:migrate-reg-ru": "node scripts/migrate-media-to-reg-ru.mjs",
+    "media:cleanup-supabase": "node scripts/cleanup-supabase-storage.mjs",
     "test": "vitest run",
     "geo:audit-tours": "tsx scripts/audit-tour-locations.ts",
     "test:watch": "vitest",

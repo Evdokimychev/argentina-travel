@@ -12,6 +12,8 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { getPlatformStatsFromMarketplace } from "@/lib/organizer-public";
 
+export const dynamic = "force-dynamic";
+
 type ToursPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };

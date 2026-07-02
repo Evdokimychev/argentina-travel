@@ -10,6 +10,8 @@ import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
 import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 
+export const dynamic = "force-dynamic";
+
 const PAGE_TITLE_FALLBACK = "Экскурсии по Аргентине";
 const PAGE_DESCRIPTION_FALLBACK =
   "Городские экскурсии и активности в Буэнос-Айресе, Патагонии и других регионах Аргентины.";

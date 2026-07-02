@@ -1,6 +1,8 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { resolveDatabaseUrl } from "@/lib/database-url";
 import { getAppVersion, getGitSha } from "@/lib/monitoring/build-info";
+import pg from "pg";
 import { getDeployEnvironment } from "@/lib/ops/deploy-env";
 import { getLatestMigrationId, getMigrationFileCount } from "@/lib/ops/migrations-version";
 
@@ -28,9 +30,47 @@ export type PublicHealthSnapshot = {
       skipped: boolean;
       error: string | null;
     };
+    postgresDirect: {
+      ok: boolean;
+      tripsterCount: number | null;
+      error: string | null;
+    };
   };
   generatedAt: string;
 };
+
+async function pingPostgresDirect(): Promise<{
+  ok: boolean;
+  tripsterCount: number | null;
+  error: string | null;
+}> {
+  const connectionString = resolveDatabaseUrl();
+  if (!connectionString) {
+    return { ok: false, tripsterCount: null, error: "Postgres URL is not configured" };
+  }
+
+  const client = new pg.Client({
+    connectionString,
+    ssl: { rejectUnauthorized: false },
+    connectionTimeoutMillis: 8_000,
+  });
+
+  try {
+    await client.connect();
+    const { rows } = await client.query<{ c: number }>(
+      "select count(*)::int as c from public.tripster_experiences"
+    );
+    return { ok: true, tripsterCount: rows[0]?.c ?? 0, error: null };
+  } catch (error) {
+    return {
+      ok: false,
+      tripsterCount: null,
+      error: error instanceof Error ? error.message : "Postgres ping failed",
+    };
+  } finally {
+    await client.end().catch(() => undefined);
+  }
+}
 
 export async function fetchPublicHealthSnapshot(options?: {
   pingDatabase?: boolean;
@@ -83,9 +123,10 @@ export async function fetchPublicHealthSnapshot(options?: {
   }
 
   const environment = getDeployEnvironment();
+  const postgresDirect = await pingPostgresDirect();
 
   return {
-    ok: databaseSkipped || databaseOk,
+    ok: databaseSkipped || databaseOk || postgresDirect.ok,
     version: getAppVersion(),
     gitSha: getGitSha(),
     environment: {
@@ -108,6 +149,7 @@ export async function fetchPublicHealthSnapshot(options?: {
         skipped: searchIndexSkipped,
         error: searchIndexError,
       },
+      postgresDirect,
     },
     generatedAt: new Date().toISOString(),
   };

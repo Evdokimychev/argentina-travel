@@ -101,18 +101,26 @@ async function fetchTripsterListResult(
   filters: ExcursionListFilters,
   allItems = false
 ): Promise<ExcursionListResult> {
+  const pgFilters = allItems ? { ...filters, page: 1, pageSize: 500 } : filters;
+  const empty: ExcursionListResult = {
+    items: [],
+    total: 0,
+    page: filters.page ?? 1,
+    pageSize: filters.pageSize ?? 24,
+    cities: [],
+  };
+
   if (supabase) {
-    if (allItems) {
-      const first = await fetchTripsterExcursionListings(supabase, { ...filters, page: 1, pageSize: 500 });
-      return first;
+    try {
+      const fromSupabase = await fetchTripsterExcursionListings(supabase, pgFilters);
+      if (fromSupabase.items.length > 0 || fromSupabase.total > 0) return fromSupabase;
+    } catch {
+      // Supabase REST blocked or unavailable — fall through to Postgres.
     }
-    return fetchTripsterExcursionListings(supabase, filters);
   }
 
-  const pgResult = await pgFetchTripsterExcursionsServer(allItems ? { ...filters, page: 1, pageSize: 500 } : filters);
-  if (pgResult) return pgResult;
-
-  return { items: [], total: 0, page: filters.page ?? 1, pageSize: filters.pageSize ?? 24, cities: [] };
+  const pgResult = await pgFetchTripsterExcursionsServer(pgFilters);
+  return pgResult ?? empty;
 }
 
 async function fetchSputnik8ListResult(
@@ -120,17 +128,26 @@ async function fetchSputnik8ListResult(
   filters: ExcursionListFilters,
   allItems = false
 ): Promise<ExcursionListResult> {
+  const pgFilters = allItems ? { ...filters, page: 1, pageSize: 500 } : filters;
+  const empty: ExcursionListResult = {
+    items: [],
+    total: 0,
+    page: filters.page ?? 1,
+    pageSize: filters.pageSize ?? 24,
+    cities: [],
+  };
+
   if (supabase) {
-    if (allItems) {
-      return fetchSputnik8ExcursionListings(supabase, { ...filters, page: 1, pageSize: 500 });
+    try {
+      const fromSupabase = await fetchSputnik8ExcursionListings(supabase, pgFilters);
+      if (fromSupabase.items.length > 0 || fromSupabase.total > 0) return fromSupabase;
+    } catch {
+      // Supabase REST blocked or unavailable — fall through to Postgres.
     }
-    return fetchSputnik8ExcursionListings(supabase, filters);
   }
 
-  const pgResult = await pgFetchSputnik8ExcursionsServer(allItems ? { ...filters, page: 1, pageSize: 500 } : filters);
-  if (pgResult) return pgResult;
-
-  return { items: [], total: 0, page: filters.page ?? 1, pageSize: filters.pageSize ?? 24, cities: [] };
+  const pgResult = await pgFetchSputnik8ExcursionsServer(pgFilters);
+  return pgResult ?? empty;
 }
 
 export async function fetchExcursionsServer(
@@ -156,10 +173,16 @@ export async function fetchExcursionsServer(
 
 async function fetchTripsterDetail(slug: string): Promise<ExcursionDetail | null> {
   const supabase = getClient();
-  const detail = supabase
-    ? await fetchTripsterExcursionBySlug(supabase, slug)
-    : await pgFetchTripsterExcursionDetailServer(slug);
+  let detail: ExcursionDetail | null = null;
+
+  if (supabase) {
+    detail = await fetchTripsterExcursionBySlug(supabase, slug);
+  }
+  if (!detail) {
+    detail = await pgFetchTripsterExcursionDetailServer(slug);
+  }
   if (!detail) return null;
+
   const enriched = await enrichTripsterGuideProfile(detail);
   return {
     ...enriched,
@@ -169,9 +192,11 @@ async function fetchTripsterDetail(slug: string): Promise<ExcursionDetail | null
 
 async function fetchSputnik8Detail(slug: string): Promise<ExcursionDetail | null> {
   const supabase = getClient();
-  return supabase
-    ? await fetchSputnik8ExcursionBySlug(supabase, slug)
-    : await pgFetchSputnik8ExcursionDetailServer(slug);
+  if (supabase) {
+    const detail = await fetchSputnik8ExcursionBySlug(supabase, slug);
+    if (detail) return detail;
+  }
+  return pgFetchSputnik8ExcursionDetailServer(slug);
 }
 
 async function enrichTripsterGuideProfile(detail: ExcursionDetail): Promise<ExcursionDetail> {
@@ -230,12 +255,14 @@ export async function fetchExcursionCityServer(citySlug: string): Promise<Excurs
       fetchTripsterExcursionCityBySlug(supabase, citySlug),
       fetchSputnik8ExcursionCityBySlug(supabase, citySlug),
     ]);
-  } else {
-    const [tripsterCities, sputnik8Cities] = await Promise.all([
-      pgFetchTripsterExcursionCities(),
-      pgFetchSputnik8ExcursionCities(),
-    ]);
+  }
+
+  if (!tripsterCity) {
+    const tripsterCities = await pgFetchTripsterExcursionCities();
     tripsterCity = tripsterCities.find((city) => city.slug === citySlug) ?? null;
+  }
+  if (!sputnik8City) {
+    const sputnik8Cities = await pgFetchSputnik8ExcursionCities();
     sputnik8City = sputnik8Cities.find((city) => city.slug === citySlug) ?? null;
   }
 
@@ -251,18 +278,23 @@ export async function fetchExcursionCityServer(citySlug: string): Promise<Excurs
 export async function fetchExcursionSlugsServer(): Promise<string[]> {
   const supabase = getClient();
 
+  let tripster: string[] = [];
+  let sputnik8: string[] = [];
+
   if (supabase) {
-    const [tripster, sputnik8] = await Promise.all([
+    [tripster, sputnik8] = await Promise.all([
       fetchTripsterExcursionSlugs(supabase),
       fetchSputnik8ExcursionSlugs(supabase),
     ]);
-    return [...new Set([...tripster, ...sputnik8])].sort();
   }
 
-  const [tripster, sputnik8] = await Promise.all([
-    pgFetchTripsterExcursionSlugsServer(),
-    pgFetchSputnik8ExcursionSlugsServer(),
-  ]);
+  if (tripster.length === 0) {
+    tripster = await pgFetchTripsterExcursionSlugsServer();
+  }
+  if (sputnik8.length === 0) {
+    sputnik8 = await pgFetchSputnik8ExcursionSlugsServer();
+  }
+
   return [...new Set([...tripster, ...sputnik8])].sort();
 }
 
@@ -276,13 +308,15 @@ export async function fetchSimilarExcursionsServer(
 
   if (partner === "sputnik8") {
     if (supabase) {
-      return fetchSimilarSputnik8ExcursionListings(supabase, { cityId, excludeId, limit });
+      const items = await fetchSimilarSputnik8ExcursionListings(supabase, { cityId, excludeId, limit });
+      if (items.length > 0) return items;
     }
     return pgFetchSimilarSputnik8Excursions(cityId, excludeId, limit);
   }
 
   if (supabase) {
-    return fetchSimilarTripsterExcursionListings(supabase, { cityId, excludeId, limit });
+    const items = await fetchSimilarTripsterExcursionListings(supabase, { cityId, excludeId, limit });
+    if (items.length > 0) return items;
   }
   return pgFetchSimilarTripsterExcursions(cityId, excludeId, limit);
 }
@@ -290,18 +324,23 @@ export async function fetchSimilarExcursionsServer(
 export async function fetchExcursionCitiesServer(): Promise<ExcursionCity[]> {
   const supabase = getClient();
 
+  let tripster: ExcursionCity[] = [];
+  let sputnik8: ExcursionCity[] = [];
+
   if (supabase) {
-    const [tripster, sputnik8] = await Promise.all([
+    [tripster, sputnik8] = await Promise.all([
       fetchTripsterExcursionCities(supabase),
       fetchSputnik8ExcursionCities(supabase),
     ]);
-    return mergeCities(tripster, sputnik8);
   }
 
-  const [tripster, sputnik8] = await Promise.all([
-    pgFetchTripsterExcursionCities(),
-    pgFetchSputnik8ExcursionCities(),
-  ]);
+  if (tripster.length === 0) {
+    tripster = await pgFetchTripsterExcursionCities();
+  }
+  if (sputnik8.length === 0) {
+    sputnik8 = await pgFetchSputnik8ExcursionCities();
+  }
+
   return mergeCities(tripster, sputnik8);
 }
 

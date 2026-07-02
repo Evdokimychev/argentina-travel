@@ -8,6 +8,7 @@ import {
   mapSputnik8ReviewRow,
 } from "@/lib/sputnik8/mapper";
 import { enrichSputnik8ExcursionDetail } from "@/lib/sputnik8/detail-enrichment";
+import { resolveDatabaseUrl } from "@/lib/database-url";
 import type {
   ExcursionCity,
   ExcursionDetail,
@@ -16,12 +17,8 @@ import type {
   ExcursionListing,
 } from "@/types/excursion";
 
-function getDatabaseUrl(): string | null {
-  return process.env.DATABASE_URL?.trim() ?? null;
-}
-
 async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T | null> {
-  const connectionString = getDatabaseUrl();
+  const connectionString = resolveDatabaseUrl();
   if (!connectionString) return null;
 
   const client = new pg.Client({

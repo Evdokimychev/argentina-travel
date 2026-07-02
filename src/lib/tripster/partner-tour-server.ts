@@ -244,7 +244,7 @@ async function loadPartnerTourListings(): Promise<TourListing[]> {
 
 const cachedPartnerTourListings = unstable_cache(
   async () => enrichTripsterListingsWithSchedule(await loadPartnerTourListings()),
-  ["partner-tour-listings"],
+  ["partner-tour-listings", "pg-fallback-v2"],
   { revalidate: 600, tags: ["partner-tours"] },
 );
 

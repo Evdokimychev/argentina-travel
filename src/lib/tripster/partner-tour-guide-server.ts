@@ -10,15 +10,12 @@ import {
 } from "@/lib/tripster/guide-mapper";
 import { mapPartnerTourReviews } from "@/lib/tripster/partner-tour-mapper";
 import { tripsterReviewToRow, type TripsterReviewRow } from "@/lib/tripster/review-mapper";
+import { resolveDatabaseUrl } from "@/lib/database-url";
 import type { ExcursionGuideProfile } from "@/types/excursion";
 import type { TourOrganizerDetail } from "@/types";
 
-function getDatabaseUrl(): string | null {
-  return process.env.DATABASE_URL?.trim() ?? null;
-}
-
 async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T | null> {
-  const connectionString = getDatabaseUrl();
+  const connectionString = resolveDatabaseUrl();
   if (!connectionString) return null;
 
   const client = new pg.Client({
