@@ -1,5 +1,7 @@
 import "server-only";
 
+import type { ClientConfig } from "pg";
+
 /**
  * Resolve Postgres connection string for server-side fallbacks when Supabase REST
  * is unavailable (egress quota, outage). Vercel Supabase integration exposes
@@ -58,4 +60,16 @@ function preferPgSessionPoolerUrl(url: string): string {
     // keep original string
   }
   return url;
+}
+
+/** Shared pg client options — Supabase pooler uses a chain Vercel Node rejects by default. */
+export function createPgClientConfig(connectionString: string): ClientConfig {
+  return {
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false,
+      checkServerIdentity: () => undefined,
+    },
+    connectionTimeoutMillis: 10_000,
+  };
 }

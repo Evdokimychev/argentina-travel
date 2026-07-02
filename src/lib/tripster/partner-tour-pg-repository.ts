@@ -8,18 +8,14 @@ import {
 } from "@/lib/tripster/partner-tour-mapper";
 import { TRIPSTER_TOUR_WHERE_SQL } from "@/lib/tripster/partner-tour-utils";
 import { isPartnerTourExperiencePublishable } from "@/lib/tripster/partner-tour-visibility";
-import { resolveDatabaseUrl } from "@/lib/database-url";
+import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
 import type { TourDetail, TourListing } from "@/types";
 
 async function withPgClient<T>(fn: (client: pg.Client) => Promise<T>): Promise<T | null> {
   const connectionString = resolveDatabaseUrl();
   if (!connectionString) return null;
 
-  const client = new pg.Client({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 10_000,
-  });
+  const client = new pg.Client(createPgClientConfig(connectionString));
 
   try {
     await client.connect();

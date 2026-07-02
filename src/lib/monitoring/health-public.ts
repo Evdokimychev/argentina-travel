@@ -1,6 +1,6 @@
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
-import { resolveDatabaseUrl } from "@/lib/database-url";
+import { resolveDatabaseUrl, createPgClientConfig } from "@/lib/database-url";
 import { getAppVersion, getGitSha } from "@/lib/monitoring/build-info";
 import pg from "pg";
 import { getDeployEnvironment } from "@/lib/ops/deploy-env";
@@ -49,11 +49,7 @@ async function pingPostgresDirect(): Promise<{
     return { ok: false, tripsterCount: null, error: "Postgres URL is not configured" };
   }
 
-  const client = new pg.Client({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-    connectionTimeoutMillis: 8_000,
-  });
+  const client = new pg.Client(createPgClientConfig(connectionString));
 
   try {
     await client.connect();
