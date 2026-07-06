@@ -2,6 +2,7 @@
 
 import type { TourListing } from "@/types";
 import TourEmbedCompactCard from "./TourEmbedCompactCard";
+import { getTourListingReactKey } from "@/lib/tour-public-display";
 
 interface TourEmbedStripProps {
   tours: TourListing[];
@@ -14,7 +15,7 @@ export default function TourEmbedStrip({ tours }: TourEmbedStripProps) {
     <div className="-mx-1 overflow-x-auto px-1 pb-1 [scrollbar-width:thin]">
       <div className="flex snap-x snap-mandatory gap-4">
         {tours.map((tour) => (
-          <TourEmbedCompactCard key={tour.id} tour={tour} layout="vertical" />
+          <TourEmbedCompactCard key={getTourListingReactKey(tour)} tour={tour} layout="vertical" />
         ))}
       </div>
     </div>

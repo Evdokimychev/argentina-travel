@@ -2,6 +2,7 @@
 
 import type { TourListing } from "@/types";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
+import { getTourListingReactKey } from "@/lib/tour-public-display";
 
 interface TourEmbedGridProps {
   tours: TourListing[];
@@ -20,7 +21,7 @@ export default function TourEmbedGrid({ tours, columns = 3 }: TourEmbedGridProps
       }
     >
       {tours.map((tour) => (
-        <MarketplaceTourCard key={tour.id} tour={tour} />
+        <MarketplaceTourCard key={getTourListingReactKey(tour)} tour={tour} />
       ))}
     </div>
   );

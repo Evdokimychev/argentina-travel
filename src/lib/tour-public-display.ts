@@ -192,3 +192,8 @@ export function isTourDurationTag(tag: string): boolean {
 export function filterTourDisplayTags(tags: string[]): string[] {
   return tags.map((tag) => tag.trim()).filter(Boolean).filter((tag) => !isTourDurationTag(tag));
 }
+
+/** Стабильный React key для карточек тура (id может отсутствовать у legacy/partner записей). */
+export function getTourListingReactKey(tour: Pick<TourListing, "id" | "slug">): string {
+  return tour.id?.trim() || tour.slug;
+}

@@ -38,6 +38,7 @@ import SectionShell from "@/components/layout/SectionShell";
 import type { PlatformStats } from "@/lib/organizer-public";
 import { getRecommendedListings } from "@/lib/tour-recommendations";
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
+import { getTourListingReactKey } from "@/lib/tour-public-display";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -151,6 +152,37 @@ export default function MarketplaceHome({
         .filter((t) => t.partnerSource === "youtravel")
         .slice(0, 6),
     [homepageTours]
+  );
+
+  const homeTourSections = useMemo(
+    () =>
+      [
+        {
+          key: "recommended",
+          id: "recommended" as const,
+          title: "Рекомендуем",
+          subtitle: "По рейтингу и актуальности",
+          tours: recommendedTours,
+        },
+        youtravelTours.length > 0
+          ? {
+              key: "youtravel",
+              title: "Авторские туры YouTravel",
+              subtitle: "Партнёрские путешествия с датами заезда на YouTravel.me",
+              tours: youtravelTours,
+            }
+          : null,
+        {
+          key: "hot",
+          title: "Горящие даты",
+          subtitle: "Только туры с реальной скидкой и ближайшими датами",
+          tours: hotTours,
+        },
+      ].filter(
+        (section): section is NonNullable<typeof section> =>
+          Boolean(section && section.tours.length > 0)
+      ),
+    [recommendedTours, youtravelTours, hotTours]
   );
 
   const valueProps = [
@@ -317,7 +349,7 @@ export default function MarketplaceHome({
           {filtered.length > 0 ? (
             <div className="grid gap-5 py-8 sm:grid-cols-2 xl:grid-cols-3">
               {filtered.slice(0, 6).map((t) => (
-                <MarketplaceTourCard key={t.id} tour={t} />
+                <MarketplaceTourCard key={getTourListingReactKey(t)} tour={t} />
               ))}
             </div>
           ) : (
@@ -446,24 +478,15 @@ export default function MarketplaceHome({
       {/* Tour collections */}
       <section className="border-y border-gray-100 bg-white py-12 md:py-14">
         <div className={cn(siteContainerClass, "space-y-14")}>
-          <TourGrid
-            id="recommended"
-            title="Рекомендуем"
-            subtitle="По рейтингу и актуальности"
-            tours={recommendedTours}
-          />
-          {youtravelTours.length > 0 ? (
+          {homeTourSections.map((section) => (
             <TourGrid
-              title="Авторские туры YouTravel"
-              subtitle="Партнёрские путешествия с датами заезда на YouTravel.me"
-              tours={youtravelTours}
+              key={section.key}
+              id={section.id}
+              title={section.title}
+              subtitle={section.subtitle}
+              tours={section.tours}
             />
-          ) : null}
-          <TourGrid
-            title="Горящие даты"
-            subtitle="Только туры с реальной скидкой и ближайшими датами"
-            tours={hotTours}
-          />
+          ))}
         </div>
       </section>
 

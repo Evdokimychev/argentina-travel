@@ -7,6 +7,7 @@ import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import ExcursionCard from "@/components/excursions/ExcursionCard";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
+import { getTourListingReactKey } from "@/lib/tour-public-display";
 import type { TourListing } from "@/types";
 import type { ExcursionListing } from "@/types/excursion";
 
@@ -112,7 +113,7 @@ export default function PersonalizedRecommendationsSection({
             )}
           >
             {tours.map((tour) => (
-              <MarketplaceTourCard key={tour.slug} tour={tour} />
+              <MarketplaceTourCard key={getTourListingReactKey(tour)} tour={tour} />
             ))}
           </div>
         ) : null}

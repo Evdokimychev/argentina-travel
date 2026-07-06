@@ -157,6 +157,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
   const filterBody = (
     <>
       <FilterPopover
+        key="filter-activity"
         label="Виды отдыха"
         active={draft.activityTypes.length > 0}
         width="sm:min-w-[520px] sm:max-w-[560px]"
@@ -171,7 +172,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
         />
       </FilterPopover>
 
-      <FilterPopover label="Цена" active={priceActive} inline={inline}>
+      <FilterPopover key="filter-price" label="Цена" active={priceActive} inline={inline}>
         <div className="p-4">
           <PriceFilterFields
             priceMin={draft.priceMin}
@@ -189,6 +190,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-duration"
         label="Продолжительность"
         active={isDurationFilterActive(draft)}
         width="sm:min-w-[340px]"
@@ -215,6 +217,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-accommodation"
         label="Проживание"
         active={draft.accommodations.length > 0}
         width="sm:min-w-[360px]"
@@ -230,6 +233,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-comfort"
         label="Комфорт"
         active={draft.comfortLevels.length > 0}
         width="sm:min-w-[360px]"
@@ -245,6 +249,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-difficulty"
         label="Нагрузка"
         active={draft.difficultyLevels.length > 0}
         width="sm:min-w-[360px]"
@@ -260,6 +265,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-language"
         label="Язык"
         active={draft.languages.length > 0}
         width="sm:min-w-[360px]"
@@ -274,7 +280,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
         />
       </FilterPopover>
 
-      <FilterPopover label="С детьми" active={!!draft.childrenPolicy} inline={inline}>
+      <FilterPopover key="filter-children" label="С детьми" active={!!draft.childrenPolicy} inline={inline}>
         <ul className="p-2">
           {CHILDREN_OPTIONS.map((opt) => (
             <li key={opt}>
@@ -299,6 +305,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-group-format"
         label={groupFormatLabel}
         active={groupFormatActive}
         width="sm:min-w-[400px]"
@@ -315,7 +322,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
         />
       </FilterPopover>
 
-      <FilterPopover label="Мгновенная бронь" active={draft.instantBookingOnly} inline={inline}>
+      <FilterPopover key="filter-instant-booking" label="Мгновенная бронь" active={draft.instantBookingOnly} inline={inline}>
         <ul className="p-2">
           <li>
             <label className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-3 hover:bg-gray-50">
@@ -337,6 +344,7 @@ export default function FilterBar({ tours, filters, onChange, inline = false }: 
       </FilterPopover>
 
       <FilterPopover
+        key="filter-neighboring-countries"
         label="Соседние страны"
         active={draft.includeNeighboringCountries}
         inline={inline}

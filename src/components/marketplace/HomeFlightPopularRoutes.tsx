@@ -28,7 +28,6 @@ export default function HomeFlightPopularRoutes({
         className="mt-2"
         renderRoute={({ route, className: pillClassName, ariaLabel }) => (
           <button
-            key={route.id}
             type="button"
             onClick={() => onSelect({ origin: route.origin, destination: route.destination })}
             className={pillClassName}
