@@ -1,6 +1,6 @@
 {
   "ok": false,
-  "ranAt": "2026-06-27T17:25:52.955Z",
+  "ranAt": "2026-07-06T18:07:42.049Z",
   "baseUrl": "https://www.goargentina.ru",
   "checks": [
     {
@@ -18,10 +18,10 @@
       "category": "env"
     },
     {
-      "id": "env:NEXT_PUBLIC_YM_COUNTER_ID",
-      "label": "NEXT_PUBLIC_YM_COUNTER_ID",
-      "status": "warn",
-      "message": "Не задана — справочно для настройки тегов",
+      "id": "env:NEXT_PUBLIC_YANDEX_METRIKA_ID",
+      "label": "NEXT_PUBLIC_YANDEX_METRIKA_ID",
+      "status": "ok",
+      "message": "Задана — счётчик загрузится в production",
       "category": "env"
     },
     {
@@ -46,10 +46,45 @@
       "category": "cms"
     },
     {
+      "id": "env:site-url-host",
+      "label": "NEXT_PUBLIC_SITE_URL совпадает с baseUrl",
+      "status": "warn",
+      "message": "NEXT_PUBLIC_SITE_URL не задан — сравнение пропущено",
+      "category": "env"
+    },
+    {
+      "id": "code:gtm-events-count",
+      "label": "GTM_EVENTS в gtm-events.ts",
+      "status": "ok",
+      "message": "19 событий (ожидается 19)",
+      "category": "code"
+    },
+    {
       "id": "live:gtm",
       "label": "Live GTM snippet (https://www.goargentina.ru)",
       "status": "fail",
       "message": "GTM не в HTML — проверьте env на хостинге и redeploy",
+      "category": "live"
+    },
+    {
+      "id": "live:yandex-metrika",
+      "label": "Live Yandex Metrika snippet (https://www.goargentina.ru)",
+      "status": "ok",
+      "message": "mc.yandex.ru/metrika найден в HTML",
+      "category": "live"
+    },
+    {
+      "id": "live:gtm-consent-default",
+      "label": "Live Consent Mode default (gtm-consent-default)",
+      "status": "fail",
+      "message": "Consent default отсутствует — GTM может загрузиться до denied",
+      "category": "live"
+    },
+    {
+      "id": "live:datalayer-init",
+      "label": "Live dataLayer initialization",
+      "status": "fail",
+      "message": "dataLayer не инициализирован в HTML",
       "category": "live"
     },
     {
@@ -84,7 +119,7 @@
       "id": "live:sitemap",
       "label": "sitemap.xml доступен",
       "status": "ok",
-      "message": "646 URL",
+      "message": "923 URL",
       "category": "live"
     },
     {
@@ -93,13 +128,33 @@
       "status": "skip",
       "message": "Search Console → Sitemaps → https://www.goargentina.ru/sitemap.xml (после верификации google-site-verification)",
       "category": "manual"
+    },
+    {
+      "id": "manual:gtm-publish",
+      "label": "GTM: контейнер опубликован",
+      "status": "skip",
+      "message": "Submit + Publish в tagmanager.google.com (GA4, Clarity). Метрика — в коде приложения, не в GTM.",
+      "category": "manual"
+    },
+    {
+      "id": "manual:ga4-conversions",
+      "label": "GA4 / Метрика: конверсии и цели",
+      "status": "skip",
+      "message": "Настроить: booking_submit, contact_form_submit, newsletter_subscribe",
+      "category": "manual"
     }
   ],
   "summary": {
-    "ok": 2,
+    "ok": 5,
     "warn": 6,
-    "fail": 4,
-    "skip": 1
+    "fail": 6,
+    "skip": 3
   },
-  "runbook": "docs/i2-analytics-gsc-runbook.md"
+  "runbook": "docs/i2-analytics-gsc-runbook.md",
+  "gtmEventsCount": 19,
+  "conversionsRecommended": [
+    "booking_submit",
+    "contact_form_submit",
+    "newsletter_subscribe"
+  ]
 }

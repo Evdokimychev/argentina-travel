@@ -1,6 +1,6 @@
 {
   "ok": false,
-  "ranAt": "2026-06-27T15:34:42.160Z",
+  "ranAt": "2026-07-01T21:39:05.264Z",
   "gitSha": null,
   "checks": [
     {
@@ -109,10 +109,45 @@
       "category": "security"
     },
     {
+      "id": "env:forbidden:PAYMENT_SANDBOX_MODE",
+      "label": "PAYMENT_SANDBOX_MODE=false",
+      "status": "ok",
+      "message": "Отключено",
+      "category": "security"
+    },
+    {
+      "id": "env:payment:MERCADOPAGO_ACCESS_TOKEN",
+      "label": "Платежи: MERCADOPAGO_ACCESS_TOKEN",
+      "status": "skip",
+      "message": "Не задана — live checkout/webhooks недоступны",
+      "category": "env"
+    },
+    {
+      "id": "env:payment:MERCADOPAGO_WEBHOOK_SECRET",
+      "label": "Платежи: MERCADOPAGO_WEBHOOK_SECRET",
+      "status": "skip",
+      "message": "Не задана — live checkout/webhooks недоступны",
+      "category": "env"
+    },
+    {
+      "id": "env:payment:STRIPE_SECRET_KEY",
+      "label": "Платежи: STRIPE_SECRET_KEY",
+      "status": "skip",
+      "message": "Не задана — live checkout/webhooks недоступны",
+      "category": "env"
+    },
+    {
+      "id": "env:payment:STRIPE_WEBHOOK_SECRET",
+      "label": "Платежи: STRIPE_WEBHOOK_SECRET",
+      "status": "skip",
+      "message": "Не задана — live checkout/webhooks недоступны",
+      "category": "env"
+    },
+    {
       "id": "migrations:files",
       "label": "Миграции в репозитории",
       "status": "ok",
-      "message": "54 файлов, последняя: 20250630200000_youtravel_affise_snapshots",
+      "message": "55 файлов, последняя: 20250630200000_youtravel_affise_snapshots",
       "category": "database"
     },
     {
@@ -124,16 +159,16 @@
     },
     {
       "id": "migrations:db-count",
-      "label": "Подключение к Postgres",
-      "status": "fail",
-      "message": "getaddrinfo ENOTFOUND aws-1-us-east-2.pooler.supabase.com",
+      "label": "Миграции в БД",
+      "status": "warn",
+      "message": "Таблиц public: 81. schema_migrations недоступна — сверьте вручную с 55 файлами (последняя: 20250630200000_youtravel_affise_snapshots)",
       "category": "database"
     },
     {
       "id": "smoke:supabase-verify",
       "label": "Smoke /api/health",
-      "status": "warn",
-      "message": "Сервер недоступен на http://127.0.0.1:3000. Запустите npm run dev или задайте SMOKE_BASE_URL",
+      "status": "fail",
+      "message": "БД: Service for this project is restricted due to the following violations: exceed_egress_quota. The project owner must upgrade their plan or remove spend caps to restore service.",
       "category": "smoke"
     },
     {
@@ -142,12 +177,33 @@
       "status": "ok",
       "message": "Компиляция без ошибок",
       "category": "build"
+    },
+    {
+      "id": "migrations:f3-scheduled-publish",
+      "label": "F3: scheduled publish migration",
+      "status": "ok",
+      "message": "20250627000010_cms_scheduled_publish.sql найден — npm run supabase:migrate на staging/prod перед cutover",
+      "category": "database"
+    },
+    {
+      "id": "search:meili-env",
+      "label": "Meilisearch (MEILISEARCH_HOST + API_KEY)",
+      "status": "skip",
+      "message": "Не заданы (локально допустимо)",
+      "category": "search"
+    },
+    {
+      "id": "perf:lighthouse-phase2",
+      "label": "Lighthouse phase2 (последний отчёт)",
+      "status": "warn",
+      "message": "median perf 59, a11y 94; 8 URL ниже бюджета — npm run lighthouse:phase2:prod",
+      "category": "perf"
     }
   ],
   "summary": {
-    "ok": 7,
-    "warn": 4,
+    "ok": 9,
+    "warn": 5,
     "fail": 2,
-    "skip": 7
+    "skip": 12
   }
 }

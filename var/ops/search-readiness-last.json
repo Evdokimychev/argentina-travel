@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "ranAt": "2026-07-01T21:46:00.171Z",
+  "configured": false,
+  "meiliHealthy": null,
+  "documentCount": null,
+  "checks": [
+    {
+      "id": "env:MEILISEARCH_HOST",
+      "label": "MEILISEARCH_HOST",
+      "status": "skip",
+      "message": "Не задана (локально OK)"
+    },
+    {
+      "id": "env:MEILISEARCH_API_KEY",
+      "label": "MEILISEARCH_API_KEY",
+      "status": "skip",
+      "message": "Не задана (локально OK)"
+    },
+    {
+      "id": "meili:health",
+      "label": "Meilisearch /health",
+      "status": "skip",
+      "message": "Пропущено — MEILISEARCH_* не заданы"
+    }
+  ]
+}

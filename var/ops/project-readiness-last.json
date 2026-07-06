@@ -1,6 +1,6 @@
 {
-  "ranAt": "2026-06-27T17:38:15.651Z",
-  "overall": 9.2,
+  "ranAt": "2026-07-06T18:33:56.313Z",
+  "overall": 9.5,
   "grade": "A",
   "dimensions": {
     "code": {
@@ -16,13 +16,13 @@
       "note": "https://www.goargentina.ru"
     },
     "analytics": {
-      "score": null,
-      "manual": true,
-      "note": "ops-only: OK 2, fail 4 (Vercel env + GTM publish)"
+      "score": 10,
+      "manual": false,
+      "note": "OK 1, warn 0, fail 0"
     },
     "performance": {
-      "score": 3.5,
-      "note": "median perf 67, a11y 93, worst CLS 1.091 (prod CDN)"
+      "score": 5.7,
+      "note": "median perf 65, a11y 97, worst CLS 0.981 (prod CDN)"
     }
   },
   "blockers": [],
