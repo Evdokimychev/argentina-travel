@@ -1,0 +1,134 @@
+---
+id: mezhgorodnie-avtobusy
+type: transport
+title: "Междугородние автобусы Аргентины (micros)"
+title_es: "Ómnibus de larga distancia"
+aliases: ["автобусы Аргентина", "micro", "cama", "semi-cama", "омнибус", "Retiro", "Plataforma10", "автобус-кровать"]
+summary: "Междугородние автобусы («micros») — основа наземного транспорта Аргентины: развитая сеть, ночные рейсы с раскладывающимися креслами-кроватями (cama, semi-cama, suite). Как выбрать класс, где купить билет (Plataforma10, терминал Ретиро), сколько занимает дорога и когда автобус выгоднее самолёта."
+status: published
+site_ready: true
+site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
+applies_to: both
+tags: [транспорт, автобусы, бюджетно, логистика]
+price_range: "Зависит от расстояния и класса: semi-cama дешевле, cama/suite дороже; на дальних плечах ночной автобус экономит стоимость гостиницы"
+media:
+  hero:
+    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/%C3%93mnibus_de_larga_distancia_de_la_empresa_%C2%ABCrucero_del_Norte%C2%BB_detenido_sobre_la_Ruta_Nacional_12_en_Jard%C3%ADn_Am%C3%A9rica.jpg/1920px-%C3%93mnibus_de_larga_distancia_de_la_empresa_%C2%ABCrucero_del_Norte%C2%BB_detenido_sobre_la_Ruta_Nacional_12_en_Jard%C3%ADn_Am%C3%A9rica.jpg"
+    alt: "Двухэтажный междугородний автобус на Национальной дороге в Аргентине"
+    author: "Horacio Cambeiro"
+    license: "CC BY-SA 4.0"
+    source_page: "https://commons.wikimedia.org/wiki/File:%C3%93mnibus_de_larga_distancia_de_la_empresa_%C2%ABCrucero_del_Norte%C2%BB_detenido_sobre_la_Ruta_Nacional_12_en_Jard%C3%ADn_Am%C3%A9rica.jpg"
+  gallery:
+    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Interior_de_la_Terminal_de_%C3%93mnibus_de_Posadas%2C_en_la_provincia_de_Misiones%2C_Argentina.jpg/1920px-Interior_de_la_Terminal_de_%C3%93mnibus_de_Posadas%2C_en_la_provincia_de_Misiones%2C_Argentina.jpg"
+      alt: "Интерьер автовокзала (terminal de ómnibus) в Аргентине с кассами перевозчиков"
+      author: "Horacio Cambeiro"
+      license: "CC BY-SA 4.0"
+      source_page: "https://commons.wikimedia.org/wiki/File:Interior_de_la_Terminal_de_%C3%93mnibus_de_Posadas,_en_la_provincia_de_Misiones,_Argentina.jpg"
+warnings:
+  - "В салоне часто сильно работает кондиционер — берите тёплый слой одежды даже летом, особенно на ночные рейсы."
+  - "На дальних плечах (БА-Барилоче ~22 ч, БА-Сальта ~20 ч, БА-Игуасу ~18 ч) автобус — это сутки в пути; сравнивайте с внутренним перелётом, который после реформ 2025 часто сопоставим по цене (см. [[vnutrennie-aviabilety]])."
+  - "Карты российских банков не работают для онлайн-оплаты билета — платите картой банка третьей страны или в кассе терминала наличными (см. [[banki-i-perevody]])."
+  - "В высокий сезон и длинные выходные билеты на популярные направления разбирают заранее — бронируйте загодя."
+recommendations:
+  - "Для ночного переезда берите класс cama (кресло раскладывается почти горизонтально) или suite/cama total — сэкономите на гостинице и приедете отдохнувшим; semi-cama дешевле, но спать менее удобно."
+  - "Билеты удобно сравнивать и покупать онлайн на агрегаторах (Plataforma10, Central de Pasajes, Omnilíneas) — видно все компании и классы сразу."
+  - "В Буэнос-Айресе автобусы дальнего следования уходят с терминала Ретиро (Terminal de Ómnibus de Retiro) — крупнейшего в стране, с сотней с лишним касс; у каждого города есть свой terminal de ómnibus."
+  - "На короткие и средние плечи (БА-Росарио, БА-Мар-дель-Плата, БА-Кордова) автобус часто удобнее самолёта: терминалы в центре, нет аэропортовых процедур."
+last_verified: "2026-07-04"
+confidence: high
+seo_slug: "mezhgorodnie-avtobusy-argentiny"
+sources:
+  - title: "Omnilíneas — Comfort categories for buses in Argentina"
+    url: "https://www.omnilineas.com/argentina/tips/categories/"
+    lang: en
+    type: aggregator
+    note: "классы común/semi-cama/cama/suite, углы наклона кресел"
+  - title: "Plataforma10 — покупка билетов на автобусы"
+    url: "https://www.plataforma10.com.ar/"
+    lang: es
+    type: official
+    note: "агрегатор компаний и маршрутов, онлайн-покупка"
+  - title: "Secrets of Buenos Aires — Long-distance bus travel"
+    url: "https://secretsofbuenosaires.com/long-distance-bus-travel-from-buenos-aires/"
+    lang: en
+    type: aggregator
+    note: "терминал Ретиро, компании, практика поездок"
+---
+
+## Описание
+
+Междугородний автобус (в Аргентине его называют **micro** или **ómnibus de larga distancia**) — это становой хребет наземного транспорта страны. Сеть охватывает буквально всё: от столицы до маленьких городков в Патагонии и на северо-западе, куда не всегда летают самолёты. Аргентинские автобусы славятся комфортом дальних рейсов: на ночных плечах кресла раскладываются почти в кровать, поэтому автобус часто заменяет и транспорт, и ночёвку. Для путешественника это гибкий и покрывающий всю страну вариант; важно понимать систему классов и где покупать билеты.
+
+При этом Аргентина огромна: некоторые переезды занимают почти сутки. После реформ 2025 года внутренние перелёты стали ценово доступнее, поэтому на самых дальних направлениях стоит сравнивать автобус с самолётом (см. [[vnutrennie-aviabilety]]).
+
+## Классы (уровень комфорта)
+
+От самого простого к премиальному:
+
+- **Común** — обычные сидячие места без раскладывания; на дальних рейсах почти не встречается.
+- **Semi-cama** — кресло откидывается примерно на 120°, больше места для ног; самый бюджетный «дальний» класс.
+- **Cama / cama ejecutivo** — кресло раскладывается сильнее (~140-160°), шире и комфортнее; оптимум для ночных переездов.
+- **Suite / cama total / VIP** — кресло превращается в почти горизонтальную кровать (до ~180°), максимум приватности и места; дороже всего.
+
+На ночной переезд берите cama или suite — приедете отдохнувшим и сэкономите на гостинице.
+
+## Где покупать билеты
+
+- **Онлайн-агрегаторы** — удобнее всего сравнить компании, классы и цены: **Plataforma10**, **Central de Pasajes**, **Omnilíneas**. Оплата картой (карты РФ не работают — нужна карта банка третьей страны).
+- **Касса терминала** — в кассах автовокзала (boletería) можно купить билет за наличные; полезно, если карта не проходит.
+- **Сайты перевозчиков** — у крупных компаний есть свои сайты и приложения.
+
+## Терминалы и компании
+
+В Буэнос-Айресе дальние автобусы уходят с **терминала Ретиро** (Terminal de Ómnibus de Retiro) — крупнейшего в стране, где более сотни касс разных перевозчиков. У каждого города Аргентины есть свой **terminal de ómnibus**, обычно в центре или недалеко от него.
+
+Крупные перевозчики: **Andesmar**, **Flecha Bus**, **Chevallier**, **Vía Bariloche**, **Cata Internacional**, **Crucero del Norte**, **Rutatlántica**, **El Rápido** и другие — на разных направлениях сильны разные компании.
+
+## Сколько занимает дорога (примеры от Буэнос-Айреса)
+
+- **Мар-дель-Плата** — ~5-6 ч
+- **Росарио** — ~4 ч
+- **Кордова** — ~9-10 ч
+- **Мендоса** — ~13-15 ч
+- **Барилоче** — ~20-22 ч
+- **Игуасу (Пуэрто-Игуасу)** — ~16-18 ч
+- **Сальта** — ~19-21 ч
+
+На плечах до ~10 часов автобус обычно удобнее самолёта (терминалы в центре, без аэропортовых процедур); на самых дальних — сравнивайте с перелётом.
+
+## Практика поездки
+
+- Возьмите **тёплый слой** — кондиционер часто морозит.
+- Захватите **воду и перекус**; на некоторых рейсах кормят, но не всегда.
+- **Wi-Fi** заявляют многие компании, но в дороге он нестабилен — скачайте фильмы/книги заранее.
+- Держите **документы и деньги** при себе; крупный багаж сдают в багажное отделение под квитанцию.
+
+## Факты
+
+- Междугородние автобусы (micros) покрывают всю страну, включая места без авиасообщения.
+- Классы: común, semi-cama (~120°), cama (~140-160°), suite/cama total (~180°).
+- Главный узел — терминал Ретиро в Буэнос-Айресе (100+ касс); у каждого города свой terminal de ómnibus.
+- Билеты удобно брать онлайн на Plataforma10 / Central de Pasajes / Omnilíneas или в кассе за наличные.
+- На дальних плечах (20+ часов) внутренний перелёт после реформ 2025 часто сопоставим по цене.
+
+## Рекомендации
+
+См. `recommendations` в метаданных.
+
+## Предупреждения
+
+См. `warnings` в метаданных — про кондиционер, время в пути и оплату.
+
+## Связанные объекты
+
+- [[vnutrennie-aviabilety]] — когда выгоднее лететь, а не ехать.
+- [[arenda-avto-i-vozhdenie]] — альтернатива автобусу для гибких маршрутов и глубинки.
+- [[iz-esejsy-v-ba]] — как добраться из аэропорта Эсейса в город.
+- [[banki-i-perevody]] — чем платить, если карта РФ не работает.
+- [[argentina-2-nedeli]], [[ruta-40-sem-ozer]] — маршруты, где автобус или авто — ключевой транспорт.
+
+## Источники
+
+- [Omnilíneas — классы автобусов](https://www.omnilineas.com/argentina/tips/categories/) — común/semi-cama/cama/suite.
+- [Plataforma10](https://www.plataforma10.com.ar/) — покупка билетов онлайн.
+- [Secrets of Buenos Aires — long-distance buses](https://secretsofbuenosaires.com/long-distance-bus-travel-from-buenos-aires/) — терминал Ретиро, компании, практика.
