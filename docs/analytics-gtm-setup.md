@@ -1,6 +1,6 @@
 # Настройка Google Tag Manager
 
-Код сайта отправляет события в `dataLayer` и управляет **Google Consent Mode v2**. Сами счётчики (GA4, Метрика, Clarity) настраиваются **в интерфейсе GTM** — без правок кода при смене ID.
+Код сайта отправляет события в `dataLayer` и управляет **Google Consent Mode v2**. GA4 и Clarity настраиваются **в интерфейсе GTM**; **Яндекс.Метрика** подключается **напрямую в Next.js** (`YandexMetrika.tsx`) — не добавляйте тег Метрики в GTM.
 
 ## 1. Переменные окружения
 
@@ -10,7 +10,7 @@
 |------------|----------|
 | `NEXT_PUBLIC_GTM_ID` | ID контейнера GTM (`GTM-XXXXXXX`) — **обязательно** |
 | `NEXT_PUBLIC_GA4_MEASUREMENT_ID` | ID потока GA4 (`G-…`) — для справки и тегов в GTM |
-| `NEXT_PUBLIC_YM_COUNTER_ID` | Номер счётчика Яндекс.Метрики |
+| `NEXT_PUBLIC_YANDEX_METRIKA_ID` | Номер счётчика Яндекс.Метрики — **загружается из кода приложения** (production), пример: `110458660` |
 | `NEXT_PUBLIC_CLARITY_PROJECT_ID` | ID проекта Microsoft Clarity |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | Токен GSC (или в Admin → SEO) |
 | `NEXT_PUBLIC_BING_SITE_VERIFICATION` | Токен Bing (`msvalidate.01`) |
@@ -60,22 +60,32 @@ npm run gtm-events:audit
 
 ### Яндекс.Метрика
 
-- **Tag type:** Custom HTML или шаблон community «Yandex Metrica»
-- **Counter ID:** номер счётчика
-- Параметры инициализации:
+Счётчик подключается **напрямую в Next.js** (`src/components/analytics/YandexMetrika.tsx`), не через GTM.
+
+1. Задайте `NEXT_PUBLIC_YANDEX_METRIKA_ID=110458660` в Vercel → Settings → Environment Variables → **Production** → Redeploy.
+2. Убедитесь, что **нет дублирующего тега Метрики** в контейнере GTM — иначе будут двойные хиты.
+3. В настройках счётчика включите Webvisor, карту кликов, карту скроллинга и анализ форм.
+
+Инициализация в коде (SPA, `defer: true` + `hit` при навигации):
 
 ```javascript
 ym(COUNTER_ID, "init", {
+  defer: true,
   clickmap: true,
   trackLinks: true,
   accurateTrackBounce: true,
   webvisor: true,
-  ecommerce: "dataLayer"
+  trackHash: true,
+  triggerEvent: true,
 });
 ```
 
-- **Consent:** analytics_storage
-- **Trigger:** All Pages (после consent)
+Проверка:
+
+```bash
+npm run analytics-readiness
+ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
+```
 
 Цели в Метрике (JavaScript-событие, имя = `event` из dataLayer):
 
@@ -171,7 +181,7 @@ ym(COUNTER_ID, "init", {
 - [ ] `NEXT_PUBLIC_GTM_ID` задан в Vercel Production → **Redeploy**
 - [ ] GA4 Configuration + универсальный GA4 Event (regex выше)
 - [ ] Consent Mode на всех тегах аналитики
-- [ ] Метрика + цели по таблице выше
+- [ ] `NEXT_PUBLIC_YANDEX_METRIKA_ID=110458660` в Vercel Production; **нет** тега Метрики в GTM; цели — в интерфейсе Яндекс.Метрики (таблица выше)
 - [ ] Clarity (опционально)
 - [ ] **Submit + Publish** контейнера в [tagmanager.google.com](https://tagmanager.google.com/)
 - [ ] `npm run gtm-events:audit` — без ошибок

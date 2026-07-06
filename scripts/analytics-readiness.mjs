@@ -23,9 +23,10 @@ const EXPECTED_GTM_EVENTS_COUNT = 19;
 const CONVERSIONS_RECOMMENDED = ["booking_submit", "contact_form_submit", "newsletter_subscribe"];
 const ANALYTICS_ENV = [
   "NEXT_PUBLIC_GA4_MEASUREMENT_ID",
-  "NEXT_PUBLIC_YM_COUNTER_ID",
+  "NEXT_PUBLIC_YANDEX_METRIKA_ID",
   "NEXT_PUBLIC_CLARITY_PROJECT_ID",
 ];
+const YM_ENV = "NEXT_PUBLIC_YANDEX_METRIKA_ID";
 const VERIFICATION_ENV = [
   "NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION",
   "NEXT_PUBLIC_BING_SITE_VERIFICATION",
@@ -200,11 +201,18 @@ async function main() {
 
   for (const key of ANALYTICS_ENV) {
     const present = Boolean(process.env[key]?.trim());
+    const isYm = key === YM_ENV;
     checks.push({
       id: `env:${key}`,
       label: key,
-      status: present ? "ok" : "warn",
-      message: present ? "Задана (для тегов в GTM UI)" : "Не задана — справочно для настройки тегов",
+      status: present ? "ok" : isYm ? "warn" : "warn",
+      message: present
+        ? isYm
+          ? "Задана — счётчик загрузится в production"
+          : "Задана (для тегов в GTM UI)"
+        : isYm
+          ? "Не задана — Метрика не загрузится"
+          : "Не задана — справочно для настройки тегов",
       category: "env",
     });
   }
@@ -279,6 +287,23 @@ async function main() {
       label: `Live GTM snippet (${baseUrl})`,
       status: hasGtm ? "ok" : "fail",
       message: hasGtm ? "googletagmanager.com найден в HTML" : "GTM не в HTML — проверьте env на хостинге и redeploy",
+      category: "live",
+    });
+
+    const hasMetrika =
+      /mc\.yandex\.ru\/metrika\/tag\.js/i.test(home.text) ||
+      /mc\.yandex\.ru\/watch\//i.test(home.text);
+    const ymEnvSet = Boolean(process.env[YM_ENV]?.trim());
+
+    checks.push({
+      id: "live:yandex-metrika",
+      label: `Live Yandex Metrika snippet (${baseUrl})`,
+      status: !ymEnvSet ? "skip" : hasMetrika ? "ok" : "fail",
+      message: !ymEnvSet
+        ? `${YM_ENV} не задан — проверка пропущена`
+        : hasMetrika
+          ? "mc.yandex.ru/metrika найден в HTML"
+          : "Метрика не в HTML — проверьте env на хостинге и redeploy",
       category: "live",
     });
 
@@ -374,7 +399,7 @@ async function main() {
       id: "manual:gtm-publish",
       label: "GTM: контейнер опубликован",
       status: "skip",
-      message: "Submit + Publish в tagmanager.google.com (GA4, Метрика, Clarity)",
+      message: "Submit + Publish в tagmanager.google.com (GA4, Clarity). Метрика — в коде приложения, не в GTM.",
       category: "manual",
     });
 

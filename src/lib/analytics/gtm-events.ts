@@ -1,6 +1,6 @@
 import { hasAnalyticsConsent } from "@/lib/cookie-consent";
 
-/** Custom dataLayer event names — map to GA4 / Metrika in GTM. */
+/** Custom dataLayer event names — map to GA4 in GTM; Metrika goals in Yandex UI. */
 export const GTM_EVENTS = {
   bookingSubmit: "booking_submit",
   contactFormSubmit: "contact_form_submit",

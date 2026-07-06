@@ -24,7 +24,7 @@ ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
 |------------|-------------|-----------|
 | `NEXT_PUBLIC_GTM_ID` | **Да** | [tagmanager.google.com](https://tagmanager.google.com) → контейнер → `GTM-XXXXXXX` |
 | `NEXT_PUBLIC_GA4_MEASUREMENT_ID` | Для тегов GTM | GA4 → Admin → Data streams → `G-…` |
-| `NEXT_PUBLIC_YM_COUNTER_ID` | Для тегов GTM | Яндекс.Метрика → номер счётчика |
+| `NEXT_PUBLIC_YANDEX_METRIKA_ID` | **Да** (production) | Яндекс.Метрика → номер счётчика → `110458660`; Vercel Dashboard → Settings → Environment Variables → Production → **Redeploy** |
 | `NEXT_PUBLIC_CLARITY_PROJECT_ID` | Для тегов GTM | clarity.microsoft.com → Settings |
 | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | GSC | Search Console → HTML tag → значение `content=` |
 | `NEXT_PUBLIC_BING_SITE_VERIFICATION` | Bing | Bing Webmaster → Meta tag → `content=` |
@@ -50,7 +50,7 @@ ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
 
 - [ ] Контейнер создан, `NEXT_PUBLIC_GTM_ID` в Vercel
 - [ ] GA4 Configuration + GA4 Event (custom events из dataLayer)
-- [ ] Яндекс.Метрика (webvisor, clickmap) — consent `analytics_storage`
+- [ ] `NEXT_PUBLIC_YANDEX_METRIKA_ID=110458660` в Vercel Production; **нет** тега Метрики в GTM (счётчик в коде)
 - [ ] Microsoft Clarity — consent `analytics_storage`
 - [ ] **Submit + Publish** контейнера GTM
 - [ ] Tag Assistant: consent denied → granted после cookie banner

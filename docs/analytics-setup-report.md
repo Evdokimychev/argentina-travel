@@ -12,7 +12,7 @@
 |--------|-------------------|----------------------------|
 | **Google Tag Manager** | Snippet в `<head>` + loader `afterInteractive` | `NEXT_PUBLIC_GTM_ID` → `GTM-XXXXXXX` |
 | **Google Analytics 4** | Тег в GTM | `NEXT_PUBLIC_GA4_MEASUREMENT_ID` → `G-XXXXXXXX` |
-| **Яндекс.Метрика** | Тег в GTM (Webvisor, карта кликов, карта скроллинга) | `NEXT_PUBLIC_YM_COUNTER_ID` → `XXXXXXXX` |
+| **Яндекс.Метрика** | Прямая интеграция в Next.js (Webvisor, карта кликов, SPA hit) | `NEXT_PUBLIC_YANDEX_METRIKA_ID` → `110458660` |
 | **Microsoft Clarity** | Тег Custom HTML в GTM | `NEXT_PUBLIC_CLARITY_PROJECT_ID` |
 | **Google Search Console** | Meta verification + sitemap | `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` |
 | **Bing Webmaster Tools** | Meta `msvalidate.01` | `NEXT_PUBLIC_BING_SITE_VERIFICATION` |

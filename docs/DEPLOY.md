@@ -29,7 +29,7 @@ npm run backup:schema
 Скопируйте `.env.example` → `.env.local` / настройки хостинга. Обязательно:
 
 - `NEXT_PUBLIC_SITE_URL`, Supabase keys
-- **Аналитика (I2):** `NEXT_PUBLIC_GTM_ID`, токены верификации GSC/Bing/Ahrefs — см. [`docs/i2-analytics-gsc-runbook.md`](./i2-analytics-gsc-runbook.md)
+- **Аналитика (I2):** `NEXT_PUBLIC_GTM_ID`, `NEXT_PUBLIC_YANDEX_METRIKA_ID` (`110458660`, прямая загрузка в коде, не GTM), токены верификации GSC/Bing/Ahrefs — см. [`docs/i2-analytics-gsc-runbook.md`](./i2-analytics-gsc-runbook.md)
 - `NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY`, `WEB_PUSH_VAPID_PRIVATE_KEY`, `WEB_PUSH_VAPID_SUBJECT` — для web push (E83)
 - `GIT_SHA` — commit SHA (CI и Vercel подставляют автоматически)
 - `SENTRY_DSN` / `NEXT_PUBLIC_SENTRY_DSN` — по желанию, для мониторинга ошибок

@@ -1,15 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import SiteGtmLoader from "@/components/analytics/SiteGtmLoader";
+import YandexMetrika from "@/components/analytics/YandexMetrika";
 import MessengerClickTracker from "@/components/analytics/MessengerClickTracker";
 import {
   COOKIE_CONSENT_CHANGED_EVENT,
   hasAnalyticsConsent,
 } from "@/lib/cookie-consent";
 import { isGtmEnabled } from "@/lib/analytics/gtm-config";
+import { isYandexMetrikaEnabled } from "@/lib/analytics/yandex-metrika-config";
 
 /** Vercel Analytics + GTM (via consent) — see legal/cookies. */
 export default function SiteAnalytics() {
@@ -30,6 +32,11 @@ export default function SiteAnalytics() {
           <SiteGtmLoader />
           <MessengerClickTracker />
         </>
+      ) : null}
+      {isYandexMetrikaEnabled() ? (
+        <Suspense fallback={null}>
+          <YandexMetrika />
+        </Suspense>
       ) : null}
       {enabled ? (
         <>
