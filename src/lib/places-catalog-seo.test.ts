@@ -68,9 +68,10 @@ describe("buildPlacesCatalogPageMetadata", () => {
     expect(twitterUrl).toMatch(/\/media\//);
   });
 
-  it("noindexes filtered catalog URLs", () => {
+  it("noindexes filtered catalog URLs and keeps clean canonical", () => {
     const meta = buildPlacesCatalogPageMetadata({ region: "Патагония" }, places);
     expect(meta.robots).toEqual({ index: false, follow: true });
+    expect(meta.alternates?.canonical).toBe("/places");
     expect(meta.title).toContain("Патагония");
   });
 });

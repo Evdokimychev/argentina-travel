@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import FlightRouteLandingView from "@/components/flights/FlightRouteLandingView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import {
   FLIGHT_POPULAR_ROUTES,
   getFlightRouteById,
@@ -45,6 +47,7 @@ export default async function FlightRoutePage({ params }: PageProps) {
   if (!route) notFound();
 
   const locale = "ru" as const;
+  const labels = getFlightRouteLabels(locale);
   const teaser = await fetchRouteFlightPriceTeaser({
     routeId: route.id,
     origin: route.origin,
@@ -61,9 +64,18 @@ export default async function FlightRoutePage({ params }: PageProps) {
   });
 
   const relatedRoutes = getRelatedFlightRoutes(route.id);
+  const routeTitle = labels.heroTitle
+    .replace("{origin}", route.originLabel)
+    .replace("{destination}", route.destinationLabel);
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(locale, "flights", {
+          name: routeTitle,
+          path: `/flights/${route.id}`,
+        })}
+      />
       {teaser ? (
         <FlightOffersJsonLd teasers={[teaser]} pageUrl={`/flights/${route.id}`} />
       ) : null}

@@ -1,6 +1,9 @@
 import { notFound } from "next/navigation";
 import ExcursionDetailView from "@/components/excursions/ExcursionDetailView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import ExcursionJsonLd from "@/components/seo/ExcursionJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import {
   fetchExcursionDetailServer,
   fetchExcursionSlugsServer,
@@ -52,9 +55,16 @@ export default async function ExcursionDetailPage({ params }: ExcursionPageProps
     6,
     excursion.partner
   );
+  const locale = await getServerI18nLocale();
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(locale, "excursions", {
+          name: excursion.title,
+          path: `/excursions/${slug}`,
+        })}
+      />
       <ExcursionJsonLd excursion={excursion} />
       <ExcursionDetailView excursion={excursion} similarExcursions={similarExcursions} />
     </>

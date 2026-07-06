@@ -1,0 +1,106 @@
+/**
+ * Типы раздела «База знаний» (/baza-znaniy).
+ * Источник данных — content/knowledge-base/ (267 записей в Markdown),
+ * читаемый через сгенерированные индексы _index/{content,navigation}.json.
+ * Генератор индексов: content/knowledge-base/_index/build_manifest.py.
+ */
+
+export type KbEntryType =
+  | "city"
+  | "guide"
+  | "faq"
+  | "author_tip"
+  | "national_park"
+  | "attraction"
+  | "region"
+  | "route"
+  | "transport";
+
+export interface KbSource {
+  title?: string;
+  url?: string;
+  lang?: string;
+  type?: string;
+  note?: string;
+}
+
+export interface KbMediaImage {
+  url: string;
+  alt?: string;
+  author?: string;
+  license?: string;
+  source_page?: string;
+}
+
+export interface KbMedia {
+  hero?: KbMediaImage;
+  gallery?: KbMediaImage[];
+}
+
+/** Полная запись базы знаний (frontmatter + тело в Markdown). */
+export interface KbEntry {
+  id: string;
+  type: KbEntryType;
+  subtype?: string | null;
+  title: string;
+  title_es?: string | null;
+  summary?: string;
+  aliases?: string[];
+  tags?: string[];
+  site_sections?: string[];
+  topic?: string | null;
+  applies_to?: string | null;
+  related?: string[];
+  warnings?: string[];
+  recommendations?: string[];
+  sources?: KbSource[];
+  media?: KbMedia | null;
+  status?: string;
+  confidence?: string;
+  last_verified?: string | null;
+  seo_slug?: string | null;
+  body: string;
+}
+
+export interface KbNavSectionEntry {
+  id: string;
+  type: string;
+  subtype?: string | null;
+  title: string;
+}
+
+export interface KbNavSection {
+  title: string;
+  entries: KbNavSectionEntry[];
+}
+
+export interface KbNavigation {
+  generated_at?: string;
+  hubs: string[];
+  sections: Record<string, KbNavSection>;
+}
+
+/** Метаданные канонического раздела для меню, хлебных крошек и категорий. */
+export interface KbSectionMeta {
+  /** id раздела (совпадает со значением site_sections) */
+  id: string;
+  /** URL-слаг раздела: /baza-znaniy/razdel/<slug> */
+  slug: string;
+  /** Название для меню/крошек */
+  title: string;
+  /** Короткое описание для карточки раздела */
+  description: string;
+  /** Эмодзи-иконка (лёгкая, без внешних зависимостей) */
+  icon: string;
+}
+
+/** Облегчённая запись для клиентского поиска. */
+export interface KbSearchItem {
+  id: string;
+  title: string;
+  summary: string;
+  type: KbEntryType;
+  section: string;
+  aliases: string[];
+  tags: string[];
+}

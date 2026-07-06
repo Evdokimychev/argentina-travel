@@ -16,7 +16,9 @@ import ImmigrationTopicRichSections, {
 } from "@/components/immigration/ImmigrationTopicRichSections";
 import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { buildGuidePillarToc } from "@/lib/build-guide-pillar-toc";
 import { cn } from "@/lib/cn";
 import { getImmigrationTopicHeroImage } from "@/lib/media-resolver";
@@ -71,6 +73,12 @@ export default function ImmigrationPillarView({ topic }: ImmigrationPillarViewPr
     <>
       <WebPageJsonLd name={heroTitle} description={heroSubtitle} path={path} />
       <FAQPageJsonLd questions={pillar.faq} path={path} />
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(undefined, "immigration", {
+          name: topic.title,
+          path,
+        })}
+      />
 
       <HubHero
         title={heroTitle}

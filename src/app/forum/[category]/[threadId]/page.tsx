@@ -1,11 +1,14 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ForumThreadView from "@/components/forum/ForumThreadView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { isSupabaseForumEnabled } from "@/lib/auth-mode";
+import { buildForumThreadBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import {
   fetchForumCategoryBySlug,
   fetchForumThreadDetail,
 } from "@/lib/forum/forum-server";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -50,6 +53,7 @@ export default async function ForumThreadPage({ params }: PageProps) {
   }
 
   const { category: slug, threadId } = await params;
+  const locale = await getServerI18nLocale();
   const supabase = await createSupabaseServerClient();
   const thread = await fetchForumThreadDetail(supabase, slug, threadId);
 
@@ -57,5 +61,16 @@ export default async function ForumThreadPage({ params }: PageProps) {
     notFound();
   }
 
-  return <ForumThreadView thread={thread} />;
+  return (
+    <>
+      <BreadcrumbListJsonLd
+        items={buildForumThreadBreadcrumbItems(
+          locale,
+          { title: thread.categoryTitle, slug: thread.categorySlug },
+          { title: thread.title, path: `/forum/${slug}/${threadId}` },
+        )}
+      />
+      <ForumThreadView thread={thread} />
+    </>
+  );
 }

@@ -1,6 +1,8 @@
 import { cookies } from "next/headers";
 import BlogIndexView from "@/components/blog/BlogIndexView";
 import BlogIndexHero from "@/components/blog/BlogIndexHero";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import { buildTwoLevelBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { resolveBlogCatalog } from "@/lib/cms/blog-resolver";
 import { getServerPersonalizedBlogPosts } from "@/lib/blog-analytics-signals";
 import { filterIndexableBlogPosts } from "@/lib/blog-utils";
@@ -86,6 +88,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={buildTwoLevelBreadcrumbItems(locale, {
+          labelKey: "nav.blog",
+          path: "/blog",
+          fallback: "Блог",
+        })}
+      />
       <link
         rel="preload"
         as="image"

@@ -2,8 +2,10 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import PlaceDetailView from "@/components/places/PlaceDetailView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import PlaceJsonLd from "@/components/seo/PlaceJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { resolveKnowledgeLinksForPlace } from "@/lib/knowledge-internal-links";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { placeHref } from "@/lib/places-repository";
@@ -46,6 +48,12 @@ export default async function PlaceDetailPage({ params }: PageProps) {
       {cmsMetadata?.showTranslationBanner ? (
         <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
       ) : null}
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(locale, "places", {
+          name: place.name,
+          path: placeHref(slug),
+        })}
+      />
       <PlaceJsonLd place={place} />
       {place.faq && place.faq.length > 0 ? (
         <FAQPageJsonLd questions={place.faq} path={placeHref(slug)} />

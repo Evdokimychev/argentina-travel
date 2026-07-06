@@ -1,8 +1,11 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
 import TourDetailView from "@/components/tour-detail/TourDetailView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import TourJsonLd from "@/components/seo/TourJsonLd";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import TourFlightLogisticsSection from "@/components/flights/TourFlightLogisticsSection";
 import { fetchTourDetail, fetchSimilarTours } from "@/lib/tours-server";
 import { fetchPlacesServer } from "@/lib/places-repository";
@@ -94,7 +97,7 @@ export default async function TourDetailPage({
     fetchPlacesServer(),
   ]);
 
-  const locale = "ru" as const;
+  const locale = await getServerI18nLocale();
   const labels = getFlightTeaserLabels(locale);
   let flightLogisticsSection: ReactNode | undefined;
   let flightOffersJsonLd: ReactNode = null;
@@ -119,6 +122,14 @@ export default async function TourDetailPage({
 
   return (
     <>
+      {tour && !tour.isPrivate ? (
+        <BreadcrumbListJsonLd
+          items={buildDetailBreadcrumbItems(locale, "tours", {
+            name: tour.title,
+            path: `/tours/${slug}`,
+          })}
+        />
+      ) : null}
       {tour ? <TourJsonLd tour={tour} /> : null}
       {flightOffersJsonLd}
       <TourDetailView

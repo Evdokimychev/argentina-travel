@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ForumIndexView from "@/components/forum/ForumIndexView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { isSupabaseForumEnabled } from "@/lib/auth-mode";
+import { buildTwoLevelBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { fetchForumCategories } from "@/lib/forum/forum-server";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
@@ -21,8 +24,20 @@ export default async function ForumPage() {
     notFound();
   }
 
+  const locale = await getServerI18nLocale();
   const supabase = await createSupabaseServerClient();
   const categories = await fetchForumCategories(supabase);
 
-  return <ForumIndexView categories={categories} />;
+  return (
+    <>
+      <BreadcrumbListJsonLd
+        items={buildTwoLevelBreadcrumbItems(locale, {
+          labelKey: "nav.forum",
+          path: "/forum",
+          fallback: PAGE_TITLE,
+        })}
+      />
+      <ForumIndexView categories={categories} />
+    </>
+  );
 }

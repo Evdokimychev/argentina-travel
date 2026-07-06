@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import LegalPageView from "@/components/legal/LegalPageView";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveLegalDocument, listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
@@ -44,6 +45,12 @@ export default async function LegalDocumentPage({ params }: PageProps) {
       {cmsMetadata?.showTranslationBanner ? (
         <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
       ) : null}
+      <BreadcrumbListJsonLd
+        items={[
+          { name: "Главная", path: "/" },
+          { name: doc.title, path: `/legal/${slug}` },
+        ]}
+      />
       <LegalPageView document={doc} />
     </>
   );

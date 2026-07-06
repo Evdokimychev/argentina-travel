@@ -86,8 +86,7 @@ export function buildPlacesCatalogPageMetadata(
       ? `${count} ${count === 1 ? "место" : count < 5 ? "места" : "мест"} по фильтрам: ${filterParts.join(", ")}. ${baseDescription}`
       : `${places.length} ${places.length === 1 ? "место" : places.length < 5 ? "места" : "мест"}: ${baseDescription}`;
 
-  const canonicalQuery = params.toString();
-  const canonicalPath = canonicalQuery ? `/places?${canonicalQuery}` : "/places";
+  const hasFilters = filterParts.length > 0;
   const heroImage = resolvePublicUrl(getPlacesCatalogHeroImage());
 
   return {
@@ -95,9 +94,9 @@ export function buildPlacesCatalogPageMetadata(
     description,
     alternates: {
       ...buildHreflangAlternates("/places"),
-      canonical: canonicalPath,
+      canonical: "/places",
     },
-    ...(filterParts.length > 0 ? { robots: { index: false, follow: true } } : {}),
+    ...(hasFilters ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title,
       description,

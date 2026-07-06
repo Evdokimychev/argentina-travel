@@ -1,7 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import NotFoundScrollReset from "@/components/NotFoundScrollReset";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+
+export const metadata: Metadata = {
+  title: "Страница не найдена",
+  description: "Запрошенная страница не существует или была удалена. Перейдите в каталог туров или на главную.",
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

@@ -29,19 +29,45 @@ export function serializeJsonLd(data: JsonLdGraph | JsonLdGraph[]): string {
   return JSON.stringify(data);
 }
 
+export const ORGANIZATION_SCHEMA_ID = "#organization";
+
+export function organizationSchemaId(siteUrl: string): string {
+  return `${siteUrl.replace(/\/$/, "")}${ORGANIZATION_SCHEMA_ID}`;
+}
+
+/** Tours catalog search — used in WebSite SearchAction (Google site name; optional for Yandex). */
+export function buildSiteSearchUrlTemplate(siteUrl: string): string {
+  const base = siteUrl.replace(/\/$/, "");
+  return `${base}/tours?query={search_term_string}`;
+}
+
 export function buildOrganizationSchema(input: {
   name: string;
   url: string;
   logoUrl: string;
   sameAs?: string[];
+  contactEmail?: string;
 }): WithContext<Organization> {
+  const orgId = organizationSchemaId(input.url);
+
   return {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": orgId,
     name: input.name,
     url: input.url,
     logo: input.logoUrl,
     ...(input.sameAs?.length ? { sameAs: input.sameAs } : {}),
+    ...(input.contactEmail
+      ? {
+          contactPoint: {
+            "@type": "ContactPoint",
+            contactType: "customer support",
+            email: input.contactEmail,
+            availableLanguage: ["Russian"],
+          },
+        }
+      : {}),
   };
 }
 
@@ -49,6 +75,7 @@ export function buildWebSiteSchema(input: {
   name: string;
   url: string;
   searchUrlTemplate: string;
+  publisherId?: string;
 }): WithContext<WebSite> {
   return {
     "@context": "https://schema.org",
@@ -56,6 +83,7 @@ export function buildWebSiteSchema(input: {
     name: input.name,
     url: input.url,
     inLanguage: "ru-RU",
+    ...(input.publisherId ? { publisher: { "@id": input.publisherId } } : {}),
     potentialAction: {
       "@type": "SearchAction",
       target: {

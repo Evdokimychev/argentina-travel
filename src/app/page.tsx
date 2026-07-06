@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import MarketplaceHome from "@/components/marketplace/MarketplaceHome";
 import HomeHeroCollage from "@/components/marketplace/HomeHeroCollage";
 import TravelPrepStrip from "@/components/flights/TravelPrepStrip";
+import HomePrimarySectionsItemListJsonLd from "@/components/seo/HomePrimarySectionsItemListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { blogPosts } from "@/data/blog";
@@ -61,6 +62,7 @@ export default async function HomePage() {
     <>
       <link rel="preload" as="image" href={absoluteUrl(heroSrc)} fetchPriority="high" />
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/" />
+      <HomePrimarySectionsItemListJsonLd />
       <MarketplaceHome
         tours={tours}
         blogPosts={blogPosts}

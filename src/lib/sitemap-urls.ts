@@ -28,7 +28,10 @@ import { filterIndexableBlogPosts } from "@/lib/blog-utils";
 import { getBlogSitemapPriority } from "@/lib/blog-sitemap-priority";
 import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
+import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
+import { KB_SECTIONS, getAllEntryIds } from "@/lib/knowledge-base/content";
+import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
 import type { BlogPost } from "@/types";
 
 function isIndexableInternalPath(href: string): boolean {
@@ -137,6 +140,21 @@ export async function collectPlacesSitemapPaths(): Promise<string[]> {
   return uniquePaths(paths);
 }
 
+export async function collectKnowledgeBaseSitemapPaths(): Promise<string[]> {
+  try {
+    const paths = ["/baza-znaniy"];
+    for (const section of KB_SECTIONS) {
+      paths.push(sectionHref(section.slug));
+    }
+    for (const id of getAllEntryIds()) {
+      paths.push(entryHref(id));
+    }
+    return uniquePaths(paths);
+  } catch {
+    return ["/baza-znaniy"];
+  }
+}
+
 export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }): Promise<string[]> {
   const navPaths = flattenSiteNavSections(SITE_NAV_SECTIONS)
     .map((link) => link.href)
@@ -157,6 +175,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     guideSlugs,
     destinationSlugs,
     legalSlugs,
+    kbPaths,
   ] = await Promise.all([
     collectTourSitemapPaths(),
     collectExcursionSitemapPaths(),
@@ -164,6 +183,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     listPublishedGuideSlugs(),
     listPublishedDestinationSlugs(),
     listPublishedLegalSlugs(),
+    collectKnowledgeBaseSitemapPaths(),
   ]);
 
   const blogPaths = [
@@ -184,6 +204,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   );
 
   return uniquePaths([
+    ...YANDEX_PRIORITY_HUB_PATHS,
     ...navPaths,
     ...footerPaths,
     ...tourPaths,
@@ -196,6 +217,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     GUIDE_ABOUT_ARGENTINA_PATH,
     ...destinationPaths,
     ...legalPaths,
+    ...kbPaths,
     ...flightRoutePaths,
     ...organizerPaths,
   ]);

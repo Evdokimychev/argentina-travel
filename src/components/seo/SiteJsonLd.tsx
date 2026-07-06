@@ -1,7 +1,9 @@
 import { fetchSiteBranding, fetchSiteContact } from "@/lib/site-settings-server";
 import {
   buildOrganizationSchema,
+  buildSiteSearchUrlTemplate,
   buildWebSiteSchema,
+  organizationSchemaId,
 } from "@/lib/schema-json-ld";
 import JsonLdScript from "@/components/seo/JsonLdScript";
 import { absoluteUrl } from "@/lib/site-url";
@@ -27,11 +29,13 @@ export default async function SiteJsonLd() {
           url: siteUrl,
           logoUrl: absoluteUrl("/logo-light.svg"),
           sameAs,
+          contactEmail: contact.supportEmail?.trim() || undefined,
         }),
         buildWebSiteSchema({
           name: branding.siteName,
           url: siteUrl,
-          searchUrlTemplate: `${siteUrl}tours?query={search_term_string}`,
+          searchUrlTemplate: buildSiteSearchUrlTemplate(siteUrl),
+          publisherId: organizationSchemaId(siteUrl),
         }),
       ]}
     />

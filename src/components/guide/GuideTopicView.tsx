@@ -7,7 +7,10 @@ import {
   Sparkles,
 } from "lucide-react";
 import Hero from "@/components/Hero";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { guideTopicHref } from "@/lib/guide-topics";
 import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import { buttonVariants } from "@/components/ui/button";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
@@ -28,9 +31,16 @@ function tourHref(rec: { href: string; query?: string }): string {
 
 export default function GuideTopicView({ topic }: GuideTopicViewProps) {
   const heroImage = topic.heroImage ?? getGuideTopicHeroImage(topic.slug);
+  const path = guideTopicHref(topic.slug);
 
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(undefined, "guide", {
+          name: topic.title,
+          path,
+        })}
+      />
       <Hero title={topic.title} subtitle={topic.shortDescription} image={heroImage} compact />
 
       <div className="bg-surface-muted pb-16">

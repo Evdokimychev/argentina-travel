@@ -3,7 +3,9 @@ import ImmigrationSectionNav from "@/components/immigration/ImmigrationSectionNa
 import ContentSectionBody from "@/components/content/ContentSectionBody";
 import ContentReadingLayout from "@/components/content/ContentReadingLayout";
 import SharePageLinkButton from "@/components/content/SharePageLinkButton";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { buttonVariants } from "@/components/ui/button";
+import { buildContentPageBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { cn } from "@/lib/cn";
 import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-heading-id";
 import { mapContentRelatedLinks } from "@/lib/content-related-links";
@@ -45,6 +47,7 @@ export default function ContentPageView({ page, freshness }: ContentPageViewProp
 
   return (
     <>
+      <BreadcrumbListJsonLd items={buildContentPageBreadcrumbItems(undefined, page)} />
       {page.section === "immigration" ? <ImmigrationSectionNav /> : null}
       <div className="bg-surface-muted pb-16">
         <div className={cn(siteContainerClass, "py-8 md:py-12")}>

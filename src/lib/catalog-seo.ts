@@ -88,19 +88,16 @@ export function buildCatalogMetadata(
       ? `${count} ${count === 1 ? "тур" : count < 5 ? "тура" : "туров"} по фильтрам: ${filterParts.join(", ")}. Авторские путешествия с удобным поиском и бронированием.`
       : `${count} авторских туров и экскурсий по Аргентине — от Буэнос-Айреса до Патагонии. Фильтры по датам, цене, формату и региону.`;
 
-  const canonicalQuery = params.toString();
-  const canonicalPath = canonicalQuery ? `/tours?${canonicalQuery}` : "/tours";
+  const hasFilters = filterParts.length > 0;
 
   return {
     title,
     description,
     alternates: {
       ...buildHreflangAlternates("/tours"),
-      canonical: canonicalPath,
+      canonical: "/tours",
     },
-    ...(filterParts.length > 0
-      ? { robots: { index: false, follow: true } }
-      : {}),
+    ...(hasFilters ? { robots: { index: false, follow: true } } : {}),
     openGraph: {
       title,
       description,

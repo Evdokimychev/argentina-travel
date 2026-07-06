@@ -8,8 +8,10 @@ import HubToc from "@/components/guide/hub/HubToc";
 import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInfographic";
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import {
   GUIDE_ABOUT_ARGENTINA,
   GUIDE_ABOUT_ARGENTINA_PATH,
@@ -30,6 +32,12 @@ export default function AboutArgentinaView() {
         path={GUIDE_ABOUT_ARGENTINA_PATH}
       />
       <FAQPageJsonLd questions={content.faq} path={GUIDE_ABOUT_ARGENTINA_PATH} />
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(undefined, "guide", {
+          name: content.heroTitle,
+          path: GUIDE_ABOUT_ARGENTINA_PATH,
+        })}
+      />
 
       <HubHero
         title={content.heroTitle}

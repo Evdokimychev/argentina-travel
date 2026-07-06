@@ -3,8 +3,10 @@ import { notFound } from "next/navigation";
 import DestinationDetailView from "@/components/destinations/DestinationDetailView";
 import DestinationFlightSidebar from "@/components/flights/DestinationFlightSidebar";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import FlightOffersJsonLd from "@/components/seo/FlightOffersJsonLd";
 import TouristDestinationJsonLd from "@/components/seo/TouristDestinationJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import {
   listPublishedDestinationSlugs,
   resolveDestinationPage,
@@ -74,6 +76,12 @@ export default async function DestinationDetailPage({ params }: PageProps) {
       {cmsMetadata?.showTranslationBanner ? (
         <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
       ) : null}
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(locale, "destinations", {
+          name: destination.name,
+          path: `/destinations/${slug}`,
+        })}
+      />
       <TouristDestinationJsonLd destination={destination} />
       {flightTeasers.length > 0 ? (
         <FlightOffersJsonLd teasers={flightTeasers} pageUrl={`/destinations/${slug}`} />

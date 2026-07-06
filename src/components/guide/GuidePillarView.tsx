@@ -18,8 +18,10 @@ import HubSection from "@/components/guide/hub/HubSection";
 import HubToc from "@/components/guide/hub/HubToc";
 import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { getGuidePracticalTips } from "@/data/guide-pillar-practical-tips";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { buildGuidePillarToc } from "@/lib/build-guide-pillar-toc";
 import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 import { cn } from "@/lib/cn";
@@ -77,6 +79,12 @@ export default function GuidePillarView({ topic, initialTours = [] }: GuidePilla
     <>
       <WebPageJsonLd name={heroTitle} description={heroSubtitle} path={path} />
       <FAQPageJsonLd questions={pillar.faq} path={path} />
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(undefined, "guide", {
+          name: topic.title,
+          path,
+        })}
+      />
 
       <HubHero
         title={heroTitle}

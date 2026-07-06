@@ -3,15 +3,18 @@ import Link from "next/link";
 import { HelpCircle } from "lucide-react";
 import FaqAccordionSection from "@/components/faq/FaqAccordionSection";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import { FAQ_ITEMS } from "@/data/faq";
+import { buildTwoLevelBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 
 const PAGE_TITLE = "Частые вопросы";
 const PAGE_DESCRIPTION =
-  "Ответы на популярные вопросы о бронировании туров, оплате и работе с организаторами.";
+  "Ответы о поездках, переезде, документах, деньгах и бронировании на «Пора в Аргентину».";
 
 export const metadata: Metadata = buildPublicPageMetadata({
   title: PAGE_TITLE,
@@ -19,9 +22,18 @@ export const metadata: Metadata = buildPublicPageMetadata({
   path: "/faq",
 });
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  const locale = await getServerI18nLocale();
+
   return (
     <>
+      <BreadcrumbListJsonLd
+        items={buildTwoLevelBreadcrumbItems(locale, {
+          labelKey: "nav.faq",
+          path: "/faq",
+          fallback: PAGE_TITLE,
+        })}
+      />
       <FAQPageJsonLd questions={FAQ_ITEMS} path="/faq" />
 
       <section className="border-b border-gray-100 bg-gradient-to-br from-surface-muted via-white to-sky/[0.06]">

@@ -1,0 +1,3050 @@
+{
+  "generated_at": "2026-07-06 12:00",
+  "hubs": [
+    "gid-po-dengam",
+    "gid-po-dokumentam",
+    "gid-po-kulture",
+    "gid-po-medicine",
+    "gid-po-transportu",
+    "gid-po-zhilyu",
+    "gid-puteshestvennika",
+    "gid-relokanta"
+  ],
+  "sections": {
+    "puteshestviya-po-argentine": {
+      "title": "Путешествия по Аргентине",
+      "entries": [
+        {
+          "id": "aconcagua-provincial-park",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Провинциальный парк Аконкагуа"
+        },
+        {
+          "id": "aep-eze-stykovka",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "AEP и EZE — два разных аэропорта Буэнос-Айреса, и тугая стыковка между ними рушит планы"
+        },
+        {
+          "id": "aeroporty",
+          "type": "transport",
+          "subtype": null,
+          "title": "Аэропорты Аргентины и трансферы в город"
+        },
+        {
+          "id": "aktualen-li-blue-dollar",
+          "type": "faq",
+          "subtype": null,
+          "title": "Актуален ли «блю-доллар» в Аргентине в 2026 году?"
+        },
+        {
+          "id": "alersesy-skrytye-ozyora",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Лос-Алерсес: рыбалка и каяк на тихих озёрах, которые пропускают ради одного дерева"
+        },
+        {
+          "id": "arenda-avto-i-vozhdenie",
+          "type": "transport",
+          "subtype": null,
+          "title": "Аренда авто и вождение в Аргентине"
+        },
+        {
+          "id": "argentina-10-dney",
+          "type": "route",
+          "subtype": null,
+          "title": "Маршрут по Аргентине на 10 дней"
+        },
+        {
+          "id": "argentina-2-nedeli",
+          "type": "route",
+          "subtype": null,
+          "title": "Маршрут по Аргентине на 2 недели"
+        },
+        {
+          "id": "argentina-3-nedeli",
+          "type": "route",
+          "subtype": null,
+          "title": "Маршрут по Аргентине на 3 недели (гранд-тур)"
+        },
+        {
+          "id": "asado",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Асадо: аргентинское барбекю от ритуала до отрубов"
+        },
+        {
+          "id": "banado-la-estrella",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Баньядо-ла-Эстрелья"
+        },
+        {
+          "id": "bariloche",
+          "type": "city",
+          "subtype": null,
+          "title": "Барилоче"
+        },
+        {
+          "id": "besplatna-li-medicina-dlya-turista",
+          "type": "faq",
+          "subtype": null,
+          "title": "Бесплатна ли медицина в Аргентине для туриста?"
+        },
+        {
+          "id": "bezopasno-li-odnoj-zhenshchine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Безопасно ли путешествовать по Аргентине одной женщине?"
+        },
+        {
+          "id": "bezopasno-li-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Безопасно ли путешествовать по Аргентине?"
+        },
+        {
+          "id": "bezopasnost-argentina",
+          "type": "guide",
+          "subtype": "safety",
+          "title": "Безопасность в Аргентине: реальные риски"
+        },
+        {
+          "id": "buenos-aires",
+          "type": "city",
+          "subtype": null,
+          "title": "Буэнос-Айрес"
+        },
+        {
+          "id": "buenos-aires-province",
+          "type": "region",
+          "subtype": null,
+          "title": "Провинция Буэнос-Айрес"
+        },
+        {
+          "id": "byudzhet-poezdki",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Бюджет поездки по Аргентине"
+        },
+        {
+          "id": "caba",
+          "type": "region",
+          "subtype": null,
+          "title": "Буэнос-Айрес (CABA)"
+        },
+        {
+          "id": "cafayate",
+          "type": "city",
+          "subtype": null,
+          "title": "Кафайяте"
+        },
+        {
+          "id": "casa-historica-tucuman",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Каса-Историка-де-ла-Индепенденсия"
+        },
+        {
+          "id": "chto-delat-krome-dostoprimechatelnostej",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что делать в Буэнос-Айресе / Мендосе / Патагонии, кроме галочных достопримечательностей?"
+        },
+        {
+          "id": "chto-est-vegetariancu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что есть вегетарианцу или вегану в «мясной» Аргентине?"
+        },
+        {
+          "id": "chto-stoit-deneg-prioritety",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Что реально стоит ваших денег и дней: приоритеты по Аргентине"
+        },
+        {
+          "id": "chto-takoe-sube",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое карта SUBE и нужна ли она туристу?"
+        },
+        {
+          "id": "cuyo",
+          "type": "region",
+          "subtype": null,
+          "title": "Куйо"
+        },
+        {
+          "id": "dalyokie-parki-nastroj-na-tishinu",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "Патагония-парк и Баньядо-ла-Эстрелья: места, в которые едут не за зрелищем, а за тишиной"
+        },
+        {
+          "id": "dikaya-priroda",
+          "type": "guide",
+          "subtype": "nature",
+          "title": "Дикая природа Аргентины: где кого смотреть по сезонам"
+        },
+        {
+          "id": "dostupnaya-sreda-i-invalidnost",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Доступная среда: путешествие и жизнь с инвалидностью в Аргентине"
+        },
+        {
+          "id": "el-bolson",
+          "type": "city",
+          "subtype": null,
+          "title": "Эль-Больсон"
+        },
+        {
+          "id": "el-calafate",
+          "type": "city",
+          "subtype": null,
+          "title": "Эль-Калафате"
+        },
+        {
+          "id": "el-chalten",
+          "type": "city",
+          "subtype": null,
+          "title": "Эль-Чальтен"
+        },
+        {
+          "id": "empanadas",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Эмпанадас: как читать главную уличную еду Аргентины"
+        },
+        {
+          "id": "esim-i-svyaz",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "eSIM и связь в Аргентине"
+        },
+        {
+          "id": "esim-ili-lokalnaya-sim",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что выбрать в Аргентине — eSIM или локальную SIM-карту?"
+        },
+        {
+          "id": "folklor-i-muzyka",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Музыка Аргентины: фольклор, рок и куартето"
+        },
+        {
+          "id": "futbol",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Футбол в Аргентине"
+        },
+        {
+          "id": "gde-luchshiy-karnaval-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Где лучший карнавал в Аргентине?"
+        },
+        {
+          "id": "gid-po-kulture",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Культура и жизнь Аргентины: полный тематический гид"
+        },
+        {
+          "id": "gid-po-transportu",
+          "type": "transport",
+          "subtype": null,
+          "title": "Транспорт в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gid-po-zhilyu",
+          "type": "guide",
+          "subtype": "accommodation",
+          "title": "Жильё в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gid-puteshestvennika",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Гид путешественника: с чего начать поездку в Аргентину"
+        },
+        {
+          "id": "govoryat-li-v-argentine-po-anglijski",
+          "type": "faq",
+          "subtype": null,
+          "title": "Говорят ли в Аргентине по-английски?"
+        },
+        {
+          "id": "ibera",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Ибера"
+        },
+        {
+          "id": "ibera-rassvet-i-tihie-portaly",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Ибера: почему стоит вставать затемно и какой портал выбрать ради тишины"
+        },
+        {
+          "id": "iguasu",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Игуасу"
+        },
+        {
+          "id": "iguasu-foto-sekrety",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Как снимать водопады Игуасу так, чтобы по фото было видно их реальный размер"
+        },
+        {
+          "id": "iguasu-ritm-bez-tolp-i-sveta",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Игуасу без толп: как выстроить день по свету, а не по расписанию автобусов"
+        },
+        {
+          "id": "interesnye-fakty",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Что удивляет в Аргентине: интересные факты"
+        },
+        {
+          "id": "ischigualasto",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Парк Исчигуаласто (Долина Луны)"
+        },
+        {
+          "id": "ispanskij-dlya-puteshestvennika",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Аргентинский испанский для путешественника"
+        },
+        {
+          "id": "istoriya-argentiny",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Краткая история Аргентины для путешественника"
+        },
+        {
+          "id": "istoriya-zheleznyh-dorog",
+          "type": "transport",
+          "subtype": null,
+          "title": "История железных дорог Аргентины: расцвет и упадок"
+        },
+        {
+          "id": "iz-esejsy-v-ba",
+          "type": "transport",
+          "subtype": null,
+          "title": "Из аэропорта Эсейса в Буэнос-Айрес"
+        },
+        {
+          "id": "kachi",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Качи"
+        },
+        {
+          "id": "kak-dobratsya-iz-rossii",
+          "type": "transport",
+          "subtype": null,
+          "title": "Как добраться из России и СНГ в Аргентину"
+        },
+        {
+          "id": "kak-kupit-aviabilety-deshevle",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как купить внутренние авиабилеты по Аргентине дешевле?"
+        },
+        {
+          "id": "kak-oplatit-tur-i-zhilyo-zaranee",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как оплатить тур, отель или экскурсию заранее, если моя карта РФ не работает?"
+        },
+        {
+          "id": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как платить в Аргентине, если карты российских банков не работают?"
+        },
+        {
+          "id": "kakie-privivki-nuzhny-dlya-argentiny",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие прививки нужны для поездки в Аргентину?"
+        },
+        {
+          "id": "kakie-rajony-ba-izbegat",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие районы Буэнос-Айреса стоит избегать?"
+        },
+        {
+          "id": "kakie-rozetki-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие розетки и напряжение в Аргентине, нужен ли адаптер?"
+        },
+        {
+          "id": "kakoj-mesyats-kuda-ehat",
+          "type": "faq",
+          "subtype": null,
+          "title": "У меня отпуск в конкретном месяце — куда в Аргентине в это время реально ехать?"
+        },
+        {
+          "id": "kakoj-otrub-steika-zakazat",
+          "type": "faq",
+          "subtype": null,
+          "title": "Bife de chorizo и ojo de bife — в чём разница, и что такое рибай?"
+        },
+        {
+          "id": "kaminito-la-boka",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Каминито и квартал Ла-Бока"
+        },
+        {
+          "id": "kanal-bigl-i-poezd-na-kray-sveta",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Пролив Бигль и «Поезд на край света»"
+        },
+        {
+          "id": "kladbische-recoleta",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Кладбище Реколета"
+        },
+        {
+          "id": "klimat-po-regionam",
+          "type": "guide",
+          "subtype": "climate",
+          "title": "Климат Аргентины по регионам"
+        },
+        {
+          "id": "kogda-luchshe-ehat-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Когда лучше ехать в Аргентину?"
+        },
+        {
+          "id": "kogda-smotret-kitov-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Когда лучше смотреть китов в Аргентине?"
+        },
+        {
+          "id": "kordova",
+          "type": "city",
+          "subtype": null,
+          "title": "Кордова"
+        },
+        {
+          "id": "korrientes",
+          "type": "city",
+          "subtype": null,
+          "title": "Корриентес"
+        },
+        {
+          "id": "kuhnya",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Кухня Аргентины"
+        },
+        {
+          "id": "la-cumbrecita",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Ла-Кумбресита и Сьерры Кордовы"
+        },
+        {
+          "id": "la-rioja",
+          "type": "city",
+          "subtype": null,
+          "title": "Ла-Риоха"
+        },
+        {
+          "id": "lanin",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Ланин"
+        },
+        {
+          "id": "lanin-sever-araukarii-i-termy",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Ланин: тихий север парка с араукариями и дикими термами, куда мало кто доезжает"
+        },
+        {
+          "id": "lgbt-travel",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "ЛГБТ-путешествия и жизнь в Аргентине"
+        },
+        {
+          "id": "lihue-calel",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лиуэ-Калель"
+        },
+        {
+          "id": "litoral",
+          "type": "region",
+          "subtype": null,
+          "title": "Литораль (Северо-Восток / Месопотамия)"
+        },
+        {
+          "id": "los-alerces",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лос-Алерсес"
+        },
+        {
+          "id": "los-cardones",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лос-Кардонес"
+        },
+        {
+          "id": "los-glasiares",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лос-Гласьярес"
+        },
+        {
+          "id": "los-glasiares-ritm-dvuh-baz",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Лос-Гласьярес: как пройти Перито-Морено и Фицрой без толп и без риска остаться без погоды"
+        },
+        {
+          "id": "mar-del-plata",
+          "type": "city",
+          "subtype": null,
+          "title": "Мар-дель-Плата"
+        },
+        {
+          "id": "mate",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Мате: национальный напиток и его этикет"
+        },
+        {
+          "id": "medicina-i-strahovka",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Медицина и страховка в Аргентине"
+        },
+        {
+          "id": "mendoza",
+          "type": "city",
+          "subtype": null,
+          "title": "Мендоса"
+        },
+        {
+          "id": "mendoza-odna-zona-v-den",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Мендоса: главная ошибка — смешать винные зоны за один день"
+        },
+        {
+          "id": "mezhgorodnie-avtobusy",
+          "type": "transport",
+          "subtype": null,
+          "title": "Междугородние автобусы Аргентины (micros)"
+        },
+        {
+          "id": "mify-ob-argentine",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Мифы об Аргентине, в которые пора перестать верить"
+        },
+        {
+          "id": "mozhno-li-doehat-do-ushuaji-na-mashine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли доехать до Ушуайи на машине?"
+        },
+        {
+          "id": "mozhno-li-pit-vodu-iz-krana",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли пить воду из-под крана в Аргентине?"
+        },
+        {
+          "id": "mozhno-li-snimat-dronom",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли снимать дроном в Аргентине туристу?"
+        },
+        {
+          "id": "mozhno-li-uvidet-lednik-bez-trekkinga",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли увидеть ледник Перито-Морено без специальной подготовки и трекинга?"
+        },
+        {
+          "id": "mozhno-li-vodit-po-rossijskim-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли водить машину в Аргентине по российским правам?"
+        },
+        {
+          "id": "narodnye-svyatye",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Народные святые Аргентины: Гаучито Хиль и Дифунта Корреа"
+        },
+        {
+          "id": "nauel-uapi",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Науэль-Уапи"
+        },
+        {
+          "id": "nauka-i-tehnologii",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Наука, космос и технологии: чем гордится Аргентина"
+        },
+        {
+          "id": "neuken",
+          "type": "city",
+          "subtype": null,
+          "title": "Неукен"
+        },
+        {
+          "id": "noa",
+          "type": "region",
+          "subtype": null,
+          "title": "Северо-Запад (NOA)"
+        },
+        {
+          "id": "noa-kolco",
+          "type": "route",
+          "subtype": null,
+          "title": "Кольцо по Северо-Западу (NOA): Сальта, долины и Жужуй"
+        },
+        {
+          "id": "nuzhen-li-4x4-ruta-40",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужен ли полноприводный автомобиль для Дороги семи озёр и Руты 40?"
+        },
+        {
+          "id": "nuzhen-li-permit-na-akonkagua",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужен ли пермит, чтобы увидеть Аконкагуа?"
+        },
+        {
+          "id": "nuzhna-li-strahovka-dlya-vezda",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли медицинская страховка для поездки в Аргентину?"
+        },
+        {
+          "id": "nuzhno-li-ostavlyat-chaevye",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужно ли оставлять чаевые в Аргентине и сколько?"
+        },
+        {
+          "id": "obzornaya-loma-pliege-tumbado",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Недооценённая смотровая Эль-Чальтена в обход очереди на Лагуна-де-лос-Трес"
+        },
+        {
+          "id": "ognennaya-zemlya",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Огненная Земля"
+        },
+        {
+          "id": "ognennaya-zemlya-serro-guanako",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Огненная Земля: вид сверху, который видят немногие, и торфяники, мимо которых все проходят"
+        },
+        {
+          "id": "pampa",
+          "type": "region",
+          "subtype": null,
+          "title": "Центр (Пампа)"
+        },
+        {
+          "id": "parque-nacional-chaco",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Чако"
+        },
+        {
+          "id": "parque-nacional-el-palmar",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Эль-Пальмар"
+        },
+        {
+          "id": "parque-nacional-rio-pilcomayo",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Рио-Пилькомайо"
+        },
+        {
+          "id": "patagonia",
+          "type": "region",
+          "subtype": null,
+          "title": "Патагония"
+        },
+        {
+          "id": "patagonia-park",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Патагония"
+        },
+        {
+          "id": "patagonia-yug",
+          "type": "route",
+          "subtype": null,
+          "title": "Юг Патагонии: ледники, Фицрой и край света"
+        },
+        {
+          "id": "peninsula-valdes",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Полуостров Вальдес"
+        },
+        {
+          "id": "perito-moreno",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Ледник Перито-Морено"
+        },
+        {
+          "id": "pinamar",
+          "type": "city",
+          "subtype": null,
+          "title": "Пинамар"
+        },
+        {
+          "id": "pochemu-net-pryamyh-reisov",
+          "type": "transport",
+          "subtype": null,
+          "title": "Почему нет прямых рейсов из России и как летают на самом деле"
+        },
+        {
+          "id": "podgotovka-k-poezdke",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Подготовка к поездке в Аргентину: чек-лист"
+        },
+        {
+          "id": "poezda",
+          "type": "transport",
+          "subtype": null,
+          "title": "Поезда дальнего следования в Аргентине"
+        },
+        {
+          "id": "pokupka-avtomobilya",
+          "type": "transport",
+          "subtype": null,
+          "title": "Покупка автомобиля в Аргентине"
+        },
+        {
+          "id": "pokupki-i-tax-free",
+          "type": "guide",
+          "subtype": "shopping",
+          "title": "Покупки и tax free в Аргентине"
+        },
+        {
+          "id": "poleznye-prilozheniya",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "Полезные приложения и сервисы в Аргентине"
+        },
+        {
+          "id": "prazdniki-i-traditsii",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Праздники, традиции и этикет Аргентины"
+        },
+        {
+          "id": "puerto-madryn",
+          "type": "city",
+          "subtype": null,
+          "title": "Пуэрто-Мадрин"
+        },
+        {
+          "id": "punta-tombo",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Пунта-Томбо"
+        },
+        {
+          "id": "purmamarka",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Пурмамарка"
+        },
+        {
+          "id": "quebrada-de-humahuaca",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Кебрада-де-Умауака"
+        },
+        {
+          "id": "razvlecheniya-i-nochnaya-zhizn",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Развлечения и ночная жизнь Аргентины"
+        },
+        {
+          "id": "restorany-i-kak-est",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Рестораны и как здесь едят: часы, типы заведений, счёт"
+        },
+        {
+          "id": "rosario",
+          "type": "city",
+          "subtype": null,
+          "title": "Росарио"
+        },
+        {
+          "id": "ruta-40-sem-ozer",
+          "type": "route",
+          "subtype": null,
+          "title": "Дорога семи озёр и Рута 40"
+        },
+        {
+          "id": "ruta-40-sem-ozer-ne-speshite",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Дорога семи озёр за полтора часа — формально возможно, но это упущенная поездка"
+        },
+        {
+          "id": "salinas-grandes",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Салинас-Грандес"
+        },
+        {
+          "id": "salta",
+          "type": "city",
+          "subtype": null,
+          "title": "Сальта"
+        },
+        {
+          "id": "salta-kalchakskie-doliny-marshrut",
+          "type": "author_tip",
+          "subtype": "route",
+          "title": "Один день из Сальты через перевал в Качи и Кальчакские долины — связка, которую часто недооценивают по времени"
+        },
+        {
+          "id": "san-huan",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Хуан"
+        },
+        {
+          "id": "san-ignacio-mini",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Сан-Игнасио-Мини"
+        },
+        {
+          "id": "san-luis",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Луис"
+        },
+        {
+          "id": "san-martin-de-los-andes",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Мартин-де-лос-Андес"
+        },
+        {
+          "id": "san-miguel-de-tucuman",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Мигель-де-Тукуман"
+        },
+        {
+          "id": "san-salvador-de-jujuy",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Сальвадор-де-Жужуй"
+        },
+        {
+          "id": "severnye-parki-zolotoj-chas",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "Пустынные парки NOA и Куйо: один и тот же приём — ловить рассвет и закат, избегать полдня"
+        },
+        {
+          "id": "sierra-de-las-quijadas",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Сьерра-де-лас-Кихадас"
+        },
+        {
+          "id": "skam-s-falshivoj-policiej",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что за мошенничество с «фальшивой полицией» в Аргентине?"
+        },
+        {
+          "id": "skolko-deneg-brat-na-poezdku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько денег нужно брать на поездку в Аргентину?"
+        },
+        {
+          "id": "skolko-dnej-na-marshrut-2-nedeli",
+          "type": "faq",
+          "subtype": null,
+          "title": "Реально ли увидеть главное в Аргентине за 2 недели?"
+        },
+        {
+          "id": "skolko-dnej-nuzhno-na-iguasu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько дней нужно на парк Игуасу?"
+        },
+        {
+          "id": "skolko-letet-iz-rossii",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько лететь из России в Аргентину и какие есть маршруты?"
+        },
+        {
+          "id": "skolko-nalichnyh-mozhno-vvezti",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько наличных можно ввезти в Аргентину без декларации?"
+        },
+        {
+          "id": "sladkoe-dulce-de-leche",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Сладкое: дульсе-де-лече, альфахорес и фактурас"
+        },
+        {
+          "id": "stoit-li-ehat-na-poezde-v-oblaka",
+          "type": "faq",
+          "subtype": null,
+          "title": "Стоит ли ехать на «Поезде в облака»?"
+        },
+        {
+          "id": "stoit-li-ehat-v-argentinu",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Стоит ли ехать в Аргентину: далеко, дорого, опасно?"
+        },
+        {
+          "id": "talampaya",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Талампая"
+        },
+        {
+          "id": "tango",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Танго в Аргентине: культура, милонги, где смотреть и танцевать"
+        },
+        {
+          "id": "teatr-kolon",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Театр Колон"
+        },
+        {
+          "id": "termas-de-rio-hondo",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Термас-де-Рио-Ондо"
+        },
+        {
+          "id": "tierra-del-fuego",
+          "type": "region",
+          "subtype": null,
+          "title": "Огненная Земля"
+        },
+        {
+          "id": "tigre-i-delta",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Тигре и Дельта Параны"
+        },
+        {
+          "id": "tilkara",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Тилькара и крепость Пукара"
+        },
+        {
+          "id": "tren-a-las-nubes",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Поезд в облака"
+        },
+        {
+          "id": "ushuaia",
+          "type": "city",
+          "subtype": null,
+          "title": "Ушуайя"
+        },
+        {
+          "id": "villa-gesell",
+          "type": "city",
+          "subtype": null,
+          "title": "Вилья-Хесель"
+        },
+        {
+          "id": "villa-la-angostura",
+          "type": "city",
+          "subtype": null,
+          "title": "Вилья-Ла-Ангостура"
+        },
+        {
+          "id": "vinnyy-marshrut",
+          "type": "route",
+          "subtype": null,
+          "title": "Винный маршрут: Мендоса и высокогорный север"
+        },
+        {
+          "id": "vino-argentiny",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Вино Аргентины: сорта и регионы"
+        },
+        {
+          "id": "viza-i-granica-dlya-rossiyan",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Виза и граница для россиян: пустят ли и что спрашивают"
+        },
+        {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
+        },
+        {
+          "id": "viza-v-braziliyu-dlya-iguasu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Бразилию, чтобы посмотреть водопады Игуасу с бразильской стороны?"
+        },
+        {
+          "id": "vnutrennie-aviabilety",
+          "type": "transport",
+          "subtype": null,
+          "title": "Внутренние авиабилеты по Аргентине"
+        },
+        {
+          "id": "vo-skolko-uzhinayut-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Во сколько в Аргентине обедают и ужинают?"
+        },
+        {
+          "id": "voditelskie-prava",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Вождение и водительские права в Аргентине: туристу и релоканту"
+        },
+        {
+          "id": "zemletryaseniya-i-vulkany",
+          "type": "guide",
+          "subtype": "safety",
+          "title": "Землетрясения, вулканы и природные стихии Аргентины"
+        },
+        {
+          "id": "zhile-dlya-turistov",
+          "type": "guide",
+          "subtype": "accommodation",
+          "title": "Где остановиться туристу в Аргентине"
+        }
+      ]
+    },
+    "goroda-i-regiony": {
+      "title": "Города и регионы",
+      "entries": [
+        {
+          "id": "aconcagua-provincial-park",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Провинциальный парк Аконкагуа"
+        },
+        {
+          "id": "ba-rajony-realnyj-vybor",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "«Все едут в Палермо» — не всегда лучший совет туристу или релоканту"
+        },
+        {
+          "id": "banado-la-estrella",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Баньядо-ла-Эстрелья"
+        },
+        {
+          "id": "bariloche",
+          "type": "city",
+          "subtype": null,
+          "title": "Барилоче"
+        },
+        {
+          "id": "bariloche-tihie-smotrovye",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Барилоче: смотровые и берега озера Науэль-Уапи в обход толпы у Кампанарио"
+        },
+        {
+          "id": "buenos-aires",
+          "type": "city",
+          "subtype": null,
+          "title": "Буэнос-Айрес"
+        },
+        {
+          "id": "buenos-aires-province",
+          "type": "region",
+          "subtype": null,
+          "title": "Провинция Буэнос-Айрес"
+        },
+        {
+          "id": "caba",
+          "type": "region",
+          "subtype": null,
+          "title": "Буэнос-Айрес (CABA)"
+        },
+        {
+          "id": "cafayate",
+          "type": "city",
+          "subtype": null,
+          "title": "Кафайяте"
+        },
+        {
+          "id": "casa-historica-tucuman",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Каса-Историка-де-ла-Индепенденсия"
+        },
+        {
+          "id": "catamarca",
+          "type": "city",
+          "subtype": null,
+          "title": "Катамарка"
+        },
+        {
+          "id": "cuyo",
+          "type": "region",
+          "subtype": null,
+          "title": "Куйо"
+        },
+        {
+          "id": "dikaya-priroda",
+          "type": "guide",
+          "subtype": "nature",
+          "title": "Дикая природа Аргентины: где кого смотреть по сезонам"
+        },
+        {
+          "id": "el-bolson",
+          "type": "city",
+          "subtype": null,
+          "title": "Эль-Больсон"
+        },
+        {
+          "id": "el-calafate",
+          "type": "city",
+          "subtype": null,
+          "title": "Эль-Калафате"
+        },
+        {
+          "id": "el-chalten",
+          "type": "city",
+          "subtype": null,
+          "title": "Эль-Чальтен"
+        },
+        {
+          "id": "formosa",
+          "type": "city",
+          "subtype": null,
+          "title": "Формоса"
+        },
+        {
+          "id": "ibera",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Ибера"
+        },
+        {
+          "id": "iguasu",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Игуасу"
+        },
+        {
+          "id": "ischigualasto",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Парк Исчигуаласто (Долина Луны)"
+        },
+        {
+          "id": "kachi",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Качи"
+        },
+        {
+          "id": "kakie-rajony-ba-izbegat",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие районы Буэнос-Айреса стоит избегать?"
+        },
+        {
+          "id": "kakoj-mesyats-kuda-ehat",
+          "type": "faq",
+          "subtype": null,
+          "title": "У меня отпуск в конкретном месяце — куда в Аргентине в это время реально ехать?"
+        },
+        {
+          "id": "kaminito-la-boka",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Каминито и квартал Ла-Бока"
+        },
+        {
+          "id": "kanal-bigl-i-poezd-na-kray-sveta",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Пролив Бигль и «Поезд на край света»"
+        },
+        {
+          "id": "kladbische-recoleta",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Кладбище Реколета"
+        },
+        {
+          "id": "klimat-po-regionam",
+          "type": "guide",
+          "subtype": "climate",
+          "title": "Климат Аргентины по регионам"
+        },
+        {
+          "id": "kogda-luchshe-ehat-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Когда лучше ехать в Аргентину?"
+        },
+        {
+          "id": "kordova",
+          "type": "city",
+          "subtype": null,
+          "title": "Кордова"
+        },
+        {
+          "id": "korrientes",
+          "type": "city",
+          "subtype": null,
+          "title": "Корриентес"
+        },
+        {
+          "id": "la-cumbrecita",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Ла-Кумбресита и Сьерры Кордовы"
+        },
+        {
+          "id": "la-plata",
+          "type": "city",
+          "subtype": null,
+          "title": "Ла-Плата"
+        },
+        {
+          "id": "la-rioja",
+          "type": "city",
+          "subtype": null,
+          "title": "Ла-Риоха"
+        },
+        {
+          "id": "lanin",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Ланин"
+        },
+        {
+          "id": "lihue-calel",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лиуэ-Калель"
+        },
+        {
+          "id": "litoral",
+          "type": "region",
+          "subtype": null,
+          "title": "Литораль (Северо-Восток / Месопотамия)"
+        },
+        {
+          "id": "los-alerces",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лос-Алерсес"
+        },
+        {
+          "id": "los-cardones",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лос-Кардонес"
+        },
+        {
+          "id": "los-glasiares",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Лос-Гласьярес"
+        },
+        {
+          "id": "mar-del-plata",
+          "type": "city",
+          "subtype": null,
+          "title": "Мар-дель-Плата"
+        },
+        {
+          "id": "mendoza",
+          "type": "city",
+          "subtype": null,
+          "title": "Мендоса"
+        },
+        {
+          "id": "nauel-uapi",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Науэль-Уапи"
+        },
+        {
+          "id": "neuken",
+          "type": "city",
+          "subtype": null,
+          "title": "Неукен"
+        },
+        {
+          "id": "noa",
+          "type": "region",
+          "subtype": null,
+          "title": "Северо-Запад (NOA)"
+        },
+        {
+          "id": "ognennaya-zemlya",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Огненная Земля"
+        },
+        {
+          "id": "pampa",
+          "type": "region",
+          "subtype": null,
+          "title": "Центр (Пампа)"
+        },
+        {
+          "id": "parana",
+          "type": "city",
+          "subtype": null,
+          "title": "Парана"
+        },
+        {
+          "id": "parque-nacional-chaco",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Чако"
+        },
+        {
+          "id": "parque-nacional-el-palmar",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Эль-Пальмар"
+        },
+        {
+          "id": "parque-nacional-rio-pilcomayo",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Рио-Пилькомайо"
+        },
+        {
+          "id": "patagonia",
+          "type": "region",
+          "subtype": null,
+          "title": "Патагония"
+        },
+        {
+          "id": "patagonia-park",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Патагония"
+        },
+        {
+          "id": "peninsula-valdes",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Полуостров Вальдес"
+        },
+        {
+          "id": "perito-moreno",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Ледник Перито-Морено"
+        },
+        {
+          "id": "pinamar",
+          "type": "city",
+          "subtype": null,
+          "title": "Пинамар"
+        },
+        {
+          "id": "puerto-madryn",
+          "type": "city",
+          "subtype": null,
+          "title": "Пуэрто-Мадрин"
+        },
+        {
+          "id": "punta-tombo",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Пунта-Томбо"
+        },
+        {
+          "id": "purmamarka",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Пурмамарка"
+        },
+        {
+          "id": "quebrada-de-humahuaca",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Кебрада-де-Умауака"
+        },
+        {
+          "id": "resistencia",
+          "type": "city",
+          "subtype": null,
+          "title": "Ресистенсия"
+        },
+        {
+          "id": "rosario",
+          "type": "city",
+          "subtype": null,
+          "title": "Росарио"
+        },
+        {
+          "id": "salinas-grandes",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Салинас-Грандес"
+        },
+        {
+          "id": "salta",
+          "type": "city",
+          "subtype": null,
+          "title": "Сальта"
+        },
+        {
+          "id": "samyj-yuzhnyj-gorod-mira",
+          "type": "faq",
+          "subtype": null,
+          "title": "Ушуайя — правда самый южный город в мире?"
+        },
+        {
+          "id": "san-huan",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Хуан"
+        },
+        {
+          "id": "san-ignacio-mini",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Сан-Игнасио-Мини"
+        },
+        {
+          "id": "san-luis",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Луис"
+        },
+        {
+          "id": "san-martin-de-los-andes",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Мартин-де-лос-Андес"
+        },
+        {
+          "id": "san-miguel-de-tucuman",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Мигель-де-Тукуман"
+        },
+        {
+          "id": "san-salvador-de-jujuy",
+          "type": "city",
+          "subtype": null,
+          "title": "Сан-Сальвадор-де-Жужуй"
+        },
+        {
+          "id": "santa-fe",
+          "type": "city",
+          "subtype": null,
+          "title": "Санта-Фе"
+        },
+        {
+          "id": "santa-rosa",
+          "type": "city",
+          "subtype": null,
+          "title": "Санта-Роса"
+        },
+        {
+          "id": "santiago-del-estero",
+          "type": "city",
+          "subtype": null,
+          "title": "Сантьяго-дель-Эстеро"
+        },
+        {
+          "id": "sierra-de-las-quijadas",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Сьерра-де-лас-Кихадас"
+        },
+        {
+          "id": "stoimost-zhizni-ba",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Сколько стоит жизнь в Буэнос-Айресе"
+        },
+        {
+          "id": "talampaya",
+          "type": "national_park",
+          "subtype": null,
+          "title": "Национальный парк Талампая"
+        },
+        {
+          "id": "teatr-kolon",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Театр Колон"
+        },
+        {
+          "id": "termas-de-rio-hondo",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Термас-де-Рио-Ондо"
+        },
+        {
+          "id": "tierra-del-fuego",
+          "type": "region",
+          "subtype": null,
+          "title": "Огненная Земля"
+        },
+        {
+          "id": "tigre-i-delta",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Тигре и Дельта Параны"
+        },
+        {
+          "id": "tilkara",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Тилькара и крепость Пукара"
+        },
+        {
+          "id": "tren-a-las-nubes",
+          "type": "attraction",
+          "subtype": null,
+          "title": "Поезд в облака"
+        },
+        {
+          "id": "ushuaia",
+          "type": "city",
+          "subtype": null,
+          "title": "Ушуайя"
+        },
+        {
+          "id": "villa-gesell",
+          "type": "city",
+          "subtype": null,
+          "title": "Вилья-Хесель"
+        },
+        {
+          "id": "villa-la-angostura",
+          "type": "city",
+          "subtype": null,
+          "title": "Вилья-Ла-Ангостура"
+        },
+        {
+          "id": "viza-v-braziliyu-dlya-iguasu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Бразилию, чтобы посмотреть водопады Игуасу с бразильской стороны?"
+        }
+      ]
+    },
+    "lichnyy-opyt": {
+      "title": "Личный опыт",
+      "entries": [
+        {
+          "id": "aep-eze-stykovka",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "AEP и EZE — два разных аэропорта Буэнос-Айреса, и тугая стыковка между ними рушит планы"
+        },
+        {
+          "id": "alersesy-skrytye-ozyora",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Лос-Алерсес: рыбалка и каяк на тихих озёрах, которые пропускают ради одного дерева"
+        },
+        {
+          "id": "ba-rajony-realnyj-vybor",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "«Все едут в Палермо» — не всегда лучший совет туристу или релоканту"
+        },
+        {
+          "id": "bariloche-tihie-smotrovye",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Барилоче: смотровые и берега озера Науэль-Уапи в обход толпы у Кампанарио"
+        },
+        {
+          "id": "dalyokie-parki-nastroj-na-tishinu",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "Патагония-парк и Баньядо-ла-Эстрелья: места, в которые едут не за зрелищем, а за тишиной"
+        },
+        {
+          "id": "dni-cuil-cuit-putanitsa",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "CUIL, CUIT, CDI, AFIP/ARCA — путаница в названиях, которая стоит реального времени"
+        },
+        {
+          "id": "falshivye-policejskie-i-obmenniki",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться"
+        },
+        {
+          "id": "futbol-kak-popast-bez-skama",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "На футбол в Аргентине нельзя купить билет «как в Европе» — и это меняет весь план"
+        },
+        {
+          "id": "ibera-rassvet-i-tihie-portaly",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Ибера: почему стоит вставать затемно и какой портал выбрать ради тишины"
+        },
+        {
+          "id": "iguasu-foto-sekrety",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Как снимать водопады Игуасу так, чтобы по фото было видно их реальный размер"
+        },
+        {
+          "id": "iguasu-ritm-bez-tolp-i-sveta",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Игуасу без толп: как выстроить день по свету, а не по расписанию автобусов"
+        },
+        {
+          "id": "lanin-sever-araukarii-i-termy",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Ланин: тихий север парка с араукариями и дикими термами, куда мало кто доезжает"
+        },
+        {
+          "id": "los-glasiares-ritm-dvuh-baz",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "Лос-Гласьярес: как пройти Перито-Морено и Фицрой без толп и без риска остаться без погоды"
+        },
+        {
+          "id": "lyubimoe-asado-mesto",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Любимая паррилья или место для асадо у Ивана"
+        },
+        {
+          "id": "lyubimoe-mesto-ne-iz-putevoditelej",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Мой любимый район Буэнос-Айреса — тихий Parque Chas"
+        },
+        {
+          "id": "marshrut-vyhodnogo-dnya-ivana",
+          "type": "author_tip",
+          "subtype": "route",
+          "title": "Авторский маршрут выходного дня от Ивана"
+        },
+        {
+          "id": "mate-etiket-spasibo-lovushka",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "«Спасибо» в кругу мате значит «больше не наливайте» — типичная ловушка для гостя"
+        },
+        {
+          "id": "mendoza-odna-zona-v-den",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Мендоса: главная ошибка — смешать винные зоны за один день"
+        },
+        {
+          "id": "motochorros-telefon-na-ulitse",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Телефон в руке у края тротуара — самая частая ошибка туриста в Буэнос-Айресе"
+        },
+        {
+          "id": "nablyudenie-pro-dengi-i-banki",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "Личное наблюдение Ивана о деньгах и банках в Аргентине"
+        },
+        {
+          "id": "obzornaya-loma-pliege-tumbado",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Недооценённая смотровая Эль-Чальтена в обход очереди на Лагуна-де-лос-Трес"
+        },
+        {
+          "id": "ognennaya-zemlya-serro-guanako",
+          "type": "author_tip",
+          "subtype": "hidden_gem",
+          "title": "Огненная Земля: вид сверху, который видят немногие, и торфяники, мимо которых все проходят"
+        },
+        {
+          "id": "oshibka-s-dokumentami",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Как я выбрал судебный путь к гражданству — и почему отказался от него"
+        },
+        {
+          "id": "oshibka-s-zhilyom",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Как я переплатил за первую квартиру в Буэнос-Айресе"
+        },
+        {
+          "id": "pervyj-mesyac-v-argentine",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "Первый месяц в Аргентине: ощущение, что попал на другую планету"
+        },
+        {
+          "id": "prazdniki-i-traditsii",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Праздники, традиции и этикет Аргентины"
+        },
+        {
+          "id": "ruta-40-sem-ozer-ne-speshite",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Дорога семи озёр за полтора часа — формально возможно, но это упущенная поездка"
+        },
+        {
+          "id": "salta-kalchakskie-doliny-marshrut",
+          "type": "author_tip",
+          "subtype": "route",
+          "title": "Один день из Сальты через перевал в Качи и Кальчакские долины — связка, которую часто недооценивают по времени"
+        },
+        {
+          "id": "severnye-parki-zolotoj-chas",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "Пустынные парки NOA и Куйо: один и тот же приём — ловить рассвет и закат, избегать полдня"
+        },
+        {
+          "id": "viza-kochevnika-ne-vnzh",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Виза цифрового кочевника — не первый шаг к переезду навсегда, хотя так часто думают"
+        }
+      ]
+    },
+    "zhizn-v-strane": {
+      "title": "Жизнь в стране",
+      "entries": [
+        {
+          "id": "aeroporty",
+          "type": "transport",
+          "subtype": null,
+          "title": "Аэропорты Аргентины и трансферы в город"
+        },
+        {
+          "id": "arenda-avto-i-vozhdenie",
+          "type": "transport",
+          "subtype": null,
+          "title": "Аренда авто и вождение в Аргентине"
+        },
+        {
+          "id": "asado",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Асадо: аргентинское барбекю от ритуала до отрубов"
+        },
+        {
+          "id": "banki-i-perevody",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Как завести и перевести деньги в Аргентину"
+        },
+        {
+          "id": "besplatna-li-medicina-dlya-turista",
+          "type": "faq",
+          "subtype": null,
+          "title": "Бесплатна ли медицина в Аргентине для туриста?"
+        },
+        {
+          "id": "bezopasno-li-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Безопасно ли путешествовать по Аргентине?"
+        },
+        {
+          "id": "bezopasnost-argentina",
+          "type": "guide",
+          "subtype": "safety",
+          "title": "Безопасность в Аргентине: реальные риски"
+        },
+        {
+          "id": "buenos-aires",
+          "type": "city",
+          "subtype": null,
+          "title": "Буэнос-Айрес"
+        },
+        {
+          "id": "byt-i-zhilyo",
+          "type": "guide",
+          "subtype": "daily_life",
+          "title": "Быт в Аргентине: квартиры, отопление, коммуналка"
+        },
+        {
+          "id": "chto-delat-krome-dostoprimechatelnostej",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что делать в Буэнос-Айресе / Мендосе / Патагонии, кроме галочных достопримечательностей?"
+        },
+        {
+          "id": "chto-est-vegetariancu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что есть вегетарианцу или вегану в «мясной» Аргентине?"
+        },
+        {
+          "id": "chto-takoe-sube",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое карта SUBE и нужна ли она туристу?"
+        },
+        {
+          "id": "dostupnaya-sreda-i-invalidnost",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Доступная среда: путешествие и жизнь с инвалидностью в Аргентине"
+        },
+        {
+          "id": "empanadas",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Эмпанадас: как читать главную уличную еду Аргентины"
+        },
+        {
+          "id": "esim-i-svyaz",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "eSIM и связь в Аргентине"
+        },
+        {
+          "id": "esim-ili-lokalnaya-sim",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что выбрать в Аргентине — eSIM или локальную SIM-карту?"
+        },
+        {
+          "id": "folklor-i-muzyka",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Музыка Аргентины: фольклор, рок и куартето"
+        },
+        {
+          "id": "futbol",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Футбол в Аргентине"
+        },
+        {
+          "id": "futbol-kak-popast-bez-skama",
+          "type": "author_tip",
+          "subtype": "lifehack",
+          "title": "На футбол в Аргентине нельзя купить билет «как в Европе» — и это меняет весь план"
+        },
+        {
+          "id": "gde-luchshiy-karnaval-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Где лучший карнавал в Аргентине?"
+        },
+        {
+          "id": "gid-po-kulture",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Культура и жизнь Аргентины: полный тематический гид"
+        },
+        {
+          "id": "gid-po-medicine",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Медицина и здоровье в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gid-po-transportu",
+          "type": "transport",
+          "subtype": null,
+          "title": "Транспорт в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gid-po-zhilyu",
+          "type": "guide",
+          "subtype": "accommodation",
+          "title": "Жильё в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "govoryat-li-v-argentine-po-anglijski",
+          "type": "faq",
+          "subtype": null,
+          "title": "Говорят ли в Аргентине по-английски?"
+        },
+        {
+          "id": "inflyatsiya-i-ekonomika",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Инфляция и экономика Аргентины простыми словами"
+        },
+        {
+          "id": "interesnye-fakty",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Что удивляет в Аргентине: интересные факты"
+        },
+        {
+          "id": "ispanskij-dlya-puteshestvennika",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Аргентинский испанский для путешественника"
+        },
+        {
+          "id": "istoriya-argentiny",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Краткая история Аргентины для путешественника"
+        },
+        {
+          "id": "istoriya-zheleznyh-dorog",
+          "type": "transport",
+          "subtype": null,
+          "title": "История железных дорог Аргентины: расцвет и упадок"
+        },
+        {
+          "id": "kak-menyat-valyutu",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Как менять валюту в Аргентине: курс, blue, MEP, карты"
+        },
+        {
+          "id": "kak-snyat-kvartiru-bez-garanta",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как снять квартиру в Аргентине без гаранта (garantía)?"
+        },
+        {
+          "id": "kakie-rozetki-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие розетки и напряжение в Аргентине, нужен ли адаптер?"
+        },
+        {
+          "id": "kakoj-otrub-steika-zakazat",
+          "type": "faq",
+          "subtype": null,
+          "title": "Bife de chorizo и ojo de bife — в чём разница, и что такое рибай?"
+        },
+        {
+          "id": "kovorkingi-i-rabota-nomada",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "Коворкинги и удалённая работа в Аргентине"
+        },
+        {
+          "id": "kuhnya",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Кухня Аргентины"
+        },
+        {
+          "id": "lgbt-travel",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "ЛГБТ-путешествия и жизнь в Аргентине"
+        },
+        {
+          "id": "mate",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Мате: национальный напиток и его этикет"
+        },
+        {
+          "id": "mate-etiket-spasibo-lovushka",
+          "type": "author_tip",
+          "subtype": "observation",
+          "title": "«Спасибо» в кругу мате значит «больше не наливайте» — типичная ловушка для гостя"
+        },
+        {
+          "id": "medicina-i-strahovka",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Медицина и страховка в Аргентине"
+        },
+        {
+          "id": "mentalitet-i-etiket",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Менталитет и этикет аргентинцев: как здесь принято"
+        },
+        {
+          "id": "mezhgorodnie-avtobusy",
+          "type": "transport",
+          "subtype": null,
+          "title": "Междугородние автобусы Аргентины (micros)"
+        },
+        {
+          "id": "mify-ob-argentine",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Мифы об Аргентине, в которые пора перестать верить"
+        },
+        {
+          "id": "motochorros-telefon-na-ulitse",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Телефон в руке у края тротуара — самая частая ошибка туриста в Буэнос-Айресе"
+        },
+        {
+          "id": "mozhno-li-pit-vodu-iz-krana",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли пить воду из-под крана в Аргентине?"
+        },
+        {
+          "id": "mozhno-li-uchitsya-v-universitete-besplatno",
+          "type": "faq",
+          "subtype": null,
+          "title": "Может ли иностранец учиться в аргентинском университете бесплатно?"
+        },
+        {
+          "id": "narodnye-svyatye",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Народные святые Аргентины: Гаучито Хиль и Дифунта Корреа"
+        },
+        {
+          "id": "nauka-i-tehnologii",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Наука, космос и технологии: чем гордится Аргентина"
+        },
+        {
+          "id": "nuzhna-li-viza-cifrovomu-kochevniku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать по безвизу на 90 дней?"
+        },
+        {
+          "id": "nuzhno-li-ostavlyat-chaevye",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужно ли оставлять чаевые в Аргентине и сколько?"
+        },
+        {
+          "id": "otkrytie-biznesa",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Открытие бизнеса и самозанятость в Аргентине"
+        },
+        {
+          "id": "pervyj-mesyac-plan",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Первый месяц в Аргентине по дням: пошаговый план"
+        },
+        {
+          "id": "pochemu-net-pryamyh-reisov",
+          "type": "transport",
+          "subtype": null,
+          "title": "Почему нет прямых рейсов из России и как летают на самом деле"
+        },
+        {
+          "id": "podgotovka-k-poezdke",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Подготовка к поездке в Аргентину: чек-лист"
+        },
+        {
+          "id": "poezda",
+          "type": "transport",
+          "subtype": null,
+          "title": "Поезда дальнего следования в Аргентине"
+        },
+        {
+          "id": "pokupka-avtomobilya",
+          "type": "transport",
+          "subtype": null,
+          "title": "Покупка автомобиля в Аргентине"
+        },
+        {
+          "id": "pokupka-nedvizhimosti",
+          "type": "guide",
+          "subtype": "accommodation",
+          "title": "Покупка недвижимости в Аргентине для иностранца"
+        },
+        {
+          "id": "pokupki-i-tax-free",
+          "type": "guide",
+          "subtype": "shopping",
+          "title": "Покупки и tax free в Аргентине"
+        },
+        {
+          "id": "poleznye-prilozheniya",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "Полезные приложения и сервисы в Аргентине"
+        },
+        {
+          "id": "prazdniki-i-traditsii",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Праздники, традиции и этикет Аргентины"
+        },
+        {
+          "id": "razvlecheniya-i-nochnaya-zhizn",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Развлечения и ночная жизнь Аргентины"
+        },
+        {
+          "id": "restorany-i-kak-est",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Рестораны и как здесь едят: часы, типы заведений, счёт"
+        },
+        {
+          "id": "rody-i-beremennost",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Роды и беременность в Аргентине: полное руководство"
+        },
+        {
+          "id": "rossiya-vs-argentina",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Россия и Аргентина: чем жизнь здесь отличается"
+        },
+        {
+          "id": "sdacha-nedvizhimosti-v-arendu",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Сдача недвижимости в аренду в Аргентине: доход и налоги"
+        },
+        {
+          "id": "sistema-zdravoohraneniya",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Система здравоохранения Аргентины"
+        },
+        {
+          "id": "skam-s-falshivoj-policiej",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что за мошенничество с «фальшивой полицией» в Аргентине?"
+        },
+        {
+          "id": "skolko-stoit-zhizn-v-buenos-ajrese",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько денег нужно на жизнь в Буэнос-Айресе в месяц?"
+        },
+        {
+          "id": "sladkoe-dulce-de-leche",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Сладкое: дульсе-де-лече, альфахорес и фактурас"
+        },
+        {
+          "id": "soobshestvo-i-adaptaciya",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Где найти своих и как пережить адаптацию в Аргентине"
+        },
+        {
+          "id": "stoimost-zhizni-ba",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Сколько стоит жизнь в Буэнос-Айресе"
+        },
+        {
+          "id": "stoimost-zhizni-semya-i-para",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Стоимость жизни в Аргентине для пары и семьи: сценарии и уровни"
+        },
+        {
+          "id": "stoit-li-pereezzhat",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Стоит ли переезжать в Аргентину: плюсы, минусы и кому подходит"
+        },
+        {
+          "id": "studencheskaya-zhizn",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Учёба и студенческий быт в Аргентине: поступление, язык, жильё"
+        },
+        {
+          "id": "tango",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Танго в Аргентине: культура, милонги, где смотреть и танцевать"
+        },
+        {
+          "id": "vino-argentiny",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Вино Аргентины: сорта и регионы"
+        },
+        {
+          "id": "vo-skolko-uzhinayut-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Во сколько в Аргентине обедают и ужинают?"
+        },
+        {
+          "id": "zashchita-nakoplenij-ot-inflyacii",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Как защитить накопления от инфляции в Аргентине"
+        },
+        {
+          "id": "zemletryaseniya-i-vulkany",
+          "type": "guide",
+          "subtype": "safety",
+          "title": "Землетрясения, вулканы и природные стихии Аргентины"
+        },
+        {
+          "id": "zhile-dlya-turistov",
+          "type": "guide",
+          "subtype": "accommodation",
+          "title": "Где остановиться туристу в Аргентине"
+        },
+        {
+          "id": "zhile-i-arenda",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Жильё и аренда в Аргентине"
+        },
+        {
+          "id": "zhizn-bez-ispanskogo",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Жизнь без испанского: как справляться в Аргентине первое время"
+        },
+        {
+          "id": "zhizn-na-pensii",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Жизнь на пенсии в Аргентине: переезд для пенсионера"
+        }
+      ]
+    },
+    "finansy-i-ekonomika": {
+      "title": "Финансы и экономика",
+      "entries": [
+        {
+          "id": "aktualen-li-blue-dollar",
+          "type": "faq",
+          "subtype": null,
+          "title": "Актуален ли «блю-доллар» в Аргентине в 2026 году?"
+        },
+        {
+          "id": "argentina-vs-drugie-strany",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Аргентина или другая страна: честное сравнение для переезда"
+        },
+        {
+          "id": "banki-i-perevody",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Как завести и перевести деньги в Аргентину"
+        },
+        {
+          "id": "bankovskij-schet",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Банковский счёт и финансы релоканта в Аргентине"
+        },
+        {
+          "id": "byudzhet-poezdki",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Бюджет поездки по Аргентине"
+        },
+        {
+          "id": "chto-takoe-mep",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое MEP в Аргентине и зачем он нужен?"
+        },
+        {
+          "id": "falshivye-policejskie-i-obmenniki",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Слишком хороший курс на обмене — почти всегда повод насторожиться, а не обрадоваться"
+        },
+        {
+          "id": "gid-po-dengam",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Деньги в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "inflyatsiya-i-ekonomika",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Инфляция и экономика Аргентины простыми словами"
+        },
+        {
+          "id": "kak-menyat-valyutu",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Как менять валюту в Аргентине: курс, blue, MEP, карты"
+        },
+        {
+          "id": "kak-oplatit-tur-i-zhilyo-zaranee",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как оплатить тур, отель или экскурсию заранее, если моя карта РФ не работает?"
+        },
+        {
+          "id": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как платить в Аргентине, если карты российских банков не работают?"
+        },
+        {
+          "id": "mozhno-li-otkryt-schet-nerezidentu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без резиденции?"
+        },
+        {
+          "id": "nalogi-i-monotributo",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Налоги и монотрибуто в Аргентине для релоканта"
+        },
+        {
+          "id": "otkrytie-biznesa",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Открытие бизнеса и самозанятость в Аргентине"
+        },
+        {
+          "id": "pereezd-s-minimalnym-byudzhetom",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Переезд в Аргентину с минимальным бюджетом ($6-8 тысяч)"
+        },
+        {
+          "id": "pokupka-nedvizhimosti",
+          "type": "guide",
+          "subtype": "accommodation",
+          "title": "Покупка недвижимости в Аргентине для иностранца"
+        },
+        {
+          "id": "rabota-i-poisk-raboty",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Работа в Аргентине: рынок труда, зарплаты и как искать"
+        },
+        {
+          "id": "sdacha-nedvizhimosti-v-arendu",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Сдача недвижимости в аренду в Аргентине: доход и налоги"
+        },
+        {
+          "id": "skolko-deneg-brat-na-poezdku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько денег нужно брать на поездку в Аргентину?"
+        },
+        {
+          "id": "skolko-nalichnyh-mozhno-vvezti",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько наличных можно ввезти в Аргентину без декларации?"
+        },
+        {
+          "id": "skolko-stoit-zhizn-v-buenos-ajrese",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько денег нужно на жизнь в Буэнос-Айресе в месяц?"
+        },
+        {
+          "id": "stoimost-zhizni-ba",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Сколько стоит жизнь в Буэнос-Айресе"
+        },
+        {
+          "id": "stoimost-zhizni-semya-i-para",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Стоимость жизни в Аргентине для пары и семьи: сценарии и уровни"
+        },
+        {
+          "id": "stoit-li-ehat-v-argentinu",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Стоит ли ехать в Аргентину: далеко, дорого, опасно?"
+        },
+        {
+          "id": "udalyonnaya-rabota-i-oplata",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Удалёнка в Аргентине: как получать оплату и не терять на курсе"
+        },
+        {
+          "id": "zashchita-nakoplenij-ot-inflyacii",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Как защитить накопления от инфляции в Аргентине"
+        }
+      ]
+    },
+    "pereezd-v-argentinu": {
+      "title": "Переезд в Аргентину",
+      "entries": [
+        {
+          "id": "apostil-i-perevod-dokumentov",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Апостиль и присяжный перевод документов для Аргентины"
+        },
+        {
+          "id": "argentina-vs-drugie-strany",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Аргентина или другая страна: честное сравнение для переезда"
+        },
+        {
+          "id": "bankovskij-schet",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Банковский счёт и финансы релоканта в Аргентине"
+        },
+        {
+          "id": "byt-i-zhilyo",
+          "type": "guide",
+          "subtype": "daily_life",
+          "title": "Быт в Аргентине: квартиры, отопление, коммуналка"
+        },
+        {
+          "id": "chek-list-pereezda",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Чек-лист переезда в Аргентину: по этапам"
+        },
+        {
+          "id": "chto-takoe-dni-i-cuil",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?"
+        },
+        {
+          "id": "chto-takoe-mep",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое MEP в Аргентине и зачем он нужен?"
+        },
+        {
+          "id": "chto-takoe-prekariya",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое прекария (Residencia Precaria) в Аргентине и что она даёт?"
+        },
+        {
+          "id": "dni-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "DNI и CUIL/CUIT в Аргентине: пошагово для иностранца"
+        },
+        {
+          "id": "gid-po-dokumentam",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Документы и легализация в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gid-relokanta",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Гид релоканта: весь путь переезда в Аргентину по этапам"
+        },
+        {
+          "id": "grazhdanstvo",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Гражданство Аргентины: натурализация и правила 2026"
+        },
+        {
+          "id": "kak-dobratsya-iz-rossii",
+          "type": "transport",
+          "subtype": null,
+          "title": "Как добраться из России и СНГ в Аргентину"
+        },
+        {
+          "id": "kak-perevezti-kota-ili-sobaku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как перевезти кота или собаку в Аргентину?"
+        },
+        {
+          "id": "kak-platit-esli-karta-rf-ne-rabotaet",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как платить в Аргентине, если карты российских банков не работают?"
+        },
+        {
+          "id": "kak-poluchit-grazhdanstvo-za-2-goda",
+          "type": "faq",
+          "subtype": null,
+          "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?"
+        },
+        {
+          "id": "kak-snyat-kvartiru-bez-garanta",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как снять квартиру в Аргентине без гаранта (garantía)?"
+        },
+        {
+          "id": "kakie-dokumenty-vezti-s-soboj",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие документы везти с собой при переезде в Аргентину?"
+        },
+        {
+          "id": "kakoj-dohod-nuzhen-dlya-rantye",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какой доход нужен для получения резиденции рантье в Аргентине?"
+        },
+        {
+          "id": "kogda-uchebnyj-god-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Когда начинается учебный год в Аргентине?"
+        },
+        {
+          "id": "kovorkingi-i-rabota-nomada",
+          "type": "guide",
+          "subtype": "communication",
+          "title": "Коворкинги и удалённая работа в Аргентине"
+        },
+        {
+          "id": "medicina-i-strahovka",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Медицина и страховка в Аргентине"
+        },
+        {
+          "id": "mentalitet-i-etiket",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Менталитет и этикет аргентинцев: как здесь принято"
+        },
+        {
+          "id": "mozhno-li-delat-vizaran",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли жить в Аргентине на визаранах, как в Азии?"
+        },
+        {
+          "id": "mozhno-li-otkryt-schet-nerezidentu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли иностранцу открыть банковский счёт в Аргентине без резиденции?"
+        },
+        {
+          "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли иностранцу устроиться на работу в аргентинскую компанию?"
+        },
+        {
+          "id": "mozhno-li-uchitsya-v-universitete-besplatno",
+          "type": "faq",
+          "subtype": null,
+          "title": "Может ли иностранец учиться в аргентинском университете бесплатно?"
+        },
+        {
+          "id": "mozhno-li-vodit-po-rossijskim-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли водить машину в Аргентине по российским правам?"
+        },
+        {
+          "id": "nalogi-i-monotributo",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Налоги и монотрибуто в Аргентине для релоканта"
+        },
+        {
+          "id": "nuzhna-li-strahovka-dlya-vezda",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли медицинская страховка для поездки в Аргентину?"
+        },
+        {
+          "id": "nuzhna-li-viza-cifrovomu-kochevniku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать по безвизу на 90 дней?"
+        },
+        {
+          "id": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужно ли отказываться от российского гражданства при получении аргентинского?"
+        },
+        {
+          "id": "pereezd-s-minimalnym-byudzhetom",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Переезд в Аргентину с минимальным бюджетом ($6-8 тысяч)"
+        },
+        {
+          "id": "perevoz-veshchey-i-pitomtsev",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Перевоз личных вещей и домашних животных при переезде в Аргентину"
+        },
+        {
+          "id": "pervyj-mesyac-plan",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Первый месяц в Аргентине по дням: пошаговый план"
+        },
+        {
+          "id": "plan-podgotovki-6-mesyacev",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Подготовка к переезду в Аргентину за 6 месяцев: таймлайн"
+        },
+        {
+          "id": "priznanie-diploma",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Признание иностранного диплома в Аргентине (гомологация)"
+        },
+        {
+          "id": "rabochaya-viza",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Рабочая резиденция в Аргентине: наём местным работодателем"
+        },
+        {
+          "id": "rabota-i-poisk-raboty",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Работа в Аргентине: рынок труда, зарплаты и как искать"
+        },
+        {
+          "id": "rody-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что даёт рождение ребёнка в Аргентине?"
+        },
+        {
+          "id": "rossiya-vs-argentina",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Россия и Аргентина: чем жизнь здесь отличается"
+        },
+        {
+          "id": "shkola-dlya-detey",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Школа для детей в Аргентине: система образования для семей релокантов"
+        },
+        {
+          "id": "sistema-zdravoohraneniya",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Система здравоохранения Аргентины"
+        },
+        {
+          "id": "skolko-letet-iz-rossii",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько лететь из России в Аргентину и какие есть маршруты?"
+        },
+        {
+          "id": "skolko-nalichnyh-mozhno-vvezti",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько наличных можно ввезти в Аргентину без декларации?"
+        },
+        {
+          "id": "skolko-stoit-oformit-vnzh",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
+        },
+        {
+          "id": "soobshestvo-i-adaptaciya",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Где найти своих и как пережить адаптацию в Аргентине"
+        },
+        {
+          "id": "stoit-li-pereezzhat",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Стоит ли переезжать в Аргентину: плюсы, минусы и кому подходит"
+        },
+        {
+          "id": "studencheskaya-zhizn",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Учёба и студенческий быт в Аргентине: поступление, язык, жильё"
+        },
+        {
+          "id": "udalyonnaya-rabota-i-oplata",
+          "type": "guide",
+          "subtype": "finance",
+          "title": "Удалёнка в Аргентине: как получать оплату и не терять на курсе"
+        },
+        {
+          "id": "viza-cifrovogo-kochevnika",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Виза цифрового кочевника Аргентины"
+        },
+        {
+          "id": "viza-cifrovogo-kochevnika-chto-daet",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?"
+        },
+        {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
+        },
+        {
+          "id": "vnzh-argentina",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "ВНЖ Аргентины: все легальные пути резиденции"
+        },
+        {
+          "id": "vnzh-po-uchebe",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "ВНЖ Аргентины по учёбе (студенческая резиденция)"
+        },
+        {
+          "id": "vnzh-rantye",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Резиденция рантье и пенсионера в Аргентине: пошаговый гайд"
+        },
+        {
+          "id": "voditelskie-prava",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Вождение и водительские права в Аргентине: туристу и релоканту"
+        },
+        {
+          "id": "voinskij-uchet-i-voennyj-bilet",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Воинский учёт и военный билет при переезде в Аргентину"
+        },
+        {
+          "id": "vossoedinenie-semi",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Резиденция по семейному признаку (vínculo familiar): супруги, дети, родители"
+        },
+        {
+          "id": "zhile-i-arenda",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Жильё и аренда в Аргентине"
+        },
+        {
+          "id": "zhizn-bez-ispanskogo",
+          "type": "guide",
+          "subtype": "culture",
+          "title": "Жизнь без испанского: как справляться в Аргентине первое время"
+        },
+        {
+          "id": "zhizn-na-pensii",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Жизнь на пенсии в Аргентине: переезд для пенсионера"
+        }
+      ]
+    },
+    "dokumenty-i-legalizatsiya": {
+      "title": "Документы и легализация",
+      "entries": [
+        {
+          "id": "apostil-i-perevod-dokumentov",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Апостиль и присяжный перевод документов для Аргентины"
+        },
+        {
+          "id": "chek-list-pereezda",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Чек-лист переезда в Аргентину: по этапам"
+        },
+        {
+          "id": "chto-takoe-dni-i-cuil",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?"
+        },
+        {
+          "id": "chto-takoe-prekariya",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что такое прекария (Residencia Precaria) в Аргентине и что она даёт?"
+        },
+        {
+          "id": "dni-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "DNI и CUIL/CUIT в Аргентине: пошагово для иностранца"
+        },
+        {
+          "id": "dni-cuil-cuit-putanitsa",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "CUIL, CUIT, CDI, AFIP/ARCA — путаница в названиях, которая стоит реального времени"
+        },
+        {
+          "id": "gid-po-dokumentam",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Документы и легализация в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "grazhdanstvo",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Гражданство Аргентины: натурализация и правила 2026"
+        },
+        {
+          "id": "kak-perevezti-kota-ili-sobaku",
+          "type": "faq",
+          "subtype": null,
+          "title": "Как перевезти кота или собаку в Аргентину?"
+        },
+        {
+          "id": "kak-poluchit-grazhdanstvo-za-2-goda",
+          "type": "faq",
+          "subtype": null,
+          "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?"
+        },
+        {
+          "id": "kakie-dokumenty-vezti-s-soboj",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какие документы везти с собой при переезде в Аргентину?"
+        },
+        {
+          "id": "kakoj-dohod-nuzhen-dlya-rantye",
+          "type": "faq",
+          "subtype": null,
+          "title": "Какой доход нужен для получения резиденции рантье в Аргентине?"
+        },
+        {
+          "id": "mozhno-li-delat-vizaran",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли жить в Аргентине на визаранах, как в Азии?"
+        },
+        {
+          "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли иностранцу устроиться на работу в аргентинскую компанию?"
+        },
+        {
+          "id": "mozhno-li-vodit-po-rossijskim-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли водить машину в Аргентине по российским правам?"
+        },
+        {
+          "id": "nuzhno-li-otkazyvatsya-ot-grazhdanstva",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужно ли отказываться от российского гражданства при получении аргентинского?"
+        },
+        {
+          "id": "perevoz-veshchey-i-pitomtsev",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Перевоз личных вещей и домашних животных при переезде в Аргентину"
+        },
+        {
+          "id": "plan-podgotovki-6-mesyacev",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Подготовка к переезду в Аргентину за 6 месяцев: таймлайн"
+        },
+        {
+          "id": "priznanie-diploma",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Признание иностранного диплома в Аргентине (гомологация)"
+        },
+        {
+          "id": "rabochaya-viza",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Рабочая резиденция в Аргентине: наём местным работодателем"
+        },
+        {
+          "id": "rody-i-beremennost",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Роды и беременность в Аргентине: полное руководство"
+        },
+        {
+          "id": "rody-v-argentine",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что даёт рождение ребёнка в Аргентине?"
+        },
+        {
+          "id": "shkola-dlya-detey",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Школа для детей в Аргентине: система образования для семей релокантов"
+        },
+        {
+          "id": "skolko-stoit-oformit-vnzh",
+          "type": "faq",
+          "subtype": null,
+          "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
+        },
+        {
+          "id": "viza-cifrovogo-kochevnika",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Виза цифрового кочевника Аргентины"
+        },
+        {
+          "id": "viza-cifrovogo-kochevnika-chto-daet",
+          "type": "faq",
+          "subtype": null,
+          "title": "Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?"
+        },
+        {
+          "id": "viza-i-granica-dlya-rossiyan",
+          "type": "guide",
+          "subtype": "planning",
+          "title": "Виза и граница для россиян: пустят ли и что спрашивают"
+        },
+        {
+          "id": "viza-kochevnika-ne-vnzh",
+          "type": "author_tip",
+          "subtype": "mistake",
+          "title": "Виза цифрового кочевника — не первый шаг к переезду навсегда, хотя так часто думают"
+        },
+        {
+          "id": "viza-rf-v-argentinu",
+          "type": "faq",
+          "subtype": null,
+          "title": "Нужна ли виза в Аргентину гражданам России?"
+        },
+        {
+          "id": "vnzh-argentina",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "ВНЖ Аргентины: все легальные пути резиденции"
+        },
+        {
+          "id": "vnzh-po-uchebe",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "ВНЖ Аргентины по учёбе (студенческая резиденция)"
+        },
+        {
+          "id": "vnzh-rantye",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Резиденция рантье и пенсионера в Аргентине: пошаговый гайд"
+        },
+        {
+          "id": "voditelskie-prava",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Вождение и водительские права в Аргентине: туристу и релоканту"
+        },
+        {
+          "id": "voinskij-uchet-i-voennyj-bilet",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Воинский учёт и военный билет при переезде в Аргентину"
+        },
+        {
+          "id": "vossoedinenie-semi",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Резиденция по семейному признаку (vínculo familiar): супруги, дети, родители"
+        }
+      ]
+    }
+  }
+}

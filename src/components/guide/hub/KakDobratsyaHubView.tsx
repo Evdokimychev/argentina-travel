@@ -21,8 +21,10 @@ import DomesticRoutesMapSection from "@/components/guide/hub/DomesticRoutesMapSe
 import GuideGuidedTransferBlock from "@/components/guide/hub/GuideGuidedTransferBlock";
 import FlightHubAviasalesSection from "@/components/flights/FlightHubAviasalesSection";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
+import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import { buildAirportFlightsHref } from "@/lib/flights/search-href";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
+import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { buttonVariants } from "@/components/ui/button";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { cn } from "@/lib/cn";
@@ -42,6 +44,12 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
     <>
       <WebPageJsonLd name={hub.heroTitle} description={hub.heroSubtitle} path={path} />
       <FAQPageJsonLd questions={hub.faq} path={path} />
+      <BreadcrumbListJsonLd
+        items={buildDetailBreadcrumbItems(undefined, "guide", {
+          name: hub.heroTitle,
+          path,
+        })}
+      />
 
       <HubHero
         title={hub.heroTitle}

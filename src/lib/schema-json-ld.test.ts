@@ -3,7 +3,10 @@ import {
   buildArticleSchema,
   buildBreadcrumbListSchema,
   buildOrganizationSchema,
+  buildSiteSearchUrlTemplate,
   buildWebPageSchema,
+  buildWebSiteSchema,
+  organizationSchemaId,
   serializeJsonLd,
 } from "@/lib/schema-json-ld";
 
@@ -16,6 +19,25 @@ describe("schema-json-ld", () => {
     });
     expect(schema["@context"]).toBe("https://schema.org");
     expect(JSON.stringify(schema)).toContain("Organization");
+    expect(JSON.stringify(schema)).toContain(organizationSchemaId("https://www.goargentina.ru/"));
+  });
+
+  it("builds site search URL template with slash before path", () => {
+    expect(buildSiteSearchUrlTemplate("https://www.goargentina.ru")).toBe(
+      "https://www.goargentina.ru/tours?query={search_term_string}",
+    );
+  });
+
+  it("links WebSite publisher to Organization @id", () => {
+    const siteUrl = "https://www.goargentina.ru/";
+    const schema = buildWebSiteSchema({
+      name: "Пора в Аргентину",
+      url: siteUrl,
+      searchUrlTemplate: buildSiteSearchUrlTemplate(siteUrl),
+      publisherId: organizationSchemaId(siteUrl),
+    });
+    expect(JSON.stringify(schema)).toContain('"publisher":{"@id"');
+    expect(JSON.stringify(schema)).toContain("/tours?query=");
   });
 
   it("builds WebPage with absolute url", () => {
@@ -27,7 +49,7 @@ describe("schema-json-ld", () => {
     expect(schema.url).toContain("/contacts");
   });
 
-  it("builds breadcrumb list positions", () => {
+  it("builds breadcrumb list positions with absolute item urls", () => {
     const schema = buildBreadcrumbListSchema([
       { name: "Главная", path: "/" },
       { name: "Блог", path: "/blog" },
@@ -39,6 +61,8 @@ describe("schema-json-ld", () => {
         : [];
     expect(items).toHaveLength(2);
     expect(JSON.stringify(schema)).toContain('"position":2');
+    expect(JSON.stringify(schema)).toContain("https://");
+    expect(JSON.stringify(schema)).toContain("/blog");
   });
 
   it("builds article schema with absolute image url", () => {
