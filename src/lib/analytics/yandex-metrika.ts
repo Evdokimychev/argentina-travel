@@ -4,6 +4,9 @@ declare global {
   interface Window {
     ym?: YandexMetrikaFn;
     __goArgentinaYmInited?: boolean;
+    /** Set by head bootstrap after the first pageview hit is queued. */
+    __goArgentinaYmFirstHitSent?: boolean;
+    [key: `yaCounter${number}`]: unknown;
   }
 }
 
@@ -45,10 +48,24 @@ export const YANDEX_METRIKA_TAG_JS = "https://mc.yandex.ru/metrika/tag.js";
 /** Official loader stub — deduplicates tag.js if already present. */
 export const YANDEX_METRIKA_LOADER_SNIPPET = `(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","${YANDEX_METRIKA_TAG_JS}","ym");`;
 
+export function getYandexMetrikaReadyEventName(counterId: number): string {
+  return `yacounter${counterId}inited`;
+}
+
+export function isYandexMetrikaCounterReady(counterId: number): boolean {
+  if (typeof window === "undefined") return false;
+  return typeof window.ym === "function" && Boolean(window[`yaCounter${counterId}`]);
+}
+
+/** Inline first pageview — fires after yacounter*inited (SPA defer pattern). */
+export function buildYandexMetrikaFirstHitScript(counterId: number): string {
+  return `(function(id){var sent=false;function sendHit(){if(sent)return;sent=true;window.__goArgentinaYmFirstHitSent=true;if(typeof ym==="function"){ym(id,"hit",window.location.href,{title:document.title});}}document.addEventListener("yacounter"+id+"inited",sendHit,{once:true});var attempts=0,t=setInterval(function(){if(window["yaCounter"+id]){clearInterval(t);sendHit();}else if(++attempts>100){clearInterval(t);}},100);})(${counterId});`;
+}
+
 /** Inline loader + init for SSR `<head>` — required for Yandex _ym_status-check verification. */
 export function buildYandexMetrikaBootstrapScript(counterId: number): string {
   const initOptions = JSON.stringify(YANDEX_METRIKA_INIT_OPTIONS);
-  return `${YANDEX_METRIKA_LOADER_SNIPPET}ym(${counterId},"init",${initOptions});window.__goArgentinaYmInited=true;`;
+  return `${YANDEX_METRIKA_LOADER_SNIPPET}ym(${counterId},"init",${initOptions});${buildYandexMetrikaFirstHitScript(counterId)}`;
 }
 
 export function parseYandexMetrikaCounterId(raw: string | null | undefined): number | null {
@@ -65,6 +82,33 @@ export function initYandexMetrika(counterId: number): boolean {
   window.ym(counterId, "init", YANDEX_METRIKA_INIT_OPTIONS);
   window.__goArgentinaYmInited = true;
   return true;
+}
+
+export function waitForYandexMetrikaReady(counterId: number, timeoutMs = 15000): Promise<boolean> {
+  if (typeof window === "undefined" || typeof document === "undefined") return Promise.resolve(false);
+  if (isYandexMetrikaCounterReady(counterId)) return Promise.resolve(true);
+
+  return new Promise((resolve) => {
+    let settled = false;
+    const finish = (ready: boolean) => {
+      if (settled) return;
+      settled = true;
+      window.clearInterval(intervalId);
+      window.clearTimeout(timeoutId);
+      resolve(ready);
+    };
+
+    const eventName = getYandexMetrikaReadyEventName(counterId);
+    document.addEventListener(eventName, () => finish(true), { once: true });
+
+    const intervalId = window.setInterval(() => {
+      if (isYandexMetrikaCounterReady(counterId)) finish(true);
+    }, 50);
+
+    const timeoutId = window.setTimeout(() => {
+      finish(isYandexMetrikaCounterReady(counterId));
+    }, timeoutMs);
+  });
 }
 
 export function hitYandexMetrikaPage(counterId: number, url: string, options?: YandexMetrikaHitOptions): void {

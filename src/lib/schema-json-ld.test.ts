@@ -68,8 +68,9 @@ describe("schema-json-ld", () => {
   it("builds article schema with absolute image url", () => {
     const schema = buildArticleSchema({
       title: "Игуасу",
-      excerpt: "Гид",
-      slug: "iguazu",
+      description: "Гид",
+      path: "/blog/iguazu",
+      text: "Полный текст статьи про водопады Игуасу.",
       image: "/media/blog/test/hero.jpg",
       datePublished: "2026-01-01",
       authorName: "Редакция",
@@ -77,18 +78,46 @@ describe("schema-json-ld", () => {
     expect(schema.image).toBe("https://www.goargentina.ru/media/blog/test/hero.jpg");
   });
 
-  it("builds article schema", () => {
+  it("builds article schema for Yandex content analytics", () => {
     const schema = buildArticleSchema({
       title: "Игуасу",
-      excerpt: "Гид",
-      slug: "iguazu",
+      description: "Гид",
+      path: "/blog/iguazu",
+      text: "Полный текст статьи про водопады Игуасу.",
       datePublished: "2026-01-01",
       authorName: "Редакция",
+      schemaType: "BlogPosting",
     });
     expect(schema.headline).toBe("Игуасу");
-    expect(JSON.stringify(schema)).toContain("Article");
+    const json = JSON.stringify(schema);
+    expect(json).toContain("BlogPosting");
+    expect(json).toContain('"text":"');
+    expect(json).toContain("#article");
+  });
+
+  it("builds blog article schema with speakable when enabled", () => {
+    const schema = buildArticleSchema({
+      title: "Игуасу",
+      description: "Гид",
+      path: "/blog/iguazu",
+      text: "Полный текст статьи.",
+      datePublished: "2026-01-01",
+      authorName: "Редакция",
+      schemaType: "BlogPosting",
+      speakable: true,
+    });
     expect(JSON.stringify(schema)).toContain("SpeakableSpecification");
-    expect(JSON.stringify(schema)).toContain("data-speakable");
+  });
+
+  it("builds article schema without speakable by default", () => {
+    const schema = buildArticleSchema({
+      title: "Виза",
+      description: "Справка",
+      path: "/immigration/visa",
+      text: "Текст материала про визу.",
+      authorName: "Редакция",
+    });
+    expect(JSON.stringify(schema)).not.toContain("SpeakableSpecification");
   });
 
   it("serializes to JSON string", () => {

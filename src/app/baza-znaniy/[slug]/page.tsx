@@ -8,6 +8,7 @@ import KbRelated from "@/components/knowledge-base/KbRelated";
 import KbSources from "@/components/knowledge-base/KbSources";
 import KbToc from "@/components/knowledge-base/KbToc";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import ContentArticleJsonLd from "@/components/seo/ContentArticleJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import {
   getAllEntryIds,
@@ -17,6 +18,7 @@ import {
   getSectionNeighbours,
 } from "@/lib/knowledge-base/content";
 import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
+import { buildKbEntryArticleJsonLd } from "@/lib/content-json-ld";
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
 import { entryHref } from "@/lib/knowledge-base/urls";
@@ -68,6 +70,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
         description={entry.summary?.trim() || entry.title}
         path={`/baza-znaniy/${entry.id}`}
       />
+      <ContentArticleJsonLd data={buildKbEntryArticleJsonLd(entry)} />
       <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
       <KbBreadcrumbs items={getBreadcrumbs(entry)} />
 

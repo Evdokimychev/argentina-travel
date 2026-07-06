@@ -8,8 +8,10 @@ import {
 } from "lucide-react";
 import Hero from "@/components/Hero";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import ContentArticleJsonLd from "@/components/seo/ContentArticleJsonLd";
 import ArgentinaExchangeRates from "@/components/guide/ArgentinaExchangeRates";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { buildGuideTopicArticleJsonLd } from "@/lib/content-json-ld";
 import { guideTopicHref } from "@/lib/guide-topics";
 import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import { buttonVariants } from "@/components/ui/button";
@@ -41,6 +43,7 @@ export default function GuideTopicView({ topic }: GuideTopicViewProps) {
           path,
         })}
       />
+      <ContentArticleJsonLd data={buildGuideTopicArticleJsonLd(topic)} />
       <Hero title={topic.title} subtitle={topic.shortDescription} image={heroImage} compact />
 
       <div className="bg-surface-muted pb-16">

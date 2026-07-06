@@ -17,6 +17,7 @@
 | Open Graph / title / description | `buildPublicPageMetadata`, корневой `generateMetadata` |
 | hreflang (ru, es, en) | `src/lib/i18n/hreflang.ts` на пилотных маршрутах |
 | Яндекс Метрика | `YandexMetrikaHeadScripts` в layout |
+| Контентная аналитика (JSON-LD Article) | `buildArticleSchema`, `ContentArticleJsonLd` — блог, путеводитель, иммиграция, база знаний |
 
 ## 1. Верификация сайта (ручная настройка)
 
@@ -79,8 +80,10 @@ curl -s https://www.goargentina.ru/robots.txt
 1. **Инструменты → Валидатор микроразметки** — проверьте URL:
    - `/` — Organization, WebSite, WebPage, ItemList
    - `/tours/patagonia-glaciers` — Product, BreadcrumbList
-   - `/blog/best-time-to-visit-argentina` — Article, BreadcrumbList
-   - `/guide/visa-argentina` — BreadcrumbList (цепочка до 3 элементов)
+   - `/blog/best-time-to-visit-argentina` — BlogPosting + BreadcrumbList
+   - `/guide/visa-argentina` — Article + BreadcrumbList
+   - `/immigration/vnzh` — Article + BreadcrumbList
+   - `/baza-znaniy/buenos-aires` — Article + BreadcrumbList
 2. Разметка может появиться в сниппетах **в течение ~2 недель** — это нормально для Яндекса.
 
 ### Навигационные цепочки (BreadcrumbList)

@@ -149,40 +149,67 @@ export const BLOG_SPEAKABLE_CSS_SELECTORS = [
   "[data-speakable='lede']",
 ] as const;
 
+export type ArticleSchemaType = "Article" | "BlogPosting" | "NewsArticle";
+
 export function buildArticleSchema(input: {
   title: string;
-  excerpt: string;
-  slug: string;
+  description: string;
+  path: string;
+  /** Full article body — required for Yandex Metrika content analytics (JSON-LD `text`). */
+  text: string;
   image?: string;
-  datePublished: string;
+  datePublished?: string;
   dateModified?: string;
   authorName: string;
   authorAvatar?: string;
   publisherName?: string;
+  schemaType?: ArticleSchemaType;
+  about?: string[];
+  /** Blog-only: Google speakable selectors */
+  speakable?: boolean;
+  /** @deprecated Prefer `path` */
+  slug?: string;
+  /** @deprecated Prefer `description` */
+  excerpt?: string;
 }): WithContext<Article> {
   const imageUrl = input.image ? resolvePublicUrl(input.image) : undefined;
   const authorAvatarUrl = input.authorAvatar ? resolvePublicUrl(input.authorAvatar) : undefined;
-  const pageUrl = absoluteUrl(`/blog/${input.slug}`);
+  const pagePath = input.path ?? `/blog/${input.slug ?? ""}`;
+  const pageUrl = absoluteUrl(pagePath);
+  const articleUrl = `${pageUrl}#article`;
   const publisherName = input.publisherName ?? DEFAULT_SITE_BRANDING.siteName;
+  const schemaType = input.schemaType ?? "Article";
+  const description = input.description.trim() || input.excerpt?.trim() || input.title;
+  const text = input.text.trim() || description;
 
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": schemaType,
+    "@id": articleUrl,
     headline: input.title,
-    description: input.excerpt,
-    url: pageUrl,
+    description,
+    text,
+    url: articleUrl,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": pageUrl,
     },
     ...(imageUrl ? { image: imageUrl } : {}),
-    datePublished: input.datePublished,
-    dateModified: input.dateModified ?? input.datePublished,
+    ...(input.datePublished
+      ? {
+          datePublished: input.datePublished,
+          dateModified: input.dateModified ?? input.datePublished,
+        }
+      : {}),
     inLanguage: "ru",
-    speakable: {
-      "@type": "SpeakableSpecification",
-      cssSelector: [...BLOG_SPEAKABLE_CSS_SELECTORS],
-    },
+    ...(input.speakable
+      ? {
+          speakable: {
+            "@type": "SpeakableSpecification",
+            cssSelector: [...BLOG_SPEAKABLE_CSS_SELECTORS],
+          },
+        }
+      : {}),
     author: authorAvatarUrl
       ? {
           "@type": "Person",
@@ -201,6 +228,14 @@ export function buildArticleSchema(input: {
         url: absoluteUrl(DEFAULT_SITE_BRANDING.defaultOgImage),
       },
     },
+    ...(input.about?.length
+      ? {
+          about: input.about.map((name) => ({
+            "@type": "Thing" as const,
+            name,
+          })),
+        }
+      : {}),
   };
 }
 

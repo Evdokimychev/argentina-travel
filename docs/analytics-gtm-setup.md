@@ -65,6 +65,7 @@ npm run gtm-events:audit
 1. Задайте `NEXT_PUBLIC_YANDEX_METRIKA_ID=110458660` в Vercel → Settings → Environment Variables → **Production** → Redeploy.
 2. Убедитесь, что **нет дублирующего тега Метрики** в контейнере GTM — иначе будут двойные хиты.
 3. В настройках счётчика включите Webvisor, карту кликов, карту скроллинга и анализ форм.
+4. **Контентная аналитика:** включите опцию «Контентная аналитика» и в поле **«Тип разметки»** выберите **`Schema.org (JSON-LD)`** — на сайте разметка статей реализована через JSON-LD (`Article` / `BlogPosting`), см. раздел ниже.
 
 Инициализация в коде (SPA, `defer: true` + `hit` при навигации):
 
@@ -172,7 +173,46 @@ ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
 | `search_submit` | Отправка запроса в поиске по сайту (⌘K) | `search_term`, `results_count`, `search_source`, `search_kind` |
 | `search_result_click` | Клик по результату поиска | `search_term`, `item_id`, `item_kind`, `position`, `search_source` |
 
-## 7. Публикация контейнера GTM (ручная ops)
+## 7. Контентная аналитика (Яндекс.Метрика)
+
+Метрика собирает статистику по материалам через **Schema.org** или **Open Graph**. На goargentina.ru используется **JSON-LD** (`buildArticleSchema` в `src/lib/schema-json-ld.ts`, сборщики в `src/lib/content-json-ld.ts`).
+
+### Настройка счётчика
+
+1. Метрика → **Настройки** → счётчик → **Контентная аналитика** → **Вкл**
+2. **Тип разметки:** **`Schema.org (JSON-LD)`** (не Microdata, не Open Graph)
+3. Убедитесь, что установлен **новый код счётчика** (см. `YandexMetrika.tsx`)
+4. Отчёты появятся в разделе **Контент** через несколько часов после первых просмотров размеченных материалов (>500 символов текста)
+
+### Обязательные поля JSON-LD (по документации Яндекса)
+
+| Поле | Ключ JSON-LD | Статус на сайте |
+|------|----------------|-----------------|
+| Идентификатор | `@id` | `{canonicalUrl}#article` |
+| Заголовок | `headline` | ✓ |
+| Текст | `text` | ✓ (plain text из тела материала) |
+| Автор | `author` | ✓ |
+| Даты | `datePublished`, `dateModified` | ✓ где есть дата обновления |
+| Рубрика | `BreadcrumbList` (отдельный блок) | ✓ на тех же страницах |
+| Издатель | `publisher` | ✓ |
+
+### Покрытые страницы
+
+| Раздел | Маршруты | `@type` |
+|--------|----------|---------|
+| Блог | `/blog/[slug]` | `BlogPosting` |
+| Путеводитель (CMS) | `/guide/[slug]` — статьи через `ContentPageView` | `Article` |
+| Путеводитель (темы) | `/guide/[slug]` — `GuideTopicView`, pillar-страницы, «Как добраться», «Об Аргентине» | `Article` |
+| Иммиграция | `/immigration/[slug]` — статьи и pillar-темы | `Article` |
+| База знаний | `/baza-znaniy/[slug]` | `Article` |
+
+**Не размечены как статьи:** каталоги и хабы (`/blog`, `/guide`, `/faq`), карточки туров/экскурсий, служебные страницы.
+
+### Проверка разметки
+
+После деплоя откройте страницу с параметром `?_ym_debug=1` и проверьте консоль браузера — должно появиться сообщение о найденной контентной разметке. Подробнее: [JSON-LD в Метрике](https://yandex.ru/support/metrica/ru/publishers/schema-org/json-ld).
+
+## 8. Публикация контейнера GTM (ручная ops)
 
 Код и env подготавливают `dataLayer`; **Publish в GTM — вручную** после настройки тегов.
 
@@ -182,6 +222,7 @@ ANALYTICS_BASE_URL=https://www.goargentina.ru npm run analytics-readiness
 - [ ] GA4 Configuration + универсальный GA4 Event (regex выше)
 - [ ] Consent Mode на всех тегах аналитики
 - [ ] `NEXT_PUBLIC_YANDEX_METRIKA_ID=110458660` в Vercel Production; **нет** тега Метрики в GTM; цели — в интерфейсе Яндекс.Метрики (таблица выше)
+- [ ] В Метрике: **Контентная аналитика** → тип разметки **`Schema.org (JSON-LD)`**
 - [ ] Clarity (опционально)
 - [ ] **Submit + Publish** контейнера в [tagmanager.google.com](https://tagmanager.google.com/)
 - [ ] `npm run gtm-events:audit` — без ошибок

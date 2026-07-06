@@ -22,9 +22,12 @@ import GuideGuidedTransferBlock from "@/components/guide/hub/GuideGuidedTransfer
 import FlightHubAviasalesSection from "@/components/flights/FlightHubAviasalesSection";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import ContentArticleJsonLd from "@/components/seo/ContentArticleJsonLd";
 import { buildAirportFlightsHref } from "@/lib/flights/search-href";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { buildEditorialArticleJsonLd } from "@/lib/content-json-ld";
+import { travelHubPlainText } from "@/lib/article-plain-text";
 import { buttonVariants } from "@/components/ui/button";
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { cn } from "@/lib/cn";
@@ -43,6 +46,15 @@ export default function KakDobratsyaHubView({ topic }: KakDobratsyaHubViewProps)
   return (
     <>
       <WebPageJsonLd name={hub.heroTitle} description={hub.heroSubtitle} path={path} />
+      <ContentArticleJsonLd
+        data={buildEditorialArticleJsonLd({
+          title: hub.heroTitle,
+          description: hub.heroSubtitle,
+          path,
+          text: travelHubPlainText(hub),
+          about: ["Путеводитель", "Как добраться"],
+        })}
+      />
       <FAQPageJsonLd questions={hub.faq} path={path} />
       <BreadcrumbListJsonLd
         items={buildDetailBreadcrumbItems(undefined, "guide", {

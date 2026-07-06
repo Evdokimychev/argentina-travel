@@ -9,9 +9,12 @@ import ArgentinaTourismInfographic from "@/components/travel/ArgentinaTourismInf
 import ArgentinaTourismTimeline from "@/components/travel/ArgentinaTourismTimeline";
 import FAQPageJsonLd from "@/components/seo/FAQPageJsonLd";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
+import ContentArticleJsonLd from "@/components/seo/ContentArticleJsonLd";
 import RelatedKnowledgeSection from "@/components/knowledge/RelatedKnowledgeSection";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { buildEditorialArticleJsonLd } from "@/lib/content-json-ld";
+import { guideAboutArgentinaPlainText } from "@/lib/article-plain-text";
 import {
   GUIDE_ABOUT_ARGENTINA,
   GUIDE_ABOUT_ARGENTINA_PATH,
@@ -30,6 +33,15 @@ export default function AboutArgentinaView() {
         name={content.heroTitle}
         description={content.heroSubtitle}
         path={GUIDE_ABOUT_ARGENTINA_PATH}
+      />
+      <ContentArticleJsonLd
+        data={buildEditorialArticleJsonLd({
+          title: content.heroTitle,
+          description: content.heroSubtitle,
+          path: GUIDE_ABOUT_ARGENTINA_PATH,
+          text: guideAboutArgentinaPlainText(content),
+          about: ["Путеводитель", "Об Аргентине"],
+        })}
       />
       <FAQPageJsonLd questions={content.faq} path={GUIDE_ABOUT_ARGENTINA_PATH} />
       <BreadcrumbListJsonLd

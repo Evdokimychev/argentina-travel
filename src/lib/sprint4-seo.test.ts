@@ -7,8 +7,9 @@ describe("Sprint 4 SEO and performance", () => {
   it("article JSON-LD uses absolute image URLs", () => {
     const schema = buildArticleSchema({
       title: "Test",
-      excerpt: "Excerpt",
-      slug: "test-slug",
+      description: "Excerpt",
+      path: "/blog/test-slug",
+      text: "Текст статьи для проверки абсолютного URL изображения.",
       image: "/media/blog/sample/hero.jpg",
       datePublished: "2026-01-01",
       authorName: "Редакция",
