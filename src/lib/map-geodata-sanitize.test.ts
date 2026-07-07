@@ -26,9 +26,9 @@ describe("map-geodata-sanitize", () => {
               [
                 [
                   [0, 0],
-                  [1, 0],
-                  [1, 1],
-                  [0, 1],
+                  [0.05, 0],
+                  [0.05, 0.05],
+                  [0, 0.05],
                   [0, 0],
                 ],
               ],
@@ -86,9 +86,11 @@ describe("map-geodata-sanitize", () => {
   it("splits ring at OSM jump chords", () => {
     const ring = [
       [-65, -46],
-      [-67, -46],
-      [-67, -44],
-      [-65, -44],
+      [-65.08, -46],
+      [-65.08, -45.92],
+      [-67, -45.92],
+      [-65.08, -45.84],
+      [-65, -45.84],
       [-65, -46],
     ];
     const collection = sanitizeMapPolygonCollection({

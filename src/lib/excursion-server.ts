@@ -233,15 +233,17 @@ async function loadExcursionDetailServer(slug: string): Promise<ExcursionDetail 
   return fetchSputnik8Detail(slug);
 }
 
-const cachedExcursionDetailBySlug = unstable_cache(
-  loadExcursionDetailServer,
-  ["excursion-detail"],
-  { revalidate: 600, tags: ["excursions"] }
-);
+function getCachedExcursionDetail(slug: string): Promise<ExcursionDetail | null> {
+  return unstable_cache(
+    () => loadExcursionDetailServer(slug),
+    ["excursion-detail", slug],
+    { revalidate: 600, tags: ["excursions"] },
+  )();
+}
 
 /** Request-scoped memoization on top of the time-based cache for API routes and RSC. */
 export const fetchExcursionDetailServer = cache(
-  (slug: string): Promise<ExcursionDetail | null> => cachedExcursionDetailBySlug(slug)
+  (slug: string): Promise<ExcursionDetail | null> => getCachedExcursionDetail(slug),
 );
 
 export async function fetchExcursionCityServer(citySlug: string): Promise<ExcursionCity | null> {
@@ -321,7 +323,7 @@ export async function fetchSimilarExcursionsServer(
   return pgFetchSimilarTripsterExcursions(cityId, excludeId, limit);
 }
 
-export async function fetchExcursionCitiesServer(): Promise<ExcursionCity[]> {
+async function loadExcursionCitiesUncached(): Promise<ExcursionCity[]> {
   const supabase = getClient();
 
   let tripster: ExcursionCity[] = [];
@@ -342,6 +344,16 @@ export async function fetchExcursionCitiesServer(): Promise<ExcursionCity[]> {
   }
 
   return mergeCities(tripster, sputnik8);
+}
+
+const cachedExcursionCities = unstable_cache(
+  loadExcursionCitiesUncached,
+  ["excursion-cities-v1"],
+  { revalidate: 600, tags: ["excursion-cities"] },
+);
+
+export async function fetchExcursionCitiesServer(): Promise<ExcursionCity[]> {
+  return cachedExcursionCities();
 }
 
 export { parseExcursionSlug };

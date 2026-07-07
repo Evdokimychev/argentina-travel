@@ -1,3 +1,6 @@
+import "server-only";
+
+import { unstable_cache } from "next/cache";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import type { Testimonial } from "@/types";
@@ -116,8 +119,7 @@ export async function fetchTopVerifiedReviewsFromDb(
     }));
 }
 
-/** Top verified reviews for homepage — Supabase first, static seed fallback. */
-export async function collectTopVerifiedReviewsAsync(limit = 3): Promise<Testimonial[]> {
+async function loadTopVerifiedReviewsUncached(limit: number): Promise<Testimonial[]> {
   if (isSupabaseReviewsEnabled()) {
     try {
       const supabase = createSupabaseAdminClient();
@@ -129,6 +131,20 @@ export async function collectTopVerifiedReviewsAsync(limit = 3): Promise<Testimo
   }
 
   return collectTopVerifiedReviewsFromSeed(limit);
+}
+
+const cachedTopVerifiedReviews = unstable_cache(
+  async () => loadTopVerifiedReviewsUncached(3),
+  ["homepage-top-reviews-v1"],
+  { revalidate: 600, tags: ["homepage-reviews"] },
+);
+
+/** Top verified reviews for homepage — Supabase first, static seed fallback. */
+export async function collectTopVerifiedReviewsAsync(limit = 3): Promise<Testimonial[]> {
+  if (limit === 3) {
+    return cachedTopVerifiedReviews();
+  }
+  return loadTopVerifiedReviewsUncached(limit);
 }
 
 export async function hasVerifiedReviewsForHomepageAsync(): Promise<boolean> {

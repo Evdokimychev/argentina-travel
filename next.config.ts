@@ -7,6 +7,8 @@ const withBundleAnalyzer = bundleAnalyzer({
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  // Не даём одной странице блокировать сборку бесконечно (Vercel hard limit ~45 мин).
+  staticPageGenerationTimeout: 180,
   // Keep Supabase in Node externals — avoids brittle vendor-chunks/@supabase.js in dev workers.
   serverExternalPackages: ["@supabase/supabase-js", "@supabase/ssr", "@react-pdf/renderer"],
   webpack: (config) => {

@@ -67,7 +67,10 @@ export async function fetchFlightPricesForDates(input: {
 
   let response: Response;
   try {
-    response = await fetch(url, { cache: "no-store" });
+    response = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    });
   } catch {
     return [];
   }
@@ -127,7 +130,10 @@ export async function fetchMonthlyFlightPrices(input: {
 
     let response: Response;
     try {
-      response = await fetch(url, { cache: "no-store" });
+      response = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    });
     } catch {
       continue;
     }
@@ -183,7 +189,10 @@ export async function fetchLatestFlightPrices(input: {
 
   let response: Response;
   try {
-    response = await fetch(url, { cache: "no-store" });
+    response = await fetch(url, {
+      cache: "no-store",
+      signal: AbortSignal.timeout(12_000),
+    });
   } catch {
     return [];
   }

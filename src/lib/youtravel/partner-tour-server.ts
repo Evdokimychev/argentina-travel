@@ -1,6 +1,7 @@
 import "server-only";
 
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { enrichYouTravelTourDetailOffers } from "@/lib/youtravel/offers-server";
 import {
@@ -29,7 +30,17 @@ export async function fetchYouTravelTourListingsServer(): Promise<TourListing[]>
   }
 }
 
-export const fetchYouTravelTourListingsCached = cache(fetchYouTravelTourListingsServer);
+const cachedYouTravelTourListings = unstable_cache(
+  fetchYouTravelTourListingsServer,
+  ["youtravel-tour-listings-v1"],
+  { revalidate: 600, tags: ["partner-tours", "youtravel-tours"] },
+);
+
+export async function fetchYouTravelTourListingsCached(): Promise<TourListing[]> {
+  return cachedYouTravelTourListings();
+}
+
+export const fetchYouTravelTourListingsCachedReact = cache(fetchYouTravelTourListingsCached);
 
 export async function fetchYouTravelTourSlugsServer(): Promise<string[]> {
   const supabase = getClient();

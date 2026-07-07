@@ -3,6 +3,7 @@ import ExcursionDetailView from "@/components/excursions/ExcursionDetailView";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import ExcursionJsonLd from "@/components/seo/ExcursionJsonLd";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
+import { capBuildStaticParams } from "@/lib/build-static-limits";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import {
   fetchExcursionDetailServer,
@@ -14,11 +15,12 @@ type ExcursionPageProps = {
   params: Promise<{ slug: string }>;
 };
 
+export const revalidate = 3600;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const slugs = await fetchExcursionSlugsServer();
-  return slugs.map((slug) => ({ slug }));
+  return capBuildStaticParams(slugs).map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({ params }: ExcursionPageProps) {

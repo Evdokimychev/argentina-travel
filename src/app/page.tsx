@@ -36,14 +36,16 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const actor = await resolveInteractionActor();
+  const [actor, tours] = await Promise.all([
+    resolveInteractionActor(),
+    fetchMarketplaceTours(),
+  ]);
   const actorId = actor.userId ?? actor.anonymousId ?? null;
   const homepageRecommendationsV2Enabled = await getFlag(
     "homepage_recommendations_v2",
     actorId
   );
 
-  const tours = await fetchMarketplaceTours();
   const heroSrc = getHomeHeroImage();
   const platformStats = getPlatformStatsFromMarketplace(tours);
 

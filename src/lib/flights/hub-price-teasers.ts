@@ -93,7 +93,7 @@ export function getHomeTravelPrepFlightTeaser(locale: LocaleCode = "ru") {
   return getFlightPriceTeasers(HOME_TRAVEL_PREP_ROUTE_IDS, locale);
 }
 
-export async function fetchRouteFlightPriceTeaser(input: {
+async function fetchRouteFlightPriceTeaserUncached(input: {
   origin: string;
   destination: string;
   originLabel: string;
@@ -105,25 +105,45 @@ export async function fetchRouteFlightPriceTeaser(input: {
 
   const locale = input.locale ?? "ru";
   const market = resolveAviasalesMarket(locale);
-  const offers = await fetchLatestFlightPrices({
-    origin: input.origin,
-    destination: input.destination,
-    currency: market.currency,
-    limit: 1,
-  });
+  try {
+    const offers = await fetchLatestFlightPrices({
+      origin: input.origin,
+      destination: input.destination,
+      currency: market.currency,
+      limit: 1,
+    });
 
-  const best = offers[0];
-  if (!best) return null;
+    const best = offers[0];
+    if (!best) return null;
 
-  return {
-    routeId: input.routeId,
-    origin: input.origin,
-    destination: input.destination,
-    originLabel: input.originLabel,
-    destinationLabel: input.destinationLabel,
-    price: best.price,
-    currency: best.currency,
-    departureAt: best.departureAt,
-    ticketPath: best.ticketPath,
-  };
+    return {
+      routeId: input.routeId,
+      origin: input.origin,
+      destination: input.destination,
+      originLabel: input.originLabel,
+      destinationLabel: input.destinationLabel,
+      price: best.price,
+      currency: best.currency,
+      departureAt: best.departureAt,
+      ticketPath: best.ticketPath,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchRouteFlightPriceTeaser(input: {
+  origin: string;
+  destination: string;
+  originLabel: string;
+  destinationLabel: string;
+  routeId: string;
+  locale?: LocaleCode;
+}): Promise<FlightPriceTeaser | null> {
+  const locale = input.locale ?? "ru";
+  return unstable_cache(
+    () => fetchRouteFlightPriceTeaserUncached(input),
+    ["route-flight-teaser", input.routeId, locale],
+    { revalidate: 3600, tags: ["flight-prices"] },
+  )();
 }

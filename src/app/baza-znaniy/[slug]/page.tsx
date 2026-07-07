@@ -25,14 +25,18 @@ import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
 import { entryHref } from "@/lib/knowledge-base/urls";
+import { capBuildStaticParams } from "@/lib/build-static-limits";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 86_400;
+export const dynamicParams = true;
+
 export function generateStaticParams() {
-  return getAllEntryIds().map((id) => ({ slug: id }));
+  return capBuildStaticParams(getAllEntryIds()).map((id) => ({ slug: id }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
