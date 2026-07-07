@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import type { MapPlacePoint } from "@/lib/map-types";
 import { PLACE_CATEGORY_LABELS, type PlaceCategory } from "@/types/place";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { cn } from "@/lib/cn";
 
 interface PlaceMapListItemProps {

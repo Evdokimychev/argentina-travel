@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { Search } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/cn";
 import type { FaqItem } from "@/data/faq";
 
@@ -43,9 +44,9 @@ export default function FaqAccordionSection({ items, className }: FaqAccordionSe
       {filteredItems.length === 0 ? (
         <p className="mt-6 rounded-2xl border border-dashed border-gray-200 bg-white px-5 py-8 text-center text-sm text-slate">
           Ничего не найдено — попробуйте другие слова или{" "}
-          <a href="/contacts" className="font-medium text-sky hover:underline">
+          <Link href="/contacts" className="font-medium text-sky hover:underline">
             напишите нам
-          </a>
+          </Link>
           .
         </p>
       ) : (

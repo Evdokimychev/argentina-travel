@@ -116,6 +116,20 @@ const KNOWN_MESSAGES: Record<string, SiteFeedbackMessage> = {
     steps: ["Напишите в поддержку с указанием email", "Мы восстановим доступ вручную"],
     action: { label: "Написать в поддержку", href: "/contacts" },
   },
+  ACCOUNT_BLOCKED: {
+    title: "Аккаунт заблокирован",
+    description: "Доступ к платформе ограничен администратором.",
+    steps: ["Напишите в поддержку, если считаете это ошибкой"],
+    action: { label: "Контакты", href: "/contacts" },
+  },
+  EXPIRED_LINK: {
+    title: "Ссылка устарела",
+    description: "Ссылка для подтверждения или восстановления пароля больше не действует.",
+    steps: [
+      "Запросите восстановление пароля ещё раз",
+      "Проверьте, что используете последнее письмо",
+    ],
+  },
 };
 
 function matchKnownMessage(raw: string): SiteFeedbackMessage | undefined {
@@ -135,6 +149,14 @@ function matchKnownMessage(raw: string): SiteFeedbackMessage | undefined {
 
   if (raw.includes("WRONG_ROLE") || raw.includes("зарегистрирована как автор тура")) {
     return KNOWN_MESSAGES.WRONG_ROLE;
+  }
+
+  if (raw.includes("заблокирован") || raw.includes("banned")) {
+    return KNOWN_MESSAGES.ACCOUNT_BLOCKED;
+  }
+
+  if (raw.includes("устарела") || raw.includes("EXPIRED_LINK")) {
+    return KNOWN_MESSAGES.EXPIRED_LINK;
   }
 
   if (lower.includes("profile") && lower.includes("не найден")) {

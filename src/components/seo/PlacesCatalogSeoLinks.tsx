@@ -1,4 +1,4 @@
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import type { PlaceListing } from "@/types/place";
 
 export default function PlacesCatalogSeoLinks({ places }: { places: PlaceListing[] }) {

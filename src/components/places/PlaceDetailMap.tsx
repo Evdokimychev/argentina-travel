@@ -4,7 +4,8 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import type { PlaceListing } from "@/types/place";
 import { escapeMapHtml } from "@/lib/tour-map";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
+import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -15,23 +16,11 @@ type PlaceDetailMapProps = {
 };
 
 function createMainIcon() {
-  return L.divIcon({
-    className: "",
-    html: `<div class="places-detail-map-marker places-detail-map-marker--main"></div>`,
-    iconSize: [24, 24],
-    iconAnchor: [12, 12],
-    popupAnchor: [0, -14],
-  });
+  return L.divIcon(createMapPinDivIcon({ tone: "brand", active: true, size: "lg" }));
 }
 
 function createRelatedIcon() {
-  return L.divIcon({
-    className: "",
-    html: `<div class="places-detail-map-marker"></div>`,
-    iconSize: [14, 14],
-    iconAnchor: [7, 7],
-    popupAnchor: [0, -10],
-  });
+  return L.divIcon(createMapPinDivIcon({ tone: "muted", size: "sm" }));
 }
 
 function popupHtml(name: string, href: string, meta?: string): string {

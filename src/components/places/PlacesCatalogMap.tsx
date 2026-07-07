@@ -9,7 +9,8 @@ import {
   ARGENTINA_MAP_CENTER,
   escapeMapHtml,
 } from "@/lib/tour-map";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
+import { createMapPinClusterDivIcon, createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -38,15 +39,8 @@ function getPlaceBounds(places: PlaceListing[]): [[number, number], [number, num
   ];
 }
 
-/** Custom pin marker — Leaflet's default PNG icons don't resolve under bundlers. */
-function createPlaceIcon(): L.DivIcon {
-  return L.divIcon({
-    className: "",
-    html: `<div class="places-map-marker"></div>`,
-    iconSize: [18, 18],
-    iconAnchor: [9, 9],
-    popupAnchor: [0, -12],
-  });
+function createPlaceIcon(active = false) {
+  return L.divIcon(createMapPinDivIcon({ tone: "place", active }));
 }
 
 function buildPopupHtml(place: PlaceListing): string {
@@ -63,12 +57,14 @@ function buildPopupHtml(place: PlaceListing): string {
 }
 
 /** Simple grid clustering when zoomed out — groups markers in ~60px cells */
-function clusterPlaces(map: L.Map, places: PlaceListing[]): L.LayerGroup {
+function clusterPlaces(map: L.Map, places: PlaceListing[], selectedSlug: string | null): L.LayerGroup {
   const group = L.layerGroup();
   const zoom = map.getZoom();
   if (zoom >= 8 || places.length <= 30) {
     for (const place of places) {
-      const marker = L.marker([place.latitude, place.longitude], { icon: createPlaceIcon() });
+      const marker = L.marker([place.latitude, place.longitude], {
+        icon: createPlaceIcon(place.slug === selectedSlug),
+      });
       marker.bindPopup(buildPopupHtml(place));
       group.addLayer(marker);
     }
@@ -92,17 +88,16 @@ function clusterPlaces(map: L.Map, places: PlaceListing[]): L.LayerGroup {
     const avgLng = cellPlaces.reduce((s, p) => s + p.longitude, 0) / cellPlaces.length;
 
     if (cellPlaces.length === 1) {
-      const marker = L.marker([avgLat, avgLng], { icon: createPlaceIcon() });
-      marker.bindPopup(buildPopupHtml(cellPlaces[0]));
+      const place = cellPlaces[0];
+      const marker = L.marker([avgLat, avgLng], {
+        icon: createPlaceIcon(place.slug === selectedSlug),
+      });
+      marker.bindPopup(buildPopupHtml(place));
       group.addLayer(marker);
     } else {
-      const clusterIcon = L.divIcon({
-        className: "",
-        html: `<div class="places-map-cluster">${cellPlaces.length}</div>`,
-        iconSize: [36, 36],
-        iconAnchor: [18, 18],
+      const marker = L.marker([avgLat, avgLng], {
+        icon: L.divIcon(createMapPinClusterDivIcon(cellPlaces.length)),
       });
-      const marker = L.marker([avgLat, avgLng], { icon: clusterIcon });
       marker.on("click", () => {
         map.setView([avgLat, avgLng], Math.min(map.getZoom() + 2, 12));
       });
@@ -125,9 +120,11 @@ export default function PlacesCatalogMap({
   const markersRef = useRef<Map<string, L.Marker>>(new Map());
   const onSelectRef = useRef(onSelect);
   const placesRef = useRef(places);
+  const selectedSlugRef = useRef(selectedSlug);
 
   onSelectRef.current = onSelect;
   placesRef.current = places;
+  selectedSlugRef.current = selectedSlug;
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -144,7 +141,11 @@ export default function PlacesCatalogMap({
     map.on("zoomend", () => {
       if (!mapRef.current) return;
       clusterLayerRef.current?.remove();
-      clusterLayerRef.current = clusterPlaces(mapRef.current, placesRef.current);
+      clusterLayerRef.current = clusterPlaces(
+        mapRef.current,
+        placesRef.current,
+        selectedSlugRef.current,
+      );
       clusterLayerRef.current.addTo(mapRef.current);
     });
 
@@ -161,7 +162,7 @@ export default function PlacesCatalogMap({
     clusterLayerRef.current?.remove();
     markersRef.current.clear();
 
-    const layer = clusterPlaces(map, places);
+    const layer = clusterPlaces(map, places, selectedSlug);
     layer.addTo(map);
     clusterLayerRef.current = layer;
 
@@ -171,7 +172,7 @@ export default function PlacesCatalogMap({
     } else if (places.length === 1) {
       map.setView([places[0].latitude, places[0].longitude], 10);
     }
-  }, [places]);
+  }, [places, selectedSlug]);
 
   useEffect(() => {
     if (!selectedSlug || !mapRef.current) return;

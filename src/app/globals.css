@@ -644,12 +644,15 @@ body {
   height: 32px;
   border-radius: 9999px;
   border: 2.5px solid #fff;
-  background: linear-gradient(145deg, #e05f48 0%, #d4533b 55%, #b8422d 100%);
+  background: linear-gradient(155deg, #ea7359 0%, #d4533b 55%, #b8422d 100%);
   color: #fff;
   font-size: 12px;
   font-weight: 700;
   line-height: 1;
-  box-shadow: 0 2px 10px rgba(26, 26, 46, 0.22);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 5px 14px rgba(15, 23, 42, 0.24);
+  filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.12));
   transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
@@ -968,86 +971,108 @@ body {
   border-color: #e5e7eb !important;
 }
 
-.tours-map-marker {
-  width: 14px;
-  height: 14px;
+/* Map pins — shared teardrop markers (Leaflet) */
+.map-pin {
+  --map-pin-color: var(--color-sky);
+  --map-pin-highlight: color-mix(in srgb, var(--map-pin-color) 72%, white);
+  --map-pin-scale: 1;
+  width: calc(32px * var(--map-pin-scale));
+  height: calc(38px * var(--map-pin-scale));
+  position: relative;
+  pointer-events: none;
+  filter: drop-shadow(0 5px 12px rgba(15, 23, 42, 0.24));
+  transition: transform 0.18s ease, filter 0.18s ease;
+}
+
+.map-pin--sm {
+  --map-pin-scale: 0.82;
+}
+
+.map-pin--lg,
+.map-pin--active {
+  --map-pin-scale: 1.18;
+  filter: drop-shadow(0 7px 16px rgba(15, 23, 42, 0.32));
+}
+
+.map-pin--brand {
+  --map-pin-color: var(--color-sky);
+}
+
+.map-pin--place {
+  --map-pin-color: var(--color-sky);
+}
+
+.map-pin--accent {
+  --map-pin-color: #d4533b;
+}
+
+.map-pin--muted {
+  --map-pin-color: var(--color-slate);
+}
+
+.map-pin__bubble {
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: calc(32px * var(--map-pin-scale));
+  height: calc(32px * var(--map-pin-scale));
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: linear-gradient(155deg, var(--map-pin-highlight), var(--map-pin-color));
+  border: 2.5px solid #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.map-pin--active .map-pin__bubble {
+  border-width: 3px;
+}
+
+.map-pin__core {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: calc(10px * var(--map-pin-scale));
+  height: calc(10px * var(--map-pin-scale));
+  margin-top: calc(-5px * var(--map-pin-scale));
+  margin-left: calc(-5px * var(--map-pin-scale));
   border-radius: 9999px;
-  border: 2px solid #fff;
-  background: var(--color-sky);
-  box-shadow: 0 2px 8px rgba(116, 172, 223, 0.45);
-  transition: transform 0.15s ease, background-color 0.15s ease;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.18);
+  transform: rotate(45deg);
 }
 
-.tours-map-marker--active {
-  width: 20px;
-  height: 20px;
-  background: var(--color-sky-dark);
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(90, 143, 196, 0.5);
+.map-pin-cluster {
+  position: relative;
+  width: 46px;
+  height: 46px;
+  pointer-events: none;
 }
 
-.places-map-cluster {
+.map-pin-cluster__halo {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle, rgba(116, 172, 223, 0.35) 0%, rgba(116, 172, 223, 0) 70%);
+  transform: scale(1.15);
+}
+
+.map-pin-cluster__body {
+  position: absolute;
+  inset: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
   border-radius: 9999px;
-  border: 2px solid #fff;
-  background: var(--color-charcoal);
+  border: 3px solid #fff;
+  background: linear-gradient(145deg, #334155, #1e293b);
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28);
+}
+
+.map-pin-cluster__count {
   color: #fff;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  box-shadow: 0 2px 10px rgba(26, 26, 46, 0.25);
-  cursor: pointer;
-}
-
-.places-map-marker {
-  width: 18px;
-  height: 18px;
-  border-radius: 9999px;
-  border: 2.5px solid #fff;
-  background: var(--color-sky);
-  box-shadow: 0 2px 8px rgba(116, 172, 223, 0.5);
-  transition: transform 0.15s ease;
-  cursor: pointer;
-}
-
-.places-map-marker:hover {
-  transform: scale(1.15);
-  background: var(--color-sky-dark);
-}
-
-.places-detail-map-marker {
-  width: 14px;
-  height: 14px;
-  border-radius: 9999px;
-  border: 2px solid #fff;
-  background: var(--color-slate);
-  box-shadow: 0 2px 6px rgba(26, 26, 46, 0.2);
-}
-
-.places-detail-map-marker--main {
-  width: 22px;
-  height: 22px;
-  background: var(--color-sky);
-  box-shadow: 0 3px 12px rgba(116, 172, 223, 0.55);
-}
-
-.itinerary-day-map-marker {
-  width: 14px;
-  height: 14px;
-  border-radius: 9999px;
-  border: 2px solid #fff;
-  background: var(--color-slate);
-  box-shadow: 0 2px 6px rgba(26, 26, 46, 0.2);
-}
-
-.itinerary-day-map-marker--main {
-  width: 20px;
-  height: 20px;
-  background: var(--color-sky);
-  box-shadow: 0 3px 10px rgba(116, 172, 223, 0.45);
+  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
 .tours-map-popup-shell .leaflet-popup-content-wrapper {

@@ -1,105 +1,96 @@
 ---
 id: sierra-de-las-quijadas
 type: national_park
-title: "Национальный парк Сьерра-де-лас-Кихадас"
-title_es: "Parque Nacional Sierra de las Quijadas"
-aliases: ["Сьерра-де-лас-Кихадас"]
-summary: "Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на северо-западе провинции Сан-Луис — палеонтологический памятник с окаменелостями возрастом около 120 млн лет и уникальным птерозавром Pterodaustro."
+title: Национальный парк Сьерра-де-лас-Кихадас
+title_es: Sierra de las Quijadas
+aliases:
+- Сьерра-де-лас-Кихадас
+summary: Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на
+  северо-западе провинции Сан-Луис — палеонтологический памятник с окаменелостями
+  возрастом около 120 млн лет и уникальным птерозавром Pterodaustro.
 status: published
 site_ready: true
-site_sections: [puteshestviya-po-argentine, goroda-i-regiony]
+site_sections:
+- puteshestviya-po-argentine
+- goroda-i-regiony
 region_id: cuyo
-province: "Сан-Луис"
-coordinates: { lat: -32.55, lng: -67.35 }
-area_ha: 73785
-founded_year: 1991
-unesco_status: "Не входит в список ЮНЕСКО; включён в перечень водно-болотных угодий международного значения (сайт Рамсар)"
+province: Сан-Луис
+coordinates:
+  lat: -32.55
+  lng: -67.35
+area_ha: '73785'
+founded_year: '1991'
+unesco_status: Не входит в список ЮНЕСКО; включён в перечень водно-болотных угодий
+  международного значения (сайт Рамсар)
 nearest_city: san-luis
-tags: [пустыня, геология, треккинг, семейный отдых]
-cost:
-  level: "$"
-  details: "На середину 2026 года вход в парк бесплатный — по официальным данным APN сбор билетов временно не функционирует. Уточняйте актуальный статус перед поездкой на официальном сайте APN, так как тарифная политика по другим паркам страны в 2026 году менялась (общий рост цен на входные билеты в системе APN)."
-best_time: ["апрель-май", "август-октябрь"]
-duration: "Полдня-день (циркуит по Потреро-де-ла-Агуада + смотровые точки)"
-how_to_get_there: "От Сан-Луиса (LUQ) ~120 км по трассе RN 147 (около 1,5 часов на машине) до въезда в районе местечка Уальтаран (км 922). Без своего авто — рейсовый автобус между Сан-Луисом и Сан-Хуаном высаживает у съезда к парку (далее ~4 км пешком), либо организованный тур из Сан-Луиса или Потреро-де-лос-Фунес."
-related: [san-luis, ischigualasto, cuyo, mendoza]
+tags:
+- пустыня
+- геология
+- треккинг
+- семейный отдых
+cost: ''
+best_time:
+- апрель-май
+- август-октябрь
+duration: Полдня-день (циркуит по Потреро-де-ла-Агуада + смотровые точки)
+how_to_get_there: От Сан-Луиса (LUQ) ~120 км по трассе RN 147 (около 1,5 часов на
+  машине) до въезда в районе местечка Уальтаран (км 922). Без своего авто — рейсовый
+  автобус между Сан-Луисом и Сан-Хуаном высаживает у съезда к парку (далее ~4 км пешком),
+  либо организованный тур из Сан-Луиса или Потреро-де-лос-Фунес.
+related:
+- san-luis
+- ischigualasto
+- cuyo
+- mendoza
 media:
   hero:
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Parque_Nacional_%2C_Sierra_de_las_Quijadas.JPG/1920px-Parque_Nacional_%2C_Sierra_de_las_Quijadas.JPG"
-    alt: "Красные скальные стены нацпарка Сьерра-де-лас-Кихадас в Сан-Луисе"
-    author: "Valentin Bruno"
-    license: "CC BY-SA 4.0"
-    source_page: "https://commons.wikimedia.org/wiki/File:Parque_Nacional_,_Sierra_de_las_Quijadas.JPG"
+    url: /media/argentina-travel/sierra-de-las-quijadas/1628709303525-sanluis_sierradelasquijadas_4.jpg
+    alt: Национальный парк Сьерра-де-лас-Кихадас
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/sierra-de-las-quijadas
   gallery:
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Sierra_de_Las_Quijadas_S._Luis.JPG/1920px-Sierra_de_Las_Quijadas_S._Luis.JPG"
-      alt: "Каньоны и эродированные песчаниковые формации Сьерра-де-лас-Кихадас"
-      author: "Julio Ricardo Buratti"
-      license: "CC BY-SA 4.0"
-      source_page: "https://commons.wikimedia.org/wiki/File:Sierra_de_Las_Quijadas_S._Luis.JPG"
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Parque_Nacional_Sierra_de_las_Quijadas%2C_San_Luis%2C_Argentina.jpg/1920px-Parque_Nacional_Sierra_de_las_Quijadas%2C_San_Luis%2C_Argentina.jpg"
-      alt: "Природный амфитеатр Потреро-де-ла-Агуада из красноватых скал"
-      author: "Viajando por la mía"
-      license: "CC BY-SA 4.0"
-      source_page: "https://commons.wikimedia.org/wiki/File:Parque_Nacional_Sierra_de_las_Quijadas,_San_Luis,_Argentina.jpg"
-warnings:
-  - "Климат резко континентальный и очень засушливый с сильными перепадами температур днём/ночью и по сезонам — берите воду, головной убор и одежду на несколько слоёв даже летом."
-  - "Дороги внутри парка грунтовые — после сильных дождей возможны временные ограничения проезда, уточняйте состояние на въезде."
-  - "Территория связана с историческими правами общины уарпе (Huarpe) на землю — при посещении уважительно относитесь к местным сообществам и следуйте указаниям смотрителей парка (guardaparques)."
-  - "Категорически нельзя выносить окаменелости и археологические находки — палеонтологический памятник охраняется государством."
-recommendations:
-  - "Не пропустите Потреро-де-ла-Агуада — природный амфитеатр из красных скал в 7 км от въезда, главная смотровая точка парка."
-  - "Расспросите смотрителей о зоне древних керамических печей уарпе у входа — часть маршрутов оборудована для посещения с гидом."
-  - "Приезжайте на рассвете или закате — низкое солнце подчёркивает красный цвет песчаниковых скал, а дневная жара летом делает треккинг менее комфортным."
-  - "Совместите визит с ночёвкой в Сан-Луисе или Потреро-де-лос-Фунес — регулярного общественного транспорта прямо к парку нет, логичнее ехать на арендованной машине или с туром."
-last_verified: "2026-07-02"
+  - url: /media/argentina-travel/sierra-de-las-quijadas/1628709318904-sanluis_sierradelasquijadas_28.jpg
+    alt: Sierra de las Quijadas
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/sierra-de-las-quijadas
+  - url: /media/argentina-travel/sierra-de-las-quijadas/1628709324049-sanluis_sierradelasquijadas_3.jpg
+    alt: Sierra de las Quijadas
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/sierra-de-las-quijadas
+  - url: /media/argentina-travel/sierra-de-las-quijadas/1628709329612-sanluis_sierradelasquijadas_27.jpg
+    alt: Sierra de las Quijadas
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/sierra-de-las-quijadas
+warnings: ''
+recommendations: ''
+last_verified: '2026-07-07'
 confidence: high
 sources:
-  - title: "APN — Parque Nacional Sierra de las Quijadas (официальная страница)"
-    url: "https://www.argentina.gob.ar/parquesnacionales/centro/parque-nacional-sierra-de-las-quijadas"
-    lang: es
-    type: official
-    note: "описание, палеонтология, статус входа (бесплатно на 2026 год), контакты"
-  - title: "Wikipedia (es) — Parque nacional Sierra de las Quijadas"
-    url: "https://es.wikipedia.org/wiki/Parque_nacional_Sierra_de_las_Quijadas"
-    lang: es
-    type: aggregator
-    note: "год основания (закон 24.015, 1991), площадь (73 534 га по декрету), Potrero de la Aguada, история экспроприации земель"
-  - title: "Suteba — El Parque Nacional Sierra de las Quijadas"
-    url: "https://www.suteba.org.ar/el-parque-nacional-sierra-de-las-quijadas-20186.html"
-    lang: es
-    type: es_source
-    note: "общее описание, палеонтологический контекст"
+- title: Visit Argentina — Sierra de las Quijadas
+  url: https://www.argentina.travel/actividades/sierra-de-las-quijadas
+  lang: es
+  type: official
+  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+title_en: Sierra de las Quijadas National Park
 ---
 
 ## Описание
 
-Сьерра-де-лас-Кихадас — национальный парк на северо-западе провинции Сан-Луис, в регионе Куйо, известный красными скальными стенами, каньонами и природным амфитеатром Потреро-де-ла-Агуада. Территория формировалась почти 25 миллионов лет и хранит одну из важных для науки палеонтологических летописей Аргентины: здесь находили окаменелости и следы динозавров возрастом около 120 миллионов лет (аптский ярус), а также остатки редкого птерозавра Pterodaustro с необычным гребенчатым строением челюсти для фильтрации пищи из воды. Парк объединяет экорегионы сухого Чако и Монте-де-Льянурас-и-Месетас, включён в перечень водно-болотных угодий международного значения (Рамсар) и служит домом для пумы, серой лисицы и находящегося под угрозой исчезновения пичисьего — редчайшего вида броненосца. По сравнению с более раскрученными Исчигуаласто и Талампаей туристический поток здесь заметно меньше, что делает парк тихой альтернативой для тех, кто уже видел похожие пейзажи северо-запада.
+Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на северо-западе провинции Сан-Луис — палеонтологический памятник с окаменелостями возрастом около 120 млн лет и уникальным птерозавром Pterodaustro.
 
-## Факты
+Национальный парк Сьерра-де-лас-Кихадас — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
-- Основан 10 декабря 1991 года национальным законом № 24.015; официальная площадь по декрету экспроприации — 73 534 га (в некоторых источниках округляется до 73 785 га).
-- Расположен в департаментах Бельграно и Аякучо на северо-западе провинции Сан-Луис.
-- Главная достопримечательность — Потреро-де-ла-Агуада, природный амфитеатр из красноватых скал в 7 км от въезда.
-- Найдены окаменелости динозавров и уникального птерозавра Pterodaustro возрастом около 120 млн лет.
-- На середину 2026 года вход в парк, по данным официального сайта APN, бесплатный — сбор билетов временно не функционирует (актуальность уточняйте перед поездкой).
+## Практическая информация
 
-## Рекомендации
-
-См. `recommendations` в метаданных — главное: Потреро-де-ла-Агуада, рассвет/закат для фото, ночёвка в Сан-Луисе, свой транспорт или тур.
-
-## Предупреждения
-
-См. `warnings` в метаданных — главное: резкий континентальный климат, состояние грунтовых дорог после дождей, уважительное отношение к общине уарпе, запрет выноса находок.
-
-## Связанные объекты
-
-- [[san-luis]] — ближайший крупный город и логичная база для поездки в парк, около 120 км по трассе RN 147.
-- [[ischigualasto]] — похожий по геологической истории и духу провинциальный парк северо-запада («Долина Луны») в Сан-Хуане, также известный триасовыми окаменелостями, хотя относится к другой провинции и статусу охраны.
-- [[cuyo]] — макрорегион, куда входит провинция Сан-Луис вместе с Мендосой, Сан-Хуаном и Ла-Риохой.
-- [[mendoza]] — крупный туристический хаб региона Куйо для планирования более длинного маршрута.
+- **Координаты:** -32.5500, -67.3500
+- **Провинция:** Сан-Луис
 
 ## Источники
 
-- [APN — Parque Nacional Sierra de las Quijadas](https://www.argentina.gob.ar/parquesnacionales/centro/parque-nacional-sierra-de-las-quijadas)
-- [Wikipedia (es) — Parque nacional Sierra de las Quijadas](https://es.wikipedia.org/wiki/Parque_nacional_Sierra_de_las_Quijadas)
-- [Suteba — El Parque Nacional Sierra de las Quijadas](https://www.suteba.org.ar/el-parque-nacional-sierra-de-las-quijadas-20186.html)
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/actividades/sierra-de-las-quijadas) (исп.; адаптировано 2026-07-07).
+
+> Фотографии взяты с официального туристического портала Argentina.travel (INPROTUR). На сайте указывается источник и автор.

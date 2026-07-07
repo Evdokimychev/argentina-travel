@@ -31,6 +31,7 @@ const SOURCE_TO_PRISMA: Record<PlaceSource, PrismaPlaceSource> = {
   wikipedia: "WIKIPEDIA",
   wikidata: "WIKIDATA",
   geonames: "GEONAMES",
+  "argentina-travel": "MANUAL",
 };
 
 const SOURCE_FROM_PRISMA = Object.fromEntries(

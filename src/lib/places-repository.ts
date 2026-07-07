@@ -20,17 +20,7 @@ import type {
   PlaceListing,
 } from "@/types/place";
 
-export function placeHref(slug: string): string {
-  return `/places/${slug}`;
-}
-
-export function collectionHref(slug: string): string {
-  return `/collections/${slug}`;
-}
-
-export function itineraryHref(slug: string): string {
-  return `/itineraries/${slug}`;
-}
+export { collectionHref, itineraryHref, placeHref } from "@/lib/places-urls";
 
 function buildCollectionFromSeed(seed: CollectionSeed): PlaceCollection {
   return {
@@ -116,7 +106,8 @@ export async function fetchPlacesServer(): Promise<PlaceListing[]> {
       // fall through to seed
     }
   }
-  return getAllPlaceListings();
+  const { applyKbToListing } = await import("@/lib/kb-place-bridge");
+  return getAllPlaceListings().map(applyKbToListing);
 }
 
 export async function fetchPlaceBySlugServer(slug: string): Promise<PlaceDetail | null> {
@@ -140,7 +131,8 @@ export async function fetchPlaceBySlugServer(slug: string): Promise<PlaceDetail 
 
   const seed = getPlaceBySlug(slug);
   if (!seed) return null;
-  return enrichPlaceDetail(seed);
+  const { applyKbToDetail } = await import("@/lib/kb-place-bridge");
+  return applyKbToDetail(enrichPlaceDetail(seed));
 }
 
 export async function fetchPlaceSlugsServer(): Promise<string[]> {

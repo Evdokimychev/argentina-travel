@@ -601,7 +601,7 @@ export default function AuthModal() {
                   setError(null);
                   setResetSent(false);
                 }}
-                className="mt-2 text-xs font-medium text-sky hover:underline"
+                className="mt-2 block w-full text-right text-xs font-medium text-sky hover:underline"
               >
                 Забыли пароль?
               </button>
@@ -945,7 +945,7 @@ export default function AuthModal() {
                               setError(null);
                               setResetSent(false);
                             }}
-                            className="mt-2 text-xs font-medium text-sky hover:underline"
+                            className="mt-2 block w-full text-right text-xs font-medium text-sky hover:underline"
                           >
                             Забыли пароль? Восстановить по почте
                           </button>
@@ -972,22 +972,9 @@ export default function AuthModal() {
                       />
                     </div>
                     <div>
-                      <div className="mb-2 flex items-center justify-between gap-2">
-                        <label htmlFor="auth-password" className="text-xs font-medium text-slate">
-                          Пароль
-                        </label>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setStep("forgot-password");
-                            setError(null);
-                            setResetSent(false);
-                          }}
-                          className="text-xs font-medium text-sky hover:underline"
-                        >
-                          Забыли пароль?
-                        </button>
-                      </div>
+                      <label htmlFor="auth-password" className="mb-2 block text-xs font-medium text-slate">
+                        Пароль
+                      </label>
                       <div className="relative">
                         <Input
                           id="auth-password"
@@ -1010,6 +997,17 @@ export default function AuthModal() {
                           {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                         </button>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setStep("forgot-password");
+                          setError(null);
+                          setResetSent(false);
+                        }}
+                        className="mt-2 block w-full text-right text-xs font-medium text-sky hover:underline"
+                      >
+                        Забыли пароль?
+                      </button>
                     </div>
                   </div>
                 )}

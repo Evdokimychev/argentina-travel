@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
+import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import "leaflet/dist/leaflet.css";
 
 type BlogMapBlockProps = {
@@ -32,12 +33,7 @@ export default function BlogMapBlock({ lat, lng, label }: BlogMapBlockProps) {
       }).addTo(map);
 
       L.marker([lat, lng], {
-        icon: L.divIcon({
-          className: "",
-          html: `<div class="places-detail-map-marker places-detail-map-marker--main"></div>`,
-          iconSize: [24, 24],
-          iconAnchor: [12, 12],
-        }),
+        icon: L.divIcon(createMapPinDivIcon({ tone: "brand", active: true, size: "lg" })),
       }).addTo(map);
 
       map.setView([lat, lng], 11);

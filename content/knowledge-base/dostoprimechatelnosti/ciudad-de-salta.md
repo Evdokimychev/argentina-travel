@@ -1,0 +1,73 @@
+---
+id: ciudad-de-salta
+type: attraction
+title: Город Salta
+title_es: Ciudad de Salta
+title_en: City of Salta
+summary: Elige tu forma de disfrutar la capital más grande del noroeste argentino.
+status: published
+site_sections:
+- puteshestviya-po-argentine
+- goroda-i-regiony
+region_id: noa
+province: Сальта
+tags:
+- северо-запад
+last_verified: '2026-07-07'
+confidence: medium
+site_ready: true
+coordinates:
+  lat: -24.7821269
+  lng: -65.4231976
+related:
+- angastaco
+- cachi
+- corredor-de-la-puna
+- el-obelisco-de-cafayate
+media:
+  hero:
+    url: /media/argentina-travel/ciudad-de-salta/1625343371861-sin_t_tulo_52.jpg
+    alt: Город Salta
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-salta
+  gallery:
+  - url: /media/argentina-travel/ciudad-de-salta/1625343376494-ciudad_de_salta___cabildo.jpg
+    alt: Ciudad de Salta
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-salta
+  - url: /media/argentina-travel/ciudad-de-salta/1625343389653-vert_altas_a__4_.jpg
+    alt: Ciudad de Salta
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-salta
+  - url: /media/argentina-travel/ciudad-de-salta/1625343394737-vert_altas_a__11_.jpg
+    alt: Ciudad de Salta
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-salta
+sources:
+- title: Visit Argentina — Ciudad de Salta
+  url: https://www.argentina.travel/actividades/ciudad-de-salta
+  lang: es
+  type: official
+  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+---
+
+## Описание
+
+Elige tu forma de disfrutar la capital más grande del noroeste argentino.
+
+Город Salta — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+
+## Практическая информация
+
+- **Координаты:** -24.7821, -65.4232
+- **Провинция:** Сальта
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/actividades/ciudad-de-salta) (исп.; адаптировано 2026-07-07).
+
+> Фотографии взяты с официального туристического портала Argentina.travel (INPROTUR). На сайте указывается источник и автор.

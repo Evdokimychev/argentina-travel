@@ -179,6 +179,79 @@ const ABOUT_LINKS: SiteNavLink[] = [
   })),
 ];
 
+/** База знаний — самостоятельный раздел (единый источник знаний об Аргентине). */
+const KNOWLEDGE_BASE_SECTION_LINKS: SiteNavLink[] = [
+  {
+    id: "kb-home",
+    label: "Главная базы знаний",
+    href: "/baza-znaniy",
+    description: "260+ материалов, поиск и навигация",
+  },
+  {
+    id: "kb-puteshestviya",
+    label: "Путешествия",
+    href: "/baza-znaniy/razdel/puteshestviya",
+    description: "Маршруты, сезоны, бюджет, подготовка",
+  },
+  {
+    id: "kb-goroda-regiony",
+    label: "Города и регионы",
+    href: "/baza-znaniy/razdel/goroda-i-regiony",
+    description: "Города, провинции, парки, места",
+  },
+  {
+    id: "kb-zhizn",
+    label: "Жизнь в стране",
+    href: "/baza-znaniy/razdel/zhizn-v-strane",
+    description: "Быт, культура, медицина, безопасность",
+  },
+  {
+    id: "kb-pereezd",
+    label: "Переезд в Аргентину",
+    href: "/baza-znaniy/razdel/pereezd",
+    description: "Весь путь релоканта",
+  },
+  {
+    id: "kb-dokumenty",
+    label: "Документы и легализация",
+    href: "/baza-znaniy/razdel/dokumenty",
+    description: "Виза, ВНЖ, DNI, гражданство",
+  },
+  {
+    id: "kb-finansy",
+    label: "Финансы и экономика",
+    href: "/baza-znaniy/razdel/finansy",
+    description: "Деньги, налоги, инфляция, накопления",
+  },
+  {
+    id: "kb-opyt",
+    label: "Личный опыт",
+    href: "/baza-znaniy/razdel/lichnyy-opyt",
+    description: "Живые истории из первых рук",
+  },
+];
+
+const KNOWLEDGE_BASE_ENTRY_LINKS: SiteNavLink[] = [
+  {
+    id: "kb-hub-traveler",
+    label: "Гид путешественника",
+    href: "/baza-znaniy/gid-puteshestvennika",
+    description: "Путь туриста: 10 шагов",
+  },
+  {
+    id: "kb-hub-relocant",
+    label: "Гид релоканта",
+    href: "/baza-znaniy/gid-relokanta",
+    description: "Путь переезда: 6 этапов",
+  },
+  {
+    id: "kb-search",
+    label: "Поиск по базе знаний",
+    href: "/baza-znaniy/poisk",
+    description: "Быстрый поиск по всем материалам",
+  },
+];
+
 /**
  * Public site navigation — single source of truth for header mega-menu and mobile drawer.
  * Every href must resolve to an existing route (or catalog/blog deep link).
@@ -355,6 +428,27 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     labelKey: "nav.immigration",
     href: "/immigration",
     columns: buildImmigrationNavColumns(),
+  },
+  {
+    id: "knowledgeBase",
+    label: "База знаний",
+    labelKey: "nav.knowledgeBase",
+    href: "/baza-znaniy",
+    activePathPrefixes: ["/baza-znaniy"],
+    description:
+      "Единый источник знаний об Аргентине: путешествия, переезд, документы, деньги и жизнь в стране",
+    columns: [
+      {
+        id: "kb-sections",
+        title: "Разделы",
+        links: KNOWLEDGE_BASE_SECTION_LINKS,
+      },
+      {
+        id: "kb-entries",
+        title: "Точки входа",
+        links: KNOWLEDGE_BASE_ENTRY_LINKS,
+      },
+    ],
   },
   {
     id: "shop",

@@ -23,4 +23,19 @@ describe("normalizeSiteError", () => {
     });
     expect(result.title).toBe("Каталог недоступен");
   });
+
+  it("maps auth duplicate email", () => {
+    const result = normalizeSiteError("DUPLICATE_EMAIL");
+    expect(result.title).toBe("Эта почта уже занята");
+  });
+
+  it("maps blocked account", () => {
+    const result = normalizeSiteError("Аккаунт заблокирован");
+    expect(result.title).toBe("Аккаунт заблокирован");
+  });
+
+  it("maps expired recovery link", () => {
+    const result = normalizeSiteError("Ссылка устарела");
+    expect(result.title).toBe("Ссылка устарела");
+  });
 });

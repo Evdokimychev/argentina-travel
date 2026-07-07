@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbCallout from "@/components/knowledge-base/KbCallout";
 import KbRelated from "@/components/knowledge-base/KbRelated";
+import KbSideNav from "@/components/knowledge-base/KbSideNav";
 import KbSources from "@/components/knowledge-base/KbSources";
 import KbToc from "@/components/knowledge-base/KbToc";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
@@ -14,11 +15,13 @@ import {
   getAllEntryIds,
   getBreadcrumbs,
   getEntry,
+  getEntrySection,
   getRelated,
   getSectionNeighbours,
 } from "@/lib/knowledge-base/content";
-import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
 import { buildKbEntryArticleJsonLd } from "@/lib/content-json-ld";
+import SocialFeed from "@/components/social-feed/SocialFeed";
+import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
 import { entryHref } from "@/lib/knowledge-base/urls";
@@ -60,6 +63,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
   const headings = extractHeadings(entry.body);
   const related = getRelated(entry, 6);
   const { prev, next } = getSectionNeighbours(entry);
+  const section = getEntrySection(entry);
   const hero = entry.media?.hero;
 
   return (
@@ -71,118 +75,127 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
         path={`/baza-znaniy/${entry.id}`}
       />
       <ContentArticleJsonLd data={buildKbEntryArticleJsonLd(entry)} />
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10">
-      <KbBreadcrumbs items={getBreadcrumbs(entry)} />
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
+        <KbBreadcrumbs items={getBreadcrumbs(entry)} />
 
-      <div className="mt-5 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:gap-10">
-        {/* Основная колонка */}
-        <article className="min-w-0">
-          <div className="mb-3 flex flex-wrap items-center gap-2">
-            <span className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-2xs font-medium uppercase tracking-wide text-slate">
-              {kbTypeLabel(entry.type)}
-            </span>
-            {entry.confidence && (
-              <span
-                className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-medium ${
-                  CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
-                }`}
-              >
-                {entry.confidence === "high"
-                  ? "Проверено"
-                  : entry.confidence === "medium"
-                    ? "Проверяйте актуальность"
-                    : "Ориентировочно"}
-              </span>
-            )}
-            {entry.last_verified && (
-              <span className="text-2xs text-slate">
-                Обновлено: {entry.last_verified}
-              </span>
-            )}
-          </div>
-
-          <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">
-            {entry.title}
-          </h1>
-          {entry.summary && (
-            <p className="mt-3 text-lg leading-relaxed text-muted">
-              {entry.summary}
-            </p>
-          )}
-
-          {hero && (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img
-              src={hero.url}
-              alt={hero.alt ?? entry.title}
-              loading="lazy"
-              className="mt-6 aspect-[16/9] w-full rounded-panel object-cover"
-            />
-          )}
-
-          {/* Оглавление на мобильных — над телом */}
-          {headings.length >= 3 && (
-            <div className="mt-6 rounded-panel border border-border-subtle bg-surface-muted p-4 lg:hidden">
-              <KbToc headings={headings} />
-            </div>
-          )}
-
-          <KbCallout variant="warning" items={entry.warnings} />
-          <KbCallout variant="recommendation" items={entry.recommendations} />
-
-          <div className="mt-4 text-base">
-            {renderMarkdown(entry.body, { validIds })}
-          </div>
-
-          <KbSources sources={entry.sources} />
-
-          {/* Пред/след внутри раздела */}
-          {(prev || next) && (
-            <nav className="mt-8 flex flex-col gap-3 border-t border-border-subtle pt-5 sm:flex-row sm:justify-between">
-              {prev ? (
-                <Link
-                  href={entryHref(prev.id)}
-                  className="group flex-1 rounded-card border border-border-subtle bg-surface-elevated p-3 text-sm shadow-card hover:border-sky/40"
-                >
-                  <span className="text-2xs uppercase tracking-wide text-slate">
-                    ← Предыдущая
-                  </span>
-                  <span className="mt-0.5 block font-medium text-foreground group-hover:text-sky-ink">
-                    {prev.title}
-                  </span>
-                </Link>
-              ) : (
-                <span className="flex-1" />
-              )}
-              {next && (
-                <Link
-                  href={entryHref(next.id)}
-                  className="group flex-1 rounded-card border border-border-subtle bg-surface-elevated p-3 text-right text-sm shadow-card hover:border-sky/40"
-                >
-                  <span className="text-2xs uppercase tracking-wide text-slate">
-                    Следующая →
-                  </span>
-                  <span className="mt-0.5 block font-medium text-foreground group-hover:text-sky-ink">
-                    {next.title}
-                  </span>
-                </Link>
-              )}
-            </nav>
-          )}
-
-          <KbRelated entries={related} />
-        </article>
-
-        {/* Оглавление — липкая колонка на десктопе */}
-        {headings.length >= 3 && (
+        <div className="mt-5 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-10 xl:grid-cols-[15rem_minmax(0,1fr)_14rem]">
+          {/* Постоянная навигация базы знаний */}
           <aside className="hidden lg:block">
             <div className="sticky top-24">
-              <KbToc headings={headings} />
+              <KbSideNav sectionId={section?.id} currentEntryId={entry.id} />
             </div>
           </aside>
-        )}
+
+          {/* Основная колонка (ограниченная ширина для комфортного чтения) */}
+          <article className="min-w-0 max-w-[46rem]">
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <span className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-2xs font-medium uppercase tracking-wide text-slate">
+                {kbTypeLabel(entry.type)}
+              </span>
+              {entry.confidence && (
+                <span
+                  className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-2xs font-medium ${
+                    CONFIDENCE_STYLE[entry.confidence] ?? "bg-surface-muted text-slate"
+                  }`}
+                >
+                  {entry.confidence === "high"
+                    ? "Проверено"
+                    : entry.confidence === "medium"
+                      ? "Проверяйте актуальность"
+                      : "Ориентировочно"}
+                </span>
+              )}
+              {entry.last_verified && (
+                <span className="text-2xs text-slate">
+                  Обновлено: {entry.last_verified}
+                </span>
+              )}
+            </div>
+
+            <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">
+              {entry.title}
+            </h1>
+            {entry.summary && (
+              <p className="mt-3 text-lg leading-relaxed text-muted">
+                {entry.summary}
+              </p>
+            )}
+
+            {hero && (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={hero.url}
+                alt={hero.alt ?? entry.title}
+                loading="lazy"
+                className="mt-6 aspect-[16/9] w-full rounded-panel object-cover"
+              />
+            )}
+
+            {/* Оглавление на мобильных и планшетах — над телом */}
+            {headings.length >= 3 && (
+              <div className="mt-6 rounded-panel border border-border-subtle bg-surface-muted p-4 xl:hidden">
+                <KbToc headings={headings} />
+              </div>
+            )}
+
+            <KbCallout variant="warning" items={entry.warnings} />
+            <KbCallout variant="recommendation" items={entry.recommendations} />
+
+            <div className="mt-4 text-base">
+              {renderMarkdown(entry.body, { validIds })}
+            </div>
+
+            <KbSources sources={entry.sources} />
+
+            {/* Пред/след внутри раздела */}
+            {(prev || next) && (
+              <nav className="mt-8 flex flex-col gap-3 border-t border-border-subtle pt-5 sm:flex-row sm:justify-between">
+                {prev ? (
+                  <Link
+                    href={entryHref(prev.id)}
+                    className="group flex-1 rounded-card border border-border-subtle bg-surface-elevated p-3 text-sm shadow-card hover:border-sky/40"
+                  >
+                    <span className="text-2xs uppercase tracking-wide text-slate">
+                      ← Предыдущая
+                    </span>
+                    <span className="mt-0.5 block font-medium text-foreground group-hover:text-sky-ink">
+                      {prev.title}
+                    </span>
+                  </Link>
+                ) : (
+                  <span className="flex-1" />
+                )}
+                {next && (
+                  <Link
+                    href={entryHref(next.id)}
+                    className="group flex-1 rounded-card border border-border-subtle bg-surface-elevated p-3 text-right text-sm shadow-card hover:border-sky/40"
+                  >
+                    <span className="text-2xs uppercase tracking-wide text-slate">
+                      Следующая →
+                    </span>
+                    <span className="mt-0.5 block font-medium text-foreground group-hover:text-sky-ink">
+                      {next.title}
+                    </span>
+                  </Link>
+                )}
+              </nav>
+            )}
+
+            <KbRelated entries={related} />
+
+            <SocialFeed placement={`kb:${entry.id}`} compact />
+          </article>
+
+          {/* Оглавление — липкая правая колонка на широких экранах */}
+          {headings.length >= 3 && (
+            <aside className="hidden xl:block">
+              <div className="sticky top-24">
+                <KbToc headings={headings} />
+              </div>
+            </aside>
+          )}
+        </div>
       </div>
-    </div>
     </>
   );
 }

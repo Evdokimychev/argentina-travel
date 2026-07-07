@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { TourRoutePoint } from "@/types";
 import { formatRoutePointDisplayName } from "@/lib/tour-route-map";
+import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -12,10 +13,6 @@ type Props = {
   className?: string;
 };
 
-function markerIcon(active = false) {
-  // Leaflet loaded dynamically — icon HTML only after import
-  return `<div class="itinerary-day-map-marker${active ? " itinerary-day-map-marker--main" : ""}"></div>`;
-}
 
 export default function ItineraryDayMiniMap({ points, dayNumber, className }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -48,12 +45,13 @@ export default function ItineraryDayMiniMap({ points, dayNumber, className }: Pr
       points.forEach((point, index) => {
         bounds.push([point.lat, point.lng]);
         L.marker([point.lat, point.lng], {
-          icon: L.divIcon({
-            className: "",
-            html: markerIcon(index === 0),
-            iconSize: index === 0 ? [22, 22] : [16, 16],
-            iconAnchor: index === 0 ? [11, 11] : [8, 8],
-          }),
+          icon: L.divIcon(
+            createMapPinDivIcon({
+              tone: index === 0 ? "brand" : "muted",
+              active: index === 0,
+              size: index === 0 ? "lg" : "sm",
+            }),
+          ),
         })
           .bindPopup(formatRoutePointDisplayName(point.name))
           .addTo(map);

@@ -10,11 +10,13 @@ import {
   clearAllMapFilterKinds,
   mapArgentinaStateToSearchParams,
   parseMapArgentinaKindsParam,
+  parseMapArgentinaUrlState,
   resetMapFilterKinds,
   selectAllMapFilterKinds,
   serializeMapArgentinaKinds,
   toggleMapArgentinaKind,
 } from "@/lib/map-argentina-url-state";
+import { DEFAULT_MAP_THEMATIC_STATE } from "@/lib/map-thematic-layers";
 
 describe("map-argentina-url-state", () => {
   it("allows clearing all marker kinds", () => {
@@ -48,8 +50,34 @@ describe("map-argentina-url-state", () => {
         contours: false,
         labels: true,
       },
+      thematic: { ...DEFAULT_MAP_THEMATIC_STATE },
     });
     expect(params.get("layers")).toBe("hillshade,labels");
+  });
+
+  it("serializes thematic layers in URL", () => {
+    const params = mapArgentinaStateToSearchParams({
+      kinds: ["city"],
+      city: "",
+      q: "",
+      selected: "",
+      theme: "tourist",
+      overlays: {
+        hillshade: false,
+        terrain3d: false,
+        contours: false,
+        labels: false,
+      },
+      thematic: { ...DEFAULT_MAP_THEMATIC_STATE, patagonia: true, ruta_40: true },
+    });
+    expect(params.get("tl")).toBe("patagonia,ruta_40");
+  });
+
+  it("parses thematic layers from URL", () => {
+    const params = new URLSearchParams("tl=climate_zones,ba_neighborhoods");
+    const state = parseMapArgentinaUrlState(params);
+    expect(state.thematic.climate_zones).toBe(true);
+    expect(state.thematic.ba_neighborhoods).toBe(true);
   });
 });
 

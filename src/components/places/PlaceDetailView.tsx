@@ -28,7 +28,7 @@ import { pairedDestinationIdForPlace } from "@/lib/geography-links";
 import { matchToursForPlace } from "@/lib/places-tour-match";
 import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
-import { collectionHref, itineraryHref } from "@/lib/places-repository";
+import { collectionHref, itineraryHref } from "@/lib/places-urls";
 import { buildPlacesCatalogHref } from "@/lib/places-catalog-filters";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
 import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
@@ -100,6 +100,15 @@ export default function PlaceDetailView({
               {place.fullDescription}
             </p>
           </section>
+
+          {place.kbSlug ? (
+            <Link
+              href={`/baza-znaniy/${place.kbSlug}`}
+              className="inline-flex items-center gap-2 rounded-xl border border-sky/20 bg-sky/5 px-4 py-2 text-sm font-semibold text-sky-ink transition hover:bg-sky/10"
+            >
+              Подробный разбор в базе знаний →
+            </Link>
+          ) : null}
 
           <PlaceDetailContentSections place={place} />
 

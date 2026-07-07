@@ -1,0 +1,100 @@
+[
+  {
+    "id": "argentina",
+    "labelRu": "Аргентина",
+    "hashtags": ["argentina", "argentinatravel", "visitargentina", "author"],
+    "sourceIds": ["iv-evd", "visit-argentina", "turismo-argentina"]
+  },
+  {
+    "id": "buenos-aires",
+    "labelRu": "Буэнос-Айрес",
+    "hashtags": ["buenosaires", "igersba", "baires"],
+    "destinationIds": ["ba"],
+    "placeSlugs": ["buenos-aires"],
+    "citySlugs": ["buenos-aires"],
+    "kbTags": ["buenos-aires", "caba"]
+  },
+  {
+    "id": "patagonia",
+    "labelRu": "Патагония",
+    "hashtags": ["patagonia", "patagoniaargentina"],
+    "destinationIds": ["patagonia"],
+    "regionSlugs": ["patagonia"],
+    "kbTags": ["patagonia"]
+  },
+  {
+    "id": "bariloche",
+    "labelRu": "Барилоче",
+    "hashtags": ["bariloche", "sanmartindelosandes"],
+    "destinationIds": ["bariloche"],
+    "placeSlugs": ["bariloche", "san-carlos-de-bariloche"],
+    "citySlugs": ["bariloche"],
+    "kbTags": ["bariloche", "lake-district"]
+  },
+  {
+    "id": "calafate",
+    "labelRu": "Эль-Калафате",
+    "hashtags": ["elcalafate", "calafate", "peritomoreno"],
+    "destinationIds": ["calafate"],
+    "placeSlugs": ["el-calafate", "perito-moreno-glacier"],
+    "citySlugs": ["el-calafate"],
+    "kbTags": ["el-calafate", "perito-moreno"]
+  },
+  {
+    "id": "ushuaia",
+    "labelRu": "Ушуайя",
+    "hashtags": ["ushuaia", "tierradelfuego", "fin-del-mundo"],
+    "destinationIds": ["ushuaia"],
+    "placeSlugs": ["ushuaia"],
+    "citySlugs": ["ushuaia"],
+    "kbTags": ["ushuaia", "tierra-del-fuego"]
+  },
+  {
+    "id": "iguazu",
+    "labelRu": "Игуасу",
+    "hashtags": ["iguazu", "cataratasdeliguazu", "iguazufalls"],
+    "destinationIds": ["iguazu"],
+    "placeSlugs": ["iguazu-falls"],
+    "kbTags": ["iguazu", "misiones"]
+  },
+  {
+    "id": "mendoza",
+    "labelRu": "Мендоса",
+    "hashtags": ["mendoza", "vinosdemendoza", "wine"],
+    "destinationIds": ["mendoza"],
+    "placeSlugs": ["mendoza"],
+    "citySlugs": ["mendoza"],
+    "kbTags": ["mendoza", "cuyo", "wine"]
+  },
+  {
+    "id": "salta",
+    "labelRu": "Сальта",
+    "hashtags": ["salta", "saltaargentina", "noa"],
+    "destinationIds": ["salta"],
+    "placeSlugs": ["salta", "cafayate"],
+    "citySlugs": ["salta"],
+    "kbTags": ["salta", "noa", "cafayate"]
+  },
+  {
+    "id": "jujuy",
+    "labelRu": "Жужуй",
+    "hashtags": ["jujuy", "humahuaca", "tilcara"],
+    "placeSlugs": ["purmamarca", "quebrada-de-humahuaca"],
+    "citySlugs": ["san-salvador-de-jujuy"],
+    "kbTags": ["jujuy", "noa"]
+  },
+  {
+    "id": "cordoba",
+    "labelRu": "Кордова",
+    "hashtags": ["cordoba", "sierrasdecordoba"],
+    "citySlugs": ["cordoba"],
+    "kbTags": ["cordoba", "sierras"]
+  },
+  {
+    "id": "misiones",
+    "labelRu": "Мисьонес",
+    "hashtags": ["misiones", "selvamisionera"],
+    "regionSlugs": ["misiones"],
+    "kbTags": ["misiones", "litoral"]
+  }
+]

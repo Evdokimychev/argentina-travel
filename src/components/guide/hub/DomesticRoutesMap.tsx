@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import L from "leaflet";
 import { ExternalLink } from "lucide-react";
 import FlightRoutePriceHint from "@/components/flights/FlightRoutePriceHint";
+import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import {
   ARGENTINA_DOMESTIC_AIRPORTS,
@@ -22,14 +23,13 @@ import "leaflet/dist/leaflet.css";
 type HubCode = "AEP" | "EZE";
 
 function createDotIcon(color: string, active: boolean, isHub = false) {
-  const size = isHub ? (active ? 22 : 18) : active ? 16 : 12;
-  return L.divIcon({
-    className: "",
-    html: `<div class="domestic-routes-marker${active ? " domestic-routes-marker--active" : ""}${isHub ? " domestic-routes-marker--hub" : ""}" style="--marker-color:${color};width:${size}px;height:${size}px"></div>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-    popupAnchor: [0, -size / 2],
-  });
+  return L.divIcon(
+    createMapPinDivIcon({
+      color,
+      active: active || isHub,
+      size: isHub ? "lg" : active ? "md" : "sm",
+    }),
+  );
 }
 
 export default function DomesticRoutesMap() {

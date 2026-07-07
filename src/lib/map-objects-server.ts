@@ -10,6 +10,9 @@ import { resolveTourCityDisplay } from "@/lib/argentina-cities";
 import { hasValidTourMapCoordinates } from "@/lib/tour-map";
 import { fetchPlacesServer, placeHref } from "@/lib/places-repository";
 import { MEDIA_LOGO_FALLBACK } from "@/lib/media-resolver";
+import { findBestMapObjectMatch } from "@/lib/map-search";
+import { buildSupplementaryCityObjects } from "@/lib/map-supplementary-cities";
+import { buildKbAttractionObjects } from "@/lib/map-kb-attractions";
 import type {
   MapMarkerKind,
   MapObject,
@@ -17,7 +20,7 @@ import type {
   MapRouteItem,
 } from "@/lib/map-types";
 
-const DEFAULT_LIMIT = 300;
+const DEFAULT_LIMIT = 5000;
 
 export interface MapObjectsQuery {
   kinds?: MapMarkerKind[];
@@ -206,6 +209,14 @@ export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapO
     }
   }
 
+  if (!activeKinds || activeKinds.includes("city")) {
+    objects.push(...buildSupplementaryCityObjects(places));
+  }
+
+  if (includePlaces) {
+    objects.push(...buildKbAttractionObjects(places));
+  }
+
   if (!activeKinds || activeKinds.includes("tour")) {
     objects.push(
       ...tours
@@ -242,10 +253,5 @@ export function findMapObjectByQuery(
   objects: MapObject[],
   q: string
 ): MapObject | undefined {
-  const needle = q.trim().toLowerCase();
-  if (!needle) return undefined;
-  return objects.find((obj) => {
-    const haystack = `${obj.title} ${obj.slug} ${obj.meta ?? ""}`.toLowerCase();
-    return haystack.includes(needle);
-  });
+  return findBestMapObjectMatch(objects, q);
 }

@@ -9,7 +9,7 @@ import {
 } from "@/data/site-links";
 import { DESTINATION_PAGES } from "@/data/destination-pages";
 import { getAllPlaceListings } from "@/data/places-seed";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { SHOP_PRODUCTS } from "@/data/shop-products";
 import { SERVICE_CATEGORIES } from "@/data/services-hub";
 import { buildContentSearchItems, buildGuideSearchItems, buildImmigrationSearchItems } from "@/lib/content-pages";
@@ -412,39 +412,9 @@ export function buildStaticSearchIndex(
   ]);
 }
 
-export async function buildStaticSearchIndexServer(): Promise<SearchIndexItem[]> {
-  try {
-    const [{ resolveBlogCatalog }, { resolveDestinationCatalog }, { resolvePlaceCatalog }, { resolveGuideCatalog }] =
-      await Promise.all([
-        import("@/lib/cms/blog-resolver"),
-        import("@/lib/cms/destination-resolver"),
-        import("@/lib/cms/place-resolver"),
-        import("@/lib/cms/guide-resolver"),
-      ]);
-
-    const [mergedBlogCatalog, mergedDestinationCatalog, mergedPlaceCatalog, mergedGuideCatalog] =
-      await Promise.all([
-        resolveBlogCatalog(),
-        resolveDestinationCatalog(),
-        resolvePlaceCatalog(),
-        resolveGuideCatalog(),
-      ]);
-
-    return buildStaticSearchIndex(
-      mergedBlogCatalog.length > 0 ? mergedBlogCatalog : blogPosts,
-      mergedDestinationCatalog.length > 0 ? mergedDestinationCatalog : DESTINATION_PAGES,
-      mergedPlaceCatalog.length > 0 ? mergedPlaceCatalog : getAllPlaceListings(),
-      mergedGuideCatalog
-    );
-  } catch {
-    return buildStaticSearchIndex();
-  }
-}
-
 export function buildFullSearchIndex(tours: TourListing[]): SearchIndexItem[] {
   return [...buildTourSearchItems(tours), ...buildStaticSearchIndex()];
 }
 
 /** Alias for static/content index without tours. */
 export const buildSiteSearchIndex = buildStaticSearchIndex;
-export const buildSiteSearchIndexServer = buildStaticSearchIndexServer;

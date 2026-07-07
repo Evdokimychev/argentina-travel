@@ -6,7 +6,7 @@ import type { GuidePillarContent } from "@/types/guide-pillar";
 import type { GuideTopicPage } from "@/types/guide-topic";
 import type { KbEntry } from "@/lib/knowledge-base/types";
 import { destinationHref } from "@/lib/destinations";
-import { collectionHref, itineraryHref, placeHref } from "@/lib/places-repository";
+import { collectionHref, itineraryHref, placeHref } from "@/lib/places-urls";
 import {
   buildArticleSchema,
   buildFaqPageSchema,

@@ -1,7 +1,7 @@
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceListing } from "@/types/place";
 import { destinationHref } from "@/lib/destinations";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 
 const TOP_PLACES_LIMIT = 20;
 

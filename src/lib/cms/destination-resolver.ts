@@ -74,7 +74,8 @@ export async function resolveDestinationCatalog(locale = "ru"): Promise<Destinat
     );
   }
 
-  const fallback = getAllDestinations();
+  const { applyKbToDestination } = await import("@/lib/kb-place-bridge");
+  const fallback = getAllDestinations().map(applyKbToDestination);
   if (!supabase) return fallback;
 
   const cmsDestinations = await fetchPublishedCmsDocumentsMergedByLocaleChain(
@@ -93,7 +94,10 @@ export async function resolveDestinationPage(
   locale = "ru"
 ): Promise<DestinationPage | null> {
   const cutover = await getCmsCutoverFlags();
-  const fallback = cutover.destination ? null : (getDestinationBySlug(slug) ?? null);
+  const rawFallback = cutover.destination ? null : (getDestinationBySlug(slug) ?? null);
+  const fallback = rawFallback
+    ? (await import("@/lib/kb-place-bridge")).applyKbToDestination(rawFallback)
+    : null;
   const supabase = await getCmsServerClient();
   const translationStatus = supabase
     ? await fetchCmsTranslationStatusForSlug(supabase, "destination", slug, {

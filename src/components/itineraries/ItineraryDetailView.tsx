@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CalendarDays } from "lucide-react";
 import type { PlaceItinerary } from "@/types/place";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
 

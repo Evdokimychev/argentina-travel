@@ -1,0 +1,52 @@
+{
+  "version": 2,
+  "generatedAt": "2026-07-06T23:59:10.149Z",
+  "basemapAlignment": "OpenStreetMap — совпадает с CARTO/OSM тайлами (© OpenStreetMap contributors)",
+  "attribution": "© OpenStreetMap contributors — ODbL",
+  "layers": {
+    "argentina_border": {
+      "file": null,
+      "source": "OSM provinces union (derived)"
+    },
+    "provinces": {
+      "file": "provinces.geojson",
+      "source": "OSM admin_level=4"
+    },
+    "patagonia": {
+      "file": "patagonia.geojson",
+      "source": "OSM provinces subset"
+    },
+    "ba_neighborhoods": {
+      "file": "ba-neighborhoods.geojson",
+      "source": "OSM barrios CABA"
+    },
+    "national_parks_area": {
+      "file": "national-parks.geojson",
+      "source": "OSM protected_area"
+    },
+    "wine_regions": {
+      "file": "wine-regions.geojson",
+      "source": "OSM provinces subset"
+    },
+    "whale_watching": {
+      "file": "whale-watching.geojson",
+      "source": "OSM Península Valdés"
+    },
+    "ruta_40": {
+      "file": "ruta-40.geojson",
+      "source": "OSM RN 40"
+    },
+    "scenic_routes": {
+      "file": "scenic-routes.geojson",
+      "source": "OSM scenic highways"
+    },
+    "patagonia_routes": {
+      "file": "patagonia-routes.geojson",
+      "source": "OSM Patagonia roads"
+    },
+    "unesco": {
+      "file": "unesco-sites.geojson",
+      "source": "OSM UNESCO WHC"
+    }
+  }
+}

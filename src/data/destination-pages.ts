@@ -159,11 +159,11 @@ const DESTINATION_CONTENT: Record<
       "Salta — «Salta la Linda»: колониальный центр и Cafayate (вина Torrontés); соседняя провинция Жужуй — Quebrada de Humahuaca, Purmamarca (UNESCO). Train to the Clouds (Tren a las Nubes) — одна из высочайших железных дорог мира (сезонный график).",
     highlights: [
       "Колониальный центр Salta",
-      "Cafayate и винные bodegas",
+      "Кафайяте и винодельни (bodegas)",
       "Quebrada de Humahuaca (Жужуй, UNESCO)",
       "Purmamarca и Cerro de los Siete Colores",
       "Tren a las Nubes",
-      "Peñas и folk music",
+      "Пеньи и народная музыка",
     ],
     bestSeason: "Апрель–июнь и сентябрь–ноябрь — сухо и +18…+25 °C; зима ночами прохладно",
     idealDuration: "4–5 дней",
@@ -171,7 +171,7 @@ const DESTINATION_CONTENT: Record<
       "Перелёт BA → Salta (SLA), ~2 ч. Дальше — аренда авто или организованные туры в Quebrada и Cafayate (3–4 ч на машине).",
     travelTips: [
       "Высота Salta ~1200 м, Quebrada de Humahuaca (Жужуй) до 3000 м — выделите 1 день на акклиматизацию.",
-      "Cafayate — ночёвка в bodega hotel или возврат в Salta.",
+      "Cafayate — ночёвка в отеле при винодельне или возврат в Salta.",
       "Tren a las Nubes — покупка билетов на официальном сайте, сезон апрель–ноябрь.",
       "На юге региона — сухой климат, вода и головной убор.",
     ],
@@ -183,8 +183,8 @@ const DESTINATION_CONTENT: Record<
     highlights: [
       "Los Glaciares и Perito Moreno",
       "El Chaltén и Monte Fitz Roy",
-      "Torres del Paine (Chile)",
-      "Peninsula Valdés — киты",
+      "Торрес-дель-Пайне (Чили)",
+      "Полуостров Вальдес — киты",
       "Ruta 40 и степи",
       "Малые группы и треккинг",
     ],

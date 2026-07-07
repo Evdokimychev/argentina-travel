@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import AboutPageView from "@/components/about/AboutPageView";
+import SocialFeed from "@/components/social-feed/SocialFeed";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
@@ -56,6 +57,7 @@ export default async function AboutPage() {
       <BreadcrumbListJsonLd items={breadcrumbItems} />
       <WebPageJsonLd name={pageTitle} description={pageDescription} path="/about" />
       <AboutPageView platformStats={platformStats} />
+      <SocialFeed placement="about" compact />
     </>
   );
 }

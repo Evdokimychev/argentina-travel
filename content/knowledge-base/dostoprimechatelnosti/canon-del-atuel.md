@@ -1,0 +1,59 @@
+---
+id: canon-del-atuel
+type: attraction
+title: Atuel Canyon
+title_es: Cañón del Atuel
+title_en: Atuel Canyon
+summary: En Мендоса, disfruta el turismo aventura a través de un paraje natural originado
+  en la era Paleozoica.
+status: published
+site_sections:
+- puteshestviya-po-argentine
+- goroda-i-regiony
+region_id: cuyo
+province: Мендоса
+tags:
+- куйо
+last_verified: '2026-07-07'
+confidence: medium
+site_ready: true
+coordinates:
+  lat: -34.8462697
+  lng: -68.51116259999999
+related:
+- cabalgata-en-los-molles
+- cruce-de-los-andes
+- el-nihuil
+- el-sosneado
+media:
+  hero:
+    url: /media/argentina-travel/canon-del-atuel/1656646627734-ca_on_del_atuel.jpg
+    alt: Cañón del Atuel
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/canon-del-atuel
+  gallery: []
+sources:
+- title: Visit Argentina — Cañón del Atuel
+  url: https://www.argentina.travel/actividades/canon-del-atuel
+  lang: es
+  type: official
+  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+---
+
+## Описание
+
+En Мендоса, disfruta el turismo aventura a través de un paraje natural originado en la era Paleozoica.
+
+Atuel Canyon — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+
+## Практическая информация
+
+- **Координаты:** -34.8463, -68.5112
+- **Провинция:** Мендоса
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/actividades/canon-del-atuel) (исп.; адаптировано 2026-07-07).
+
+> Фотографии взяты с официального туристического портала Argentina.travel (INPROTUR). На сайте указывается источник и автор.

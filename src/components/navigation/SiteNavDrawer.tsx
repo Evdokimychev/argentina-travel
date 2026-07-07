@@ -133,7 +133,7 @@ export function SiteNavFullScreenOverlay({
 
         <div
           ref={scrollRef}
-          className="mobile-nav-scroll min-h-0 flex-1 touch-pan-y overflow-y-auto overscroll-y-contain px-3 py-4 sm:px-4 sm:py-5"
+          className="mobile-nav-scroll min-h-0 flex-1 overflow-y-auto overscroll-none px-3 py-4 sm:px-4 sm:py-5"
         >
           <MobileSiteNavMenu
             sections={sections}

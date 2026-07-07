@@ -19,7 +19,7 @@ type Props = {
   compact?: boolean;
 };
 
-const VISIBLE_KINDS = MAP_MARKER_KINDS.filter((kind) => kind !== "route" && kind !== "region");
+const VISIBLE_KINDS = MAP_MARKER_KINDS.filter((kind) => kind !== "route");
 
 export default function MapCategoryFilters({
   activeKinds,
@@ -30,7 +30,8 @@ export default function MapCategoryFilters({
   className,
   compact = false,
 }: Props) {
-  const allActive = VISIBLE_KINDS.every((kind) => activeKinds.includes(kind)) && activeKinds.includes("route");
+  const allActive =
+    VISIBLE_KINDS.every((kind) => activeKinds.includes(kind)) && activeKinds.includes("route");
   const noneActive = activeKinds.length === 0;
 
   return (

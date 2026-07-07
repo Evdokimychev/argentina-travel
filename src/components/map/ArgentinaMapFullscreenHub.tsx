@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import ArgentinaMapLibreCanvas from "@/components/map/ArgentinaMapLibreCanvas";
 import MapControlsPanel from "@/components/map/MapControlsPanel";
 import MapStyleLayersControl from "@/components/map/MapStyleLayersControl";
+import MapThematicLayersControl from "@/components/map/MapThematicLayersControl";
 import { useRouter, useSearchParams } from "next/navigation";
 import MapObjectPopup from "@/components/map/MapObjectPopup";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -20,6 +21,13 @@ import {
   type MapArgentinaUrlState,
 } from "@/lib/map-argentina-url-state";
 import { collectMapOverlayAttributions, toggleMapOverlayLayer } from "@/lib/map-overlay-layers";
+import {
+  DEFAULT_MAP_THEMATIC_STATE,
+  toggleMapThematicLayer,
+  type MapThematicLayerId,
+} from "@/lib/map-thematic-layers";
+import { mapObjectsToSuggestions, searchMapObjects } from "@/lib/map-search";
+import { probeThematicLayerAvailability } from "@/lib/map-thematic-loader";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
 import type { MapOverlayLayerId } from "@/lib/map-overlay-layers";
 import type { MapMarkerKind, MapObject, MapObjectsPayload } from "@/lib/map-types";
@@ -41,6 +49,13 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   const [selected, setSelected] = useState<MapObject | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
+  const [layerAvailability, setLayerAvailability] = useState<
+    Partial<Record<MapThematicLayerId, boolean>>
+  >({});
+
+  useEffect(() => {
+    void probeThematicLayerAvailability().then(setLayerAvailability);
+  }, []);
 
   useEffect(() => {
     const next = parseMapArgentinaUrlState(searchParams);
@@ -113,12 +128,9 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   );
 
   const suggestions = useMemo(() => {
-    const needle = searchDraft.trim().toLowerCase();
+    const needle = searchDraft.trim();
     if (!needle) return [];
-    return data.objects
-      .filter((obj) => obj.title.toLowerCase().includes(needle))
-      .slice(0, 6)
-      .map((obj) => obj.title);
+    return mapObjectsToSuggestions(searchMapObjects(data.objects, needle, 6));
   }, [data.objects, searchDraft]);
 
   const visibleObjects = useMemo(() => {
@@ -126,6 +138,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   }, [data.objects, state.kinds]);
 
   const visibleRoutes = state.kinds.includes("route") ? data.routes : [];
+  const visibleItemCount = visibleObjects.length + visibleRoutes.length;
 
   const mapSelectedId = useMemo(() => {
     if (selected?.id && visibleObjects.some((obj) => obj.id === selected.id)) {
@@ -137,20 +150,32 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     return null;
   }, [selected, state.selected, visibleObjects]);
 
+  function ensureKindsForObject(obj: MapObject, kinds: MapMarkerKind[]): MapMarkerKind[] {
+    if (kinds.includes(obj.kind)) return kinds;
+    return [...kinds, obj.kind];
+  }
+
+  function selectMapObject(obj: MapObject, q = "") {
+    const nextKinds = ensureKindsForObject(obj, stateRef.current.kinds);
+    const nextState: MapArgentinaUrlState = {
+      ...stateRef.current,
+      kinds: nextKinds,
+      q,
+      selected: obj.id,
+    };
+    setSelected(obj);
+    applyState(nextState);
+  }
+
   function handleSearchSubmit() {
     const q = searchDraft.trim();
-    const match = q
-      ? data.objects.find((obj) =>
-          `${obj.title} ${obj.meta ?? ""}`.toLowerCase().includes(q.toLowerCase())
-        )
-      : undefined;
-    const nextState: MapArgentinaUrlState = {
-      ...state,
-      q,
-      selected: match?.id ?? "",
-    };
-    applyState(nextState);
-    if (match) setSelected(match);
+    const match = q ? searchMapObjects(data.objects, q, 1)[0] : undefined;
+    if (match) {
+      selectMapObject(match, q);
+      return;
+    }
+    applyState({ ...state, q, selected: "" });
+    setSelected(null);
   }
 
   function handleSearchClear() {
@@ -202,6 +227,29 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     replaceUrl(nextState);
   }
 
+  function handleToggleThematic(layerId: MapThematicLayerId) {
+    if (layerAvailability[layerId] !== true) return;
+    const nextState = {
+      ...state,
+      thematic: toggleMapThematicLayer(state.thematic, layerId),
+    };
+    setState(nextState);
+    replaceUrl(nextState);
+  }
+
+  function handleClearThematic() {
+    const nextState = { ...state, thematic: { ...DEFAULT_MAP_THEMATIC_STATE } };
+    setState(nextState);
+    replaceUrl(nextState);
+  }
+
+  function handleSelectSuggestion(id: string) {
+    const obj = data.objects.find((item) => item.id === id);
+    if (!obj) return;
+    setSearchDraft(obj.title);
+    selectMapObject(obj, obj.title);
+  }
+
   function handleSelectObject(obj: MapObject | null) {
     setSelected(obj);
     replaceUrl({ ...state, selected: obj?.id ?? "" });
@@ -217,6 +265,27 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     ...collectMapOverlayAttributions(state.overlays),
   ].join(" · ");
 
+  const emptyFeedback =
+    !loading && !loadError && visibleItemCount === 0
+      ? state.kinds.length === 0
+        ? {
+            title: "Метки на карте скрыты",
+            description: "Включите нужные категории или верните стандартный набор меток.",
+            action: { label: "Вернуть фильтры", onClick: handleResetKinds },
+          }
+        : state.q
+          ? {
+              title: "Поиск ничего не нашёл",
+              description: `По запросу «${state.q}» нет объектов на карте. Попробуйте другое слово или очистите поиск.`,
+              action: { label: "Очистить поиск", onClick: handleSearchClear },
+            }
+          : {
+              title: "Нет объектов по выбранным фильтрам",
+              description: "Измените категории на карте или верните стандартный набор меток.",
+              action: { label: "Вернуть фильтры", onClick: handleResetKinds },
+            }
+      : null;
+
   return (
     <div className="relative h-[calc(100dvh-var(--site-header-full-height,72px))] min-h-[520px] w-full">
       <ArgentinaMapLibreCanvas
@@ -226,6 +295,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         selectedId={mapSelectedId}
         theme={state.theme}
         overlays={state.overlays}
+        thematic={state.thematic}
         onSelect={handleSelectObject}
         className="absolute inset-0"
       />
@@ -244,14 +314,23 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
               }}
             />
           ) : null}
+          {emptyFeedback ? (
+            <InlineFeedback
+              variant="info"
+              title={emptyFeedback.title}
+              description={emptyFeedback.description}
+              action={emptyFeedback.action}
+            />
+          ) : null}
           <MapControlsPanel
-            objectCount={visibleObjects.length}
+            objectCount={visibleItemCount}
             searchDraft={searchDraft}
             activeQuery={state.q}
             onSearchChange={setSearchDraft}
             onSearchSubmit={handleSearchSubmit}
             onSearchClear={handleSearchClear}
             suggestions={suggestions}
+            onSelectSuggestion={handleSelectSuggestion}
             activeKinds={state.kinds}
             onToggleKind={handleToggleKind}
             onSelectAllKinds={handleSelectAllKinds}
@@ -261,6 +340,14 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
           />
         </div>
       </div>
+
+      <MapThematicLayersControl
+        thematic={state.thematic}
+        layerAvailability={layerAvailability}
+        onToggleThematic={handleToggleThematic}
+        onClearThematic={handleClearThematic}
+        className="absolute left-2.5 top-[248px] z-20 sm:left-[9px]"
+      />
 
       <MapStyleLayersControl
         theme={state.theme}

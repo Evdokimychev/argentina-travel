@@ -53,6 +53,7 @@ export type AdminNavItemId =
   | "marketplace-moderation"
   | "content-documents"
   | "content-media"
+  | "content-social-feed"
   | "content-translations"
   | "content-freshness"
   | "users-list"

@@ -29,7 +29,7 @@ import { destinationCatalogLink, matchToursForDestination } from "@/lib/destinat
 import { flattenKnowledgeLinks } from "@/lib/content-related-links";
 import { pairedPlaceSlugForDestination, placeSlugsForDestination } from "@/lib/geography-links";
 import type { KnowledgeLinksBundle } from "@/lib/knowledge-internal-links";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import type { ContentTocItem } from "@/types/content-reading";

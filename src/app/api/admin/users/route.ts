@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import type { AccountRoleDb } from "@/types/database";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "users.view");
@@ -8,6 +9,8 @@ export async function GET(request: Request) {
 
   const url = new URL(request.url);
   const query = url.searchParams.get("q")?.trim().toLowerCase() ?? "";
+  const roleFilter = url.searchParams.get("role")?.trim() as AccountRoleDb | undefined;
+  const statusFilter = url.searchParams.get("status")?.trim();
 
   const supabase = createSupabaseAdminClient();
   const dbQuery = supabase
@@ -22,6 +25,14 @@ export async function GET(request: Request) {
   }
 
   let users = data ?? [];
+  if (roleFilter && ["tourist", "organizer", "admin"].includes(roleFilter)) {
+    users = users.filter((user) => user.roles.includes(roleFilter));
+  }
+  if (statusFilter === "blocked") {
+    users = users.filter((user) => user.is_blocked);
+  } else if (statusFilter === "active") {
+    users = users.filter((user) => !user.is_blocked);
+  }
   if (query) {
     users = users.filter((user) => {
       const haystack = [

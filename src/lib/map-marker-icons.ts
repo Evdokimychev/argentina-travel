@@ -27,17 +27,39 @@ type MapImageHost = {
   addImage(id: string, image: HTMLImageElement, options?: { pixelRatio?: number }): void;
 };
 
+function lightenHex(hex: string, amount = 0.22): string {
+  const raw = hex.replace("#", "");
+  const num = Number.parseInt(raw, 16);
+  const r = Math.min(255, ((num >> 16) & 255) + Math.round(255 * amount));
+  const g = Math.min(255, ((num >> 8) & 255) + Math.round(255 * amount));
+  const b = Math.min(255, (num & 255) + Math.round(255 * amount));
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
+}
+
 function buildPinSvg(kind: MapMarkerKind, color: string, selected: boolean): string {
   const iconPaths = KIND_ICON_PATHS[kind] ?? `<circle cx="12" cy="12" r="4" fill="#fff"/>`;
-  const pinScale = selected ? 1.08 : 1;
-  const stroke = selected ? 3 : 2.5;
+  const highlight = lightenHex(color);
+  const scale = selected ? 1.1 : 1;
+  const tx = selected ? -2.4 : 0;
+  const ty = selected ? -2.8 : 0;
+  const stroke = selected ? 3.2 : 2.8;
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="48" height="56" viewBox="0 0 48 56">
-  <g transform="scale(${pinScale}) translate(${selected ? -1.9 : 0}, ${selected ? -2.2 : 0})">
-    <ellipse cx="20" cy="52" rx="8" ry="3" fill="rgba(15,23,42,0.18)"/>
-    <path d="M20 48 C20 48 36 31 36 19 C36 9.06 28.94 2 20 2 C11.06 2 4 9.06 4 19 C4 31 20 48 20 48 Z"
-      fill="${color}" stroke="#ffffff" stroke-width="${stroke}"/>
-    <g transform="translate(8, 7)" stroke="#ffffff" fill="none" stroke-width="1.8"
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="52" height="62" viewBox="0 0 52 62">
+  <defs>
+    <linearGradient id="pinGrad" x1="22" y1="4" x2="22" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="${highlight}"/>
+      <stop offset="100%" stop-color="${color}"/>
+    </linearGradient>
+    <filter id="pinShadow" x="-20%" y="-10%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3.5" flood-color="#0f172a" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+  <g transform="translate(${tx}, ${ty}) scale(${scale})" filter="url(#pinShadow)">
+    <ellipse cx="22" cy="56" rx="9" ry="3.2" fill="rgba(15,23,42,0.16)"/>
+    <path d="M22 52 C22 52 40 33 40 20 C40 9.4 32.1 1 22 1 C11.9 1 4 9.4 4 20 C4 33 22 52 22 52 Z"
+      fill="url(#pinGrad)" stroke="#ffffff" stroke-width="${stroke}" stroke-linejoin="round"/>
+    <circle cx="22" cy="20" r="11.5" fill="rgba(255,255,255,0.18)"/>
+    <g transform="translate(10, 8)" stroke="#ffffff" fill="none" stroke-width="1.85"
       stroke-linecap="round" stroke-linejoin="round">
       ${iconPaths}
     </g>

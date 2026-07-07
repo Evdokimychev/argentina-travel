@@ -17,6 +17,7 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useQuickExplore } from "@/context/QuickExploreContext";
 import { cn } from "@/lib/cn";
 import { tokenButtonOutlineClass, tokenFocusRingClass } from "@/lib/design-tokens";
 import { DEFAULT_MAP_OVERLAY_STATE } from "@/lib/map-overlay-layers";
@@ -30,7 +31,6 @@ import type { MapMarkerKind, MapObject } from "@/lib/map-types";
 import { spotsToMapObjects } from "@/lib/quick-explore/spot-to-map-object";
 import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-open";
 import type {
-  QuickExplorePayload,
   QuickExploreProvince,
   QuickExploreSpot,
 } from "@/lib/quick-explore/types";
@@ -42,6 +42,10 @@ const QUICK_THEMATIC: MapThematicState = {
   provinces: true,
   argentina_border: true,
 };
+
+/** Широкая панель с отступами от краёв viewport и safe-area. */
+const QUICK_MODAL_SHELL_CLASS =
+  "!fixed !inset-x-3 !top-[max(0.75rem,env(safe-area-inset-top))] !bottom-auto !left-auto !right-auto !h-[min(calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1.5rem),820px)] !max-h-[min(calc(100dvh-env(safe-area-inset-top)-env(safe-area-inset-bottom)-1.5rem),820px)] !w-[min(calc(100vw-1.5rem),1120px)] !max-w-[min(calc(100vw-1.5rem),1120px)] !translate-x-0 !translate-y-0 sm:!inset-auto sm:!left-1/2 sm:!top-1/2 sm:!-translate-x-1/2 sm:!-translate-y-1/2";
 
 function normalizeQuery(value: string): string {
   return value
@@ -73,29 +77,12 @@ function filterSpots(spots: QuickExploreSpot[], query: string): QuickExploreSpot
 }
 
 export default function QuickExploreMapDialog() {
+  const { payload, loading, error, refresh } = useQuickExplore();
   const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [payload, setPayload] = useState<QuickExplorePayload | null>(null);
   const [provinceIso, setProvinceIso] = useState<string | null>(null);
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
-
-  const loadPayload = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-    try {
-      const response = await fetch("/api/quick-explore");
-      if (!response.ok) throw new Error("Не удалось загрузить данные карты");
-      const data = (await response.json()) as QuickExplorePayload;
-      setPayload(data);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Ошибка загрузки");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
 
   useEffect(() => {
     function onOpenRequest() {
@@ -107,16 +94,14 @@ export default function QuickExploreMapDialog() {
 
   useEffect(() => {
     if (!open) return;
-    if (!payload && !loading) void loadPayload();
     const timer = window.setTimeout(() => searchRef.current?.focus(), 80);
     return () => window.clearTimeout(timer);
-  }, [open, payload, loading, loadPayload]);
+  }, [open]);
 
   const resetState = useCallback(() => {
     setProvinceIso(null);
     setSelectedSpotId(null);
     setQuery("");
-    setError(null);
   }, []);
 
   const handleOpenChange = useCallback(
@@ -148,7 +133,10 @@ export default function QuickExploreMapDialog() {
   );
 
   const selectedSpot = useMemo(
-    () => visibleSpots.find((s) => s.id === selectedSpotId) ?? provinceSpots.find((s) => s.id === selectedSpotId) ?? null,
+    () =>
+      visibleSpots.find((s) => s.id === selectedSpotId) ??
+      provinceSpots.find((s) => s.id === selectedSpotId) ??
+      null,
     [visibleSpots, provinceSpots, selectedSpotId]
   );
 
@@ -203,12 +191,17 @@ export default function QuickExploreMapDialog() {
     return "/mapa-argentina";
   }, [selectedSpot, selectedProvince]);
 
+  const showDataLoader = loading && !payload;
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent
         bottomSheet={false}
         showClose
-        className="flex h-[min(92dvh,820px)] max-h-[92dvh] w-[min(calc(100dvw-1rem),1120px)] max-w-[calc(100dvw-1rem)] flex-col overflow-hidden rounded-3xl p-0 sm:h-[min(88dvh,780px)]"
+        className={cn(
+          "flex flex-col overflow-hidden rounded-3xl p-0 shadow-modal",
+          QUICK_MODAL_SHELL_CLASS
+        )}
         onOpenAutoFocus={(event) => {
           event.preventDefault();
           searchRef.current?.focus();
@@ -220,9 +213,8 @@ export default function QuickExploreMapDialog() {
         </DialogDescription>
 
         <div className="flex min-h-0 flex-1 flex-col lg:flex-row">
-          {/* Карта */}
           <div className="relative min-h-[220px] flex-1 bg-[#e8eef4] lg:min-h-0 lg:basis-[58%]">
-            {loading && !payload ? (
+            {showDataLoader ? (
               <div className="flex h-full items-center justify-center gap-2 text-sm text-slate">
                 <Loader2 className="h-5 w-5 animate-spin text-sky" />
                 Загружаем места…
@@ -242,7 +234,7 @@ export default function QuickExploreMapDialog() {
               />
             )}
 
-            {!provinceIso ? (
+            {!provinceIso && !showDataLoader ? (
               <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-charcoal/35 to-transparent px-4 pb-4 pt-10">
                 <p className="text-sm font-medium text-white drop-shadow-sm">
                   Выберите провинцию справа — на карте появятся города и парки
@@ -251,8 +243,7 @@ export default function QuickExploreMapDialog() {
             ) : null}
           </div>
 
-          {/* Боковая панель */}
-          <aside className="flex min-h-0 flex-col border-t border-border-subtle bg-surface-elevated lg:w-[42%] lg:border-l lg:border-t-0">
+          <aside className="flex min-h-0 flex-col border-t border-border-subtle bg-surface-elevated lg:w-[42%] lg:max-w-[480px] lg:border-l lg:border-t-0">
             <header className="shrink-0 border-b border-border-subtle px-4 py-3 sm:px-5">
               <div className="mb-3 flex items-center gap-2">
                 {provinceIso ? (
@@ -304,7 +295,7 @@ export default function QuickExploreMapDialog() {
                   {error}
                   <button
                     type="button"
-                    onClick={() => void loadPayload()}
+                    onClick={() => void refresh()}
                     className="mt-2 block w-full text-sky underline"
                   >
                     Повторить
@@ -339,7 +330,7 @@ export default function QuickExploreMapDialog() {
                       </button>
                     </li>
                   ))}
-                  {visibleProvinces.length === 0 && !loading ? (
+                  {visibleProvinces.length === 0 && !showDataLoader ? (
                     <p className="px-3 py-8 text-center text-sm text-slate">Ничего не найдено</p>
                   ) : null}
                 </ul>
@@ -383,7 +374,7 @@ export default function QuickExploreMapDialog() {
                       </button>
                     </li>
                   ))}
-                  {visibleSpots.length === 0 && !loading ? (
+                  {visibleSpots.length === 0 && !showDataLoader ? (
                     <p className="px-3 py-8 text-center text-sm text-slate">
                       В этой провинции пока нет отмеченных мест
                     </p>

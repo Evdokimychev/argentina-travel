@@ -66,7 +66,7 @@ export default async function KnowledgeBaseHomePage() {
           <h2 className="text-xl font-semibold text-foreground">
             С чего начать
           </h2>
-          <span className="text-sm text-muted">Путеводители по темам</span>
+          <span className="text-sm text-muted">Точки входа по темам</span>
         </div>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {hubs.map((hub) => (

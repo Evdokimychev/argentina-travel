@@ -12,6 +12,8 @@ export interface SectionShellProps {
   subtitle?: string;
   href?: string;
   linkLabel?: string;
+  /** Доп. действие в шапке секции (кнопка, ссылка). */
+  actions?: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
   innerClassName?: string;
@@ -41,6 +43,7 @@ export default function SectionShell({
   subtitle,
   href,
   linkLabel,
+  actions,
   children,
   className,
   innerClassName,
@@ -104,6 +107,7 @@ export default function SectionShell({
               </p>
             ) : null}
           </div>
+          {actions ? <div className="hidden shrink-0 sm:block">{actions}</div> : null}
           {href && linkLabel ? (
             <Link
               href={href}

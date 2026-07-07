@@ -1,5 +1,5 @@
 import { PLACES_SEED } from "@/data/places-seed";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import type { SiteNavLink } from "@/types/site-nav";
 
 const POPULAR_PLACE_SLUGS = [

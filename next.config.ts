@@ -112,7 +112,15 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "cf.youtravel.me",
+        hostname: "www.argentina.travel",
+      },
+      {
+        protocol: "https",
+        hostname: "argentina.travel",
+      },
+      {
+        protocol: "https",
+        hostname: "**.argentina.travel",
       },
       {
         protocol: "https",

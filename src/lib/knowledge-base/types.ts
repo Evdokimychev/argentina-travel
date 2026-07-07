@@ -59,6 +59,14 @@ export interface KbEntry {
   confidence?: string;
   last_verified?: string | null;
   seo_slug?: string | null;
+  /** Гео-поля (для мест/регионов/карты; присутствуют у city/region/national_park/attraction). */
+  coordinates?: { lat: number; lng: number } | null;
+  region_id?: string | null;
+  province?: string | null;
+  how_to_get_there?: string | null;
+  best_time?: string[] | null;
+  cost?: { level?: string; details?: string } | null;
+  duration?: string | null;
   body: string;
 }
 

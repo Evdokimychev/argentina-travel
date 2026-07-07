@@ -565,3 +565,6 @@ export function getHomeShowcaseImages(): ResolvedImage[] {
 export function getServiceCategoryCardImage(categoryId: string): ResolvedImage {
   return getContentImage("service:services", `card-${categoryId}`);
 }
+
+export { queryMediaFeed, countMediaFeed } from "@/lib/media-library/feed-query";
+export type { MediaFeedItem, MediaFeedResult } from "@/lib/media-library/feed-query";

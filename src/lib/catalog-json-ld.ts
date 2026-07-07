@@ -4,7 +4,7 @@ import type { PlaceListing } from "@/types/place";
 import { destinationHref } from "@/lib/destinations";
 import type { I18nLocale } from "@/lib/i18n/config";
 import { getServerSyncMessages } from "@/lib/i18n/sync-messages";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
 
 export const MAX_CATALOG_ITEM_LIST = 50;

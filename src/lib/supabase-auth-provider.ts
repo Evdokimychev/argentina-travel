@@ -68,10 +68,33 @@ function mapSignInError(message: string): AuthResult {
       "INVALID_CREDENTIALS"
     );
   }
+  if (lower.includes("user is banned") || lower.includes("banned")) {
+    return rejectLogin(
+      "Аккаунт заблокирован. Напишите в поддержку, если считаете это ошибкой.",
+      "INVALID_CREDENTIALS"
+    );
+  }
+  if (
+    lower.includes("expired") ||
+    (lower.includes("invalid") && lower.includes("token"))
+  ) {
+    return rejectLogin(
+      "Ссылка устарела или недействительна. Запросите восстановление пароля ещё раз.",
+      "INVALID_CREDENTIALS"
+    );
+  }
   return rejectLogin(message, "INVALID_CREDENTIALS");
 }
 
 async function finalizeLogin(profile: Profile, role: AccountRole): Promise<AuthResult> {
+  if (profile.is_blocked) {
+    await getClient().auth.signOut();
+    return rejectLogin(
+      "Аккаунт заблокирован. Обратитесь в поддержку через форму контактов.",
+      "INVALID_CREDENTIALS"
+    );
+  }
+
   const account = {
     role: profile.active_role as AccountRole,
     roles: profile.roles as AccountRole[],
@@ -298,7 +321,23 @@ export const supabaseAuthProvider: AuthProvider = {
     const normalizedPhone =
       normalizePhone(input.phone, resolvePhoneCountryIsoFromProfile(input.country)) ??
       input.phone.trim();
-    const patch = sessionUserToProfileUpdate({ ...input, phone: normalizedPhone });
+    const normalizedEmail = input.email.trim().toLowerCase();
+
+    const existing = await fetchProfile(userId);
+    if (!existing) return { error: "Профиль не найден" };
+
+    if (normalizedEmail && normalizedEmail !== (existing.email ?? "").trim().toLowerCase()) {
+      const { error: emailError } = await getClient().auth.updateUser({ email: normalizedEmail });
+      if (emailError) {
+        const lower = emailError.message.toLowerCase();
+        if (lower.includes("already") || lower.includes("registered")) {
+          return { error: "Эта почта уже используется другим аккаунтом" };
+        }
+        return { error: emailError.message };
+      }
+    }
+
+    const patch = sessionUserToProfileUpdate({ ...input, phone: normalizedPhone, email: normalizedEmail });
     const { error } = await getClient().from("profiles").update(patch).eq("id", userId);
 
     if (error) {

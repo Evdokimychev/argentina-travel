@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { addDays, format } from "date-fns";
 import { CAPACITY_REGRESSION_CASES } from "@/lib/youtravel/__fixtures__/regression-payloads";
 import { assertDepartureCapacityConsistent } from "@/lib/youtravel/partner-invariants";
 import { mapYouTravelOffersToTourDates } from "@/lib/youtravel/offers-mapper";
@@ -16,6 +17,8 @@ import {
 import type { TourDatePrice } from "@/types";
 import type { PartnerTourContent } from "@/lib/tripster/partner-tour-content";
 import type { YouTravelTour } from "@/lib/youtravel/types";
+
+const dateFromToday = (days: number) => format(addDays(new Date(), days), "yyyy-MM-dd");
 
 describe("resolveYouTravelInstantBooking", () => {
   it("reads instant booking from payload and serp", () => {
@@ -52,26 +55,28 @@ describe("resolveYouTravelTravelersGoing", () => {
 });
 
 describe("resolveYouTravelReferenceDate", () => {
+  const nearDate = dateFromToday(30);
+  const laterDate = dateFromToday(60);
   const dates: TourDatePrice[] = [
     {
       id: "past",
-      startDate: "2024-01-10",
-      endDate: "2024-01-20",
+      startDate: dateFromToday(-60),
+      endDate: dateFromToday(-50),
       spotsLeft: 5,
       priceUsd: 1000,
     },
     {
       id: "near",
-      startDate: "2026-07-01",
-      endDate: "2026-07-13",
+      startDate: nearDate,
+      endDate: dateFromToday(42),
       spotsLeft: 3,
       priceUsd: 1200,
       travelersGoingCount: 5,
     },
     {
       id: "later",
-      startDate: "2026-08-01",
-      endDate: "2026-08-13",
+      startDate: laterDate,
+      endDate: dateFromToday(72),
       spotsLeft: 10,
       priceUsd: 1300,
       travelersGoingCount: 2,

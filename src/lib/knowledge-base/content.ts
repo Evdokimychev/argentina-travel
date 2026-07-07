@@ -192,7 +192,56 @@ export function getRelated(entry: KbEntry, limit = 6): KbEntry[] {
     }
     if (result.length >= limit) break;
   }
+  // Бэкфилл соседями раздела, чтобы у статьи никогда не было «тупика».
+  if (result.length < limit) {
+    const primarySectionId = (entry.site_sections ?? [])[0];
+    if (primarySectionId) {
+      for (const sibling of getSectionEntries(primarySectionId)) {
+        if (result.length >= limit) break;
+        if (seen.has(sibling.id) || isHub(sibling.id)) continue;
+        result.push(sibling);
+        seen.add(sibling.id);
+      }
+    }
+  }
   return result;
+}
+
+/** Раздел записи (по первому site_section). */
+export function getEntrySection(entry: KbEntry): KbSectionMeta | undefined {
+  const primarySectionId = (entry.site_sections ?? [])[0];
+  return primarySectionId ? sectionById.get(primarySectionId) : undefined;
+}
+
+/** Порядок и подписи типов для сгруппированного листинга раздела. */
+export const KB_TYPE_GROUP_ORDER: { type: string; label: string }[] = [
+  { type: "guide", label: "Руководства" },
+  { type: "region", label: "Регионы" },
+  { type: "city", label: "Города" },
+  { type: "national_park", label: "Национальные парки" },
+  { type: "attraction", label: "Достопримечательности" },
+  { type: "route", label: "Маршруты" },
+  { type: "transport", label: "Транспорт" },
+  { type: "faq", label: "Вопросы и ответы" },
+  { type: "author_tip", label: "Личный опыт" },
+];
+
+/** Группирует записи раздела по типам (хабы отдельно первыми). */
+export function getSectionGroups(sectionId: string): {
+  hubs: KbEntry[];
+  groups: { type: string; label: string; entries: KbEntry[] }[];
+} {
+  const all = getSectionEntries(sectionId);
+  const hubs = all.filter((entry) => isHub(entry.id));
+  const rest = all.filter((entry) => !isHub(entry.id));
+  const groups = KB_TYPE_GROUP_ORDER.map(({ type, label }) => ({
+    type,
+    label,
+    entries: rest
+      .filter((entry) => entry.type === type)
+      .sort((a, b) => a.title.localeCompare(b.title, "ru")),
+  })).filter((group) => group.entries.length > 0);
+  return { hubs, groups };
 }
 
 export interface KbCrumb {

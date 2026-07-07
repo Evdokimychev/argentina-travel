@@ -2,12 +2,14 @@
 
 import { Search } from "lucide-react";
 import { cn } from "@/lib/cn";
+import type { MapSearchSuggestion } from "@/lib/map-search";
 
 type Props = {
   value: string;
   onChange: (value: string) => void;
   onSubmit: () => void;
-  suggestions?: string[];
+  suggestions?: MapSearchSuggestion[];
+  onSelectSuggestion?: (id: string) => void;
   className?: string;
   compact?: boolean;
 };
@@ -17,6 +19,7 @@ export default function MapSearchPanel({
   onChange,
   onSubmit,
   suggestions = [],
+  onSelectSuggestion,
   className,
   compact = false,
 }: Props) {
@@ -50,17 +53,24 @@ export default function MapSearchPanel({
       </form>
       {suggestions.length > 0 && value.trim() ? (
         <ul className="absolute z-30 mt-1 max-h-48 w-full overflow-y-auto rounded-xl border border-gray-100 bg-white py-1 shadow-lg">
-          {suggestions.map((label) => (
-            <li key={label}>
+          {suggestions.map((item) => (
+            <li key={item.id}>
               <button
                 type="button"
-                className="block w-full px-3 py-2 text-left text-sm text-charcoal hover:bg-gray-50"
+                className="block w-full px-3 py-2 text-left hover:bg-gray-50"
                 onClick={() => {
-                  onChange(label);
-                  onSubmit();
+                  onChange(item.label);
+                  if (onSelectSuggestion) {
+                    onSelectSuggestion(item.id);
+                  } else {
+                    onSubmit();
+                  }
                 }}
               >
-                {label}
+                <span className="block text-sm font-medium text-charcoal">{item.label}</span>
+                {item.subtitle ? (
+                  <span className="block text-[11px] text-slate">{item.subtitle}</span>
+                ) : null}
               </button>
             </li>
           ))}

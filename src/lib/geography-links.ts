@@ -6,7 +6,7 @@ import {
 } from "@/data/knowledge-graph/entities";
 import { PLACES_SEED, toPlaceListing } from "@/data/places-seed";
 import { destinationHref } from "@/lib/destinations";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { destinationCatalogHref } from "@/lib/site-nav";
 import type { PlaceListing } from "@/types/place";
 

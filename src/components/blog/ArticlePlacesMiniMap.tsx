@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import L from "leaflet";
 import Link from "next/link";
 import type { ArticleMapPoint } from "@/lib/article-map-points";
+import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -15,12 +16,13 @@ type Props = {
 };
 
 function markerIcon(active = false) {
-  return L.divIcon({
-    className: "",
-    html: `<div class="places-detail-map-marker${active ? " places-detail-map-marker--main" : ""}"></div>`,
-    iconSize: active ? [24, 24] : [14, 14],
-    iconAnchor: active ? [12, 12] : [7, 7],
-  });
+  return L.divIcon(
+    createMapPinDivIcon({
+      tone: active ? "brand" : "muted",
+      active,
+      size: active ? "lg" : "sm",
+    }),
+  );
 }
 
 export default function ArticlePlacesMiniMap({ points, className, embedded = false }: Props) {

@@ -1,0 +1,13 @@
+{"route":"/?auth=sign-in","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/tours","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Sheet «Фильтры каталога» без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"desktop","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/tours","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Sheet «Фильтры каталога» без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"desktop","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"desktop","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/tours","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Sheet «Фильтры каталога» без кнопки «Закрыть»"}
+{"route":"/tours","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Sheet «Фильтры каталога» без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"desktop","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/?auth=sign-in","viewport":"desktop","check":"modal-close-button","severity":"high","message":"Диалог авторизации без кнопки «Закрыть»"}
+{"route":"/tours","viewport":"mobile","check":"modal-close-button","severity":"high","message":"Sheet «Фильтры каталога» без кнопки «Закрыть»"}

@@ -17,6 +17,7 @@ import { cabinetLinkClass, cabinetPageSubtitleClass, cabinetPageTitleClass, cabi
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import NotificationPreferencesSection from "@/components/notifications/NotificationPreferencesSection";
 import PrivacySettingsSection from "@/components/settings/PrivacySettingsSection";
+import ProfilePasswordSection from "@/components/settings/ProfilePasswordSection";
 import PushNotificationsSection from "@/components/settings/PushNotificationsSection";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
@@ -462,6 +463,7 @@ export default function ProfileSettingsPage() {
           </aside>
 
       <ThemeSettingsSection className="lg:col-span-2" />
+      <ProfilePasswordSection />
       <NotificationPreferencesSection scope="tourist" className="lg:col-span-2" />
       <PushNotificationsSection className="lg:col-span-2" />
       <PrivacySettingsSection className="lg:col-span-2" />

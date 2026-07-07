@@ -166,20 +166,25 @@ export default function UsersView() {
   const canManage = hasCapability("users.manage");
   const { data, loading, error, refresh } = useAdminApi<UsersResponse>("/api/admin/users");
   const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState<AccountRoleDb | "">("");
+  const [statusFilter, setStatusFilter] = useState<"" | "active" | "blocked">("");
   const [manageId, setManageId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const users = data?.users ?? [];
     const query = search.trim().toLowerCase();
-    if (!query) return users;
     return users.filter((user) => {
+      if (roleFilter && !user.roles.includes(roleFilter)) return false;
+      if (statusFilter === "blocked" && !user.isBlocked) return false;
+      if (statusFilter === "active" && user.isBlocked) return false;
+      if (!query) return true;
       const haystack = [user.fullName, user.email, user.phone, user.roles.join(" ")]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
       return haystack.includes(query);
     });
-  }, [data?.users, search]);
+  }, [data?.users, roleFilter, search, statusFilter]);
 
   const managedUser = filtered.find((u) => u.id === manageId) ?? data?.users?.find((u) => u.id === manageId);
 
@@ -206,6 +211,32 @@ export default function UsersView() {
               placeholder="Поиск по имени, email, роли…"
               className="sm:max-w-md"
             />
+
+            <div className="flex flex-wrap gap-3">
+              <NativeSelect
+                value={roleFilter}
+                onChange={(e) => setRoleFilter(e.target.value as AccountRoleDb | "")}
+                className="sm:max-w-[180px]"
+                aria-label="Фильтр по роли"
+              >
+                <option value="">Все роли</option>
+                {ALL_ROLES.map((role) => (
+                  <option key={role} value={role}>
+                    {ROLE_LABELS[role]}
+                  </option>
+                ))}
+              </NativeSelect>
+              <NativeSelect
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value as "" | "active" | "blocked")}
+                className="sm:max-w-[180px]"
+                aria-label="Фильтр по статусу"
+              >
+                <option value="">Все статусы</option>
+                <option value="active">Активные</option>
+                <option value="blocked">Заблокированные</option>
+              </NativeSelect>
+            </div>
 
             <div className={cabinetTableWrapClass}>
               <table className="w-full min-w-[640px] text-left text-sm">

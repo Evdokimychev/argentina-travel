@@ -32,21 +32,37 @@ export default function ResetPasswordPage() {
     }
 
     const supabase = createSupabaseBrowserClient();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "PASSWORD_RECOVERY" || session) {
+        setReady(true);
+        setError(null);
+      }
+    });
+
     void supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         setReady(true);
-        return;
+      } else {
+        window.setTimeout(() => {
+          void supabase.auth.getSession().then(({ data: { session: retrySession } }) => {
+            if (!retrySession) {
+              setError(
+                siteFormError(
+                  "Ссылка устарела или уже использована. Запросите восстановление пароля ещё раз.",
+                  {
+                    title: "Не удалось открыть форму",
+                    action: { label: "На главную", href: "/?auth=sign-in" },
+                  }
+                )
+              );
+            }
+          });
+        }, 800);
       }
-      setError(
-        siteFormError(
-          "Ссылка устарела или уже использована. Запросите восстановление пароля ещё раз.",
-          {
-            title: "Не удалось открыть форму",
-            action: { label: "На главную", href: "/?auth=sign-in" },
-          }
-        )
-      );
     });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   async function handleSubmit(event: React.FormEvent) {
@@ -69,7 +85,12 @@ export default function ResetPasswordPage() {
     setLoading(false);
 
     if (updateError) {
-      setError(siteFormError(updateError.message, { title: "Не удалось сохранить пароль" }));
+      const lower = updateError.message.toLowerCase();
+      const message =
+        lower.includes("session") || lower.includes("expired") || lower.includes("token")
+          ? "Ссылка устарела. Запросите восстановление пароля ещё раз."
+          : updateError.message;
+      setError(siteFormError(message, { title: "Не удалось сохранить пароль" }));
       return;
     }
 

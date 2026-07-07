@@ -43,7 +43,8 @@ export type PlaceSource =
   | "wikimedia"
   | "wikipedia"
   | "wikidata"
-  | "geonames";
+  | "geonames"
+  | "argentina-travel";
 
 export type PlaceRelationType = "geographic" | "tag" | "category" | "region" | "distance";
 
@@ -70,6 +71,8 @@ export interface PlaceListing {
   season?: string;
   ticketPrice?: string;
   popularity: number;
+  /** Слаг статьи в базе знаний (/baza-znaniy/<slug>), если объект туда сослан. */
+  kbSlug?: string;
 }
 
 export interface PlaceDetail extends PlaceListing {

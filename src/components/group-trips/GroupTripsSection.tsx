@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Users } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 import TourSection from "@/components/tour-detail/TourSection";
@@ -235,9 +236,9 @@ export default function GroupTripsSection({ tour }: GroupTripsSectionProps) {
       {user ? (
         <p className={cn("mt-4 text-xs text-muted")}>
           Ваши наборы также доступны в{" "}
-          <a href="/profile/group-trips" className="text-sky hover:underline">
+          <Link href="/profile/group-trips" className="text-sky hover:underline">
             личном кабинете
-          </a>
+          </Link>
           .
         </p>
       ) : null}

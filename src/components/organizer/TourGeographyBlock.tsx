@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { ChevronDown, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
@@ -230,9 +231,9 @@ export default function TourGeographyBlock({
 
       <div className="rounded-2xl border border-amber-200/80 bg-amber-50/80 px-4 py-3 text-sm leading-relaxed text-charcoal">
         Если вы не нашли свой регион, напишите в{" "}
-        <a href="/contacts" className="font-medium text-brand hover:underline">
+        <Link href="/contacts" className="font-medium text-brand hover:underline">
           чат поддержки
-        </a>
+        </Link>
         . Мы добавим его в течение 7 дней.
       </div>
 

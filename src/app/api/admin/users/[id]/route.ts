@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { revokeSupabaseAuthSessions } from "@/lib/auth-sessions";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { AccountRoleDb, Database } from "@/types/database";
 
@@ -35,6 +36,13 @@ export async function PATCH(
   const { error } = await supabase.from("profiles").update(update).eq("id", id);
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  if (body.isBlocked === true) {
+    await supabase.auth.admin.updateUserById(id, { ban_duration: "876000h" });
+    await revokeSupabaseAuthSessions(id);
+  } else if (body.isBlocked === false) {
+    await supabase.auth.admin.updateUserById(id, { ban_duration: "none" });
   }
 
   await writeAdminAuditLog({

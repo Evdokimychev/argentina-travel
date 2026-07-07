@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { startOfDay } from "date-fns";
+import { addDays, format, startOfDay } from "date-fns";
 import {
   resolveNearestUpcomingDepartureStart,
   resolveNearestUpcomingDepartureTimestamp,
@@ -43,32 +43,34 @@ function stubListing(
 }
 
 describe("tour departure date sort", () => {
-  const today = startOfDay(new Date("2026-06-22"));
+  const today = startOfDay(new Date());
+  const dateFromToday = (days: number) => format(addDays(today, days), "yyyy-MM-dd");
 
   it("picks the nearest upcoming departure, not the first array item", () => {
+    const soonDate = dateFromToday(9);
     const tour = stubListing({
       id: "1",
       slug: "tour-1",
       availableDates: [
-        { start: "2026-03-01", end: "2026-03-08", spotsLeft: 0 },
-        { start: "2026-09-10", end: "2026-09-17", spotsLeft: 4 },
-        { start: "2026-07-01", end: "2026-07-08", spotsLeft: 2 },
+        { start: dateFromToday(-90), end: dateFromToday(-83), spotsLeft: 0 },
+        { start: dateFromToday(80), end: dateFromToday(87), spotsLeft: 4 },
+        { start: soonDate, end: dateFromToday(16), spotsLeft: 2 },
       ],
     });
 
-    expect(resolveNearestUpcomingDepartureStart(tour, today)).toBe("2026-07-01");
+    expect(resolveNearestUpcomingDepartureStart(tour, today)).toBe(soonDate);
   });
 
   it("sorts tours by nearest upcoming departure", () => {
     const soon = stubListing({
       id: "1",
       slug: "soon",
-      availableDates: [{ start: "2026-07-01", end: "2026-07-08", spotsLeft: 2 }],
+      availableDates: [{ start: dateFromToday(30), end: dateFromToday(37), spotsLeft: 2 }],
     });
     const later = stubListing({
       id: "2",
       slug: "later",
-      availableDates: [{ start: "2026-10-01", end: "2026-10-08", spotsLeft: 2 }],
+      availableDates: [{ start: dateFromToday(90), end: dateFromToday(97), spotsLeft: 2 }],
     });
     const noDates = stubListing({ id: "3", slug: "none", availableDates: [] });
 
@@ -80,12 +82,12 @@ describe("tour departure date sort", () => {
     const pastOnly = stubListing({
       id: "1",
       slug: "past",
-      availableDates: [{ start: "2026-01-01", end: "2026-01-08", spotsLeft: 0 }],
+      availableDates: [{ start: dateFromToday(-90), end: dateFromToday(-83), spotsLeft: 0 }],
     });
     const upcoming = stubListing({
       id: "2",
       slug: "upcoming",
-      availableDates: [{ start: "2026-08-01", end: "2026-08-08", spotsLeft: 2 }],
+      availableDates: [{ start: dateFromToday(30), end: dateFromToday(37), spotsLeft: 2 }],
     });
 
     expect(

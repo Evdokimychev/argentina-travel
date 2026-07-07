@@ -1,0 +1,74 @@
+---
+id: ciudad-de-san-juan
+type: attraction
+title: Город San Juan
+title_es: Ciudad de San Juan
+title_en: City of San Juan
+summary: En la región de Куйо, disfruta de una capital donde la cultura de hoy se
+  funde con las huellas del pasado.
+status: stub
+site_sections:
+- puteshestviya-po-argentine
+- goroda-i-regiony
+region_id: cuyo
+province: Сан-Хуан
+tags:
+- куйо
+last_verified: '2026-07-07'
+confidence: medium
+site_ready: false
+coordinates:
+  lat: -31.5351074
+  lng: -68.5385941
+related:
+- astroturismo-en-san-juan
+- caminos-de-la-fe-san-juan
+- caucete-san-juan
+- cerro-mercedario-y-grandes-cumbres-de-san-juan
+media:
+  hero:
+    url: /media/argentina-travel/ciudad-de-san-juan/1626729071588-estadio_san_juan_del_bicentenario_03.jpg
+    alt: Город San Juan
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-san-juan
+  gallery:
+  - url: /media/argentina-travel/ciudad-de-san-juan/1626729077155-puente_5055.jpg
+    alt: Ciudad de San Juan
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-san-juan
+  - url: /media/argentina-travel/ciudad-de-san-juan/1626729082275-puente_5000.jpg
+    alt: Ciudad de San Juan
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-san-juan
+  - url: /media/argentina-travel/ciudad-de-san-juan/1626729087691-plaza_4322.jpg
+    alt: Ciudad de San Juan
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/ciudad-de-san-juan
+sources:
+- title: Visit Argentina — Ciudad de San Juan
+  url: https://www.argentina.travel/actividades/ciudad-de-san-juan
+  lang: es
+  type: official
+  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+---
+
+## Описание
+
+En la región de Куйо, disfruta de una capital donde la cultura de hoy se funde con las huellas del pasado.
+
+Город San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+
+## Практическая информация
+
+- **Координаты:** -31.5351, -68.5386
+- **Провинция:** Сан-Хуан
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/actividades/ciudad-de-san-juan) (исп.; адаптировано 2026-07-07).
+
+> Фотографии взяты с официального туристического портала Argentina.travel (INPROTUR). На сайте указывается источник и автор.

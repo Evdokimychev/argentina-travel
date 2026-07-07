@@ -26,7 +26,9 @@ export type MediaSource =
   | "openstreetmap"
   | "unsplash"
   | "pexels"
-  | "local";
+  | "local"
+  | "instagram"
+  | "argentina-travel";
 
 export type MediaAssetRole =
   | "hero"
@@ -76,6 +78,14 @@ export interface MediaAsset {
   /** MD5 hex digest of local file bytes — used to dedupe visually identical gallery slots. */
   contentHash?: string;
   role: MediaAssetRole;
+  /** Instagram: permalink для атрибуции и ссылки на пост. */
+  instagramPermalink?: string;
+  instagramHandle?: string;
+  mediaKind?: "image" | "video";
+  kbArticleId?: string;
+  publishedAt?: string;
+  /** Приоритет в лентах: author = @iv.evd и др. */
+  feedPriority?: number;
 }
 
 export interface MediaManifest {

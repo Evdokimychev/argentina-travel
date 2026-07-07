@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Layers } from "lucide-react";
 import type { PlaceCollection } from "@/types/place";
-import { collectionHref } from "@/lib/places-repository";
+import { collectionHref } from "@/lib/places-urls";
 import { formatSpots } from "@/lib/pluralize";
 import { cn } from "@/lib/cn";
 

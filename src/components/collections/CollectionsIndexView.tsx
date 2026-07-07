@@ -4,7 +4,7 @@ import { ArrowRight, Layers, MapPin } from "lucide-react";
 import Hero from "@/components/Hero";
 import SectionShell from "@/components/layout/SectionShell";
 import type { PlaceCollection } from "@/types/place";
-import { collectionHref } from "@/lib/places-repository";
+import { collectionHref } from "@/lib/places-urls";
 import { formatSpots } from "@/lib/pluralize";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";

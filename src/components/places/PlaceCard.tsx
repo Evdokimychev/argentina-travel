@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Clock, MapPin, Star } from "lucide-react";
 import { PLACE_CATEGORY_LABELS } from "@/types/place";
 import type { PlaceListing } from "@/types/place";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
 import { favoriteOverlayButtonClass } from "@/lib/favorite-button-styles";
 import { ImagePlaceholder } from "@/components/ui/image-placeholder";

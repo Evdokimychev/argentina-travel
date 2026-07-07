@@ -19,6 +19,7 @@ import {
 } from "@/lib/personalization/recommendations-server";
 import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
+import SocialFeed from "@/components/social-feed/SocialFeed";
 import { absoluteUrl } from "@/lib/site-url";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
@@ -88,6 +89,7 @@ export default async function HomePage() {
           recommendedTours.personalized || recommendedExcursions.personalized
         }
       />
+      <SocialFeed placement="home" />
     </>
   );
 }

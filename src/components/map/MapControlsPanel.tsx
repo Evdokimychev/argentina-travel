@@ -5,6 +5,7 @@ import { Check, ChevronDown, ChevronUp, Map, Search, Share2, X } from "lucide-re
 import MapCategoryFilters from "@/components/map/MapCategoryFilters";
 import MapLegend from "@/components/map/MapLegend";
 import MapSearchPanel from "@/components/map/MapSearchPanel";
+import type { MapSearchSuggestion } from "@/lib/map-search";
 import type { MapMarkerKind } from "@/lib/map-types";
 
 type Props = {
@@ -14,7 +15,8 @@ type Props = {
   onSearchChange: (value: string) => void;
   onSearchSubmit: () => void;
   onSearchClear: () => void;
-  suggestions: string[];
+  suggestions: MapSearchSuggestion[];
+  onSelectSuggestion: (id: string) => void;
   activeKinds: MapMarkerKind[];
   onToggleKind: (kind: MapMarkerKind) => void;
   onSelectAllKinds: () => void;
@@ -31,6 +33,7 @@ export default function MapControlsPanel({
   onSearchSubmit,
   onSearchClear,
   suggestions,
+  onSelectSuggestion,
   activeKinds,
   onToggleKind,
   onSelectAllKinds,
@@ -123,6 +126,7 @@ export default function MapControlsPanel({
             onChange={onSearchChange}
             onSubmit={onSearchSubmit}
             suggestions={suggestions}
+            onSelectSuggestion={onSelectSuggestion}
             compact
           />
           {activeQuery ? (

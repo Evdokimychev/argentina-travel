@@ -6,6 +6,7 @@ import type { LocaleCode } from "@/types/locale";
 import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { QuickExploreProvider } from "@/context/QuickExploreContext";
 import { SiteFeedbackProvider } from "@/context/SiteFeedbackContext";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
 import SiteAnalytics from "@/components/SiteAnalytics";
@@ -20,6 +21,10 @@ const ScrollNavigationRail = dynamic(() => import("@/components/ScrollNavigation
   ssr: false,
 });
 const SiteSearch = dynamic(() => import("@/components/SiteSearch"), { ssr: false });
+const QuickExploreMapDialog = dynamic(
+  () => import("@/components/quick-explore/QuickExploreMapDialog"),
+  { ssr: false }
+);
 const PwaShell = dynamic(() => import("@/components/pwa/PwaShell"), { ssr: false });
 const GuideAssistantWidget = dynamic(() => import("@/components/guide/GuideAssistantWidget"), {
   ssr: false,
@@ -37,22 +42,25 @@ export default function Providers({
       <LocaleCurrencyProvider initialLocale={locale}>
         <SiteFeedbackProvider>
           <AuthProvider>
-            <InteractionTrackingProvider>
-              <RouteProgressBar />
-              <SiteHashScroll />
-              {children}
-              <CustomCursor />
-              <ScrollNavigationRail />
-              <SiteSearch />
-              <CookieConsentBanner />
-              <PwaShell />
-              <Suspense fallback={null}>
-                <FirstTouchAttributionCapture />
-              </Suspense>
-              <GuideAssistantWidget />
-              <SiteAnalytics />
-              <SiteToastHost />
-            </InteractionTrackingProvider>
+            <QuickExploreProvider>
+              <InteractionTrackingProvider>
+                <RouteProgressBar />
+                <SiteHashScroll />
+                {children}
+                <CustomCursor />
+                <ScrollNavigationRail />
+                <SiteSearch />
+                <QuickExploreMapDialog />
+                <CookieConsentBanner />
+                <PwaShell />
+                <Suspense fallback={null}>
+                  <FirstTouchAttributionCapture />
+                </Suspense>
+                <GuideAssistantWidget />
+                <SiteAnalytics />
+                <SiteToastHost />
+              </InteractionTrackingProvider>
+            </QuickExploreProvider>
           </AuthProvider>
         </SiteFeedbackProvider>
       </LocaleCurrencyProvider>

@@ -2,6 +2,7 @@ import "server-only";
 
 import pg from "pg";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { revokeSupabaseAuthSessions } from "@/lib/auth-sessions";
 import { sendPrivacyDeleteCompletedEmail } from "@/lib/notifications/email-delivery";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database, Json } from "@/types/database";
@@ -53,29 +54,6 @@ function buildAnonymizedPayload(raw: Json, anonymizedAt: string): Json {
   result.gdprAnonymizedAt = anonymizedAt;
 
   return result as Json;
-}
-
-async function revokeSupabaseSessions(userId: string): Promise<{ ok: boolean; revokedCount: number }> {
-  const connectionString = process.env.DATABASE_URL?.trim();
-  if (!connectionString) {
-    return { ok: false, revokedCount: 0 };
-  }
-
-  const client = new pg.Client({
-    connectionString,
-    ssl: { rejectUnauthorized: false },
-  });
-
-  try {
-    await client.connect();
-    const { rowCount } = await client.query("delete from auth.sessions where user_id = $1", [userId]);
-    return {
-      ok: true,
-      revokedCount: rowCount ?? 0,
-    };
-  } finally {
-    await client.end().catch(() => undefined);
-  }
 }
 
 async function fetchUserLinkedBookings(
@@ -198,7 +176,7 @@ async function processDeleteRequest(
       throw new Error(authBanError.message);
     }
 
-    const revokeResult = await revokeSupabaseSessions(request.user_id);
+    const revokeResult = await revokeSupabaseAuthSessions(request.user_id);
     if (!revokeResult.ok) {
       throw new Error("Не удалось отозвать auth-сессии: DATABASE_URL не задан");
     }

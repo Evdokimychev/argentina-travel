@@ -124,6 +124,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "content.edit",
   },
   {
+    id: "content-social-feed",
+    section: "content",
+    href: "/admin/content/social-feed",
+    label: "Социальная лента",
+    description: "Instagram: источники, публикации, размещения",
+    capability: "content.edit",
+  },
+  {
     id: "content-translations",
     section: "content",
     href: "/admin/content/translations",

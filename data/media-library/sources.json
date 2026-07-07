@@ -1,0 +1,29 @@
+[
+  {
+    "id": "iv-evd",
+    "type": "instagram",
+    "handle": "iv.evd",
+    "label": "Иван — автор проекта",
+    "profileUrl": "https://www.instagram.com/iv.evd/",
+    "role": "primary",
+    "priority": 0
+  },
+  {
+    "id": "visit-argentina",
+    "type": "instagram",
+    "handle": "visitargentina",
+    "label": "Visit Argentina",
+    "profileUrl": "https://www.instagram.com/visitargentina/",
+    "role": "official",
+    "priority": 10
+  },
+  {
+    "id": "turismo-argentina",
+    "type": "instagram",
+    "handle": "turismoargentina",
+    "label": "Turismo Argentina",
+    "profileUrl": "https://www.instagram.com/turismoargentina/",
+    "role": "official",
+    "priority": 11
+  }
+]

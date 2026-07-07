@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import type { PlaceDetail, PlaceListing } from "@/types/place";
 import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { getPlacesCatalogHeroImage } from "@/lib/media-resolver";
 
 export function buildPlaceMetadata(place: PlaceDetail): Metadata {

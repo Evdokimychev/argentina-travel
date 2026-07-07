@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import type { MapMarkerKind, MapObject, MapRouteItem } from "@/lib/map-types";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
 import type { MapOverlayState } from "@/lib/map-overlay-layers";
+import type { MapThematicState } from "@/lib/map-thematic-layers";
 
 export type ArgentinaMapLibreCanvasProps = {
   objects: MapObject[];
@@ -12,8 +13,10 @@ export type ArgentinaMapLibreCanvasProps = {
   selectedId: string | null;
   theme: MapBasemapThemeId;
   overlays: MapOverlayState;
+  thematic: MapThematicState;
   onSelect: (object: MapObject | null) => void;
   className?: string;
+  view?: import("@/lib/map-view-config").MapViewConfig;
 };
 
 const ArgentinaMapLibreCanvasInner = dynamic(

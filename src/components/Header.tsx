@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { forwardRef, useEffect, useRef, useState } from "react";
-import { ArrowLeft, ArrowUpRight, Menu, Search } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, MapPinned, Menu, Search } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -27,6 +27,7 @@ import {
   tokenHeaderShellClass,
   tokenHeaderShellScrolledClass,
 } from "@/lib/design-tokens";
+import { openSiteMap, prefetchQuickExploreMap } from "@/lib/site-map-open";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
@@ -36,6 +37,8 @@ const CircleButton = forwardRef<
   {
     href?: string;
     onClick?: () => void;
+    onMouseEnter?: () => void;
+    onFocus?: () => void;
     ariaLabel: string;
     ariaExpanded?: boolean;
     ariaControls?: string;
@@ -43,7 +46,7 @@ const CircleButton = forwardRef<
     className?: string;
   }
 >(function CircleButton(
-  { href, onClick, ariaLabel, ariaExpanded, ariaControls, children, className },
+  { href, onClick, onMouseEnter, onFocus, ariaLabel, ariaExpanded, ariaControls, children, className },
   ref
 ) {
   const cls = cn(tokenHeaderCircleButtonClass, tokenFocusRingClass, className);
@@ -62,7 +65,15 @@ const CircleButton = forwardRef<
   }
 
   return (
-    <button ref={ref} type="button" onClick={onClick} className={cls} {...aria}>
+    <button
+      ref={ref}
+      type="button"
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onFocus={onFocus}
+      className={cls}
+      {...aria}
+    >
       {children}
     </button>
   );
@@ -108,6 +119,19 @@ export default function Header() {
 
   const mobileMenuHeaderActions = (
     <>
+      <button
+        type="button"
+        onClick={() => {
+          setMobileMenuOpen(false);
+          openSiteMap();
+        }}
+        onMouseEnter={prefetchQuickExploreMap}
+        onFocus={prefetchQuickExploreMap}
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+        aria-label="Быстрая карта"
+      >
+        <MapPinned className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+      </button>
       <button
         type="button"
         onClick={() => {
@@ -225,6 +249,15 @@ export default function Header() {
           />
 
           <div className="relative z-10 ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
+            <CircleButton
+              ariaLabel="Быстрая карта — куда поехать"
+              onClick={() => openSiteMap()}
+              onMouseEnter={prefetchQuickExploreMap}
+              onFocus={prefetchQuickExploreMap}
+              className="bg-sky-ink text-white ring-sky-ink/30 hover:bg-sky-ink/90 hover:text-white hover:ring-sky-ink/40 dark:bg-sky dark:text-charcoal dark:ring-sky/40 dark:hover:bg-sky/90"
+            >
+              <MapPinned className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            </CircleButton>
             <CircleButton
               ariaLabel="Поиск по сайту"
               onClick={() => openSiteSearch()}

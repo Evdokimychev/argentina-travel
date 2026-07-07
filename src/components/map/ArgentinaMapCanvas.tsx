@@ -10,7 +10,7 @@ import {
   getLatLngBounds,
 } from "@/lib/tour-map";
 import { clusterMapItems } from "@/lib/map-cluster";
-import { placeHref } from "@/lib/places-repository";
+import { placeHref } from "@/lib/places-urls";
 import { PLACE_CATEGORY_LABELS, type PlaceCategory } from "@/types/place";
 import type {
   MapLayerId,
@@ -20,6 +20,7 @@ import type {
   MapTourPoint,
 } from "@/lib/map-types";
 import { ARGENTINA_REGIONS_GEOJSON } from "@/data/argentina-regions";
+import { createMapPinClusterDivIcon, createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -40,22 +41,15 @@ interface ArgentinaMapCanvasProps {
 }
 
 function createTourIcon(active: boolean) {
-  return L.divIcon({
-    className: "",
-    html: `<div class="tours-map-marker${active ? " tours-map-marker--active" : ""}"></div>`,
-    iconSize: active ? [20, 20] : [14, 14],
-    iconAnchor: active ? [10, 10] : [7, 7],
-    popupAnchor: [0, -12],
-  });
+  return L.divIcon(createMapPinDivIcon({ tone: "brand", active }));
+}
+
+function createPlaceIcon(active: boolean) {
+  return L.divIcon(createMapPinDivIcon({ tone: "place", active, size: active ? "lg" : "md" }));
 }
 
 function createClusterIcon(count: number) {
-  return L.divIcon({
-    className: "",
-    html: `<div class="places-map-cluster">${count}</div>`,
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-  });
+  return L.divIcon(createMapPinClusterDivIcon(count));
 }
 
 function buildTourPopup(tour: MapTourPoint, priceLabel: string): string {
@@ -241,6 +235,7 @@ export default function ArgentinaMapCanvas({
       if (cluster.items.length === 1) {
         const place = cluster.items[0];
         const marker = L.marker([place.latitude, place.longitude], {
+          icon: createPlaceIcon(place.slug === selectedPlaceSlug),
           zIndexOffset: place.slug === selectedPlaceSlug ? 900 : 80,
         });
         marker.bindPopup(buildPlacePopup(place), {

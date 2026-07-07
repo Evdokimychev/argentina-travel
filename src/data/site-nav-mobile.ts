@@ -32,8 +32,8 @@ export const SITE_NAV_MOBILE_GROUPS: SiteNavMobileGroup[] = [
   {
     id: "guides",
     label: "Справочники",
-    description: "Путеводитель, иммиграция и статьи",
-    sectionIds: ["guide", "immigration", "journal"],
+    description: "Путеводитель, база знаний, иммиграция и статьи",
+    sectionIds: ["guide", "knowledgeBase", "immigration", "journal"],
   },
   {
     id: "services",
@@ -54,6 +54,7 @@ export const SITE_NAV_SECTION_ICONS: Record<string, LucideIcon> = {
   tours: Compass,
   excursions: Sparkles,
   guide: BookOpen,
+  knowledgeBase: BookOpen,
   gallery: Camera,
   immigration: Plane,
   shop: ShoppingBag,

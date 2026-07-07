@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import DestinationDetailView from "@/components/destinations/DestinationDetailView";
+import SocialFeed from "@/components/social-feed/SocialFeed";
 import DestinationFlightSidebar from "@/components/flights/DestinationFlightSidebar";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
@@ -98,6 +99,7 @@ export default async function DestinationDetailPage({ params }: PageProps) {
           />
         }
       />
+      <SocialFeed placement={`destination:${destination.id}`} compact />
     </>
   );
 }

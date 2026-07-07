@@ -1,103 +1,93 @@
 ---
 id: el-chalten
 type: city
-title: "Эль-Чальтен"
-title_es: "El Chaltén"
-aliases: ["национальная столица треккинга Аргентины"]
-summary: "Маленький посёлок у подножия Фицроя, официальная «столица треккинга» Аргентины и вторые, северные ворота в национальный парк Лос-Гласьярес."
+title: Эль-Чальтен
+title_es: El Chaltén
+aliases:
+- национальная столица треккинга Аргентины
+summary: Маленький посёлок у подножия Фицроя, официальная «столица треккинга» Аргентины
+  и вторые, северные ворота в национальный парк Лос-Гласьярес.
 status: published
-site_sections: [goroda-i-regiony, puteshestviya-po-argentine]
+site_sections:
+- goroda-i-regiony
+- puteshestviya-po-argentine
 region_id: patagonia
-province: "Санта-Крус"
-coordinates: { lat: -49.3325, lng: -72.8865 }
-tags: [треккинг, горы, патагония, ледники, бюджетно]
+province: Санта-Крус
+coordinates:
+  lat: -49.3325
+  lng: -72.8865
+tags:
+- треккинг
+- горы
+- патагония
+- ледники
+- бюджетно
 media:
   hero:
-    url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/El_Chalt%C3%A9n_-_Fitz_Roy_massif_-_R%C3%ADo_Fitz_Roy.JPG/1920px-El_Chalt%C3%A9n_-_Fitz_Roy_massif_-_R%C3%ADo_Fitz_Roy.JPG"
-    alt: "Посёлок Эль-Чальтен в долине под гранитным массивом Фицрой и рекой Фицрой"
-    author: "Gagea"
-    license: "CC BY-SA 3.0"
-    source_page: "https://commons.wikimedia.org/wiki/File:El_Chaltén_-_Fitz_Roy_massif_-_Río_Fitz_Roy.JPG"
+    url: /media/argentina-travel/el-chalten/1627394111592-_mg_5337web.jpg
+    alt: Эль-Чальтен
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/el-chalten
   gallery:
-    - url: "https://upload.wikimedia.org/wikipedia/commons/9/9e/El_Chalten_from_south.jpg"
-      alt: "Эль-Чальтен и долина реки Де-лас-Вуэльтас, вид с юга"
-      author: "michele molinari"
-      license: "CC BY 2.0"
-      source_page: "https://commons.wikimedia.org/wiki/File:El_Chalten_from_south.jpg"
-    - url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Los_Glaciares_-_El_Chalten_Fitz_Roy_001.jpg/1920px-Los_Glaciares_-_El_Chalten_Fitz_Roy_001.jpg"
-      alt: "Вид на гору Фицрой с юга от посёлка Эль-Чальтен"
-      author: "Gedankenstuecke"
-      license: "CC BY-SA 4.0"
-      source_page: "https://commons.wikimedia.org/wiki/File:Los_Glaciares_-_El_Chalten_Fitz_Roy_001.jpg"
-cost: { level: "$$", details: "Базовый посёлок проще и дешевле Эль-Калафате, основные расходы — жильё и снаряжение/туры; вход в зону парка с северной стороны бесплатный, но требует регистрации" }
-best_time: ["ноябрь-март (стабильнее погода, длинный световой день)", "октябрь и апрель (меньше туристов)"]
-duration: "3-4 дня (минимум 2 полных дня треккинга)"
-how_to_get_there: "Прямых рейсов в Эль-Чальтен нет — ближайший аэропорт - Эль-Калафате (FTE), оттуда около 220 км (примерно 3 часа) по дороге RN 40 и RP 23 на автобусе, арендованном авто или с трансфером. Автобусное сообщение с Эль-Калафате круглогодичное, в высокий сезон (октябрь-апрель) — несколько рейсов в день."
-related: [los-glasiares, el-calafate, bariloche, ruta-40-sem-ozer, perito-moreno]
-warnings:
-  - "Погода в горах меняется очень быстро — даже летом возможны снегопад и сильный ветер на маршрутах, особенно на открытых участках вроде Лома-дель-Плиге-Тумбадо."
-  - "Длинные треки (8-10 часов, например к Лагуна-де-лос-Трес) требуют хорошей физической подготовки и расчёта по световому дню — выходите рано утром."
-  - "Постоянные сильные ветра (порывы 40-60 км/ч, особенно с октября по март) — важный фактор при выборе снаряжения и планировании маршрута."
-recommendations:
-  - "Если время ограничено одним днём — поход к смотровой Мирадор-де-лос-Кондорес или короткие маршруты у самого посёлка дают хороший обзор массива Фицрой без длинного трека."
-  - "Классический маршрут к Лагуна-де-лос-Трес (около 22 км, 8-10 часов туда-обратно) — главная цель большинства гостей: финальный крутой подъём компенсируется видом на Фицрой и ледниковое озеро."
-  - "Маршрут на Лома-дель-Плиге-Тумбадо — единственная точка, откуда одновременно видны и Фицрой, и Серро-Торре; идёт постоянным подъёмом и требует больше выносливости, чем технических навыков."
-  - "Связку Эль-Калафате — Эль-Чальтен удобно проходить последовательно: сначала ледник Перито-Морено, затем сюда на 2-3 ночи ради треккинга."
-last_verified: "2026-07-02"
+  - url: /media/argentina-travel/el-chalten/1627394120991-chalt_n__3_.jpg
+    alt: El Chaltén
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/el-chalten
+  - url: /media/argentina-travel/el-chalten/1627394127788-_mg_5408web.jpg
+    alt: El Chaltén
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/el-chalten
+  - url: /media/argentina-travel/el-chalten/1627394133358-chalt_n__14_.jpg
+    alt: El Chaltén
+    author: INPROTUR / Visit Argentina
+    license: argentina.travel
+    source_page: https://www.argentina.travel/actividades/el-chalten
+cost: '[object Object]'
+best_time:
+- ноябрь-март (стабильнее погода
+- длинный световой день)
+- октябрь и апрель (меньше туристов)
+duration: 3-4 дня (минимум 2 полных дня треккинга)
+how_to_get_there: Прямых рейсов в Эль-Чальтен нет — ближайший аэропорт - Эль-Калафате
+  (FTE), оттуда около 220 км (примерно 3 часа) по дороге RN 40 и RP 23 на автобусе,
+  арендованном авто или с трансфером. Автобусное сообщение с Эль-Калафате круглогодичное,
+  в высокий сезон (октябрь-апрель) — несколько рейсов в день.
+related:
+- los-glasiares
+- el-calafate
+- bariloche
+- ruta-40-sem-ozer
+- perito-moreno
+warnings: ''
+recommendations: ''
+last_verified: '2026-07-07'
 confidence: high
 site_ready: true
 sources:
-  - title: "APN — Ficha del área protegida, Parque Nacional Los Glaciares"
-    url: "https://www.argentina.gob.ar/parquesnacionales/patagonia/parque-nacional-los-glaciares"
-    lang: es
-    type: official
-    note: "официальный статус территории, северная зона парка"
-  - title: "Elchalten.com — How to get to El Chaltén"
-    url: "https://elchalten.com/v4/en/how-to-get-to-el-chalten.php"
-    lang: en
-    type: en_source
-    note: "логистика, расстояние и время в пути от Эль-Калафате"
-  - title: "Elchalten.com — Loma del Pliegue Tumbado trek"
-    url: "https://elchalten.com/v4/en/pliegue-tumbado-trek-el-chalten.php"
-    lang: en
-    type: en_source
-    note: "детали маршрутов, протяжённость, сложность"
-  - title: "Allmyworld — Аргентинская Патагония: Эль-Чальтен, Серро-Торре и Фицрой"
-    url: "https://allmyworld.ru/argentinskaya-patagoniya-el-chalten-ozero-torre-i-gora-ficroj/"
-    lang: ru
-    type: ru_blog
-    note: "общая характеристика посёлка и маршрутов"
+- title: Visit Argentina — El Chaltén
+  url: https://www.argentina.travel/actividades/el-chalten
+  lang: es
+  type: official
+  note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
+title_en: El Chaltén
 ---
 
 ## Описание
 
-Эль-Чальтен — крошечный посёлок, основанный в 1985 году у подножия гранитного массива Фицрой, который сегодня официально носит звание национальной столицы треккинга Аргентины. В отличие от более курортного и обустроенного Эль-Калафате, Эль-Чальтен заточен именно под пеший туризм: большинство гостей приезжают на несколько дней ради сети маршрутов разной длины и сложности, ведущих к смотровым на Фицрой и Серро-Торре — два самых узнаваемых горных силуэта Патагонии. Посёлок стоит в северной части национального парка Лос-Гласьярес, и вместе с Эль-Калафате на юге образует логичную пару точек для знакомства с парком целиком: ледники у одного города, горы и треккинг — у другого. Добраться можно только наземным транспортом — ближайший аэропорт в Эль-Калафате, дорога занимает около трёх часов. Климат здесь суровее и ветренее, чем в Эль-Калафате, из-за близости к Патагонскому ледовому полю, а главный фактор при планировании похода — не столько физическая форма, сколько погода, которая в горах меняется очень быстро.
+Маленький посёлок у подножия Фицроя, официальная «столица треккинга» Аргентины и вторые, северные ворота в национальный парк Лос-Гласьярес.
 
-## Факты
+Эль-Чальтен — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
-- Посёлок основан в 1985 году отчасти по геополитическим причинам — для закрепления аргентинского присутствия в приграничном с Чили районе.
-- Самый популярный маршрут, к Лагуна-де-лос-Трес, — около 22 км и 8-10 часов в обе стороны, с крутым финальным подъёмом к смотровой на ледниковое озеро у подножия Фицроя.
-- Маршрут на Лома-дель-Плиге-Тумбадо — единственная точка, откуда одновременно видно оба знаковых пика региона, Фицрой и Серро-Торре.
-- Расстояние до Эль-Калафате — около 220 км, дорога полностью асфальтирована и занимает порядка 3-3,5 часов.
-- Постоянные сильные ветра (порывы до 40-60 км/ч) особенно характерны для периода с октября по март — это нужно учитывать при выборе снаряжения даже летом.
+## Практическая информация
 
-## Рекомендации
-
-См. `recommendations` в метаданных. Общая информация о парке, в который входит Эль-Чальтен, — в записи [[los-glasiares]].
-
-## Предупреждения
-
-См. `warnings` в метаданных — главное: переменчивая горная погода, длинные треки требуют расчёта по времени и подготовки, постоянный сильный ветер.
-
-## Связанные объекты
-
-- [[los-glasiares]] — национальный парк, северные (треккинговые) ворота которого и есть Эль-Чальтен.
-- [[el-calafate]] — южная пара города в рамках одного маршрута по парку, ближайший аэропорт.
-- [[ruta-40-sem-ozer]] — Рута 40 связывает Эль-Чальтен с другими опорными точками Патагонии.
+- **Координаты:** -49.3325, -72.8865
+- **Провинция:** Санта-Крус
 
 ## Источники
 
-- [APN — Parque Nacional Los Glaciares](https://www.argentina.gob.ar/parquesnacionales/patagonia/parque-nacional-los-glaciares)
-- [Elchalten.com — как добраться до Эль-Чальтена](https://elchalten.com/v4/en/how-to-get-to-el-chalten.php)
-- [Elchalten.com — маршрут Loma del Pliegue Tumbado](https://elchalten.com/v4/en/pliegue-tumbado-trek-el-chalten.php)
-- [Allmyworld — Эль-Чальтен, Серро-Торре и Фицрой](https://allmyworld.ru/argentinskaya-patagoniya-el-chalten-ozero-torre-i-gora-ficroj/)
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/actividades/el-chalten) (исп.; адаптировано 2026-07-07).
+
+> Фотографии взяты с официального туристического портала Argentina.travel (INPROTUR). На сайте указывается источник и автор.

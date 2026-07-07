@@ -12,7 +12,7 @@ import {
 import { KNOWLEDGE_RELATIONS } from "@/data/knowledge-graph/relations";
 import { COLLECTIONS_SEED, ITINERARIES_SEED, PLACES_SEED } from "@/data/places-seed";
 import { getAllGuideTopics, guideTopicHref } from "@/lib/guide-topics";
-import { collectionHref, itineraryHref, placeHref } from "@/lib/places-repository";
+import { collectionHref, itineraryHref, placeHref } from "@/lib/places-urls";
 import { destinationHref } from "@/lib/destinations";
 
 export type KnowledgeLinksBundle = {

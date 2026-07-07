@@ -1,10 +1,10 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { buildExcursionSearchItems } from "@/lib/excursion-search-index";
 import {
-  buildStaticSearchIndexServer,
   buildTourSearchItems,
   type SearchIndexItem,
 } from "@/lib/site-search-index";
+import { buildStaticSearchIndexServer } from "@/lib/site-search-index-server";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { fetchExcursionsServer } from "@/lib/tripster/excursion-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";

@@ -46,6 +46,8 @@ function sourceLabel(source: MediaSource): string {
     wikipedia: "Wikipedia",
     openstreetmap: "OSM",
     local: "Локально",
+    instagram: "Instagram",
+    "argentina-travel": "Проект",
   };
   return labels[source] ?? source;
 }

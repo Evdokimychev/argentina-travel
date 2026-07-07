@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import maplibregl from "maplibre-gl";
 import type { Feature, FeatureCollection, LineString, Point } from "geojson";
+import { boundaryGeoJsonSource } from "@/lib/map-geodata-source";
+import { prepareArgentinaProvinceGeometry } from "@/lib/map-geodata-sanitize";
 import type { MapMarkerKind, MapObject, MapRouteItem } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
 import {
@@ -16,13 +18,20 @@ import {
   MAP_TOPO_OVERLAY_TILES,
   type MapOverlayState,
 } from "@/lib/map-overlay-layers";
+import {
+  applyThematicLayerVisibility,
+  bindThematicLayerInteractions,
+  ensureThematicLayerData,
+  installThematicLayerShells,
+} from "@/lib/map-thematic-maplibre";
+import { MAP_THEMATIC_LAYER_IDS, type MapThematicLayerId, type MapThematicState } from "@/lib/map-thematic-layers";
 import { registerMapMarkerImages } from "@/lib/map-marker-icons";
-import { ARGENTINA_REGIONS_GEOJSON } from "@/data/argentina-regions";
+import { MAP_GEODATA_BASE_PATH } from "@/data/map-thematic/layer-registry";
 import { cn } from "@/lib/cn";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-const ARGENTINA_CENTER: [number, number] = [-64.2, -38.5];
-const ARGENTINA_ZOOM = 4;
+import type { MapViewConfig } from "@/lib/map-view-config";
+import { ARGENTINA_MAP_VIEW } from "@/lib/map-view-config";
 /** Below this count markers are shown individually; above — clustered. */
 const MAP_CLUSTER_MIN_OBJECTS = 25;
 
@@ -65,8 +74,11 @@ type Props = {
   selectedId: string | null;
   theme: MapBasemapThemeId;
   overlays: MapOverlayState;
+  thematic: MapThematicState;
   onSelect: (object: MapObject | null) => void;
   className?: string;
+  /** Переопределение центра/зума — для встраиваемых карт (районы CABA и т.д.) */
+  view?: MapViewConfig;
 };
 
 function objectsToGeoJson(objects: MapObject[], selectedId: string | null): FeatureCollection<Point> {
@@ -158,18 +170,24 @@ export default function ArgentinaMapLibreCanvas({
   selectedId,
   theme,
   overlays,
+  thematic,
   onSelect,
   className,
+  view = ARGENTINA_MAP_VIEW,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const onSelectRef = useRef(onSelect);
+  const viewRef = useRef(view);
   const objectsRef = useRef(objects);
   const routesRef = useRef(routes);
   const activeKindsRef = useRef(activeKinds);
   const selectedIdRef = useRef(selectedId);
   const themeRef = useRef(theme);
   const overlaysRef = useRef(overlays);
+  const thematicRef = useRef(thematic);
+  const thematicCleanupRef = useRef<(() => void) | null>(null);
+  const loadedThematicRef = useRef<Set<MapThematicLayerId>>(new Set());
   const terrainControlRef = useRef<maplibregl.TerrainControl | null>(null);
   const didFitBoundsRef = useRef(false);
   const layersReadyRef = useRef(false);
@@ -185,6 +203,8 @@ export default function ArgentinaMapLibreCanvas({
   selectedIdRef.current = selectedId;
   themeRef.current = theme;
   overlaysRef.current = overlays;
+  thematicRef.current = thematic;
+  viewRef.current = view;
 
   const applyLayerData = useCallback((map: maplibregl.Map) => {
     const objectsSource = map.getSource("objects") as maplibregl.GeoJSONSource | undefined;
@@ -238,6 +258,7 @@ export default function ArgentinaMapLibreCanvas({
     );
 
     if (
+      !viewRef.current.lockView &&
       !didFitBoundsRef.current &&
       objectsRef.current.length > 0 &&
       !selectedIdRef.current
@@ -311,10 +332,11 @@ export default function ArgentinaMapLibreCanvas({
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: createMapStyle(MAP_BASEMAP_THEMES[initialTheme].backgroundColor),
-      center: ARGENTINA_CENTER,
-      zoom: ARGENTINA_ZOOM,
-      minZoom: 3,
-      maxZoom: 16,
+      center: viewRef.current.center,
+      zoom: viewRef.current.zoom,
+      minZoom: viewRef.current.minZoom ?? 3,
+      maxZoom: viewRef.current.maxZoom ?? 16,
+      maxBounds: viewRef.current.maxBounds,
       maxPitch: 85,
       attributionControl: { compact: true },
     });
@@ -460,10 +482,19 @@ export default function ArgentinaMapLibreCanvas({
 
       applyMapOverlays(map, overlaysRef.current);
 
-      map.addSource("regions", {
-        type: "geojson",
-        data: ARGENTINA_REGIONS_GEOJSON as GeoJSON.FeatureCollection,
-      });
+      map.addSource(
+        "regions",
+        boundaryGeoJsonSource({ type: "FeatureCollection", features: [] })
+      );
+      void fetch(`${MAP_GEODATA_BASE_PATH}/provinces.geojson`, { cache: "force-cache" })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((data) => {
+          if (!data || !mapRef.current) return;
+          const argentina = prepareArgentinaProvinceGeometry(data as FeatureCollection);
+          const source = map.getSource("regions") as maplibregl.GeoJSONSource | undefined;
+          source?.setData(argentina);
+        })
+        .catch(() => undefined);
       map.addLayer({
         id: "regions-fill",
         type: "fill",
@@ -476,6 +507,11 @@ export default function ArgentinaMapLibreCanvas({
         source: "regions",
         paint: { "line-color": "#64748b", "line-width": 1.2, "line-opacity": 0 },
       });
+
+      installThematicLayerShells(map);
+      applyThematicLayerVisibility(map, thematicRef.current);
+      thematicCleanupRef.current = bindThematicLayerInteractions(map, () => thematicRef.current);
+      void syncActiveThematicLayers(map, thematicRef.current);
 
       map.addSource("flight-arcs", { type: "geojson", data: flightArcsToGeoJson(undefined) });
       map.addLayer({
@@ -534,10 +570,10 @@ export default function ArgentinaMapLibreCanvas({
         filter: ["!", ["has", "point_count"]],
         paint: {
           "circle-color": ["get", "color"],
-          "circle-radius": ["case", ["==", ["get", "selected"], 1], 10, 7],
-          "circle-stroke-width": 2,
+          "circle-radius": ["case", ["==", ["get", "selected"], 1], 11, 8],
+          "circle-stroke-width": 2.5,
           "circle-stroke-color": "#ffffff",
-          "circle-opacity": 0.95,
+          "circle-opacity": 0.92,
         },
       });
 
@@ -550,16 +586,16 @@ export default function ArgentinaMapLibreCanvas({
           "circle-color": [
             "step",
             ["get", "point_count"],
-            "#7dd3fc",
+            "#475569",
             8,
-            "#38bdf8",
+            "#334155",
             20,
-            "#0284c7",
+            "#1e293b",
           ],
-          "circle-radius": ["step", ["get", "point_count"], 14, 8, 18, 20, 24],
-          "circle-stroke-width": 2.5,
+          "circle-radius": ["step", ["get", "point_count"], 16, 8, 20, 20, 26],
+          "circle-stroke-width": 3,
           "circle-stroke-color": "#ffffff",
-          "circle-opacity": 0.92,
+          "circle-opacity": 0.96,
         },
       });
 
@@ -576,9 +612,9 @@ export default function ArgentinaMapLibreCanvas({
           "text-ignore-placement": true,
         },
         paint: {
-          "text-color": "#0f172a",
-          "text-halo-color": "#ffffff",
-          "text-halo-width": 1.75,
+          "text-color": "#ffffff",
+          "text-halo-color": "rgba(15, 23, 42, 0.35)",
+          "text-halo-width": 1.25,
         },
       });
 
@@ -626,6 +662,9 @@ export default function ArgentinaMapLibreCanvas({
     }
 
     return () => {
+      thematicCleanupRef.current?.();
+      thematicCleanupRef.current = null;
+      loadedThematicRef.current.clear();
       map.remove();
       mapRef.current = null;
       layersReadyRef.current = false;
@@ -654,6 +693,22 @@ export default function ArgentinaMapLibreCanvas({
     if (!map || !layersReadyRef.current) return;
     applyMapOverlays(map, overlays);
   }, [overlays, applyMapOverlays]);
+
+  const syncActiveThematicLayers = useCallback(async (map: maplibregl.Map, state: MapThematicState) => {
+    for (const layerId of MAP_THEMATIC_LAYER_IDS) {
+      if (!state[layerId]) continue;
+      if (loadedThematicRef.current.has(layerId)) continue;
+      const ok = await ensureThematicLayerData(map, layerId);
+      if (ok) loadedThematicRef.current.add(layerId);
+    }
+  }, []);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !layersReadyRef.current) return;
+    applyThematicLayerVisibility(map, thematic);
+    void syncActiveThematicLayers(map, thematic);
+  }, [thematic, syncActiveThematicLayers]);
 
   useEffect(() => {
     const map = mapRef.current;

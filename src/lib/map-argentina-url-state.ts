@@ -6,6 +6,12 @@ import {
   serializeMapOverlayLayers,
   type MapOverlayState,
 } from "@/lib/map-overlay-layers";
+import {
+  DEFAULT_MAP_THEMATIC_STATE,
+  parseMapThematicLayers,
+  serializeMapThematicLayers,
+  type MapThematicState,
+} from "@/lib/map-thematic-layers";
 import { MAP_MARKER_KINDS, type MapMarkerKind } from "@/lib/map-types";
 
 export const DEFAULT_MAP_ARGENTINA_KINDS: MapMarkerKind[] = [
@@ -29,6 +35,7 @@ export interface MapArgentinaUrlState {
   selected: string;
   theme: MapBasemapThemeId;
   overlays: MapOverlayState;
+  thematic: MapThematicState;
 }
 
 function isMapMarkerKind(value: string): value is MapMarkerKind {
@@ -60,6 +67,7 @@ export function parseMapArgentinaUrlState(
     selected: params.get("selected")?.trim() ?? "",
     theme: parseMapBasemapTheme(params.get("theme")),
     overlays: parseMapOverlayLayers(params.get("layers")),
+    thematic: parseMapThematicLayers(params.get("tl")),
   };
 }
 
@@ -75,6 +83,8 @@ export function mapArgentinaStateToSearchParams(state: MapArgentinaUrlState): UR
   const layersKey = serializeMapOverlayLayers(state.overlays);
   const defaultLayersKey = serializeMapOverlayLayers(DEFAULT_MAP_OVERLAY_STATE);
   if (layersKey && layersKey !== defaultLayersKey) params.set("layers", layersKey);
+  const thematicKey = serializeMapThematicLayers(state.thematic);
+  if (thematicKey) params.set("tl", thematicKey);
   return params;
 }
 
@@ -92,6 +102,7 @@ export function buildMapTourDeepLink(tour: { id: string; slug: string }): string
     selected: `tour:${tour.id}`,
     theme: "tourist",
     overlays: { ...DEFAULT_MAP_OVERLAY_STATE },
+    thematic: { ...DEFAULT_MAP_THEMATIC_STATE },
   });
 }
 
@@ -104,6 +115,7 @@ export function buildMapPlaceDeepLink(place: { id: string }): string {
     selected: `place:${place.id}`,
     theme: "tourist",
     overlays: { ...DEFAULT_MAP_OVERLAY_STATE },
+    thematic: { ...DEFAULT_MAP_THEMATIC_STATE },
   });
 }
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ItineraryDetailView from "@/components/itineraries/ItineraryDetailView";
+import SocialFeed from "@/components/social-feed/SocialFeed";
 import ItineraryTripJsonLd from "@/components/seo/ItineraryTripJsonLd";
 import { fetchItinerariesServer, fetchItineraryBySlugServer } from "@/lib/places-repository";
 
@@ -32,6 +33,7 @@ export default async function ItineraryDetailPage({ params }: PageProps) {
     <>
       <ItineraryTripJsonLd itinerary={itinerary} />
       <ItineraryDetailView itinerary={itinerary} />
+      <SocialFeed placement={`itinerary:${slug}`} compact />
     </>
   );
 }

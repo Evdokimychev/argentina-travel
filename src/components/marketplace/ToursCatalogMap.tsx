@@ -13,6 +13,7 @@ import {
   hasValidTourMapCoordinates,
 } from "@/lib/tour-map";
 import { resolveTourCityDisplay } from "@/lib/argentina-cities";
+import { createMapPinDivIcon } from "@/lib/map-leaflet-icons";
 import { cn } from "@/lib/cn";
 import "leaflet/dist/leaflet.css";
 
@@ -26,13 +27,7 @@ interface ToursCatalogMapProps {
 }
 
 function createDotIcon(active: boolean) {
-  return L.divIcon({
-    className: "",
-    html: `<div class="tours-map-marker${active ? " tours-map-marker--active" : ""}"></div>`,
-    iconSize: active ? [20, 20] : [14, 14],
-    iconAnchor: active ? [10, 10] : [7, 7],
-    popupAnchor: [0, -12],
-  });
+  return L.divIcon(createMapPinDivIcon({ tone: "brand", active }));
 }
 
 function buildPopupHtml(tour: TourListing, priceLabel: string): string {

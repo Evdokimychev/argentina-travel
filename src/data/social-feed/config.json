@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-07T00:00:00.000Z",
+  "sources": [
+    {
+      "id": "iv-evd",
+      "type": "instagram",
+      "handle": "iv.evd",
+      "label": "Иван — автор проекта",
+      "profileUrl": "https://www.instagram.com/iv.evd/",
+      "enabled": true
+    },
+    {
+      "id": "visit-argentina",
+      "type": "instagram",
+      "handle": "visitargentina",
+      "label": "Visit Argentina",
+      "profileUrl": "https://www.instagram.com/visitargentina/",
+      "enabled": true
+    },
+    {
+      "id": "turismo-argentina",
+      "type": "instagram",
+      "handle": "turismoargentina",
+      "label": "Turismo Argentina",
+      "profileUrl": "https://www.instagram.com/turismoargentina/",
+      "enabled": true
+    },
+    {
+      "id": "ba-ig",
+      "type": "instagram",
+      "handle": "buenosaires",
+      "label": "Buenos Aires (официальный)",
+      "profileUrl": "https://www.instagram.com/buenosaires/",
+      "enabled": false
+    }
+  ],
+  "posts": [
+    {
+      "id": "post-iv-ba-1",
+      "sourceId": "iv-evd",
+      "mediaAssetId": "place-buenos-aires-hero",
+      "caption": "Буэнос-Айрес — город, который не отпускает",
+      "permalink": "https://www.instagram.com/iv.evd/",
+      "publishedAt": "2026-03-10T12:00:00.000Z",
+      "enabled": true
+    },
+    {
+      "id": "post-iv-ba-2",
+      "sourceId": "iv-evd",
+      "mediaAssetId": "place-buenos-aires-gallery-1",
+      "caption": "La Boca и цветные дома",
+      "permalink": "https://www.instagram.com/iv.evd/",
+      "publishedAt": "2026-03-08T12:00:00.000Z",
+      "enabled": true
+    },
+    {
+      "id": "post-iv-ba-3",
+      "sourceId": "iv-evd",
+      "mediaAssetId": "place-buenos-aires-gallery-2",
+      "caption": "Обелиск и центр города",
+      "permalink": "https://www.instagram.com/iv.evd/",
+      "publishedAt": "2026-03-05T12:00:00.000Z",
+      "enabled": true
+    },
+    {
+      "id": "post-iv-bariloche-1",
+      "sourceId": "iv-evd",
+      "mediaAssetId": "place-bariloche-hero",
+      "caption": "Барилоче и озеро Нахуэль-Уапи",
+      "permalink": "https://www.instagram.com/iv.evd/",
+      "publishedAt": "2026-02-20T12:00:00.000Z",
+      "enabled": true
+    }
+  ],
+  "placements": [
+    {
+      "id": "home",
+      "label": "Главная",
+      "sourceIds": ["iv-evd"],
+      "title": "Аргентина глазами автора",
+      "subtitle": "Живые кадры из поездок @iv.evd — то, что не помещается в статьи",
+      "layout": "carousel",
+      "limit": 14,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "about",
+      "label": "О проекте",
+      "sourceIds": ["iv-evd"],
+      "title": "За кадром проекта",
+      "subtitle": "Личные публикации и атмосфера поездок — то, ради чего живёт «Пора в Аргентину»",
+      "layout": "masonry",
+      "limit": 9,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "destination:default",
+      "label": "Направление (по умолчанию)",
+      "sourceIds": ["iv-evd", "visit-argentina"],
+      "layout": "masonry",
+      "limit": 8,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "destination:ba",
+      "label": "Буэнос-Айрес",
+      "sourceIds": ["iv-evd", "ba-ig"],
+      "layout": "masonry",
+      "limit": 8,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "destination:bariloche",
+      "label": "Барилоче",
+      "sourceIds": ["iv-evd"],
+      "layout": "masonry",
+      "limit": 8,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "destination:patagonia",
+      "label": "Патагония",
+      "sourceIds": ["iv-evd", "visit-argentina"],
+      "layout": "masonry",
+      "limit": 8,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "place:default",
+      "label": "Место (по умолчанию)",
+      "sourceIds": ["iv-evd"],
+      "layout": "carousel",
+      "limit": 10,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "place:bariloche",
+      "label": "Барилоче",
+      "sourceIds": ["iv-evd"],
+      "layout": "carousel",
+      "limit": 10,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "place:buenos-aires",
+      "label": "Буэнос-Айрес",
+      "sourceIds": ["iv-evd", "ba-ig"],
+      "layout": "carousel",
+      "limit": 10,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "kb:default",
+      "label": "База знаний (по умолчанию)",
+      "sourceIds": ["iv-evd"],
+      "layout": "carousel",
+      "limit": 8,
+      "minItems": 3,
+      "enabled": true
+    },
+    {
+      "id": "itinerary:default",
+      "label": "Маршруты (по умолчанию)",
+      "sourceIds": ["iv-evd"],
+      "layout": "carousel",
+      "limit": 10,
+      "minItems": 3,
+      "enabled": true
+    }
+  ]
+}
