@@ -129,6 +129,7 @@ export const GUIDE_HUB: GuideIndexHubContent = {
   toc: [
     { id: "quick-30", label: "Кратко за 30 секунд" },
     { id: "planning", label: "Планирование поездки" },
+    { id: "knowledge-base", label: "Полезно знать" },
     { id: "topics-practice", label: "Практика" },
     { id: "topics-travel", label: "Путешествие" },
     { id: "topics-country", label: "Страна" },

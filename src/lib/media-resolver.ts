@@ -39,6 +39,11 @@ import { mediaUrl } from "@/lib/media/media-cdn";
 
 export { mediaUrl };
 
+function manifestMediaUrl(localPath: string): string {
+  const normalized = localPath.trim().replace(/^\/+/, "");
+  return normalized.startsWith("media/") ? `/${normalized}` : `/media/${normalized}`;
+}
+
 function assetsForPlace(slug: string): MediaAsset[] {
   return manifest.assets
     .filter((a) => a.placeId === slug)
@@ -57,7 +62,7 @@ function assetsForDestination(id: string): MediaAsset[] {
 }
 
 function assetUrl(asset: MediaAsset | undefined): string {
-  return asset ? mediaUrl(asset.localPath) : FALLBACK;
+  return asset ? manifestMediaUrl(asset.localPath) : FALLBACK;
 }
 
 export function getMediaAsset(id: string): MediaAsset | undefined {
@@ -94,7 +99,7 @@ export function getPlaceCoverAlt(slug: string): string {
 }
 
 export function getPlaceGallery(slug: string): string[] {
-  const paths = assetsForPlace(slug).map((a) => mediaUrl(a.localPath));
+  const paths = assetsForPlace(slug).map((a) => manifestMediaUrl(a.localPath));
   return [...new Set(paths)];
 }
 
@@ -113,7 +118,7 @@ export function getDestinationImage(destinationId: string): string {
 }
 
 export function getDestinationGallery(destinationId: string): string[] {
-  const fromManifest = assetsForDestination(destinationId).map((a) => mediaUrl(a.localPath));
+  const fromManifest = assetsForDestination(destinationId).map((a) => manifestMediaUrl(a.localPath));
   if (fromManifest.length > 0) return [...new Set(fromManifest)];
 
   const placeSlug = DESTINATION_PLACE_MAP[destinationId];
@@ -221,7 +226,7 @@ export function getTourCoverImage(tourSlug: string): string {
 }
 
 export function getTourGallery(tourSlug: string): string[] {
-  const fromManifest = assetsForTour(tourSlug).map((a) => mediaUrl(a.localPath));
+  const fromManifest = assetsForTour(tourSlug).map((a) => manifestMediaUrl(a.localPath));
   if (fromManifest.length > 0) return [...new Set(fromManifest)];
   const placeSlug = TOUR_PLACE_MAP[tourSlug];
   if (placeSlug) return getPlaceGallery(placeSlug);
@@ -353,7 +358,7 @@ export function resolveBlogPostCardImage(post: {
   if (!isMediaLogoFallback(semantic)) return semantic;
 
   const manifestHero = manifestBlogHero(post.slug);
-  if (manifestHero) return mediaUrl(manifestHero.localPath);
+  if (manifestHero) return manifestMediaUrl(manifestHero.localPath);
 
   const cover = getHeroSrc(`blog:${post.slug}`);
   if (!isMediaLogoFallback(cover)) return cover;
@@ -370,7 +375,7 @@ export function resolveBlogPostCardImage(post: {
 
 export function getBlogPostCoverImage(slug: string): string {
   const manifestHero = manifestBlogHero(slug);
-  if (manifestHero) return mediaUrl(manifestHero.localPath);
+  if (manifestHero) return manifestMediaUrl(manifestHero.localPath);
   return getHeroSrc(`blog:${slug}`);
 }
 
@@ -382,13 +387,15 @@ export function getBlogPostCoverAlt(slug: string): string {
 
 /** Manifest thumbnail paired with a gallery/full image (contentHash match). */
 export function getManifestThumbnailSrc(src: string): string | undefined {
-  const asset = manifest.assets.find((a) => mediaUrl(a.localPath) === src);
+  const asset = manifest.assets.find(
+    (a) => manifestMediaUrl(a.localPath) === src || mediaUrl(a.localPath) === src,
+  );
   if (!asset?.contentHash) return undefined;
 
   const thumb = manifest.assets.find(
     (a) => a.role === "thumbnail" && a.contentHash === asset.contentHash,
   );
-  return thumb ? mediaUrl(thumb.localPath) : undefined;
+  return thumb ? manifestMediaUrl(thumb.localPath) : undefined;
 }
 
 /** Post page hero with manifest attribution (LCP element). */
@@ -411,7 +418,11 @@ export function getBlogPostHeroResolved(post: {
   });
   if (!isMediaLogoFallback(semanticSrc)) {
     const manifestHero = manifestBlogHero(post.slug);
-    if (manifestHero && mediaUrl(manifestHero.localPath) === semanticSrc) {
+    if (
+      manifestHero &&
+      (manifestMediaUrl(manifestHero.localPath) === semanticSrc ||
+        mediaUrl(manifestHero.localPath) === semanticSrc)
+    ) {
       return mediaAssetToResolved(manifestHero);
     }
 
@@ -419,7 +430,11 @@ export function getBlogPostHeroResolved(post: {
     const normalized = semanticSrc.replace(/^\//, "");
     const pathAsset = manifest.assets.find((asset) => {
       const assetPath = asset.localPath.replace(/^\/+/, "");
-      return assetPath === normalized || mediaUrl(asset.localPath) === semanticSrc;
+      return (
+        assetPath === normalized ||
+        manifestMediaUrl(asset.localPath) === semanticSrc ||
+        mediaUrl(asset.localPath) === semanticSrc
+      );
     });
     if (pathAsset) return mediaAssetToResolved(pathAsset);
 
@@ -485,7 +500,10 @@ export function getRichArticleGallery(articleId: string): Array<{
 
   for (const img of getGalleryImages(`rich:${articleId}`, 5)) {
     const asset = manifest.assets.find(
-      (a) => a.articleId === articleId && a.role === "gallery" && mediaUrl(a.localPath) === img.src,
+      (a) =>
+        a.articleId === articleId &&
+        a.role === "gallery" &&
+        (manifestMediaUrl(a.localPath) === img.src || mediaUrl(a.localPath) === img.src),
     );
     addImage(
       img.src,
@@ -505,7 +523,7 @@ export function getRichArticleGallery(articleId: string): Array<{
         .sort((a, b) => a.id.localeCompare(b.id));
       for (const asset of placeGallery) {
         addImage(
-          mediaUrl(asset.localPath),
+          manifestMediaUrl(asset.localPath),
           asset.alt,
           asset.contentHash,
           asset.imageTitle ?? asset.title ?? asset.caption,
@@ -548,7 +566,7 @@ export function hasContentSlotImage(pageId: string, slotId: string): boolean {
   const assetId = resolveSlotAssetId(pageId, slotId);
   const asset = getMediaAsset(assetId);
   if (!asset) return false;
-  return !isMediaLogoFallback(mediaUrl(asset.localPath));
+  return !isMediaLogoFallback(manifestMediaUrl(asset.localPath));
 }
 
 export function getContentImageSrc(pageId: string, slotId: string): string {

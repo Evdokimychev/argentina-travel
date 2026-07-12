@@ -10,7 +10,7 @@ site_ready: true
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 applies_to: both
 tags: [навигация, транспорт, перелёты, авто, точка входа]
-related: [aeroporty, vnutrennie-aviabilety, chto-takoe-sube, arenda-avto-i-vozhdenie, iz-esejsy-v-ba]
+related: [aeroporty, vnutrennie-aviabilety, chto-takoe-sube, arenda-avto-i-vozhdenie, iz-esejsy-v-ba, kak-poluchit-prava-v-argentine, dokumenty-dlya-poezdki-na-avto, shtrafy-i-scoring, certificado-de-legalidad-prav, gosudarstvennye-prilozheniya]
 warnings:
   - "Цены на перелёты и тарифы подвижны — конкретику смотрите в связанных записях; прямых рейсов РФ→Аргентина нет (см. [[pochemu-net-pryamyh-reisov]])."
 recommendations:
@@ -27,29 +27,29 @@ sources: []
 
 ## Как добраться и летать по стране
 
-- [[kak-dobratsya-iz-rossii]] — маршруты из РФ/СНГ.
-- [[pochemu-net-pryamyh-reisov]] — почему нет прямых рейсов и как летают.
-- [[vnutrennie-aviabilety]] — внутренние перелёты (главное при больших расстояниях).
-- [[aeroporty]] — аэропорты (EZE/AEP) и трансферы; [[iz-esejsy-v-ba]] — из Эсейсы в город.
+- [[kak-dobratsya-iz-rossii|Как добраться из России и СНГ в Аргентину]] — маршруты из РФ/СНГ.
+- [[pochemu-net-pryamyh-reisov|Почему нет прямых рейсов из России и как летают на самом деле]] — почему нет прямых рейсов и как летают.
+- [[vnutrennie-aviabilety|Внутренние авиабилеты по Аргентине]] — внутренние перелёты (главное при больших расстояниях).
+- [[aeroporty|Аэропорты Аргентины и трансферы в город]] — аэропорты (EZE/AEP) и трансферы; [[iz-esejsy-v-ba|Из аэропорта Эсейса в Буэнос-Айрес]] — из Эсейсы в город.
 
 ## Наземный транспорт
 
-- [[mezhgorodnie-avtobusy]] — междугородние автобусы (cama/semi-cama).
-- [[poezda]] — поезда дальнего следования.
-- [[chto-takoe-sube]] — карта SUBE и городской транспорт.
-- [[poleznye-prilozheniya]] — приложения (Cómo Llego, такси, SUBE).
+- [[mezhgorodnie-avtobusy|Междугородние автобусы Аргентины (micros)]] — междугородние автобусы (cama/semi-cama).
+- [[poezda|Поезда дальнего следования в Аргентине]] — поезда дальнего следования.
+- [[chto-takoe-sube|Что такое карта SUBE и нужна ли она туристу?]] — карта SUBE и городской транспорт.
+- [[poleznye-prilozheniya|Полезные приложения и сервисы в Аргентине]] — приложения (Cómo Llego, такси, SUBE).
 
 ## Автомобиль
 
-- [[arenda-avto-i-vozhdenie]] — аренда и вождение (МВУ, ПДД, ripio).
-- [[pokupka-avtomobilya]] — покупка и содержание авто.
-- [[voditelskie-prava]] — права и их обмен для резидентов.
-- [[mozhno-li-vodit-po-rossijskim-pravam]], [[nuzhen-li-4x4-ruta-40]] — частые вопросы.
+- [[arenda-avto-i-vozhdenie|Аренда авто и вождение в Аргентине]] — аренда и вождение (МВУ, ПДД, ripio).
+- [[pokupka-avtomobilya|Покупка автомобиля в Аргентине]] — покупка и содержание авто.
+- [[voditelskie-prava|Вождение и водительские права в Аргентине: туристу и релоканту]] — права и их обмен для резидентов.
+- [[mozhno-li-vodit-po-rossijskim-pravam|Можно ли водить машину в Аргентине по российским правам?]], [[nuzhen-li-4x4-ruta-40|Нужен ли полноприводный автомобиль для Дороги семи озёр и Руты 40?]] — частые вопросы.
 
 ## Другие тематические гиды
 
-- [[gid-po-dengam]] · [[gid-po-dokumentam]] · [[gid-po-zhilyu]] · [[gid-po-medicine]] · [[gid-po-kulture]]
-- Пути целиком: [[gid-puteshestvennika]] · [[gid-relokanta]].
+- [[gid-po-dengam|Деньги в Аргентине: полный тематический гид]] · [[gid-po-dokumentam|Документы и легализация в Аргентине: полный тематический гид]] · [[gid-po-zhilyu|Жильё в Аргентине: полный тематический гид]] · [[gid-po-medicine|Медицина и здоровье в Аргентине: полный тематический гид]] · [[gid-po-kulture|Культура и жизнь Аргентины: полный тематический гид]]
+- Пути целиком: [[gid-puteshestvennika|Гид путешественника: с чего начать поездку в Аргентину]] · [[gid-relokanta|Гид релоканта: весь путь переезда в Аргентину по этапам]].
 
 ## Источники
 

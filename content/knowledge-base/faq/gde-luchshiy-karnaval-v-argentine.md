@@ -39,4 +39,4 @@ sources:
 - [Municipalidad de Corrientes — Carnavales Correntinos](https://ciudaddecorrientes.gov.ar/carnavales) — официальный статус и формат (es).
 - [La Nación — Carnaval de Gualeguaychú 2026](https://www.lanacion.com.ar/que-sale/carnaval-de-gualeguaychu-2026-cuando-desfilan-las-carrozas-en-la-fiesta-mas-grande-del-pais-nid25112025/) — даты и масштаб сезона 2026 (es).
 - [Identidad Correntina — Carnaval 2026](https://www.identidadcorrentina.com.ar/noticia/26780_carnaval-2026-corrientes-busca-revalidar-su-ttulo-nacional.htm) — спор национальных титулов (es).
-- Запись [[korrientes]] этой базы знаний — компарсы, корсодром, предупреждения по жилью.
+- Запись [[korrientes|Корриентес]] этой базы знаний — компарсы, корсодром, предупреждения по жилью.

@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-12 01:14",
-  "total_entities": 676,
+  "generated_at": "2026-07-12 11:27",
+  "total_entities": 685,
   "entities": [
     {
       "id": "aconcagua-provincial-park",
@@ -77,7 +77,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 572,
+        "word_count": 586,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/aconcagua-provincial-park.md"
@@ -116,7 +116,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 192,
+        "word_count": 210,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/aep-eze-stykovka.md"
@@ -166,7 +166,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 481,
+        "word_count": 529,
         "needs_attention": false
       },
       "path": "transport/aeroporty.md"
@@ -317,7 +317,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 142,
+        "word_count": 147,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/alersesy-skrytye-ozyora.md"
@@ -790,7 +790,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 465,
+        "word_count": 533,
         "needs_attention": false
       },
       "path": "pereezd/apostil-i-perevod-dokumentov.md"
@@ -928,7 +928,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 574,
+        "word_count": 601,
         "needs_attention": false
       },
       "path": "transport/arenda-avto-i-vozhdenie.md"
@@ -987,7 +987,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 726,
+        "word_count": 782,
         "needs_attention": false
       },
       "path": "marshruty/argentina-10-dney.md"
@@ -1060,7 +1060,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 1120,
+        "word_count": 1152,
         "needs_attention": false
       },
       "path": "marshruty/argentina-2-nedeli.md"
@@ -1126,7 +1126,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 812,
+        "word_count": 871,
         "needs_attention": false
       },
       "path": "marshruty/argentina-3-nedeli.md"
@@ -1168,7 +1168,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 686,
+        "word_count": 819,
         "needs_attention": true
       },
       "path": "pereezd/argentina-vs-drugie-strany.md"
@@ -1378,7 +1378,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 601,
+        "word_count": 625,
         "needs_attention": false
       },
       "path": "kultura/asado.md"
@@ -2063,7 +2063,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 168,
+        "word_count": 176,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/ba-rajony-realnyj-vybor.md"
@@ -2176,7 +2176,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 668,
+        "word_count": 685,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/banado-la-estrella.md"
@@ -2218,7 +2218,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 718,
+        "word_count": 794,
         "needs_attention": false
       },
       "path": "dengi/banki-i-perevody.md"
@@ -2259,7 +2259,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 1064,
+        "word_count": 1110,
         "needs_attention": false
       },
       "path": "dengi/bankovskij-schet.md"
@@ -2339,7 +2339,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 407,
+        "word_count": 425,
         "needs_attention": false
       },
       "path": "goroda/bariloche.md"
@@ -2380,7 +2380,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 181,
+        "word_count": 192,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/bariloche-tihie-smotrovye.md"
@@ -2607,7 +2607,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 182,
+        "word_count": 187,
         "needs_attention": false
       },
       "path": "faq/besplatna-li-medicina-dlya-turista.md"
@@ -2725,7 +2725,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 721,
+        "word_count": 769,
         "needs_attention": false
       },
       "path": "bezopasnost/bezopasnost-argentina.md"
@@ -3128,7 +3128,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 1205,
+        "word_count": 1242,
         "needs_attention": false
       },
       "path": "goroda/buenos-aires.md"
@@ -3192,7 +3192,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 324,
+        "word_count": 341,
         "needs_attention": false
       },
       "path": "regiony/buenos-aires-province.md"
@@ -3306,7 +3306,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 438,
+        "word_count": 531,
         "needs_attention": false
       },
       "path": "byt/byt-i-zhilyo.md"
@@ -3346,7 +3346,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 891,
+        "word_count": 946,
         "needs_attention": false
       },
       "path": "dengi/byudzhet-poezdki.md"
@@ -3411,7 +3411,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 338,
+        "word_count": 380,
         "needs_attention": false
       },
       "path": "regiony/caba.md"
@@ -4067,7 +4067,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 357,
+        "word_count": 364,
         "needs_attention": false
       },
       "path": "goroda/cafayate.md"
@@ -4903,7 +4903,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 491,
+        "word_count": 507,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/casa-historica-tucuman.md"
@@ -5339,7 +5339,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 483,
+        "word_count": 491,
         "needs_attention": false
       },
       "path": "goroda/catamarca.md"
@@ -5971,6 +5971,91 @@
       "path": "dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md"
     },
     {
+      "id": "certificado-de-domicilio",
+      "type": "guide",
+      "subtype": "immigration",
+      "title": "Как подтвердить адрес в Аргентине: certificado de domicilio",
+      "summary": "Многие процедуры в Аргентине требуют подтверждения адреса. Резидент с DNI получает certificado de domicilio в RENAPER или полиции; иностранцу без DNI в Буэнос-Айресе оформляют его через систему TAD с двумя свидетелями. Разбираем, зачем он нужен, кто и как его выдаёт и чем отличается декларация о месте жительства.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "документы",
+        "легализация",
+        "адрес",
+        "DNI",
+        "бюрократия"
+      ],
+      "site_sections": [
+        "dokumenty-i-legalizatsiya",
+        "pereezd-v-argentinu",
+        "zhizn-v-strane"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 3,
+        "word_count": 497,
+        "needs_attention": false
+      },
+      "path": "pereezd/certificado-de-domicilio.md"
+    },
+    {
+      "id": "certificado-de-legalidad-prav",
+      "type": "guide",
+      "subtype": "transport",
+      "title": "Certificado de legalidad водительских прав: что это и зачем",
+      "summary": "У «certificado de legalidad» водительских прав два разных смысла. Аргентинец берёт certificado de legalidad своей licencia nacional (бесплатно, онлайн), чтобы использовать её за границей или оформить процедуру в другой юрисдикции. Иностранцу, наоборот, нужна легальность его зарубежных прав (через консульство страны выдачи, с апостилем и переводом), чтобы подтвердить стаж при получении аргентинских прав.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авто",
+        "документы",
+        "легализация"
+      ],
+      "site_sections": [
+        "dokumenty-i-legalizatsiya",
+        "puteshestviya-po-argentine",
+        "pereezd-v-argentinu"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 2,
+        "word_count": 357,
+        "needs_attention": false
+      },
+      "path": "transport/certificado-de-legalidad-prav.md"
+    },
+    {
       "id": "chek-list-pereezda",
       "type": "guide",
       "subtype": "immigration",
@@ -6007,7 +6092,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 350,
+        "word_count": 571,
         "needs_attention": false
       },
       "path": "pereezd/chek-list-pereezda.md"
@@ -6121,7 +6206,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 197,
+        "word_count": 253,
         "needs_attention": false
       },
       "path": "faq/chto-delat-krome-dostoprimechatelnostej.md"
@@ -6163,7 +6248,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 161,
+        "word_count": 172,
         "needs_attention": false
       },
       "path": "faq/chto-est-vegetariancu.md"
@@ -6204,7 +6289,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 745,
+        "word_count": 863,
         "needs_attention": false
       },
       "path": "puteshestvie/chto-stoit-deneg-prioritety.md"
@@ -8614,7 +8699,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 403,
+        "word_count": 442,
         "needs_attention": false
       },
       "path": "regiony/cuyo.md"
@@ -8654,7 +8739,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 177,
+        "word_count": 183,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/dalyokie-parki-nastroj-na-tishinu.md"
@@ -8900,7 +8985,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 368,
+        "word_count": 414,
         "needs_attention": false
       },
       "path": "priroda/dikaya-priroda.md"
@@ -9156,7 +9241,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 773,
+        "word_count": 804,
         "needs_attention": false
       },
       "path": "pereezd/dni-cuil.md"
@@ -9195,10 +9280,53 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 163,
+        "word_count": 179,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/dni-cuil-cuit-putanitsa.md"
+    },
+    {
+      "id": "dokumenty-dlya-poezdki-na-avto",
+      "type": "guide",
+      "subtype": "transport",
+      "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине",
+      "summary": "Обязательный комплект для управления автомобилем: действующие права (или иностранные + МВУ), документ на машину (cédula verde, а на чужую — cédula azul или доверенность), обязательная страховка (seguro), действующий техосмотр VTV и оплаченный налог patente. Отдельно — что нужно, если машина не ваша и если вы выезжаете в Чили.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авто",
+        "документы",
+        "роудтрип",
+        "логистика"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "zhizn-v-strane",
+        "dokumenty-i-legalizatsiya"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 2,
+        "word_count": 424,
+        "needs_attention": false
+      },
+      "path": "transport/dokumenty-dlya-poezdki-na-avto.md"
     },
     {
       "id": "dostupnaya-sreda-i-invalidnost",
@@ -9237,7 +9365,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 493,
+        "word_count": 561,
         "needs_attention": true
       },
       "path": "puteshestvie/dostupnaya-sreda-i-invalidnost.md"
@@ -9391,7 +9519,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 435,
+        "word_count": 453,
         "needs_attention": false
       },
       "path": "goroda/el-bolson.md"
@@ -10603,7 +10731,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 354,
+        "word_count": 375,
         "needs_attention": false
       },
       "path": "kultura/empanadas.md"
@@ -10859,7 +10987,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 654,
+        "word_count": 694,
         "needs_attention": false
       },
       "path": "svyaz/esim-i-svyaz.md"
@@ -11264,7 +11392,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 151,
+        "word_count": 165,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/falshivye-policejskie-i-obmenniki.md"
@@ -11820,7 +11948,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 405,
+        "word_count": 444,
         "needs_attention": false
       },
       "path": "kultura/folklor-i-muzyka.md"
@@ -11888,7 +12016,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 491,
+        "word_count": 502,
         "needs_attention": false
       },
       "path": "goroda/formosa.md"
@@ -11999,7 +12127,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 688,
+        "word_count": 713,
         "needs_attention": false
       },
       "path": "kultura/futbol.md"
@@ -12038,7 +12166,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 172,
+        "word_count": 177,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/futbol-kak-popast-bez-skama.md"
@@ -12950,7 +13078,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 236,
+        "word_count": 237,
         "needs_attention": false
       },
       "path": "faq/gde-luchshiy-karnaval-v-argentine.md"
@@ -13062,7 +13190,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 251,
+        "word_count": 456,
         "needs_attention": true
       },
       "path": "dengi/gid-po-dengam.md"
@@ -13104,7 +13232,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 191,
+        "word_count": 378,
         "needs_attention": true
       },
       "path": "pereezd/gid-po-dokumentam.md"
@@ -13146,7 +13274,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 174,
+        "word_count": 354,
         "needs_attention": false
       },
       "path": "kultura/gid-po-kulture.md"
@@ -13187,7 +13315,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 140,
+        "word_count": 253,
         "needs_attention": true
       },
       "path": "medicina/gid-po-medicine.md"
@@ -13229,7 +13357,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 166,
+        "word_count": 317,
         "needs_attention": false
       },
       "path": "transport/gid-po-transportu.md"
@@ -13271,7 +13399,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 150,
+        "word_count": 256,
         "needs_attention": true
       },
       "path": "zhile/gid-po-zhilyu.md"
@@ -13311,7 +13439,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 431,
+        "word_count": 754,
         "needs_attention": false
       },
       "path": "puteshestvie/gid-puteshestvennika.md"
@@ -13351,7 +13479,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 433,
+        "word_count": 880,
         "needs_attention": true
       },
       "path": "pereezd/gid-relokanta.md"
@@ -13601,6 +13729,47 @@
       "path": "dostoprimechatelnosti/golf-en-tierra-del-fuego.md"
     },
     {
+      "id": "gosudarstvennye-prilozheniya",
+      "type": "guide",
+      "subtype": "digital",
+      "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA",
+      "summary": "Цифровая инфраструктура жизни в Аргентине держится на трёх государственных приложениях. Mi Argentina — единый профиль гражданина с документами и цифровыми правами (licencia digital с QR). miBA — городской профиль Буэнос-Айреса для столичных процедур. ARCA (бывшая AFIP) — налоги, clave fiscal и монотрибуто. Все они требуют DNI/CUIL, то есть доступны релоканту, а не туристу.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "цифровая жизнь",
+        "документы",
+        "приложения",
+        "релокация"
+      ],
+      "site_sections": [
+        "zhizn-v-strane",
+        "dokumenty-i-legalizatsiya"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 3,
+        "word_count": 331,
+        "needs_attention": false
+      },
+      "path": "svyaz/gosudarstvennye-prilozheniya.md"
+    },
+    {
       "id": "govoryat-li-v-argentine-po-anglijski",
       "type": "faq",
       "subtype": null,
@@ -13636,7 +13805,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 139,
+        "word_count": 143,
         "needs_attention": false
       },
       "path": "faq/govoryat-li-v-argentine-po-anglijski.md"
@@ -13677,7 +13846,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 1047,
+        "word_count": 1075,
         "needs_attention": false
       },
       "path": "pereezd/grazhdanstvo.md"
@@ -14027,7 +14196,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 994,
+        "word_count": 1011,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/ibera.md"
@@ -14067,7 +14236,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 159,
+        "word_count": 162,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/ibera-rassvet-i-tihie-portaly.md"
@@ -14237,7 +14406,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 166,
+        "word_count": 182,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/iguasu-foto-sekrety.md"
@@ -14279,7 +14448,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 198,
+        "word_count": 207,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/iguasu-ritm-bez-tolp-i-sveta.md"
@@ -14318,7 +14487,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 436,
+        "word_count": 480,
         "needs_attention": false
       },
       "path": "dengi/inflyatsiya-i-ekonomika.md"
@@ -14439,7 +14608,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 473,
+        "word_count": 579,
         "needs_attention": false
       },
       "path": "kultura/interesnye-fakty.md"
@@ -14584,7 +14753,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 766,
+        "word_count": 778,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/ischigualasto.md"
@@ -14745,7 +14914,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 623,
+        "word_count": 635,
         "needs_attention": false
       },
       "path": "kultura/ispanskij-dlya-puteshestvennika.md"
@@ -14785,7 +14954,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 581,
+        "word_count": 623,
         "needs_attention": false
       },
       "path": "kultura/istoriya-argentiny.md"
@@ -14835,7 +15004,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 462,
+        "word_count": 498,
         "needs_attention": false
       },
       "path": "transport/istoriya-zheleznyh-dorog.md"
@@ -14945,7 +15114,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 667,
+        "word_count": 699,
         "needs_attention": false
       },
       "path": "transport/iz-esejsy-v-ba.md"
@@ -15434,7 +15603,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 409,
+        "word_count": 422,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/kachi.md"
@@ -15474,7 +15643,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 662,
+        "word_count": 720,
         "needs_attention": false
       },
       "path": "transport/kak-dobratsya-iz-rossii.md"
@@ -15552,7 +15721,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 1143,
+        "word_count": 1172,
         "needs_attention": false
       },
       "path": "dengi/kak-menyat-valyutu.md"
@@ -15594,7 +15763,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 210,
+        "word_count": 236,
         "needs_attention": true
       },
       "path": "faq/kak-oplatit-tur-i-zhilyo-zaranee.md"
@@ -15719,6 +15888,49 @@
       "path": "faq/kak-poluchit-grazhdanstvo-za-2-goda.md"
     },
     {
+      "id": "kak-poluchit-prava-v-argentine",
+      "type": "guide",
+      "subtype": "immigration",
+      "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля",
+      "summary": "Полное руководство для иностранцев: можно ли ездить с российскими и другими иностранными правами, кому доступен обмен (canje), как получить аргентинскую лицензию с нуля и какие документы нужны — с пошаговым порядком для Буэнос-Айреса (CABA).",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "документы",
+        "вождение",
+        "транспорт",
+        "релокация",
+        "туризм"
+      ],
+      "site_sections": [
+        "dokumenty-i-legalizatsiya",
+        "pereezd-v-argentinu",
+        "puteshestviya-po-argentine"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 4,
+        "word_count": 2255,
+        "needs_attention": false
+      },
+      "path": "transport/kak-poluchit-prava-v-argentine.md"
+    },
+    {
       "id": "kak-snyat-kvartiru-bez-garanta",
       "type": "faq",
       "subtype": null,
@@ -15754,7 +15966,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 192,
+        "word_count": 197,
         "needs_attention": false
       },
       "path": "faq/kak-snyat-kvartiru-bez-garanta.md"
@@ -15833,7 +16045,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 212,
+        "word_count": 217,
         "needs_attention": false
       },
       "path": "faq/kakie-privivki-nuzhny-dlya-argentiny.md"
@@ -15913,7 +16125,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 150,
+        "word_count": 162,
         "needs_attention": false
       },
       "path": "faq/kakie-rozetki-v-argentine.md"
@@ -15993,7 +16205,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 214,
+        "word_count": 223,
         "needs_attention": false
       },
       "path": "faq/kakoj-mesyats-kuda-ehat.md"
@@ -16101,7 +16313,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 426,
+        "word_count": 430,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/kaminito-la-boka.md"
@@ -16172,7 +16384,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 711,
+        "word_count": 716,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/kanal-bigl-i-poezd-na-kray-sveta.md"
@@ -16411,7 +16623,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 537,
+        "word_count": 544,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/kladbische-recoleta.md"
@@ -16454,7 +16666,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 547,
+        "word_count": 558,
         "needs_attention": false
       },
       "path": "klimat/klimat-po-regionam.md"
@@ -16534,7 +16746,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 196,
+        "word_count": 200,
         "needs_attention": false
       },
       "path": "faq/kogda-smotret-kitov-v-argentine.md"
@@ -16643,7 +16855,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 466,
+        "word_count": 486,
         "needs_attention": false
       },
       "path": "goroda/kordova.md"
@@ -16714,7 +16926,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 545,
+        "word_count": 554,
         "needs_attention": false
       },
       "path": "goroda/korrientes.md"
@@ -16754,7 +16966,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 477,
+        "word_count": 518,
         "needs_attention": false
       },
       "path": "svyaz/kovorkingi-i-rabota-nomada.md"
@@ -16793,7 +17005,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 766,
+        "word_count": 794,
         "needs_attention": false
       },
       "path": "kultura/kuhnya.md"
@@ -16952,7 +17164,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 424,
+        "word_count": 435,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/la-cumbrecita.md"
@@ -17085,7 +17297,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 7,
-        "word_count": 678,
+        "word_count": 688,
         "needs_attention": false
       },
       "path": "goroda/la-plata.md"
@@ -17156,7 +17368,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 378,
+        "word_count": 387,
         "needs_attention": false
       },
       "path": "goroda/la-rioja.md"
@@ -17992,7 +18204,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 1227,
+        "word_count": 1242,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/lanin.md"
@@ -18033,7 +18245,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 142,
+        "word_count": 151,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/lanin-sever-araukarii-i-termy.md"
@@ -18190,7 +18402,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 477,
+        "word_count": 509,
         "needs_attention": false
       },
       "path": "kultura/lgbt-travel.md"
@@ -18261,7 +18473,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 695,
+        "word_count": 700,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/lihue-calel.md"
@@ -18325,7 +18537,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 391,
+        "word_count": 422,
         "needs_attention": false
       },
       "path": "regiony/litoral.md"
@@ -18404,7 +18616,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 1253,
+        "word_count": 1267,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/los-alerces.md"
@@ -18549,7 +18761,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 831,
+        "word_count": 849,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/los-cardones.md"
@@ -18743,7 +18955,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 214,
+        "word_count": 222,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/los-glasiares-ritm-dvuh-baz.md"
@@ -18896,7 +19108,7 @@
         "review_due": true,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 152,
+        "word_count": 156,
         "needs_attention": true
       },
       "path": "lichnyy-opyt/lyubimoe-asado-mesto.md"
@@ -18935,7 +19147,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 210,
+        "word_count": 225,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/lyubimoe-mesto-ne-iz-putevoditelej.md"
@@ -19195,7 +19407,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 487,
+        "word_count": 503,
         "needs_attention": false
       },
       "path": "goroda/mar-del-plata.md"
@@ -19233,7 +19445,7 @@
         "review_due": true,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 155,
+        "word_count": 163,
         "needs_attention": true
       },
       "path": "lichnyy-opyt/marshrut-vyhodnogo-dnya-ivana.md"
@@ -19299,7 +19511,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 577,
+        "word_count": 595,
         "needs_attention": false
       },
       "path": "kultura/mate.md"
@@ -19410,7 +19622,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 148,
+        "word_count": 154,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/mate-etiket-spasibo-lovushka.md"
@@ -19452,7 +19664,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 543,
+        "word_count": 566,
         "needs_attention": false
       },
       "path": "medicina/medicina-i-strahovka.md"
@@ -19622,7 +19834,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 151,
+        "word_count": 152,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/mendoza-odna-zona-v-den.md"
@@ -19664,7 +19876,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 644,
+        "word_count": 731,
         "needs_attention": false
       },
       "path": "kultura/mentalitet-i-etiket.md"
@@ -19809,7 +20021,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 613,
+        "word_count": 652,
         "needs_attention": false
       },
       "path": "transport/mezhgorodnie-avtobusy.md"
@@ -19850,7 +20062,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 486,
+        "word_count": 574,
         "needs_attention": false
       },
       "path": "kultura/mify-ob-argentine.md"
@@ -20307,7 +20519,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 151,
+        "word_count": 158,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/motochorros-telefon-na-ulitse.md"
@@ -20459,10 +20671,51 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 221,
+        "word_count": 222,
         "needs_attention": false
       },
       "path": "faq/mozhno-li-doehat-do-ushuaji-na-mashine.md"
+    },
+    {
+      "id": "mozhno-li-ezdit-po-inostrannym-pravam",
+      "type": "faq",
+      "subtype": null,
+      "title": null,
+      "summary": null,
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авто",
+        "документы",
+        "туризм"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "dokumenty-i-legalizatsiya"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 2,
+        "word_count": 169,
+        "needs_attention": false
+      },
+      "path": "faq/mozhno-li-ezdit-po-inostrannym-pravam.md"
     },
     {
       "id": "mozhno-li-otkryt-schet-nerezidentu",
@@ -20539,7 +20792,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 152,
+        "word_count": 160,
         "needs_attention": false
       },
       "path": "faq/mozhno-li-pit-vodu-iz-krana.md"
@@ -20620,7 +20873,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 165,
+        "word_count": 176,
         "needs_attention": false
       },
       "path": "faq/mozhno-li-snimat-dronom.md"
@@ -20660,7 +20913,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 190,
+        "word_count": 196,
         "needs_attention": false
       },
       "path": "faq/mozhno-li-uchitsya-v-universitete-besplatno.md"
@@ -21067,7 +21320,7 @@
         "review_due": true,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 186,
+        "word_count": 202,
         "needs_attention": true
       },
       "path": "lichnyy-opyt/nablyudenie-pro-dengi-i-banki.md"
@@ -21108,7 +21361,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 547,
+        "word_count": 593,
         "needs_attention": false
       },
       "path": "dengi/nalogi-i-monotributo.md"
@@ -21174,7 +21427,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 569,
+        "word_count": 582,
         "needs_attention": false
       },
       "path": "kultura/narodnye-svyatye.md"
@@ -21254,7 +21507,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 1555,
+        "word_count": 1579,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/nauel-uapi.md"
@@ -21304,7 +21557,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 432,
+        "word_count": 461,
         "needs_attention": false
       },
       "path": "kultura/nauka-i-tehnologii.md"
@@ -21707,7 +21960,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 640,
+        "word_count": 656,
         "needs_attention": false
       },
       "path": "goroda/neuken.md"
@@ -21900,7 +22153,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 456,
+        "word_count": 513,
         "needs_attention": false
       },
       "path": "regiony/noa.md"
@@ -21958,7 +22211,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 279,
+        "word_count": 322,
         "needs_attention": false
       },
       "path": "marshruty/noa-kolco.md"
@@ -22087,7 +22340,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 225,
+        "word_count": 228,
         "needs_attention": false
       },
       "path": "faq/nuzhen-li-permit-na-akonkagua.md"
@@ -22357,7 +22610,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 118,
+        "word_count": 124,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/obzornaya-loma-pliege-tumbado.md"
@@ -22436,7 +22689,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 1543,
+        "word_count": 1562,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/ognennaya-zemlya.md"
@@ -22476,7 +22729,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 147,
+        "word_count": 151,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/ognennaya-zemlya-serro-guanako.md"
@@ -22516,7 +22769,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 302,
+        "word_count": 356,
         "needs_attention": true
       },
       "path": "lichnyy-opyt/oshibka-s-dokumentami.md"
@@ -22555,7 +22808,7 @@
         "review_due": false,
         "missing_sources": true,
         "source_count": 0,
-        "word_count": 320,
+        "word_count": 385,
         "needs_attention": true
       },
       "path": "lichnyy-opyt/oshibka-s-zhilyom.md"
@@ -22597,7 +22850,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 507,
+        "word_count": 565,
         "needs_attention": false
       },
       "path": "dengi/otkrytie-biznesa.md"
@@ -22661,7 +22914,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 376,
+        "word_count": 411,
         "needs_attention": false
       },
       "path": "regiony/pampa.md"
@@ -22745,7 +22998,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 562,
+        "word_count": 574,
         "needs_attention": false
       },
       "path": "goroda/parana.md"
@@ -23607,7 +23860,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 467,
+        "word_count": 478,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-chaco.md"
@@ -23895,7 +24148,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 519,
+        "word_count": 529,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-el-palmar.md"
@@ -24840,7 +25093,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 528,
+        "word_count": 539,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-rio-pilcomayo.md"
@@ -25696,7 +25949,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 477,
+        "word_count": 534,
         "needs_attention": false
       },
       "path": "regiony/patagonia.md"
@@ -25846,7 +26099,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 1190,
+        "word_count": 1202,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/patagonia-park.md"
@@ -25904,7 +26157,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 265,
+        "word_count": 304,
         "needs_attention": false
       },
       "path": "marshruty/patagonia-yug.md"
@@ -26118,7 +26371,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 507,
+        "word_count": 511,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/peninsula-valdes.md"
@@ -26232,7 +26485,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 677,
+        "word_count": 862,
         "needs_attention": false
       },
       "path": "pereezd/pereezd-s-minimalnym-byudzhetom.md"
@@ -26274,7 +26527,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 951,
+        "word_count": 994,
         "needs_attention": false
       },
       "path": "pereezd/perevoz-veshchey-i-pitomtsev.md"
@@ -26354,7 +26607,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 558,
+        "word_count": 580,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/perito-moreno.md"
@@ -26396,7 +26649,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 643,
+        "word_count": 850,
         "needs_attention": false
       },
       "path": "pereezd/pervyj-mesyac-plan.md"
@@ -26435,7 +26688,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 954,
+        "word_count": 1067,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/pervyj-mesyac-v-argentine.md"
@@ -27133,7 +27386,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 559,
+        "word_count": 575,
         "needs_attention": false
       },
       "path": "goroda/pinamar.md"
@@ -27247,7 +27500,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 585,
+        "word_count": 718,
         "needs_attention": false
       },
       "path": "pereezd/plan-podgotovki-6-mesyacev.md"
@@ -27369,7 +27622,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 434,
+        "word_count": 466,
         "needs_attention": false
       },
       "path": "transport/pochemu-net-pryamyh-reisov.md"
@@ -27411,7 +27664,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 405,
+        "word_count": 547,
         "needs_attention": false
       },
       "path": "puteshestvie/podgotovka-k-poezdke.md"
@@ -27460,7 +27713,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 444,
+        "word_count": 475,
         "needs_attention": false
       },
       "path": "transport/poezda.md"
@@ -27502,7 +27755,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 479,
+        "word_count": 520,
         "needs_attention": false
       },
       "path": "transport/pokupka-avtomobilya.md"
@@ -27544,7 +27797,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 540,
+        "word_count": 578,
         "needs_attention": false
       },
       "path": "zhile/pokupka-nedvizhimosti.md"
@@ -27584,7 +27837,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 466,
+        "word_count": 482,
         "needs_attention": false
       },
       "path": "pokupki/pokupki-i-tax-free.md"
@@ -27626,7 +27879,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 414,
+        "word_count": 476,
         "needs_attention": false
       },
       "path": "svyaz/poleznye-prilozheniya.md"
@@ -27742,7 +27995,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 454,
+        "word_count": 459,
         "needs_attention": false
       },
       "path": "kultura/prazdniki-i-traditsii.md"
@@ -27784,7 +28037,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 503,
+        "word_count": 561,
         "needs_attention": false
       },
       "path": "pereezd/priznanie-diploma.md"
@@ -28490,7 +28743,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 6,
-        "word_count": 479,
+        "word_count": 486,
         "needs_attention": false
       },
       "path": "goroda/puerto-madryn.md"
@@ -28633,7 +28886,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 476,
+        "word_count": 486,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/punta-tombo.md"
@@ -28768,7 +29021,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 358,
+        "word_count": 366,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/purmamarka.md"
@@ -28919,7 +29172,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 181,
+        "word_count": 186,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/quebrada-de-humahuaca.md"
@@ -29098,7 +29351,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 532,
+        "word_count": 572,
         "needs_attention": false
       },
       "path": "pereezd/rabochaya-viza.md"
@@ -29140,7 +29393,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 442,
+        "word_count": 530,
         "needs_attention": false
       },
       "path": "pereezd/rabota-i-poisk-raboty.md"
@@ -29556,6 +29809,49 @@
       "path": "dostoprimechatelnosti/rafting-en-el-rio-mendoza.md"
     },
     {
+      "id": "raskhozhdeniya-dni-cuit-cuil",
+      "type": "guide",
+      "subtype": "immigration",
+      "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить",
+      "summary": "У иностранца имя, фамилия или дата рождения в DNI, CUIL и CUIT нередко расходятся — из-за транслитерации, двух фамилий или формата даты. Это ломает банковские и налоговые операции. Разбираем принцип «DNI — источник истины» и порядок исправления: сначала DNI (RENAPER/Registro Civil), затем CUIL (ANSES), затем CUIT (ARCA).",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "документы",
+        "легализация",
+        "DNI",
+        "налоги",
+        "бюрократия"
+      ],
+      "site_sections": [
+        "dokumenty-i-legalizatsiya",
+        "pereezd-v-argentinu",
+        "finansy-i-ekonomika"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 3,
+        "word_count": 505,
+        "needs_attention": false
+      },
+      "path": "pereezd/raskhozhdeniya-dni-cuit-cuil.md"
+    },
+    {
       "id": "razvlecheniya-i-nochnaya-zhizn",
       "type": "guide",
       "subtype": "culture",
@@ -29600,7 +29896,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 398,
+        "word_count": 472,
         "needs_attention": false
       },
       "path": "kultura/razvlecheniya-i-nochnaya-zhizn.md"
@@ -30864,7 +31160,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 426,
+        "word_count": 514,
         "needs_attention": false
       },
       "path": "kultura/restorany-i-kak-est.md"
@@ -31194,7 +31490,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 480,
+        "word_count": 544,
         "needs_attention": false
       },
       "path": "medicina/rody-i-beremennost.md"
@@ -31370,7 +31666,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 7,
-        "word_count": 430,
+        "word_count": 441,
         "needs_attention": false
       },
       "path": "goroda/rosario.md"
@@ -31412,7 +31708,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 427,
+        "word_count": 534,
         "needs_attention": false
       },
       "path": "kultura/rossiya-vs-argentina.md"
@@ -31663,7 +31959,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 832,
+        "word_count": 887,
         "needs_attention": false
       },
       "path": "marshruty/ruta-40-sem-ozer.md"
@@ -31703,7 +31999,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 176,
+        "word_count": 189,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/ruta-40-sem-ozer-ne-speshite.md"
@@ -32670,7 +32966,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 373,
+        "word_count": 381,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/salinas-grandes.md"
@@ -32813,7 +33109,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 383,
+        "word_count": 400,
         "needs_attention": false
       },
       "path": "goroda/salta.md"
@@ -32854,7 +33150,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 197,
+        "word_count": 202,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/salta-kalchakskie-doliny-marshrut.md"
@@ -33304,7 +33600,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 662,
+        "word_count": 668,
         "needs_attention": false
       },
       "path": "goroda/san-huan.md"
@@ -33375,7 +33671,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 701,
+        "word_count": 711,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/san-ignacio-mini.md"
@@ -33525,7 +33821,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 348,
+        "word_count": 356,
         "needs_attention": false
       },
       "path": "goroda/san-luis.md"
@@ -33607,7 +33903,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 412,
+        "word_count": 428,
         "needs_attention": false
       },
       "path": "goroda/san-martin-de-los-andes.md"
@@ -33677,7 +33973,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 475,
+        "word_count": 497,
         "needs_attention": false
       },
       "path": "goroda/san-miguel-de-tucuman.md"
@@ -33831,7 +34127,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 587,
+        "word_count": 596,
         "needs_attention": false
       },
       "path": "goroda/san-salvador-de-jujuy.md"
@@ -34036,7 +34332,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 5,
-        "word_count": 714,
+        "word_count": 727,
         "needs_attention": false
       },
       "path": "goroda/santa-fe.md"
@@ -34185,7 +34481,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 519,
+        "word_count": 528,
         "needs_attention": false
       },
       "path": "goroda/santa-rosa.md"
@@ -34253,7 +34549,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 501,
+        "word_count": 508,
         "needs_attention": false
       },
       "path": "goroda/santiago-del-estero.md"
@@ -34295,7 +34591,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 517,
+        "word_count": 574,
         "needs_attention": false
       },
       "path": "dengi/sdacha-nedvizhimosti-v-arendu.md"
@@ -34529,7 +34825,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 184,
+        "word_count": 196,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/severnye-parki-zolotoj-chas.md"
@@ -34569,10 +34865,53 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 763,
+        "word_count": 788,
         "needs_attention": false
       },
       "path": "pereezd/shkola-dlya-detey.md"
+    },
+    {
+      "id": "shtrafy-i-scoring",
+      "type": "guide",
+      "subtype": "transport",
+      "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине",
+      "summary": "Как проверить и оплатить дорожные штрафы (infracciones) в Аргентине, как работает балльная система scoring (у водителя есть исходный запас баллов, он уменьшается за серьёзные нарушения) и почему суммы считают не в песо, а в «условных единицах» (UF), привязанных к цене бензина. С 2026 года коды нарушений унифицированы по всей стране.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авто",
+        "документы",
+        "безопасность",
+        "штрафы"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "zhizn-v-strane",
+        "dokumenty-i-legalizatsiya"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 3,
+        "word_count": 464,
+        "needs_attention": false
+      },
+      "path": "transport/shtrafy-i-scoring.md"
     },
     {
       "id": "sierra-de-la-ventana",
@@ -34948,7 +35287,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 602,
+        "word_count": 655,
         "needs_attention": false
       },
       "path": "medicina/sistema-zdravoohraneniya.md"
@@ -35183,7 +35522,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 192,
+        "word_count": 202,
         "needs_attention": false
       },
       "path": "faq/skolko-nalichnyh-mozhno-vvezti.md"
@@ -35310,7 +35649,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 393,
+        "word_count": 411,
         "needs_attention": false
       },
       "path": "kultura/sladkoe-dulce-de-leche.md"
@@ -35352,10 +35691,52 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 594,
+        "word_count": 692,
         "needs_attention": false
       },
       "path": "pereezd/soobshestvo-i-adaptaciya.md"
+    },
+    {
+      "id": "status-expediente-migraciones",
+      "type": "guide",
+      "subtype": "immigration",
+      "title": "Как узнать статус дела (expediente) в Migraciones",
+      "summary": "После подачи на резиденцию через RaDEX заявителя чаще всего тревожит одно: «что с моим делом?». Разбираем, где смотреть статус (Consulta Unificada, портал уведомлений, почта), какие бывают типовые этапы — от подачи до диспозиции, — и почему главное правило простое: регулярно проверять email и вовремя отвечать на замечания (observaciones).",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "документы",
+        "легализация",
+        "ВНЖ",
+        "миграция",
+        "бюрократия"
+      ],
+      "site_sections": [
+        "dokumenty-i-legalizatsiya",
+        "pereezd-v-argentinu"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 3,
+        "word_count": 442,
+        "needs_attention": false
+      },
+      "path": "pereezd/status-expediente-migraciones.md"
     },
     {
       "id": "stoimost-zhizni-ba",
@@ -35393,7 +35774,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 988,
+        "word_count": 1037,
         "needs_attention": false
       },
       "path": "dengi/stoimost-zhizni-ba.md"
@@ -35436,7 +35817,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 742,
+        "word_count": 840,
         "needs_attention": false
       },
       "path": "dengi/stoimost-zhizni-semya-i-para.md"
@@ -35476,7 +35857,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 215,
+        "word_count": 218,
         "needs_attention": false
       },
       "path": "faq/stoit-li-ehat-na-poezde-v-oblaka.md"
@@ -35518,7 +35899,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 1076,
+        "word_count": 1229,
         "needs_attention": false
       },
       "path": "puteshestvie/stoit-li-ehat-v-argentinu.md"
@@ -35559,7 +35940,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 482,
+        "word_count": 647,
         "needs_attention": false
       },
       "path": "pereezd/stoit-li-pereezzhat.md"
@@ -35601,7 +35982,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 528,
+        "word_count": 684,
         "needs_attention": false
       },
       "path": "pereezd/studencheskaya-zhizn.md"
@@ -35833,7 +36214,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 937,
+        "word_count": 955,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/talampaya.md"
@@ -35917,7 +36298,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 448,
+        "word_count": 464,
         "needs_attention": false
       },
       "path": "kultura/tango.md"
@@ -36131,7 +36512,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 341,
+        "word_count": 343,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/teatr-kolon.md"
@@ -36423,7 +36804,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 466,
+        "word_count": 472,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/termas-de-rio-hondo.md"
@@ -36680,7 +37061,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 291,
+        "word_count": 304,
         "needs_attention": false
       },
       "path": "regiony/tierra-del-fuego.md"
@@ -36752,7 +37133,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 402,
+        "word_count": 420,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tigre-i-delta.md"
@@ -36896,7 +37277,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 414,
+        "word_count": 428,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tilkara.md"
@@ -38377,7 +38758,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 636,
+        "word_count": 726,
         "needs_attention": false
       },
       "path": "dengi/udalyonnaya-rabota-i-oplata.md"
@@ -38456,7 +38837,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 221,
+        "word_count": 238,
         "needs_attention": false
       },
       "path": "goroda/ushuaia.md"
@@ -39581,7 +39962,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 600,
+        "word_count": 615,
         "needs_attention": false
       },
       "path": "goroda/villa-gesell.md"
@@ -39663,7 +40044,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 468,
+        "word_count": 484,
         "needs_attention": false
       },
       "path": "goroda/villa-la-angostura.md"
@@ -40407,7 +40788,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 282,
+        "word_count": 327,
         "needs_attention": false
       },
       "path": "marshruty/vinnyy-marshrut.md"
@@ -40473,7 +40854,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 3,
-        "word_count": 520,
+        "word_count": 535,
         "needs_attention": false
       },
       "path": "kultura/vino-argentiny.md"
@@ -40730,7 +41111,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 1058,
+        "word_count": 1108,
         "needs_attention": false
       },
       "path": "pereezd/viza-cifrovogo-kochevnika.md"
@@ -40812,7 +41193,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 724,
+        "word_count": 818,
         "needs_attention": false
       },
       "path": "puteshestvie/viza-i-granica-dlya-rossiyan.md"
@@ -40853,7 +41234,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 153,
+        "word_count": 163,
         "needs_attention": false
       },
       "path": "lichnyy-opyt/viza-kochevnika-ne-vnzh.md"
@@ -40971,7 +41352,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 600,
+        "word_count": 641,
         "needs_attention": false
       },
       "path": "transport/vnutrennie-aviabilety.md"
@@ -41013,7 +41394,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 1633,
+        "word_count": 1777,
         "needs_attention": false
       },
       "path": "pereezd/vnzh-argentina.md"
@@ -41055,7 +41436,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 378,
+        "word_count": 443,
         "needs_attention": false
       },
       "path": "pereezd/vnzh-po-uchebe.md"
@@ -41097,7 +41478,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 913,
+        "word_count": 985,
         "needs_attention": false
       },
       "path": "pereezd/vnzh-rantye.md"
@@ -41138,7 +41519,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 148,
+        "word_count": 164,
         "needs_attention": false
       },
       "path": "faq/vo-skolko-uzhinayut-v-argentine.md"
@@ -41168,18 +41549,18 @@
         "puteshestviya-po-argentine"
       ],
       "confidence": "medium",
-      "last_verified": "2026-07-01",
+      "last_verified": "2026-07-12",
       "long_form_source": null,
       "site_id_map": null,
       "site_ready": null,
       "editorial": {
         "sensitive": true,
         "policy_days": 45,
-        "review_due_at": "2026-08-15",
+        "review_due_at": "2026-08-26",
         "review_due": false,
         "missing_sources": false,
-        "source_count": 4,
-        "word_count": 544,
+        "source_count": 5,
+        "word_count": 607,
         "needs_attention": false
       },
       "path": "pereezd/voditelskie-prava.md"
@@ -41220,7 +41601,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 604,
+        "word_count": 678,
         "needs_attention": true
       },
       "path": "pereezd/voinskij-uchet-i-voennyj-bilet.md"
@@ -41406,7 +41787,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 4,
-        "word_count": 716,
+        "word_count": 748,
         "needs_attention": false
       },
       "path": "pereezd/vossoedinenie-semi.md"
@@ -41592,7 +41973,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 549,
+        "word_count": 604,
         "needs_attention": false
       },
       "path": "dengi/zashchita-nakoplenij-ot-inflyacii.md"
@@ -41642,7 +42023,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 540,
+        "word_count": 563,
         "needs_attention": false
       },
       "path": "bezopasnost/zemletryaseniya-i-vulkany.md"
@@ -41684,7 +42065,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 418,
+        "word_count": 461,
         "needs_attention": false
       },
       "path": "zhile/zhile-dlya-turistov.md"
@@ -41726,7 +42107,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 354,
+        "word_count": 378,
         "needs_attention": false
       },
       "path": "pereezd/zhile-i-arenda.md"
@@ -41768,7 +42149,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 587,
+        "word_count": 684,
         "needs_attention": false
       },
       "path": "kultura/zhizn-bez-ispanskogo.md"
@@ -41810,7 +42191,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 573,
+        "word_count": 737,
         "needs_attention": false
       },
       "path": "pereezd/zhizn-na-pensii.md"

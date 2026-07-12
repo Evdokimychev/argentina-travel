@@ -13,6 +13,7 @@ describe("media-cdn", () => {
   });
 
   it("returns site-relative URLs when CDN is not configured", () => {
+    vi.stubEnv("NEXT_PUBLIC_MEDIA_CDN_URL", "");
     expect(mediaUrl("media/places/buenos-aires/hero.jpg")).toBe("/media/places/buenos-aires/hero.jpg");
   });
 

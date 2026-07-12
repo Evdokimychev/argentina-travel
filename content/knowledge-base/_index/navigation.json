@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-12 01:14",
+  "generated_at": "2026-07-12 11:27",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -525,6 +525,12 @@
           "title": "Cerros Catedral y Перито-Морено"
         },
         {
+          "id": "certificado-de-legalidad-prav",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Certificado de legalidad водительских прав: что это и зачем"
+        },
+        {
           "id": "cholila",
           "type": "attraction",
           "subtype": null,
@@ -799,6 +805,12 @@
           "type": "attraction",
           "subtype": null,
           "title": "Плотина Писку-Яку"
+        },
+        {
+          "id": "dokumenty-dlya-poezdki-na-avto",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине"
         },
         {
           "id": "dostupnaya-sreda-i-invalidnost",
@@ -1377,6 +1389,12 @@
           "title": "Как платить в Аргентине, если карты российских банков не работают?"
         },
         {
+          "id": "kak-poluchit-prava-v-argentine",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля"
+        },
+        {
           "id": "kakie-privivki-nuzhny-dlya-argentiny",
           "type": "faq",
           "subtype": null,
@@ -1789,6 +1807,12 @@
           "type": "faq",
           "subtype": null,
           "title": "Можно ли доехать до Ушуайи на машине?"
+        },
+        {
+          "id": "mozhno-li-ezdit-po-inostrannym-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли ездить в Аргентине по иностранным (российским) правам?"
         },
         {
           "id": "mozhno-li-pit-vodu-iz-krana",
@@ -2929,6 +2953,12 @@
           "type": "author_tip",
           "subtype": "observation",
           "title": "Пустынные парки NOA и Куйо: один и тот же приём — ловить рассвет и закат, избегать полдня"
+        },
+        {
+          "id": "shtrafy-i-scoring",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине"
         },
         {
           "id": "sierra-de-la-ventana",
@@ -6744,6 +6774,12 @@
           "title": "Быт в Аргентине: квартиры, отопление, коммуналка"
         },
         {
+          "id": "certificado-de-domicilio",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как подтвердить адрес в Аргентине: certificado de domicilio"
+        },
+        {
           "id": "chto-delat-krome-dostoprimechatelnostej",
           "type": "faq",
           "subtype": null,
@@ -6760,6 +6796,12 @@
           "type": "faq",
           "subtype": null,
           "title": "Что такое карта SUBE и нужна ли она туристу?"
+        },
+        {
+          "id": "dokumenty-dlya-poezdki-na-avto",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине"
         },
         {
           "id": "dostupnaya-sreda-i-invalidnost",
@@ -6832,6 +6874,12 @@
           "type": "guide",
           "subtype": "accommodation",
           "title": "Жильё в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gosudarstvennye-prilozheniya",
+          "type": "guide",
+          "subtype": "digital",
+          "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA"
         },
         {
           "id": "govoryat-li-v-argentine-po-anglijski",
@@ -7080,6 +7128,12 @@
           "title": "Сдача недвижимости в аренду в Аргентине: доход и налоги"
         },
         {
+          "id": "shtrafy-i-scoring",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине"
+        },
+        {
           "id": "sistema-zdravoohraneniya",
           "type": "guide",
           "subtype": "health",
@@ -7301,6 +7355,12 @@
           "title": "Работа в Аргентине: рынок труда, зарплаты и как искать"
         },
         {
+          "id": "raskhozhdeniya-dni-cuit-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить"
+        },
+        {
           "id": "sdacha-nedvizhimosti-v-arendu",
           "type": "guide",
           "subtype": "finance",
@@ -7384,6 +7444,18 @@
           "title": "Быт в Аргентине: квартиры, отопление, коммуналка"
         },
         {
+          "id": "certificado-de-domicilio",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как подтвердить адрес в Аргентине: certificado de domicilio"
+        },
+        {
+          "id": "certificado-de-legalidad-prav",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Certificado de legalidad водительских прав: что это и зачем"
+        },
+        {
           "id": "chek-list-pereezda",
           "type": "guide",
           "subtype": "immigration",
@@ -7454,6 +7526,12 @@
           "type": "faq",
           "subtype": null,
           "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?"
+        },
+        {
+          "id": "kak-poluchit-prava-v-argentine",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля"
         },
         {
           "id": "kak-snyat-kvartiru-bez-garanta",
@@ -7594,6 +7672,12 @@
           "title": "Работа в Аргентине: рынок труда, зарплаты и как искать"
         },
         {
+          "id": "raskhozhdeniya-dni-cuit-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить"
+        },
+        {
           "id": "rody-v-argentine",
           "type": "faq",
           "subtype": null,
@@ -7640,6 +7724,12 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Где найти своих и как пережить адаптацию в Аргентине"
+        },
+        {
+          "id": "status-expediente-migraciones",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как узнать статус дела (expediente) в Migraciones"
         },
         {
           "id": "stoit-li-pereezzhat",
@@ -7743,6 +7833,18 @@
           "title": "Апостиль и присяжный перевод документов для Аргентины"
         },
         {
+          "id": "certificado-de-domicilio",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как подтвердить адрес в Аргентине: certificado de domicilio"
+        },
+        {
+          "id": "certificado-de-legalidad-prav",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Certificado de legalidad водительских прав: что это и зачем"
+        },
+        {
           "id": "chek-list-pereezda",
           "type": "guide",
           "subtype": "immigration",
@@ -7773,10 +7875,22 @@
           "title": "CUIL, CUIT, CDI, AFIP/ARCA — путаница в названиях, которая стоит реального времени"
         },
         {
+          "id": "dokumenty-dlya-poezdki-na-avto",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Какие документы нужны, чтобы ездить на автомобиле в Аргентине"
+        },
+        {
           "id": "gid-po-dokumentam",
           "type": "guide",
           "subtype": "immigration",
           "title": "Документы и легализация в Аргентине: полный тематический гид"
+        },
+        {
+          "id": "gosudarstvennye-prilozheniya",
+          "type": "guide",
+          "subtype": "digital",
+          "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA"
         },
         {
           "id": "grazhdanstvo",
@@ -7797,6 +7911,12 @@
           "title": "Правда ли, что гражданство Аргентины можно получить за 2 года?"
         },
         {
+          "id": "kak-poluchit-prava-v-argentine",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как получить водительские права в Аргентине: иностранные, обмен и с нуля"
+        },
+        {
           "id": "kakie-dokumenty-vezti-s-soboj",
           "type": "faq",
           "subtype": null,
@@ -7813,6 +7933,12 @@
           "type": "faq",
           "subtype": null,
           "title": "Можно ли жить в Аргентине на визаранах, как в Азии?"
+        },
+        {
+          "id": "mozhno-li-ezdit-po-inostrannym-pravam",
+          "type": "faq",
+          "subtype": null,
+          "title": "Можно ли ездить в Аргентине по иностранным (российским) правам?"
         },
         {
           "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
@@ -7857,6 +7983,12 @@
           "title": "Рабочая резиденция в Аргентине: наём местным работодателем"
         },
         {
+          "id": "raskhozhdeniya-dni-cuit-cuil",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Расхождения в данных DNI, CUIT и CUIL: как исправить"
+        },
+        {
           "id": "rody-i-beremennost",
           "type": "guide",
           "subtype": "health",
@@ -7875,10 +8007,22 @@
           "title": "Школа для детей в Аргентине: система образования для семей релокантов"
         },
         {
+          "id": "shtrafy-i-scoring",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Штрафы, баллы (scoring) и проверка задолженности за рулём в Аргентине"
+        },
+        {
           "id": "skolko-stoit-oformit-vnzh",
           "type": "faq",
           "subtype": null,
           "title": "Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?"
+        },
+        {
+          "id": "status-expediente-migraciones",
+          "type": "guide",
+          "subtype": "immigration",
+          "title": "Как узнать статус дела (expediente) в Migraciones"
         },
         {
           "id": "viza-cifrovogo-kochevnika",

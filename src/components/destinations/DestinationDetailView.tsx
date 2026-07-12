@@ -17,6 +17,7 @@ import DestinationInsuranceTeaser from "@/components/destinations/DestinationIns
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { PageSlotImage } from "@/components/media/ContentSectionImage";
 import RelatedContentCards from "@/components/content/RelatedContentCards";
+import DetailPhotoGallery from "@/components/shared/DetailPhotoGallery";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import { SafeImage } from "@/components/ui/safe-image";
 import { Button } from "@/components/ui/button";
@@ -282,32 +283,15 @@ export default function DestinationDetailView({
                 >
                   Галерея
                 </h2>
-                <div className="mt-4 grid gap-3 sm:grid-cols-3">
-                  {destination.gallery.map((src, i) => (
-                    <div
-                      key={src}
-                      className={cn(
-                        "relative overflow-hidden rounded-xl",
-                        i === 0 && destination.gallery!.length >= 3
-                          ? "aspect-[4/3] sm:row-span-1"
-                          : "aspect-[4/3]"
-                      )}
-                    >
-                      <SafeImage
-                        src={src}
-                        alt={destinationGalleryAlt(
-                          destination.name,
-                          i,
-                          destination.gallery?.length,
-                        )}
-                        fill
-                        className="object-cover"
-                        sizes="33vw"
-                        placeholderVariant="destination"
-                      />
-                    </div>
-                  ))}
-                </div>
+                <DetailPhotoGallery
+                  images={destination.gallery}
+                  title={destination.name}
+                  altForImage={(i) =>
+                    destinationGalleryAlt(destination.name, i, destination.gallery?.length)
+                  }
+                  className="mt-4 sm:grid-cols-3"
+                  placeholderVariant="destination"
+                />
               </div>
             ) : null}
 

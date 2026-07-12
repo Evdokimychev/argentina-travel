@@ -33,4 +33,4 @@ sources:
 
 - [Puerto Pirámides — Whales Season](https://www.puertopiramides.gov.ar/whales-season/) — официальные рамки сезона, порт лодочных туров (en/es).
 - [Paikea.ru — киты и пингвины в Патагонии](http://paikea.ru/whales-penguins-patagonia-argentina/) — сезонность и личный опыт (ru).
-- Записи [[peninsula-valdes]] и [[puerto-madryn]] этой базы знаний — сезонные окна всех видов, логистика.
+- Записи [[peninsula-valdes|Полуостров Вальдес]] и [[puerto-madryn|Пуэрто-Мадрин]] этой базы знаний — сезонные окна всех видов, логистика.

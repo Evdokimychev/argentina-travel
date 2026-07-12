@@ -1,5 +1,11 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/cn";
+import {
+  tokenCardInteractiveClass,
+  tokenCardSurfaceClass,
+  tokenFocusRingClass,
+} from "@/lib/design-tokens";
 import type { RelatedContentItem, RelatedContentKind } from "@/types/content-reading";
 
 type RelatedContentCardsProps = {
@@ -34,7 +40,13 @@ export default function RelatedContentCards({
           <li key={item.href}>
             <Link
               href={item.href}
-              className="group flex h-full flex-col rounded-2xl border border-gray-100 bg-surface-muted/40 px-4 py-3 transition-colors hover:border-sky/25 hover:bg-sky/5"
+              className={cn(
+                "group flex h-full flex-col px-4 py-3",
+                tokenCardSurfaceClass,
+                tokenCardInteractiveClass,
+                tokenFocusRingClass,
+                "hover:border-sky/25 hover:bg-sky/5",
+              )}
             >
               <span className="text-[10px] font-semibold uppercase tracking-wider text-sky">
                 {kindLabels[item.kind ?? "link"]}

@@ -288,6 +288,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   return (
     <div className="relative h-[calc(100dvh-var(--site-header-full-height,72px))] min-h-[520px] w-full">
+      <h1 className="sr-only">Интерактивная карта Аргентины</h1>
       <ArgentinaMapLibreCanvas
         objects={visibleObjects}
         routes={visibleRoutes}

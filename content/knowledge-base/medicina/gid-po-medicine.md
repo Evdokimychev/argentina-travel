@@ -28,26 +28,26 @@ sources: []
 
 ## Как устроена система
 
-- [[sistema-zdravoohraneniya]] — público / obra social / prepaga, скорая, аптеки.
-- [[medicina-i-strahovka]] — какую страховку выбрать, prepaga, покрытие.
+- [[sistema-zdravoohraneniya|Система здравоохранения Аргентины]] — público / obra social / prepaga, скорая, аптеки.
+- [[medicina-i-strahovka|Медицина и страховка в Аргентине]] — какую страховку выбрать, prepaga, покрытие.
 
 ## Ситуации
 
-- [[rody-i-beremennost]] — роды и беременность, гражданство ребёнка.
-- [[dostupnaya-sreda-i-invalidnost]] — доступность и CUD для людей с инвалидностью.
-- [[zhizn-na-pensii]] — медицина в пожилом возрасте (prepaga и нюансы).
+- [[rody-i-beremennost|Роды и беременность в Аргентине: полное руководство]] — роды и беременность, гражданство ребёнка.
+- [[dostupnaya-sreda-i-invalidnost|Доступная среда: путешествие и жизнь с инвалидностью в Аргентине]] — доступность и CUD для людей с инвалидностью.
+- [[zhizn-na-pensii|Жизнь на пенсии в Аргентине: переезд для пенсионера]] — медицина в пожилом возрасте (prepaga и нюансы).
 
 ## Практические вопросы (FAQ)
 
-- [[nuzhna-li-strahovka-dlya-vezda]] — страховка на въезд.
-- [[besplatna-li-medicina-dlya-turista]] — бесплатна ли помощь туристу.
-- [[mozhno-li-pit-vodu-iz-krana]] — вода из-под крана.
-- [[kakie-privivki-nuzhny-dlya-argentiny]] — прививки.
+- [[nuzhna-li-strahovka-dlya-vezda|Нужна ли медицинская страховка для поездки в Аргентину?]] — страховка на въезд.
+- [[besplatna-li-medicina-dlya-turista|Бесплатна ли медицина в Аргентине для туриста?]] — бесплатна ли помощь туристу.
+- [[mozhno-li-pit-vodu-iz-krana|Можно ли пить воду из-под крана в Аргентине?]] — вода из-под крана.
+- [[kakie-privivki-nuzhny-dlya-argentiny|Какие прививки нужны для поездки в Аргентину?]] — прививки.
 
 ## Другие тематические гиды
 
-- [[gid-po-dengam]] · [[gid-po-dokumentam]] · [[gid-po-zhilyu]] · [[gid-po-transportu]] · [[gid-po-kulture]]
-- Пути целиком: [[gid-puteshestvennika]] · [[gid-relokanta]].
+- [[gid-po-dengam|Деньги в Аргентине: полный тематический гид]] · [[gid-po-dokumentam|Документы и легализация в Аргентине: полный тематический гид]] · [[gid-po-zhilyu|Жильё в Аргентине: полный тематический гид]] · [[gid-po-transportu|Транспорт в Аргентине: полный тематический гид]] · [[gid-po-kulture|Культура и жизнь Аргентины: полный тематический гид]]
+- Пути целиком: [[gid-puteshestvennika|Гид путешественника: с чего начать поездку в Аргентину]] · [[gid-relokanta|Гид релоканта: весь путь переезда в Аргентину по этапам]].
 
 ## Источники
 

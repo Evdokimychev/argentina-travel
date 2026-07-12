@@ -33,4 +33,4 @@ sources:
 
 - [Gobierno de Mendoza — permisos temporada 2025-2026](https://www.mendoza.gov.ar/prensa/ya-esta-habilitada-la-venta-anticipada-de-permisos-para-la-temporada-2025-2026-del-parque-provincial-aconcagua/) — официальные категории и тарифы (es).
 - [INKA Expediciones — Park Aconcagua Entrance Permit](https://inkaexpediciones.com/tips/park-aconcagua-entrance-permit/) — разница треккинговых категорий и пермита на восхождение (en).
-- Запись [[aconcagua-provincial-park]] этой базы знаний — полный разбор форматов посещения и цен.
+- Запись [[aconcagua-provincial-park|Провинциальный парк Аконкагуа]] этой базы знаний — полный разбор форматов посещения и цен.

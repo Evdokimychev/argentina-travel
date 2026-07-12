@@ -11,7 +11,7 @@ site_ready: true
 site_sections: [dokumenty-i-legalizatsiya, pereezd-v-argentinu]
 applies_to: relocant
 tags: [навигация, документы, легализация, резиденция, точка входа]
-related: [vnzh-argentina, dni-cuil, grazhdanstvo, apostil-i-perevod-dokumentov, viza-i-granica-dlya-rossiyan]
+related: [vnzh-argentina, dni-cuil, grazhdanstvo, apostil-i-perevod-dokumentov, viza-i-granica-dlya-rossiyan, kak-poluchit-prava-v-argentine, certificado-de-domicilio, raskhozhdeniya-dni-cuit-cuil, status-expediente-migraciones, certificado-de-legalidad-prav]
 warnings:
   - "Миграционные нормы активно менялись (свежие декреты, DNU 366/2025) — конкретику и сроки сверяйте на официальных источниках (Migraciones/RaDEX) и у профильного юриста; ссылки ниже ведут в записи с флажками."
 recommendations:
@@ -28,32 +28,32 @@ sources: []
 
 ## Въезд (турист)
 
-- [[viza-i-granica-dlya-rossiyan]] — безвиз, что спрашивают на границе, продление, overstay.
-- [[nuzhna-li-strahovka-dlya-vezda]], [[mozhno-li-delat-vizaran]] — страховка на въезд и «визаран».
+- [[viza-i-granica-dlya-rossiyan|Виза и граница для россиян: пустят ли и что спрашивают]] — безвиз, что спрашивают на границе, продление, overstay.
+- [[nuzhna-li-strahovka-dlya-vezda|Нужна ли медицинская страховка для поездки в Аргентину?]], [[mozhno-li-delat-vizaran|Можно ли жить в Аргентине на визаранах, как в Азии?]] — страховка на въезд и «визаран».
 
 ## Резиденция: карта и основания
 
-- [[vnzh-argentina]] — все легальные пути резиденции (начните отсюда).
-- Основания: [[rabochaya-viza]] (работа) · [[vnzh-rantye]] (рантье/пенсия) · [[vnzh-po-uchebe]] (учёба) · [[vossoedinenie-semi]] (семья) · [[viza-cifrovogo-kochevnika]] (удалёнка).
-- [[chto-takoe-prekariya]] — precaria на время ожидания.
+- [[vnzh-argentina|ВНЖ Аргентины: все легальные пути резиденции]] — все легальные пути резиденции (начните отсюда).
+- Основания: [[rabochaya-viza|Рабочая резиденция в Аргентине: наём местным работодателем]] (работа) · [[vnzh-rantye|Резиденция рантье и пенсионера в Аргентине: пошаговый гайд]] (рантье/пенсия) · [[vnzh-po-uchebe|ВНЖ Аргентины по учёбе (студенческая резиденция)]] (учёба) · [[vossoedinenie-semi|Резиденция по семейному признаку (vínculo familiar): супруги, дети, родители]] (семья) · [[viza-cifrovogo-kochevnika|Виза цифрового кочевника Аргентины]] (удалёнка).
+- [[chto-takoe-prekariya|Что такое прекария (Residencia Precaria) в Аргентине и что она даёт?]] — precaria на время ожидания.
 
 ## DNI, CUIL и гражданство
 
-- [[dni-cuil]] — DNI и налоговый номер пошагово.
-- [[grazhdanstvo]] — натурализация (~2 года) и правила.
-- [[kak-poluchit-grazhdanstvo-za-2-goda]], [[nuzhno-li-otkazyvatsya-ot-grazhdanstva]] — сроки и двойное гражданство.
+- [[dni-cuil|DNI и CUIL/CUIT в Аргентине: пошагово для иностранца]] — DNI и налоговый номер пошагово.
+- [[grazhdanstvo|Гражданство Аргентины: натурализация и правила 2026]] — натурализация (~2 года) и правила.
+- [[kak-poluchit-grazhdanstvo-za-2-goda|Правда ли, что гражданство Аргентины можно получить за 2 года?]], [[nuzhno-li-otkazyvatsya-ot-grazhdanstva|Нужно ли отказываться от российского гражданства при получении аргентинского?]] — сроки и двойное гражданство.
 
 ## Подготовка документов
 
-- [[apostil-i-perevod-dokumentov]] — апостиль в России + присяжный перевод.
-- [[priznanie-diploma]] — признание (гомологация) диплома для работы по специальности.
-- [[kakie-dokumenty-vezti-s-soboj]] — что взять с собой.
-- [[voinskij-uchet-i-voennyj-bilet]] — для мужчин призывного возраста.
+- [[apostil-i-perevod-dokumentov|Апостиль и присяжный перевод документов для Аргентины]] — апостиль в России + присяжный перевод.
+- [[priznanie-diploma|Признание иностранного диплома в Аргентине (гомологация)]] — признание (гомологация) диплома для работы по специальности.
+- [[kakie-dokumenty-vezti-s-soboj|Какие документы везти с собой при переезде в Аргентину?]] — что взять с собой.
+- [[voinskij-uchet-i-voennyj-bilet|Воинский учёт и военный билет при переезде в Аргентину]] — для мужчин призывного возраста.
 
 ## Другие тематические гиды
 
-- [[gid-po-dengam]] · [[gid-po-zhilyu]] · [[gid-po-medicine]] · [[gid-po-transportu]] · [[gid-po-kulture]]
-- Путь переезда целиком — [[gid-relokanta]].
+- [[gid-po-dengam|Деньги в Аргентине: полный тематический гид]] · [[gid-po-zhilyu|Жильё в Аргентине: полный тематический гид]] · [[gid-po-medicine|Медицина и здоровье в Аргентине: полный тематический гид]] · [[gid-po-transportu|Транспорт в Аргентине: полный тематический гид]] · [[gid-po-kulture|Культура и жизнь Аргентины: полный тематический гид]]
+- Путь переезда целиком — [[gid-relokanta|Гид релоканта: весь путь переезда в Аргентину по этапам]].
 
 ## Источники
 

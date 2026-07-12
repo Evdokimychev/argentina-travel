@@ -1,7 +1,6 @@
 import {
   fetchPublishedCmsDocumentsForCutover,
   getCmsCutoverFlags,
-  placeListingsFromCmsDocuments,
 } from "@/lib/cms/cms-cutover";
 import {
   fetchPlaceBySlugServer,
@@ -68,20 +67,15 @@ export function mergePlaceCatalog(filePlaces: PlaceListing[], cmsPlaces: CmsDocu
 }
 
 export async function resolvePlaceCatalog(locale = "ru"): Promise<PlaceListing[]> {
-  const cutover = await getCmsCutoverFlags();
   const supabase = await getCmsServerClient();
-
-  if (cutover.place) {
-    if (!supabase) return [];
-    const cmsPlaces = await fetchPublishedCmsDocumentsForCutover("place", locale);
-    const orderSlugs = await fetchPlaceSlugsServer();
-    return placeListingsFromCmsDocuments(cmsPlaces, orderSlugs);
-  }
-
   const fallback = await fetchPlacesServer();
+
   if (!supabase) return fallback;
 
-  const cmsPlaces = await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "place", locale);
+  const cutover = await getCmsCutoverFlags();
+  const cmsPlaces = cutover.place
+    ? await fetchPublishedCmsDocumentsForCutover("place", locale)
+    : await fetchPublishedCmsDocumentsMergedByLocaleChain(supabase, "place", locale);
   if (cmsPlaces.length === 0) return fallback;
 
   return mergePlaceCatalog(fallback, cmsPlaces);
@@ -89,14 +83,13 @@ export async function resolvePlaceCatalog(locale = "ru"): Promise<PlaceListing[]
 
 /** Published CMS override merged with source place data by slug. */
 export async function resolvePlacePage(slug: string, locale = "ru"): Promise<PlaceDetail | null> {
-  const cutover = await getCmsCutoverFlags();
-  const fallback = cutover.place ? null : await fetchPlaceBySlugServer(slug);
+  const fallback = await fetchPlaceBySlugServer(slug);
   const supabase = await getCmsServerClient();
   const translationStatus = supabase
     ? await fetchCmsTranslationStatusForSlug(supabase, "place", slug, {
-        ruFallbackComplete: cutover.place ? false : Boolean(fallback),
+        ruFallbackComplete: Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(cutover.place ? false : Boolean(fallback));
+    : buildDefaultTranslationStatus(Boolean(fallback));
 
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "place",
@@ -112,7 +105,6 @@ export async function resolvePlacePage(slug: string, locale = "ru"): Promise<Pla
 }
 
 export async function listPublishedPlaceSlugs(locale = "ru"): Promise<string[]> {
-  const cutover = await getCmsCutoverFlags();
   const fallbackSlugs = await fetchPlaceSlugsServer();
-  return listPublishedCmsSlugs("place", fallbackSlugs, locale, { cmsOnly: cutover.place });
+  return listPublishedCmsSlugs("place", fallbackSlugs, locale);
 }

@@ -1,6 +1,6 @@
 {
   "ok": false,
-  "ranAt": "2026-07-06T18:07:42.049Z",
+  "ranAt": "2026-07-12T15:00:21.958Z",
   "baseUrl": "https://www.goargentina.ru",
   "checks": [
     {
@@ -20,8 +20,8 @@
     {
       "id": "env:NEXT_PUBLIC_YANDEX_METRIKA_ID",
       "label": "NEXT_PUBLIC_YANDEX_METRIKA_ID",
-      "status": "ok",
-      "message": "Задана — счётчик загрузится в production",
+      "status": "warn",
+      "message": "Не задана — Метрика не загрузится",
       "category": "env"
     },
     {
@@ -69,8 +69,8 @@
     {
       "id": "live:yandex-metrika",
       "label": "Live Yandex Metrika snippet (https://www.goargentina.ru)",
-      "status": "ok",
-      "message": "mc.yandex.ru/metrika найден в HTML",
+      "status": "skip",
+      "message": "NEXT_PUBLIC_YANDEX_METRIKA_ID не задан — проверка пропущена",
       "category": "live"
     },
     {
@@ -119,7 +119,7 @@
       "id": "live:sitemap",
       "label": "sitemap.xml доступен",
       "status": "ok",
-      "message": "923 URL",
+      "message": "1319 URL",
       "category": "live"
     },
     {
@@ -145,10 +145,10 @@
     }
   ],
   "summary": {
-    "ok": 5,
-    "warn": 6,
+    "ok": 3,
+    "warn": 7,
     "fail": 6,
-    "skip": 3
+    "skip": 4
   },
   "runbook": "docs/i2-analytics-gsc-runbook.md",
   "gtmEventsCount": 19,

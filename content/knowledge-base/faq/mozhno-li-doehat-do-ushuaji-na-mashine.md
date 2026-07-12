@@ -33,4 +33,4 @@ sources:
 
 - [Ushuaia Turismo — How to Get to Ushuaia by Car or Bus](https://www.ushuaiaturismo.com.ar/en/how-to-get-to-ushuaia-by-car-or-bus.html) — маршрут, переходы, паром (en).
 - [InterPatagonia — How to get to Ushuaia](https://www.interpatagonia.com/ushuaia/comollegar_i.html) — независимая перепроверка маршрута (en).
-- Запись [[ushuaia]] этой базы знаний — перелёт как основной способ, логистика города.
+- Запись [[ushuaia|Ушуайя]] этой базы знаний — перелёт как основной способ, логистика города.

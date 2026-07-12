@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, MapPin, X } from "lucide-react";
 import Hero from "@/components/Hero";
 import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
@@ -24,6 +24,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
     initialRegion && GALLERY_REGIONS.some((r) => r.slug === initialRegion) ? initialRegion : null
   );
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   useSiteHeaderOverlayLock(lightboxItem != null);
 
@@ -40,6 +41,22 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
     const url = slug ? `/gallery?region=${slug}` : "/gallery";
     window.history.replaceState(null, "", url);
   }, []);
+
+  useEffect(() => {
+    if (!lightboxItem) return;
+
+    closeButtonRef.current?.focus();
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        setLightboxItem(null);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [lightboxItem]);
 
   return (
     <>
@@ -126,21 +143,26 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
 
       {lightboxItem ? (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-charcoal/90 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-lightbox flex items-center justify-center bg-charcoal/90 p-4 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-label={lightboxItem.title}
+          onClick={() => setLightboxItem(null)}
         >
           <button
+            ref={closeButtonRef}
             type="button"
             onClick={() => setLightboxItem(null)}
-            className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
             aria-label="Закрыть"
           >
             <X className="h-5 w-5" />
           </button>
 
-          <div className="relative max-h-[85vh] w-full max-w-5xl overflow-hidden rounded-2xl bg-charcoal shadow-elevated">
+          <div
+            className="relative max-h-[85vh] w-full max-w-5xl overflow-hidden rounded-panel bg-charcoal shadow-elevated"
+            onClick={(event) => event.stopPropagation()}
+          >
             <div className="relative aspect-[16/10] max-h-[70vh] w-full">
               <Image
                 src={lightboxItem.imageUrl}
@@ -161,7 +183,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
               </div>
               <Link
                 href={`/tours/${lightboxItem.tourSlug}`}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-sky px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky/90"
+                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-sky-ink px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-ink/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
               >
                 Смотреть тур
                 <ArrowRight className="h-4 w-4" />

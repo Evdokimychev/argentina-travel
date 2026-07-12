@@ -14,6 +14,7 @@ import {
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
 import PageBreadcrumbs from "@/components/navigation/PageBreadcrumbs";
 import PlaceFavoriteButton from "@/components/places/PlaceFavoriteButton";
+import DetailPhotoGallery from "@/components/shared/DetailPhotoGallery";
 import { favoriteHeaderButtonClass } from "@/lib/favorite-button-styles";
 import PlaceTransportMapSection from "@/components/places/PlaceTransportMapSection";
 import RelatedPlacesSection from "@/components/places/RelatedPlacesSection";
@@ -115,13 +116,13 @@ export default function PlaceDetailView({
           {place.gallery.length > 1 ? (
             <section>
               <h2 className="font-heading text-xl font-bold text-charcoal">Галерея</h2>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                {place.gallery.map((src, i) => (
-                  <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-card">
-                    <Image src={src} alt={galleryAlts[i] ?? `${place.name} — фото ${i + 1}`} fill className="object-cover" sizes="50vw" />
-                  </div>
-                ))}
-              </div>
+              <DetailPhotoGallery
+                images={place.gallery}
+                title={place.name}
+                altForImage={(i) => galleryAlts[i] ?? `${place.name} — фото ${i + 1}`}
+                className="mt-4 sm:grid-cols-2"
+                placeholderVariant="generic"
+              />
             </section>
           ) : null}
 

@@ -48685,6 +48685,132 @@
       "attributionPage": "https://www.argentina.travel/actividades/glaciar-ojo-del-albino",
       "kbArticleId": "glaciar-ojo-del-albino",
       "destinationId": "patagonia"
+    },
+    {
+      "id": "place-lujan-hero",
+      "title": "Лухан — обложка",
+      "alt": "Лухан, Аргентина",
+      "caption": "Лухан, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "lujan",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Bas%C3%ADlica_Luj%C3%A1n_desde_Plaza_Belgrano.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Dario Alpern",
+      "localPath": "media/places/lujan/hero.jpg",
+      "placeId": "lujan",
+      "role": "hero"
+    },
+    {
+      "id": "place-mar-de-las-pampas-hero",
+      "title": "Мар-де-лас-Пампас — обложка",
+      "alt": "Пляж Мар-де-лас-Пампас, Аргентина",
+      "caption": "Пляж Мар-де-лас-Пампас, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "mar-de-las-pampas",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Playa_de_mar_de_las_pampas.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Fernando Martello",
+      "localPath": "media/places/mar-de-las-pampas/hero.jpg",
+      "placeId": "mar-de-las-pampas",
+      "role": "hero"
+    },
+    {
+      "id": "place-necochea-hero",
+      "title": "Некочеа — обложка",
+      "alt": "Некочеа, Аргентина",
+      "caption": "Некочеа, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "necochea",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Playa_de_Necochea_(Argentina).JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Lucas Gagliardi",
+      "localPath": "media/places/necochea/hero.jpg",
+      "placeId": "necochea",
+      "role": "hero"
+    },
+    {
+      "id": "place-pinamar-hero",
+      "title": "Пинамар — обложка",
+      "alt": "Пинамар, Аргентина",
+      "caption": "Пинамар, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "pinamar",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Playa_y_muelle_en_Pinamar.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Dario Alpern",
+      "localPath": "media/places/pinamar/hero.jpg",
+      "placeId": "pinamar",
+      "role": "hero"
+    },
+    {
+      "id": "place-villa-gesell-hero",
+      "title": "Вилья-Хесель — обложка",
+      "alt": "Вилья-Хесель, Аргентина",
+      "caption": "Вилья-Хесель, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "villa-gesell",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Villa_Gesell_playa_01.JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Roberto Fiadone",
+      "localPath": "media/places/villa-gesell/hero.jpg",
+      "placeId": "villa-gesell",
+      "role": "hero"
+    },
+    {
+      "id": "place-sierra-de-la-ventana-hero",
+      "title": "Сьерра-де-ла-Вентана — обложка",
+      "alt": "Сьерра-де-ла-Вентана, Аргентина",
+      "caption": "Сьерра-де-ла-Вентана, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "sierra-de-la-ventana",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Sierra_de_la_Ventana_Arroyo_Sauce.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Mauryfrapi",
+      "localPath": "media/places/sierra-de-la-ventana/hero.jpg",
+      "placeId": "sierra-de-la-ventana",
+      "role": "hero"
+    },
+    {
+      "id": "place-tandil-hero",
+      "title": "Тандиль — обложка",
+      "alt": "Тандиль, Аргентина",
+      "caption": "Тандиль, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "tandil",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Monumento_Cerro_del_Libertador_General_San_Martin,_Tandil.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Roberto Fiadone",
+      "localPath": "media/places/tandil/hero.jpg",
+      "placeId": "tandil",
+      "role": "hero"
     }
   ]
 }

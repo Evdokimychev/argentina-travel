@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import HubHero from "@/components/guide/hub/HubHero";
+import RelatedContentCards from "@/components/content/RelatedContentCards";
 import GuidePillarCta from "@/components/guide/GuidePillarCta";
 import GuidePillarFaq from "@/components/guide/GuidePillarFaq";
 import GuideSectionNav from "@/components/guide/GuideSectionNav";
@@ -18,6 +19,51 @@ import { GUIDE_HUB } from "@/data/guide-hub-index-content";
 import { getGuideTopicIcon } from "@/lib/guide-nav-icons";
 import { cn } from "@/lib/cn";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
+import {
+  tokenCardInteractiveClass,
+  tokenCardSurfaceClass,
+  tokenFocusRingClass,
+} from "@/lib/design-tokens";
+import type { RelatedContentItem } from "@/types/content-reading";
+
+const GUIDE_KB_LINKS: RelatedContentItem[] = [
+  {
+    title: "Подготовка к поездке",
+    href: "/baza-znaniy/podgotovka-k-poezdke",
+    description: "Что проверить перед вылетом: документы, страховка, связь, деньги и маршрут.",
+    kind: "link",
+  },
+  {
+    title: "Деньги и обмен валюты",
+    href: "/baza-znaniy/gid-po-dengam",
+    description: "Песо, наличные доллары, карты и реальные сценарии оплаты в поездке.",
+    kind: "link",
+  },
+  {
+    title: "Транспорт по стране",
+    href: "/baza-znaniy/gid-po-transportu",
+    description: "Внутренние рейсы, автобусы, аренда автомобиля и длинные переезды.",
+    kind: "link",
+  },
+  {
+    title: "Безопасность в Аргентине",
+    href: "/baza-znaniy/bezopasnost-argentina",
+    description: "Риски больших городов, тропы, погода и спокойная базовая осмотрительность.",
+    kind: "link",
+  },
+  {
+    title: "eSIM и связь",
+    href: "/baza-znaniy/esim-i-svyaz",
+    description: "Как оставаться на связи: eSIM, местные операторы, мессенджеры и карты.",
+    kind: "link",
+  },
+  {
+    title: "Водительские права",
+    href: "/baza-znaniy/voditelskie-prava",
+    description: "Что важно знать перед арендой автомобиля и поездками между регионами.",
+    kind: "link",
+  },
+];
 
 export default function GuideHubView() {
   const { t } = useLocaleCurrency();
@@ -72,7 +118,11 @@ export default function GuideHubView() {
                   {hub.planning.cards.map((card) => (
                     <article
                       key={card.title}
-                      className="flex flex-col rounded-2xl border border-gray-100 bg-surface-muted/40 p-4 transition-shadow hover:shadow-md"
+                      className={cn(
+                        "flex flex-col p-4",
+                        tokenCardSurfaceClass,
+                        tokenCardInteractiveClass,
+                      )}
                     >
                       <span className="text-2xl" aria-hidden>
                         {card.emoji}
@@ -93,6 +143,17 @@ export default function GuideHubView() {
                 </div>
               </HubSection>
 
+              <HubSection
+                id="knowledge-base"
+                title="Полезно знать перед поездкой"
+                subtitle="Короткий путь из путеводителя к практическим материалам базы знаний: деньги, связь, документы, безопасность и транспорт."
+              >
+                <RelatedContentCards
+                  title="Практические материалы"
+                  items={GUIDE_KB_LINKS}
+                />
+              </HubSection>
+
               {hub.topicGroups.map((group) => (
                 <HubSection
                   key={group.id}
@@ -107,7 +168,13 @@ export default function GuideHubView() {
                         <Link
                           key={topic.slug}
                           href={topic.href}
-                          className="group flex flex-col rounded-2xl border border-gray-100 bg-white p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
+                          className={cn(
+                            "group flex flex-col p-4",
+                            tokenCardSurfaceClass,
+                            tokenCardInteractiveClass,
+                            tokenFocusRingClass,
+                            "hover:border-sky/30 hover:bg-sky/5",
+                          )}
                         >
                           <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky transition-colors group-hover:bg-sky group-hover:text-white">
                             <Icon className="h-5 w-5" aria-hidden />
@@ -135,7 +202,13 @@ export default function GuideHubView() {
                       <Link
                         key={`all-${topic.slug}`}
                         href={topic.href}
-                        className="group flex items-start gap-3 rounded-2xl border border-gray-100 p-3 transition-colors hover:border-sky/30 hover:bg-sky/5"
+                        className={cn(
+                          "group flex items-start gap-3 p-3",
+                          tokenCardSurfaceClass,
+                          tokenCardInteractiveClass,
+                          tokenFocusRingClass,
+                          "hover:border-sky/30 hover:bg-sky/5",
+                        )}
                       >
                         <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-sky/10 text-sky transition-colors group-hover:bg-sky group-hover:text-white">
                           <Icon className="h-4 w-4" aria-hidden />
@@ -154,7 +227,7 @@ export default function GuideHubView() {
 
               <section
                 id="related"
-                className={cn(siteScrollAnchorClass, "rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8")}
+                className={cn(siteScrollAnchorClass, "rounded-panel border border-border-subtle bg-surface-elevated p-6 shadow-card sm:p-8")}
               >
                 <h2 className="font-heading text-xl font-bold text-charcoal">{t("guide.hub.section.related")}</h2>
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -162,7 +235,13 @@ export default function GuideHubView() {
                     <Link
                       key={link.href + link.title}
                       href={link.href}
-                      className="group flex items-start justify-between gap-3 rounded-2xl border border-gray-100 p-4 transition-colors hover:border-sky/30 hover:bg-sky/5"
+                      className={cn(
+                        "group flex items-start justify-between gap-3 p-4",
+                        tokenCardSurfaceClass,
+                        tokenCardInteractiveClass,
+                        tokenFocusRingClass,
+                        "hover:border-sky/30 hover:bg-sky/5",
+                      )}
                     >
                       <span>
                         <span className="block font-medium text-charcoal group-hover:text-sky">

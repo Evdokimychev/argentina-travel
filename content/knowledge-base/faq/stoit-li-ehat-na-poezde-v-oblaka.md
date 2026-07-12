@@ -33,4 +33,4 @@ sources:
 
 - [Tren a las Nubes — официальный сайт](https://trenalasnubes.com.ar/inicio-es/) — формат, высота, тарифы (es).
 - [Daytours4u — гид по туру 2026](https://www.daytours4u.com/es/travel-guide/tren-las-nubes-en-salta-guia-del-tour-2026) — свежая перепроверка расписания и цен (es).
-- Запись [[tren-a-las-nubes]] этой базы знаний — история линии и полный разбор.
+- Запись [[tren-a-las-nubes|Поезд в облака]] этой базы знаний — история линии и полный разбор.
