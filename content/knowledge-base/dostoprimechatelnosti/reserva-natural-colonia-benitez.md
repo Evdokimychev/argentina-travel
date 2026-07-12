@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-colonia-benitez
 type: attraction
-title: Colonia Benítez Nature Reserve
+title: "Природный заповедник Колония-Бенитес"
 title_es: Reserva Natural Colonia Benítez
 title_en: Colonia Benítez Nature Reserve
-summary: Recorre una reserva pequeña en extensión y grande en variedad de ambientes
-  naturales.
-status: stub
+summary: "Небольшой, но очень разнообразный заповедник в провинции Чако недалеко от Ресистенсии: влажные леса, пальмы и болота."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-Recorre una reserva pequeña en extensión y grande en variedad de ambientes naturales.
-
-Colonia Benítez Nature Reserve — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Колония-Бенитес мал по площади, но удивительно разнообразен: на небольшом участке соседствуют влажные чакские леса, пальмовые рощи и болота. Расположен недалеко от Ресистенсии и удобен для короткой вылазки на природу.
 
 ## Практическая информация
 

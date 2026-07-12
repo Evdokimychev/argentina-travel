@@ -38,6 +38,7 @@ how_to_get_there: Самолётом из Буэнос-Айреса (AEP) до �
   От города до Сьерра-де-лас-Кихадас ~120 км по трассе RN 147 (около 1,5 часов на
   машине).
 related:
+- merlo
 - sierra-de-las-quijadas
 - cuyo
 - mendoza

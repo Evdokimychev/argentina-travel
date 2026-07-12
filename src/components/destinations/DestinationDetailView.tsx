@@ -106,7 +106,7 @@ export default function DestinationDetailView({
     <>
       {flightSidebar}
       <DestinationInsuranceTeaser destinationName={destination.name} />
-      <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+      <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
         <div className="flex items-start gap-3">
           <CalendarDays className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
           <div>
@@ -114,7 +114,7 @@ export default function DestinationDetailView({
             <p className="mt-1 text-sm leading-relaxed text-slate">{destination.bestSeason}</p>
           </div>
         </div>
-        <div className="mt-4 flex items-start gap-3 border-t border-gray-100 pt-4">
+        <div className="mt-4 flex items-start gap-3 border-t border-border-subtle pt-4">
           <Clock className="mt-0.5 h-5 w-5 shrink-0 text-sky" aria-hidden />
           <div>
             <p className="text-sm font-semibold text-charcoal">Рекомендуемый срок</p>
@@ -208,7 +208,7 @@ export default function DestinationDetailView({
               </h2>
               <p className="mt-4">{destination.intro}</p>
               {linkedPlaceSlugs.length > 0 ? (
-                <div className="mt-6 rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-5 sm:p-6">
+                <div className="mt-6 rounded-card border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-5 sm:p-6">
                   <p className="text-sm font-medium text-charcoal">
                     {destination.id === "patagonia"
                       ? "Ключевые места Патагонии в справочнике"
@@ -229,7 +229,7 @@ export default function DestinationDetailView({
                         <Link
                           key={slug}
                           href={placeHref(slug)}
-                          className="inline-flex items-center gap-1.5 rounded-full border border-sky/25 bg-white px-3 py-1.5 text-sm font-medium text-sky hover:bg-sky/5"
+                          className="inline-flex items-center gap-1.5 rounded-full border border-sky/25 bg-surface-elevated px-3 py-1.5 text-sm font-medium text-sky-ink hover:bg-sky/5"
                         >
                           {place.name}
                           <ArrowRight className="h-3.5 w-3.5" aria-hidden />
@@ -238,7 +238,7 @@ export default function DestinationDetailView({
                     })}
                     <Link
                       href={destination.id === "patagonia" ? "/places?region=Патагония" : "/places"}
-                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-slate hover:text-sky"
+                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-slate hover:text-sky-ink"
                     >
                       {destination.id === "patagonia" ? "Все места Патагонии" : "Весь справочник"}
                     </Link>
@@ -265,7 +265,7 @@ export default function DestinationDetailView({
                 {destination.highlights.map((item) => (
                   <li
                     key={item}
-                    className="flex items-start gap-2.5 rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm text-charcoal shadow-sm"
+                    className="flex items-start gap-2.5 rounded-xl border border-border-subtle bg-surface-elevated px-4 py-3 text-sm text-charcoal shadow-sm"
                   >
                     <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-sky" aria-hidden />
                     {item}
@@ -314,7 +314,7 @@ export default function DestinationDetailView({
             <div
               id="how-to-get"
               className={cn(
-                "rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-6 sm:p-8",
+                "rounded-card border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-6 sm:p-8",
                 siteScrollAnchorClass
               )}
             >
@@ -330,7 +330,7 @@ export default function DestinationDetailView({
             {destination.travelTips.length > 0 ? (
               <div>
                 <div className="flex items-center gap-2">
-                  <Lightbulb className="h-5 w-5 text-amber-500" aria-hidden />
+                  <Lightbulb className="h-5 w-5 text-warning" aria-hidden />
                   <h2
                     id="travel-tips"
                     className={cn("font-heading text-xl font-bold text-charcoal", siteScrollAnchorClass)}
@@ -342,7 +342,7 @@ export default function DestinationDetailView({
                   {destination.travelTips.map((tip) => (
                     <li
                       key={tip}
-                      className="rounded-xl border border-amber-100/80 bg-amber-50/50 px-4 py-3 text-sm leading-relaxed text-charcoal"
+                      className="rounded-card border border-warning/20 bg-warning-muted px-4 py-3 text-sm leading-relaxed text-charcoal"
                     >
                       {tip}
                     </li>
@@ -377,11 +377,11 @@ export default function DestinationDetailView({
                   <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры в регионе</h2>
                   <p className="mt-2 text-slate">Пока нет точных совпадений — откройте полный каталог</p>
                 </div>
-                <Link href={catalogHref} className="text-sm font-medium text-sky hover:underline">
+                <Link href={catalogHref} className="text-sm font-medium text-sky-ink hover:underline">
                   Смотреть все в каталоге →
                 </Link>
               </div>
-              <div className="mt-8 rounded-2xl border border-dashed border-gray-200 bg-white px-6 py-12 text-center">
+              <div className="mt-8 rounded-card border border-dashed border-border-default bg-surface-elevated px-6 py-12 text-center">
                 <p className="font-medium text-charcoal">Туры по этому направлению скоро появятся</p>
                 <p className="mx-auto mt-2 max-w-md text-sm text-slate">
                   Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут.
@@ -396,7 +396,7 @@ export default function DestinationDetailView({
       </section>
 
       {relatedItems.length > 0 ? (
-        <section className="bg-white py-12 sm:py-16">
+        <section className="bg-surface-elevated py-12 sm:py-16">
           <div className={siteContainerClass}>
             <RelatedContentCards title="Связанные материалы" items={relatedItems} />
           </div>

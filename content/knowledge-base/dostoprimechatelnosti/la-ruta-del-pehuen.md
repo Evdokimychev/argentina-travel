@@ -1,11 +1,11 @@
 ---
 id: la-ruta-del-pehuen
 type: attraction
-title: Pehuén Route
+title: "Путь араукарии"
 title_es: La Ruta del Pehuén
 title_en: The Pehuén Route
-summary: Descubre un árbol con historia entre paisajes soñados de la Патагония argentina.
-status: stub
+summary: "Маршрут по землям священного дерева пеуэн (араукарии) в северной Патагонии, по местам народа мапуче."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre un árbol con historia entre paisajes soñados de la Патагония argentina.
-
-Pehuén Route — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+«Путь пеуэна» проходит по северу провинции Неукен, где растёт священное для мапуче дерево араукария (pehuén), дающее съедобные орехи-пиньоны. Озёра, вулканы и живая культура коренного народа складываются в атмосферный маршрут.
 
 ## Практическая информация
 

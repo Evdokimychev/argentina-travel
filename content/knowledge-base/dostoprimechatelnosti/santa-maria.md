@@ -1,12 +1,11 @@
 ---
 id: santa-maria
 type: attraction
-title: Santa María
+title: "Санта-Мария"
 title_es: Santa María
 title_en: Santa María
-summary: En el norte argentino, explora una tierra donde los incas y otras civilizaciones
-  dejaron su impronta cultural.
-status: stub
+summary: "Городок в долинах Кальчаки провинции Катамарка — земля древних культур, виноградников торронтес и археологии."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el norte argentino, explora una tierra donde los incas y otras civilizaciones dejaron su impronta cultural.
-
-Santa María — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Санта-Мария лежит в долинах Кальчаки на севере провинции Катамарка, среди мест, где оставили след инки и доинкские народы. Археологические памятники, музеи и виноградники высокогорного торронтеса делают её интересной остановкой.
 
 ## Практическая информация
 

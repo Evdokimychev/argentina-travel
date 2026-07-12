@@ -1,12 +1,11 @@
 ---
 id: reserva-costa-atlantica-tierra-del-fuego
 type: attraction
-title: Reserva Costa Atlántica Огненная Земля
+title: "Заповедник атлантического побережья Огненной Земли"
 title_es: Reserva Costa Atlántica Tierra del Fuego
 title_en: Tierra del Fuego Atlantic Coast Reserve
-summary: En el extremo sur de Argentina, asómbrate con la belleza del paisaje y la
-  diversidad de las especies.
-status: stub
+summary: "Прибрежный заповедник на крайнем юге Аргентины: приливные отмели и берега, где кормятся тысячи перелётных куликов и других птиц."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el extremo sur de Argentina, asómbrate con la belleza del paisaje y la diversidad de las especies.
-
-Reserva Costa Atlántica Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Заповедник охраняет атлантическое побережье Огненной Земли — обширные приливные отмели, куда на кормёжку слетаются тысячи перелётных птиц со всего Западного полушария. Суровая красота южных берегов и обилие пернатых делают его важной точкой для орнитологов.
 
 ## Практическая информация
 

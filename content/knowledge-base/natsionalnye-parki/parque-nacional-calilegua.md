@@ -1,11 +1,11 @@
 ---
 id: parque-nacional-calilegua
 type: national_park
-title: национальный парк Calilegua
+title: "Национальный парк Калилегуа"
 title_es: Parque Nacional Calilegua
 title_en: Calilegua National Park
-summary: Explora una de las áreas protegidas de mayor diversidad en Argentina.
-status: stub
+summary: "Крупнейший парк горных лесов юнга в провинции Жужуй: густая зелень, туманные склоны и богатая фауна на восточных отрогах Анд."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Explora una de las áreas protegidas de mayor diversidad en Argentina.
-
-национальный парк Calilegua — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Калилегуа в провинции Жужуй охраняет обширные влажные горные леса юнга (yungas) на восточных склонах Анд. Перепад высот создаёт несколько лесных ярусов с богатой фауной — от туканов до ягуара; по парку проложены тропы и смотровые точки.
 
 ## Практическая информация
 

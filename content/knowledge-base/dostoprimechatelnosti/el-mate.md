@@ -1,12 +1,11 @@
 ---
 id: el-mate
 type: attraction
-title: Mate
+title: "Мате"
 title_es: El Mate
 title_en: Mate
-summary: 'Descubre los secretos de la infusión de yerba mate tomada con bombilla:
-  el mate.'
-status: stub
+summary: "Национальный напиток Аргентины — настой йерба-мате, который пьют через металлическую трубочку-бомбилью и передают по кругу."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre los secretos de la infusión de yerba mate tomada con bombilla: el mate.
-
-Mate — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Мате — больше чем напиток: это ежедневный ритуал и знак гостеприимства. Настой из листьев йерба-мате пьют через бомбилью из общей калабасы, передавая по кругу; провинция Мисьонес — главный район выращивания йербы.
 
 ## Практическая информация
 

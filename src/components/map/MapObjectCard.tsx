@@ -54,15 +54,15 @@ export default function MapObjectCard({
   return (
     <article
       className={cn(
-        "w-full overflow-hidden bg-white",
+        "w-full overflow-hidden bg-surface-elevated",
         variant === "floating"
-          ? "max-w-[340px] rounded-2xl border border-gray-100/80 shadow-elevated"
+          ? "max-w-[340px] rounded-card border border-border-subtle shadow-elevated"
           : "rounded-t-2xl",
         className
       )}
     >
       {object.image ? (
-        <div className="relative aspect-[16/10] bg-gray-100">
+        <div className="relative aspect-[16/10] bg-surface-muted">
           <Image
             src={object.image}
             alt=""
@@ -70,7 +70,7 @@ export default function MapObjectCard({
             className="object-cover"
             sizes="(max-width: 767px) 100vw, 340px"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal/35 via-transparent to-transparent" />
           <span
             className="absolute bottom-2.5 left-2.5 rounded-full px-2.5 py-0.5 text-[10px] font-semibold text-white shadow-sm"
             style={{ backgroundColor: kindColor }}
@@ -110,7 +110,7 @@ export default function MapObjectCard({
               event.stopPropagation();
               onClose();
             }}
-            className="shrink-0 rounded-lg p-1.5 text-slate hover:bg-gray-100"
+            className="shrink-0 rounded-button p-1.5 text-slate hover:bg-surface-muted"
             aria-label="Закрыть карточку"
           >
             <X className="h-4 w-4" />
@@ -122,8 +122,8 @@ export default function MapObjectCard({
         ) : null}
 
         {object.flightDestinations && object.flightDestinations.length > 0 ? (
-          <div className="mt-3 rounded-xl bg-sky/5 p-2.5">
-            <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-sky">
+          <div className="mt-3 rounded-card bg-sky/5 p-2.5">
+            <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-sky-ink">
               <Plane className="h-3.5 w-3.5" aria-hidden />
               Прямые рейсы · {object.flightDestinations.length}
             </p>
@@ -134,7 +134,7 @@ export default function MapObjectCard({
                   type="button"
                   title={dest.airportName}
                   onClick={() => onSelectObjectId?.(dest.mapObjectId)}
-                  className="inline-flex items-center gap-1 rounded-full border border-sky/20 bg-white px-2 py-1 text-[11px] font-semibold text-charcoal transition hover:border-sky hover:text-sky"
+                  className="inline-flex items-center gap-1 rounded-full border border-sky/20 bg-surface-elevated px-2 py-1 text-[11px] font-semibold text-charcoal transition hover:border-sky hover:text-sky-ink"
                 >
                   {dest.city}
                   <span className="text-[9px] font-bold text-slate">{dest.iata}</span>
@@ -152,7 +152,7 @@ export default function MapObjectCard({
             {tourCta ? (
               <Link
                 href={tourCta.href}
-                className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-xl bg-sky px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-dark"
+                className="inline-flex min-h-[42px] items-center justify-center gap-1.5 rounded-button bg-sky-ink px-3 py-2 text-sm font-semibold text-white transition hover:bg-sky-ink/90"
               >
                 {tourCta.label}
                 <ArrowRight className="h-4 w-4" aria-hidden />
@@ -163,8 +163,8 @@ export default function MapObjectCard({
                 <Link
                   href={primaryCta.href}
                   className={cn(
-                    "inline-flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-sm font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky",
-                    !tourCta && "bg-sky text-white border-transparent hover:bg-sky-dark hover:text-white"
+                    "inline-flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-button border border-border-default px-3 py-2 text-sm font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky-ink",
+                    !tourCta && "bg-sky-ink text-white border-transparent hover:bg-sky-ink/90 hover:text-white"
                   )}
                 >
                   {!tourCta ? <ArrowRight className="h-4 w-4" aria-hidden /> : null}
@@ -174,7 +174,7 @@ export default function MapObjectCard({
               {articleCta ? (
                 <Link
                   href={articleCta.href}
-                  className="inline-flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-xl border border-gray-200 px-3 py-2 text-sm font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky"
+                  className="inline-flex min-h-[40px] flex-1 items-center justify-center gap-1.5 rounded-button border border-border-default px-3 py-2 text-sm font-semibold text-charcoal transition hover:border-sky/30 hover:text-sky-ink"
                 >
                   <BookOpen className="h-3.5 w-3.5 shrink-0" aria-hidden />
                   {articleCta.label}

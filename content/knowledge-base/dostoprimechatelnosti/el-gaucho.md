@@ -1,12 +1,11 @@
 ---
 id: el-gaucho
 type: attraction
-title: Gaucho
+title: "Гаучо"
 title_es: El Gaucho
 title_en: The Gaucho
-summary: 'Descubre los secretos del habitante tradicional de las llanuras: un símbolo
-  de la argentinidad.'
-status: stub
+summary: "Вольный пастух аргентинских равнин — символ национального характера, с его конём, ножом, серебром и мате."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre los secretos del habitante tradicional de las llanuras: un símbolo de la argentinidad.
-
-Gaucho — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Гаучо — легендарный конный пастух пампы, ставший символом аргентинской идентичности. Его образ — независимость, мастерство верховой езды, серебряная сбруя, асадо и мате — жив в усадьбах, родео и празднике Дня традиции.
 
 ## Практическая информация
 

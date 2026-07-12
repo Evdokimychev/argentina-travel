@@ -1,12 +1,11 @@
 ---
 id: glaciar-huemul
 type: attraction
-title: Huemul Glacier
+title: "Ледник Уэмуль"
 title_es: Glaciar Huemul
 title_en: Huemul Glacier
-summary: A un paso del lago del Desierto, te espera una maravilla helada de la Патагония
-  Argentina.
-status: stub
+summary: "Небольшой висячий ледник с айсбергами у озера Лаго-дель-Десьерто на севере ледникового района Патагонии."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-A un paso del lago del Desierto, te espera una maravilla helada de la Патагония Argentina.
-
-Huemul Glacier — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Ледник Уэмуль спускается к маленькому озеру с плавучими льдинами недалеко от Лаго-дель-Десьерто. К смотровой ведёт короткая тропа — доступная возможность увидеть ледник вблизи в районе Эль-Чальтена.
 
 ## Практическая информация
 

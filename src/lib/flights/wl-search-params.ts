@@ -44,6 +44,8 @@ export type FlightsSearchHrefOptions = {
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 const MAX_WL_SEGMENTS = 6;
 
+type ReadableSearchParams = Pick<URLSearchParams, "get">;
+
 function readIsoDate(value: string | null): string | undefined {
   const trimmed = value?.trim();
   if (!trimmed || !ISO_DATE.test(trimmed)) return undefined;
@@ -62,7 +64,7 @@ function readCount(value: string | null, fallback: number, min: number, max: num
   return Math.min(max, Math.max(min, parsed));
 }
 
-function readTripType(searchParams: URLSearchParams): FlightTripType {
+function readTripType(searchParams: ReadableSearchParams): FlightTripType {
   const oneWay = searchParams.get("one_way") ?? searchParams.get("oneWay");
   if (oneWay === "true" || oneWay === "1") return "one_way";
   if (oneWay === "false" || oneWay === "0") return "round_trip";
@@ -72,18 +74,18 @@ function readTripType(searchParams: URLSearchParams): FlightTripType {
   return returnDate ? "round_trip" : "one_way";
 }
 
-function readAutoSearch(searchParams: URLSearchParams): boolean {
+function readAutoSearch(searchParams: ReadableSearchParams): boolean {
   const flag = searchParams.get("search") ?? searchParams.get("autoSearch");
   return flag === "1" || flag === "true";
 }
 
-function readTripClass(searchParams: URLSearchParams): FlightTripClass {
+function readTripClass(searchParams: ReadableSearchParams): FlightTripClass {
   const value = searchParams.get("trip_class");
   if (value === "1") return 1;
   return 0;
 }
 
-function readSegmentsFromUrl(searchParams: URLSearchParams): FlightSearchSegment[] | undefined {
+function readSegmentsFromUrl(searchParams: ReadableSearchParams): FlightSearchSegment[] | undefined {
   const segments: FlightSearchSegment[] = [];
 
   for (let index = 0; index < MAX_WL_SEGMENTS; index += 1) {
@@ -118,7 +120,9 @@ function appendSegmentParams(params: URLSearchParams, segments: FlightSearchSegm
 }
 
 /** Read flight search params from URL (supports legacy `origin`/`departDate` and WL `origin_iata`/`depart_date`). */
-export function parseFlightsSearchParams(searchParams: URLSearchParams): ParsedFlightsSearch | null {
+export function parseFlightsSearchParams(searchParams: ReadableSearchParams | null): ParsedFlightsSearch | null {
+  if (!searchParams) return null;
+
   const segments = readSegmentsFromUrl(searchParams);
 
   const origin =

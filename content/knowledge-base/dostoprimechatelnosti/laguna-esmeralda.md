@@ -1,12 +1,11 @@
 ---
 id: laguna-esmeralda
 type: attraction
-title: Esmeralda Lagoon
+title: "Лагуна Эсмеральда"
 title_es: Laguna Esmeralda
 title_en: Esmeralda Lagoon
-summary: En Огненная Земля, a un paso de la capital del fin del mundo, te espera una
-  excursión imposible de olvidar.
-status: stub
+summary: "Изумрудное горное озеро под Ушуайей — самый популярный однодневный треккинг Огненной Земли."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -48,9 +47,7 @@ sources:
 
 ## Описание
 
-En Огненная Земля, a un paso de la capital del fin del mundo, te espera una excursión imposible de olvidar.
-
-Esmeralda Lagoon — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Лагуна Эсмеральда — изумрудное ледниковое озеро в горах недалеко от Ушуайи. Несложная, но очень живописная тропа через торфяники, лес и бобровые запруды делает её самым любимым однодневным треккингом Огненной Земли.
 
 ## Практическая информация
 

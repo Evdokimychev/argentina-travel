@@ -1,12 +1,11 @@
 ---
 id: termas-en-entre-rios
 type: attraction
-title: Hot springs in Entre Ríos
+title: "Термы Энтре-Риоса"
 title_es: Termas en Entre Ríos
 title_en: Hot springs in Entre Ríos
-summary: Visita la provincia que pone a tu alcance la mayor cantidad de centros termales
-  y recreativos de la Argentina.
-status: stub
+summary: "Провинция Энтре-Риос — главный термальный регион Аргентины с наибольшим числом термальных парков и курортов."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Visita la provincia que pone a tu alcance la mayor cantidad de centros termales y recreativos de la Argentina.
-
-Hot springs in Entre Ríos — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Энтре-Риос — «термальная столица» Аргентины: здесь больше всего термальных парков и оздоровительных курортов страны. Федерасьон, Колóн, Конкордия и другие города предлагают горячие минеральные бассейны на любой вкус.
 
 ## Практическая информация
 

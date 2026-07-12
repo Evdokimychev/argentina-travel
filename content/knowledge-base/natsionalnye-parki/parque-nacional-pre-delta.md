@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-pre-delta
 type: national_park
-title: национальный парк Pre Delta
+title: "Национальный парк Пре-Дельта"
 title_es: Parque Nacional Pre Delta
 title_en: Pre Delta National Park
-summary: Encuéntrate con un refugio de naturaleza en la ecorregión Delta e Islas del
-  Paraná.
-status: stub
+summary: "Небольшой парк в начале дельты Параны в провинции Энтре-Риос: острова, протоки и богатая водно-болотная жизнь."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Encuéntrate con un refugio de naturaleza en la ecorregión Delta e Islas del Paraná.
-
-национальный парк Pre Delta — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Пре-Дельта на юге провинции Энтре-Риос охраняет начало дельты реки Парана — лабиринт островов, проток и прибрежных лесов. Удобен для коротких прогулок на лодке и наблюдения за птицами.
 
 ## Практическая информация
 

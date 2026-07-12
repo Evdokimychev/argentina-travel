@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbEntryCard from "@/components/knowledge-base/KbEntryCard";
+import KbSearchBox from "@/components/knowledge-base/KbSearchBox";
 import KbSideNav from "@/components/knowledge-base/KbSideNav";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
@@ -92,6 +93,9 @@ export default async function KnowledgeSectionPage({ params }: PageProps) {
                 <p className="mt-1 text-sm text-slate">Материалов: {total}</p>
               </div>
             </header>
+            <div className="mt-6 max-w-xl">
+              <KbSearchBox placeholder={`Поиск по базе: ${section.title.toLowerCase()}...`} />
+            </div>
 
             {hubs.length > 0 && (
               <section className="mt-8">

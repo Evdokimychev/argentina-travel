@@ -104,7 +104,7 @@ export default function PlaceDetailView({
           {place.kbSlug ? (
             <Link
               href={`/baza-znaniy/${place.kbSlug}`}
-              className="inline-flex items-center gap-2 rounded-xl border border-sky/20 bg-sky/5 px-4 py-2 text-sm font-semibold text-sky-ink transition hover:bg-sky/10"
+              className="inline-flex items-center gap-2 rounded-button border border-sky/20 bg-sky/5 px-4 py-2 text-sm font-semibold text-sky-ink transition hover:bg-sky/10"
             >
               Подробный разбор в базе знаний →
             </Link>
@@ -117,7 +117,7 @@ export default function PlaceDetailView({
               <h2 className="font-heading text-xl font-bold text-charcoal">Галерея</h2>
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 {place.gallery.map((src, i) => (
-                  <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-xl">
+                  <div key={src} className="relative aspect-[4/3] overflow-hidden rounded-card">
                     <Image src={src} alt={galleryAlts[i] ?? `${place.name} — фото ${i + 1}`} fill className="object-cover" sizes="50vw" />
                   </div>
                 ))}
@@ -150,32 +150,32 @@ export default function PlaceDetailView({
 
         <aside className="space-y-6">
           {destinationPage ? (
-            <div className="rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/5 to-white p-5 shadow-card">
+            <div className="rounded-card border border-sky/15 bg-gradient-to-br from-sky/5 to-surface-elevated p-5 shadow-card">
               <h2 className="font-heading text-lg font-bold text-charcoal">Регион для планирования</h2>
               <p className="mt-2 text-sm leading-relaxed text-slate">
                 Сезоны, логистика и туры по направлению «{destinationPage.name}» — в региональном гиде.
               </p>
               <Link
                 href={destinationHref(destinationId!)}
-                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky hover:underline"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-ink hover:underline"
               >
                 Открыть гид региона
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
             </div>
           ) : (
-            <div className="rounded-2xl border border-gray-100 bg-surface-muted/60 p-5">
+            <div className="rounded-card border border-border-subtle bg-surface-muted/60 p-5">
               <h2 className="font-heading text-sm font-bold text-charcoal">Планирование поездки</h2>
               <p className="mt-2 text-sm text-slate">
                 Региональные гиды с сезонами и турами — в обзоре направлений.
               </p>
-              <Link href="/destinations" className="mt-3 inline-flex text-sm font-medium text-sky hover:underline">
+              <Link href="/destinations" className="mt-3 inline-flex text-sm font-medium text-sky-ink hover:underline">
                 Регионы и места
               </Link>
             </div>
           )}
 
-          <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+          <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
             <h2 className="font-heading text-lg font-bold text-charcoal">Практическая информация</h2>
             <dl className="mt-4 space-y-3 text-sm">
               <div className="flex gap-3">
@@ -217,7 +217,7 @@ export default function PlaceDetailView({
               ) : null}
               {place.rating != null ? (
                 <div className="flex gap-3">
-                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-amber-400 text-amber-400" aria-hidden />
+                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-sun text-sun" aria-hidden />
                   <div>
                     <dt className="text-slate">Рейтинг</dt>
                     <dd className="font-medium text-charcoal">{place.rating.toFixed(1)} / 5</dd>
@@ -231,7 +231,7 @@ export default function PlaceDetailView({
                 href={place.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-sky hover:underline"
+                className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium text-sky-ink hover:underline"
               >
                 Официальный сайт
                 <ExternalLink className="h-3.5 w-3.5" aria-hidden />
@@ -240,14 +240,14 @@ export default function PlaceDetailView({
           </div>
 
           {place.tags.length > 0 ? (
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+            <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
               <h2 className="font-heading text-lg font-bold text-charcoal">Темы</h2>
               <div className="mt-3 flex flex-wrap gap-2">
                 {place.tags.map((tag) => (
                   <Link
                     key={tag}
                     href={buildPlacesCatalogHref({ tag })}
-                    className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky transition-colors hover:bg-sky/20"
+                    className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky-ink transition-colors hover:bg-sky/20"
                   >
                     {tag}
                   </Link>
@@ -257,12 +257,12 @@ export default function PlaceDetailView({
           ) : null}
 
           {place.collections.length > 0 ? (
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+            <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
               <h2 className="font-heading text-lg font-bold text-charcoal">Подборки</h2>
               <ul className="mt-3 space-y-2">
                 {place.collections.map((col) => (
                   <li key={col.slug}>
-                    <Link href={collectionHref(col.slug)} className="text-sm text-sky hover:underline">
+                    <Link href={collectionHref(col.slug)} className="text-sm text-sky-ink hover:underline">
                       {col.title}
                     </Link>
                   </li>
@@ -272,12 +272,12 @@ export default function PlaceDetailView({
           ) : null}
 
           {place.itineraryReferences.length > 0 ? (
-            <div className="rounded-2xl border border-gray-100 bg-white p-5 shadow-card">
+            <div className="rounded-card border border-border-subtle bg-surface-elevated p-5 shadow-card">
               <h2 className="font-heading text-lg font-bold text-charcoal">Маршруты</h2>
               <ul className="mt-3 space-y-2">
                 {place.itineraryReferences.map((it) => (
                   <li key={it.slug}>
-                    <Link href={itineraryHref(it.slug)} className="text-sm text-sky hover:underline">
+                    <Link href={itineraryHref(it.slug)} className="text-sm text-sky-ink hover:underline">
                       {it.title} ({it.durationDays} дн.)
                     </Link>
                   </li>

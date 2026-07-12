@@ -1,12 +1,11 @@
 ---
 id: villa-general-belgrano
 type: attraction
-title: Villa General Belgrano
+title: "Вилья-Хенераль-Бельграно"
 title_es: Villa General Belgrano
 title_en: Villa General Belgrano
-summary: En el Valle de Calamuchita, te espera un lugar con paisajes de ensueño y
-  tradiciones centroeuropeas.
-status: stub
+summary: "Городок с немецко-центральноевропейским характером в долине Каламучита (Кордова), знаменитый аргентинским Октоберфестом."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el Valle de Calamuchita, te espera un lugar con paisajes de ensueño y tradiciones centroeuropeas.
-
-Villa General Belgrano — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Хенераль-Бельграно в долине Каламучита основана центральноевропейскими переселенцами и сохранила альпийский облик: фахверк, пивоварни, штрудели. Осенью здесь проходит крупнейший в стране «Праздник пива» (Fiesta Nacional de la Cerveza).
 
 ## Практическая информация
 

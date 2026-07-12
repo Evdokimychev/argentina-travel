@@ -1,12 +1,11 @@
 ---
 id: valle-de-la-luna-de-cusi-cusi
 type: attraction
-title: Valle de la Luna de Cusi Cusi
+title: "Лунная долина Куси-Куси"
 title_es: Valle de la Luna de Cusi Cusi
 title_en: Valle de la Luna de Cusi Cusi
-summary: En la provincia de Jujuy, explora una formación geológica de lava, escoria
-  y rocas volcánicas que apuntan al cielo.
-status: stub
+summary: "Разноцветные вулканические формации в глубине Пуны провинции Жужуй, напоминающие лунный пейзаж."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la provincia de Jujuy, explora una formación geológica de lava, escoria y rocas volcánicas que apuntan al cielo.
-
-Valle de la Luna de Cusi Cusi — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Лунная долина у посёлка Куси-Куси на крайнем севере провинции Жужуй — сюрреалистический пейзаж из застывшей лавы, шлака и разноцветных вулканических пород. Удалённое место высоко в Пуне для любителей необычной геологии.
 
 ## Практическая информация
 

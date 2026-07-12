@@ -1,12 +1,11 @@
 ---
 id: cerro-castor
 type: attraction
-title: Cerro Castor
+title: "Серро-Кастор"
 title_es: Cerro Castor
 title_en: Cerro Castor
-summary: Muy cerca de la ciudad de Ушуайя, visita el centro de esquí más austral del
-  planeta.
-status: stub
+summary: "Самый южный горнолыжный курорт планеты рядом с Ушуайей на Огненной Земле."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Muy cerca de la ciudad de Ушуайя, visita el centro de esquí más austral del planeta.
-
-Cerro Castor — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Серро-Кастор под Ушуайей — самый южный горнолыжный курорт мира. Стабильный снег, продлённый сезон и виды на горы Огненной Земли; летом — треккинг и подъёмники с панорамами.
 
 ## Практическая информация
 

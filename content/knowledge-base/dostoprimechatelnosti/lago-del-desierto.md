@@ -1,12 +1,11 @@
 ---
 id: lago-del-desierto
 type: attraction
-title: Lago del Desierto
+title: "Лаго-дель-Десьерто"
 title_es: Lago del Desierto
 title_en: Lago del Desierto
-summary: Vive la aventura de navegar en una reserva que protege la flora y fauna de
-  toda una región.
-status: stub
+summary: "Уединённое ледниковое озеро к северу от Эль-Чальтена у чилийской границы, с видами на Фицрой и переправой к Чили."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Vive la aventura de navegar en una reserva que protege la flora y fauna de toda una región.
-
-Lago del Desierto — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Лаго-дель-Десьерто — тихое вытянутое озеро в лесах севернее Эль-Чальтена. По нему ходит катер, а тропы ведут к леднику Уэмуль и к пешему пограничному переходу в Чили — атмосферный уголок дикой Патагонии.
 
 ## Практическая информация
 

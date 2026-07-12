@@ -1,12 +1,11 @@
 ---
 id: cascadas-santa-ana-y-dora
 type: attraction
-title: Santa Ana and Dora Waterfalls
+title: "Водопады Санта-Ана и Дора"
 title_es: Cascadas Santa Ana y Dora
 title_en: Santa Ana and Dora Waterfalls
-summary: Desde Villa La Angostura, emprende una excursión que te llevará a contemplar
-  espectáculos naturales.
-status: stub
+summary: "Пара живописных водопадов недалеко от Вилья-Ла-Ангостуры в Патагонии — популярная короткая экскурсия."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-Desde Villa La Angostura, emprende una excursión que te llevará a contemplar espectáculos naturales.
-
-Santa Ana and Dora Waterfalls — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Водопады Санта-Ана и Дора расположены недалеко от Вилья-Ла-Ангостуры. Несложная экскурсия среди патагонского леса приводит к двум эффектным каскадам — приятная прогулка на полдня.
 
 ## Практическая информация
 

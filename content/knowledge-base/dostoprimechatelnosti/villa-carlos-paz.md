@@ -1,12 +1,11 @@
 ---
 id: villa-carlos-paz
 type: attraction
-title: Villa Carlos Paz
+title: "Вилья-Карлос-Пас"
 title_es: Villa Carlos Paz
 title_en: Villa Carlos Paz
-summary: Descubre un mundo de naturaleza, aventuras y espectáculos, en una de las
-  villas turísticas más importantes del país.
-status: stub
+summary: "Один из главных курортных городов Кордовы у озера Сан-Роке — шумный центр летнего отдыха, театров и развлечений."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre un mundo de naturaleza, aventuras y espectáculos, en una de las villas turísticas más importantes del país.
-
-Villa Carlos Paz — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Карлос-Пас на берегу водохранилища Сан-Роке — крупнейший курорт кордовских сьерр. Летом сюда стекается вся страна ради пляжей, ночной жизни, театральных сезонов и знаменитого часов-«кукушки» в центре.
 
 ## Практическая информация
 

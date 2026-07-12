@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-estricta-san-antonio
 type: attraction
-title: Estricta San Antonio Nature Reserve
+title: "Строгий природный заповедник Сан-Антонио"
 title_es: Reserva Natural Estricta San Antonio
 title_en: Estricta San Antonio Nature Reserve
-summary: En la ecorregión Selva Paranaense, existe una reserva que da vida a grandes
-  bosques de araucaria y de pino Paraná.
-status: stub
+summary: "Заповедник в провинции Мисьонес, охраняющий редкие леса бразильской араукарии (сосны Парана) в атлантической сельве."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la ecorregión Selva Paranaense, existe una reserva que da vida a grandes bosques de araucaria y de pino Paraná.
-
-Estricta San Antonio Nature Reserve — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Строгий природный заповедник Сан-Антонио в провинции Мисьонес сохраняет одни из последних в Аргентине лесов бразильской араукарии (pino Paraná). Как «строгий» заповедник он ориентирован прежде всего на охрану и науку, а не на массовый туризм.
 
 ## Практическая информация
 

@@ -513,7 +513,7 @@ export type BlogCardVariant = "featured" | "standard" | "compact";
 export type BlogRelatedResource = {
   label: string;
   href: string;
-  type: "guide" | "immigration" | "tour" | "blog";
+  type: "guide" | "immigration" | "tour" | "blog" | "knowledge";
   description?: string;
 };
 

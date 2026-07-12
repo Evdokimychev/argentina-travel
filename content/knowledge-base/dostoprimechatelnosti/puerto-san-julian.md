@@ -1,12 +1,11 @@
 ---
 id: puerto-san-julian
 type: attraction
-title: Puerto San Julián
+title: "Пуэрто-Сан-Хулиан"
 title_es: Puerto San Julián
 title_en: Puerto San Julián
-summary: En la Патагония Argentina, te espera una ciudad rodeada de legados históricos
-  y maravillas de la naturaleza.
-status: stub
+summary: "Исторический патагонский город на побережье Санта-Крус, связанный с первой мессой и кругосветкой Магеллана."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония Argentina, te espera una ciudad rodeada de legados históricos y maravillas de la naturaleza.
-
-Puerto San Julián — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Пуэрто-Сан-Хулиан на атлантическом берегу Санта-Крус хранит богатую историю: здесь высаживался Магеллан, а позже Дрейк. Сегодня это спокойный город с реконструкцией каравеллы, колониями пингвинов и морской фауной залива.
 
 ## Практическая информация
 

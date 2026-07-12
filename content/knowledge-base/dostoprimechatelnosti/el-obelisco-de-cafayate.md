@@ -1,12 +1,11 @@
 ---
 id: el-obelisco-de-cafayate
 type: attraction
-title: Cafayate Obelisco
+title: "Обелиск Кафайяте"
 title_es: El Obelisco de Cafayate
 title_en: The Cafayate Obelisco
-summary: En la provincia de Salta, encuéntrate con un monumento esculpido por el clima
-  durante millones de años.
-status: stub
+summary: "Природный скальный «обелиск», выточенный ветром и водой за миллионы лет, в ущелье Лас-Кончас у Кафайяте (Сальта)."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -48,9 +47,7 @@ sources:
 
 ## Описание
 
-En la provincia de Salta, encuéntrate con un monumento esculpido por el clima durante millones de años.
-
-Cafayate Obelisco — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Обелиск Кафайяте — эффектная скальная колонна в красном ущелье Кебрада-де-лас-Кончас, созданная эрозией за миллионы лет. Одна из фотогеничных остановок на живописной дороге к винному городку Кафайяте.
 
 ## Практическая информация
 

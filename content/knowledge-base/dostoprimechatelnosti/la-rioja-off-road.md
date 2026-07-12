@@ -1,11 +1,11 @@
 ---
 id: la-rioja-off-road
 type: attraction
-title: La Rioja off Road
+title: "Ла-Риоха: бездорожье"
 title_es: La Rioja off road
 title_en: La Rioja off Road
-summary: Súbete a un vehículo 4x4 y explora terrenos que van más allá de los caminos.
-status: stub
+summary: "Внедорожные маршруты по каньонам, дюнам и красным горам провинции Ла-Риоха — приключение вне асфальта."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -42,9 +42,7 @@ sources:
 
 ## Описание
 
-Súbete a un vehículo 4x4 y explora terrenos que van más allá de los caminos.
-
-La Rioja off Road — одна из достопримечательностей региона Северо-Запад (Ла-Риоха). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Провинция Ла-Риоха создана для внедорожных путешествий: красные каньоны, дюны, солончаки и лунные пейзажи вроде Талампаи открываются лучше всего с джипа. Маршруты 4x4 ведут туда, куда не добраться по обычным дорогам.
 
 ## Практическая информация
 

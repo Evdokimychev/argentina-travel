@@ -1,12 +1,11 @@
 ---
 id: los-gigantes
 type: attraction
-title: Los Gigantes
+title: "Лос-Хигантес"
 title_es: Los Gigantes
 title_en: Los Gigantes
-summary: En el norte de las Sierras Grandes cordobesas, explora un macizo formado
-  hace más de trescientos millones de años.
-status: stub
+summary: "Скальный массив в Сьеррас-Гранде Кордовы возрастом свыше 300 млн лет — популярное место скалолазания и треккинга."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el norte de las Sierras Grandes cordobesas, explora un macizo formado hace más de trescientos millones de años.
-
-Los Gigantes — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+«Лос-Хигантес» — впечатляющий гранитный массив на севере кордовских Сьеррас-Гранде. Причудливые скалы возрастом более 300 миллионов лет привлекают скалолазов и любителей треккинга с панорамами гор.
 
 ## Практическая информация
 

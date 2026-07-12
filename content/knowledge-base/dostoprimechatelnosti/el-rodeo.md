@@ -1,12 +1,11 @@
 ---
 id: el-rodeo
 type: attraction
-title: El Rodeo
+title: "Эль-Родео"
 title_es: El Rodeo
 title_en: El Rodeo
-summary: En el cordón montañoso de Ambato, déjate sorprender por un pueblo escondido
-  que te espera con naturaleza y aventura.
-status: stub
+summary: "Уютный горный посёлок в хребте Амбато провинции Катамарка — прохладный оазис зелени и активного отдыха."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el cordón montañoso de Ambato, déjate sorprender por un pueblo escondido que te espera con naturaleza y aventura.
-
-El Rodeo — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Эль-Родео — спрятанный в горах Амбато посёлок недалеко от города Катамарка. Прохладный микроклимат, реки и тропы делают его популярным местом летнего отдыха и старта для треккинга и парапланеризма.
 
 ## Практическая информация
 

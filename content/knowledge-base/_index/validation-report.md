@@ -1,13 +1,22 @@
 # Отчёт валидации базы знаний
 
-Сгенерировано: 2026-07-07 00:45
+Сгенерировано: 2026-07-12 01:14
 
-Всего валидных записей: **680**
+Всего валидных записей: **676**
 Проблемных файлов: **0**
 Дублей id: **0**
 Форвард-ссылок / потенциальных опечаток в related: **0**
 Битых [[вики-ссылок]] в телах: **0**
-Осиротевших записей (0 входящих ссылок): **284**
+Осиротевших записей (0 входящих ссылок): **145**
+Записей `site_ready: true` без hero-фото: **20**
+Коротких опубликованных записей (<120 слов): **165**
+Гео-заголовков без русской адаптации: **224**
+Шаблонных импортных текстов INPROTUR: **289**
+Чувствительных опубликованных материалов: **108**
+Чувствительных материалов без источников: **28**
+Материалов с наступившей плановой перепроверкой: **0**
+Материалов с низкой уверенностью: **3**
+Материалов, требующих редакционного внимания: **31**
 
 ## По типам
 
@@ -16,46 +25,28 @@
 - `city`: 49
 - `faq`: 59
 - `guide`: 86
-- `national_park`: 48
+- `national_park`: 44
 - `region`: 8
 - `route`: 7
 - `transport`: 11
 
 ## Осиротевшие записи (никто не ссылается — стоит добавить входящую ссылку)
 
-- `barreal` (attraction, dostoprimechatelnosti/barreal.md)
-- `bosque-petrificado` (national_park, natsionalnye-parki/bosque-petrificado.md)
-- `cascadas-santa-ana-y-dora` (attraction, dostoprimechatelnosti/cascadas-santa-ana-y-dora.md)
-- `caviahue-copahue` (attraction, dostoprimechatelnosti/caviahue-copahue.md)
 - `centros-de-esqui-en-neuquen` (attraction, dostoprimechatelnosti/centros-de-esqui-en-neuquen.md)
-- `cerros-catedral-y-perito-moreno` (attraction, dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md)
 - `circuito-de-cervecerias-en-rosario` (attraction, dostoprimechatelnosti/circuito-de-cervecerias-en-rosario.md)
 - `circuito-gastronomico-en-el-rio-parana` (attraction, dostoprimechatelnosti/circuito-gastronomico-en-el-rio-parana.md)
-- `ciudad-de-santa-fe` (attraction, dostoprimechatelnosti/ciudad-de-santa-fe.md)
-- `colon-entre-rios` (city, goroda/colon-entre-rios.md)
-- `colonia-suiza` (attraction, dostoprimechatelnosti/colonia-suiza.md)
-- `colonias-judias-en-santa-fe` (attraction, dostoprimechatelnosti/colonias-judias-en-santa-fe.md)
-- `cordero-patagonico` (attraction, dostoprimechatelnosti/cordero-patagonico.md)
 - `corredor-del-viento` (attraction, dostoprimechatelnosti/corredor-del-viento.md)
 - `costanera-de-formosa` (attraction, dostoprimechatelnosti/costanera-de-formosa.md)
 - `cuesta-del-viento` (attraction, dostoprimechatelnosti/cuesta-del-viento.md)
-- `cueva-de-las-manos` (attraction, dostoprimechatelnosti/cueva-de-las-manos.md)
 - `deportes-extremos-en-paso-de-la-patria` (attraction, dostoprimechatelnosti/deportes-extremos-en-paso-de-la-patria.md)
 - `dinosaurios-de-la-patagonia` (attraction, dostoprimechatelnosti/dinosaurios-de-la-patagonia.md)
 - `dinosaurios-en-neuquen` (attraction, dostoprimechatelnosti/dinosaurios-en-neuquen.md)
-- `el-curanto` (attraction, dostoprimechatelnosti/el-curanto.md)
-- `el-hoyo` (attraction, dostoprimechatelnosti/el-hoyo.md)
-- `el-tren-patagonico` (attraction, dostoprimechatelnosti/el-tren-patagonico.md)
-- `el-vino-malbec` (attraction, dostoprimechatelnosti/el-vino-malbec.md)
-- `empedrado` (attraction, dostoprimechatelnosti/empedrado.md)
 - `empedrado-y-el-carrizal` (attraction, dostoprimechatelnosti/empedrado-y-el-carrizal.md)
 - `epuyen` (attraction, dostoprimechatelnosti/epuyen.md)
-- `esquel` (city, goroda/esquel.md)
 - `esquina` (attraction, dostoprimechatelnosti/esquina.md)
 - `estancias-turisticas-de-campo` (attraction, dostoprimechatelnosti/estancias-turisticas-de-campo.md)
 - `expedicion-al-avion-de-los-uruguayos` (attraction, dostoprimechatelnosti/expedicion-al-avion-de-los-uruguayos.md)
 - `expediciones-en-el-lago-huechulafquen` (attraction, dostoprimechatelnosti/expediciones-en-el-lago-huechulafquen.md)
-- `federacion` (city, goroda/federacion.md)
 - `fiambala` (attraction, dostoprimechatelnosti/fiambala.md)
 - `fiesta-nacional-del-canotaje-en-chaco` (attraction, dostoprimechatelnosti/fiesta-nacional-del-canotaje-en-chaco.md)
 - `fiesta-nacional-del-sol-en-san-juan` (attraction, dostoprimechatelnosti/fiesta-nacional-del-sol-en-san-juan.md)
@@ -68,13 +59,9 @@
 - `gastronomia-en-cordoba` (attraction, dostoprimechatelnosti/gastronomia-en-cordoba.md)
 - `gastronomia-en-santa-fe` (attraction, dostoprimechatelnosti/gastronomia-en-santa-fe.md)
 - `general-acha` (attraction, dostoprimechatelnosti/general-acha.md)
-- `glaciar-huemul` (attraction, dostoprimechatelnosti/glaciar-huemul.md)
 - `golf-en-mendoza` (attraction, dostoprimechatelnosti/golf-en-mendoza.md)
-- `gualeguaychu` (city, goroda/gualeguaychu.md)
 - `herradura` (attraction, dostoprimechatelnosti/herradura.md)
-- `hornocal` (attraction, dostoprimechatelnosti/hornocal.md)
 - `intendente-alvear` (attraction, dostoprimechatelnosti/intendente-alvear.md)
-- `iruya` (attraction, dostoprimechatelnosti/iruya.md)
 - `isla-del-cerrito` (attraction, dostoprimechatelnosti/isla-del-cerrito.md)
 - `isla-medialuna-antartida` (attraction, dostoprimechatelnosti/isla-medialuna-antartida.md)
 - `ituzaingo` (attraction, dostoprimechatelnosti/ituzaingo.md)
@@ -84,48 +71,22 @@
 - `juan-jose-castelli` (attraction, dostoprimechatelnosti/juan-jose-castelli.md)
 - `jujuy-en-bicicleta` (attraction, dostoprimechatelnosti/jujuy-en-bicicleta.md)
 - `junin-de-los-andes` (attraction, dostoprimechatelnosti/junin-de-los-andes.md)
-- `kayak-en-bariloche` (attraction, dostoprimechatelnosti/kayak-en-bariloche.md)
 - `kayak-en-el-parana` (attraction, dostoprimechatelnosti/kayak-en-el-parana.md)
-- `kemping-i-palatki` (guide, zhile/kemping-i-palatki.md)
-- `la-aripuca` (attraction, dostoprimechatelnosti/la-aripuca.md)
-- `la-mitica-ruta-40` (attraction, dostoprimechatelnosti/la-mitica-ruta-40.md)
-- `la-ruta-del-chocolate` (attraction, dostoprimechatelnosti/la-ruta-del-chocolate.md)
-- `la-ruta-del-pehuen` (attraction, dostoprimechatelnosti/la-ruta-del-pehuen.md)
-- `laberinto-patagonia` (attraction, dostoprimechatelnosti/laberinto-patagonia.md)
-- `lago-del-desierto` (attraction, dostoprimechatelnosti/lago-del-desierto.md)
-- `lago-mascardi` (attraction, dostoprimechatelnosti/lago-mascardi.md)
-- `lago-posadas` (attraction, dostoprimechatelnosti/lago-posadas.md)
-- `lagos-de-tierra-del-fuego` (attraction, dostoprimechatelnosti/lagos-de-tierra-del-fuego.md)
-- `laguna-de-mar-chiquita` (attraction, dostoprimechatelnosti/laguna-de-mar-chiquita.md)
-- `laguna-esmeralda` (attraction, dostoprimechatelnosti/laguna-esmeralda.md)
-- `laguna-melincue` (attraction, dostoprimechatelnosti/laguna-melincue.md)
-- `las-lenas` (attraction, dostoprimechatelnosti/las-lenas.md)
 - `legado-jesuita-en-cordoba` (attraction, dostoprimechatelnosti/legado-jesuita-en-cordoba.md)
-- `los-gigantes` (attraction, dostoprimechatelnosti/los-gigantes.md)
-- `los-valles-calchaquies` (attraction, dostoprimechatelnosti/los-valles-calchaquies.md)
-- `lujan` (city, goroda/lujan.md)
 - `maimara` (attraction, dostoprimechatelnosti/maimara.md)
 - `malargue` (attraction, dostoprimechatelnosti/malargue.md)
-- `mar-de-las-pampas` (attraction, dostoprimechatelnosti/mar-de-las-pampas.md)
 - `mate-en-la-laguna-capri` (attraction, dostoprimechatelnosti/mate-en-la-laguna-capri.md)
 - `mendoza-best-of-wine-tourism` (attraction, dostoprimechatelnosti/mendoza-best-of-wine-tourism.md)
-- `mercedes-corrientes` (city, goroda/mercedes-corrientes.md)
-- `merlo` (city, goroda/merlo.md)
 - `minitrekking-sobre-el-glaciar-perito-moreno` (attraction, dostoprimechatelnosti/minitrekking-sobre-el-glaciar-perito-moreno.md)
 - `miraflores` (attraction, dostoprimechatelnosti/miraflores.md)
 - `montanismo-en-jujuy` (attraction, dostoprimechatelnosti/montanismo-en-jujuy.md)
 - `monte-olivia-y-glaciar-de-agostini` (attraction, dostoprimechatelnosti/monte-olivia-y-glaciar-de-agostini.md)
-- `monumento-natural-laguna-de-los-pozuelos` (attraction, dostoprimechatelnosti/monumento-natural-laguna-de-los-pozuelos.md)
 - `mountain-bike-en-piedra-del-aguila` (attraction, dostoprimechatelnosti/mountain-bike-en-piedra-del-aguila.md)
 - `museo-de-arqueologia-de-alta-montana` (attraction, dostoprimechatelnosti/museo-de-arqueologia-de-alta-montana.md)
 - `museos-de-salta` (attraction, dostoprimechatelnosti/museos-de-salta.md)
-- `navegacion-en-los-rios-limay-y-neuquen` (attraction, dostoprimechatelnosti/navegacion-en-los-rios-limay-y-neuquen.md)
 - `navegacion-en-tierra-del-fuego` (attraction, dostoprimechatelnosti/navegacion-en-tierra-del-fuego.md)
 - `navegacion-entre-glaciares` (attraction, dostoprimechatelnosti/navegacion-entre-glaciares.md)
-- `navegacion-por-el-lago-argentino` (attraction, dostoprimechatelnosti/navegacion-por-el-lago-argentino.md)
-- `necochea` (city, goroda/necochea.md)
 - `nevado-de-chani` (attraction, dostoprimechatelnosti/nevado-de-chani.md)
-- `newells-old-boys` (attraction, dostoprimechatelnosti/newells-old-boys.md)
 - `nueva-cordoba` (attraction, dostoprimechatelnosti/nueva-cordoba.md)
 - `obera` (attraction, dostoprimechatelnosti/obera.md)
 - `parapente-en-cerro-san-javier` (attraction, dostoprimechatelnosti/parapente-en-cerro-san-javier.md)
@@ -133,34 +94,9 @@
 - `parque-marino-costero-patagonia-austral` (attraction, dostoprimechatelnosti/parque-marino-costero-patagonia-austral.md)
 - `parque-marino-isla-pinguino` (attraction, dostoprimechatelnosti/parque-marino-isla-pinguino.md)
 - `parque-marino-makenke` (attraction, dostoprimechatelnosti/parque-marino-makenke.md)
-- `parque-nacional-aconquija` (national_park, natsionalnye-parki/parque-nacional-aconquija.md)
-- `parque-nacional-baritu` (national_park, natsionalnye-parki/parque-nacional-baritu.md)
-- `parque-nacional-bosques-petrificados` (national_park, natsionalnye-parki/parque-nacional-bosques-petrificados.md)
-- `parque-nacional-calilegua` (national_park, natsionalnye-parki/parque-nacional-calilegua.md)
-- `parque-nacional-campos-del-tuyu` (national_park, natsionalnye-parki/parque-nacional-campos-del-tuyu.md)
-- `parque-nacional-ciervo-de-los-pantanos` (national_park, natsionalnye-parki/parque-nacional-ciervo-de-los-pantanos.md)
-- `parque-nacional-el-leoncito` (national_park, natsionalnye-parki/parque-nacional-el-leoncito.md)
-- `parque-nacional-el-rey` (national_park, natsionalnye-parki/parque-nacional-el-rey.md)
 - `parque-nacional-iguazu-patrimonio-de-la-humanidad` (national_park, natsionalnye-parki/parque-nacional-iguazu-patrimonio-de-la-humanidad.md)
-- `parque-nacional-islas-de-santa-fe` (national_park, natsionalnye-parki/parque-nacional-islas-de-santa-fe.md)
-- `parque-nacional-lago-puelo` (national_park, natsionalnye-parki/parque-nacional-lago-puelo.md)
-- `parque-nacional-laguna-blanca` (national_park, natsionalnye-parki/parque-nacional-laguna-blanca.md)
-- `parque-nacional-lanin` (national_park, natsionalnye-parki/parque-nacional-lanin.md)
-- `parque-nacional-los-alerces` (national_park, natsionalnye-parki/parque-nacional-los-alerces.md)
-- `parque-nacional-los-alerces-patrimonio-de-la-humanidad` (national_park, natsionalnye-parki/parque-nacional-los-alerces-patrimonio-de-la-humanidad.md)
-- `parque-nacional-los-arrayanes` (national_park, natsionalnye-parki/parque-nacional-los-arrayanes.md)
-- `parque-nacional-los-cardones` (national_park, natsionalnye-parki/parque-nacional-los-cardones.md)
 - `parque-nacional-los-glaciares-patrimonio-de-la-humanidad` (national_park, natsionalnye-parki/parque-nacional-los-glaciares-patrimonio-de-la-humanidad.md)
-- `parque-nacional-monte-leon` (national_park, natsionalnye-parki/parque-nacional-monte-leon.md)
-- `parque-nacional-patagonia` (national_park, natsionalnye-parki/parque-nacional-patagonia.md)
-- `parque-nacional-perito-moreno` (national_park, natsionalnye-parki/parque-nacional-perito-moreno.md)
-- `parque-nacional-pre-delta` (national_park, natsionalnye-parki/parque-nacional-pre-delta.md)
-- `parque-nacional-san-guillermo` (national_park, natsionalnye-parki/parque-nacional-san-guillermo.md)
-- `parque-nacional-talampaya` (national_park, natsionalnye-parki/parque-nacional-talampaya.md)
-- `parque-nacional-tierra-del-fuego` (national_park, natsionalnye-parki/parque-nacional-tierra-del-fuego.md)
 - `parque-natural-valle-fertil` (attraction, dostoprimechatelnosti/parque-natural-valle-fertil.md)
-- `parque-provincial-cordon-del-plata` (national_park, natsionalnye-parki/parque-provincial-cordon-del-plata.md)
-- `parque-provincial-ischigualasto` (national_park, natsionalnye-parki/parque-provincial-ischigualasto.md)
 - `parques-de-parana` (attraction, dostoprimechatelnosti/parques-de-parana.md)
 - `paseos-acuaticos-en-herradura` (attraction, dostoprimechatelnosti/paseos-acuaticos-en-herradura.md)
 - `paseos-aereos-en-ushuaia` (attraction, dostoprimechatelnosti/paseos-aereos-en-ushuaia.md)
@@ -181,47 +117,19 @@
 - `piedra-parada` (attraction, dostoprimechatelnosti/piedra-parada.md)
 - `pinguinos-en-punta-tombo` (attraction, dostoprimechatelnosti/pinguinos-en-punta-tombo.md)
 - `playas-de-la-patagonia` (attraction, dostoprimechatelnosti/playas-de-la-patagonia.md)
-- `pueblos-galeses-y-comunidades-originarias` (attraction, dostoprimechatelnosti/pueblos-galeses-y-comunidades-originarias.md)
-- `pueblos-pintorescos-de-cordoba` (attraction, dostoprimechatelnosti/pueblos-pintorescos-de-cordoba.md)
-- `pueblos-rurales-en-santa-fe` (attraction, dostoprimechatelnosti/pueblos-rurales-en-santa-fe.md)
-- `puente-del-inca` (attraction, dostoprimechatelnosti/puente-del-inca.md)
-- `puente-rosario-victoria` (attraction, dostoprimechatelnosti/puente-rosario-victoria.md)
-- `puerto-almanza` (attraction, dostoprimechatelnosti/puerto-almanza.md)
-- `puerto-iguazu` (city, goroda/puerto-iguazu.md)
-- `puerto-san-julian` (attraction, dostoprimechatelnosti/puerto-san-julian.md)
 - `purmamarca` (attraction, dostoprimechatelnosti/purmamarca.md)
 - `qhapaq-nan-el-shincal` (attraction, dostoprimechatelnosti/qhapaq-nan-el-shincal.md)
-- `quebrada-de-las-flechas` (attraction, dostoprimechatelnosti/quebrada-de-las-flechas.md)
 - `quitilipi` (attraction, dostoprimechatelnosti/quitilipi.md)
 - `rafaela` (attraction, dostoprimechatelnosti/rafaela.md)
 - `rafting-en-el-rio-chimehuin` (attraction, dostoprimechatelnosti/rafting-en-el-rio-chimehuin.md)
 - `rafting-en-el-rio-corcovado` (attraction, dostoprimechatelnosti/rafting-en-el-rio-corcovado.md)
-- `rafting-en-el-rio-hua-hum` (attraction, dostoprimechatelnosti/rafting-en-el-rio-hua-hum.md)
 - `rafting-en-el-rio-manso` (attraction, dostoprimechatelnosti/rafting-en-el-rio-manso.md)
-- `rafting-en-el-rio-mendoza` (attraction, dostoprimechatelnosti/rafting-en-el-rio-mendoza.md)
-- `reconquista` (attraction, dostoprimechatelnosti/reconquista.md)
 - `red-de-refugios-de-montana` (attraction, dostoprimechatelnosti/red-de-refugios-de-montana.md)
-- `reserva-costa-atlantica-tierra-del-fuego` (attraction, dostoprimechatelnosti/reserva-costa-atlantica-tierra-del-fuego.md)
-- `reserva-de-biosfera-laguna-blanca` (attraction, dostoprimechatelnosti/reserva-de-biosfera-laguna-blanca.md)
-- `reserva-de-biosfera-laguna-oca` (attraction, dostoprimechatelnosti/reserva-de-biosfera-laguna-oca.md)
-- `reserva-de-biosfera-yaboti` (attraction, dostoprimechatelnosti/reserva-de-biosfera-yaboti.md)
-- `reserva-natural-colonia-benitez` (attraction, dostoprimechatelnosti/reserva-natural-colonia-benitez.md)
-- `reserva-natural-el-nogalar-de-los-toldos` (attraction, dostoprimechatelnosti/reserva-natural-el-nogalar-de-los-toldos.md)
-- `reserva-natural-estricta-san-antonio` (attraction, dostoprimechatelnosti/reserva-natural-estricta-san-antonio.md)
-- `reserva-natural-ibera` (attraction, dostoprimechatelnosti/reserva-natural-ibera.md)
-- `reserva-natural-pichi-mahuida` (attraction, dostoprimechatelnosti/reserva-natural-pichi-mahuida.md)
-- `reserva-natural-silvestre-isla-de-los-estados` (attraction, dostoprimechatelnosti/reserva-natural-silvestre-isla-de-los-estados.md)
-- `reserva-provincial-parque-luro` (attraction, dostoprimechatelnosti/reserva-provincial-parque-luro.md)
 - `ria-de-bahia-blanca` (attraction, dostoprimechatelnosti/ria-de-bahia-blanca.md)
-- `rio-gallegos` (attraction, dostoprimechatelnosti/rio-gallegos.md)
-- `rio-grande` (attraction, dostoprimechatelnosti/rio-grande.md)
-- `rio-parana` (attraction, dostoprimechatelnosti/rio-parana.md)
 - `roque-saenz-pena` (attraction, dostoprimechatelnosti/roque-saenz-pena.md)
-- `ruta-40-en-chubut` (attraction, dostoprimechatelnosti/ruta-40-en-chubut.md)
 - `ruta-40-en-santa-cruz` (attraction, dostoprimechatelnosti/ruta-40-en-santa-cruz.md)
 - `ruta-azul` (attraction, dostoprimechatelnosti/ruta-azul.md)
 - `ruta-de-la-cultura-qom` (attraction, dostoprimechatelnosti/ruta-de-la-cultura-qom.md)
-- `ruta-de-los-siete-lagos` (attraction, dostoprimechatelnosti/ruta-de-los-siete-lagos.md)
 - `ruta-del-adobe-en-catamarca` (attraction, dostoprimechatelnosti/ruta-del-adobe-en-catamarca.md)
 - `ruta-del-artesano-en-tucuman` (attraction, dostoprimechatelnosti/ruta-del-artesano-en-tucuman.md)
 - `ruta-del-olivo-san-juan` (attraction, dostoprimechatelnosti/ruta-del-olivo-san-juan.md)
@@ -232,43 +140,25 @@
 - `rutas-de-tierra-del-fuego` (attraction, dostoprimechatelnosti/rutas-de-tierra-del-fuego.md)
 - `sabores-de-chaco` (attraction, dostoprimechatelnosti/sabores-de-chaco.md)
 - `sabores-riojanos` (attraction, dostoprimechatelnosti/sabores-riojanos.md)
-- `salinas-grandes-jujuy` (attraction, dostoprimechatelnosti/salinas-grandes-jujuy.md)
 - `salta-y-san-lorenzo` (attraction, dostoprimechatelnosti/salta-y-san-lorenzo.md)
 - `salto-encantado` (attraction, dostoprimechatelnosti/salto-encantado.md)
-- `saltos-del-mocona` (attraction, dostoprimechatelnosti/saltos-del-mocona.md)
-- `san-antonio-oeste` (attraction, dostoprimechatelnosti/san-antonio-oeste.md)
-- `san-jose` (attraction, dostoprimechatelnosti/san-jose.md)
 - `sandboard-en-abra-pampa` (attraction, dostoprimechatelnosti/sandboard-en-abra-pampa.md)
 - `sandboard-en-las-dunas-de-saujil` (attraction, dostoprimechatelnosti/sandboard-en-las-dunas-de-saujil.md)
-- `santa-maria` (attraction, dostoprimechatelnosti/santa-maria.md)
 - `seclantas` (attraction, dostoprimechatelnosti/seclantas.md)
 - `senderismo-con-llamas-en-jujuy` (attraction, dostoprimechatelnosti/senderismo-con-llamas-en-jujuy.md)
 - `senderos-periurbanos-de-esquel` (attraction, dostoprimechatelnosti/senderos-periurbanos-de-esquel.md)
-- `sierras-cordobesas` (attraction, dostoprimechatelnosti/sierras-cordobesas.md)
-- `sierras-de-la-provincia-de-buenos-aires` (attraction, dostoprimechatelnosti/sierras-de-la-provincia-de-buenos-aires.md)
-- `susques` (city, goroda/susques.md)
-- `tafi-del-valle` (attraction, dostoprimechatelnosti/tafi-del-valle.md)
 - `tafi-viejo` (attraction, dostoprimechatelnosti/tafi-viejo.md)
 - `tastil-y-santa-rosa-de-tastil` (attraction, dostoprimechatelnosti/tastil-y-santa-rosa-de-tastil.md)
-- `teatro-y-literatura-en-buenos-aires` (attraction, dostoprimechatelnosti/teatro-y-literatura-en-buenos-aires.md)
 - `temporada-de-orcas-en-peninsula-valdes` (attraction, dostoprimechatelnosti/temporada-de-orcas-en-peninsula-valdes.md)
-- `termas-de-cacheuta` (attraction, dostoprimechatelnosti/termas-de-cacheuta.md)
-- `termas-de-saenz-pena` (attraction, dostoprimechatelnosti/termas-de-saenz-pena.md)
-- `termas-del-rio-jordan` (attraction, dostoprimechatelnosti/termas-del-rio-jordan.md)
-- `termas-en-entre-rios` (attraction, dostoprimechatelnosti/termas-en-entre-rios.md)
 - `tilcara` (attraction, dostoprimechatelnosti/tilcara.md)
 - `tinogasta` (attraction, dostoprimechatelnosti/tinogasta.md)
 - `tolhuin` (attraction, dostoprimechatelnosti/tolhuin.md)
-- `tradicion-cervecera-en-santa-fe` (attraction, dostoprimechatelnosti/tradicion-cervecera-en-santa-fe.md)
 - `tradiciones-gauchas` (attraction, dostoprimechatelnosti/tradiciones-gauchas.md)
 - `travesia-4x4-en-tierra-del-fuego` (attraction, dostoprimechatelnosti/travesia-4x4-en-tierra-del-fuego.md)
-- `trekking-en-bosques-y-lagos` (attraction, dostoprimechatelnosti/trekking-en-bosques-y-lagos.md)
 - `trekking-en-lihue-calel` (attraction, dostoprimechatelnosti/trekking-en-lihue-calel.md)
 - `trekking-en-parque-patagonia` (attraction, dostoprimechatelnosti/trekking-en-parque-patagonia.md)
 - `trekking-en-salta` (attraction, dostoprimechatelnosti/trekking-en-salta.md)
-- `trekking-en-tolhuin` (attraction, dostoprimechatelnosti/trekking-en-tolhuin.md)
 - `tren-de-las-sierras` (attraction, dostoprimechatelnosti/tren-de-las-sierras.md)
-- `trevelin` (attraction, dostoprimechatelnosti/trevelin.md)
 - `trevelin-el-pueblo-del-molino` (attraction, dostoprimechatelnosti/trevelin-el-pueblo-del-molino.md)
 - `turismo-aventura-en-chaco` (attraction, dostoprimechatelnosti/turismo-aventura-en-chaco.md)
 - `turismo-cultural-en-rosario` (attraction, dostoprimechatelnosti/turismo-cultural-en-rosario.md)
@@ -278,32 +168,324 @@
 - `turismo-rural-en-la-pampa` (attraction, dostoprimechatelnosti/turismo-rural-en-la-pampa.md)
 - `turismo-rural-en-salta` (attraction, dostoprimechatelnosti/turismo-rural-en-salta.md)
 - `ushuaia-la-ciudad-y-el-tren` (attraction, dostoprimechatelnosti/ushuaia-la-ciudad-y-el-tren.md)
-- `valle-de-la-luna-de-cusi-cusi` (attraction, dostoprimechatelnosti/valle-de-la-luna-de-cusi-cusi.md)
-- `valle-de-punilla-cordoba` (attraction, dostoprimechatelnosti/valle-de-punilla-cordoba.md)
-- `valle-de-traslasierra` (attraction, dostoprimechatelnosti/valle-de-traslasierra.md)
-- `valle-de-uco` (attraction, dostoprimechatelnosti/valle-de-uco.md)
-- `valle-de-uco-mendoza` (attraction, dostoprimechatelnosti/valle-de-uco-mendoza.md)
-- `valle-encantado` (attraction, dostoprimechatelnosti/valle-encantado.md)
-- `valle-grande` (attraction, dostoprimechatelnosti/valle-grande.md)
 - `valles-y-bosques-fueguinos` (attraction, dostoprimechatelnosti/valles-y-bosques-fueguinos.md)
 - `verano-en-corrientes` (attraction, dostoprimechatelnosti/verano-en-corrientes.md)
-- `vida-nocturna-en-buenos-aires` (attraction, dostoprimechatelnosti/vida-nocturna-en-buenos-aires.md)
 - `viedma` (attraction, dostoprimechatelnosti/viedma.md)
-- `villa-carlos-paz` (attraction, dostoprimechatelnosti/villa-carlos-paz.md)
-- `villa-general-belgrano` (attraction, dostoprimechatelnosti/villa-general-belgrano.md)
-- `villa-mercedes-san-luis` (attraction, dostoprimechatelnosti/villa-mercedes-san-luis.md)
-- `villa-nougues` (attraction, dostoprimechatelnosti/villa-nougues.md)
-- `villa-ocampo` (attraction, dostoprimechatelnosti/villa-ocampo.md)
-- `villa-paranacito` (attraction, dostoprimechatelnosti/villa-paranacito.md)
-- `villa-pehuenia` (attraction, dostoprimechatelnosti/villa-pehuenia.md)
-- `villa-regina` (attraction, dostoprimechatelnosti/villa-regina.md)
-- `villa-rio-bermejito` (attraction, dostoprimechatelnosti/villa-rio-bermejito.md)
 - `villa-traful` (attraction, dostoprimechatelnosti/villa-traful.md)
-- `villavicencio` (attraction, dostoprimechatelnosti/villavicencio.md)
 - `vinos-de-san-juan` (attraction, dostoprimechatelnosti/vinos-de-san-juan.md)
 - `vinos-de-tolombon` (attraction, dostoprimechatelnosti/vinos-de-tolombon.md)
 - `vinos-del-valle-patagonico` (attraction, dostoprimechatelnosti/vinos-del-valle-patagonico.md)
-- `volcan-lanin` (attraction, dostoprimechatelnosti/volcan-lanin.md)
-- `volcan-malacara` (attraction, dostoprimechatelnosti/volcan-malacara.md)
 - `yapeyu` (attraction, dostoprimechatelnosti/yapeyu.md)
 - `yungas-tucumanas` (attraction, dostoprimechatelnosti/yungas-tucumanas.md)
+
+## Готовность к сайту: нет hero-фото
+
+- `bahia-blanca` (city, goroda/bahia-blanca.md)
+- `barreal` (attraction, dostoprimechatelnosti/barreal.md)
+- `colon-entre-rios` (city, goroda/colon-entre-rios.md)
+- `esquel` (city, goroda/esquel.md)
+- `hornocal` (attraction, dostoprimechatelnosti/hornocal.md)
+- `las-lenas` (attraction, dostoprimechatelnosti/las-lenas.md)
+- `lujan` (city, goroda/lujan.md)
+- `mar-de-las-pampas` (attraction, dostoprimechatelnosti/mar-de-las-pampas.md)
+- `mercedes-corrientes` (city, goroda/mercedes-corrientes.md)
+- `merlo` (city, goroda/merlo.md)
+- `necochea` (city, goroda/necochea.md)
+- `ruinas-de-quilmes` (attraction, dostoprimechatelnosti/ruinas-de-quilmes.md)
+- `saltos-del-mocona` (attraction, dostoprimechatelnosti/saltos-del-mocona.md)
+- `sierra-de-la-ventana` (attraction, dostoprimechatelnosti/sierra-de-la-ventana.md)
+- `susques` (city, goroda/susques.md)
+- `tafi-del-valle` (attraction, dostoprimechatelnosti/tafi-del-valle.md)
+- `tandil` (city, goroda/tandil.md)
+- `trevelin` (attraction, dostoprimechatelnosti/trevelin.md)
+- `valle-de-uco` (attraction, dostoprimechatelnosti/valle-de-uco.md)
+- `villavicencio` (attraction, dostoprimechatelnosti/villavicencio.md)
+
+## Редакционный долг: короткие опубликованные записи
+
+- `avistaje-de-aves-en-santa-cruz` (attraction, dostoprimechatelnosti/avistaje-de-aves-en-santa-cruz.md) — 93 слов
+- `buceo-en-las-costas-de-ushuaia` (attraction, dostoprimechatelnosti/buceo-en-las-costas-de-ushuaia.md) — 93 слов
+- `cabalgatas-en-cerro-belvedere-y-cascada-inacayal` (attraction, dostoprimechatelnosti/cabalgatas-en-cerro-belvedere-y-cascada-inacayal.md) — 95 слов
+- `cabalgatas-en-la-estepa-de-bariloche` (attraction, dostoprimechatelnosti/cabalgatas-en-la-estepa-de-bariloche.md) — 78 слов
+- `cabalgatas-en-las-sierras-bonaerenses` (attraction, dostoprimechatelnosti/cabalgatas-en-las-sierras-bonaerenses.md) — 101 слов
+- `canon-del-atuel` (attraction, dostoprimechatelnosti/canon-del-atuel.md) — 86 слов
+- `cascada-chachin` (attraction, dostoprimechatelnosti/cascada-chachin.md) — 76 слов
+- `cascada-del-rio-noque` (attraction, dostoprimechatelnosti/cascada-del-rio-noque.md) — 70 слов
+- `cascada-nivinco-y-pichi-traful` (attraction, dostoprimechatelnosti/cascada-nivinco-y-pichi-traful.md) — 89 слов
+- `cascadas-santa-ana-y-dora` (attraction, dostoprimechatelnosti/cascadas-santa-ana-y-dora.md) — 71 слов
+- `catamaran-en-la-triple-frontera` (attraction, dostoprimechatelnosti/catamaran-en-la-triple-frontera.md) — 91 слов
+- `caviahue-copahue` (attraction, dostoprimechatelnosti/caviahue-copahue.md) — 84 слов
+- `cerro-castor` (attraction, dostoprimechatelnosti/cerro-castor.md) — 69 слов
+- `cerro-mercedario-y-grandes-cumbres-de-san-juan` (attraction, dostoprimechatelnosti/cerro-mercedario-y-grandes-cumbres-de-san-juan.md) — 79 слов
+- `cerro-tronador` (attraction, dostoprimechatelnosti/cerro-tronador.md) — 79 слов
+- `cerros-catedral-y-perito-moreno` (attraction, dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md) — 79 слов
+- `ciudad-de-corrientes` (attraction, dostoprimechatelnosti/ciudad-de-corrientes.md) — 74 слов
+- `ciudad-de-formosa` (attraction, dostoprimechatelnosti/ciudad-de-formosa.md) — 75 слов
+- `ciudad-de-salta` (attraction, dostoprimechatelnosti/ciudad-de-salta.md) — 82 слов
+- `ciudad-de-san-juan` (attraction, dostoprimechatelnosti/ciudad-de-san-juan.md) — 77 слов
+- `ciudad-de-santa-fe` (attraction, dostoprimechatelnosti/ciudad-de-santa-fe.md) — 75 слов
+- `colon-entre-rios` (city, goroda/colon-entre-rios.md) — 95 слов
+- `colonia-carlos-pellegrini` (attraction, dostoprimechatelnosti/colonia-carlos-pellegrini.md) — 74 слов
+- `colonia-menonita-en-la-pampa` (attraction, dostoprimechatelnosti/colonia-menonita-en-la-pampa.md) — 88 слов
+- `colonia-suiza` (attraction, dostoprimechatelnosti/colonia-suiza.md) — 78 слов
+- `colonias-judias-en-santa-fe` (attraction, dostoprimechatelnosti/colonias-judias-en-santa-fe.md) — 82 слов
+- `costa-atlantica-bonaerense` (attraction, dostoprimechatelnosti/costa-atlantica-bonaerense.md) — 99 слов
+- `dique-piscu-yacu` (attraction, dostoprimechatelnosti/dique-piscu-yacu.md) — 72 слов
+- `dunas-de-taton` (attraction, dostoprimechatelnosti/dunas-de-taton.md) — 72 слов
+- `el-calafate` (city, goroda/el-calafate.md) — 88 слов
+- `el-chaku` (attraction, dostoprimechatelnosti/el-chaku.md) — 73 слов
+- `el-chalten` (city, goroda/el-chalten.md) — 87 слов
+- `el-curanto` (attraction, dostoprimechatelnosti/el-curanto.md) — 79 слов
+- `el-gaucho` (attraction, dostoprimechatelnosti/el-gaucho.md) — 73 слов
+- `el-hoyo` (attraction, dostoprimechatelnosti/el-hoyo.md) — 82 слов
+- `el-mate` (attraction, dostoprimechatelnosti/el-mate.md) — 73 слов
+- `el-nihuil` (attraction, dostoprimechatelnosti/el-nihuil.md) — 74 слов
+- `el-obelisco-de-cafayate` (attraction, dostoprimechatelnosti/el-obelisco-de-cafayate.md) — 73 слов
+- `el-rodeo` (attraction, dostoprimechatelnosti/el-rodeo.md) — 71 слов
+- `el-salitral-encantado` (attraction, dostoprimechatelnosti/el-salitral-encantado.md) — 72 слов
+- `el-sauzalito` (attraction, dostoprimechatelnosti/el-sauzalito.md) — 71 слов
+- `el-sosneado` (attraction, dostoprimechatelnosti/el-sosneado.md) — 75 слов
+- `el-trapiche` (attraction, dostoprimechatelnosti/el-trapiche.md) — 71 слов
+- `el-tren-patagonico` (attraction, dostoprimechatelnosti/el-tren-patagonico.md) — 91 слов
+- `el-vino-malbec` (attraction, dostoprimechatelnosti/el-vino-malbec.md) — 74 слов
+- `empedrado` (attraction, dostoprimechatelnosti/empedrado.md) — 80 слов
+- `esquel` (city, goroda/esquel.md) — 84 слов
+- `glaciar-huemul` (attraction, dostoprimechatelnosti/glaciar-huemul.md) — 72 слов
+- `glaciar-ojo-del-albino` (attraction, dostoprimechatelnosti/glaciar-ojo-del-albino.md) — 76 слов
+- `iguasu` (national_park, natsionalnye-parki/iguasu.md) — 94 слов
+- `kayak-en-bariloche` (attraction, dostoprimechatelnosti/kayak-en-bariloche.md) — 87 слов
+- `la-aripuca` (attraction, dostoprimechatelnosti/la-aripuca.md) — 74 слов
+- `la-mitica-ruta-40` (attraction, dostoprimechatelnosti/la-mitica-ruta-40.md) — 77 слов
+- `la-rioja-off-road` (attraction, dostoprimechatelnosti/la-rioja-off-road.md) — 77 слов
+- `la-ruta-del-chocolate` (attraction, dostoprimechatelnosti/la-ruta-del-chocolate.md) — 71 слов
+- `la-ruta-del-pehuen` (attraction, dostoprimechatelnosti/la-ruta-del-pehuen.md) — 76 слов
+- `laberinto-patagonia` (attraction, dostoprimechatelnosti/laberinto-patagonia.md) — 84 слов
+- `lago-del-desierto` (attraction, dostoprimechatelnosti/lago-del-desierto.md) — 77 слов
+- `lago-mascardi` (attraction, dostoprimechatelnosti/lago-mascardi.md) — 73 слов
+- `lago-posadas` (attraction, dostoprimechatelnosti/lago-posadas.md) — 71 слов
+- `lagos-de-tierra-del-fuego` (attraction, dostoprimechatelnosti/lagos-de-tierra-del-fuego.md) — 90 слов
+- `laguna-de-mar-chiquita` (attraction, dostoprimechatelnosti/laguna-de-mar-chiquita.md) — 75 слов
+- `laguna-esmeralda` (attraction, dostoprimechatelnosti/laguna-esmeralda.md) — 73 слов
+- `laguna-melincue` (attraction, dostoprimechatelnosti/laguna-melincue.md) — 71 слов
+- `los-gigantes` (attraction, dostoprimechatelnosti/los-gigantes.md) — 68 слов
+- `los-glasiares` (national_park, natsionalnye-parki/los-glasiares.md) — 95 слов
+- `los-valles-calchaquies` (attraction, dostoprimechatelnosti/los-valles-calchaquies.md) — 73 слов
+- `mar-de-las-pampas` (attraction, dostoprimechatelnosti/mar-de-las-pampas.md) — 96 слов
+- `merlo` (city, goroda/merlo.md) — 88 слов
+- `monumento-natural-laguna-de-los-pozuelos` (attraction, dostoprimechatelnosti/monumento-natural-laguna-de-los-pozuelos.md) — 91 слов
+- `navegacion-en-los-rios-limay-y-neuquen` (attraction, dostoprimechatelnosti/navegacion-en-los-rios-limay-y-neuquen.md) — 92 слов
+- `navegacion-por-el-lago-argentino` (attraction, dostoprimechatelnosti/navegacion-por-el-lago-argentino.md) — 89 слов
+- `necochea` (city, goroda/necochea.md) — 87 слов
+- `newells-old-boys` (attraction, dostoprimechatelnosti/newells-old-boys.md) — 90 слов
+- `parque-nacional-aconquija` (national_park, natsionalnye-parki/parque-nacional-aconquija.md) — 74 слов
+- `parque-nacional-baritu` (national_park, natsionalnye-parki/parque-nacional-baritu.md) — 87 слов
+- `parque-nacional-bosques-petrificados` (national_park, natsionalnye-parki/parque-nacional-bosques-petrificados.md) — 93 слов
+- `parque-nacional-calilegua` (national_park, natsionalnye-parki/parque-nacional-calilegua.md) — 81 слов
+- `parque-nacional-campos-del-tuyu` (national_park, natsionalnye-parki/parque-nacional-campos-del-tuyu.md) — 80 слов
+- `parque-nacional-ciervo-de-los-pantanos` (national_park, natsionalnye-parki/parque-nacional-ciervo-de-los-pantanos.md) — 95 слов
+- …и ещё 85
+
+## Редакционный долг: заголовки без русской адаптации
+
+- `alero-charcamata` (attraction, dostoprimechatelnosti/alero-charcamata.md) — Alero Charcamata
+- `alumine` (attraction, dostoprimechatelnosti/alumine.md) — Aluminé
+- `amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes` (attraction, dostoprimechatelnosti/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes.md) — Amaicha del Valle and Sagrada de los Quilmes City
+- `andinismo-y-montanismo-en-neuquen` (attraction, dostoprimechatelnosti/andinismo-y-montanismo-en-neuquen.md) — Mountaineering in Neuquén
+- `angastaco` (attraction, dostoprimechatelnosti/angastaco.md) — Angastaco
+- `antofagasta-de-la-sierra` (attraction, dostoprimechatelnosti/antofagasta-de-la-sierra.md) — Antofagasta de la Sierra
+- `area-natural-protegida-rio-limay` (attraction, dostoprimechatelnosti/area-natural-protegida-rio-limay.md) — Limay River Protected Natural Area
+- `artesania-formosena` (attraction, dostoprimechatelnosti/artesania-formosena.md) — Handicrafts in Formosa
+- `astroturismo-en-san-juan` (attraction, dostoprimechatelnosti/astroturismo-en-san-juan.md) — Astrotourism in San Juan
+- `autodromo-internacional-de-rio-hondo` (attraction, dostoprimechatelnosti/autodromo-internacional-de-rio-hondo.md) — Río Hondo International Racetrack
+- `avellaneda` (attraction, dostoprimechatelnosti/avellaneda.md) — Avellaneda
+- `aventura-submarina-en-puerto-madryn` (attraction, dostoprimechatelnosti/aventura-submarina-en-puerto-madryn.md) — Submarine adventure in Puerto Madryn
+- `aves-del-chaco` (attraction, dostoprimechatelnosti/aves-del-chaco.md) — Birds from Chaco
+- `avistaje-de-aves-en-formosa` (attraction, dostoprimechatelnosti/avistaje-de-aves-en-formosa.md) — Bird watching in Formosa
+- `avistaje-de-aves-en-santa-cruz` (attraction, dostoprimechatelnosti/avistaje-de-aves-en-santa-cruz.md) — Bird watching in Santa Cruz
+- `bebidas-y-gastronomia-en-cordoba` (attraction, dostoprimechatelnosti/bebidas-y-gastronomia-en-cordoba.md) — Food and Drink in Córdoba
+- `belen` (attraction, dostoprimechatelnosti/belen.md) — Belén
+- `bienal-internacional-de-esculturas-en-resistencia` (attraction, dostoprimechatelnosti/bienal-internacional-de-esculturas-en-resistencia.md) — International Sculpture Biennale in Resistencia
+- `bodega-submarina-en-las-grutas` (attraction, dostoprimechatelnosti/bodega-submarina-en-las-grutas.md) — An underwater winery in Las Grutas
+- `buceo-en-el-golfo-san-matias` (attraction, dostoprimechatelnosti/buceo-en-el-golfo-san-matias.md) — Scuba diving at the San Matías Gulf
+- `cabalgata-en-el-lago-roca` (attraction, dostoprimechatelnosti/cabalgata-en-el-lago-roca.md) — Horseback riding in the Roca lake
+- `cabalgata-en-los-molles` (attraction, dostoprimechatelnosti/cabalgata-en-los-molles.md) — Horseback riding in Los Molles
+- `cabalgatas-en-cerro-belvedere-y-cascada-inacayal` (attraction, dostoprimechatelnosti/cabalgatas-en-cerro-belvedere-y-cascada-inacayal.md) — Horseback rides in Belvedere Hill and Inacayal waterfall
+- `cabalgatas-en-tafi-del-valle` (attraction, dostoprimechatelnosti/cabalgatas-en-tafi-del-valle.md) — Horseback riding in Tafí del Valle
+- `cabalgatas-en-valle-chico` (attraction, dostoprimechatelnosti/cabalgatas-en-valle-chico.md) — Horseback riding in Valle Chico
+- `cachi` (attraction, dostoprimechatelnosti/cachi.md) — Cachi
+- `camino-de-la-costa` (attraction, dostoprimechatelnosti/camino-de-la-costa.md) — shore road
+- `caminos-de-la-fe-san-juan` (attraction, dostoprimechatelnosti/caminos-de-la-fe-san-juan.md) — Paths of faith, San Juan
+- `campo-del-cielo` (attraction, dostoprimechatelnosti/campo-del-cielo.md) — Campo del Cielo
+- `campo-del-cielo-y-saenz-pena` (attraction, dostoprimechatelnosti/campo-del-cielo-y-saenz-pena.md) — Field of the Sky [Campo del Cielo] and Sáenz Peña
+- `canon-del-atuel` (attraction, dostoprimechatelnosti/canon-del-atuel.md) — Atuel Canyon
+- `capilla-del-monte` (attraction, dostoprimechatelnosti/capilla-del-monte.md) — Capilla del Monte
+- `carcarana` (attraction, dostoprimechatelnosti/carcarana.md) — Carcarañá
+- `carmen-del-sauce` (attraction, dostoprimechatelnosti/carmen-del-sauce.md) — Carmen del Sauce
+- `carnaval-de-humahuaca` (attraction, dostoprimechatelnosti/carnaval-de-humahuaca.md) — Humahuaca Carnival
+- `carnaval-en-corrientes` (attraction, dostoprimechatelnosti/carnaval-en-corrientes.md) — Carnival in Corrientes
+- `casa-de-san-martin-en-yapeyu` (attraction, dostoprimechatelnosti/casa-de-san-martin-en-yapeyu.md) — San Martin’s home in Yapeyú
+- `cascada-nivinco-y-pichi-traful` (attraction, dostoprimechatelnosti/cascada-nivinco-y-pichi-traful.md) — Ñivinco and Pichi Traful Waterfalls
+- `catamaran-en-el-rio-parana` (attraction, dostoprimechatelnosti/catamaran-en-el-rio-parana.md) — Catamaran on the Paraná river
+- `catamaran-en-la-triple-frontera` (attraction, dostoprimechatelnosti/catamaran-en-la-triple-frontera.md) — Catamaran at the Triple Frontier
+- `caucete-san-juan` (attraction, dostoprimechatelnosti/caucete-san-juan.md) — Caucete, San Juan
+- `caviahue-copahue` (attraction, dostoprimechatelnosti/caviahue-copahue.md) — Caviahue - Copahue
+- `centro-de-esqui-la-hoya` (attraction, dostoprimechatelnosti/centro-de-esqui-la-hoya.md) — La Hoya ski resort
+- `centro-termal-bernardo-larroude` (attraction, dostoprimechatelnosti/centro-termal-bernardo-larroude.md) — Bernardo Larroudé Hot Spring Center
+- `centros-de-esqui-en-neuquen` (attraction, dostoprimechatelnosti/centros-de-esqui-en-neuquen.md) — Ski resorts in Neuquén
+- `cholila` (attraction, dostoprimechatelnosti/cholila.md) — Cholila
+- `circuito-callejero-de-potrero-de-los-funes` (attraction, dostoprimechatelnosti/circuito-callejero-de-potrero-de-los-funes.md) — Street circuit in Potrero de los Funes
+- `circuito-cultural-en-formosa` (attraction, dostoprimechatelnosti/circuito-cultural-en-formosa.md) — Cultural circuit in Formosa
+- `circuito-de-cervecerias-en-rosario` (attraction, dostoprimechatelnosti/circuito-de-cervecerias-en-rosario.md) — Brewers’ circuit in Rosario
+- `circuito-gastronomico-en-el-rio-parana` (attraction, dostoprimechatelnosti/circuito-gastronomico-en-el-rio-parana.md) — Food circuit on the Paraná river
+- `clorinda` (attraction, dostoprimechatelnosti/clorinda.md) — Clorinda
+- `colon` (attraction, dostoprimechatelnosti/colon.md) — Colón
+- `colonia-menonita-en-la-pampa` (attraction, dostoprimechatelnosti/colonia-menonita-en-la-pampa.md) — Mennonite Colony in La Pampa
+- `comandante-luis-piedrabuena` (attraction, dostoprimechatelnosti/comandante-luis-piedrabuena.md) — Comandante Luis Piedrabuena
+- `comarca-andina-del-paralelo-42` (attraction, dostoprimechatelnosti/comarca-andina-del-paralelo-42.md) — Comarca Andina del Paralelo 42
+- `cordoba-de-las-campanas` (attraction, dostoprimechatelnosti/cordoba-de-las-campanas.md) — Córdoba with Bells
+- `corredor-de-la-puna` (attraction, dostoprimechatelnosti/corredor-de-la-puna.md) — Puna Route
+- `corredor-del-viento` (attraction, dostoprimechatelnosti/corredor-del-viento.md) — Corredor del Viento
+- `cosquin` (attraction, dostoprimechatelnosti/cosquin.md) — Cosquín
+- `costanera-de-corrientes` (attraction, dostoprimechatelnosti/costanera-de-corrientes.md) — coastal promenade in Corrientes
+- `costanera-de-formosa` (attraction, dostoprimechatelnosti/costanera-de-formosa.md) — Formosa coastal promenade
+- `cruce-de-los-andes` (attraction, dostoprimechatelnosti/cruce-de-los-andes.md) — Andean crossing
+- `cuesta-del-viento` (attraction, dostoprimechatelnosti/cuesta-del-viento.md) — Cuesta del Viento
+- `cultura-guarani-en-misiones` (attraction, dostoprimechatelnosti/cultura-guarani-en-misiones.md) — Guaraní Culture in Misiones
+- `cusi-cusi` (attraction, dostoprimechatelnosti/cusi-cusi.md) — Cusi Cusi
+- `deportes-extremos-en-la-rioja` (attraction, dostoprimechatelnosti/deportes-extremos-en-la-rioja.md) — Extreme Sports in La Rioja
+- `deportes-extremos-en-paso-de-la-patria` (attraction, dostoprimechatelnosti/deportes-extremos-en-paso-de-la-patria.md) — Extreme sports in Paso de la Patria
+- `dinosaurios-en-neuquen` (attraction, dostoprimechatelnosti/dinosaurios-en-neuquen.md) — Dinosaurs in Neuquén
+- `el-hoyo` (attraction, dostoprimechatelnosti/el-hoyo.md) — El Hoyo
+- `eldorado` (attraction, dostoprimechatelnosti/eldorado.md) — Eldorado
+- `empedrado` (attraction, dostoprimechatelnosti/empedrado.md) — Empedrado
+- `empedrado-y-el-carrizal` (attraction, dostoprimechatelnosti/empedrado-y-el-carrizal.md) — Empedrado and El Carrizal
+- `epuyen` (attraction, dostoprimechatelnosti/epuyen.md) — Epuyén
+- `esquina` (attraction, dostoprimechatelnosti/esquina.md) — Esquina
+- `estancias-turisticas-de-campo` (attraction, dostoprimechatelnosti/estancias-turisticas-de-campo.md) — Tourist estancias in the countryside
+- `expedicion-al-avion-de-los-uruguayos` (attraction, dostoprimechatelnosti/expedicion-al-avion-de-los-uruguayos.md) — Expedition to the Uruguayan team’s plane
+- `expediciones-en-el-lago-huechulafquen` (attraction, dostoprimechatelnosti/expediciones-en-el-lago-huechulafquen.md) — Expeditions in Huechulafquen Lake
+- `federacion` (city, goroda/federacion.md) — Federación
+- `feria-de-simoca` (attraction, dostoprimechatelnosti/feria-de-simoca.md) — Simoca Fair
+- `festival-de-cosquin` (attraction, dostoprimechatelnosti/festival-de-cosquin.md) — Cosquín Festival
+- …и ещё 144
+
+## Редакционный долг: шаблонные импортные тексты INPROTUR
+
+- `alero-charcamata` (attraction, dostoprimechatelnosti/alero-charcamata.md)
+- `alumine` (attraction, dostoprimechatelnosti/alumine.md)
+- `amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes` (attraction, dostoprimechatelnosti/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes.md)
+- `andinismo-y-montanismo-en-neuquen` (attraction, dostoprimechatelnosti/andinismo-y-montanismo-en-neuquen.md)
+- `angastaco` (attraction, dostoprimechatelnosti/angastaco.md)
+- `antofagasta-de-la-sierra` (attraction, dostoprimechatelnosti/antofagasta-de-la-sierra.md)
+- `area-natural-protegida-rio-limay` (attraction, dostoprimechatelnosti/area-natural-protegida-rio-limay.md)
+- `artesania-formosena` (attraction, dostoprimechatelnosti/artesania-formosena.md)
+- `astroturismo-en-san-juan` (attraction, dostoprimechatelnosti/astroturismo-en-san-juan.md)
+- `autodromo-internacional-de-rio-hondo` (attraction, dostoprimechatelnosti/autodromo-internacional-de-rio-hondo.md)
+- `avellaneda` (attraction, dostoprimechatelnosti/avellaneda.md)
+- `aventura-en-la-patagonia-andina` (attraction, dostoprimechatelnosti/aventura-en-la-patagonia-andina.md)
+- `aventura-submarina-en-puerto-madryn` (attraction, dostoprimechatelnosti/aventura-submarina-en-puerto-madryn.md)
+- `aves-del-chaco` (attraction, dostoprimechatelnosti/aves-del-chaco.md)
+- `avistaje-de-aves-en-formosa` (attraction, dostoprimechatelnosti/avistaje-de-aves-en-formosa.md)
+- `avistaje-de-aves-en-santa-cruz` (attraction, dostoprimechatelnosti/avistaje-de-aves-en-santa-cruz.md)
+- `bebidas-y-gastronomia-en-cordoba` (attraction, dostoprimechatelnosti/bebidas-y-gastronomia-en-cordoba.md)
+- `belen` (attraction, dostoprimechatelnosti/belen.md)
+- `bienal-internacional-de-esculturas-en-resistencia` (attraction, dostoprimechatelnosti/bienal-internacional-de-esculturas-en-resistencia.md)
+- `bodega-submarina-en-las-grutas` (attraction, dostoprimechatelnosti/bodega-submarina-en-las-grutas.md)
+- `buceo-en-el-golfo-san-matias` (attraction, dostoprimechatelnosti/buceo-en-el-golfo-san-matias.md)
+- `buceo-en-las-costas-de-ushuaia` (attraction, dostoprimechatelnosti/buceo-en-las-costas-de-ushuaia.md)
+- `cabalgata-en-el-lago-roca` (attraction, dostoprimechatelnosti/cabalgata-en-el-lago-roca.md)
+- `cabalgata-en-los-molles` (attraction, dostoprimechatelnosti/cabalgata-en-los-molles.md)
+- `cabalgatas-en-cerro-belvedere-y-cascada-inacayal` (attraction, dostoprimechatelnosti/cabalgatas-en-cerro-belvedere-y-cascada-inacayal.md)
+- `cabalgatas-en-la-estepa-de-bariloche` (attraction, dostoprimechatelnosti/cabalgatas-en-la-estepa-de-bariloche.md)
+- `cabalgatas-en-las-sierras-bonaerenses` (attraction, dostoprimechatelnosti/cabalgatas-en-las-sierras-bonaerenses.md)
+- `cabalgatas-en-tafi-del-valle` (attraction, dostoprimechatelnosti/cabalgatas-en-tafi-del-valle.md)
+- `cabalgatas-en-valle-chico` (attraction, dostoprimechatelnosti/cabalgatas-en-valle-chico.md)
+- `cachi` (attraction, dostoprimechatelnosti/cachi.md)
+- `camino-de-la-costa` (attraction, dostoprimechatelnosti/camino-de-la-costa.md)
+- `caminos-de-la-fe-san-juan` (attraction, dostoprimechatelnosti/caminos-de-la-fe-san-juan.md)
+- `campo-del-cielo` (attraction, dostoprimechatelnosti/campo-del-cielo.md)
+- `campo-del-cielo-y-saenz-pena` (attraction, dostoprimechatelnosti/campo-del-cielo-y-saenz-pena.md)
+- `canon-del-atuel` (attraction, dostoprimechatelnosti/canon-del-atuel.md)
+- `capilla-del-monte` (attraction, dostoprimechatelnosti/capilla-del-monte.md)
+- `carcarana` (attraction, dostoprimechatelnosti/carcarana.md)
+- `carmen-del-sauce` (attraction, dostoprimechatelnosti/carmen-del-sauce.md)
+- `carnaval-de-humahuaca` (attraction, dostoprimechatelnosti/carnaval-de-humahuaca.md)
+- `carnaval-en-corrientes` (attraction, dostoprimechatelnosti/carnaval-en-corrientes.md)
+- `casa-de-san-martin-en-yapeyu` (attraction, dostoprimechatelnosti/casa-de-san-martin-en-yapeyu.md)
+- `cascada-nivinco-y-pichi-traful` (attraction, dostoprimechatelnosti/cascada-nivinco-y-pichi-traful.md)
+- `catamaran-en-el-rio-parana` (attraction, dostoprimechatelnosti/catamaran-en-el-rio-parana.md)
+- `catamaran-en-la-triple-frontera` (attraction, dostoprimechatelnosti/catamaran-en-la-triple-frontera.md)
+- `caucete-san-juan` (attraction, dostoprimechatelnosti/caucete-san-juan.md)
+- `caviahue-copahue` (attraction, dostoprimechatelnosti/caviahue-copahue.md)
+- `centro-de-esqui-la-hoya` (attraction, dostoprimechatelnosti/centro-de-esqui-la-hoya.md)
+- `centro-termal-bernardo-larroude` (attraction, dostoprimechatelnosti/centro-termal-bernardo-larroude.md)
+- `centros-de-esqui-en-neuquen` (attraction, dostoprimechatelnosti/centros-de-esqui-en-neuquen.md)
+- `cerros-catedral-y-perito-moreno` (attraction, dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md)
+- `cholila` (attraction, dostoprimechatelnosti/cholila.md)
+- `circuito-callejero-de-potrero-de-los-funes` (attraction, dostoprimechatelnosti/circuito-callejero-de-potrero-de-los-funes.md)
+- `circuito-cultural-en-formosa` (attraction, dostoprimechatelnosti/circuito-cultural-en-formosa.md)
+- `circuito-de-cervecerias-en-rosario` (attraction, dostoprimechatelnosti/circuito-de-cervecerias-en-rosario.md)
+- `circuito-gastronomico-en-el-rio-parana` (attraction, dostoprimechatelnosti/circuito-gastronomico-en-el-rio-parana.md)
+- `ciudad-de-corrientes` (attraction, dostoprimechatelnosti/ciudad-de-corrientes.md)
+- `ciudad-de-salta` (attraction, dostoprimechatelnosti/ciudad-de-salta.md)
+- `clorinda` (attraction, dostoprimechatelnosti/clorinda.md)
+- `colon` (attraction, dostoprimechatelnosti/colon.md)
+- `colon-entre-rios` (city, goroda/colon-entre-rios.md)
+- `colonia-menonita-en-la-pampa` (attraction, dostoprimechatelnosti/colonia-menonita-en-la-pampa.md)
+- `comandante-luis-piedrabuena` (attraction, dostoprimechatelnosti/comandante-luis-piedrabuena.md)
+- `comarca-andina-del-paralelo-42` (attraction, dostoprimechatelnosti/comarca-andina-del-paralelo-42.md)
+- `cordoba-de-las-campanas` (attraction, dostoprimechatelnosti/cordoba-de-las-campanas.md)
+- `corredor-de-la-puna` (attraction, dostoprimechatelnosti/corredor-de-la-puna.md)
+- `corredor-del-viento` (attraction, dostoprimechatelnosti/corredor-del-viento.md)
+- `cosquin` (attraction, dostoprimechatelnosti/cosquin.md)
+- `costa-atlantica-bonaerense` (attraction, dostoprimechatelnosti/costa-atlantica-bonaerense.md)
+- `costa-atlantica-de-la-provincia-de-buenos-aires` (attraction, dostoprimechatelnosti/costa-atlantica-de-la-provincia-de-buenos-aires.md)
+- `costanera-de-corrientes` (attraction, dostoprimechatelnosti/costanera-de-corrientes.md)
+- `costanera-de-formosa` (attraction, dostoprimechatelnosti/costanera-de-formosa.md)
+- `cruce-de-los-andes` (attraction, dostoprimechatelnosti/cruce-de-los-andes.md)
+- `cuesta-del-viento` (attraction, dostoprimechatelnosti/cuesta-del-viento.md)
+- `cultura-guarani-en-misiones` (attraction, dostoprimechatelnosti/cultura-guarani-en-misiones.md)
+- `cusi-cusi` (attraction, dostoprimechatelnosti/cusi-cusi.md)
+- `delta-del-parana` (attraction, dostoprimechatelnosti/delta-del-parana.md)
+- `deportes-extremos-en-la-rioja` (attraction, dostoprimechatelnosti/deportes-extremos-en-la-rioja.md)
+- `deportes-extremos-en-paso-de-la-patria` (attraction, dostoprimechatelnosti/deportes-extremos-en-paso-de-la-patria.md)
+- `dinosaurios-de-la-patagonia` (attraction, dostoprimechatelnosti/dinosaurios-de-la-patagonia.md)
+- `dinosaurios-en-neuquen` (attraction, dostoprimechatelnosti/dinosaurios-en-neuquen.md)
+- …и ещё 209
+
+## Редакционный контроль: чувствительные материалы без источников
+
+- `aktualen-li-blue-dollar` (faq, faq/aktualen-li-blue-dollar.md) — Актуален ли «блю-доллар» в Аргентине в 2026 году?
+- `bezopasno-li-odnoj-zhenshchine` (faq, faq/bezopasno-li-odnoj-zhenshchine.md) — Безопасно ли путешествовать по Аргентине одной женщине?
+- `bezopasno-li-v-argentine` (faq, faq/bezopasno-li-v-argentine.md) — Безопасно ли путешествовать по Аргентине?
+- `chto-takoe-dni-i-cuil` (faq, faq/chto-takoe-dni-i-cuil.md) — Что такое DNI, CUIL и CUIT в Аргентине и зачем они нужны?
+- `chto-takoe-mep` (faq, faq/chto-takoe-mep.md) — Что такое MEP в Аргентине и зачем он нужен?
+- `gid-po-dengam` (guide, dengi/gid-po-dengam.md) — Деньги в Аргентине: полный тематический гид
+- `gid-po-dokumentam` (guide, pereezd/gid-po-dokumentam.md) — Документы и легализация в Аргентине: полный тематический гид
+- `gid-po-medicine` (guide, medicina/gid-po-medicine.md) — Медицина и здоровье в Аргентине: полный тематический гид
+- `gid-po-zhilyu` (guide, zhile/gid-po-zhilyu.md) — Жильё в Аргентине: полный тематический гид
+- `gid-relokanta` (guide, pereezd/gid-relokanta.md) — Гид релоканта: весь путь переезда в Аргентину по этапам
+- `kak-oplatit-tur-i-zhilyo-zaranee` (faq, faq/kak-oplatit-tur-i-zhilyo-zaranee.md) — Как оплатить тур, отель или экскурсию заранее, если моя карта РФ не работает?
+- `kak-platit-esli-karta-rf-ne-rabotaet` (faq, faq/kak-platit-esli-karta-rf-ne-rabotaet.md) — Как платить в Аргентине, если карты российских банков не работают?
+- `kak-poluchit-grazhdanstvo-za-2-goda` (faq, faq/kak-poluchit-grazhdanstvo-za-2-goda.md) — Правда ли, что гражданство Аргентины можно получить за 2 года?
+- `kakoj-dohod-nuzhen-dlya-rantye` (faq, faq/kakoj-dohod-nuzhen-dlya-rantye.md) — Какой доход нужен для получения резиденции рантье в Аргентине?
+- `mozhno-li-otkryt-schet-nerezidentu` (faq, faq/mozhno-li-otkryt-schet-nerezidentu.md) — Можно ли иностранцу открыть банковский счёт в Аргентине без резиденции?
+- `nuzhna-li-strahovka-dlya-vezda` (faq, faq/nuzhna-li-strahovka-dlya-vezda.md) — Нужна ли медицинская страховка для поездки в Аргентину?
+- `nuzhna-li-viza-cifrovomu-kochevniku` (faq, faq/nuzhna-li-viza-cifrovomu-kochevniku.md) — Нужна ли отдельная виза цифровому кочевнику в Аргентине, если можно въехать по безвизу на 90 дней?
+- `nuzhno-li-otkazyvatsya-ot-grazhdanstva` (faq, faq/nuzhno-li-otkazyvatsya-ot-grazhdanstva.md) — Нужно ли отказываться от российского гражданства при получении аргентинского?
+- `oshibka-s-dokumentami` (author_tip, lichnyy-opyt/oshibka-s-dokumentami.md) — Как я выбрал судебный путь к гражданству — и почему отказался от него
+- `oshibka-s-zhilyom` (author_tip, lichnyy-opyt/oshibka-s-zhilyom.md) — Как я переплатил за первую квартиру в Буэнос-Айресе
+- `skam-s-falshivoj-policiej` (faq, faq/skam-s-falshivoj-policiej.md) — Что за мошенничество с «фальшивой полицией» в Аргентине?
+- `skolko-deneg-brat-na-poezdku` (faq, faq/skolko-deneg-brat-na-poezdku.md) — Сколько денег нужно брать на поездку в Аргентину?
+- `skolko-letet-iz-rossii` (faq, faq/skolko-letet-iz-rossii.md) — Сколько лететь из России в Аргентину и какие есть маршруты?
+- `skolko-stoit-oformit-vnzh` (faq, faq/skolko-stoit-oformit-vnzh.md) — Сколько стоит оформление резиденции или визы цифрового кочевника в Аргентине?
+- `skolko-stoit-zhizn-v-buenos-ajrese` (faq, faq/skolko-stoit-zhizn-v-buenos-ajrese.md) — Сколько денег нужно на жизнь в Буэнос-Айресе в месяц?
+- `viza-cifrovogo-kochevnika-chto-daet` (faq, faq/viza-cifrovogo-kochevnika-chto-daet.md) — Что даёт виза цифрового кочевника в Аргентине и ведёт ли она к ПМЖ?
+- `viza-rf-v-argentinu` (faq, faq/viza-rf-v-argentinu.md) — Нужна ли виза в Аргентину гражданам России?
+- `viza-v-braziliyu-dlya-iguasu` (faq, faq/viza-v-braziliyu-dlya-iguasu.md) — Нужна ли виза в Бразилию, чтобы посмотреть водопады Игуасу с бразильской стороны?
+
+## Редакционный контроль: низкая уверенность
+
+- `argentina-vs-drugie-strany` (guide, pereezd/argentina-vs-drugie-strany.md) — Аргентина или другая страна: честное сравнение для переезда
+- `dostupnaya-sreda-i-invalidnost` (guide, puteshestvie/dostupnaya-sreda-i-invalidnost.md) — Доступная среда: путешествие и жизнь с инвалидностью в Аргентине
+- `voinskij-uchet-i-voennyj-bilet` (guide, pereezd/voinskij-uchet-i-voennyj-bilet.md) — Воинский учёт и военный билет при переезде в Аргентину

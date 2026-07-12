@@ -1,12 +1,11 @@
 ---
 id: quebrada-de-las-flechas
 type: attraction
-title: Quebrada de las Flechas
+title: "Кебрада-де-лас-Флечас"
 title_es: Quebrada de las Flechas
 title_en: Quebrada de las Flechas
-summary: En los Valles Calchaquíes, explora una quebrada que forma parte del Monumento
-  Natural Provincial de Angastaco.
-status: stub
+summary: "Драматичное ущелье с острыми скалами-«стрелами» в долинах Кальчаки провинции Сальта, на винной дороге к Кафайяте."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En los Valles Calchaquíes, explora una quebrada que forma parte del Monumento Natural Provincial de Angastaco.
-
-Quebrada de las Flechas — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Кебрада-де-лас-Флечас («Ущелье стрел») поражает острыми скальными пластами, вздыбленными к небу, вдоль дороги через долины Кальчаки. Эффектная остановка на живописном маршруте между Кафайяте и Качи.
 
 ## Практическая информация
 

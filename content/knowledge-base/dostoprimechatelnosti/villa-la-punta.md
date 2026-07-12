@@ -1,12 +1,11 @@
 ---
 id: villa-la-punta
 type: attraction
-title: Villa La Punta
+title: "Вилья-Ла-Пунта"
 title_es: Villa La Punta
 title_en: Villa La Punta
-summary: En las sierras de Guasayán, descubre un lugar donde te esperan la tranquilidad
-  y la aventura.
-status: stub
+summary: "Тихий уголок в сьеррах Гуасаян провинции Сантьяго-дель-Эстеро — природа и спокойный отдых."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En las sierras de Guasayán, descubre un lugar donde te esperan la tranquilidad y la aventura.
-
-Villa La Punta — одна из достопримечательностей региона Северо-Запад (Саньяго-дель-Эстеро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Ла-Пунта в горах Гуасаян провинции Сантьяго-дель-Эстеро — спокойное место среди зелени и рек. Подходит для неспешного отдыха, прогулок и знакомства с природой северного центра страны.
 
 ## Практическая информация
 

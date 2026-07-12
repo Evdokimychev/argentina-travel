@@ -1,12 +1,11 @@
 ---
 id: sierras-cordobesas
 type: attraction
-title: Córdoba hills
+title: "Сьерры Кордовы"
 title_es: Sierras cordobesas
 title_en: Córdoba hills
-summary: Vive una aventura tierra adentro, en las cimas de los cerros, en lo profundo
-  del agua y en lo alto de los cielos.
-status: stub
+summary: "Живописные горы в центре Аргентины с реками, ущельями и десятками курортных городков — популярнейшее направление внутреннего туризма."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Vive una aventura tierra adentro, en las cimas de los cerros, en lo profundo del agua y en lo alto de los cielos.
-
-Córdoba hills — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Сьеррас-де-Кордова — невысокие древние горы в центре страны, изрезанные реками и ущельями. Мягкий климат, сотни городков-курортов и активности от парапланеризма до купания в горных речках делают их одним из главных мест отдыха аргентинцев.
 
 ## Практическая информация
 

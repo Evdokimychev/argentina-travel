@@ -1,12 +1,11 @@
 ---
 id: el-nihuil
 type: attraction
-title: El Nihuil
+title: "Эль-Ниуиль"
 title_es: El Nihuil
 title_en: El Nihuil
-summary: En Мендоса, vive la aventura de explorar un lago rodeado por un paisaje extremo
-  que fue escenario del Dakar.
-status: stub
+summary: "Большое водохранилище в горах Мендосы у Сан-Рафаэля — центр парусного спорта и приключений, этап ралли «Дакар»."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-En Мендоса, vive la aventura de explorar un lago rodeado por un paisaje extremo que fue escenario del Dakar.
-
-El Nihuil — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Эль-Ниуиль — крупное водохранилище среди суровых гор недалеко от Сан-Рафаэля в Мендосе. Стабильный ветер сделал его центром виндсёрфинга и парусного спорта, а окрестные пейзажи не раз становились ареной ралли «Дакар».
 
 ## Практическая информация
 

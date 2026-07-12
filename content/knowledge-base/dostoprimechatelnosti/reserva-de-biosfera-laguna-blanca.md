@@ -1,12 +1,11 @@
 ---
 id: reserva-de-biosfera-laguna-blanca
 type: attraction
-title: Laguna Blanca Biosphere Reserve
+title: "Биосферный заповедник Лагуна-Бланка"
 title_es: Reserva de Biósfera Laguna Blanca
 title_en: Laguna Blanca Biosphere Reserve
-summary: En la subregión de la Puna seca catamarqueña, date el gusto de recorrer un
-  área natural protegida.
-status: stub
+summary: "Охраняемая территория в сухой Пуне провинции Катамарка вокруг высокогорной лагуны — место обитания викуний, фламинго и редкой высокогорной фауны."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la subregión de la Puna seca catamarqueña, date el gusto de recorrer un área natural protegida.
-
-Laguna Blanca Biosphere Reserve — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Биосферный заповедник Лагуна-Бланка охватывает участок сухой Пуны на высоте более трёх тысяч метров в провинции Катамарка. Вокруг одноимённой лагуны пасутся викуньи и гуанако, а на воде держатся фламинго — суровый, но живописный высокогорный ландшафт.
 
 ## Практическая информация
 

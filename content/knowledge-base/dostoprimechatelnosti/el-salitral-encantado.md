@@ -1,11 +1,11 @@
 ---
 id: el-salitral-encantado
 type: attraction
-title: Salitral Encantado
+title: "Эль-Салитраль-Энкантадо"
 title_es: El Salitral Encantado
 title_en: Salitral Encantado
-summary: Vive la aventura de caminar por uno de los salares más grandes del mundo.
-status: stub
+summary: "«Заколдованный солончак» в провинции Ла-Пампа — сюрреалистическая белая равнина среди сухих просторов."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Vive la aventura de caminar por uno de los salares más grandes del mundo.
-
-Salitral Encantado — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Эль-Салитраль-Энкантадо — обширный солончак в провинции Ла-Пампа с необычными геологическими формами и палеонтологическими находками. Дикое, тихое место для прогулок по белой равнине среди пампасских просторов.
 
 ## Практическая информация
 

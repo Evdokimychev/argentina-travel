@@ -1,12 +1,11 @@
 ---
 id: el-trapiche
 type: attraction
-title: El Trapiche
+title: "Эль-Трапиче"
 title_es: El Trapiche
 title_en: El Trapiche
-summary: En la provincia de San Luis, vive la aventura de explorar un pueblo donde
-  te esperan la naturaleza y la historia.
-status: stub
+summary: "Живописный горный посёлок в провинции Сан-Луис на реке — место природы, истории и старой узкоколейки."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-En la provincia de San Luis, vive la aventura de explorar un pueblo donde te esperan la naturaleza y la historia.
-
-El Trapiche — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Эль-Трапиче в сьеррах провинции Сан-Луис — уютный посёлок у горной реки, окружённый лесами. Купание, треккинг, старый золотой прииск и историческая узкоколейка делают его приятным местом отдыха.
 
 ## Практическая информация
 

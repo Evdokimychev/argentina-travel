@@ -26,7 +26,7 @@ export default function PlaceDetailContentSections({ place }: { place: PlaceDeta
             {place.interestingFacts.map((fact) => (
               <li
                 key={fact}
-                className="rounded-xl border border-gray-100 bg-white px-4 py-3 text-sm leading-relaxed text-charcoal"
+                className="rounded-xl border border-border-subtle bg-surface-elevated px-4 py-3 text-sm leading-relaxed text-charcoal"
               >
                 {fact}
               </li>

@@ -1,12 +1,11 @@
 ---
 id: rio-grande
 type: attraction
-title: Río Grande
+title: "Рио-Гранде"
 title_es: Río Grande
 title_en: Río Grande
-summary: En la Патагония austral, acércate a la naturaleza y a la historia de la ciudad
-  más poblada de Огненная Земля.
-status: stub
+summary: "Крупнейший город Огненной Земли на атлантическом побережье — центр овцеводства и мировая столица ловли морской форели."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония austral, acércate a la naturaleza y a la historia de la ciudad más poblada de Огненная Земля.
-
-Río Grande — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Рио-Гранде — самый населённый город Огненной Земли, на ветреном атлантическом берегу. Известен историей овцеводческих усадеб и мировой славой среди рыболовов: местные реки — легендарное место ловли морской кумжи (sea trout).
 
 ## Практическая информация
 

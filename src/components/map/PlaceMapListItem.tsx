@@ -28,8 +28,8 @@ export default function PlaceMapListItem({
     <li ref={listItemRef} data-place-slug={place.slug}>
       <article
         className={cn(
-          "flex gap-3 border-b border-gray-100 p-4 transition-colors last:border-b-0",
-          selected ? "bg-brand-light/40 ring-1 ring-sky/20" : "hover:bg-gray-50/80"
+          "flex gap-3 border-b border-border-subtle p-4 transition-colors last:border-b-0",
+          selected ? "bg-brand-light/40 ring-1 ring-sky/20" : "hover:bg-surface-muted/80"
         )}
       >
         <button type="button" onClick={onSelect} className="flex min-w-0 flex-1 gap-3 text-left">

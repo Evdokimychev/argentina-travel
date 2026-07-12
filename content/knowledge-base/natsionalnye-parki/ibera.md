@@ -20,7 +20,7 @@ cost: { level: "$$", details: "Вход в национальный парк б�
 best_time: ["апрель-ноябрь", "оптимум — зима (июнь-август): сухо, мало комаров, лучшая видимость фауны"]
 duration: "2-3 дня"
 how_to_get_there: "Самолётом из Буэнос-Айреса до Корриентеса (CNQ) или Посадаса (PSS), ~1,5 ч, далее авто/трансфер. К главному порталу Лагуна-Ибера (Колония-Карлос-Пельегрини) — через город Мерседес: ~120 км (≈50 км асфальт + 70 км грунт), 2-2,5 часа. Бюджетно: ночной автобус БА→Мерседес (9-11 ч) + трансфер. Портал Камбиретá — из Итусаинго (~30-40 км)."
-related: [iguasu, korrientes, banado-la-estrella, parque-nacional-rio-pilcomayo, argentina-10-dney, kogda-smotret-kitov-v-argentine, dikaya-priroda, ibera-rassvet-i-tihie-portaly]
+related: [iguasu, korrientes, banado-la-estrella, parque-nacional-rio-pilcomayo, argentina-10-dney, kogda-smotret-kitov-v-argentine, dikaya-priroda, ibera-rassvet-i-tihie-portaly, mercedes-corrientes]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Flying_Over_Esteros_del_Iber%C3%A1_The_kingdom_of_water%2C_North-eastern_Argentina.jpg/1920px-Flying_Over_Esteros_del_Iber%C3%A1_The_kingdom_of_water%2C_North-eastern_Argentina.jpg"

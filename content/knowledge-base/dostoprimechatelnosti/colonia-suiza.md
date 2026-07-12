@@ -1,12 +1,11 @@
 ---
 id: colonia-suiza
 type: attraction
-title: Colonia Suiza
+title: "Колония-Суиса"
 title_es: Colonia Suiza
 title_en: Colonia Suiza
-summary: A solo 25 kilómetros de San Carlos de Барилоче, visita el primer asentamiento
-  europeo en la región.
-status: stub
+summary: "Старейшее европейское поселение под Барилоче, основанное швейцарскими переселенцами — уголок альпийских традиций и знаменитого куранто."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-A solo 25 kilómetros de San Carlos de Барилоче, visita el primer asentamiento europeo en la región.
-
-Colonia Suiza — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Колония-Суиса в 25 км от Барилоче — первое европейское поселение в этих местах, основанное швейцарцами. Сегодня это живописная деревушка с ремесленным рынком и традиционным блюдом куранто, которое готовят в земляной яме на раскалённых камнях.
 
 ## Практическая информация
 

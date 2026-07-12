@@ -1,12 +1,11 @@
 ---
 id: sierras-de-la-provincia-de-buenos-aires
 type: attraction
-title: Sierras de la Provincia de Буэнос-Айрес
+title: "Сьерры провинции Буэнос-Айрес"
 title_es: Sierras de la Provincia de Buenos Aires
 title_en: Province of Buenos Aires hills
-summary: Descubre las experiencias que Sierra de los Padres, Tandil y Sierra de la
-  Ventana tienen para ti.
-status: stub
+summary: "Горные островки среди равнинной пампы — Тандиль, Сьерра-де-лос-Падрес и Сьерра-де-ла-Вентана."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre las experiencias que Sierra de los Padres, Tandil y Sierra de la Ventana tienen para ti.
-
-Sierras de la Provincia de Буэнос-Айрес — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+В равнинной провинции Буэнос-Айрес есть свои горы: системы Тандилья и Вентания. Тандиль, Сьерра-де-лос-Падрес и Сьерра-де-ла-Вентана предлагают треккинг, гастрономию и отдых выходного дня недалеко от побережья.
 
 ## Практическая информация
 

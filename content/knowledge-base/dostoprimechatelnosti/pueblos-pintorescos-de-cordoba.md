@@ -1,11 +1,11 @@
 ---
 id: pueblos-pintorescos-de-cordoba
 type: attraction
-title: Picturesque villages in Córdoba
+title: "Живописные городки Кордовы"
 title_es: Pueblos pintorescos de Córdoba
 title_en: Picturesque villages in Córdoba
-summary: Descubre los encantos de Calamuchita, La Cumbrecita y Villa General Belgrano.
-status: stub
+summary: "Уютные горные городки кордовских сьерр — Ла-Кумбресита, Вилья-Хенераль-Бельграно и долина Каламучита."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre los encantos de Calamuchita, La Cumbrecita y Villa General Belgrano.
-
-Picturesque villages in Córdoba — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Сьерры Кордовы усыпаны живописными городками с европейским характером: пешеходная Ла-Кумбресита в альпийском стиле, Вилья-Хенераль-Бельграно с октоберфестом, курорты долины Каламучита — сердце кордовского отдыха.
 
 ## Практическая информация
 

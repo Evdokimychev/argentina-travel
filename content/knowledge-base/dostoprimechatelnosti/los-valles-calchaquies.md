@@ -1,12 +1,11 @@
 ---
 id: los-valles-calchaquies
 type: attraction
-title: Calchaquí Valleys
+title: "Долины Кальчаки"
 title_es: Los Valles Calchaquíes
 title_en: Calchaquí Valleys
-summary: Encuéntrate con el encanto de Cachi, la Cuesta del Obispo, la Quebrada de
-  las Flechas y otras maravillas de Salta.
-status: stub
+summary: "Живописная система высокогорных долин Сальты и соседних провинций: Качи, Куэста-дель-Обиспо, Кебрада-де-лас-Флечас и Кафайяте."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Encuéntrate con el encanto de Cachi, la Cuesta del Obispo, la Quebrada de las Flechas y otras maravillas de Salta.
-
-Calchaquí Valleys — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Долины Кальчаки — сердце винно-пейзажного северо-запада: разноцветные горы, кактусы кардон, старинные посёлки вроде Качи и Кафайяте, серпантин Куэста-дель-Обиспо и ущелье Флечас. Один из красивейших маршрутов Аргентины.
 
 ## Практическая информация
 

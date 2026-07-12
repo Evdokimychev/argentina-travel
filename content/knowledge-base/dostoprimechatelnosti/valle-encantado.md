@@ -1,12 +1,11 @@
 ---
 id: valle-encantado
 type: attraction
-title: Valle Encantado
+title: "Заколдованная долина"
 title_es: Valle Encantado
 title_en: Valle Encantado
-summary: A un paso de San Carlos de Барилоче, explora un entorno que te sorprenderá
-  por sus formas naturales.
-status: stub
+summary: "Долина причудливых скальных фигур недалеко от Барилоче, вдоль дороги к Лимай."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-A un paso de San Carlos de Барилоче, explora un entorno que te sorprenderá por sus formas naturales.
-
-Valle Encantado — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+«Заколдованная долина» (Валье-Энкантадо) недалеко от Барилоче знаменита причудливыми скалами-останцами, которым ветер и вода придали фантастические формы. Живописная остановка по дороге вдоль реки Лимай.
 
 ## Практическая информация
 

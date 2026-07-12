@@ -12,7 +12,7 @@ coordinates: { lat: -34.6037, lng: -58.3816 }
 tags: [столица, мегаполис, танго, гастрономия, культура]
 cost: { level: "$$-$$$", details: "Самые высокие цены в стране на жильё и рестораны, но по мировым меркам столица остаётся доступной" }
 best_time: ["сентябрь-ноябрь (весна)", "март-май (осень) — комфортнее летней жары и зимней сырости"]
-related: [buenos-aires, buenos-aires-province, tango, kladbische-recoleta, kaminito-la-boka, teatr-kolon, istoriya-argentiny]
+related: [buenos-aires, buenos-aires-province, tango, kladbische-recoleta, kaminito-la-boka, teatr-kolon, istoriya-argentiny, teatro-y-literatura-en-buenos-aires, vida-nocturna-en-buenos-aires]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/193_-_Buenos_Aires_-_Puerto_Madero_-_Janvier_2010.jpg/1920px-193_-_Buenos_Aires_-_Puerto_Madero_-_Janvier_2010.jpg"

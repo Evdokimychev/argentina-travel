@@ -1,12 +1,11 @@
 ---
 id: pueblos-de-la-provincia-de-buenos-aires
 type: attraction
-title: Pueblos de la provincia de Буэнос-Айрес
+title: "Городки провинции Буэнос-Айрес"
 title_es: Pueblos de la provincia de Buenos Aires
 title_en: Villages in the Province of Buenos Aires
-summary: Viaja al corazón de poblaciones que te ofrecen otra forma de entender y disfrutar
-  la vida.
-status: stub
+summary: "Тихие пампасские городки вокруг столицы — гаучо-традиции, усадьбы и неспешный сельский ритм."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Viaja al corazón de poblaciones que te ofrecen otra forma de entender y disfrutar la vida.
-
-Pueblos de la provincia de Буэнос-Айрес — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+В провинции Буэнос-Айрес множество тихих сельских городков, где сохранился неспешный уклад пампы: усадьбы-эстансии, пульперии, гаучо-праздники. Сан-Антонио-де-Ареко и другие — популярные направления выходного дня из столицы.
 
 ## Практическая информация
 

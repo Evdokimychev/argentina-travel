@@ -1,12 +1,11 @@
 ---
 id: cerro-tronador
 type: attraction
-title: Cerro Tronador
+title: "Серро-Тронадор"
 title_es: Cerro Tronador
 title_en: Cerro Tronador
-summary: Atrévete a escalar este cerro mítico, en la zona sur de la Cordillera de
-  los Andes.
-status: stub
+summary: "Мощный ледниковый массив на границе Аргентины и Чили у Барилоче — высшая точка национального парка Науэль-Уапи с «чёрным ледником»."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Atrévete a escalar este cerro mítico, en la zona sur de la Cordillera de los Andes.
-
-Cerro Tronador — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Серро-Тронадор («Гремящий») поднимается на границе с Чили в национальном парке Науэль-Уапи. Его склоны покрыты ледниками, а знаменитый Вентискеро-Негро («чёрный ледник») и грохот ледяных обвалов дали горе имя. Популярная однодневная поездка из Барилоче.
 
 ## Практическая информация
 

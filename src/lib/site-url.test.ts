@@ -49,4 +49,13 @@ describe("absoluteUrl", () => {
     process.env.NEXT_PUBLIC_SITE_URL = "https://www.goargentina.ru";
     expect(absoluteUrl("places")).toBe("https://www.goargentina.ru/places");
   });
+
+  it("passes through external media URLs", () => {
+    expect(absoluteUrl("https://media.goargentina.ru/media/home/hero.jpg")).toBe(
+      "https://media.goargentina.ru/media/home/hero.jpg"
+    );
+    expect(absoluteUrl("//media.goargentina.ru/media/home/hero.jpg")).toBe(
+      "https://media.goargentina.ru/media/home/hero.jpg"
+    );
+  });
 });

@@ -1,12 +1,11 @@
 ---
 id: el-vino-malbec
 type: attraction
-title: Malbec Wine
+title: "Вино мальбек"
 title_es: El Vino Malbec
 title_en: Malbec Wine
-summary: Entre valles y paisajes de montaña, date el gusto de probar una cepa que
-  es emblema del territorio argentino.
-status: stub
+summary: "Красный сорт-эмблема Аргентины, раскрывшийся на высокогорных виноградниках Мендосы во всей полноте."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-Entre valles y paisajes de montaña, date el gusto de probar una cepa que es emblema del territorio argentino.
-
-Malbec Wine — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Мальбек — виноградный сорт, ставший визитной карточкой аргентинского вина. Привезённый из Франции, он идеально прижился на высоте в Мендосе, дав насыщенные, бархатистые красные вина, ради которых едут на дегустации по винодельням.
 
 ## Практическая информация
 

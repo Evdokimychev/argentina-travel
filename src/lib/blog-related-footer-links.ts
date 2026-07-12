@@ -38,6 +38,11 @@ export function isValidBlogRelatedResourceHref(
     return slug ? Boolean(getContentPage("immigration", slug)) : false;
   }
 
+  if (resource.type === "knowledge") {
+    const slug = extractPathSlug(resource.href, "/baza-znaniy/");
+    return Boolean(slug);
+  }
+
   if (resource.type === "tour") {
     return resource.href === "/tours" || resource.href.startsWith("/tours?");
   }

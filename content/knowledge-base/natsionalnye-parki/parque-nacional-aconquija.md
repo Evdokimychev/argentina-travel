@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-aconquija
 type: national_park
-title: национальный парк Aconquija
+title: "Национальный парк Аконкиха"
 title_es: Parque Nacional Aconquija
 title_en: Aconquija National Park
-summary: Recorre un lugar donde la naturaleza es tan exuberante como las opciones
-  para la aventura.
-status: stub
+summary: "Горный парк в провинции Тукуман на массиве Сьеррас-дель-Аконкиха: влажные леса, высокогорные луга и археологические следы древних культур."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Recorre un lugar donde la naturaleza es tan exuberante como las opciones para la aventura.
-
-национальный парк Aconquija — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Аконкиха в провинции Тукуман охватывает высокий хребет Сьеррас-дель-Аконкиха — от влажных горных лесов юнга до высокогорных лугов. Здесь сочетаются богатая природа, треккинг и археологические памятники доколумбовых культур.
 
 ## Практическая информация
 

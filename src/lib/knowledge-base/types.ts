@@ -1,6 +1,6 @@
 /**
  * Типы раздела «База знаний» (/baza-znaniy).
- * Источник данных — content/knowledge-base/ (267 записей в Markdown),
+ * Источник данных — content/knowledge-base/ (сотни Markdown-записей),
  * читаемый через сгенерированные индексы _index/{content,navigation}.json.
  * Генератор индексов: content/knowledge-base/_index/build_manifest.py.
  */
@@ -37,6 +37,17 @@ export interface KbMedia {
   gallery?: KbMediaImage[];
 }
 
+export interface KbEditorialMeta {
+  sensitive?: boolean;
+  policy_days?: number;
+  review_due_at?: string | null;
+  review_due?: boolean;
+  missing_sources?: boolean;
+  source_count?: number;
+  word_count?: number | null;
+  needs_attention?: boolean;
+}
+
 /** Полная запись базы знаний (frontmatter + тело в Markdown). */
 export interface KbEntry {
   id: string;
@@ -55,6 +66,7 @@ export interface KbEntry {
   recommendations?: string[];
   sources?: KbSource[];
   media?: KbMedia | null;
+  editorial?: KbEditorialMeta;
   status?: string;
   confidence?: string;
   last_verified?: string | null;

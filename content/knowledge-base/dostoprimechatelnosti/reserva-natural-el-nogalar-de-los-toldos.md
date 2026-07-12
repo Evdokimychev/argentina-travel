@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-el-nogalar-de-los-toldos
 type: attraction
-title: El Nogalar de los Toldos Natural Reserve
+title: "Природный заповедник Эль-Ногаляр-де-лос-Тольдос"
 title_es: Reserva Natural El Nogalar de los Toldos
 title_en: El Nogalar de los Toldos Natural Reserve
-summary: Elige tu forma de disfrutar este paraíso de flora y fauna en plena selva
-  de altura.
-status: stub
+summary: "Заповедник влажных горных лесов юнга на севере Сальты, известный рощами южноамериканского грецкого ореха (nogal criollo)."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Elige tu forma de disfrutar este paraíso de flora y fauna en plena selva de altura.
-
-El Nogalar de los Toldos Natural Reserve — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Эль-Ногаляр-де-лос-Тольдос охраняет участок влажных горных лесов юнга (yungas) на севере провинции Сальта, у границы с Боливией. Его особенность — рощи креольского грецкого ореха; по заповеднику проложены короткие тропы среди пышной зелени.
 
 ## Практическая информация
 

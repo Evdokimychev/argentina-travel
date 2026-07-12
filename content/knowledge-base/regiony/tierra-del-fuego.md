@@ -12,7 +12,7 @@ coordinates: { lat: -54.8, lng: -68.3 }
 tags: [край света, антарктида, треккинг, круизы]
 cost: { level: "$$$", details: "Дороже остальной Патагонии из-за удалённости и логистики; круизы в Антарктиду — отдельная высокая категория расходов" }
 best_time: ["ноябрь-март (южное лето, длинный день; сезон антарктических круизов)"]
-related: [ognennaya-zemlya, ushuaia, kanal-bigl-i-poezd-na-kray-sveta, patagonia, nauka-i-tehnologii]
+related: [ognennaya-zemlya, ushuaia, kanal-bigl-i-poezd-na-kray-sveta, patagonia, nauka-i-tehnologii, lagos-de-tierra-del-fuego, laguna-esmeralda, parque-nacional-tierra-del-fuego, puerto-almanza, reserva-costa-atlantica-tierra-del-fuego, reserva-natural-silvestre-isla-de-los-estados, rio-grande, trekking-en-tolhuin]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/Canal_de_Beagle_Ushuaia_Argentina_-_panoramio_%2810%29.jpg/1920px-Canal_de_Beagle_Ushuaia_Argentina_-_panoramio_%2810%29.jpg"

@@ -186,7 +186,7 @@ export default function PlacesCatalogMap({
   return (
     <div
       ref={containerRef}
-      className={cn("h-[480px] w-full overflow-hidden rounded-2xl border border-gray-100", className)}
+      className={cn("h-[480px] w-full overflow-hidden rounded-card border border-border-subtle", className)}
       role="region"
       aria-label="Карта мест"
     />

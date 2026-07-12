@@ -1,12 +1,11 @@
 ---
 id: cascada-chachin
 type: attraction
-title: Chachín Waterfall
+title: "Водопад Чачин"
 title_es: Cascada Chachín
 title_en: Chachín Waterfall
-summary: En la Патагония Argentina, descubre una de las grandes caídas de agua del
-  национальный парк Lanín.
-status: stub
+summary: "Живописный водопад в национальном парке Ланин на севере Патагонии, скрытый во влажном андском лесу недалеко от Сан-Мартин-де-лос-Андес."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-En la Патагония Argentina, descubre una de las grandes caídas de agua del национальный парк Lanín.
-
-Chachín Waterfall — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Водопад Чачин прячется в густом андско-патагонском лесу национального парка Ланин. К нему ведёт короткая тропа среди древних деревьев; вода падает с высоты в окружении папоротников и мха — атмосферное место для лёгкой прогулки.
 
 ## Практическая информация
 

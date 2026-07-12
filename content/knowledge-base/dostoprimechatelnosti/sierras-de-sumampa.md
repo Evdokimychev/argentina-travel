@@ -1,12 +1,11 @@
 ---
 id: sierras-de-sumampa
 type: attraction
-title: Sumampa Hills
+title: "Сьерры Сумампа"
 title_es: Sierras de Sumampa
 title_en: Sumampa Hills
-summary: Recorre una región de vegetación exuberante, balnearios naturales, arte rupestre
-  y aves para contemplar.
-status: stub
+summary: "Зелёные горы на юге провинции Сантьяго-дель-Эстеро с природными купальнями, наскальным искусством и птицами."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Recorre una región de vegetación exuberante, balnearios naturales, arte rupestre y aves para contemplar.
-
-Sumampa Hills — одна из достопримечательностей региона Северо-Запад (Саньяго-дель-Эстеро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Сьеррас-де-Сумампа на юге провинции Сантьяго-дель-Эстеро — оазис пышной зелени среди сухих равнин. Природные заводи для купания, петроглифы и обилие птиц привлекают сюда любителей спокойного отдыха на природе.
 
 ## Практическая информация
 

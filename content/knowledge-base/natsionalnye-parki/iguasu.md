@@ -40,6 +40,7 @@ how_to_get_there: Самолётом из Буэнос-Айреса (AEP/EZE) д
   вокзала Ретиро, 16-18 ч. От Пуэрто-Игуасу до входа — рейсовый автобус Río Uruguay
   каждые 20-30 мин (20-25 мин в пути) или такси.
 related:
+- saltos-del-mocona
 - los-glasiares
 - nauel-uapi
 - ognennaya-zemlya

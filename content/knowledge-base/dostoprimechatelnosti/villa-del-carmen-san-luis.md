@@ -1,12 +1,11 @@
 ---
 id: villa-del-carmen-san-luis
 type: attraction
-title: Villa del Carmen, San Luis
+title: "Вилья-дель-Кармен"
 title_es: Villa del Carmen, San Luis
 title_en: Villa del Carmen, San Luis
-summary: Déjate conquistar por la tranquilidad y el encanto de esta pequeña ciudad
-  en la región de Куйо.
-status: stub
+summary: "Тихий уютный городок у гор в провинции Сан-Луис — спокойный отдых на природе региона Куйо."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Déjate conquistar por la tranquilidad y el encanto de esta pequeña ciudad en la región de Куйо.
-
-Villa del Carmen, San Luis — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-дель-Кармен на юге провинции Сан-Луис — маленький спокойный городок у подножия гор. Сюда едут за тишиной, чистым воздухом и неспешным отдыхом среди природы Куйо.
 
 ## Практическая информация
 

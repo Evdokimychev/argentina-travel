@@ -20,7 +20,7 @@ cost:
 best_time: ["апрель-май (после сбора урожая)", "сентябрь-ноябрь"]
 duration: "1-2 дня в самом городе; закладывайте отдельно 1-2 дня на выезд в Исчигуаласто"
 how_to_get_there: "Аэропорт Доминго Фаустино Сармьенто (UAQ) в 12 км от центра — рейсы из Буэнос-Айреса на Aerolíneas Argentinas, ~1,5-2 ч (по факту перелёта; расписание может меняться). Автомобилем от Мендосы — около 165 км по Руте 40 (живописная дорога, ~2-2,5 часа), от Буэнос-Айреса — около 1110 км."
-related: [cuyo, ischigualasto, mendoza, narodnye-svyatye, zemletryaseniya-i-vulkany]
+related: [cuyo, ischigualasto, mendoza, narodnye-svyatye, zemletryaseniya-i-vulkany, barreal]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Peatonal_Rivadavia%2C_ciudad_de_San_Juan%2C_prov._de_San_Juan%2C_Argentina.jpg/1920px-Peatonal_Rivadavia%2C_ciudad_de_San_Juan%2C_prov._de_San_Juan%2C_Argentina.jpg"

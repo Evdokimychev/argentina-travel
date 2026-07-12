@@ -1,12 +1,11 @@
 ---
 id: glaciar-ojo-del-albino
 type: attraction
-title: Ojo del Albino Glacier
+title: "Ледник Охо-дель-Альбино"
 title_es: Glaciar Ojo del Albino
 title_en: Ojo del Albino Glacier
-summary: En Огненная Земля, te espera un mundo de hielo rodeado por paisajes agrestes
-  del fin del mundo.
-status: stub
+summary: "Горный ледник в окрестностях Ушуайи, к которому идут по дикой долине «края света»."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-En Огненная Земля, te espera un mundo de hielo rodeado por paisajes agrestes del fin del mundo.
-
-Ojo del Albino Glacier — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Ледник Охо-дель-Альбино лежит в горах над Ушуайей. К нему ведёт полноценный однодневный треккинг через леса и долины Огненной Земли — награда для подготовленных ходоков — ледяной цирк среди суровых пейзажей.
 
 ## Практическая информация
 

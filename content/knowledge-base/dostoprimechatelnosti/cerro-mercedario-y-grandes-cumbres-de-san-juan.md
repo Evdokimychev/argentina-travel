@@ -1,12 +1,11 @@
 ---
 id: cerro-mercedario-y-grandes-cumbres-de-san-juan
 type: attraction
-title: Cerro Mercedario and High Mountains of San Juan
+title: "Серро-Меркедарио и большие вершины Сан-Хуана"
 title_es: Cerro Mercedario y grandes cumbres de San Juan
 title_en: Cerro Mercedario and High Mountains of San Juan
-summary: Atrévete a escalar una montaña mítica y alcanza una visión más alta que la
-  de los cóndores.
-status: stub
+summary: "Один из высочайших шеститысячников Анд в провинции Сан-Хуан — цель серьёзных высотных восхождений вдали от толп."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Atrévete a escalar una montaña mítica y alcanza una visión más alta que la de los cóndores.
-
-Cerro Mercedario and High Mountains of San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Серро-Меркедарио (около 6770 м) — величественный шеститысячник на западе провинции Сан-Хуан, менее известный, чем Аконкагуа, но не менее суровый. Район больших вершин для подготовленных альпинистов и любителей высокогорья.
 
 ## Практическая информация
 

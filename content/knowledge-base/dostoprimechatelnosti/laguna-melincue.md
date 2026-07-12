@@ -1,12 +1,11 @@
 ---
 id: laguna-melincue
 type: attraction
-title: Laguna Melincué
+title: "Лагуна Мелинкуэ"
 title_es: Laguna Melincué
 title_en: Laguna Melincué
-summary: Acércate a un humedal reconocido por las propiedades de sus aguas y la belleza
-  de sus flamencos.
-status: stub
+summary: "Крупное озеро на юге провинции Санта-Фе, известное лечебными водами и колониями фламинго."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Acércate a un humedal reconocido por las propiedades de sus aguas y la belleza de sus flamencos.
-
-Laguna Melincué — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Лагуна Мелинкуэ — большое мелководное озеро на юге Санта-Фе. Его ценят за минеральные лечебные воды и обилие птиц, в том числе фламинго; на берегу — спокойный курортный отдых.
 
 ## Практическая информация
 

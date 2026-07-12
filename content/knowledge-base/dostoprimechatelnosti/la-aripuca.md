@@ -1,12 +1,11 @@
 ---
 id: la-aripuca
 type: attraction
-title: La Aripuca
+title: "Ла-Арипука"
 title_es: La Aripuca
 title_en: La Aripuca
-summary: Cerca de Puerto Игуасу, visita un lugar que expresa una cultura ancestral
-  y crea conciencia sobre la sustentabilidad.
-status: stub
+summary: "Этнокультурный центр у Пуэрто-Игуасу с гигантской деревянной конструкцией гуарани и темой устойчивого отношения к лесу."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -63,9 +62,7 @@ sources:
 
 ## Описание
 
-Cerca de Puerto Игуасу, visita un lugar que expresa una cultura ancestral y crea conciencia sobre la sustentabilidad.
-
-La Aripuca — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Ла-Арипука недалеко от Пуэрто-Игуасу — необычный центр, построенный вокруг огромной деревянной конструкции в форме традиционной ловушки гуарани (aripuca). Он рассказывает о культуре коренных народов и бережном отношении к атлантической сельве.
 
 ## Практическая информация
 

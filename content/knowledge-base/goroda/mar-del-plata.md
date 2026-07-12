@@ -18,7 +18,7 @@ cost: { level: "$$", details: "Цены на жильё и рестораны з
 best_time: ["декабрь-февраль (высокий пляжный сезон, южное лето)", "март-апрель и октябрь-ноябрь (мягче и дешевле, но вода холоднее)"]
 duration: "3-5 дней в высокий сезон, при желании можно и дольше"
 how_to_get_there: "Автобусом от терминала Ретиро в Буэнос-Айресе — прямые рейсы каждые несколько часов, в пути около 5 часов. Самолётом — аэропорт Астор-Пьяццолла (MDQ) принимает рейсы из Буэнос-Айреса (аэропорт Хорхе Ньюбери, AEP), время в полёте — порядка 1 часа. Поездом — с вокзала Конститусьон, около 6 часов в пути, самый бюджетный вариант, но менее комфортный по подвижному составу. Расстояние от Буэнос-Айреса — около 400 км."
-related: [buenos-aires, buenos-aires-province, argentina-2-nedeli, bezopasnost-argentina, poezda, sladkoe-dulce-de-leche]
+related: [buenos-aires, buenos-aires-province, argentina-2-nedeli, bezopasnost-argentina, poezda, sladkoe-dulce-de-leche, necochea]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/Mar_del_Plata_City.jpg/1920px-Mar_del_Plata_City.jpg"

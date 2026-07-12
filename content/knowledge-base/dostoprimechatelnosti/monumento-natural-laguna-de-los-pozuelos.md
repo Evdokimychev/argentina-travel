@@ -1,11 +1,11 @@
 ---
 id: monumento-natural-laguna-de-los-pozuelos
 type: attraction
-title: Laguna de Los Pozuelos Natural Monument
+title: "Природный памятник Лагуна-де-лос-Посуэлос"
 title_es: Monumento Natural Laguna de Los Pozuelos
 title_en: Laguna de Los Pozuelos Natural Monument
-summary: Visita el lugar que protege a más de dieciséis mil гектаров de la Puna jujeña.
-status: stub
+summary: "Высокогорная лагуна в Пуне провинции Жужуй — важнейшее место гнездования фламинго и водоплавающих птиц, охраняемая территория площадью более шестнадцати тысяч гектаров."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Visita el lugar que protege a más de dieciséis mil гектаров de la Puna jujeña.
-
-Laguna de Los Pozuelos Natural Monument — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный памятник Лагуна-де-лос-Посуэлос лежит высоко в Пуне провинции Жужуй и охраняет мелководную солёную лагуну — одно из главных в Андах мест обитания трёх видов фламинго и множества водоплавающих птиц. Место дикое, высокогорное и малолюдное; лучшее время — тёплый сезон, когда птиц особенно много.
 
 ## Практическая информация
 

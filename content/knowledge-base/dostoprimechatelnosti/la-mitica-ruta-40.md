@@ -1,12 +1,11 @@
 ---
 id: la-mitica-ruta-40
 type: attraction
-title: mythical Ruta 40
+title: "Легендарная Рута 40"
 title_es: La mítica Ruta 40
 title_en: The mythical Ruta 40
-summary: Recorre la Патагония andina de norte a sur, en una aventura sobre ruedas
-  por una de las rutas más importantes del país.
-status: stub
+summary: "Знаменитое шоссе длиной более 5000 км вдоль Анд от боливийской границы до Патагонии — мечта роуд-трипа по Аргентине."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Recorre la Патагония andina de norte a sur, en una aventura sobre ruedas por una de las rutas más importantes del país.
-
-mythical Ruta 40 — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Рута-40 (Ruta 40) — легендарная дорога, тянущаяся вдоль всей западной кромки страны у подножия Анд: пустыни севера, винные долины, озёра и патагонская степь. Проехать её хотя бы частично — классика аргентинского автопутешествия.
 
 ## Практическая информация
 

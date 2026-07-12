@@ -1,12 +1,11 @@
 ---
 id: la-ruta-del-chocolate
 type: attraction
-title: Chocolate Route
+title: "Шоколадный путь"
 title_es: La Ruta del Chocolate
 title_en: The Chocolate Route
-summary: Date el placer de saborear variedades de un manjar que enamora desde tiempos
-  ancestrales.
-status: stub
+summary: "Гастрономический маршрут по шоколадным мастерским Барилоче и озёрной Патагонии."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Date el placer de saborear variedades de un manjar que enamora desde tiempos ancestrales.
-
-Chocolate Route — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+«Шоколадный путь» — вкусный маршрут по знаменитым шоколадным мастерским Барилоче и окрестностей. Швейцарские традиции переселенцев сделали регион шоколадной столицей Аргентины; дегустации и фабрики — обязательная часть визита.
 
 ## Практическая информация
 

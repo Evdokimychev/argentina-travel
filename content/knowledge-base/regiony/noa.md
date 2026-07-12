@@ -12,7 +12,7 @@ coordinates: { lat: -24.5, lng: -65.5 }
 tags: [горы, инки, колониальная архитектура, вино высокогорья, пустыня]
 cost: { level: "$", details: "В среднем дешевле Патагонии и Буэнос-Айреса — особенно жильё и еда вне туристического центра Сальты" }
 best_time: ["апрель-ноябрь (сухой сезон, ясное небо, проходимые дороги)"]
-related: [salta, los-cardones, quebrada-de-humahuaca, purmamarka, salinas-grandes, tilkara, kachi, cafayate, tren-a-las-nubes, san-miguel-de-tucuman, casa-historica-tucuman, san-salvador-de-jujuy, catamarca, santiago-del-estero, termas-de-rio-hondo, vino-argentiny, noa-kolco]
+related: [salta, los-cardones, quebrada-de-humahuaca, purmamarka, salinas-grandes, tilkara, kachi, cafayate, tren-a-las-nubes, san-miguel-de-tucuman, casa-historica-tucuman, san-salvador-de-jujuy, catamarca, santiago-del-estero, termas-de-rio-hondo, vino-argentiny, noa-kolco, hornocal, los-valles-calchaquies, monumento-natural-laguna-de-los-pozuelos, parque-nacional-aconquija, parque-nacional-baritu, parque-nacional-calilegua, parque-nacional-el-rey, parque-nacional-los-cardones, quebrada-de-las-flechas, reserva-de-biosfera-laguna-blanca, reserva-natural-el-nogalar-de-los-toldos, salinas-grandes-jujuy, santa-maria, susques, termas-del-rio-jordan, valle-de-la-luna-de-cusi-cusi, villa-nougues]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bd/Cerro_de_los_siete_colores_._Purmamarca_._Jujuy.jpg/1920px-Cerro_de_los_siete_colores_._Purmamarca_._Jujuy.jpg"

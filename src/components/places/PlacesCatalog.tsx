@@ -31,7 +31,7 @@ import { cn } from "@/lib/cn";
 const PlacesCatalogMap = dynamic(() => import("@/components/places/PlacesCatalogMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-[480px] items-center justify-center rounded-2xl border border-gray-100 bg-gray-50 text-slate">
+    <div className="flex h-[480px] items-center justify-center rounded-card border border-border-subtle bg-surface-muted text-slate">
       Загрузка карты…
     </div>
   ),
@@ -115,16 +115,16 @@ export default function PlacesCatalog({
 
   return (
     <div className="pb-16">
-      <section className="border-b border-gray-100 bg-gradient-to-b from-sky/[0.06] via-white to-white">
+      <section className="border-b border-border-subtle bg-gradient-to-b from-sky/[0.06] via-surface-elevated to-surface-elevated">
         <div className={cn(siteContainerClass, "py-8 sm:py-10")}>
           <div className="max-w-3xl">
             <Link
               href="/destinations"
-              className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-sky hover:underline"
+              className="mb-3 inline-flex items-center gap-1 text-xs font-medium text-sky-ink hover:underline"
             >
               ← Регионы и места
             </Link>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky-ink">
               {t("places.eyebrow")}
             </p>
             <h1 className="mt-2 font-display text-3xl font-bold text-charcoal sm:text-4xl">
@@ -133,7 +133,7 @@ export default function PlacesCatalog({
             <p className="mt-2 text-base leading-relaxed text-slate">{t("places.subtitle")}</p>
             <p className="mt-3 text-sm text-slate">
               {t("places.hubHint")}{" "}
-              <Link href="/destinations" className="font-medium text-sky hover:underline">
+              <Link href="/destinations" className="font-medium text-sky-ink hover:underline">
                 {t("places.hubHintLink")}
               </Link>
               .
@@ -181,13 +181,13 @@ export default function PlacesCatalog({
             <p className="text-sm text-slate">
               {t("places.resultsCount").replace("{count}", String(sorted.length))}
             </p>
-            <div className="flex items-center gap-1 rounded-xl border border-gray-200 bg-white p-1">
+            <div className="flex items-center gap-1 rounded-button border border-border-default bg-surface-elevated p-1">
               <button
                 type="button"
                 onClick={() => switchView("grid")}
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                  viewMode === "grid" ? "bg-charcoal text-white" : "text-slate hover:text-charcoal",
+                  viewMode === "grid" ? "bg-sky-ink text-white" : "text-slate hover:text-charcoal",
                 )}
               >
                 <LayoutGrid className="h-4 w-4" aria-hidden />
@@ -198,7 +198,7 @@ export default function PlacesCatalog({
                 onClick={() => switchView("map")}
                 className={cn(
                   "inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium transition-colors",
-                  viewMode === "map" ? "bg-charcoal text-white" : "text-slate hover:text-charcoal",
+                  viewMode === "map" ? "bg-sky-ink text-white" : "text-slate hover:text-charcoal",
                 )}
               >
                 <MapIcon className="h-4 w-4" aria-hidden />
@@ -222,13 +222,13 @@ export default function PlacesCatalog({
         <div className="mb-8 flex flex-wrap gap-3 text-sm">
           <Link
             href="/collections"
-            className="rounded-full border border-gray-200 px-4 py-1.5 text-charcoal hover:border-sky hover:text-sky"
+            className="rounded-pill border border-border-default px-4 py-1.5 text-charcoal hover:border-sky hover:text-sky-ink"
           >
             {t("places.linkCollections")}
           </Link>
           <Link
             href="/itineraries"
-            className="rounded-full border border-gray-200 px-4 py-1.5 text-charcoal hover:border-sky hover:text-sky"
+            className="rounded-pill border border-border-default px-4 py-1.5 text-charcoal hover:border-sky hover:text-sky-ink"
           >
             {t("places.linkItineraries")}
           </Link>

@@ -1,12 +1,11 @@
 ---
 id: el-sosneado
 type: attraction
-title: El Sosneado
+title: "Эль-Соснеадо"
 title_es: El Sosneado
 title_en: El Sosneado
-summary: En la cordillera andina, explora emociones fuertes y acércate a los restos
-  de un avión estrellado en la altura.
-status: stub
+summary: "Горная местность в Мендосе с термами и трагически известным местом падения уругвайского самолёта в Андах (1972)."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la cordillera andina, explora emociones fuertes y acércate a los restos de un avión estrellado en la altura.
-
-El Sosneado — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Эль-Соснеадо на юге Мендосы — суровый горный район с термальными источниками. Отсюда идут к месту катастрофы уругвайского рейса 1972 года в Андах, историю которого рассказал фильм «Живые», — мрачная, но притягательная страница высокогорья.
 
 ## Практическая информация
 

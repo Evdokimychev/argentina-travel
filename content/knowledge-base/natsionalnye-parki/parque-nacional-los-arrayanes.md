@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-los-arrayanes
 type: national_park
-title: национальный парк Los Arrayanes
+title: "Национальный парк Лос-Арраянес"
 title_es: Parque Nacional Los Arrayanes
 title_en: Los Arrayanes National Park
-summary: En la Патагония, déjate cautivar por el único bosque puro de arrayanes que
-  existe en el mundo.
-status: stub
+summary: "Уникальный парк на полуострове Кетриуэ у Вилья-Ла-Ангостуры, охраняющий единственный в мире чистый лес деревьев арраян с корицево-рыжей корой."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония, déjate cautivar por el único bosque puro de arrayanes que existe en el mundo.
-
-национальный парк Los Arrayanes — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Лос-Арраянес на полуострове Кетриуэ (у Вилья-Ла-Ангостуры) знаменит единственным в мире чистым лесом деревьев арраян с гладкой корицево-рыжей корой. К роще добираются пешком, на велосипеде или на катере по озеру Науэль-Уапи.
 
 ## Практическая информация
 

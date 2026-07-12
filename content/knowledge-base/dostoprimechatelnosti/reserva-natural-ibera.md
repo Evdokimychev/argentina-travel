@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-ibera
 type: attraction
-title: Iberá Natural Reserve
+title: "Природный заповедник Иберá"
 title_es: Reserva Natural Iberá
 title_en: Iberá Natural Reserve
-summary: En el Литорал argentino, te espera una experiencia de sensaciones con la
-  naturaleza en estado puro.
-status: stub
+summary: "Провинциальная охраняемая часть болот Иберá в провинции Корриентес — одного из крупнейших водно-болотных угодий Южной Америки с богатейшей фауной."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el Литорал argentino, te espera una experiencia de sensaciones con la naturaleza en estado puro.
-
-Iberá Natural Reserve — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Иберá охраняет провинциальную часть огромных болот Иберá в провинции Корриентес. Это одно из крупнейших водно-болотных угодий континента: капибары, кайманы, болотные олени и сотни видов птиц. Главная база для сафари — деревня Колония-Карлос-Пеллегрини.
 
 ## Практическая информация
 

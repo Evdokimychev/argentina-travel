@@ -1,12 +1,11 @@
 ---
 id: cascada-del-rio-noque
 type: attraction
-title: Río Noque Waterfall
+title: "Водопад на реке Ноке"
 title_es: Cascada del Río Noque
 title_en: Río Noque Waterfall
-summary: Descubre una caída de agua cristalina en el circuito de las Yungas del Norte
-  Argentino.
-status: stub
+summary: "Прозрачный водопад на маршруте по влажным горным лесам юнга на севере Аргентины, в провинции Тукуман."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre una caída de agua cristalina en el circuito de las Yungas del Norte Argentino.
-
-Río Noque Waterfall — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Водопад на реке Ноке — одна из остановок на маршруте по юнгам провинции Тукуман. Кристально чистая вода среди пышной субтропической зелени; хорошая цель для лёгкого треккинга.
 
 ## Практическая информация
 

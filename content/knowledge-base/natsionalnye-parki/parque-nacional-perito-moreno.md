@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-perito-moreno
 type: national_park
-title: национальный парк Перито-Морено
+title: "Национальный парк Перито-Морено"
 title_es: Parque Nacional Perito Moreno
 title_en: Perito Moreno National Park
-summary: En la Патагония, visita una reserva de vida y de cultura junto a la Cordillera
-  de los Andes.
-status: stub
+summary: "Удалённый и малопосещаемый высокогорно-степной парк в провинции Санта-Крус (не путать с ледником Перито-Морено): озёра, гуанако и первозданная Патагония."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония, visita una reserva de vida y de cultura junto a la Cordillera de los Andes.
-
-национальный парк Перито-Морено — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Перито-Морено — один из самых удалённых и малолюдных парков Аргентины, в глубине провинции Санта-Крус. Важно не путать его со знаменитым ледником Перито-Морено: это разные объекты. Здесь — суровые степи, бирюзовые озёра, гуанако и кондоры, для настоящих любителей дикой Патагонии.
 
 ## Практическая информация
 

@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-copo
 type: national_park
-title: национальный парк Copo
+title: "Национальный парк Копо"
 title_es: Parque Nacional Copo
 title_en: Copo National Park
-summary: Descubre el impenetrable santiagueño y atrévete a caminar por una de las
-  tierras menos transitadas de la región.
-status: stub
+summary: "Дикий уголок сухого Чако на севере провинции Сантьяго-дель-Эстеро — часть «непроходимого» (el impenetrable), одна из наименее посещаемых природных территорий региона."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre el impenetrable santiagueño y atrévete a caminar por una de las tierras menos transitadas de la región.
-
-национальный парк Copo — одна из достопримечательностей региона Северо-Запад (Саньяго-дель-Эстеро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Копо охраняет крупный массив сухого Чако (Chaco Seco) на севере провинции Сантьяго-дель-Эстеро — тот самый «непроходимый» лес (el impenetrable) из твёрдых пород кебрачо. Это дикое, малолюдное место для тех, кто хочет увидеть настоящую чакскую природу и её фауну вдали от туристических троп.
 
 ## Практическая информация
 

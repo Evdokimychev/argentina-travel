@@ -51,7 +51,7 @@ export default function CarRentalFaqSection({ title, items }: CarRentalFaqSectio
             <div
               key={item.question}
               className={cn(
-                "overflow-hidden rounded-2xl border border-gray-100 bg-white transition-colors duration-200 hover:border-[#FFB347]/70",
+                "overflow-hidden rounded-2xl border border-gray-100 bg-white transition-colors duration-200 hover:border-sun/70",
                 revealClass(revealed, ITEM_DELAYS[index])
               )}
             >

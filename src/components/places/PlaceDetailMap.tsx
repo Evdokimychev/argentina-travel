@@ -87,7 +87,7 @@ export default function PlaceDetailMap({ place, relatedPlaces = [], className }:
   return (
     <div
       ref={containerRef}
-      className={cn("h-[280px] w-full overflow-hidden rounded-2xl border border-gray-100 sm:h-[320px]", className)}
+      className={cn("h-[280px] w-full overflow-hidden rounded-card border border-border-subtle sm:h-[320px]", className)}
       role="region"
       aria-label={`Карта: ${place.name}`}
     />

@@ -1,12 +1,11 @@
 ---
 id: ciudad-de-formosa
 type: attraction
-title: Город Formosa
+title: "Город Формоса"
 title_es: Ciudad de Formosa
 title_en: City of Formosa
-summary: A orillas del río Paraguay, te espera una urbe donde la cultura y la historia
-  conviven con la naturaleza.
-status: stub
+summary: "Столица провинции Формоса на берегу реки Парагвай — тёплый субтропический город, где культура и история соседствуют с дикой природой Литораля."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-A orillas del río Paraguay, te espera una urbe donde la cultura y la historia conviven con la naturaleza.
-
-Город Formosa — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Формоса — столица одноимённой северной провинции на берегу реки Парагвай. Спокойный субтропический город с набережной, откуда начинаются поездки в дикую природу Чако и к болотам; сюда же приходят маршруты в соседний Парагвай.
 
 ## Практическая информация
 

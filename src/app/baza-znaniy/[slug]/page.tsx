@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 
 import KbBreadcrumbs from "@/components/knowledge-base/KbBreadcrumbs";
 import KbCallout from "@/components/knowledge-base/KbCallout";
+import KbEditorialNotice from "@/components/knowledge-base/KbEditorialNotice";
+import KbFactPanel from "@/components/knowledge-base/KbFactPanel";
 import KbRelated from "@/components/knowledge-base/KbRelated";
 import KbSideNav from "@/components/knowledge-base/KbSideNav";
 import KbSources from "@/components/knowledge-base/KbSources";
@@ -24,6 +26,7 @@ import SocialFeed from "@/components/social-feed/SocialFeed";
 import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import { extractHeadings, renderMarkdown } from "@/lib/knowledge-base/markdown";
+import type { KbEntry } from "@/lib/knowledge-base/types";
 import { entryHref } from "@/lib/knowledge-base/urls";
 import { capBuildStaticParams } from "@/lib/build-static-limits";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -57,6 +60,24 @@ const CONFIDENCE_STYLE: Record<string, string> = {
   medium: "bg-warning-muted text-warning",
   low: "bg-surface-muted text-slate",
 };
+
+function imageCredit(hero: NonNullable<KbEntry["media"]>["hero"]) {
+  if (!hero) return null;
+  const parts = [hero.author, hero.license].filter(Boolean);
+  if (parts.length === 0 && !hero.source_page) return null;
+  const label = parts.join(", ") || "Источник изображения";
+  if (!hero.source_page) return label;
+  return (
+    <a
+      href={hero.source_page}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="underline decoration-slate/30 underline-offset-2 hover:decoration-slate"
+    >
+      {label}
+    </a>
+  );
+}
 
 export default async function KnowledgeArticlePage({ params }: PageProps) {
   const { slug } = await params;
@@ -114,6 +135,11 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
                   Обновлено: {entry.last_verified}
                 </span>
               )}
+              {entry.status === "stub" && (
+                <span className="inline-flex items-center rounded-full bg-surface-muted px-2.5 py-0.5 text-2xs font-medium text-slate">
+                  Короткая справка
+                </span>
+              )}
             </div>
 
             <h1 className="text-2xl font-bold leading-tight text-foreground sm:text-3xl">
@@ -125,15 +151,26 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               </p>
             )}
 
+            <KbEditorialNotice entry={entry} />
+
             {hero && (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={hero.url}
-                alt={hero.alt ?? entry.title}
-                loading="lazy"
-                className="mt-6 aspect-[16/9] w-full rounded-panel object-cover"
-              />
+              <figure className="mt-6">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={hero.url}
+                  alt={hero.alt ?? entry.title}
+                  loading="lazy"
+                  className="aspect-[16/9] w-full rounded-panel bg-surface-muted object-cover"
+                />
+                {imageCredit(hero) && (
+                  <figcaption className="mt-1.5 text-xs leading-relaxed text-slate">
+                    Фото: {imageCredit(hero)}
+                  </figcaption>
+                )}
+              </figure>
             )}
+
+            <KbFactPanel entry={entry} />
 
             {/* Оглавление на мобильных и планшетах — над телом */}
             {headings.length >= 3 && (

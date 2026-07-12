@@ -1,12 +1,11 @@
 ---
 id: villa-ocampo
 type: attraction
-title: Villa Ocampo
+title: "Вилья-Окампо"
 title_es: Villa Ocampo
 title_en: Villa Ocampo
-summary: En el Литорал argentino, una urbe te espera entre el sitio Ramsar Jaaukanigás
-  y el valle del río Los Amores.
-status: stub
+summary: "Городок на севере Санта-Фе между рамсарским угодьем Хаауканигас и долиной реки Лос-Аморес."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el Литорал argentino, una urbe te espera entre el sitio Ramsar Jaaukanigás y el valle del río Los Amores.
-
-Villa Ocampo — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Окампо на севере провинции Санта-Фе окружена дикой природой: рядом рамсарское водно-болотное угодье Хаауканигас и долина реки Лос-Аморес. Место для тех, кто хочет тишины, рыбалки и птиц вдали от туристических троп.
 
 ## Практическая информация
 

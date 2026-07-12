@@ -1,12 +1,11 @@
 ---
 id: laguna-de-mar-chiquita
 type: attraction
-title: Laguna de Mar Chiquita
+title: "Лагуна Мар-Чикита"
 title_es: Laguna de Mar Chiquita
 title_en: Laguna de Mar Chiquita
-summary: Disfruta de las aves, la playa y los deportes náuticos en uno de los humedales
-  salinos más grandes del mundo.
-status: stub
+summary: "Одно из крупнейших солёных озёр планеты на севере провинции Кордова — рай для фламинго и водных птиц."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Disfruta de las aves, la playa y los deportes náuticos en uno de los humedales salinos más grandes del mundo.
-
-Laguna de Mar Chiquita — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Мар-Чикита — огромное бессточное солёное озеро на севере Кордовы, одно из крупнейших в мире. Сюда слетаются тысячи фламинго и перелётных птиц; на берегу — пляжи, термальные ванны и наблюдение за пернатыми.
 
 ## Практическая информация
 

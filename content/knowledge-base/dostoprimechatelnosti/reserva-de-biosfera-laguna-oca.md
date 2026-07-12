@@ -1,12 +1,11 @@
 ---
 id: reserva-de-biosfera-laguna-oca
 type: attraction
-title: Laguna Oca Biosphere Reserve
+title: "Биосферный заповедник Лагуна-Ока"
 title_es: Reserva de Biósfera Laguna Oca
 title_en: Laguna Oca Biosphere Reserve
-summary: Visita un área que protege la diversidad biológica de ecosistemas terrestres
-  y costeros.
-status: stub
+summary: "Водно-болотный заповедник у самого города Формоса на реке Парагвай: старицы, протоки и богатая прибрежная жизнь."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Visita un área que protege la diversidad biológica de ecosistemas terrestres y costeros.
-
-Laguna Oca Biosphere Reserve — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Биосферный заповедник Лагуна-Ока начинается прямо у окраины города Формоса — это старица реки Парагвай с протоками, заводями и прибрежными лесами. Удобное и близкое к городу место для прогулок и наблюдения за птицами субтропического Литоралья.
 
 ## Практическая информация
 

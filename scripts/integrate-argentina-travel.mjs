@@ -56,10 +56,10 @@ const placesImportOut = path.join(root, "src/data/places-kb-import.generated.ts"
 const siteIdMapOut = path.join(root, "content/knowledge-base/_index/site-id-map.json");
 
 const REGION_LABEL = {
-  noa: "Северо-Запад",
+  noa: "Северо-запад",
   patagonia: "Патагония",
   cuyo: "Куйо",
-  litoral: "Северо-Восток",
+  litoral: "Северо-восток",
   pampa: "Центр и Пампа",
   "buenos-aires-province": "Центр и Пампа",
   caba: "Центр и Пампа",
@@ -80,7 +80,7 @@ const REGION_DESTINATION = {
 const KB_TYPE_TO_PLACE_CATEGORY = {
   city: "city",
   national_park: "national_park",
-  attraction: "attraction",
+  attraction: "historic",
 };
 
 function loadJson(p) {
@@ -484,7 +484,7 @@ function generatePlacesImport(placeToKb) {
     if (placeSlugs.has(slug)) continue;
 
     const desc =
-      body.match(/##\s+Описание\s*\n+([\s\S]*?)(?=\n##\s|$)/)?.[1]?.trim().slice(0, 280) ??
+      body.match(/##\s+Описание\s*\n+([\s\S]*?)(?=\n##\s|$)/)?.[1]?.trim() ??
       fm.summary ??
       "";
     if (spanishRatio(desc) > 0.08) continue;
@@ -495,9 +495,9 @@ function generatePlacesImport(placeToKb) {
       id: `place-kb-${slug}`,
       slug,
       name: fm.title,
-      shortDescription: (fm.summary ?? desc).slice(0, 200),
-      fullDescription: desc.slice(0, 600) || fm.summary || fm.title,
-      category: KB_TYPE_TO_PLACE_CATEGORY[fm.type] ?? "attraction",
+      shortDescription: fm.summary ?? desc,
+      fullDescription: desc || fm.summary || fm.title,
+      category: KB_TYPE_TO_PLACE_CATEGORY[fm.type] ?? "historic",
       region: REGION_LABEL[fm.region_id] ?? "Аргентина",
       province: fm.province ?? undefined,
       latitude: coords.lat,

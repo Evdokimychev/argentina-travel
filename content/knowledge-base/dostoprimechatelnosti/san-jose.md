@@ -1,12 +1,11 @@
 ---
 id: san-jose
 type: attraction
-title: San José
+title: "Сан-Хосе"
 title_es: San José
 title_en: San José
-summary: En el Литорал argentino, descubre una ciudad donde la cultura se integra
-  con la naturaleza.
-status: stub
+summary: "Городок в Энтре-Риосе рядом с историческим дворцом Сан-Хосе и термами, среди природы речного Литораля."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -63,9 +62,7 @@ sources:
 
 ## Описание
 
-En el Литорал argentino, descubre una ciudad donde la cultura se integra con la naturaleza.
-
-San José — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Сан-Хосе в провинции Энтре-Риос известен соседством с историческим дворцом Сан-Хосе — усадьбой генерала Уркисы. Спокойный городок сочетает историю, природу реки Уругвай и близость термальных курортов.
 
 ## Практическая информация
 

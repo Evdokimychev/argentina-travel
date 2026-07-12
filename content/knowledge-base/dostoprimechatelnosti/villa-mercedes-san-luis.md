@@ -1,12 +1,11 @@
 ---
 id: villa-mercedes-san-luis
 type: attraction
-title: Villa Mercedes, San Luis
+title: "Вилья-Мерседес"
 title_es: Villa Mercedes, San Luis
 title_en: Villa Mercedes, San Luis
-summary: Descubre los encantos de la segunda urbe más importante de la provincia de
-  San Luis.
-status: stub
+summary: "Второй по величине город провинции Сан-Луис — оживлённый центр с гастрономией, фестивалями и рекой."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre los encantos de la segunda urbe más importante de la provincia de San Luis.
-
-Villa Mercedes, San Luis — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Мерседес — второй город провинции Сан-Луис, живой и растущий. Известен фольклорными фестивалями, гастрономией и набережной реки Кинто; удобная остановка на пути через центр страны.
 
 ## Практическая информация
 

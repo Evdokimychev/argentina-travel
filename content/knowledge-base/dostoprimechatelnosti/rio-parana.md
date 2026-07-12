@@ -1,12 +1,11 @@
 ---
 id: rio-parana
 type: attraction
-title: Paraná river
+title: "Река Парана"
 title_es: Río Paraná
 title_en: Paraná river
-summary: Recorre uno de los ríos más importantes de Sudamérica, donde te esperan la
-  pesca del dorado y un mundo de actividades.
-status: stub
+summary: "Одна из величайших рек Южной Америки — артерия Литораля с рыбалкой на золотистого дорадо и водными маршрутами."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Recorre uno de los ríos más importantes de Sudamérica, donde te esperan la pesca del dorado y un mundo de actividades.
-
-Paraná river — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Река Парана — вторая по величине река континента и главная водная артерия аргентинского Литоралья. Дельта, острова и протоки дарят рыбалку на дорадо, речные круизы и богатую прибрежную жизнь.
 
 ## Практическая информация
 

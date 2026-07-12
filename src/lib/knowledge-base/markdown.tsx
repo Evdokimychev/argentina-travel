@@ -24,9 +24,42 @@ const STRIP_SECTION_TITLES = new Set([
 // Разделы-заглушки «См. … в метаданных» — их тоже убираем.
 const STRIP_IF_PLACEHOLDER = new Set(["Рекомендации", "Предупреждения"]);
 
+const KNOWN_SECTION_TITLES = [
+  "Описание",
+  "Что нужно",
+  "Что посмотреть и сделать",
+  "Как добраться",
+  "К чему ведёт",
+  "Деньги за учёбу",
+  "Практическая информация",
+  "Факты",
+  "Рекомендации",
+  "Предупреждения",
+  "Связанные объекты",
+  "Источники",
+];
+
+const KNOWN_SECTION_RE = new RegExp(
+  `(^|\\n|\\s)(#{2,3})\\s+(${KNOWN_SECTION_TITLES.map((title) =>
+    title.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+  ).join("|")})(?=\\s+\\S)`,
+  "g",
+);
+
+/** Импортные записи иногда приходят как `## Описание текст ## Факты ...` в одну строку. */
+function normalizeMarkdownSections(body: string): string {
+  return body
+    .replace(KNOWN_SECTION_RE, (_match, prefix, hashes, title) => {
+      const before = prefix.trim() === "" ? "\n" : `${prefix}\n`;
+      return `${before}${hashes} ${title}\n\n`;
+    })
+    .trim();
+}
+
 /** Удаляет из тела разделы, дублирующие структурные UI-блоки. */
 export function stripRedundantSections(body: string): string {
-  const parts = body.split(/^(##\s+.+)$/m);
+  const normalized = normalizeMarkdownSections(body);
+  const parts = normalized.split(/^(##\s+.+)$/m);
   // parts: [before, "## Heading", content, "## Heading", content, ...]
   let out = parts[0] ?? "";
   for (let i = 1; i < parts.length; i += 2) {
@@ -240,6 +273,15 @@ export function renderMarkdown(body: string, opts: RenderOptions): ReactNode {
         i++;
       }
       blocks.push(renderTable(rows, validIds, key++));
+      continue;
+    }
+    if (trimmed.startsWith("|")) {
+      blocks.push(
+        <p key={key++} className="my-3 leading-relaxed text-muted">
+          {renderInline(trimmed, validIds)}
+        </p>,
+      );
+      i++;
       continue;
     }
 

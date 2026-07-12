@@ -1,12 +1,11 @@
 ---
 id: reserva-de-biosfera-yaboti
 type: attraction
-title: Yabotí Biosphere Reserve
+title: "Биосферный заповедник Яботи"
 title_es: Reserva de Biósfera Yabotí
 title_en: Yabotí Biosphere Reserve
-summary: Visita una reserva que contiene diversas áreas naturales protegidas, como
-  el провинциальный парк Moconá.
-status: stub
+summary: "Крупный массив атлантической сельвы в провинции Мисьонес, объединяющий несколько охраняемых территорий, включая водопады Моконá."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Visita una reserva que contiene diversas áreas naturales protegidas, como el провинциальный парк Moconá.
-
-Yabotí Biosphere Reserve — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Биосферный заповедник Яботи охраняет один из самых больших сохранившихся массивов атлантической сельвы (Selva Paranaense) в провинции Мисьонес. Внутри него — несколько заповедников и провинциальный парк с уникальными продольными водопадами Моконá.
 
 ## Практическая информация
 

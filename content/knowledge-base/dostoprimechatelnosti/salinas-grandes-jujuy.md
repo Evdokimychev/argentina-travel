@@ -1,11 +1,11 @@
 ---
 id: salinas-grandes-jujuy
 type: attraction
-title: Salinas Grandes, Jujuy
+title: "Салинас-Грандес (Жужуй)"
 title_es: Salinas Grandes, Jujuy
 title_en: Salinas Grandes, Jujuy
-summary: Vive la experiencia de caminar sobre una de las salinas más grandes del planeta.
-status: stub
+summary: "Ослепительно белая солёная пустыня на высоте Пуны на границе Жужуя и Сальты — один из самых фотогеничных пейзажей севера."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Vive la experiencia de caminar sobre una de las salinas más grandes del planeta.
-
-Salinas Grandes, Jujuy — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Салинас-Грандес — огромный солончак на высоте около 3400 м на границе провинций Жужуй и Сальта. Бесконечная белая гладь с геометрическими узорами соли, ярким небом и мастерскими по добыче соли — обязательная остановка на северо-западе.
 
 ## Практическая информация
 

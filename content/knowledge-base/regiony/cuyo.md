@@ -12,7 +12,7 @@ coordinates: { lat: -32.5, lng: -68.8 }
 tags: [вино, горы, пустыня, аконкагуа]
 cost: { level: "$$", details: "Мендоса — умеренные цены по меркам туристических регионов; винные туры и рестораны высокого уровня дороже" }
 best_time: ["март-май (сбор винограда, вендимия)", "сентябрь-ноябрь (весна)"]
-related: [mendoza, ischigualasto, talampaya, aconcagua-provincial-park, la-rioja, san-luis, sierra-de-las-quijadas, san-huan, vino-argentiny, vinnyy-marshrut, zemletryaseniya-i-vulkany]
+related: [mendoza, ischigualasto, talampaya, aconcagua-provincial-park, la-rioja, san-luis, sierra-de-las-quijadas, san-huan, vino-argentiny, vinnyy-marshrut, zemletryaseniya-i-vulkany, el-vino-malbec, parque-nacional-el-leoncito, parque-nacional-san-guillermo, parque-provincial-cordon-del-plata, parque-provincial-ischigualasto, rafting-en-el-rio-mendoza, termas-de-cacheuta, valle-de-uco-mendoza, valle-grande, villa-mercedes-san-luis, volcan-malacara]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Aconcagua%2C_2019.jpg/1920px-Aconcagua%2C_2019.jpg"

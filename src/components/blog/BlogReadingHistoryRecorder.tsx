@@ -3,10 +3,7 @@
 import { useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { recordBlogReading } from "@/lib/blog-reading-history";
-import {
-  syncBlogReadingHistoryEntry,
-  syncBlogReadingHistoryWithRemote,
-} from "@/lib/blog-reading-history-sync";
+import { syncBlogReadingHistoryWithRemote } from "@/lib/blog-reading-history-sync";
 import { trackBlogArticleView } from "@/lib/analytics/gtm-events";
 import type { BlogPost } from "@/types";
 
@@ -25,13 +22,6 @@ export default function BlogReadingHistoryRecorder({ post }: BlogReadingHistoryR
       category: post.category,
     });
 
-    const entry = {
-      slug: post.slug,
-      title: post.title,
-      category: post.category,
-      readAt: new Date().toISOString(),
-    };
-    void syncBlogReadingHistoryEntry(entry);
   }, [post.slug, post.title, post.category]);
 
   useEffect(() => {

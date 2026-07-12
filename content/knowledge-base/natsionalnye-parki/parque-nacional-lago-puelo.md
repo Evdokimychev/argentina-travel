@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-lago-puelo
 type: national_park
-title: национальный парк Lago Puelo
+title: "Национальный парк Лаго-Пуэло"
 title_es: Parque Nacional Lago Puelo
 title_en: Lago Puelo National Park
-summary: Al pie de la Cordillera de los Andes, descubre el encanto de esta área protegida
-  en la ecorregión Bosques Patagónicos.
-status: stub
+summary: "Патагонский лесной парк вокруг бирюзового озера Пуэло на юге провинции Чубут, у подножия Анд рядом с Эль-Больсоном."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Al pie de la Cordillera de los Andes, descubre el encanto de esta área protegida en la ecorregión Bosques Patagónicos.
-
-национальный парк Lago Puelo — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Лаго-Пуэло охраняет бирюзовое озеро Пуэло и окружающие патагонские леса на юге провинции Чубут, недалеко от Эль-Больсона. Мягкий микроклимат позволяет расти видам, нетипичным для этих широт; популярны прогулки у воды, каякинг и лёгкий треккинг.
 
 ## Практическая информация
 

@@ -32,7 +32,7 @@ export default function PlacesRegionExplorer({
           <button
             type="button"
             onClick={() => onSelect("")}
-            className="shrink-0 text-xs font-medium text-sky hover:underline"
+            className="shrink-0 text-xs font-medium text-sky-ink hover:underline"
           >
             {t("places.regions.showAll")}
           </button>
@@ -44,10 +44,10 @@ export default function PlacesRegionExplorer({
           type="button"
           onClick={() => onSelect("")}
           className={cn(
-            "flex w-[140px] shrink-0 flex-col overflow-hidden rounded-2xl border text-left transition-all sm:w-[160px]",
+            "flex w-[140px] shrink-0 flex-col overflow-hidden rounded-card border text-left transition-all sm:w-[160px]",
             !activeRegion
               ? "border-sky ring-2 ring-sky/20"
-              : "border-gray-100 hover:border-gray-200 hover:shadow-sm",
+              : "border-border-subtle hover:border-border-default hover:shadow-sm",
           )}
         >
           <div className="relative flex aspect-[4/3] items-center justify-center bg-gradient-to-br from-sky/20 to-sky/5">
@@ -67,13 +67,13 @@ export default function PlacesRegionExplorer({
               type="button"
               onClick={() => onSelect(item.region)}
               className={cn(
-                "group w-[140px] shrink-0 overflow-hidden rounded-2xl border text-left transition-all sm:w-[160px]",
+                "group w-[140px] shrink-0 overflow-hidden rounded-card border text-left transition-all sm:w-[160px]",
                 active
                   ? "border-sky ring-2 ring-sky/20"
-                  : "border-gray-100 hover:border-gray-200 hover:shadow-sm",
+                  : "border-border-subtle hover:border-border-default hover:shadow-sm",
               )}
             >
-              <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+              <div className="relative aspect-[4/3] overflow-hidden bg-surface-muted">
                 {item.coverImage ? (
                   <Image
                     src={item.coverImage}

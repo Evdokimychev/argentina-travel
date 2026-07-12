@@ -1,12 +1,11 @@
 ---
 id: colonia-carlos-pellegrini
 type: attraction
-title: Colonia Carlos Pellegrini
+title: "Колония-Карлос-Пеллегрини"
 title_es: Colonia Carlos Pellegrini
 title_en: Colonia Carlos Pellegrini
-summary: En el Литорал argentino, descubre el encanto de un paraje rural con solo
-  novecientos habitantes.
-status: stub
+summary: "Крошечная деревня на берегу лагуны Иберá — главная база для сафари по знаменитым болотам Корриентеса."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el Литорал argentino, descubre el encanto de un paraje rural con solo novecientos habitantes.
-
-Colonia Carlos Pellegrini — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Колония-Карлос-Пеллегрини — тихая деревня примерно на девятьсот жителей на берегу лагуны Иберá. Это главные ворота к болотам Иберá: отсюда на лодках и джипах наблюдают капибар, кайманов и сотни птиц.
 
 ## Практическая информация
 

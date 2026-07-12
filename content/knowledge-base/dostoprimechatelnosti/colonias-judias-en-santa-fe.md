@@ -1,12 +1,11 @@
 ---
 id: colonias-judias-en-santa-fe
 type: attraction
-title: Jewish colonies in Santa Fe
+title: "Еврейские колонии в Санта-Фе"
 title_es: Colonias judías en Santa Fe
 title_en: Jewish colonies in Santa Fe
-summary: Explora la tierra que vio llegar a los primeros inmigrantes de origen judío
-  en Argentina.
-status: stub
+summary: "Земля первых еврейских переселенцев-земледельцев Аргентины — синагоги, музеи и память о «еврейских гаучо»."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Explora la tierra que vio llegar a los primeros inmigrantes de origen judío en Argentina.
-
-Jewish colonies in Santa Fe — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+На западе провинции Санта-Фе сохранились следы еврейских земледельческих колоний конца XIX века, куда прибывали первые переселенцы из Восточной Европы. Синагоги, кладбища и музеи хранят память о «еврейских гаучо» и их вкладе в аргентинское село.
 
 ## Практическая информация
 

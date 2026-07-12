@@ -73,12 +73,13 @@ export default async function HomePage() {
         platformStats={platformStats}
         excursionCities={excursionCities}
         travelPrepStrip={
-          <Suspense fallback={null}>
+          <Suspense key="home-travel-prep-strip" fallback={null}>
             <TravelPrepStrip />
           </Suspense>
         }
         heroCollage={
           <HomeHeroCollage
+            key="home-hero-collage"
             heroSrc={heroSrc}
             heroAlt={getHomeHeroAlt()}
             showcase={getHomeShowcaseImages()}

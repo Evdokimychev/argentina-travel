@@ -1,12 +1,11 @@
 ---
 id: termas-del-rio-jordan
 type: attraction
-title: Río Jordán Hot Springs
+title: "Термы Рио-Жордан"
 title_es: Termas del Río Jordán
 title_en: Río Jordán Hot Springs
-summary: En el corazón de la selva de Yungas, descubre una maravilla natural de la
-  provincia de Jujuy.
-status: stub
+summary: "Горячие источники среди влажной сельвы юнга в провинции Жужуй — дикое термальное место в глубине гор."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -43,9 +42,7 @@ sources:
 
 ## Описание
 
-En el corazón de la selva de Yungas, descubre una maravilla natural de la provincia de Jujuy.
-
-Río Jordán Hot Springs — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Термы Рио-Жордан спрятаны в самом сердце влажных горных лесов юнга провинции Жужуй. Природные горячие источники среди буйной зелени, к которым добираются по горной дороге — уединённый уголок для любителей дикой природы.
 
 ## Практическая информация
 

@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-pichi-mahuida
 type: attraction
-title: Pichi Mahuida Natural Reserve
+title: "Природный заповедник Пичи-Мауида"
 title_es: Reserva Natural Pichi Mahuida
 title_en: Pichi Mahuida Natural Reserve
-summary: Camina por una de las áreas protegidas más valiosas del centro geográfico
-  argentino.
-status: stub
+summary: "Охраняемый уголок провинции Ла-Пампа на реке Колорадо — переходная зона между пампой и патагонской степью."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Camina por una de las áreas protegidas más valiosas del centro geográfico argentino.
-
-Pichi Mahuida Natural Reserve — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Пичи-Мауида в провинции Ла-Пампа охраняет участок на реке Колорадо, где пампа переходит в засушливую патагонскую степь. Тихое место с характерной фауной равнин центра страны.
 
 ## Практическая информация
 

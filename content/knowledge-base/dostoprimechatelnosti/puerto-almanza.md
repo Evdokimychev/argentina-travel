@@ -1,11 +1,11 @@
 ---
 id: puerto-almanza
 type: attraction
-title: Puerto Almanza
+title: "Пуэрто-Альманса"
 title_es: Puerto Almanza
 title_en: Puerto Almanza
-summary: Vive la experiencia de explorar el pueblo más austral de la Патагония Argentina.
-status: stub
+summary: "Самый южный посёлок континентальной Аргентины на канале Бигль — рыбацкая деревушка со знаменитыми крабами-сентольей."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Vive la experiencia de explorar el pueblo más austral de la Патагония Argentina.
-
-Puerto Almanza — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Пуэрто-Альманса — крошечная рыбацкая деревня на берегу канала Бигль, самый южный посёлок материковой Аргентины напротив чилийского берега. Сюда едут за свежайшей сентольей (королевским крабом) и видами на «край света».
 
 ## Практическая информация
 

@@ -51,6 +51,7 @@ import { cn } from "@/lib/cn";
 import { getBlogSectionKind } from "@/lib/blog-section-body";
 import { buildTocItemsFromHeadings, headingToAnchorId } from "@/lib/content-heading-id";
 import { mapBlogRelatedResources } from "@/lib/content-related-links";
+import { getBlogKbLinks } from "@/data/blog-kb-links";
 import { getRichArticleGallery } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import TourEmbedSection from "@/components/embed/TourEmbedSection";
@@ -89,10 +90,10 @@ export default function BlogPostView({
 
   const adjacentPosts = getBlogAdjacentPosts(post, catalog);
   const uiBreadcrumbs = buildBlogPostUiBreadcrumbs(post);
-  const sidebarRelatedResources = getBlogPostSidebarRelatedResources(
-    post,
-    publishedBlogSlugs,
-  );
+  const sidebarRelatedResources = [
+    ...getBlogPostSidebarRelatedResources(post, publishedBlogSlugs),
+    ...getBlogKbLinks(post.slug),
+  ];
   const footerLinks = getBlogPostFooterLinks(post, publishedBlogSlugs);
 
   const canonicalTarget = post.canonicalSlug

@@ -12,7 +12,7 @@ coordinates: { lat: -32.5, lng: -63.0 }
 tags: [пампа, университетские города, история, сельское хозяйство]
 cost: { level: "$$", details: "Умеренные цены; крупные города дешевле Буэнос-Айреса, глубинка ещё бюджетнее" }
 best_time: ["сентябрь-ноябрь (весна)", "март-май (осень)"]
-related: [kordova, rosario, santa-fe, santa-rosa, lihue-calel, la-cumbrecita, buenos-aires, argentina-3-nedeli]
+related: [kordova, rosario, santa-fe, santa-rosa, lihue-calel, la-cumbrecita, buenos-aires, argentina-3-nedeli, laguna-de-mar-chiquita, los-gigantes, pueblos-pintorescos-de-cordoba, reserva-natural-pichi-mahuida, reserva-provincial-parque-luro, sierras-cordobesas, valle-de-punilla-cordoba, valle-de-traslasierra, villa-carlos-paz, villa-general-belgrano]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/7/7e/Monumento_a_la_Bandera_18.jpg"

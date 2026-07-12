@@ -1,11 +1,11 @@
 ---
 id: reserva-natural-laguna-brava
 type: attraction
-title: Laguna Brava Natural Reserve
+title: "Природный заповедник Лагуна-Брава"
 title_es: Reserva Natural Laguna Brava
 title_en: Laguna Brava Natural Reserve
-summary: Explora un entorno natural de ensueño en este sitio Ramsar de la Argentina.
-status: stub
+summary: "Высокогорный заповедник Ла-Риохи у подножия шеститысячников Анд: солёная лагуна-Рамсар, викуньи и фламинго на высоте более четырёх тысяч метров."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Explora un entorno natural de ensueño en este sitio Ramsar de la Argentina.
-
-Laguna Brava Natural Reserve — одна из достопримечательностей региона Северо-Запад (Ла-Риоха). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Лагуна-Брава лежит высоко в Андах провинции Ла-Риоха, среди вулканов-шеститысячников. Солёная высокогорная лагуна (объект Рамсарской конвенции) собирает фламинго, а по склонам пасутся викуньи. Суровая и величественная высокогорная пустыня.
 
 ## Практическая информация
 

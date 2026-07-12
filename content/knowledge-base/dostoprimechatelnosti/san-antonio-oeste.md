@@ -1,11 +1,11 @@
 ---
 id: san-antonio-oeste
 type: attraction
-title: San Antonio Oeste
+title: "Сан-Антонио-Оэсте"
 title_es: San Antonio Oeste
 title_en: San Antonio Oeste
-summary: En la Патагония, recorre una ciudad centenaria y contempla la actividad marítima.
-status: stub
+summary: "Столетний портовый город на севере Рио-Негро у залива Сан-Матиас, рядом с курортом Лас-Грутас."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония, recorre una ciudad centenaria y contempla la actividad marítima.
-
-San Antonio Oeste — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Сан-Антонио-Оэсте — старый портовый город на берегу залива Сан-Матиас в провинции Рио-Негро. Вместе с соседним пляжным курортом Лас-Грутас образует популярное направление морского отдыха с тёплой водой и обрывистыми берегами.
 
 ## Практическая информация
 

@@ -1,11 +1,11 @@
 ---
 id: villa-pehuenia
 type: attraction
-title: Villa Pehuenia
+title: "Вилья-Пеуэния"
 title_es: Villa Pehuenia
 title_en: Villa Pehuenia
-summary: Aventúrate a explorar una aldea de montaña al pie de los Andes patagónicos.
-status: stub
+summary: "Горное селение у вулкана Батеа-Мауида и озёр северного Неукена, среди лесов древней араукарии."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Aventúrate a explorar una aldea de montaña al pie de los Andes patagónicos.
-
-Villa Pehuenia — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Пеуэния — уютная горная деревня на севере провинции Неукен, у подножия Анд и вулкана Батеа-Мауида. Озёра, леса священной араукарии (pehuén) и культура мапуче делают её атмосферным местом отдыха круглый год.
 
 ## Практическая информация
 

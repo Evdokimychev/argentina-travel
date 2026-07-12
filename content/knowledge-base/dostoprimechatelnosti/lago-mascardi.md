@@ -1,12 +1,11 @@
 ---
 id: lago-mascardi
 type: attraction
-title: Mascardi Lake
+title: "Озеро Маскарди"
 title_es: Lago Mascardi
 title_en: Mascardi Lake
-summary: En la Патагония argentina, deslízate por las aguas de un lago glacial rodeado
-  de montañas.
-status: stub
+summary: "Бирюзовое ледниковое озеро в национальном парке Науэль-Уапи по дороге к Серро-Тронадор."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония argentina, deslízate por las aguas de un lago glacial rodeado de montañas.
-
-Mascardi Lake — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Озеро Маскарди с característерной бирюзовой водой лежит среди гор национального парка Науэль-Уапи, на пути к Тронадору. Кемпинги, каякинг и лесные тропы делают его популярной остановкой южнее Барилоче.
 
 ## Практическая информация
 

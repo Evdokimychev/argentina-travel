@@ -1,11 +1,11 @@
 ---
 id: rio-gallegos
 type: attraction
-title: Río Gallegos
+title: "Рио-Гальегос"
 title_es: Río Gallegos
 title_en: Río Gallegos
-summary: Explora la ciudad que te invita a llegar a los confines del continente americano.
-status: stub
+summary: "Столица провинции Санта-Крус на берегу одноимённого эстуария — южный транспортный узел и «ворота» к дальней Патагонии."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-Explora la ciudad que te invita a llegar a los confines del continente americano.
-
-Río Gallegos — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Рио-Гальегос — административный центр провинции Санта-Крус на юге материковой Патагонии. Это прежде всего транспортный узел и деловой город (отсюда добираются в Эль-Калафате и к югу), с ветреным эстуарием и колониями перелётных птиц.
 
 ## Практическая информация
 

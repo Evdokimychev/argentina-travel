@@ -1,12 +1,11 @@
 ---
 id: villa-nougues
 type: attraction
-title: Villa Nougués
+title: "Вилья-Нугес"
 title_es: Villa Nougués
 title_en: Villa Nougués
-summary: En un paisaje lleno de vegetación, encuéntrate con una villa de estilo europeo
-  fundada a fines del siglo XIX.
-status: stub
+summary: "Живописная горная вилла европейского облика над городом Тукуман, основанная в конце XIX века как летняя резиденция."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En un paisaje lleno de vegetación, encuéntrate con una villa de estilo europeo fundada a fines del siglo XIX.
-
-Villa Nougués — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Нугес — уютный посёлок в горах над Сан-Мигель-де-Тукуман, построенный в конце XIX века как летняя резиденция знати. Прохлада, пышная зелень юнга и старинные особняки создают атмосферу горного курорта.
 
 ## Практическая информация
 

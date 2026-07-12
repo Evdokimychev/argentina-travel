@@ -1,12 +1,11 @@
 ---
 id: dique-piscu-yacu
 type: attraction
-title: Piscu Yacu dam
+title: "Плотина Писку-Яку"
 title_es: Dique Piscu Yacu
 title_en: Piscu Yacu dam
-summary: Date el placer de conectarte con el agua a solo media hora de la Villa de
-  Merlo.
-status: stub
+summary: "Водохранилище в получасе от курортного городка Мерло (Сан-Луис) — место для купания и спокойного отдыха у воды."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Date el placer de conectarte con el agua a solo media hora de la Villa de Merlo.
-
-Piscu Yacu dam — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Плотина Писку-Яку с водохранилищем находится всего в получасе от Мерло в провинции Сан-Луис. Тихое место у воды среди гор Комечингонес, удобное для купания и пикника.
 
 ## Практическая информация
 

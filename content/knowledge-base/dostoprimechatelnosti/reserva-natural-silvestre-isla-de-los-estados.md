@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-silvestre-isla-de-los-estados
 type: attraction
-title: Isla de los Estados Natural Reserve
+title: "Природный заповедник Исла-де-лос-Эстадос (Остров Штатов)"
 title_es: Reserva Natural Silvestre Isla de los Estados
 title_en: Isla de los Estados Natural Reserve
-summary: Junto al faro del fin del mundo, visita un lugar donde la temperatura baja
-  y las emociones suben .
-status: stub
+summary: "Дикий, почти недоступный остров у восточной оконечности Огненной Земли — «край света» с историческим маяком, вдохновившим Жюля Верна."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Junto al faro del fin del mundo, visita un lugar donde la temperatura baja y las emociones suben .
-
-Isla de los Estados Natural Reserve — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Исла-де-лос-Эстадос — суровый скалистый остров к востоку от Огненной Земли, отделённый бурным проливом Ле-Мер. Здесь стоит легендарный «маяк на краю света», а посещение возможно только в составе редких морских экспедиций. Место штормов, тюленей и абсолютной дикости.
 
 ## Практическая информация
 

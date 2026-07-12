@@ -36,6 +36,9 @@ how_to_get_there: Самолётом из Буэнос-Айреса (AEP) до �
   Argentinas, лоукостеры); либо ночным автобусом ~13-15 часов. Альта-Монтанья и часть
   пути по Руте 40 связывают город с Сан-Хуаном (Исчигуаласто, Талампая).
 related:
+- las-lenas
+- valle-de-uco
+- villavicencio
 - buenos-aires
 - ruta-40-sem-ozer
 - vnutrennie-aviabilety

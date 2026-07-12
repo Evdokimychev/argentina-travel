@@ -12,7 +12,7 @@ coordinates: { lat: -27.5, lng: -56.5 }
 tags: [сельва, водопады, водно-болотные угодья, субтропики]
 cost: { level: "$$", details: "Игуасу туристически развит и дороже соседних менее раскрученных зон; остальной Литораль бюджетнее" }
 best_time: ["март-май", "сентябрь-ноябрь (межсезонье; жара и влажность лета утомляют)"]
-related: [iguasu, ibera, banado-la-estrella, san-ignacio-mini, parana, parque-nacional-el-palmar, resistencia, parque-nacional-chaco, formosa, parque-nacional-rio-pilcomayo, korrientes]
+related: [iguasu, ibera, banado-la-estrella, san-ignacio-mini, parana, parque-nacional-el-palmar, resistencia, parque-nacional-chaco, formosa, parque-nacional-rio-pilcomayo, korrientes, ciudad-de-santa-fe, colonias-judias-en-santa-fe, el-sauzalito, empedrado, la-aripuca, laguna-melincue, newells-old-boys, parque-nacional-islas-de-santa-fe, parque-nacional-pre-delta, pueblos-rurales-en-santa-fe, puente-rosario-victoria, reconquista, reserva-de-biosfera-laguna-oca, reserva-de-biosfera-yaboti, reserva-natural-colonia-benitez, reserva-natural-estricta-san-antonio, reserva-natural-ibera, san-jose, termas-de-saenz-pena, termas-en-entre-rios, tradicion-cervecera-en-santa-fe, villa-ocampo, villa-paranacito, villa-rio-bermejito]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/31/Iguazu_D%C3%A9cembre_2007_-_Panorama_2.jpg/1920px-Iguazu_D%C3%A9cembre_2007_-_Panorama_2.jpg"

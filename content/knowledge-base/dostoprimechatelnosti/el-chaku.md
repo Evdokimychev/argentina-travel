@@ -1,12 +1,11 @@
 ---
 id: el-chaku
 type: attraction
-title: Chaku
+title: "Чаку"
 title_es: El Chaku
 title_en: The Chaku
-summary: En el norte argentino, descubre una técnica sustentable que empleaban los
-  pueblos originarios para esquilar la vicuña.
-status: stub
+summary: "Древняя щадящая техника стрижки викуньи, которую коренные народы севера применяли столетиями и возродили сегодня."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el norte argentino, descubre una técnica sustentable que empleaban los pueblos originarios para esquilar la vicuña.
-
-Chaku — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Чаку — старинный обряд коренных народов Пуны: диких викуний загоняют, аккуратно стригут ценную шерсть и отпускают. Эта устойчивая практика возрождена на севере Аргентины и связывает древние традиции с современной охраной животных.
 
 ## Практическая информация
 

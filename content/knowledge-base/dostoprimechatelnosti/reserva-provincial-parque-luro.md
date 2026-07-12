@@ -1,12 +1,11 @@
 ---
 id: reserva-provincial-parque-luro
 type: attraction
-title: Parque Luro Provincial Reserve
+title: "Провинциальный заповедник Парке-Луро"
 title_es: Reserva Provincial Parque Luro
 title_en: Parque Luro Provincial Reserve
-summary: Muy cerca de la ciudad de Santa Rosa, te espera un patrimonio cultural en
-  una reserva de vida.
-status: stub
+summary: "Заповедник каль­денового леса недалеко от Санта-Росы (Ла-Пампа) с историческим замком-усадьбой и оленями — популярное место отдыха у пампасов."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Muy cerca de la ciudad de Santa Rosa, te espera un patrimonio cultural en una reserva de vida.
-
-Parque Luro Provincial Reserve — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Провинциальный заповедник Парке-Луро в двух шагах от Санта-Росы охраняет реликтовый лес карликового дуба-кальдена и старинную усадьбу с «замком» начала XX века. По заповеднику гуляют благородные олени; это одно из любимых мест выходного дня в провинции Ла-Пампа.
 
 ## Практическая информация
 

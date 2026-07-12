@@ -1,12 +1,11 @@
 ---
 id: reserva-natural-quebrada-de-los-condores
 type: attraction
-title: Quebrada de Los Cóndores Natural Reserve
+title: "Природный заповедник Кебрада-де-лос-Кондорес"
 title_es: Reserva Natural Quebrada de Los Cóndores
 title_en: Quebrada de Los Cóndores Natural Reserve
-summary: Descubre un sitio único, donde el gigante de los cielos despliega sus alas
-  muy cerca de tu cabeza.
-status: stub
+summary: "Ущелье в горах Ла-Риохи с одной из крупнейших колоний андских кондоров: птицы парят буквально над головой."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Descubre un sitio único, donde el gigante de los cielos despliega sus alas muy cerca de tu cabeza.
-
-Quebrada de Los Cóndores Natural Reserve — одна из достопримечательностей региона Северо-Запад (Ла-Риоха). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Природный заповедник Кебрада-де-лос-Кондорес охраняет ущелье в сьеррах провинции Ла-Риоха, где гнездится одна из самых больших в стране колоний андских кондоров. С обрыва можно наблюдать, как десятки этих гигантов кружат совсем рядом — незабываемое зрелище.
 
 ## Практическая информация
 

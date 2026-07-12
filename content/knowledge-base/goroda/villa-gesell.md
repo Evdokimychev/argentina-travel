@@ -17,7 +17,7 @@ cost: { level: "$$", details: "В среднем демократичнее и �
 best_time: ["декабрь-февраль (высокий пляжный сезон, южное лето)", "март-апрель и октябрь-ноябрь (спокойнее и дешевле, вода холоднее)"]
 duration: "2-5 дней"
 how_to_get_there: "Автобусом от терминала Ретиро в Буэнос-Айресе — прямой рейс, в пути около 4-4,5 часов. На автомобиле — примерно столько же, расстояние около 370 км. Расположен всего в ~19 км южнее Пинамара — оба курорта легко комбинировать в одной поездке."
-related: [pinamar, mar-del-plata, buenos-aires-province, buenos-aires, argentina-2-nedeli]
+related: [pinamar, mar-del-plata, buenos-aires-province, buenos-aires, argentina-2-nedeli, mar-de-las-pampas]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Villa_Gesell_-_panoramio_-_VANT_Vistas_A%C3%A9reas_%285%29_%28cropped%29.jpg/1920px-Villa_Gesell_-_panoramio_-_VANT_Vistas_A%C3%A9reas_%285%29_%28cropped%29.jpg"

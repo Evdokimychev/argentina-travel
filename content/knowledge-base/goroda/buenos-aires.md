@@ -19,7 +19,7 @@ cost:
 best_time: ["март-май", "сентябрь-ноябрь"]
 duration: "3-5 дней (минимум 3 для центра, San Telmo, Recoleta, Palermo)"
 how_to_get_there: "Международный аэропорт Ezeiza (EZE) — рейсы из Европы и других континентов; Aeroparque (AEP) — внутренние рейсы. Между аэропортами — около часа на такси."
-related: [tango, istoriya-argentiny, lgbt-travel, mendoza, stoimost-zhizni-ba, argentina-2-nedeli, bezopasnost-argentina, vnzh-argentina, kladbische-recoleta, kaminito-la-boka, restorany-i-kak-est, razvlecheniya-i-nochnaya-zhizn, poleznye-prilozheniya, aeroporty, tigre-i-delta, chto-delat-krome-dostoprimechatelnostej, dostupnaya-sreda-i-invalidnost]
+related: [tango, istoriya-argentiny, lgbt-travel, mendoza, stoimost-zhizni-ba, argentina-2-nedeli, bezopasnost-argentina, vnzh-argentina, kladbische-recoleta, kaminito-la-boka, restorany-i-kak-est, razvlecheniya-i-nochnaya-zhizn, poleznye-prilozheniya, aeroporty, tigre-i-delta, chto-delat-krome-dostoprimechatelnostej, dostupnaya-sreda-i-invalidnost, lujan]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/193_-_Buenos_Aires_-_Puerto_Madero_-_Janvier_2010.jpg/1920px-193_-_Buenos_Aires_-_Puerto_Madero_-_Janvier_2010.jpg"

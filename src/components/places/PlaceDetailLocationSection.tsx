@@ -6,7 +6,7 @@ import type { PlaceListing } from "@/types/place";
 const PlaceDetailMap = dynamic(() => import("@/components/places/PlaceDetailMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-[280px] items-center justify-center rounded-2xl border border-gray-100 bg-gray-50 text-sm text-slate sm:h-[320px]">
+    <div className="flex h-[280px] items-center justify-center rounded-card border border-border-subtle bg-surface-muted text-sm text-slate sm:h-[320px]">
       Загрузка карты…
     </div>
   ),

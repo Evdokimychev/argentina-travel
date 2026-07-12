@@ -42,7 +42,12 @@ export { mediaUrl };
 function assetsForPlace(slug: string): MediaAsset[] {
   return manifest.assets
     .filter((a) => a.placeId === slug)
-    .sort((a, b) => a.id.localeCompare(b.id));
+    .sort((a, b) => {
+      const aCanonical = a.localPath.startsWith("media/places/") ? 0 : 1;
+      const bCanonical = b.localPath.startsWith("media/places/") ? 0 : 1;
+      if (aCanonical !== bCanonical) return aCanonical - bCanonical;
+      return a.id.localeCompare(b.id);
+    });
 }
 
 function assetsForDestination(id: string): MediaAsset[] {

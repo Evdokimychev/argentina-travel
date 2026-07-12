@@ -1,12 +1,11 @@
 ---
 id: el-curanto
 type: attraction
-title: Curanto
+title: "Куранто"
 title_es: El curanto
 title_en: Curanto
-summary: En la Патагония, saborea una comida típica de la región, elaborada con arte
-  y con técnicas ancestrales.
-status: stub
+summary: "Традиционное патагонское блюдо: мясо, овощи и морепродукты, томлённые в земляной яме на раскалённых камнях."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония, saborea una comida típica de la región, elaborada con arte y con técnicas ancestrales.
-
-Curanto — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Куранто — древний способ готовки, пришедший с юга Чили и прижившийся в андской Патагонии (особенно в Колонии-Суиса под Барилоче). Мясо, колбасы и овощи закладывают в яму на раскалённые камни, накрывают листьями и томят несколько часов.
 
 ## Практическая информация
 

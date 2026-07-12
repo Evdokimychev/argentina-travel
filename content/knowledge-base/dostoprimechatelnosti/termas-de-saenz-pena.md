@@ -1,11 +1,11 @@
 ---
 id: termas-de-saenz-pena
 type: attraction
-title: Thermal baths at Sáenz Peña
+title: "Термы Саэнс-Пенья"
 title_es: Termas de Sáenz Peña
 title_en: Thermal baths at Sáenz Peña
-summary: En la región Литорал, sumérgete en aguas elegidas por sus propiedades medicinales.
-status: stub
+summary: "Термальный курорт в городе Пресиденсия-Роке-Саэнс-Пенья в провинции Чако, с водами, ценимыми за лечебные свойства."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -57,9 +57,7 @@ sources:
 
 ## Описание
 
-En la región Литорал, sumérgete en aguas elegidas por sus propiedades medicinales.
-
-Thermal baths at Sáenz Peña — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Термы Саэнс-Пенья в чакском городе Пресиденсия-Роке-Саэнс-Пенья предлагают горячие минеральные воды, которые ценят за лечебные свойства. Спокойный термально-оздоровительный отдых в субтропическом Литоралье.
 
 ## Практическая информация
 

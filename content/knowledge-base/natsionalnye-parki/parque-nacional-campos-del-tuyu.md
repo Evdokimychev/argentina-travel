@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-campos-del-tuyu
 type: national_park
-title: национальный парк Campos del Tuyú
+title: "Национальный парк Кампос-дель-Тую"
 title_es: Parque Nacional Campos del Tuyú
 title_en: Campos del Tuyú National Park
-summary: Visita el lugar que protege el ambiente del pastizal pampeano y los cangrejales
-  de la bahía de Samborombón.
-status: stub
+summary: "Небольшой парк на побережье залива Самборомбон в провинции Буэнос-Айрес, охраняющий пампасские луга и последние популяции болотного оленя."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Visita el lugar que protege el ambiente del pastizal pampeano y los cangrejales de la bahía de Samborombón.
-
-национальный парк Campos del Tuyú — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Кампос-дель-Тую на востоке провинции Буэнос-Айрес охраняет пампасские луга и прибрежные болота залива Самборомбон. Это одно из последних убежищ пампасского болотного оленя и важная территория для водоплавающих птиц.
 
 ## Практическая информация
 

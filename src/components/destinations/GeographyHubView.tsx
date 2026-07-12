@@ -14,6 +14,13 @@ import PlaceCard from "@/components/places/PlaceCard";
 import PlacesFeaturedCollections from "@/components/places/PlacesFeaturedCollections";
 import ArgentinaSeasonMatrix from "@/components/travel/ArgentinaSeasonMatrix";
 import { SafeImage } from "@/components/ui/safe-image";
+import {
+  OverlayCardLink,
+  OverlayMetaChip,
+  OverlayTopPill,
+  overlayGradientClass,
+  overlayMediaHoverClass,
+} from "@/components/content/ContentCardOverlay";
 import type { DestinationPage } from "@/data/destination-pages";
 import { DESTINATION_REGION_GROUPS } from "@/data/destination-pages";
 import { destinationHref } from "@/lib/destinations";
@@ -37,35 +44,36 @@ function DestinationCard({
   featured?: boolean;
 }) {
   return (
-    <Link
+    <OverlayCardLink
       href={destinationHref(dest.id)}
-      className={cn(
-        "group relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elevated",
-        featured && "sm:col-span-2 xl:col-span-2",
-      )}
+      ariaLabel={dest.name}
+      className={cn(featured && "sm:col-span-2 xl:col-span-2")}
     >
-      <div className={cn("relative overflow-hidden", featured ? "aspect-[21/9] sm:aspect-[2.4/1]" : "aspect-[4/3]")}>
+      <div
+        className={cn(
+          "relative overflow-hidden",
+          featured ? "aspect-[21/9] sm:aspect-[2.4/1]" : "aspect-[4/3]",
+        )}
+      >
         <SafeImage
           src={dest.image}
           alt={destinationHeroAlt(dest.name)}
           fill
           placeholderVariant="destination"
-          className="object-cover transition-transform duration-700 group-hover:scale-105"
+          className={overlayMediaHoverClass}
           sizes={featured ? "(max-width: 1280px) 100vw, 50vw" : "(max-width: 768px) 100vw, 25vw"}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/25 to-transparent" />
+        <div className={overlayGradientClass} />
         <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-          <span className="rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide text-white backdrop-blur-sm">
-            {dest.regionGroup}
-          </span>
+          <OverlayTopPill>{dest.regionGroup}</OverlayTopPill>
           {featured ? (
-            <span className="inline-flex items-center gap-1 rounded-full bg-sky/90 px-2.5 py-1 text-[11px] font-medium text-white">
+            <span className="inline-flex items-center gap-1 rounded-pill bg-sky/90 px-2.5 py-1 text-[11px] font-medium text-white">
               <Sparkles className="h-3 w-3" aria-hidden />
               Популярное
             </span>
           ) : null}
         </div>
-        <div className={cn("absolute bottom-0 p-4 text-white sm:p-5", featured && "sm:p-6")}>
+        <div className={cn("absolute inset-x-0 bottom-0 p-4 text-white sm:p-5", featured && "sm:p-6")}>
           <p className="flex items-center gap-1 text-xs text-white/75">
             <MapPin className="h-3 w-3" aria-hidden />
             {dest.region}
@@ -77,18 +85,12 @@ function DestinationCard({
             {dest.description}
           </p>
           <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-white/80">
-            <span className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-0.5 backdrop-blur-sm">
-              <Clock className="h-3 w-3" aria-hidden />
-              {dest.idealDuration}
-            </span>
-            <span className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2 py-0.5 backdrop-blur-sm">
-              <CalendarDays className="h-3 w-3" aria-hidden />
-              {dest.bestSeason.split(";")[0]}
-            </span>
+            <OverlayMetaChip icon={Clock}>{dest.idealDuration}</OverlayMetaChip>
+            <OverlayMetaChip icon={CalendarDays}>{dest.bestSeason.split(";")[0]}</OverlayMetaChip>
           </div>
         </div>
       </div>
-    </Link>
+    </OverlayCardLink>
   );
 }
 
@@ -106,15 +108,15 @@ function ConceptCard({
   cta: string;
 }) {
   return (
-    <div className="flex flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-card">
-      <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-sky/10 text-sky">
+    <div className="flex flex-col rounded-card border border-border-subtle bg-surface-elevated p-6 shadow-card">
+      <span className="inline-flex h-11 w-11 items-center justify-center rounded-card bg-sky/10 text-sky-ink">
         <Icon className="h-5 w-5" aria-hidden />
       </span>
       <h2 className="mt-4 font-heading text-lg font-bold text-charcoal">{title}</h2>
       <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">{description}</p>
       <Link
         href={href}
-        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky hover:underline"
+        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-ink hover:underline"
       >
         {cta}
         <ArrowRight className="h-4 w-4" aria-hidden />
@@ -162,7 +164,7 @@ export default function GeographyHubView({ destinations, places, collections = [
           />
         </div>
 
-        <dl className="mt-8 grid grid-cols-2 gap-4 rounded-2xl border border-gray-100 bg-surface-muted px-5 py-4 sm:grid-cols-4 sm:gap-6 sm:px-6">
+        <dl className="mt-8 grid grid-cols-2 gap-4 rounded-card border border-border-subtle bg-surface-muted px-5 py-4 sm:grid-cols-4 sm:gap-6 sm:px-6">
           <div>
             <dt className="text-xs text-slate">Регионов</dt>
             <dd className="font-heading text-2xl font-bold text-charcoal">{destinations.length}</dd>
@@ -190,13 +192,13 @@ export default function GeographyHubView({ destinations, places, collections = [
           <p className="mt-2 text-sm leading-relaxed text-slate">
             Сводная таблица по месяцам: нажмите месяц — увидите лучшие направления, наведите на ячейку —
             подсказка по погоде и сезону. Подробный разбор — в{" "}
-            <Link href="/guide/pogoda-i-sezonnost" className="font-medium text-sky hover:underline">
+            <Link href="/guide/pogoda-i-sezonnost" className="font-medium text-sky-ink hover:underline">
               гиде по погоде
             </Link>{" "}
             и статье{" "}
             <Link
               href="/blog/best-time-to-visit-argentina"
-              className="font-medium text-sky hover:underline"
+              className="font-medium text-sky-ink hover:underline"
             >
               «Когда лучше ехать»
             </Link>
@@ -221,7 +223,7 @@ export default function GeographyHubView({ destinations, places, collections = [
             <h3 className="font-heading text-lg font-bold text-charcoal">Рекомендуем начать с</h3>
             <Link
               href={destinationHref(featured.id)}
-              className="inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+              className="inline-flex items-center gap-1 text-sm font-medium text-sky-ink hover:underline"
             >
               Подробнее
               <ArrowRight className="h-4 w-4" aria-hidden />
@@ -236,7 +238,7 @@ export default function GeographyHubView({ destinations, places, collections = [
           <div key={group.label} className="mt-14">
             <div className="mb-5 flex items-center gap-3">
               <h3 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">{group.label}</h3>
-              <span className="h-px flex-1 bg-gray-100" aria-hidden />
+              <span className="h-px flex-1 bg-border-subtle" aria-hidden />
               <span className="text-sm text-slate">{group.items.length}</span>
             </div>
             <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -248,7 +250,7 @@ export default function GeographyHubView({ destinations, places, collections = [
         ))}
       </section>
 
-      <section className="border-y border-gray-100 bg-surface-muted/50 py-12 sm:py-16">
+      <section className="border-y border-border-subtle bg-surface-muted/50 py-12 sm:py-16">
         <div className={siteContainerClass}>
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
@@ -260,14 +262,14 @@ export default function GeographyHubView({ destinations, places, collections = [
             <div className="flex flex-wrap gap-2">
               <Link
                 href="/places"
-                className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-charcoal hover:border-sky hover:text-sky"
+                className="inline-flex items-center gap-1.5 rounded-pill border border-border-default bg-surface-elevated px-4 py-2 text-sm font-medium text-charcoal hover:border-sky hover:text-sky-ink"
               >
                 Все места
                 <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
               <Link
                 href="/places?view=map"
-                className="inline-flex items-center gap-1.5 rounded-full border border-sky/30 bg-sky/5 px-4 py-2 text-sm font-medium text-sky hover:bg-sky/10"
+                className="inline-flex items-center gap-1.5 rounded-pill border border-sky/30 bg-sky/5 px-4 py-2 text-sm font-medium text-sky-ink hover:bg-sky/10"
               >
                 <Map className="h-4 w-4" aria-hidden />
                 Карта
@@ -294,7 +296,7 @@ export default function GeographyHubView({ destinations, places, collections = [
           <div className="mt-6 flex flex-wrap gap-3">
             <Link
               href="/itineraries"
-              className="inline-flex items-center gap-2 rounded-full border border-gray-200 px-4 py-2 text-sm font-medium text-charcoal hover:border-sky hover:text-sky"
+              className="inline-flex items-center gap-2 rounded-pill border border-border-default px-4 py-2 text-sm font-medium text-charcoal hover:border-sky hover:text-sky-ink"
             >
               <Route className="h-4 w-4" aria-hidden />
               Готовые маршруты

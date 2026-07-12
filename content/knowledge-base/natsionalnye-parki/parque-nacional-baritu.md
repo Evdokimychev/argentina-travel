@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-baritu
 type: national_park
-title: национальный парк Baritú
+title: "Национальный парк Баритý"
 title_es: Parque Nacional Baritú
 title_en: Baritú National Park
-summary: Recorre un национальный парк valioso para la conservación de una de las ecorregiones
-  de mayor diversidad en Argentina.
-status: stub
+summary: "Труднодоступный парк влажных горных лесов юнга на севере Сальты у границы с Боливией — один из самых биоразнообразных уголков Аргентины."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Recorre un национальный парк valioso para la conservación de una de las ecorregiones de mayor diversidad en Argentina.
-
-национальный парк Baritú — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Баритý лежит на крайнем севере провинции Сальта, у самой границы с Боливией, и охраняет влажные горные леса юнга (yungas) — одну из богатейших по биоразнообразию экосистем страны. Парк труднодоступен и почти не тронут, что делает его местом для подготовленных любителей дикой природы.
 
 ## Практическая информация
 

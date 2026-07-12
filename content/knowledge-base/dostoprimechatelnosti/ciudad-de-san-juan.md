@@ -1,12 +1,11 @@
 ---
 id: ciudad-de-san-juan
 type: attraction
-title: Город San Juan
+title: "Город Сан-Хуан"
 title_es: Ciudad de San Juan
 title_en: City of San Juan
-summary: En la región de Куйо, disfruta de una capital donde la cultura de hoy se
-  funde con las huellas del pasado.
-status: stub
+summary: "Столица винной провинции Сан-Хуан в Куйо — солнечный андский город, отстроенный заново после землетрясения 1944 года."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la región de Куйо, disfruta de una capital donde la cultura de hoy se funde con las huellas del pasado.
-
-Город San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Сан-Хуан — столица одноимённой провинции в регионе Куйо, центр виноделия и оливководства. Город почти полностью отстроен после разрушительного землетрясения 1944 года; отсюда едут к винодельням, в Барреаль и к парку Исчигуаласто.
 
 ## Практическая информация
 

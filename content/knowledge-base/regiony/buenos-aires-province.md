@@ -12,7 +12,7 @@ coordinates: { lat: -36.6, lng: -60.0 }
 tags: [пампа, побережье, пляжи, гаучо]
 cost: { level: "$$", details: "Курорты дорожают на пике (январь-февраль); вне сезона и в глубинке заметно дешевле" }
 best_time: ["декабрь-февраль (пляжный сезон)", "весна/осень для городов и пампы"]
-related: [caba, buenos-aires, mar-del-plata, la-plata, pinamar, villa-gesell, tigre-i-delta]
+related: [caba, buenos-aires, mar-del-plata, la-plata, pinamar, villa-gesell, tigre-i-delta, parque-nacional-campos-del-tuyu, parque-nacional-ciervo-de-los-pantanos, rio-parana, sierras-de-la-provincia-de-buenos-aires]
 media:
   hero:
     url: "https://upload.wikimedia.org/wikipedia/commons/e/eb/Mar_Del_Plata%2C_Argentina.jpg"

@@ -1,12 +1,11 @@
 ---
 id: valle-de-punilla-cordoba
 type: attraction
-title: Valle de Punilla, Córdoba
+title: "Долина Пунилья"
 title_es: Valle de Punilla, Córdoba
 title_en: Valle de Punilla, Córdoba
-summary: En este valle te esperan más de treinta localidades turísticas rodeadas de
-  ríos, sierras y opciones para la diversión.
-status: stub
+summary: "Самая известная курортная долина Кордовы с десятками городков среди рек и сьерр — от Ла-Фальды до Капилья-дель-Монте."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En este valle te esperan más de treinta localidades turísticas rodeadas de ríos, sierras y opciones para la diversión.
-
-Valle de Punilla, Córdoba — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Долина Пунилья — популярнейшая туристическая долина провинции Кордова, где более тридцати городков-курортов растянулись вдоль сьерр и рек. Коскин с фольклорным фестивалем, Ла-Фальда, Капилья-дель-Монте — сердце кордовского отдыха.
 
 ## Практическая информация
 

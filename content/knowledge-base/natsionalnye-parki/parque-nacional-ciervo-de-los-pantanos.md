@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-ciervo-de-los-pantanos
 type: national_park
-title: национальный парк Ciervo de los Pantanos
+title: "Национальный парк Сьерво-де-лос-Пантанос"
 title_es: Parque Nacional Ciervo de los Pantanos
 title_en: Ciervo de los Pantanos National Park
-summary: Vive tu aventura en el lugar donde se encuentran las ecorregiones Pampeana
-  y Delta e Islas del Paraná.
-status: stub
+summary: "Парк на стыке пампы и дельты Параны недалеко от Буэнос-Айреса: болота, прибрежные леса и болотный олень, давший парку имя."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Vive tu aventura en el lugar donde se encuentran las ecorregiones Pampeana y Delta e Islas del Paraná.
-
-национальный парк Ciervo de los Pantanos — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Сьерво-де-лос-Пантанос лежит там, где пампа встречается с дельтой Параны, всего в паре часов от столицы. Он охраняет заболоченные луга и прибрежные леса, а его символ — болотный олень (ciervo de los pantanos). Удобное место для наблюдения за птицами близко к Буэнос-Айресу.
 
 ## Практическая информация
 

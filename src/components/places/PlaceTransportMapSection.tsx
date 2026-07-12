@@ -9,7 +9,7 @@ import { buildMapPlaceDeepLink } from "@/lib/map-argentina-url-state";
 const PlaceDetailMap = dynamic(() => import("@/components/places/PlaceDetailMap"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-[220px] items-center justify-center rounded-xl bg-gray-50 text-sm text-slate sm:h-[260px]">
+    <div className="flex h-[220px] items-center justify-center rounded-xl bg-surface-muted text-sm text-slate sm:h-[260px]">
       Загрузка карты…
     </div>
   ),
@@ -26,7 +26,7 @@ export default function PlaceTransportMapSection({ place, relatedPlaces }: Props
   if (!place.howToGetThere && (place.latitude == null || place.longitude == null)) return null;
 
   return (
-    <section className="overflow-hidden rounded-2xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white shadow-sm">
+    <section className="overflow-hidden rounded-card border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white shadow-sm">
       <div className="border-b border-sky/10 px-5 py-4 sm:px-6">
         <h2 className="font-heading text-xl font-bold text-charcoal">Как добраться</h2>
         {place.howToGetThere ? (

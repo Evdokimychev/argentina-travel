@@ -62,7 +62,7 @@ export default function EsimFaqSection({
           rel="noopener noreferrer"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "shrink-0 rounded-full border-gray-200 px-5 text-sm font-medium text-charcoal hover:border-[#FFB347] hover:bg-[#FFB347]/5"
+            "shrink-0 rounded-full border-gray-200 px-5 text-sm font-medium text-charcoal hover:border-sun hover:bg-sun/5"
           )}
         >
           {helpCenterLabel}
@@ -80,7 +80,7 @@ export default function EsimFaqSection({
             <div
               key={item.question}
               className={cn(
-                "overflow-hidden rounded-2xl border border-gray-100 bg-white transition-colors duration-200 hover:border-[#FFB347]/70",
+                "overflow-hidden rounded-2xl border border-gray-100 bg-white transition-colors duration-200 hover:border-sun/70",
                 revealClass(revealed, ITEM_DELAYS[index])
               )}
             >
@@ -134,7 +134,7 @@ export default function EsimFaqSection({
           rel="noopener noreferrer"
           className={cn(
             buttonVariants({ variant: "outline" }),
-            "mt-5 inline-flex rounded-full border-gray-200 px-5 text-sm font-medium text-charcoal hover:border-[#FFB347] hover:bg-[#FFB347]/5"
+            "mt-5 inline-flex rounded-full border-gray-200 px-5 text-sm font-medium text-charcoal hover:border-sun hover:bg-sun/5"
           )}
         >
           {support.whatsappLabel}

@@ -1,12 +1,11 @@
 ---
 id: pueblos-rurales-en-santa-fe
 type: attraction
-title: Rural towns in Santa Fe
+title: "Сельские городки Санта-Фе"
 title_es: Pueblos rurales en Santa Fe
 title_en: Rural towns in Santa Fe
-summary: Pasea por pueblos que construyeron su futuro a partir del trabajo y el esfuerzo
-  de nativos e inmigrantes.
-status: stub
+summary: "Земледельческие городки провинции Санта-Фе, построенные трудом коренных жителей и переселенцев."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Pasea por pueblos que construyeron su futuro a partir del trabajo y el esfuerzo de nativos e inmigrantes.
-
-Rural towns in Santa Fe — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+По провинции Санта-Фе рассыпаны сельские городки, выросшие на земледелии и труде иммигрантов — итальянцев, немцев, евреев. Спокойный аграрный быт, старые вокзалы и гастрономические традиции переселенцев.
 
 ## Практическая информация
 

@@ -43,11 +43,11 @@ export default function PlacesFeaturedCollections({
       </div>
 
       <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-1">
-        {collections.map((col) => (
+        {collections.map((col, index) => (
           <Link
             key={col.slug}
             href={collectionHref(col.slug)}
-            className="group relative w-[280px] shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elevated sm:w-[320px]"
+            className="group relative w-[280px] shrink-0 overflow-hidden rounded-card border border-border-subtle bg-surface-elevated shadow-card transition-all hover:-translate-y-0.5 hover:shadow-elevated sm:w-[320px]"
           >
             <div className="relative aspect-[16/10] overflow-hidden">
               {col.coverImage ? (
@@ -55,6 +55,8 @@ export default function PlacesFeaturedCollections({
                   src={col.coverImage}
                   alt={col.title}
                   fill
+                  priority={index === 0}
+                  fetchPriority={index === 0 ? "high" : undefined}
                   className="object-cover transition-transform duration-700 group-hover:scale-105"
                   sizes="320px"
                 />

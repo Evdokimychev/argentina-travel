@@ -1,12 +1,11 @@
 ---
 id: parque-nacional-el-rey
 type: national_park
-title: национальный парк El Rey
+title: "Национальный парк Эль-Рей"
 title_es: Parque Nacional El Rey
 title_en: El Rey National Park
-summary: Explora una de las áreas protegidas con mayor diversidad de flora y fauna
-  en la región.
-status: stub
+summary: "Парк влажных горных лесов юнга в провинции Сальта в форме природного амфитеатра, с обилием птиц и троп."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Explora una de las áreas protegidas con mayor diversidad de flora y fauna en la región.
-
-национальный парк El Rey — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Национальный парк Эль-Рей в провинции Сальта охраняет влажные горные леса юнга (yungas) в естественной «подкове» гор. Богатая фауна, особенно птицы, и сеть троп делают его хорошим местом для спокойного знакомства с природой северо-запада.
 
 ## Практическая информация
 

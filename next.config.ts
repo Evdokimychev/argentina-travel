@@ -5,6 +5,10 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
+const hasExternalMediaCdn = Boolean(process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim());
+const disableNextImageOptimization =
+  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true" || hasExternalMediaCdn;
+
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
   // Не даём одной странице блокировать сборку бесконечно (Vercel hard limit ~45 мин).
@@ -59,6 +63,9 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
+    // Vercel image optimization can return 402 when quota/billing blocks optimizer requests.
+    // The project serves curated media from its own CDN, so prefer visible images over broken cards.
+    unoptimized: disableNextImageOptimization,
     remotePatterns: [
       {
         protocol: "https",

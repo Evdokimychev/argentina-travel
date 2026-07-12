@@ -1,12 +1,11 @@
 ---
 id: ciudad-de-santa-fe
 type: attraction
-title: Город Santa Fe
+title: "Город Санта-Фе"
 title_es: Ciudad de Santa Fe
 title_en: City of Santa Fe
-summary: En el Литорал argentino, recorre una ciudad donde la cultura se integra con
-  la magia del río Paraná.
-status: stub
+summary: "Историческая столица провинции Санта-Фе у реки Парана — старинный колониальный центр, родина аргентинской конституции и пива."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En el Литорал argentino, recorre una ciudad donde la cultura se integra con la magia del río Paraná.
-
-Город Santa Fe — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Санта-Фе — столица одноимённой провинции на берегах Параны, один из старейших городов страны. Колониальный центр, где принимали конституцию Аргентины, соединён мостами с соседней Параной; известен пивоварнями и речной набережной.
 
 ## Практическая информация
 

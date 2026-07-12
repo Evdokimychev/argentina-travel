@@ -1,12 +1,11 @@
 ---
 id: villa-regina
 type: attraction
-title: Villa Regina
+title: "Вилья-Регина"
 title_es: Villa Regina
 title_en: Villa Regina
-summary: Descubre los encantos de una ciudad frutihortícola en el Alto Valle del Río
-  Negro.
-status: stub
+summary: "Плодовый город в Верхней долине Рио-Негро, основанный итальянскими переселенцами среди яблоневых и грушевых садов."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -48,9 +47,7 @@ sources:
 
 ## Описание
 
-Descubre los encantos de una ciudad frutihortícola en el Alto Valle del Río Negro.
-
-Villa Regina — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Регина в Верхней долине Рио-Негро выросла благодаря итальянским переселенцам и орошаемому земледелию. Яблоневые и грушевые сады, винодельни и итальянские традиции определяют облик этого патагонского города-сада.
 
 ## Практическая информация
 

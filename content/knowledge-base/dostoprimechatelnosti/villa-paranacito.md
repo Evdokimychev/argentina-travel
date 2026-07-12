@@ -1,12 +1,11 @@
 ---
 id: villa-paranacito
 type: attraction
-title: Villa Paranacito
+title: "Вилья-Паранасито"
 title_es: Villa Paranacito
 title_en: Villa Paranacito
-summary: En el delta del río Paraná, te espera un lugar donde el agua fluye entre
-  paisajes cargados de vegetación.
-status: stub
+summary: "Городок в дельте Параны на юге Энтре-Риоса — водный мир проток, островов и рыбалки."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -63,9 +62,7 @@ sources:
 
 ## Описание
 
-En el delta del río Paraná, te espera un lugar donde el agua fluye entre paisajes cargados de vegetación.
-
-Villa Paranacito — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Паранасито стоит в дельте реки Парана на юге провинции Энтре-Риос. Жизнь здесь подчинена воде: протоки, острова, лодки и рыбалка среди пышной прибрежной зелени — тихий уголок речного Литоралья.
 
 ## Практическая информация
 

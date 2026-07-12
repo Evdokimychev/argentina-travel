@@ -1,12 +1,11 @@
 ---
 id: lago-posadas
 type: attraction
-title: Posadas Lake
+title: "Озеро Посадас"
 title_es: Lago Posadas
 title_en: Posadas Lake
-summary: En la Патагония Argentina, te espera un lugar perfecto para caminar, pescar,
-  escalar y acercarte a la historia.
-status: stub
+summary: "Пара контрастных по цвету озёр (Посадас и Пуэйрредон) в глухой степной Патагонии провинции Санта-Крус."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la Патагония Argentina, te espera un lugar perfecto para caminar, pescar, escalar y acercarte a la historia.
-
-Posadas Lake — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+У посёлка Лаго-Посадас соседствуют два озера — бирюзовое Посадас и синее Пуэйрредон, разделённые узкой косой. Дикий, малолюдный уголок степной Патагонии для треккинга, рыбалки и наскальной живописи неподалёку.
 
 ## Практическая информация
 

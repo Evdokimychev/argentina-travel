@@ -1,12 +1,11 @@
 ---
 id: valle-de-traslasierra
 type: attraction
-title: Traslasierra Valley
+title: "Долина Траслассьерра"
 title_es: Valle de Traslasierra
 title_en: Traslasierra Valley
-summary: Disfruta tu propia aventura entre el encanto de los pueblos y la magia de
-  las sierras.
-status: stub
+summary: "Тихая долина по западную сторону кордовских сьерр с уютными городками и спокойным ритмом."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Disfruta tu propia aventura entre el encanto de los pueblos y la magia de las sierras.
-
-Traslasierra Valley — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Долина Траслассьерра лежит по западную сторону главных сьерр Кордовы, вдали от суеты Пунильи. Уютные городки вроде Мина-Клаверо и Нионо, горные реки и неспешный ритм привлекают сюда любителей спокойного отдыха.
 
 ## Практическая информация
 

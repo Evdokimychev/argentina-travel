@@ -1,12 +1,11 @@
 ---
 id: valle-grande
 type: attraction
-title: Valle Grande
+title: "Валье-Гранде"
 title_es: Valle Grande
 title_en: Valle Grande
-summary: En Мендоса, sube tu adrenalina con actividades terrestres y acuáticas junto
-  a la Cordillera de los Andes.
-status: stub
+summary: "Каньон реки Атуэль в провинции Мендоса у Сан-Рафаэля — центр рафтинга и активного отдыха у воды."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En Мендоса, sube tu adrenalina con actividades terrestres y acuáticas junto a la Cordillera de los Andes.
-
-Valle Grande — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Валье-Гранде — курортная часть каньона реки Атуэль недалеко от Сан-Рафаэля в Мендосе. Бирюзовая река среди разноцветных скал, рафтинг, зиплайн и другие активности делают его популярным местом приключенческого отдыха.
 
 ## Практическая информация
 

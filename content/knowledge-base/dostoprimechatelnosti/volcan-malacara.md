@@ -1,12 +1,11 @@
 ---
 id: volcan-malacara
 type: attraction
-title: Malacara volcano
+title: "Вулкан Малакара"
 title_es: Volcán Malacara
 title_en: Malacara volcano
-summary: Camina por las entrañas de un cerro volcánico y contempla las formaciones
-  que dejó la lava.
-status: stub
+summary: "Древний вулканический конус в Мендосе, по «внутренностям» которого проложена необычная пешеходная экскурсия."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Camina por las entrañas de un cerro volcánico y contempla las formaciones que dejó la lava.
-
-Malacara volcano — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вулкан Малакара в провинции Мендоса даёт редкую возможность пройти буквально сквозь «внутренности» вулкана — по застывшим лавовым руслам и причудливым формациям. Необычная геологическая экскурсия на юге провинции.
 
 ## Практическая информация
 

@@ -1,12 +1,11 @@
 ---
 id: dunas-de-taton
 type: attraction
-title: Tatón Dunes
+title: "Дюны Татон"
 title_es: Dunas de Tatón
 title_en: Tatón Dunes
-summary: En plena Cordillera de los Andes, acércate a un mar de arena y descubre un
-  oasis para la aventura.
-status: stub
+summary: "Море песка среди Анд в провинции Катамарка — одни из самых высоких дюн Аргентины, оазис для приключений."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En plena Cordillera de los Andes, acércate a un mar de arena y descubre un oasis para la aventura.
-
-Tatón Dunes — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Дюны Татон — впечатляющее песчаное море у подножия Анд в провинции Катамарка, с одними из самых высоких дюн страны. Сюда едут за сэндбордингом, внедорожными поездками и закатами над барханами.
 
 ## Практическая информация
 

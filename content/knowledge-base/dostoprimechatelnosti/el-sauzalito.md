@@ -1,12 +1,11 @@
 ---
 id: el-sauzalito
 type: attraction
-title: El Sauzalito
+title: "Эль-Саусалито"
 title_es: El Sauzalito
 title_en: El Sauzalito
-summary: Acércate al Литорал argentino y recorre una ciudad donde te hablarán en dos
-  idiomas.
-status: stub
+summary: "Городок на западе Чако в лесах «Эль-Импенетрабле», где говорят по-испански и на языке коренного народа вичи."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -53,9 +52,7 @@ sources:
 
 ## Описание
 
-Acércate al Литорал argentino y recorre una ciudad donde te hablarán en dos idiomas.
-
-El Sauzalito — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Эль-Саусалито — небольшой город на западе провинции Чако, на краю «непроходимого» леса Эль-Импенетрабле. Здесь тесно соседствуют культуры: рядом живут коренные вичи, и услышать можно сразу два языка.
 
 ## Практическая информация
 

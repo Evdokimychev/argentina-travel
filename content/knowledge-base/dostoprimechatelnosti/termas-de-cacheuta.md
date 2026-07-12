@@ -1,12 +1,11 @@
 ---
 id: termas-de-cacheuta
 type: attraction
-title: Cacheuta hot springs
+title: "Термы Качеута"
 title_es: Termas de Cacheuta
 title_en: Cacheuta hot springs
-summary: Date el placer de disfrutar baños termales mientras contemplas el paisaje
-  de la cordillera andina
-status: stub
+summary: "Популярный термальный курорт в горах недалеко от города Мендоса, с горячими минеральными бассейнами и видом на Анды."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-Date el placer de disfrutar baños termales mientras contemplas el paisaje de la cordillera andina
-
-Cacheuta hot springs — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Термы Качеута — известный термальный комплекс в предгорьях Анд в получасе-часе от города Мендоса. Горячие минеральные бассейны, спа и грязи на фоне гор делают его любимым местом отдыха мендосинцев.
 
 ## Практическая информация
 

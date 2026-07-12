@@ -36,8 +36,11 @@ let navigationCache: KbNavigation | null = null;
 function loadEntries(): KbEntry[] {
   if (!entriesCache) {
     const data = readJson<{ entities: KbEntry[] }>("content.json");
-    // backlog — незаполненные слоты личных историй, на сайте не показываем
-    entriesCache = data.entities.filter((entry) => entry.status !== "backlog");
+    // backlog — незаполненные слоты личных историй; stub — импортированные
+    // черновики (напр. Argentina.travel), ещё не доведённые до качества: на сайте не показываем.
+    entriesCache = data.entities.filter(
+      (entry) => entry.status !== "backlog" && entry.status !== "stub",
+    );
     byIdCache = new Map(entriesCache.map((entry) => [entry.id, entry]));
   }
   return entriesCache;

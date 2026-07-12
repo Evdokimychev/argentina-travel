@@ -53,6 +53,12 @@ describe("Places catalog integrity", () => {
     }
   });
 
+  it("prefers canonical place media over legacy Argentina.travel imports", () => {
+    for (const slug of ["perito-moreno-glacier", "iguazu-falls", "mendoza"]) {
+      expect(getPlaceCoverImage(slug), slug).toContain(`/media/places/${slug}/`);
+    }
+  });
+
   it("resolves every collection place slug to a real place", () => {
     for (const collection of COLLECTIONS_SEED) {
       expect(collection.placeSlugs.length, collection.slug).toBeGreaterThan(0);

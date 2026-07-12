@@ -1,12 +1,11 @@
 ---
 id: villa-rio-bermejito
 type: attraction
-title: Villa Río Bermejito
+title: "Вилья-Рио-Бермехито"
 title_es: Villa Río Bermejito
 title_en: Villa Río Bermejito
-summary: En la región de bosque nativo llamada El Impenetrable, encuentra un lugar
-  que te invita a la aventura y al descanso.
-status: stub
+summary: "Городок на краю чакского леса «Эль-Импенетрабле» у реки Бермехито — ворота к дикой природе и коренным общинам."
+status: published
 site_sections:
 - puteshestviya-po-argentine
 - goroda-i-regiony
@@ -58,9 +57,7 @@ sources:
 
 ## Описание
 
-En la región de bosque nativo llamada El Impenetrable, encuentra un lugar que te invita a la aventura y al descanso.
-
-Villa Río Bermejito — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
+Вилья-Рио-Бермехито в провинции Чако стоит у самой кромки «непроходимого» леса Эль-Импенетрабле, на берегу реки Бермехито. Отсюда начинаются вылазки в дикую чакскую природу и знакомство с общинами коренного народа.
 
 ## Практическая информация
 
