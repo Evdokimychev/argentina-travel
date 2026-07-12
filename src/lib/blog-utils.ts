@@ -11,11 +11,16 @@ export function formatBlogReadTime(minutes: number): string {
 }
 
 function formatBlogDate(dateStr: string): string {
+  const parsed = /^\d{4}-\d{2}-\d{2}$/.test(dateStr)
+    ? new Date(`${dateStr}T12:00:00.000Z`)
+    : new Date(dateStr);
+  if (Number.isNaN(parsed.getTime())) return "";
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
     month: "long",
+    timeZone: "UTC",
     year: "numeric",
-  }).format(new Date(dateStr));
+  }).format(parsed);
 }
 
 export function getBlogUpdatedDate(post: BlogPost): string {

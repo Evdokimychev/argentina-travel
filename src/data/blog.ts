@@ -2913,12 +2913,22 @@ export function getBlogPostBySlug(slug: string): BlogPost | undefined {
   return blogPosts.find((p) => p.slug === slug);
 }
 
+function parseBlogDisplayDate(dateStr: string): Date {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return new Date(`${dateStr}T12:00:00.000Z`);
+  }
+  return new Date(dateStr);
+}
+
 export function formatDate(dateStr: string): string {
+  const parsed = parseBlogDisplayDate(dateStr);
+  if (Number.isNaN(parsed.getTime())) return "";
   return new Intl.DateTimeFormat("ru-RU", {
     day: "numeric",
     month: "long",
+    timeZone: "UTC",
     year: "numeric",
-  }).format(new Date(dateStr));
+  }).format(parsed);
 }
 
 export { getBlogCategories, getBlogCategoriesWithCounts, getBlogTags, getTopBlogTags, filterBlogPosts, sortBlogPostsByDate, sortBlogPostsByUpdated, computeBlogStats, formatBlogReadTime, formatBlogUpdatedLabel, pluralizeArticles, buildBlogQuickFacts } from "@/lib/blog-utils";

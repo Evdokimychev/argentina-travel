@@ -114,6 +114,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
                 key={item.id}
                 type="button"
                 onClick={() => setLightboxItem(item)}
+                aria-label={`Открыть фото: ${item.title}`}
                 className="group mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-shadow hover:shadow-elevated"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
