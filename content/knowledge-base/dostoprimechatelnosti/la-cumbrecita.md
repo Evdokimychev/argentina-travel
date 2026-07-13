@@ -26,7 +26,6 @@ tags:
 - колониальная архитектура
 - семейный отдых
 - бюджетно
-cost: '[object Object]'
 best_time:
 - декабрь-март (лето
 - реки и треккинг)
@@ -63,8 +62,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/la-cumbrecita
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 seo_slug: la-cumbrecita-sierras-cordoba

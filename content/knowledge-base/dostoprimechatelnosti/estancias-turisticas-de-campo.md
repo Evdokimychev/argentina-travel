@@ -55,8 +55,6 @@ sources:
 
 En la llanura pampeana, disfruta la vida campestre con los más altos estándares de gastronomía y servicios.
 
-Tourist estancias in the countryside — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -36.8918, -66.9923

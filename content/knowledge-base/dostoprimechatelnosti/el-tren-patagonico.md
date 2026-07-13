@@ -60,8 +60,6 @@ sources:
 
 Reserva tu lugar en el legendario tren que atraviesa la estepa patagónica y une la cordillera con el océano.
 
-Патагонияn Train — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -41.1604, -71.3510

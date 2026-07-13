@@ -60,8 +60,6 @@ sources:
 
 Atrévete a seguir los pasos de un prócer que hace más de doscientos años cruzó los Andes en una gesta libertadora.
 
-Andean crossing — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.3383, -69.7249

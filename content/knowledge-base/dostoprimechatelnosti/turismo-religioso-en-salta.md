@@ -45,8 +45,6 @@ sources:
 
 Recorre iglesias, templos, capillas y festividades populares donde se celebra la fe.
 
-Religious Tourism in Salta — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.7821, -65.4232

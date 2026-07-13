@@ -60,8 +60,6 @@ sources:
 
 En tierras patagónicas, recorre una ciudad llena de huellas históricas y tesoros naturales.
 
-Comandante Luis Piedrabuena — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -49.9810, -68.9144

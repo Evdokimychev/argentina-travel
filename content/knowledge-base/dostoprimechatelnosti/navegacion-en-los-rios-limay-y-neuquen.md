@@ -59,8 +59,6 @@ sources:
 
 Explora el lugar donde confluyen dos emblemáticos ríos de la Патагония argentina.
 
-Sailing on the Limay and Neuquén rivers — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -39.3152, -68.9118

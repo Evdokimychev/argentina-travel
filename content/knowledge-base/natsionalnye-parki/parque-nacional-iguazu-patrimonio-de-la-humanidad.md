@@ -60,8 +60,6 @@ sources:
 
 Descubre el área protegida que alberga a una de las siete maravillas naturales del mundo: las Cataratas del Игуасу.
 
-национальный парк Игуасу: Patrimonio de la Humanidad — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.6540, -54.5484

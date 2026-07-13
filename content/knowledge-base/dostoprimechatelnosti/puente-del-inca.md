@@ -17,7 +17,6 @@ coordinates:
   lng: -69.9114
 tags:
 - куйо
-cost: '[object Object]'
 best_time: '[\"ноябрь-апрель (тёплый сезон; зимой перевал и дорога сложнее из-за снега)\"]'
 duration: Короткая остановка (30-60 минут)
 how_to_get_there: На международной трассе RN 7 в сторону перевала Кристо-Редентор
@@ -62,8 +61,6 @@ sources:
 ## Описание
 
 Viaja a la región de Куйо y vive una experiencia de exploración en el corazón de la Cordillera de los Andes.
-
-Inca Bridge — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

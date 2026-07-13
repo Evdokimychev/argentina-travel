@@ -59,8 +59,6 @@ sources:
 
 Vive una experiencia de exploración en un monte emblemático del Литорал argentino.
 
-Adventure tourism in Chaco — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.1789, -61.0953

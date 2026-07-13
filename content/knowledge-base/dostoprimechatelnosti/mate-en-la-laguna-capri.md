@@ -60,8 +60,6 @@ sources:
 
 En la Патагония, vive la experiencia de tomar mate contemplando una laguna de aguas azules.
 
-Have some mate by the Capri lagoon — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -49.3020, -72.9377

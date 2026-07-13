@@ -60,8 +60,6 @@ sources:
 
 En las provincias de Río Negro y La Pampa, disfruta variedades de vinos con sabores autóctonos.
 
-Патагонияn valley wines — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.9964, -65.7651

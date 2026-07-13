@@ -60,8 +60,6 @@ sources:
 
 En la región cuyana, recorre lugares donde se celebran la fe y las creencias religiosas.
 
-Paths of faith, San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.4689, -68.5169

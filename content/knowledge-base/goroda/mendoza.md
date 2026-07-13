@@ -26,7 +26,6 @@ tags:
 - гастрономия
 - бюджетно
 - премиум
-cost: '[object Object]'
 best_time:
 - март-май (вендимия
 - сбор урожая)
@@ -75,8 +74,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/vinos-en-mendoza
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 long_form_merged: true

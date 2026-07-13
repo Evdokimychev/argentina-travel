@@ -59,8 +59,6 @@ sources:
 
 Vive una experiencia de turismo inclusivo y sustentable en la Патагония argentina.
 
-Rural community tourism — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.8949, -68.6484

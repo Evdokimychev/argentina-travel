@@ -60,8 +60,6 @@ sources:
 
 Visita el paraje extremo donde un accidente aéreo inspiró el libro y la película Viven.
 
-Expedition to the Uruguayan team’s plane — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -35.0323, -69.6446

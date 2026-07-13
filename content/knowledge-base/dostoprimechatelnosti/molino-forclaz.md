@@ -60,8 +60,6 @@ sources:
 
 A través de un antiguo molino, acércate al trabajo y al esfuerzo de inmigrantes que poblaron la región.
 
-Forclaz Windmill — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.2170, -58.1860

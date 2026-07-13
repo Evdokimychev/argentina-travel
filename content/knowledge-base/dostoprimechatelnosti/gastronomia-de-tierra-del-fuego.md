@@ -60,8 +60,6 @@ sources:
 
 En el extremo sur de la Патагония, degusta la exquisita centolla y visita un pueblo de pescadores: Puerto Almanza.
 
-Gastronomía de Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.8723, -67.5650

@@ -60,8 +60,6 @@ sources:
 
 Recorre un circuito turístico que une dos parques nacionales: Uno en Argentina. El otro, en Chile.
 
-Trekking en Parque Патагония — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -46.5831, -70.9176

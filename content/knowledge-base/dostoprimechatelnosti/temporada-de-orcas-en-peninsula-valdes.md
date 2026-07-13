@@ -60,8 +60,6 @@ sources:
 
 Visita el único lugar del mundo donde verás a las orcas enseñar a sus crías a cazar lobitos de mar.
 
-Orca season at Península Valdés — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.5455, -63.6146

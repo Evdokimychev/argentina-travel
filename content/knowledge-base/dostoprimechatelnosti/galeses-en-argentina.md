@@ -60,8 +60,6 @@ sources:
 
 En la Патагония, te esperan historias de comunidades europeas que eligieron estas tierras para vivir.
 
-Welsh in Argentina — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

@@ -60,8 +60,6 @@ sources:
 
 Reserva tu lugar en el mayor espacio de difusión y promoción de la música popular argentina.
 
-Cosquín Festival — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.2413, -64.4660

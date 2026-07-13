@@ -59,8 +59,6 @@ sources:
 
 Explora paisajes y tradiciones en el altiplano y la Puna catamarqueña.
 
-Antofagasta de la Sierra — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.0596, -67.4065

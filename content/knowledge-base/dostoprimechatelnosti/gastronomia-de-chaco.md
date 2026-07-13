@@ -60,8 +60,6 @@ sources:
 
 Date el gusto de descubrir riquezas naturales y tradiciones culturales fusionadas en la cocina chaqueña.
 
-Food in Chaco — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.5858, -60.9540

@@ -59,8 +59,6 @@ sources:
 
 En el Chaco austral, visita el lugar donde cayó una lluvia de cuerpos metálicos.
 
-Campo del Cielo — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.6095, -61.6817

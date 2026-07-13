@@ -59,8 +59,6 @@ sources:
 
 Vive una experiencia gaucha en un lugar lleno de historia.
 
-Horseback riding in Tafí del Valle — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.8517, -65.7098

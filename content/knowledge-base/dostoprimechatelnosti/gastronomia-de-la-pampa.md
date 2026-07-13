@@ -60,8 +60,6 @@ sources:
 
 Descubre los secretos del asado criollo y acércate a un rito que forma parte de la tradición argentina.
 
-Food in La Pampa — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.7257, -65.5862

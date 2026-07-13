@@ -59,8 +59,6 @@ sources:
 
 En la inmensidad de un desierto de altura, explora un área natural protegida.
 
-национальный парк San Guillermo — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.2242, -69.3747

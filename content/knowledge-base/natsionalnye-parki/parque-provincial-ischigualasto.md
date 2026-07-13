@@ -60,8 +60,6 @@ sources:
 
 Siente el misterio de un paisaje de otro planeta, declarado Patrimonio de la Humanidad.
 
-провинциальный парк Ischigualasto — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -30.1034, -68.0164

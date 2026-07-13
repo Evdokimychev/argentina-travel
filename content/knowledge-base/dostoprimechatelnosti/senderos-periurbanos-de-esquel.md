@@ -60,8 +60,6 @@ sources:
 
 Emprende excursiones a pie, en bicicleta, en moto y a caballo por los cerros que rodean a esta ciudad patagónica.
 
-Suburban footpaths of Esquel — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.9086, -71.3324

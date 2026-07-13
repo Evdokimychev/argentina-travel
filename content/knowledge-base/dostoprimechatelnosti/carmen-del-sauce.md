@@ -60,8 +60,6 @@ sources:
 
 En la región Литорал, descubre el encanto de un lugar donde se respira la cultura gauchesca.
 
-Carmen del Sauce — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -33.2375, -60.8116

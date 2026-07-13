@@ -60,8 +60,6 @@ sources:
 
 Visita la segunda provincia productora de vinos argentinos y degusta variedades nacidas en el corazón de la montaña.
 
-San Juan wines — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.5219, -68.5522

@@ -60,8 +60,6 @@ sources:
 
 Recorre un paraíso a orillas del lago Fagnano, entre la meseta y la cordillera andina.
 
-Tolhuin — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.5115, -67.1912

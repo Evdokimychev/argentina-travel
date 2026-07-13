@@ -60,8 +60,6 @@ sources:
 
 Date el placer de montar a caballo y disfrutar una actividad típica de la provincia de Буэнос-Айрес.
 
-Horseback riding in the hills of Буэнос-Айрес — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -36.0251, -60.5095

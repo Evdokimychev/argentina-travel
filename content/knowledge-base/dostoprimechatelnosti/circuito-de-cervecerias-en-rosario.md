@@ -60,8 +60,6 @@ sources:
 
 Emprende un tour gastronómico e histórico en una de las grandes urbes del Литорал argentino.
 
-Brewers’ circuit in Rosario — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

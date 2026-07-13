@@ -60,8 +60,6 @@ sources:
 
 Junto a las aguas del Atlántico, emprende un circuito que atraviesa municipios costeros, reservas y parques nacionales.
 
-Ruta Azul — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -45.4188, -67.6157

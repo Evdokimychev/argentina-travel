@@ -61,8 +61,6 @@ sources:
 
 En las provincias de San Juan y de La Rioja, te esperan paisajes que son de otro tiempo y parecen de otro planeta.
 
-Ischigualasto and Talampaya Natural Parks: World Heritage Sites — одна из достопримечательностей региона Северо-Запад (Ла-Риоха). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.9998, -67.7675

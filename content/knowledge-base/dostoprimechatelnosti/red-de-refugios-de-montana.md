@@ -60,8 +60,6 @@ sources:
 
 Descubre lugares que te protegen y te ayudan en tu travesía por los cerros de la Патагония Argentina.
 
-Mountain Refuge Network — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -41.1393, -71.4971

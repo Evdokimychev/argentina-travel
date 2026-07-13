@@ -24,7 +24,6 @@ tags:
 - треккинг
 - бюджетно
 - ремёсла
-cost: '[object Object]'
 best_time:
 - декабрь-март (лето
 - треккинг и ярмарки)
@@ -64,8 +63,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/el-bolson
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 seo_slug: el-bolson-patagoniya

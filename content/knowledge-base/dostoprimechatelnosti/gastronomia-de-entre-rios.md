@@ -60,8 +60,6 @@ sources:
 
 Entre ríos y paisajes de ensueño, saborea las delicias de la gastronomía regional y descubre su tradición vitivinícola.
 
-Food in Entre Ríos — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.1723, -58.4726

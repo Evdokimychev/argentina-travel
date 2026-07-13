@@ -24,7 +24,6 @@ tags:
 - инки
 - разноцветные горы
 - север
-cost: '[object Object]'
 best_time:
 - апрель-ноябрь (сухой сезон
 - ярче цвета пород)
@@ -61,8 +60,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/quebrada-de-humahuaca
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

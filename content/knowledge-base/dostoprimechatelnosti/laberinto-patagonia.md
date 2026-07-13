@@ -60,8 +60,6 @@ sources:
 
 Explora un lugar donde confluyen conocimientos de mitología, filosofía, cábala y geometría sagrada.
 
-Laberinto Патагония — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

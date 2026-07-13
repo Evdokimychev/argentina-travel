@@ -26,7 +26,6 @@ tags:
 - природа
 - ЮНЕСКО
 - Патагония
-cost: '[object Object]'
 best_time:
 - октябрь-апрель (весна-осень
 - длинный день)
@@ -66,8 +65,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/glaciar-perito-moreno
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 seo_slug: lednik-perito-moreno

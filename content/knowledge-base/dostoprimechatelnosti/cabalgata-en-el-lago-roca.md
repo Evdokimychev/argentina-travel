@@ -60,8 +60,6 @@ sources:
 
 En la Патагония, disfruta una cabalgata que te lleva a contemplar una vista panorámica del Glaciar Перито-Морено.
 
-Horseback riding in the Roca lake — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -50.5387, -72.8117

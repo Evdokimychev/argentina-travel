@@ -60,8 +60,6 @@ sources:
 
 Vive una aventura llena de adrenalina, en un río de deshielo con vistas a la cordillera.
 
-Rafting en el río Мендоса — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.9529, -69.1917

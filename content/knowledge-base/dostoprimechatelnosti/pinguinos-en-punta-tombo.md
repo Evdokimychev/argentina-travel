@@ -60,8 +60,6 @@ sources:
 
 En la Патагония Argentina, te espera la colonia de pingüinos de Magallanes más grande del mundo.
 
-Penguins at Punta Tombo — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -43.2023, -64.8032

@@ -60,8 +60,6 @@ sources:
 
 Visita el área protegida donde te espera uno de los glaciares más grandes del planeta.
 
-национальный парк Los Glaciares: Patrimonio de la Humanidad — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -50.5227, -73.2766

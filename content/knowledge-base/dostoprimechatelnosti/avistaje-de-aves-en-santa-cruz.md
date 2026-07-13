@@ -60,8 +60,6 @@ sources:
 
 Visita la Патагония Argentina y recorre hábitats de aves en ambiente extremos y de alta biodiversidad.
 
-Bird watching in Santa Cruz — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -47.9566, -69.4728

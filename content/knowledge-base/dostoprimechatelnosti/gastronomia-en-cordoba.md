@@ -60,8 +60,6 @@ sources:
 
 Date el placer de probar el queso de cabra, degustar los embutidos tradicionales y cenar como en el 1800.
 
-Food in Córdoba — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.3796, -64.1896

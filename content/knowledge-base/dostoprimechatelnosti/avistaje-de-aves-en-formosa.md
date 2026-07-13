@@ -60,8 +60,6 @@ sources:
 
 Date el gusto de visitar un lugar donde viven más del 50% de las aves que habitan en todo el territorio argentino.
 
-Bird watching in Formosa — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.0836, -58.1963

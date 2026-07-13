@@ -45,8 +45,6 @@ sources:
 
 Degusta vinos, chivitos, empanadas, aceitunas y dulces regionales entre paisajes de valles y cerros.
 
-La Rioja Tastes — одна из достопримечательностей региона Северо-Запад (Ла-Риоха). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.4135, -66.8565

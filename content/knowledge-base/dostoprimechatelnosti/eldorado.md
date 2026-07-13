@@ -60,8 +60,6 @@ sources:
 
 Vive una aventura urbana a un paso de una de las siete maravillas naturales del mundo: las Cataratas del Игуасу.
 
-Eldorado — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.4064, -54.6275

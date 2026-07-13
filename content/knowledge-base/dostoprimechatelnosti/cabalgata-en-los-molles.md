@@ -59,8 +59,6 @@ sources:
 
 En Malargüe, cabalga entre montañas andinas y siente el contacto con la naturaleza.
 
-Horseback riding in Los Molles — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -35.1656, -69.9389

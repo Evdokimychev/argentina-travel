@@ -60,8 +60,6 @@ sources:
 
 Vive la aventura de deslizarte por un mundo blanco en las tierras más australes del continente.
 
-Valleys and forests in Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.7172, -68.0921

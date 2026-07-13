@@ -60,8 +60,6 @@ sources:
 
 En la Патагония, visita una de las mayores comunidades de nativos y descendientes de galeses fuera del Reino Unido.
 
-Gaiman — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -43.2896, -65.4920

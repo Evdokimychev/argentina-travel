@@ -60,8 +60,6 @@ sources:
 
 En Jaramillo, siente la emoción de pisar una tierra sepultada por la lava durante el período Cretácico.
 
-национальный парк Bosques Petrificados — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -47.1849, -67.1426

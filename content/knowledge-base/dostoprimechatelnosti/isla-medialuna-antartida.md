@@ -45,8 +45,6 @@ sources:
 
 Vive la aventura extrema de embarcarte en un rompehielos y explorar una isla del archipiélago Shetland del Sur.
 
-Half Moon Island, Antarctica — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.8028, -68.3016

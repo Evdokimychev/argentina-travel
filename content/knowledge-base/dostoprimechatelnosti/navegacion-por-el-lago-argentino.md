@@ -60,8 +60,6 @@ sources:
 
 Desde Puerto Bandera, emprende una aventura acuática por paisajes helados de la Патагония Argentina.
 
-Sailing along Lago Argentino — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -50.3640, -72.4937

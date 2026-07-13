@@ -60,8 +60,6 @@ sources:
 
 Vive una aventura extrema entre la Cordillera de los Andes y la Cordillera del Viento.
 
-Mountaineering in Neuquén — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.3181, -70.3403

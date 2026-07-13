@@ -60,8 +60,6 @@ sources:
 
 En la región de Куйо, vive la experiencia de recorrer lagos entre paisajes de montaña.
 
-Interlagos San Juan Route — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.4825, -68.6541

@@ -60,8 +60,6 @@ sources:
 
 En la Патагония argentina, disfruta la experiencia de bajar por un río rodeado de naturaleza casi virgen.
 
-Rafting in the Corcovado River — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -43.5337, -71.4668

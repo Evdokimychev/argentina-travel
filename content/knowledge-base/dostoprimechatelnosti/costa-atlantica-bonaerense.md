@@ -50,8 +50,6 @@ sources:
 
 Allí donde las aguas del océano Atlántico bañan inmensas playas, elige tu propia aventura para disfrutar de sol a sol.
 
-Буэнос-Айрес Atlantic Coast — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.2017, -59.8411

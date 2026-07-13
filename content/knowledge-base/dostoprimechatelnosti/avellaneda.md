@@ -60,8 +60,6 @@ sources:
 
 Descubre un lugar donde las tradiciones se integran con las maravillas de la naturaleza.
 
-Avellaneda — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.1175, -59.6586

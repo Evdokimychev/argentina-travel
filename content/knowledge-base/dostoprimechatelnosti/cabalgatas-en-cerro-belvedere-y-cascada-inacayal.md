@@ -60,8 +60,6 @@ sources:
 
 En Villa La Angostura, siente el privilegio de explorar a caballo paisajes únicos de la Патагония argentina.
 
-Horseback rides in Belvedere Hill and Inacayal waterfall — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.7571, -71.6652

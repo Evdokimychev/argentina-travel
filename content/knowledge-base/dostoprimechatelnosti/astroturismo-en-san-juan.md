@@ -60,8 +60,6 @@ sources:
 
 Recorre una tierra elegida por sus condiciones perfectas para la observación astronómica.
 
-Astrotourism in San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.3322, -69.4193

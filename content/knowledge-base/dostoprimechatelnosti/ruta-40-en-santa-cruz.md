@@ -60,8 +60,6 @@ sources:
 
 Vive una aventura de mil cuatrocientos kilómetros entre los cerros de los Andes y las aguas del Atlántico.
 
-Ruta 40 in Santa Cruz — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -49.1001, -72.7793

@@ -60,8 +60,6 @@ sources:
 
 Desde la Патагония argentina, embárcate en una aventura llena de adrenalina que te lleva a cruzar la frontera.
 
-Rafting in the Hua Hum River — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.1131, -71.6624

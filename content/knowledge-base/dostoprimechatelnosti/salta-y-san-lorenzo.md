@@ -60,8 +60,6 @@ sources:
 
 Cultura y folklore, historia y arqueología, ríos y selvas, montañas y aventuras te esperan en la provincia de Salta.
 
-Salta and San Lorenzo — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.7521, -65.4380

@@ -60,8 +60,6 @@ sources:
 
 Acércate al patrimonio artístico y cultural de una de las urbes más importantes del Литорал argentino.
 
-Cultural tourism in Rosario — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.9587, -60.6930

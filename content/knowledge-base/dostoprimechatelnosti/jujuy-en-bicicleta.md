@@ -50,8 +50,6 @@ sources:
 
 Recorre caminos que te llevarán a descubrir un mundo de quebradas, colores, tradiciones y calidez.
 
-Cover Jujuy by Bike — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.1858, -65.2995

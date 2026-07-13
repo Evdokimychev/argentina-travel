@@ -59,8 +59,6 @@ sources:
 
 Date el gusto de disfrutar del agua en un paisaje serrano de vegetación frondosa.
 
-Renca, San Luis — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.7708, -65.3647

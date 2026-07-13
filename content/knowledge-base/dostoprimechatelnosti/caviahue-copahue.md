@@ -60,8 +60,6 @@ sources:
 
 Visita la Патагония argentina y vive experiencias de aventura y relax en un entorno natural soñado.
 
-Caviahue - Copahue — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.8664, -71.0501

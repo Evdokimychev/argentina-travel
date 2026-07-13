@@ -11,7 +11,7 @@ site_ready: true
 site_sections: [zhizn-v-strane]
 applies_to: both
 tags: [навигация, медицина, здоровье, страховка, точка входа]
-related: [sistema-zdravoohraneniya, medicina-i-strahovka, rody-i-beremennost, dostupnaya-sreda-i-invalidnost, nuzhna-li-strahovka-dlya-vezda]
+related: [sistema-zdravoohraneniya, medicina-i-strahovka, rody-i-beremennost, dostupnaya-sreda-i-invalidnost, nuzhna-li-strahovka-dlya-vezda, provoz-lekarstv]
 warnings:
   - "После реформы 2025 плановая медицина для нерезидентов без ПМЖ платная — страховка де-факто обязательна; тарифы prepaga подвижны, смотрите связанные записи с флажками."
 recommendations:

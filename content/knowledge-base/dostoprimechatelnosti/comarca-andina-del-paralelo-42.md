@@ -60,8 +60,6 @@ sources:
 
 Recorre seis poblaciones que forman una de las rutas más bellas de la Патагония andina.
 
-Comarca Andina del Paralelo 42 — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.0613, -71.5971

@@ -60,8 +60,6 @@ sources:
 
 En la estepa patagónica, encuéntrate con extrañas geoformas dentro de un Área Natural Protegida.
 
-Piedra Parada — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.7264, -70.5420

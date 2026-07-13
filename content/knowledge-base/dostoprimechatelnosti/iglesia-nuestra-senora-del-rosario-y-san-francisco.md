@@ -45,8 +45,6 @@ sources:
 
 En Yavi, provincia de Jujuy, explora un lugar declarado Monumento Histórico Nacional.
 
-Church Nuestra Señora del Rosario y San Francisco — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

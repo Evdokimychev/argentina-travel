@@ -60,8 +60,6 @@ sources:
 
 Date el placer de degustar las empanadas, las tortillas, el cabrito y otros manjares de una gastronomía rica en matices.
 
-Food in Santiago del Estero — одна из достопримечательностей региона Северо-Запад (Саньяго-дель-Эстеро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.7794, -64.2581

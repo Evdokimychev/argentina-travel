@@ -59,8 +59,6 @@ sources:
 
 Lánzate a una aventura en uno de los ríos más largos y caudalosos del planeta.
 
-Kayaking in the Paraná — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.6107, -60.6973

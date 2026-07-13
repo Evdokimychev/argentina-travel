@@ -60,8 +60,6 @@ sources:
 
 Recorre la Manzana Jesuítica de la capital de Córdoba y cinco estancias jesuitas que te esperan en la provincia.
 
-Jesuit legacy in Córdoba — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.4010, -64.1986

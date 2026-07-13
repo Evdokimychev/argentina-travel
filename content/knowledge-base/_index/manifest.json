@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-12 11:27",
-  "total_entities": 685,
+  "generated_at": "2026-07-13 11:23",
+  "total_entities": 689,
   "entities": [
     {
       "id": "aconcagua-provincial-park",
@@ -277,7 +277,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/alero-charcamata.md"
@@ -461,7 +461,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/alumine.md"
@@ -533,7 +533,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 106,
+        "word_count": 74,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes.md"
@@ -605,7 +605,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/andinismo-y-montanismo-en-neuquen.md"
@@ -677,7 +677,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/angastaco.md"
@@ -749,7 +749,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/antofagasta-de-la-sierra.md"
@@ -862,7 +862,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/area-natural-protegida-rio-limay.md"
@@ -1312,7 +1312,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/artesania-formosena.md"
@@ -1450,7 +1450,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/astroturismo-en-san-juan.md"
@@ -1522,7 +1522,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/autodromo-internacional-de-rio-hondo.md"
@@ -1594,7 +1594,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/avellaneda.md"
@@ -1666,7 +1666,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/aventura-en-la-patagonia-andina.md"
@@ -1738,7 +1738,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/aventura-submarina-en-puerto-madryn.md"
@@ -1807,7 +1807,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 78,
+        "word_count": 52,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/aves-del-chaco.md"
@@ -1879,7 +1879,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/avistaje-de-aves-en-formosa.md"
@@ -2023,7 +2023,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/avistaje-de-aves-en-santa-cruz.md"
@@ -2495,7 +2495,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 54,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/bebidas-y-gastronomia-en-cordoba.md"
@@ -2567,7 +2567,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 81,
+        "word_count": 56,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/belen.md"
@@ -2797,7 +2797,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/bienal-internacional-de-esculturas-en-resistencia.md"
@@ -2847,7 +2847,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 105,
+        "word_count": 76,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/bodega-submarina-en-las-grutas.md"
@@ -2968,7 +2968,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/buceo-en-el-golfo-san-matias.md"
@@ -3040,7 +3040,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/buceo-en-las-costas-de-ushuaia.md"
@@ -3483,7 +3483,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgata-en-el-lago-roca.md"
@@ -3555,7 +3555,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgata-en-los-molles.md"
@@ -3627,7 +3627,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgatas-en-cerro-belvedere-y-cascada-inacayal.md"
@@ -3699,7 +3699,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 78,
+        "word_count": 26,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgatas-en-la-estepa-de-bariloche.md"
@@ -3771,7 +3771,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 101,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgatas-en-las-sierras-bonaerenses.md"
@@ -3843,7 +3843,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 56,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgatas-en-tafi-del-valle.md"
@@ -3915,7 +3915,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cabalgatas-en-valle-chico.md"
@@ -3987,7 +3987,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cachi.md"
@@ -4139,7 +4139,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/camino-de-la-costa.md"
@@ -4211,7 +4211,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/caminos-de-la-fe-san-juan.md"
@@ -4283,7 +4283,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/campo-del-cielo.md"
@@ -4355,7 +4355,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 99,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/campo-del-cielo-y-saenz-pena.md"
@@ -4405,7 +4405,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/canon-del-atuel.md"
@@ -4477,7 +4477,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/capilla-del-monte.md"
@@ -4549,7 +4549,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/carcarana.md"
@@ -4621,7 +4621,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/carmen-del-sauce.md"
@@ -4693,7 +4693,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/carnaval-de-humahuaca.md"
@@ -4765,7 +4765,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/carnaval-en-corrientes.md"
@@ -4837,7 +4837,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/casa-de-san-martin-en-yapeyu.md"
@@ -5075,7 +5075,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cascada-nivinco-y-pichi-traful.md"
@@ -5197,7 +5197,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/catamaran-en-el-rio-parana.md"
@@ -5269,7 +5269,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/catamaran-en-la-triple-frontera.md"
@@ -5389,7 +5389,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/caucete-san-juan.md"
@@ -5461,7 +5461,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/caviahue-copahue.md"
@@ -5533,7 +5533,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/centro-de-esqui-la-hoya.md"
@@ -5605,7 +5605,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/centro-termal-bernardo-larroude.md"
@@ -5677,7 +5677,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/centros-de-esqui-en-neuquen.md"
@@ -5965,7 +5965,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 79,
+        "word_count": 25,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md"
@@ -6164,7 +6164,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 81,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cholila.md"
@@ -6520,7 +6520,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 98,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/circuito-callejero-de-potrero-de-los-funes.md"
@@ -6592,7 +6592,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/circuito-cultural-en-formosa.md"
@@ -6664,7 +6664,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/circuito-de-cervecerias-en-rosario.md"
@@ -6736,7 +6736,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/circuito-gastronomico-en-el-rio-parana.md"
@@ -6808,7 +6808,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 74,
+        "word_count": 49,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ciudad-de-corrientes.md"
@@ -6952,7 +6952,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ciudad-de-salta.md"
@@ -7146,7 +7146,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/clorinda.md"
@@ -7225,7 +7225,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/colon.md"
@@ -7268,7 +7268,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 95,
+        "word_count": 23,
         "needs_attention": false
       },
       "path": "goroda/colon-entre-rios.md"
@@ -7412,7 +7412,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/colonia-menonita-en-la-pampa.md"
@@ -7628,7 +7628,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/comandante-luis-piedrabuena.md"
@@ -7700,7 +7700,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/comarca-andina-del-paralelo-42.md"
@@ -7822,7 +7822,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cordoba-de-las-campanas.md"
@@ -7887,7 +7887,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/corredor-de-la-puna.md"
@@ -7959,7 +7959,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/corredor-del-viento.md"
@@ -8024,7 +8024,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cosquin.md"
@@ -8082,7 +8082,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 99,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/costa-atlantica-bonaerense.md"
@@ -8154,7 +8154,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 102,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/costa-atlantica-de-la-provincia-de-buenos-aires.md"
@@ -8226,7 +8226,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/costanera-de-corrientes.md"
@@ -8298,7 +8298,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/costanera-de-formosa.md"
@@ -8370,7 +8370,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 70,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cruce-de-los-andes.md"
@@ -8442,7 +8442,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cuesta-del-viento.md"
@@ -8563,7 +8563,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cultura-guarani-en-misiones.md"
@@ -8635,7 +8635,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/cusi-cusi.md"
@@ -8811,7 +8811,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/delta-del-parana.md"
@@ -8861,7 +8861,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/deportes-extremos-en-la-rioja.md"
@@ -8926,7 +8926,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/deportes-extremos-en-paso-de-la-patria.md"
@@ -9057,7 +9057,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/dinosaurios-de-la-patagonia.md"
@@ -9129,7 +9129,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/dinosaurios-en-neuquen.md"
@@ -9600,7 +9600,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "goroda/el-calafate.md"
@@ -9752,7 +9752,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "goroda/el-chalten.md"
@@ -9968,7 +9968,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/el-hoyo.md"
@@ -10551,7 +10551,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/el-tren-patagonico.md"
@@ -10673,7 +10673,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/eldorado.md"
@@ -10803,7 +10803,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 80,
+        "word_count": 56,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/empedrado.md"
@@ -10875,7 +10875,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/empedrado-y-el-carrizal.md"
@@ -10947,7 +10947,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/epuyen.md"
@@ -11072,7 +11072,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 84,
+        "word_count": 20,
         "needs_attention": false
       },
       "path": "goroda/esquel.md"
@@ -11144,7 +11144,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 73,
+        "word_count": 49,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/esquina.md"
@@ -11209,7 +11209,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/estancias-turisticas-de-campo.md"
@@ -11281,7 +11281,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/expedicion-al-avion-de-los-uruguayos.md"
@@ -11353,7 +11353,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/expediciones-en-el-lago-huechulafquen.md"
@@ -11473,7 +11473,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "goroda/federacion.md"
@@ -11545,7 +11545,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/feria-de-simoca.md"
@@ -11617,7 +11617,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/festival-de-cosquin.md"
@@ -11689,7 +11689,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/fiambala.md"
@@ -11761,7 +11761,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/fiesta-nacional-del-canotaje-en-chaco.md"
@@ -11826,7 +11826,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/fiesta-nacional-del-sol-en-san-juan.md"
@@ -11898,7 +11898,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/fiestas-y-festivales-en-cordoba.md"
@@ -12088,7 +12088,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 101,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/frutas-de-pepita-en-el-alto-valle-del-rio-negro.md"
@@ -12238,7 +12238,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gaiman.md"
@@ -12310,7 +12310,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/galeses-en-argentina.md"
@@ -12382,7 +12382,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-de-chaco.md"
@@ -12454,7 +12454,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 98,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-de-entre-rios.md"
@@ -12526,7 +12526,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-de-jujuy.md"
@@ -12598,7 +12598,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-de-la-pampa.md"
@@ -12677,7 +12677,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-de-misiones.md"
@@ -12749,7 +12749,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-de-tierra-del-fuego.md"
@@ -12821,7 +12821,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-en-cordoba.md"
@@ -12893,7 +12893,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-en-santa-fe.md"
@@ -12965,7 +12965,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 99,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/gastronomia-en-santiago-del-estero.md"
@@ -13150,7 +13150,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/general-acha.md"
@@ -13651,7 +13651,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/golf-en-mendoza.md"
@@ -13723,7 +13723,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/golf-en-tierra-del-fuego.md"
@@ -13927,7 +13927,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "goroda/gualeguaychu.md"
@@ -13999,7 +13999,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/herradura.md"
@@ -14117,7 +14117,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/humahuaca.md"
@@ -14286,7 +14286,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/iglesia-nuestra-senora-del-rosario-y-san-francisco.md"
@@ -14366,7 +14366,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 527,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/iguasu.md"
@@ -14559,7 +14559,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/intendente-alvear.md"
@@ -14683,7 +14683,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/iruya.md"
@@ -14825,7 +14825,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/isla-del-cerrito.md"
@@ -14875,7 +14875,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/isla-medialuna-antartida.md"
@@ -15076,7 +15076,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ituzaingo.md"
@@ -15186,7 +15186,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/jaaukanigas.md"
@@ -15258,7 +15258,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/jachal.md"
@@ -15330,7 +15330,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/jaramillo.md"
@@ -15402,7 +15402,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/juan-jose-castelli.md"
@@ -15460,7 +15460,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/jujuy-en-bicicleta.md"
@@ -15532,7 +15532,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/junin-de-los-andes.md"
@@ -16442,7 +16442,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/kayak-en-bariloche.md"
@@ -16514,7 +16514,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/kayak-en-el-parana.md"
@@ -17634,7 +17634,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/laberinto-patagonia.md"
@@ -17922,7 +17922,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/lagos-de-tierra-del-fuego.md"
@@ -18361,7 +18361,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/legado-jesuita-en-cordoba.md"
@@ -18691,7 +18691,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "goroda/los-antiguos.md"
@@ -18914,7 +18914,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 454,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/los-glasiares.md"
@@ -19221,7 +19221,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 79,
+        "word_count": 55,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/maimara.md"
@@ -19293,7 +19293,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 79,
+        "word_count": 55,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/malargue.md"
@@ -19336,7 +19336,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 96,
+        "word_count": 24,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/mar-de-las-pampas.md"
@@ -19583,7 +19583,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/mate-en-la-laguna-capri.md"
@@ -19795,7 +19795,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/mendoza-best-of-wine-tourism.md"
@@ -19963,7 +19963,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 88,
+        "word_count": 21,
         "needs_attention": false
       },
       "path": "goroda/merlo.md"
@@ -20134,7 +20134,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/minitrekking-sobre-el-glaciar-perito-moreno.md"
@@ -20206,7 +20206,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/miraflores.md"
@@ -20278,7 +20278,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/molino-forclaz.md"
@@ -20350,7 +20350,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/montanismo-en-jujuy.md"
@@ -20408,7 +20408,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/monte-olivia-y-glaciar-de-agostini.md"
@@ -20591,7 +20591,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/mountain-bike-en-piedra-del-aguila.md"
@@ -21065,7 +21065,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/museo-arqueologico-los-menhires.md"
@@ -21137,7 +21137,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 102,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/museo-de-arqueologia-de-alta-montana.md"
@@ -21281,7 +21281,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/museos-de-salta.md"
@@ -21629,7 +21629,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/navegacion-en-los-rios-limay-y-neuquen.md"
@@ -21701,7 +21701,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 99,
+        "word_count": 70,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/navegacion-en-tierra-del-fuego.md"
@@ -21773,7 +21773,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/navegacion-entre-glaciares.md"
@@ -21845,7 +21845,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/navegacion-por-el-lago-argentino.md"
@@ -21888,7 +21888,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 87,
+        "word_count": 21,
         "needs_attention": false
       },
       "path": "goroda/necochea.md"
@@ -22010,7 +22010,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/nevado-de-chani.md"
@@ -22082,7 +22082,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/newells-old-boys.md"
@@ -22261,7 +22261,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/nueva-cordoba.md"
@@ -22570,7 +22570,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/obera.md"
@@ -23070,7 +23070,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parapente-en-cerro-san-javier.md"
@@ -23142,7 +23142,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 98,
+        "word_count": 70,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parque-aereo-de-san-jose.md"
@@ -23214,7 +23214,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parque-general-san-martin.md"
@@ -23286,7 +23286,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parque-marino-costero-patagonia-austral.md"
@@ -23358,7 +23358,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parque-marino-isla-pinguino.md"
@@ -23430,7 +23430,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parque-marino-makenke.md"
@@ -23646,7 +23646,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-bosques-petrificados.md"
@@ -24076,7 +24076,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-el-leoncito.md"
@@ -24292,7 +24292,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-iguazu-patrimonio-de-la-humanidad.md"
@@ -24364,7 +24364,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 81,
+        "word_count": 26,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-islas-de-santa-fe.md"
@@ -24508,7 +24508,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 76,
+        "word_count": 50,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-laguna-blanca.md"
@@ -24580,7 +24580,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-los-alerces-patrimonio-de-la-humanidad.md"
@@ -24724,7 +24724,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-los-cardones.md"
@@ -24796,7 +24796,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-los-glaciares-patrimonio-de-la-humanidad.md"
@@ -24868,7 +24868,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-monte-leon.md"
@@ -25165,7 +25165,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-san-guillermo.md"
@@ -25237,7 +25237,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-tierra-del-fuego.md"
@@ -25309,7 +25309,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parque-natural-valle-fertil.md"
@@ -25381,7 +25381,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-provincial-cordon-del-plata.md"
@@ -25453,7 +25453,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-provincial-ischigualasto.md"
@@ -25525,7 +25525,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parques-de-parana.md"
@@ -25597,7 +25597,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 106,
+        "word_count": 74,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/parques-naturales-ischigualasto-y-talampaya-patrimonios-de-la-humanidad.md"
@@ -25669,7 +25669,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/paseos-acuaticos-en-herradura.md"
@@ -25741,7 +25741,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/paseos-aereos-en-ushuaia.md"
@@ -25813,7 +25813,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/paso-de-la-patria.md"
@@ -25878,7 +25878,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pasos-del-papa-francisco.md"
@@ -26021,7 +26021,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/patagonia-de-los-lagos.md"
@@ -26215,7 +26215,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/patinaje-en-bahia-redonda.md"
@@ -26287,7 +26287,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/penas-folkloricas-en-salta.md"
@@ -26443,7 +26443,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/peninsula-valdes-sitio-patrimonio-mundial-de-la-unesco.md"
@@ -26760,7 +26760,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-con-devolucion-en-entre-rios.md"
@@ -26832,7 +26832,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-con-devolucion-en-formosa.md"
@@ -26904,7 +26904,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-deportiva-en-entre-rios.md"
@@ -26976,7 +26976,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-deportiva-en-isla-del-cerrito.md"
@@ -27048,7 +27048,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-en-el-dique-cabra-corral.md"
@@ -27120,7 +27120,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-en-neuquen.md"
@@ -27192,7 +27192,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pesca-en-tierra-del-fuego.md"
@@ -27250,7 +27250,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pico-truncado.md"
@@ -27322,7 +27322,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/piedra-parada.md"
@@ -27458,7 +27458,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pinguinos-en-punta-tombo.md"
@@ -27572,7 +27572,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/playas-de-la-patagonia.md"
@@ -27954,10 +27954,94 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "goroda/posadas.md"
+    },
+    {
+      "id": "posle-dtp",
+      "type": "guide",
+      "subtype": "transport",
+      "title": "Что делать после ДТП в Аргентине",
+      "summary": "Пошагово после аварии: безопасность и раненые (911), обмен данными (права, страховка, patente, свидетели), фотофиксация места, полицейская denuncia при ущербе или пострадавших и обязательная denuncia в страховую в течение 72 часов — без неё полис не срабатывает.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авто",
+        "безопасность",
+        "страховка",
+        "документы"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "zhizn-v-strane",
+        "dokumenty-i-legalizatsiya"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 2,
+        "word_count": 335,
+        "needs_attention": false
+      },
+      "path": "transport/posle-dtp.md"
+    },
+    {
+      "id": "prava-passazhira-otmena-reisa",
+      "type": "guide",
+      "subtype": "transport",
+      "title": "Права пассажира при отмене или задержке рейса в Аргентине",
+      "summary": "При отмене рейса авиакомпания обязана предложить ближайший свой рейс, переоформление на другого перевозчика или другой маршрут; если ничего не подходит — полный возврат стоимости. При задержке свыше 4 часов положены еда и напитки, свыше 8 — ещё и гостиница с трансфером. Исключения — погода и форс-мажор. Права закреплены Resolución 1532/98, а с 2025 действует новая система жалоб ANAC.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авиа",
+        "права пассажира",
+        "логистика"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "zhizn-v-strane"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": false,
+        "policy_days": 90,
+        "review_due_at": "2026-10-10",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 2,
+        "word_count": 358,
+        "needs_attention": false
+      },
+      "path": "transport/prava-passazhira-otmena-reisa.md"
     },
     {
       "id": "prazdniki-i-traditsii",
@@ -28041,6 +28125,48 @@
         "needs_attention": false
       },
       "path": "pereezd/priznanie-diploma.md"
+    },
+    {
+      "id": "provoz-lekarstv",
+      "type": "guide",
+      "subtype": "health",
+      "title": "Провоз лекарств через границу Аргентины",
+      "summary": "Личные лекарства ввозить можно, но на границе могут попросить рецепт и назначение врача, а количество должно быть разумным — по длительности поездки. Для препаратов с психотропными/наркотическими веществами требования строже: легализованный рецепт с активным веществом и дозировкой, иногда разрешение ANMAT. Пересылать такие препараты почтой нельзя.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "медицина",
+        "документы",
+        "таможня",
+        "туризм",
+        "здоровье"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "zhizn-v-strane"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 3,
+        "word_count": 380,
+        "needs_attention": false
+      },
+      "path": "medicina/provoz-lekarstv.md"
     },
     {
       "id": "pueblos-de-la-provincia-de-buenos-aires",
@@ -28181,7 +28307,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/pueblos-galeses-y-comunidades-originarias.md"
@@ -28399,7 +28525,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/puente-del-inca.md"
@@ -28449,7 +28575,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/puente-rosario-victoria.md"
@@ -28595,7 +28721,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "goroda/puerto-deseado.md"
@@ -28671,7 +28797,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "goroda/puerto-iguazu.md"
@@ -28958,7 +29084,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/purmamarca.md"
@@ -29093,7 +29219,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/qhapaq-nan-el-shincal.md"
@@ -29309,7 +29435,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 83,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/quitilipi.md"
@@ -29465,7 +29591,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rafaela.md"
@@ -29537,7 +29663,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rafting-en-el-rio-chimehuin.md"
@@ -29609,7 +29735,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rafting-en-el-rio-corcovado.md"
@@ -29681,7 +29807,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rafting-en-el-rio-hua-hum.md"
@@ -29731,7 +29857,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rafting-en-el-rio-manso.md"
@@ -29803,7 +29929,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rafting-en-el-rio-mendoza.md"
@@ -29968,7 +30094,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/reconquista.md"
@@ -30040,7 +30166,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/red-de-refugios-de-montana.md"
@@ -30112,7 +30238,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/renca-san-luis.md"
@@ -31101,7 +31227,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "goroda/resistencia.md"
@@ -31232,7 +31358,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ria-de-bahia-blanca.md"
@@ -31603,7 +31729,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/roque-saenz-pena.md"
@@ -31751,7 +31877,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 80,
+        "word_count": 22,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruinas-de-quilmes.md"
@@ -31823,7 +31949,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-40-en-chubut.md"
@@ -31895,7 +32021,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-40-en-santa-cruz.md"
@@ -32071,7 +32197,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-azul.md"
@@ -32143,7 +32269,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-de-la-cultura-qom.md"
@@ -32215,7 +32341,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-de-los-siete-lagos.md"
@@ -32287,7 +32413,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-del-adobe-en-catamarca.md"
@@ -32359,7 +32485,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-del-artesano-en-tucuman.md"
@@ -32409,7 +32535,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-del-olivo-san-juan.md"
@@ -32481,7 +32607,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 69,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-del-vino-en-la-patagonia.md"
@@ -32553,7 +32679,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-del-vino-en-san-juan.md"
@@ -32625,7 +32751,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-del-vino-en-tucuman.md"
@@ -32697,7 +32823,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ruta-interlagos-san-juan.md"
@@ -32769,7 +32895,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/rutas-de-tierra-del-fuego.md"
@@ -32838,7 +32964,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 76,
+        "word_count": 50,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/sabores-de-chaco.md"
@@ -32888,7 +33014,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 58,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/sabores-riojanos.md"
@@ -33222,7 +33348,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/salta-y-san-lorenzo.md"
@@ -33301,7 +33427,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 60,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/salto-encantado.md"
@@ -33458,7 +33584,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "goroda/san-antonio-de-areco.md"
@@ -34048,7 +34174,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "goroda/san-rafael.md"
@@ -34199,7 +34325,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/sandboard-en-abra-pampa.md"
@@ -34271,7 +34397,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/sandboard-en-las-dunas-de-saujil.md"
@@ -34641,7 +34767,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/seclantas.md"
@@ -34713,7 +34839,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/senderismo-con-llamas-en-jujuy.md"
@@ -34785,7 +34911,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/senderos-periurbanos-de-esquel.md"
@@ -35030,7 +35156,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 104,
+        "word_count": 75,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/sierra-de-las-quijadas.md"
@@ -36142,7 +36268,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tafi-viejo.md"
@@ -36257,7 +36383,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 87,
+        "word_count": 21,
         "needs_attention": false
       },
       "path": "goroda/tandil.md"
@@ -36442,7 +36568,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 94,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tastil-y-santa-rosa-de-tastil.md"
@@ -36656,7 +36782,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 99,
+        "word_count": 70,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/temporada-de-orcas-en-peninsula-valdes.md"
@@ -37205,7 +37331,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tilcara.md"
@@ -37349,7 +37475,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tinogasta.md"
@@ -37421,7 +37547,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tolhuin.md"
@@ -37493,7 +37619,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 97,
+        "word_count": 68,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tradicion-cervecera-en-santa-fe.md"
@@ -37558,7 +37684,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tradiciones-gauchas.md"
@@ -37630,7 +37756,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 96,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/travesia-4x4-en-tierra-del-fuego.md"
@@ -37702,7 +37828,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trekking-en-bosques-y-lagos.md"
@@ -37774,7 +37900,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trekking-en-lihue-calel.md"
@@ -37846,7 +37972,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 90,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trekking-en-parque-patagonia.md"
@@ -37918,7 +38044,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trekking-en-salta.md"
@@ -37990,7 +38116,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trekking-en-tolhuin.md"
@@ -38068,7 +38194,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 105,
+        "word_count": 79,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tren-a-las-nubes.md"
@@ -38118,7 +38244,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tren-de-las-sierras.md"
@@ -38162,7 +38288,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 87,
+        "word_count": 20,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trevelin.md"
@@ -38234,7 +38360,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 89,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/trevelin-el-pueblo-del-molino.md"
@@ -38306,7 +38432,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-aventura-en-chaco.md"
@@ -38378,7 +38504,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 65,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-cultural-en-rosario.md"
@@ -38450,7 +38576,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-paleontologico-en-neuquen.md"
@@ -38500,7 +38626,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 84,
+        "word_count": 57,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-religioso-en-salta.md"
@@ -38572,7 +38698,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 81,
+        "word_count": 56,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-rural-comunitario.md"
@@ -38644,7 +38770,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-rural-en-la-pampa.md"
@@ -38716,7 +38842,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/turismo-rural-en-salta.md"
@@ -38909,7 +39035,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 101,
+        "word_count": 71,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/ushuaia-la-ciudad-y-el-tren.md"
@@ -39243,7 +39369,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 59,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/valle-de-uco-mendoza.md"
@@ -39459,7 +39585,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 93,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/valles-y-bosques-fueguinos.md"
@@ -39531,7 +39657,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/verano-en-corrientes.md"
@@ -39675,7 +39801,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/viedma.md"
@@ -40688,7 +40814,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 85,
+        "word_count": 61,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/villa-traful.md"
@@ -40731,7 +40857,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 82,
+        "word_count": 20,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/villavicencio.md"
@@ -40926,7 +41052,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 66,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/vinos-de-san-juan.md"
@@ -40998,7 +41124,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/vinos-de-tolombon.md"
@@ -41070,7 +41196,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 64,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/vinos-del-valle-patagonico.md"
@@ -41673,7 +41799,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/volcan-lanin.md"
@@ -41793,6 +41919,49 @@
       "path": "pereezd/vossoedinenie-semi.md"
     },
     {
+      "id": "vysokogorye-na-avto",
+      "type": "guide",
+      "subtype": "transport",
+      "title": "Путешествие на автомобиле в высокогорье: Пуна и перевалы",
+      "summary": "Северо-запад Аргентины и высокие перевалы Куйо — это дороги на 3500-4900 м, где к обычным рискам добавляются горная болезнь (сороче) и особенности машины на высоте: двигатель теряет мощность, между заправками сотни километров, связь пропадает. Разбираем, как подготовиться к высоте, топливу, холоду и одиночным участкам.",
+      "status": "published",
+      "region_id": null,
+      "province": null,
+      "coordinates": null,
+      "best_time": null,
+      "duration": null,
+      "how_to_get_there": null,
+      "media": null,
+      "tags": [
+        "транспорт",
+        "авто",
+        "роудтрип",
+        "высокогорье",
+        "Пуна",
+        "безопасность"
+      ],
+      "site_sections": [
+        "puteshestviya-po-argentine",
+        "zhizn-v-strane"
+      ],
+      "confidence": "medium",
+      "last_verified": "2026-07-12",
+      "long_form_source": null,
+      "site_id_map": null,
+      "site_ready": null,
+      "editorial": {
+        "sensitive": true,
+        "policy_days": 45,
+        "review_due_at": "2026-08-26",
+        "review_due": false,
+        "missing_sources": false,
+        "source_count": 1,
+        "word_count": 402,
+        "needs_attention": false
+      },
+      "path": "transport/vysokogorye-na-avto.md"
+    },
+    {
       "id": "yapeyu",
       "type": "attraction",
       "subtype": null,
@@ -41859,7 +42028,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 86,
+        "word_count": 62,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/yapeyu.md"
@@ -41931,7 +42100,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 92,
+        "word_count": 67,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/yungas-tucumanas.md"

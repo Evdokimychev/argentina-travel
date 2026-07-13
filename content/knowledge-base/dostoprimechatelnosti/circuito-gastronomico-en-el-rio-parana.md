@@ -59,8 +59,6 @@ sources:
 
 En el Литорал argentino, descubre los platos típicos de la comida regional.
 
-Food circuit on the Paraná river — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

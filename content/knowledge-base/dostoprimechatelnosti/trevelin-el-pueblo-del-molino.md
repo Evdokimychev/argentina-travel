@@ -60,8 +60,6 @@ sources:
 
 Acércate a un pueblo con raíces galesas y un campo de tulipanes único en Argentina.
 
-Trevelin, the mill town — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -43.0695, -71.4489

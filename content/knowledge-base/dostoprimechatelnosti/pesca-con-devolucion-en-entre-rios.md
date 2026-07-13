@@ -60,8 +60,6 @@ sources:
 
 Disfruta la pesca deportiva del dorado, el surubí y otros peces típicos del Литорал argentino.
 
-Catch-and-release fishing in Entre Ríos — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.9169, -59.2567

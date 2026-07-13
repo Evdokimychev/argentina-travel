@@ -49,7 +49,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/bariloche
-cost: '[object Object]'
 best_time:
 - декабрь-март (треккинг
 - озёра)
@@ -66,8 +65,6 @@ related:
 - el-chalten
 - argentina-2-nedeli
 - bariloche-tihie-smotrovye
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 site_ready: true

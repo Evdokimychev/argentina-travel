@@ -50,8 +50,6 @@ sources:
 
 En el extremo sur del continente, emprende una aventura para descubrir tesoros de Огненная Земля.
 
-Monte Olivia and Glaciar de Agostini — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.3084, -67.7452

@@ -60,8 +60,6 @@ sources:
 
 Date el gusto de caminar por una reserva histórica y natural de la provincia de La Pampa.
 
-Trekking in Lihué Calel — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.0054, -65.5765

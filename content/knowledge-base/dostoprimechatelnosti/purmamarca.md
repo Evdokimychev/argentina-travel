@@ -60,8 +60,6 @@ sources:
 
 En el corazón de la Quebrada de Humahuaca, déjate enamorar por este pueblo con encanto.
 
-Purmamarca — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -23.7463, -65.4949

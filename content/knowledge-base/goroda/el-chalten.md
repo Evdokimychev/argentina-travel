@@ -45,7 +45,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/el-chalten
-cost: '[object Object]'
 best_time:
 - ноябрь-март (стабильнее погода
 - длинный световой день)
@@ -61,8 +60,6 @@ related:
 - bariloche
 - ruta-40-sem-ozer
 - perito-moreno
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 site_ready: true
@@ -78,8 +75,6 @@ title_en: El Chaltén
 ## Описание
 
 Маленький посёлок у подножия Фицроя, официальная «столица треккинга» Аргентины и вторые, северные ворота в национальный парк Лос-Гласьярес.
-
-Эль-Чальтен — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

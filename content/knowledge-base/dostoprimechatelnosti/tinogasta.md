@@ -60,8 +60,6 @@ sources:
 
 Visita la ciudad que te da acceso a la Ruta del Adobe y a la mítica Ruta de los Seismiles.
 
-Tinogasta — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -28.0627, -67.5661

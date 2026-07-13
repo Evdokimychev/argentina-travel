@@ -66,8 +66,6 @@ media:
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/santa-rosa
 site_ready: true
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

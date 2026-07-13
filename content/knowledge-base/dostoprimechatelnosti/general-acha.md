@@ -60,8 +60,6 @@ sources:
 
 En un paisaje de horizontes infinitos, recorre una ciudad rica en atractivos naturales y culturales.
 
-General Acha — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.3688, -64.5999

@@ -60,8 +60,6 @@ sources:
 
 Vive una experiencia deportiva y recreativa entre paisajes soñados de la Патагония argentina.
 
-Fishing in Neuquén — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.5816, -69.8130

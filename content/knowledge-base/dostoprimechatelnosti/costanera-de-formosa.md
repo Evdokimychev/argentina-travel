@@ -60,8 +60,6 @@ sources:
 
 Prepárate para explorar una ciudad que te espera junto a las aguas del río Paraguay.
 
-Formosa coastal promenade — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.1618, -58.1895

@@ -60,8 +60,6 @@ sources:
 
 Recorre valles y quebradas, ríos y arroyos, cerros y pueblos, selvas y sitios arqueológicos del norte argentino.
 
-Trekking in Salta — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.8082, -65.4096

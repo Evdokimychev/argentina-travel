@@ -60,8 +60,6 @@ sources:
 
 Ven al lugar donde el culto por la gastronomía y la cerveza es un motivo para el encuentro y el disfrute.
 
-Food in Santa Fe — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -30.1601, -60.9869

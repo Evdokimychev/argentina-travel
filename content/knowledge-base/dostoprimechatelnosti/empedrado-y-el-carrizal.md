@@ -60,8 +60,6 @@ sources:
 
 A la vera del río Paraná, recorre lugares con encanto y saborea la gastronomía típica: los pescados y el chipá mbocá.
 
-Empedrado and El Carrizal — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.9004, -58.8013

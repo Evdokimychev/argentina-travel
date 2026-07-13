@@ -60,8 +60,6 @@ sources:
 
 Prepara tus sentidos para experimentar sabores y aromas entre imponentes paisajes de montaña.
 
-Valle de Uco, Мендоса — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -33.2517, -68.8961

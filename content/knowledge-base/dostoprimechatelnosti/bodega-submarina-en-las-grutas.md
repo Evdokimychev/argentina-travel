@@ -45,8 +45,6 @@ sources:
 
 Acércate a una bodega única en el país, que produce sus vinos en tierras de Río Negro y los añeja en el fondo del mar.
 
-An underwater winery in Las Grutas — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.8076, -65.0929

@@ -60,8 +60,6 @@ sources:
 
 Entre paisajes de la cordillera andina, explora un lugar que esconde dibujos de nueve mil años de antigüedad.
 
-Alero Charcamata — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -46.5958, -70.8842

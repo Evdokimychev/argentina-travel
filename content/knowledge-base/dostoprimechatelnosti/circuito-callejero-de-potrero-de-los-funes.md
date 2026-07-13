@@ -60,8 +60,6 @@ sources:
 
 Junto a un espejo de agua, descubre una pista callejera donde los autos corren y la adrenalina se dispara.
 
-Street circuit in Potrero de los Funes — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -33.2217, -66.2328

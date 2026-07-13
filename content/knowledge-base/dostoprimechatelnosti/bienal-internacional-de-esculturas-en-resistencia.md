@@ -60,8 +60,6 @@ sources:
 
 En el Литорал argentino, acércate a una exposición donde los artistas modelan sus obras delante del público.
 
-International Sculpture Biennale in Resistencia — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.4519, -58.9856

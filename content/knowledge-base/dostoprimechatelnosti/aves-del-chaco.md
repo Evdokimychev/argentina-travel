@@ -57,7 +57,6 @@ sources:
 
 Explora una provincia buscada por aficionados de todo el mundo para vivir experiencias de avistaje.
 
-Birds from Chaco — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 - **Провинция:** Чако
 
 ## Источники

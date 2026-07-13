@@ -60,8 +60,6 @@ sources:
 
 Emprende tu camino hacia El Shincal, una parada obligada en el Camino del Inca.
 
-Qhapaq Ñan: El Shincal — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.6387, -67.1512

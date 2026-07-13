@@ -60,8 +60,6 @@ sources:
 
 Navega por un paraíso natural que contiene dos parques nacionales: Predelta e Islas de Santa Fe.
 
-Paraná — дельта — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.2798, -60.7214

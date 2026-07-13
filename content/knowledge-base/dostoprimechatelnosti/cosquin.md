@@ -55,8 +55,6 @@ sources:
 
 Explora las riquezas culturales y naturales de una ciudad que vive entre sierras y tradiciones.
 
-Cosquín — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.2468, -64.4704

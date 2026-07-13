@@ -60,8 +60,6 @@ sources:
 
 En la provincia de Jujuy, camina por el Valle de la Luna y descubre uno de los parajes menos transitados de la Puna.
 
-Cusi Cusi — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -22.3407, -66.4919

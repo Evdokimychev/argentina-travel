@@ -60,8 +60,6 @@ sources:
 
 En el sur de Argentina, explora una tierra que fue habitada por dinosaurios gigantes.
 
-Paleontological tourism in Neuquén — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.7564, -68.8022

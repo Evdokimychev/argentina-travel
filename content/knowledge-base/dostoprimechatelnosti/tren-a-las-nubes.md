@@ -23,7 +23,6 @@ tags:
 - пустыня
 - треккинг
 - премиум
-cost: '[object Object]'
 best_time:
 - апрель-ноябрь (сухой сезон
 - меньше риска отмены из-за непогоды)
@@ -62,8 +61,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/tren-a-las-nubes
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:
@@ -78,8 +75,6 @@ title_en: Train to the Clouds
 ## Описание
 
 Один из самых высокогорных железнодорожных маршрутов мира — кульминация у виадука Ла-Полворилья на высоте 4220 м, куда с 2015 года туристов везут комбинацией автобуса из Сальты и поезда от Сан-Антонио-де-лос-Кобрес.
-
-Поезд в облака — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

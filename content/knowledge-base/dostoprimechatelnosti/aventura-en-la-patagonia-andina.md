@@ -60,8 +60,6 @@ sources:
 
 Junto a la Cordillera de los Andes, descubre la diversidad de propuestas de los parques nacionales patagónicos.
 
-Aventura en la Патагония andina — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -41.0177, -71.3069

@@ -56,5 +56,4 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание Entre islas abrazadas por el río Paraná, te esperan casi tres mil гектаров de delta virgen. национальный парк Islas de Santa Fe — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину». ## Практическая информация - **Координаты:** -32.3948, -60.7268
 - **Провинция:** Санта-Фе ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/parque-nacional-islas-de-santa-fe) (исп.; адаптировано 2026-07-07).

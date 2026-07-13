@@ -21,7 +21,6 @@ tags:
 - пустыня
 - колониальная архитектура
 - бюджетно
-cost: '[object Object]'
 best_time:
 - апрель-ноябрь (сухой сезон)
 - февраль-март (вендимия
@@ -61,8 +60,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/cafayate
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

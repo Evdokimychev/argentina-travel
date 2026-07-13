@@ -47,7 +47,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/el-calafate
-cost: '[object Object]'
 best_time:
 - ноябрь-март (тепло
 - длинный световой день)
@@ -67,8 +66,6 @@ related:
 - argentina-2-nedeli
 - perito-moreno
 - patagonia-yug
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 site_ready: true
@@ -84,8 +81,6 @@ title_en: El Calafate
 ## Описание
 
 Туристическая база на берегу озера Архентино — главные ворота к леднику Перито-Морено и южной зоне национального парка Лос-Гласьярес.
-
-Эль-Калафате — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

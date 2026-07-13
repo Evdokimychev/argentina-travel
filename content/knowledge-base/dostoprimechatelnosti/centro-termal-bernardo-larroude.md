@@ -60,8 +60,6 @@ sources:
 
 En cualquier momento del año, date el placer de viajar hacia el bienestar de tu cuerpo y de tu mente.
 
-Bernardo Larroudé Hot Spring Center — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -35.0260, -63.5827

@@ -60,8 +60,6 @@ sources:
 
 Entre paisajes de ensueño, siente la emoción de la historia y la adrenalina de la escalada deportiva.
 
-Jáchal — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -30.3987, -68.3768

@@ -16,7 +16,6 @@ coordinates:
   lng: -65.899
 tags:
 - патагония
-cost: '[object Object]'
 best_time: '[\"октябрь-апрель (сезон морской фауны и навигации)\"]'
 duration: 1-2 дня (морские экскурсии)
 how_to_get_there: На атлантическом побережье Санта-Крус, съезд с национальной трассы
@@ -62,8 +61,6 @@ sources:
 ## Описание
 
 En la Патагония Argentina, acércate a una ciudad pesquera que te invita a experimentar el turismo ecológico.
-
-Puerto Deseado — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

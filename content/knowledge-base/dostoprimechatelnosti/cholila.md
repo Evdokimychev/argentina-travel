@@ -60,8 +60,6 @@ sources:
 
 Cerca del национальный парк Los Alerces, te espera una aventura en pleno contacto con la naturaleza.
 
-Cholila — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.5135, -71.4203

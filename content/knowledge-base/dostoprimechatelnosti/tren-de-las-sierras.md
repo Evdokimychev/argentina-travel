@@ -45,8 +45,6 @@ sources:
 
 En la ciudad de Córdoba, súbete a bordo del convoy que te lleva a pasear por el Valle de Punilla.
 
-Tren de las Sierras — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.4858, -64.5715

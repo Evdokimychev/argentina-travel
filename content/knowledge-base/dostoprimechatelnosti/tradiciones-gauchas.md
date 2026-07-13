@@ -55,8 +55,6 @@ sources:
 
 En la provincia de Буэнос-Айрес, acércate a la identidad y a las costumbres de las poblaciones rurales.
 
-Gaucho Traditions — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.2017, -59.8411

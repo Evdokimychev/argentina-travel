@@ -60,8 +60,6 @@ sources:
 
 En la región Литорал, descubre una ciudad donde la aventura te espera junto a huellas de la historia.
 
-Juan José Castelli — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.9471, -60.6198

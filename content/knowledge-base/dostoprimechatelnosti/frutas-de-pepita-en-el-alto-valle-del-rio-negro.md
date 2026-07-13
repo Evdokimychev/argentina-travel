@@ -60,8 +60,6 @@ sources:
 
 En la Патагония, visita la provincia argentina que produce y exporta más frutas de pepita.
 
-Seed fruits in the Alto Valle del Río Negro — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.9893, -67.6995

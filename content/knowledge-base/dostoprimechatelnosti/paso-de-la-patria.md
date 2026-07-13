@@ -60,8 +60,6 @@ sources:
 
 Relájate en un lugar que fue clave en la Guerra de la Triple Alianza, hace más de ciento cincuenta años.
 
-Paso de la Patria — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.3148, -58.5636

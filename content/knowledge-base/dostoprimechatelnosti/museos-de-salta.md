@@ -60,8 +60,6 @@ sources:
 
 Déjate sorprender por el Museo Güemes y por el Museo de Arqueología de Alta Montaña.
 
-Salta Museums — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.7848, -65.4225

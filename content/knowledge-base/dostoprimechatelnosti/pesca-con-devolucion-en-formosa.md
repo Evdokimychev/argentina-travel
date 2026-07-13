@@ -60,8 +60,6 @@ sources:
 
 En los ríos Paraguay, Bermejo y Pilcomayo, te espera una abundante fauna de peces y una completa infraestructura.
 
-Catch-and-release fishing in Formosa — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.1695, -60.5735

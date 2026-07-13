@@ -60,8 +60,6 @@ sources:
 
 En la Патагония, entre maravillas naturales, te espera la Capital Nacional de la Fruta Fina.
 
-El Hoyo — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.0660, -71.5237

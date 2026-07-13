@@ -60,8 +60,6 @@ sources:
 
 En el Литорал argentino, pasea por un lugar rico en tesoros históricos, arqueológicos y paleontológicos.
 
-Reconquista — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.1448, -59.6435

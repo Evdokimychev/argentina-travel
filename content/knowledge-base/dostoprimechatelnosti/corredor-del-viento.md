@@ -60,8 +60,6 @@ sources:
 
 Lánzate a una aventura de exploración por la Ruta Provincial 43 en la Патагония Argentina.
 
-Corredor del Viento — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -46.6241, -68.2310

@@ -55,5 +55,4 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание Date el placer de pasear a caballo por paisajes soñados de la Патагония argentina. Cabalgatas en la estepa de Барилоче — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину». ## Практическая информация - **Координаты:** -41.1319, -71.2844
 - **Провинция:** Рио-Негро ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/cabalgatas-en-la-estepa-de-bariloche) (исп.; адаптировано 2026-07-07).

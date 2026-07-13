@@ -59,8 +59,6 @@ sources:
 
 Descubre los encantos urbanos y naturales de una ciudad donde vive la historia.
 
-coastal promenade in Corrientes — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.4651, -58.8472

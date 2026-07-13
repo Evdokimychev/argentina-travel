@@ -60,8 +60,6 @@ sources:
 
 Descubre el sur argentino a través de un circuito de bodegas que te conectarán con aromas y sabores típicos.
 
-Ruta del Vino en la Патагония — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

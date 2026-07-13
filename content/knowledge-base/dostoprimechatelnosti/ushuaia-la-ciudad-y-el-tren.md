@@ -60,8 +60,6 @@ sources:
 
 En la ciudad más austral del planeta, te esperan la prisión de los confines y el tren del fin del mundo.
 
-Ушуайя: la ciudad y el tren — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.8063, -68.2858

@@ -59,8 +59,6 @@ sources:
 
 Disfruta la cultura que late al ritmo del folklore en el centro del país.
 
-Córdoba Feasts and Festivals — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.4355, -64.1853

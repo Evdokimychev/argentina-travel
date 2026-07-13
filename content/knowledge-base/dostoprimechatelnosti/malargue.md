@@ -59,8 +59,6 @@ sources:
 
 Recorre un lugar donde te esperan paisajes por recorrer y leyendas por descubrir.
 
-Malargüe — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -35.4845, -69.5797

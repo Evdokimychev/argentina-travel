@@ -60,8 +60,6 @@ sources:
 
 Al pie de la Cordillera de los Andes, te espera un lugar donde se funden la naturaleza y el legado de la historia.
 
-Aluminé — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -39.2514, -70.9175

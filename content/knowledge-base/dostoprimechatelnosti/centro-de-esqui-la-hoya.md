@@ -60,8 +60,6 @@ sources:
 
 En la Патагония Argentina, te espera un centro de actividades de montaña con cuatro décadas de historia.
 
-La Hoya ski resort — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.8492, -71.4407

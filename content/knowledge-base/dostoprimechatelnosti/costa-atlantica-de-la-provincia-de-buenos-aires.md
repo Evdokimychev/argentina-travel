@@ -60,8 +60,6 @@ sources:
 
 Surfea las olas, explora parques temáticos y disfruta opciones de aventura muy cerca del mar.
 
-Costa Atlántica de la provincia de Буэнос-Айрес — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.4840, -57.1253

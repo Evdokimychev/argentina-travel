@@ -60,8 +60,6 @@ sources:
 
 En el Valle de Punilla, te espera una urbe con un cerro mítico y una calle techada.
 
-Capilla del Monte — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -30.8570, -64.5263

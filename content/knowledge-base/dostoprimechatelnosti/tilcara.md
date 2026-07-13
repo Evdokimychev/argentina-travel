@@ -60,8 +60,6 @@ sources:
 
 Déjate sorprender por una ciudad fundada en 1586: la capital arqueológica y museística de la provincia de Jujuy.
 
-Tilcara — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -23.5580, -65.3863

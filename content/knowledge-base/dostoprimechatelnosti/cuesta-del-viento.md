@@ -59,8 +59,6 @@ sources:
 
 Visita uno de los mejores lugares del mundo para practicar windsurf y kitesurf.
 
-Cuesta del Viento — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -30.1833, -69.0667

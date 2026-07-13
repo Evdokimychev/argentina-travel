@@ -60,8 +60,6 @@ sources:
 
 Recorre una región vitivinícola que te invita a entrar en contacto con los productores y a conocer sus procesos.
 
-Wine Route in Tucumán — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.8083, -65.2176

@@ -45,8 +45,6 @@ sources:
 
 Recorre una zona clave de la vida económica, cultural y recreativa de la capital cordobesa.
 
-Nueva Córdoba — одна из достопримечательностей региона Центр и Пампа (Кордова). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

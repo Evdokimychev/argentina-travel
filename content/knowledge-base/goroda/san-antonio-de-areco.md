@@ -18,7 +18,6 @@ coordinates:
   lng: -59.4744
 tags:
 - центр и пампа
-cost: '[object Object]'
 best_time: '[\"круглый год; День традиции — ноябрь (главный праздник\", \"максимум
   людей)\"]'
 duration: 1 день (или с ночёвкой на усадьбе)
@@ -64,8 +63,6 @@ sources:
 ## Описание
 
 Encuéntrate con la Argentina gaucha a solo 113 kilómetros de la Ciudad de Буэнос-Айрес.
-
-San Antonio de Areco — одна из достопримечательностей региона Центр и Пампа (Buenos Aires). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

@@ -21,7 +21,6 @@ coordinates:
 tags:
 - термальные источники
 - бюджетно
-cost: '[object Object]'
 best_time:
 - май-сентябрь (зима и межсезонье — комфортнее для термальных ванн
 - чем изнуряюще жаркое лето провинции)
@@ -57,8 +56,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/termas-de-rio-hondo
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

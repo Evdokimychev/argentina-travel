@@ -23,7 +23,6 @@ tags:
 - север
 - горы
 - юнеско
-cost: '[object Object]'
 best_time:
 - май-октябрь (сухой сезон
 - наиболее ровная белая корка соли)
@@ -58,8 +57,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/salinas-grandes
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

@@ -60,8 +60,6 @@ sources:
 
 En la provincia de Tucumán, explora una reserva a cielo abierto que te llevará hasta el inicio de la era Cristiana.
 
-Los Menhires Archaeological Museum — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.9387, -65.7070

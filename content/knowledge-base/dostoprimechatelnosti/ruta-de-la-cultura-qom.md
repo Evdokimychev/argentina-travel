@@ -60,8 +60,6 @@ sources:
 
 Descubre las artesanías en cestería y juncos que la comunidad qom produce con recursos naturales.
 
-Qom culture route — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.7740, -60.1116

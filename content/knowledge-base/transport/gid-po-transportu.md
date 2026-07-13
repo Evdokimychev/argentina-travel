@@ -10,7 +10,7 @@ site_ready: true
 site_sections: [puteshestviya-po-argentine, zhizn-v-strane]
 applies_to: both
 tags: [навигация, транспорт, перелёты, авто, точка входа]
-related: [aeroporty, vnutrennie-aviabilety, chto-takoe-sube, arenda-avto-i-vozhdenie, iz-esejsy-v-ba, kak-poluchit-prava-v-argentine, dokumenty-dlya-poezdki-na-avto, shtrafy-i-scoring, certificado-de-legalidad-prav, gosudarstvennye-prilozheniya]
+related: [aeroporty, vnutrennie-aviabilety, chto-takoe-sube, arenda-avto-i-vozhdenie, iz-esejsy-v-ba, kak-poluchit-prava-v-argentine, dokumenty-dlya-poezdki-na-avto, shtrafy-i-scoring, certificado-de-legalidad-prav, gosudarstvennye-prilozheniya, posle-dtp, prava-passazhira-otmena-reisa, vysokogorye-na-avto]
 warnings:
   - "Цены на перелёты и тарифы подвижны — конкретику смотрите в связанных записях; прямых рейсов РФ→Аргентина нет (см. [[pochemu-net-pryamyh-reisov]])."
 recommendations:

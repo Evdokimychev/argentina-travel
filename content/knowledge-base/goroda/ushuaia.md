@@ -49,7 +49,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/ushuaia
-cost: '[object Object]'
 best_time:
 - ноябрь-март
 duration: 3-4 дня
@@ -65,8 +64,6 @@ related:
 - nauka-i-tehnologii
 - mozhno-li-doehat-do-ushuaji-na-mashine
 - samyj-yuzhnyj-gorod-mira
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 site_ready: true

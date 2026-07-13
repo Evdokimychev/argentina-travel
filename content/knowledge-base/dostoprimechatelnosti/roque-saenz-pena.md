@@ -60,8 +60,6 @@ sources:
 
 En el corazón de la provincia de Chaco, encuentra un entorno perfecto para el descanso y el relax.
 
-Roque Sáenz Peña — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.8004, -60.4312

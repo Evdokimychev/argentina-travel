@@ -60,8 +60,6 @@ sources:
 
 Visita el autódromo donde se corren prestigiosos campeonatos de automovilismo y el Gran Premio internacional Moto GP.
 
-Río Hondo International Racetrack — одна из достопримечательностей региона Северо-Запад (Саньяго-дель-Эстеро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.5115, -64.9203

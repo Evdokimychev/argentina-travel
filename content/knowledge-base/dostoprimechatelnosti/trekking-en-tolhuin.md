@@ -60,8 +60,6 @@ sources:
 
 Emprende caminatas de distinta intensidad y extensión por paisajes extremos de Огненная Земля.
 
-Trekking in Tolhuin — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.5045, -67.1905

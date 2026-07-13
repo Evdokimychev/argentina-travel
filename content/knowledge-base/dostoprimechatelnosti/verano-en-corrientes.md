@@ -60,8 +60,6 @@ sources:
 
 Visita una tierra donde la diversión se comparte en las costas y en las celebraciones populares.
 
-Summer in Corrientes — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.4692, -58.8306

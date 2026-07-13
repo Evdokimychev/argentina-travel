@@ -60,8 +60,6 @@ sources:
 
 En el circuito Valles Calchaquíes, siéntete parte de un paisaje único y de una historia autóctona que te va a enamorar.
 
-Amaicha del Valle and Sagrada de los Quilmes City — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.5574, -65.9397

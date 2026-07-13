@@ -60,8 +60,6 @@ sources:
 
 En la región Литорал, visita un pueblo nacido sobre unas ruinas hace más de ciento cincuenta años.
 
-Yapeyú — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.4698, -56.8164

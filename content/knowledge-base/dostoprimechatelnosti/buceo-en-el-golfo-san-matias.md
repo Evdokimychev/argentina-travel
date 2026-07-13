@@ -59,8 +59,6 @@ sources:
 
 Sumérgete en el placer de contemplar la diversidad de la vida bajo el agua.
 
-Scuba diving at the San Matías Gulf — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.8105, -65.0861

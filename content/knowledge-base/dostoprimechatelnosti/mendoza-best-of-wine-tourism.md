@@ -45,8 +45,6 @@ sources:
 
 Unas de las grandes capitales del vino entregó los premios que reconocen la excelencia en el enoturismo.
 
-Мендоса, Best of wine tourism — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.8895, -68.8458

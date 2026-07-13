@@ -60,8 +60,6 @@ sources:
 
 A un paso de la capital provincial de Formosa, contempla la naturaleza y siente la adrenalina.
 
-Herradura — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.4899, -58.3108

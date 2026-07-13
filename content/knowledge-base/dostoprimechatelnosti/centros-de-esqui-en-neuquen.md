@@ -60,8 +60,6 @@ sources:
 
 Descubre paraísos de la temporada invernal: Chapelco, Cerro Bayo, Caviahue, Batea Mahuida y Primeros Pinos.
 
-Ski resorts in Neuquén — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.0840, -71.1973

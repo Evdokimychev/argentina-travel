@@ -60,8 +60,6 @@ sources:
 
 Encuéntrate con un paraíso al pie de la cordillera andina, en un bosque de Chubut.
 
-Epuyén — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.2338, -71.3439

@@ -60,8 +60,6 @@ sources:
 
 Participa en un espectáculo único, donde la alegría te espera entre carrozas, bailarines y bandas de música.
 
-Carnival in Corrientes — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.4680, -58.8353

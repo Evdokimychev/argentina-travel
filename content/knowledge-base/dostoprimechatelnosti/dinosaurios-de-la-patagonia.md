@@ -60,8 +60,6 @@ sources:
 
 Emprende un viaje de millones de años y encuentra las huellas de los dinosaurios más grandes que habitaron la Tierra.
 
-Dinosaurios de la Патагония — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -37.4631, -68.9462

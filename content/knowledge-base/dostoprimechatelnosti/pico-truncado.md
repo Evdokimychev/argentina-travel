@@ -50,8 +50,6 @@ sources:
 
 Explora una ruta de tesoros arqueológicos, paleontológicos y geológicos en la Патагония Argentina.
 
-Pico Truncado — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -46.7910, -67.9321

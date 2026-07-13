@@ -60,8 +60,6 @@ sources:
 
 Ponte al volante de una aventura por carreteras y caminos de la provincia más austral del continente.
 
-Rutas de Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.3426, -67.2347

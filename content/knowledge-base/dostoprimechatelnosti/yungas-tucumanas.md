@@ -60,8 +60,6 @@ sources:
 
 A un paso de la capital de Tucumán, recorre el Circuito de las Yungas y descubre Raco, San Javier y Villa Nogués.
 
-Tucuman Yungas — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.7960, -65.3635

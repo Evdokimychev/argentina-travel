@@ -60,8 +60,6 @@ sources:
 
 Acércate a la región Литорал y embárcate en aventuras por los ríos Paraná y Uruguay.
 
-Sport fishing in Entre Ríos — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.9631, -59.2146

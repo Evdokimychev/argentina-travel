@@ -60,8 +60,6 @@ sources:
 
 En la región Norte de Argentina, vive la aventura de explorar la Puna, las Yungas y la Quebrada de Humahuaca.
 
-Mountain Climbing in Jujuy — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.1858, -65.2995

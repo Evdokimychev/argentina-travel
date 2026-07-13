@@ -59,8 +59,6 @@ sources:
 
 En la región de Куйо, emprende una aventura al pie de la cordillera andina.
 
-Valle Fértil Natural Park — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -30.7732, -67.4755

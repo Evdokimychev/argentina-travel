@@ -45,8 +45,6 @@ sources:
 
 En el Литорал argentino, recorre el viaducto monumental que une las provincias de Santa Fe y Entre Ríos.
 
-Rosario-Victoria Bridge — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.8706, -60.6892

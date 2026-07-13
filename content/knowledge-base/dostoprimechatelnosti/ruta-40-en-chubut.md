@@ -60,8 +60,6 @@ sources:
 
 Explora bosques, saborea delicias regionales y practica deportes recreativos en la Патагония Argentina.
 
-Ruta 40 in Chubut — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.3293, -71.1478

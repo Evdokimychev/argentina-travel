@@ -57,7 +57,6 @@ sources:
 
 Descubre los secretos de una cocina que integra tradiciones autóctonas y europeas.
 
-Flavors from Chaco — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 - **Провинция:** Чако
 
 ## Источники

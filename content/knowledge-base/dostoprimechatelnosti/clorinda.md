@@ -45,8 +45,6 @@ sources:
 
 A un paso de la capital de Formosa, vive tu aventura en una ciudad rodeada de naturaleza.
 
-Clorinda — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.2901, -57.7217

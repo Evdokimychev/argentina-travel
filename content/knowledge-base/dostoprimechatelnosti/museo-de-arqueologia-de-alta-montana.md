@@ -60,8 +60,6 @@ sources:
 
 Visita un museo donde la tecnología permite preservar un tesoro arqueológico de más de quinientos años.
 
-High Mountain Archeological Museum [Museo de Arqueología de Alta Montaña] — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.7890, -65.4110

@@ -45,8 +45,6 @@ sources:
 
 Recorre una tierra que te invita a subir la adrenalina entre paisajes llenos de vida.
 
-Extreme Sports in La Rioja — одна из достопримечательностей региона Северо-Запад (Ла-Риоха). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.4135, -66.8565

@@ -60,8 +60,6 @@ sources:
 
 En la ciudad de Esquel, toma las riendas de una aventura por valles y cerros de la Патагония argentina.
 
-Horseback riding in Valle Chico — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -43.1791, -70.9550

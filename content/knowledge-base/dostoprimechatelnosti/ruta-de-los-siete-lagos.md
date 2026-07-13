@@ -60,8 +60,6 @@ sources:
 
 Entre San Martín de los Andes y Villa La Angostura, te espera un mundo de tesoros naturales de la Патагония argentina.
 
-Route of Seven Lakes — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.1758, -71.3615

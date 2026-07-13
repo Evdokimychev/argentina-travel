@@ -18,7 +18,6 @@ coordinates:
   lng: -58.5172
 tags:
 - северо-восток
-cost: '[object Object]'
 best_time: '[\"карнавал — январь-февраль (по выходным); тёплый сезон для реки и пляжей
   — декабрь-март\"]'
 duration: 1-2 дня (вечер карнавала + река)
@@ -69,8 +68,6 @@ sources:
 ## Описание
 
 En el Литорал argentino, visita una ciudad donde se disfruta la naturaleza y se celebra el carnaval.
-
-Gualeguaychú — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

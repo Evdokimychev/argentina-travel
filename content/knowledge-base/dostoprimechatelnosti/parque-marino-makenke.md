@@ -60,8 +60,6 @@ sources:
 
 En la ecorregión Mar Argentino, descubre un lugar donde la vida se preserva y la naturaleza se disfruta.
 
-Makenke Sea Park — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -49.3098, -67.7174

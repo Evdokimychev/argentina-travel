@@ -60,8 +60,6 @@ sources:
 
 En Chaco, descubre un lugar para mirar hacia el espacio y otro para sumergirte en aguas curativas.
 
-Field of the Sky [Campo del Cielo] and Sáenz Peña — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.6095, -61.6817

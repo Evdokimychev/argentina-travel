@@ -31,7 +31,6 @@ tags:
 - побережье
 - юнеско
 - семейный отдых
-cost: '[object Object]'
 best_time:
 - июнь-декабрь — сезон южных китов
 - пик сентябрь-октябрь
@@ -71,8 +70,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/peninsula-valdes
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

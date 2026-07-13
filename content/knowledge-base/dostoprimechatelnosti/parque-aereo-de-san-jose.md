@@ -60,8 +60,6 @@ sources:
 
 Vive la experiencia de divertirte en la altura, a un paso de los centros turísticos de San José y de Colón.
 
-San José Aerial Park — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.1990, -58.1822

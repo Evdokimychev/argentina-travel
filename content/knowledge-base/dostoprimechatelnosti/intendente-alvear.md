@@ -60,8 +60,6 @@ sources:
 
 Visita una ciudad pampeana que es cuna de importantes fiestas provinciales y nacionales.
 
-Intendente Alvear — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -35.2339, -63.5928

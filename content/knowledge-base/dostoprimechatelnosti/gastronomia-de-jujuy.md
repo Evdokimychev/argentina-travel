@@ -60,8 +60,6 @@ sources:
 
 Disfruta la fusión de la cocina criolla con recetas de culturas andinas que se transmiten entre generaciones.
 
-Gastronomy in Jujuy — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -23.2169, -65.3673

@@ -60,8 +60,6 @@ sources:
 
 En el Литорал argentino, pasea por una isla donde las riquezas naturales conviven con las huellas de la historia.
 
-Isla del Cerrito — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.2909, -58.6151

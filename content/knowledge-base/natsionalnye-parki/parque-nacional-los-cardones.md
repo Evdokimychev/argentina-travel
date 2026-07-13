@@ -60,8 +60,6 @@ sources:
 
 Descúbrelos entre ambientes naturales de ecorregiones diversas: Puna, Altos Andes, Monte de Sierras y Bolsones.
 
-национальный парк Los Cardones — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.2337, -65.9491

@@ -17,7 +17,6 @@ coordinates:
   lng: -57.9167
 tags:
 - северо-восток
-cost: '[object Object]'
 best_time: '[\"круглый год благодаря термам; людно летом и в школьные каникулы\"]'
 duration: 2-3 дня (термы + озеро)
 how_to_get_there: На севере Энтре-Риос у водохранилища Сальто-Гранде; автобусом или
@@ -67,8 +66,6 @@ sources:
 ## Описание
 
 En el Литорал argentino, te esperan balnearios de agua dulce y uno de los complejos termales más importantes del país.
-
-Federación — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

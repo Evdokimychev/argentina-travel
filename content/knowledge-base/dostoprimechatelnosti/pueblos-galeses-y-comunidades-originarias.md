@@ -60,8 +60,6 @@ sources:
 
 Acércate a tradiciones de inmigrantes galeses y de habitantes originarios de la Патагония argentina.
 
-Welsh towns and native communities — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -43.3187, -65.5438

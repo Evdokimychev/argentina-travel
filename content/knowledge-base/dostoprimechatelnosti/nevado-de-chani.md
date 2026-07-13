@@ -44,8 +44,6 @@ sources:
 
 Vive una aventura de montañismo en el cerro más alto de los Andes jujeños.
 
-Nevado de Chañi — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.0606, -65.7423

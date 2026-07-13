@@ -60,8 +60,6 @@ sources:
 
 Vive la experiencia de visitar estancias y conocer tradiciones en contacto con la naturaleza.
 
-Rural Tourism in Salta — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.8267, -65.3462

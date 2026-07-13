@@ -60,8 +60,6 @@ sources:
 
 En los Valles Calchaquíes, visita un pueblo donde la naturaleza y la historia te invitan a la aventura.
 
-Angastaco — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.6891, -66.1640

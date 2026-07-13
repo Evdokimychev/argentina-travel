@@ -60,8 +60,6 @@ sources:
 
 Disfruta actividades náuticas en un lugar único para la conservación de aves playeras en el hemisferio sur.
 
-Bahía Blanca ria — одна из достопримечательностей региона Центр и Пампа (Провинция Буэнос-Айрес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.7601, -62.3525

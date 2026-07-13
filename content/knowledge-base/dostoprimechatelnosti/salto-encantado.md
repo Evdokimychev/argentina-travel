@@ -65,8 +65,6 @@ sources:
 
 Descubre este espectáculo natural en un провинциальный парк que protege miles de гектаров de selva misionera.
 
-Salto Encantado — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.0614, -54.8267

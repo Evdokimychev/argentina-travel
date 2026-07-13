@@ -60,8 +60,6 @@ sources:
 
 En el extremo sur de la Патагония Argentina, surca las aguas del Canal Beagle y acércate al faro del fin del mundo.
 
-Navegación en Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.8328, -68.2435

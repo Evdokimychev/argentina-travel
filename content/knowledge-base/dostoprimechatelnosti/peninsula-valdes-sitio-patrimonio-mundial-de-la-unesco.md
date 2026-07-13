@@ -60,8 +60,6 @@ sources:
 
 Visita el área protegida donde te espera un emblema de las costas patagónicas: la Ballena Franca Austral.
 
-Península Valdés: World Heritage Site — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.5040, -63.8812

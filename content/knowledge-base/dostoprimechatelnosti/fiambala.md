@@ -60,8 +60,6 @@ sources:
 
 En el norte argentino, vive una experiencia de descubrimiento entre la Ruta del Adobe y el relax de las aguas termales.
 
-Fiambalá — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.6893, -67.6193

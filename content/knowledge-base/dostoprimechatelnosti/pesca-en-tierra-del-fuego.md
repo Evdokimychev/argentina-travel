@@ -60,8 +60,6 @@ sources:
 
 En la provincia más austral del continente, te esperan tres cuencas hidrográficas con una gran diversidad de ambientes.
 
-Pesca en Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -53.7961, -67.6971

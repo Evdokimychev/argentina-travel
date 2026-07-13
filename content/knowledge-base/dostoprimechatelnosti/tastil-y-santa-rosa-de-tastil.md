@@ -60,8 +60,6 @@ sources:
 
 Lánzate a la aventura de explorar pueblos de montaña que te esperan con tesoros arqueológicos.
 
-Tastil and Santa Rosa de Tastil — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.4500, -65.9521

@@ -60,8 +60,6 @@ sources:
 
 En el национальный парк Los Glaciares, embárcate en la emoción de contemplar el hielo desde el agua.
 
-Sailing among glaciers — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -50.2979, -73.2341

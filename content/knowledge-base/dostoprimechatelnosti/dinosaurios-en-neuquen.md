@@ -60,8 +60,6 @@ sources:
 
 En la Патагония argentina, te esperan rastros de los gigantes que habitaron esta tierra hace millones de años.
 
-Dinosaurs in Neuquén — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.5925, -69.6307

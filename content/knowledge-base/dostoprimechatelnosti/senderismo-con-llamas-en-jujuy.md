@@ -60,8 +60,6 @@ sources:
 
 Recorre lugares de ensueño en compañía de camélidos que te conectan con tradiciones ancestrales.
 
-Hiking with llamas in Jujuy — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -23.4246, -65.3196

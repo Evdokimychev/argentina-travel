@@ -56,5 +56,4 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-## Описание La propuesta de deportes invernales más importante de LatiСеверо-Западmérica te espera en la Патагония Argentina. Cerros Catedral y Перито-Морено — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину». ## Практическая информация - **Координаты:** -41.2266, -71.4914
 - **Провинция:** Рио-Негро ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/cerros-catedral-y-perito-moreno) (исп.; адаптировано 2026-07-07).

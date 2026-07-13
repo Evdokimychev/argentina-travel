@@ -60,8 +60,6 @@ sources:
 
 En la Патагония Argentina, te espera el encanto de una ciudad que nació como una estación de ferrocarril.
 
-Jaramillo — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -47.1837, -67.1428

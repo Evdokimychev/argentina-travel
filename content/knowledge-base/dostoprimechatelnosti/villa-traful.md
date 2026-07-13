@@ -17,7 +17,6 @@ coordinates:
   lng: -71.4
 tags:
 - патагония
-cost: '[object Object]'
 best_time: '[\"декабрь-март (лето\", \"треккинг и озеро); осень (март-апрель) — золотые
   леса\"]'
 duration: 1-2 дня (уединённый отдых, прогулки)
@@ -63,8 +62,6 @@ sources:
 ## Описание
 
 Acércate a esta aldea de montaña recostada sobre un lago en la Cordillera de los Andes.
-
-Villa Traful — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

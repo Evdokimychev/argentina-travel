@@ -48811,6 +48811,456 @@
       "localPath": "media/places/tandil/hero.jpg",
       "placeId": "tandil",
       "role": "hero"
+    },
+    {
+      "id": "place-barreal-hero",
+      "title": "Барреаль — обложка",
+      "alt": "Барреаль, Аргентина",
+      "caption": "Барреаль, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "barreal",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Pico_de_la_Cordillaera_de_Ansilta_desde_Barreal,_San_Juan,_Argentina.jpg",
+      "license": "CC BY 3.0",
+      "author": "FROSI, Rubem A. M.",
+      "localPath": "media/places/barreal/hero.jpg",
+      "placeId": "barreal",
+      "role": "hero"
+    },
+    {
+      "id": "place-la-rioja-hero",
+      "title": "Ла-Риоха — обложка",
+      "alt": "Ла-Риоха, Аргентина",
+      "caption": "Ла-Риоха, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "la-rioja",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:05._La_Rioja_(2).JPG",
+      "license": "CC BY 3.0",
+      "author": "Elemaki",
+      "localPath": "media/places/la-rioja/hero.jpg",
+      "placeId": "la-rioja",
+      "role": "hero"
+    },
+    {
+      "id": "place-las-lenas-hero",
+      "title": "Лас-Леньяс — обложка",
+      "alt": "Лас-Леньяс, Аргентина",
+      "caption": "Лас-Леньяс, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "las-lenas",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ruta_a_Las_Le%C3%B1as.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Mel 23",
+      "localPath": "media/places/las-lenas/hero.jpg",
+      "placeId": "las-lenas",
+      "role": "hero"
+    },
+    {
+      "id": "place-merlo-hero",
+      "title": "Мерло — обложка",
+      "alt": "Мерло, Аргентина",
+      "caption": "Мерло, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "merlo",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Iglesia_Hist%C3%B3rica_%22Nuestra_Se%C3%B1ora_del_Rosario%22_-_Merlo_-_San_Luis.JPG",
+      "license": "CC BY-SA 3.0",
+      "author": "Carina L. Staiti",
+      "localPath": "media/places/merlo/hero.jpg",
+      "placeId": "merlo",
+      "role": "hero"
+    },
+    {
+      "id": "place-san-luis-hero",
+      "title": "Сан-Луис — обложка",
+      "alt": "Сан-Луис, Аргентина",
+      "caption": "Сан-Луис, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "san-luis",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Circuito_Serrano_San_Luis_01.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Darío Alpern",
+      "localPath": "media/places/san-luis/hero.jpg",
+      "placeId": "san-luis",
+      "role": "hero"
+    },
+    {
+      "id": "place-villavicencio-hero",
+      "title": "Вильявисенсио — обложка",
+      "alt": "Вильявисенсио, Аргентина",
+      "caption": "Вильявисенсио, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "villavicencio",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Guanacos_de_Villavicencio.JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Ccarosio",
+      "localPath": "media/places/villavicencio/hero.jpg",
+      "placeId": "villavicencio",
+      "role": "hero"
+    },
+    {
+      "id": "place-banado-la-estrella-hero",
+      "title": "Баньядо-ла-Эстрелья — обложка",
+      "alt": "Баньядо-ла-Эстрелья, Аргентина",
+      "caption": "Баньядо-ла-Эстрелья, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "banado-la-estrella",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:El_Ba%C3%B1ado_de_la_Estrella,_Formosa,_Argentina_-_panoramio.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "rodoluca",
+      "localPath": "media/places/banado-la-estrella/hero.jpg",
+      "placeId": "banado-la-estrella",
+      "role": "hero"
+    },
+    {
+      "id": "place-colon-entre-rios-hero",
+      "title": "Колон — обложка",
+      "alt": "Колон, Аргентина",
+      "caption": "Колон, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "colon-entre-rios",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Palacio_Urquiza,_Col%C3%B3n,_Entre_R%C3%ADos.JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Piazzanto",
+      "localPath": "media/places/colon-entre-rios/hero.jpg",
+      "placeId": "colon-entre-rios",
+      "role": "hero"
+    },
+    {
+      "id": "place-mercedes-corrientes-hero",
+      "title": "Мерседес — обложка",
+      "alt": "Мерседес, Аргентина",
+      "caption": "Мерседес, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "mercedes-corrientes",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Mercedes,_Ctes._-_panoramio.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Gustavo Muñoz Clos",
+      "localPath": "media/places/mercedes-corrientes/hero.jpg",
+      "placeId": "mercedes-corrientes",
+      "role": "hero"
+    },
+    {
+      "id": "place-parque-nacional-chaco-hero",
+      "title": "Национальный парк Чако — обложка",
+      "alt": "Национальный парк Чако, Аргентина",
+      "caption": "Национальный парк Чако, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "parque-nacional-chaco",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Negro_river_in_Parque_Nacional_Chaco_seen_from_suspension_bridge.JPG",
+      "license": "CC BY-SA 3.0",
+      "author": "Pertile",
+      "localPath": "media/places/parque-nacional-chaco/hero.jpg",
+      "placeId": "parque-nacional-chaco",
+      "role": "hero"
+    },
+    {
+      "id": "place-saltos-del-mocona-hero",
+      "title": "Сальтос-дель-Мокона — обложка",
+      "alt": "Сальтос-дель-Мокона, Аргентина",
+      "caption": "Сальтос-дель-Мокона, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "saltos-del-mocona",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Saltos_del_Mocon%C3%A1_-El_soberbio-_Misiones_-_Argentina.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Lorenitauvita",
+      "localPath": "media/places/saltos-del-mocona/hero.jpg",
+      "placeId": "saltos-del-mocona",
+      "role": "hero"
+    },
+    {
+      "id": "place-san-ignacio-mini-hero",
+      "title": "Сан-Игнасио-Мини — обложка",
+      "alt": "Сан-Игнасио-Мини, Аргентина",
+      "caption": "Сан-Игнасио-Мини, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "san-ignacio-mini",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:San_Ignacio_Min%C3%AD-2.jpg",
+      "license": "CC BY 2.0",
+      "author": "San_Ignacio_Miní.jpg : Juan derivative work: Hic et nunc ( talk )",
+      "localPath": "media/places/san-ignacio-mini/hero.jpg",
+      "placeId": "san-ignacio-mini",
+      "role": "hero"
+    },
+    {
+      "id": "place-catamarca-hero",
+      "title": "Катамарка — обложка",
+      "alt": "Катамарка, Аргентина",
+      "caption": "Катамарка, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "catamarca",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Catamarca_-_San_Fernando_del_Valle_de_Catamarca_-_Catedral_de_Catamarca_01.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Loco085",
+      "localPath": "media/places/catamarca/hero.jpg",
+      "placeId": "catamarca",
+      "role": "hero"
+    },
+    {
+      "id": "place-kachi-hero",
+      "title": "Качи — обложка",
+      "alt": "Качи, Аргентина",
+      "caption": "Качи, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "kachi",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cachi,_calle_de_la_iglesia_y_el_museo.JPG",
+      "license": "CC BY-SA 3.0",
+      "author": "Pablo Grassi",
+      "localPath": "media/places/kachi/hero.jpg",
+      "placeId": "kachi",
+      "role": "hero"
+    },
+    {
+      "id": "place-los-cardones-hero",
+      "title": "Национальный парк Лос-Кардонес — обложка",
+      "alt": "Национальный парк Лос-Кардонес, Аргентина",
+      "caption": "Национальный парк Лос-Кардонес, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "los-cardones",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Los_cardones_356.JPG",
+      "license": "CC BY-SA 3.0",
+      "author": "Claudio Elias",
+      "localPath": "media/places/los-cardones/hero.jpg",
+      "placeId": "los-cardones",
+      "role": "hero"
+    },
+    {
+      "id": "place-ruinas-de-quilmes-hero",
+      "title": "Руины Кильмес — обложка",
+      "alt": "Руины Кильмес, Аргентина",
+      "caption": "Руины Кильмес, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "ruinas-de-quilmes",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:12._Ruinas_de_Quilmes_(29).JPG",
+      "license": "CC BY 3.0",
+      "author": "Elemaki",
+      "localPath": "media/places/ruinas-de-quilmes/hero.jpg",
+      "placeId": "ruinas-de-quilmes",
+      "role": "hero"
+    },
+    {
+      "id": "place-santiago-del-estero-hero",
+      "title": "Сантьяго-дель-Эстеро — обложка",
+      "alt": "Сантьяго-дель-Эстеро, Аргентина",
+      "caption": "Сантьяго-дель-Эстеро, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "santiago-del-estero",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Complejo_Cultural_de_Santiago_del_Estero.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Dario Alpern",
+      "localPath": "media/places/santiago-del-estero/hero.jpg",
+      "placeId": "santiago-del-estero",
+      "role": "hero"
+    },
+    {
+      "id": "place-tafi-del-valle-hero",
+      "title": "Тафи-дель-Валье — обложка",
+      "alt": "Тафи-дель-Валье, Аргентина",
+      "caption": "Тафи-дель-Валье, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "tafi-del-valle",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Calle_c%C3%A9ntrica_de_Taf%C3%AD_del_Valle.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Dario Alpern",
+      "localPath": "media/places/tafi-del-valle/hero.jpg",
+      "placeId": "tafi-del-valle",
+      "role": "hero"
+    },
+    {
+      "id": "place-lihue-calel-hero",
+      "title": "Национальный парк Лиуэ-Калель — обложка",
+      "alt": "Национальный парк Лиуэ-Калель, Аргентина",
+      "caption": "Национальный парк Лиуэ-Калель, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "lihue-calel",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Parque_Nacional_Lihue_Calel,_La_Pampa,_Argentina_._-_panoramio.jpg",
+      "license": "CC BY 3.0",
+      "author": "Horacio_Fernandez",
+      "localPath": "media/places/lihue-calel/hero.jpg",
+      "placeId": "lihue-calel",
+      "role": "hero"
+    },
+    {
+      "id": "place-bosque-petrificado-hero",
+      "title": "Окаменелый лес — обложка",
+      "alt": "Окаменелый лес, Аргентина",
+      "caption": "Окаменелый лес, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "bosque-petrificado",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Araucaria_petrificada.jpg",
+      "license": "CC BY 3.0",
+      "author": "Eassi",
+      "localPath": "media/places/bosque-petrificado/hero.jpg",
+      "placeId": "bosque-petrificado",
+      "role": "hero"
+    },
+    {
+      "id": "place-lanin-hero",
+      "title": "Ланин — обложка",
+      "alt": "Ланин, Аргентина",
+      "caption": "Ланин, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "lanin",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Volc%C3%A1n_Lan%C3%ADn..JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Analiapalmira",
+      "localPath": "media/places/lanin/hero.jpg",
+      "placeId": "lanin",
+      "role": "hero"
+    },
+    {
+      "id": "place-punta-tombo-hero",
+      "title": "Пунта-Томбо — обложка",
+      "alt": "Пунта-Томбо, Аргентина",
+      "caption": "Пунта-Томбо, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "punta-tombo",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Punta_Tombo_Argentina_pinguino_ni.jpg",
+      "license": "CC BY-SA 3.0",
+      "author": "Nicolás Pérez",
+      "localPath": "media/places/punta-tombo/hero.jpg",
+      "placeId": "punta-tombo",
+      "role": "hero"
+    },
+    {
+      "id": "place-santa-fe-hero",
+      "title": "Санта-Фе — обложка",
+      "alt": "Санта-Фе, Аргентина",
+      "caption": "Санта-Фе, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "santa-fe",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Santa_Fe,_Argentina_2019_(letras).jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "ElGuruCesar",
+      "localPath": "media/places/santa-fe/hero.jpg",
+      "placeId": "santa-fe",
+      "role": "hero"
+    },
+    {
+      "id": "place-formosa-hero",
+      "title": "Формоса — обложка",
+      "alt": "Формоса, Аргентина",
+      "caption": "Формоса, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "formosa",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Plaza_San_Mart%C3%ADn_-_Ciudad_de_Formosa_03.jpg",
+      "license": "CC BY-SA 4.0",
+      "author": "Iro Bosero",
+      "localPath": "media/places/formosa/hero.jpg",
+      "placeId": "formosa",
+      "role": "hero"
+    },
+    {
+      "id": "place-parque-nacional-el-palmar-hero",
+      "title": "Национальный парк Эль-Пальмар — обложка",
+      "alt": "Национальный парк Эль-Пальмар, Аргентина",
+      "caption": "Национальный парк Эль-Пальмар, Wikimedia Commons",
+      "category": "attraction",
+      "tags": [
+        "parque-nacional-el-palmar",
+        "hero"
+      ],
+      "source": "wikimedia",
+      "sourceUrl": "https://commons.wikimedia.org/wiki/File:Argentina_-_Entre_R%C3%ADos_-_Parque_Nacional_El_Palmar_(entrada).JPG",
+      "license": "CC BY-SA 4.0",
+      "author": "Leandro Kibisz",
+      "localPath": "media/places/parque-nacional-el-palmar/hero.jpg",
+      "placeId": "parque-nacional-el-palmar",
+      "role": "hero"
     }
   ]
 }

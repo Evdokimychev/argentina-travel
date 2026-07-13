@@ -60,8 +60,6 @@ sources:
 
 Visita una tierra donde se celebra una feria clásica, en la que aún se practica el trueque.
 
-Simoca Fair — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.2591, -65.3538

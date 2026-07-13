@@ -24,7 +24,6 @@ airport_codes:
 tags:
 - столица
 - колониальная архитектура
-cost: '[object Object]'
 best_time:
 - март-май
 - сентябрь-ноябрь
@@ -60,8 +59,6 @@ media:
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/resistencia
 site_ready: true
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:
@@ -76,8 +73,6 @@ title_en: Resistencia
 ## Описание
 
 Столица провинции Чако на реке Негро близ впадения Параны — «Национальная столица скульптур» Аргентины с сотнями работ под открытым небом, но в целом малотуристический административный центр.
-
-Ресистенсия — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

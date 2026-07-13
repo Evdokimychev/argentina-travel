@@ -60,8 +60,6 @@ sources:
 
 Elige una aventura tranquila o un desafío exigente en paisajes cordilleranos de la Патагония Argentina.
 
-Trekking in forests and lakes — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -41.4532, -71.4667

@@ -55,8 +55,6 @@ sources:
 
 En el Литорал argentino, encuéntrate con un lugar que te acerca a las comunidades indígenas.
 
-Quitilipi — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.8720, -60.2212

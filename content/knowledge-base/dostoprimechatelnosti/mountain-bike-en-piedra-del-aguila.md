@@ -60,8 +60,6 @@ sources:
 
 Vive una aventura de montaña en un lugar con múltiples circuitos para recorrer en bicicleta.
 
-Mountain biking in Piedra del Águila — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.0463, -70.0941

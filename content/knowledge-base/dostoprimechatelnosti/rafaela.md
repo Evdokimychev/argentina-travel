@@ -60,8 +60,6 @@ sources:
 
 Recorre una de las ciudades más importantes de la cuenca lechera en el Литорал argentino.
 
-Rafaela — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.2526, -61.4916

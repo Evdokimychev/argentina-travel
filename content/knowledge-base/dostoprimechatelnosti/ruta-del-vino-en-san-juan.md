@@ -60,8 +60,6 @@ sources:
 
 Recorre los viñedos y las bodegas que producen vinos y espumantes nacidos en los valles sanjuaninos.
 
-Wine route in San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.4697, -68.5260

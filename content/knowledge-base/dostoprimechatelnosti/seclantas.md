@@ -45,8 +45,6 @@ sources:
 
 Acércate a la provincia de Salta y descubre el encanto de un pueblo recostado en la montaña.
 
-Seclantás — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.3173, -66.2353

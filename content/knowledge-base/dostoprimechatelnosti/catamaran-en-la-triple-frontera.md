@@ -60,8 +60,6 @@ sources:
 
 En la región Литорал, navega hacia el lugar donde confluyen aguas de Argentina, Brasil y Paraguay.
 
-Catamaran at the Triple Frontier — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.5946, -54.5922

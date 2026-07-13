@@ -29,7 +29,6 @@ tags:
 - дикая природа
 - птицы
 - сафари
-cost: '[object Object]'
 best_time:
 - март-май
 - сентябрь-ноябрь (более комфортная температура; летом
@@ -70,8 +69,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parque-nacional-rio-pilcomayo
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

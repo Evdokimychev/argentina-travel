@@ -60,8 +60,6 @@ sources:
 
 En el norte argentino, te espera un mundo de médanos blancos a más de dos mil metros de altura.
 
-Sandboarding on the Saujil dunes — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -28.1733, -66.2117

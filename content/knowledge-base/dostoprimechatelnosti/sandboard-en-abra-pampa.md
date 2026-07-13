@@ -60,8 +60,6 @@ sources:
 
 En la Puna jujeña, encuentra un paraíso para la práctica del sandboard: el cerro Huancar.
 
-Sandboarding in Abra Pampa — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -22.7707, -65.7234

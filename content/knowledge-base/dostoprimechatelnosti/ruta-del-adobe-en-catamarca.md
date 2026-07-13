@@ -60,8 +60,6 @@ sources:
 
 Disfruta un circuito turístico que recorre construcciones hechas en un material con historia: el adobe.
 
-Adobe Route in Catamarca — одна из достопримечательностей региона Северо-Запад (Катамарка). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -28.0373, -67.5400

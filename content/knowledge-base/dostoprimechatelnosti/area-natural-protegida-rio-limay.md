@@ -60,8 +60,6 @@ sources:
 
 En la ecorregión Bosques Patagónicos, date el gusto de explorar la naturaleza generosa de esta tierra.
 
-Limay River Protected Natural Area — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.9879, -68.2235

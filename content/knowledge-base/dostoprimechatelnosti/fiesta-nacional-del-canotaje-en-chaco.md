@@ -60,8 +60,6 @@ sources:
 
 En el Литорал argentino, te espera un evento que convoca a deportistas de todas las edades.
 
-National Canoeing Festival in Chaco — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.4278, -58.9844

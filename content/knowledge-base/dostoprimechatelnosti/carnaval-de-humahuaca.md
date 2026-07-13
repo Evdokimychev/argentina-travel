@@ -60,8 +60,6 @@ sources:
 
 Acércate a una de las fiestas más tradicionales y coloridas de la Quebrada de Humahuaca.
 
-Humahuaca Carnival — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -23.2002, -65.3515

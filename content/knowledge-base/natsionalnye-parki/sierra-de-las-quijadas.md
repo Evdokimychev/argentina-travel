@@ -65,8 +65,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/sierra-de-las-quijadas
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:
@@ -81,8 +79,6 @@ title_en: Sierra de las Quijadas National Park
 ## Описание
 
 Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на северо-западе провинции Сан-Луис — палеонтологический памятник с окаменелостями возрастом около 120 млн лет и уникальным птерозавром Pterodaustro.
-
-Национальный парк Сьерра-де-лас-Кихадас — одна из достопримечательностей региона Куйо (Сан-Луис). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

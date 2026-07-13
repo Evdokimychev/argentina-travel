@@ -45,8 +45,6 @@ sources:
 
 En la región de Куйо, vive la experiencia de recorrer olivares entre valles y paisajes de montaña.
 
-Olive Route, San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.6204, -68.2939

@@ -60,8 +60,6 @@ sources:
 
 Embárcate en una aventura de navegación entre paisajes verdes de la provincia de Formosa.
 
-Water rides in Herradura — одна из достопримечательностей региона Северо-Восток (Формоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.4951, -58.2625

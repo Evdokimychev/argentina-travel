@@ -60,8 +60,6 @@ sources:
 
 En la región andino-patagónica, te espera la mayor cuenca lacustre de la Argentina.
 
-Патагония de los lagos — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.3823, -71.4609

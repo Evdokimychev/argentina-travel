@@ -65,8 +65,6 @@ sources:
 
 Descubre platos que surgen de la fusión entre las culturas autóctonas y las tradiciones de inmigrantes.
 
-Food in Misiones — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.4037, -55.1443

@@ -55,8 +55,6 @@ sources:
 
 Pon en marcha tu aventura por rutas y caminos de las provincias de Salta, Jujuy y Catamarca.
 
-Puna Route — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.8205, -67.2919

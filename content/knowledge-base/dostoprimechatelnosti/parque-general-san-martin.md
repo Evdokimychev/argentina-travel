@@ -59,8 +59,6 @@ sources:
 
 Recorre el parque más antiguo y más grande de la provincia de Мендоса.
 
-General San Martin Park — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.8833, -68.8714

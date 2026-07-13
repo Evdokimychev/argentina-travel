@@ -60,8 +60,6 @@ sources:
 
 En la capital argentina del buceo, lánzate a la aventura y sumérgete entre lobitos marinos.
 
-Submarine adventure in Puerto Madryn — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.7651, -65.0315

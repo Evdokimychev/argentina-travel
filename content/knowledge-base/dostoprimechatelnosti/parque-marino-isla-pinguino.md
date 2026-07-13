@@ -60,8 +60,6 @@ sources:
 
 En la ecorregión Mar Argentino, descubre la alta biodiversidad de esta área protegida.
 
-Isla Pingüino Sea Park — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -47.9051, -65.7162

@@ -54,8 +54,6 @@ sources:
 
 En tierras cuyanas, acércate a la celebración del sol más importante de Argentina.
 
-National Sun Festival in San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.5351, -68.5386

@@ -27,7 +27,6 @@ tags:
 - инки
 - север
 - бюджетно
-cost: '[object Object]'
 best_time:
 - апрель-октябрь (сухой сезон
 - комфортнее для поездок по региону)
@@ -68,8 +67,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/san-salvador-de-jujuy
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

@@ -60,8 +60,6 @@ sources:
 
 Disfruta los espacios verdes que te regala la capital provincial de Entre Ríos.
 
-Paraná Parks — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.7181, -60.5196

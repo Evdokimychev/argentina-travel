@@ -59,8 +59,6 @@ sources:
 
 Vive una experiencia auténtica en las profundidades de la selva misionera.
 
-Guaraní Culture in Misiones — одна из достопримечательностей региона Северо-Восток (Мисьонес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.6667, -54.5023

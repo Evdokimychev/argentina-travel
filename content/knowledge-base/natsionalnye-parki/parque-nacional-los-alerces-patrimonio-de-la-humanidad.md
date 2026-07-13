@@ -59,8 +59,6 @@ sources:
 
 Siente el privilegio de observar el alerzal más longevo del mundo.
 
-национальный парк Los Alerces: Patrimonio de la Humanidad — одна из достопримечательностей региона Патагония (Чубут). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.9741, -71.6439

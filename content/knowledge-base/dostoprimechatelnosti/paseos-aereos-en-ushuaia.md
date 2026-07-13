@@ -60,8 +60,6 @@ sources:
 
 En la Патагония Argentina, date el gusto de recorrer desde el aire las tierras del fin del mundo.
 
-Paseos aéreos en Ушуайя — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.8106, -68.3111

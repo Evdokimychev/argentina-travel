@@ -60,8 +60,6 @@ sources:
 
 En la región Norte de Argentina, recorre talleres locales y acércate a la esencia de los valles Calchaquíes.
 
-Artisan Route in Tucumán — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.4354, -65.7806

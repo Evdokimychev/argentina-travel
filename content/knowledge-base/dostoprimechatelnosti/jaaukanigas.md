@@ -60,8 +60,6 @@ sources:
 
 En la provincia de Santa Fe, recorre una de las áreas con mayor biodiversidad de la Argentina.
 
-Jaaukanigás — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -28.0594, -58.8875

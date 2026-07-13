@@ -55,8 +55,6 @@ sources:
 
 Sigue las huellas de Jorge Bergoglio antes de que se convirtiera en el máximo representante de la iglesia católica.
 
-After the steps of Pope Francis — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.4161, -63.6167

@@ -60,8 +60,6 @@ sources:
 
 En el sur del planeta te esperan kilómetros de playas con aguas frías y aguas cálidas, para recorrer y disfrutar.
 
-Playas de la Патагония — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -42.9752, -64.8927

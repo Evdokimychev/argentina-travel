@@ -45,8 +45,6 @@ sources:
 
 En Мендоса, disfruta el turismo aventura a través de un paraje natural originado en la era Paleozoica.
 
-Atuel Canyon — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -34.8463, -68.5112

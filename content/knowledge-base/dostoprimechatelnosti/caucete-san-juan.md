@@ -45,8 +45,6 @@ sources:
 
 En el circuito turístico de Valle Fértil, te espera un testimonio valioso de antiguas civilizaciones.
 
-Caucete, San Juan — одна из достопримечательностей региона Куйо (Сан-Хуан). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.6542, -68.2853

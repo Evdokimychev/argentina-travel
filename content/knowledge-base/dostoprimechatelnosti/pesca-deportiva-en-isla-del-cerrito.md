@@ -60,8 +60,6 @@ sources:
 
 Visita la región Литорал y lánzate a una aventura acuática en los ríos Paraná y Paraguay.
 
-Sport fishing at Isla del Cerrito — одна из достопримечательностей региона Северо-Восток (Чако). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -27.2909, -58.6151

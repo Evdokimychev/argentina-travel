@@ -60,8 +60,6 @@ sources:
 
 Date el gusto de saborear un "liso" y conocer un cervezoducto de 850 metros de largo, único en LatiСеверо-Западmérica.
 
-Brewing tradition in Santa Fe — одна из достопримечательностей региона Северо-Восток (Санта-Фе). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -31.7487, -60.5095

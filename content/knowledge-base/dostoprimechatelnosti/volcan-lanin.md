@@ -60,8 +60,6 @@ sources:
 
 En la Патагония argentina, vive la aventura de llegar a más de tres mil setecientos metros de altura.
 
-Lanín volcano — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -39.8176, -71.4544

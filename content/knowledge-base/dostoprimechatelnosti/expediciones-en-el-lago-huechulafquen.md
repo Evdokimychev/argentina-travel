@@ -60,8 +60,6 @@ sources:
 
 Vive la experiencia de recorrer un lago glaciario del национальный парк Lanín, en la Патагония argentina.
 
-Expeditions in Huechulafquen Lake — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -39.7625, -71.3659

@@ -65,8 +65,6 @@ sources:
 
 Visita la ciudad donde te espera la unión de balnearios de agua dulce más importante del país.
 
-Colón — одна из достопримечательностей региона Северо-Восток (Энтре-Риос). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -32.2268, -58.1450

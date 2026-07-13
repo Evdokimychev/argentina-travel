@@ -60,8 +60,6 @@ sources:
 
 Recorre una ciudad donde la producción de cítricos se funde con las huellas de la historia.
 
-Tafí Viejo — одна из достопримечательностей региона Северо-Запад (Тукуман). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -26.7276, -65.2628

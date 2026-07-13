@@ -60,8 +60,6 @@ sources:
 
 Explora lugares de ensueño: la laguna Esmeralda y los lagos Fagnano, Escondido y Acigami.
 
-Lagos de Огненная Земля — одна из достопримечательностей региона Огненная Земля (Огненная Земля). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -54.5588, -67.9947

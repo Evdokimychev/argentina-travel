@@ -16,7 +16,6 @@ coordinates:
   lng: -68.3301
 tags:
 - куйо
-cost: '[object Object]'
 best_time: '[\"октябрь-апрель (тёплый сезон\", \"рафтинг и каньон)\"]'
 duration: 2-3 дня (город + Каньон-дель-Атуэль + винодельни)
 how_to_get_there: Есть аэропорт и автобусное сообщение; около 3 часов на юг от города
@@ -61,8 +60,6 @@ sources:
 ## Описание
 
 En la región de Куйо, te espera una ciudad con un mundo de opciones para disfrutar al pie de la Cordillera de los Andes.
-
-San Rafael — одна из достопримечательностей региона Куйо (Мендоса). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

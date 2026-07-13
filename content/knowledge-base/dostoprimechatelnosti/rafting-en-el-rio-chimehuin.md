@@ -59,8 +59,6 @@ sources:
 
 Vive una aventura en plena naturaleza, a un paso de San Martín de los Andes.
 
-Rafting in the Chimehuin River — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -38.7003, -68.7501

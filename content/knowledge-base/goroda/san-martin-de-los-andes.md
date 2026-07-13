@@ -30,7 +30,6 @@ tags:
 - премиум
 - семейный отдых
 - рыбалка
-cost: '[object Object]'
 best_time:
 - декабрь-март (треккинг
 - озеро
@@ -69,8 +68,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/san-martin-de-los-andes
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

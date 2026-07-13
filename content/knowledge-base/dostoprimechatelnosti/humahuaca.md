@@ -17,7 +17,6 @@ coordinates:
   lng: -65.3506
 tags:
 - северо-запад
-cost: '[object Object]'
 best_time: '[\"апрель-ноябрь (сухой сезон)\", \"1 февраля — праздник Пачамамы и карнавальные
   традиции\"]'
 duration: 1 день или ночёвка как база для Орнокаля и севера
@@ -64,8 +63,6 @@ sources:
 ## Описание
 
 Explora la capital histórica de la Quebrada de Humahuaca, fundada por los españoles en tiempos de la conquista.
-
-Humahuaca — одна из достопримечательностей региона Северо-Запад (Жужуй). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
 
 ## Практическая информация
 

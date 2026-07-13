@@ -60,8 +60,6 @@ sources:
 
 En la región Литорал, recorre el lugar donde nació un prócer clave de la historia argentina.
 
-San Martin’s home in Yapeyú — одна из достопримечательностей региона Северо-Восток (Корриентес). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -29.4698, -56.8164

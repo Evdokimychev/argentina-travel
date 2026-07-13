@@ -60,8 +60,6 @@ sources:
 
 Vive la experiencia de cabalgar y visitar estancias en la inmensidad de la llanura.
 
-Rural tourism in La Pampa — одна из достопримечательностей региона Центр и Пампа (Ла-Пампа). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -36.8452, -65.1195

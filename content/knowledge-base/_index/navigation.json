@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-12 11:27",
+  "generated_at": "2026-07-13 11:23",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -2409,10 +2409,28 @@
           "title": "Posadas"
         },
         {
+          "id": "posle-dtp",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Что делать после ДТП в Аргентине"
+        },
+        {
+          "id": "prava-passazhira-otmena-reisa",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Права пассажира при отмене или задержке рейса в Аргентине"
+        },
+        {
           "id": "prazdniki-i-traditsii",
           "type": "guide",
           "subtype": "culture",
           "title": "Праздники, традиции и этикет Аргентины"
+        },
+        {
+          "id": "provoz-lekarstv",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Провоз лекарств через границу Аргентины"
         },
         {
           "id": "pueblos-de-la-provincia-de-buenos-aires",
@@ -3535,6 +3553,12 @@
           "type": "attraction",
           "subtype": null,
           "title": "Вулкан Малакара"
+        },
+        {
+          "id": "vysokogorye-na-avto",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Путешествие на автомобиле в высокогорье: Пуна и перевалы"
         },
         {
           "id": "yapeyu",
@@ -7092,10 +7116,28 @@
           "title": "Полезные приложения и сервисы в Аргентине"
         },
         {
+          "id": "posle-dtp",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Что делать после ДТП в Аргентине"
+        },
+        {
+          "id": "prava-passazhira-otmena-reisa",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Права пассажира при отмене или задержке рейса в Аргентине"
+        },
+        {
           "id": "prazdniki-i-traditsii",
           "type": "guide",
           "subtype": "culture",
           "title": "Праздники, традиции и этикет Аргентины"
+        },
+        {
+          "id": "provoz-lekarstv",
+          "type": "guide",
+          "subtype": "health",
+          "title": "Провоз лекарств через границу Аргентины"
         },
         {
           "id": "razvlecheniya-i-nochnaya-zhizn",
@@ -7204,6 +7246,12 @@
           "type": "faq",
           "subtype": null,
           "title": "Во сколько в Аргентине обедают и ужинают?"
+        },
+        {
+          "id": "vysokogorye-na-avto",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Путешествие на автомобиле в высокогорье: Пуна и перевалы"
         },
         {
           "id": "zashchita-nakoplenij-ot-inflyacii",
@@ -7969,6 +8017,12 @@
           "type": "guide",
           "subtype": "immigration",
           "title": "Подготовка к переезду в Аргентину за 6 месяцев: таймлайн"
+        },
+        {
+          "id": "posle-dtp",
+          "type": "guide",
+          "subtype": "transport",
+          "title": "Что делать после ДТП в Аргентине"
         },
         {
           "id": "priznanie-diploma",

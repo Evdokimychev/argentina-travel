@@ -33,7 +33,6 @@ tags:
 - альпинизм
 - семь вершин
 - куйо
-cost: '[object Object]'
 best_time:
 - ноябрь-март (сезон работы парка и восхождений)
 - декабрь-середина февраля (высокий сезон восхождений
@@ -73,8 +72,6 @@ media:
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/parque-provincial-aconcagua
-warnings: ''
-recommendations: ''
 last_verified: '2026-07-07'
 confidence: high
 sources:

@@ -60,8 +60,6 @@ sources:
 
 Disfruta la pesca y el deporte aventura en la principal reserva hídrica del noroeste argentino.
 
-Fishing at the Cabra Corral Dam — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -25.2718, -65.3348

@@ -50,8 +50,6 @@ sources:
 
 En la ciudad de Эль-Калафате, lánzate por la pista natural de hielo más grande de Sudamérica.
 
-Ice-skating in Bahía Redonda — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -50.3395, -72.2895

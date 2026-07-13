@@ -60,8 +60,6 @@ sources:
 
 Vive la experiencia única de caminar sobre uno de los glaciares más grandes del planeta.
 
-Minitrekking sobre el Glaciar Перито-Морено — одна из достопримечательностей региона Патагония (Санта-Крус). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -50.4833, -73.0537

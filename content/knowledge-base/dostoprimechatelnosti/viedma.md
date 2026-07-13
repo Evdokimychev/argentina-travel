@@ -60,8 +60,6 @@ sources:
 
 Date el gusto de conocer la capital histórica de la Патагония, que te espera al norte de esta región.
 
-Viedma — одна из достопримечательностей региона Патагония (Рио-Негро). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -40.8119, -62.9962

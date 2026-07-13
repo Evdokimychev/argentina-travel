@@ -60,8 +60,6 @@ sources:
 
 Déjate seducir por la vida nocturna salteña y disfruta de las comidas regionales, la música y las danzas típicas.
 
-Folk peñas in Salta — одна из достопримечательностей региона Северо-Запад (Сальта). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -24.7456, -65.4202

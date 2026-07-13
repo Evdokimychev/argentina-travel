@@ -60,8 +60,6 @@ sources:
 
 Visita una tierra que te conecta con tradiciones y con maravillas naturales de la Патагония argentina.
 
-Junín de los Andes — одна из достопримечательностей региона Патагония (Неукен). Материал подготовлен на основе официального портала INPROTUR (Argentina.travel) и адаптирован для путеводителя «Пора в Аргентину».
-
 ## Практическая информация
 
 - **Координаты:** -39.9882, -71.0758
