@@ -10,7 +10,7 @@ function AuthQueryHandlerInner() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const { openAuth, isAuthenticated, logout } = useAuth();
-  const feedback = useSiteFeedback();
+  const { showError } = useSiteFeedback();
 
   useEffect(() => {
     const auth = searchParams.get("auth");
@@ -23,7 +23,7 @@ function AuthQueryHandlerInner() {
 
     if (errorCode === "account-blocked") {
       logout();
-      feedback.showError({
+      showError({
         title: "Аккаунт заблокирован",
         description: "Доступ к личному кабинету ограничен администратором.",
         steps: [
@@ -40,7 +40,7 @@ function AuthQueryHandlerInner() {
     }
 
     if (errorCode === "expired-link") {
-      feedback.showError({
+      showError({
         title: "Ссылка больше не действует",
         description: "Запросите новое письмо для входа или восстановления пароля.",
         steps: ["Откройте форму входа", "Нажмите «Забыли пароль?»"],
@@ -59,7 +59,7 @@ function AuthQueryHandlerInner() {
     cleaned.delete("error");
     const query = cleaned.toString();
     router.replace(query ? `/?${query}` : "/", { scroll: false });
-  }, [feedback, isAuthenticated, logout, openAuth, router, searchParams]);
+  }, [isAuthenticated, logout, openAuth, router, searchParams, showError]);
 
   return null;
 }
