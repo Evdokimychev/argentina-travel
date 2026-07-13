@@ -175,7 +175,7 @@ export default function ExcursionDetailView({
               ) : null}
 
               <div className="mt-6 lg:hidden">
-                <ExcursionBookingPanel />
+                <ExcursionBookingPanel placement="mobile" />
               </div>
 
               {excursion.comfortLevelInfo ? (

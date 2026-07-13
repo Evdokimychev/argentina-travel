@@ -17,7 +17,7 @@ export const tourDetailSecondaryButtonClass =
 export const tourDetailTimelineClass = "bg-sky/20";
 
 export const tourDetailDayBadgeClass =
-  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-sky text-sm font-bold text-white shadow-sm sm:h-12 sm:w-12";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sky text-xs font-bold text-white shadow-sm sm:h-12 sm:w-12 sm:text-sm";
 
 export const tourDetailAccentTextClass = "text-sky-ink";
 

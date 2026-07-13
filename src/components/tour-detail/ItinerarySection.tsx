@@ -59,7 +59,7 @@ function ItineraryDayCard({
         type="button"
         onClick={onToggle}
         aria-expanded={isOpen}
-        className="flex w-full min-w-0 items-start gap-4 text-left"
+        className="flex w-full min-w-0 items-start gap-3 text-left sm:gap-4"
       >
         <span className={cn("relative z-10", tourDetailDayBadgeClass)}>
           {day.dayNumber}
@@ -237,7 +237,7 @@ export default function ItinerarySection({
     >
       {showPdfDownload && tour ? <TourItineraryPdfButton tour={tour} className="mb-5 sm:mb-6" /> : null}
       <div className="relative min-w-0 space-y-0 overflow-hidden">
-        <div className={cn("absolute left-[19px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
+        <div className={cn("absolute left-[15px] top-4 bottom-4 w-0.5 sm:left-[23px]", tourDetailTimelineClass)} />
         {itineraryDays.map((day) => (
           <ItineraryDayCard
             key={day.id}

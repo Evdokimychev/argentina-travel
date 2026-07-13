@@ -28,7 +28,7 @@ export default function TourSectionExpandToggle({
     <div
       role="group"
       aria-label={groupAriaLabel}
-      className="flex max-w-full min-h-[44px] items-center gap-3 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-2.5 shadow-sm transition-colors hover:border-sky/30 sm:min-h-0"
+      className="flex max-w-full min-h-[44px] items-center gap-2 rounded-xl border border-sky/15 bg-gradient-to-br from-sky/[0.04] to-white px-3 py-1.5 shadow-sm transition-colors hover:border-sky/30 sm:min-h-0 sm:gap-3 sm:py-2.5"
     >
       <button
         type="button"
@@ -45,7 +45,7 @@ export default function TourSectionExpandToggle({
           </span>
         </div>
 
-        <div className="mt-2 flex gap-0.5" aria-hidden title={segmentsTitle}>
+        <div className="mt-2 hidden gap-0.5 sm:flex" aria-hidden title={segmentsTitle}>
           {openSegments.map((isOpen, index) => (
             <span
               key={index}
@@ -57,7 +57,7 @@ export default function TourSectionExpandToggle({
           ))}
         </div>
 
-        <p className="mt-1.5 text-xs text-slate">{statusLabel}</p>
+        <p className="mt-1.5 hidden text-xs text-slate sm:block">{statusLabel}</p>
       </button>
 
       <Switch checked={allExpanded} onCheckedChange={() => onToggle()} aria-hidden />

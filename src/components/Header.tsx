@@ -254,7 +254,7 @@ export default function Header() {
               onClick={() => openSiteMap()}
               onMouseEnter={prefetchQuickExploreMap}
               onFocus={prefetchQuickExploreMap}
-              className="bg-sky-ink text-white ring-sky-ink/30 hover:bg-sky-ink/90 hover:text-white hover:ring-sky-ink/40 dark:bg-sky dark:text-charcoal dark:ring-sky/40 dark:hover:bg-sky/90"
+              className="max-sm:hidden bg-sky-ink text-white ring-sky-ink/30 hover:bg-sky-ink/90 hover:text-white hover:ring-sky-ink/40 dark:bg-sky dark:text-charcoal dark:ring-sky/40 dark:hover:bg-sky/90"
             >
               <MapPinned className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </CircleButton>

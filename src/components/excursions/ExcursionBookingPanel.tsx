@@ -12,14 +12,19 @@ import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackExcursionBookingClick } from "@/lib/analytics/gtm-events";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type ExcursionBookingPanelProps = {
   className?: string;
+  placement?: "mobile" | "desktop";
 };
 
-export default function ExcursionBookingPanel({ className }: ExcursionBookingPanelProps) {
+export default function ExcursionBookingPanel({
+  className,
+  placement = "desktop",
+}: ExcursionBookingPanelProps) {
   const { t, locale } = useLocaleCurrency();
+  const panelRef = useRef<HTMLDivElement>(null);
   const [formError, setFormErrorState] = useState<SiteFeedbackMessage | null>(null);
 
   const setFormError = (value: string | SiteFeedbackMessage | null) => {
@@ -76,13 +81,21 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
     if (!openBookingPreview()) {
       if (!selectedDate || !selectedTime) {
         setFormError(t("excursions.booking.pickDateTime"));
+        window.requestAnimationFrame(() => {
+          if (!selectedDate) {
+            panelRef.current?.querySelector<HTMLButtonElement>("[data-excursion-booking-date]")?.click();
+            return;
+          }
+          panelRef.current?.querySelector<HTMLElement>("[data-excursion-booking-time]")?.focus();
+        });
       }
     }
   }
 
   return (
     <div
-      id="booking"
+      ref={panelRef}
+      id={placement === "mobile" ? "booking" : undefined}
       className={cn(
         "relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-5 shadow-card sm:p-6",
         className
@@ -113,6 +126,7 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
           ) : (
             <>
               <ExcursionScheduleDatePicker
+                triggerId={placement === "mobile" ? "excursion-booking-date" : undefined}
                 dates={scheduleDateKeys}
                 selectedDate={selectedDate}
                 onSelect={(date) => {
@@ -135,6 +149,7 @@ export default function ExcursionBookingPanel({ className }: ExcursionBookingPan
                       <button
                         key={slot.time}
                         type="button"
+                        data-excursion-booking-time
                         onClick={() => setSelectedTime(slot.time)}
                         className={cn(
                           "rounded-xl border px-3 py-2 text-xs font-medium transition",

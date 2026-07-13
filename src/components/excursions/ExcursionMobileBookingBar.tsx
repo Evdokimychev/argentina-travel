@@ -48,6 +48,9 @@ export default function ExcursionMobileBookingBar({
       return;
     }
     scrollToBooking();
+    window.setTimeout(() => {
+      document.getElementById("excursion-booking-date")?.click();
+    }, 350);
   }
 
   return (

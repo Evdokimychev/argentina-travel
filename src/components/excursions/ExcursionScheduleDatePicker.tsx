@@ -19,6 +19,7 @@ type ExcursionScheduleDatePickerProps = {
   label?: string;
   placeholder?: string;
   className?: string;
+  triggerId?: string;
 };
 
 function resolveViewMonth(selectedDate: string, months: Date[]): Date {
@@ -38,6 +39,7 @@ export default function ExcursionScheduleDatePicker({
   label,
   placeholder = "Выберите дату",
   className,
+  triggerId,
 }: ExcursionScheduleDatePickerProps) {
   const [open, setOpen] = useState(false);
   const availableSet = useMemo(() => new Set(dates), [dates]);
@@ -85,6 +87,8 @@ export default function ExcursionScheduleDatePicker({
       <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
           <button
+            id={triggerId}
+            data-excursion-booking-date
             type="button"
             aria-haspopup="dialog"
             aria-expanded={open}
