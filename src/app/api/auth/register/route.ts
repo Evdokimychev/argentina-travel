@@ -34,6 +34,7 @@ async function postRegister(request: Request) {
       phone: body.phone ?? "",
       email: body.email ?? "",
       password: body.password,
+      emailRedirectTo: `${new URL(request.url).origin}/auth/callback?next=/profile`,
     });
 
     if (!result.ok) {
@@ -50,7 +51,11 @@ async function postRegister(request: Request) {
       );
     }
 
-    return NextResponse.json({ ok: true, userId: result.userId });
+    return NextResponse.json({
+      ok: true,
+      userId: result.userId,
+      confirmationRequired: result.confirmationRequired,
+    });
   } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unexpected error" },

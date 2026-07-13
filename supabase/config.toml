@@ -1,7 +1,7 @@
 # Supabase CLI — https://supabase.com/docs/guides/cli
 # Link: supabase link --project-ref ejseeuszipxwvdeuqamc
 
-project_id = "ejseeuszipxwvdeuqamc"
+project_id = "uooxrypocahomoqzdvzy"
 
 [db]
 major_version = 15
@@ -13,7 +13,7 @@ major_version = 15
 [auth.email]
 enable_signup = true
 double_confirm_changes = true
-enable_confirmations = false
+enable_confirmations = true
 
 [auth.email.template.confirmation]
 subject = "Подтвердите регистрацию — Пора в Аргентину"
@@ -34,3 +34,7 @@ content_path = "./supabase/templates/magic_link.html"
 [auth.email.template.invite]
 subject = "Приглашение на «Пора в Аргентину»"
 content_path = "./supabase/templates/invite.html"
+
+[auth.email.template.reauthentication]
+subject = "Код подтверждения — Пора в Аргентину"
+content_path = "./supabase/templates/reauthentication.html"

@@ -17,6 +17,10 @@ export type AuthResult<T = SessionUser> =
   | { user: T }
   | { error: string; code?: AuthErrorCode };
 
+export type RegistrationAuthResult =
+  | AuthResult
+  | { confirmationRequired: true; email: string };
+
 export interface AuthProvider {
   getSessionUser(): SessionUser | null | Promise<SessionUser | null>;
   loginWithPhone: (
@@ -40,7 +44,7 @@ export interface AuthProvider {
     phone: string;
     email: string;
     password?: string;
-  }): AuthResult | Promise<AuthResult>;
+  }): RegistrationAuthResult | Promise<RegistrationAuthResult>;
   addOrganizerRole(userId: string): AuthResult | Promise<AuthResult>;
   updateProfile(
     userId: string,

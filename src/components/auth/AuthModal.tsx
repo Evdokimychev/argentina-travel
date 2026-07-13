@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Mail, Phone, X } from "lucide-react";
+import { CheckCircle2, Eye, EyeOff, Mail, Phone, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { touchTargetIconClass } from "@/lib/responsive-ui";
 import { Button } from "@/components/ui/button";
@@ -82,6 +82,7 @@ export default function AuthModal() {
   const [loading, setLoading] = useState(false);
   const [duplicateRegistration, setDuplicateRegistration] = useState(false);
   const [resetSent, setResetSent] = useState(false);
+  const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
   const feedback = useSiteFeedback();
 
   const setError = (value: string | SiteFeedbackMessage | null) => {
@@ -123,6 +124,7 @@ export default function AuthModal() {
     setLoading(false);
     setDuplicateRegistration(false);
     setResetSent(false);
+    setConfirmationEmail(null);
     setStep(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setOrganizerTab(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setMode("email");
@@ -382,6 +384,11 @@ export default function AuthModal() {
       return;
     }
 
+    if ("confirmationRequired" in result) {
+      setConfirmationEmail(result.email);
+      return;
+    }
+
     if (result.duplicatePhone || result.duplicateEmail) {
       setDuplicateRegistration(true);
       if (isOrganizerFlow) {
@@ -521,6 +528,10 @@ export default function AuthModal() {
   }
 
   function renderOrganizerAuth() {
+    if (confirmationEmail) {
+      return renderConfirmationRequired();
+    }
+
     return (
       <div className="space-y-5 px-5 py-5 sm:px-6">
         <div className="flex rounded-xl bg-gray-100 p-1">
@@ -760,6 +771,30 @@ export default function AuthModal() {
     );
   }
 
+  function renderConfirmationRequired() {
+    return (
+      <div className="space-y-5 px-5 py-6 text-center sm:px-6">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+          <CheckCircle2 className="h-6 w-6" aria-hidden />
+        </span>
+        <div>
+          <h3 className="font-heading text-lg font-bold text-charcoal">Подтвердите почту</h3>
+          <p className="mt-2 text-sm leading-relaxed text-slate">
+            Мы отправили письмо на <strong className="text-charcoal">{confirmationEmail}</strong>.
+            Перейдите по ссылке в письме, после этого аккаунт будет готов к работе.
+          </p>
+        </div>
+        <div className="rounded-xl bg-gray-50 px-4 py-3 text-left text-xs leading-relaxed text-slate">
+          Письмо может прийти в течение нескольких минут. Проверьте папку «Спам», если его нет во
+          входящих.
+        </div>
+        <Button type="button" className="w-full" onClick={closeAuth}>
+          Понятно
+        </Button>
+      </div>
+    );
+  }
+
   const modalTitle = isAuthenticated
     ? isOrganizerFlow
       ? hasOrganizerRole
@@ -799,7 +834,9 @@ export default function AuthModal() {
           </button>
         </div>
 
-        {isAuthenticated && user ? (
+        {confirmationEmail ? (
+          renderConfirmationRequired()
+        ) : isAuthenticated && user ? (
           renderAuthenticatedView()
         ) : step === "forgot-password" ? (
           <div className="space-y-5 px-5 py-5 sm:px-6">

@@ -1,5 +1,6 @@
 import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import type { AccountRole } from "@/types/user";
 
@@ -10,12 +11,13 @@ export type RegisterInput = {
   phone: string;
   email: string;
   password?: string;
+  emailRedirectTo?: string;
 };
 
 export type RegisterErrorCode = "DUPLICATE_PHONE" | "DUPLICATE_EMAIL" | "VALIDATION";
 
 export type RegisterResult =
-  | { ok: true; userId: string }
+  | { ok: true; userId: string; confirmationRequired: boolean }
   | { ok: false; error: string; code?: RegisterErrorCode };
 
 function validationError(message: string): RegisterResult {
@@ -77,16 +79,19 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
   const roles: AccountRole[] =
     input.role === "organizer" ? ["tourist", "organizer"] : [input.role];
 
-  const { data: created, error: createError } = await admin.auth.admin.createUser({
+  const signupClient = await createSupabaseServerClient();
+  const { data: created, error: createError } = await signupClient.auth.signUp({
     email: normalizedEmail,
     password,
-    email_confirm: true,
-    user_metadata: {
-      first_name: firstName,
-      last_name: lastName,
-      phone: normalizedPhone,
-      role: input.role,
-      country: "Россия",
+    options: {
+      emailRedirectTo: input.emailRedirectTo,
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        phone: normalizedPhone,
+        role: input.role,
+        country: "Россия",
+      },
     },
   });
 
@@ -98,8 +103,8 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
     return { ok: false, error: createError.message };
   }
 
-  if (!created.user) {
-    return { ok: false, error: "Не удалось создать аккаунт" };
+  if (!created.user || created.user.identities?.length === 0) {
+    return { ok: false, error: "DUPLICATE_EMAIL", code: "DUPLICATE_EMAIL" };
   }
 
   const userId = created.user.id;
@@ -146,7 +151,7 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
     return { ok: false, error: "Профиль не создан" };
   }
 
-  return { ok: true, userId };
+  return { ok: true, userId, confirmationRequired: !created.session };
 }
 
 async function waitForProfile(

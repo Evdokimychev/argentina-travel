@@ -76,6 +76,7 @@ interface AuthContextValue {
     password?: string;
   }) => Promise<
     | { ok: true; user: SessionUser }
+    | { ok: false; confirmationRequired: true; email: string }
     | { ok: false; error: string; duplicatePhone?: boolean; duplicateEmail?: boolean }
   >;
   addOrganizerRole: () => Promise<{ ok: true } | { ok: false; error: string }>;
@@ -330,6 +331,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email: input.email,
         password: input.password,
       });
+
+      if ("confirmationRequired" in result) {
+        return {
+          ok: false as const,
+          confirmationRequired: true as const,
+          email: result.email,
+        };
+      }
 
       if ("error" in result) {
         if (result.error === "DUPLICATE_PHONE" || result.code === "DUPLICATE_PHONE") {

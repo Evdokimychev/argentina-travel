@@ -13,7 +13,15 @@ export async function GET(request: Request) {
     if (!error) {
       return NextResponse.redirect(`${origin}${safeNext}`);
     }
+
+    const errorUrl = new URL("/", origin);
+    errorUrl.searchParams.set("auth", "sign-in");
+    errorUrl.searchParams.set("error", "expired-link");
+    return NextResponse.redirect(errorUrl);
   }
 
-  return NextResponse.redirect(`${origin}/?auth=sign-in`);
+  const errorUrl = new URL("/", origin);
+  errorUrl.searchParams.set("auth", "sign-in");
+  errorUrl.searchParams.set("error", "expired-link");
+  return NextResponse.redirect(errorUrl);
 }

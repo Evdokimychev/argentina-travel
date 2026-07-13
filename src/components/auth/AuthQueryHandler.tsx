@@ -4,7 +4,7 @@ import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
-import { clearAuthNextPath, storeAuthNextPath } from "@/lib/auth-redirect";
+import { storeAuthNextPath } from "@/lib/auth-redirect";
 
 function AuthQueryHandlerInner() {
   const searchParams = useSearchParams();
@@ -39,6 +39,14 @@ function AuthQueryHandlerInner() {
       return;
     }
 
+    if (errorCode === "expired-link") {
+      feedback.showError({
+        title: "Ссылка больше не действует",
+        description: "Запросите новое письмо для входа или восстановления пароля.",
+        steps: ["Откройте форму входа", "Нажмите «Забыли пароль?»"],
+      });
+    }
+
     if (auth !== "sign-in" || isAuthenticated) return;
 
     const role = searchParams.get("role");
@@ -48,6 +56,7 @@ function AuthQueryHandlerInner() {
     cleaned.delete("auth");
     cleaned.delete("role");
     cleaned.delete("next");
+    cleaned.delete("error");
     const query = cleaned.toString();
     router.replace(query ? `/?${query}` : "/", { scroll: false });
   }, [feedback, isAuthenticated, logout, openAuth, router, searchParams]);

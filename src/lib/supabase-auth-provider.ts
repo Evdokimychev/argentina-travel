@@ -1,6 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
-import type { AuthProvider, AuthResult, AuthErrorCode } from "@/lib/auth-provider";
+import type {
+  AuthProvider,
+  AuthResult,
+  AuthErrorCode,
+  RegistrationAuthResult,
+} from "@/lib/auth-provider";
 import { resolvePasswordInput } from "@/lib/auth-store";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { setSentryUserContext } from "@/lib/monitoring/sentry";
@@ -163,7 +168,7 @@ async function registerByApi(input: {
   phone: string;
   email: string;
   password?: string;
-}): Promise<AuthResult> {
+}): Promise<RegistrationAuthResult> {
   const normalizedEmail = input.email.trim().toLowerCase();
   const password = resolvePasswordInput(input.password);
 
@@ -185,10 +190,15 @@ async function registerByApi(input: {
     ok?: boolean;
     error?: string;
     code?: AuthErrorCode;
+    confirmationRequired?: boolean;
   };
 
   if (!response.ok) {
     return { error: body.error ?? "Не удалось зарегистрироваться", code: body.code };
+  }
+
+  if (body.confirmationRequired) {
+    return { confirmationRequired: true, email: normalizedEmail };
   }
 
   return loginWithCredentials(normalizedEmail, password, input.role);

@@ -11,6 +11,7 @@
 | `supabase/templates/email_change.html` | Change email address | Смена email в профиле |
 | `supabase/templates/magic_link.html` | Magic link | Вход без пароля (не используется в UI) |
 | `supabase/templates/invite.html` | Invite user | Приглашение администратором |
+| `supabase/templates/reauthentication.html` | Reauthentication | Код для подтверждения важного действия |
 | `supabase/templates/password_changed_notification.html` | — | Уведомление о смене пароля (Security notifications в Dashboard) |
 
 Стиль совпадает с транзакционными письмами E73: шапка «Пора в Аргентину», цвет `#0f766e`, русский текст.
@@ -32,8 +33,8 @@
    - Subject — как в `supabase/config.toml` (`[auth.email.template.*].subject`)
 
 4. **Authentication → Providers → Email**
-   - Confirm email: **выключено** для текущего UX (регистрация с `email_confirm: true` на сервере)
-   - При включении подтверждения — обновите `registerSupabaseUser` (убрать `email_confirm: true`)
+   - Confirm email: **включено**
+   - После регистрации интерфейс показывает отдельное состояние «Подтвердите почту»
 
 5. **Authentication → Email → Security notifications**
    - Password changed — вставьте `password_changed_notification.html`

@@ -21,9 +21,16 @@ async function postRequestPasswordReset(request: Request) {
 
     const origin = new URL(request.url).origin;
     const supabase = await createSupabaseServerClient();
-    await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
     });
+
+    if (error) {
+      return NextResponse.json(
+        { error: "Не удалось отправить письмо. Попробуйте ещё раз через несколько минут." },
+        { status: error.status === 429 ? 429 : 502 }
+      );
+    }
 
     // Не раскрываем, есть ли аккаунт с такой почтой.
     return NextResponse.json({ ok: true });
