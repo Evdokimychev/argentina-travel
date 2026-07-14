@@ -1,11 +1,15 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { authRedirectUrl } from "@/lib/site-url";
+
+const ALLOWED_NEXT_PATHS = new Set(["/", "/profile", "/organizer", "/auth/reset-password"]);
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
+  const origin = new URL(authRedirectUrl("/", request.url)).origin;
   const code = searchParams.get("code");
   const next = searchParams.get("next") ?? "/";
-  const safeNext = next.startsWith("/") ? next : "/";
+  const safeNext = ALLOWED_NEXT_PATHS.has(next) ? next : "/";
 
   if (code) {
     const supabase = await createSupabaseServerClient();

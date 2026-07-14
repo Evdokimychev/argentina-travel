@@ -12,6 +12,8 @@
     "supabase:migrate": "node scripts/supabase-apply-migration.mjs",
     "supabase:resolve-db": "node scripts/supabase-resolve-db-url.mjs",
     "supabase:verify": "node scripts/supabase-verify.mjs",
+    "auth:readiness": "node scripts/auth-readiness.mjs",
+    "auth:reconcile": "node scripts/auth-reconcile.mjs",
     "rls-audit": "node scripts/rls-audit.mjs",
     "production-readiness": "node scripts/production-readiness.mjs",
     "production-smoke": "node scripts/production-smoke.mjs",

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
+import { authRedirectUrl } from "@/lib/site-url";
 
 async function postRequestPasswordReset(request: Request) {
   if (!isSupabaseAuthEnabled()) {
@@ -19,10 +20,9 @@ async function postRequestPasswordReset(request: Request) {
       return NextResponse.json({ error: "Укажите корректный email" }, { status: 400 });
     }
 
-    const origin = new URL(request.url).origin;
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${origin}/auth/callback?next=/auth/reset-password`,
+      redirectTo: authRedirectUrl("/auth/callback?next=/auth/reset-password", request.url),
     });
 
     if (error) {
@@ -34,9 +34,9 @@ async function postRequestPasswordReset(request: Request) {
 
     // Не раскрываем, есть ли аккаунт с такой почтой.
     return NextResponse.json({ ok: true });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
+      { error: "Сервис восстановления временно недоступен. Попробуйте позже." },
       { status: 500 }
     );
   }

@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
 import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
-import { lookupPhoneAccount, resolveAuthGreeting } from "@/lib/auth-client";
+import { lookupEmailAccount, lookupPhoneAccount, resolveAuthGreeting } from "@/lib/auth-client";
 import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -25,6 +25,7 @@ type AuthMode = "phone" | "email";
 type AuthStep = "sign-in" | "register" | "forgot-password";
 type OrganizerTab = "sign-in" | "register";
 type PhoneAuthStep = "phone" | "password";
+type EmailAuthStep = "email" | "password";
 
 function RoleBadges({ user }: { user: { roles: AuthUserRole[]; role: AuthUserRole } }) {
   return (
@@ -69,6 +70,7 @@ export default function AuthModal() {
   const [role, setRole] = useState<AuthUserRole>("tourist");
   const [mode, setMode] = useState<AuthMode>("email");
   const [phoneAuthStep, setPhoneAuthStep] = useState<PhoneAuthStep>("phone");
+  const [emailAuthStep, setEmailAuthStep] = useState<EmailAuthStep>("email");
   const [step, setStep] = useState<AuthStep>("sign-in");
   const [organizerTab, setOrganizerTab] = useState<OrganizerTab>("sign-in");
   const [phone, setPhone] = useState("");
@@ -77,6 +79,9 @@ export default function AuthModal() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [fullName, setFullName] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [passwordConfirmation, setPasswordConfirmation] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
@@ -129,12 +134,16 @@ export default function AuthModal() {
     setOrganizerTab(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setMode("email");
     setPhoneAuthStep("phone");
+    setEmailAuthStep("email");
     setRole(isOrganizerFlow ? "organizer" : "tourist");
     setPhone("");
     setEmail("");
     setLoginCredential("");
     setPassword("");
     setFullName("");
+    setFirstName("");
+    setLastName("");
+    setPasswordConfirmation("");
     setShowPassword(false);
     setTermsAccepted(false);
   }, [authOpen, isOrganizerFlow, isFavoriteFlow, favoriteAuthStep]);
@@ -242,13 +251,39 @@ export default function AuthModal() {
   }
 
   async function handleEmailContinue(targetRole = role) {
-    if (!termsAccepted) {
-      setError("Примите условия пользовательского соглашения");
+    if (!email.trim() || !email.includes("@")) {
+      setError("Укажите корректный email");
       return;
     }
 
-    if (!email.trim() || !email.includes("@")) {
-      setError("Укажите корректный email");
+    if (emailAuthStep === "email") {
+      setLoading(true);
+      setError(null);
+      const lookup = await lookupEmailAccount(email);
+      setLoading(false);
+      if (lookup.status === "error") {
+        setError(lookup.message);
+        return;
+      }
+      if (lookup.status === "not_found") {
+        setStep("register");
+        setTermsAccepted(false);
+        return;
+      }
+      if (lookup.status === "needs_repair") {
+        setError({
+          title: "Нужно восстановить доступ",
+          description: "Мы нашли профиль, которому требуется создание нового пароля.",
+          action: { label: "Отправить ссылку", onClick: () => void handleForgotPasswordSubmit() },
+        });
+        return;
+      }
+      if (lookup.status === "unconfirmed") {
+        setError("Сначала подтвердите email по ссылке из письма регистрации.");
+        return;
+      }
+      setEmailAuthStep("password");
+      setPassword("");
       return;
     }
 
@@ -285,11 +320,6 @@ export default function AuthModal() {
   }
 
   async function handleOrganizerCredentialLogin() {
-    if (!termsAccepted) {
-      setError("Примите условия соглашения для организаторов");
-      return;
-    }
-
     const credential = loginCredential.trim();
     if (!credential) {
       setError("Введите email или телефон");
@@ -364,6 +394,16 @@ export default function AuthModal() {
       setError("Пароль должен содержать не менее 6 символов");
       return;
     }
+    if (nextPassword !== passwordConfirmation) {
+      setError("Пароли не совпадают");
+      return;
+    }
+
+    const registrationName = [firstName.trim(), lastName.trim()].filter(Boolean).join(" ") || fullName;
+    if (!registrationName.trim()) {
+      setError("Укажите имя и фамилию");
+      return;
+    }
 
     setLoading(true);
     setError(null);
@@ -371,7 +411,7 @@ export default function AuthModal() {
 
     const result = await register({
       role: isOrganizerFlow ? "organizer" : role,
-      fullName,
+      fullName: registrationName,
       phone,
       email,
       password: nextPassword,
@@ -652,7 +692,9 @@ export default function AuthModal() {
               </label>
               <Input
                 id="organizer-register-email"
+                name="email"
                 type="email"
+                autoComplete="email"
                 placeholder="email@example.com"
                 value={email}
                 onChange={(event) => {
@@ -668,11 +710,29 @@ export default function AuthModal() {
               </label>
               <Input
                 id="organizer-register-password"
+                name="new-password"
                 type="password"
+                autoComplete="new-password"
                 placeholder="Придумайте пароль"
                 value={password}
                 onChange={(event) => {
                   setPassword(event.target.value);
+                  setError(null);
+                }}
+              />
+            </div>
+            <div>
+              <label htmlFor="organizer-register-password-confirmation" className="mb-2 block text-xs font-medium text-slate">
+                Повторите пароль
+              </label>
+              <Input
+                id="organizer-register-password-confirmation"
+                name="new-password-confirmation"
+                type="password"
+                autoComplete="new-password"
+                value={passwordConfirmation}
+                onChange={(event) => {
+                  setPasswordConfirmation(event.target.value);
                   setError(null);
                 }}
               />
@@ -710,7 +770,7 @@ export default function AuthModal() {
           />
         ) : null}
 
-        <label className="flex cursor-pointer items-start gap-3">
+        {organizerTab === "register" ? <label className="flex cursor-pointer items-start gap-3">
           <input
             type="checkbox"
             checked={termsAccepted}
@@ -727,7 +787,7 @@ export default function AuthModal() {
               Договора для организатора
             </Link>
           </span>
-        </label>
+        </label> : null}
 
         <Button
           type="button"
@@ -991,15 +1051,25 @@ export default function AuthModal() {
                     ) : null}
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <form
+                    className="space-y-3"
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void handleEmailContinue();
+                    }}
+                  >
                     <div>
                       <label htmlFor="auth-email" className="mb-2 block text-xs font-medium text-slate">
                         Email
                       </label>
                       <Input
                         id="auth-email"
+                        name="username"
                         type="email"
-                        autoComplete="email"
+                        autoComplete="username"
+                        inputMode="email"
+                        readOnly={emailAuthStep === "password"}
+                        autoFocus
                         placeholder="email@example.com"
                         value={email}
                         onChange={(event) => {
@@ -1008,13 +1078,17 @@ export default function AuthModal() {
                         }}
                       />
                     </div>
-                    <div>
+                    {emailAuthStep === "password" ? <div>
+                      <p className="mb-3 rounded-xl border border-sky/20 bg-sky/5 px-3 py-2.5 text-sm text-charcoal">
+                        Вы уже зарегистрированы. Введите пароль.
+                      </p>
                       <label htmlFor="auth-password" className="mb-2 block text-xs font-medium text-slate">
                         Пароль
                       </label>
                       <div className="relative">
                         <Input
                           id="auth-password"
+                          name="password"
                           type={showPassword ? "text" : "password"}
                           autoComplete="current-password"
                           placeholder="Введите пароль"
@@ -1045,8 +1119,9 @@ export default function AuthModal() {
                       >
                         Забыли пароль?
                       </button>
-                    </div>
-                  </div>
+                    </div> : null}
+                    <button type="submit" aria-label="Отправить форму" className="sr-only">Продолжить</button>
+                  </form>
                 )}
 
                 {error ? (
@@ -1059,33 +1134,18 @@ export default function AuthModal() {
                   />
                 ) : null}
 
-                <label className="flex cursor-pointer items-start gap-3">
-                  <input
-                    type="checkbox"
-                    checked={termsAccepted}
-                    onChange={(event) => setTermsAccepted(event.target.checked)}
-                    className="mt-0.5 h-4 w-4 accent-brand"
-                  />
-                  <span className="text-xs leading-relaxed text-slate">
-                    Я принимаю условия{" "}
-                    <Link href="/contacts" className="font-medium text-brand hover:text-brand-dark">
-                      Пользовательского соглашения
-                    </Link>
-                  </span>
-                </label>
-
                 <Button
                   type="button"
                   className="w-full rounded-xl"
                   loading={loading}
-                  loadingLabel={mode === "phone" && phoneAuthStep === "phone" ? "Проверяем…" : "Входим…"}
+                  loadingLabel={(mode === "phone" && phoneAuthStep === "phone") || (mode === "email" && emailAuthStep === "email") ? "Проверяем…" : "Входим…"}
                   onClick={mode === "phone" ? () => handlePhoneContinue() : () => handleEmailContinue()}
                 >
                   {mode === "phone"
                     ? phoneAuthStep === "phone"
                       ? "Продолжить"
                       : "Войти"
-                    : "Войти"}
+                    : emailAuthStep === "email" ? "Продолжить" : "Войти"}
                 </Button>
 
                 {mode === "phone" && phoneAuthStep === "password" ? (
@@ -1102,12 +1162,27 @@ export default function AuthModal() {
                   </button>
                 ) : null}
 
+                {mode === "email" && emailAuthStep === "password" ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setEmailAuthStep("email");
+                      setPassword("");
+                      setError(null);
+                    }}
+                    className="w-full text-sm font-medium text-slate transition-colors hover:text-charcoal"
+                  >
+                    ← Изменить email
+                  </button>
+                ) : null}
+
                 <button
                   type="button"
                   onClick={() => {
                     const nextMode = mode === "phone" ? "email" : "phone";
                     setMode(nextMode);
                     setPhoneAuthStep("phone");
+                    setEmailAuthStep("email");
                     setPassword("");
                     setError(null);
                   }}
@@ -1124,21 +1199,51 @@ export default function AuthModal() {
             ) : (
               <>
                 <p className="text-sm text-slate">
-                  Аккаунт с номером{" "}
-                  <span className="font-medium text-charcoal">{formatInternationalPhone(phone)}</span>{" "}
-                  не найден. Заполните данные для регистрации.
+                  Аккаунт с {mode === "email" ? "этой почтой" : "этим номером"} не найден.
+                  Создайте новый профиль.
                 </p>
 
-                <div>
-                  <label htmlFor="auth-name" className="mb-2 block text-xs font-medium text-slate">
-                    Имя и фамилия
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <div>
+                  <label htmlFor="auth-first-name" className="mb-2 block text-xs font-medium text-slate">
+                    Имя
                   </label>
                   <Input
-                    id="auth-name"
-                    placeholder="Иван Иванов"
-                    value={fullName}
+                    id="auth-first-name"
+                    name="given-name"
+                    autoComplete="given-name"
+                    placeholder="Иван"
+                    value={firstName}
                     onChange={(event) => {
-                      setFullName(event.target.value);
+                      setFirstName(event.target.value);
+                      setError(null);
+                    }}
+                  />
+                  </div>
+                  <div>
+                  <label htmlFor="auth-last-name" className="mb-2 block text-xs font-medium text-slate">
+                    Фамилия
+                  </label>
+                  <Input
+                    id="auth-last-name"
+                    name="family-name"
+                    autoComplete="family-name"
+                    placeholder="Иванов"
+                    value={lastName}
+                    onChange={(event) => {
+                      setLastName(event.target.value);
+                      setError(null);
+                    }}
+                  />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="mb-2 block text-xs font-medium text-slate">Телефон</label>
+                  <PhoneCountryInput
+                    value={phone}
+                    onChange={(international) => {
+                      setPhone(international);
                       setError(null);
                     }}
                   />
@@ -1150,7 +1255,10 @@ export default function AuthModal() {
                   </label>
                   <Input
                     id="auth-register-email"
+                    name="email"
                     type="email"
+                    autoComplete="email"
+                    inputMode="email"
                     placeholder="email@example.com"
                     value={email}
                     onChange={(event) => {
@@ -1167,6 +1275,7 @@ export default function AuthModal() {
                   <div className="relative">
                     <Input
                       id="auth-register-password"
+                      name="new-password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
                       placeholder="Не менее 6 символов"
@@ -1189,6 +1298,23 @@ export default function AuthModal() {
                   <p className="mt-1.5 text-xs text-slate">
                     Пароль нужен для входа по почте и по телефону.
                   </p>
+                </div>
+
+                <div>
+                  <label htmlFor="auth-register-password-confirmation" className="mb-2 block text-xs font-medium text-slate">
+                    Повторите пароль
+                  </label>
+                  <Input
+                    id="auth-register-password-confirmation"
+                    name="new-password-confirmation"
+                    type="password"
+                    autoComplete="new-password"
+                    value={passwordConfirmation}
+                    onChange={(event) => {
+                      setPasswordConfirmation(event.target.value);
+                      setError(null);
+                    }}
+                  />
                 </div>
 
                 {duplicateRegistration ? (

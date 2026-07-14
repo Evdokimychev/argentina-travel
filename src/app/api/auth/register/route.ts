@@ -3,6 +3,7 @@ import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { registerSupabaseUser } from "@/lib/auth-register-server";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import type { AccountRole } from "@/types/user";
+import { authRedirectUrl } from "@/lib/site-url";
 
 async function postRegister(request: Request) {
   if (!isSupabaseAuthEnabled()) {
@@ -34,7 +35,7 @@ async function postRegister(request: Request) {
       phone: body.phone ?? "",
       email: body.email ?? "",
       password: body.password,
-      emailRedirectTo: `${new URL(request.url).origin}/auth/callback?next=/profile`,
+      emailRedirectTo: authRedirectUrl("/auth/callback?next=/profile", request.url),
     });
 
     if (!result.ok) {
@@ -56,9 +57,9 @@ async function postRegister(request: Request) {
       userId: result.userId,
       confirmationRequired: result.confirmationRequired,
     });
-  } catch (error) {
+  } catch {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
+      { error: "Регистрация временно недоступна. Попробуйте позже." },
       { status: 500 }
     );
   }

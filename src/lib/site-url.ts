@@ -36,6 +36,15 @@ export function absoluteUrl(path: string): string {
   return `${getSiteUrl()}${normalized}`;
 }
 
+/** Canonical in production, request origin for local development and isolated tests. */
+export function authRedirectUrl(path: string, requestUrl?: string): string {
+  const normalized = path.startsWith("/") ? path : `/${path}`;
+  if (process.env.VERCEL_ENV === "production" || !requestUrl) {
+    return `${getSiteUrl()}${normalized}`;
+  }
+  return `${new URL(requestUrl).origin}${normalized}`;
+}
+
 /** Site-relative path → absolute URL; external http(s) URLs pass through unchanged. */
 export function resolvePublicUrl(url: string): string {
   if (/^https?:\/\//i.test(url)) return url;

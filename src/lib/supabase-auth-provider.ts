@@ -385,16 +385,6 @@ export const supabaseAuthProvider: AuthProvider = {
       return { error: "Укажите корректный email" };
     }
 
-    const redirectTo = `${window.location.origin}/auth/callback?next=/auth/reset-password`;
-
-    const clientResult = await getClient().auth.resetPasswordForEmail(normalizedEmail, {
-      redirectTo,
-    });
-
-    if (!clientResult.error) {
-      return { ok: true };
-    }
-
     const response = await fetch("/api/auth/request-password-reset", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -404,7 +394,7 @@ export const supabaseAuthProvider: AuthProvider = {
 
     const body = (await response.json()) as { ok?: boolean; error?: string };
     if (!response.ok) {
-      return { error: body.error ?? clientResult.error.message };
+      return { error: body.error ?? "Не удалось отправить письмо" };
     }
 
     return { ok: true };
