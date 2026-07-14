@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Check, ChevronLeft, ChevronRight, Lock, X } from "lucide-react";
@@ -398,6 +398,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const idempotencyKeyRef = useRef(crypto.randomUUID());
   const feedback = useSiteFeedback();
 
   const setError = (value: string | SiteFeedbackMessage | null) => {
@@ -470,6 +471,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
 
   useEffect(() => {
     if (checkoutOpen) {
+      idempotencyKeyRef.current = crypto.randomUUID();
       document.body.style.overflow = "hidden";
       setStepIndex(
         getInitialCheckoutStepIndex(
@@ -612,6 +614,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   }
 
   async function submitCheckout() {
+    if (submitting) return;
     setSubmitting(true);
     setError(null);
 
@@ -641,6 +644,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       checkoutRatesSource: ratesSource,
       payNowUsd,
       attribution: getStoredFirstTouchAttribution() ?? undefined,
+      optionId: selectedDate?.id,
+      idempotencyKey: idempotencyKeyRef.current,
     });
 
     if ("error" in bookingResult) {

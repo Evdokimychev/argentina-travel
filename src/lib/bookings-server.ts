@@ -149,6 +149,53 @@ export async function insertBooking(
   return { booking: normalizeBooking(booking) };
 }
 
+export async function insertCanonicalBookingAtomically(
+  supabase: DbClient,
+  input: { booking: Booking; organizerUserId: string; slotDate?: string }
+): Promise<{ booking: Booking; created: boolean } | { error: string; status?: number }> {
+  const row = bookingToRow(input.booking);
+  const trustedRow = { ...row, organizer_user_id: input.organizerUserId };
+  const { data, error } = await supabase.rpc("create_booking_with_reservation", {
+    p_booking: trustedRow as unknown as Database["public"]["Functions"]["create_booking_with_reservation"]["Args"]["p_booking"],
+    p_slot_date: input.slotDate ?? null,
+    p_guests: input.booking.guests,
+  });
+
+  if (error) {
+    if (error.message.includes("IDEMPOTENCY_KEY_REUSED")) {
+      return { error: "Эта форма уже использовалась для другой заявки. Обновите страницу.", status: 409 };
+    }
+    if (error.message.includes("BOOKING_SLOT_CLOSED")) {
+      return { error: "На выбранную дату бронирование закрыто.", status: 409 };
+    }
+    if (error.message.includes("BOOKING_SLOT_CAPACITY")) {
+      return { error: "На выбранную дату уже недостаточно мест.", status: 409 };
+    }
+    return { error: error.message, status: 500 };
+  }
+
+  const result = data && typeof data === "object" && !Array.isArray(data)
+    ? (data as { booking?: unknown; created?: unknown })
+    : null;
+  if (!result?.booking || typeof result.booking !== "object" || Array.isArray(result.booking)) {
+    return { error: "База данных не подтвердила создание заявки.", status: 500 };
+  }
+  const stored = normalizeBooking(rowToBooking(result.booking as Parameters<typeof rowToBooking>[0]));
+  const created = result.created === true;
+
+  if (created) {
+    void import("@/lib/partner-webhooks").then(({ dispatchPartnerBookingWebhookEvent }) =>
+      dispatchPartnerBookingWebhookEvent({
+        organizerId: input.organizerUserId,
+        event: "booking.created",
+        booking: stored,
+      })
+    );
+  }
+
+  return { booking: stored, created };
+}
+
 export async function updateBookingRecord(
   supabase: DbClient,
   booking: Booking

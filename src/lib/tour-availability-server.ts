@@ -307,6 +307,15 @@ async function ensureSlotExists(
   return inserted ?? null;
 }
 
+export async function ensureAvailabilitySlotForBooking(
+  supabase: DbClient,
+  input: { tourId: string; tourSlug: string; startDate?: string }
+): Promise<boolean> {
+  const date = toIsoDate(input.startDate);
+  if (!date) return false;
+  return Boolean(await ensureSlotExists(supabase, input.tourId, input.tourSlug, date));
+}
+
 export async function reserveTourSlotForBooking(
   supabase: DbClient,
   input: { tourId: string; tourSlug: string; startDate?: string; guests: number }

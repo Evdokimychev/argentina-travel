@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T20:35:30.668Z",
+  "generatedAt": "2026-07-14T21:50:54.839Z",
   "baselineSha": "df839a6871c6697e7ed96aa0c45607629bd2e70f",
   "fixes": [
     {
@@ -14,7 +14,14 @@
     },
     {
       "id": "server-authoritative-booking-command",
-      "status": "next"
+      "status": "implemented_production",
+      "reversibleMigration": "drop function public.create_booking_with_reservation(jsonb, date, integer)",
+      "verification": [
+        "unit",
+        "build",
+        "transaction_rollback",
+        "legacy_payload_rejected"
+      ]
     },
     {
       "id": "production-mode-isolation",

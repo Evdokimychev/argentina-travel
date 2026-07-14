@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { TourDetail } from "@/types";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ interface TourPriceRequestModalProps {
 export default function TourPriceRequestModal({ tour }: TourPriceRequestModalProps) {
   const { user } = useAuth();
   const feedback = useSiteFeedback();
+  const idempotencyKeyRef = useRef(crypto.randomUUID());
   const {
     priceRequestOpen,
     closePriceRequest,
@@ -75,6 +76,8 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
     if (!priceRequestOpen) {
       setSubmitted(false);
       setError(null);
+    } else {
+      idempotencyKeyRef.current = crypto.randomUUID();
     }
   }, [priceRequestOpen]);
 
@@ -125,6 +128,8 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
       },
       priceQuoteRequest: true,
       attribution: getStoredFirstTouchAttribution() ?? undefined,
+      optionId: selectedDate?.id,
+      idempotencyKey: idempotencyKeyRef.current,
     });
 
     if ("error" in result) {

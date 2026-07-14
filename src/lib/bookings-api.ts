@@ -7,6 +7,7 @@ import type {
 import type { TripsterBookingRequestView } from "@/types/tripster-booking";
 import type { YouTravelBookingRequestView } from "@/types/youtravel-booking";
 import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
+import type { CreateBookingCommand } from "@/lib/booking-create-command";
 
 async function parseJson<T>(response: Response): Promise<T> {
   const body = (await response.json()) as T & { error?: string };
@@ -16,12 +17,12 @@ async function parseJson<T>(response: Response): Promise<T> {
   return body;
 }
 
-export async function apiCreateBooking(booking: Booking): Promise<Booking> {
+export async function apiCreateBooking(command: CreateBookingCommand): Promise<Booking> {
   const data = await parseJson<{ booking: Booking }>(
     await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ booking }),
+      body: JSON.stringify({ command }),
     })
   );
   return data.booking;

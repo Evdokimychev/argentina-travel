@@ -1,12 +1,12 @@
 {
-  "generatedAt": "2026-07-14T20:35:30.668Z",
+  "generatedAt": "2026-07-14T21:50:54.839Z",
   "baselineSha": "df839a6871c6697e7ed96aa0c45607629bd2e70f",
   "counts": {
-    "routes": 354,
-    "pages": 129,
-    "apiRoutes": 225,
-    "critical": 66,
-    "withIssues": 38
+    "routes": 358,
+    "pages": 132,
+    "apiRoutes": 226,
+    "critical": 69,
+    "withIssues": 37
   },
   "routes": [
     {
@@ -58,6 +58,26 @@
       "criticality": "normal",
       "issues": [],
       "sourcePath": "src/app/about/page.tsx"
+    },
+    {
+      "route": "/account/update-password",
+      "title": "update-password",
+      "audience": "public_tourist",
+      "primaryIntent": "discovery",
+      "businessPurpose": "discovery",
+      "domain": "discovery",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "framework_default",
+      "cachePolicy": "implicit",
+      "owner": "discovery",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "normal",
+      "issues": [],
+      "sourcePath": "src/app/account/update-password/page.tsx"
     },
     {
       "route": "/admin",
@@ -2718,6 +2738,30 @@
       "sourcePath": "src/app/api/auth/request-password-reset/route.ts"
     },
     {
+      "route": "/api/auth/update-password",
+      "title": "update-password",
+      "audience": "system_or_client",
+      "primaryIntent": "serve_domain_command_or_query",
+      "businessPurpose": "api",
+      "domain": "api",
+      "authentication": "authenticated",
+      "dataSources": [
+        "supabase"
+      ],
+      "dynamicMode": "request",
+      "cachePolicy": "implicit",
+      "owner": "api",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [
+        "supabase"
+      ],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [],
+      "sourcePath": "src/app/api/auth/update-password/route.ts"
+    },
+    {
       "route": "/api/blog/comments",
       "title": "comments",
       "audience": "system_or_client",
@@ -2834,9 +2878,7 @@
       ],
       "analyticsEvents": [],
       "criticality": "critical",
-      "issues": [
-        "client_supplied_booking_payload"
-      ],
+      "issues": [],
       "sourcePath": "src/app/api/bookings/route.ts"
     },
     {
@@ -6046,17 +6088,17 @@
       "sourcePath": "src/app/auth/callback/route.ts"
     },
     {
-      "route": "/auth/reset-password",
-      "title": "reset-password",
+      "route": "/auth/confirm",
+      "title": "confirm",
       "audience": "public_tourist",
-      "primaryIntent": "discovery",
+      "primaryIntent": "serve_domain_command_or_query",
       "businessPurpose": "discovery",
       "domain": "discovery",
       "authentication": "public_or_route_managed",
       "dataSources": [
         "supabase"
       ],
-      "dynamicMode": "framework_default",
+      "dynamicMode": "request",
       "cachePolicy": "implicit",
       "owner": "discovery",
       "status": "core",
@@ -6064,6 +6106,46 @@
       "dependencies": [
         "supabase"
       ],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [],
+      "sourcePath": "src/app/auth/confirm/route.ts"
+    },
+    {
+      "route": "/auth/error",
+      "title": "error",
+      "audience": "public_tourist",
+      "primaryIntent": "discovery",
+      "businessPurpose": "discovery",
+      "domain": "discovery",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "framework_default",
+      "cachePolicy": "implicit",
+      "owner": "discovery",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
+      "analyticsEvents": [],
+      "criticality": "critical",
+      "issues": [],
+      "sourcePath": "src/app/auth/error/page.tsx"
+    },
+    {
+      "route": "/auth/reset-password",
+      "title": "reset-password",
+      "audience": "public_tourist",
+      "primaryIntent": "discovery",
+      "businessPurpose": "discovery",
+      "domain": "discovery",
+      "authentication": "public_or_route_managed",
+      "dataSources": [],
+      "dynamicMode": "framework_default",
+      "cachePolicy": "implicit",
+      "owner": "discovery",
+      "status": "core",
+      "duplicateOf": null,
+      "dependencies": [],
       "analyticsEvents": [],
       "criticality": "critical",
       "issues": [],
@@ -9381,6 +9463,21 @@
       "issues": []
     },
     {
+      "route": "/api/auth/update-password",
+      "method": "inspect_source",
+      "authRequired": true,
+      "role": "authenticated",
+      "inputSchema": "source_audit_required",
+      "outputSchema": "source_audit_required",
+      "rateLimit": "source_audit_required",
+      "idempotency": "source_audit_required",
+      "csrfProtection": "source_audit_required",
+      "auditLog": "source_audit_required",
+      "pii": false,
+      "owner": "api",
+      "issues": []
+    },
+    {
       "route": "/api/blog/comments",
       "method": "inspect_source",
       "authRequired": true,
@@ -9453,9 +9550,7 @@
       "auditLog": "source_audit_required",
       "pii": true,
       "owner": "api",
-      "issues": [
-        "client_supplied_booking_payload"
-      ]
+      "issues": []
     },
     {
       "route": "/api/bookings/[id]",

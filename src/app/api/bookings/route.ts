@@ -1,17 +1,20 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { insertBooking } from "@/lib/bookings-server";
+import { insertCanonicalBookingAtomically } from "@/lib/bookings-server";
 import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
-import {
-  releaseTourSlotReservation,
-  reserveTourSlotForBooking,
-  type SlotReservation,
-} from "@/lib/tour-availability-server";
+import { ensureAvailabilitySlotForBooking } from "@/lib/tour-availability-server";
 import type { Booking } from "@/types/tourist";
 import { normalizeBooking } from "@/lib/bookings-store";
+import {
+  BookingCommandError,
+  buildCanonicalBooking,
+  parseCreateBookingCommand,
+} from "@/lib/booking-create-server";
+import { notifyBookingCreatedEmail } from "@/lib/bookings-notify";
 
 async function postBooking(request: Request) {
   if (!isSupabaseBookingsEnabled()) {
@@ -19,21 +22,17 @@ async function postBooking(request: Request) {
   }
 
   try {
-    const body = (await request.json()) as { booking?: Booking };
-    if (!body.booking?.id || !body.booking.contactEmail) {
-      return NextResponse.json({ error: "Invalid booking payload" }, { status: 400 });
-    }
+    const body = (await request.json()) as { command?: unknown };
+    const command = parseCreateBookingCommand(body.command);
 
     const supabase = await createSupabaseServerClient();
     const {
       data: { user: authUser },
     } = await supabase.auth.getUser();
 
-    let booking = normalizeBooking(body.booking);
-
-    if (authUser) {
-      booking = normalizeBooking({ ...booking, userId: authUser.id });
-    }
+    const admin = createSupabaseAdminClient();
+    const canonical = await buildCanonicalBooking(admin, command, authUser?.id);
+    const booking = canonical.booking;
 
     addBookingBreadcrumb("booking.create.requested", {
       bookingId: booking.id,
@@ -41,40 +40,35 @@ async function postBooking(request: Request) {
       tourSlug: booking.tourSlug,
     });
 
-    let slotReservation: SlotReservation | null = null;
-    const reservationResult = await reserveTourSlotForBooking(supabase, {
+    await ensureAvailabilitySlotForBooking(admin, {
       tourId: booking.tourId,
       tourSlug: booking.tourSlug,
       startDate: booking.startDate,
-      guests: booking.guests,
     });
-
-    if ("error" in reservationResult) {
-      addBookingBreadcrumb("booking.create.failed", {
-        bookingId: booking.id,
-        reason: reservationResult.error,
-      });
-      return NextResponse.json(
-        { error: reservationResult.error },
-        { status: reservationResult.status ?? 409 }
-      );
-    }
-
-    slotReservation = reservationResult.reservation;
-    let result: Awaited<ReturnType<typeof insertBooking>>;
-    try {
-      result = await insertBooking(supabase, booking);
-    } catch (insertError) {
-      await releaseTourSlotReservation(supabase, slotReservation);
-      throw insertError;
-    }
+    const result = await insertCanonicalBookingAtomically(admin, {
+      booking,
+      organizerUserId: canonical.organizerUserId,
+      slotDate: booking.startDate,
+    });
     if ("error" in result) {
-      await releaseTourSlotReservation(supabase, slotReservation);
       addBookingBreadcrumb("booking.create.failed", {
         bookingId: booking.id,
         error: result.error,
       });
-      return NextResponse.json({ error: result.error }, { status: 500 });
+      return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
+    }
+
+    if (result.created) {
+      void notifyBookingCreatedEmail({
+        userId: authUser?.id,
+        bookingId: result.booking.id,
+        tourTitle: result.booking.tourTitle,
+        contactEmail: result.booking.contactEmail,
+        contactName: result.booking.contactName,
+        guests: result.booking.guests,
+        startDate: result.booking.startDate,
+        endDate: result.booking.endDate,
+      });
     }
 
     addBookingBreadcrumb("booking.created", {
@@ -90,7 +84,7 @@ async function postBooking(request: Request) {
     captureException(error, { tags: { area: "booking", action: "create" } });
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
+      { status: error instanceof BookingCommandError ? error.status : 500 }
     );
   }
 }

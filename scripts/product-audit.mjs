@@ -54,7 +54,12 @@ function issues(route, source, sources) {
   if (sources.includes("local_storage") && !route.includes("admin")) result.push("business_data_local_storage");
   if (/force-dynamic/.test(source) && !/admin|profile|organizer|api|booking|payment/.test(route)) result.push("review_force_dynamic");
   if (route.startsWith("/api") && !/require|auth|getUser|webhook|cron|public/i.test(source)) result.push("auth_contract_not_obvious");
-  if (route === "/api/bookings") result.push("client_supplied_booking_payload");
+  if (
+    route === "/api/bookings" &&
+    (/body\.booking/.test(source) || /booking\?\s*:\s*Booking/.test(source))
+  ) {
+    result.push("client_supplied_booking_payload");
+  }
   if (/catch\s*\([^)]*\)\s*\{\s*\}/s.test(source) || /catch\s*\{\s*\}/s.test(source)) result.push("silent_error");
   return result;
 }
@@ -129,7 +134,7 @@ const manifest = {
   baselineSha,
   fixes: [
     { id: "secure-booking-lookup", status: "implemented_local", reversibleMigration: "drop two booking_lookup tables", verification: ["unit", "e2e", "rls"] },
-    { id: "server-authoritative-booking-command", status: "next" },
+    { id: "server-authoritative-booking-command", status: "implemented_production", reversibleMigration: "drop function public.create_booking_with_reservation(jsonb, date, integer)", verification: ["unit", "build", "transaction_rollback", "legacy_payload_rejected"] },
     { id: "production-mode-isolation", status: "pending" },
     { id: "shell-and-navigation-simplification", status: "pending" },
   ],
@@ -151,8 +156,15 @@ fs.writeFileSync(path.join(root, "docs/audit/product-architecture-audit-2026-07-
   "## Подтверждённые корневые риски",
   "",
   "1. Email-only поиск заявок раскрывал полные данные. Заменён на OTP и короткую lookup-сессию.",
-  "2. Создание заявки принимает готовый объект и клиентскую цену. Требует серверной команды и price snapshot.",
+  "2. ~~Создание заявки принимало готовый объект и клиентскую цену.~~ Закрыто: API принимает команду пользователя, цена рассчитывается сервером и сохраняется в price snapshot.",
   "3. В production-коде остаются localStorage/demo fallback. Требуется fail-closed конфигурация.",
+  "",
+  "## Проверка серверного создания заявки",
+  "",
+  "- Клиент не передаёт статус, итоговую цену, данные организатора и платёжные служебные поля.",
+  "- Запись заявки и резерв мест выполняются одной транзакцией с idempotency key.",
+  "- Миграция применена после schema-only backup; тест создания, повтора и конфликта ключа прошёл с rollback.",
+  "- Пока production-таблица tours пуста, сервер читает опубликованный канонический каталог проекта; партнёрские оформления изолированы.",
   "",
   "## Автоматически найденные классы",
   "",

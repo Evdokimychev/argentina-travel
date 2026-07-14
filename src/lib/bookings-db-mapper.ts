@@ -39,6 +39,7 @@ export type BookingRow = {
 
 export type BookingPayload = {
   organizerTourId?: string;
+  priceQuoteRequest?: boolean;
   touristComment?: string;
   organizerComments?: BookingOrganizerComment[];
   statusHistory?: BookingStatusChange[];
@@ -82,6 +83,7 @@ export function bookingToRow(booking: Booking): Omit<BookingRow, "created_at" | 
   const guest = isGuestUserId(booking.userId);
   const payload: BookingPayload = {
     organizerTourId: booking.organizerTourId,
+    priceQuoteRequest: booking.priceQuoteRequest,
     touristComment: booking.touristComment,
     organizerComments: booking.organizerComments,
     statusHistory: booking.statusHistory,
@@ -147,6 +149,7 @@ export function rowToBooking(row: BookingRow): Booking {
     startDate: row.start_date ?? undefined,
     endDate: row.end_date ?? undefined,
     totalPriceUsd: Number(row.total_price_usd),
+    priceQuoteRequest: payload.priceQuoteRequest,
     contactName: row.contact_name,
     contactEmail: row.contact_email,
     contactPhone: row.contact_phone,

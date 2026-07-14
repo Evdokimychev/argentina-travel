@@ -3416,6 +3416,14 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
+      create_booking_with_reservation: {
+        Args: {
+          p_booking: Json;
+          p_slot_date?: string | null;
+          p_guests?: number;
+        };
+        Returns: Json;
+      };
       is_admin_with: {
         Args: { required_capability: string };
         Returns: boolean;

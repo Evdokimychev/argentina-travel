@@ -1,4 +1,5 @@
 import type { BookingAttribution } from "@/types/booking-attribution";
+import type { CreateBookingCommand } from "@/lib/booking-create-command";
 import { SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
@@ -946,16 +947,59 @@ export async function createBookingFromCheckout(input: {
   checkoutRatesSource?: "frankfurter" | "fallback";
   payNowUsd?: number;
   attribution?: BookingAttribution;
+  optionId?: string;
+  idempotencyKey?: string;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
   }
 
-  const built = createBookingFromCheckoutLocal({ ...input, persist: false });
-  if ("error" in built) return built;
+  const contactName = [input.form.contactFirstName, input.form.contactLastName]
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .join(" ");
+  const command: CreateBookingCommand = {
+    tourId: input.tour.id,
+    optionId: input.optionId,
+    startDate: input.startDate ?? "",
+    travelers: { adults: input.guests },
+    customer: {
+      name: contactName,
+      email: input.form.contactEmail,
+      phone: input.form.contactPhone || undefined,
+    },
+    promoCode: input.form.coupon || undefined,
+    idempotencyKey:
+      input.idempotencyKey ??
+      (typeof crypto !== "undefined" && crypto.randomUUID
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2)}`),
+    intent: input.priceQuoteRequest ? "price_quote" : "booking",
+    selections: {
+      roomAllocations: input.form.roomAllocations,
+      addonIds: input.form.addonIds,
+      transferAllocations: input.form.transferAllocations,
+    },
+    details: {
+      comment: input.form.comments,
+      fillTravelersLater: input.form.fillTravelersLater,
+      displayCurrency: input.checkoutCurrency,
+      travelers: input.form.travelers.map((traveler) => ({
+        firstName: traveler.firstName,
+        lastName: traveler.lastName,
+        dateOfBirth: traveler.dateOfBirth
+          ? [
+              traveler.dateOfBirth.getFullYear(),
+              String(traveler.dateOfBirth.getMonth() + 1).padStart(2, "0"),
+              String(traveler.dateOfBirth.getDate()).padStart(2, "0"),
+            ].join("-")
+          : undefined,
+      })),
+    },
+  };
 
   try {
-    const saved = await apiCreateBooking(built);
+    const saved = await apiCreateBooking(command);
     notifyUpdated();
     return saved;
   } catch (error) {

@@ -32,6 +32,9 @@ export interface BookingCheckoutDisplaySnapshot {
 export interface BookingMetadata {
   checkoutCurrency?: CheckoutCurrencyCode;
   checkoutDisplay?: BookingCheckoutDisplaySnapshot;
+  priceSnapshot?: import("@/lib/booking-create-pricing").BookingPriceSnapshot;
+  idempotencyKeyHash?: string;
+  requestFingerprint?: string;
 }
 
 export function isCheckoutCurrencyCode(value: string): value is CheckoutCurrencyCode {

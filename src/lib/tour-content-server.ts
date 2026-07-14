@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import type { TourListing } from "@/types";
+import type { TourDetail } from "@/types";
 import type { Tour } from "@/types/tour";
 import type { TourContentAdminSummary } from "@/types/tour-content";
 import {
@@ -69,6 +70,24 @@ export async function fetchTourDetailBySlug(
 
   if (error || !data) return null;
   return rowToTourDetail(data);
+}
+
+export async function fetchPublishedTourBookingSourceById(
+  supabase: DbClient,
+  tourId: string
+): Promise<{ tour: TourDetail; ownerUserId: string } | null> {
+  const { data, error } = await supabase
+    .from("tours")
+    .select("*")
+    .eq("id", tourId)
+    .eq("status", "published")
+    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .maybeSingle();
+
+  if (error || !data) return null;
+  const tour = rowToTourDetail(data);
+  if (!tour) return null;
+  return { tour, ownerUserId: data.owner_user_id };
 }
 
 export async function upsertTourFromCanonical(
