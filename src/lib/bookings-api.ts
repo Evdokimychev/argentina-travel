@@ -6,7 +6,7 @@ import type {
 } from "@/types/platform-commission";
 import type { TripsterBookingRequestView } from "@/types/tripster-booking";
 import type { YouTravelBookingRequestView } from "@/types/youtravel-booking";
-import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
+import type { Booking, BookingStatus } from "@/types/tourist";
 import type { CreateBookingCommand } from "@/lib/booking-create-command";
 
 async function parseJson<T>(response: Response): Promise<T> {
@@ -57,7 +57,6 @@ export async function apiAttachGuestBookings(): Promise<number> {
 export async function apiUpdateBookingStatus(input: {
   bookingId: string;
   status: BookingStatus;
-  changedBy?: BookingStatusActor;
   note?: string;
 }): Promise<Booking> {
   const data = await parseJson<{ booking: Booking }>(
@@ -67,7 +66,6 @@ export async function apiUpdateBookingStatus(input: {
       body: JSON.stringify({
         action: "update_status",
         status: input.status,
-        changedBy: input.changedBy,
         note: input.note,
       }),
     })
@@ -99,17 +97,6 @@ export async function apiAddOrganizerComment(input: {
         action: "add_comment",
         comment: { text: input.text, authorName: input.authorName },
       }),
-    })
-  );
-  return data.booking;
-}
-
-export async function apiPatchBooking(booking: Booking): Promise<Booking> {
-  const data = await parseJson<{ booking: Booking }>(
-    await fetch(`/api/bookings/${encodeURIComponent(booking.id)}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ booking }),
     })
   );
   return data.booking;

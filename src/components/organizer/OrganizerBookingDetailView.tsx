@@ -169,7 +169,6 @@ export default function OrganizerBookingDetailView({ bookingId }: { bookingId: s
       void apiUpdateBookingStatus({
         bookingId,
         status: nextStatus,
-        changedBy: "organizer",
       })
         .then((updated) => {
           setBooking(updated);

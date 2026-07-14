@@ -10,21 +10,20 @@ import {
 import { addBookingBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { notifyBookingStatusChanged } from "@/lib/bookings-notify";
-import type { Booking, BookingStatus, BookingStatusActor } from "@/types/tourist";
+import type { BookingStatus } from "@/types/tourist";
 import { normalizeBooking, createStatusChange } from "@/lib/bookings-store";
 import { bookingToRow } from "@/lib/bookings-db-mapper";
 import {
   dispatchPartnerBookingWebhookEvent,
   resolvePartnerWebhookEventByStatus,
 } from "@/lib/partner-webhooks";
+import { assertBookingStatusTransition } from "@/lib/booking-state-machine";
 
 type PatchBody = {
   action?: "update_status" | "add_comment" | "cancel";
   status?: BookingStatus;
-  changedBy?: BookingStatusActor;
   note?: string;
   comment?: { text: string; authorName: string };
-  booking?: Booking;
 };
 
 export async function GET(
@@ -83,45 +82,19 @@ export async function PATCH(
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    if (body.booking) {
-      addBookingBreadcrumb("booking.patch.requested", {
-        bookingId: id,
-        action: body.action ?? "replace",
-      });
-      const allowed = assertBookingMutationAllowed(
-        current,
-        sessionUser,
-        body.action === "cancel" ? "cancel" : "manage"
-      );
-      if ("error" in allowed) {
-        return NextResponse.json({ error: allowed.error }, { status: 403 });
-      }
-
-      const result = await updateBookingRecord(supabase, normalizeBooking(body.booking));
-      if ("error" in result) {
-        addBookingBreadcrumb("booking.patch.failed", {
-          bookingId: id,
-          action: body.action ?? "replace",
-          error: result.error,
-        });
-        return NextResponse.json({ error: result.error }, { status: 500 });
-      }
-      addBookingBreadcrumb("booking.patched", {
-        bookingId: id,
-        action: body.action ?? "replace",
-        status: result.booking.status,
-      });
-      return NextResponse.json({ booking: result.booking });
-    }
-
     if (body.action === "cancel") {
       const allowed = assertBookingMutationAllowed(current, sessionUser, "cancel");
       if ("error" in allowed) {
         return NextResponse.json({ error: allowed.error }, { status: 403 });
       }
 
-      if (current.status !== "new" && current.status !== "pending") {
-        return NextResponse.json({ error: "Эту заявку нельзя отменить" }, { status: 400 });
+      const transition = assertBookingStatusTransition({
+        from: current.status,
+        to: "cancelled",
+        actor: "tourist",
+      });
+      if ("error" in transition) {
+        return NextResponse.json({ error: transition.error }, { status: 409 });
       }
 
       const updated = normalizeBooking({
@@ -138,13 +111,13 @@ export async function PATCH(
         ],
       });
 
-      const result = await updateBookingRecord(supabase, updated);
+      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
       if ("error" in result) {
         addBookingBreadcrumb("booking.cancel.failed", {
           bookingId: id,
           error: result.error,
         });
-        return NextResponse.json({ error: result.error }, { status: 500 });
+        return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
       }
 
       addBookingBreadcrumb("booking.cancelled", {
@@ -183,6 +156,15 @@ export async function PATCH(
         return NextResponse.json({ booking: current });
       }
 
+      const transition = assertBookingStatusTransition({
+        from: current.status,
+        to: body.status,
+        actor: "organizer",
+      });
+      if ("error" in transition) {
+        return NextResponse.json({ error: transition.error }, { status: 409 });
+      }
+
       const updated = normalizeBooking({
         ...current,
         status: body.status,
@@ -192,13 +174,13 @@ export async function PATCH(
           createStatusChange({
             from: current.status,
             to: body.status,
-            changedBy: body.changedBy ?? "organizer",
+            changedBy: "organizer",
             note: body.note,
           }),
         ],
       });
 
-      const result = await updateBookingRecord(supabase, updated);
+      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
       if ("error" in result) {
         addBookingBreadcrumb("booking.status_update.failed", {
           bookingId: id,
@@ -206,7 +188,7 @@ export async function PATCH(
           toStatus: body.status,
           error: result.error,
         });
-        return NextResponse.json({ error: result.error }, { status: 500 });
+        return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
       }
 
       addBookingBreadcrumb("booking.status_updated", {
@@ -259,13 +241,13 @@ export async function PATCH(
         ],
       });
 
-      const result = await updateBookingRecord(supabase, updated);
+      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
       if ("error" in result) {
         addBookingBreadcrumb("booking.comment.failed", {
           bookingId: id,
           error: result.error,
         });
-        return NextResponse.json({ error: result.error }, { status: 500 });
+        return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
       }
       addBookingBreadcrumb("booking.comment_added", {
         bookingId: id,

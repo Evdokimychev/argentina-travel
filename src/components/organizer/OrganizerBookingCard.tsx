@@ -88,7 +88,6 @@ export default function OrganizerBookingCard({
         await apiUpdateBookingStatus({
           bookingId: booking.id,
           status,
-          changedBy: "organizer",
         });
       } else {
         const result = updateBookingStatusWithHistory({

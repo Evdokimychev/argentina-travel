@@ -198,10 +198,11 @@ export async function insertCanonicalBookingAtomically(
 
 export async function updateBookingRecord(
   supabase: DbClient,
-  booking: Booking
-): Promise<{ booking: Booking } | { error: string }> {
+  booking: Booking,
+  expectedUpdatedAt?: string
+): Promise<{ booking: Booking } | { error: string; status?: number }> {
   const row = bookingToRow(booking);
-  const { error } = await supabase
+  let query = supabase
     .from("bookings")
     .update({
       user_id: row.user_id,
@@ -215,12 +216,22 @@ export async function updateBookingRecord(
       updated_at: row.updated_at,
     })
     .eq("id", booking.id);
+  if (expectedUpdatedAt) {
+    query = query.eq("updated_at", expectedUpdatedAt);
+  }
+  const { data, error } = await query.select("*").maybeSingle();
 
   if (error) {
     return { error: error.message };
   }
+  if (!data) {
+    return {
+      error: "Заявка уже была изменена в другом окне. Обновите страницу и повторите.",
+      status: 409,
+    };
+  }
 
-  return { booking: normalizeBooking(booking) };
+  return { booking: normalizeBooking(rowToBooking(data)) };
 }
 
 export async function attachGuestBookingsByEmail(

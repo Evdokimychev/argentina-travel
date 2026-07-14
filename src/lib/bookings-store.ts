@@ -1,5 +1,6 @@
 import type { BookingAttribution } from "@/types/booking-attribution";
 import type { CreateBookingCommand } from "@/lib/booking-create-command";
+import { assertBookingStatusTransition } from "@/lib/booking-state-machine";
 import { SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
@@ -686,6 +687,13 @@ export function updateBookingStatusWithHistory(input: {
   if (current.status === input.status) {
     return { booking: current };
   }
+
+  const transition = assertBookingStatusTransition({
+    from: current.status,
+    to: input.status,
+    actor: input.changedBy,
+  });
+  if ("error" in transition) return transition;
 
   const updated: Booking = {
     ...current,

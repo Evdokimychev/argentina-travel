@@ -1,4 +1,5 @@
 import type { BookingStatus, BookingStatusActive, BookingStatusActor } from "@/types/tourist";
+import { BOOKING_STATUS_TRANSITIONS } from "@/lib/booking-state-machine";
 
 export const BOOKING_STATUSES_ACTIVE: BookingStatusActive[] = [
   "new",
@@ -43,9 +44,9 @@ export const ORGANIZER_BOOKING_TRANSITIONS: Record<
   BookingStatusActive,
   BookingStatusActive[]
 > = {
-  new: ["pending", "confirmed", "cancelled"],
-  pending: ["confirmed", "cancelled"],
-  confirmed: ["completed", "cancelled"],
+  new: [...BOOKING_STATUS_TRANSITIONS.new].filter(isActiveBookingStatus),
+  pending: [...BOOKING_STATUS_TRANSITIONS.pending].filter(isActiveBookingStatus),
+  confirmed: [...BOOKING_STATUS_TRANSITIONS.confirmed].filter(isActiveBookingStatus),
   cancelled: [],
   completed: [],
 };

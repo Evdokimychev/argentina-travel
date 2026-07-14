@@ -11,6 +11,7 @@ import {
   resolvePartnerWebhookEventByStatus,
 } from "@/lib/partner-webhooks";
 import type { BookingStatus } from "@/types/tourist";
+import { assertBookingStatusTransition } from "@/lib/booking-state-machine";
 
 type PatchBody = {
   status?: BookingStatus;
@@ -60,9 +61,20 @@ export async function PATCH(
     return NextResponse.json({ booking: current });
   }
 
+  const transition = assertBookingStatusTransition({
+    from: current.status,
+    to: body.status,
+    actor: "system",
+  });
+  if ("error" in transition) {
+    return NextResponse.json({ error: transition.error }, { status: 409 });
+  }
+
+  const now = new Date().toISOString();
   const next = normalizeBooking({
     ...current,
     status: body.status,
+    updatedAt: now,
     statusHistory: [
       ...current.statusHistory,
       createStatusChange({
@@ -74,9 +86,9 @@ export async function PATCH(
     ],
   });
 
-  const result = await updateBookingRecord(supabase, next);
+  const result = await updateBookingRecord(supabase, next, current.updatedAt);
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 500 });
+    return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
   }
 
   await writeAdminAuditLog({
