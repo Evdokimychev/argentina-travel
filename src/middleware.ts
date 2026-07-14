@@ -9,10 +9,12 @@ import {
 } from "@/lib/attribution/first-touch";
 import { LOCALE_COOKIE_KEY } from "@/lib/i18n/config";
 import { getLocaleFromPathname, stripLocalePrefix } from "@/lib/i18n/locale-path";
+import { shouldBlockInternalRoute } from "@/lib/internal-route-access";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { matchUrlRedirect } from "@/lib/redirects/url-redirect-server";
 import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
+import { getAppRuntimeMode } from "@/lib/runtime-mode";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
@@ -151,6 +153,16 @@ function applyLocalePrefix(request: NextRequest): NextResponse | null {
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const routePathname = stripLocalePrefix(pathname);
+
+  if (shouldBlockInternalRoute(routePathname, getAppRuntimeMode())) {
+    return new NextResponse(null, {
+      status: 404,
+      headers: {
+        "Cache-Control": "private, no-store",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
+  }
 
   if (request.method === "GET" || request.method === "HEAD") {
     try {

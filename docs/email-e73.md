@@ -28,7 +28,7 @@
 
 ```env
 RESEND_API_KEY=
-LEADS_NOTIFY_FROM=noreply@goargentina.ru
+LEADS_NOTIFY_FROM=no-reply@goargentina.ru
 LEADS_NOTIFY_EMAIL=          # копия admin-алертов и platform digest
 NOTIFICATION_UNSUBSCRIBE_SECRET=   # опционально; иначе SUPABASE_SERVICE_ROLE_KEY
 ```
@@ -46,7 +46,7 @@ NOTIFICATION_UNSUBSCRIBE_SECRET=   # опционально; иначе SUPABASE
 
 ## Deliverability (SPF / DKIM)
 
-Письма уходят через [Resend](https://resend.com/docs/dashboard/domains/introduction). Для домена отправителя (`LEADS_NOTIFY_FROM`, например `noreply@goargentina.ru`):
+Письма уходят через [Resend](https://resend.com/docs/dashboard/domains/introduction). Канонический адрес отправителя — `no-reply@goargentina.ru`; он должен совпадать в Resend, Supabase SMTP и `LEADS_NOTIFY_FROM`.
 
 1. **Добавьте домен** в Resend Dashboard → Domains.
 2. **SPF** — Resend выдаст TXT-запись `v=spf1 include:…` для вашего DNS. Убедитесь, что нет конфликтующих SPF-записей (допускается одна SPF на домен).

@@ -19,7 +19,7 @@ export async function GET() {
     const supabase = await createSupabaseServerClient();
     const sessionUser = await loadSessionUserFromSupabase(supabase);
     if (!sessionUser) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ entries: [] });
     }
 
     const rows = await listUserBlogReadingHistoryRows(supabase, sessionUser.id);

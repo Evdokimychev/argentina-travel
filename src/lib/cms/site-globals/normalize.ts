@@ -65,8 +65,8 @@ export const DEFAULT_SITE_BRANDING: SiteBrandingGlobal = {
   titleTemplate: "%s | Пора в Аргентину",
   defaultOgImage: "/logo-light.svg",
   themeColor: "#74acdf",
-  faviconUrl: "/logo-light.svg",
-  appleTouchIconUrl: "/icons/pwa-icon.svg",
+  faviconUrl: "/favicon.ico",
+  appleTouchIconUrl: "/apple-touch-icon.png",
   locales: DEFAULT_SITE_BRANDING_LOCALES,
 };
 
@@ -217,10 +217,10 @@ export function normalizeSiteBranding(value: unknown): SiteBrandingGlobal {
     titleTemplate: asString(r.titleTemplate, DEFAULT_SITE_BRANDING.titleTemplate),
     defaultOgImage: asString(r.defaultOgImage, DEFAULT_SITE_BRANDING.defaultOgImage),
     themeColor: asString(r.themeColor, DEFAULT_SITE_BRANDING.themeColor),
-    faviconUrl: asString(r.faviconUrl, DEFAULT_SITE_BRANDING.faviconUrl ?? "/logo-light.svg"),
+    faviconUrl: asString(r.faviconUrl, DEFAULT_SITE_BRANDING.faviconUrl ?? "/favicon.ico"),
     appleTouchIconUrl: asString(
       r.appleTouchIconUrl,
-      DEFAULT_SITE_BRANDING.appleTouchIconUrl ?? "/icons/pwa-icon.svg"
+      DEFAULT_SITE_BRANDING.appleTouchIconUrl ?? "/apple-touch-icon.png"
     ),
     locales: parseLocaleOverrides<SiteBrandingTranslatable>(
       r.locales,

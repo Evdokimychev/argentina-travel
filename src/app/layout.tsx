@@ -70,8 +70,19 @@ export async function generateMetadata(): Promise<Metadata> {
         : {}),
     },
     icons: {
-      icon: branding.faviconUrl?.trim() || "/logo-light.svg",
-      apple: branding.appleTouchIconUrl?.trim() || "/icons/pwa-icon.svg",
+      icon: [
+        { url: branding.faviconUrl?.trim() || "/favicon.ico" },
+        { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+        { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      ],
+      shortcut: "/favicon.ico",
+      apple: [
+        {
+          url: branding.appleTouchIconUrl?.trim() || "/apple-touch-icon.png",
+          sizes: "180x180",
+          type: "image/png",
+        },
+      ],
     },
     manifest: "/manifest.json",
     appleWebApp: {
