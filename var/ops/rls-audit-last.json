@@ -1,9 +1,9 @@
 {
   "ok": true,
   "source": "static",
-  "ranAt": "2026-07-12T14:57:18.289Z",
+  "ranAt": "2026-07-14T20:30:17.308Z",
   "gitSha": null,
-  "tableCount": 81,
+  "tableCount": 83,
   "criticalIssueCount": 0,
   "criticalIssues": [],
   "tables": [
@@ -22,6 +22,8 @@
     "blog_reading_history",
     "booking_attribution",
     "booking_commission_snapshots",
+    "booking_lookup_audit_log",
+    "booking_lookup_challenges",
     "bookings",
     "cms_media_assets",
     "contact_submissions",

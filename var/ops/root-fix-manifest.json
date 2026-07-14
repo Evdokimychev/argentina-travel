@@ -1,0 +1,28 @@
+{
+  "generatedAt": "2026-07-14T20:35:30.668Z",
+  "baselineSha": "df839a6871c6697e7ed96aa0c45607629bd2e70f",
+  "fixes": [
+    {
+      "id": "secure-booking-lookup",
+      "status": "implemented_local",
+      "reversibleMigration": "drop two booking_lookup tables",
+      "verification": [
+        "unit",
+        "e2e",
+        "rls"
+      ]
+    },
+    {
+      "id": "server-authoritative-booking-command",
+      "status": "next"
+    },
+    {
+      "id": "production-mode-isolation",
+      "status": "pending"
+    },
+    {
+      "id": "shell-and-navigation-simplification",
+      "status": "pending"
+    }
+  ]
+}

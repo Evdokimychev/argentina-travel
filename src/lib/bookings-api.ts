@@ -224,13 +224,43 @@ export function isRemoteBookingsMode(): boolean {
   return isSupabaseBookingsEnabled();
 }
 
-export async function apiLookupBookingsByEmail(email: string): Promise<Booking[]> {
-  const data = await parseJson<{ bookings: Booking[] }>(
+export type BookingLookupSummary = {
+  id: string;
+  tourTitle: string;
+  status: BookingStatus;
+  paymentStatus: "pending" | "partial" | "paid" | "refunded" | null;
+  guests: number;
+  totalPriceUsd: number;
+  startDate?: string;
+  endDate?: string;
+};
+
+export async function apiRequestBookingLookup(email: string): Promise<{
+  requestId?: string;
+  message: string;
+}> {
+  return parseJson(
     await fetch("/api/bookings/lookup", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     })
+  );
+}
+
+export async function apiVerifyBookingLookup(requestId: string, code: string): Promise<void> {
+  await parseJson(
+    await fetch("/api/bookings/lookup/verify", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ requestId, code }),
+    })
+  );
+}
+
+export async function apiFetchBookingLookupResults(): Promise<BookingLookupSummary[]> {
+  const data = await parseJson<{ bookings: BookingLookupSummary[] }>(
+    await fetch("/api/bookings/lookup/results", { cache: "no-store" })
   );
   return data.bookings;
 }

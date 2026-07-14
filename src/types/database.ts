@@ -150,6 +150,61 @@ export interface Database {
         };
         Relationships: [];
       };
+      booking_lookup_challenges: {
+        Row: {
+          id: string;
+          email_hash: string;
+          code_hash: string;
+          booking_ids: string[];
+          expires_at: string;
+          attempts: number;
+          max_attempts: number;
+          consumed_at: string | null;
+          session_token_hash: string | null;
+          session_expires_at: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          email_hash: string;
+          code_hash: string;
+          booking_ids?: string[];
+          expires_at: string;
+          attempts?: number;
+          max_attempts?: number;
+          consumed_at?: string | null;
+          session_token_hash?: string | null;
+          session_expires_at?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          attempts?: number;
+          consumed_at?: string | null;
+          session_token_hash?: string | null;
+          session_expires_at?: string | null;
+        };
+        Relationships: [];
+      };
+      booking_lookup_audit_log: {
+        Row: {
+          id: string;
+          challenge_id: string | null;
+          event: string;
+          ip_hash: string | null;
+          metadata: Json;
+          created_at: string;
+        };
+        Insert: {
+          id?: string;
+          challenge_id?: string | null;
+          event: string;
+          ip_hash?: string | null;
+          metadata?: Json;
+          created_at?: string;
+        };
+        Update: never;
+        Relationships: [];
+      };
       booking_attribution: {
         Row: {
           booking_id: string;

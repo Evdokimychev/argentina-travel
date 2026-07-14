@@ -12,7 +12,6 @@ import {
   apiFetchTripsterBookingRequests,
   apiFetchYouTravelBookingRequests,
   apiFetchUserBookings,
-  apiLookupBookingsByEmail,
   apiRefreshYouTravelBookingRequest,
   isRemoteBookingsMode,
 } from "@/lib/bookings-api";

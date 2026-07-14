@@ -1,55 +1,75 @@
 import { NextResponse } from "next/server";
-import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { normalizeBookingsFromRows } from "@/lib/bookings-server";
+import {
+  BOOKING_LOOKUP_MAX_ATTEMPTS,
+  BOOKING_LOOKUP_OTP_TTL_MS,
+  generateLookupCode,
+  hashLookupValue,
+  normalizeLookupEmail,
+} from "@/lib/booking-lookup-security";
+import { sendBookingLookupCodeEmail } from "@/lib/notifications/email-delivery";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
+const NEUTRAL_MESSAGE = "Если для этого адреса есть заявки, мы отправили код доступа.";
+
+async function audit(challengeId: string | null, event: string, ip: string) {
+  const admin = createSupabaseAdminClient();
+  await admin.from("booking_lookup_audit_log").insert({
+    challenge_id: challengeId,
+    event,
+    ip_hash: hashLookupValue("ip", ip),
+  });
+}
+
 export async function POST(request: Request) {
-  if (!isSupabaseBookingsEnabled()) {
-    return NextResponse.json({ error: "Bookings API unavailable" }, { status: 503 });
-  }
-
   const ip = getClientIp(request);
-  const ipLimit = await checkRateLimit(`bookings-lookup:ip:${ip}`, 20, 60_000);
+  const ipLimit = await checkRateLimit(`bookings-lookup:request:ip:${ip}`, 8, 10 * 60_000);
   if (!ipLimit.ok) {
-    return NextResponse.json(
-      { error: "Слишком много запросов. Попробуйте через минуту." },
-      { status: 429, headers: { "Retry-After": String(ipLimit.retryAfterSec) } },
-    );
+    return NextResponse.json({ ok: true, message: NEUTRAL_MESSAGE }, { status: 202 });
   }
 
+  let email: string | null = null;
   try {
-    const body = (await request.json()) as { email?: string };
-    const email = body.email?.trim().toLowerCase() ?? "";
-    if (!email || !email.includes("@")) {
-      return NextResponse.json({ error: "Укажите корректный email" }, { status: 400 });
-    }
-
-    const emailLimit = await checkRateLimit(`bookings-lookup:email:${email}`, 5, 300_000);
-    if (!emailLimit.ok) {
-      return NextResponse.json(
-        { error: "Превышен лимит запросов для этого email." },
-        { status: 429, headers: { "Retry-After": String(emailLimit.retryAfterSec) } },
-      );
-    }
-
-    const supabase = createSupabaseAdminClient();
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("*")
-      .ilike("contact_email", email)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    const bookings = data?.length ? normalizeBookingsFromRows(data) : [];
-    return NextResponse.json({ bookings });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+    const body = (await request.json()) as { email?: unknown };
+    email = normalizeLookupEmail(typeof body.email === "string" ? body.email : "");
+  } catch {
+    email = null;
   }
+
+  if (!email) {
+    return NextResponse.json({ ok: true, message: NEUTRAL_MESSAGE }, { status: 202 });
+  }
+
+  const emailHash = hashLookupValue("email", email);
+  const emailLimit = await checkRateLimit(`bookings-lookup:request:email:${emailHash}`, 3, 15 * 60_000);
+  if (!emailLimit.ok) {
+    return NextResponse.json({ ok: true, message: NEUTRAL_MESSAGE }, { status: 202 });
+  }
+
+  const admin = createSupabaseAdminClient();
+  const { data: rows } = await admin.from("bookings").select("id").ilike("contact_email", email).limit(50);
+  const bookingIds = rows?.map((row) => row.id) ?? [];
+  const code = generateLookupCode();
+  const challengeId = crypto.randomUUID();
+  const { error } = await admin.from("booking_lookup_challenges").insert({
+    id: challengeId,
+    email_hash: emailHash,
+    code_hash: hashLookupValue(`code:${challengeId}`, code),
+    booking_ids: bookingIds,
+    expires_at: new Date(Date.now() + BOOKING_LOOKUP_OTP_TTL_MS).toISOString(),
+    max_attempts: BOOKING_LOOKUP_MAX_ATTEMPTS,
+  });
+
+  if (!error) {
+    await audit(challengeId, "lookup_requested", ip);
+    if (bookingIds.length > 0) {
+      const delivered = await sendBookingLookupCodeEmail({ recipientEmail: email, code });
+      await audit(challengeId, delivered ? "otp_delivery_accepted" : "otp_delivery_failed", ip);
+    }
+  }
+
+  return NextResponse.json(
+    { ok: true, requestId: error ? undefined : challengeId, message: NEUTRAL_MESSAGE },
+    { status: 202 },
+  );
 }

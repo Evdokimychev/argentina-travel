@@ -3,6 +3,7 @@ import {
   renderBookingReminder24hEmail,
   renderTripPrepReminderEmail,
   renderBookingConfirmedEmail,
+  renderBookingLookupCodeEmail,
   renderNewMessageEmail,
   renderBookingStatusChangedEmail,
   renderContentFreshnessReportEmail,
@@ -89,11 +90,11 @@ function resolveUnsubscribeUrl(context: TransactionalSendContext): string | null
   return buildUnsubscribeUrl(context.userId, context.category);
 }
 
-async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<void> {
-  if (!input.to.length) return;
+async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<boolean> {
+  if (!input.to.length) return false;
 
   try {
-    await fetch(RESEND_ENDPOINT, {
+    const response = await fetch(RESEND_ENDPOINT, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${config.apiKey}`,
@@ -109,8 +110,9 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<vo
       }),
       signal: AbortSignal.timeout(10_000),
     });
+    return response.ok;
   } catch {
-    // Non-blocking delivery channel.
+    return false;
   }
 }
 
@@ -127,7 +129,7 @@ async function sendTemplateEmail(
 
   const unsubscribeUrl = resolveUnsubscribeUrl(context);
 
-  await sendEmail(config, {
+  return sendEmail(config, {
     to: recipients,
     subject: template.subject,
     html: template.html,
@@ -135,7 +137,21 @@ async function sendTemplateEmail(
     headers: buildListUnsubscribeHeader(unsubscribeUrl),
   });
 
-  return true;
+}
+
+export async function sendBookingLookupCodeEmail(input: {
+  recipientEmail: string;
+  code: string;
+}): Promise<boolean> {
+  const config = resolveEmailConfig();
+  if (!config) return false;
+  const template = renderBookingLookupCodeEmail(input.code);
+  return sendEmail(config, {
+    to: normalizeRecipients([input.recipientEmail]),
+    subject: template.subject,
+    html: template.html,
+    text: template.text,
+  });
 }
 
 export async function sendBookingConfirmedEmail(input: {

@@ -51,3 +51,4 @@ export {
   renderPrivacyDeleteCompletedEmail,
   type PrivacyDeleteCompletedTemplateInput,
 } from "./privacy-delete-completed";
+export { renderBookingLookupCodeEmail } from "./booking-lookup-code";

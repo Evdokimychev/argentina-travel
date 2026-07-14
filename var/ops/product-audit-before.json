@@ -1,0 +1,17 @@
+{
+  "generatedAt": "2026-07-14T20:35:30.668Z",
+  "baselineSha": "df839a6871c6697e7ed96aa0c45607629bd2e70f",
+  "productionDeployment": "dpl_HVXqRU5EVbd58UVM98ipYJhw7pGR",
+  "confirmedCriticalIssues": [
+    "email_only_booking_lookup_returned_full_booking_rows",
+    "booking_creation_accepts_client_supplied_price_status_and_denormalized_fields",
+    "local_storage_business_fallbacks_present"
+  ],
+  "counts": {
+    "routes": 354,
+    "pages": 129,
+    "apiRoutes": 225,
+    "critical": 66,
+    "withIssues": 38
+  }
+}

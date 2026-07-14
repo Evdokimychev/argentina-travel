@@ -25,6 +25,8 @@ const SERVICE_ROLE_ONLY_TABLES = new Set([
   "api_key_usage_log",
   "affiliate_link_clicks",
   "booking_commission_snapshots",
+  "booking_lookup_audit_log",
+  "booking_lookup_challenges",
   "payment_audit_log",
   "payment_transactions",
   "payout_records",
