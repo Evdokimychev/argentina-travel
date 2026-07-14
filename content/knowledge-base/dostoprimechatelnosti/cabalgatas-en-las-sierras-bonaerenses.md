@@ -4,8 +4,7 @@ type: attraction
 title: Horseback riding in the hills of Буэнос-Айрес
 title_es: Cabalgatas en las sierras bonaerenses
 title_en: Horseback riding in the hills of Buenos Aires
-summary: Date el placer de montar a caballo y disfrutar una actividad típica de la
-  provincia de Буэнос-Айрес.
+summary: "Конные прогулки по сьеррам провинции Буэнос-Айрес — традиционное занятие этих мест."
 status: published
 site_sections:
 - puteshestviya-po-argentine

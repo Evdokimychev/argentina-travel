@@ -4,8 +4,7 @@ type: attraction
 title: Sailing along Lago Argentino
 title_es: Navegación por el Lago Argentino
 title_en: Sailing along Lago Argentino
-summary: Desde Puerto Bandera, emprende una aventura acuática por paisajes helados
-  de la Патагония Argentina.
+summary: "Навигация по озеру Архентино от Пуэрто-Бандеры к ледникам парка Лос-Гласьярес."
 status: published
 site_sections:
 - puteshestviya-po-argentine

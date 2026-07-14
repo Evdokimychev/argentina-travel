@@ -4,8 +4,7 @@ type: attraction
 title: Cerros Catedral y Перито-Морено
 title_es: Cerros Catedral y Perito Moreno
 title_en: Cerro Catedral and Perito Moreno hills
-summary: La propuesta de deportes invernales más importante de LatiСеверо-Западmérica
-  te espera en la Патагония Argentina.
+summary: "Крупнейшие горнолыжные центры Патагонии — Серро-Катедраль у Барилоче и Серро-Перито-Морено."
 status: published
 site_sections:
 - puteshestviya-po-argentine

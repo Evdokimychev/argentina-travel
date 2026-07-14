@@ -4,8 +4,7 @@ type: attraction
 title: Trekking in Tolhuin
 title_es: Trekking en Tolhuin
 title_en: Trekking in Tolhuin
-summary: Emprende caminatas de distinta intensidad y extensión por paisajes extremos
-  de Огненная Земля.
+summary: "Треккинг в окрестностях Тольуина на Огненной Земле — маршруты разной сложности."
 status: published
 site_sections:
 - puteshestviya-po-argentine

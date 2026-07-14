@@ -4,8 +4,7 @@ type: attraction
 title: Buceo en las costas de Ушуайя
 title_es: Buceo en las costas de Ushuaia
 title_en: Diving off the shores of Ushuaia
-summary: En la Патагония Argentina, vive la aventura de explorar el universo submarino
-  del Canal Beagle.
+summary: "Дайвинг в водах канала Бигл у Ушуайи — погружение в подводный мир самой южной Патагонии."
 status: published
 site_sections:
 - puteshestviya-po-argentine

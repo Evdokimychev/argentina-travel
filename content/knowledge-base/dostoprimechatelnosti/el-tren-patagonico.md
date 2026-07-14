@@ -1,11 +1,10 @@
 ---
 id: el-tren-patagonico
 type: attraction
-title: Патагонияn Train
+title: Патагонский поезд
 title_es: El Tren Patagónico
 title_en: Patagonian Train
-summary: Reserva tu lugar en el legendario tren que atraviesa la estepa patagónica
-  y une la cordillera con el océano.
+summary: "Легендарный патагонский поезд через степь Рио-Негро, связывающий Анды и Атлантику."
 status: published
 site_sections:
 - puteshestviya-po-argentine
@@ -28,7 +27,7 @@ related:
 media:
   hero:
     url: /media/argentina-travel/el-tren-patagonico/1624482415407-26.jpg
-    alt: Патагонияn Train
+    alt: Патагонский поезд
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/el-tren-patagonico

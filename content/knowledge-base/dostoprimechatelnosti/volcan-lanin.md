@@ -4,8 +4,7 @@ type: attraction
 title: Lanín volcano
 title_es: Volcán Lanín
 title_en: Lanín volcano
-summary: En la Патагония argentina, vive la aventura de llegar a más de tres mil setecientos
-  metros de altura.
+summary: "Вулкан Ланин в Патагонии — восхождение к конусу высотой более 3700 метров на границе с Чили."
 status: published
 site_sections:
 - puteshestviya-po-argentine

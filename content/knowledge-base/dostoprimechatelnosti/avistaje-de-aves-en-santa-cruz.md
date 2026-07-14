@@ -4,8 +4,7 @@ type: attraction
 title: Bird watching in Santa Cruz
 title_es: Avistaje de aves en Santa Cruz
 title_en: Bird watching in Santa Cruz
-summary: Visita la Патагония Argentina y recorre hábitats de aves en ambiente extremos
-  y de alta biodiversidad.
+summary: "Наблюдение за птицами в Санта-Крусе: экстремальные, но богатые жизнью местообитания патагонской фауны."
 status: published
 site_sections:
 - puteshestviya-po-argentine

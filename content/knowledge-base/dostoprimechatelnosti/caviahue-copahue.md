@@ -4,8 +4,7 @@ type: attraction
 title: Caviahue - Copahue
 title_es: Caviahue - Copahue
 title_en: Caviahue - Copahue
-summary: Visita la Патагония argentina y vive experiencias de aventura y relax en
-  un entorno natural soñado.
+summary: "Кавиауэ и Копауэ в Неукене: термальные источники, вулкан и активный отдых среди араукарий."
 status: published
 site_sections:
 - puteshestviya-po-argentine

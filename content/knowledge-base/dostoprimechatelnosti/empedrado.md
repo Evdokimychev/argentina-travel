@@ -4,8 +4,7 @@ type: attraction
 title: Empedrado
 title_es: Empedrado
 title_en: Empedrado
-summary: En el Литорал argentino, encuentra un lugar soñado para practicar la pesca
-  deportiva.
+summary: "Эмпедрадо в Корриентесе — тихое место на Паране, известное спортивной рыбалкой."
 status: published
 site_sections:
 - puteshestviya-po-argentine

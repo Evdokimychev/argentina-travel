@@ -4,7 +4,7 @@ type: attraction
 title: Cabalgatas en la estepa de Барилоче
 title_es: Cabalgatas en la estepa de Bariloche
 title_en: Horseback riding on the Bariloche steppe
-summary: Date el placer de pasear a caballo por paisajes soñados de la Патагония argentina.
+summary: "Верховые прогулки по патагонской степи в окрестностях Барилоче."
 status: published
 site_sections:
 - puteshestviya-po-argentine

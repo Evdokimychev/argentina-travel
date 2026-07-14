@@ -4,8 +4,7 @@ type: attraction
 title: Reconquista
 title_es: Reconquista
 title_en: Reconquista
-summary: En el Литорал argentino, pasea por un lugar rico en tesoros históricos, arqueológicos
-  y paleontológicos.
+summary: "Реконкиста в Санта-Фе — город Литораля с историческим, археологическим и палеонтологическим наследием."
 status: published
 site_sections:
 - puteshestviya-po-argentine

@@ -4,8 +4,7 @@ type: attraction
 title: Welsh towns and native communities
 title_es: Pueblos galeses y comunidades originarias
 title_en: Welsh towns and native communities
-summary: Acércate a tradiciones de inmigrantes galeses y de habitantes originarios
-  de la Патагония argentina.
+summary: "Валлийские посёлки и коренные общины Патагонии: традиции иммигрантов и первых жителей Чубута."
 status: published
 site_sections:
 - puteshestviya-po-argentine

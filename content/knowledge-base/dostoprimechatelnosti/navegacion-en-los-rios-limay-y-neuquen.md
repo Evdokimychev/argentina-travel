@@ -4,7 +4,7 @@ type: attraction
 title: Sailing on the Limay and Neuquén rivers
 title_es: Navegación en los ríos Limay y Neuquén
 title_en: Sailing on the Limay and Neuquén rivers
-summary: Explora el lugar donde confluyen dos emblemáticos ríos de la Патагония argentina.
+summary: "Навигация по рекам Лимай и Неукен — там, где сливаются две главные реки северной Патагонии."
 status: published
 site_sections:
 - puteshestviya-po-argentine

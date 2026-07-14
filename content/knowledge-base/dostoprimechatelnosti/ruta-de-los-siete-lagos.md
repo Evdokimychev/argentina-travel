@@ -4,8 +4,7 @@ type: attraction
 title: Route of Seven Lakes
 title_es: Ruta de los Siete Lagos
 title_en: Route of Seven Lakes
-summary: Entre San Martín de los Andes y Villa La Angostura, te espera un mundo de
-  tesoros naturales de la Патагония argentina.
+summary: "«Дорога семи озёр» между Сан-Мартин-де-лос-Андес и Вилья-Ла-Ангостурой — классический маршрут озёрного края."
 status: published
 site_sections:
 - puteshestviya-po-argentine

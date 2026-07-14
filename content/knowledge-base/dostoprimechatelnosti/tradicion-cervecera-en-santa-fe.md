@@ -4,8 +4,7 @@ type: attraction
 title: Brewing tradition in Santa Fe
 title_es: Tradición cervecera en Santa Fe
 title_en: Brewing tradition in Santa Fe
-summary: Date el gusto de saborear un "liso" y conocer un cervezoducto de 850 metros
-  de largo, único en LatiСеверо-Западmérica.
+summary: "Пивная традиция Санта-Фе: бокал «лисо» и уникальный «пивопровод» длиной 850 метров."
 status: published
 site_sections:
 - puteshestviya-po-argentine
@@ -58,7 +57,7 @@ sources:
 
 ## Описание
 
-Date el gusto de saborear un "liso" y conocer un cervezoducto de 850 metros de largo, único en LatiСеверо-Западmérica.
+Попробуйте местное разливное пиво «лисо» и узнайте о пивопроводе длиной 850 метров — редкой достопримечательности Санта-Фе.
 
 ## Практическая информация
 

@@ -1,6 +1,6 @@
 # Отчёт валидации базы знаний
 
-Сгенерировано: 2026-07-13 11:23
+Сгенерировано: 2026-07-14 17:08
 
 Всего валидных записей: **689**
 Проблемных файлов: **0**
@@ -9,7 +9,7 @@
 Битых [[вики-ссылок]] в телах: **0**
 Осиротевших записей (0 входящих ссылок): **145**
 Записей `site_ready: true` без hero-фото: **20**
-Коротких опубликованных записей (<120 слов): **163**
+Коротких опубликованных записей (<120 слов): **134**
 Гео-заголовков без русской адаптации: **224**
 Шаблонных импортных текстов INPROTUR: **0**
 Чувствительных опубликованных материалов: **120**
@@ -224,7 +224,6 @@
 - `ciudad-de-salta` (attraction, dostoprimechatelnosti/ciudad-de-salta.md) — 57 слов
 - `ciudad-de-san-juan` (attraction, dostoprimechatelnosti/ciudad-de-san-juan.md) — 77 слов
 - `ciudad-de-santa-fe` (attraction, dostoprimechatelnosti/ciudad-de-santa-fe.md) — 75 слов
-- `colon-entre-rios` (city, goroda/colon-entre-rios.md) — 23 слов
 - `colonia-carlos-pellegrini` (attraction, dostoprimechatelnosti/colonia-carlos-pellegrini.md) — 74 слов
 - `colonia-menonita-en-la-pampa` (attraction, dostoprimechatelnosti/colonia-menonita-en-la-pampa.md) — 58 слов
 - `colonia-suiza` (attraction, dostoprimechatelnosti/colonia-suiza.md) — 78 слов
@@ -232,9 +231,7 @@
 - `costa-atlantica-bonaerense` (attraction, dostoprimechatelnosti/costa-atlantica-bonaerense.md) — 69 слов
 - `dique-piscu-yacu` (attraction, dostoprimechatelnosti/dique-piscu-yacu.md) — 72 слов
 - `dunas-de-taton` (attraction, dostoprimechatelnosti/dunas-de-taton.md) — 72 слов
-- `el-calafate` (city, goroda/el-calafate.md) — 63 слов
 - `el-chaku` (attraction, dostoprimechatelnosti/el-chaku.md) — 73 слов
-- `el-chalten` (city, goroda/el-chalten.md) — 62 слов
 - `el-curanto` (attraction, dostoprimechatelnosti/el-curanto.md) — 79 слов
 - `el-gaucho` (attraction, dostoprimechatelnosti/el-gaucho.md) — 73 слов
 - `el-hoyo` (attraction, dostoprimechatelnosti/el-hoyo.md) — 58 слов
@@ -249,7 +246,6 @@
 - `el-tren-patagonico` (attraction, dostoprimechatelnosti/el-tren-patagonico.md) — 66 слов
 - `el-vino-malbec` (attraction, dostoprimechatelnosti/el-vino-malbec.md) — 74 слов
 - `empedrado` (attraction, dostoprimechatelnosti/empedrado.md) — 56 слов
-- `esquel` (city, goroda/esquel.md) — 20 слов
 - `glaciar-huemul` (attraction, dostoprimechatelnosti/glaciar-huemul.md) — 72 слов
 - `glaciar-ojo-del-albino` (attraction, dostoprimechatelnosti/glaciar-ojo-del-albino.md) — 76 слов
 - `kayak-en-bariloche` (attraction, dostoprimechatelnosti/kayak-en-bariloche.md) — 61 слов
@@ -269,21 +265,25 @@
 - `los-gigantes` (attraction, dostoprimechatelnosti/los-gigantes.md) — 68 слов
 - `los-valles-calchaquies` (attraction, dostoprimechatelnosti/los-valles-calchaquies.md) — 73 слов
 - `mar-de-las-pampas` (attraction, dostoprimechatelnosti/mar-de-las-pampas.md) — 24 слов
-- `merlo` (city, goroda/merlo.md) — 21 слов
 - `monumento-natural-laguna-de-los-pozuelos` (attraction, dostoprimechatelnosti/monumento-natural-laguna-de-los-pozuelos.md) — 91 слов
 - `navegacion-en-los-rios-limay-y-neuquen` (attraction, dostoprimechatelnosti/navegacion-en-los-rios-limay-y-neuquen.md) — 62 слов
 - `navegacion-por-el-lago-argentino` (attraction, dostoprimechatelnosti/navegacion-por-el-lago-argentino.md) — 62 слов
-- `necochea` (city, goroda/necochea.md) — 21 слов
 - `newells-old-boys` (attraction, dostoprimechatelnosti/newells-old-boys.md) — 62 слов
-- `parque-nacional-aconquija` (national_park, natsionalnye-parki/parque-nacional-aconquija.md) — 74 слов
-- `parque-nacional-baritu` (national_park, natsionalnye-parki/parque-nacional-baritu.md) — 87 слов
-- `parque-nacional-bosques-petrificados` (national_park, natsionalnye-parki/parque-nacional-bosques-petrificados.md) — 66 слов
-- `parque-nacional-calilegua` (national_park, natsionalnye-parki/parque-nacional-calilegua.md) — 81 слов
-- `parque-nacional-campos-del-tuyu` (national_park, natsionalnye-parki/parque-nacional-campos-del-tuyu.md) — 80 слов
-- `parque-nacional-ciervo-de-los-pantanos` (national_park, natsionalnye-parki/parque-nacional-ciervo-de-los-pantanos.md) — 95 слов
-- `parque-nacional-copo` (national_park, natsionalnye-parki/parque-nacional-copo.md) — 91 слов
-- `parque-nacional-el-leoncito` (national_park, natsionalnye-parki/parque-nacional-el-leoncito.md) — 62 слов
-- …и ещё 83
+- `parque-provincial-cordon-del-plata` (national_park, natsionalnye-parki/parque-provincial-cordon-del-plata.md) — 57 слов
+- `pueblos-de-la-provincia-de-buenos-aires` (attraction, dostoprimechatelnosti/pueblos-de-la-provincia-de-buenos-aires.md) — 80 слов
+- `pueblos-galeses-y-comunidades-originarias` (attraction, dostoprimechatelnosti/pueblos-galeses-y-comunidades-originarias.md) — 61 слов
+- `pueblos-pintorescos-de-cordoba` (attraction, dostoprimechatelnosti/pueblos-pintorescos-de-cordoba.md) — 70 слов
+- `pueblos-rurales-en-santa-fe` (attraction, dostoprimechatelnosti/pueblos-rurales-en-santa-fe.md) — 72 слов
+- `puente-rosario-victoria` (attraction, dostoprimechatelnosti/puente-rosario-victoria.md) — 64 слов
+- `puerto-almanza` (attraction, dostoprimechatelnosti/puerto-almanza.md) — 73 слов
+- `puerto-san-julian` (attraction, dostoprimechatelnosti/puerto-san-julian.md) — 75 слов
+- `quebrada-de-las-flechas` (attraction, dostoprimechatelnosti/quebrada-de-las-flechas.md) — 72 слов
+- `rafting-en-el-rio-hua-hum` (attraction, dostoprimechatelnosti/rafting-en-el-rio-hua-hum.md) — 66 слов
+- `rafting-en-el-rio-mendoza` (attraction, dostoprimechatelnosti/rafting-en-el-rio-mendoza.md) — 63 слов
+- `reconquista` (attraction, dostoprimechatelnosti/reconquista.md) — 61 слов
+- `reserva-costa-atlantica-tierra-del-fuego` (attraction, dostoprimechatelnosti/reserva-costa-atlantica-tierra-del-fuego.md) — 81 слов
+- `reserva-de-biosfera-laguna-blanca` (attraction, dostoprimechatelnosti/reserva-de-biosfera-laguna-blanca.md) — 80 слов
+- …и ещё 54
 
 ## Редакционный долг: заголовки без русской адаптации
 

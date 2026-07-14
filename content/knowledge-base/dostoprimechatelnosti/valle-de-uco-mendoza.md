@@ -4,8 +4,7 @@ type: attraction
 title: Valle de Uco, Мендоса
 title_es: Valle de Uco, Mendoza
 title_en: Uco Valley, Mendoza
-summary: Prepara tus sentidos para experimentar sabores y aromas entre imponentes
-  paisajes de montaña.
+summary: "Долина Уко в Мендосе — высокогорные винодельни и гастрономия среди горных пейзажей."
 status: published
 site_sections:
 - puteshestviya-po-argentine

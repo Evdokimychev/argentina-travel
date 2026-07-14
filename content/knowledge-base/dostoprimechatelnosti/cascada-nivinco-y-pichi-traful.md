@@ -4,8 +4,7 @@ type: attraction
 title: Ñivinco and Pichi Traful Waterfalls
 title_es: Cascada Ñivinco y Pichi Traful
 title_en: Ñivinco and Pichi Traful Waterfalls
-summary: Vive la aventura de recorrer senderos andinos y encontrar dos tesoros del
-  национальный парк Nahuel Huapi.
+summary: "Два водопада в национальном парке Науэль-Уапи: андские тропы к Нивинко и Пичи-Трафуль."
 status: published
 site_sections:
 - puteshestviya-po-argentine

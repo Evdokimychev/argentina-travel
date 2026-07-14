@@ -4,8 +4,7 @@ type: attraction
 title: Newell's Old Boys
 title_es: Newell's Old Boys
 title_en: Newell's Old Boys
-summary: En el Литорал argentino, descubre la institución donde el ídolo jugó cuando
-  era un niño.
+summary: "«Ньюэллс Олд Бойз» в Росарио — клуб, где в детстве начинал Лионель Месси."
 status: published
 site_sections:
 - puteshestviya-po-argentine

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13 11:23",
+  "generated_at": "2026-07-14 17:08",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -630,7 +630,7 @@
           "id": "colon-entre-rios",
           "type": "city",
           "subtype": null,
-          "title": "Колóн"
+          "title": "Колон"
         },
         {
           "id": "colonia-carlos-pellegrini",
@@ -918,7 +918,7 @@
           "id": "el-tren-patagonico",
           "type": "attraction",
           "subtype": null,
-          "title": "Патагонияn Train"
+          "title": "Патагонский поезд"
         },
         {
           "id": "el-vino-malbec",
@@ -3504,7 +3504,7 @@
           "id": "vinos-del-valle-patagonico",
           "type": "attraction",
           "subtype": null,
-          "title": "Патагонияn valley wines"
+          "title": "Вина патагонских долин"
         },
         {
           "id": "viza-i-granica-dlya-rossiyan",
@@ -4109,7 +4109,7 @@
           "id": "colon-entre-rios",
           "type": "city",
           "subtype": null,
-          "title": "Колóн"
+          "title": "Колон"
         },
         {
           "id": "colonia-carlos-pellegrini",
@@ -4379,7 +4379,7 @@
           "id": "el-tren-patagonico",
           "type": "attraction",
           "subtype": null,
-          "title": "Патагонияn Train"
+          "title": "Патагонский поезд"
         },
         {
           "id": "el-vino-malbec",
@@ -6521,7 +6521,7 @@
           "id": "vinos-del-valle-patagonico",
           "type": "attraction",
           "subtype": null,
-          "title": "Патагонияn valley wines"
+          "title": "Вина патагонских долин"
         },
         {
           "id": "viza-v-braziliyu-dlya-iguasu",

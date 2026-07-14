@@ -4,8 +4,7 @@ type: attraction
 title: Kayak en Барилоче
 title_es: Kayak en Bariloche
 title_en: Kayak in Bariloche
-summary: En la Патагония Argentina, date el placer de remar por los lagos Nahuel Huapi
-  y Moreno.
+summary: "Каякинг в Барилоче по озёрам Науэль-Уапи и Морено."
 status: published
 site_sections:
 - puteshestviya-po-argentine

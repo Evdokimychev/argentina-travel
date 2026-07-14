@@ -20,7 +20,7 @@ argentina-3-nedeli,route,,Маршрут по Аргентине на 3 неде
 argentina-vs-drugie-strany,guide,immigration,Аргентина или другая страна: честное сравнение для переезда,published,,low,2026-07-05,True,2026-08-19,True,819,pereezd/argentina-vs-drugie-strany.md
 arte-urbano-en-buenos-aires,attraction,,Стрит-арт в Буэнос-Айресе,published,caba,medium,2026-07-07,False,2026-10-05,False,272,dostoprimechatelnosti/arte-urbano-en-buenos-aires.md
 artesania-formosena,attraction,,Handicrafts in Formosa,stub,litoral,medium,2026-07-07,False,2026-10-05,False,61,dostoprimechatelnosti/artesania-formosena.md
-asado,guide,culture,Асадо: аргентинское барбекю от ритуала до отрубов,published,,high,2026-07-04,False,2026-12-31,False,625,kultura/asado.md
+asado,guide,culture,Асадо: аргентинское барбекю от ритуала до отрубов,published,,high,2026-07-04,False,2026-12-31,False,623,kultura/asado.md
 astroturismo-en-san-juan,attraction,,Astrotourism in San Juan,stub,cuyo,medium,2026-07-07,False,2026-10-05,False,60,dostoprimechatelnosti/astroturismo-en-san-juan.md
 autodromo-internacional-de-rio-hondo,attraction,,Río Hondo International Racetrack,stub,noa,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/autodromo-internacional-de-rio-hondo.md
 avellaneda,attraction,,Avellaneda,stub,litoral,medium,2026-07-07,False,2026-10-05,False,57,dostoprimechatelnosti/avellaneda.md
@@ -114,7 +114,7 @@ ciudad-de-san-juan,attraction,,Город Сан-Хуан,published,cuyo,medium,
 ciudad-de-santa-fe,attraction,,Город Санта-Фе,published,litoral,medium,2026-07-07,False,2026-10-05,False,75,dostoprimechatelnosti/ciudad-de-santa-fe.md
 clorinda,attraction,,Clorinda,stub,litoral,medium,2026-07-07,False,2026-10-05,False,59,dostoprimechatelnosti/clorinda.md
 colon,attraction,,Colón,stub,litoral,medium,2026-07-07,False,2026-10-05,False,63,dostoprimechatelnosti/colon.md
-colon-entre-rios,city,,Колóн,published,litoral,medium,2026-07-06,False,2026-10-04,False,23,goroda/colon-entre-rios.md
+colon-entre-rios,city,,Колон,published,litoral,medium,2026-07-06,False,2026-10-04,False,342,goroda/colon-entre-rios.md
 colonia-carlos-pellegrini,attraction,,Колония-Карлос-Пеллегрини,published,litoral,medium,2026-07-07,False,2026-10-05,False,74,dostoprimechatelnosti/colonia-carlos-pellegrini.md
 colonia-menonita-en-la-pampa,attraction,,Mennonite Colony in La Pampa,published,pampa,medium,2026-07-07,False,2026-10-05,False,58,dostoprimechatelnosti/colonia-menonita-en-la-pampa.md
 colonia-suiza,attraction,,Колония-Суиса,published,patagonia,medium,2026-07-07,False,2026-10-05,False,78,dostoprimechatelnosti/colonia-suiza.md
@@ -150,9 +150,9 @@ dokumenty-dlya-poezdki-na-avto,guide,transport,"Какие документы н
 dostupnaya-sreda-i-invalidnost,guide,planning,Доступная среда: путешествие и жизнь с инвалидностью в Аргентине,published,,low,2026-07-05,False,2026-08-04,True,561,puteshestvie/dostupnaya-sreda-i-invalidnost.md
 dunas-de-taton,attraction,,Дюны Татон,published,noa,medium,2026-07-07,False,2026-10-05,False,72,dostoprimechatelnosti/dunas-de-taton.md
 el-bolson,city,,Эль-Больсон,published,patagonia,high,2026-07-07,False,2027-01-03,False,453,goroda/el-bolson.md
-el-calafate,city,,Эль-Калафате,published,patagonia,high,2026-07-07,False,2027-01-03,False,63,goroda/el-calafate.md
+el-calafate,city,,Эль-Калафате,published,patagonia,high,2026-07-07,False,2027-01-03,False,395,goroda/el-calafate.md
 el-chaku,attraction,,Чаку,published,noa,medium,2026-07-07,False,2026-10-05,False,73,dostoprimechatelnosti/el-chaku.md
-el-chalten,city,,Эль-Чальтен,published,patagonia,high,2026-07-07,False,2027-01-03,False,62,goroda/el-chalten.md
+el-chalten,city,,Эль-Чальтен,published,patagonia,high,2026-07-07,False,2027-01-03,False,387,goroda/el-chalten.md
 el-curanto,attraction,,Куранто,published,patagonia,medium,2026-07-07,False,2026-10-05,False,79,dostoprimechatelnosti/el-curanto.md
 el-gaucho,attraction,,Гаучо,published,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,73,dostoprimechatelnosti/el-gaucho.md
 el-hoyo,attraction,,El Hoyo,published,patagonia,medium,2026-07-07,False,2026-10-05,False,58,dostoprimechatelnosti/el-hoyo.md
@@ -164,7 +164,7 @@ el-salitral-encantado,attraction,,Эль-Салитраль-Энкантадо,p
 el-sauzalito,attraction,,Эль-Саусалито,published,litoral,medium,2026-07-07,False,2026-10-05,False,71,dostoprimechatelnosti/el-sauzalito.md
 el-sosneado,attraction,,Эль-Соснеадо,published,cuyo,medium,2026-07-07,False,2026-10-05,False,75,dostoprimechatelnosti/el-sosneado.md
 el-trapiche,attraction,,Эль-Трапиче,published,cuyo,medium,2026-07-07,False,2026-10-05,False,71,dostoprimechatelnosti/el-trapiche.md
-el-tren-patagonico,attraction,,Патагонияn Train,published,patagonia,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/el-tren-patagonico.md
+el-tren-patagonico,attraction,,Патагонский поезд,published,patagonia,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/el-tren-patagonico.md
 el-vino-malbec,attraction,,Вино мальбек,published,cuyo,medium,2026-07-07,False,2026-10-05,False,74,dostoprimechatelnosti/el-vino-malbec.md
 eldorado,attraction,,Eldorado,stub,litoral,medium,2026-07-07,False,2026-10-05,False,62,dostoprimechatelnosti/eldorado.md
 empanadas,guide,culture,Эмпанадас: как читать главную уличную еду Аргентины,published,,high,2026-07-04,False,2026-12-31,False,375,kultura/empanadas.md
@@ -173,7 +173,7 @@ empedrado-y-el-carrizal,attraction,,Empedrado and El Carrizal,stub,litoral,mediu
 epuyen,attraction,,Epuyén,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,59,dostoprimechatelnosti/epuyen.md
 esim-i-svyaz,guide,communication,eSIM и связь в Аргентине,published,,medium,2026-07-02,True,2026-08-16,False,694,svyaz/esim-i-svyaz.md
 esim-ili-lokalnaya-sim,faq,,,published,,medium,2026-06-30,False,2026-09-28,False,73,faq/esim-ili-lokalnaya-sim.md
-esquel,city,,Эскель,published,patagonia,medium,2026-07-06,False,2026-10-04,False,20,goroda/esquel.md
+esquel,city,,Эскель,published,patagonia,medium,2026-07-06,False,2026-10-04,False,330,goroda/esquel.md
 esquina,attraction,,Esquina,stub,litoral,medium,2026-07-07,False,2026-10-05,False,49,dostoprimechatelnosti/esquina.md
 estancias-turisticas-de-campo,attraction,,Tourist estancias in the countryside,stub,pampa,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/estancias-turisticas-de-campo.md
 expedicion-al-avion-de-los-uruguayos,attraction,,Expedition to the Uruguayan team’s plane,stub,cuyo,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/expedicion-al-avion-de-los-uruguayos.md
@@ -326,7 +326,7 @@ mendoza-best-of-wine-tourism,attraction,,"Мендоса, Best of wine tourism",
 mendoza-odna-zona-v-den,author_tip,mistake,Мендоса: главная ошибка — смешать винные зоны за один день,published,,medium,2026-06-30,False,2026-09-28,False,152,lichnyy-opyt/mendoza-odna-zona-v-den.md
 mentalitet-i-etiket,guide,culture,Менталитет и этикет аргентинцев: как здесь принято,published,,high,2026-07-05,True,2026-08-19,False,731,kultura/mentalitet-i-etiket.md
 mercedes-corrientes,city,,Мерседес (Корриентес),published,litoral,medium,2026-07-06,False,2026-10-04,False,231,goroda/mercedes-corrientes.md
-merlo,city,,Мерло,published,cuyo,medium,2026-07-06,False,2026-10-04,False,21,goroda/merlo.md
+merlo,city,,Мерло,published,cuyo,medium,2026-07-06,False,2026-10-04,False,364,goroda/merlo.md
 mezhgorodnie-avtobusy,transport,,Междугородние автобусы Аргентины (micros),published,,high,2026-07-04,False,2026-12-31,False,652,transport/mezhgorodnie-avtobusy.md
 mify-ob-argentine,guide,culture,"Мифы об Аргентине, в которые пора перестать верить",published,,high,2026-07-04,False,2026-12-31,False,574,kultura/mify-ob-argentine.md
 minitrekking-sobre-el-glaciar-perito-moreno,attraction,,Minitrekking sobre el Glaciar Перито-Морено,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/minitrekking-sobre-el-glaciar-perito-moreno.md
@@ -360,7 +360,7 @@ navegacion-en-los-rios-limay-y-neuquen,attraction,,Sailing on the Limay and Neuq
 navegacion-en-tierra-del-fuego,attraction,,Navegación en Огненная Земля,stub,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,70,dostoprimechatelnosti/navegacion-en-tierra-del-fuego.md
 navegacion-entre-glaciares,attraction,,Sailing among glaciers,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/navegacion-entre-glaciares.md
 navegacion-por-el-lago-argentino,attraction,,Sailing along Lago Argentino,published,patagonia,medium,2026-07-07,False,2026-10-05,False,62,dostoprimechatelnosti/navegacion-por-el-lago-argentino.md
-necochea,city,,Некочеа,published,buenos-aires-province,medium,2026-07-06,False,2026-10-04,False,21,goroda/necochea.md
+necochea,city,,Некочеа,published,buenos-aires-province,medium,2026-07-06,False,2026-10-04,False,317,goroda/necochea.md
 neuken,city,,Неукен,published,patagonia,high,2026-07-02,False,2026-12-29,False,656,goroda/neuken.md
 nevado-de-chani,attraction,,Nevado de Chañi,stub,noa,medium,2026-07-07,False,2026-10-05,False,61,dostoprimechatelnosti/nevado-de-chani.md
 newells-old-boys,attraction,,Newell's Old Boys,published,litoral,medium,2026-07-07,False,2026-10-05,False,62,dostoprimechatelnosti/newells-old-boys.md
@@ -388,34 +388,34 @@ parque-general-san-martin,attraction,,General San Martin Park,stub,cuyo,medium,2
 parque-marino-costero-patagonia-austral,attraction,,Parque Marino Costero Патагония Austral,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,61,dostoprimechatelnosti/parque-marino-costero-patagonia-austral.md
 parque-marino-isla-pinguino,attraction,,Isla Pingüino Sea Park,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,60,dostoprimechatelnosti/parque-marino-isla-pinguino.md
 parque-marino-makenke,attraction,,Makenke Sea Park,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/parque-marino-makenke.md
-parque-nacional-aconquija,national_park,,Национальный парк Аконкиха,published,noa,medium,2026-07-07,False,2026-10-05,False,74,natsionalnye-parki/parque-nacional-aconquija.md
-parque-nacional-baritu,national_park,,Национальный парк Баритý,published,noa,medium,2026-07-07,False,2026-10-05,False,87,natsionalnye-parki/parque-nacional-baritu.md
-parque-nacional-bosques-petrificados,national_park,,национальный парк Bosques Petrificados,published,patagonia,medium,2026-07-07,False,2026-10-05,False,66,natsionalnye-parki/parque-nacional-bosques-petrificados.md
-parque-nacional-calilegua,national_park,,Национальный парк Калилегуа,published,noa,medium,2026-07-07,False,2026-10-05,False,81,natsionalnye-parki/parque-nacional-calilegua.md
-parque-nacional-campos-del-tuyu,national_park,,Национальный парк Кампос-дель-Тую,published,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,80,natsionalnye-parki/parque-nacional-campos-del-tuyu.md
+parque-nacional-aconquija,national_park,,Национальный парк Аконкиха,published,noa,medium,2026-07-07,False,2026-10-05,False,436,natsionalnye-parki/parque-nacional-aconquija.md
+parque-nacional-baritu,national_park,,Национальный парк Баритý,published,noa,medium,2026-07-07,False,2026-10-05,False,404,natsionalnye-parki/parque-nacional-baritu.md
+parque-nacional-bosques-petrificados,national_park,,национальный парк Bosques Petrificados,published,patagonia,medium,2026-07-07,False,2026-10-05,False,386,natsionalnye-parki/parque-nacional-bosques-petrificados.md
+parque-nacional-calilegua,national_park,,Национальный парк Калилегуа,published,noa,medium,2026-07-07,False,2026-10-05,False,411,natsionalnye-parki/parque-nacional-calilegua.md
+parque-nacional-campos-del-tuyu,national_park,,Национальный парк Кампос-дель-Тую,published,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,383,natsionalnye-parki/parque-nacional-campos-del-tuyu.md
 parque-nacional-chaco,national_park,,Национальный парк Чако,published,litoral,high,2026-07-02,False,2026-12-29,False,478,natsionalnye-parki/parque-nacional-chaco.md
-parque-nacional-ciervo-de-los-pantanos,national_park,,Национальный парк Сьерво-де-лос-Пантанос,published,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,95,natsionalnye-parki/parque-nacional-ciervo-de-los-pantanos.md
-parque-nacional-copo,national_park,,Национальный парк Копо,published,noa,medium,2026-07-07,False,2026-10-05,False,91,natsionalnye-parki/parque-nacional-copo.md
-parque-nacional-el-leoncito,national_park,,национальный парк El Leoncito,published,cuyo,medium,2026-07-07,False,2026-10-05,False,62,natsionalnye-parki/parque-nacional-el-leoncito.md
+parque-nacional-ciervo-de-los-pantanos,national_park,,Национальный парк Сьерво-де-лос-Пантанос,published,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,397,natsionalnye-parki/parque-nacional-ciervo-de-los-pantanos.md
+parque-nacional-copo,national_park,,Национальный парк Копо,published,noa,medium,2026-07-07,False,2026-10-05,False,378,natsionalnye-parki/parque-nacional-copo.md
+parque-nacional-el-leoncito,national_park,,национальный парк El Leoncito,published,cuyo,medium,2026-07-07,False,2026-10-05,False,406,natsionalnye-parki/parque-nacional-el-leoncito.md
 parque-nacional-el-palmar,national_park,,Национальный парк Эль-Пальмар,published,litoral,high,2026-07-02,False,2026-12-29,False,529,natsionalnye-parki/parque-nacional-el-palmar.md
-parque-nacional-el-rey,national_park,,Национальный парк Эль-Рей,published,noa,medium,2026-07-07,False,2026-10-05,False,80,natsionalnye-parki/parque-nacional-el-rey.md
+parque-nacional-el-rey,national_park,,Национальный парк Эль-Рей,published,noa,medium,2026-07-07,False,2026-10-05,False,384,natsionalnye-parki/parque-nacional-el-rey.md
 parque-nacional-iguazu-patrimonio-de-la-humanidad,national_park,,национальный парк Игуасу: Patrimonio de la Humanidad,stub,litoral,medium,2026-07-07,False,2026-10-05,False,67,natsionalnye-parki/parque-nacional-iguazu-patrimonio-de-la-humanidad.md
-parque-nacional-islas-de-santa-fe,national_park,,национальный парк Islas de Santa Fe,published,litoral,medium,2026-07-07,False,2026-10-05,False,26,natsionalnye-parki/parque-nacional-islas-de-santa-fe.md
-parque-nacional-lago-puelo,national_park,,Национальный парк Лаго-Пуэло,published,patagonia,medium,2026-07-07,False,2026-10-05,False,82,natsionalnye-parki/parque-nacional-lago-puelo.md
-parque-nacional-laguna-blanca,national_park,,национальный парк Laguna Blanca,published,patagonia,medium,2026-07-07,False,2026-10-05,False,50,natsionalnye-parki/parque-nacional-laguna-blanca.md
-parque-nacional-los-alerces-patrimonio-de-la-humanidad,national_park,,национальный парк Los Alerces: Patrimonio de la Humanidad,published,patagonia,medium,2026-07-07,False,2026-10-05,False,61,natsionalnye-parki/parque-nacional-los-alerces-patrimonio-de-la-humanidad.md
-parque-nacional-los-arrayanes,national_park,,Национальный парк Лос-Арраянес,published,patagonia,medium,2026-07-07,False,2026-10-05,False,82,natsionalnye-parki/parque-nacional-los-arrayanes.md
-parque-nacional-los-cardones,national_park,,национальный парк Los Cardones,published,noa,medium,2026-07-07,False,2026-10-05,False,61,natsionalnye-parki/parque-nacional-los-cardones.md
+parque-nacional-islas-de-santa-fe,national_park,,национальный парк Islas de Santa Fe,published,litoral,medium,2026-07-07,False,2026-10-05,False,390,natsionalnye-parki/parque-nacional-islas-de-santa-fe.md
+parque-nacional-lago-puelo,national_park,,Национальный парк Лаго-Пуэло,published,patagonia,medium,2026-07-07,False,2026-10-05,False,376,natsionalnye-parki/parque-nacional-lago-puelo.md
+parque-nacional-laguna-blanca,national_park,,национальный парк Laguna Blanca,published,patagonia,medium,2026-07-07,False,2026-10-05,False,363,natsionalnye-parki/parque-nacional-laguna-blanca.md
+parque-nacional-los-alerces-patrimonio-de-la-humanidad,national_park,,национальный парк Los Alerces: Patrimonio de la Humanidad,published,patagonia,medium,2026-07-07,False,2026-10-05,False,396,natsionalnye-parki/parque-nacional-los-alerces-patrimonio-de-la-humanidad.md
+parque-nacional-los-arrayanes,national_park,,Национальный парк Лос-Арраянес,published,patagonia,medium,2026-07-07,False,2026-10-05,False,395,natsionalnye-parki/parque-nacional-los-arrayanes.md
+parque-nacional-los-cardones,national_park,,национальный парк Los Cardones,published,noa,medium,2026-07-07,False,2026-10-05,False,398,natsionalnye-parki/parque-nacional-los-cardones.md
 parque-nacional-los-glaciares-patrimonio-de-la-humanidad,national_park,,национальный парк Los Glaciares: Patrimonio de la Humanidad,stub,patagonia,medium,2026-07-07,False,2026-10-05,False,66,natsionalnye-parki/parque-nacional-los-glaciares-patrimonio-de-la-humanidad.md
-parque-nacional-monte-leon,national_park,,национальный парк Monte León,published,patagonia,medium,2026-07-07,False,2026-10-05,False,68,natsionalnye-parki/parque-nacional-monte-leon.md
-parque-nacional-perito-moreno,national_park,,Национальный парк Перито-Морено,published,patagonia,medium,2026-07-07,False,2026-10-05,False,88,natsionalnye-parki/parque-nacional-perito-moreno.md
-parque-nacional-pre-delta,national_park,,Национальный парк Пре-Дельта,published,litoral,medium,2026-07-07,False,2026-10-05,False,76,natsionalnye-parki/parque-nacional-pre-delta.md
+parque-nacional-monte-leon,national_park,,национальный парк Monte León,published,patagonia,medium,2026-07-07,False,2026-10-05,False,384,natsionalnye-parki/parque-nacional-monte-leon.md
+parque-nacional-perito-moreno,national_park,,Национальный парк Перито-Морено,published,patagonia,medium,2026-07-07,False,2026-10-05,False,420,natsionalnye-parki/parque-nacional-perito-moreno.md
+parque-nacional-pre-delta,national_park,,Национальный парк Пре-Дельта,published,litoral,medium,2026-07-07,False,2026-10-05,False,393,natsionalnye-parki/parque-nacional-pre-delta.md
 parque-nacional-rio-pilcomayo,national_park,,Национальный парк Рио-Пилькомайо,published,litoral,high,2026-07-07,True,2026-08-21,False,539,natsionalnye-parki/parque-nacional-rio-pilcomayo.md
-parque-nacional-san-guillermo,national_park,,национальный парк San Guillermo,published,cuyo,medium,2026-07-07,False,2026-10-05,False,59,natsionalnye-parki/parque-nacional-san-guillermo.md
-parque-nacional-tierra-del-fuego,national_park,,национальный парк Огненная Земля,published,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,64,natsionalnye-parki/parque-nacional-tierra-del-fuego.md
+parque-nacional-san-guillermo,national_park,,национальный парк San Guillermo,published,cuyo,medium,2026-07-07,False,2026-10-05,False,390,natsionalnye-parki/parque-nacional-san-guillermo.md
+parque-nacional-tierra-del-fuego,national_park,,национальный парк Огненная Земля,published,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,401,natsionalnye-parki/parque-nacional-tierra-del-fuego.md
 parque-natural-valle-fertil,attraction,,Valle Fértil Natural Park,stub,cuyo,medium,2026-07-07,False,2026-10-05,False,61,dostoprimechatelnosti/parque-natural-valle-fertil.md
 parque-provincial-cordon-del-plata,national_park,,Провинциальный парк Кордон-дель-Плата,published,cuyo,medium,2026-07-07,False,2026-10-05,False,57,natsionalnye-parki/parque-provincial-cordon-del-plata.md
-parque-provincial-ischigualasto,national_park,,провинциальный парк Ischigualasto,published,cuyo,medium,2026-07-07,False,2026-10-05,False,59,natsionalnye-parki/parque-provincial-ischigualasto.md
+parque-provincial-ischigualasto,national_park,,провинциальный парк Ischigualasto,published,cuyo,medium,2026-07-07,False,2026-10-05,False,412,natsionalnye-parki/parque-provincial-ischigualasto.md
 parques-de-parana,attraction,,Paraná Parks,stub,litoral,medium,2026-07-07,False,2026-10-05,False,59,dostoprimechatelnosti/parques-de-parana.md
 parques-naturales-ischigualasto-y-talampaya-patrimonios-de-la-humanidad,attraction,,Ischigualasto and Talampaya Natural Parks: World Heritage Sites,stub,noa,medium,2026-07-07,False,2026-10-05,False,74,dostoprimechatelnosti/parques-naturales-ischigualasto-y-talampaya-patrimonios-de-la-humanidad.md
 paseos-acuaticos-en-herradura,attraction,,Water rides in Herradura,stub,litoral,medium,2026-07-07,False,2026-10-05,False,61,dostoprimechatelnosti/paseos-acuaticos-en-herradura.md
@@ -505,7 +505,7 @@ reserva-natural-pichi-mahuida,attraction,,Природный заповедни�
 reserva-natural-quebrada-de-los-condores,attraction,,Природный заповедник Кебрада-де-лос-Кондорес,published,noa,medium,2026-07-07,False,2026-10-05,False,85,dostoprimechatelnosti/reserva-natural-quebrada-de-los-condores.md
 reserva-natural-silvestre-isla-de-los-estados,attraction,,Природный заповедник Исла-де-лос-Эстадос (Остров Штатов),published,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,90,dostoprimechatelnosti/reserva-natural-silvestre-isla-de-los-estados.md
 reserva-provincial-parque-luro,attraction,,Провинциальный заповедник Парке-Луро,published,pampa,medium,2026-07-07,False,2026-10-05,False,86,dostoprimechatelnosti/reserva-provincial-parque-luro.md
-resistencia,city,,Ресистенсия,published,litoral,high,2026-07-07,False,2027-01-03,False,67,goroda/resistencia.md
+resistencia,city,,Ресистенсия,published,litoral,high,2026-07-07,False,2027-01-03,False,352,goroda/resistencia.md
 restorany-i-kak-est,guide,culture,"Рестораны и как здесь едят: часы, типы заведений, счёт",published,,high,2026-07-04,False,2026-12-31,False,514,kultura/restorany-i-kak-est.md
 ria-de-bahia-blanca,attraction,,Bahía Blanca ria,stub,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/ria-de-bahia-blanca.md
 rio-gallegos,attraction,,Рио-Гальегос,published,patagonia,medium,2026-07-07,False,2026-10-05,False,78,dostoprimechatelnosti/rio-gallegos.md
@@ -592,7 +592,7 @@ susques,city,,Сускес,published,noa,medium,2026-07-06,False,2026-10-04,Fals
 tafi-del-valle,attraction,,Тафи-дель-Валье,published,noa,medium,2026-07-06,False,2026-10-04,False,269,dostoprimechatelnosti/tafi-del-valle.md
 tafi-viejo,attraction,,Tafí Viejo,stub,noa,medium,2026-07-07,False,2026-10-05,False,61,dostoprimechatelnosti/tafi-viejo.md
 talampaya,national_park,,Национальный парк Талампая,published,cuyo,high,2026-07-02,False,2026-12-29,False,955,natsionalnye-parki/talampaya.md
-tandil,city,,Тандиль,published,buenos-aires-province,medium,2026-07-06,False,2026-10-04,False,21,goroda/tandil.md
+tandil,city,,Тандиль,published,buenos-aires-province,medium,2026-07-06,False,2026-10-04,False,344,goroda/tandil.md
 tango,guide,culture,"Танго в Аргентине: культура, милонги, где смотреть и танцевать",published,,high,2026-07-03,False,2026-12-30,False,464,kultura/tango.md
 tango-en-buenos-aires,attraction,,Танго в Буэнос-Айресе,published,caba,medium,2026-07-07,False,2026-10-05,False,161,dostoprimechatelnosti/tango-en-buenos-aires.md
 tastil-y-santa-rosa-de-tastil,attraction,,Tastil and Santa Rosa de Tastil,stub,noa,medium,2026-07-07,False,2026-10-05,False,65,dostoprimechatelnosti/tastil-y-santa-rosa-de-tastil.md
@@ -610,7 +610,7 @@ tilcara,attraction,,Tilcara,stub,noa,medium,2026-07-07,False,2026-10-05,False,63
 tilkara,attraction,,Тилькара и крепость Пукара,published,noa,high,2026-07-03,False,2026-12-30,False,428,dostoprimechatelnosti/tilkara.md
 tinogasta,attraction,,Tinogasta,stub,noa,medium,2026-07-07,False,2026-10-05,False,63,dostoprimechatelnosti/tinogasta.md
 tolhuin,attraction,,Tolhuin,stub,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,59,dostoprimechatelnosti/tolhuin.md
-tradicion-cervecera-en-santa-fe,attraction,,Brewing tradition in Santa Fe,published,litoral,medium,2026-07-07,False,2026-10-05,False,68,dostoprimechatelnosti/tradicion-cervecera-en-santa-fe.md
+tradicion-cervecera-en-santa-fe,attraction,,Brewing tradition in Santa Fe,published,litoral,medium,2026-07-07,False,2026-10-05,False,63,dostoprimechatelnosti/tradicion-cervecera-en-santa-fe.md
 tradiciones-gauchas,attraction,,Gaucho Traditions,stub,buenos-aires-province,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/tradiciones-gauchas.md
 travesia-4x4-en-tierra-del-fuego,attraction,,Travesía 4x4 en Огненная Земля,stub,tierra-del-fuego,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/travesia-4x4-en-tierra-del-fuego.md
 trekking-en-bosques-y-lagos,attraction,,Trekking in forests and lakes,published,patagonia,medium,2026-07-07,False,2026-10-05,False,63,dostoprimechatelnosti/trekking-en-bosques-y-lagos.md
@@ -662,7 +662,7 @@ vinnyy-marshrut,route,,Винный маршрут: Мендоса и высок
 vino-argentiny,guide,culture,Вино Аргентины: сорта и регионы,published,,high,2026-07-04,False,2026-12-31,False,535,kultura/vino-argentiny.md
 vinos-de-san-juan,attraction,,San Juan wines,stub,cuyo,medium,2026-07-07,False,2026-10-05,False,66,dostoprimechatelnosti/vinos-de-san-juan.md
 vinos-de-tolombon,attraction,,Tolombón Wines,stub,noa,medium,2026-07-07,False,2026-10-05,False,62,dostoprimechatelnosti/vinos-de-tolombon.md
-vinos-del-valle-patagonico,attraction,,Патагонияn valley wines,stub,pampa,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/vinos-del-valle-patagonico.md
+vinos-del-valle-patagonico,attraction,,Вина патагонских долин,stub,pampa,medium,2026-07-07,False,2026-10-05,False,64,dostoprimechatelnosti/vinos-del-valle-patagonico.md
 viza-cifrovogo-kochevnika,guide,immigration,Виза цифрового кочевника Аргентины,published,,medium,2026-07-02,True,2026-08-16,False,1108,pereezd/viza-cifrovogo-kochevnika.md
 viza-cifrovogo-kochevnika-chto-daet,faq,,,published,,high,2026-06-30,True,2026-08-14,True,113,faq/viza-cifrovogo-kochevnika-chto-daet.md
 viza-i-granica-dlya-rossiyan,guide,planning,Виза и граница для россиян: пустят ли и что спрашивают,published,,medium,2026-07-05,True,2026-08-19,False,818,puteshestvie/viza-i-granica-dlya-rossiyan.md

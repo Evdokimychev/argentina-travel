@@ -4,8 +4,7 @@ type: attraction
 title: Horseback rides in Belvedere Hill and Inacayal waterfall
 title_es: Cabalgatas en cerro Belvedere y cascada Inacayal
 title_en: Horseback rides in Belvedere Hill and Inacayal waterfall
-summary: En Villa La Angostura, siente el privilegio de explorar a caballo paisajes
-  únicos de la Патагония argentina.
+summary: "Конные прогулки у Вилья-Ла-Ангостуры: тропы к смотровой Бельведере и водопаду Инакайаль."
 status: published
 site_sections:
 - puteshestviya-po-argentine

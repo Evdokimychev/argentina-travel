@@ -14,6 +14,7 @@ import type {
   KbSectionMeta,
 } from "./types";
 import { entryHref } from "./urls";
+import { isPublicKbEntry } from "./publication-quality";
 
 const KB_INDEX_DIR = path.join(
   process.cwd(),
@@ -36,11 +37,9 @@ let navigationCache: KbNavigation | null = null;
 function loadEntries(): KbEntry[] {
   if (!entriesCache) {
     const data = readJson<{ entities: KbEntry[] }>("content.json");
-    // backlog — незаполненные слоты личных историй; stub — импортированные
-    // черновики (напр. Argentina.travel), ещё не доведённые до качества: на сайте не показываем.
-    entriesCache = data.entities.filter(
-      (entry) => entry.status !== "backlog" && entry.status !== "stub",
-    );
+    // Один фильтр управляет всеми публичными каналами: страницами, поиском,
+    // картой, рекомендациями и sitemap. Исходники карантинных записей сохраняются.
+    entriesCache = data.entities.filter(isPublicKbEntry);
     byIdCache = new Map(entriesCache.map((entry) => [entry.id, entry]));
   }
   return entriesCache;

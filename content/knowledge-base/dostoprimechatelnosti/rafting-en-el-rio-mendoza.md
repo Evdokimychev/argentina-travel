@@ -4,8 +4,7 @@ type: attraction
 title: Rafting en el río Мендоса
 title_es: Rafting en el río Mendoza
 title_en: Rafting in the Mendoza River
-summary: Vive una aventura llena de adrenalina, en un río de deshielo con vistas a
-  la cordillera.
+summary: "Рафтинг по талой реке Мендоса с видами на Анды."
 status: published
 site_sections:
 - puteshestviya-po-argentine

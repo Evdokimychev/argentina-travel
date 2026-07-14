@@ -17,7 +17,7 @@ const GLOSSARY = [
   ["Patagonia", "Патагония"],
   ["Cuyo", "Куйо"],
   ["NOA", "Северо-Запад"],
-  ["Litoral", "Литорал"],
+  ["Litoral", "Северо-Восток (Литораль)"],
   ["Aconcagua", "Аконкагуа"],
   ["Iguazú", "Игуасу"],
   ["Iguazu", "Игуасу"],
@@ -33,6 +33,10 @@ const GLOSSARY = [
   ["hectáreas", "гектаров"],
   ["hectares", "гектаров"],
 ];
+
+const SORTED_GLOSSARY = [...GLOSSARY].sort(([a], [b]) => b.length - a.length);
+const PROTECTED_FRAGMENT_RE = /(<[^>]*>|https?:\/\/[^\s<]+|www\.[^\s<]+|[\p{L}\p{N}._%+-]+@[\p{L}\p{N}.-]+\.[\p{L}]{2,})/giu;
+const LATIN_WITH_CYRILLIC_RE = /(?=[\p{L}\p{M}-]*\p{Script=Latin})(?=[\p{L}\p{M}-]*\p{Script=Cyrillic})[\p{L}\p{M}-]+/gu;
 
 const FACT_LABELS_ES = {
   "Ubicación geográfica": "Географическое положение",
@@ -71,15 +75,32 @@ if (fs.existsSync(cachePath)) {
 }
 
 function applyGlossary(text) {
-  let out = text;
-  for (const [from, to] of GLOSSARY) {
-    out = out.replace(new RegExp(from.replace(/[.*+?^${]()|[\]\\]/g, "\\$&"), "gi"), to);
-  }
-  return out;
+  if (!text) return text;
+
+  return text
+    .split(PROTECTED_FRAGMENT_RE)
+    .map((fragment, index) => {
+      if (index % 2 === 1) return fragment;
+
+      let out = fragment;
+      for (const [from, to] of SORTED_GLOSSARY) {
+        const escaped = from.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+        // Unicode letter/number guards prevent short terms such as NOA from
+        // being inserted into Latinoamerica while still matching punctuation.
+        const pattern = new RegExp(`(?<![\\p{L}\\p{N}])${escaped}(?![\\p{L}\\p{N}])`, "giu");
+        out = out.replace(pattern, to);
+      }
+      return out;
+    })
+    .join("");
 }
 
 export function applyGlossaryExport(text) {
   return applyGlossary(text);
+}
+
+export function findMixedScriptWords(text) {
+  return text?.match(LATIN_WITH_CYRILLIC_RE) ?? [];
 }
 
 export function translateFromCache(text, langpair = "es|ru") {
@@ -96,7 +117,10 @@ async function myMemoryTranslate(text, langpair, { cacheOnly = false } = {}) {
   if (cacheOnly || quotaExhausted) return null;
 
   const url = new URL("https://api.mymemory.translated.net/get");
-  url.searchParams.set("q", text.slice(0, 450));
+  if (text.length > 450) {
+    throw new Error(`Translation chunk exceeds MyMemory limit (${text.length} > 450)`);
+  }
+  url.searchParams.set("q", text);
   url.searchParams.set("langpair", langpair);
 
   const res = await fetch(url.toString(), {
@@ -123,8 +147,9 @@ export async function translateToRu(text, { preferLang = "es", cacheOnly = false
   const cached = translateFromCache(text, langpair);
   if (cached) return cached;
 
-  const chunks = text.match(/[^.!?]+[.!?]+|[^.!?]+$/g) ?? [text];
+  const chunks = splitTranslationChunks(text);
   const parts = [];
+  const failures = [];
   for (const chunk of chunks) {
     const trimmed = chunk.trim();
     if (!trimmed) continue;
@@ -137,15 +162,54 @@ export async function translateToRu(text, { preferLang = "es", cacheOnly = false
       parts.push(chunkCached);
       continue;
     }
-    if (cacheOnly) continue;
+    if (cacheOnly) {
+      failures.push(trimmed);
+      continue;
+    }
     try {
       const translated = await myMemoryTranslate(trimmed, langpair);
       if (translated) parts.push(translated);
-    } catch {
-      /* skip failed chunk */
+      else failures.push(trimmed);
+    } catch (error) {
+      failures.push(trimmed);
     }
   }
-  return applyGlossary(parts.join(" ").replace(/\s+/g, " ").trim());
+  if (failures.length > 0 || parts.length !== chunks.filter((chunk) => chunk.trim()).length) {
+    return "";
+  }
+
+  const result = applyGlossary(parts.join(" ").replace(/\s+/g, " ").trim());
+  return findMixedScriptWords(result).length === 0 ? result : "";
+}
+
+export function splitTranslationChunks(text, maxLength = 450) {
+  const sentences = text.match(/[^.!?\n]+[.!?]+|[^.!?\n]+|\n+/g) ?? [text];
+  const chunks = [];
+
+  for (const sentence of sentences) {
+    const trimmed = sentence.trim();
+    if (!trimmed) continue;
+    if (trimmed.length <= maxLength) {
+      chunks.push(trimmed);
+      continue;
+    }
+
+    const words = trimmed.split(/\s+/);
+    let current = "";
+    for (const word of words) {
+      if (word.length > maxLength) throw new Error("Translation contains an unsplittable token");
+      const candidate = current ? `${current} ${word}` : word;
+      if (candidate.length > maxLength) {
+        chunks.push(current);
+        current = word;
+      } else {
+        current = candidate;
+      }
+    }
+    if (current) chunks.push(current);
+  }
+
+  return chunks;
 }
 
 export async function translateActivity(activity) {

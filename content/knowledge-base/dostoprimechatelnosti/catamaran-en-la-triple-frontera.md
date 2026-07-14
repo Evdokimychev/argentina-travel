@@ -4,8 +4,7 @@ type: attraction
 title: Catamaran at the Triple Frontier
 title_es: Catamarán en la Triple Frontera
 title_en: Catamaran at the Triple Frontier
-summary: En la región Литорал, navega hacia el lugar donde confluyen aguas de Argentina,
-  Brasil y Paraguay.
+summary: "Прогулка на катамаране к «тройной границе», где сходятся воды Аргентины, Бразилии и Парагвая."
 status: published
 site_sections:
 - puteshestviya-po-argentine

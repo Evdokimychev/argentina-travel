@@ -4,8 +4,7 @@ type: attraction
 title: Буэнос-Айрес Atlantic Coast
 title_es: Costa Atlántica Bonaerense
 title_en: Buenos Aires Atlantic Coast
-summary: Allí donde las aguas del océano Atlántico bañan inmensas playas, elige tu
-  propia aventura para disfrutar de sol a sol.
+summary: "Атлантическое побережье провинции Буэнос-Айрес: длинные пляжи и курорты от Мар-дель-Платы до юга."
 status: published
 site_sections:
 - puteshestviya-po-argentine

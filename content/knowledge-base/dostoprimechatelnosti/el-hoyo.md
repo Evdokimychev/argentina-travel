@@ -4,8 +4,7 @@ type: attraction
 title: El Hoyo
 title_es: El Hoyo
 title_en: El Hoyo
-summary: En la Патагония, entre maravillas naturales, te espera la Capital Nacional
-  de la Fruta Fina.
+summary: "Эль-Ойо в Патагонии (Чубут) — «национальная столица мелких ягод» среди гор и садов."
 status: published
 site_sections:
 - puteshestviya-po-argentine

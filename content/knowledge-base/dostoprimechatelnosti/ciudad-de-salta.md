@@ -4,7 +4,7 @@ type: attraction
 title: Город Salta
 title_es: Ciudad de Salta
 title_en: City of Salta
-summary: Elige tu forma de disfrutar la capital más grande del noroeste argentino.
+summary: "Сальта «Ла Линда» — самая большая столица аргентинского северо-запада: колониальный центр и ворота в кальчакские долины."
 status: published
 site_sections:
 - puteshestviya-po-argentine

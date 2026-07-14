@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-13 11:23",
+  "generated_at": "2026-07-14 17:08",
   "total_entities": 689,
   "entities": [
     {
@@ -1322,7 +1322,7 @@
       "type": "guide",
       "subtype": "culture",
       "title": "Асадо: аргентинское барбекю от ритуала до отрубов",
-      "summary": "Асадо — не просто жареное мясо, а социальный ритуал в основе аргентинской культуры: как устроена паррилья, кто такой асадор, какие отрубы заказывать, чем чоripán отличается от бифе-де-чоризо и как вести себя за столом, чтобы понять страну через её главное застолье.",
+      "summary": "Асадо — не просто жареное мясо, а социальный ритуал в основе аргентинской культуры: как устроена паррилья, кто такой асадор, какие отрубы заказывать, чем чорипан отличается от бифе-де-чоризо и как вести себя за столом, чтобы понять страну через её главное застолье.",
       "status": "published",
       "region_id": null,
       "province": null,
@@ -1378,7 +1378,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 2,
-        "word_count": 625,
+        "word_count": 623,
         "needs_attention": false
       },
       "path": "kultura/asado.md"
@@ -1961,7 +1961,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Bird watching in Santa Cruz",
-      "summary": "Visita la Патагония Argentina y recorre hábitats de aves en ambiente extremos y de alta biodiversidad.",
+      "summary": "Наблюдение за птицами в Санта-Крусе: экстремальные, но богатые жизнью местообитания патагонской фауны.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Санта-Крус",
@@ -2978,7 +2978,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Buceo en las costas de Ушуайя",
-      "summary": "En la Патагония Argentina, vive la aventura de explorar el universo submarino del Canal Beagle.",
+      "summary": "Дайвинг в водах канала Бигл у Ушуайи — погружение в подводный мир самой южной Патагонии.",
       "status": "published",
       "region_id": "tierra-del-fuego",
       "province": "Огненная Земля",
@@ -3565,7 +3565,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Horseback rides in Belvedere Hill and Inacayal waterfall",
-      "summary": "En Villa La Angostura, siente el privilegio de explorar a caballo paisajes únicos de la Патагония argentina.",
+      "summary": "Конные прогулки у Вилья-Ла-Ангостуры: тропы к смотровой Бельведере и водопаду Инакайаль.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -3637,7 +3637,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Cabalgatas en la estepa de Барилоче",
-      "summary": "Date el placer de pasear a caballo por paisajes soñados de la Патагония argentina.",
+      "summary": "Верховые прогулки по патагонской степи в окрестностях Барилоче.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Рио-Негро",
@@ -3709,7 +3709,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Horseback riding in the hills of Буэнос-Айрес",
-      "summary": "Date el placer de montar a caballo y disfrutar una actividad típica de la provincia de Буэнос-Айрес.",
+      "summary": "Конные прогулки по сьеррам провинции Буэнос-Айрес — традиционное занятие этих мест.",
       "status": "published",
       "region_id": "buenos-aires-province",
       "province": "Провинция Буэнос-Айрес",
@@ -4365,7 +4365,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Atuel Canyon",
-      "summary": "En Мендоса, disfruta el turismo aventura a través de un paraje natural originado en la era Paleozoica.",
+      "summary": "Каньон реки Атуэль в Мендосе (Сан-Рафаэль): живописное ущелье и активный отдых на воде.",
       "status": "published",
       "region_id": "cuyo",
       "province": "Мендоса",
@@ -5035,7 +5035,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Ñivinco and Pichi Traful Waterfalls",
-      "summary": "Vive la aventura de recorrer senderos andinos y encontrar dos tesoros del национальный парк Nahuel Huapi.",
+      "summary": "Два водопада в национальном парке Науэль-Уапи: андские тропы к Нивинко и Пичи-Трафуль.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -5207,7 +5207,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Catamaran at the Triple Frontier",
-      "summary": "En la región Литорал, navega hacia el lugar donde confluyen aguas de Argentina, Brasil y Paraguay.",
+      "summary": "Прогулка на катамаране к «тройной границе», где сходятся воды Аргентины, Бразилии и Парагвая.",
       "status": "published",
       "region_id": "litoral",
       "province": "Мисьонес",
@@ -5399,7 +5399,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Caviahue - Copahue",
-      "summary": "Visita la Патагония argentina y vive experiencias de aventura y relax en un entorno natural soñado.",
+      "summary": "Кавиауэ и Копауэ в Неукене: термальные источники, вулкан и активный отдых среди араукарий.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -5903,7 +5903,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Cerros Catedral y Перито-Морено",
-      "summary": "La propuesta de deportes invernales más importante de LatiСеверо-Западmérica te espera en la Патагония Argentina.",
+      "summary": "Крупнейшие горнолыжные центры Патагонии — Серро-Катедраль у Барилоче и Серро-Перито-Морено.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Рио-Негро",
@@ -6746,7 +6746,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Город Corrientes",
-      "summary": "Recorre cuatro siglos de historia",
+      "summary": "Коррьентес — столица провинции на берегу Параны: четыре века истории, карнавал и чамаме.",
       "status": "published",
       "region_id": "litoral",
       "province": "Корриентес",
@@ -6890,7 +6890,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Город Salta",
-      "summary": "Elige tu forma de disfrutar la capital más grande del noroeste argentino.",
+      "summary": "Сальта «Ла Линда» — самая большая столица аргентинского северо-запада: колониальный центр и ворота в кальчакские долины.",
       "status": "published",
       "region_id": "noa",
       "province": "Сальта",
@@ -7234,7 +7234,7 @@
       "id": "colon-entre-rios",
       "type": "city",
       "subtype": null,
-      "title": "Колóн",
+      "title": "Колон",
       "summary": "Курортный городок на берегу реки Уругвай в провинции Энтре-Риос: песчаные речные пляжи, термальный комплекс и удобная база для поездки в национальный парк Эль-Пальмар с рощами пальм ятай. Одно из любимых мест внутреннего пляжно-термального отдыха аргентинцев.",
       "status": "published",
       "region_id": "litoral",
@@ -7268,7 +7268,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 23,
+        "word_count": 342,
         "needs_attention": false
       },
       "path": "goroda/colon-entre-rios.md"
@@ -8034,7 +8034,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Буэнос-Айрес Atlantic Coast",
-      "summary": "Allí donde las aguas del océano Atlántico bañan inmensas playas, elige tu propia aventura para disfrutar de sol a sol.",
+      "summary": "Атлантическое побережье провинции Буэнос-Айрес: длинные пляжи и курорты от Мар-дель-Платы до юга.",
       "status": "published",
       "region_id": "buenos-aires-province",
       "province": "Провинция Буэнос-Айрес",
@@ -9600,7 +9600,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 63,
+        "word_count": 395,
         "needs_attention": false
       },
       "path": "goroda/el-calafate.md"
@@ -9752,7 +9752,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 62,
+        "word_count": 387,
         "needs_attention": false
       },
       "path": "goroda/el-chalten.md"
@@ -9906,7 +9906,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "El Hoyo",
-      "summary": "En la Патагония, entre maravillas naturales, te espera la Capital Nacional de la Fruta Fina.",
+      "summary": "Эль-Ойо в Патагонии (Чубут) — «национальная столица мелких ягод» среди гор и садов.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Чубут",
@@ -10488,8 +10488,8 @@
       "id": "el-tren-patagonico",
       "type": "attraction",
       "subtype": null,
-      "title": "Патагонияn Train",
-      "summary": "Reserva tu lugar en el legendario tren que atraviesa la estepa patagónica y une la cordillera con el océano.",
+      "title": "Патагонский поезд",
+      "summary": "Легендарный патагонский поезд через степь Рио-Негро, связывающий Анды и Атлантику.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Рио-Негро",
@@ -10503,7 +10503,7 @@
       "media": {
         "hero": {
           "url": "/media/argentina-travel/el-tren-patagonico/1624482415407-26.jpg",
-          "alt": "Патагонияn Train",
+          "alt": "Патагонский поезд",
           "author": "INPROTUR / Visit Argentina",
           "license": "argentina.travel",
           "source_page": "https://www.argentina.travel/actividades/el-tren-patagonico"
@@ -10741,7 +10741,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Empedrado",
-      "summary": "En el Литорал argentino, encuentra un lugar soñado para practicar la pesca deportiva.",
+      "summary": "Эмпедрадо в Корриентесе — тихое место на Паране, известное спортивной рыбалкой.",
       "status": "published",
       "region_id": "litoral",
       "province": "Корриентес",
@@ -11072,7 +11072,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 20,
+        "word_count": 330,
         "needs_attention": false
       },
       "path": "goroda/esquel.md"
@@ -16394,7 +16394,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Kayak en Барилоче",
-      "summary": "En la Патагония Argentina, date el placer de remar por los lagos Nahuel Huapi y Moreno.",
+      "summary": "Каякинг в Барилоче по озёрам Науэль-Уапи и Морено.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Рио-Негро",
@@ -17572,7 +17572,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Laberinto Патагония",
-      "summary": "Explora un lugar donde confluyen conocimientos de mitología, filosofía, cábala y geometría sagrada.",
+      "summary": "Лабиринт Патагонии в Эль-Больсоне — тематический парк на стыке мифологии, философии и сакральной геометрии.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Чубут",
@@ -17860,7 +17860,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Lagos de Огненная Земля",
-      "summary": "Explora lugares de ensueño: la laguna Esmeralda y los lagos Fagnano, Escondido y Acigami.",
+      "summary": "Озёра Огненной Земли: лагуна Эсмеральда и озёра Фаньяно, Эскондидо и Асигами (Рока).",
       "status": "published",
       "region_id": "tierra-del-fuego",
       "province": "Огненная Земля",
@@ -19963,7 +19963,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 21,
+        "word_count": 364,
         "needs_attention": false
       },
       "path": "goroda/merlo.md"
@@ -21567,7 +21567,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Sailing on the Limay and Neuquén rivers",
-      "summary": "Explora el lugar donde confluyen dos emblemáticos ríos de la Патагония argentina.",
+      "summary": "Навигация по рекам Лимай и Неукен — там, где сливаются две главные реки северной Патагонии.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -21783,7 +21783,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Sailing along Lago Argentino",
-      "summary": "Desde Puerto Bandera, emprende una aventura acuática por paisajes helados de la Патагония Argentina.",
+      "summary": "Навигация по озеру Архентино от Пуэрто-Бандеры к ледникам парка Лос-Гласьярес.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Санта-Крус",
@@ -21888,7 +21888,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 21,
+        "word_count": 317,
         "needs_attention": false
       },
       "path": "goroda/necochea.md"
@@ -22020,7 +22020,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Newell's Old Boys",
-      "summary": "En el Литорал argentino, descubre la institución donde el ídolo jugó cuando era un niño.",
+      "summary": "«Ньюэллс Олд Бойз» в Росарио — клуб, где в детстве начинал Лионель Месси.",
       "status": "published",
       "region_id": "litoral",
       "province": "Санта-Фе",
@@ -23502,7 +23502,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 74,
+        "word_count": 436,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-aconquija.md"
@@ -23574,7 +23574,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 87,
+        "word_count": 404,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-baritu.md"
@@ -23584,7 +23584,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Bosques Petrificados",
-      "summary": "En Jaramillo, siente la emoción de pisar una tierra sepultada por la lava durante el período Cretácico.",
+      "summary": "Окаменелый лес в Санта-Крусе (Хараміло): стволы араукарий, погребённые около 150 млн лет назад.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Санта-Крус",
@@ -23646,7 +23646,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 66,
+        "word_count": 386,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-bosques-petrificados.md"
@@ -23718,7 +23718,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 81,
+        "word_count": 411,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-calilegua.md"
@@ -23790,7 +23790,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 80,
+        "word_count": 383,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-campos-del-tuyu.md"
@@ -23932,7 +23932,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 95,
+        "word_count": 397,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-ciervo-de-los-pantanos.md"
@@ -23945,7 +23945,7 @@
       "summary": "Дикий уголок сухого Чако на севере провинции Сантьяго-дель-Эстеро — часть «непроходимого» (el impenetrable), одна из наименее посещаемых природных территорий региона.",
       "status": "published",
       "region_id": "noa",
-      "province": "Саньяго-дель-Эстеро",
+      "province": "Сантьяго-дель-Эстеро",
       "coordinates": {
         "lat": -26.1323576,
         "lng": -62.06040549999999
@@ -24004,7 +24004,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 91,
+        "word_count": 378,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-copo.md"
@@ -24014,7 +24014,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк El Leoncito",
-      "summary": "A 2. 250 metros de altura, contempla el espacio desde un lugar único en la Tierra.",
+      "summary": "Эль-Леонсито в Сан-Хуане на высоте ~2250 м — одно из самых чистых небес Земли и астрономические обсерватории.",
       "status": "published",
       "region_id": "cuyo",
       "province": "Сан-Хуан",
@@ -24076,7 +24076,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 62,
+        "word_count": 406,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-el-leoncito.md"
@@ -24220,7 +24220,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 80,
+        "word_count": 384,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-el-rey.md"
@@ -24302,7 +24302,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Islas de Santa Fe",
-      "summary": "Entre islas abrazadas por el río Paraná, te esperan casi tres mil гектаров de delta virgen.",
+      "summary": "Островной парк на Паране в Санта-Фе — почти три тысячи гектаров нетронутой дельты.",
       "status": "published",
       "region_id": "litoral",
       "province": "Санта-Фе",
@@ -24364,7 +24364,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 26,
+        "word_count": 390,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-islas-de-santa-fe.md"
@@ -24436,7 +24436,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 376,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-lago-puelo.md"
@@ -24446,7 +24446,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Laguna Blanca",
-      "summary": "Contempla un espejo de vida",
+      "summary": "Лагуна-Бланка в Неукене — высокогорное озеро-зеркало, важное для водоплавающих птиц.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -24508,7 +24508,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 50,
+        "word_count": 363,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-laguna-blanca.md"
@@ -24518,7 +24518,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Los Alerces: Patrimonio de la Humanidad",
-      "summary": "Siente el privilegio de observar el alerzal más longevo del mundo.",
+      "summary": "Лос-Алерсес в Чубуте (ЮНЕСКО) — реликтовые леса с одними из древнейших в мире деревьев алерсе.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Чубут",
@@ -24580,7 +24580,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 61,
+        "word_count": 396,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-los-alerces-patrimonio-de-la-humanidad.md"
@@ -24652,7 +24652,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 82,
+        "word_count": 395,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-los-arrayanes.md"
@@ -24662,7 +24662,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Los Cardones",
-      "summary": "Descúbrelos entre ambientes naturales de ecorregiones diversas: Puna, Altos Andes, Monte de Sierras y Bolsones.",
+      "summary": "Лос-Кардонес в Сальте: гигантские кактусы-кардоны и прямая Ректа-дель-Тин-Тин среди разных экорегионов.",
       "status": "published",
       "region_id": "noa",
       "province": "Сальта",
@@ -24724,7 +24724,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 61,
+        "word_count": 398,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-los-cardones.md"
@@ -24806,7 +24806,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Monte León",
-      "summary": "Acércate a una península que parece un león y da nombre al primer национальный парк Costero de la Argentina.",
+      "summary": "Монте-Леон в Санта-Крусе — первый морской национальный парк Аргентины с колониями пингвинов на атлантическом берегу.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Санта-Крус",
@@ -24868,7 +24868,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 68,
+        "word_count": 384,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-monte-leon.md"
@@ -24940,7 +24940,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 88,
+        "word_count": 420,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-perito-moreno.md"
@@ -25012,7 +25012,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 76,
+        "word_count": 393,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-pre-delta.md"
@@ -25103,7 +25103,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк San Guillermo",
-      "summary": "En la inmensidad de un desierto de altura, explora un área natural protegida.",
+      "summary": "Сан-Гильермо в Сан-Хуане — высокогорная пустыня-заповедник с крупнейшими популяциями викуний.",
       "status": "published",
       "region_id": "cuyo",
       "province": "Сан-Хуан",
@@ -25165,7 +25165,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 59,
+        "word_count": 390,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-san-guillermo.md"
@@ -25175,7 +25175,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "национальный парк Огненная Земля",
-      "summary": "En la ecorregión Bosques Patagónicos, te espera el área protegida más austral de Argentina.",
+      "summary": "Самый южный национальный парк Аргентины у Ушуайи: патагонские леса, залив Лапатайя и «поезд на край света».",
       "status": "published",
       "region_id": "tierra-del-fuego",
       "province": "Огненная Земля",
@@ -25237,7 +25237,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 64,
+        "word_count": 401,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-nacional-tierra-del-fuego.md"
@@ -25391,7 +25391,7 @@
       "type": "national_park",
       "subtype": null,
       "title": "провинциальный парк Ischigualasto",
-      "summary": "Siente el misterio de un paisaje de otro planeta, declarado Patrimonio de la Humanidad.",
+      "summary": "Исчигуаласто (Долина Луны) в Сан-Хуане — инопланетные пейзажи и палеонтология, объект ЮНЕСКО.",
       "status": "published",
       "region_id": "cuyo",
       "province": "Сан-Хуан",
@@ -25453,7 +25453,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 59,
+        "word_count": 412,
         "needs_attention": false
       },
       "path": "natsionalnye-parki/parque-provincial-ischigualasto.md"
@@ -28245,7 +28245,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Welsh towns and native communities",
-      "summary": "Acércate a tradiciones de inmigrantes galeses y de habitantes originarios de la Патагония argentina.",
+      "summary": "Валлийские посёлки и коренные общины Патагонии: традиции иммигрантов и первых жителей Чубута.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Чубут",
@@ -28535,7 +28535,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Rosario-Victoria Bridge",
-      "summary": "En el Литорал argentino, recorre el viaducto monumental que une las provincias de Santa Fe y Entre Ríos.",
+      "summary": "Мост Росарио-Виктория — монументальный виадук через Парану, связывающий Санта-Фе и Энтре-Риос.",
       "status": "published",
       "region_id": "litoral",
       "province": "Санта-Фе",
@@ -29745,7 +29745,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Rafting in the Hua Hum River",
-      "summary": "Desde la Патагония argentina, embárcate en una aventura llena de adrenalina que te lleva a cruzar la frontera.",
+      "summary": "Рафтинг по реке Уа-Ум в Патагонии — сплав с адреналином и выходом к чилийской границе.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -29867,7 +29867,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Rafting en el río Мендоса",
-      "summary": "Vive una aventura llena de adrenalina, en un río de deshielo con vistas a la cordillera.",
+      "summary": "Рафтинг по талой реке Мендоса с видами на Анды.",
       "status": "published",
       "region_id": "cuyo",
       "province": "Мендоса",
@@ -30032,7 +30032,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Reconquista",
-      "summary": "En el Литорал argentino, pasea por un lugar rico en tesoros históricos, arqueológicos y paleontológicos.",
+      "summary": "Реконкиста в Санта-Фе — город Литораля с историческим, археологическим и палеонтологическим наследием.",
       "status": "published",
       "region_id": "litoral",
       "province": "Санта-Фе",
@@ -31227,7 +31227,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 67,
+        "word_count": 352,
         "needs_attention": false
       },
       "path": "goroda/resistencia.md"
@@ -31887,7 +31887,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Ruta 40 in Chubut",
-      "summary": "Explora bosques, saborea delicias regionales y practica deportes recreativos en la Патагония Argentina.",
+      "summary": "Участок Рута-40 в Чубуте: леса, региональная гастрономия и активный отдых Патагонии.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Чубут",
@@ -32279,7 +32279,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Route of Seven Lakes",
-      "summary": "Entre San Martín de los Andes y Villa La Angostura, te espera un mundo de tesoros naturales de la Патагония argentina.",
+      "summary": "«Дорога семи озёр» между Сан-Мартин-де-лос-Андес и Вилья-Ла-Ангостурой — классический маршрут озёрного края.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",
@@ -36383,7 +36383,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 0,
-        "word_count": 21,
+        "word_count": 344,
         "needs_attention": false
       },
       "path": "goroda/tandil.md"
@@ -37557,7 +37557,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Brewing tradition in Santa Fe",
-      "summary": "Date el gusto de saborear un \"liso\" y conocer un cervezoducto de 850 metros de largo, único en LatiСеверо-Западmérica.",
+      "summary": "Пивная традиция Санта-Фе: бокал «лисо» и уникальный «пивопровод» длиной 850 метров.",
       "status": "published",
       "region_id": "litoral",
       "province": "Санта-Фе",
@@ -37619,7 +37619,7 @@
         "review_due": false,
         "missing_sources": false,
         "source_count": 1,
-        "word_count": 68,
+        "word_count": 63,
         "needs_attention": false
       },
       "path": "dostoprimechatelnosti/tradicion-cervecera-en-santa-fe.md"
@@ -37766,7 +37766,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Trekking in forests and lakes",
-      "summary": "Elige una aventura tranquila o un desafío exigente en paisajes cordilleranos de la Патагония Argentina.",
+      "summary": "Треккинг среди лесов и озёр андской Патагонии — от лёгких прогулок до серьёзных маршрутов.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Рио-Негро",
@@ -38054,7 +38054,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Trekking in Tolhuin",
-      "summary": "Emprende caminatas de distinta intensidad y extensión por paisajes extremos de Огненная Земля.",
+      "summary": "Треккинг в окрестностях Тольуина на Огненной Земле — маршруты разной сложности.",
       "status": "published",
       "region_id": "tierra-del-fuego",
       "province": "Огненная Земля",
@@ -39307,7 +39307,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Valle de Uco, Мендоса",
-      "summary": "Prepara tus sentidos para experimentar sabores y aromas entre imponentes paisajes de montaña.",
+      "summary": "Долина Уко в Мендосе — высокогорные винодельни и гастрономия среди горных пейзажей.",
       "status": "published",
       "region_id": "cuyo",
       "province": "Мендоса",
@@ -41133,7 +41133,7 @@
       "id": "vinos-del-valle-patagonico",
       "type": "attraction",
       "subtype": null,
-      "title": "Патагонияn valley wines",
+      "title": "Вина патагонских долин",
       "summary": "En las provincias de Río Negro y La Pampa, disfruta variedades de vinos con sabores autóctonos.",
       "status": "stub",
       "region_id": "pampa",
@@ -41148,7 +41148,7 @@
       "media": {
         "hero": {
           "url": "/media/argentina-travel/vinos-del-valle-patagonico/1624481656429-patagonia4.jpg",
-          "alt": "Патагонияn valley wines",
+          "alt": "Вина патагонских долин",
           "author": "INPROTUR / Visit Argentina",
           "license": "argentina.travel",
           "source_page": "https://www.argentina.travel/actividades/vinos-del-valle-patagonico"
@@ -41737,7 +41737,7 @@
       "type": "attraction",
       "subtype": null,
       "title": "Lanín volcano",
-      "summary": "En la Патагония argentina, vive la aventura de llegar a más de tres mil setecientos metros de altura.",
+      "summary": "Вулкан Ланин в Патагонии — восхождение к конусу высотой более 3700 метров на границе с Чили.",
       "status": "published",
       "region_id": "patagonia",
       "province": "Неукен",

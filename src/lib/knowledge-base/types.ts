@@ -68,6 +68,7 @@ export interface KbEntry {
   media?: KbMedia | null;
   editorial?: KbEditorialMeta;
   status?: string;
+  site_ready?: boolean | null;
   confidence?: string;
   last_verified?: string | null;
   seo_slug?: string | null;

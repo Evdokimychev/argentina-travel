@@ -4,8 +4,7 @@ type: attraction
 title: Trekking in forests and lakes
 title_es: Trekking en bosques y lagos
 title_en: Trekking in forests and lakes
-summary: Elige una aventura tranquila o un desafío exigente en paisajes cordilleranos
-  de la Патагония Argentina.
+summary: "Треккинг среди лесов и озёр андской Патагонии — от лёгких прогулок до серьёзных маршрутов."
 status: published
 site_sections:
 - puteshestviya-po-argentine

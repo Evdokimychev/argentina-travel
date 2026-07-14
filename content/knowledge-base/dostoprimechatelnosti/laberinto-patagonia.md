@@ -4,8 +4,7 @@ type: attraction
 title: Laberinto Патагония
 title_es: Laberinto Patagonia
 title_en: Patagonia maze [Laberinto Patagonia]
-summary: Explora un lugar donde confluyen conocimientos de mitología, filosofía, cábala
-  y geometría sagrada.
+summary: "Лабиринт Патагонии в Эль-Больсоне — тематический парк на стыке мифологии, философии и сакральной геометрии."
 status: published
 site_sections:
 - puteshestviya-po-argentine

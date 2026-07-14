@@ -4,8 +4,7 @@ type: attraction
 title: Rafting in the Hua Hum River
 title_es: Rafting en el río Hua Hum
 title_en: Rafting in the Hua Hum River
-summary: Desde la Патагония argentina, embárcate en una aventura llena de adrenalina
-  que te lleva a cruzar la frontera.
+summary: "Рафтинг по реке Уа-Ум в Патагонии — сплав с адреналином и выходом к чилийской границе."
 status: published
 site_sections:
 - puteshestviya-po-argentine

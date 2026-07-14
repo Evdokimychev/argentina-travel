@@ -4,8 +4,7 @@ type: attraction
 title: Rosario-Victoria Bridge
 title_es: Puente Rosario-Victoria
 title_en: Rosario-Victoria Bridge
-summary: En el Литорал argentino, recorre el viaducto monumental que une las provincias
-  de Santa Fe y Entre Ríos.
+summary: "Мост Росарио-Виктория — монументальный виадук через Парану, связывающий Санта-Фе и Энтре-Риос."
 status: published
 site_sections:
 - puteshestviya-po-argentine

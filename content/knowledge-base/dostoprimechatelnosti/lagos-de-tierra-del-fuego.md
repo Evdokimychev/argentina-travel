@@ -4,8 +4,7 @@ type: attraction
 title: Lagos de Огненная Земля
 title_es: Lagos de Tierra del Fuego
 title_en: Tierra del Fuego lakes
-summary: 'Explora lugares de ensueño: la laguna Esmeralda y los lagos Fagnano, Escondido
-  y Acigami.'
+summary: "Озёра Огненной Земли: лагуна Эсмеральда и озёра Фаньяно, Эскондидо и Асигами (Рока)."
 status: published
 site_sections:
 - puteshestviya-po-argentine

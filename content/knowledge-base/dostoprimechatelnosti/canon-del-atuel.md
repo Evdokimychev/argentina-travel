@@ -4,8 +4,7 @@ type: attraction
 title: Atuel Canyon
 title_es: Cañón del Atuel
 title_en: Atuel Canyon
-summary: En Мендоса, disfruta el turismo aventura a través de un paraje natural originado
-  en la era Paleozoica.
+summary: "Каньон реки Атуэль в Мендосе (Сан-Рафаэль): живописное ущелье и активный отдых на воде."
 status: published
 site_sections:
 - puteshestviya-po-argentine

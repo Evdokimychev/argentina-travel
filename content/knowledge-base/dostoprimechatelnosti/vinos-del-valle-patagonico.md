@@ -1,7 +1,7 @@
 ---
 id: vinos-del-valle-patagonico
 type: attraction
-title: Патагонияn valley wines
+title: Вина патагонских долин
 title_es: Vinos del valle patagónico
 title_en: Patagonian valley wines
 summary: En las provincias de Río Negro y La Pampa, disfruta variedades de vinos con
@@ -28,7 +28,7 @@ related:
 media:
   hero:
     url: /media/argentina-travel/vinos-del-valle-patagonico/1624481656429-patagonia4.jpg
-    alt: Патагонияn valley wines
+    alt: Вина патагонских долин
     author: INPROTUR / Visit Argentina
     license: argentina.travel
     source_page: https://www.argentina.travel/actividades/vinos-del-valle-patagonico
