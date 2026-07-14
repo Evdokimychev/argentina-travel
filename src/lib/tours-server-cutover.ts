@@ -18,6 +18,13 @@ function shouldFallbackToSeedCatalog(): boolean {
   return getToursSourceMode() === "hybrid";
 }
 
+function reportCatalogSourceError(operation: string, error: unknown): void {
+  console.error("[catalog_source_error]", {
+    operation,
+    message: error instanceof Error ? error.message : String(error),
+  });
+}
+
 export async function fetchCutoverPublishedTourListings(): Promise<TourListing[]> {
   if (!isSupabaseToursEnabled()) {
     return fetchRepositoryMarketplaceTours();
@@ -26,7 +33,8 @@ export async function fetchCutoverPublishedTourListings(): Promise<TourListing[]
   try {
     const { fetchPublishedListingsServer } = await import("@/lib/tour-content-server");
     return await fetchPublishedListingsServer();
-  } catch {
+  } catch (error) {
+    reportCatalogSourceError("published_tour_listings", error);
     if (shouldFallbackToSeedCatalog()) {
       return fetchRepositoryMarketplaceTours();
     }
@@ -48,7 +56,8 @@ export async function fetchCutoverPublishedTourSlugs(): Promise<string[]> {
 
     const local = getMarketplaceListings().map((tour) => tour.slug);
     return [...new Set([...slugs, ...local])];
-  } catch {
+  } catch (error) {
+    reportCatalogSourceError("published_tour_slugs", error);
     if (shouldFallbackToSeedCatalog()) {
       return getMarketplaceListings().map((tour) => tour.slug);
     }
@@ -66,7 +75,8 @@ export async function fetchCutoverTourDetailBySlug(
       const fromDb = await fetchTourDetailBySlugServer(slug);
       if (fromDb) return fromDb;
       if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
-    } catch {
+    } catch (error) {
+      reportCatalogSourceError("tour_detail", error);
       if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
     }
   }
@@ -81,7 +91,8 @@ export async function fetchCutoverCanonicalTourBySlug(slug: string): Promise<Tou
       const fromDb = await fetchCanonicalTourBySlugServer(slug);
       if (fromDb) return fromDb;
       if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
-    } catch {
+    } catch (error) {
+      reportCatalogSourceError("canonical_tour", error);
       if (shouldUseSupabaseToursAsSourceOfTruth()) return null;
     }
   }

@@ -1,4 +1,4 @@
-import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
+import { normalizePhone, resolvePasswordInput } from "@/lib/auth-input";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { profileToSessionUser } from "@/lib/profile-mapper";

@@ -1,5 +1,5 @@
 import { getOrganizerCanonicalStats } from "@/data/organizer-canonical-stats";
-import { SEED_USERS } from "@/lib/auth-store";
+import { getPublicOrganizerIdentity } from "@/data/public-organizers";
 import { joinFullName } from "@/lib/full-name";
 import { getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
@@ -99,7 +99,7 @@ export function resolveListingOwnerUserId(listing: Pick<TourListing, "organizerO
 
 export function isKnownOrganizerSlug(slug: string): boolean {
   if (!slug.trim()) return false;
-  if (SEED_USERS.some((user) => user.id === slug && user.roles?.includes("organizer"))) {
+  if (getPublicOrganizerIdentity(slug)) {
     return true;
   }
   const tours = getAllCanonicalTours();
@@ -163,7 +163,7 @@ export function buildPublicOrganizerProfile(slug: string): PublicOrganizerProfil
   if (!isKnownOrganizerSlug(slug)) return null;
 
   const profile = readOrganizerProfile(slug);
-  const user = SEED_USERS.find((item) => item.id === slug);
+  const user = getPublicOrganizerIdentity(slug);
   const publishedTours = getPublishedToursByOrganizer(slug);
   const { detail: organizer, totalReviewCount } = aggregateOrganizerDetail(
     slug,

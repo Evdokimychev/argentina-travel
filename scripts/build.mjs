@@ -7,16 +7,22 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import nextEnv from "@next/env";
 import {
   killPorts,
   killProjectNextDev,
   removeDevLock,
   removeNextCache,
 } from "./dev-utils.mjs";
+import { validateBuildMode } from "./validate-build-mode.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
+const { loadEnvConfig } = nextEnv;
+loadEnvConfig(root, false);
 const isCiBuild = Boolean(process.env.VERCEL || process.env.CI);
+process.env.BUILD_TARGET = "production";
+const { mode: appMode } = validateBuildMode();
 
 let killedNext = [];
 let killedByPort = new Map();
@@ -64,6 +70,15 @@ meta.on("exit", (metaCode) => {
   });
 
   child.on("exit", (code) => {
-    process.exit(code ?? 0);
+    if (code !== 0 || appMode !== "production") {
+      process.exit(code ?? 0);
+    }
+
+    const verify = spawn("node", ["scripts/verify-production-bundle.mjs"], {
+      cwd: root,
+      stdio: "inherit",
+      env: process.env,
+    });
+    verify.on("exit", (verifyCode) => process.exit(verifyCode ?? 1));
   });
 });

@@ -48,6 +48,7 @@ npm run publish:verify:pre-deploy   # code-ready: build + stale /map на prod �
 | `DEPLOY_ENV` | `production` |
 | `CRON_SECRET` | Случайная строка ≥32 символов |
 | `NEXT_PUBLIC_ENABLE_DEMO_SEED` | `false` |
+| `NEXT_PUBLIC_APP_MODE` | `production` |
 
 ### Рекомендуемые
 

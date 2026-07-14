@@ -316,7 +316,11 @@ export async function fetchRepositoryMarketplaceTours(): Promise<TourListing[]> 
   if (isSupabaseToursEnabled() && typeof window !== "undefined") {
     try {
       return await apiFetchPublishedTourListings();
-    } catch {
+    } catch (error) {
+      console.error("[catalog_source_error]", {
+        operation: "client_published_tour_listings",
+        message: error instanceof Error ? error.message : String(error),
+      });
       if (shouldDisableLocalPublishedOverrides()) {
         return [];
       }

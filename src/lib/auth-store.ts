@@ -1,6 +1,6 @@
 import type { AuthProvider, AuthResult } from "@/lib/auth-provider";
 import { toSessionUser } from "@/lib/auth-session";
-import { joinFullName, splitFullName } from "@/lib/full-name";
+import { splitFullName } from "@/lib/full-name";
 import type { AccountRole, SessionUser, User } from "@/types/user";
 import {
   DEFAULT_ORGANIZER_OWNER_ID,
@@ -8,12 +8,7 @@ import {
   userHasAccountRole,
 } from "@/types/user";
 import { DEFAULT_PROFILE_COUNTRY, resolvePhoneCountryIsoFromProfile } from "@/data/profile-countries";
-import {
-  DEFAULT_PHONE_COUNTRY,
-  buildInternationalPhone,
-  getPhoneCountry,
-  parseInternationalPhone,
-} from "@/lib/phone-countries";
+import { normalizePhone } from "@/lib/auth-input";
 import type { StoredAuthUser } from "@/types/auth";
 
 const SESSION_KEY = "argentina-travel-auth-session";
@@ -21,14 +16,7 @@ const USERS_KEY = "argentina-travel-auth-users";
 const OVERRIDES_KEY = "argentina-travel-auth-overrides";
 
 export const DEMO_PASSWORD = "demo123";
-
-/** Production requires explicit password; dev may fall back to demo password. */
-export function resolvePasswordInput(input?: string): string {
-  const value = input?.trim();
-  if (value) return value;
-  if (process.env.NODE_ENV === "production") return "";
-  return DEMO_PASSWORD;
-}
+export { formatPhoneInput, normalizePhone } from "@/lib/auth-input";
 
 export const SEED_USERS: StoredAuthUser[] = [
   {
@@ -123,47 +111,6 @@ export function getAllUsers(): StoredAuthUser[] {
   }
 
   return Array.from(byId.values());
-}
-
-export function normalizePhone(input: string, countryIso?: string): string | null {
-  const trimmed = input.trim();
-  if (!trimmed) return null;
-
-  const parsedInternational = parseInternationalPhone(trimmed);
-  if (parsedInternational) {
-    const { country, nationalDigits } = parsedInternational;
-    if (!nationalDigits || nationalDigits.length < country.nationalLength - 1) {
-      return null;
-    }
-    return buildInternationalPhone(country, nationalDigits);
-  }
-
-  const country = getPhoneCountry(countryIso ?? DEFAULT_PHONE_COUNTRY.iso);
-  const nationalDigits = trimmed.replace(/\D/g, "");
-
-  if (nationalDigits.length < country.nationalLength - 1) {
-    return null;
-  }
-
-  return buildInternationalPhone(country, nationalDigits.slice(0, country.nationalLength));
-}
-
-export function formatPhoneInput(value: string, countryIso?: string): string {
-  const country = getPhoneCountry(countryIso ?? DEFAULT_PHONE_COUNTRY.iso);
-  const digits = value.replace(/\D/g, "").slice(0, country.nationalLength);
-
-  if (country.iso === "RU" || country.iso === "KZ") {
-    if (digits.length <= 3) return digits;
-    if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-    if (digits.length <= 8) {
-      return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
-    }
-    return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6, 8)} ${digits.slice(8)}`;
-  }
-
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `${digits.slice(0, 3)} ${digits.slice(3)}`;
-  return `${digits.slice(0, 3)} ${digits.slice(3, 6)} ${digits.slice(6)}`;
 }
 
 export function findUserByPhone(phone: string): StoredAuthUser | null {

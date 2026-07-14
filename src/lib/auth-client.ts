@@ -1,4 +1,4 @@
-import { normalizePhone } from "@/lib/auth-store";
+import { normalizePhone } from "@/lib/auth-input";
 
 export type PhoneAccountLookupResult =
   | { status: "found" }

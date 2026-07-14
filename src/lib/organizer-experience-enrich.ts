@@ -1,5 +1,5 @@
 import { getOrganizerCanonicalStats } from "@/data/organizer-canonical-stats";
-import { getUserById } from "@/lib/auth-store";
+import { getPublicOrganizerIdentity } from "@/data/public-organizers";
 import { joinFullName } from "@/lib/full-name";
 import { readOrganizerProfile } from "@/lib/organizer-profile-store";
 import type { TourOrganizerDetail } from "@/types";
@@ -11,7 +11,7 @@ export function enrichTourOrganizerDetail(
   if (!ownerUserId) return organizer;
 
   const profile = readOrganizerProfile(ownerUserId);
-  const user = getUserById(ownerUserId);
+  const user = getPublicOrganizerIdentity(ownerUserId);
   const canonical = getOrganizerCanonicalStats(ownerUserId);
   const displayName = user ? joinFullName(user.firstName, user.lastName) : organizer.name;
   const avatar = user?.avatar?.trim() || organizer.avatar;

@@ -53,6 +53,11 @@ npm run backup:schema
 - [ ] Применены миграции: `DATABASE_URL=$STAGING_DATABASE_URL npm run supabase:migrate`
 - [ ] RLS-аудит пройден: `npm run rls-audit`
 - [ ] `NEXT_PUBLIC_ENABLE_DEMO_SEED=false`
+- [ ] `NEXT_PUBLIC_APP_MODE=production` (локальная авторизация и демо-данные исключены из сборки)
+
+Демо-сборка запускается отдельно через `npm run build:demo`; для неё обязательны
+`NEXT_PUBLIC_APP_MODE=demo` и `DEMO_DEPLOYMENT=true`. Эти переменные нельзя задавать
+production-проекту Vercel.
 - [ ] Cron/sync secrets (`CRON_SECRET`, Tripster/Sputnik8) — отдельные или отключены
 - [ ] Mercado Pago — sandbox-токены, не production
 - [ ] Smoke после деплоя: `SMOKE_BASE_URL=$STAGING_NEXT_PUBLIC_SITE_URL node scripts/smoke-public.mjs`

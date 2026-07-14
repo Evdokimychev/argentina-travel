@@ -10,7 +10,7 @@ import {
   SITE_FOOTER_NAV,
 } from "@/data/site-links";
 import { SITE_NAV_SECTIONS } from "@/data/site-nav";
-import { SEED_USERS } from "@/lib/auth-store";
+import { PUBLIC_ORGANIZERS } from "@/data/public-organizers";
 import {
   contentPageHref,
   getAllContentPages,
@@ -199,7 +199,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
   const destinationPaths = destinationSlugs.map((slug) => `/destinations/${slug}`);
   const legalPaths = legalSlugs.map((slug) => `/legal/${slug}`);
   const flightRoutePaths = FLIGHT_POPULAR_ROUTES.map((route) => `/flights/${route.id}`);
-  const organizerPaths = SEED_USERS.filter((user) => user.roles?.includes("organizer")).map(
+  const organizerPaths = PUBLIC_ORGANIZERS.map(
     (user) => `/organizers/${user.id}`
   );
 

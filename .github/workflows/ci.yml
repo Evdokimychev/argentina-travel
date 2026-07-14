@@ -14,6 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GIT_SHA: ${{ github.sha }}
+      DEPLOY_ENV: production
+      NEXT_PUBLIC_APP_MODE: production
+      NEXT_PUBLIC_ENABLE_DEMO_SEED: "false"
+      NEXT_PUBLIC_SUPABASE_URL: https://ci-placeholder.supabase.co
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
+      NEXT_PUBLIC_SUPABASE_AUTH: "true"
+      NEXT_PUBLIC_TOURS_SOURCE: supabase
 
     steps:
       - name: Checkout

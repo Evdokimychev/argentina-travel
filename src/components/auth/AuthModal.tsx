@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
-import { normalizePhone, resolvePasswordInput } from "@/lib/auth-store";
+import { normalizePhone, resolvePasswordInput } from "@/lib/auth-input";
 import { lookupEmailAccount, lookupPhoneAccount, resolveAuthGreeting } from "@/lib/auth-client";
 import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";

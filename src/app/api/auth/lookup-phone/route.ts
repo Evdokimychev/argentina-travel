@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
-import { normalizePhone } from "@/lib/auth-store";
+import { normalizePhone } from "@/lib/auth-input";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 
 /** Поиск email по телефону — без входа, только для клиентского signIn. */

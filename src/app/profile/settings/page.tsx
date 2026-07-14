@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SingleDatePicker from "@/components/ui/single-date-picker";
 import { useAuth } from "@/context/AuthContext";
-import { formatPhoneInput } from "@/lib/auth-store";
+import { formatPhoneInput } from "@/lib/auth-input";
 import { maxBirthDateIso, minBirthDateIso, participantAgeLabel } from "@/lib/participant-age";
 import { PROFILE_COUNTRIES, getProfileCountryFlag } from "@/data/profile-countries";
 import UserAvatar from "@/components/auth/UserAvatar";

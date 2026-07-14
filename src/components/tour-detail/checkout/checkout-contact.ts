@@ -1,6 +1,6 @@
 import { isValid, parseISO } from "date-fns";
 import type { AuthUser } from "@/types/auth";
-import { normalizePhone } from "@/lib/auth-store";
+import { normalizePhone } from "@/lib/auth-input";
 import { resolvePhoneCountryIsoFromProfile } from "@/data/profile-countries";
 import { formatInternationalPhone, parseInternationalPhone } from "@/lib/phone-countries";
 import type { CheckoutFormState, TravelerForm } from "./types";

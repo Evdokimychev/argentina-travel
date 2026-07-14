@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import path from "node:path";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
@@ -8,6 +9,12 @@ const withBundleAnalyzer = bundleAnalyzer({
 const hasExternalMediaCdn = Boolean(process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim());
 const disableNextImageOptimization =
   process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true" || hasExternalMediaCdn;
+const isDemoBuild =
+  process.env.NEXT_PUBLIC_APP_MODE === "demo" ||
+  (!process.env.NEXT_PUBLIC_APP_MODE &&
+    process.env.NODE_ENV !== "production" &&
+    process.env.DEPLOY_ENV !== "production" &&
+    process.env.DEPLOY_ENV !== "staging");
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -16,6 +23,12 @@ const nextConfig: NextConfig = {
   // Keep Supabase in Node externals — avoids brittle vendor-chunks/@supabase.js in dev workers.
   serverExternalPackages: ["@supabase/supabase-js", "@supabase/ssr", "@react-pdf/renderer"],
   webpack: (config) => {
+    if (isDemoBuild) {
+      config.resolve.alias["@/lib/auth-provider-active"] = path.resolve(
+        process.cwd(),
+        "src/lib/auth-provider-active.demo.ts"
+      );
+    }
     config.module.rules.push({
       test: /\.geojson$/,
       type: "json",

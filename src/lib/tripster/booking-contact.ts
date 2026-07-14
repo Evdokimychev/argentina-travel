@@ -1,4 +1,4 @@
-import { normalizePhone } from "@/lib/auth-store";
+import { normalizePhone } from "@/lib/auth-input";
 import { resolvePhoneCountryIsoFromProfile } from "@/data/profile-countries";
 
 /** Нормализует телефон туриста для Tripster External Orders API (+79991234567). */

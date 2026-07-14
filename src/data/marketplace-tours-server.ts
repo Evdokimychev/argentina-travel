@@ -6,6 +6,13 @@ import { mergeMarketplaceTourListings } from "@/lib/tripster/partner-tour-utils"
 /** Каталог меняется редко; 5 мин — баланс свежести и TTFB для роботов и cold start. */
 export const MARKETPLACE_CATALOG_REVALIDATE_SEC = 300;
 
+function reportMarketplaceSourceError(source: string, error: unknown): void {
+  console.error("[marketplace_source_error]", {
+    source,
+    message: error instanceof Error ? error.message : String(error),
+  });
+}
+
 async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
   const { isSupabaseToursEnabled, getToursSourceMode } = await import("@/lib/auth-mode");
   const { fetchRepositoryMarketplaceTours } = await import("@/lib/tour-repository");
@@ -20,8 +27,8 @@ async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
     const supabase = createSupabaseAdminClient();
     const fromDb = await fetchPublishedListings(supabase);
     if (fromDb.length) return fromDb;
-  } catch {
-    // REST/admin недоступен — seed fallback ниже
+  } catch (error) {
+    reportMarketplaceSourceError("platform_tours", error);
   }
 
   if (getToursSourceMode() === "hybrid") {
@@ -36,7 +43,8 @@ async function fetchPartnerTourListingsSafe(): Promise<TourListing[]> {
       "@/lib/tripster/partner-tour-server"
     );
     return await fetchPartnerTourListingsServer();
-  } catch {
+  } catch (error) {
+    reportMarketplaceSourceError("tripster", error);
     return [];
   }
 }
@@ -47,7 +55,8 @@ async function fetchYouTravelTourListingsSafe(): Promise<TourListing[]> {
       "@/lib/youtravel/partner-tour-server"
     );
     return await fetchYouTravelTourListingsCached();
-  } catch {
+  } catch (error) {
+    reportMarketplaceSourceError("youtravel", error);
     return [];
   }
 }

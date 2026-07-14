@@ -1,8 +1,6 @@
 import type { AuthIntent } from "@/types/auth";
 import type { AccountRole, SessionUser } from "@/types/user";
-import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
-import { localAuthProvider } from "@/lib/auth-store";
-import { supabaseAuthProvider } from "@/lib/supabase-auth-provider";
+import { activeAuthProvider } from "@/lib/auth-provider-active";
 
 export type AuthErrorCode =
   | "NOT_FOUND"
@@ -74,11 +72,6 @@ export interface AuthProvider {
 /** Re-export for AuthContext modal flows — not part of storage. */
 export type { AuthIntent };
 
-export { localAuthProvider } from "@/lib/auth-store";
-
 export function getAuthProvider(): AuthProvider {
-  if (isSupabaseAuthEnabled()) {
-    return supabaseAuthProvider;
-  }
-  return localAuthProvider;
+  return activeAuthProvider;
 }

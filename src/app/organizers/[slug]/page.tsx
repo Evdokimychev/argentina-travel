@@ -5,14 +5,14 @@ import {
   buildPublicOrganizerProfile,
   resolveListingOwnerUserId,
 } from "@/lib/organizer-public";
-import { SEED_USERS } from "@/lib/auth-store";
+import { PUBLIC_ORGANIZERS } from "@/data/public-organizers";
 
 interface OrganizerPageProps {
   params: Promise<{ slug: string }>;
 }
 
 export async function generateStaticParams() {
-  return SEED_USERS.filter((user) => user.roles?.includes("organizer")).map((user) => ({
+  return PUBLIC_ORGANIZERS.map((user) => ({
     slug: user.id,
   }));
 }

@@ -6,11 +6,11 @@ import type {
   AuthErrorCode,
   RegistrationAuthResult,
 } from "@/lib/auth-provider";
-import { resolvePasswordInput } from "@/lib/auth-store";
+import { resolvePasswordInput } from "@/lib/auth-input";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { setSentryUserContext } from "@/lib/monitoring/sentry";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
-import { normalizePhone } from "@/lib/auth-store";
+import { normalizePhone } from "@/lib/auth-input";
 import type { AccountRole, SessionUser } from "@/types/user";
 import { normalizeAccountRoles, userHasAccountRole } from "@/types/user";
 import type { Profile } from "@/types/database";
