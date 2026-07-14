@@ -15,6 +15,10 @@ import { notifyPaymentReceivedFromWebhook } from "@/lib/bookings-notify";
 import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PaymentWebhookEvent } from "@/types/payment-webhook";
+import {
+  readPaymentMetadataAmountUsd,
+  readPaymentMetadataString,
+} from "@/lib/payments/payment-integrity";
 
 function resolveBookingId(payment: {
   externalReference?: string;
@@ -125,9 +129,10 @@ export async function POST(request: Request) {
       eventId: notification.notificationId ?? `mp-payment-${payment.id}`,
       eventType: notification.action ?? "payment.updated",
       bookingId,
+      paymentLinkToken: readPaymentMetadataString(payment.metadata, "paymentLinkToken"),
       paymentStatus: mapMercadoPagoToBookingPaymentStatus(payment.status, payment.statusDetail),
-      amountPaidUsd: payment.transactionAmount,
-      amountTotalUsd: payment.transactionAmount,
+      amountPaidUsd: readPaymentMetadataAmountUsd(payment.metadata) ?? payment.transactionAmount,
+      amountTotalUsd: readPaymentMetadataAmountUsd(payment.metadata) ?? payment.transactionAmount,
       occurredAt: payment.dateApproved ?? payment.dateCreated ?? new Date().toISOString(),
       rawPayload: {
         notification: notification.rawPayload,

@@ -5,6 +5,10 @@ import { isBookingPaymentLinkExpired } from "@/lib/booking-payment-link";
 import { normalizeBooking } from "@/lib/bookings-store";
 import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createPreference } from "@/lib/payments/mercadopago-client";
+import {
+  buildPaymentCheckoutIdempotencyKey,
+  canStartPaymentForBookingStatus,
+} from "@/lib/payments/payment-integrity";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type CreatePreferenceBody = {
@@ -44,6 +48,13 @@ export async function POST(
       return NextResponse.json({ error: "Booking has no active payment link" }, { status: 400 });
     }
 
+    if (!canStartPaymentForBookingStatus(booking.status)) {
+      return NextResponse.json(
+        { error: "Cancelled or completed booking cannot be paid" },
+        { status: 409 },
+      );
+    }
+
     if (!body.paymentLinkToken?.trim()) {
       return NextResponse.json({ error: "paymentLinkToken is required" }, { status: 400 });
     }
@@ -75,7 +86,13 @@ export async function POST(
     const preference = await createPreference(booking, {
       accessToken,
       baseUrl: new URL(request.url).origin,
-      idempotencyKey: `booking-${booking.id}-${Date.now().toString(36)}`,
+      idempotencyKey: buildPaymentCheckoutIdempotencyKey({
+        provider: "mercadopago",
+        bookingId: booking.id,
+        paymentLinkToken: booking.paymentLink.token,
+        amountUsd: booking.paymentLink.amountUsd,
+        currency: booking.metadata?.checkoutCurrency ?? "USD",
+      }),
     });
     addPaymentBreadcrumb("mercadopago.preference.created", {
       bookingId: booking.id,

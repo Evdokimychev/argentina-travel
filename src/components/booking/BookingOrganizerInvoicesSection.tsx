@@ -19,6 +19,8 @@ import {
   shouldShowOrganizerPaymentLink,
 } from "@/lib/booking-payment-link";
 import { generateOrganizerBookingPaymentLink, getBookingById } from "@/lib/bookings-store";
+import { apiGenerateBookingPaymentLink } from "@/lib/bookings-api";
+import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import { useAuth } from "@/context/AuthContext";
 import FormattedPrice from "@/components/FormattedPrice";
 import { cn } from "@/lib/cn";
@@ -144,19 +146,28 @@ export default function BookingOrganizerInvoicesSection({ booking }: { booking: 
   async function handleGenerateLink() {
     setGenerating(true);
     setLinkError(null);
-    const result = generateOrganizerBookingPaymentLink({
-      bookingId: currentBooking.id,
-      actor: user,
-    });
-    setGenerating(false);
-
-    if ("error" in result) {
-      setLinkError(result.error);
-      return;
+    try {
+      if (isSupabaseBookingsEnabled()) {
+        const result = await apiGenerateBookingPaymentLink({ bookingId: currentBooking.id });
+        setCurrentBooking(result.booking);
+        setPaymentLinkUrl(`${window.location.origin}${result.paymentLinkPath}`);
+      } else {
+        const result = generateOrganizerBookingPaymentLink({
+          bookingId: currentBooking.id,
+          actor: user,
+        });
+        if ("error" in result) {
+          setLinkError(result.error);
+          return;
+        }
+        setCurrentBooking(result.booking);
+        setPaymentLinkUrl(result.paymentLinkUrl);
+      }
+    } catch (error) {
+      setLinkError(error instanceof Error ? error.message : "Не удалось создать ссылку");
+    } finally {
+      setGenerating(false);
     }
-
-    setCurrentBooking(result.booking);
-    setPaymentLinkUrl(result.paymentLinkUrl);
   }
 
   async function handleCopyLink() {

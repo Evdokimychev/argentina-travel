@@ -132,6 +132,18 @@ export async function apiCreateBookingStripeSession(input: {
   );
 }
 
+export async function apiGenerateBookingPaymentLink(input: {
+  bookingId: string;
+}): Promise<{ booking: Booking; paymentLinkPath: string }> {
+  return parseJson<{ booking: Booking; paymentLinkPath: string }>(
+    await fetch(`/api/bookings/${encodeURIComponent(input.bookingId)}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "create_payment_link" }),
+    }),
+  );
+}
+
 export type PaymentLinkStatusResponse = {
   bookingId: string;
   tourTitle: string;

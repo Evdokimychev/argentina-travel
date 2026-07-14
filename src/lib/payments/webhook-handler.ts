@@ -7,6 +7,7 @@ import type {
   PaymentWebhookParseResult,
   PaymentProviderId,
 } from "@/types/payment-webhook";
+import { reconcileBookingPayment } from "@/lib/payments/payment-integrity";
 
 type DbClient = SupabaseClient<Database>;
 type JsonRecord = Record<string, unknown>;
@@ -160,44 +161,6 @@ function normalizeStateMachineStatus(status: unknown): BookingPaymentStatus {
   return "pending";
 }
 
-function resolveNextPaymentStatus(
-  currentStatus: BookingPaymentStatus,
-  incomingStatus: BookingPaymentStatus
-): BookingPaymentStatus {
-  if (incomingStatus === "refunded") return "refunded";
-  if (currentStatus === "refunded") return "refunded";
-  if (currentStatus === "paid") return "paid";
-  if (currentStatus === "partial") {
-    return incomingStatus === "paid" ? "paid" : "partial";
-  }
-  if (incomingStatus === "paid") return "paid";
-  if (incomingStatus === "partial") return "partial";
-  return "pending";
-}
-
-function resolvePaidAmountUsd(input: {
-  status: BookingPaymentStatus;
-  totalAmountUsd: number;
-  requestedPaidUsd: number;
-  currentPaidUsd: number;
-}): number {
-  const total = Math.max(0, input.totalAmountUsd);
-  const requested = Math.max(0, input.requestedPaidUsd);
-  const current = Math.max(0, input.currentPaidUsd);
-
-  if (input.status === "pending") return 0;
-  if (input.status === "paid") return total > 0 ? total : requested;
-  if (total <= 0) return Math.max(current, requested);
-
-  const normalizedRequested = Math.min(requested, total);
-  if (normalizedRequested > 0 && normalizedRequested < total) {
-    return normalizedRequested;
-  }
-
-  const fallback = Math.max(1, Math.round(total / 2));
-  return Math.min(fallback, Math.max(1, total - 1));
-}
-
 export function parseAndValidateWebhook(input: ParseWebhookInput): PaymentWebhookParseResult {
   const rawPayload = asRecord(input.payload);
   if (!rawPayload) {
@@ -234,6 +197,14 @@ export function parseAndValidateWebhook(input: ParseWebhookInput): PaymentWebhoo
       pickString(rawPayload, ["eventType", "event_type", "type", "data.type"]) ??
       "payment.updated",
     bookingId,
+    paymentLinkToken: pickString(rawPayload, [
+      "paymentLinkToken",
+      "payment_link_token",
+      "metadata.paymentLinkToken",
+      "metadata.payment_link_token",
+      "data.object.metadata.paymentLinkToken",
+      "data.object.metadata.payment_link_token",
+    ]),
     paymentStatus: normalizePaymentStatus(
       pickString(rawPayload, [
         "paymentStatus",
@@ -305,6 +276,7 @@ export function mapWebhookToBookingPaymentUpdate(
     },
     sourceEventId: event.eventId,
     provider: event.provider,
+    paymentLinkToken: event.paymentLinkToken,
     occurredAt: event.occurredAt,
   };
 }
@@ -312,43 +284,77 @@ export function mapWebhookToBookingPaymentUpdate(
 export async function applyPaymentWebhookPatch(
   supabase: DbClient,
   bookingId: string,
-  patch: BookingPaymentWebhookPatch
+  patch: BookingPaymentWebhookPatch,
+  attempt = 0,
 ): Promise<boolean> {
   if (!patch.verified) return false;
 
   const { data, error } = await supabase
     .from("bookings")
-    .select("id, payload, total_price_usd, payment_status")
+    .select("id, payload, total_price_usd, payment_status, updated_at")
     .eq("id", bookingId)
     .maybeSingle();
 
   if (error || !data) return false;
 
   const payload = asRecord(data.payload) ?? {};
+  const processedEventIds = Array.isArray(payload.processedPaymentEventIds)
+    ? payload.processedPaymentEventIds.filter((value): value is string => typeof value === "string")
+    : [];
+  if (processedEventIds.includes(patch.sourceEventId)) return false;
+
   const currentSummary = normalizeSummary(payload.paymentSummary, Number(data.total_price_usd) || 0);
   const currentStatus = normalizeStateMachineStatus(payload.paymentStatus ?? data.payment_status);
-  const incomingStatus = normalizeStateMachineStatus(patch.paymentStatus);
-  const nextPaymentStatus = resolveNextPaymentStatus(currentStatus, incomingStatus);
   const patchSummary = patch.paymentSummary;
+  const currentPaymentLink = asRecord(payload.paymentLink);
+  const currentPaymentLinkToken =
+    typeof currentPaymentLink?.token === "string" ? currentPaymentLink.token : undefined;
+  if (
+    patch.paymentLinkToken &&
+    currentPaymentLinkToken &&
+    patch.paymentLinkToken !== currentPaymentLinkToken
+  ) {
+    return false;
+  }
 
-  const totalAmountUsd =
-    patchSummary.totalAmountUsd > 0 ? patchSummary.totalAmountUsd : currentSummary.totalAmountUsd;
-  const paidAmountUsd = resolvePaidAmountUsd({
-    status: nextPaymentStatus,
-    totalAmountUsd,
-    requestedPaidUsd:
-      totalAmountUsd > 0
-        ? Math.min(Math.max(0, patchSummary.paidAmountUsd), totalAmountUsd)
-        : Math.max(0, patchSummary.paidAmountUsd),
+  const totalAmountUsd = Math.max(
+    0,
+    currentSummary.totalAmountUsd || Number(data.total_price_usd) || 0,
+  );
+  const serverChargeAmountUsd = Math.max(
+    0,
+    typeof currentPaymentLink?.amountUsd === "number"
+      ? currentPaymentLink.amountUsd
+      : patchSummary.totalAmountUsd || patchSummary.paidAmountUsd,
+  );
+  if (
+    patch.paymentStatus !== "pending" &&
+    patch.paymentStatus !== "refunded" &&
+    patchSummary.totalAmountUsd > 0 &&
+    Math.abs(patchSummary.totalAmountUsd - serverChargeAmountUsd) > 0.01
+  ) {
+    return false;
+  }
+
+  const reconciled = reconcileBookingPayment({
+    currentStatus,
     currentPaidUsd: currentSummary.paidAmountUsd,
+    totalAmountUsd,
+    serverChargeAmountUsd,
+    incomingStatus: normalizeStateMachineStatus(patch.paymentStatus),
+    paymentLinkAlreadyPaid: currentPaymentLink?.status === "paid",
   });
+  if (reconciled.duplicate) return false;
+  const nextPaymentStatus = reconciled.paymentStatus;
+  const paidAmountUsd = reconciled.paidAmountUsd;
   const remainingAmountUsd = Math.max(0, totalAmountUsd - paidAmountUsd);
   const serviceFeeUsd =
     patchSummary.serviceFeeUsd > 0 ? patchSummary.serviceFeeUsd : currentSummary.serviceFeeUsd;
 
-  const currentPaymentLink = asRecord(payload.paymentLink);
   const nextPaymentLink =
-    currentPaymentLink && nextPaymentStatus === "paid"
+    currentPaymentLink &&
+    !reconciled.duplicate &&
+    (patch.paymentStatus === "paid" || patch.paymentStatus === "partial")
       ? ({
           ...currentPaymentLink,
           status: "paid",
@@ -373,18 +379,26 @@ export async function applyPaymentWebhookPatch(
     amountPaid: paidAmountUsd,
     amountDue: remainingAmountUsd,
     paymentLink: nextPaymentLink,
+    processedPaymentEventIds: [...processedEventIds, patch.sourceEventId].slice(-50),
   };
 
-  const { error: updateError } = await supabase
+  const { data: updated, error: updateError } = await supabase
     .from("bookings")
     .update({
       payment_status: nextPaymentStatus,
       payload: nextPayload as Json,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", bookingId);
+    .eq("id", bookingId)
+    .eq("updated_at", data.updated_at)
+    .select("id")
+    .maybeSingle();
 
-  return !updateError;
+  if (updateError) return false;
+  if (!updated && attempt < 2) {
+    return applyPaymentWebhookPatch(supabase, bookingId, patch, attempt + 1);
+  }
+  return Boolean(updated);
 }
 
 export type PersistWebhookTransactionInput = {

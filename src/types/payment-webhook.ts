@@ -8,6 +8,7 @@ export interface PaymentWebhookEvent {
   eventId: string;
   eventType: string;
   bookingId: string;
+  paymentLinkToken?: string;
   paymentStatus: BookingPaymentStatus;
   amountPaidUsd?: number;
   amountTotalUsd?: number;
@@ -27,5 +28,6 @@ export interface BookingPaymentWebhookPatch {
   paymentSummary: BookingPaymentSummary;
   sourceEventId: string;
   provider: PaymentProviderId;
+  paymentLinkToken?: string;
   occurredAt: string;
 }

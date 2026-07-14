@@ -3416,6 +3416,15 @@ export interface Database {
     };
     Views: Record<string, never>;
     Functions: {
+      cancel_booking_with_reservation_release: {
+        Args: {
+          p_booking_id: string;
+          p_expected_updated_at: string;
+          p_payload: Json;
+          p_updated_at: string;
+        };
+        Returns: Json;
+      };
       create_booking_with_reservation: {
         Args: {
           p_booking: Json;

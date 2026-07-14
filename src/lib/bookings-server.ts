@@ -234,6 +234,41 @@ export async function updateBookingRecord(
   return { booking: normalizeBooking(rowToBooking(data)) };
 }
 
+export async function cancelBookingAndReleaseReservation(
+  supabase: DbClient,
+  booking: Booking,
+  expectedUpdatedAt: string,
+): Promise<{ booking: Booking } | { error: string; status?: number }> {
+  const row = bookingToRow(booking);
+  const { data, error } = await supabase.rpc("cancel_booking_with_reservation_release", {
+    p_booking_id: booking.id,
+    p_expected_updated_at: expectedUpdatedAt,
+    p_payload: row.payload,
+    p_updated_at: booking.updatedAt,
+  });
+
+  if (error) {
+    if (error.message.includes("BOOKING_CONFLICT")) {
+      return {
+        error: "Заявка уже была изменена в другом окне. Обновите страницу и повторите.",
+        status: 409,
+      };
+    }
+    if (error.message.includes("BOOKING_CANNOT_BE_CANCELLED")) {
+      return { error: "Эту заявку уже нельзя отменить.", status: 409 };
+    }
+    return { error: error.message, status: 500 };
+  }
+
+  if (!data || typeof data !== "object" || Array.isArray(data)) {
+    return { error: "База данных не подтвердила отмену заявки.", status: 500 };
+  }
+
+  return {
+    booking: normalizeBooking(rowToBooking(data as Parameters<typeof rowToBooking>[0])),
+  };
+}
+
 export async function attachGuestBookingsByEmail(
   supabase: DbClient,
   userId: string,

@@ -16,6 +16,7 @@ type Subtask = {
 const SUBTASKS: Subtask[] = [
   { key: "typing", path: "/api/cron/messaging/cleanup-typing" },
   { key: "privacyProcess", path: "/api/cron/privacy/process" },
+  { key: "expireUnpaidBookings", path: "/api/cron/bookings/expire-unpaid" },
   { key: "bookingReminder24h", path: "/api/cron/messaging/booking-reminder-24h" },
   { key: "tripPrepReminders", path: "/api/cron/trip-prep/reminders" },
   { key: "digest", path: "/api/cron/notifications/digest" },

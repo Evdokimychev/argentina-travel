@@ -19,6 +19,10 @@ import { notifyPaymentReceivedFromWebhook } from "@/lib/bookings-notify";
 import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { PaymentWebhookEvent } from "@/types/payment-webhook";
+import {
+  readPaymentMetadataAmountUsd,
+  readPaymentMetadataString,
+} from "@/lib/payments/payment-integrity";
 
 const HANDLED_EVENT_TYPES = new Set([
   "payment_intent.succeeded",
@@ -125,13 +129,15 @@ export async function POST(request: Request) {
         eventId: event.id,
         eventType: event.type,
         bookingId,
+        paymentLinkToken: readPaymentMetadataString(payment.metadata, "paymentLinkToken"),
         paymentStatus: mapStripeToBookingPaymentStatus({
           status: payment.status,
           amount: payment.amount,
           amountReceived: payment.amountReceived,
         }),
-        amountPaidUsd: amount,
-        amountTotalUsd: stripeAmountToUsd(payment.amount),
+        amountPaidUsd: readPaymentMetadataAmountUsd(payment.metadata) ?? amount,
+        amountTotalUsd:
+          readPaymentMetadataAmountUsd(payment.metadata) ?? stripeAmountToUsd(payment.amount),
         occurredAt: new Date(event.created * 1000).toISOString(),
         rawPayload: {
           event: event.rawPayload,
@@ -165,14 +171,16 @@ export async function POST(request: Request) {
         eventId: event.id,
         eventType: event.type,
         bookingId,
+        paymentLinkToken: readPaymentMetadataString(charge.metadata, "paymentLinkToken"),
         paymentStatus: mapStripeToBookingPaymentStatus({
           status: charge.status,
           amount: charge.amount,
           amountRefunded: charge.amountRefunded,
           refunded: charge.refunded,
         }),
-        amountPaidUsd: amount,
-        amountTotalUsd: stripeAmountToUsd(charge.amount),
+        amountPaidUsd: readPaymentMetadataAmountUsd(charge.metadata) ?? amount,
+        amountTotalUsd:
+          readPaymentMetadataAmountUsd(charge.metadata) ?? stripeAmountToUsd(charge.amount),
         occurredAt: new Date(event.created * 1000).toISOString(),
         rawPayload: {
           event: event.rawPayload,

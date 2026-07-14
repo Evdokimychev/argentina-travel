@@ -3,7 +3,7 @@ import type { BookingStatus, BookingStatusActor } from "@/types/tourist";
 export const BOOKING_STATUS_TRANSITIONS: Readonly<Record<BookingStatus, readonly BookingStatus[]>> = {
   new: ["pending", "confirmed", "cancelled"],
   pending: ["confirmed", "cancelled"],
-  confirmed: ["completed", "cancelled"],
+  confirmed: ["waiting_payment", "completed", "cancelled"],
   waiting_payment: ["paid", "cancelled"],
   paid: ["completed", "cancelled"],
   completed: [],
@@ -12,7 +12,7 @@ export const BOOKING_STATUS_TRANSITIONS: Readonly<Record<BookingStatus, readonly
 
 const ACTOR_TARGETS: Readonly<Record<BookingStatusActor, readonly BookingStatus[]>> = {
   tourist: ["cancelled"],
-  organizer: ["pending", "confirmed", "completed", "cancelled"],
+  organizer: ["pending", "confirmed", "waiting_payment", "completed", "cancelled"],
   system: ["pending", "confirmed", "waiting_payment", "paid", "completed", "cancelled"],
 };
 

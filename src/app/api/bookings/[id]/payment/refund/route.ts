@@ -117,6 +117,17 @@ export async function POST(
       return NextResponse.json({ error: "Укажите сумму возврата" }, { status: 400 });
     }
 
+    const paidAmount = Math.max(0, Math.round(summary.paidAmountUsd ?? booking.amountPaid ?? 0));
+    if (amount !== paidAmount) {
+      return NextResponse.json(
+        {
+          error:
+            "Частичный возврат пока недоступен. Запросите возврат всей оплаченной суммы.",
+        },
+        { status: 400 },
+      );
+    }
+
     const admin = createSupabaseAdminClient();
     const result = await createRefundRequest(admin, {
       bookingId: id,

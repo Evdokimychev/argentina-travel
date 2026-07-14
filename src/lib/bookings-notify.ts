@@ -13,6 +13,7 @@ import { sendPushToUser } from "@/lib/notifications/push-server";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
 import type { BookingPaymentWebhookPatch } from "@/types/payment-webhook";
+import type { BookingPaymentStatus } from "@/types/booking-params";
 import { BOOKING_STATUS_LABELS } from "@/data/booking-statuses";
 
 export async function notifyBookingCreatedEmail(input: {
@@ -131,6 +132,34 @@ const PROVIDER_LABELS: Record<"stripe" | "mercadopago" | "manual", string> = {
   manual: "Вручную",
 };
 
+function asRecord(value: unknown): Record<string, unknown> | null {
+  return value && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : null;
+}
+
+export function resolveStoredPaymentNotification(input: {
+  paymentStatus: string | null;
+  payload: unknown;
+  totalPriceUsd: number;
+}): { paymentStatus: "paid" | "partial" | "refunded"; amountUsd: number } | null {
+  const payload = asRecord(input.payload);
+  const status = (payload?.paymentStatus ?? input.paymentStatus) as BookingPaymentStatus | undefined;
+  if (status !== "paid" && status !== "partial" && status !== "refunded") return null;
+
+  const summary = asRecord(payload?.paymentSummary);
+  const paidAmount = summary?.paidAmountUsd;
+  return {
+    paymentStatus: status,
+    amountUsd:
+      typeof paidAmount === "number" && Number.isFinite(paidAmount)
+        ? Math.max(0, paidAmount)
+        : status === "paid"
+          ? Math.max(0, input.totalPriceUsd)
+          : 0,
+  };
+}
+
 /** Sends payment email after webhook patch (Supabase bookings). */
 export async function notifyPaymentReceivedFromWebhook(
   supabase: SupabaseClient<Database>,
@@ -138,17 +167,19 @@ export async function notifyPaymentReceivedFromWebhook(
   patch: BookingPaymentWebhookPatch
 ): Promise<void> {
   if (!patch.verified) return;
-  if (patch.paymentStatus !== "paid" && patch.paymentStatus !== "partial" && patch.paymentStatus !== "refunded") {
-    return;
-  }
-
   const { data } = await supabase
     .from("bookings")
-    .select("user_id, guest_user_id, tour_title, contact_email, contact_name")
+    .select("user_id, guest_user_id, tour_title, contact_email, contact_name, payment_status, payload, total_price_usd")
     .eq("id", bookingId)
     .maybeSingle();
 
   if (!data?.contact_email?.trim()) return;
+  const stored = resolveStoredPaymentNotification({
+    paymentStatus: data.payment_status,
+    payload: data.payload,
+    totalPriceUsd: Number(data.total_price_usd) || 0,
+  });
+  if (!stored) return;
 
   await notifyPaymentReceivedEmail({
     userId: data.user_id ?? data.guest_user_id,
@@ -156,8 +187,8 @@ export async function notifyPaymentReceivedFromWebhook(
     tourTitle: data.tour_title,
     contactEmail: data.contact_email,
     contactName: data.contact_name,
-    amountUsd: patch.paymentSummary.paidAmountUsd,
-    paymentStatus: patch.paymentStatus,
+    amountUsd: stored.amountUsd,
+    paymentStatus: stored.paymentStatus,
     providerLabel: PROVIDER_LABELS[patch.provider],
   });
 }

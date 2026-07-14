@@ -1,8 +1,10 @@
 import { NextResponse } from "next/server";
+import { randomBytes } from "node:crypto";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
 import {
   assertBookingMutationAllowed,
+  cancelBookingAndReleaseReservation,
   canAccessBooking,
   fetchBookingById,
   updateBookingRecord,
@@ -18,9 +20,15 @@ import {
   resolvePartnerWebhookEventByStatus,
 } from "@/lib/partner-webhooks";
 import { assertBookingStatusTransition } from "@/lib/booking-state-machine";
+import {
+  buildBookingPaymentLinkPath,
+  createBookingPaymentLinkRecord,
+  isBookingPaymentLinkExpired,
+} from "@/lib/booking-payment-link";
+import { canIssuePaymentLinkForBookingStatus } from "@/lib/payments/payment-integrity";
 
 type PatchBody = {
-  action?: "update_status" | "add_comment" | "cancel";
+  action?: "update_status" | "add_comment" | "cancel" | "create_payment_link";
   status?: BookingStatus;
   note?: string;
   comment?: { text: string; authorName: string };
@@ -100,6 +108,9 @@ export async function PATCH(
       const updated = normalizeBooking({
         ...current,
         status: "cancelled",
+        paymentLink: current.paymentLink
+          ? { ...current.paymentLink, status: "cancelled" }
+          : undefined,
         updatedAt: new Date().toISOString(),
         statusHistory: [
           ...current.statusHistory,
@@ -111,7 +122,11 @@ export async function PATCH(
         ],
       });
 
-      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
+      const result = await cancelBookingAndReleaseReservation(
+        supabase,
+        updated,
+        current.updatedAt,
+      );
       if ("error" in result) {
         addBookingBreadcrumb("booking.cancel.failed", {
           bookingId: id,
@@ -253,6 +268,62 @@ export async function PATCH(
         bookingId: id,
       });
       return NextResponse.json({ booking: result.booking });
+    }
+
+    if (body.action === "create_payment_link") {
+      const allowed = assertBookingMutationAllowed(current, sessionUser, "manage");
+      if ("error" in allowed) {
+        return NextResponse.json({ error: allowed.error }, { status: 403 });
+      }
+      if (!canIssuePaymentLinkForBookingStatus(current.status)) {
+        return NextResponse.json(
+          { error: "Ссылку на оплату можно создать после подтверждения заявки." },
+          { status: 409 },
+        );
+      }
+      if (
+        current.paymentLink?.status === "active" &&
+        !isBookingPaymentLinkExpired(current.paymentLink)
+      ) {
+        return NextResponse.json({
+          booking: current,
+          paymentLinkPath: buildBookingPaymentLinkPath(current.paymentLink.token),
+        });
+      }
+
+      const now = new Date().toISOString();
+      const paymentLink = createBookingPaymentLinkRecord({
+        token: `pay-${randomBytes(24).toString("hex")}`,
+        booking: current,
+        now,
+      });
+      const updated = normalizeBooking({
+        ...current,
+        status: "waiting_payment",
+        paymentLink,
+        paymentLinkToken: paymentLink.token,
+        paymentLinkExpiresAt: paymentLink.expiresAt,
+        updatedAt: now,
+        statusHistory: current.status === "waiting_payment"
+          ? current.statusHistory
+          : [
+              ...current.statusHistory,
+              createStatusChange({
+                from: current.status,
+                to: "waiting_payment",
+                changedBy: "organizer",
+              }),
+            ],
+      });
+      const result = await updateBookingRecord(supabase, updated, current.updatedAt);
+      if ("error" in result) {
+        return NextResponse.json({ error: result.error }, { status: result.status ?? 500 });
+      }
+      addBookingBreadcrumb("booking.payment_link_created", { bookingId: id });
+      return NextResponse.json({
+        booking: result.booking,
+        paymentLinkPath: buildBookingPaymentLinkPath(paymentLink.token),
+      });
     }
 
     return NextResponse.json({ error: "Invalid patch" }, { status: 400 });

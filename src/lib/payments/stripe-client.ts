@@ -311,6 +311,13 @@ export async function createCheckoutSession(
   );
   appendFormField(params, "payment_intent_data[metadata][bookingId]", booking.id);
   appendFormField(params, "payment_intent_data[metadata][paymentLinkToken]", link?.token ?? "");
+  appendFormField(params, "payment_intent_data[metadata][amountUsd]", String(amountUsd));
+  appendFormField(params, "payment_intent_data[metadata][displayCurrency]", displayCurrency);
+  appendFormField(
+    params,
+    "payment_intent_data[metadata][rateFromUsd]",
+    String(resolveRateFromUsd(chargeCurrency, ratesPayload.rates)),
+  );
   appendFormField(params, "line_items[0][quantity]", 1);
   appendFormField(params, "line_items[0][price_data][currency]", stripeCurrency);
   appendFormField(params, "line_items[0][price_data][unit_amount]", majorToCents(safeAmount));

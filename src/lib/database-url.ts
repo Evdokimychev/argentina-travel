@@ -31,10 +31,10 @@ function isUsableDatabaseUrl(value: string | undefined): value is string {
 
 export function resolveDatabaseUrl(): string | null {
   const candidates = [
-    process.env.DATABASE_URL,
-    process.env.POSTGRES_URL_NON_POOLING,
     process.env.POSTGRES_URL,
     process.env.POSTGRES_PRISMA_URL,
+    process.env.DATABASE_URL,
+    process.env.POSTGRES_URL_NON_POOLING,
   ];
 
   for (const value of candidates) {

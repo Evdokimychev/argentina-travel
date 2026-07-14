@@ -5,6 +5,10 @@ import { isBookingPaymentLinkExpired } from "@/lib/booking-payment-link";
 import { normalizeBooking } from "@/lib/bookings-store";
 import { addPaymentBreadcrumb, captureException } from "@/lib/monitoring/sentry";
 import { createCheckoutSession, isStripeConfigured } from "@/lib/payments/stripe-client";
+import {
+  buildPaymentCheckoutIdempotencyKey,
+  canStartPaymentForBookingStatus,
+} from "@/lib/payments/payment-integrity";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
 type CreateSessionBody = {
@@ -44,6 +48,13 @@ export async function POST(
       return NextResponse.json({ error: "Booking has no active payment link" }, { status: 400 });
     }
 
+    if (!canStartPaymentForBookingStatus(booking.status)) {
+      return NextResponse.json(
+        { error: "Cancelled or completed booking cannot be paid" },
+        { status: 409 },
+      );
+    }
+
     if (!body.paymentLinkToken?.trim()) {
       return NextResponse.json({ error: "paymentLinkToken is required" }, { status: 400 });
     }
@@ -78,7 +89,13 @@ export async function POST(
     const session = await createCheckoutSession(booking, {
       secretKey,
       baseUrl: new URL(request.url).origin,
-      idempotencyKey: `booking-stripe-${booking.id}-${Date.now().toString(36)}`,
+      idempotencyKey: buildPaymentCheckoutIdempotencyKey({
+        provider: "stripe",
+        bookingId: booking.id,
+        paymentLinkToken: booking.paymentLink.token,
+        amountUsd: booking.paymentLink.amountUsd,
+        currency: booking.metadata?.checkoutCurrency ?? "USD",
+      }),
     });
     addPaymentBreadcrumb("stripe.checkout_session.created", {
       bookingId: booking.id,

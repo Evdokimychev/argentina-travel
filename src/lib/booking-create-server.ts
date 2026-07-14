@@ -13,7 +13,6 @@ import { tourToDetail } from "@/lib/tour-mapper";
 import { resolveTourOwnerUserId } from "@/lib/organizer-public";
 import { guestUserIdFromEmail } from "@/lib/guest-booking";
 import { buildPaymentSummaryFromStatus, normalizeOrganizerParams } from "@/lib/booking-params";
-import { createBookingPaymentLinkRecord } from "@/lib/booking-payment-link";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -261,13 +260,6 @@ export async function buildCanonicalBooking(
     createdAt: now,
     updatedAt: now,
   };
-  booking.paymentLink = createBookingPaymentLinkRecord({
-    token: `pay-${keyHash.slice(0, 32)}`,
-    booking,
-    now,
-  });
-  booking.paymentLinkToken = booking.paymentLink.token;
-  booking.paymentLinkExpiresAt = booking.paymentLink.expiresAt;
   booking.amountDue = paymentSummary.remainingAmountUsd;
   booking.amountPaid = paymentSummary.paidAmountUsd;
 
