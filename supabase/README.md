@@ -119,7 +119,7 @@ npm run supabase:migrate   # все файлы в supabase/migrations/ по по
 ### Ручная настройка Supabase Dashboard
 
 1. **Authentication → Providers → Email** — включить Email auth
-2. **Authentication → URL Configuration** — Site URL и Redirect URLs (`http://localhost:3000/auth/callback`)
+2. **Authentication → URL Configuration** — production Site URL `https://www.goargentina.ru`; localhost только в дополнительных development redirect URLs (см. `docs/auth-email-setup.md`)
 3. При необходимости отключить подтверждение email для dev
 
 ### API Phase 2

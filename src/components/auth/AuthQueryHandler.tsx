@@ -14,6 +14,7 @@ function AuthQueryHandlerInner() {
 
   useEffect(() => {
     const auth = searchParams.get("auth");
+    const step = searchParams.get("step");
     const next = searchParams.get("next");
     const errorCode = searchParams.get("error");
 
@@ -40,21 +41,22 @@ function AuthQueryHandlerInner() {
     }
 
     if (errorCode === "expired-link") {
-      showError({
-        title: "Ссылка больше не действует",
-        description: "Запросите новое письмо для входа или восстановления пароля.",
-        steps: ["Откройте форму входа", "Нажмите «Забыли пароль?»"],
-      });
+      router.replace("/auth/error?reason=expired-link", { scroll: false });
+      return;
     }
 
     if (auth !== "sign-in" || isAuthenticated) return;
 
     const role = searchParams.get("role");
-    openAuth(role === "organizer" ? "organizer" : "default");
+    openAuth(
+      role === "organizer" ? "organizer" : "default",
+      step === "forgot-password" ? "forgot-password" : "sign-in"
+    );
 
     const cleaned = new URLSearchParams(searchParams.toString());
     cleaned.delete("auth");
     cleaned.delete("role");
+    cleaned.delete("step");
     cleaned.delete("next");
     cleaned.delete("error");
     const query = cleaned.toString();

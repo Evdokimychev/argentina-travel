@@ -11,7 +11,16 @@ export type AuthErrorCode =
   | "INVALID_CREDENTIALS"
   | "DUPLICATE_PHONE"
   | "DUPLICATE_EMAIL"
-  | "PROFILE_MISSING";
+  | "PROFILE_MISSING"
+  | "EMAIL_NOT_CONFIRMED"
+  | "RATE_LIMITED"
+  | "USER_BANNED"
+  | "NETWORK_ERROR"
+  | "CONFIGURATION_ERROR";
+
+export type PasswordResetResult =
+  | { ok: true; message: string }
+  | { error: string; code?: string; retryAfter?: number };
 
 export type AuthResult<T = SessionUser> =
   | { user: T }
@@ -58,7 +67,7 @@ export interface AuthProvider {
     }
   ): AuthResult | Promise<AuthResult>;
   updateAvatar(userId: string, avatarUrl: string | null): AuthResult | Promise<AuthResult>;
-  requestPasswordReset(email: string): Promise<{ ok: true } | { error: string }>;
+  requestPasswordReset(email: string): Promise<PasswordResetResult>;
   logout(): void | Promise<void>;
 }
 

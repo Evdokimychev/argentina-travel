@@ -14,6 +14,10 @@ import { normalizePhone } from "@/lib/auth-store";
 import type { AccountRole, SessionUser } from "@/types/user";
 import { normalizeAccountRoles, userHasAccountRole } from "@/types/user";
 import type { Profile } from "@/types/database";
+import {
+  mapAuthClientError,
+  normalizeAuthEmail,
+} from "@/lib/auth-flow";
 
 type BrowserClient = SupabaseClient<Database>;
 
@@ -58,37 +62,21 @@ function rejectLogin(error: string, code?: AuthErrorCode): AuthResult {
   return { error, code };
 }
 
-function mapSignInError(message: string): AuthResult {
-  const lower = message.toLowerCase();
-  if (
-    lower.includes("invalid login credentials") ||
-    lower.includes("invalid email or password") ||
-    lower.includes("invalid credentials")
-  ) {
-    return rejectLogin("Неверный email или пароль", "INVALID_CREDENTIALS");
+function mapSignInError(error: unknown): AuthResult {
+  const mapped = mapAuthClientError(error);
+  if (mapped === "invalid_credentials") {
+    return rejectLogin("INVALID_CREDENTIALS", "INVALID_CREDENTIALS");
   }
-  if (lower.includes("email not confirmed")) {
-    return rejectLogin(
-      "Подтвердите email — проверьте почту или восстановите пароль.",
-      "INVALID_CREDENTIALS"
-    );
+  if (mapped === "email_not_confirmed") {
+    return rejectLogin("EMAIL_NOT_CONFIRMED", "EMAIL_NOT_CONFIRMED");
   }
-  if (lower.includes("user is banned") || lower.includes("banned")) {
-    return rejectLogin(
-      "Аккаунт заблокирован. Напишите в поддержку, если считаете это ошибкой.",
-      "INVALID_CREDENTIALS"
-    );
+  if (mapped === "rate_limit") return rejectLogin("RATE_LIMITED", "RATE_LIMITED");
+  if (mapped === "user_banned") return rejectLogin("USER_BANNED", "USER_BANNED");
+  if (mapped === "network_error") return rejectLogin("NETWORK_ERROR", "NETWORK_ERROR");
+  if (mapped === "configuration_error") {
+    return rejectLogin("CONFIGURATION_ERROR", "CONFIGURATION_ERROR");
   }
-  if (
-    lower.includes("expired") ||
-    (lower.includes("invalid") && lower.includes("token"))
-  ) {
-    return rejectLogin(
-      "Ссылка устарела или недействительна. Запросите восстановление пароля ещё раз.",
-      "INVALID_CREDENTIALS"
-    );
-  }
-  return rejectLogin(message, "INVALID_CREDENTIALS");
+  return rejectLogin("Не удалось войти. Попробуйте ещё раз.", "INVALID_CREDENTIALS");
 }
 
 async function finalizeLogin(profile: Profile, role: AccountRole): Promise<AuthResult> {
@@ -138,7 +126,7 @@ async function loginWithCredentials(
   password: string,
   role: AccountRole
 ): Promise<AuthResult> {
-  const normalizedEmail = email.trim().toLowerCase();
+  const normalizedEmail = normalizeAuthEmail(email);
 
   const { data, error } = await getClient().auth.signInWithPassword({
     email: normalizedEmail,
@@ -146,7 +134,7 @@ async function loginWithCredentials(
   });
 
   if (error || !data.user) {
-    return mapSignInError(error?.message ?? "Неверный email или пароль");
+    return mapSignInError(error ?? "Invalid login credentials");
   }
 
   const profile = await ensureProfileForSession(data.user.id);
@@ -169,7 +157,7 @@ async function registerByApi(input: {
   email: string;
   password?: string;
 }): Promise<RegistrationAuthResult> {
-  const normalizedEmail = input.email.trim().toLowerCase();
+  const normalizedEmail = normalizeAuthEmail(input.email);
   const password = resolvePasswordInput(input.password);
 
   const response = await fetch("/api/auth/register", {
@@ -270,7 +258,7 @@ export const supabaseAuthProvider: AuthProvider = {
 
   async register(input) {
     const normalizedPhone = normalizePhone(input.phone);
-    const normalizedEmail = input.email.trim().toLowerCase();
+    const normalizedEmail = normalizeAuthEmail(input.email);
     const firstName = input.firstName.trim();
     const lastName = input.lastName.trim();
 
@@ -331,7 +319,7 @@ export const supabaseAuthProvider: AuthProvider = {
     const normalizedPhone =
       normalizePhone(input.phone, resolvePhoneCountryIsoFromProfile(input.country)) ??
       input.phone.trim();
-    const normalizedEmail = input.email.trim().toLowerCase();
+    const normalizedEmail = normalizeAuthEmail(input.email);
 
     const existing = await fetchProfile(userId);
     if (!existing) return { error: "Профиль не найден" };
@@ -380,7 +368,7 @@ export const supabaseAuthProvider: AuthProvider = {
   },
 
   async requestPasswordReset(email) {
-    const normalizedEmail = email.trim().toLowerCase();
+    const normalizedEmail = normalizeAuthEmail(email);
     if (!normalizedEmail || !normalizedEmail.includes("@")) {
       return { error: "Укажите корректный email" };
     }
@@ -392,12 +380,27 @@ export const supabaseAuthProvider: AuthProvider = {
       body: JSON.stringify({ email: normalizedEmail }),
     });
 
-    const body = (await response.json()) as { ok?: boolean; error?: string };
+    const body = (await response.json().catch(() => null)) as
+      | {
+          ok?: boolean;
+          message?: string;
+          error?: { code?: string; message?: string; retryAfter?: number };
+        }
+      | null;
     if (!response.ok) {
-      return { error: body.error ?? "Не удалось отправить письмо" };
+      return {
+        error: body?.error?.message ?? "Не удалось отправить письмо",
+        code: body?.error?.code,
+        retryAfter: body?.error?.retryAfter,
+      };
     }
 
-    return { ok: true };
+    return {
+      ok: true,
+      message:
+        body?.message ??
+        "Если этот адрес зарегистрирован, мы отправили ссылку для изменения пароля.",
+    };
   },
 };
 

@@ -4,6 +4,7 @@ import { registerSupabaseUser } from "@/lib/auth-register-server";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
 import type { AccountRole } from "@/types/user";
 import { authRedirectUrl } from "@/lib/site-url";
+import { normalizeAuthEmail } from "@/lib/auth-flow";
 
 async function postRegister(request: Request) {
   if (!isSupabaseAuthEnabled()) {
@@ -33,9 +34,9 @@ async function postRegister(request: Request) {
       firstName: body.firstName ?? "",
       lastName: body.lastName ?? "",
       phone: body.phone ?? "",
-      email: body.email ?? "",
+      email: normalizeAuthEmail(body.email ?? ""),
       password: body.password,
-      emailRedirectTo: authRedirectUrl("/auth/callback?next=/profile", request.url),
+      emailRedirectTo: authRedirectUrl("/auth/confirm?next=/profile", request.url),
     });
 
     if (!result.ok) {

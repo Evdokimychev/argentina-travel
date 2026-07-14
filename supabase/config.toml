@@ -20,7 +20,7 @@ subject = "Подтвердите регистрацию — Пора в Арг�
 content_path = "./supabase/templates/confirmation.html"
 
 [auth.email.template.recovery]
-subject = "Восстановление пароля — Пора в Аргентину"
+subject = "Изменение пароля — Пора в Аргентину"
 content_path = "./supabase/templates/recovery.html"
 
 [auth.email.template.email_change]

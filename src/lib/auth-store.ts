@@ -556,13 +556,9 @@ export const localAuthProvider: AuthProvider = {
     if (!normalized || !normalized.includes("@")) {
       return { error: "Укажите корректный email" };
     }
-    const account = findUserByEmail(normalized);
-    if (!account) {
-      return { ok: true };
-    }
     return {
-      error:
-        "В локальном демо-режиме письмо не отправляется. Используйте пароль, заданный при регистрации, или очистите localStorage сайта.",
+      ok: true,
+      message: "Если этот адрес зарегистрирован, мы отправили ссылку для изменения пароля.",
     };
   },
   logout: logoutUser,

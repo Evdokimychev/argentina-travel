@@ -52,6 +52,7 @@ export default function AuthModal() {
     isAuthenticated,
     authOpen,
     authIntent,
+    authInitialStep,
     favoriteAuthStep,
     closeAuth,
     loginByPhone,
@@ -88,6 +89,7 @@ export default function AuthModal() {
   const [duplicateRegistration, setDuplicateRegistration] = useState(false);
   const [resetSent, setResetSent] = useState(false);
   const [confirmationEmail, setConfirmationEmail] = useState<string | null>(null);
+  const [resetCooldown, setResetCooldown] = useState(0);
   const feedback = useSiteFeedback();
 
   const setError = (value: string | SiteFeedbackMessage | null) => {
@@ -130,7 +132,8 @@ export default function AuthModal() {
     setDuplicateRegistration(false);
     setResetSent(false);
     setConfirmationEmail(null);
-    setStep(isFavoriteFlow ? favoriteAuthStep : "sign-in");
+    setResetCooldown(0);
+    setStep(isFavoriteFlow ? favoriteAuthStep : authInitialStep);
     setOrganizerTab(isFavoriteFlow ? favoriteAuthStep : "sign-in");
     setMode("email");
     setPhoneAuthStep("phone");
@@ -146,7 +149,15 @@ export default function AuthModal() {
     setPasswordConfirmation("");
     setShowPassword(false);
     setTermsAccepted(false);
-  }, [authOpen, isOrganizerFlow, isFavoriteFlow, favoriteAuthStep]);
+  }, [authInitialStep, authOpen, isOrganizerFlow, isFavoriteFlow, favoriteAuthStep]);
+
+  useEffect(() => {
+    if (resetCooldown <= 0) return;
+    const timer = window.setInterval(() => {
+      setResetCooldown((seconds) => Math.max(0, seconds - 1));
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [resetCooldown]);
 
   async function handlePhoneContinue(targetRole = role) {
     if (!termsAccepted) {
@@ -242,12 +253,21 @@ export default function AuthModal() {
     setLoading(false);
 
     if (!result.ok) {
+      if (result.code === "AUTH_RESET_RATE_LIMITED") {
+        const retryAfter = result.retryAfter ?? 60;
+        setResetCooldown(retryAfter);
+        setError({
+          title: "Письмо уже запрошено",
+          description: `Повторная отправка будет доступна через ${retryAfter} секунд.`,
+        });
+        return;
+      }
       setError(normalizeSiteError(result.error));
       return;
     }
 
     setResetSent(true);
-    setError(passwordResetSentMessage(targetEmail));
+    setError(passwordResetSentMessage());
   }
 
   async function handleEmailContinue(targetRole = role) {
@@ -909,8 +929,9 @@ export default function AuthModal() {
               </label>
               <Input
                 id="forgot-email"
+                name="email"
                 type="email"
-                autoComplete="email"
+                autoComplete="username"
                 placeholder="email@example.com"
                 value={email}
                 onChange={(event) => {
@@ -934,11 +955,12 @@ export default function AuthModal() {
             <Button
               type="button"
               className="w-full rounded-xl"
+              disabled={resetCooldown > 0}
               loading={loading}
               loadingLabel="Отправляем…"
               onClick={() => void handleForgotPasswordSubmit()}
             >
-              Отправить ссылку
+              {resetCooldown > 0 ? `Повторить через ${resetCooldown} с` : "Отправить ссылку"}
             </Button>
 
             <button

@@ -35,7 +35,6 @@ const SERVICE_UNAVAILABLE_HINT: SiteFeedbackMessage = {
 const RATE_LIMIT_HINT: SiteFeedbackMessage = {
   title: "Слишком много запросов",
   description: "Подождите немного и попробуйте снова.",
-  steps: ["Сделайте паузу на 30–60 секунд", "Обновите страницу"],
 };
 
 function isNetworkError(message: string): boolean {
@@ -92,13 +91,30 @@ const KNOWN_MESSAGES: Record<string, SiteFeedbackMessage> = {
     steps: ["Попробуйте войти с этим номером", "Или восстановите пароль по почте"],
   },
   INVALID_CREDENTIALS: {
-    title: "Неверные данные для входа",
-    description: "Проверьте email и пароль.",
-    steps: [
-      "Убедитесь, что раскладка клавиатуры верная",
-      "Если регистрировались по телефону — используйте тот же пароль при входе по почте",
-      "Нажмите «Забыли пароль?» для восстановления",
-    ],
+    title: "Пароль не подходит",
+    description: "Проверьте пароль или восстановите доступ.",
+    action: { label: "Восстановить пароль", href: "/?auth=sign-in&step=forgot-password" },
+  },
+  EMAIL_NOT_CONFIRMED: {
+    title: "Подтвердите email",
+    description: "Откройте последнее письмо регистрации и перейдите по ссылке.",
+  },
+  RATE_LIMITED: {
+    title: "Нужно немного подождать",
+    description: "Повторная попытка станет доступна автоматически.",
+  },
+  USER_BANNED: {
+    title: "Доступ ограничен",
+    description: "Обратитесь в поддержку, если считаете это ошибкой.",
+    action: { label: "Поддержка", href: "/contacts" },
+  },
+  NETWORK_ERROR: {
+    title: "Нет связи с сервером",
+    description: "Проверьте подключение к интернету и повторите попытку.",
+  },
+  CONFIGURATION_ERROR: {
+    title: "Вход временно недоступен",
+    description: "Проверьте настройки сервиса и попробуйте позже.",
   },
   ROLE_NOT_CONNECTED: {
     title: "Роль организатора не подключена",
@@ -236,14 +252,9 @@ export function siteSuccessMessage(
   return { title, description, action };
 }
 
-export function passwordResetSentMessage(email: string): SiteFeedbackMessage {
+export function passwordResetSentMessage(): SiteFeedbackMessage {
   return {
     title: "Письмо отправлено",
-    description: `Если аккаунт с адресом ${email} зарегистрирован, вы получите ссылку для смены пароля.`,
-    steps: [
-      "Проверьте папку «Спам»",
-      "Ссылка действует ограниченное время",
-      "После смены пароля войдите с новыми данными",
-    ],
+    description: "Если этот адрес зарегистрирован, мы отправили ссылку для изменения пароля.",
   };
 }

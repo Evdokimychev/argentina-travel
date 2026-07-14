@@ -18,6 +18,8 @@
 
 ## Production (Supabase Dashboard)
 
+Production сайта фактически использует проект `uooxrypocahomoqzdvzy` (это подтверждают URL, ключи и `supabase/config.toml`). Проект `wugdzhbqkvjxodbfdysq`, указанный в одной из передач, содержит другую предметную область и не должен подставляться в переменные GoArgentina.
+
 1. **Project Settings → Authentication → SMTP Settings**
    - Включите Custom SMTP (Resend, SendGrid, Mailgun и т.д.)
    - **Sender name:** `Пора в Аргентину`
@@ -26,11 +28,13 @@
 
 2. **Authentication → URL Configuration**
    - Site URL: `https://www.goargentina.ru`
-   - Redirect URLs: `https://www.goargentina.ru/auth/callback`, `http://localhost:3000/auth/callback`
+   - Redirect URLs: `https://www.goargentina.ru/auth/confirm`, `https://www.goargentina.ru/auth/callback`, `https://www.goargentina.ru/account/update-password`, `https://www.goargentina.ru/**`, `https://goargentina.ru/**`
+   - Localhost добавляется отдельным development redirect URL и не используется как Site URL.
 
 3. **Authentication → Email Templates**
    - Для каждого типа скопируйте HTML из `supabase/templates/*.html`
-   - Subject — как в `supabase/config.toml` (`[auth.email.template.*].subject`)
+   - Subject — как в `supabase/config.toml` (`[auth.email.template.*].subject`).
+   - Recovery subject: `Изменение пароля — Пора в Аргентину`.
 
 4. **Authentication → Providers → Email**
    - Confirm email: **включено**
@@ -45,16 +49,29 @@
 
 ## Переменные Go-шаблона Supabase
 
-- `{{ .ConfirmationURL }}` — ссылка подтверждения / восстановления
+- `{{ .TokenHash }}` — хеш для SSR-подтверждения через `/auth/confirm`
 - `{{ .SiteURL }}` — Site URL из настроек
 - `{{ .Email }}` — адрес получателя
 - `{{ .Token }}` — OTP (если включён)
 
 ## Проверка
 
-1. «Забыли пароль?» → письмо с темой «Восстановление пароля — Пора в Аргентину»
-2. Ссылка ведёт на `/auth/callback?next=/auth/reset-password`
-3. Форма «Новый пароль» сохраняет пароль и перенаправляет в `/profile`
+1. «Забыли пароль?» → письмо с темой «Изменение пароля — Пора в Аргентину».
+2. Ссылка ведёт только на `https://www.goargentina.ru/auth/confirm?...&type=recovery&next=/account/update-password`.
+3. `/auth/confirm` проверяет одноразовый token hash, записывает сессию и удаляет токен из адресной строки.
+4. Форма `/account/update-password` меняет пароль только при действующей recovery-сессии.
+5. После успешной смены пользователь входит новым паролем и открывает `/profile`.
+
+## Текущее внешнее ограничение
+
+На 14 июля 2026 доступный аккаунт Supabase Dashboard не имеет прав на production-проект `uooxrypocahomoqzdvzy`. Из-за этого URL Configuration, Email Templates и Custom SMTP нельзя считать применёнными, пока владельцу проекта не будет выдан доступ. Фактическая проверка `generateLink` показала старый `redirect_to=http://localhost:3000`.
+
+После получения доступа обязательны:
+
+1. Применить URL Configuration и все шаблоны из этой папки.
+2. Подключить Custom SMTP для `noreply@goargentina.ru`.
+3. Подтвердить SPF, DKIM и DMARC домена у почтового провайдера.
+4. Пройти реальный сценарий письма: запрос → переход → новый пароль → новый вход → `/profile`.
 
 ## Телефонный вход
 

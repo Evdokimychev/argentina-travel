@@ -1,51 +1,90 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
-import { getClientIp, withRateLimit } from "@/lib/rate-limit";
+import {
+  isValidAuthEmail,
+  normalizeAuthEmail,
+  parseRetryAfterSeconds,
+} from "@/lib/auth-flow";
 import { authRedirectUrl } from "@/lib/site-url";
 
-async function postRequestPasswordReset(request: Request) {
+const NEUTRAL_MESSAGE =
+  "Если этот адрес зарегистрирован, мы отправили ссылку для изменения пароля.";
+
+export async function POST(request: Request) {
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json(
-      { error: "Восстановление пароля недоступно в демо-режиме без Supabase." },
+      {
+        error: {
+          code: "AUTH_CONFIGURATION_ERROR",
+          message: "Восстановление пароля временно недоступно.",
+        },
+      },
       { status: 503 }
     );
   }
 
   try {
-    const body = (await request.json()) as { email?: string };
-    const email = body.email?.trim().toLowerCase() ?? "";
-
-    if (!email || !email.includes("@")) {
-      return NextResponse.json({ error: "Укажите корректный email" }, { status: 400 });
+    const body = (await request.json().catch(() => null)) as { email?: string } | null;
+    const email = normalizeAuthEmail(body?.email ?? "");
+    if (!isValidAuthEmail(email)) {
+      return NextResponse.json(
+        { error: { code: "AUTH_INVALID_EMAIL", message: "Укажите корректный email." } },
+        { status: 400 }
+      );
     }
 
     const supabase = await createSupabaseServerClient();
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: authRedirectUrl("/auth/callback?next=/auth/reset-password", request.url),
+      redirectTo: authRedirectUrl(
+        "/auth/confirm?next=/account/update-password",
+        request.url
+      ),
     });
 
-    if (error) {
+    if (error?.status === 429) {
+      const retryAfter = parseRetryAfterSeconds(error, 60);
       return NextResponse.json(
-        { error: "Не удалось отправить письмо. Попробуйте ещё раз через несколько минут." },
-        { status: error.status === 429 ? 429 : 502 }
+        {
+          error: {
+            code: "AUTH_RESET_RATE_LIMITED",
+            retryAfter,
+            message: `Повторная отправка будет доступна через ${retryAfter} секунд.`,
+          },
+        },
+        { status: 429, headers: { "Retry-After": String(retryAfter) } }
       );
     }
 
-    // Не раскрываем, есть ли аккаунт с такой почтой.
-    return NextResponse.json({ ok: true });
-  } catch {
+    if (error) {
+      console.error("[auth.reset.request] delivery rejected", {
+        code: error.code,
+        status: error.status,
+      });
+      return NextResponse.json(
+        {
+          error: {
+            code: "AUTH_EMAIL_DELIVERY_FAILED",
+            message: "Письмо не удалось отправить. Попробуйте немного позже.",
+          },
+        },
+        { status: 502 }
+      );
+    }
+
+    return NextResponse.json({ ok: true, message: NEUTRAL_MESSAGE });
+  } catch (error) {
+    console.error("[auth.reset.request] unavailable", {
+      message: error instanceof Error ? error.message : "unknown",
+    });
     return NextResponse.json(
-      { error: "Сервис восстановления временно недоступен. Попробуйте позже." },
-      { status: 500 }
+      {
+        error: {
+          code: "AUTH_RESET_UNAVAILABLE",
+          message: "Сервис восстановления временно недоступен.",
+        },
+      },
+      { status: 503 }
     );
   }
 }
-
-export const POST = withRateLimit(postRequestPasswordReset, {
-  limit: 5,
-  window: 300_000,
-  keyPrefix: "auth:request-password-reset",
-  key: (request) => `ip:${getClientIp(request)}`,
-  message: "Слишком много запросов на восстановление пароля. Попробуйте позже.",
-});

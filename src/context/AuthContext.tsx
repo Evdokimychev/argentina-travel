@@ -43,7 +43,8 @@ interface AuthContextValue {
   authIntent: AuthIntent;
   favoriteAuthStep: FavoriteAuthStep;
   favoritePromptOpen: boolean;
-  openAuth: (intent?: AuthIntent) => void;
+  openAuth: (intent?: AuthIntent, step?: "sign-in" | "forgot-password") => void;
+  authInitialStep: "sign-in" | "forgot-password";
   closeAuth: () => void;
   openFavoritePrompt: (tour: FavoriteTourInput) => void;
   closeFavoritePrompt: () => void;
@@ -82,7 +83,10 @@ interface AuthContextValue {
   addOrganizerRole: () => Promise<{ ok: true } | { ok: false; error: string }>;
   requestPasswordReset: (
     email: string
-  ) => Promise<{ ok: true } | { ok: false; error: string }>;
+  ) => Promise<
+    | { ok: true; message: string }
+    | { ok: false; error: string; code?: string; retryAfter?: number }
+  >;
   updateProfile: (input: {
     fullName: string;
     phone: string;
@@ -107,6 +111,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(null);
   const [authOpen, setAuthOpen] = useState(false);
   const [authIntent, setAuthIntent] = useState<AuthIntent>("default");
+  const [authInitialStep, setAuthInitialStep] = useState<"sign-in" | "forgot-password">("sign-in");
   const [favoriteAuthStep, setFavoriteAuthStep] = useState<FavoriteAuthStep>("sign-in");
   const [favoritePromptOpen, setFavoritePromptOpen] = useState(false);
   const [hydrated, setHydrated] = useState(false);
@@ -203,14 +208,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => window.removeEventListener("online", onOnline);
   }, [user]);
 
-  const openAuth = useCallback((intent: AuthIntent = "default") => {
+  const openAuth = useCallback((intent: AuthIntent = "default", step: "sign-in" | "forgot-password" = "sign-in") => {
     setAuthIntent(intent);
+    setAuthInitialStep(step);
     setAuthOpen(true);
   }, []);
 
   const closeAuth = useCallback(() => {
     setAuthOpen(false);
     setAuthIntent("default");
+    setAuthInitialStep("sign-in");
     pendingFavoriteRef.current = null;
     favoriteFlowRef.current = false;
   }, []);
@@ -367,9 +374,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const requestPasswordReset = useCallback(async (email: string) => {
     const result = await getAuthProvider().requestPasswordReset(email);
     if ("error" in result) {
-      return { ok: false as const, error: result.error };
+      return {
+        ok: false as const,
+        error: result.error,
+        code: result.code,
+        retryAfter: result.retryAfter,
+      };
     }
-    return { ok: true as const };
+    return { ok: true as const, message: result.message };
   }, []);
 
   const connectOrganizerRole = useCallback(async () => {
@@ -452,6 +464,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       authHydrated: hydrated,
       authOpen,
       authIntent,
+      authInitialStep,
       favoriteAuthStep,
       favoritePromptOpen,
       openAuth,
@@ -471,6 +484,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }),
     [
       authIntent,
+      authInitialStep,
       authOpen,
       closeAuth,
       closeFavoritePrompt,

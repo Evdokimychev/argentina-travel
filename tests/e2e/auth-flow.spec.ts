@@ -34,9 +34,41 @@ test.describe("Авторизация", () => {
 
   test("просроченная ссылка восстановления показывает понятный следующий шаг", async ({ page }) => {
     await page.goto("/?auth=sign-in&error=expired-link");
-    await page.waitForURL(url => !url.searchParams.has("error"));
+    await page.waitForURL("**/auth/error?reason=expired-link");
 
     await expect(page.getByText("Ссылка больше не действует")).toBeVisible();
-    await expect(page.getByRole("dialog")).toBeVisible();
+    await expect(page.getByRole("link", { name: "Запросить новое письмо" })).toBeVisible();
+  });
+
+  test("ссылка восстановления открывает нужный шаг и показывает серверный countdown", async ({ page }) => {
+    await page.route("**/api/auth/request-password-reset", async (route) => {
+      await route.fulfill({
+        status: 429,
+        headers: { "Retry-After": "42" },
+        contentType: "application/json",
+        body: JSON.stringify({
+          error: {
+            code: "AUTH_RESET_RATE_LIMITED",
+            retryAfter: 42,
+            message: "Повторная отправка будет доступна через 42 секунды.",
+          },
+        }),
+      });
+    });
+
+    await page.goto("/?auth=sign-in&step=forgot-password");
+    const dialog = page.getByRole("dialog");
+    await expect(dialog.getByRole("heading", { name: "Восстановление пароля" })).toBeVisible();
+    await dialog.getByLabel("Email").fill("owner@example.com");
+    await dialog.getByRole("button", { name: "Отправить ссылку" }).click();
+    await expect(dialog.getByText("Повторная отправка будет доступна через 42 секунд.")).toBeVisible();
+    await expect(dialog.getByRole("button", { name: /Повторить через \d+ с/ })).toBeDisabled();
+  });
+
+  test("форма нового пароля без recovery-сессии не принимает пароль", async ({ page }) => {
+    await page.goto("/account/update-password");
+    await expect(page.getByRole("heading", { name: "Новый пароль" })).toBeVisible();
+    await expect(page.getByText("Ссылка больше не действует")).toBeVisible();
+    await expect(page.getByLabel("Новый пароль")).toHaveCount(0);
   });
 });

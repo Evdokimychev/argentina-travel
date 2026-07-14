@@ -17,6 +17,9 @@ function loadEnvFile(filename) {
 
 loadEnvFile(path.resolve(".env.local"));
 
+const canonicalSiteUrl = "https://www.goargentina.ru";
+const expectedProjectRef = process.env.EXPECTED_SUPABASE_PROJECT_REF ?? "uooxrypocahomoqzdvzy";
+
 const refFromUrl = (value) => {
   try { return new URL(value).hostname.split(".")[0]; } catch { return null; }
 };
@@ -46,13 +49,18 @@ const environment = process.env.VERCEL_ENV ?? process.env.NODE_ENV ?? "local";
 const errors = [];
 if (missing.length) errors.push(`Не определены: ${missing.join(", ")}`);
 if (uniqueRefs.size > 1) errors.push("Supabase-переменные относятся к разным проектам");
-if (environment === "production" && siteUrl !== "https://www.goargentina.ru") {
-  errors.push("NEXT_PUBLIC_SITE_URL должен быть https://www.goargentina.ru");
+if (uniqueRefs.size === 1 && !uniqueRefs.has(expectedProjectRef)) {
+  errors.push(`Supabase project ref должен быть ${expectedProjectRef}`);
+}
+if (environment === "production" && siteUrl !== canonicalSiteUrl) {
+  errors.push(`NEXT_PUBLIC_SITE_URL должен быть ${canonicalSiteUrl}`);
 }
 
 console.log(`Auth environment: ${environment}`);
 console.log(`Supabase project ref: ${uniqueRefs.size === 1 ? [...uniqueRefs][0] : "mismatch"}`);
+console.log(`Expected project ref: ${expectedProjectRef}`);
 console.log(`Canonical site URL: ${siteUrl ?? "not set"}`);
+console.log(`Release SHA: ${process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 12) ?? "local"}`);
 console.log(`Supabase Auth: ${process.env.NEXT_PUBLIC_SUPABASE_AUTH === "false" ? "disabled" : "enabled"}`);
 if (errors.length) {
   for (const error of errors) console.error(`ERROR: ${error}`);

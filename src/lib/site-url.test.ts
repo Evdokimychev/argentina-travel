@@ -2,12 +2,18 @@ import { describe, it, expect, afterEach } from "vitest";
 import { getSiteUrl, absoluteUrl } from "./site-url";
 
 const ORIGINAL = process.env.NEXT_PUBLIC_SITE_URL;
+const ORIGINAL_VERCEL_ENV = process.env.VERCEL_ENV;
 
 afterEach(() => {
   if (ORIGINAL === undefined) {
     delete process.env.NEXT_PUBLIC_SITE_URL;
   } else {
     process.env.NEXT_PUBLIC_SITE_URL = ORIGINAL;
+  }
+  if (ORIGINAL_VERCEL_ENV === undefined) {
+    delete process.env.VERCEL_ENV;
+  } else {
+    process.env.VERCEL_ENV = ORIGINAL_VERCEL_ENV;
   }
 });
 
@@ -18,9 +24,9 @@ describe("getSiteUrl", () => {
     expect(getSiteUrl()).toBe("https://www.goargentina.ru");
   });
 
-  it("ignores localhost and *.local", () => {
+  it("allows localhost only outside production", () => {
     process.env.NEXT_PUBLIC_SITE_URL = "http://localhost:3000";
-    expect(getSiteUrl()).toBe("https://www.goargentina.ru");
+    expect(getSiteUrl()).toBe("http://localhost:3000");
   });
 
   it("keeps a valid custom domain and strips the trailing slash", () => {
@@ -36,6 +42,18 @@ describe("getSiteUrl", () => {
   it("falls back when the value is not a valid URL", () => {
     process.env.NEXT_PUBLIC_SITE_URL = "not-a-url";
     expect(getSiteUrl()).toBe("https://www.goargentina.ru");
+  });
+
+  it("rejects missing site URL in production", () => {
+    process.env.VERCEL_ENV = "production";
+    delete process.env.NEXT_PUBLIC_SITE_URL;
+    expect(() => getSiteUrl()).toThrow("required in production");
+  });
+
+  it("rejects localhost in production", () => {
+    process.env.VERCEL_ENV = "production";
+    process.env.NEXT_PUBLIC_SITE_URL = "http://localhost:3000";
+    expect(() => getSiteUrl()).toThrow("must be https://www.goargentina.ru");
   });
 });
 
