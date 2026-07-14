@@ -1,27 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import type { LucideIcon } from "lucide-react";
 import { CheckCircle2, Handshake, Map, Sparkles, Users } from "lucide-react";
-import { mergePlatformStats, type PlatformStats } from "@/lib/organizer-public";
+import type { PlatformStats } from "@/lib/organizer-public";
 import { formatCatalogStatsDetail } from "@/lib/catalog-stats";
 import { useRevealAnimation } from "@/hooks/useRevealAnimation";
 import { formatTours, tripsWord } from "@/lib/pluralize";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
-
-function countCompletedBookings(): number {
-  if (typeof window === "undefined") return 0;
-  try {
-    const raw = window.localStorage.getItem("argentina-travel-bookings");
-    if (!raw) return 0;
-    const parsed = JSON.parse(raw) as Array<{ status?: string }>;
-    if (!Array.isArray(parsed)) return 0;
-    return parsed.filter((booking) => booking.status === "completed").length;
-  } catch {
-    return 0;
-  }
-}
 
 type StatCard = {
   icon: LucideIcon;
@@ -65,13 +51,8 @@ function StatTile({
 }
 
 export default function PlatformStatsBlock({ initialStats }: { initialStats: PlatformStats }) {
-  const [stats, setStats] = useState(initialStats);
+  const stats = initialStats;
   const { ref, revealed } = useRevealAnimation<HTMLElement>(0.15);
-
-  useEffect(() => {
-    const completed = countCompletedBookings();
-    setStats((prev) => mergePlatformStats(prev, completed));
-  }, []);
 
   if (stats.isNewPlatform && stats.totalTourCount <= 3) {
     return (

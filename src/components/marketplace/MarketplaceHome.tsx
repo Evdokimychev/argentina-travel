@@ -44,8 +44,7 @@ import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
-import PersonalizedRecommendationsSection from "@/components/personalization/PersonalizedRecommendationsSection";
-import type { ExcursionCity, ExcursionListing } from "@/types/excursion";
+import type { ExcursionCity } from "@/types/excursion";
 
 const HOME_FEATURED_REGIONS = POPULAR_DESTINATIONS.slice(0, 6);
 
@@ -59,7 +58,6 @@ interface MarketplaceHomeProps {
   heroCollage?: React.ReactNode;
   showHomepageRecommendationsV2?: boolean;
   personalizedTours?: TourListing[];
-  personalizedExcursions?: ExcursionListing[];
   personalizedActive?: boolean;
 }
 
@@ -113,7 +111,6 @@ export default function MarketplaceHome({
   heroCollage,
   showHomepageRecommendationsV2 = false,
   personalizedTours = [],
-  personalizedExcursions = [],
   personalizedActive = false,
 }: MarketplaceHomeProps) {
   const router = useRouter();
@@ -154,36 +151,17 @@ export default function MarketplaceHome({
     [homepageTours]
   );
 
-  const homeTourSections = useMemo(
-    () =>
-      [
-        {
-          key: "recommended",
-          id: "recommended" as const,
-          title: "Рекомендуем",
-          subtitle: "По рейтингу и актуальности",
-          tours: recommendedTours,
-        },
-        youtravelTours.length > 0
-          ? {
-              key: "youtravel",
-              title: "Авторские туры YouTravel",
-              subtitle: "Партнёрские путешествия с датами заезда на YouTravel.me",
-              tours: youtravelTours,
-            }
-          : null,
-        {
-          key: "hot",
-          title: "Горящие даты",
-          subtitle: "Только туры с реальной скидкой и ближайшими датами",
-          tours: hotTours,
-        },
-      ].filter(
-        (section): section is NonNullable<typeof section> =>
-          Boolean(section && section.tours.length > 0)
-      ),
-    [recommendedTours, youtravelTours, hotTours]
-  );
+  const featuredTours = useMemo(() => {
+    const primary =
+      showHomepageRecommendationsV2 && personalizedTours.length > 0
+        ? personalizedTours
+        : recommendedTours;
+    const unique = new Map<string, TourListing>();
+    for (const tour of [...primary, ...hotTours, ...youtravelTours]) {
+      if (!unique.has(tour.slug)) unique.set(tour.slug, tour);
+    }
+    return [...unique.values()].slice(0, 6);
+  }, [hotTours, personalizedTours, recommendedTours, showHomepageRecommendationsV2, youtravelTours]);
 
   const valueProps = [
     {
@@ -217,15 +195,8 @@ export default function MarketplaceHome({
       {/* Hero */}
       <section
         data-scroll-rail-tone="light"
-        className="relative overflow-hidden border-b border-gray-100 bg-gradient-to-br from-[#f4f9fc] via-white to-sky/[0.08]"
+        className="relative overflow-hidden border-b border-gray-100 bg-white"
       >
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_100%_0%,rgba(56,189,248,0.12),transparent)]"
-          aria-hidden
-        />
-        <div className="pointer-events-none absolute -right-16 top-8 h-56 w-56 rounded-full bg-sky/10 blur-3xl" aria-hidden />
-        <div className="pointer-events-none absolute -left-10 bottom-0 h-40 w-40 rounded-full bg-sun/10 blur-3xl" aria-hidden />
-
         <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-16")}>
           <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,380px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
             <div className="min-w-0">
@@ -385,7 +356,7 @@ export default function MarketplaceHome({
           subtitle="Честные условия, малые группы и русскоязычные гиды — без скрытых комиссий и накрученных рейтингов"
           className="border-b border-gray-100 py-10"
         >
-          <HubQuickFactsGrid columns={4} facts={valueProps} />
+          <HubQuickFactsGrid columns={4} facts={valueProps} className="grid-cols-2" />
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <p className="text-center text-sm text-slate">
               В каталоге{" "}
@@ -419,12 +390,12 @@ export default function MarketplaceHome({
         href="/destinations"
         linkLabel="Обзор регионов"
       >
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {HOME_FEATURED_REGIONS.map((dest) => (
             <Link
               key={dest.id}
               href={destinationHref(dest.id)}
-              className="group relative block h-48 overflow-hidden rounded-2xl ring-1 ring-gray-100 transition-shadow hover:shadow-elevated sm:h-56"
+              className="group relative block h-44 overflow-hidden rounded-lg ring-1 ring-gray-100 transition-shadow hover:shadow-elevated sm:h-56"
             >
               <Image
                 src={dest.image}
@@ -437,7 +408,7 @@ export default function MarketplaceHome({
               <div className="absolute bottom-0 p-4 text-white">
                 <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{dest.region}</p>
                 <h3 className="mt-1 font-heading text-lg font-bold">{dest.name}</h3>
-                <p className="mt-0.5 line-clamp-2 text-xs leading-relaxed text-white/80">{dest.description}</p>
+                <p className="mt-0.5 hidden line-clamp-2 text-xs leading-relaxed text-white/80 sm:block">{dest.description}</p>
               </div>
             </Link>
           ))}
@@ -465,28 +436,16 @@ export default function MarketplaceHome({
         </div>
       </SectionShell>
 
-      {showHomepageRecommendationsV2 ? (
-        <PersonalizedRecommendationsSection
-          initialTours={personalizedTours}
-          initialExcursions={personalizedExcursions}
-          toursPersonalized={personalizedActive}
-          excursionsPersonalized={personalizedActive}
-          variant="homepage"
-        />
-      ) : null}
-
-      {/* Tour collections */}
+      {/* One ranked offer shelf keeps the primary choice focused. */}
       <section className="border-y border-gray-100 bg-white py-12 md:py-14">
-        <div className={cn(siteContainerClass, "space-y-14")}>
-          {homeTourSections.map((section) => (
-            <TourGrid
-              key={section.key}
-              id={section.id}
-              title={section.title}
-              subtitle={section.subtitle}
-              tours={section.tours}
-            />
-          ))}
+        <div className={siteContainerClass}>
+          <TourGrid
+            id="recommended"
+            title={personalizedActive ? "Подобрано для вас" : "Актуальные предложения"}
+            subtitle="Опубликованные туры с доступными датами и понятными условиями"
+            tours={featuredTours}
+            variant="strip"
+          />
         </div>
       </section>
 
@@ -502,9 +461,11 @@ export default function MarketplaceHome({
           href="/blog"
           linkLabel="Все статьи"
         >
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="-mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-3">
             {blogPosts.slice(0, 3).map((p) => (
-              <BlogCard key={p.id} post={p} />
+              <div key={p.id} className="min-w-[17rem] snap-start sm:min-w-0">
+                <BlogCard post={p} />
+              </div>
             ))}
           </div>
         </SectionShell>

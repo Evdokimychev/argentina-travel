@@ -1,6 +1,6 @@
 # Auth email — брендированные шаблоны Supabase
 
-Письма подтверждения, восстановления пароля и смены email отправляет **Supabase Auth** (не Resend). Транзакционные письма заявок — через Resend (`docs/email-e73.md`).
+Письма подтверждения, восстановления пароля и смены email отправляет **Supabase Auth через SMTP Resend**. Транзакционные письма заявок также отправляются через Resend (`docs/email-e73.md`).
 
 ## Файлы шаблонов
 
@@ -23,7 +23,7 @@ Production сайта фактически использует проект `uo
 1. **Project Settings → Authentication → SMTP Settings**
    - Включите Custom SMTP (Resend, SendGrid, Mailgun и т.д.)
    - **Sender name:** `Пора в Аргентину`
-   - **Sender email:** `noreply@goargentina.ru` (верифицированный домен)
+   - **Sender email:** `no-reply@goargentina.ru` (верифицированный домен)
    - Без Custom SMTP письма идут с `noreply@mail.app.supabase.io` — не для production
 
 2. **Authentication → URL Configuration**
@@ -62,16 +62,24 @@ Production сайта фактически использует проект `uo
 4. Форма `/account/update-password` меняет пароль только при действующей recovery-сессии.
 5. После успешной смены пользователь входит новым паролем и открывает `/profile`.
 
-## Текущее внешнее ограничение
+## Состояние production на 14 июля 2026
 
-На 14 июля 2026 доступный аккаунт Supabase Dashboard не имеет прав на production-проект `uooxrypocahomoqzdvzy`. Из-за этого URL Configuration, Email Templates и Custom SMTP нельзя считать применёнными, пока владельцу проекта не будет выдан доступ. Фактическая проверка `generateLink` показала старый `redirect_to=http://localhost:3000`.
+- Project ref: `uooxrypocahomoqzdvzy` (`ACTIVE_HEALTHY`).
+- Site URL и redirect allow list настроены на production-домен.
+- Custom SMTP подключён к Resend, отправитель: `Пора в Аргентину <no-reply@goargentina.ru>`.
+- Все шаблоны из `supabase/templates/` синхронизированы, уведомление о смене пароля включено.
+- DNS-записи опубликованы на `vip221.hosting.reg.ru`, запрос верификации Resend запущен; текущий статус во время распространения DNS — `pending`.
 
-После получения доступа обязательны:
+Обязательные DNS-записи в REG.RU:
 
-1. Применить URL Configuration и все шаблоны из этой папки.
-2. Подключить Custom SMTP для `noreply@goargentina.ru`.
-3. Подтвердить SPF, DKIM и DMARC домена у почтового провайдера.
-4. Пройти реальный сценарий письма: запрос → переход → новый пароль → новый вход → `/profile`.
+| Тип | Имя | Значение | Приоритет |
+|-----|-----|----------|-----------|
+| TXT | `resend._domainkey` | DKIM public key из карточки домена Resend | — |
+| MX | `send` | `feedback-smtp.us-east-1.amazonses.com` | `10` |
+| TXT | `send` | `v=spf1 include:amazonses.com ~all` | — |
+| TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:hello@goargentina.ru;` | — |
+
+До статуса `verified` восстановление пароля может получать отказ SMTP и production нельзя считать полностью готовым. После верификации домена нужно пройти реальный сценарий: запрос письма → переход → новый пароль → новый вход → `/profile`.
 
 ## Телефонный вход
 

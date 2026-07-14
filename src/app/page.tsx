@@ -14,12 +14,10 @@ import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { getFlag } from "@/lib/feature-flags/server";
 import { resolveInteractionActor } from "@/lib/personalization/interaction-context-server";
 import {
-  getRecommendedExcursions,
   getRecommendedTours,
 } from "@/lib/personalization/recommendations-server";
 import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
-import SocialFeed from "@/components/social-feed/SocialFeed";
 import { absoluteUrl } from "@/lib/site-url";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
@@ -49,15 +47,12 @@ export default async function HomePage() {
   const heroSrc = getHomeHeroImage();
   const platformStats = getPlatformStatsFromMarketplace(tours);
 
-  const [testimonials, recommendedTours, recommendedExcursions, excursionCities] =
+  const [testimonials, recommendedTours, excursionCities] =
     await Promise.all([
       collectTopVerifiedReviewsAsync(3),
       homepageRecommendationsV2Enabled
         ? getRecommendedTours({ ...actor, limit: 6, allTours: tours })
         : Promise.resolve({ tours: [], personalized: false }),
-      homepageRecommendationsV2Enabled
-        ? getRecommendedExcursions({ ...actor, limit: 6 })
-        : Promise.resolve({ excursions: [], personalized: false }),
       fetchExcursionCitiesServer(),
     ]);
 
@@ -87,12 +82,8 @@ export default async function HomePage() {
         }
         showHomepageRecommendationsV2={homepageRecommendationsV2Enabled}
         personalizedTours={recommendedTours.tours}
-        personalizedExcursions={recommendedExcursions.excursions}
-        personalizedActive={
-          recommendedTours.personalized || recommendedExcursions.personalized
-        }
+        personalizedActive={recommendedTours.personalized}
       />
-      <SocialFeed placement="home" />
     </>
   );
 }

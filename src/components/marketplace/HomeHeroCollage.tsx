@@ -23,14 +23,9 @@ export default function HomeHeroCollage({
         className="pointer-events-none absolute -bottom-3 -left-3 hidden h-[calc(100%-0.75rem)] w-[calc(100%-0.75rem)] rounded-2xl border border-sky/25 lg:block"
         aria-hidden
       />
-      <div
-        className="pointer-events-none absolute -right-2 -top-2 hidden h-24 w-24 rounded-full bg-sun/25 blur-2xl lg:block"
-        aria-hidden
-      />
-
       <div className="grid grid-cols-12 items-stretch gap-2 sm:gap-2.5">
-        <div className="relative col-span-8 overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100 sm:col-span-7">
-          <div className="relative aspect-[4/5] w-full sm:aspect-[3/4] lg:aspect-[4/5]">
+        <div className="relative col-span-12 overflow-hidden rounded-lg bg-charcoal/5 shadow-card ring-1 ring-gray-100 sm:col-span-7">
+          <div className="relative aspect-[16/9] w-full sm:aspect-[3/4] lg:aspect-[4/5]">
             <Image
               src={heroSrc}
               alt={heroAlt}
@@ -47,7 +42,7 @@ export default function HomeHeroCollage({
           </div>
         </div>
 
-        <div className="col-span-4 grid min-h-0 grid-rows-2 gap-2 sm:col-span-5 sm:gap-2.5">
+        <div className="col-span-4 hidden min-h-0 grid-rows-2 gap-2 sm:col-span-5 sm:grid sm:gap-2.5">
           {secondary.map((image) => (
             <figure
               key={image.src}

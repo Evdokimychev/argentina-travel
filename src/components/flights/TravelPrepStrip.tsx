@@ -56,14 +56,14 @@ export default async function TravelPrepStrip({ locale = "ru" }: TravelPrepStrip
           </Link>
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-3">
+        <div className="-mx-4 mt-6 flex snap-x gap-3 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0">
           {prepLinks.map((item) => {
             const Icon = item.icon;
             return (
               <Link
                 key={item.id}
                 href={item.href}
-                className="group flex flex-col rounded-2xl border border-gray-100 bg-surface-muted/30 p-5 transition-all hover:border-sky/25 hover:bg-sky/[0.03] hover:shadow-card"
+                className="group flex min-w-[15rem] snap-start flex-col rounded-lg border border-gray-100 bg-surface-muted/30 p-4 transition-all hover:border-sky/25 hover:bg-sky/[0.03] hover:shadow-card sm:min-w-0 sm:p-5"
               >
                 <Icon className="h-5 w-5 text-sky" aria-hidden />
                 <p className="mt-3 font-heading font-bold text-charcoal group-hover:text-sky">
