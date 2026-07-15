@@ -36,46 +36,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Typecheck
-        run: npx tsc --noEmit
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
 
-      - name: Lint
-        run: npm run lint
+      - name: Mandatory release gate
+        run: npm run release:gate
 
-      - name: Unit tests
-        run: npm test
-
-      - name: RLS audit
-        run: node scripts/rls-audit.mjs
-
-      - name: Blog image perf audit
-        run: npm run blog-image-perf-audit
-
-      - name: Blog MD sync check
-        run: npm run sync-manual-posts:check && npm run sync-rich-articles:check
-
-      - name: Blog hero audit
-        run: node scripts/audit-blog-heroes.mjs --strict
-
-      - name: Cornerstone media check
-        run: npm run register-cornerstone-media:check
-
-      - name: Content-plan redirects manifest
-        run: npm run sync-content-plan-redirects:check
-
-      - name: Legacy blog media slugs
-        run: npm run prune-legacy-blog-media:check
-
-      - name: CMS media deploy check
-        run: npm run cms-media:deploy-check
-
-      - name: Migration meta
-        run: node scripts/write-migration-meta.mjs
-
-      - name: Production build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_SITE_URL: https://www.goargentina.ru
+      - name: Upload release gate report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-gate-${{ github.sha }}
+          path: |
+            var/ops/release-gate-report.json
+            var/ops/release-gate-logs/
+          if-no-files-found: error
 
       - name: Bundle size report
         run: npm run bundle:report

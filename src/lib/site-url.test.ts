@@ -1,8 +1,14 @@
-import { describe, it, expect, afterEach } from "vitest";
+import { describe, it, expect, afterEach, beforeEach } from "vitest";
 import { getSiteUrl, absoluteUrl } from "./site-url";
 
 const ORIGINAL = process.env.NEXT_PUBLIC_SITE_URL;
 const ORIGINAL_VERCEL_ENV = process.env.VERCEL_ENV;
+const ORIGINAL_DEPLOY_ENV = process.env.DEPLOY_ENV;
+
+beforeEach(() => {
+  delete process.env.VERCEL_ENV;
+  delete process.env.DEPLOY_ENV;
+});
 
 afterEach(() => {
   if (ORIGINAL === undefined) {
@@ -14,6 +20,11 @@ afterEach(() => {
     delete process.env.VERCEL_ENV;
   } else {
     process.env.VERCEL_ENV = ORIGINAL_VERCEL_ENV;
+  }
+  if (ORIGINAL_DEPLOY_ENV === undefined) {
+    delete process.env.DEPLOY_ENV;
+  } else {
+    process.env.DEPLOY_ENV = ORIGINAL_DEPLOY_ENV;
   }
 });
 

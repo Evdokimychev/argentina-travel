@@ -1,4 +1,5 @@
 {
+  "buildCommand": "npm run quality:static && npm run quality:contracts && npm run quality:content && npm run quality:security && npm run quality:commerce && npm run quality:production",
   "crons": [
     {
       "path": "/api/cron/affiliate-sync",
