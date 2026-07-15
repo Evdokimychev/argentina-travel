@@ -33,6 +33,18 @@ export type CmsMediaAssetRow = {
   updated_by: string | null;
   created_at: string;
   updated_at: string;
+  original_url: string | null;
+  source_page_url: string | null;
+  creator: string | null;
+  license: string | null;
+  license_url: string | null;
+  attribution_text: string | null;
+  rights_verified_at: string | null;
+  rights_verified_by: string | null;
+  caption_ru: string | null;
+  focal_point: { x?: number; y?: number } | null;
+  content_hash: string | null;
+  rights_status: "review_required" | "verified" | "restricted" | "expired" | "rejected";
 };
 
 export type CmsMediaUploadInput = {
@@ -69,13 +81,25 @@ export function cmsMediaRowToManifestAsset(row: CmsMediaAssetRow): MediaAsset {
     title: row.title,
     alt: row.alt || row.title,
     source: "local",
-    sourceUrl: row.public_url,
-    license: "Uploaded via CMS",
+    sourceUrl: row.source_page_url || row.original_url || row.public_url,
+    sourcePageUrl: row.source_page_url || undefined,
+    license: row.license || "Права требуют проверки",
+    licenseUrl: row.license_url || undefined,
+    author: row.creator || undefined,
+    caption: row.caption_ru || undefined,
     category: (row.category as MediaCategory) || "blog-article",
     tags: row.tags ?? [],
     localPath: row.public_url,
     role: (row.role as MediaAssetRole) || "content",
     attributionRequired: false,
+    attributionHtml: row.attribution_text || undefined,
+    contentHash: row.content_hash || undefined,
+    rightsStatus: row.rights_status,
+    rightsVerifiedAt: row.rights_verified_at || undefined,
+    focalPoint:
+      row.focal_point && typeof row.focal_point === "object"
+        ? { x: row.focal_point.x ?? 0.5, y: row.focal_point.y ?? 0.5 }
+        : undefined,
   };
 }
 
@@ -169,9 +193,35 @@ export async function uploadCmsMediaAsset(
 export async function updateCmsMediaAsset(
   supabase: DbClient,
   id: string,
-  patch: { title?: string; alt?: string; category?: string; tags?: string[]; role?: string },
+  patch: {
+    title?: string;
+    alt?: string;
+    category?: string;
+    tags?: string[];
+    role?: string;
+    sourcePageUrl?: string | null;
+    creator?: string | null;
+    license?: string | null;
+    licenseUrl?: string | null;
+    attributionText?: string | null;
+    captionRu?: string | null;
+    focalPoint?: { x: number; y: number };
+    rightsStatus?: CmsMediaAssetRow["rights_status"];
+  },
   actorId: string
 ): Promise<{ asset: CmsMediaAssetRow; manifestSync: CmsManifestSyncResult } | { error: string }> {
+  if (
+    patch.rightsStatus === "verified" &&
+    (!patch.alt?.trim() ||
+      !patch.creator?.trim() ||
+      !patch.license?.trim() ||
+      !patch.sourcePageUrl?.startsWith("https://"))
+  ) {
+    return {
+      error: "Для подтверждения прав нужны alt, автор, лицензия и HTTPS-страница источника",
+    };
+  }
+
   const { data, error } = await supabase
     .from("cms_media_assets")
     .update({
@@ -180,6 +230,21 @@ export async function updateCmsMediaAsset(
       ...(patch.category !== undefined ? { category: patch.category } : {}),
       ...(patch.tags !== undefined ? { tags: patch.tags } : {}),
       ...(patch.role !== undefined ? { role: patch.role } : {}),
+      ...(patch.sourcePageUrl !== undefined ? { source_page_url: patch.sourcePageUrl } : {}),
+      ...(patch.creator !== undefined ? { creator: patch.creator } : {}),
+      ...(patch.license !== undefined ? { license: patch.license } : {}),
+      ...(patch.licenseUrl !== undefined ? { license_url: patch.licenseUrl } : {}),
+      ...(patch.attributionText !== undefined ? { attribution_text: patch.attributionText } : {}),
+      ...(patch.captionRu !== undefined ? { caption_ru: patch.captionRu } : {}),
+      ...(patch.focalPoint !== undefined ? { focal_point: patch.focalPoint } : {}),
+      ...(patch.rightsStatus !== undefined
+        ? {
+            rights_status: patch.rightsStatus,
+            rights_verified_at:
+              patch.rightsStatus === "verified" ? new Date().toISOString() : null,
+            rights_verified_by: patch.rightsStatus === "verified" ? actorId : null,
+          }
+        : {}),
       manifest_synced: false,
       updated_by: actorId,
     })

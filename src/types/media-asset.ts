@@ -77,6 +77,11 @@ export interface MediaAsset {
   blogPostSlug?: string;
   /** MD5 hex digest of local file bytes — used to dedupe visually identical gallery slots. */
   contentHash?: string;
+  rightsStatus?: "review_required" | "verified" | "restricted" | "expired" | "rejected";
+  rightsVerifiedAt?: string;
+  licenseUrl?: string;
+  sourcePageUrl?: string;
+  focalPoint?: { x: number; y: number };
   role: MediaAssetRole;
   /** Instagram: permalink для атрибуции и ссылки на пост. */
   instagramPermalink?: string;

@@ -221,6 +221,16 @@ def build_editorial_meta(data, word_count=None):
     today = datetime.now().date()
     source_count = len(data.get("sources") or [])
     missing_sources = sensitive and source_count == 0
+    primary_source_count = sum(
+        1 for source in (data.get("sources") or [])
+        if str(source.get("type") or "").lower() in {"official", "government", "primary"}
+    )
+    missing_primary_source = sensitive and primary_source_count == 0
+    missing_reviewer = sensitive and not data.get("reviewer")
+    hero = (data.get("media") or {}).get("hero") or None
+    missing_media_rights = bool(hero) and any(
+        not hero.get(field) for field in ("url", "alt", "author", "license", "source_page")
+    )
     review_due = review_due_at is None or review_due_at < today
     return {
         "sensitive": sensitive,
@@ -228,9 +238,20 @@ def build_editorial_meta(data, word_count=None):
         "review_due_at": review_due_at.isoformat() if review_due_at else None,
         "review_due": review_due,
         "missing_sources": missing_sources,
+        "primary_source_count": primary_source_count,
+        "missing_primary_source": missing_primary_source,
+        "missing_reviewer": missing_reviewer,
+        "missing_media_rights": missing_media_rights,
         "source_count": source_count,
         "word_count": word_count,
-        "needs_attention": review_due or missing_sources or confidence == "low",
+        "needs_attention": (
+            review_due
+            or missing_sources
+            or missing_primary_source
+            or missing_reviewer
+            or missing_media_rights
+            or confidence == "low"
+        ),
     }
 
 
@@ -337,6 +358,7 @@ def main():
             "site_sections": data.get("site_sections", []),
             "confidence": data.get("confidence"),
             "last_verified": data.get("last_verified"),
+            "reviewer": data.get("reviewer"),
             "long_form_source": data.get("long_form_source"),
             "site_id_map": data.get("site_id_map"),
             "site_ready": data.get("site_ready"),
@@ -411,6 +433,7 @@ def main():
             "status": data.get("status"),
             "confidence": data.get("confidence"),
             "last_verified": str(lv) if lv else None,
+            "reviewer": data.get("reviewer"),
             "seo_slug": data.get("seo_slug"),
             "site_ready": data.get("site_ready"),
             "editorial": editorial_meta,

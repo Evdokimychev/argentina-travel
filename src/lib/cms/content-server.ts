@@ -5,13 +5,19 @@ import type {
   CmsDocType,
   CmsDocument,
   CmsDocumentBody,
+  CmsRiskLevel,
   CmsDocumentSeo,
   CmsDocumentStatus,
   CmsRevision,
+  CmsWorkflowStage,
 } from "@/types/cms-content";
 import { cmsDocumentId } from "@/types/cms-content";
 import { validateScheduledPublishAt } from "@/lib/cms/cms-scheduled-publish";
 import { syncCmsDocumentToSearchIndex } from "@/lib/search/cms-search-sync";
+import {
+  checkCmsPublicationGate,
+  cmsPublicationGateMessage,
+} from "@/lib/cms/publication-gate";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -64,6 +70,12 @@ export async function createCmsDocument(
     body: CmsDocumentBody;
     seo?: CmsDocumentSeo;
     status?: CmsDocumentStatus;
+    workflowStage?: CmsWorkflowStage;
+    riskLevel?: CmsRiskLevel;
+    reviewerId?: string | null;
+    lastFactCheckedAt?: string | null;
+    nextReviewAt?: string | null;
+    lastSubstantiveUpdateAt?: string | null;
     actorId: string;
   }
 ): Promise<{ document: CmsDocument } | { error: string }> {
@@ -84,6 +96,13 @@ export async function createCmsDocument(
     seo: input.seo ?? {},
     publishedAt: null,
     scheduledPublishAt: null,
+    workflowStage: "draft",
+    riskLevel: "low",
+    reviewerId: null,
+    lastFactCheckedAt: null,
+    nextReviewAt: null,
+    lastSubstantiveUpdateAt: null,
+    schemaVersion: 1,
     createdBy: input.actorId,
     updatedBy: input.actorId,
   });
@@ -135,6 +154,12 @@ export async function updateCmsDocument(
     body?: CmsDocumentBody;
     seo?: CmsDocumentSeo;
     status?: CmsDocumentStatus;
+    workflowStage?: CmsWorkflowStage;
+    riskLevel?: CmsRiskLevel;
+    reviewerId?: string | null;
+    lastFactCheckedAt?: string | null;
+    nextReviewAt?: string | null;
+    lastSubstantiveUpdateAt?: string | null;
     actorId: string;
   }
 ): Promise<{ document: CmsDocument } | { error: string }> {
@@ -153,9 +178,21 @@ export async function updateCmsDocument(
     if (input.status === "published") {
       update.published_at = new Date().toISOString();
       update.scheduled_publish_at = null;
+      update.workflow_stage = "published";
     } else if (input.status === "draft" || input.status === "archived") {
       update.scheduled_publish_at = null;
+      update.workflow_stage = input.status === "archived" ? "archived" : "draft";
     }
+  }
+  if (input.workflowStage !== undefined) update.workflow_stage = input.workflowStage;
+  if (input.riskLevel !== undefined) update.risk_level = input.riskLevel;
+  if (input.reviewerId !== undefined) update.reviewer_id = input.reviewerId;
+  if (input.lastFactCheckedAt !== undefined) {
+    update.last_fact_checked_at = input.lastFactCheckedAt;
+  }
+  if (input.nextReviewAt !== undefined) update.next_review_at = input.nextReviewAt;
+  if (input.lastSubstantiveUpdateAt !== undefined) {
+    update.last_substantive_update_at = input.lastSubstantiveUpdateAt;
   }
 
   const { error } = await supabase.from("content_documents").update(update).eq("id", id);
@@ -174,6 +211,10 @@ export async function publishCmsDocument(
   id: string,
   actorId: string
 ): Promise<{ document: CmsDocument } | { error: string }> {
+  const gate = await checkCmsPublicationGate(supabase, id);
+  if (!gate.ok) {
+    return { error: `Публикация заблокирована: ${cmsPublicationGateMessage(gate)}` };
+  }
   return updateCmsDocument(supabase, id, { status: "published", actorId });
 }
 
@@ -197,15 +238,30 @@ export async function scheduleCmsDocument(
     return { error: "Опубликованный документ нельзя запланировать — сначала снимите с публикации" };
   }
 
+  // Persist the exact version that will be gated. A single UPDATE containing
+  // both body and status would make a BEFORE trigger see the previous row via
+  // a separate SELECT, so scheduling is deliberately a two-step operation.
+  if (input.title !== undefined || input.body !== undefined || input.seo !== undefined) {
+    const saved = await updateCmsDocument(supabase, id, {
+      title: input.title,
+      body: input.body,
+      seo: input.seo,
+      actorId: input.actorId,
+    });
+    if ("error" in saved) return saved;
+  }
+
+  const gate = await checkCmsPublicationGate(supabase, id);
+  if (!gate.ok) {
+    return { error: `Планирование заблокировано: ${cmsPublicationGateMessage(gate)}` };
+  }
+
   const update: Database["public"]["Tables"]["content_documents"]["Update"] = {
     status: "scheduled",
+    workflow_stage: "scheduled",
     scheduled_publish_at: validated.iso,
     updated_by: input.actorId,
   };
-
-  if (input.title !== undefined) update.title = input.title;
-  if (input.body !== undefined) update.body = input.body as Json;
-  if (input.seo !== undefined) update.seo = input.seo as Json;
 
   const { error } = await supabase.from("content_documents").update(update).eq("id", id);
   if (error) return { error: error.message };
@@ -232,6 +288,7 @@ export async function cancelCmsDocumentSchedule(
     .from("content_documents")
     .update({
       status: "draft",
+      workflow_stage: "ready",
       scheduled_publish_at: null,
       updated_by: actorId,
     })
@@ -274,10 +331,16 @@ export async function publishDueScheduledCmsDocuments(
     if (!current || current.status !== "scheduled" || !current.scheduledPublishAt) continue;
 
     const publishAt = current.scheduledPublishAt;
+    const gate = await checkCmsPublicationGate(supabase, row.id);
+    if (!gate.ok) {
+      failed.push({ id: row.id, error: cmsPublicationGateMessage(gate) });
+      continue;
+    }
     const { error: updateError } = await supabase
       .from("content_documents")
       .update({
         status: "published",
+        workflow_stage: "published",
         published_at: publishAt,
         scheduled_publish_at: null,
         updated_by: actorId,

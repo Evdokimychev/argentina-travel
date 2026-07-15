@@ -30,6 +30,7 @@ import type {
 } from "@/types/cms-content";
 import { parseCmsDocumentId } from "@/types/cms-content";
 import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
+import CmsGovernancePanel from "@/components/admin/CmsGovernancePanel";
 import CmsSectionEditor from "@/components/admin/cms/CmsSectionEditor";
 import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
 import BlogInternalLinksPreview from "@/components/admin/cms/BlogInternalLinksPreview";
@@ -826,6 +827,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           </section>
 
           <aside className="space-y-4">
+            <CmsGovernancePanel document={doc} />
+
             {isBlogLike ? (
               <BlogInternalLinksPreview
                 excerpt={excerpt}

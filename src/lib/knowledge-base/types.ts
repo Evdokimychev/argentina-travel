@@ -43,6 +43,10 @@ export interface KbEditorialMeta {
   review_due_at?: string | null;
   review_due?: boolean;
   missing_sources?: boolean;
+  primary_source_count?: number;
+  missing_primary_source?: boolean;
+  missing_reviewer?: boolean;
+  missing_media_rights?: boolean;
   source_count?: number;
   word_count?: number | null;
   needs_attention?: boolean;
@@ -71,6 +75,7 @@ export interface KbEntry {
   site_ready?: boolean | null;
   confidence?: string;
   last_verified?: string | null;
+  reviewer?: string | null;
   seo_slug?: string | null;
   /** Гео-поля (для мест/регионов/карты; присутствуют у city/region/national_park/attraction). */
   coordinates?: { lat: number; lng: number } | null;

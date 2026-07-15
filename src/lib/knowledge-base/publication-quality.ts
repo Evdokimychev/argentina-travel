@@ -16,7 +16,11 @@ export type PublicationIssue =
   | "non_russian_title"
   | "non_russian_summary"
   | "placeholder_content"
-  | "missing_sensitive_source";
+  | "missing_sensitive_source"
+  | "missing_primary_source"
+  | "missing_sensitive_reviewer"
+  | "verification_due"
+  | "missing_media_rights";
 
 export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   const issues: PublicationIssue[] = [];
@@ -36,6 +40,14 @@ export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   if (entry.editorial?.sensitive && entry.editorial.missing_sources) {
     issues.push("missing_sensitive_source");
   }
+  if (entry.editorial?.sensitive && entry.editorial.missing_primary_source) {
+    issues.push("missing_primary_source");
+  }
+  if (entry.editorial?.sensitive && entry.editorial.missing_reviewer) {
+    issues.push("missing_sensitive_reviewer");
+  }
+  if (entry.editorial?.review_due) issues.push("verification_due");
+  if (entry.editorial?.missing_media_rights) issues.push("missing_media_rights");
 
   return [...new Set(issues)];
 }

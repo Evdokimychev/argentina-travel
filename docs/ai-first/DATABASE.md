@@ -60,3 +60,19 @@ npm run supabase:seed-cms
 - Service role key — server only
 - Never expose RLS-bypassing queries to client
 - See [SECURITY.md](./SECURITY.md)
+
+## Content knowledge governance
+
+Миграция `20260715041742_content_knowledge_governance.sql` добавляет:
+
+- workflow/risk/reviewer/review dates в `content_documents`;
+- реестр `content_sources` и связи `content_source_links`;
+- проверяемые `knowledge_claims`;
+- expiring `dynamic_facts`;
+- `entity_relations`, registry/usages виджетов и usages медиа;
+- provenance, license, attribution, focal point, hash и rights status в `cms_media_assets`;
+- server-only RPC `content_publication_gate` и триггер для `published`/`scheduled`.
+
+Все новые таблицы имеют RLS и явные grants. Публично читаются только активные источники, неистёкшие verified claims, актуальные dynamic facts, активные relations и widgets. Редактирование требует capability `content.edit`; публикация остаётся за `content.publish`.
+
+Rollback: `supabase/rollback/20260715041742_content_knowledge_governance.sql`. Перед ним требуется экспорт governance-таблиц: rollback намеренно не пытается преобразовать их обратно в плоские CMS-поля.

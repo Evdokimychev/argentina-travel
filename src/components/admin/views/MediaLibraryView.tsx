@@ -353,6 +353,7 @@ export default function MediaLibraryView() {
             index={lightboxIndex}
             onClose={() => setLightboxIndex(null)}
             onNavigate={setLightboxIndex}
+            onUpdated={refresh}
           />
         ) : null}
       </AdminPageShell>

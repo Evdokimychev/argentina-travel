@@ -7,13 +7,25 @@ import {
   updateCmsDocument,
 } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import type { CmsDocumentBody, CmsDocumentSeo, CmsDocumentStatus } from "@/types/cms-content";
+import type {
+  CmsDocumentBody,
+  CmsDocumentSeo,
+  CmsDocumentStatus,
+  CmsRiskLevel,
+  CmsWorkflowStage,
+} from "@/types/cms-content";
 
 type PatchBody = {
   title?: string;
   body?: CmsDocumentBody;
   seo?: CmsDocumentSeo;
   status?: CmsDocumentStatus;
+  workflowStage?: CmsWorkflowStage;
+  riskLevel?: CmsRiskLevel;
+  reviewerId?: string | null;
+  lastFactCheckedAt?: string | null;
+  nextReviewAt?: string | null;
+  lastSubstantiveUpdateAt?: string | null;
 };
 
 export async function GET(
@@ -57,6 +69,12 @@ export async function PATCH(
     body: body.body,
     seo: body.seo,
     status: body.status,
+    workflowStage: body.workflowStage,
+    riskLevel: body.riskLevel,
+    reviewerId: body.reviewerId,
+    lastFactCheckedAt: body.lastFactCheckedAt,
+    nextReviewAt: body.nextReviewAt,
+    lastSubstantiveUpdateAt: body.lastSubstantiveUpdateAt,
     actorId: auth.actorId,
   });
 
@@ -69,7 +87,11 @@ export async function PATCH(
     action: "cms.document.update",
     entityType: "content_document",
     entityId: decodedId,
-    payload: { status: body.status ?? result.document.status },
+    payload: {
+      status: body.status ?? result.document.status,
+      workflowStage: body.workflowStage ?? result.document.workflowStage,
+      riskLevel: body.riskLevel ?? result.document.riskLevel,
+    },
     ipAddress: clientIpFromRequest(request),
   });
 
