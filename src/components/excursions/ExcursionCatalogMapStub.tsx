@@ -41,8 +41,8 @@ export default function ExcursionCatalogMapStub({
           Карта экскурсий
         </h2>
         <p className="relative mt-2 max-w-md text-sm leading-relaxed text-slate">
-          Полноценная карта каталога в разработке. Пока можно посмотреть точки интереса на Google
-          Картах{cityName ? ` — ${cityName}` : ""}.
+          Посмотрите точки интереса и места проведения экскурсий на Google Картах
+          {cityName ? ` — ${cityName}` : ""}.
         </p>
         <Link
           href={mapsUrl}

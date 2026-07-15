@@ -186,15 +186,15 @@ export default function PodborResultsView({ result, onRestart }: PodborResultsVi
         </h2>
         <p className="mt-3 max-w-2xl text-slate">
           {isRelocation
-            ? "Мы подключим материалы по иммиграции и предложим туры для знакомства со страной."
+            ? "Поможем выбрать ознакомительный маршрут и ответим на вопросы о поездке."
             : "Отправьте заявку — организатор уточнит даты, состав группы и финальную стоимость."}
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <Link
-            href={isRelocation ? "/immigration" : "/contacts"}
+            href="/contacts"
             className={buttonVariants()}
           >
-            {isRelocation ? "Раздел о переезде" : "Обсудить маршрут"}
+            {isRelocation ? "Задать вопрос" : "Обсудить маршрут"}
           </Link>
           <Link href="/tours" className={buttonVariants({ variant: "outline" })}>
             Смотреть туры

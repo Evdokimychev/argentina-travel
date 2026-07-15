@@ -758,9 +758,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 <p className="mt-2 text-sm leading-relaxed text-slate">
                   {savedToProfile ? (
                     <>
-                      Заявка сохранена в профиле. Уведомление о статусе — в разделе «Обзор» и на{" "}
-                      <span className="font-medium text-charcoal">{form.contactEmail}</span> (когда
-                      подключим email).
+                      Заявка сохранена в профиле. Следить за статусом можно в разделе «Обзор».
                     </>
                   ) : (
                     <>
@@ -770,13 +768,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   )}{" "}
                   {form.paymentOption === "later" ? (
                     <>
-                      Оплата через платформу скоро — сейчас списание не производится. После
-                      подтверждения откройте ссылку на оплату из уведомлений или личного кабинета.
+                      Средства сейчас не списываются. После подтверждения организатор сообщит
+                      доступный способ оплаты.
                     </>
                   ) : (
                     <>
-                      Оплата картой на сайте появится позже. Организатор пришлёт ссылку на
-                      предоплату после подтверждения заявки.
+                      После подтверждения организатор сообщит доступный способ предоплаты.
                     </>
                   )}
                   {form.fillTravelersLater
@@ -1304,8 +1301,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                       </div>
                     ) : (
                       <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal">
-                        Оплата картой на сайте появится позже. Пожалуйста, выберите «Оплатить позже»
-                        и отправьте заявку организатору.
+                        Для этого тура оплата проводится после подтверждения. Выберите «Оплатить
+                        позже» и отправьте заявку организатору.
                       </div>
                     )}
 

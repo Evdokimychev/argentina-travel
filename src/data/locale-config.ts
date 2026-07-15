@@ -4,10 +4,9 @@ export const LANGUAGES: LanguageOption[] = [
   { code: "ru", label: "Русский", nativeName: "Русский", flag: "🇷🇺" },
   { code: "es", label: "Español", nativeName: "Español", flag: "🇪🇸" },
   { code: "en", label: "English", nativeName: "English", flag: "🇬🇧" },
-  { code: "pt", label: "Português", nativeName: "Português", flag: "🇵🇹" },
 ];
 
-/** Mock exchange rates — replace with API fetch in production */
+/** Reference currencies; current rates are loaded from the exchange-rate API. */
 export const CURRENCIES: CurrencyOption[] = [
   {
     code: "RUB",
