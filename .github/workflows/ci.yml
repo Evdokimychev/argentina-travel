@@ -69,7 +69,28 @@ jobs:
         run: npm run test:e2e:ux-audit
         continue-on-error: true
 
+      - name: Wait for matching production deployment
+        run: |
+          for attempt in {1..30}; do
+            deployed_sha="$(curl --fail --silent --show-error https://www.goargentina.ru/api/health | jq --raw-output '.gitSha // empty' || true)"
+            if [[ "$deployed_sha" == "$GITHUB_SHA" ]]; then
+              echo "Production is serving $deployed_sha"
+              exit 0
+            fi
+            echo "Waiting for production SHA $GITHUB_SHA (currently ${deployed_sha:-unavailable})"
+            sleep 20
+          done
+          exit 1
+
+      - name: Production smoke
+        env:
+          SMOKE_BASE_URL: https://www.goargentina.ru
+          EXPECTED_GIT_SHA: ${{ github.sha }}
+        run: npm run production-smoke
+
       - name: Stage 2 visual acceptance
+        env:
+          PLAYWRIGHT_BASE_URL: https://www.goargentina.ru
         run: npm run test:e2e:stage2-visual
 
       - name: Upload Stage 2 visual gallery
