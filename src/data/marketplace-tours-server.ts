@@ -16,9 +16,10 @@ function reportMarketplaceSourceError(source: string, error: unknown): void {
 async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
   const { isSupabaseToursEnabled, getToursSourceMode } = await import("@/lib/auth-mode");
   const { fetchRepositoryMarketplaceTours } = await import("@/lib/tour-repository");
+  const { isProductionRuntime } = await import("@/lib/runtime-mode");
 
   if (!isSupabaseToursEnabled()) {
-    return fetchRepositoryMarketplaceTours();
+    return isProductionRuntime() ? [] : fetchRepositoryMarketplaceTours();
   }
 
   try {
@@ -31,7 +32,7 @@ async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
     reportMarketplaceSourceError("platform_tours", error);
   }
 
-  if (getToursSourceMode() === "hybrid") {
+  if (getToursSourceMode() === "hybrid" && !isProductionRuntime()) {
     return fetchRepositoryMarketplaceTours();
   }
   return [];

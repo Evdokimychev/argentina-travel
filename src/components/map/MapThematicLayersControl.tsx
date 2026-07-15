@@ -117,7 +117,9 @@ export default function MapThematicLayersControl({
 
           <div className="mt-3 space-y-3">
             {GROUP_ORDER.map((group) => {
-              const layers = grouped[group];
+              const layers = grouped[group].filter(
+                (layer) => layerAvailability[layer.id] === true,
+              );
               if (!layers.length) return null;
               return (
                 <section key={group}>
@@ -134,11 +136,7 @@ export default function MapThematicLayersControl({
                         <button
                           key={layer.id}
                           type="button"
-                          title={
-                            available
-                              ? layer.description
-                              : `${layer.description}. Геоданные подключаются — слой временно недоступен.`
-                          }
+                          title={layer.description}
                           onClick={() => available && onToggleThematic(layer.id)}
                           disabled={!available}
                           className={cn(
@@ -162,9 +160,6 @@ export default function MapThematicLayersControl({
                           />
                           <span className="min-w-0 flex-1 leading-snug">
                             {layer.label}
-                            {!available ? (
-                              <span className="ml-1 font-normal text-[9px] text-slate">скоро</span>
-                            ) : null}
                           </span>
                           <span
                             className={cn(

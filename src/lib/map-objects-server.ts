@@ -267,7 +267,7 @@ function airportToMapObject(airport: (typeof ARGENTINA_AIRPORTS)[number]): MapOb
     ...mapEditorialFields({
       kind: "airport",
       featured: ["EZE", "AEP", "COR", "MDZ", "BRC", "FTE", "USH", "IGR"].includes(airport.iata),
-      source: "ANAC и редакционная проверка GoArgentina",
+      source: "Каталог аэропортов ANAC; направления — ориентир для планирования",
       sourceUrl: AIRPORT_SOURCE_URL,
       sourceVerifiedAt: AIRPORTS_VERIFIED_AT,
     }),

@@ -1,4 +1,5 @@
 import { ARGENTINA_CITIES } from "@/data/argentina-cities";
+import { getEntry } from "@/lib/knowledge-base/content";
 import type { MapObject } from "@/lib/map-types";
 import type { PlaceListing } from "@/types/place";
 
@@ -18,6 +19,8 @@ export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject
     const coordKey = `${city.lat.toFixed(3)}:${city.lng.toFixed(3)}`;
     if (coveredCoords.has(coordKey)) continue;
 
+    const kbEntry = getEntry(city.slug);
+    const href = kbEntry ? `/baza-znaniy/${city.slug}` : "/places";
     objects.push({
       id: `city:${city.slug}`,
       slug: city.slug,
@@ -27,9 +30,9 @@ export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject
       latitude: city.lat,
       longitude: city.lng,
       region: city.macroRegionRu,
-      href: `/baza-znaniy/${city.slug}`,
+      href,
       meta: city.provinceRu,
-      relatedArticles: [{ title: city.nameRu, href: `/baza-znaniy/${city.slug}` }],
+      relatedArticles: kbEntry ? [{ title: city.nameRu, href }] : [],
     });
   }
 

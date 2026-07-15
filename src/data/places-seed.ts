@@ -1955,7 +1955,7 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
     title: "Жемчужины Патагонии",
     subtitle: "Ледники, горы и дикая природа",
     description:
-      "Семь мест, без которых не обходится классический маршрут по южной Патагонии: от Perito Moreno до Fitz Roy и полуострова Вальдес.",
+      "Семь мест для первого знакомства с Патагонией: ледники, горы, озёра и побережье с колониями морских животных.",
     coverImage: getPlaceCoverImage("perito-moreno-glacier"),
     tags: ["патагония", "природа", "unesco"],
     placeSlugs: [
@@ -1986,7 +1986,6 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
       "salinas-grandes",
       "cafayate",
       "tren-de-las-nubes",
-      "talampaya",
     ],
   },
   {
@@ -2004,9 +2003,7 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
       "valdes-peninsula",
       "cueva-de-las-manos",
       "quebrada-de-humahuaca",
-      "cerro-de-los-7-colores",
       "talampaya",
-      "cordoba",
     ],
   },
   {
@@ -2033,9 +2030,9 @@ export const COLLECTIONS_SEED: CollectionSeed[] = [
   {
     id: "col-best-waterfalls",
     slug: "best-waterfalls",
-    title: "Лучшие водопады",
-    subtitle: "Игуасу и регион Литораль",
-    description: "Главный водопадный комплекс страны и отправная точка для маршрута по северо-востоку.",
+    title: "Водопады Игуасу",
+    subtitle: "Главный водопадный комплекс Аргентины",
+    description: "Подборка для планирования поездки к водопадам Игуасу и по национальному парку.",
     coverImage: getPlaceCoverImage("iguazu-falls"),
     tags: ["водопад", "unesco"],
     placeSlugs: ["iguazu-falls"],
@@ -2186,7 +2183,7 @@ export const ITINERARIES_SEED: ItinerarySeed[] = [
         dayNumber: 2,
         sortOrder: 0,
         title: "Perito Moreno",
-        description: "Walkways и опционально Mini-Trekking",
+        description: "Смотровые дорожки у ледника и, при наличии брони, прогулка по льду с гидом.",
         placeSlug: "perito-moreno-glacier",
       },
       { dayNumber: 3, sortOrder: 0, title: "Переезд в El Chaltén", placeSlug: "el-chalten" },
@@ -2197,7 +2194,13 @@ export const ITINERARIES_SEED: ItinerarySeed[] = [
         placeSlug: "fitz-roy",
       },
       { dayNumber: 5, sortOrder: 0, title: "Запасной день / Laguna Torre", placeSlug: "el-chalten" },
-      { dayNumber: 6, sortOrder: 0, title: "Перелёт в Bariloche", placeSlug: "bariloche" },
+      {
+        dayNumber: 6,
+        sortOrder: 0,
+        title: "Перелёт в Барилоче",
+        description: "Перелёт обычно требует пересадки; расписание нужно проверить до бронирования маршрута.",
+        placeSlug: "bariloche",
+      },
       {
         dayNumber: 7,
         sortOrder: 0,
@@ -2257,7 +2260,7 @@ export const ITINERARIES_SEED: ItinerarySeed[] = [
         title: "Аргентинская сторона — полный день",
         placeSlug: "iguazu-falls",
       },
-      { dayNumber: 5, sortOrder: 0, title: "Вылет", placeSlug: "buenos-aires" },
+      { dayNumber: 5, sortOrder: 0, title: "Вылет из Игуасу", placeSlug: "iguazu-falls" },
     ],
   },
 ];
