@@ -13,6 +13,7 @@ import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
 import type { ModerationQueueItem } from "@/lib/admin/moderation-server";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 
 type ModerationResponse = { items?: ModerationQueueItem[]; count?: number };
 
@@ -28,14 +29,13 @@ export default function ModerationView() {
   const { data, loading, error, refresh } = useAdminApi<ModerationResponse>("/api/admin/moderation");
   const items = data?.items ?? [];
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [rejectingId, setRejectingId] = useState<string | null>(null);
+  const [rejectNote, setRejectNote] = useState("");
+  const [feedback, setFeedback] = useState<{ variant: "success" | "error"; message: string } | null>(null);
 
-  async function resolveItem(id: string, action: "approve" | "reject") {
-    const note =
-      action === "reject"
-        ? window.prompt("Причина отклонения (необязательно):") ?? undefined
-        : undefined;
-
+  async function resolveItem(id: string, action: "approve" | "reject", note?: string) {
     setBusyId(id);
+    setFeedback(null);
     try {
       const res = await fetch(`/api/admin/moderation/${id}`, {
         method: "PATCH",
@@ -44,9 +44,18 @@ export default function ModerationView() {
       });
       const json = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(json.error ?? "Ошибка модерации");
+      setRejectingId(null);
+      setRejectNote("");
+      setFeedback({
+        variant: "success",
+        message: action === "approve" ? "Материал одобрен" : "Материал возвращён автору",
+      });
       await refresh();
     } catch (resolveError) {
-      alert(resolveError instanceof Error ? resolveError.message : "Ошибка");
+      setFeedback({
+        variant: "error",
+        message: resolveError instanceof Error ? resolveError.message : "Не удалось выполнить действие",
+      });
     } finally {
       setBusyId(null);
     }
@@ -57,7 +66,7 @@ export default function ModerationView() {
       <AdminPageShell>
         <AdminPageHeader
           title="Модерация"
-          subtitle="Очередь проверки туров, отзывов и сообщений форума"
+          subtitle="Очередь проверки туров, статей, отзывов и сообщений форума"
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -66,6 +75,13 @@ export default function ModerationView() {
         />
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {feedback ? (
+          <InlineFeedback
+            variant={feedback.variant}
+            title={feedback.variant === "success" ? "Готово" : "Не удалось завершить модерацию"}
+            description={feedback.message}
+          />
+        ) : null}
 
         <section className={`${cabinetCardClass} overflow-hidden`}>
           <h2 className="border-b border-gray-100 px-5 py-4 font-heading text-lg font-bold text-charcoal">
@@ -174,6 +190,19 @@ export default function ModerationView() {
                         Открыть на сайте
                       </Link>
                     </>
+                  ) : item.entityType === "author_article" ? (
+                    <>
+                      <p className="font-medium text-charcoal">
+                        {typeof item.metadata.title === "string" ? item.metadata.title : "Статья организатора"}
+                      </p>
+                      <p className="text-slate">Материал организатора ожидает редакционной проверки.</p>
+                      <Link
+                        href={`/admin/content/documents/${encodeURIComponent(item.entityId)}`}
+                        className="text-sky hover:underline"
+                      >
+                        Открыть статью в редакторе
+                      </Link>
+                    </>
                   ) : (
                     <p className="text-slate">
                       {item.entityType} #{item.entityId}
@@ -198,13 +227,43 @@ export default function ModerationView() {
                       size="sm"
                       variant="outline"
                       disabled={busyId === item.id}
-                      onClick={() => void resolveItem(item.id, "reject")}
+                      onClick={() => {
+                        setRejectingId(item.id);
+                        setRejectNote("");
+                      }}
                     >
                       {item.entityType === "review_report" || item.entityType === "forum_post"
                         ? "Отклонить жалобу"
                         : "Отклонить"}
                     </Button>
                   </div>
+                  {rejectingId === item.id ? (
+                    <div className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                      <label className="text-sm font-medium text-charcoal" htmlFor={`reject-note-${item.id}`}>
+                        Что нужно исправить
+                      </label>
+                      <textarea
+                        id={`reject-note-${item.id}`}
+                        value={rejectNote}
+                        onChange={(event) => setRejectNote(event.target.value)}
+                        className="mt-2 min-h-24 w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"
+                        placeholder="Напишите автору конкретный и понятный комментарий"
+                      />
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={rejectNote.trim().length < 8 || busyId === item.id}
+                          onClick={() => void resolveItem(item.id, "reject", rejectNote.trim())}
+                        >
+                          Вернуть на доработку
+                        </Button>
+                        <Button size="sm" variant="ghost" onClick={() => setRejectingId(null)}>
+                          Отмена
+                        </Button>
+                      </div>
+                    </div>
+                  ) : null}
                 </li>
               ))}
             </ul>

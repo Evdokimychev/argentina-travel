@@ -219,6 +219,41 @@ export async function resolveModerationItem(
     };
   }
 
+  if (item.entity_type === "author_article") {
+    const { data: document, error: documentError } = await supabase
+      .from("content_documents")
+      .update({
+        status: action === "approve" ? "published" : "draft",
+        published_at: action === "approve" ? now : null,
+        updated_by: actorUserId,
+      })
+      .eq("id", item.entity_id)
+      .eq("doc_type", "author_article")
+      .select("title, created_by")
+      .maybeSingle();
+
+    if (documentError || !document) {
+      return { error: documentError?.message ?? "Статья не найдена" };
+    }
+
+    let ownerEmail: string | null = null;
+    if (document.created_by) {
+      const { data: ownerProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", document.created_by)
+        .maybeSingle();
+      ownerEmail = ownerProfile?.email ?? null;
+    }
+
+    return {
+      ok: true,
+      entityType: "author_article",
+      entityTitle: document.title,
+      ownerEmail,
+    };
+  }
+
   if (item.entity_type === "review") {
     const reviewResult = await resolveReviewModeration(
       supabase,

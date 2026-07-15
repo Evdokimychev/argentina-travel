@@ -3,6 +3,16 @@
  */
 import { absoluteUrl } from "@/lib/site-url";
 
+function escapeHtml(value: string): string {
+  return value.replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;",
+  })[character] ?? character);
+}
+
 export async function notifyModerationOutcome(input: {
   entityType: string;
   entityTitle: string;
@@ -18,11 +28,14 @@ export async function notifyModerationOutcome(input: {
 
   const actionLabel = input.action === "approve" ? "одобрено" : "отклонено";
   const subject = `Модерация: ${input.entityTitle} — ${actionLabel}`;
+  const safeEntityType = escapeHtml(input.entityType);
+  const safeEntityTitle = escapeHtml(input.entityTitle);
+  const safeNote = input.note ? escapeHtml(input.note) : null;
   const html = `
-    <p>Тип: ${input.entityType}</p>
-    <p>Объект: <strong>${input.entityTitle}</strong></p>
+    <p>Тип: ${safeEntityType}</p>
+    <p>Объект: <strong>${safeEntityTitle}</strong></p>
     <p>Решение: ${actionLabel}</p>
-    ${input.note ? `<p>Комментарий: ${input.note}</p>` : ""}
+    ${safeNote ? `<p>Комментарий: ${safeNote}</p>` : ""}
   `;
 
   const recipients = [adminTo, input.ownerEmail].filter(Boolean) as string[];

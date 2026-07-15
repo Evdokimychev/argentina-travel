@@ -4,13 +4,27 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 import BlogSectionPageBuilder from "@/components/admin/page-builder/BlogSectionPageBuilder";
 import CmsSeoPanel from "@/components/admin/CmsSeoPanel";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import { stageCmsDocumentPreviewDraft } from "@/lib/cms/cms-preview";
 import { usePageBuilderAutosave } from "@/hooks/usePageBuilderAutosave";
 import type { BlogPostSection } from "@/types";
-import type { CmsDocument, CmsDocumentSeo } from "@/types/cms-content";
+import {
+  CMS_AUTHOR_ARTICLE_TYPES,
+  type CmsAuthorArticleRelations,
+  type CmsAuthorArticleType,
+  type CmsDocument,
+  type CmsDocumentSeo,
+} from "@/types/cms-content";
+import {
+  AUTHOR_ARTICLE_STATUS_LABELS,
+  AUTHOR_ARTICLE_TYPE_LABELS,
+  type AuthorArticleWorkflow,
+} from "@/lib/cms/author-article-workflow";
+import { trackProductEvent } from "@/lib/analytics/product-events";
 
 type Props = {
   documentId: string;
@@ -24,7 +38,11 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
   const [excerpt, setExcerpt] = useState("");
   const [sections, setSections] = useState<BlogPostSection[]>([]);
   const [seo, setSeo] = useState<CmsDocumentSeo>({});
+  const [articleType, setArticleType] = useState<CmsAuthorArticleType>("story");
+  const [relations, setRelations] = useState<CmsAuthorArticleRelations>({});
+  const [workflow, setWorkflow] = useState<AuthorArticleWorkflow | null>(null);
   const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     void (async () => {
@@ -32,7 +50,11 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
       setError(null);
       try {
         const res = await fetch(`/api/organizer/articles/${encodeURIComponent(documentId)}`);
-        const data = (await res.json()) as { document?: CmsDocument; error?: string };
+        const data = (await res.json()) as {
+          document?: CmsDocument;
+          workflow?: AuthorArticleWorkflow;
+          error?: string;
+        };
         if (!res.ok || !data.document) throw new Error(data.error ?? "Не удалось загрузить статью");
 
         const document = data.document;
@@ -52,6 +74,9 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
           }))
         );
         setSeo(document.seo ?? {});
+        setArticleType(document.body.articleType ?? "story");
+        setRelations(document.body.relations ?? {});
+        setWorkflow(data.workflow ?? null);
       } catch (loadError) {
         setError(loadError instanceof Error ? loadError.message : "Ошибка загрузки");
       } finally {
@@ -61,8 +86,8 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
   }, [documentId]);
 
   const savePayload = useMemo(
-    () => ({ title, excerpt, sections, seo }),
-    [title, excerpt, sections, seo]
+    () => ({ title, excerpt, sections, seo, articleType, relations }),
+    [title, excerpt, sections, seo, articleType, relations]
   );
 
   const persist = useCallback(async () => {
@@ -78,6 +103,8 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
           excerpt,
           sections,
           seo,
+          articleType,
+          relations,
         }),
       });
       const data = (await res.json()) as { document?: CmsDocument; error?: string };
@@ -88,7 +115,7 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
     } finally {
       setSaving(false);
     }
-  }, [doc, documentId, title, excerpt, sections, seo]);
+  }, [doc, documentId, title, excerpt, sections, seo, articleType, relations]);
 
   usePageBuilderAutosave(savePayload, persist, { enabled: !loading && Boolean(doc) });
 
@@ -100,6 +127,8 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
         kind: "author_article",
         excerpt: excerpt.trim(),
         authorName: doc.body.authorName,
+        articleType,
+        relations,
         sections,
       },
       seo,
@@ -109,6 +138,48 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
       "_blank",
       "noopener,noreferrer"
     );
+  }
+
+  async function submitForReview() {
+    if (!doc) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      const saveResponse = await fetch(`/api/organizer/articles/${encodeURIComponent(documentId)}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, excerpt, sections, seo, articleType, relations }),
+      });
+      const saveData = (await saveResponse.json()) as { document?: CmsDocument; error?: string };
+      if (!saveResponse.ok || !saveData.document) {
+        throw new Error(saveData.error ?? "Не удалось сохранить статью");
+      }
+      setDoc(saveData.document);
+
+      const response = await fetch(
+        `/api/organizer/articles/${encodeURIComponent(documentId)}/submit`,
+        { method: "POST" },
+      );
+      const data = (await response.json()) as {
+        workflow?: AuthorArticleWorkflow;
+        error?: string;
+        validationErrors?: string[];
+      };
+      if (!response.ok || !data.workflow) {
+        const details = data.validationErrors?.join(". ");
+        throw new Error(details || data.error || "Не удалось отправить статью");
+      }
+      setWorkflow(data.workflow);
+      trackProductEvent("article_submitted", {
+        entityType: "author_article",
+        entityId: documentId,
+        source: "organizer_editor",
+      });
+    } catch (submitError) {
+      setError(submitError instanceof Error ? submitError.message : "Не удалось отправить статью");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (loading) {
@@ -140,34 +211,73 @@ export default function OrganizerArticleEditorView({ documentId }: Props) {
             Визуальный конструктор без кода · автосохранение черновика
             {saving ? " · сохраняем…" : ""}
           </p>
+          {workflow ? (
+            <p className="mt-2 inline-flex rounded-full bg-surface-muted px-3 py-1 text-xs font-semibold text-charcoal">
+              {AUTHOR_ARTICLE_STATUS_LABELS[workflow.status]}
+            </p>
+          ) : null}
         </div>
-        <Button type="button" onClick={() => void persist()} loading={saving} loadingLabel="Сохраняем…">
-          Сохранить
-        </Button>
-        <Button type="button" variant="outline" onClick={openLivePreview}>
-          Предпросмотр
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button type="button" onClick={() => void persist()} loading={saving} loadingLabel="Сохраняем…">
+            Сохранить
+          </Button>
+          <Button type="button" variant="outline" onClick={openLivePreview}>
+            Предпросмотр
+          </Button>
+          {workflow?.status !== "in_review" && workflow?.status !== "published" && workflow?.status !== "scheduled" ? (
+            <Button type="button" variant="outline" onClick={() => void submitForReview()} loading={submitting} loadingLabel="Отправляем…">
+              Отправить на проверку
+            </Button>
+          ) : null}
+        </div>
       </div>
 
       {error ? (
-        <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-          {error}
-        </p>
+        <InlineFeedback variant="error" title="Не удалось выполнить действие" description={error} />
+      ) : null}
+      {workflow?.status === "in_review" ? (
+        <InlineFeedback variant="info" title="Статья на проверке" description="Редактор увидит текущую сохранённую версию. После решения статус обновится в списке статей." />
+      ) : null}
+      {workflow?.status === "changes_requested" ? (
+        <InlineFeedback variant="info" title="Редактор просит внести изменения" description={workflow.note || "Откройте комментарии редактора и уточните материал."} />
       ) : null}
 
       <section className={`${cabinetCardClass} space-y-4 p-5`}>
+        <label className="block text-sm font-medium text-charcoal">
+          Тип материала
+          <select
+            value={articleType}
+            onChange={(event) => setArticleType(event.target.value as CmsAuthorArticleType)}
+            className="mt-1 min-h-11 w-full rounded-xl border border-gray-200 bg-white px-3 text-sm"
+          >
+            {CMS_AUTHOR_ARTICLE_TYPES.map((type) => (
+              <option key={type} value={type}>{AUTHOR_ARTICLE_TYPE_LABELS[type]}</option>
+            ))}
+          </select>
+        </label>
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Заголовок статьи"
           className="font-heading text-lg font-semibold"
         />
-        <textarea
-          className="min-h-[72px] w-full rounded-xl border border-gray-200 px-3 py-2 text-sm"
+        <Textarea
+          className="min-h-[88px]"
           value={excerpt}
           onChange={(e) => setExcerpt(e.target.value)}
           placeholder="Краткое описание (лид)"
         />
+      </section>
+
+      <section className={`${cabinetCardClass} p-5`}>
+        <h2 className="font-heading text-lg font-bold text-charcoal">Связи с сайтом</h2>
+        <p className="mt-1 text-sm text-slate">Укажите адресную часть или идентификатор. Редактор проверит связи перед публикацией.</p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <Input value={relations.place ?? ""} onChange={(event) => setRelations({ ...relations, place: event.target.value })} placeholder="Место, например el-calafate" />
+          <Input value={relations.destination ?? ""} onChange={(event) => setRelations({ ...relations, destination: event.target.value })} placeholder="Направление, например patagonia" />
+          <Input value={relations.tour ?? ""} onChange={(event) => setRelations({ ...relations, tour: event.target.value })} placeholder="Тур" />
+          <Input value={relations.mapObject ?? ""} onChange={(event) => setRelations({ ...relations, mapObject: event.target.value })} placeholder="Объект карты" />
+        </div>
       </section>
 
       <section className={`${cabinetCardClass} p-5`}>

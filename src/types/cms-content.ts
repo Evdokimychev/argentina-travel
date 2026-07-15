@@ -76,7 +76,27 @@ export type CmsAuthorArticleBody = {
   kind: "author_article";
   excerpt?: string;
   authorName?: string;
+  articleType?: CmsAuthorArticleType;
+  relations?: CmsAuthorArticleRelations;
   sections?: CmsBlogSection[];
+};
+
+export const CMS_AUTHOR_ARTICLE_TYPES = [
+  "story",
+  "place_guide",
+  "route",
+  "practical_tip",
+  "tour_review",
+  "local_recommendation",
+] as const;
+
+export type CmsAuthorArticleType = (typeof CMS_AUTHOR_ARTICLE_TYPES)[number];
+
+export type CmsAuthorArticleRelations = {
+  place?: string;
+  destination?: string;
+  tour?: string;
+  mapObject?: string;
 };
 
 export type CmsDocumentBody =

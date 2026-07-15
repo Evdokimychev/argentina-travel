@@ -5,7 +5,15 @@ import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { getCmsDocumentById, updateCmsDocument } from "@/lib/cms/content-server";
 import { parseCmsDocumentId } from "@/types/cms-content";
 import { userHasAccountRole } from "@/types/user";
-import type { CmsAuthorArticleBody, CmsBlogSection, CmsDocumentSeo } from "@/types/cms-content";
+import {
+  CMS_AUTHOR_ARTICLE_TYPES,
+  type CmsAuthorArticleBody,
+  type CmsAuthorArticleRelations,
+  type CmsAuthorArticleType,
+  type CmsBlogSection,
+  type CmsDocumentSeo,
+} from "@/types/cms-content";
+import { resolveAuthorArticleWorkflow } from "@/lib/cms/author-article-workflow";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
@@ -47,7 +55,17 @@ export async function GET(_request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Нет доступа" }, { status: 403 });
   }
 
-  return NextResponse.json({ document });
+  const { data: moderation } = await admin
+    .from("moderation_queue")
+    .select("status, reason, updated_at")
+    .eq("entity_type", "author_article")
+    .eq("entity_id", document.id)
+    .maybeSingle();
+
+  return NextResponse.json({
+    document,
+    workflow: resolveAuthorArticleWorkflow(document, moderation),
+  });
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
@@ -70,12 +88,18 @@ export async function PATCH(request: Request, context: RouteContext) {
     excerpt?: string;
     sections?: CmsBlogSection[];
     seo?: CmsDocumentSeo;
+    articleType?: CmsAuthorArticleType;
+    relations?: CmsAuthorArticleRelations;
   };
 
   const nextBody: CmsAuthorArticleBody = {
     ...existing.body,
     excerpt: input.excerpt ?? existing.body.excerpt,
     sections: input.sections ?? existing.body.sections,
+    articleType: CMS_AUTHOR_ARTICLE_TYPES.includes(input.articleType as CmsAuthorArticleType)
+      ? input.articleType
+      : existing.body.articleType,
+    relations: input.relations ?? existing.body.relations,
   };
 
   const result = await updateCmsDocument(admin, id, {
