@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const explicitBase =
   process.env.PLAYWRIGHT_BASE_URL?.trim() || process.env.SMOKE_BASE_URL?.trim();
-const baseURL = explicitBase || "http://127.0.0.1:3000";
+const baseURL = explicitBase || "http://localhost:3000";
 const useLocalWebServer =
   !explicitBase && /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(baseURL);
 
@@ -25,11 +25,19 @@ export default defineConfig({
   projects: [
     {
       name: "mobile-390x844",
-      use: { ...devices["iPhone 13"], viewport: { width: 390, height: 844 } },
+      use: {
+        ...devices["iPhone 13"],
+        browserName: "chromium",
+        viewport: { width: 390, height: 844 },
+      },
     },
     {
       name: "tablet-768x1024",
-      use: { ...devices["iPad (gen 7)"], viewport: { width: 768, height: 1024 } },
+      use: {
+        ...devices["iPad (gen 7)"],
+        browserName: "chromium",
+        viewport: { width: 768, height: 1024 },
+      },
     },
     {
       name: "desktop-1440x900",

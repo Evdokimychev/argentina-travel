@@ -35,9 +35,15 @@ export async function GET(request: Request) {
     const comments = await listBlogArticleComments(supabase, slug, user?.id ?? null);
     return NextResponse.json({ comments });
   } catch (error) {
+    console.warn("[blog-comments] Read failed; returning an empty list", error);
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 },
+      { comments: [] },
+      {
+        headers: {
+          "Cache-Control": "no-store",
+          "X-GoArgentina-Degraded": "blog-comments",
+        },
+      },
     );
   }
 }
