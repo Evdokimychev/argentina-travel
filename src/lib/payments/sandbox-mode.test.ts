@@ -19,6 +19,7 @@ describe("payment sandbox mode", () => {
   it("auto-enables in development without payment providers", () => {
     vi.stubEnv("PAYMENT_SANDBOX_MODE", "");
     vi.stubEnv("DEPLOY_ENV", "development");
+    vi.stubEnv("VERCEL_ENV", "");
     vi.stubEnv("NODE_ENV", "development");
     vi.stubEnv("MERCADOPAGO_ACCESS_TOKEN", "");
     vi.stubEnv("STRIPE_SECRET_KEY", "");
