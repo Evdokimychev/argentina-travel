@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-15T00:45:00.000Z",
+  "productionSha": "825791230ba8381dfb4fede0fae31df9c5a8b7f9",
+  "productionUrl": "https://www.goargentina.ru",
+  "hardening": {
+    "releaseGate": "passed",
+    "productionSmoke": "passed",
+    "database": "passed",
+    "postgresDirect": "passed",
+    "openP0": 0
+  },
+  "viewports": [
+    "320x568",
+    "360x800",
+    "390x844",
+    "430x932",
+    "768x1024",
+    "1024x768",
+    "1280x800",
+    "1440x900",
+    "1920x1080"
+  ],
+  "screenshots": {
+    "beforeDirectory": "var/ops/screenshots/stage2-before",
+    "homeCount": 9,
+    "flightsCount": 9
+  },
+  "measurements": {
+    "lighthouseProductionMobile": {
+      "medianPerformance": 49,
+      "medianAccessibility": 97,
+      "sampleSize": 13,
+      "homeLcpMs": 35405,
+      "toursLcpMs": 41939,
+      "blogLcpMs": 51120,
+      "report": "var/ops/lighthouse-phase2-prod-last.json"
+    },
+    "homeDocumentHeight": {
+      "320x568": 5547,
+      "390x844": 5374,
+      "768x1024": 4245,
+      "1440x900": 3991
+    },
+    "horizontalOverflow": false,
+    "flightsShadowDomCtaOverflowAt320": true
+  },
+  "findings": [
+    {
+      "id": "UX-FLIGHTS-001",
+      "severity": "P1",
+      "route": "/flights",
+      "summary": "Partner submit button extends beyond the 320px widget viewport"
+    },
+    {
+      "id": "UX-ROLE-001",
+      "severity": "P1",
+      "route": "workspace",
+      "summary": "No single server-resolved active workspace model"
+    },
+    {
+      "id": "UX-ADMIN-001",
+      "severity": "P2",
+      "route": "/admin",
+      "summary": "Owner dashboard is metric-led instead of task-led"
+    }
+  ]
+}

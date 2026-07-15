@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { ExternalLink, RefreshCw } from "lucide-react";
 import {
   ensureWlSearchParamsInUrl,
   hasMinimumFlightsSearchParams,
@@ -25,6 +26,10 @@ import { cn } from "@/lib/utils";
 import "./flights-whitelabel-widget.css";
 
 const AUTO_SEARCH_RETRY_MS = [400, 900, 1800, 3200];
+const WIDGET_SYNC_RETRY_MS = [100, 500, 1500, 3000, 6000];
+const WIDGET_READY_TIMEOUT_MS = 10_000;
+
+type WidgetStatus = "loading" | "ready" | "error";
 
 export type FlightsWhitelabelWidgetCoreProps = {
   scriptUrl: string;
@@ -49,7 +54,14 @@ export default function FlightsWhitelabelWidgetCore({
   const mountRef = useRef<HTMLDivElement>(null);
   const resultsScrolledRef = useRef(false);
   const autoSearchStartedRef = useRef(false);
-  const [ready, setReady] = useState(false);
+  const [status, setStatus] = useState<WidgetStatus>("loading");
+  const [retryKey, setRetryKey] = useState(0);
+
+  const retryWidget = useCallback(() => {
+    resetTravelpayoutsWhitelabelWidget();
+    setStatus("loading");
+    setRetryKey((value) => value + 1);
+  }, []);
 
   useEffect(() => {
     autoSearchStartedRef.current = false;
@@ -60,8 +72,13 @@ export default function FlightsWhitelabelWidgetCore({
     const mountEl = mountRef.current;
     if (!mountEl || !scriptUrl) return;
 
+    const abortController = new AbortController();
     let disposed = false;
     const autoSearchTimers: number[] = [];
+    const syncTimers: number[] = [];
+    let ticketsObserver: MutationObserver | null = null;
+    let resizeObserver: ResizeObserver | null = null;
+    let readyTimeout = 0;
 
     if (urlSync === "inline") {
       resetTravelpayoutsWhitelabelWidget();
@@ -72,7 +89,14 @@ export default function FlightsWhitelabelWidgetCore({
     }
 
     function markReady() {
-      if (!disposed) setReady(true);
+      if (!disposed) {
+        setStatus("ready");
+        window.clearTimeout(readyTimeout);
+      }
+    }
+
+    function markError() {
+      if (!disposed) setStatus("error");
     }
 
     function ticketsHaveResults(): boolean {
@@ -137,6 +161,14 @@ export default function FlightsWhitelabelWidgetCore({
         markReady();
         maybeAutoStartSearch(true);
       }
+      const tickets = document.getElementById(TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID);
+      if (tickets && !ticketsObserver) {
+        ticketsObserver = new MutationObserver(() => {
+          syncWidget();
+          maybeScrollToResults();
+        });
+        ticketsObserver.observe(tickets, { childList: true, subtree: true });
+      }
       maybeScrollToResults();
       return widgetReady;
     }
@@ -145,48 +177,38 @@ export default function FlightsWhitelabelWidgetCore({
     script?.addEventListener("load", () => {
       if (disposed || !mountRef.current?.isConnected) return;
       const widgetReady = syncWidget();
-      window.setTimeout(syncWidget, 100);
-      window.setTimeout(syncWidget, 500);
-      window.setTimeout(() => {
-        const readyNow = syncWidget();
-        scheduleAutoSearchRetries(Boolean(readyNow ?? widgetReady));
-      }, 1500);
-    });
-    script?.addEventListener("error", markReady);
+      scheduleAutoSearchRetries(Boolean(widgetReady));
+    }, { signal: abortController.signal });
+    script?.addEventListener("error", markError, { signal: abortController.signal });
 
     const observer = new MutationObserver(syncWidget);
     observer.observe(mountEl, { childList: true, subtree: true });
-    observer.observe(document.head, { childList: true, subtree: true });
-    observer.observe(document.body, { childList: true, subtree: true });
 
-    const tickets = document.getElementById(TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID);
-    const ticketsObserver = new MutationObserver(() => {
-      syncWidget();
-      maybeScrollToResults();
-    });
-    if (tickets) {
-      ticketsObserver.observe(tickets, { childList: true, subtree: true });
+    if (typeof ResizeObserver !== "undefined") {
+      resizeObserver = new ResizeObserver(() => {
+        if (!disposed) window.dispatchEvent(new Event("resize"));
+      });
+      resizeObserver.observe(mountEl);
     }
-
-    const interval = window.setInterval(syncWidget, 300);
-    const stopInterval = window.setTimeout(() => window.clearInterval(interval), 60000);
 
     const initialReady = syncWidget();
     scheduleAutoSearchRetries(Boolean(initialReady));
-
-    const onScrollReposition = () => {
-      window.dispatchEvent(new Event("resize"));
-    };
-    window.addEventListener("scroll", onScrollReposition, { passive: true, capture: true });
+    for (const delay of WIDGET_SYNC_RETRY_MS) {
+      syncTimers.push(window.setTimeout(syncWidget, delay));
+    }
+    readyTimeout = window.setTimeout(() => {
+      if (!disposed && !syncWidget()) markError();
+    }, WIDGET_READY_TIMEOUT_MS);
 
     return () => {
       disposed = true;
+      abortController.abort();
       observer.disconnect();
       ticketsObserver?.disconnect();
-      window.clearInterval(interval);
-      window.clearTimeout(stopInterval);
+      resizeObserver?.disconnect();
+      window.clearTimeout(readyTimeout);
       for (const timer of autoSearchTimers) window.clearTimeout(timer);
-      window.removeEventListener("scroll", onScrollReposition, { capture: true });
+      for (const timer of syncTimers) window.clearTimeout(timer);
       removeAviasalesInjectedStyles();
       if (urlSync === "inline") {
         resetTravelpayoutsWhitelabelWidget();
@@ -195,7 +217,7 @@ export default function FlightsWhitelabelWidgetCore({
         if (modals?.parentElement === document.body) safeRemoveElement(modals);
       }
     };
-  }, [scriptUrl, parsedSearch, urlSync]);
+  }, [scriptUrl, parsedSearch, retryKey, urlSync]);
 
   return (
     <div
@@ -204,7 +226,7 @@ export default function FlightsWhitelabelWidgetCore({
       className={cn("flights-wl-root", resultsOnly && "flights-wl-root--results-only", className)}
     >
       <div className="flights-wl-mount">
-        {!ready ? (
+        {status === "loading" ? (
           <div
             className={cn("px-4 py-5 sm:px-5 sm:py-6", resultsOnly && "py-3")}
             aria-live="polite"
@@ -224,6 +246,35 @@ export default function FlightsWhitelabelWidgetCore({
                 <Skeleton className="h-12 w-full rounded-xl sm:max-w-[200px]" />
               </div>
             )}
+          </div>
+        ) : null}
+        {status === "error" ? (
+          <div className="px-4 py-6 text-center sm:px-6" role="alert">
+            <p className="font-heading text-base font-semibold text-foreground">
+              Поиск авиабилетов временно не загрузился
+            </p>
+            <p className="mx-auto mt-2 max-w-md text-sm text-muted">
+              Параметры маршрута сохранены. Попробуйте ещё раз или продолжите поиск у партнёра.
+            </p>
+            <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
+              <button
+                type="button"
+                onClick={retryWidget}
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-sky-ink px-4 text-sm font-semibold text-white"
+              >
+                <RefreshCw className="h-4 w-4" aria-hidden />
+                Повторить
+              </button>
+              <a
+                href="https://www.aviasales.ru"
+                target="_blank"
+                rel="noopener noreferrer sponsored"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border-subtle px-4 text-sm font-semibold text-foreground"
+              >
+                Открыть Aviasales
+                <ExternalLink className="h-4 w-4" aria-hidden />
+              </a>
+            </div>
           </div>
         ) : null}
         <div id={TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID} />

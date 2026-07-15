@@ -2,12 +2,26 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Heart, LayoutGrid, LogOut, Settings, User } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Check,
+  ChevronDown,
+  Heart,
+  LayoutGrid,
+  LogOut,
+  Plane,
+  Settings,
+  ShieldCheck,
+  User,
+} from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import { userHasRole } from "@/types/auth";
 import UserAvatar from "@/components/auth/UserAvatar";
 import { tokenFocusRingClass, tokenHeaderCircleButtonClass } from "@/lib/design-tokens";
+import { useUserExperience } from "@/context/UserExperienceContext";
+import { availableWorkspaces, WORKSPACE_META } from "@/lib/user-experience/workspaces";
+import type { ActiveWorkspace } from "@/types/user-experience";
 
 function getFirstName(fullName: string): string {
   return fullName.trim().split(/\s+/)[0] || fullName;
@@ -64,8 +78,10 @@ function MenuItem({
 
 export default function ProfileMenu() {
   const { isAuthenticated, user, openAuth, logout } = useAuth();
+  const { experience, loading: experienceLoading, switchWorkspace } = useUserExperience();
   const hasOrganizerRole = useHasOrganizerRole(user);
   const [open, setOpen] = useState(false);
+  const [workspaceError, setWorkspaceError] = useState<string | null>(null);
   const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -111,6 +127,22 @@ export default function ProfileMenu() {
   }
 
   const firstName = getFirstName(user.fullName);
+  const workspaces = availableWorkspaces(experience.roles);
+  const workspaceIcons: Record<ActiveWorkspace, typeof Plane> = {
+    travel: Plane,
+    organizer: BriefcaseBusiness,
+    admin: ShieldCheck,
+  };
+
+  async function handleWorkspaceChange(workspace: ActiveWorkspace) {
+    setWorkspaceError(null);
+    const result = await switchWorkspace(workspace);
+    if (!result.ok) {
+      setWorkspaceError(result.error ?? "Не удалось переключить режим");
+      return;
+    }
+    setOpen(false);
+  }
 
   return (
     <div ref={rootRef} className="relative">
@@ -176,10 +208,46 @@ export default function ProfileMenu() {
           </div>
 
           <div className="mt-1 space-y-0.5 px-1 py-1">
+            {workspaces.length > 1 ? (
+              <div className="mb-1 border-b border-gray-100 pb-2">
+                <p className="px-3 pb-1.5 pt-1 text-[11px] font-semibold uppercase text-slate">
+                  Рабочее пространство
+                </p>
+                {workspaces.map((workspace) => {
+                  const Icon = workspaceIcons[workspace];
+                  const active = experience.activeWorkspace === workspace;
+                  return (
+                    <button
+                      key={workspace}
+                      type="button"
+                      role="menuitemradio"
+                      aria-checked={active}
+                      disabled={experienceLoading}
+                      onClick={() => void handleWorkspaceChange(workspace)}
+                      className={cn(
+                        "flex min-h-11 w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm font-medium transition-colors",
+                        active ? "bg-sky/10 text-sky" : "text-charcoal hover:bg-gray-50",
+                      )}
+                    >
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-white/80 ring-1 ring-charcoal/5">
+                        <Icon className="h-4 w-4" strokeWidth={1.75} />
+                      </span>
+                      <span className="min-w-0 flex-1">{WORKSPACE_META[workspace].label}</span>
+                      {active ? <Check className="h-4 w-4" aria-hidden /> : null}
+                    </button>
+                  );
+                })}
+                {workspaceError ? (
+                  <p className="px-3 pt-1 text-xs text-red-700" role="alert">
+                    {workspaceError}
+                  </p>
+                ) : null}
+              </div>
+            ) : null}
             <MenuItem
               href="/profile"
               icon={User}
-              label="Личный кабинет"
+              label="Мои поездки"
               onClick={() => setOpen(false)}
             />
             <MenuItem
@@ -193,6 +261,14 @@ export default function ProfileMenu() {
                 href="/organizer"
                 icon={LayoutGrid}
                 label="Кабинет организатора"
+                onClick={() => setOpen(false)}
+              />
+            ) : null}
+            {experience.roles.includes("admin") ? (
+              <MenuItem
+                href="/admin"
+                icon={ShieldCheck}
+                label="Управление сайтом"
                 onClick={() => setOpen(false)}
               />
             ) : null}

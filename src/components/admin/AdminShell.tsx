@@ -50,11 +50,8 @@ function AdminAccessGate({
         <div className={cn(cabinetPanelClass, "mx-auto max-w-lg text-center")}>
           <h1 className="font-display text-2xl font-bold text-charcoal">Нет доступа</h1>
           <p className="mt-3 text-sm text-slate">
-            У аккаунта <span className="font-medium text-charcoal">{user.fullName}</span> (
-            {user.email}) нет роли администратора. Проверьте, что в Supabase в таблице{" "}
-            <code className="text-xs">profiles</code> у этого пользователя в массиве{" "}
-            <code className="text-xs">roles</code> есть значение{" "}
-            <code className="text-xs">admin</code>, затем выйдите и войдите снова.
+            У этой учётной записи нет доступа к управлению сайтом. Обратитесь к владельцу,
+            который назначает права сотрудникам.
           </p>
         </div>
       </div>
@@ -77,8 +74,8 @@ function AdminAccessGate({
         <div className={cn(cabinetPanelClass, "text-center")}>
           <p className="text-sm text-red-600">{error}</p>
           <p className="mt-3 text-xs text-slate">
-            Если роль уже назначена в Supabase — выйдите из аккаунта и войдите заново. На
-            production нужен деплой ветки с админ-панелью.
+            Обновите страницу. Если проблема повторится, откройте журнал доступа в расширенных
+            настройках или обратитесь к владельцу сайта.
           </p>
         </div>
       </div>

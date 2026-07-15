@@ -24,10 +24,25 @@ export default function SiteChrome({
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
   const isMaintenance = pathname === "/maintenance";
+  const isWorkspace =
+    pathname?.startsWith("/profile") ||
+    pathname?.startsWith("/organizer") ||
+    pathname?.startsWith("/admin");
   const footerInfo = siteFooter ?? siteLegal;
 
   if (isEmbed || isMaintenance) {
     return <>{children}</>;
+  }
+
+  if (isWorkspace) {
+    return (
+      <>
+        <SkipToContentLink />
+        <main id="main-content" className="relative min-h-dvh bg-surface-elevated" tabIndex={-1}>
+          {children}
+        </main>
+      </>
+    );
   }
 
   return (

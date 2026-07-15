@@ -22,7 +22,7 @@ import { siteContainerClass } from "@/lib/site-container";
 
 export default function OrganizerShell({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { user, isAuthenticated, openAuth, addOrganizerRole } = useAuth();
+  const { user, isAuthenticated, authHydrated, openAuth, addOrganizerRole } = useAuth();
   const hasOrganizerAccess = useCanAccessOrganizerPanel(user);
   const [connectLoading, setConnectLoading] = useState(false);
 
@@ -43,6 +43,16 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
       </div>
     </div>
   );
+
+  if (!authHydrated) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
+        <div className={cn(cabinetPanelClass, "text-center text-sm text-slate")}>
+          Проверяем сессию…
+        </div>
+      </div>
+    );
+  }
 
   if (!isAuthenticated || !user) {
     return loginFallback;
@@ -85,7 +95,7 @@ export default function OrganizerShell({ children }: { children: React.ReactNode
           <OrganizerSidebar userName={user.fullName} avatarUrl={user.avatarUrl} />
 
           <div className="min-w-0 flex-1">
-            <div className="min-h-[calc(100vh-var(--site-header-full-height,72px)-2rem)] rounded-3xl md:min-h-[calc(100vh-var(--site-header-full-height,72px)-2.5rem)]">
+            <div className="min-h-[calc(100dvh-2rem)] rounded-3xl md:min-h-[calc(100dvh-2.5rem)]">
               {children}
             </div>
           </div>

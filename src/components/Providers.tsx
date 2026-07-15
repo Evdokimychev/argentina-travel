@@ -2,10 +2,12 @@
 
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
+import { usePathname } from "next/navigation";
 import type { LocaleCode } from "@/types/locale";
 import { LocaleCurrencyProvider } from "@/context/LocaleCurrencyContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { UserExperienceProvider } from "@/context/UserExperienceContext";
 import { QuickExploreProvider } from "@/context/QuickExploreContext";
 import { SiteFeedbackProvider } from "@/context/SiteFeedbackContext";
 import CookieConsentBanner from "@/components/CookieConsentBanner";
@@ -37,30 +39,40 @@ export default function Providers({
   children: React.ReactNode;
   locale?: LocaleCode;
 }) {
+  const pathname = usePathname();
+  const isWorkspace =
+    pathname?.startsWith("/profile") ||
+    pathname?.startsWith("/organizer") ||
+    pathname?.startsWith("/admin");
+
   return (
     <ThemeProvider>
       <LocaleCurrencyProvider initialLocale={locale}>
         <SiteFeedbackProvider>
           <AuthProvider>
-            <QuickExploreProvider>
-              <InteractionTrackingProvider>
+            <UserExperienceProvider>
+              <QuickExploreProvider>
+                <InteractionTrackingProvider>
                 <RouteProgressBar />
                 <SiteHashScroll />
                 {children}
-                <CustomCursor />
-                <ScrollNavigationRail />
-                <SiteSearch />
-                <QuickExploreMapDialog />
+                {!isWorkspace ? <CustomCursor /> : null}
+                {!isWorkspace ? <ScrollNavigationRail /> : null}
+                {!isWorkspace ? <SiteSearch /> : null}
+                {!isWorkspace ? <QuickExploreMapDialog /> : null}
                 <CookieConsentBanner />
-                <PwaShell />
-                <Suspense fallback={null}>
-                  <FirstTouchAttributionCapture />
-                </Suspense>
-                <GuideAssistantWidget />
+                {!isWorkspace ? <PwaShell /> : null}
+                {!isWorkspace ? (
+                  <Suspense fallback={null}>
+                    <FirstTouchAttributionCapture />
+                  </Suspense>
+                ) : null}
+                {!isWorkspace ? <GuideAssistantWidget /> : null}
                 <SiteAnalytics />
                 <SiteToastHost />
-              </InteractionTrackingProvider>
-            </QuickExploreProvider>
+                </InteractionTrackingProvider>
+              </QuickExploreProvider>
+            </UserExperienceProvider>
           </AuthProvider>
         </SiteFeedbackProvider>
       </LocaleCurrencyProvider>

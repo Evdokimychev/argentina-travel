@@ -3,6 +3,7 @@ import {
   TRAVELPAYOUTS_WHITELABEL_TICKETS_CONTAINER_ID,
 } from "@/lib/travelpayouts/whitelabel/config";
 import { ensureTpwlModalsInteractive } from "@/lib/travelpayouts/whitelabel/ensure-tpwl-modals-interactive";
+import { ensureTravelpayoutsSearchResponsive } from "@/lib/travelpayouts/whitelabel/ensure-wl-search-responsive";
 import { sanitizeAviasalesInjectedStyles } from "@/lib/travelpayouts/whitelabel/sanitize-aviasales-styles";
 
 const WL_CONTAINER_IDS = [
@@ -87,6 +88,7 @@ export function syncTravelpayoutsWhitelabelMount(mount: HTMLElement): boolean {
 
   const search = document.getElementById(TRAVELPAYOUTS_WHITELABEL_SEARCH_CONTAINER_ID);
   if (!search || !mount.contains(search)) return false;
+  ensureTravelpayoutsSearchResponsive(search);
   return search.offsetHeight > 60 || search.childElementCount > 0;
 }
 

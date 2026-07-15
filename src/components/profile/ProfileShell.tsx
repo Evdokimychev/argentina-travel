@@ -17,7 +17,7 @@ import {
 import { siteContainerClass } from "@/lib/site-container";
 
 export default function ProfileShell({ children }: { children: React.ReactNode }) {
-  const { user, isAuthenticated, openAuth } = useAuth();
+  const { user, isAuthenticated, authHydrated, openAuth } = useAuth();
 
   const loginFallback = (
     <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
@@ -33,6 +33,16 @@ export default function ProfileShell({ children }: { children: React.ReactNode }
     </div>
   );
 
+  if (!authHydrated) {
+    return (
+      <div className="mx-auto max-w-lg px-4 py-16 sm:px-6">
+        <div className={cn(cabinetPanelClass, "text-center text-sm text-slate")}>
+          Проверяем сессию…
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated || !user) {
     return loginFallback;
   }
@@ -47,7 +57,7 @@ export default function ProfileShell({ children }: { children: React.ReactNode }
           <ProfileSidebar userName={user.fullName} avatarUrl={user.avatarUrl} />
 
           <div className="min-w-0 flex-1">
-            <div className="min-h-[calc(100vh-var(--site-header-full-height,72px)-2rem)] rounded-3xl md:min-h-[calc(100vh-var(--site-header-full-height,72px)-2.5rem)]">
+            <div className="min-h-[calc(100dvh-2rem)] rounded-3xl md:min-h-[calc(100dvh-2.5rem)]">
               {children}
             </div>
           </div>

@@ -1,9 +1,6 @@
-import { siteStickyBelowHeaderInsetClass } from "@/lib/site-container";
-
 /** Shared layout tokens for tourist & organizer personal cabinets */
 
-export const cabinetShellClass =
-  "min-h-[calc(100vh-var(--site-header-full-height,72px))] bg-surface-muted dark:bg-background";
+export const cabinetShellClass = "min-h-dvh bg-surface-muted dark:bg-background";
 
 export const cabinetContentGapClass = "flex items-start gap-5 py-5 md:py-6";
 
@@ -20,17 +17,17 @@ export const cabinetLinkClass =
   "font-medium text-sky transition-colors hover:text-sky-dark hover:underline";
 
 export const cabinetSidebarClass =
-  `sticky hidden h-fit shrink-0 flex-col rounded-3xl border border-border-subtle bg-surface-elevated shadow-card transition-[width] duration-300 ease-out md:flex dark:border-border-subtle dark:bg-surface-elevated ${siteStickyBelowHeaderInsetClass}`;
+  "sticky top-5 hidden h-fit shrink-0 flex-col rounded-3xl border border-border-subtle bg-surface-elevated shadow-card transition-[width] duration-300 ease-out md:flex dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetSidebarSkeletonClass =
-  `sticky h-fit rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated ${siteStickyBelowHeaderInsetClass}`;
+  "sticky top-5 h-fit rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetMobileHeaderClass =
   "flex items-center justify-between border-b border-border-subtle bg-surface-elevated/95 px-4 py-3 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
 
 /** Horizontal section nav — sticky below site header on mobile cabinets. */
 export const cabinetMobileNavClass =
-  "scrollbar-hide sticky top-[var(--site-header-full-height,72px)] z-30 flex gap-1 overflow-x-auto border-b border-border-subtle bg-surface-elevated/95 px-3 py-2 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
+  "scrollbar-hide sticky top-0 z-30 flex gap-1 overflow-x-auto border-b border-border-subtle bg-surface-elevated/95 px-3 py-2 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
 
 export const cabinetMobileBottomNavClass =
   "fixed inset-x-0 bottom-0 z-40 border-t border-border-subtle bg-surface-elevated/95 px-2 pt-2 pb-[calc(env(safe-area-inset-bottom,0px)+0.5rem)] backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
