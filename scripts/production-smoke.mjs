@@ -17,6 +17,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const baseUrl = (process.env.SMOKE_BASE_URL ?? "http://127.0.0.1:3000").replace(/\/$/, "");
 const timeoutMs = Number.parseInt(process.env.SMOKE_TIMEOUT_MS ?? "15000", 10);
+const isCanonicalProduction = /^https:\/\/(?:www\.)?goargentina\.ru$/i.test(baseUrl);
 
 const PAGE_PATHS = [
   "/",
@@ -99,10 +100,42 @@ async function checkHealth() {
     json.migrationVersion === null || typeof json.migrationVersion === "string",
     "Health response must include migrationVersion."
   );
+  if (isCanonicalProduction) {
+    assert(typeof json.gitSha === "string" && json.gitSha.length >= 7, "Production health must include gitSha.");
+    assert(json.checks?.postgresDirect?.ok === true, `Direct Postgres check failed: ${json.checks?.postgresDirect?.error ?? "unknown"}`);
+  }
+  const expectedGitSha = process.env.EXPECTED_GIT_SHA?.trim();
+  if (expectedGitSha) {
+    assert(
+      typeof json.gitSha === "string" && json.gitSha.startsWith(expectedGitSha),
+      `Production SHA ${json.gitSha ?? "missing"} does not match ${expectedGitSha}`,
+    );
+  }
 
   console.log(
     `✓ /api/health (deployEnv=${json.environment.deployEnv}, migrationVersion=${json.migrationVersion ?? "—"})`
   );
+}
+
+async function checkAsset(pathname, expectedType) {
+  const asset = await get(pathname);
+  assert(asset.status === 200, `GET ${pathname} returned ${asset.status}`);
+  assert(asset.contentType.includes(expectedType), `GET ${pathname} expected ${expectedType}, got ${asset.contentType}`);
+  console.log(`✓ ${pathname}`);
+}
+
+async function checkInternalRouteClosed(pathname) {
+  const page = await get(pathname);
+  assert(page.status === 404, `GET ${pathname} expected 404, got ${page.status}`);
+  console.log(`✓ ${pathname} closed`);
+}
+
+async function checkAnonymousReadingHistory() {
+  const response = await get("/api/blog/reading-history");
+  assert(response.status === 200, `GET /api/blog/reading-history returned ${response.status}`);
+  const json = JSON.parse(response.text);
+  assert(Array.isArray(json.entries), "Anonymous reading history must return entries array");
+  console.log("✓ anonymous reading history");
 }
 
 async function checkPage(pathname) {
@@ -166,6 +199,15 @@ async function main() {
   }
 
   await checkRedirect("/map", "/mapa-argentina");
+  await checkInternalRouteClosed("/dev/design-system");
+  await checkAnonymousReadingHistory();
+  await checkAsset("/favicon.ico", "image/");
+  await checkAsset("/favicon-16x16.png", "image/png");
+  await checkAsset("/favicon-32x32.png", "image/png");
+  await checkAsset("/apple-touch-icon.png", "image/png");
+  await checkAsset("/icons/icon-192.png", "image/png");
+  await checkAsset("/icons/icon-512.png", "image/png");
+  await checkAsset("/icons/icon-maskable-512.png", "image/png");
   await checkBlogPostHasHeroImage("/blog/buenos-aires-rajony");
   await checkBlogPostHasHeroImage("/blog/natsionalnyy-park-iguasu");
 

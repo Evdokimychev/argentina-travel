@@ -29,7 +29,7 @@ const timeoutMs = Number.parseInt(process.env.SEO_AUDIT_TIMEOUT_MS ?? process.en
 
 const HREFLANG_PATHS = ["/", "/tours", "/excursions"];
 const JSON_LD_SAMPLES = [
-  { path: "/tours/patagonia-glaciers", types: ["Product"], label: "tour detail" },
+  { path: null, types: ["Product"], label: "tour detail", dynamic: "tour" },
   { path: null, types: ["TouristTrip", "Event"], label: "excursion detail", dynamic: "excursion" },
   { path: "/blog/best-time-to-visit-argentina", types: ["Article"], label: "blog post" },
 ];
@@ -170,6 +170,14 @@ async function resolveExcursionSamplePath() {
   return slugMatch ? `/excursions/${slugMatch[1]}` : null;
 }
 
+async function resolveTourSamplePath() {
+  const { text, status } = await fetchText("/tours");
+  if (status !== 200) return null;
+
+  const slugMatch = text.match(/href=["']\/tours\/([^"'/?#]+)["']/i);
+  return slugMatch ? `/tours/${slugMatch[1]}` : null;
+}
+
 async function auditPageMetadata(pagePath, requireHreflang = false) {
   const issues = [];
   const { status, text } = await fetchText(pagePath);
@@ -200,6 +208,18 @@ async function auditPageMetadata(pagePath, requireHreflang = false) {
 
 async function auditJsonLdSample(sample) {
   let pagePath = sample.path;
+
+  if (sample.dynamic === "tour") {
+    pagePath = await resolveTourSamplePath();
+    if (!pagePath) {
+      return {
+        label: sample.label,
+        path: null,
+        ok: false,
+        issues: ["Could not resolve tour sample slug from /tours"],
+      };
+    }
+  }
 
   if (sample.dynamic === "excursion") {
     pagePath = await resolveExcursionSamplePath();
