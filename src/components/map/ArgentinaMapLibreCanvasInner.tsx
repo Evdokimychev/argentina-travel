@@ -32,8 +32,6 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import type { MapViewConfig } from "@/lib/map-view-config";
 import { ARGENTINA_MAP_VIEW } from "@/lib/map-view-config";
-/** Below this count markers are shown individually; above — clustered. */
-const MAP_CLUSTER_MIN_OBJECTS = 25;
 
 /**
  * MapLibre symbol layers need a glyph source; raster-only styles omit it by default.
@@ -76,6 +74,11 @@ type Props = {
   overlays: MapOverlayState;
   thematic: MapThematicState;
   onSelect: (object: MapObject | null) => void;
+  userLocation?: {
+    latitude: number;
+    longitude: number;
+    requestId: number;
+  } | null;
   className?: string;
   /** Переопределение центра/зума — для встраиваемых карт (районы CABA и т.д.) */
   view?: MapViewConfig;
@@ -172,11 +175,13 @@ export default function ArgentinaMapLibreCanvas({
   overlays,
   thematic,
   onSelect,
+  userLocation = null,
   className,
   view = ARGENTINA_MAP_VIEW,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
+  const userLocationMarkerRef = useRef<maplibregl.Marker | null>(null);
   const onSelectRef = useRef(onSelect);
   const viewRef = useRef(view);
   const objectsRef = useRef(objects);
@@ -346,14 +351,6 @@ export default function ArgentinaMapLibreCanvas({
       "top-right"
     );
     map.addControl(new maplibregl.FullscreenControl(), "top-right");
-    map.addControl(
-      new maplibregl.GeolocateControl({
-        positionOptions: { enableHighAccuracy: true },
-        trackUserLocation: false,
-        showUserLocation: true,
-      }),
-      "top-right"
-    );
     map.addControl(new maplibregl.ScaleControl({ maxWidth: 120, unit: "metric" }), "bottom-right");
 
     const bindClusterInteractions = () => {
@@ -662,6 +659,8 @@ export default function ArgentinaMapLibreCanvas({
     }
 
     return () => {
+      userLocationMarkerRef.current?.remove();
+      userLocationMarkerRef.current = null;
       thematicCleanupRef.current?.();
       thematicCleanupRef.current = null;
       loadedThematicRef.current.clear();
@@ -709,6 +708,24 @@ export default function ArgentinaMapLibreCanvas({
     applyThematicLayerVisibility(map, thematic);
     void syncActiveThematicLayers(map, thematic);
   }, [thematic, syncActiveThematicLayers]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !userLocation) return;
+
+    userLocationMarkerRef.current?.remove();
+    const marker = new maplibregl.Marker({ color: "#d9533f", scale: 0.85 })
+      .setLngLat([userLocation.longitude, userLocation.latitude])
+      .addTo(map);
+    marker.getElement().setAttribute("aria-label", "Ваше местоположение");
+    marker.getElement().setAttribute("title", "Ваше местоположение");
+    userLocationMarkerRef.current = marker;
+    map.flyTo({
+      center: [userLocation.longitude, userLocation.latitude],
+      zoom: Math.max(map.getZoom(), 11),
+      essential: true,
+    });
+  }, [userLocation, mapLayersReady]);
 
   useEffect(() => {
     const map = mapRef.current;

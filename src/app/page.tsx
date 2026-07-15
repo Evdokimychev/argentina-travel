@@ -18,7 +18,6 @@ import {
 } from "@/lib/personalization/recommendations-server";
 import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
-import { absoluteUrl } from "@/lib/site-url";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
@@ -58,7 +57,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <link rel="preload" as="image" href={absoluteUrl(heroSrc)} fetchPriority="high" />
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/" />
       <HomePrimarySectionsItemListJsonLd />
       <MarketplaceHome

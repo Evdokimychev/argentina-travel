@@ -17,8 +17,6 @@ import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
-import { absoluteUrl } from "@/lib/site-url";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 
 const PAGE_TITLE = "Блог — советы и маршруты по Аргентине";
@@ -94,12 +92,6 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
           path: "/blog",
           fallback: "Блог",
         })}
-      />
-      <link
-        rel="preload"
-        as="image"
-        href={absoluteUrl(getServicePageHeroImage("blog-index"))}
-        fetchPriority="high"
       />
       <BlogIndexHero variant={heroVariant} indexablePostsCount={indexable.length} />
       <BlogIndexView

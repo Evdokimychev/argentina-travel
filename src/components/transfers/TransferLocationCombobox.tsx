@@ -119,7 +119,7 @@ export default function TransferLocationCombobox({
             type="button"
             onClick={handleClear}
             className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-slate hover:bg-gray-100"
-            aria-label="Clear"
+            aria-label="Очистить"
           >
             <X className="h-4 w-4" />
           </button>
@@ -137,6 +137,7 @@ export default function TransferLocationCombobox({
               <button
                 type="button"
                 role="option"
+                aria-selected={value?.id === location.id}
                 className="flex w-full items-start gap-2 px-3 py-2.5 text-left text-sm hover:bg-sky/5"
                 onMouseDown={(event) => event.preventDefault()}
                 onClick={() => handleSelect(location)}

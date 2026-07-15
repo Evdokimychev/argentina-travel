@@ -15,6 +15,11 @@ export type ArgentinaMapLibreCanvasProps = {
   overlays: MapOverlayState;
   thematic: MapThematicState;
   onSelect: (object: MapObject | null) => void;
+  userLocation?: {
+    latitude: number;
+    longitude: number;
+    requestId: number;
+  } | null;
   className?: string;
   view?: import("@/lib/map-view-config").MapViewConfig;
 };

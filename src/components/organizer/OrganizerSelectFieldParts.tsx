@@ -13,7 +13,8 @@ export function PopoverFieldTrigger({
 }) {
   return (
     <div
-      role="combobox"
+      role="button"
+      aria-haspopup="listbox"
       tabIndex={0}
       className={cn(
         "relative flex min-h-14 w-full cursor-pointer rounded-2xl border border-gray-200 bg-white px-3 pb-2.5 pt-6 text-left transition-colors hover:border-gray-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/20",

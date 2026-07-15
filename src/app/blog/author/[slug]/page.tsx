@@ -8,9 +8,8 @@ import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveAuthorArticle, listPublishedAuthorArticleSlugs } from "@/lib/cms/author-article-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
-import { getBlogPostHeroResolved } from "@/lib/media-resolver";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { absoluteUrl, resolvePublicUrl } from "@/lib/site-url";
+import { absoluteUrl } from "@/lib/site-url";
 
 interface AuthorArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -60,11 +59,8 @@ export default async function AuthorArticlePage({ params }: AuthorArticlePagePro
 
   const cmsMetadata = getCmsResolverMetadata(post);
   const initialTours = await fetchMarketplaceTours();
-  const heroSrc = resolvePublicUrl(getBlogPostHeroResolved(post).src);
-
   return (
     <>
-      <link rel="preload" as="image" href={heroSrc} fetchPriority="high" />
       {cmsMetadata?.showTranslationBanner ? (
         <TranslationPreparingBanner locale={cmsMetadata.requestedLocale} />
       ) : null}

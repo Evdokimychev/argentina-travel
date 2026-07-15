@@ -34,4 +34,18 @@ describe("Phase 6 — perf budget guards", () => {
     expect(css).toMatch(/min-height:\s*28rem/);
     expect(css).toContain(".blog-index-toolbar");
   });
+
+  it("critical heroes rely on next/image responsive preload", () => {
+    const home = readFileSync(join(root, "app/page.tsx"), "utf8");
+    const blogIndex = readFileSync(join(root, "app/blog/page.tsx"), "utf8");
+    const blogPost = readFileSync(join(root, "app/blog/[slug]/page.tsx"), "utf8");
+    expect(home).not.toContain('rel="preload" as="image"');
+    expect(blogIndex).not.toContain('rel="preload"');
+    expect(blogPost).not.toContain('rel="preload" as="image"');
+  });
+
+  it("tour loading state keeps the footer below the initial viewport", () => {
+    const loading = readFileSync(join(root, "app/tours/[slug]/loading.tsx"), "utf8");
+    expect(loading).toContain("min-h-[1800px]");
+  });
 });

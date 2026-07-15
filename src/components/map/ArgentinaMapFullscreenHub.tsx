@@ -30,8 +30,14 @@ import { mapObjectsToSuggestions, searchMapObjects } from "@/lib/map-search";
 import { probeThematicLayerAvailability } from "@/lib/map-thematic-loader";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
 import type { MapOverlayLayerId } from "@/lib/map-overlay-layers";
-import type { MapMarkerKind, MapObject, MapObjectsPayload } from "@/lib/map-types";
+import {
+  MAP_MARKER_KIND_LABELS,
+  type MapMarkerKind,
+  type MapObject,
+  type MapObjectsPayload,
+} from "@/lib/map-types";
 import { trackProductEvent } from "@/lib/analytics/product-events";
+import { List, Loader2, LocateFixed, X } from "lucide-react";
 
 type Props = {
   initialData: MapObjectsPayload;
@@ -53,6 +59,14 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   const [layerAvailability, setLayerAvailability] = useState<
     Partial<Record<MapThematicLayerId, boolean>>
   >({});
+  const [listOpen, setListOpen] = useState(false);
+  const [locationPanelOpen, setLocationPanelOpen] = useState(false);
+  const [locationStatus, setLocationStatus] = useState<"idle" | "requesting" | "error">("idle");
+  const [userLocation, setUserLocation] = useState<{
+    latitude: number;
+    longitude: number;
+    requestId: number;
+  } | null>(null);
 
   useEffect(() => {
     void probeThematicLayerAvailability().then(setLayerAvailability);
@@ -82,16 +96,20 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   );
 
   useEffect(() => {
-    if (!selected) return;
+    if (!selected && !listOpen && !locationPanelOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
-        setSelected(null);
-        replaceUrl({ ...stateRef.current, selected: "" });
+        setListOpen(false);
+        setLocationPanelOpen(false);
+        if (selected) {
+          setSelected(null);
+          replaceUrl({ ...stateRef.current, selected: "" });
+        }
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selected, replaceUrl]);
+  }, [selected, listOpen, locationPanelOpen, replaceUrl]);
 
   const refreshData = useCallback(async (nextState: MapArgentinaUrlState) => {
     if (nextState.kinds.length === 0) {
@@ -273,6 +291,27 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
     if (obj) handleSelectObject(obj);
   }
 
+  function requestCurrentLocation() {
+    if (!("geolocation" in navigator)) {
+      setLocationStatus("error");
+      return;
+    }
+    setLocationStatus("requesting");
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          requestId: Date.now(),
+        });
+        setLocationStatus("idle");
+        setLocationPanelOpen(false);
+      },
+      () => setLocationStatus("error"),
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+    );
+  }
+
   const attribution = [
     MAP_BASEMAP_THEMES[state.theme].attribution,
     ...collectMapOverlayAttributions(state.overlays),
@@ -311,6 +350,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         overlays={state.overlays}
         thematic={state.thematic}
         onSelect={handleSelectObject}
+        userLocation={userLocation}
         className="absolute inset-0"
       />
 
@@ -376,6 +416,139 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
         onClose={() => handleSelectObject(null)}
         onSelectObjectId={handleSelectObjectById}
       />
+
+      <div className="absolute bottom-12 right-3 z-20 flex flex-col gap-2 sm:right-4">
+        <button
+          type="button"
+          onClick={() => {
+            setListOpen(false);
+            setLocationStatus("idle");
+            setLocationPanelOpen((open) => !open);
+          }}
+          aria-expanded={locationPanelOpen}
+          aria-controls="map-location-panel"
+          aria-label="Моё местоположение"
+          title="Моё местоположение"
+          className="flex min-h-11 items-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-medium text-charcoal shadow-md hover:bg-gray-50"
+        >
+          <LocateFixed className="h-4 w-4" aria-hidden />
+          <span className="hidden sm:inline">Моё местоположение</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setLocationPanelOpen(false);
+            setListOpen((open) => !open);
+          }}
+          aria-pressed={listOpen}
+          aria-controls="map-accessible-list"
+          aria-label="Показать объекты списком"
+          title="Показать объекты списком"
+          className="flex min-h-11 items-center gap-2 rounded-md border border-gray-200 bg-white px-3 text-sm font-medium text-charcoal shadow-md hover:bg-gray-50"
+        >
+          <List className="h-4 w-4" aria-hidden />
+          <span className="hidden sm:inline">Показать списком</span>
+        </button>
+      </div>
+
+      {locationPanelOpen ? (
+        <section
+          id="map-location-panel"
+          aria-label="Использование местоположения"
+          className="absolute bottom-28 right-3 z-30 w-[min(calc(100%-1.5rem),22rem)] rounded-md border border-gray-200 bg-white p-4 shadow-lg sm:right-4"
+        >
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <h2 className="text-sm font-semibold text-charcoal">Показать, где вы находитесь?</h2>
+              <p className="mt-1 text-sm leading-relaxed text-slate">
+                Координаты используются только в этой вкладке, чтобы приблизить карту. Мы их не сохраняем и не отправляем в профиль.
+              </p>
+              <p className="mt-2 text-xs text-slate">Можно отказаться и найти город через поиск вверху.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setLocationPanelOpen(false)}
+              aria-label="Закрыть"
+              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md text-slate hover:bg-gray-100"
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+          {locationStatus === "error" ? (
+            <p role="alert" className="mt-3 text-sm text-danger">
+              Не удалось получить координаты. Проверьте разрешение браузера или воспользуйтесь поиском.
+            </p>
+          ) : null}
+          <div className="mt-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              onClick={requestCurrentLocation}
+              disabled={locationStatus === "requesting"}
+              className="inline-flex min-h-11 items-center gap-2 rounded-md bg-brand px-4 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
+            >
+              {locationStatus === "requesting" ? (
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+              ) : (
+                <LocateFixed className="h-4 w-4" aria-hidden />
+              )}
+              {locationStatus === "requesting" ? "Определяем…" : "Показать на карте"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setLocationPanelOpen(false)}
+              className="min-h-11 rounded-md border border-gray-200 px-4 text-sm font-medium text-charcoal hover:bg-gray-50"
+            >
+              Не сейчас
+            </button>
+          </div>
+        </section>
+      ) : null}
+
+      {listOpen ? (
+        <section
+          id="map-accessible-list"
+          aria-label="Объекты карты списком"
+          className="absolute inset-x-0 bottom-0 z-30 max-h-[65dvh] overflow-y-auto border-t border-gray-200 bg-white shadow-xl sm:bottom-4 sm:left-auto sm:right-4 sm:w-[26rem] sm:rounded-md sm:border"
+        >
+          <div className="sticky top-0 flex items-center justify-between gap-3 border-b border-gray-100 bg-white px-4 py-3">
+            <div>
+              <h2 className="text-base font-semibold text-charcoal">Объекты на карте</h2>
+              <p className="text-xs text-slate">{visibleObjects.length} по выбранным фильтрам</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setListOpen(false)}
+              aria-label="Закрыть список"
+              className="flex h-10 w-10 items-center justify-center rounded-md text-slate hover:bg-gray-100"
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+          {visibleObjects.length > 0 ? (
+            <ul className="divide-y divide-gray-100">
+              {visibleObjects.map((object) => (
+                <li key={object.id}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setListOpen(false);
+                      handleSelectObject(object);
+                    }}
+                    className="w-full px-4 py-3 text-left hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-brand/30"
+                  >
+                    <span className="block text-sm font-semibold text-charcoal">{object.title}</span>
+                    <span className="mt-0.5 block text-xs text-slate">
+                      {object.region} · {object.meta ?? MAP_MARKER_KIND_LABELS[object.kind]}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="px-4 py-6 text-sm text-slate">По выбранным фильтрам объектов нет.</p>
+          )}
+        </section>
+      ) : null}
 
       <p className="pointer-events-none absolute bottom-3 left-3 z-10 rounded-lg bg-white/75 px-2 py-1 text-[10px] text-slate backdrop-blur-sm sm:left-4">
         {attribution}

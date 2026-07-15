@@ -68,7 +68,7 @@ export default function ExcursionSearchSuggestions({
       aria-label="Подсказки поиска"
     >
       {suggestions.map((item) => (
-        <li key={item.id} role="option">
+        <li key={item.id} role="option" aria-selected={false}>
           <Link
             href={item.href}
             className="block border-t border-gray-100 px-4 py-3 first:border-t-0 transition hover:bg-gray-50"

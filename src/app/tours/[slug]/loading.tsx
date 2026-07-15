@@ -2,7 +2,11 @@ import { siteContainerClass } from "@/lib/site-container";
 
 export default function TourDetailLoading() {
   return (
-    <div className={`${siteContainerClass} py-8`} aria-busy="true" aria-live="polite">
+    <div
+      className={`${siteContainerClass} min-h-[1800px] py-8 lg:min-h-[1400px]`}
+      aria-busy="true"
+      aria-live="polite"
+    >
       <span className="sr-only">Загружаем путешествие…</span>
 
       {/* Gallery */}
