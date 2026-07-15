@@ -40,7 +40,9 @@ export default defineConfig({
     ? {
         command: process.env.CI ? "npm run start" : "npm run dev",
         url: baseURL,
-        reuseExistingServer: !process.env.CI,
+        // Earlier CI checks may keep the production server alive on this port.
+        // It serves the same build, so visual acceptance should reuse it.
+        reuseExistingServer: true,
         timeout: 180_000,
       }
     : undefined,
