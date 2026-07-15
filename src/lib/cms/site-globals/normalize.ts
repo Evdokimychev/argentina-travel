@@ -12,6 +12,7 @@ import type {
   SiteMaintenanceTranslatable,
   SiteSeoGlobal,
   SiteSeoTranslatable,
+  SiteNavigationGlobal,
 } from "@/types/site-globals";
 
 export const DEFAULT_SITE_BRANDING_LOCALES: SiteGlobalLocaleOverrides<SiteBrandingTranslatable> = {
@@ -106,6 +107,33 @@ export const DEFAULT_SITE_MAINTENANCE: SiteMaintenanceGlobal = {
   locales: DEFAULT_SITE_MAINTENANCE_LOCALES,
 };
 
+export const DEFAULT_SITE_NAVIGATION: SiteNavigationGlobal = {
+  showGeography: true,
+  showTours: true,
+  showExcursions: true,
+  showGuide: true,
+  showGallery: true,
+  showImmigration: true,
+  showKnowledgeBase: true,
+  showShop: true,
+  showServices: true,
+  showJournal: true,
+  showAbout: true,
+  utilityToursLabel: "Бронируйте лучшие туры",
+  utilityToursUrl: "/tours",
+  utilityOrganizerLabel: "Авторам туров",
+  utilityOrganizerUrl: "/join",
+  utilityContactLabel: "Свяжитесь с нами",
+  utilityContactUrl: "/contacts",
+};
+
+function normalizeNavigationHref(value: unknown, fallback: string): string {
+  const href = asString(value).trim();
+  if (href.startsWith("/") && !href.startsWith("//")) return href;
+  if (/^https:\/\//i.test(href)) return href;
+  return fallback;
+}
+
 function asString(value: unknown, fallback = ""): string {
   return typeof value === "string" ? value : fallback;
 }
@@ -180,6 +208,32 @@ export function normalizeSiteFeatures(value: unknown): SiteFeaturesGlobal {
     cmsGuideCutover: r.cmsGuideCutover === true,
     cmsDestinationCutover: r.cmsDestinationCutover === true,
     cmsPlaceCutover: r.cmsPlaceCutover === true,
+  };
+}
+
+export function normalizeSiteNavigation(value: unknown): SiteNavigationGlobal {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return DEFAULT_SITE_NAVIGATION;
+  }
+  const row = value as Record<string, unknown>;
+  return {
+    showGeography: row.showGeography !== false,
+    showTours: row.showTours !== false,
+    showExcursions: row.showExcursions !== false,
+    showGuide: row.showGuide !== false,
+    showGallery: row.showGallery !== false,
+    showImmigration: row.showImmigration !== false,
+    showKnowledgeBase: row.showKnowledgeBase !== false,
+    showShop: row.showShop !== false,
+    showServices: row.showServices !== false,
+    showJournal: row.showJournal !== false,
+    showAbout: row.showAbout !== false,
+    utilityToursLabel: asString(row.utilityToursLabel, DEFAULT_SITE_NAVIGATION.utilityToursLabel),
+    utilityToursUrl: normalizeNavigationHref(row.utilityToursUrl, DEFAULT_SITE_NAVIGATION.utilityToursUrl),
+    utilityOrganizerLabel: asString(row.utilityOrganizerLabel, DEFAULT_SITE_NAVIGATION.utilityOrganizerLabel),
+    utilityOrganizerUrl: normalizeNavigationHref(row.utilityOrganizerUrl, DEFAULT_SITE_NAVIGATION.utilityOrganizerUrl),
+    utilityContactLabel: asString(row.utilityContactLabel, DEFAULT_SITE_NAVIGATION.utilityContactLabel),
+    utilityContactUrl: normalizeNavigationHref(row.utilityContactUrl, DEFAULT_SITE_NAVIGATION.utilityContactUrl),
   };
 }
 

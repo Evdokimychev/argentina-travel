@@ -106,6 +106,26 @@ export type SiteMaintenanceGlobal = SiteMaintenanceGlobalBase & {
   locales?: SiteGlobalLocaleOverrides<SiteMaintenanceTranslatable>;
 };
 
+export type SiteNavigationGlobal = {
+  showGeography: boolean;
+  showTours: boolean;
+  showExcursions: boolean;
+  showGuide: boolean;
+  showGallery: boolean;
+  showImmigration: boolean;
+  showKnowledgeBase: boolean;
+  showShop: boolean;
+  showServices: boolean;
+  showJournal: boolean;
+  showAbout: boolean;
+  utilityToursLabel: string;
+  utilityToursUrl: string;
+  utilityOrganizerLabel: string;
+  utilityOrganizerUrl: string;
+  utilityContactLabel: string;
+  utilityContactUrl: string;
+};
+
 /** Resolved public shapes — locales stripped after resolveSiteGlobalForLocale. */
 export type SiteBrandingGlobalResolved = SiteBrandingGlobalBase;
 export type SiteSeoGlobalResolved = SiteSeoGlobalBase;
@@ -119,6 +139,7 @@ export type SiteGlobalKey =
   | "site.branding"
   | "site.seo"
   | "site.contact"
+  | "site.navigation"
   | "site.maintenance";
 
 export type SiteGlobalsMap = {
@@ -127,6 +148,7 @@ export type SiteGlobalsMap = {
   "site.branding": SiteBrandingGlobal;
   "site.seo": SiteSeoGlobal;
   "site.contact": SiteContactGlobal;
+  "site.navigation": SiteNavigationGlobal;
   "site.maintenance": SiteMaintenanceGlobal;
 };
 
@@ -134,6 +156,7 @@ export const SITE_GLOBAL_KEYS = [
   "site.branding",
   "site.seo",
   "site.contact",
+  "site.navigation",
   "site.legal",
   "site.features",
   "site.maintenance",

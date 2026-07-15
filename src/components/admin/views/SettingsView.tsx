@@ -26,6 +26,7 @@ import type { AnalyticsReadinessSnapshot } from "@/lib/ops/analytics-readiness-t
 import type { CronHealthReport } from "@/lib/ops/ops-status";
 import type { ProductionReadinessSnapshot } from "@/lib/ops/production-readiness-types";
 import type { SiteGlobalKey } from "@/types/site-globals";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 
 type CronRunEntry = {
   ranAt: string;
@@ -101,6 +102,7 @@ function emptyGlobalsState(): Record<SiteGlobalKey, Record<string, unknown>> {
     "site.branding": {},
     "site.seo": {},
     "site.contact": {},
+    "site.navigation": {},
     "site.legal": {},
     "site.features": {},
     "site.maintenance": {},
@@ -112,6 +114,10 @@ export default function SettingsView() {
   const [tab, setTab] = useState<SettingsTab>("content");
   const [globals, setGlobals] = useState(emptyGlobalsState);
   const [savingKey, setSavingKey] = useState<SiteGlobalKey | null>(null);
+  const [saveFeedback, setSaveFeedback] = useState<{
+    variant: "success" | "error";
+    message: string;
+  } | null>(null);
 
   useEffect(() => {
     if (!data?.settings) return;
@@ -129,6 +135,7 @@ export default function SettingsView() {
   const saveGlobal = useCallback(
     async (key: SiteGlobalKey) => {
       setSavingKey(key);
+      setSaveFeedback(null);
       try {
         const res = await fetch("/api/admin/settings", {
           method: "PATCH",
@@ -140,8 +147,12 @@ export default function SettingsView() {
           throw new Error(json.error ?? "Ошибка сохранения");
         }
         await refresh();
+        setSaveFeedback({ variant: "success", message: "Настройки сохранены и применятся на публичном сайте." });
       } catch (saveError) {
-        alert(saveError instanceof Error ? saveError.message : "Ошибка");
+        setSaveFeedback({
+          variant: "error",
+          message: saveError instanceof Error ? saveError.message : "Не удалось сохранить настройки",
+        });
       } finally {
         setSavingKey(null);
       }
@@ -174,6 +185,13 @@ export default function SettingsView() {
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}
         {loading ? <p className="text-sm text-slate">Загрузка…</p> : null}
+        {saveFeedback ? (
+          <InlineFeedback
+            variant={saveFeedback.variant}
+            title={saveFeedback.variant === "success" ? "Изменения сохранены" : "Не удалось сохранить"}
+            description={saveFeedback.message}
+          />
+        ) : null}
 
         <div className="flex flex-wrap gap-2">
           {(Object.keys(TAB_LABELS) as SettingsTab[]).map((tabKey) => (

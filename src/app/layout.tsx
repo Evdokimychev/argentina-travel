@@ -10,7 +10,7 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { localeCodeFromI18n } from "@/lib/i18n/sync-messages";
 import { siteRobotsMetadata } from "@/lib/cms/site-globals/robots-meta";
 import { resolveSiteVerificationMeta } from "@/lib/analytics/site-verification-meta";
-import { fetchSiteBranding, fetchSitePublicMeta } from "@/lib/site-settings-server";
+import { fetchSiteBranding, fetchSiteNavigation, fetchSitePublicMeta } from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -107,7 +107,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const siteFooter = await loadSiteFooterInfo();
+  const [siteFooter, siteNavigation] = await Promise.all([
+    loadSiteFooterInfo(),
+    fetchSiteNavigation(),
+  ]);
   const i18nLocale = await getServerI18nLocale();
   const locale = localeCodeFromI18n(i18nLocale);
 
@@ -125,7 +128,7 @@ export default async function RootLayout({
         <ThemeScript />
         <SiteJsonLd />
         <Providers locale={locale}>
-          <SiteChrome siteFooter={siteFooter}>{children}</SiteChrome>
+          <SiteChrome siteFooter={siteFooter} siteNavigation={siteNavigation}>{children}</SiteChrome>
         </Providers>
       </body>
     </html>

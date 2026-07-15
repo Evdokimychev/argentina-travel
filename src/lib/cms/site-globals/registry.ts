@@ -72,6 +72,30 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
     ],
   },
   {
+    key: "site.navigation",
+    label: "Навигация",
+    description: "Разделы главного меню и служебные ссылки в верхней панели",
+    fields: [
+      { name: "showGeography", label: "Показывать направления", type: "checkbox" },
+      { name: "showTours", label: "Показывать туры", type: "checkbox" },
+      { name: "showExcursions", label: "Показывать экскурсии", type: "checkbox" },
+      { name: "showGuide", label: "Показывать путеводитель", type: "checkbox" },
+      { name: "showGallery", label: "Показывать галерею", type: "checkbox" },
+      { name: "showImmigration", label: "Показывать иммиграцию", type: "checkbox" },
+      { name: "showKnowledgeBase", label: "Показывать базу знаний", type: "checkbox" },
+      { name: "showShop", label: "Показывать магазин", type: "checkbox" },
+      { name: "showServices", label: "Показывать сервисы", type: "checkbox" },
+      { name: "showJournal", label: "Показывать журнал", type: "checkbox" },
+      { name: "showAbout", label: "Показывать раздел о проекте", type: "checkbox" },
+      { name: "utilityToursLabel", label: "Ссылка на туры: текст", type: "text" },
+      { name: "utilityToursUrl", label: "Ссылка на туры: адрес", type: "text" },
+      { name: "utilityOrganizerLabel", label: "Ссылка для организаторов: текст", type: "text" },
+      { name: "utilityOrganizerUrl", label: "Ссылка для организаторов: адрес", type: "text" },
+      { name: "utilityContactLabel", label: "Ссылка контактов: текст", type: "text" },
+      { name: "utilityContactUrl", label: "Ссылка контактов: адрес", type: "text" },
+    ],
+  },
+  {
     key: "site.seo",
     label: "SEO по умолчанию",
     description: "Глобальные meta для layout и fallback CMS",
@@ -217,6 +241,7 @@ export const SITE_CONTENT_GLOBAL_KEYS = [
   "site.branding",
   "site.seo",
   "site.contact",
+  "site.navigation",
 ] as const satisfies readonly SiteGlobalKey[];
 
 export const SITE_OPS_GLOBAL_KEYS = ["site.legal", "site.features"] as const satisfies readonly SiteGlobalKey[];

@@ -5,12 +5,14 @@ import {
   DEFAULT_SITE_FEATURES,
   DEFAULT_SITE_LEGAL_LOCALES,
   DEFAULT_SITE_MAINTENANCE,
+  DEFAULT_SITE_NAVIGATION,
   DEFAULT_SITE_SEO,
   normalizeSiteBranding,
   normalizeSiteContact,
   normalizeSiteFeatures,
   normalizeSiteLegal,
   normalizeSiteMaintenance,
+  normalizeSiteNavigation,
   normalizeSiteSeo,
   sanitizeGlobalForSave,
 } from "@/lib/cms/site-globals/normalize";
@@ -151,6 +153,18 @@ describe("normalizeSiteMaintenance", () => {
       countdownTarget: "2026-08-01T10:00:00.000Z",
       showContacts: true,
     });
+  });
+});
+
+describe("normalizeSiteNavigation", () => {
+  it("uses defaults and supports hiding a public section", () => {
+    expect(normalizeSiteNavigation(undefined)).toEqual(DEFAULT_SITE_NAVIGATION);
+    expect(normalizeSiteNavigation({ showShop: false }).showShop).toBe(false);
+  });
+
+  it("rejects unsafe utility links", () => {
+    expect(normalizeSiteNavigation({ utilityContactUrl: "javascript:alert(1)" }).utilityContactUrl)
+      .toBe(DEFAULT_SITE_NAVIGATION.utilityContactUrl);
   });
 });
 

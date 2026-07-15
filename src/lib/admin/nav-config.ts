@@ -1,13 +1,13 @@
 import type { AdminNavItem, AdminNavSectionId } from "@/types/admin";
 
 export const ADMIN_NAV_SECTION_LABELS: Record<AdminNavSectionId, string> = {
-  dashboard: "Обзор",
-  operations: "Операции",
-  marketplace: "Маркетплейс",
-  content: "Контент",
-  users: "Пользователи",
-  analytics: "Аналитика",
-  system: "Система",
+  dashboard: "Сегодня",
+  operations: "Продажи",
+  marketplace: "Туры и предложения",
+  content: "Контент и сайт",
+  users: "Пользователи и авторы",
+  analytics: "Отчёты",
+  system: "Расширенные настройки",
 };
 
 export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
@@ -112,7 +112,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     id: "content-documents",
     section: "content",
     href: "/admin/content/documents",
-    label: "Документы",
+    label: "Контент и страницы",
     capability: "content.edit",
   },
   {
@@ -128,7 +128,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     section: "content",
     href: "/admin/media",
     label: "Медиатека",
-    description: "Upload, grid, sync manifest",
+    description: "Файлы, подписи, источники и использование",
     capability: "content.edit",
   },
   {
@@ -179,7 +179,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
   },
   {
     id: "system-redirects",
-    section: "system",
+    section: "content",
     href: "/admin/system/redirects",
     label: "Редиректы",
     description: "301/302 для переноса URL",
@@ -189,7 +189,7 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     id: "system-settings",
     section: "system",
     href: "/admin/system/settings",
-    label: "Настройки",
+    label: "Настройки сайта",
     capability: "system.settings",
   },
   {

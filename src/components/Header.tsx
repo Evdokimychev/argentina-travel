@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, ArrowUpRight, MapPinned, Menu, Search } from "lucide-react";
 import ArgentinaLogo from "@/components/ArgentinaLogo";
 import LocaleCurrencySwitcher from "@/components/LocaleCurrencySwitcher";
@@ -13,7 +13,7 @@ import { SiteNavFullScreenOverlay } from "@/components/navigation/SiteNavDrawer"
 import { useAuth } from "@/context/AuthContext";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import {
-  SITE_NAV_MOBILE_SECTIONS,
+  SITE_NAV_SECTIONS,
   SITE_NAV_UTILITY_LINKS,
 } from "@/data/site-nav";
 import { useCanGoBack } from "@/hooks/useCanGoBack";
@@ -31,6 +31,7 @@ import { openSiteMap, prefetchQuickExploreMap } from "@/lib/site-map-open";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
+import type { SiteNavigationGlobal } from "@/types/site-globals";
 
 const CircleButton = forwardRef<
   HTMLButtonElement,
@@ -79,7 +80,21 @@ const CircleButton = forwardRef<
   );
 });
 
-export default function Header() {
+const SECTION_VISIBILITY_KEYS: Partial<Record<string, keyof SiteNavigationGlobal>> = {
+  geography: "showGeography",
+  tours: "showTours",
+  excursions: "showExcursions",
+  guide: "showGuide",
+  gallery: "showGallery",
+  immigration: "showImmigration",
+  knowledgeBase: "showKnowledgeBase",
+  shop: "showShop",
+  services: "showServices",
+  journal: "showJournal",
+  about: "showAbout",
+};
+
+export default function Header({ navigation }: { navigation?: SiteNavigationGlobal }) {
   const router = useRouter();
   const pathname = usePathname();
   const canGoBack = useCanGoBack();
@@ -115,7 +130,25 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const utilityLinks = SITE_NAV_UTILITY_LINKS;
+  const utilityLinks = useMemo(() => {
+    if (!navigation) return SITE_NAV_UTILITY_LINKS;
+    return [
+      { ...SITE_NAV_UTILITY_LINKS[0], label: navigation.utilityToursLabel, labelKey: undefined, href: navigation.utilityToursUrl },
+      { ...SITE_NAV_UTILITY_LINKS[1], label: navigation.utilityOrganizerLabel, labelKey: undefined, href: navigation.utilityOrganizerUrl },
+      { ...SITE_NAV_UTILITY_LINKS[2], label: navigation.utilityContactLabel, labelKey: undefined, href: navigation.utilityContactUrl },
+    ];
+  }, [navigation]);
+  const navSections = useMemo(
+    () => SITE_NAV_SECTIONS.filter((section) => {
+      const key = SECTION_VISIBILITY_KEYS[section.id];
+      return !key || navigation?.[key] !== false;
+    }),
+    [navigation],
+  );
+  const mobileNavSections = useMemo(
+    () => navSections.filter((section) => section.id !== "home"),
+    [navSections],
+  );
 
   const mobileMenuHeaderActions = (
     <>
@@ -242,6 +275,7 @@ export default function Header() {
           </Link>
 
           <DesktopSiteNav
+            sections={navSections}
             pathname={pathname}
             t={t}
             openMegaMenuId={openMegaMenuId}
@@ -275,7 +309,7 @@ export default function Header() {
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         title={t("nav.menu")}
-        sections={SITE_NAV_MOBILE_SECTIONS}
+        sections={mobileNavSections}
         pathname={pathname}
         t={t}
         returnFocusRef={mobileMenuTriggerRef}

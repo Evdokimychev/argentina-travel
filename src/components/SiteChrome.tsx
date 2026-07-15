@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipToContentLink from "@/components/SkipToContentLink";
 import type { SiteFooterInfo } from "@/lib/site-footer-info";
+import type { SiteNavigationGlobal } from "@/types/site-globals";
 
 export type { SiteFooterInfo };
 
@@ -16,10 +17,12 @@ export default function SiteChrome({
   siteFooter,
   /** @deprecated Pass siteFooter instead */
   siteLegal,
+  siteNavigation,
 }: {
   children: React.ReactNode;
   siteFooter?: SiteFooterInfo;
   siteLegal?: SiteFooterInfo;
+  siteNavigation?: SiteNavigationGlobal;
 }) {
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
@@ -48,7 +51,7 @@ export default function SiteChrome({
   return (
     <>
       <SkipToContentLink />
-      <Header />
+      <Header navigation={siteNavigation} />
       <div className="site-header-spacer shrink-0" aria-hidden="true" />
       <main id="main-content" className="relative z-0 flex-1 bg-surface-elevated" tabIndex={-1}>
         {children}
