@@ -2,7 +2,7 @@ import { defineConfig, devices } from "@playwright/test";
 
 const explicitBase =
   process.env.PLAYWRIGHT_BASE_URL?.trim() || process.env.SMOKE_BASE_URL?.trim();
-const baseURL = explicitBase || "http://127.0.0.1:3000";
+const baseURL = explicitBase || "http://localhost:3000";
 const useLocalWebServer =
   !explicitBase && /^https?:\/\/(127\.0\.0\.1|localhost)(:\d+)?(?:\/|$)/i.test(baseURL);
 
