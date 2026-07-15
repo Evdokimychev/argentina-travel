@@ -17,6 +17,7 @@ import SiteToastHost from "@/components/feedback/SiteToastHost";
 import RouteProgressBar from "@/components/feedback/RouteProgressBar";
 import FirstTouchAttributionCapture from "@/components/attribution/FirstTouchAttributionCapture";
 import InteractionTrackingProvider from "@/components/personalization/InteractionTrackingProvider";
+import { isWorkspacePath } from "@/lib/internal-route-access";
 
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
 const ScrollNavigationRail = dynamic(() => import("@/components/ScrollNavigationRail"), {
@@ -40,10 +41,7 @@ export default function Providers({
   locale?: LocaleCode;
 }) {
   const pathname = usePathname();
-  const isWorkspace =
-    pathname?.startsWith("/profile") ||
-    pathname?.startsWith("/organizer") ||
-    pathname?.startsWith("/admin");
+  const isWorkspace = isWorkspacePath(pathname);
 
   return (
     <ThemeProvider>

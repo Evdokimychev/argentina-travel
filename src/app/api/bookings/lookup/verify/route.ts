@@ -4,7 +4,6 @@ import {
   BOOKING_LOOKUP_SESSION_TTL_MS,
   generateLookupSessionToken,
   hashLookupValue,
-  verifyLookupHash,
 } from "@/lib/booking-lookup-security";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -30,46 +29,28 @@ export async function POST(request: Request) {
   }
 
   const admin = createSupabaseAdminClient();
-  const { data: challenge } = await admin
-    .from("booking_lookup_challenges")
-    .select("*")
-    .eq("id", requestId)
-    .maybeSingle();
-  const invalid =
-    !challenge ||
-    Boolean(challenge.consumed_at) ||
-    new Date(challenge.expires_at).getTime() <= Date.now() ||
-    challenge.attempts >= challenge.max_attempts;
+  const token = generateLookupSessionToken();
+  const sessionExpiresAt = new Date(Date.now() + BOOKING_LOOKUP_SESSION_TTL_MS);
+  const { data, error } = await admin.rpc("consume_booking_lookup_challenge", {
+    p_challenge_id: requestId,
+    p_code_hash: hashLookupValue(`code:${requestId}`, code),
+    p_session_token_hash: hashLookupValue("session", token),
+    p_session_expires_at: sessionExpiresAt.toISOString(),
+  });
+  const outcome = data?.[0];
 
-  if (invalid) return NextResponse.json({ error: INVALID_MESSAGE }, { status: 400 });
-
-  const attempts = challenge.attempts + 1;
-  const validCode = verifyLookupHash(
-    challenge.code_hash,
-    hashLookupValue(`code:${requestId}`, code),
-  );
-  if (!validCode || challenge.booking_ids.length === 0) {
-    await admin.from("booking_lookup_challenges").update({ attempts }).eq("id", requestId);
-    await admin.from("booking_lookup_audit_log").insert({
-      challenge_id: requestId,
-      event: "otp_rejected",
-      ip_hash: hashLookupValue("ip", ip),
-      metadata: { attempts },
-    });
+  if (error || outcome?.status !== "accepted") {
+    if (outcome?.status === "rejected") {
+      await admin.from("booking_lookup_audit_log").insert({
+        challenge_id: requestId,
+        event: "otp_rejected",
+        ip_hash: hashLookupValue("ip", ip),
+        metadata: { attempts: outcome.attempts },
+      });
+    }
     return NextResponse.json({ error: INVALID_MESSAGE }, { status: 400 });
   }
 
-  const token = generateLookupSessionToken();
-  const sessionExpiresAt = new Date(Date.now() + BOOKING_LOOKUP_SESSION_TTL_MS);
-  await admin
-    .from("booking_lookup_challenges")
-    .update({
-      attempts,
-      consumed_at: new Date().toISOString(),
-      session_token_hash: hashLookupValue("session", token),
-      session_expires_at: sessionExpiresAt.toISOString(),
-    })
-    .eq("id", requestId);
   await admin.from("booking_lookup_audit_log").insert({
     challenge_id: requestId,
     event: "lookup_session_created",

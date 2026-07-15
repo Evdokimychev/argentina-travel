@@ -12,7 +12,7 @@ import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { placeHref } from "@/lib/places-urls";
 import { listPublishedPlaceSlugs, resolvePlacePage } from "@/lib/cms/place-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
-import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPlaceMetadata } from "@/lib/places-seo";
 
@@ -30,8 +30,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const locale = await getServerI18nLocale();
   const place = await resolvePlacePage(slug, locale);
   if (!place) return { title: "Место не найдено" };
-  const alternates = await buildCmsContentHreflangAlternates("place", slug);
-  return { ...buildPlaceMetadata(place), alternates };
+  const alternates = await buildCmsContentHreflangAlternates("place", slug, locale);
+  return { ...buildPlaceMetadata(place), alternates, robots: cmsFallbackRobots(place) };
 }
 
 export default async function PlaceDetailPage({ params }: PageProps) {

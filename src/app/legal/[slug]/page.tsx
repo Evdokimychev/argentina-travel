@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBanner";
 import LegalPageView from "@/components/legal/LegalPageView";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
-import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveLegalDocument, listPublishedLegalSlugs } from "@/lib/cms/legal-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const locale = await getServerI18nLocale();
   const doc = await resolveLegalDocument(slug, locale);
   if (!doc) return { title: "Документ" };
-  const alternates = await buildCmsContentHreflangAlternates("legal", slug);
+  const alternates = await buildCmsContentHreflangAlternates("legal", slug, locale);
   return {
     ...buildPublicPageMetadata({
       title: doc.title,
@@ -31,6 +31,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       path: `/legal/${slug}`,
     }),
     alternates,
+    robots: cmsFallbackRobots(doc),
   };
 }
 

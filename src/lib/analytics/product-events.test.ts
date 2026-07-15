@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { COOKIE_CONSENT_STORAGE_KEY } from "@/lib/cookie-consent";
+import { COOKIE_CONSENT_STORAGE_KEY, COOKIE_CONSENT_VERSION } from "@/lib/cookie-consent";
 import { PRODUCT_EVENT_NAMES, sanitizeProductEventDetails, trackProductEvent } from "@/lib/analytics/product-events";
 
 describe("product event taxonomy", () => {
@@ -31,7 +31,7 @@ describe("product event taxonomy", () => {
   });
 
   it("emits only after analytics consent", () => {
-    window.localStorage.setItem(COOKIE_CONSENT_STORAGE_KEY, JSON.stringify({ necessary: true, analytics: true, personalization: false, decidedAt: new Date().toISOString() }));
+    window.localStorage.setItem(COOKIE_CONSENT_STORAGE_KEY, JSON.stringify({ version: COOKIE_CONSENT_VERSION, necessary: true, analytics: true, personalization: false, decidedAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 60_000).toISOString() }));
     trackProductEvent("map_opened", { source: "header" });
     expect(window.dataLayer?.[0]).toMatchObject({ event: "map_opened", event_version: 2, source: "header" });
   });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import CmsMediaPathField from "@/components/admin/CmsMediaPathField";
@@ -14,6 +15,8 @@ type Props = {
   values: Record<string, unknown>;
   onChange: (values: Record<string, unknown>) => void;
   onSave: () => void;
+  onReset?: () => void;
+  savedValues?: Record<string, unknown>;
   saving?: boolean;
   updatedAt?: string | null;
 };
@@ -39,11 +42,17 @@ export default function SiteGlobalForm({
   values,
   onChange,
   onSave,
+  onReset,
+  savedValues,
   saving,
   updatedAt,
 }: Props) {
   const hasTranslatableFields = definition.fields.some((field) => field.translatable);
   const [localeTab, setLocaleTab] = useState<LocaleTab>("ru");
+  const hasUnsavedChanges = useMemo(
+    () => savedValues !== undefined && JSON.stringify(values) !== JSON.stringify(savedValues),
+    [savedValues, values],
+  );
 
   const visibleFields = useMemo(() => {
     if (localeTab === "ru") return definition.fields;
@@ -167,9 +176,17 @@ export default function SiteGlobalForm({
 
       <div className="grid gap-3 sm:grid-cols-2">{visibleFields.map(renderField)}</div>
 
-      <Button type="button" onClick={onSave} disabled={saving}>
-        {saving ? "Сохранение…" : `Сохранить «${definition.label}»`}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button type="button" onClick={onSave} disabled={saving || !hasUnsavedChanges}>
+          {saving ? "Сохранение…" : `Сохранить «${definition.label}»`}
+        </Button>
+        {onReset && hasUnsavedChanges ? (
+          <Button type="button" variant="outline" onClick={onReset} disabled={saving}>
+            <RotateCcw className="h-4 w-4" aria-hidden="true" />
+            Отменить правки
+          </Button>
+        ) : null}
+      </div>
     </section>
   );
 }

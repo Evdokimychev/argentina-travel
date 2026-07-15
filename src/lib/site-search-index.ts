@@ -266,7 +266,7 @@ export function buildStaticSearchIndex(
       return true;
     })
     .map((link) => ({
-      id: `nav-${link.id}`,
+      id: `nav-${link.id}-${encodeURIComponent(link.href)}`,
       type: "page" as const,
       title: link.label,
       description: link.description ?? link.columnTitle,

@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import SkipToContentLink from "@/components/SkipToContentLink";
 import type { SiteFooterInfo } from "@/lib/site-footer-info";
 import type { SiteNavigationGlobal } from "@/types/site-globals";
+import { isWorkspacePath } from "@/lib/internal-route-access";
 
 export type { SiteFooterInfo };
 
@@ -27,10 +28,7 @@ export default function SiteChrome({
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
   const isMaintenance = pathname === "/maintenance";
-  const isWorkspace =
-    pathname?.startsWith("/profile") ||
-    pathname?.startsWith("/organizer") ||
-    pathname?.startsWith("/admin");
+  const isWorkspace = isWorkspacePath(pathname);
   const footerInfo = siteFooter ?? siteLegal;
 
   if (isEmbed || isMaintenance) {

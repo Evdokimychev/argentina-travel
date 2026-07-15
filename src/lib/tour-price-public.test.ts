@@ -29,6 +29,7 @@ describe("formatTourCatalogSeoPriceLabel", () => {
 
   it("formats fixed USD price", () => {
     expect(formatTourCatalogSeoPriceLabel({ priceUsd: 1200 })).toBe("1200 USD");
+    expect(formatTourCatalogSeoPriceLabel({ priceUsd: 6213.630434782608 })).toBe("6214 USD");
   });
 
   it("adds от prefix when priceFromPrefix is set", () => {

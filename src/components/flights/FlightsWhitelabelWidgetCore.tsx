@@ -80,7 +80,6 @@ export default function FlightsWhitelabelWidgetCore({
     const autoSearchTimers: number[] = [];
     const syncTimers: number[] = [];
     let ticketsObserver: MutationObserver | null = null;
-    let resizeObserver: ResizeObserver | null = null;
     let readyTimeout = 0;
 
     if (urlSync === "inline") {
@@ -199,13 +198,6 @@ export default function FlightsWhitelabelWidgetCore({
     const observer = new MutationObserver(syncWidget);
     observer.observe(mountEl, { childList: true, subtree: true });
 
-    if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(() => {
-        if (!disposed) window.dispatchEvent(new Event("resize"));
-      });
-      resizeObserver.observe(mountEl);
-    }
-
     const initialReady = syncWidget();
     scheduleAutoSearchRetries(Boolean(initialReady));
     for (const delay of WIDGET_SYNC_RETRY_MS) {
@@ -220,7 +212,6 @@ export default function FlightsWhitelabelWidgetCore({
       abortController.abort();
       observer.disconnect();
       ticketsObserver?.disconnect();
-      resizeObserver?.disconnect();
       window.clearTimeout(readyTimeout);
       for (const timer of autoSearchTimers) window.clearTimeout(timer);
       for (const timer of syncTimers) window.clearTimeout(timer);
@@ -238,6 +229,7 @@ export default function FlightsWhitelabelWidgetCore({
     <div
       id={mountId}
       ref={mountRef}
+      data-widget-status={status}
       className={cn("flights-wl-root", resultsOnly && "flights-wl-root--results-only", className)}
     >
       <div className="flights-wl-mount">

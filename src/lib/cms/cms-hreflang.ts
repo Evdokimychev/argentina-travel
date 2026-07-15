@@ -21,7 +21,8 @@ export const CMS_DOC_TYPE_PATH_SEGMENT: Record<CmsDocType, string> = {
  */
 export async function buildCmsContentHreflangAlternates(
   docType: CmsDocType,
-  defaultSlug: string
+  defaultSlug: string,
+  requestedLocale: I18nLocale = "ru",
 ): Promise<NonNullable<Metadata["alternates"]>> {
   const segment = CMS_DOC_TYPE_PATH_SEGMENT[docType];
   const localeSlugs = await resolvePublishedCmsLocaleSlugs(docType, defaultSlug);
@@ -29,7 +30,8 @@ export async function buildCmsContentHreflangAlternates(
   const languages: Record<string, string> = {};
 
   for (const locale of I18N_LOCALES) {
-    const slug = localeSlugs[locale as I18nLocale] ?? defaultSlug;
+    const slug = localeSlugs[locale as I18nLocale];
+    if (!slug) continue;
     const path = `/${segment}/${slug}`;
     languages[locale] = absoluteUrl(
       locale === "ru" ? path : addLocalePrefix(path, locale as I18nLocale)
@@ -38,10 +40,13 @@ export async function buildCmsContentHreflangAlternates(
 
   languages["x-default"] = languages.ru;
 
-  const canonicalSlug = localeSlugs.ru ?? defaultSlug;
+  const canonicalLocale = localeSlugs[requestedLocale] ? requestedLocale : "ru";
+  const canonicalSlug = localeSlugs[canonicalLocale] ?? defaultSlug;
+  const canonicalPath = `/${segment}/${canonicalSlug}`;
 
   return {
-    canonical: `/${segment}/${canonicalSlug}`,
+    canonical:
+      canonicalLocale === "ru" ? canonicalPath : addLocalePrefix(canonicalPath, canonicalLocale),
     languages,
   };
 }

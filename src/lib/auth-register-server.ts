@@ -40,8 +40,8 @@ export async function registerSupabaseUser(input: RegisterInput): Promise<Regist
   if (!normalizedEmail || !normalizedEmail.includes("@")) {
     return validationError("Укажите корректный email");
   }
-  if (password.length < 6) {
-    return validationError("Пароль должен содержать не менее 6 символов");
+  if (password.length < 8) {
+    return validationError("Пароль должен содержать не менее 8 символов");
   }
   if (input.role === "admin") {
     return validationError("Роль администратора назначается вручную");

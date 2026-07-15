@@ -40,10 +40,11 @@ async function postRegister(request: Request) {
     });
 
     if (!result.ok) {
+      if (result.code === "DUPLICATE_PHONE" || result.code === "DUPLICATE_EMAIL") {
+        return NextResponse.json({ ok: true, confirmationRequired: true });
+      }
       const status =
-        result.code === "DUPLICATE_PHONE" || result.code === "DUPLICATE_EMAIL"
-          ? 409
-          : result.code === "VALIDATION"
+        result.code === "VALIDATION"
             ? 400
             : 500;
 

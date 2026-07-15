@@ -111,9 +111,9 @@ export function SafeImage({
       {showSkeleton ? (
         <ImagePlaceholder
           variant={placeholderVariant}
-          compact={placeholderCompact}
+          compact
           loading
-          ariaLabel={alt}
+          decorative
           className={placeholderClassName}
         />
       ) : null}

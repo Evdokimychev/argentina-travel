@@ -4,7 +4,7 @@ import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBa
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BlogFaqJsonLd from "@/components/seo/BlogFaqJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveAuthorArticle, listPublishedAuthorArticleSlugs } from "@/lib/cms/author-article-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: AuthorArticlePageProps) {
   const post = await resolveAuthorArticle(slug, locale);
   if (!post) return { title: "Статья не найдена" };
 
-  const alternates = await buildCmsContentHreflangAlternates("author_article", slug);
+  const alternates = await buildCmsContentHreflangAlternates("author_article", slug, locale);
   const pageMetadata = buildPublicPageMetadata({
     title: post.seoTitle ?? post.title,
     description: post.excerpt,
@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: AuthorArticlePageProps) {
       ...pageMetadata.alternates,
       canonical: absoluteUrl(`/blog/author/${slug}`),
     },
+    robots: cmsFallbackRobots(post),
   };
 }
 

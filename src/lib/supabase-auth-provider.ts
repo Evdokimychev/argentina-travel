@@ -208,39 +208,21 @@ export const supabaseAuthProvider: AuthProvider = {
       return { error: "Введите корректный номер телефона" };
     }
 
-    const lookupResponse = await fetch("/api/auth/lookup-phone", {
+    const loginPassword = resolvePasswordInput(password);
+    const lookupResponse = await fetch("/api/auth/sign-in-phone", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "same-origin",
-      body: JSON.stringify({ phone: normalized }),
+      body: JSON.stringify({ phone: normalized, password: loginPassword, role }),
     });
-
-    if (lookupResponse.status === 404) {
-      return rejectLogin("NOT_FOUND", "NOT_FOUND");
+    const body = (await lookupResponse.json().catch(() => null)) as AuthResult | null;
+    if (!lookupResponse.ok || !body) {
+      return rejectLogin(
+        body && "error" in body ? body.error : "INVALID_CREDENTIALS",
+        body && "code" in body ? body.code : "INVALID_CREDENTIALS",
+      );
     }
-
-    if (!lookupResponse.ok) {
-      const body = (await lookupResponse.json()) as { error?: string };
-      return { error: body.error ?? "Ошибка входа" };
-    }
-
-    const lookup = (await lookupResponse.json()) as { email?: string };
-    if (!lookup.email) {
-      return rejectLogin("NOT_FOUND", "NOT_FOUND");
-    }
-
-    const loginPassword = resolvePasswordInput(password);
-    const result = await loginWithCredentials(lookup.email, loginPassword, role);
-
-    if ("error" in result && result.code === "INVALID_CREDENTIALS" && !password?.trim()) {
-      return {
-        error:
-          "Неверный пароль. Если вы задавали свой пароль при регистрации — войдите по email или укажите пароль.",
-        code: "INVALID_CREDENTIALS",
-      };
-    }
-
-    return result;
+    return body;
   },
 
   async loginWithEmail(email, password, role) {

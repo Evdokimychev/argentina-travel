@@ -4,7 +4,6 @@ import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { profileToSessionUser } from "@/lib/profile-mapper";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
-import type { AccountRole } from "@/types/user";
 
 /** Создаёт профиль для текущей auth-сессии, если триггер signup его не создал. */
 async function postEnsureProfile() {
@@ -38,10 +37,6 @@ async function postEnsureProfile() {
     }
 
     const metadata = user.user_metadata ?? {};
-    const roleText = typeof metadata.role === "string" ? metadata.role : "tourist";
-    const profileRoles: AccountRole[] =
-      roleText === "organizer" ? ["tourist", "organizer"] : ["tourist"];
-
     const email = (user.email ?? metadata.email ?? "").toString().trim().toLowerCase();
 
     const { data: created, error: insertError } = await admin
@@ -52,8 +47,8 @@ async function postEnsureProfile() {
         first_name: typeof metadata.first_name === "string" ? metadata.first_name : "",
         last_name: typeof metadata.last_name === "string" ? metadata.last_name : "",
         phone: typeof metadata.phone === "string" ? metadata.phone : null,
-        roles: profileRoles,
-        active_role: roleText === "organizer" ? "organizer" : "tourist",
+        roles: ["tourist"],
+        active_role: "tourist",
         country: typeof metadata.country === "string" ? metadata.country : "Россия",
       })
       .select("*")

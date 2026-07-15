@@ -98,6 +98,12 @@ export function persistFirstTouchAttribution(attribution: BookingAttribution): v
   document.cookie = `${FIRST_TOUCH_COOKIE}=${encodeURIComponent(serialized)}; path=/; max-age=${COOKIE_MAX_AGE_SEC}; SameSite=Lax`;
 }
 
+export function clearFirstTouchAttribution(): void {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.removeItem(FIRST_TOUCH_STORAGE_KEY);
+  document.cookie = `${FIRST_TOUCH_COOKIE}=; path=/; max-age=0; SameSite=Lax`;
+}
+
 /** Read stored first-touch (sessionStorage first, then cookie). */
 export function getStoredFirstTouchAttribution(): BookingAttribution | null {
   return readFirstTouchFromStorage() ?? readFirstTouchFromDocumentCookie();

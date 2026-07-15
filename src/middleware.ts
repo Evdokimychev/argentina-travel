@@ -9,12 +9,20 @@ import {
 } from "@/lib/attribution/first-touch";
 import { LOCALE_COOKIE_KEY } from "@/lib/i18n/config";
 import { getLocaleFromPathname, stripLocalePrefix } from "@/lib/i18n/locale-path";
-import { shouldBlockInternalRoute } from "@/lib/internal-route-access";
+import {
+  isPathWithin,
+  isWorkspacePath,
+  shouldBlockInternalRoute,
+} from "@/lib/internal-route-access";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
 import { fetchSiteFeatures } from "@/lib/site-settings-server";
 import { matchUrlRedirect } from "@/lib/redirects/url-redirect-server";
 import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
 import { getAppRuntimeMode } from "@/lib/runtime-mode";
+import {
+  COOKIE_CONSENT_COOKIE_NAME,
+  hasPersonalizationConsentFromCookieValue,
+} from "@/lib/cookie-consent";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
@@ -24,6 +32,9 @@ function applyFirstTouchAttributionCookie(
   request: NextRequest,
   response: NextResponse
 ): NextResponse {
+  if (!hasPersonalizationConsentFromCookieValue(request.cookies.get(COOKIE_CONSENT_COOKIE_NAME)?.value)) {
+    return response;
+  }
   if (parseFirstTouchCookieHeader(request.headers.get("cookie"))) {
     return response;
   }
@@ -121,11 +132,7 @@ function redirectToSignIn(request: NextRequest, pathname: string, extra?: Record
 }
 
 function isProtectedCabinetPath(pathname: string): boolean {
-  return (
-    pathname.startsWith("/profile") ||
-    pathname.startsWith("/organizer") ||
-    pathname.startsWith("/admin")
-  );
+  return isWorkspacePath(pathname);
 }
 
 function isMaintenanceExempt(pathname: string): boolean {
@@ -220,8 +227,8 @@ export async function middleware(request: NextRequest) {
     return finalizeMiddlewareResponse(request, response);
   }
 
-  const isOrganizer = routePathname.startsWith("/organizer");
-  const isAdmin = routePathname.startsWith("/admin");
+  const isOrganizer = isPathWithin(routePathname, "/organizer");
+  const isAdmin = isPathWithin(routePathname, "/admin");
 
   const response =
     localeResponse ??

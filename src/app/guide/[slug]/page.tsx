@@ -8,7 +8,7 @@ import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBa
 import { KAK_DOBRATSYA_HUB } from "@/data/guide-hub-kak-dobratsya";
 import { listPublishedGuideSlugs, resolveGuidePage } from "@/lib/cms/guide-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
-import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import {
   getAllGuideTopics,
   getGuideTopicBySlug,
@@ -33,6 +33,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const locale = await getServerI18nLocale();
 
   const topicMeta = getGuideTopicMetadata(slug);
   if (topicMeta) {
@@ -59,13 +60,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
   }
 
-  const page = await resolveGuidePage(slug, await getServerI18nLocale());
+  const page = await resolveGuidePage(slug, locale);
   if (!page) return { title: "Путеводитель" };
-  const alternates = await buildCmsContentHreflangAlternates("guide", slug);
+  const alternates = await buildCmsContentHreflangAlternates("guide", slug, locale);
   return {
     title: page.title,
     description: page.description,
     alternates,
+    robots: cmsFallbackRobots(page),
   };
 }
 

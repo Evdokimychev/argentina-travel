@@ -64,6 +64,12 @@ export function getCmsResolverMetadata(value: unknown): CmsResolverMetadata | nu
   return metadata ?? null;
 }
 
+export function cmsFallbackRobots(value: unknown): { index: false; follow: true } | undefined {
+  return getCmsResolverMetadata(value)?.showTranslationBanner
+    ? { index: false, follow: true }
+    : undefined;
+}
+
 /** Admin/service-role client; null when Supabase is not configured. */
 export async function getCmsServerClient(): Promise<CmsDbClient | null> {
   try {

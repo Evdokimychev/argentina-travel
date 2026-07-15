@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { isWorkspacePath } from "../../../src/lib/internal-route-access";
 
 export type RouteCategory = "public" | "auth" | "cabinet" | "embed" | "booking";
 
@@ -132,11 +133,7 @@ function scanAppRoutePatterns(): string[] {
 }
 
 function categorizeRoute(routePath: string): RouteCategory {
-  if (
-    routePath.startsWith("/profile") ||
-    routePath.startsWith("/admin") ||
-    routePath.startsWith("/organizer")
-  ) {
+  if (isWorkspacePath(routePath)) {
     return "cabinet";
   }
   if (routePath.startsWith("/embed")) return "embed";

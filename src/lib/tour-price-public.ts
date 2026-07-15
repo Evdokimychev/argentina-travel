@@ -46,5 +46,6 @@ export function formatTourCatalogSeoPriceLabel(input: TourPublicPriceInput): str
     return TOUR_PRICE_ON_REQUEST_LABEL;
   }
   const prefix = resolveTourPriceFromPrefix(input) ? "от " : "";
-  return `${prefix}${input.priceUsd} USD`;
+  const roundedPrice = Math.round(input.priceUsd).toString();
+  return `${prefix}${roundedPrice} USD`;
 }

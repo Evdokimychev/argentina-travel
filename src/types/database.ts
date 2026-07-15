@@ -3508,6 +3508,18 @@ export interface Database {
         };
         Returns: Json;
       };
+      consume_booking_lookup_challenge: {
+        Args: {
+          p_challenge_id: string;
+          p_code_hash: string;
+          p_session_token_hash: string;
+          p_session_expires_at: string;
+        };
+        Returns: {
+          status: "accepted" | "rejected" | "invalid";
+          attempts: number;
+        }[];
+      };
       is_admin_with: {
         Args: { required_capability: string };
         Returns: boolean;

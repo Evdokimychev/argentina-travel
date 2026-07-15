@@ -80,6 +80,15 @@ describe("catalog-stats", () => {
         organizerCount: 1,
       })
     ).toBe("5 туров на площадке и 41 тур партнёров");
+
+    expect(
+      formatCatalogHeadline({
+        nativeCount: 0,
+        partnerCount: 53,
+        totalCount: 53,
+        organizerCount: 0,
+      })
+    ).toBe("53 тура партнёров");
   });
 
   it("formats browse hint only when partners exist", () => {

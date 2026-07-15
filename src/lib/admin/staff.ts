@@ -13,18 +13,7 @@ export type AdminStaffRecord = {
   isActive: boolean;
 };
 
-const BOOTSTRAP_CAPABILITIES: AdminCapability[] = ["*"];
-
 type DbClient = SupabaseClient<Database>;
-
-function bootstrapRecord(userId: string): AdminStaffRecord {
-  return {
-    userId,
-    capabilities: BOOTSTRAP_CAPABILITIES,
-    preset: null,
-    isActive: true,
-  };
-}
 
 function isMissingRelationError(message: string | undefined): boolean {
   if (!message) return false;
@@ -66,14 +55,7 @@ export async function resolveAdminCapabilitiesWithClient(
     .eq("id", user.id)
     .maybeSingle();
 
-  if (profileError?.message && isMissingRelationError(profileError.message)) {
-    return bootstrapRecord(user.id);
-  }
-
-  if (profileError || !profile) {
-    // Session user already verified as admin — allow bootstrap when profile read fails transiently
-    return bootstrapRecord(user.id);
-  }
+  if (profileError || !profile) return null;
 
   if (profile.is_blocked) return null;
   if (!profile.roles?.includes("admin")) return null;
@@ -84,11 +66,7 @@ export async function resolveAdminCapabilitiesWithClient(
     .eq("user_id", user.id)
     .maybeSingle();
 
-  if (staffError && isMissingRelationError(staffError.message)) {
-    return bootstrapRecord(user.id);
-  }
-
-  if (!staff) return bootstrapRecord(user.id);
+  if (staffError || !staff) return null;
   if (!staff.is_active) return null;
 
   let presetCaps: string[] = [];
@@ -123,11 +101,7 @@ export async function resolveAdminCapabilities(userId: string): Promise<AdminSta
     .eq("user_id", userId)
     .maybeSingle();
 
-  if (staffError && isMissingRelationError(staffError.message)) {
-    return bootstrapRecord(userId);
-  }
-
-  if (!staff) return bootstrapRecord(userId);
+  if (staffError || !staff) return null;
   if (!staff.is_active) return null;
 
   let presetCaps: string[] = [];

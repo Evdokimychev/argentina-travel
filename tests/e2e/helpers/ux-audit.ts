@@ -91,9 +91,8 @@ export type ViewportOverflowSample = {
   id: string;
   className: string;
   right: number;
-  bottom: number;
+  left: number;
   viewportWidth: number;
-  viewportHeight: number;
 };
 
 export async function findViewportOverflows(
@@ -103,7 +102,6 @@ export async function findViewportOverflows(
   return page.evaluate(
     ({ maxSamples: limit, tolerance }) => {
       const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
       const samples: ViewportOverflowSample[] = [];
 
       const elements = document.querySelectorAll("body *");
@@ -120,21 +118,19 @@ export async function findViewportOverflows(
         if (rect.width <= 0 || rect.height <= 0) continue;
 
         const rightOverflow = rect.right - viewportWidth;
-        const bottomOverflow = rect.bottom - viewportHeight;
-        if (rightOverflow <= tolerance && bottomOverflow <= tolerance) continue;
+        const leftOverflow = -rect.left;
+        if (rightOverflow <= tolerance && leftOverflow <= tolerance) continue;
 
         // Skip off-screen elements intentionally translated away (e.g. closed drawers).
-        if (rect.right < -tolerance || rect.bottom < -tolerance) continue;
-        if (rect.left > viewportWidth + tolerance || rect.top > viewportHeight + tolerance) continue;
+        if (rect.right < -tolerance || rect.left > viewportWidth + tolerance) continue;
 
         samples.push({
           tag: element.tagName.toLowerCase(),
           id: element.id,
           className: element.className.slice(0, 120),
           right: Math.round(rect.right),
-          bottom: Math.round(rect.bottom),
+          left: Math.round(rect.left),
           viewportWidth,
-          viewportHeight,
         });
       }
 
@@ -194,7 +190,7 @@ export function severityForCheck(check: UxCheckType): UxViolationSeverity {
 export function formatViolationSamples(samples: ViewportOverflowSample[]): string[] {
   return samples.map(
     (sample) =>
-      `<${sample.tag}${sample.id ? `#${sample.id}` : ""}> right=${sample.right}px bottom=${sample.bottom}px (${sample.className.slice(0, 60)})`,
+      `<${sample.tag}${sample.id ? `#${sample.id}` : ""}> left=${sample.left}px right=${sample.right}px (${sample.className.slice(0, 60)})`,
   );
 }
 
@@ -261,7 +257,7 @@ export function buildBacklogMarkdown(report: UxAuditReport): string {
       `_Последний прогон (${report.runAt}): нарушений не обнаружено._`,
       "",
     );
-    return lines.join("\n");
+    return lines.join("\n").trimEnd();
   }
 
   lines.push(
@@ -293,5 +289,5 @@ export function buildBacklogMarkdown(report: UxAuditReport): string {
     }
   }
 
-  return lines.join("\n");
+  return lines.join("\n").trimEnd();
 }

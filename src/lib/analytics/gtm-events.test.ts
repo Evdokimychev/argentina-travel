@@ -1,5 +1,8 @@
 import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
-import { COOKIE_CONSENT_STORAGE_KEY } from "@/lib/cookie-consent";
+import {
+  COOKIE_CONSENT_STORAGE_KEY,
+  COOKIE_CONSENT_VERSION,
+} from "@/lib/cookie-consent";
 import {
   GTM_EVENTS,
   pushDataLayer,
@@ -49,10 +52,12 @@ describe("gtm-events", () => {
     storage.set(
       COOKIE_CONSENT_STORAGE_KEY,
       JSON.stringify({
+        version: COOKIE_CONSENT_VERSION,
         necessary: true,
         analytics: true,
         personalization: false,
         decidedAt: new Date().toISOString(),
+        expiresAt: new Date(Date.now() + 60_000).toISOString(),
       }),
     );
 

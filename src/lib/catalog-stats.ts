@@ -35,6 +35,9 @@ export function formatCatalogHeadline(stats: CatalogStats): string {
   if (stats.partnerCount <= 0) {
     return `${stats.totalCount} ${toursWord(stats.totalCount)}`;
   }
+  if (stats.nativeCount <= 0) {
+    return `${formatTours(stats.partnerCount)} партнёров`;
+  }
   return `${formatTours(stats.nativeCount)} на площадке и ${formatTours(stats.partnerCount)} партнёров`;
 }
 
@@ -42,6 +45,9 @@ export function formatCatalogHeadline(stats: CatalogStats): string {
 export function formatCatalogStatsDetail(stats: CatalogStats): string {
   if (stats.partnerCount <= 0) {
     return "Авторские маршруты по Аргентине";
+  }
+  if (stats.nativeCount <= 0) {
+    return `${formatTours(stats.partnerCount)} от Tripster и YouTravel — бронирование проходит на стороне партнёра`;
   }
   return `${formatTours(stats.nativeCount)} организаторов площадки и ${formatTours(stats.partnerCount)} от Tripster и YouTravel`;
 }

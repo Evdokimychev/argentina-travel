@@ -12,7 +12,7 @@ import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
 import { normalizePhone, resolvePasswordInput } from "@/lib/auth-input";
-import { lookupEmailAccount, lookupPhoneAccount, resolveAuthGreeting } from "@/lib/auth-client";
+import { resolveAuthGreeting } from "@/lib/auth-client";
 import { formatInternationalPhone } from "@/lib/phone-countries";
 import PhoneCountryInput from "@/components/auth/PhoneCountryInput";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -172,23 +172,7 @@ export default function AuthModal() {
     }
 
     if (phoneAuthStep === "phone") {
-      setLoading(true);
       setError(null);
-
-      const lookup = await lookupPhoneAccount(phone);
-      setLoading(false);
-
-      if (lookup.status === "error") {
-        setError(lookup.message);
-        return;
-      }
-
-      if (lookup.status === "not_found") {
-        setStep("register");
-        setError(null);
-        return;
-      }
-
       setPhoneAuthStep("password");
       setPassword("");
       setShowPassword(false);
@@ -277,31 +261,7 @@ export default function AuthModal() {
     }
 
     if (emailAuthStep === "email") {
-      setLoading(true);
       setError(null);
-      const lookup = await lookupEmailAccount(email);
-      setLoading(false);
-      if (lookup.status === "error") {
-        setError(lookup.message);
-        return;
-      }
-      if (lookup.status === "not_found") {
-        setStep("register");
-        setTermsAccepted(false);
-        return;
-      }
-      if (lookup.status === "needs_repair") {
-        setError({
-          title: "Нужно восстановить доступ",
-          description: "Мы нашли профиль, которому требуется создание нового пароля.",
-          action: { label: "Отправить ссылку", onClick: () => void handleForgotPasswordSubmit() },
-        });
-        return;
-      }
-      if (lookup.status === "unconfirmed") {
-        setError("Сначала подтвердите email по ссылке из письма регистрации.");
-        return;
-      }
       setEmailAuthStep("password");
       setPassword("");
       return;
@@ -1026,7 +986,7 @@ export default function AuthModal() {
                     {phoneAuthStep === "password" ? (
                       <>
                         <div className="rounded-xl border border-sky/20 bg-sky/5 px-3 py-2.5 text-sm text-charcoal">
-                          Аккаунт с этим номером найден. Введите пароль, который задавали при регистрации.
+                          Введите пароль, который задавали при регистрации.
                         </div>
                         <div>
                           <label htmlFor="auth-phone-password" className="mb-2 block text-xs font-medium text-slate">
@@ -1216,6 +1176,17 @@ export default function AuthModal() {
                     <Phone className="h-4 w-4 text-slate" aria-hidden />
                   )}
                   {mode === "phone" ? "Войти по почте" : "Войти по телефону"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setStep("register");
+                    setTermsAccepted(false);
+                    setError(null);
+                  }}
+                  className="w-full text-sm font-semibold text-sky-ink hover:underline"
+                >
+                  Нет аккаунта? Зарегистрироваться
                 </button>
               </>
             ) : (

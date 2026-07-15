@@ -68,3 +68,16 @@ jobs:
       - name: E2E UX audit
         run: npm run test:e2e:ux-audit
         continue-on-error: true
+
+      - name: Stage 2 visual acceptance
+        run: npm run test:e2e:stage2-visual
+
+      - name: Upload Stage 2 visual gallery
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: stage2-visual-${{ github.sha }}
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: warn

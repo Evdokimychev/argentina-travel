@@ -11,7 +11,6 @@ export default function ContactOfficeMap() {
         referrerPolicy="no-referrer-when-downgrade"
         allowFullScreen
       />
-      <p className="border-t border-gray-100 px-4 py-3 text-xs text-slate">{SITE_OFFICE.note}</p>
     </div>
   );
 }

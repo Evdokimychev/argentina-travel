@@ -11,6 +11,7 @@ import CmsCutoverPanel from "@/components/admin/CmsCutoverPanel";
 import CmsOpsPanel from "@/components/admin/cms/CmsOpsPanel";
 import SiteGlobalsSeoPreview from "@/components/admin/cms/SiteGlobalsSeoPreview";
 import MaintenancePreviewPanel from "@/components/admin/cms/MaintenancePreviewPanel";
+import SiteNavigationPreview from "@/components/admin/cms/SiteNavigationPreview";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
@@ -86,9 +87,9 @@ type SettingsResponse = {
 type SettingsTab = "content" | "ops" | "maintenance";
 
 const TAB_LABELS: Record<SettingsTab, string> = {
-  content: "Бренд и контент",
-  ops: "Юридическое и функции",
-  maintenance: "Эксплуатация",
+  content: "Бренд, меню и контакты",
+  ops: "Публикация и правила",
+  maintenance: "Расширенные настройки",
 };
 
 function formatCronRun(entry: CronRunEntry | null | undefined): string {
@@ -175,6 +176,15 @@ export default function SettingsView() {
     return SITE_GLOBAL_DEFINITIONS.filter((def) => keys.has(def.key));
   }, []);
 
+  const resetGlobal = useCallback(
+    (key: SiteGlobalKey) => {
+      const saved = data?.settings?.[key] ?? {};
+      setGlobals((prev) => ({ ...prev, [key]: { ...saved } }));
+      setSaveFeedback(null);
+    },
+    [data?.settings],
+  );
+
   return (
     <CapabilityGate capability="system.settings">
       <AdminPageShell>
@@ -221,10 +231,13 @@ export default function SettingsView() {
                   setGlobals((prev) => ({ ...prev, [definition.key]: values }))
                 }
                 onSave={() => void saveGlobal(definition.key)}
+                onReset={() => resetGlobal(definition.key)}
+                savedValues={data?.settings?.[definition.key] ?? {}}
                 saving={savingKey === definition.key}
                 updatedAt={data?.updatedAt?.[definition.key] ?? null}
               />
             ))}
+            <SiteNavigationPreview values={globals["site.navigation"]} />
             <SiteGlobalsSeoPreview
               branding={globals["site.branding"]}
               seo={globals["site.seo"]}
@@ -244,6 +257,8 @@ export default function SettingsView() {
                   setGlobals((prev) => ({ ...prev, [definition.key]: values }))
                 }
                 onSave={() => void saveGlobal(definition.key)}
+                onReset={() => resetGlobal(definition.key)}
+                savedValues={data?.settings?.[definition.key] ?? {}}
                 saving={savingKey === definition.key}
                 updatedAt={data?.updatedAt?.[definition.key] ?? null}
               />
@@ -268,6 +283,8 @@ export default function SettingsView() {
                   setGlobals((prev) => ({ ...prev, [definition.key]: values }))
                 }
                 onSave={() => void saveGlobal(definition.key)}
+                onReset={() => resetGlobal(definition.key)}
+                savedValues={data?.settings?.[definition.key] ?? {}}
                 saving={savingKey === definition.key}
                 updatedAt={data?.updatedAt?.[definition.key] ?? null}
               />
@@ -284,10 +301,9 @@ export default function SettingsView() {
             <CutoverChecklistPanel health={data?.publicHealth} readiness={data?.productionReadiness} />
 
             <section className={`${cabinetCardClass} space-y-4 p-5`}>
-              <h2 className="font-heading text-lg font-bold text-foreground">Эксплуатация</h2>
+              <h2 className="font-heading text-lg font-bold text-foreground">Для разработчика</h2>
               <p className="text-sm text-slate">
-                Подсказки по резервному копированию, последней проверке RLS (CI или{" "}
-                <code className="text-xs">npm run rls-audit</code>) и плановым задачам cron.
+                Служебные проверки сайта. Они не влияют на обычное редактирование контента.
               </p>
               <dl className="grid gap-3 text-sm sm:grid-cols-2">
                 <div>

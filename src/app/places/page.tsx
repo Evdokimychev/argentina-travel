@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import PlacesCatalog from "@/components/places/PlacesCatalog";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import CatalogItemListJsonLd from "@/components/seo/CatalogItemListJsonLd";
 import PlacesCatalogSeoLinks from "@/components/seo/PlacesCatalogSeoLinks";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
-import { CatalogLoadingFallback } from "@/components/ui/skeleton";
 import { fetchCollectionsServer } from "@/lib/places-repository";
 import { resolvePlaceCatalog } from "@/lib/cms/place-resolver";
 import { buildPlacesCatalogItemListJsonLd } from "@/lib/catalog-json-ld";
@@ -59,14 +57,12 @@ export default async function PlacesPage({ searchParams }: PageProps) {
         />
       ) : null}
       <PlacesCatalogSeoLinks places={view.filtered} />
-      <Suspense fallback={<CatalogLoadingFallback title="Загружаем справочник мест…" />}>
-        <PlacesCatalog
-          places={places}
-          collections={collections}
-          initialFilters={parsePlaceFiltersFromSearchParamsRecord(resolvedSearchParams)}
-          initialViewMode={parsePlacesViewMode(resolvedSearchParams)}
-        />
-      </Suspense>
+      <PlacesCatalog
+        places={places}
+        collections={collections}
+        initialFilters={parsePlaceFiltersFromSearchParamsRecord(resolvedSearchParams)}
+        initialViewMode={parsePlacesViewMode(resolvedSearchParams)}
+      />
     </>
   );
 }

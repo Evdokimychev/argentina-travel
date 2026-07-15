@@ -64,6 +64,31 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/contact",
+        destination: "/contacts",
+        permanent: true,
+      },
+      {
+        source: "/privacy-policy",
+        destination: "/legal/privacy",
+        permanent: true,
+      },
+      {
+        source: "/politika-konfidencialnosti",
+        destination: "/legal/privacy",
+        permanent: true,
+      },
+      {
+        source: "/about-us",
+        destination: "/about",
+        permanent: true,
+      },
+      {
+        source: "/o-nas",
+        destination: "/about",
+        permanent: true,
+      },
+      {
         source: "/blog/blue-dollar-argentina-2025",
         destination: "/blog/blue-dollar-argentina-2026",
         permanent: true,

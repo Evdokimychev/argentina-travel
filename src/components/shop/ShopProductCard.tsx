@@ -60,7 +60,7 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
                   className="inline-flex items-center gap-2 rounded-full bg-sky px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky/90"
                 >
                   <ShoppingBag className="h-4 w-4" aria-hidden />
-                  Купить
+                  Заказать PDF
                 </button>
               ) : (
                 <Link
@@ -68,7 +68,7 @@ export default function ShopProductCard({ product }: ShopProductCardProps) {
                   className="inline-flex items-center gap-2 rounded-full bg-sky px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-sky/90"
                 >
                   <ShoppingBag className="h-4 w-4" aria-hidden />
-                  Запросить
+                  Уточнить доступность
                 </Link>
               )}
             </div>

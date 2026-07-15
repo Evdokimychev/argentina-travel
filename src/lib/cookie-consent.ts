@@ -1,6 +1,7 @@
 export const COOKIE_CONSENT_STORAGE_KEY = "site-cookie-consent";
 export const COOKIE_CONSENT_COOKIE_NAME = "site-cookie-consent";
 export const COOKIE_CONSENT_MAX_AGE = 60 * 60 * 24 * 365;
+export const COOKIE_CONSENT_VERSION = 2;
 /** @deprecated Use COOKIE_CONSENT_EVENT */
 export const COOKIE_CONSENT_EVENT = "cookie-consent-changed";
 export const COOKIE_CONSENT_CHANGED_EVENT = "cookie-consent-changed";
@@ -9,40 +10,48 @@ export const COOKIE_CONSENT_OPEN_EVENT = "cookie-consent-open";
 export type CookieConsentCategory = "necessary" | "analytics" | "personalization";
 
 export type CookieConsentPreferences = {
+  version: number;
   necessary: true;
   analytics: boolean;
   personalization: boolean;
   decidedAt: string;
+  expiresAt: string;
 };
 
 const DEFAULT_PREFERENCES: CookieConsentPreferences = {
+  version: COOKIE_CONSENT_VERSION,
   necessary: true,
   analytics: false,
   personalization: false,
   decidedAt: "",
+  expiresAt: "",
 };
+
+function consentExpiry(): string {
+  return new Date(Date.now() + COOKIE_CONSENT_MAX_AGE * 1000).toISOString();
+}
 
 function parseConsentJson(raw: string | null): CookieConsentPreferences | null {
   if (!raw) return null;
   if (raw === "accepted") {
-    return {
-      necessary: true,
-      analytics: true,
-      personalization: true,
-      decidedAt: new Date(0).toISOString(),
-    };
+    return null;
   }
   try {
     const parsed = JSON.parse(raw) as Partial<CookieConsentPreferences>;
     if (typeof parsed !== "object" || parsed === null) return null;
+    if (parsed.version !== COOKIE_CONSENT_VERSION) return null;
+    const expiresAt = typeof parsed.expiresAt === "string" ? parsed.expiresAt : "";
+    if (!expiresAt || Date.parse(expiresAt) <= Date.now()) return null;
     return {
+      version: COOKIE_CONSENT_VERSION,
       necessary: true,
       analytics: Boolean(parsed.analytics),
       personalization: Boolean(parsed.personalization),
       decidedAt:
         typeof parsed.decidedAt === "string" && parsed.decidedAt
           ? parsed.decidedAt
-          : new Date().toISOString(),
+          : "",
+      expiresAt,
     };
   } catch {
     return null;
@@ -134,15 +143,23 @@ export function hasPersonalizationConsent(): boolean {
   return getCookieConsent()?.personalization === true;
 }
 
+export function hasPersonalizationConsentFromCookieValue(
+  raw: string | null | undefined
+): boolean {
+  return parseCookieConsentValue(raw)?.personalization === true;
+}
+
 export function saveCookieConsent(input: {
   analytics: boolean;
   personalization: boolean;
 }): CookieConsentPreferences {
   const preferences: CookieConsentPreferences = {
+    version: COOKIE_CONSENT_VERSION,
     necessary: true,
     analytics: input.analytics,
     personalization: input.personalization,
     decidedAt: new Date().toISOString(),
+    expiresAt: consentExpiry(),
   };
   persistPreferences(preferences);
   return preferences;

@@ -125,6 +125,15 @@ function mergeMetadata(
   } as Json;
 }
 
+export function completedDeleteMetadata(input: {
+  processingStartedAt: string;
+  completedAt: string;
+  bookingsAnonymized: number;
+  sessionsRevoked: number;
+}): Database["public"]["Tables"]["privacy_requests"]["Update"]["metadata"] {
+  return { ...input } as Json;
+}
+
 async function processDeleteRequest(
   supabase: DbClient,
   request: PrivacyRequestRow
@@ -213,7 +222,8 @@ async function processDeleteRequest(
       .update({
         status: "completed",
         processed_at: completedAt,
-        metadata: mergeMetadata(request.metadata, {
+        reason: null,
+        metadata: completedDeleteMetadata({
           processingStartedAt: startedAt,
           completedAt,
           bookingsAnonymized,

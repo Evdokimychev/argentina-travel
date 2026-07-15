@@ -68,7 +68,7 @@ export default function ShopProductDetailView({ product }: ShopProductDetailView
                   className="inline-flex items-center gap-2 rounded-full bg-sky px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-sky/90"
                 >
                   <ShoppingBag className="h-4 w-4" aria-hidden />
-                  Купить
+                  Заказать PDF
                 </button>
               ) : (
                 <Link

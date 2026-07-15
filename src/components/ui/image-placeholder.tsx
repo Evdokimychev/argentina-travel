@@ -23,6 +23,8 @@ interface ImagePlaceholderProps {
   compact?: boolean;
   /** Пульсация, пока грузится реальное изображение. */
   loading?: boolean;
+  /** Loading skeletons are decorative and must not compete with the real image. */
+  decorative?: boolean;
 }
 
 export function ImagePlaceholder({
@@ -33,6 +35,7 @@ export function ImagePlaceholder({
   iconClassName,
   compact = false,
   loading = false,
+  decorative = false,
 }: ImagePlaceholderProps) {
   const isAvatar = variant === "avatar";
   const Icon = isAvatar ? UserRound : ImageIcon;
@@ -48,8 +51,9 @@ export function ImagePlaceholder({
         loading && "animate-pulse",
         className,
       )}
-      role="img"
-      aria-label={accessibleName}
+      role={decorative ? undefined : "img"}
+      aria-label={decorative ? undefined : accessibleName}
+      aria-hidden={decorative ? true : undefined}
     >
       <span
         className={cn(

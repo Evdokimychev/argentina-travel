@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { executeSiteSearch } from "@/lib/search/search-query";
+import { SEARCH_TYPE_LABELS } from "@/lib/site-search-index";
 
 export async function GET(request: Request) {
   const startedAt = Date.now();
@@ -8,6 +9,13 @@ export async function GET(request: Request) {
   const kind = searchParams.get("kind") ?? undefined;
   const limitParam = searchParams.get("limit");
   const limit = limitParam ? Number.parseInt(limitParam, 10) : undefined;
+
+  if (q.length > 200) {
+    return NextResponse.json({ error: "Слишком длинный поисковый запрос" }, { status: 400 });
+  }
+  if (kind && !(kind in SEARCH_TYPE_LABELS)) {
+    return NextResponse.json({ error: "Неизвестный тип поиска" }, { status: 400 });
+  }
 
   const payload = await executeSiteSearch(q, {
     kind,

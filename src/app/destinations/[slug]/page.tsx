@@ -13,7 +13,7 @@ import {
   resolveDestinationPage,
 } from "@/lib/cms/destination-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
-import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
 import { getDestinationFlightTeasers } from "@/lib/flights/hub-price-teasers";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const destination = await resolveDestinationPage(slug, locale);
   if (!destination) return { title: "Направление" };
 
-  const alternates = await buildCmsContentHreflangAlternates("destination", slug);
+  const alternates = await buildCmsContentHreflangAlternates("destination", slug, locale);
   const title = `${destination.name} — направления Аргентины`;
   const description = destination.description ?? destination.intro;
   const pageUrl = absoluteUrl(`/destinations/${slug}`);
@@ -45,6 +45,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     title,
     description,
     alternates: { ...alternates, canonical: pageUrl },
+    robots: cmsFallbackRobots(destination),
     openGraph: {
       title,
       description,
