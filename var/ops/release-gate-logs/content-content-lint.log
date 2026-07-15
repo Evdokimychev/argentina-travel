@@ -1,0 +1,13 @@
+
+> argentina-travel@0.1.0 content:audit
+> node scripts/content-audit.mjs
+
+{
+  "total": 689,
+  "critical": 479,
+  "high": 44,
+  "medium": 0,
+  "low": 0,
+  "none": 166,
+  "notIndexable": 479
+}

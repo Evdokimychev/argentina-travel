@@ -1,0 +1,25 @@
+
+> argentina-travel@0.1.0 seo-audit
+> node scripts/seo-audit.mjs
+
+SEO audit base URL: https://www.goargentina.ru
+✓ static: Tour Product JSON-LD component
+✓ static: Tour Product JSON-LD builder
+✓ static: Excursion JSON-LD builder
+✓ static: BreadcrumbList JSON-LD component
+✓ static: i18n sitemap expansion
+✓ sitemap.xml — 1172 URLs
+✓ sitemap i18n paths (/es/, /en/) for homepage, tours, excursions
+✓ first 20 sitemap URLs return 200
+✓ metadata + hreflang: /
+✓ metadata + hreflang: /tours
+✓ metadata + hreflang: /excursions
+✓ JSON-LD (tour detail): /tours/mnogo-trekkinga-v-patagonii-kruizy-na-korablyah-ushuayya-i-iguasu-yt52537
+✓ JSON-LD (excursion detail): /excursions/glavnoe-v-buenos-ayrese-istoriya-i-arhitektura-t50900
+✓ JSON-LD (blog post): /blog/best-time-to-visit-argentina
+✓ hub page SEO: /destinations
+✓ hub page SEO: /en/places
+
+Report: var/ops/seo-audit-last.json
+
+SEO audit passed.

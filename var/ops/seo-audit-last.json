@@ -1,0 +1,204 @@
+{
+  "checkedAt": "2026-07-15T22:45:26.139Z",
+  "baseUrl": "https://www.goargentina.ru",
+  "sitemap": {
+    "urlCount": 1172,
+    "statusIssues": [],
+    "i18nIssues": []
+  },
+  "metadata": [
+    {
+      "path": "/",
+      "status": 200,
+      "title": "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса",
+      "description": "Русскоязычные гиды, проверенные маршруты и путеводитель по стране: туры, иммиграция и практические советы для поездки.",
+      "canonical": "https://www.goargentina.ru",
+      "hreflang": [
+        {
+          "hreflang": "ru",
+          "href": "https://www.goargentina.ru"
+        },
+        {
+          "hreflang": "x-default",
+          "href": "https://www.goargentina.ru"
+        },
+        {
+          "hreflang": "es",
+          "href": "https://www.goargentina.ru/es"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.goargentina.ru/en"
+        }
+      ],
+      "issues": [],
+      "ok": true
+    },
+    {
+      "path": "/tours",
+      "status": 200,
+      "title": "Каталог туров по Аргентине | Пора в Аргентину",
+      "description": "53 авторских туров и экскурсий по Аргентине — от Буэнос-Айреса до Патагонии. Фильтры по датам, цене, формату и региону.",
+      "canonical": "https://www.goargentina.ru/tours",
+      "hreflang": [
+        {
+          "hreflang": "ru",
+          "href": "https://www.goargentina.ru/tours"
+        },
+        {
+          "hreflang": "x-default",
+          "href": "https://www.goargentina.ru/tours"
+        },
+        {
+          "hreflang": "es",
+          "href": "https://www.goargentina.ru/es/tours"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.goargentina.ru/en/tours"
+        }
+      ],
+      "issues": [],
+      "ok": true
+    },
+    {
+      "path": "/excursions",
+      "status": 200,
+      "title": "Экскурсии по Аргентине | Пора в Аргентину",
+      "description": "Городские маршруты и активности по Аргентине",
+      "canonical": "https://www.goargentina.ru/excursions",
+      "hreflang": [
+        {
+          "hreflang": "ru",
+          "href": "https://www.goargentina.ru/excursions"
+        },
+        {
+          "hreflang": "x-default",
+          "href": "https://www.goargentina.ru/excursions"
+        },
+        {
+          "hreflang": "es",
+          "href": "https://www.goargentina.ru/es/excursions"
+        },
+        {
+          "hreflang": "en",
+          "href": "https://www.goargentina.ru/en/excursions"
+        }
+      ],
+      "issues": [],
+      "ok": true
+    }
+  ],
+  "jsonLd": [
+    {
+      "label": "tour detail",
+      "path": "/tours/mnogo-trekkinga-v-patagonii-kruizy-na-korablyah-ushuayya-i-iguasu-yt52537",
+      "ok": true,
+      "issues": [],
+      "types": [
+        "Organization",
+        "ContactPoint",
+        "WebSite",
+        "SearchAction",
+        "EntryPoint",
+        "BreadcrumbList",
+        "ListItem",
+        "Product",
+        "Offer"
+      ]
+    },
+    {
+      "label": "excursion detail",
+      "path": "/excursions/glavnoe-v-buenos-ayrese-istoriya-i-arhitektura-t50900",
+      "ok": true,
+      "issues": [],
+      "types": [
+        "Organization",
+        "ContactPoint",
+        "WebSite",
+        "SearchAction",
+        "EntryPoint",
+        "BreadcrumbList",
+        "ListItem",
+        "TouristTrip",
+        "Offer",
+        "AggregateRating",
+        "Event",
+        "Place",
+        "PostalAddress"
+      ]
+    },
+    {
+      "label": "blog post",
+      "path": "/blog/best-time-to-visit-argentina",
+      "ok": true,
+      "issues": [],
+      "types": [
+        "Organization",
+        "ContactPoint",
+        "WebSite",
+        "SearchAction",
+        "EntryPoint",
+        "BlogPosting",
+        "WebPage",
+        "SpeakableSpecification",
+        "Person",
+        "ImageObject",
+        "Thing",
+        "FAQPage",
+        "Question",
+        "Answer",
+        "ItemList",
+        "ListItem",
+        "Article",
+        "BreadcrumbList"
+      ]
+    }
+  ],
+  "hubPages": [
+    {
+      "path": "/destinations",
+      "ok": true,
+      "issues": [],
+      "hasSrOnlyNav": true,
+      "hasItemList": true
+    },
+    {
+      "path": "/en/places",
+      "ok": true,
+      "issues": [],
+      "breadcrumbNames": [
+        "Home",
+        "Places in Argentina"
+      ]
+    }
+  ],
+  "staticChecks": [
+    {
+      "file": "src/components/seo/TourJsonLd.tsx",
+      "label": "Tour Product JSON-LD component",
+      "ok": true
+    },
+    {
+      "file": "src/lib/tour-json-ld.ts",
+      "label": "Tour Product JSON-LD builder",
+      "ok": true
+    },
+    {
+      "file": "src/lib/excursion-json-ld.ts",
+      "label": "Excursion JSON-LD builder",
+      "ok": true
+    },
+    {
+      "file": "src/components/seo/BreadcrumbListJsonLd.tsx",
+      "label": "BreadcrumbList JSON-LD component",
+      "ok": true
+    },
+    {
+      "file": "src/lib/i18n/sitemap-locales.ts",
+      "label": "i18n sitemap expansion",
+      "ok": true
+    }
+  ],
+  "ok": true
+}

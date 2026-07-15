@@ -1,27 +1,54 @@
 {
-  "commitSha": "bf8d81bfcb11fdaf1e5d551bc379d8a098411ffe",
-  "timestamp": "2026-07-14T23:58:31.390Z",
+  "commitSha": "045fad139e74c3d62e87192929772f8e686912d9",
+  "timestamp": "2026-07-15T22:45:57.348Z",
   "environment": "local-production",
-  "requestedGroup": "production",
-  "status": "failed",
+  "requestedGroup": "content",
+  "status": "passed",
   "checks": [
     {
-      "id": "production:production-build",
-      "group": "production",
+      "id": "content:public-editorial",
+      "group": "content",
       "status": "passed",
-      "durationMs": 155285,
+      "durationMs": 1408,
       "blocking": true,
-      "artifact": "var/ops/release-gate-logs/production-production-build.log",
-      "command": "npm run build"
+      "artifact": "var/ops/release-gate-logs/content-public-editorial.log",
+      "command": "npm run content:public-editorial"
     },
     {
-      "id": "production:production-isolation",
-      "group": "production",
-      "status": "failed",
-      "durationMs": 586,
+      "id": "content:content-lint",
+      "group": "content",
+      "status": "passed",
+      "durationMs": 236,
       "blocking": true,
-      "artifact": "var/ops/release-gate-logs/production-production-isolation.log",
-      "command": "node scripts/scan-production-artifacts.mjs"
+      "artifact": "var/ops/release-gate-logs/content-content-lint.log",
+      "command": "npm run content:audit"
+    },
+    {
+      "id": "content:content-governance",
+      "group": "content",
+      "status": "passed",
+      "durationMs": 291,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/content-content-governance.log",
+      "command": "npm run content:governance"
+    },
+    {
+      "id": "content:seo-live-baseline",
+      "group": "content",
+      "status": "passed",
+      "durationMs": 31051,
+      "blocking": false,
+      "artifact": "var/ops/release-gate-logs/content-seo-live-baseline.log",
+      "command": "npm run seo-audit"
+    },
+    {
+      "id": "content:media",
+      "group": "content",
+      "status": "passed",
+      "durationMs": 306,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/content-media.log",
+      "command": "npm run media:integrity"
     }
   ]
 }
