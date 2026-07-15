@@ -1,84 +1,85 @@
-const REVALIDATE_SECONDS = 1800;
+const REVALIDATE_SECONDS = 3600;
+const BCRA_USD_URL = "https://api.bcra.gob.ar/estadisticascambiarias/v1.0/Cotizaciones/USD";
 
-const DOLAR_API_BASE = "https://dolarapi.com/v1/dolares";
-
-type DolarApiResponse = {
-  compra: number;
-  venta: number;
-  fechaActualizacion: string;
+type BcraCurrencyDetail = {
+  codigoMoneda: string;
+  descripcion: string;
+  tipoCotizacion: number;
 };
 
-function isDolarApiResponse(value: unknown): value is DolarApiResponse {
-  if (typeof value !== "object" || value === null) return false;
-  const record = value as Record<string, unknown>;
+type BcraCurrencyResult = {
+  fecha: string;
+  detalle: BcraCurrencyDetail[];
+};
+
+type BcraCurrencyResponse = {
+  status: number;
+  results: BcraCurrencyResult[];
+};
+
+function isBcraCurrencyResponse(value: unknown): value is BcraCurrencyResponse {
+  if (!value || typeof value !== "object") return false;
+  const response = value as Partial<BcraCurrencyResponse>;
   return (
-    typeof record.compra === "number" &&
-    Number.isFinite(record.compra) &&
-    typeof record.venta === "number" &&
-    Number.isFinite(record.venta) &&
-    typeof record.fechaActualizacion === "string"
+    response.status === 200 &&
+    Array.isArray(response.results) &&
+    response.results.some(
+      (result) =>
+        typeof result?.fecha === "string" &&
+        Array.isArray(result.detalle) &&
+        result.detalle.some(
+          (detail) =>
+            detail?.codigoMoneda === "USD" &&
+            typeof detail.tipoCotizacion === "number" &&
+            Number.isFinite(detail.tipoCotizacion)
+        )
+    )
   );
 }
 
-
-export type ExchangeRateQuote = {
-  buy: number;
-  sell: number;
-  updatedAt: string;
-};
-
-export type ArgentinaExchangeRatesData = {
-  oficial: ExchangeRateQuote;
-  blue: ExchangeRateQuote;
+export type ArgentinaOfficialExchangeRate = {
+  rate: number;
+  observedAt: string;
+  sourceName: "Banco Central de la República Argentina";
+  sourceUrl: typeof BCRA_USD_URL;
+  rateType: "official_reference";
 };
 
 export type ArgentinaExchangeRatesResult =
-  | { ok: true; data: ArgentinaExchangeRatesData }
+  | { ok: true; data: ArgentinaOfficialExchangeRate }
   | { ok: false; error: string };
 
-function mapQuote(raw: DolarApiResponse): ExchangeRateQuote {
+export function parseBcraUsdQuote(payload: unknown): ArgentinaOfficialExchangeRate | null {
+  if (!isBcraCurrencyResponse(payload)) return null;
+  const result = payload.results.find((item) =>
+    item.detalle.some((detail) => detail.codigoMoneda === "USD")
+  );
+  const detail = result?.detalle.find((item) => item.codigoMoneda === "USD");
+  if (!result || !detail) return null;
+
   return {
-    buy: raw.compra,
-    sell: raw.venta,
-    updatedAt: raw.fechaActualizacion,
+    rate: detail.tipoCotizacion,
+    observedAt: `${result.fecha}T12:00:00-03:00`,
+    sourceName: "Banco Central de la República Argentina",
+    sourceUrl: BCRA_USD_URL,
+    rateType: "official_reference",
   };
-}
-
-async function fetchDolarQuote(casa: "oficial" | "blue"): Promise<DolarApiResponse> {
-  const response = await fetch(`${DOLAR_API_BASE}/${casa}`, {
-    next: { revalidate: REVALIDATE_SECONDS },
-    signal: AbortSignal.timeout(10_000),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Dolar API ${casa}: HTTP ${response.status}`);
-  }
-
-  const payload: unknown = await response.json();
-  if (!isDolarApiResponse(payload)) {
-    throw new Error(`Dolar API ${casa}: invalid payload`);
-  }
-
-  return payload;
 }
 
 export async function getArgentinaExchangeRates(): Promise<ArgentinaExchangeRatesResult> {
   try {
-    const [oficialRaw, blueRaw] = await Promise.all([
-      fetchDolarQuote("oficial"),
-      fetchDolarQuote("blue"),
-    ]);
+    const response = await fetch(BCRA_USD_URL, {
+      next: { revalidate: REVALIDATE_SECONDS },
+      signal: AbortSignal.timeout(10_000),
+      headers: { Accept: "application/json" },
+    });
+    if (!response.ok) throw new Error(`BCRA: HTTP ${response.status}`);
 
-    return {
-      ok: true,
-      data: {
-        oficial: mapQuote(oficialRaw),
-        blue: mapQuote(blueRaw),
-      },
-    };
+    const quote = parseBcraUsdQuote(await response.json());
+    if (!quote) throw new Error("BCRA: invalid payload");
+    return { ok: true, data: quote };
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Неизвестная ошибка";
-    return { ok: false, error: message };
+    return { ok: false, error: error instanceof Error ? error.message : "Неизвестная ошибка" };
   }
 }
 
@@ -86,7 +87,7 @@ export function formatArsRate(value: number): string {
   return new Intl.NumberFormat("ru-RU", {
     style: "currency",
     currency: "ARS",
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 2,
   }).format(value);
 }
 
@@ -99,10 +100,4 @@ export function formatExchangeRateUpdatedAt(isoDate: string): string {
     minute: "2-digit",
     timeZone: "America/Argentina/Buenos_Aires",
   }).format(new Date(isoDate));
-}
-
-export function latestExchangeRateUpdate(data: ArgentinaExchangeRatesData): string {
-  const oficialTime = new Date(data.oficial.updatedAt).getTime();
-  const blueTime = new Date(data.blue.updatedAt).getTime();
-  return oficialTime >= blueTime ? data.oficial.updatedAt : data.blue.updatedAt;
 }

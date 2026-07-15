@@ -6,17 +6,21 @@ import { useMemo, useState } from "react";
 import { kbTypeLabel } from "@/lib/knowledge-base/labels";
 import type { KbSearchItem } from "@/lib/knowledge-base/types";
 import { entryHref } from "@/lib/knowledge-base/urls";
+import { normalizeSearchText, searchTextMatches } from "@/lib/search/normalize";
 
 const MAX_RESULTS = 40;
 
 function score(item: KbSearchItem, q: string): number {
-  const title = item.title.toLowerCase();
+  const title = normalizeSearchText(item.title);
   if (title === q) return 100;
   if (title.startsWith(q)) return 80;
   if (title.includes(q)) return 60;
-  if (item.aliases.some((a) => a.toLowerCase().includes(q))) return 40;
-  if (item.tags.some((t) => t.toLowerCase().includes(q))) return 30;
-  if (item.summary.toLowerCase().includes(q)) return 20;
+  if (item.aliases.some((a) => normalizeSearchText(a).includes(q))) return 40;
+  if (item.tags.some((t) => normalizeSearchText(t).includes(q))) return 30;
+  if (normalizeSearchText(item.summary).includes(q)) return 20;
+  if (searchTextMatches([item.title, item.summary, ...item.aliases, ...item.tags].join(" "), q)) {
+    return 10;
+  }
   return 0;
 }
 
@@ -31,7 +35,7 @@ export default function KbSearch({
   const [query, setQuery] = useState(initialQuery);
 
   const results = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = normalizeSearchText(query);
     if (q.length < 2) return [];
     return items
       .map((item) => ({ item, s: score(item, q) }))

@@ -3,5 +3,10 @@ import { buildSiteSearchIndexServer } from "@/lib/site-search-index-server";
 
 export async function GET() {
   const items = await buildSiteSearchIndexServer();
-  return NextResponse.json(items);
+  const clientItems = items.map((item) => {
+    const clientItem = { ...item };
+    delete clientItem.searchText;
+    return clientItem;
+  });
+  return NextResponse.json(clientItems);
 }

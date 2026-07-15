@@ -33,6 +33,7 @@ export type SearchResultType =
   | "page"
   | "legal"
   | "destination"
+  | "knowledge"
   | "guide"
   | "immigration";
 
@@ -43,6 +44,8 @@ export type SearchIndexItem = {
   description?: string;
   href: string;
   keywords?: string[];
+  /** Полный текст только для серверного индекса; API клиентского индекса его удаляет. */
+  searchText?: string;
 };
 
 export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
@@ -54,6 +57,7 @@ export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
   page: "Страницы",
   legal: "Документы",
   destination: "Регионы",
+  knowledge: "База знаний",
   guide: "Путеводитель",
   immigration: "Иммиграция",
 };
@@ -195,6 +199,7 @@ const SEARCH_TYPE_PRIORITY: Record<SearchResultType, number> = {
   place: 8,
   blog: 7,
   guide: 6,
+  knowledge: 7,
   immigration: 5,
   destination: 4,
   faq: 3,

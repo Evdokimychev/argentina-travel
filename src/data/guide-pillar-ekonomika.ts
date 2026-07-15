@@ -14,16 +14,11 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
   quickFacts: [
     {
       label: "Официальный USD",
-      headline: "Ниже синего курса",
-      detail: "Карты и банкоматы часто конвертируют по oficial — актуальные цифры в виджете ниже",
-    },
-    {
-      label: "Синий USD",
-      headline: "Рыночный курс наличных",
-      detail: "Ориентир для обмена USD/EUR в cueva и WU — см. виджет курса",
+      headline: "Справочный курс BCRA",
+      detail: "Официальная котировка и время наблюдения показаны в виджете ниже",
     },
     { label: "Валюта", headline: "Аргентинский песо (ARS)", detail: "Расчёты в песо; USD часто принимают в туристических местах" },
-    { label: "Инфляция", headline: "Цены в песо растут быстро", detail: "Пересчитывайте бюджет по актуальному blue, не по старым статьям" },
+    { label: "Изменчивость", headline: "Проверяйте сумму перед оплатой", detail: "Курсы и комиссии меняются; старые цифры быстро теряют смысл" },
     {
       label: "Visa / Mastercard",
       headline: "Работают, но не всегда выгодно",
@@ -37,9 +32,6 @@ export const EKONOMIKA_PILLAR: GuidePillarContent = {
 
   widgetSlots: [
     { id: "widget-exchange-rates", label: "Курс доллара сегодня", type: "exchange-rates" },
-    { id: "widget-calculator", label: "Калькулятор обмена", type: "calculator" },
-    { id: "widget-map", label: "Карта обменников", type: "map" },
-    { id: "widget-promo", label: "Партнёрские предложения", type: "promo" },
   ],
 
   sections: [

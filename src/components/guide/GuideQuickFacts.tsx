@@ -18,8 +18,8 @@ async function resolveLiveValue(live: GuideQuickFact["live"]): Promise<string | 
   try {
     const result = await getArgentinaExchangeRates();
     if (!result.ok) return null;
-    const quote = live === "exchange-oficial" ? result.data.oficial : result.data.blue;
-    return `${formatArsRate(quote.sell)} ARS`;
+    if (live !== "exchange-oficial") return null;
+    return `${formatArsRate(result.data.rate)} за 1 USD`;
   } catch {
     return null;
   }

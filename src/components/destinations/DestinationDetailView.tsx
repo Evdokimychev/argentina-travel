@@ -359,14 +359,14 @@ export default function DestinationDetailView({
               <div className="flex flex-wrap items-end justify-between gap-4">
                 <div>
                   <h2 className="font-heading text-2xl font-bold text-charcoal sm:text-3xl">Туры в регионе</h2>
-                  <p className="mt-2 text-slate">Пока нет точных совпадений — откройте полный каталог</p>
+                  <p className="mt-2 text-slate">В каталоге нет маршрутов с точным совпадением по региону</p>
                 </div>
                 <Link href={catalogHref} className="text-sm font-medium text-sky-ink hover:underline">
                   Смотреть все в каталоге →
                 </Link>
               </div>
               <div className="mt-8 rounded-card border border-dashed border-border-default bg-surface-elevated px-6 py-12 text-center">
-                <p className="font-medium text-charcoal">Туры по этому направлению скоро появятся</p>
+                <p className="font-medium text-charcoal">Посмотрите маршруты по соседним регионам</p>
                 <p className="mx-auto mt-2 max-w-md text-sm text-slate">
                   Откройте каталог с фильтром по региону или свяжитесь с нами — поможем подобрать маршрут.
                 </p>

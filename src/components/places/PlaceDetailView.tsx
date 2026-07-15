@@ -8,7 +8,6 @@ import {
   Clock,
   ExternalLink,
   MapPin,
-  Star,
   Ticket,
 } from "lucide-react";
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
@@ -26,7 +25,6 @@ import type { PlaceDetail } from "@/types/place";
 import type { TourListing } from "@/types";
 import { destinationHref } from "@/lib/destinations";
 import { pairedDestinationIdForPlace } from "@/lib/geography-links";
-import { matchToursForPlace } from "@/lib/places-tour-match";
 import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { collectionHref, itineraryHref } from "@/lib/places-urls";
@@ -213,15 +211,6 @@ export default function PlaceDetailView({
                   <div>
                     <dt className="text-slate">Стоимость</dt>
                     <dd className="font-medium text-charcoal">{place.ticketPrice}</dd>
-                  </div>
-                </div>
-              ) : null}
-              {place.rating != null ? (
-                <div className="flex gap-3">
-                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-sun text-sun" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Рейтинг</dt>
-                    <dd className="font-medium text-charcoal">{place.rating.toFixed(1)} / 5</dd>
                   </div>
                 </div>
               ) : null}

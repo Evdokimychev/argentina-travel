@@ -640,7 +640,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       form,
       checkoutCurrency,
       checkoutRates,
-      checkoutRatesUpdatedAt: ratesUpdatedAt,
+      checkoutRatesUpdatedAt: ratesUpdatedAt ?? undefined,
       checkoutRatesSource: ratesSource,
       payNowUsd,
       attribution: getStoredFirstTouchAttribution() ?? undefined,

@@ -1,50 +1,10 @@
 import { Suspense } from "react";
-import { AlertCircle, Banknote, TrendingUp } from "lucide-react";
+import { AlertCircle, Banknote, RefreshCw, TrendingUp } from "lucide-react";
 import {
   formatArsRate,
   formatExchangeRateUpdatedAt,
   getArgentinaExchangeRates,
-  latestExchangeRateUpdate,
-  type ExchangeRateQuote,
 } from "@/lib/argentina-exchange-rates";
-import { cn } from "@/lib/cn";
-
-function RateColumn({
-  label,
-  quote,
-  accentClass,
-}: {
-  label: string;
-  quote: ExchangeRateQuote;
-  accentClass: string;
-}) {
-  return (
-    <div className="rounded-xl border border-gray-100 bg-surface-muted/60 p-4">
-      <div className="flex items-center gap-2">
-        <span className={cn("h-2 w-2 rounded-full", accentClass)} aria-hidden />
-        <h3 className="font-heading text-sm font-bold text-charcoal">{label}</h3>
-      </div>
-      <dl className="mt-3 space-y-2">
-        <div className="flex items-baseline justify-between gap-3">
-          <dt className="text-xs text-slate">Покупка</dt>
-          <dd className="font-heading text-lg font-bold tabular-nums text-charcoal">
-            {formatArsRate(quote.buy)}
-          </dd>
-        </div>
-        <div className="flex items-baseline justify-between gap-3">
-          <dt className="text-xs text-slate">Продажа</dt>
-          <dd className="font-heading text-lg font-bold tabular-nums text-sky">
-            {formatArsRate(quote.sell)}
-          </dd>
-        </div>
-      </dl>
-      <p className="mt-2 text-[11px] text-slate">
-        за 1 USD · обновлено{" "}
-        {formatExchangeRateUpdatedAt(quote.updatedAt)}
-      </p>
-    </div>
-  );
-}
 
 export function ArgentinaExchangeRatesSkeleton() {
   return (
@@ -95,7 +55,6 @@ async function ArgentinaExchangeRatesContent() {
   }
 
   const { data } = result;
-  const lastUpdated = latestExchangeRateUpdate(data);
 
   return (
     <section
@@ -111,28 +70,47 @@ async function ArgentinaExchangeRatesContent() {
             id="exchange-rates-title"
             className="font-heading text-lg font-bold text-charcoal"
           >
-            Курс доллара сегодня
+            Официальный справочный курс BCRA
           </h2>
           <p className="mt-1 text-sm text-slate">
-            Справочные котировки в аргентинских песо за 1 USD. Официальный и параллельный
-            («синий») рынок часто расходятся — учитывайте оба при планировании бюджета.
+            Котировка аргентинских песо за 1 USD из статистики Центрального банка Аргентины.
           </p>
         </div>
       </div>
 
-      <div className="mt-5 grid gap-4 sm:grid-cols-2">
-        <RateColumn label="Официальный" quote={data.oficial} accentClass="bg-sky" />
-        <RateColumn label="Синий (paralelo)" quote={data.blue} accentClass="bg-patagonia" />
+      <div className="mt-5 rounded-xl border border-gray-100 bg-surface-muted/60 p-5">
+        <dl className="flex flex-wrap items-baseline justify-between gap-3">
+          <dt className="text-sm font-medium text-slate">Официальная справочная котировка</dt>
+          <dd className="font-heading text-2xl font-bold tabular-nums text-charcoal">
+            {formatArsRate(data.rate)} за 1 USD
+          </dd>
+        </dl>
+        <p className="mt-3 text-xs leading-relaxed text-slate">
+          Это не банковский курс покупки или продажи, не курс международной карты и не MEP.
+          Итоговый пересчёт зависит от банка, платёжной системы и конкретной операции.
+        </p>
       </div>
 
       <footer className="mt-5 flex flex-col gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="inline-flex items-center gap-1.5 text-xs text-slate">
           <Banknote className="h-3.5 w-3.5 shrink-0" aria-hidden />
-          Обновлено: {formatExchangeRateUpdatedAt(lastUpdated)} (Буэнос-Айрес)
+          Данные на {formatExchangeRateUpdatedAt(data.observedAt)} (Буэнос-Айрес)
         </p>
-        <p className="text-[11px] leading-snug text-slate">
-          Справочно, не является финансовой рекомендацией
-        </p>
+        <div className="flex flex-wrap items-center gap-3 text-[11px] leading-snug text-slate">
+          <a
+            href={data.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline decoration-slate/30 underline-offset-2 hover:decoration-slate"
+          >
+            Источник: BCRA
+          </a>
+          <a href="?refresh=1" className="inline-flex items-center gap-1 underline decoration-slate/30 underline-offset-2">
+            <RefreshCw className="h-3 w-3" aria-hidden />
+            Обновить
+          </a>
+          <span>Справочно, не является финансовой рекомендацией</span>
+        </div>
       </footer>
     </section>
   );

@@ -23,7 +23,7 @@ function slugFromItem(item: SearchIndexItem): string {
 }
 
 function bodyTextFromItem(item: SearchIndexItem): string {
-  const parts = [item.description ?? "", ...(item.keywords ?? [])];
+  const parts = [item.description ?? "", ...(item.keywords ?? []), item.searchText ?? ""];
   return parts.filter(Boolean).join(" ").trim();
 }
 

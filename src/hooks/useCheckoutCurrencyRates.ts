@@ -6,7 +6,7 @@ import type { CurrencyCode } from "@/types/locale";
 
 export function useCheckoutCurrencyRates() {
   const [rates, setRates] = useState<Partial<Record<CurrencyCode, number>>>({});
-  const [ratesUpdatedAt, setRatesUpdatedAt] = useState<string | undefined>();
+  const [ratesUpdatedAt, setRatesUpdatedAt] = useState<string | null | undefined>();
   const [ratesSource, setRatesSource] = useState<ExchangeRatesPayload["source"] | undefined>();
   const [ready, setReady] = useState(false);
 

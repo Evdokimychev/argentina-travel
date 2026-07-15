@@ -3,6 +3,11 @@ import {
   type SearchIndexItem,
   type SearchResultType,
 } from "@/lib/site-search-index";
+import {
+  fuzzyTokenMatches,
+  normalizeSearchText,
+  tokenizeSearchText,
+} from "@/lib/search/normalize";
 
 export type SearchResultGroup = {
   type: SearchResultType;
@@ -10,17 +15,8 @@ export type SearchResultGroup = {
   items: Array<SearchIndexItem & { score: number }>;
 };
 
-function normalize(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/ё/g, "е")
-    .trim();
-}
-
 function tokenize(query: string): string[] {
-  return normalize(query)
-    .split(/\s+/)
-    .filter((token) => token.length > 0);
+  return tokenizeSearchText(query);
 }
 
 function scoreText(
@@ -29,7 +25,7 @@ function scoreText(
   fullQuery: string,
   weights: { phrase: number; exact: number; prefix: number; includes: number }
 ): number {
-  const haystack = normalize(text);
+  const haystack = normalizeSearchText(text);
   if (!haystack) return 0;
 
   let score = 0;
@@ -39,6 +35,9 @@ function scoreText(
     if (haystack === token) score += weights.exact;
     else if (haystack.startsWith(token)) score += weights.prefix;
     else if (haystack.includes(token)) score += weights.includes;
+    else if (haystack.split(" ").some((candidate) => fuzzyTokenMatches(token, candidate))) {
+      score += Math.max(1, Math.floor(weights.includes / 2));
+    }
   }
 
   return score;
@@ -67,9 +66,16 @@ function scoreItem(item: SearchIndexItem, tokens: string[]): number {
       phrase: 6,
       exact: 4,
       prefix: 3,
-      includes: 2,
+      includes: 4,
     });
   }
+
+  score += scoreText(item.searchText ?? "", tokens, fullQuery, {
+    phrase: 3,
+    exact: 2,
+    prefix: 1,
+    includes: 1,
+  });
 
   return score;
 }
@@ -77,9 +83,11 @@ function scoreItem(item: SearchIndexItem, tokens: string[]): number {
 const TYPE_ORDER: SearchResultType[] = [
   "tour",
   "excursion",
+  "place",
   "blog",
   "guide",
   "destination",
+  "knowledge",
   "immigration",
   "page",
   "faq",
@@ -96,7 +104,9 @@ export function searchSiteIndex(
 
   const scored = items
     .map((item) => ({ ...item, score: scoreItem(item, tokens) }))
-    .filter((item) => item.score > 0)
+    // A lone fuzzy coincidence in a long body gets score=1 and is too weak to
+    // show. Title typos and exact body phrases score at least 2.
+    .filter((item) => item.score >= 2)
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title, "ru"));
 
   const groups = new Map<SearchResultType, SearchResultGroup>();

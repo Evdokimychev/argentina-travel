@@ -136,7 +136,6 @@ export default function PlaceSearchPanel({
                 className="w-full rounded-button border border-border-default px-3 py-2 text-sm"
               >
                 <option value="popular">{labels.sortPopular}</option>
-                <option value="rating">{labels.sortRating}</option>
                 <option value="name_asc">{labels.sortNameAsc}</option>
                 <option value="name_desc">{labels.sortNameDesc}</option>
               </select>

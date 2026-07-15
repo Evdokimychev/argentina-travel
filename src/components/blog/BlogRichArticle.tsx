@@ -5,7 +5,6 @@ import {
   ExternalLink,
   MapPin,
   Mountain,
-  Star,
 } from "lucide-react";
 import BlogCallout from "@/components/blog/BlogCallout";
 import BlogInlineRelatedPosts from "@/components/blog/BlogInlineRelatedPosts";
@@ -127,63 +126,6 @@ function RichSpotCard({ spot }: { spot: BlogRichSpot }) {
   );
 }
 
-function StarRating({ value }: { value: number }) {
-  return (
-    <span className="inline-flex gap-0.5" aria-label={`${value} из 5`}>
-      {Array.from({ length: 5 }).map((_, index) => (
-        <Star
-          key={index}
-          className={cn(
-            "h-4 w-4",
-            index < value ? "fill-amber-400 text-amber-400" : "text-gray-200"
-          )}
-          aria-hidden
-        />
-      ))}
-    </span>
-  );
-}
-
-function RichRatings({
-  items,
-  audience,
-  note,
-}: {
-  items: Array<{ label: string; stars: number }>;
-  audience: string[];
-  note?: string;
-}) {
-  return (
-    <div className="space-y-4">
-      <div className="grid gap-3 sm:grid-cols-2">
-        {items.map((item) => (
-          <div
-            key={item.label}
-            className="flex items-center justify-between rounded-2xl border border-gray-100 bg-white px-4 py-3 shadow-sm"
-          >
-            <span className="text-sm font-medium text-charcoal">{item.label}</span>
-            <StarRating value={item.stars} />
-          </div>
-        ))}
-      </div>
-      <div className="rounded-2xl border border-sky/15 bg-sky/[0.04] p-4 sm:p-5">
-        <p className="text-xs font-semibold uppercase tracking-wide text-sky-dark">Кому подойдёт</p>
-        <ul className="mt-3 flex flex-wrap gap-2">
-          {audience.map((item) => (
-            <li
-              key={item}
-              className="rounded-full border border-sky/15 bg-white px-3 py-1.5 text-xs font-medium text-charcoal"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-        {note ? <p className="mt-3 text-xs leading-relaxed text-slate">{note}</p> : null}
-      </div>
-    </div>
-  );
-}
-
 function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId: string }) {
   switch (block.type) {
     case "paragraphs":
@@ -236,7 +178,9 @@ function RichStaticBlock({ block, articleId }: { block: BlogRichBlock; articleId
     case "seasons":
       return <BlogSeasonWidget items={block.items} conclusion={block.conclusion} />;
     case "ratings":
-      return <RichRatings items={block.items} audience={block.audience} note={block.note} />;
+      // Legacy scores have no source, sample or methodology. Keep the content
+      // readable in storage, but do not present those values as measured facts.
+      return null;
     case "numbered-tips":
       return (
         <BlogExpandableSection

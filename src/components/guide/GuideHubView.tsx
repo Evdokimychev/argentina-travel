@@ -29,13 +29,13 @@ import type { RelatedContentItem } from "@/types/content-reading";
 const GUIDE_KB_LINKS: RelatedContentItem[] = [
   {
     title: "Подготовка к поездке",
-    href: "/baza-znaniy/podgotovka-k-poezdke",
+    href: "/guide/kak-dobratsya",
     description: "Что проверить перед вылетом: документы, страховка, связь, деньги и маршрут.",
     kind: "link",
   },
   {
     title: "Деньги и обмен валюты",
-    href: "/baza-znaniy/gid-po-dengam",
+    href: "/guide/ekonomika-i-dengi",
     description: "Песо, наличные доллары, карты и реальные сценарии оплаты в поездке.",
     kind: "link",
   },
@@ -47,19 +47,19 @@ const GUIDE_KB_LINKS: RelatedContentItem[] = [
   },
   {
     title: "Безопасность в Аргентине",
-    href: "/baza-znaniy/bezopasnost-argentina",
+    href: "/guide/bezopasnost",
     description: "Риски больших городов, тропы, погода и спокойная базовая осмотрительность.",
     kind: "link",
   },
   {
     title: "eSIM и связь",
-    href: "/baza-znaniy/esim-i-svyaz",
+    href: "/guide/svyaz",
     description: "Как оставаться на связи: eSIM, местные операторы, мессенджеры и карты.",
     kind: "link",
   },
   {
     title: "Водительские права",
-    href: "/baza-znaniy/voditelskie-prava",
+    href: "/guide/transport",
     description: "Что важно знать перед арендой автомобиля и поездками между регионами.",
     kind: "link",
   },

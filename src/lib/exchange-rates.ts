@@ -20,7 +20,8 @@ const TRACKED: CurrencyCode[] = [
 export type ExchangeRatesPayload = {
   rates: Partial<Record<CurrencyCode, number>>;
   source: "frankfurter" | "fallback";
-  updatedAt: string;
+  updatedAt: string | null;
+  stale: boolean;
 };
 
 function fallbackRates(): ExchangeRatesPayload {
@@ -29,7 +30,8 @@ function fallbackRates(): ExchangeRatesPayload {
       Record<CurrencyCode, number>
     >,
     source: "fallback",
-    updatedAt: new Date().toISOString(),
+    updatedAt: null,
+    stale: true,
   };
 }
 
@@ -64,6 +66,7 @@ export async function fetchLiveExchangeRates(): Promise<ExchangeRatesPayload> {
       updatedAt: payload.date
         ? `${payload.date}T12:00:00.000Z`
         : new Date().toISOString(),
+      stale: false,
     };
   } catch {
     return fallbackRates();
