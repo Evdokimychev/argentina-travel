@@ -58,6 +58,26 @@ export interface MapObject {
   meta?: string;
   relatedArticles?: MapRelatedLink[];
   relatedTours?: MapRelatedLink[];
+  importance?: number;
+  featured?: boolean;
+  editorialPriority?: number;
+  qualityScore?: number;
+  source?: string;
+  sourceUrl?: string;
+  sourceVerifiedAt?: string;
+  minZoom?: number;
+  maxZoom?: number;
+  tags?: string[];
+  status?: "published" | "hidden" | "needs_review";
+  curatorNote?: string;
+  airportDetails?: {
+    iata: string;
+    city: string;
+    role: string;
+    domesticRoutes: number;
+    internationalNote: string;
+    seasonalityNote: string;
+  };
   /** Только для kind === "airport": куда можно улететь прямым рейсом */
   flightDestinations?: MapFlightDestination[];
 }

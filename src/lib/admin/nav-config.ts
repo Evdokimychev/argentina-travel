@@ -116,6 +116,14 @@ export const ADMIN_NAV_ITEMS: AdminNavItem[] = [
     capability: "content.edit",
   },
   {
+    id: "content-map",
+    section: "content",
+    href: "/admin/content/map",
+    label: "Редактор карты",
+    description: "Объекты, масштаб и источники",
+    capability: "content.edit",
+  },
+  {
     id: "content-media",
     section: "content",
     href: "/admin/media",

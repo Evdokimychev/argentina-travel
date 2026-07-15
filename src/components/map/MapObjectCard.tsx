@@ -1,12 +1,14 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BookOpen, MapPin, Plane, X } from "lucide-react";
+import { ArrowRight, BookOpen, ExternalLink, MapPin, Plane, Route, X } from "lucide-react";
 import type { MapObject } from "@/lib/map-types";
 import { MAP_MARKER_KIND_LABELS } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
 import { cn } from "@/lib/cn";
+import { buildFlightsSearchHref } from "@/lib/flights/search-href";
 
 type Props = {
   object: MapObject;
@@ -39,6 +41,22 @@ function resolveArticleCta(object: MapObject): { label: string; href: string } |
   return { label: article.title, href: article.href };
 }
 
+function airportRouteDistanceKm(
+  from: Pick<MapObject, "latitude" | "longitude">,
+  to: { latitude: number; longitude: number },
+): number {
+  const radians = (value: number) => (value * Math.PI) / 180;
+  const earthRadiusKm = 6371;
+  const latDelta = radians(to.latitude - from.latitude);
+  const lngDelta = radians(to.longitude - from.longitude);
+  const a =
+    Math.sin(latDelta / 2) ** 2 +
+    Math.cos(radians(from.latitude)) *
+      Math.cos(radians(to.latitude)) *
+      Math.sin(lngDelta / 2) ** 2;
+  return Math.round(earthRadiusKm * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+}
+
 export default function MapObjectCard({
   object,
   onClose,
@@ -46,10 +64,19 @@ export default function MapObjectCard({
   className,
   variant = "floating",
 }: Props) {
+  const [selectedDestinationIata, setSelectedDestinationIata] = useState<string | null>(null);
+  useEffect(() => setSelectedDestinationIata(null), [object.id]);
   const tourCta = resolveTourCta(object);
   const primaryCta = resolvePrimaryCta(object);
   const articleCta = resolveArticleCta(object);
   const kindColor = MAP_KIND_COLORS[object.kind];
+  const selectedDestination = useMemo(
+    () => object.flightDestinations?.find((item) => item.iata === selectedDestinationIata) ?? null,
+    [object.flightDestinations, selectedDestinationIata],
+  );
+  const selectedRouteDistance = selectedDestination
+    ? airportRouteDistanceKm(object, selectedDestination)
+    : null;
 
   return (
     <article
@@ -121,6 +148,29 @@ export default function MapObjectCard({
           <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-slate">{object.description}</p>
         ) : null}
 
+        {object.airportDetails ? (
+          <dl className="mt-3 grid grid-cols-2 gap-2 rounded-xl border border-border-subtle bg-surface-muted/60 p-3 text-xs">
+            <div>
+              <dt className="text-muted">Город и код</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">{object.airportDetails.city} · {object.airportDetails.iata}</dd>
+            </div>
+            <div>
+              <dt className="text-muted">Роль</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">{object.airportDetails.role}</dd>
+            </div>
+            <div>
+              <dt className="text-muted">Внутренние направления</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">{object.airportDetails.domesticRoutes || "Нет данных"}</dd>
+            </div>
+            <div>
+              <dt className="text-muted">Проверено</dt>
+              <dd className="mt-0.5 font-semibold text-foreground">
+                {object.sourceVerifiedAt ? new Date(`${object.sourceVerifiedAt}T12:00:00Z`).toLocaleDateString("ru-RU") : "Не указано"}
+              </dd>
+            </div>
+          </dl>
+        ) : null}
+
         {object.flightDestinations && object.flightDestinations.length > 0 ? (
           <div className="mt-3 rounded-card bg-sky/5 p-2.5">
             <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-sky-ink">
@@ -133,7 +183,7 @@ export default function MapObjectCard({
                   key={dest.iata}
                   type="button"
                   title={dest.airportName}
-                  onClick={() => onSelectObjectId?.(dest.mapObjectId)}
+                  onClick={() => setSelectedDestinationIata(dest.iata)}
                   className="inline-flex items-center gap-1 rounded-full border border-sky/20 bg-surface-elevated px-2 py-1 text-[11px] font-semibold text-charcoal transition hover:border-sky hover:text-sky-ink"
                 >
                   {dest.city}
@@ -142,7 +192,47 @@ export default function MapObjectCard({
               ))}
             </div>
             <p className="mt-1.5 text-[10px] leading-snug text-slate">
-              Направления ориентировочные — расписание меняется по сезонам, уточняйте у авиакомпаний.
+              {object.airportDetails?.seasonalityNote ?? "Направления ориентировочные — расписание меняется по сезонам."}
+            </p>
+            {selectedDestination && object.airportDetails ? (
+              <div className="mt-2 rounded-lg border border-sky/20 bg-white p-2.5">
+                <p className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+                  <Route className="h-3.5 w-3.5 text-sky" aria-hidden />
+                  {object.airportDetails.iata} → {selectedDestination.iata}
+                </p>
+                <p className="mt-1 text-[11px] text-muted">
+                  Около {selectedRouteDistance?.toLocaleString("ru-RU")} км · ориентировочно {Math.max(1, Math.round((selectedRouteDistance ?? 0) / 750 * 10) / 10)} ч в воздухе
+                </p>
+                <p className="mt-1 text-[10px] text-muted">Внутренний маршрут. Время не учитывает пересадки, ожидание и изменения перевозчика.</p>
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => onSelectObjectId?.(selectedDestination.mapObjectId)}
+                    className="text-xs font-semibold text-sky hover:underline"
+                  >
+                    Показать аэропорт назначения
+                  </button>
+                  <Link
+                    href={buildFlightsSearchHref(object.airportDetails.iata, selectedDestination.iata)}
+                    className="text-xs font-semibold text-sky hover:underline"
+                  >
+                    Найти билеты
+                  </Link>
+                </div>
+              </div>
+            ) : null}
+          </div>
+        ) : null}
+
+        {object.airportDetails ? (
+          <div className="mt-3 text-[10px] leading-relaxed text-muted">
+            <p>{object.airportDetails.internationalNote}</p>
+            <p className="mt-1">
+              Источник: {object.sourceUrl ? (
+                <a href={object.sourceUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-0.5 font-semibold text-sky hover:underline">
+                  {object.source}<ExternalLink className="h-2.5 w-2.5" aria-hidden />
+                </a>
+              ) : object.source}. Расписание может меняться.
             </p>
           </div>
         ) : null}

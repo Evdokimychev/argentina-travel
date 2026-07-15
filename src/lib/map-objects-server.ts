@@ -11,6 +11,8 @@ import { hasValidTourMapCoordinates } from "@/lib/tour-map";
 import { fetchPlacesServer, placeHref } from "@/lib/places-repository";
 import { MEDIA_LOGO_FALLBACK } from "@/lib/media-resolver";
 import { findBestMapObjectMatch } from "@/lib/map-search";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { isSupabaseConfigured } from "@/lib/supabase/env";
 import { buildSupplementaryCityObjects } from "@/lib/map-supplementary-cities";
 import { buildKbAttractionObjects } from "@/lib/map-kb-attractions";
 import type {
@@ -20,7 +22,114 @@ import type {
   MapRouteItem,
 } from "@/lib/map-types";
 
-const DEFAULT_LIMIT = 5000;
+const DEFAULT_LIMIT = 240;
+
+const MAP_SOURCE = "Редакционная база GoArgentina";
+const AIRPORT_SOURCE_URL = "https://www.argentina.gob.ar/anac/catalogo-de-datos";
+const AIRPORTS_VERIFIED_AT = "2026-07-14";
+
+function mapEditorialFields(input: {
+  kind: MapMarkerKind;
+  featured?: boolean;
+  source?: string;
+  sourceUrl?: string;
+  sourceVerifiedAt?: string;
+}): Required<Pick<MapObject, "importance" | "featured" | "editorialPriority" | "qualityScore" | "source" | "minZoom" | "maxZoom" | "tags" | "status">> & Pick<MapObject, "sourceUrl" | "sourceVerifiedAt"> {
+  const baseImportance: Record<MapMarkerKind, number> = {
+    city: 90,
+    national_park: 88,
+    airport: 86,
+    region: 82,
+    attraction: 70,
+    transport: 68,
+    tour: 55,
+    route: 50,
+  };
+  const minZoom: Record<MapMarkerKind, number> = {
+    city: 3,
+    national_park: 3,
+    airport: 3,
+    region: 3,
+    attraction: 5,
+    transport: 6,
+    tour: 7,
+    route: 6,
+  };
+  const importance = baseImportance[input.kind] + (input.featured ? 8 : 0);
+  return {
+    importance,
+    featured: input.featured === true,
+    editorialPriority: importance,
+    qualityScore: input.sourceVerifiedAt ? 90 : 72,
+    source: input.source ?? MAP_SOURCE,
+    sourceUrl: input.sourceUrl,
+    sourceVerifiedAt: input.sourceVerifiedAt,
+    minZoom: minZoom[input.kind],
+    maxZoom: 18,
+    tags: [input.kind],
+    status: "published",
+  };
+}
+
+export function rankMapObjects(objects: MapObject[]): MapObject[] {
+  const deduplicated = new Map<string, MapObject>();
+  for (const object of objects) {
+    if (object.status === "hidden") continue;
+    const key = `${object.kind}:${object.slug}:${object.latitude.toFixed(4)}:${object.longitude.toFixed(4)}`;
+    const current = deduplicated.get(key);
+    if (!current || (object.qualityScore ?? 0) > (current.qualityScore ?? 0)) deduplicated.set(key, object);
+  }
+  return [...deduplicated.values()].sort(
+    (left, right) =>
+      Number(Boolean(right.featured)) - Number(Boolean(left.featured)) ||
+      (right.editorialPriority ?? 0) - (left.editorialPriority ?? 0) ||
+      (right.qualityScore ?? 0) - (left.qualityScore ?? 0) ||
+      left.title.localeCompare(right.title, "ru"),
+  );
+}
+
+type MapCurationRow = import("@/types/database").Database["public"]["Tables"]["map_object_curation"]["Row"];
+
+async function loadMapCuration(): Promise<Map<string, MapCurationRow>> {
+  if (!isSupabaseConfigured()) return new Map();
+  try {
+    const { data, error } = await createSupabaseAdminClient()
+      .from("map_object_curation")
+      .select("*");
+    if (error) return new Map();
+    return new Map((data ?? []).map((row) => [row.object_id, row]));
+  } catch {
+    return new Map();
+  }
+}
+
+function applyMapCuration(object: MapObject, row: MapCurationRow | undefined): MapObject {
+  if (!row) return object;
+  return {
+    ...object,
+    latitude: row.latitude ?? object.latitude,
+    longitude: row.longitude ?? object.longitude,
+    importance: row.importance,
+    featured: row.featured,
+    editorialPriority: row.editorial_priority,
+    qualityScore: row.quality_score,
+    source: row.source ?? object.source,
+    sourceUrl: row.source_url ?? object.sourceUrl,
+    sourceVerifiedAt: row.source_verified_at ?? object.sourceVerifiedAt,
+    minZoom: row.min_zoom,
+    maxZoom: row.max_zoom,
+    region: row.region ?? object.region,
+    tags: row.tags,
+    status: row.status,
+    curatorNote: row.curator_note ?? undefined,
+    relatedArticles: row.related_article_href
+      ? [{ title: "Связанный материал", href: row.related_article_href }, ...(object.relatedArticles ?? [])]
+      : object.relatedArticles,
+    relatedTours: row.related_tour_href
+      ? [{ title: "Связанный тур", href: row.related_tour_href }, ...(object.relatedTours ?? [])]
+      : object.relatedTours,
+  };
+}
 
 export interface MapObjectsQuery {
   kinds?: MapMarkerKind[];
@@ -91,6 +200,7 @@ function placeToMapObject(place: PlaceListing, tours: TourListing[]): MapObject 
     meta: place.city ?? place.region,
     relatedTours: relatedToursForPlace(place.slug, tours),
     relatedArticles: [{ title: "Места на карте", href: `/places/${place.slug}` }],
+    ...mapEditorialFields({ kind }),
   };
 }
 
@@ -107,6 +217,7 @@ function tourToMapObject(tour: TourListing): MapObject {
     region: tour.region,
     href: `/tours/${tour.slug}`,
     meta: resolveTourCityDisplay(tour),
+    ...mapEditorialFields({ kind: "tour", featured: tour.featured }),
   };
 }
 
@@ -135,6 +246,31 @@ function airportToMapObject(airport: (typeof ARGENTINA_AIRPORTS)[number]): MapOb
       { title: "Как добраться по Аргентине", href: "/guide/kak-dobratsya" },
     ],
     flightDestinations: destinations.length > 0 ? destinations : undefined,
+    airportDetails: {
+      iata: airport.iata,
+      city: airport.city,
+      role:
+        airport.iata === "EZE"
+          ? "Главный международный аэропорт страны"
+          : airport.iata === "AEP"
+            ? "Основной городской аэропорт Буэнос-Айреса"
+            : destinations.length >= 5
+              ? "Крупный региональный авиаузел"
+              : "Региональный туристический аэропорт",
+      domesticRoutes: destinations.length,
+      internationalNote:
+        ["EZE", "AEP", "COR", "MDZ"].includes(airport.iata)
+          ? "Возможны международные направления; проверяйте актуальную выдачу перевозчиков."
+          : "Международные направления не подтверждены в редакционной выборке.",
+      seasonalityNote: "Маршруты и расписание могут меняться в зависимости от сезона.",
+    },
+    ...mapEditorialFields({
+      kind: "airport",
+      featured: ["EZE", "AEP", "COR", "MDZ", "BRC", "FTE", "USH", "IGR"].includes(airport.iata),
+      source: "ANAC и редакционная проверка GoArgentina",
+      sourceUrl: AIRPORT_SOURCE_URL,
+      sourceVerifiedAt: AIRPORTS_VERIFIED_AT,
+    }),
   };
 }
 
@@ -153,6 +289,7 @@ function transportHubToMapObject(hub: (typeof ARGENTINA_TRANSPORT_HUBS)[number])
     relatedArticles: hub.placeSlug
       ? [{ title: `Как добраться в ${hub.cityName}`, href: placeHref(hub.placeSlug) }]
       : undefined,
+    ...mapEditorialFields({ kind: "transport" }),
   };
 }
 
@@ -194,7 +331,11 @@ export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapO
   const limit = query.limit ?? DEFAULT_LIMIT;
   const activeKinds = query.kinds?.length ? query.kinds : undefined;
 
-  const [tours, places] = await Promise.all([fetchMarketplaceTours(), fetchPlacesServer()]);
+  const [tours, places, curation] = await Promise.all([
+    fetchMarketplaceTours(),
+    fetchPlacesServer(),
+    loadMapCuration(),
+  ]);
 
   const objects: MapObject[] = [];
 
@@ -233,7 +374,8 @@ export async function fetchMapObjects(query: MapObjectsQuery = {}): Promise<MapO
     objects.push(...ARGENTINA_TRANSPORT_HUBS.map(transportHubToMapObject));
   }
 
-  const filtered = objects.filter((obj) => filterObject(obj, query)).slice(0, limit);
+  const curatedObjects = objects.map((object) => applyMapCuration(object, curation.get(object.id)));
+  const filtered = rankMapObjects(curatedObjects.filter((obj) => filterObject(obj, query))).slice(0, limit);
 
   const routes =
     !activeKinds || activeKinds.includes("route")

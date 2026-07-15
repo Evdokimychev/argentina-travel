@@ -52,6 +52,7 @@ export type AdminNavItemId =
   | "marketplace-experts"
   | "marketplace-moderation"
   | "content-documents"
+  | "content-map"
   | "content-media"
   | "content-social-feed"
   | "content-translations"
