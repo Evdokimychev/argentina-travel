@@ -27,6 +27,7 @@ const groups = {
   ],
   content: [
     ["content-lint", "npm", ["run", "content:audit"], true],
+    ["content-governance", "npm", ["run", "content:governance"], true],
     ["seo-live-baseline", "npm", ["run", "seo-audit"], false],
     ["media", "npm", ["run", "media:integrity"], true],
   ],

@@ -1,0 +1,23 @@
+preferred_ru,avoid,allowed_original,definition,context,source,status
+руководство / путеводитель,guide,,Пользовательский материал с практическими объяснениями.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+советы / рекомендации,tips,,Практические рекомендации без обещания результата.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+статья,post,,Отдельный редакционный материал.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+раздел,section,,Смысловая часть страницы или материала.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+стоимость / цена,price,,Денежное значение с валютой и единицей измерения.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+бронирование,booking,,Оформление заявки или заказа.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+поиск,search,,Поиск материалов или услуг.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+сравнение,comparison,,Сопоставление вариантов по понятным критериям.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+преимущества,benefits,,Сильные стороны варианта; только с объяснением критериев.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+обзор,overview,,Вводный материал о теме.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+обновление,update,,Существенное изменение материала или данных.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+поддержка,support,,Помощь пользователю.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+отзыв / обратная связь,feedback,,Комментарий пользователя или ответ редакции.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+рекомендуемое / избранное,featured,,Редакционно выделенный материал с понятным основанием.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+песо,peso|pesos,ARS,Название валюты в русском тексте; ISO-код допустим при неоднозначности.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+Буэнос-Айрес,Buenos Aires в русском тексте,Buenos Aires,Официальная русская форма; испанская допустима при первом упоминании и в поисковых aliases.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+Патагония,Patagonia в русском тексте,Patagonia,Официальная русская форма; латинская форма хранится как поисковый alias.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+ВНЖ / ПМЖ,residencia без пояснения,residencia,Русские сокращения не смешиваются с испанским термином без пояснения.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+DNI,,DNI,Официальный аргентинский идентификатор; при первом упоминании требуется пояснение.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+RADEX,,RADEX,Официальный термин миграционной процедуры; при первом упоминании требуется пояснение.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+MERVAL,,MERVAL,Официальный финансовый термин; при первом упоминании требуется пояснение.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical
+jus soli,,jus soli,Устоявшийся правовой термин; требуется пояснение по-русски.,public_ru_content,.cursor/rules/editorial-standard.mdc,canonical

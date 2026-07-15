@@ -1,0 +1,59 @@
+route_pattern,route_kind,page_source,content_sources,repository_record_count,public_url_examples,sitemap_expected,search_coverage,edit_surface,evidence,notes
+/,public_static,src/app/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/page.tsx,
+/about,public_static,src/app/about/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/about/page.tsx,
+/audio-guides,service,src/app/audio-guides/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/audio-guides/page.tsx,
+/audio-guides/[id],service,src/app/audio-guides/[id]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/audio-guides/[id]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/baza-znaniy,editorial,src/app/baza-znaniy/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/baza-znaniy/page.tsx,
+/baza-znaniy/[slug],editorial,src/app/baza-znaniy/[slug]/page.tsx,knowledge_base_markdown,231,/baza-znaniy/aconcagua-provincial-park|/baza-znaniy/aep-eze-stykovka|/baza-znaniy/aeroporty,yes,yes,static_data_or_cms_resolver,src/app/baza-znaniy/[slug]/page.tsx,
+/baza-znaniy/poisk,editorial,src/app/baza-znaniy/poisk/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/baza-znaniy/poisk/page.tsx,
+/baza-znaniy/razdel/[slug],editorial,src/app/baza-znaniy/razdel/[slug]/page.tsx,,7,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/baza-znaniy/razdel/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/blog,editorial,src/app/blog/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/blog/page.tsx,
+/blog/[slug],editorial,src/app/blog/[slug]/page.tsx,static_blog|blog_content_plan,87,/blog/argentina-10-dnej-3-nedeli|/blog/argentina-2-nedeli-marshrut|/blog/argentina-tourist-visa-2026,yes,yes,static_data_or_cms_resolver,src/app/blog/[slug]/page.tsx,
+/blog/author/[slug],editorial,src/app/blog/author/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/blog/author/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/blog/authors,editorial,src/app/blog/authors/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/blog/authors/page.tsx,
+/blog/authors/[slug],editorial,src/app/blog/authors/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/blog/authors/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/blog/hub/[hubId],editorial,src/app/blog/hub/[hubId]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/blog/hub/[hubId]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/car-rental,service,src/app/car-rental/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/car-rental/page.tsx,
+/collections,editorial,src/app/collections/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/collections/page.tsx,
+/collections/[slug],editorial,src/app/collections/[slug]/page.tsx,collections_static,14,/collections/best-for-photographers|/collections/best-glaciers|/collections/best-national-parks,yes,no_or_not_observed,static_data_or_cms_resolver,src/app/collections/[slug]/page.tsx,
+/contacts,public_static,src/app/contacts/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/contacts/page.tsx,
+/destinations,editorial,src/app/destinations/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/destinations/page.tsx,
+/destinations/[slug],editorial,src/app/destinations/[slug]/page.tsx,destination_static,8,/destinations/ba|/destinations/bariloche|/destinations/calafate,yes,yes,static_data_or_cms_resolver,src/app/destinations/[slug]/page.tsx,
+/embed/flights/wl,public_static,src/app/embed/flights/wl/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/embed/flights/wl/page.tsx,
+/embed/tours,public_static,src/app/embed/tours/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/embed/tours/page.tsx,
+/esim,service,src/app/esim/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/esim/page.tsx,
+/excursions,marketplace,src/app/excursions/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/excursions/page.tsx,
+/excursions/[slug],marketplace,src/app/excursions/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/excursions/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/excursions/city/[citySlug],marketplace,src/app/excursions/city/[citySlug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/excursions/city/[citySlug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/excursions/guide/[guideId],marketplace,src/app/excursions/guide/[guideId]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/excursions/guide/[guideId]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/experts,marketplace,src/app/experts/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/experts/page.tsx,
+/experts/[slug],marketplace,src/app/experts/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/experts/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/faq,editorial,src/app/faq/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/faq/page.tsx,
+/flights,service,src/app/flights/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/flights/page.tsx,
+/flights/[route],service,src/app/flights/[route]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/flights/[route]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/forum,community,src/app/forum/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/forum/page.tsx,
+/forum/[category],community,src/app/forum/[category]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/forum/[category]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/forum/[category]/[threadId],community,src/app/forum/[category]/[threadId]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/forum/[category]/[threadId]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/gallery,public_static,src/app/gallery/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/gallery/page.tsx,
+/guide,editorial,src/app/guide/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/guide/page.tsx,
+/guide/[slug],editorial,src/app/guide/[slug]/page.tsx,guide_topics_static|content_pages_static,19,/guide/bezopasnost|/guide/bronirovanie-i-oplata|/guide/dostoprimechatelnosti,yes,yes,static_data_or_cms_resolver,src/app/guide/[slug]/page.tsx,
+/guide/ob-argentine,editorial,src/app/guide/ob-argentine/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/guide/ob-argentine/page.tsx,
+/immigration,editorial,src/app/immigration/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/immigration/page.tsx,
+/immigration/[slug],editorial,src/app/immigration/[slug]/page.tsx,content_pages_static,4,/immigration/dokumenty-dlya-vyezda|/immigration/obzor-vnzh|/immigration/prodlenie-turisticheskogo-vizita,yes,yes,static_data_or_cms_resolver,src/app/immigration/[slug]/page.tsx,
+/insurance,service,src/app/insurance/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/insurance/page.tsx,
+/itineraries,editorial,src/app/itineraries/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/itineraries/page.tsx,
+/itineraries/[slug],editorial,src/app/itineraries/[slug]/page.tsx,itineraries_static,3,/itineraries/buenos-aires-iguazu-5-days|/itineraries/northwest-7-days|/itineraries/patagonia-classic-10-days,yes,no_or_not_observed,static_data_or_cms_resolver,src/app/itineraries/[slug]/page.tsx,
+/join,public_static,src/app/join/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/join/page.tsx,
+/legal/[slug],public_static,src/app/legal/[slug]/page.tsx,legal_static,6,/legal/affiliate|/legal/booking|/legal/cookies,yes,yes,static_data_or_cms_resolver,src/app/legal/[slug]/page.tsx,
+/map,editorial,src/app/map/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/map/page.tsx,
+/mapa-argentina,editorial,src/app/mapa-argentina/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/mapa-argentina/page.tsx,
+/organizers/[slug],marketplace,src/app/organizers/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/organizers/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/places,editorial,src/app/places/page.tsx,,1,,yes,no_or_not_observed,page_component_or_runtime_provider,src/app/places/page.tsx,
+/places/[slug],editorial,src/app/places/[slug]/page.tsx,places_static,98,/places/aconcagua|/places/bahia-blanca|/places/banado-la-estrella,yes,yes,static_data_or_cms_resolver,src/app/places/[slug]/page.tsx,
+/podbor,public_static,src/app/podbor/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/podbor/page.tsx,
+/services,service,src/app/services/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/services/page.tsx,
+/shop,marketplace,src/app/shop/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/shop/page.tsx,
+/shop/[slug],marketplace,src/app/shop/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/shop/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/tours,marketplace,src/app/tours/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/tours/page.tsx,
+/tours/[slug],marketplace,src/app/tours/[slug]/page.tsx,,,,unknown_or_runtime,no_or_not_observed,page_component_or_runtime_provider,src/app/tours/[slug]/page.tsx,Данные приходят из runtime/API либо статический реестр не найден этим baseline-сканером.
+/transfers,service,src/app/transfers/page.tsx,,1,,not_asserted_for_static_route,no_or_not_observed,page_component_or_runtime_provider,src/app/transfers/page.tsx,

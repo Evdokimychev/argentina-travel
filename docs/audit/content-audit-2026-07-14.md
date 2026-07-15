@@ -1,12 +1,12 @@
 # Контент-аудит — 14 июля 2026
 
-Сформирован: 2026-07-14T20:08:29.772Z
+Сформирован: 2026-07-15T04:17:18.922Z
 
 ## Исходное состояние
 
 - Проверено сущностей базы знаний: **689**.
-- Критических: **388**; высокий приоритет: **44**; средний: **2**.
-- Не допускаются в публичные индексы: **390**.
+- Критических: **479**; высокий приоритет: **44**; средний: **0**.
+- Не допускаются в публичные индексы: **479**.
 - Исходные Markdown-файлы не удаляются; карантин обратим и описан в `var/ops/content-fix-manifest.json`.
 
 ## Классы проблем
@@ -14,7 +14,9 @@
 - `non_russian_summary`: 226
 - `non_russian_title`: 224
 - `thin_content`: 163
+- `missing_sensitive_reviewer`: 133
 - `not_publication_ready`: 105
+- `missing_primary_source`: 64
 - `missing_sensitive_source`: 29
 - `missing_hero`: 20
 - `mixed_script_word`: 9
@@ -23,14 +25,16 @@
 
 ## Критические материалы
 
-- `aktualen-li-blue-dollar` — null; missing_sensitive_source, thin_content
+- `aktualen-li-blue-dollar` — null; missing_sensitive_source, missing_primary_source, missing_sensitive_reviewer, thin_content
 - `alero-charcamata` — Alero Charcamata; non_russian_title, non_russian_summary
 - `alumine` — Aluminé; non_russian_title, non_russian_summary
-- `amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes` — Amaicha del Valle and Sagrada de los Quilmes City; non_russian_title, non_russian_summary
+- `amaicha-del-valle-y-ciudad-sagrada-de-los-quilmes` — Amaicha del Valle and Sagrada de los Quilmes City; non_russian_title, non_russian_summary, missing_sensitive_reviewer
 - `andinismo-y-montanismo-en-neuquen` — Mountaineering in Neuquén; non_russian_title, non_russian_summary
 - `angastaco` — Angastaco; non_russian_title, non_russian_summary
 - `antofagasta-de-la-sierra` — Antofagasta de la Sierra; non_russian_title, non_russian_summary
+- `apostil-i-perevod-dokumentov` — Апостиль и присяжный перевод документов для Аргентины; missing_sensitive_reviewer
 - `area-natural-protegida-rio-limay` — Limay River Protected Natural Area; non_russian_title, non_russian_summary
+- `argentina-vs-drugie-strany` — Аргентина или другая страна: честное сравнение для переезда; missing_primary_source, missing_sensitive_reviewer
 - `artesania-formosena` — Handicrafts in Formosa; non_russian_title, non_russian_summary
 - `astroturismo-en-san-juan` — Astrotourism in San Juan; non_russian_title, non_russian_summary
 - `autodromo-internacional-de-rio-hondo` — Río Hondo International Racetrack; non_russian_title, non_russian_summary
@@ -40,14 +44,20 @@
 - `aves-del-chaco` — Birds from Chaco; non_russian_title, non_russian_summary, placeholder_content
 - `avistaje-de-aves-en-formosa` — Bird watching in Formosa; non_russian_title, non_russian_summary, placeholder_content
 - `avistaje-de-aves-en-santa-cruz` — Bird watching in Santa Cruz; non_russian_title, thin_content
+- `banki-i-perevody` — Как завести и перевести деньги в Аргентину; missing_sensitive_reviewer
+- `bankovskij-schet` — Банковский счёт и финансы релоканта в Аргентине; missing_sensitive_reviewer
 - `bebidas-y-gastronomia-en-cordoba` — Food and Drink in Córdoba; non_russian_title, non_russian_summary
 - `belen` — Belén; non_russian_title, non_russian_summary
-- `bezopasno-li-odnoj-zhenshchine` — null; missing_sensitive_source, thin_content
-- `bezopasno-li-v-argentine` — null; missing_sensitive_source, thin_content
+- `besplatna-li-medicina-dlya-turista` — null; missing_sensitive_reviewer
+- `bezopasno-li-odnoj-zhenshchine` — null; missing_sensitive_source, missing_primary_source, missing_sensitive_reviewer, thin_content
+- `bezopasno-li-v-argentine` — null; missing_sensitive_source, missing_primary_source, missing_sensitive_reviewer, thin_content
+- `bezopasnost-argentina` — Безопасность в Аргентине: реальные риски; missing_primary_source, missing_sensitive_reviewer
 - `bienal-internacional-de-esculturas-en-resistencia` — International Sculpture Biennale in Resistencia; non_russian_title, non_russian_summary
 - `bodega-submarina-en-las-grutas` — An underwater winery in Las Grutas; non_russian_title, non_russian_summary
 - `bosque-petrificado` — Национальный парк Окаменевшие леса Харамільо; not_publication_ready
 - `buceo-en-el-golfo-san-matias` — Scuba diving at the San Matías Gulf; non_russian_title, non_russian_summary
+- `byt-i-zhilyo` — Быт в Аргентине: квартиры, отопление, коммуналка; missing_primary_source, missing_sensitive_reviewer
+- `byudzhet-poezdki` — Бюджет поездки по Аргентине; missing_primary_source, missing_sensitive_reviewer
 - `cabalgata-en-el-lago-roca` — Horseback riding in the Roca lake; non_russian_title, non_russian_summary
 - `cabalgata-en-los-molles` — Horseback riding in Los Molles; non_russian_title, non_russian_summary
 - `cabalgatas-en-cerro-belvedere-y-cascada-inacayal` — Horseback rides in Belvedere Hill and Inacayal waterfall; non_russian_title, thin_content
@@ -71,7 +81,7 @@
 - `cascadas-santa-ana-y-dora` — Водопады Санта-Ана и Дора; not_publication_ready, thin_content
 - `catamaran-en-el-rio-parana` — Catamaran on the Paraná river; non_russian_title, non_russian_summary
 - `catamaran-en-la-triple-frontera` — Catamaran at the Triple Frontier; non_russian_title, thin_content
-- `caucete-san-juan` — Caucete, San Juan; non_russian_title, non_russian_summary
+- `caucete-san-juan` — Caucete, San Juan; non_russian_title, non_russian_summary, missing_sensitive_reviewer
 - `caviahue-copahue` — Caviahue - Copahue; non_russian_title, thin_content
 - `centro-de-esqui-la-hoya` — La Hoya ski resort; non_russian_title, non_russian_summary
 - `centro-termal-bernardo-larroude` — Bernardo Larroudé Hot Spring Center; non_russian_title, non_russian_summary
@@ -79,13 +89,18 @@
 - `cerro-castor` — Серро-Кастор; not_publication_ready, thin_content
 - `cerro-mercedario-y-grandes-cumbres-de-san-juan` — Серро-Меркедарио и большие вершины Сан-Хуана; not_publication_ready, thin_content
 - `cerro-tronador` — Серро-Тронадор; not_publication_ready, thin_content
+- `certificado-de-domicilio` — Как подтвердить адрес в Аргентине: certificado de domicilio; missing_sensitive_reviewer
+- `certificado-de-legalidad-prav` — Certificado de legalidad водительских прав: что это и зачем; missing_sensitive_reviewer
+- `chek-list-pereezda` — Чек-лист переезда в Аргентину: по этапам; missing_primary_source, missing_sensitive_reviewer
 - `cholila` — Cholila; non_russian_title, non_russian_summary
-- `chto-takoe-dni-i-cuil` — null; missing_sensitive_source, thin_content
-- `chto-takoe-mep` — null; missing_sensitive_source, thin_content
-- `circuito-callejero-de-potrero-de-los-funes` — Street circuit in Potrero de los Funes; non_russian_title, non_russian_summary
-- `circuito-cultural-en-formosa` — Cultural circuit in Formosa; non_russian_title, non_russian_summary
-- `circuito-de-cervecerias-en-rosario` — Brewers’ circuit in Rosario; non_russian_title, non_russian_summary
-- `circuito-gastronomico-en-el-rio-parana` — Food circuit on the Paraná river; non_russian_title, non_russian_summary
+- `chto-takoe-dni-i-cuil` — null; missing_sensitive_source, missing_primary_source, missing_sensitive_reviewer, thin_content
+- `chto-takoe-mep` — null; missing_sensitive_source, missing_primary_source, missing_sensitive_reviewer, thin_content
+- `chto-takoe-prekariya` — null; missing_sensitive_reviewer
+- `chto-takoe-sube` — null; missing_sensitive_reviewer
+- `circuito-callejero-de-potrero-de-los-funes` — Street circuit in Potrero de los Funes; non_russian_title, non_russian_summary, missing_sensitive_reviewer
+- `circuito-cultural-en-formosa` — Cultural circuit in Formosa; non_russian_title, non_russian_summary, missing_sensitive_reviewer
+- `circuito-de-cervecerias-en-rosario` — Brewers’ circuit in Rosario; non_russian_title, non_russian_summary, missing_sensitive_reviewer
+- `circuito-gastronomico-en-el-rio-parana` — Food circuit on the Paraná river; non_russian_title, non_russian_summary, missing_sensitive_reviewer
 - `ciudad-de-formosa` — Город Формоса; not_publication_ready, thin_content
 - `ciudad-de-san-juan` — Город Сан-Хуан; not_publication_ready, thin_content
 - `ciudad-de-santa-fe` — Город Санта-Фе; not_publication_ready, thin_content
@@ -110,18 +125,5 @@
 - `cultura-guarani-en-misiones` — Guaraní Culture in Misiones; non_russian_title, non_russian_summary
 - `cusi-cusi` — Cusi Cusi; non_russian_title, non_russian_summary
 - `delta-del-parana` — Paraná — дельта; non_russian_summary
-- `deportes-extremos-en-la-rioja` — Extreme Sports in La Rioja; non_russian_title, non_russian_summary
-- `deportes-extremos-en-paso-de-la-patria` — Extreme sports in Paso de la Patria; non_russian_title, non_russian_summary
-- `dinosaurios-de-la-patagonia` — Dinosaurios de la Патагония; non_russian_summary
-- `dinosaurios-en-neuquen` — Dinosaurs in Neuquén; non_russian_title, non_russian_summary
-- `dique-piscu-yacu` — Плотина Писку-Яку; not_publication_ready, thin_content
-- `dunas-de-taton` — Дюны Татон; not_publication_ready, thin_content
-- `el-chaku` — Чаку; not_publication_ready, thin_content
-- `el-curanto` — Куранто; not_publication_ready, thin_content
-- `el-gaucho` — Гаучо; not_publication_ready, thin_content
-- `el-hoyo` — El Hoyo; non_russian_title, thin_content
-- `el-mate` — Мате; not_publication_ready, thin_content
-- `el-nihuil` — Эль-Ниуиль; not_publication_ready, thin_content
-- `el-obelisco-de-cafayate` — Обелиск Кафайяте; not_publication_ready, thin_content
 
 Полный реестр по каждой сущности находится в `var/ops/content-audit.json`.

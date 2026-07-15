@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T20:08:29.772Z",
+  "generatedAt": "2026-07-15T04:17:18.922Z",
   "policy": "No source deletion; quarantine is reversible",
   "actions": [
     {
@@ -9,6 +9,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -39,7 +41,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -73,6 +76,15 @@
       ]
     },
     {
+      "id": "apostil-i-perevod-dokumentov",
+      "sourcePath": "content/knowledge-base/pereezd/apostil-i-perevod-dokumentov.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "area-natural-protegida-rio-limay",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/area-natural-protegida-rio-limay.md",
       "action": "quarantine_and_review",
@@ -80,6 +92,16 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "argentina-vs-drugie-strany",
+      "sourcePath": "content/knowledge-base/pereezd/argentina-vs-drugie-strany.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -183,6 +205,24 @@
       ]
     },
     {
+      "id": "banki-i-perevody",
+      "sourcePath": "content/knowledge-base/dengi/banki-i-perevody.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "bankovskij-schet",
+      "sourcePath": "content/knowledge-base/dengi/bankovskij-schet.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "barreal",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/barreal.md",
       "action": "editorial_review",
@@ -212,12 +252,23 @@
       ]
     },
     {
+      "id": "besplatna-li-medicina-dlya-turista",
+      "sourcePath": "content/knowledge-base/faq/besplatna-li-medicina-dlya-turista.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "bezopasno-li-odnoj-zhenshchine",
       "sourcePath": "content/knowledge-base/faq/bezopasno-li-odnoj-zhenshchine.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -228,7 +279,19 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "bezopasnost-argentina",
+      "sourcePath": "content/knowledge-base/bezopasnost/bezopasnost-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -277,6 +340,26 @@
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "byt-i-zhilyo",
+      "sourcePath": "content/knowledge-base/byt/byt-i-zhilyo.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "byudzhet-poezdki",
+      "sourcePath": "content/knowledge-base/dengi/byudzhet-poezdki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -534,7 +617,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -617,6 +701,34 @@
       ]
     },
     {
+      "id": "certificado-de-domicilio",
+      "sourcePath": "content/knowledge-base/pereezd/certificado-de-domicilio.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "certificado-de-legalidad-prav",
+      "sourcePath": "content/knowledge-base/transport/certificado-de-legalidad-prav.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "chek-list-pereezda",
+      "sourcePath": "content/knowledge-base/pereezd/chek-list-pereezda.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "cholila",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cholila.md",
       "action": "quarantine_and_review",
@@ -633,6 +745,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -643,7 +757,27 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "chto-takoe-prekariya",
+      "sourcePath": "content/knowledge-base/faq/chto-takoe-prekariya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "chto-takoe-sube",
+      "sourcePath": "content/knowledge-base/faq/chto-takoe-sube.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -653,7 +787,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -663,7 +798,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -673,7 +809,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -683,7 +820,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1010,6 +1148,34 @@
       ]
     },
     {
+      "id": "dni-cuil",
+      "sourcePath": "content/knowledge-base/pereezd/dni-cuil.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "dni-cuil-cuit-putanitsa",
+      "sourcePath": "content/knowledge-base/lichnyy-opyt/dni-cuil-cuit-putanitsa.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "dokumenty-dlya-poezdki-na-avto",
+      "sourcePath": "content/knowledge-base/transport/dokumenty-dlya-poezdki-na-avto.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "dunas-de-taton",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/dunas-de-taton.md",
       "action": "quarantine_and_review",
@@ -1199,6 +1365,16 @@
       ]
     },
     {
+      "id": "esim-i-svyaz",
+      "sourcePath": "content/knowledge-base/svyaz/esim-i-svyaz.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "esim-ili-lokalnaya-sim",
       "sourcePath": "content/knowledge-base/faq/esim-ili-lokalnaya-sim.md",
       "action": "editorial_review",
@@ -1254,6 +1430,16 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "falshivye-policejskie-i-obmenniki",
+      "sourcePath": "content/knowledge-base/lichnyy-opyt/falshivye-policejskie-i-obmenniki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1342,7 +1528,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "mixed_script_word"
+        "mixed_script_word",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1470,7 +1658,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1479,7 +1669,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1488,7 +1680,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1497,7 +1691,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1506,7 +1702,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1545,6 +1743,34 @@
       "reversible": true,
       "issues": [
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "gosudarstvennye-prilozheniya",
+      "sourcePath": "content/knowledge-base/svyaz/gosudarstvennye-prilozheniya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "govoryat-li-v-argentine-po-anglijski",
+      "sourcePath": "content/knowledge-base/faq/govoryat-li-v-argentine-po-anglijski.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "grazhdanstvo",
+      "sourcePath": "content/knowledge-base/pereezd/grazhdanstvo.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1597,6 +1823,15 @@
       ]
     },
     {
+      "id": "inflyatsiya-i-ekonomika",
+      "sourcePath": "content/knowledge-base/dengi/inflyatsiya-i-ekonomika.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "intendente-alvear",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/intendente-alvear.md",
       "action": "quarantine_and_review",
@@ -1634,6 +1869,15 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "istoriya-argentiny",
+      "sourcePath": "content/knowledge-base/kultura/istoriya-argentiny.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1707,6 +1951,15 @@
       ]
     },
     {
+      "id": "kak-dobratsya-iz-rossii",
+      "sourcePath": "content/knowledge-base/transport/kak-dobratsya-iz-rossii.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "kak-kupit-aviabilety-deshevle",
       "sourcePath": "content/knowledge-base/faq/kak-kupit-aviabilety-deshevle.md",
       "action": "editorial_review",
@@ -1716,12 +1969,33 @@
       ]
     },
     {
+      "id": "kak-menyat-valyutu",
+      "sourcePath": "content/knowledge-base/dengi/kak-menyat-valyutu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "kak-oplatit-tur-i-zhilyo-zaranee",
       "sourcePath": "content/knowledge-base/faq/kak-oplatit-tur-i-zhilyo-zaranee.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "kak-perevezti-kota-ili-sobaku",
+      "sourcePath": "content/knowledge-base/faq/kak-perevezti-kota-ili-sobaku.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1731,6 +2005,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -1741,7 +2017,36 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "kak-poluchit-prava-v-argentine",
+      "sourcePath": "content/knowledge-base/transport/kak-poluchit-prava-v-argentine.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "kak-snyat-kvartiru-bez-garanta",
+      "sourcePath": "content/knowledge-base/faq/kak-snyat-kvartiru-bez-garanta.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "kakie-dokumenty-vezti-s-soboj",
+      "sourcePath": "content/knowledge-base/faq/kakie-dokumenty-vezti-s-soboj.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1760,6 +2065,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -1770,6 +2077,16 @@
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "kaminito-la-boka",
+      "sourcePath": "content/knowledge-base/dostoprimechatelnosti/kaminito-la-boka.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1792,12 +2109,40 @@
       ]
     },
     {
+      "id": "kemping-i-palatki",
+      "sourcePath": "content/knowledge-base/zhile/kemping-i-palatki.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "kogda-luchshe-ehat-v-argentinu",
       "sourcePath": "content/knowledge-base/faq/kogda-luchshe-ehat-v-argentinu.md",
       "action": "editorial_review",
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "kogda-uchebnyj-god-v-argentine",
+      "sourcePath": "content/knowledge-base/faq/kogda-uchebnyj-god-v-argentine.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "kovorkingi-i-rabota-nomada",
+      "sourcePath": "content/knowledge-base/svyaz/kovorkingi-i-rabota-nomada.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -1988,7 +2333,7 @@
     {
       "id": "lyubimoe-asado-mesto",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/lyubimoe-asado-mesto.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "verification_due"
@@ -2027,7 +2372,7 @@
     {
       "id": "marshrut-vyhodnogo-dnya-ivana",
       "sourcePath": "content/knowledge-base/lichnyy-opyt/marshrut-vyhodnogo-dnya-ivana.md",
-      "action": "editorial_review",
+      "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "verification_due"
@@ -2044,12 +2389,32 @@
       ]
     },
     {
+      "id": "medicina-i-strahovka",
+      "sourcePath": "content/knowledge-base/medicina/medicina-i-strahovka.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "mendoza-best-of-wine-tourism",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/mendoza-best-of-wine-tourism.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "mentalitet-i-etiket",
+      "sourcePath": "content/knowledge-base/kultura/mentalitet-i-etiket.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2131,13 +2496,42 @@
       ]
     },
     {
+      "id": "motochorros-telefon-na-ulitse",
+      "sourcePath": "content/knowledge-base/lichnyy-opyt/motochorros-telefon-na-ulitse.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "mountain-bike-en-piedra-del-aguila",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/mountain-bike-en-piedra-del-aguila.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "mozhno-li-delat-vizaran",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-delat-vizaran.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "mozhno-li-ezdit-po-inostrannym-pravam",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-ezdit-po-inostrannym-pravam.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2147,7 +2541,37 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "mozhno-li-pit-vodu-iz-krana",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-pit-vodu-iz-krana.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-rabotat-na-mestnuyu-kompaniyu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "mozhno-li-uchitsya-v-universitete-besplatno",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-uchitsya-v-universitete-besplatno.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2157,6 +2581,15 @@
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "mozhno-li-vodit-po-rossijskim-pravam",
+      "sourcePath": "content/knowledge-base/faq/mozhno-li-vodit-po-rossijskim-pravam.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2196,7 +2629,18 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "verification_due"
+      ]
+    },
+    {
+      "id": "nalogi-i-monotributo",
+      "sourcePath": "content/knowledge-base/dengi/nalogi-i-monotributo.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2302,6 +2746,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -2312,6 +2758,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -2322,6 +2770,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -2341,7 +2791,9 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2350,7 +2802,18 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "otkrytie-biznesa",
+      "sourcePath": "content/knowledge-base/dengi/otkrytie-biznesa.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2531,6 +2994,15 @@
       ]
     },
     {
+      "id": "parque-nacional-rio-pilcomayo",
+      "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-rio-pilcomayo.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "parque-natural-valle-fertil",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/parque-natural-valle-fertil.md",
       "action": "quarantine_and_review",
@@ -2648,6 +3120,35 @@
       ]
     },
     {
+      "id": "pereezd-s-minimalnym-byudzhetom",
+      "sourcePath": "content/knowledge-base/pereezd/pereezd-s-minimalnym-byudzhetom.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "perevoz-veshchey-i-pitomtsev",
+      "sourcePath": "content/knowledge-base/pereezd/perevoz-veshchey-i-pitomtsev.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "pervyj-mesyac-plan",
+      "sourcePath": "content/knowledge-base/pereezd/pervyj-mesyac-plan.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "pesca-con-devolucion-en-entre-rios",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/pesca-con-devolucion-en-entre-rios.md",
       "action": "quarantine_and_review",
@@ -2747,12 +3248,60 @@
       ]
     },
     {
+      "id": "plan-podgotovki-6-mesyacev",
+      "sourcePath": "content/knowledge-base/pereezd/plan-podgotovki-6-mesyacev.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "playas-de-la-patagonia",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/playas-de-la-patagonia.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "podgotovka-k-poezdke",
+      "sourcePath": "content/knowledge-base/puteshestvie/podgotovka-k-poezdke.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "pokupka-avtomobilya",
+      "sourcePath": "content/knowledge-base/transport/pokupka-avtomobilya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "pokupka-nedvizhimosti",
+      "sourcePath": "content/knowledge-base/zhile/pokupka-nedvizhimosti.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "pokupki-i-tax-free",
+      "sourcePath": "content/knowledge-base/pokupki/pokupki-i-tax-free.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2763,6 +3312,33 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "posle-dtp",
+      "sourcePath": "content/knowledge-base/transport/posle-dtp.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "priznanie-diploma",
+      "sourcePath": "content/knowledge-base/pereezd/priznanie-diploma.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "provoz-lekarstv",
+      "sourcePath": "content/knowledge-base/medicina/provoz-lekarstv.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -2905,6 +3481,25 @@
       ]
     },
     {
+      "id": "rabochaya-viza",
+      "sourcePath": "content/knowledge-base/pereezd/rabochaya-viza.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "rabota-i-poisk-raboty",
+      "sourcePath": "content/knowledge-base/pereezd/rabota-i-poisk-raboty.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "rafaela",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/rafaela.md",
       "action": "quarantine_and_review",
@@ -2961,6 +3556,15 @@
       "reversible": true,
       "issues": [
         "thin_content"
+      ]
+    },
+    {
+      "id": "raskhozhdeniya-dni-cuit-cuil",
+      "sourcePath": "content/knowledge-base/pereezd/raskhozhdeniya-dni-cuit-cuil.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3166,6 +3770,24 @@
       ]
     },
     {
+      "id": "rody-i-beremennost",
+      "sourcePath": "content/knowledge-base/medicina/rody-i-beremennost.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "rody-v-argentine",
+      "sourcePath": "content/knowledge-base/faq/rody-v-argentine.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "roque-saenz-pena",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/roque-saenz-pena.md",
       "action": "quarantine_and_review",
@@ -3173,6 +3795,16 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "rossiya-vs-argentina",
+      "sourcePath": "content/knowledge-base/kultura/rossiya-vs-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3212,7 +3844,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3242,7 +3875,8 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3271,7 +3905,8 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3453,6 +4088,15 @@
       ]
     },
     {
+      "id": "sdacha-nedvizhimosti-v-arendu",
+      "sourcePath": "content/knowledge-base/dengi/sdacha-nedvizhimosti-v-arendu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "seclantas",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/seclantas.md",
       "action": "quarantine_and_review",
@@ -3480,6 +4124,24 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "shkola-dlya-detey",
+      "sourcePath": "content/knowledge-base/pereezd/shkola-dlya-detey.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "shtrafy-i-scoring",
+      "sourcePath": "content/knowledge-base/transport/shtrafy-i-scoring.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3531,12 +4193,23 @@
       ]
     },
     {
+      "id": "sistema-zdravoohraneniya",
+      "sourcePath": "content/knowledge-base/medicina/sistema-zdravoohraneniya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "skam-s-falshivoj-policiej",
       "sourcePath": "content/knowledge-base/faq/skam-s-falshivoj-policiej.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -3547,6 +4220,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -3575,7 +4250,18 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "skolko-nalichnyh-mozhno-vvezti",
+      "sourcePath": "content/knowledge-base/faq/skolko-nalichnyh-mozhno-vvezti.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3585,6 +4271,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -3594,7 +4282,77 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "missing_sensitive_source"
+        "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "soobshestvo-i-adaptaciya",
+      "sourcePath": "content/knowledge-base/pereezd/soobshestvo-i-adaptaciya.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "status-expediente-migraciones",
+      "sourcePath": "content/knowledge-base/pereezd/status-expediente-migraciones.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "stoimost-zhizni-ba",
+      "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-ba.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "stoimost-zhizni-semya-i-para",
+      "sourcePath": "content/knowledge-base/dengi/stoimost-zhizni-semya-i-para.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "stoit-li-ehat-v-argentinu",
+      "sourcePath": "content/knowledge-base/puteshestvie/stoit-li-ehat-v-argentinu.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "stoit-li-pereezzhat",
+      "sourcePath": "content/knowledge-base/pereezd/stoit-li-pereezzhat.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "studencheskaya-zhizn",
+      "sourcePath": "content/knowledge-base/pereezd/studencheskaya-zhizn.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3779,7 +4537,8 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -3909,6 +4668,16 @@
       "issues": [
         "non_russian_title",
         "non_russian_summary"
+      ]
+    },
+    {
+      "id": "udalyonnaya-rabota-i-oplata",
+      "sourcePath": "content/knowledge-base/dengi/udalyonnaya-rabota-i-oplata.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -4074,6 +4843,7 @@
       "reversible": true,
       "issues": [
         "not_publication_ready",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -4177,13 +4947,43 @@
       ]
     },
     {
+      "id": "viza-cifrovogo-kochevnika",
+      "sourcePath": "content/knowledge-base/pereezd/viza-cifrovogo-kochevnika.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "viza-cifrovogo-kochevnika-chto-daet",
       "sourcePath": "content/knowledge-base/faq/viza-cifrovogo-kochevnika-chto-daet.md",
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "viza-i-granica-dlya-rossiyan",
+      "sourcePath": "content/knowledge-base/puteshestvie/viza-i-granica-dlya-rossiyan.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "viza-kochevnika-ne-vnzh",
+      "sourcePath": "content/knowledge-base/lichnyy-opyt/viza-kochevnika-ne-vnzh.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -4193,6 +4993,8 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
       ]
     },
@@ -4203,7 +5005,54 @@
       "reversible": true,
       "issues": [
         "missing_sensitive_source",
+        "missing_primary_source",
+        "missing_sensitive_reviewer",
         "thin_content"
+      ]
+    },
+    {
+      "id": "vnzh-argentina",
+      "sourcePath": "content/knowledge-base/pereezd/vnzh-argentina.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "vnzh-po-uchebe",
+      "sourcePath": "content/knowledge-base/pereezd/vnzh-po-uchebe.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "vnzh-rantye",
+      "sourcePath": "content/knowledge-base/pereezd/vnzh-rantye.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "voditelskie-prava",
+      "sourcePath": "content/knowledge-base/pereezd/voditelskie-prava.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "voinskij-uchet-i-voennyj-bilet",
+      "sourcePath": "content/knowledge-base/pereezd/voinskij-uchet-i-voennyj-bilet.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -4227,6 +5076,24 @@
       ]
     },
     {
+      "id": "vossoedinenie-semi",
+      "sourcePath": "content/knowledge-base/pereezd/vossoedinenie-semi.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "vysokogorye-na-avto",
+      "sourcePath": "content/knowledge-base/transport/vysokogorye-na-avto.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
       "id": "yapeyu",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/yapeyu.md",
       "action": "quarantine_and_review",
@@ -4243,7 +5110,37 @@
       "reversible": true,
       "issues": [
         "non_russian_title",
-        "non_russian_summary"
+        "non_russian_summary",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "zashchita-nakoplenij-ot-inflyacii",
+      "sourcePath": "content/knowledge-base/dengi/zashchita-nakoplenij-ot-inflyacii.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "zemletryaseniya-i-vulkany",
+      "sourcePath": "content/knowledge-base/bezopasnost/zemletryaseniya-i-vulkany.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "zhile-i-arenda",
+      "sourcePath": "content/knowledge-base/pereezd/zhile-i-arenda.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_sensitive_reviewer"
       ]
     },
     {
@@ -4252,7 +5149,19 @@
       "action": "quarantine_and_review",
       "reversible": true,
       "issues": [
-        "mixed_script_word"
+        "mixed_script_word",
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
+      ]
+    },
+    {
+      "id": "zhizn-na-pensii",
+      "sourcePath": "content/knowledge-base/pereezd/zhizn-na-pensii.md",
+      "action": "quarantine_and_review",
+      "reversible": true,
+      "issues": [
+        "missing_primary_source",
+        "missing_sensitive_reviewer"
       ]
     }
   ]

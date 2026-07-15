@@ -1,0 +1,9 @@
+source_url,target_url,link_type,status,evidence,owner,action
+/guide/ekonomika-i-dengi,/guide/ekonomika-i-dengi#widget-calculator,fragment,resolved,"Removed unsupported slot and TOC target on 2026-07-15",content-platform,"Done"
+/guide/ekonomika-i-dengi,/guide/ekonomika-i-dengi#widget-map,fragment,resolved,"Removed unsupported slot and TOC target on 2026-07-15",content-platform,"Done"
+/guide/ekonomika-i-dengi,/guide/ekonomika-i-dengi#widget-promo,fragment,resolved,"Removed unsupported slot and TOC target on 2026-07-15",content-platform,"Done"
+/guide,/guide/kak-dobratsya,internal,resolved,"Replaced quarantined knowledge-base target on 2026-07-15",content,"Done"
+/guide,/guide/ekonomika-i-dengi,internal,resolved,"Replaced quarantined knowledge-base target on 2026-07-15",content,"Done"
+/guide,/guide/bezopasnost,internal,resolved,"Replaced quarantined knowledge-base target on 2026-07-15",content,"Done"
+/guide,/guide/svyaz,internal,resolved,"Replaced quarantined knowledge-base target on 2026-07-15",content,"Done"
+/guide,/guide/transport,internal,resolved,"Replaced quarantined knowledge-base target on 2026-07-15",content,"Done"
