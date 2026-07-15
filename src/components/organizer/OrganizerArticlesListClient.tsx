@@ -2,22 +2,30 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { FileText, Plus, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { CmsDocument } from "@/types/cms-content";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function OrganizerArticlesListClient() {
+  const router = useRouter();
   const [articles, setArticles] = useState<CmsDocument[]>([]);
   const [loading, setLoading] = useState(true);
   const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function loadArticles() {
     setLoading(true);
+    setError(null);
     try {
       const res = await fetch("/api/organizer/articles");
-      const data = (await res.json()) as { articles?: CmsDocument[] };
+      const data = (await res.json()) as { articles?: CmsDocument[]; error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Не удалось загрузить статьи");
       setArticles(data.articles ?? []);
+    } catch (loadError) {
+      setError(loadError instanceof Error ? loadError.message : "Не удалось загрузить статьи");
     } finally {
       setLoading(false);
     }
@@ -29,6 +37,7 @@ export default function OrganizerArticlesListClient() {
 
   async function createArticle() {
     setCreating(true);
+    setError(null);
     try {
       const res = await fetch("/api/organizer/articles", {
         method: "POST",
@@ -37,9 +46,9 @@ export default function OrganizerArticlesListClient() {
       });
       const data = (await res.json()) as { document?: CmsDocument; error?: string };
       if (!res.ok || !data.document) throw new Error(data.error ?? "Ошибка");
-      window.location.href = `/organizer/articles/${encodeURIComponent(data.document.id)}/edit`;
-    } catch (error) {
-      alert(error instanceof Error ? error.message : "Не удалось создать статью");
+      router.push(`/organizer/articles/${encodeURIComponent(data.document.id)}/edit`);
+    } catch (createError) {
+      setError(createError instanceof Error ? createError.message : "Не удалось создать статью");
       setCreating(false);
     }
   }
@@ -60,10 +69,27 @@ export default function OrganizerArticlesListClient() {
       </div>
 
       <section className={`${cabinetCardClass} p-5`}>
+        {error ? (
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-error/20 bg-error-muted px-4 py-3 text-sm text-error" role="alert">
+            <span>{error}</span>
+            <Button type="button" size="sm" variant="outline" onClick={() => void loadArticles()}>
+              <RefreshCw className="h-4 w-4" aria-hidden />
+              Повторить
+            </Button>
+          </div>
+        ) : null}
         {loading ? (
-          <p className="text-sm text-slate">Загрузка…</p>
+          <div className="space-y-3" aria-label="Загружаем статьи">
+            {[0, 1, 2].map((item) => <div key={item} className="h-14 animate-pulse rounded-xl bg-surface-muted" />)}
+          </div>
         ) : articles.length === 0 ? (
-          <p className="text-sm text-slate">Статей пока нет. Создайте первую — черновик сохранится автоматически.</p>
+          <EmptyState
+            icon={FileText}
+            title="Статей пока нет"
+            description="Создайте первый материал. Он появится как черновик и будет сохраняться автоматически."
+            action={{ label: "Создать статью", onClick: () => void createArticle() }}
+            variant="cabinet"
+          />
         ) : (
           <ul className="divide-y divide-gray-100">
             {articles.map((article) => (

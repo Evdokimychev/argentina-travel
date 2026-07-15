@@ -3,19 +3,12 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  BadgeCheck,
-  Coins,
-  Copy,
-  ExternalLink,
-  FileText,
-  Headphones,
+  CalendarClock,
+  CreditCard,
+  FilePenLine,
   ListChecks,
   Mail,
-  Send,
-  Wallet,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/cn";
 import { cabinetHeroClass, cabinetLinkClass, cabinetPanelClass } from "@/lib/cabinet-ui";
 import { CabinetDashboardSkeleton } from "@/components/ui/skeleton";
@@ -35,39 +28,10 @@ import type { OrganizerBookingStats } from "@/types/tourist";
 import { ORGANIZER_TOURS_UPDATED_EVENT } from "@/types/organizer-tour";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
 import { ORGANIZER_INBOX_UPDATED_EVENT } from "@/types/organizer-inbox";
-
-function StatusBadge({ label }: { label: string }) {
-  return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
-      <BadgeCheck className="h-3.5 w-3.5" aria-hidden />
-      {label}
-    </span>
-  );
-}
-
-function DashboardCard({
-  title,
-  children,
-  className,
-}: {
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <Card className={className}>
-      <CardHeader className="p-5 pb-0 sm:p-5 sm:pb-0">
-        <CardTitle>{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="p-5 pt-3 sm:p-5 sm:pt-3">{children}</CardContent>
-    </Card>
-  );
-}
+import { ActionQueue, type ActionQueueItem } from "@/components/workspace/ActionQueue";
 
 export default function OrganizerDashboardView() {
   const { user } = useAuth();
-  const [copied, setCopied] = useState(false);
-  const [publicToursUrl, setPublicToursUrl] = useState("/tours");
   const [bookingStats, setBookingStats] = useState<OrganizerBookingStats>({
     newCount: 0,
     pendingCount: 0,
@@ -82,10 +46,6 @@ export default function OrganizerDashboardView() {
   const [unreadMessages, setUnreadMessages] = useState(0);
   const hasAnyTours = (analytics?.publishedToursCount ?? 0) + (analytics?.draftToursCount ?? 0) > 0;
   const showOnboardingEmptyState = !hasAnyTours && bookings.length === 0;
-
-  useEffect(() => {
-    setPublicToursUrl(`${window.location.origin}/tours`);
-  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -120,41 +80,63 @@ export default function OrganizerDashboardView() {
     };
   }, [user]);
 
-  useEffect(() => {
-    if (!copied) return;
-    const timer = window.setTimeout(() => setCopied(false), 2000);
-    return () => window.clearTimeout(timer);
-  }, [copied]);
-
-  async function handleCopyLink() {
-    try {
-      await navigator.clipboard.writeText(publicToursUrl);
-      setCopied(true);
-    } catch {
-      setCopied(false);
-    }
-  }
-
   if (loading) {
     return <CabinetDashboardSkeleton title="Загружаем обзор кабинета…" />;
   }
 
+  const actionItems: ActionQueueItem[] = [
+    ...(bookingStats.activeInboxCount > 0
+      ? [{
+          id: "new-bookings",
+          title: `${bookingStats.activeInboxCount} ${bookingStats.activeInboxCount === 1 ? "заявка ждёт ответа" : "заявки ждут ответа"}`,
+          description: "Подтвердите детали или свяжитесь с путешественником.",
+          href: "/organizer/bookings?status=new",
+          label: "Разобрать",
+          priority: "high" as const,
+          count: bookingStats.activeInboxCount,
+          icon: CalendarClock,
+        }]
+      : []),
+    ...(unreadMessages > 0
+      ? [{
+          id: "unread-messages",
+          title: `${unreadMessages} ${unreadMessages === 1 ? "непрочитанное сообщение" : "непрочитанных сообщения"}`,
+          description: "Ответьте туристам, чтобы не задерживать решение по поездке.",
+          href: "/organizer/messages",
+          label: "Ответить",
+          priority: "medium" as const,
+          count: unreadMessages,
+          icon: Mail,
+        }]
+      : []),
+    ...((analytics?.pendingPaymentsCount ?? 0) > 0
+      ? [{
+          id: "pending-payments",
+          title: `${analytics?.pendingPaymentsCount ?? 0} оплат ожидают завершения`,
+          description: "Проверьте состояние оплат по активным бронированиям.",
+          href: "/organizer/finance",
+          label: "Проверить",
+          priority: "medium" as const,
+          count: analytics?.pendingPaymentsCount ?? 0,
+          icon: CreditCard,
+        }]
+      : []),
+    ...((analytics?.draftToursCount ?? 0) > 0
+      ? [{
+          id: "draft-tours",
+          title: `${analytics?.draftToursCount ?? 0} ${analytics?.draftToursCount === 1 ? "тур остался в черновиках" : "тура остались в черновиках"}`,
+          description: "Продолжите заполнение и отправьте готовое предложение на публикацию.",
+          href: "/organizer/tours?status=draft",
+          label: "Продолжить",
+          priority: "low" as const,
+          count: analytics?.draftToursCount ?? 0,
+          icon: FilePenLine,
+        }]
+      : []),
+  ];
+
   return (
     <div className="space-y-6">
-      <div className="rounded-3xl border border-sky/15 bg-gradient-to-r from-sky/8 via-white to-sky/5 px-4 py-3 sm:flex sm:items-center sm:justify-between sm:gap-4 sm:px-5">
-        <div className="flex items-start gap-3">
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-sky shadow-sm">
-            <Send className="h-4 w-4" />
-          </div>
-          <p className="text-sm leading-relaxed text-charcoal">
-            Настройте уведомления о новых заявках в мессенджер.{" "}
-            <button type="button" className="font-semibold text-sky hover:underline">
-              Подключить
-            </button>
-          </p>
-        </div>
-      </div>
-
       <section className={cabinetHeroClass}>
         <h1 className="font-display text-2xl font-bold text-charcoal sm:text-3xl">
           Входящие и заявки
@@ -185,6 +167,14 @@ export default function OrganizerDashboardView() {
           </Link>
         </div>
       </section>
+
+      <ActionQueue
+        title="Что требует внимания сегодня"
+        description="Только реальные заявки, сообщения и рабочие задачи."
+        items={actionItems}
+        emptyTitle="Входящие разобраны"
+        emptyDescription="Новых заявок, сообщений и незавершённых оплат сейчас нет."
+      />
 
       {showOnboardingEmptyState ? (
         <section className={cn(cabinetPanelClass, "border-sky/20 bg-sky/5")}>
@@ -306,113 +296,6 @@ export default function OrganizerDashboardView() {
         </section>
       ) : null}
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <DashboardCard title="Верификация личности">
-          <StatusBadge label="Скоро" />
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Проверка документов организаторов появится на следующем этапе. Пока вы можете
-            публиковать туры и принимать заявки.
-          </p>
-        </DashboardCard>
-
-        <DashboardCard title="Проверка данных">
-          <StatusBadge label="Не требуется" />
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Модерация новых организаторов будет подключена вместе с расширением маркетплейса.
-          </p>
-        </DashboardCard>
-
-        <DashboardCard title="Сообщения">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
-            <Headphones className="h-5 w-5" />
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Переписка с туристами по турам и заявкам — в кабинете, без почты.
-          </p>
-          <Link
-            href="/organizer/messages"
-            className="mt-4 inline-flex h-9 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-xs font-semibold text-charcoal transition-colors hover:bg-gray-50"
-          >
-            Открыть сообщения
-          </Link>
-        </DashboardCard>
-
-        <DashboardCard title="Поддержка платформы">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
-            <Wallet className="h-5 w-5" />
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Вопросы по работе площадки — через форму контактов.
-          </p>
-          <Link
-            href="/contacts"
-            className="mt-4 inline-flex h-9 items-center justify-center rounded-xl border border-gray-200 bg-white px-3 text-xs font-semibold text-charcoal transition-colors hover:bg-gray-50"
-          >
-            Написать в поддержку
-          </Link>
-        </DashboardCard>
-
-        <DashboardCard title="Моя страница с турами">
-          <p className="text-sm leading-relaxed text-slate">
-            Посмотрите, как выглядит ваша страница с турами на сайте партнёра
-          </p>
-          <div className="mt-4 flex flex-wrap gap-2">
-            <a
-              href={publicToursUrl}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-sky px-3 text-xs font-semibold text-white transition-colors hover:bg-sky-dark"
-            >
-              <ExternalLink className="h-4 w-4" />
-              Открыть
-            </a>
-            <Button type="button" size="sm" variant="outline" onClick={handleCopyLink}>
-              <Copy className="h-4 w-4" />
-              {copied ? "Скопировано" : "Скопировать ссылку"}
-            </Button>
-          </div>
-        </DashboardCard>
-
-        <DashboardCard title="Отчётные документы">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
-            <FileText className="h-5 w-5" />
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Пока нет документов. Когда партнёр пришлёт отчётные документы, здесь появится кнопка
-            для их скачивания.
-          </p>
-        </DashboardCard>
-
-        <DashboardCard title="Способ получения выплат">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
-            <Coins className="h-5 w-5" />
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Подключение выплат через партнёра будет доступно позже. Сейчас вы можете принимать
-            заявки и согласовывать оплату с путешественниками напрямую.
-          </p>
-          <span className="mt-4 inline-flex rounded-full bg-gray-100 px-2.5 py-1 text-xs font-semibold text-slate">
-            Скоро
-          </span>
-        </DashboardCard>
-
-        <DashboardCard title="Правила работы" className="xl:col-span-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky/10 text-sky">
-            <FileText className="h-5 w-5" />
-          </div>
-          <p className="mt-3 text-sm leading-relaxed text-slate">
-            Ознакомьтесь с{" "}
-            <Link href="/contacts" className="font-medium text-sky hover:underline">
-              правилами работы
-            </Link>{" "}
-            на площадке, а также с{" "}
-            <Link href="/join" className="font-medium text-sky hover:underline">
-              договором для организаторов
-            </Link>
-            .
-          </p>
-        </DashboardCard>
-      </div>
     </div>
   );
 }

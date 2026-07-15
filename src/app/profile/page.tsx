@@ -23,6 +23,7 @@ import {
   cabinetPanelClass,
 } from "@/lib/cabinet-ui";
 import { syncBlogReadingHistoryWithRemote } from "@/lib/blog-reading-history-sync";
+import ProfileNextBestAction from "@/components/profile/ProfileNextBestAction";
 
 export default function ProfileDashboardPage() {
   const { user } = useAuth();
@@ -81,6 +82,8 @@ export default function ProfileDashboardPage() {
           </p>
         ) : null}
       </section>
+
+      <ProfileNextBestAction />
 
       <ProfileQuickActions />
 

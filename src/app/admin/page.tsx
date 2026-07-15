@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { BellRing, CreditCard, FileCheck2, HeartPulse, UserCheck } from "lucide-react";
 import AdminTrendChart from "@/components/admin/AdminTrendChart";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
@@ -12,6 +13,7 @@ import { cabinetCardClass, cabinetStatCardClass } from "@/lib/cabinet-ui";
 import type { AdminDashboardWidgets, AdminOperationsSummary } from "@/types/admin";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
+import { ActionQueue, type ActionQueueItem } from "@/components/workspace/ActionQueue";
 
 type DashboardResponse = { widgets?: AdminDashboardWidgets };
 type OperationsSummaryResponse = { summary?: AdminOperationsSummary };
@@ -58,13 +60,66 @@ export default function AdminDashboardPage() {
       ? `Период: с ${formatAdminWhen(widgets.periodStart)}`
       : "Период: всё время"
     : null;
+  const operations = operationsData?.summary;
+  const actionItems: ActionQueueItem[] = [
+    ...(operations?.moderation.pendingCount
+      ? [{
+          id: "moderation",
+          title: `${operations.moderation.pendingCount} материалов ожидают модерации`,
+          description: operations.moderation.oldestPendingAgeMinutes
+            ? `Самый ранний материал ждёт ${Math.max(1, Math.round(operations.moderation.oldestPendingAgeMinutes / 60))} ч.`
+            : "Проверьте материалы перед публикацией.",
+          href: "/admin/marketplace/moderation",
+          label: "Проверить",
+          priority: "high" as const,
+          count: operations.moderation.pendingCount,
+          icon: FileCheck2,
+        }]
+      : []),
+    ...(operations?.organizerApplications.pendingCount
+      ? [{
+          id: "organizers",
+          title: `${operations.organizerApplications.pendingCount} заявок организаторов ждут решения`,
+          description: "Проверьте профиль и доступ к публикации предложений.",
+          href: "/admin/marketplace/organizers",
+          label: "Рассмотреть",
+          priority: "high" as const,
+          count: operations.organizerApplications.pendingCount,
+          icon: UserCheck,
+        }]
+      : []),
+    ...(operations?.payments.pendingOrPartialCount
+      ? [{
+          id: "payments",
+          title: `${operations.payments.pendingOrPartialCount} оплат требуют проверки`,
+          description: "Есть незавершённые или частично проведённые оплаты.",
+          href: "/admin/operations/payments",
+          label: "Сверить",
+          priority: "medium" as const,
+          count: operations.payments.pendingOrPartialCount,
+          icon: CreditCard,
+        }]
+      : []),
+    ...(operations?.notifications.unreadCount
+      ? [{
+          id: "notifications",
+          title: `${operations.notifications.unreadCount} непрочитанных уведомлений`,
+          description: "Проверьте новые события по операциям сайта.",
+          href: "/admin/operations",
+          label: "Открыть",
+          priority: "low" as const,
+          count: operations.notifications.unreadCount,
+          icon: BellRing,
+        }]
+      : []),
+  ];
 
   return (
     <CapabilityGate capability="dashboard.view">
       <AdminPageShell>
         <AdminPageHeader
           title="Панель управления"
-          subtitle="Ключевые показатели по операциям"
+          subtitle="Задачи владельца, продажи, контент и состояние платформы"
           actions={
             <NativeSelect
               value={period}
@@ -87,15 +142,25 @@ export default function AdminDashboardPage() {
               {periodHint} · Обновлено {formatAdminWhen(widgets.generatedAt)}
             </p>
             <Link
-              href="/api/admin/health"
+              href="/admin/operations"
               className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${healthChipClass}`}
             >
-              Здоровье: {operationsLoading ? "…" : (healthStatus ?? "—")}
+              Сайт: {operationsLoading ? "проверяем…" : healthStatus === "ok" ? "работает штатно" : healthStatus === "degraded" ? "нужна проверка" : "нет данных"}
             </Link>
           </div>
         ) : null}
 
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+        <ActionQueue
+          title="Сегодня"
+          description="Очередь действий собрана из реальных заявок, оплат и модерации."
+          items={actionItems}
+          emptyTitle="Обязательных задач нет"
+          emptyDescription="Очереди модерации, заявок организаторов и проблемных оплат сейчас пусты."
+        />
+
+        <section aria-labelledby="sales-heading">
+          <h2 id="sales-heading" className="mb-4 font-heading text-lg font-bold text-foreground">Продажи</h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
             { label: "Новые лиды", value: widgets?.totals.newLeads, href: "/admin/operations/leads" },
             {
@@ -105,12 +170,7 @@ export default function AdminDashboardPage() {
             },
             { label: "Заказы магазина", value: widgets?.totals.shopOrders, href: "/admin/operations/shop-orders" },
             {
-              label: "Очередь модерации",
-              value: widgets?.totals.pendingModeration,
-              href: "/admin/marketplace/moderation",
-            },
-            {
-              label: "Оценка выручки",
+              label: "Сумма активных бронирований",
               value: widgets ? formatUsd(widgets.totals.bookingRevenueUsd) : "0",
               href: "/admin/operations/bookings",
             },
@@ -127,6 +187,7 @@ export default function AdminDashboardPage() {
               ) : null}
             </div>
           ))}
+          </div>
         </section>
 
         {period !== "all" ? (
@@ -140,10 +201,16 @@ export default function AdminDashboardPage() {
           </section>
         )}
 
-        <section className={`${cabinetCardClass} p-5`}>
-          <h2 className="font-heading text-lg font-bold text-charcoal">Быстрые ссылки</h2>
+        <section className={`${cabinetCardClass} p-5`} aria-labelledby="content-heading">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h2 id="content-heading" className="font-heading text-lg font-bold text-charcoal">Контент</h2>
+              <p className="mt-1 text-sm text-slate">Публикации, медиа, переводы и актуальность материалов.</p>
+            </div>
+            <Link href="/admin/content/documents" className="text-sm font-semibold text-sky hover:underline">Открыть редакцию</Link>
+          </div>
           <ul className="mt-4 flex flex-wrap gap-2">
-            {QUICK_LINKS.map((link) => (
+            {QUICK_LINKS.filter((link) => link.href.startsWith("/admin/content") || link.href.includes("moderation")).map((link) => (
               <li key={link.href}>
                 <Link
                   href={link.href}
@@ -154,6 +221,29 @@ export default function AdminDashboardPage() {
               </li>
             ))}
           </ul>
+        </section>
+
+        <section className={`${cabinetCardClass} p-5`} aria-labelledby="platform-heading">
+          <div className="flex items-start gap-3">
+            <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg ${healthChipClass}`}>
+              <HeartPulse className="h-5 w-5" aria-hidden />
+            </span>
+            <div className="min-w-0 flex-1">
+              <h2 id="platform-heading" className="font-heading text-lg font-bold text-charcoal">Платформа</h2>
+              <p className="mt-1 text-sm text-slate">
+                {operationsLoading
+                  ? "Проверяем базу данных, синхронизацию и правила доступа…"
+                  : healthStatus === "ok"
+                    ? "База данных, синхронизация и правила доступа работают штатно."
+                    : "Одна или несколько системных проверок требуют внимания."}
+              </p>
+              <div className="mt-4 flex flex-wrap gap-3 text-sm">
+                <Link href="/admin/operations" className="font-semibold text-sky hover:underline">Центр операций</Link>
+                <Link href="/admin/system/audit" className="font-semibold text-sky hover:underline">Журнал действий</Link>
+                <Link href="/admin/feature-flags" className="font-semibold text-sky hover:underline">Управление функциями</Link>
+              </div>
+            </div>
+          </div>
         </section>
       </AdminPageShell>
     </CapabilityGate>
