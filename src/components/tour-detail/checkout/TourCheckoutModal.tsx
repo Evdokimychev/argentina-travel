@@ -690,8 +690,9 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   return (
     <Dialog open={checkoutOpen} onOpenChange={(next) => !next && closeCheckout()}>
       <DialogContent
+        data-private-content="checkout"
         bottomSheet
-        className="flex h-[100dvh] max-w-6xl flex-col overflow-hidden p-0 shadow-2xl sm:h-auto sm:max-h-[92vh] lg:flex-row"
+        className="ym-hide-content flex h-[100dvh] max-w-6xl flex-col overflow-hidden p-0 shadow-2xl sm:h-auto sm:max-h-[92vh] lg:flex-row"
         onPointerDownOutside={closeCheckout}
         onEscapeKeyDown={closeCheckout}
       >

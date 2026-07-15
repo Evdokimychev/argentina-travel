@@ -38,7 +38,7 @@ export default function SiteChrome({
     return (
       <>
         <SkipToContentLink />
-        <main id="main-content" className="relative min-h-dvh bg-surface-elevated" tabIndex={-1}>
+        <main id="main-content" className="ym-hide-content relative min-h-dvh bg-surface-elevated" tabIndex={-1}>
           {children}
         </main>
       </>

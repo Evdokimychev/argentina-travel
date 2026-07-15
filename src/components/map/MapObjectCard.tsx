@@ -9,6 +9,7 @@ import { MAP_MARKER_KIND_LABELS } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
 import { cn } from "@/lib/cn";
 import { buildFlightsSearchHref } from "@/lib/flights/search-href";
+import { trackProductEvent } from "@/lib/analytics/product-events";
 
 type Props = {
   object: MapObject;
@@ -183,7 +184,14 @@ export default function MapObjectCard({
                   key={dest.iata}
                   type="button"
                   title={dest.airportName}
-                  onClick={() => setSelectedDestinationIata(dest.iata)}
+                  onClick={() => {
+                    setSelectedDestinationIata(dest.iata);
+                    trackProductEvent("airport_route_selected", {
+                      entityType: "airport_route",
+                      entityId: `${object.airportDetails?.iata ?? object.slug}-${dest.iata}`,
+                      source: "map_airport_card",
+                    });
+                  }}
                   className="inline-flex items-center gap-1 rounded-full border border-sky/20 bg-surface-elevated px-2 py-1 text-[11px] font-semibold text-charcoal transition hover:border-sky hover:text-sky-ink"
                 >
                   {dest.city}

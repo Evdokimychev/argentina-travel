@@ -98,13 +98,11 @@ export function setSentryUserContext(user: SentryUserLike | null): void {
     }
 
     const id = user.id?.trim();
-    const email = user.email?.trim().toLowerCase();
     const role = user.role?.trim();
     const roles = user.roles?.filter(Boolean) ?? [];
 
     Sentry.setUser({
       id: id || undefined,
-      email: email || undefined,
     });
 
     if (role) {

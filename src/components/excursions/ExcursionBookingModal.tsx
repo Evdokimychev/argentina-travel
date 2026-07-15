@@ -21,7 +21,7 @@ export default function ExcursionBookingModal() {
       <DialogContent
         bottomSheet
         showClose={false}
-        className="max-w-lg gap-0 overflow-hidden p-0 sm:max-w-lg sm:rounded-2xl"
+        className="ym-hide-content max-w-lg gap-0 overflow-hidden p-0 sm:max-w-lg sm:rounded-2xl"
       >
         <DialogTitle className="sr-only">Подтверждение заявки на экскурсию</DialogTitle>
         <DialogDescription className="sr-only">

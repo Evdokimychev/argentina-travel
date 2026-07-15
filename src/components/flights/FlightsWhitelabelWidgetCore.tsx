@@ -24,6 +24,7 @@ import { triggerTravelpayoutsWhitelabelSearch } from "@/lib/travelpayouts/whitel
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import "./flights-whitelabel-widget.css";
+import { trackProductEvent } from "@/lib/analytics/product-events";
 
 const AUTO_SEARCH_RETRY_MS = [400, 900, 1800, 3200];
 const WIDGET_SYNC_RETRY_MS = [100, 500, 1500, 3000, 6000];
@@ -54,6 +55,8 @@ export default function FlightsWhitelabelWidgetCore({
   const mountRef = useRef<HTMLDivElement>(null);
   const resultsScrolledRef = useRef(false);
   const autoSearchStartedRef = useRef(false);
+  const readyTrackedRef = useRef(false);
+  const errorTrackedRef = useRef(false);
   const [status, setStatus] = useState<WidgetStatus>("loading");
   const [retryKey, setRetryKey] = useState(0);
 
@@ -91,12 +94,22 @@ export default function FlightsWhitelabelWidgetCore({
     function markReady() {
       if (!disposed) {
         setStatus("ready");
+        if (!readyTrackedRef.current) {
+          readyTrackedRef.current = true;
+          trackProductEvent("flights_widget_ready", { source: "travelpayouts" });
+        }
         window.clearTimeout(readyTimeout);
       }
     }
 
     function markError() {
-      if (!disposed) setStatus("error");
+      if (!disposed) {
+        setStatus("error");
+        if (!errorTrackedRef.current) {
+          errorTrackedRef.current = true;
+          trackProductEvent("flights_widget_error", { source: "travelpayouts", errorCategory: "widget_load" });
+        }
+      }
     }
 
     function ticketsHaveResults(): boolean {
@@ -112,6 +125,7 @@ export default function FlightsWhitelabelWidgetCore({
       }
       if (scrollTravelpayoutsWhitelabelResultsIntoView()) {
         resultsScrolledRef.current = true;
+        trackProductEvent("flights_results_opened", { source: "travelpayouts" });
       }
     }
 
@@ -129,6 +143,7 @@ export default function FlightsWhitelabelWidgetCore({
 
       if (triggerTravelpayoutsWhitelabelSearch()) {
         autoSearchStartedRef.current = true;
+        trackProductEvent("flights_search_started", { source: "travelpayouts", entityType: "flight_route" });
       }
     }
 
@@ -269,6 +284,7 @@ export default function FlightsWhitelabelWidgetCore({
                 href="https://www.aviasales.ru"
                 target="_blank"
                 rel="noopener noreferrer sponsored"
+                onClick={() => trackProductEvent("flights_results_opened", { source: "aviasales_fallback", outcome: "external" })}
                 className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl border border-border-subtle px-4 text-sm font-semibold text-foreground"
               >
                 Открыть Aviasales

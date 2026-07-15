@@ -16,6 +16,7 @@ import { cn } from "@/lib/cn";
 import type { SiteFooterInfo } from "@/lib/site-footer-info";
 import { siteContainerClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
+import { COOKIE_CONSENT_OPEN_EVENT } from "@/lib/cookie-consent";
 
 function FooterColumn({
   title,
@@ -170,7 +171,14 @@ export default function Footer({
 
         <div className="mt-12 flex flex-col gap-3 border-t border-border-subtle pt-8 text-sm text-slate sm:flex-row sm:items-center sm:justify-between dark:border-border-subtle">
           <div>
-            <p>© {new Date().getFullYear()} {t("footer.copyright")}</p>
+              <p>© {new Date().getFullYear()} {t("footer.copyright")}</p>
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event(COOKIE_CONSENT_OPEN_EVENT))}
+                className="mt-2 text-xs text-sky-ink hover:underline"
+              >
+                Настройки cookie
+              </button>
             {footerInfo?.legalLine ? (
               <p className="mt-1 text-xs text-slate/80">{footerInfo.legalLine}</p>
             ) : null}

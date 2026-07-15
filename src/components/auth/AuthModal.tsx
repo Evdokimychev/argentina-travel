@@ -892,7 +892,7 @@ export default function AuthModal() {
   return (
     <Dialog open={authOpen} onOpenChange={(next) => !next && closeAuth()}>
       <DialogContent
-        className="max-h-[92vh] max-w-md overflow-y-auto p-0 shadow-2xl"
+        className="ym-hide-content max-h-[92vh] max-w-md overflow-y-auto p-0 shadow-2xl"
         showClose={false}
       >
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">

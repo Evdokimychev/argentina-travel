@@ -4,6 +4,7 @@ export const COOKIE_CONSENT_MAX_AGE = 60 * 60 * 24 * 365;
 /** @deprecated Use COOKIE_CONSENT_EVENT */
 export const COOKIE_CONSENT_EVENT = "cookie-consent-changed";
 export const COOKIE_CONSENT_CHANGED_EVENT = "cookie-consent-changed";
+export const COOKIE_CONSENT_OPEN_EVENT = "cookie-consent-open";
 
 export type CookieConsentCategory = "necessary" | "analytics" | "personalization";
 

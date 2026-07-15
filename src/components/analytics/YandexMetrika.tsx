@@ -6,11 +6,13 @@ import { isYandexMetrikaEnabled } from "@/lib/analytics/yandex-metrika-config";
 import {
   getConfiguredYandexMetrikaCounterId,
   hitYandexMetrikaPage,
+  ensureYandexMetrikaLoader,
+  initYandexMetrika,
   resolveYandexMetrikaPageUrl,
   waitForYandexMetrikaReady,
 } from "@/lib/analytics/yandex-metrika";
 
-/** Tracks SPA navigations via ym hit(); loader + init + first hit live in YandexMetrikaHeadScripts. */
+/** Loads Metrika after consent and tracks the first view plus SPA navigations. */
 export default function YandexMetrika() {
   const counterId = getConfiguredYandexMetrikaCounterId();
   const pathname = usePathname();
@@ -19,6 +21,9 @@ export default function YandexMetrika() {
 
   useEffect(() => {
     if (!isYandexMetrikaEnabled() || counterId === null) return;
+
+    ensureYandexMetrikaLoader();
+    initYandexMetrika(counterId);
 
     let cancelled = false;
 

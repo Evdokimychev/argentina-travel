@@ -29,6 +29,7 @@ type YandexMetrikaHitOptions = {
 type YandexMetrikaFn = {
   (counterId: number, method: "init", options: YandexMetrikaInitOptions): void;
   (counterId: number, method: "hit", url: string, options?: YandexMetrikaHitOptions): void;
+  (counterId: number, method: "reachGoal", goal: string, params?: Record<string, unknown>): void;
   a?: unknown[];
   l?: number;
 };
@@ -44,6 +45,26 @@ export const YANDEX_METRIKA_INIT_OPTIONS: YandexMetrikaInitOptions = {
 };
 
 export const YANDEX_METRIKA_TAG_JS = "https://mc.yandex.ru/metrika/tag.js";
+
+/** Load the counter only after explicit analytics consent. */
+export function ensureYandexMetrikaLoader(): void {
+  if (typeof window === "undefined" || typeof document === "undefined") return;
+  if (typeof window.ym !== "function") {
+    const queue = function (...args: unknown[]) {
+      queue.a = queue.a ?? [];
+      queue.a.push(args);
+    } as YandexMetrikaFn;
+    queue.l = Date.now();
+    window.ym = queue;
+  }
+  if (!document.querySelector(`script[src="${YANDEX_METRIKA_TAG_JS}"]`)) {
+    const script = document.createElement("script");
+    script.src = YANDEX_METRIKA_TAG_JS;
+    script.async = true;
+    script.dataset.consent = "analytics";
+    document.head.appendChild(script);
+  }
+}
 
 /** Official loader stub — deduplicates tag.js if already present. */
 export const YANDEX_METRIKA_LOADER_SNIPPET = `(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};m[i].l=1*new Date();for(var j=0;j<document.scripts.length;j++){if(document.scripts[j].src===r){return;}}k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})(window,document,"script","${YANDEX_METRIKA_TAG_JS}","ym");`;
@@ -82,6 +103,12 @@ export function initYandexMetrika(counterId: number): boolean {
   window.ym(counterId, "init", YANDEX_METRIKA_INIT_OPTIONS);
   window.__goArgentinaYmInited = true;
   return true;
+}
+
+export function reachYandexMetrikaGoal(goal: string, params?: Record<string, unknown>): void {
+  const counterId = getConfiguredYandexMetrikaCounterId();
+  if (counterId === null || typeof window === "undefined" || typeof window.ym !== "function") return;
+  window.ym(counterId, "reachGoal", goal, params);
 }
 
 export function waitForYandexMetrikaReady(counterId: number, timeoutMs = 15000): Promise<boolean> {

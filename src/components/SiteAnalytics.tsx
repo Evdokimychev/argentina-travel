@@ -27,13 +27,13 @@ export default function SiteAnalytics() {
 
   return (
     <>
-      {isGtmEnabled() ? (
+      {enabled && isGtmEnabled() ? (
         <>
           <SiteGtmLoader />
           <MessengerClickTracker />
         </>
       ) : null}
-      {isYandexMetrikaEnabled() ? (
+      {enabled && isYandexMetrikaEnabled() ? (
         <Suspense fallback={null}>
           <YandexMetrika />
         </Suspense>

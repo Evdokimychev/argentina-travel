@@ -5,7 +5,6 @@ import ThemeScript from "@/components/ThemeScript";
 import SiteChrome from "@/components/SiteChrome";
 import SiteJsonLd from "@/components/seo/SiteJsonLd";
 import GtmHeadScripts from "@/components/analytics/GtmHeadScripts";
-import YandexMetrikaHeadScripts from "@/components/analytics/YandexMetrikaHeadScripts";
 import { loadSiteFooterInfo } from "@/lib/site-footer-info";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { localeCodeFromI18n } from "@/lib/i18n/sync-messages";
@@ -116,7 +115,6 @@ export default async function RootLayout({
     <html lang={locale} className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
       <head>
         <GtmHeadScripts />
-        <YandexMetrikaHeadScripts />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var h=w?132:88;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,

@@ -31,6 +31,7 @@ import { probeThematicLayerAvailability } from "@/lib/map-thematic-loader";
 import type { MapBasemapThemeId } from "@/lib/map-basemap-themes";
 import type { MapOverlayLayerId } from "@/lib/map-overlay-layers";
 import type { MapMarkerKind, MapObject, MapObjectsPayload } from "@/lib/map-types";
+import { trackProductEvent } from "@/lib/analytics/product-events";
 
 type Props = {
   initialData: MapObjectsPayload;
@@ -55,6 +56,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   useEffect(() => {
     void probeThematicLayerAvailability().then(setLayerAvailability);
+    trackProductEvent("map_opened", { source: "map_page" });
   }, []);
 
   useEffect(() => {
@@ -169,11 +171,14 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   function handleSearchSubmit() {
     const q = searchDraft.trim();
+    trackProductEvent("site_search_started", { source: "map", entityType: "map_object" });
     const match = q ? searchMapObjects(data.objects, q, 1)[0] : undefined;
     if (match) {
+      trackProductEvent("site_search_completed", { source: "map", entityType: match.kind, entityId: match.id, count: 1 });
       selectMapObject(match, q);
       return;
     }
+    trackProductEvent("site_search_zero_results", { source: "map", entityType: "map_object", count: 0 });
     applyState({ ...state, q, selected: "" });
     setSelected(null);
   }
@@ -185,6 +190,7 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
   }
 
   function handleToggleKind(kind: MapMarkerKind) {
+    trackProductEvent("map_filter_changed", { source: "category", entityType: "map_kind", entityId: kind });
     const nextKinds = toggleMapArgentinaKind(state.kinds, kind);
     const keepSelected =
       state.selected &&
@@ -252,6 +258,13 @@ export default function ArgentinaMapFullscreenHub({ initialData, initialState }:
 
   function handleSelectObject(obj: MapObject | null) {
     setSelected(obj);
+    if (obj) {
+      trackProductEvent(obj.kind === "airport" ? "airport_selected" : "map_marker_selected", {
+        entityType: obj.kind,
+        entityId: obj.id,
+        source: "map_marker",
+      });
+    }
     replaceUrl({ ...state, selected: obj?.id ?? "" });
   }
 
