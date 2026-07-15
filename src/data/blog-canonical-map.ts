@@ -63,8 +63,8 @@ export function resolveBlogCanonicalTarget(slug: string): BlogCanonicalTarget | 
 
 export function buildCanonicalCtaParagraph(target: BlogCanonicalTarget): string {
   return (
-    `Этот материал — черновик из контент-плана и не предназначен для самостоятельного чтения. ` +
-    `Актуальный разбор темы — в статье «${target.canonicalTitle}»: /blog/${target.canonicalSlug}.`
+    `Актуальный разбор темы опубликован в статье «${target.canonicalTitle}»: ` +
+    `/blog/${target.canonicalSlug}.`
   );
 }
 

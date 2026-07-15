@@ -414,7 +414,7 @@ export function buildStaticSearchIndex(
     ...shopItems,
     ...serviceItems,
     ...placeItems,
-  ]);
+  ]).filter((item) => !item.href.startsWith("/immigration"));
 }
 
 export function buildFullSearchIndex(tours: TourListing[]): SearchIndexItem[] {

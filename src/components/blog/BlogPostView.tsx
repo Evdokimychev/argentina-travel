@@ -1,4 +1,3 @@
-import Link from "next/link";
 import BlogPostSectionView from "@/components/blog/BlogPostSectionView";
 import BlogRelatedPosts from "@/components/blog/BlogRelatedPosts";
 import BlogPostFooterLinks from "@/components/blog/BlogPostFooterLinks";
@@ -29,7 +28,6 @@ import {
   blogPosts,
   sortBlogPostsByDate,
 } from "@/data/blog";
-import { resolveBlogCanonicalTarget } from "@/data/blog-canonical-map";
 import { blogHubPath, getBlogHubFreshPosts, getPrimaryBlogHubForPost } from "@/data/blog-hubs";
 import {
   buildBlogPostBreadcrumbJsonLd,
@@ -95,16 +93,6 @@ export default function BlogPostView({
     ...getBlogKbLinks(post.slug),
   ];
   const footerLinks = getBlogPostFooterLinks(post, publishedBlogSlugs);
-
-  const canonicalTarget = post.canonicalSlug
-    ? {
-        canonicalSlug: post.canonicalSlug,
-        canonicalTitle:
-          resolveBlogCanonicalTarget(post.slug)?.canonicalTitle ??
-          catalog.find((p) => p.slug === post.canonicalSlug)?.title ??
-          post.canonicalSlug,
-      }
-    : undefined;
 
   const usedIds = new Set<string>();
   const sectionsWithIds = (post.sections ?? []).map((section) => ({
@@ -230,21 +218,6 @@ export default function BlogPostView({
               <BlogTopicClusterNav post={post} catalog={catalog} className="mb-8" />
             ) : null}
             <div className="space-y-4">
-              {canonicalTarget ? (
-                <aside className="rounded-2xl border border-amber-200/80 bg-amber-50/90 p-4 text-sm leading-relaxed text-amber-950">
-                  <p className="font-medium">Это черновик из контент-плана.</p>
-                  <p className="mt-1">
-                    Актуальный материал по теме —{" "}
-                    <Link
-                      href={`/blog/${canonicalTarget.canonicalSlug}`}
-                      className="font-semibold text-sky hover:underline"
-                    >
-                      {canonicalTarget.canonicalTitle}
-                    </Link>
-                    .
-                  </p>
-                </aside>
-              ) : null}
               {richArticle ? (
                 <BlogRichArticle
                   article={richArticle}

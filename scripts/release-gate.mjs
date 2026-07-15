@@ -26,6 +26,7 @@ const groups = {
     ["redirect-contracts", "npm", ["run", "sync-content-plan-redirects:check"], true],
   ],
   content: [
+    ["public-editorial", "npm", ["run", "content:public-editorial"], true],
     ["content-lint", "npm", ["run", "content:audit"], true],
     ["content-governance", "npm", ["run", "content:governance"], true],
     ["seo-live-baseline", "npm", ["run", "seo-audit"], false],

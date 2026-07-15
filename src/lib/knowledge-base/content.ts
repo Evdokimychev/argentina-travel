@@ -116,8 +116,8 @@ export const KB_SECTIONS: KbSectionMeta[] = [
   {
     id: "lichnyy-opyt",
     slug: "lichnyy-opyt",
-    title: "Личный опыт",
-    description: "Живые истории и наблюдения из первых рук.",
+    title: "Советы путешественникам",
+    description: "Практические наблюдения и рекомендации для поездки.",
     icon: "✍️",
   },
 ];
@@ -194,18 +194,8 @@ export function getRelated(entry: KbEntry, limit = 6): KbEntry[] {
     }
     if (result.length >= limit) break;
   }
-  // Бэкфилл соседями раздела, чтобы у статьи никогда не было «тупика».
-  if (result.length < limit) {
-    const primarySectionId = (entry.site_sections ?? [])[0];
-    if (primarySectionId) {
-      for (const sibling of getSectionEntries(primarySectionId)) {
-        if (result.length >= limit) break;
-        if (seen.has(sibling.id) || isHub(sibling.id)) continue;
-        result.push(sibling);
-        seen.add(sibling.id);
-      }
-    }
-  }
+  // Не заполняем блок случайными соседями широкого раздела: пустой блок лучше
+  // нерелевантных рекомендаций. Явные связи проходят общий public-гейт выше.
   return result;
 }
 
@@ -225,7 +215,7 @@ export const KB_TYPE_GROUP_ORDER: { type: string; label: string }[] = [
   { type: "route", label: "Маршруты" },
   { type: "transport", label: "Транспорт" },
   { type: "faq", label: "Вопросы и ответы" },
-  { type: "author_tip", label: "Личный опыт" },
+  { type: "author_tip", label: "Советы путешественникам" },
 ];
 
 /** Группирует записи раздела по типам (хабы отдельно первыми). */

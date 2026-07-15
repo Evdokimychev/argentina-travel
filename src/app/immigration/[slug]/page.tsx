@@ -1,66 +1,17 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import ContentPageView from "@/components/content/ContentPageView";
-import ImmigrationPillarView from "@/components/immigration/ImmigrationPillarView";
-import { getContentPage, getPagesBySection } from "@/lib/content-pages";
-import {
-  getAllImmigrationTopics,
-  getImmigrationTopicBySlug,
-  getImmigrationTopicMetadata,
-  isImmigrationTopicSlug,
-} from "@/lib/immigration-topics";
-import { getImmigrationFreshnessState } from "@/lib/content-freshness-server";
-import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
-
-type PageProps = {
-  params: Promise<{ slug: string }>;
-};
 
 export async function generateStaticParams() {
-  const topicSlugs = getAllImmigrationTopics().map((topic) => ({ slug: topic.slug }));
-  const articleSlugs = getPagesBySection("immigration").map((page) => ({ slug: page.slug }));
-  return [...topicSlugs, ...articleSlugs];
+  return [];
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const { slug } = await params;
-
-  const topicMeta = getImmigrationTopicMetadata(slug);
-  if (topicMeta) {
-    return {
-      ...buildPublicPageMetadata({
-        title: topicMeta.title,
-        description: topicMeta.description,
-        path: `/immigration/${slug}`,
-      }),
-      alternates: buildHreflangAlternates(`/immigration/${slug}`),
-    };
-  }
-
-  const page = getContentPage("immigration", slug);
-  if (!page) return { title: "Иммиграция" };
+export function generateMetadata(): Metadata {
   return {
-    ...buildPublicPageMetadata({
-      title: page.title,
-      description: page.description,
-      path: `/immigration/${slug}`,
-    }),
-    alternates: buildHreflangAlternates(`/immigration/${slug}`),
+    title: "Материал недоступен",
+    robots: { index: false, follow: false },
   };
 }
 
-export default async function ImmigrationArticlePage({ params }: PageProps) {
-  const { slug } = await params;
-
-  if (isImmigrationTopicSlug(slug)) {
-    const topic = getImmigrationTopicBySlug(slug);
-    if (!topic) notFound();
-    return <ImmigrationPillarView topic={topic} />;
-  }
-
-  const page = getContentPage("immigration", slug);
-  if (!page) notFound();
-  const freshness = await getImmigrationFreshnessState(slug, page.updatedAt);
-  return <ContentPageView page={page} freshness={freshness} />;
+export default function ImmigrationArticlePage() {
+  notFound();
 }

@@ -81,7 +81,7 @@ export default function BlogHubView({
             <BlogHubCatalog hub={hub} posts={hubPosts} />
           ) : (
             <p className="mt-8 rounded-panel border border-dashed border-border-subtle bg-surface-elevated p-10 text-center text-slate">
-              Материалы подборки скоро появятся. Пока загляните в{" "}
+              В этой подборке пока нет отдельных статей. Все актуальные материалы доступны в{" "}
               <Link href="/blog" className="font-medium text-sky hover:underline">
                 каталог блога
               </Link>

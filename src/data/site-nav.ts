@@ -185,7 +185,7 @@ const KNOWLEDGE_BASE_SECTION_LINKS: SiteNavLink[] = [
     id: "kb-home",
     label: "Главная базы знаний",
     href: "/baza-znaniy",
-    description: "260+ материалов, поиск и навигация",
+    description: "Практические материалы, поиск и навигация",
   },
   {
     id: "kb-puteshestviya",
@@ -206,28 +206,10 @@ const KNOWLEDGE_BASE_SECTION_LINKS: SiteNavLink[] = [
     description: "Быт, культура, медицина, безопасность",
   },
   {
-    id: "kb-pereezd",
-    label: "Переезд в Аргентину",
-    href: "/baza-znaniy/razdel/pereezd",
-    description: "Весь путь релоканта",
-  },
-  {
-    id: "kb-dokumenty",
-    label: "Документы и легализация",
-    href: "/baza-znaniy/razdel/dokumenty",
-    description: "Виза, ВНЖ, DNI, гражданство",
-  },
-  {
-    id: "kb-finansy",
-    label: "Финансы и экономика",
-    href: "/baza-znaniy/razdel/finansy",
-    description: "Деньги, налоги, инфляция, накопления",
-  },
-  {
     id: "kb-opyt",
-    label: "Личный опыт",
+    label: "Советы путешественникам",
     href: "/baza-znaniy/razdel/lichnyy-opyt",
-    description: "Живые истории из первых рук",
+    description: "Практические наблюдения и рекомендации",
   },
 ];
 
@@ -237,12 +219,6 @@ const KNOWLEDGE_BASE_ENTRY_LINKS: SiteNavLink[] = [
     label: "Гид путешественника",
     href: "/baza-znaniy/gid-puteshestvennika",
     description: "Путь туриста: 10 шагов",
-  },
-  {
-    id: "kb-hub-relocant",
-    label: "Гид релоканта",
-    href: "/baza-znaniy/gid-relokanta",
-    description: "Путь переезда: 6 этапов",
   },
   {
     id: "kb-search",
@@ -423,13 +399,6 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     description: "Фотографии природы, городов и культуры Аргентины",
   },
   {
-    id: "immigration",
-    label: "Иммиграция",
-    labelKey: "nav.immigration",
-    href: "/immigration",
-    columns: buildImmigrationNavColumns(),
-  },
-  {
     id: "knowledgeBase",
     label: "База знаний",
     labelKey: "nav.knowledgeBase",
@@ -529,7 +498,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
 ];
 
 /** Core conversion sections — visible in the desktop pill bar at xl+. */
-export const SITE_NAV_PRIMARY_IDS = ["geography", "tours", "excursions", "guide", "immigration"] as const;
+export const SITE_NAV_PRIMARY_IDS = ["geography", "tours", "excursions", "guide"] as const;
 
 /** Shorter desktop bar at lg–xl to avoid overlap with logo and actions. */
 export const SITE_NAV_COMPACT_PRIMARY_IDS = ["geography", "tours", "excursions", "guide"] as const;
@@ -576,7 +545,14 @@ export function getSiteNavSection(id: string): SiteNavSection | undefined {
   return SITE_NAV_SECTIONS.find((section) => section.id === id);
 }
 
-export const IMMIGRATION_SITE_NAV = getSiteNavSection("immigration")!;
+/** Внутренняя конфигурация компонента: раздел скрыт до юридической перепроверки. */
+export const IMMIGRATION_SITE_NAV: SiteNavSection = {
+  id: "immigration",
+  label: "Иммиграция",
+  labelKey: "nav.immigration",
+  href: "/immigration",
+  columns: buildImmigrationNavColumns(),
+};
 
 export const SITE_NAV_PRIMARY_SECTIONS = SITE_NAV_SECTIONS.filter((section) =>
   (SITE_NAV_PRIMARY_IDS as readonly string[]).includes(section.id)

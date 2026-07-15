@@ -4,6 +4,7 @@ import type { BlogPost } from "@/types";
 export const grazhdanstvo_argentinyPost: BlogPost = {
   id: "md-grazhdanstvo-argentiny",
   slug: "grazhdanstvo-argentiny",
+  noIndex: true,
   title: "Гражданство Аргентины за 2 года: натурализация и новые правила (гид 2026)",
   seoTitle: "Гражданство Аргентины за 2 года: гид 2026",
   excerpt: "Гражданство Аргентины за 2 года: натурализация в 2026, новые правила DNU 366/2025, ребёнок-аргентинец, двойное гражданство и документы.",

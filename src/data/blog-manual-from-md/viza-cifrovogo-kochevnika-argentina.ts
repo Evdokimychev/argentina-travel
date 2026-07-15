@@ -4,6 +4,7 @@ import type { BlogPost } from "@/types";
 export const viza_cifrovogo_kochevnika_argentinaPost: BlogPost = {
   id: "md-viza-cifrovogo-kochevnika-argentina",
   slug: "viza-cifrovogo-kochevnika-argentina",
+  noIndex: true,
   title: "Виза цифрового кочевника Аргентины: полный гид 2026",
   seoTitle: "Виза цифрового кочевника Аргентины: гид 2026",
   excerpt: "Виза цифрового кочевника Аргентины 2026: требования, доход, документы, срок 180+180 дней, сколько стоит и как оформить удалёнщику. Пошагово.",

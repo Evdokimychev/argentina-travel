@@ -13,7 +13,7 @@ export const KB_TYPE_LABELS: Record<KbEntryType, string> = {
   transport: "Транспорт",
   guide: "Руководство",
   faq: "Вопрос-ответ",
-  author_tip: "Личный опыт",
+  author_tip: "Совет путешественнику",
 };
 
 export function kbTypeLabel(type: string): string {

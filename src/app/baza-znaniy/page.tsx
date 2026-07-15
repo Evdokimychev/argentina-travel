@@ -16,9 +16,9 @@ import { buildTwoLevelBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-const PAGE_TITLE = "База знаний об Аргентине — путеводитель, переезд, документы, деньги";
+const PAGE_TITLE = "База знаний об Аргентине — практический путеводитель";
 const PAGE_DESCRIPTION =
-  "Структурированная база знаний «Пора в Аргентину»: путешествия, переезд, документы и легализация, деньги, жизнь в стране и личный опыт. Сотни проверенных материалов с поиском и навигацией.";
+  "Практические материалы «Пора в Аргентину» о поездках, городах, регионах и жизни в стране — с поиском и понятной навигацией.";
 
 export const metadata: Metadata = buildPublicPageMetadata({
   title: PAGE_TITLE,
@@ -30,6 +30,7 @@ export default async function KnowledgeBaseHomePage() {
   const locale = await getServerI18nLocale();
   const hubs = getHubs();
   const total = getAllEntries().length;
+  const availableSections = KB_SECTIONS.filter((section) => getSectionCount(section.id) > 0);
 
   return (
     <>
@@ -51,9 +52,9 @@ export default async function KnowledgeBaseHomePage() {
           База знаний об Аргентине
         </h1>
         <p className="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-muted">
-          Честные, практичные и проверенные материалы для путешественников и тех,
-          кто переезжает: {total}+ статей о поездках, документах, деньгах и жизни в
-          стране. Начните с поиска или выберите точку входа.
+          {total} практических материалов для путешественников и тех, кто
+          изучает жизнь в Аргентине. Для проверяемых фактов мы указываем
+          источники и дату обновления. Начните с поиска или выберите тему.
         </p>
         <div className="mx-auto mt-6 max-w-xl">
           <KbSearchBox autoFocus />
@@ -61,25 +62,27 @@ export default async function KnowledgeBaseHomePage() {
       </header>
 
       {/* Точки входа (хабы) */}
-      <section className="mt-12">
-        <div className="mb-4 flex items-baseline justify-between">
-          <h2 className="text-xl font-semibold text-foreground">
-            С чего начать
-          </h2>
-          <span className="text-sm text-muted">Точки входа по темам</span>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {hubs.map((hub) => (
-            <KbHubCard key={hub.id} entry={hub} />
-          ))}
-        </div>
-      </section>
+      {hubs.length > 0 ? (
+        <section className="mt-12">
+          <div className="mb-4 flex items-baseline justify-between">
+            <h2 className="text-xl font-semibold text-foreground">
+              С чего начать
+            </h2>
+            <span className="text-sm text-muted">Точки входа по темам</span>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {hubs.map((hub) => (
+              <KbHubCard key={hub.id} entry={hub} />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* Разделы */}
       <section className="mt-12">
         <h2 className="mb-4 text-xl font-semibold text-foreground">Разделы</h2>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {KB_SECTIONS.map((section) => (
+          {availableSections.map((section) => (
             <Link
               key={section.id}
               href={sectionHref(section.slug)}

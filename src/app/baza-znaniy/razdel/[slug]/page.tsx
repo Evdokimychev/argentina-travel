@@ -22,7 +22,9 @@ interface PageProps {
 }
 
 export function generateStaticParams() {
-  return KB_SECTIONS.map((section) => ({ slug: section.slug }));
+  return KB_SECTIONS.filter((section) => getSectionCount(section.id) > 0).map((section) => ({
+    slug: section.slug,
+  }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
@@ -45,6 +47,7 @@ export default async function KnowledgeSectionPage({ params }: PageProps) {
 
   const sectionPath = `/baza-znaniy/razdel/${section.slug}`;
   const total = getSectionCount(section.id);
+  if (total === 0) notFound();
   const { hubs, groups } = getSectionGroups(section.id);
 
   return (

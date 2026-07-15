@@ -220,7 +220,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...kbPaths,
     ...flightRoutePaths,
     ...organizerPaths,
-  ]);
+  ]).filter((path) => !path.startsWith("/immigration"));
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {

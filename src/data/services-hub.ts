@@ -160,13 +160,6 @@ export const SERVICE_CATEGORIES: ServiceCategory[] = [
     description: "Консультации по въезду, продлению и видам ВНЖ — не юридические услуги.",
     items: [
       {
-        id: "visa-materials",
-        slug: "visa-materials",
-        title: "Материалы по въезду",
-        description: "Визы, документы и обзор ВНЖ на платформе.",
-        href: "/immigration",
-      },
-      {
         id: "visa-consult",
         slug: "visa-consult",
         title: "Запрос консультации",

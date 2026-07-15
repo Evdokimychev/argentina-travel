@@ -6,7 +6,6 @@ import {
   Info,
   MapPinned,
   Newspaper,
-  Plane,
   ShoppingBag,
   Sparkles,
   Wrench,
@@ -32,8 +31,8 @@ export const SITE_NAV_MOBILE_GROUPS: SiteNavMobileGroup[] = [
   {
     id: "guides",
     label: "Справочники",
-    description: "Путеводитель, база знаний, иммиграция и статьи",
-    sectionIds: ["guide", "knowledgeBase", "immigration", "journal"],
+    description: "Путеводитель, база знаний и статьи",
+    sectionIds: ["guide", "knowledgeBase", "journal"],
   },
   {
     id: "services",
@@ -56,7 +55,6 @@ export const SITE_NAV_SECTION_ICONS: Record<string, LucideIcon> = {
   guide: BookOpen,
   knowledgeBase: BookOpen,
   gallery: Camera,
-  immigration: Plane,
   shop: ShoppingBag,
   services: Wrench,
   journal: Newspaper,

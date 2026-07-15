@@ -14,11 +14,13 @@
  * из серверных функций репозитория, чтобы не попадать в клиентский бандл.
  */
 import { getEntry } from "@/lib/knowledge-base/content";
+import { normalizeMarkdownSections } from "@/lib/knowledge-base/markdown";
 import type { KbEntry } from "@/lib/knowledge-base/types";
 import { PLACE_TO_KB_ID } from "@/data/kb-place-id-map";
 import { DESTINATION_TO_PLACE } from "@/data/knowledge-graph/entities";
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceDetail, PlaceListing } from "@/types/place";
+import { isEditoriallyCleanRussianText } from "@/lib/editorial-text";
 
 /** id региона базы знаний → отображаемый ярлык региона на сайте (как в places-seed). */
 const KB_REGION_LABEL: Record<string, string> = {
@@ -39,14 +41,16 @@ export function kbEntryForPlaceSlug(slug: string): KbEntry | undefined {
 }
 
 /** Достаёт из тела статьи раздел «Описание» как связный текст (для fullDescription). */
-function kbLeadDescription(entry: KbEntry): string | undefined {
-  const body = entry.body ?? "";
-  const match = body.match(/##\s+Описание\s*\n+([\s\S]*?)(?=\n##\s|$)/);
-  let text = match ? match[1] : body;
+export function extractKbLeadDescription(entry: KbEntry): string | undefined {
+  const body = normalizeMarkdownSections(entry.body ?? "");
+  const match = body.match(/(?:^|\n)##\s+Описание\s*\n+([\s\S]*?)(?=\n##\s|$)/);
+  let text = match?.[1] ?? entry.summary ?? "";
   text = text
     .replace(/\[\[[^\]|]+\|([^\]]+)\]\]/g, "$1") // [[id|Текст]] → Текст
     .replace(/\[\[([^\]]+)\]\]/g, "$1") // [[id]] → id (в прозе таких не осталось)
     .replace(/\*\*([^*]+)\*\*/g, "$1") // **жирный** → жирный
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1") // [Текст](url) → Текст
+    .replace(/^[-*]\s+/gm, "")
     .replace(/\s+/g, " ")
     .trim();
   return text || undefined;
@@ -82,7 +86,7 @@ export function applyKbToDetail(place: PlaceDetail): PlaceDetail {
   return {
     ...place,
     ...listing,
-    fullDescription: kbLeadDescription(kb) || place.fullDescription,
+    fullDescription: extractKbLeadDescription(kb) || place.fullDescription,
     howToGetThere: kb.how_to_get_there ?? place.howToGetThere,
     relatedPlaces: place.relatedPlaces.map(applyKbToListing),
     kbSlug: kb.id,
@@ -109,7 +113,7 @@ export function applyKbToDestination(dest: DestinationPage): DestinationPage {
   const id = kbIdForDestination(dest.id);
   const kb = id ? getEntry(id) : undefined;
   if (!kb) return dest;
-  const lead = kbLeadDescription(kb);
+  const lead = extractKbLeadDescription(kb);
   return {
     ...dest,
     name: kb.title || dest.name,
@@ -119,5 +123,7 @@ export function applyKbToDestination(dest: DestinationPage): DestinationPage {
       kb.best_time && kb.best_time.length > 0 ? kb.best_time.join("; ") : dest.bestSeason,
     idealDuration: kb.duration || dest.idealDuration,
     howToGetThere: kb.how_to_get_there || dest.howToGetThere,
+    highlights: dest.highlights.filter(isEditoriallyCleanRussianText),
+    travelTips: dest.travelTips.filter(isEditoriallyCleanRussianText),
   };
 }

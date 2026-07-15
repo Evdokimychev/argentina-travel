@@ -13,7 +13,6 @@ export const SITE_FOOTER_NAV = [
   { href: "/destinations", label: "Регионы и места", labelKey: "nav.geography" },
   { href: "/tours", label: "Туры", labelKey: "nav.tours" },
   { href: "/guide", label: "Путеводитель", labelKey: "nav.guide" },
-  { href: "/immigration", label: "Иммиграция", labelKey: "nav.immigration" },
   { href: "/gallery", label: "Галерея", labelKey: "nav.gallery" },
   { href: "/shop", label: "Магазин", labelKey: "nav.shop" },
   { href: "/services", label: "Сервисы", labelKey: "nav.services" },

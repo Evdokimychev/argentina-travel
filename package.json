@@ -106,6 +106,7 @@
     "content:inventory": "tsx scripts/generate-content-overhaul-inventory.ts",
     "content:governance": "node scripts/content-governance-audit.mjs",
     "content:governance:strict": "node scripts/content-governance-audit.mjs --strict",
+    "content:public-editorial": "tsx scripts/public-editorial-audit.ts",
     "content:lint": "node scripts/content-audit.mjs --strict",
     "content:fix": "node scripts/content-audit.mjs",
     "content:verify-production": "SMOKE_BASE_URL=https://www.goargentina.ru node scripts/production-smoke.mjs && node scripts/content-audit.mjs",

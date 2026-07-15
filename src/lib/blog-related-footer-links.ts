@@ -2,7 +2,6 @@ import { BLOG_HUB_LINKS } from "@/data/blog-hub-links";
 import { getBlogPostBySlug } from "@/data/blog";
 import { GUIDE_TOPICS } from "@/data/guide-topics";
 import { getPlaceBySlug } from "@/data/places-seed";
-import { getContentPage } from "@/lib/content-pages";
 import { getDestinationBySlug } from "@/lib/destinations";
 import { isBlogSlugPublished } from "@/lib/blog-slug-resolve";
 import type { BlogPost, BlogRelatedResource } from "@/types";
@@ -34,8 +33,7 @@ export function isValidBlogRelatedResourceHref(
   }
 
   if (resource.type === "immigration") {
-    const slug = extractPathSlug(resource.href, "/immigration/");
-    return slug ? Boolean(getContentPage("immigration", slug)) : false;
+    return false;
   }
 
   if (resource.type === "knowledge") {

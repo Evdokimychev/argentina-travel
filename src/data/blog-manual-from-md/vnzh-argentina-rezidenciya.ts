@@ -4,6 +4,7 @@ import type { BlogPost } from "@/types";
 export const vnzh_argentina_rezidenciyaPost: BlogPost = {
   id: "md-vnzh-argentina-rezidenciya",
   slug: "vnzh-argentina-rezidenciya",
+  noIndex: true,
   title: "ВНЖ Аргентины 2026: все легальные пути резиденции и визы",
   seoTitle: "ВНЖ Аргентины 2026: все легальные пути и визы",
   excerpt: "ВНЖ Аргентины 2026: резиденция рантье, инвестора, по работе, учёбе и семье, виза цифрового кочевника. Реформа DNU 366/2025 и путь к гражданству.",
