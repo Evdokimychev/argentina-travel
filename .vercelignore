@@ -7,7 +7,6 @@ build
 
 # Repository and editor state
 .git
-.github
 .claude
 .cursor
 .vscode
