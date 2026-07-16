@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import OrganizerPublicView from "@/components/organizer-public/OrganizerPublicView";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
@@ -6,6 +7,7 @@ import {
   resolveListingOwnerUserId,
 } from "@/lib/organizer-public";
 import { PUBLIC_ORGANIZERS } from "@/data/public-organizers";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 interface OrganizerPageProps {
   params: Promise<{ slug: string }>;
@@ -17,14 +19,15 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: OrganizerPageProps) {
+export async function generateMetadata({ params }: OrganizerPageProps): Promise<Metadata> {
   const { slug } = await params;
   const profile = buildPublicOrganizerProfile(slug);
   if (!profile) return { title: "Организатор не найден" };
-  return {
+  return buildPublicPageMetadata({
     title: `${profile.name} — организатор туров`,
     description: profile.shortDescription || `Авторские туры по Аргентине от ${profile.name}`,
-  };
+    path: `/organizers/${slug}`,
+  });
 }
 
 export default async function OrganizerPublicPage({ params }: OrganizerPageProps) {

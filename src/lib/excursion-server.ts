@@ -45,6 +45,15 @@ import type {
   ExcursionPartner,
 } from "@/types/excursion";
 import { excursionCityMergeKey, normalizeExcursionCitySlug } from "@/data/excursion-city-links";
+import {
+  fetchPublishedExcursionBySlug,
+  fetchPublishedExcursionListings,
+} from "@/lib/tour-content-server";
+import {
+  nativeExcursionCities,
+  nativeTourDetailToExcursion,
+  nativeTourListingToExcursion,
+} from "@/lib/native-excursion-mapper";
 
 function getClient() {
   try {
@@ -72,10 +81,10 @@ function sortListings(items: ExcursionListing[], sort?: ExcursionListFilters["so
   return sorted;
 }
 
-function mergeCities(tripster: ExcursionCity[], sputnik8: ExcursionCity[]): ExcursionCity[] {
+function mergeCities(...sources: ExcursionCity[][]): ExcursionCity[] {
   const merged = new Map<string, ExcursionCity>();
 
-  for (const city of [...tripster, ...sputnik8]) {
+  for (const city of sources.flat()) {
     const key = excursionCityMergeKey(city);
     const slug = normalizeExcursionCitySlug(city.slug, city.name);
     const existing = merged.get(key);
@@ -94,6 +103,34 @@ function mergeCities(tripster: ExcursionCity[], sputnik8: ExcursionCity[]): Excu
   }
 
   return [...merged.values()].sort((a, b) => b.experienceCount - a.experienceCount);
+}
+
+async function fetchNativeExcursionListings(
+  supabase: ReturnType<typeof createSupabaseAdminClient> | null
+): Promise<ExcursionListing[]> {
+  if (!supabase) return [];
+  try {
+    const listings = await fetchPublishedExcursionListings(supabase);
+    return listings.map(nativeTourListingToExcursion);
+  } catch {
+    return [];
+  }
+}
+
+function filterNativeExcursions(
+  items: ExcursionListing[],
+  filters: ExcursionListFilters
+): ExcursionListing[] {
+  const query = filters.query?.trim().toLocaleLowerCase("ru") ?? "";
+  return items.filter((item) => {
+    if (filters.citySlug && item.citySlug !== filters.citySlug) return false;
+    if (query && !`${item.title} ${item.tagline ?? ""} ${item.cityName}`.toLocaleLowerCase("ru").includes(query)) {
+      return false;
+    }
+    if (filters.minPrice != null && (item.priceValue ?? 0) < filters.minPrice) return false;
+    if (filters.maxPrice != null && (item.priceValue ?? Number.MAX_SAFE_INTEGER) > filters.maxPrice) return false;
+    return true;
+  });
 }
 
 async function fetchTripsterListResult(
@@ -157,13 +194,15 @@ export async function fetchExcursionsServer(
   const page = Math.max(1, filters.page ?? 1);
   const pageSize = Math.min(500, Math.max(1, filters.pageSize ?? 24));
 
-  const [tripster, sputnik8] = await Promise.all([
+  const [tripster, sputnik8, nativeAll] = await Promise.all([
     fetchTripsterListResult(supabase, { ...filters, page: 1, pageSize: 500 }, true),
     fetchSputnik8ListResult(supabase, { ...filters, page: 1, pageSize: 500 }, true),
+    fetchNativeExcursionListings(supabase),
   ]);
 
-  const cities = mergeCities(tripster.cities, sputnik8.cities);
-  const mergedItems = sortListings([...tripster.items, ...sputnik8.items], filters.sort);
+  const nativeItems = filterNativeExcursions(nativeAll, filters);
+  const cities = mergeCities(tripster.cities, sputnik8.cities, nativeExcursionCities(nativeAll));
+  const mergedItems = sortListings([...nativeItems, ...tripster.items, ...sputnik8.items], filters.sort);
   const total = mergedItems.length;
   const from = (page - 1) * pageSize;
   const items = mergedItems.slice(from, from + pageSize);
@@ -199,6 +238,13 @@ async function fetchSputnik8Detail(slug: string): Promise<ExcursionDetail | null
   return pgFetchSputnik8ExcursionDetailServer(slug);
 }
 
+async function fetchNativeDetail(slug: string): Promise<ExcursionDetail | null> {
+  const supabase = getClient();
+  if (!supabase) return null;
+  const source = await fetchPublishedExcursionBySlug(supabase, slug);
+  return source ? nativeTourDetailToExcursion(source.canonical, source.detail) : null;
+}
+
 async function enrichTripsterGuideProfile(detail: ExcursionDetail): Promise<ExcursionDetail> {
   if (detail.partner !== "tripster" || !detail.guide?.id) return detail;
 
@@ -218,6 +264,9 @@ async function enrichTripsterGuideProfile(detail: ExcursionDetail): Promise<Excu
 }
 
 async function loadExcursionDetailServer(slug: string): Promise<ExcursionDetail | null> {
+  const native = await fetchNativeDetail(slug);
+  if (native) return native;
+
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8") {
@@ -236,7 +285,7 @@ async function loadExcursionDetailServer(slug: string): Promise<ExcursionDetail 
 function getCachedExcursionDetail(slug: string): Promise<ExcursionDetail | null> {
   return unstable_cache(
     () => loadExcursionDetailServer(slug),
-    ["excursion-detail", slug],
+    ["excursion-detail-v2", slug],
     { revalidate: 600, tags: ["excursions"] },
   )();
 }
@@ -248,6 +297,9 @@ export const fetchExcursionDetailServer = cache(
 
 export async function fetchExcursionCityServer(citySlug: string): Promise<ExcursionCity | null> {
   const supabase = getClient();
+  const requestedCityKey = normalizeExcursionCitySlug(citySlug).toLowerCase();
+  const matchesRequestedCity = (city: ExcursionCity) =>
+    normalizeExcursionCitySlug(city.slug, city.name).toLowerCase() === requestedCityKey;
 
   let tripsterCity: ExcursionCity | null = null;
   let sputnik8City: ExcursionCity | null = null;
@@ -261,18 +313,25 @@ export async function fetchExcursionCityServer(citySlug: string): Promise<Excurs
 
   if (!tripsterCity) {
     const tripsterCities = await pgFetchTripsterExcursionCities();
-    tripsterCity = tripsterCities.find((city) => city.slug === citySlug) ?? null;
+    tripsterCity = tripsterCities.find(matchesRequestedCity) ?? null;
   }
   if (!sputnik8City) {
     const sputnik8Cities = await pgFetchSputnik8ExcursionCities();
-    sputnik8City = sputnik8Cities.find((city) => city.slug === citySlug) ?? null;
+    sputnik8City = sputnik8Cities.find(matchesRequestedCity) ?? null;
   }
 
-  if (!tripsterCity && !sputnik8City) return null;
+  const nativeCities = nativeExcursionCities(await fetchNativeExcursionListings(supabase));
+  const nativeCity = nativeCities.find(matchesRequestedCity) ?? null;
+
+  if (!tripsterCity && !sputnik8City && !nativeCity) {
+    const catalog = await fetchExcursionsServer({ pageSize: 1 });
+    return catalog.cities.find(matchesRequestedCity) ?? null;
+  }
 
   const merged = mergeCities(
     tripsterCity ? [tripsterCity] : [],
-    sputnik8City ? [sputnik8City] : []
+    sputnik8City ? [sputnik8City] : [],
+    nativeCity ? [nativeCity] : []
   );
   return merged[0] ?? null;
 }
@@ -297,7 +356,8 @@ export async function fetchExcursionSlugsServer(): Promise<string[]> {
     sputnik8 = await pgFetchSputnik8ExcursionSlugsServer();
   }
 
-  return [...new Set([...tripster, ...sputnik8])].sort();
+  const native = await fetchNativeExcursionListings(supabase);
+  return [...new Set([...native.map((item) => item.slug), ...tripster, ...sputnik8])].sort();
 }
 
 export async function fetchSimilarExcursionsServer(
@@ -307,6 +367,8 @@ export async function fetchSimilarExcursionsServer(
   partner: ExcursionPartner = "tripster"
 ): Promise<ExcursionListing[]> {
   const supabase = getClient();
+
+  if (partner === "platform") return [];
 
   if (partner === "sputnik8") {
     if (supabase) {
@@ -343,7 +405,8 @@ async function loadExcursionCitiesUncached(): Promise<ExcursionCity[]> {
     sputnik8 = await pgFetchSputnik8ExcursionCities();
   }
 
-  return mergeCities(tripster, sputnik8);
+  const native = await fetchNativeExcursionListings(supabase);
+  return mergeCities(tripster, sputnik8, nativeExcursionCities(native));
 }
 
 const cachedExcursionCities = unstable_cache(

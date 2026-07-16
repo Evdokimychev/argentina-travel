@@ -4,7 +4,12 @@ import { useEffect, useRef, useState } from "react";
 import { X } from "lucide-react";
 import { TourDetail } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
@@ -153,15 +158,19 @@ export default function TourPriceRequestModal({ tour }: TourPriceRequestModalPro
 
   return (
     <Dialog open={priceRequestOpen} onOpenChange={(open) => !open && closePriceRequest()}>
-      <DialogContent bottomSheet className="max-w-lg p-0">
+      <DialogContent bottomSheet showClose={false} className="max-w-lg p-0">
         <div className="border-b border-gray-100 px-5 py-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className={tourDetailPromoHeadingClass}>
                 Цена по запросу
               </p>
-              <h2 className="font-heading text-xl font-bold text-charcoal">Запросить расчёт</h2>
-              <p className="mt-1 text-sm text-slate">{TOUR_PRICE_ON_REQUEST_HINT}</p>
+              <DialogTitle className="font-heading text-xl font-bold text-charcoal">
+                Запросить расчёт
+              </DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-slate">
+                {TOUR_PRICE_ON_REQUEST_HINT}
+              </DialogDescription>
             </div>
             <button
               type="button"

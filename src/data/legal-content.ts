@@ -131,7 +131,8 @@ export const LEGAL_DOCUMENTS: Record<string, LegalDocument> = {
   refunds: {
     slug: "refunds",
     title: "Политика возвратов",
-    description: "Общие принципы возврата средств на маркетплейсе.",
+    description:
+      "Условия, сроки и порядок возврата средств за туры и экскурсии на маркетплейсе.",
     updatedAt: "2026-06-17",
     sections: [
       {

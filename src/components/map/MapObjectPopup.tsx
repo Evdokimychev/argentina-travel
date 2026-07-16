@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import type { MapObject } from "@/lib/map-types";
 import MapObjectCard from "@/components/map/MapObjectCard";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type Props = {
   object: MapObject | null;
@@ -38,6 +43,10 @@ export default function MapObjectPopup({ object, onClose, onSelectObjectId }: Pr
           showClose={false}
           className="max-w-lg gap-0 overflow-hidden p-0 sm:max-h-[min(85vh,520px)]"
         >
+          <DialogTitle className="sr-only">{object.title}</DialogTitle>
+          <DialogDescription className="sr-only">
+            Информация об объекте на карте: {object.title}
+          </DialogDescription>
           <MapObjectCard
             object={object}
             onClose={onClose}

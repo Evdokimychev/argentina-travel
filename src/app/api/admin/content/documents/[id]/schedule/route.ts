@@ -4,6 +4,7 @@ import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { parseScheduledPublishAt } from "@/lib/cms/cms-scheduled-publish";
 import { cancelCmsDocumentSchedule, scheduleCmsDocument } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { validateAndNormalizeCmsSeo } from "@/lib/cms/seo-utils";
 import type { CmsDocumentBody, CmsDocumentSeo } from "@/types/cms-content";
 
 type ScheduleBody = {
@@ -23,6 +24,10 @@ export async function POST(
   const { id } = await context.params;
   const decodedId = decodeURIComponent(id);
   const body = (await request.json()) as ScheduleBody;
+  const validatedSeo = body.seo === undefined ? null : validateAndNormalizeCmsSeo(body.seo);
+  if (validatedSeo && !validatedSeo.ok) {
+    return NextResponse.json({ error: validatedSeo.error }, { status: 400 });
+  }
   const scheduledPublishAt = parseScheduledPublishAt(body.scheduledPublishAt);
   if (!scheduledPublishAt) {
     return NextResponse.json({ error: "Укажите дату и время публикации" }, { status: 400 });
@@ -33,7 +38,7 @@ export async function POST(
     scheduledPublishAt,
     title: body.title,
     body: body.body,
-    seo: body.seo,
+    seo: validatedSeo?.seo,
     actorId: auth.actorId,
   });
 

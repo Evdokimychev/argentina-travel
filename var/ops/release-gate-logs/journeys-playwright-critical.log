@@ -1,0 +1,48 @@
+
+> argentina-travel@0.1.0 test:e2e:smoke
+> playwright test tests/e2e/smoke.spec.ts
+
+
+Running 13 tests using 1 worker
+
+  ✓   1 [chromium] › tests/e2e/smoke.spec.ts:13:7 › E100 public smoke › home page renders (3.7s)
+  ✓   2 [chromium] › tests/e2e/smoke.spec.ts:17:7 › E100 public smoke › tours catalog renders (5.9s)
+  ✓   3 [chromium] › tests/e2e/smoke.spec.ts:21:7 › E100 public smoke › booking find page renders (2.3s)
+  ✓   4 [chromium] › tests/e2e/smoke.spec.ts:26:7 › E100 public smoke › login entry route opens auth modal (4.7s)
+  ✓   5 [chromium] › tests/e2e/smoke.spec.ts:31:7 › E100 public smoke › /api/health returns json payload (4.9s)
+  ✓   6 [chromium] › tests/e2e/smoke.spec.ts:46:7 › I3 CMS cutover smoke › blog cornerstone post renders (8.8s)
+  ✓   7 [chromium] › tests/e2e/smoke.spec.ts:51:7 › I3 CMS cutover smoke › rich park article renders (7.4s)
+  ✓   8 [chromium] › tests/e2e/smoke.spec.ts:56:7 › I3 CMS cutover smoke › guide page renders (7.6s)
+  ✓   9 [chromium] › tests/e2e/smoke.spec.ts:61:7 › I3 CMS cutover smoke › destination page renders (9.5s)
+  ✓  10 [chromium] › tests/e2e/smoke.spec.ts:66:7 › I3 CMS cutover smoke › place page renders (9.0s)
+  ✓  11 [chromium] › tests/e2e/smoke.spec.ts:71:7 › I3 CMS cutover smoke › legacy blog slug redirects to canonical (4.5s)
+  ✓  12 [chromium] › tests/e2e/smoke.spec.ts:80:7 › I3 CMS cutover smoke › legacy map URL redirects to mapa-argentina (6.3s)
+  ✓  13 [chromium] › tests/e2e/smoke.spec.ts:87:7 › I3 CMS cutover smoke › blog cornerstone shows hero image not logo (3.7s)
+
+  13 passed (1.7m)
+[WebServer] (node:50265) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50315) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50367) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+[WebServer] <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+(node:50491) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer]  ⚠ Cross origin request detected from 127.0.0.1 to /_next/* resource. In a future major version of Next.js, you will need to explicitly configure "allowedDevOrigins" in next.config to allow this.
+[WebServer] Read more: https://nextjs.org/docs/app/api-reference/config/next-config-js/allowedDevOrigins
+[WebServer] (node:50848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50932) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:50979) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51078) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51172) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51253) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)
+[WebServer] (node:51351) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)

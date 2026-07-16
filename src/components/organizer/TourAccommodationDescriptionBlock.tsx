@@ -4,15 +4,12 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Camera, Eye, Link2, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   ORGANIZER_TOUR_ACCOMMODATION_DESCRIPTION_MAX,
   ORGANIZER_TOUR_ACCOMMODATION_PHOTOS_MAX,
 } from "@/data/tour-accommodation-defaults";
 import { countDescriptionWords } from "@/data/tour-description-defaults";
-import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
-import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { uploadOrganizerProductImage } from "@/lib/organizer-product-media-client";
 import { getPlainTextLength } from "@/lib/rich-text";
 import RichTextEditor from "@/components/editor/RichTextEditor";
 import { cn } from "@/lib/cn";
@@ -42,6 +39,7 @@ function PhotoThumbnail({
 }
 
 interface TourAccommodationDescriptionBlockProps {
+  productId: string;
   description: string;
   photos: string[];
   onDescriptionChange: (next: string) => void;
@@ -53,6 +51,7 @@ interface TourAccommodationDescriptionBlockProps {
 }
 
 export default function TourAccommodationDescriptionBlock({
+  productId,
   description,
   photos,
   onDescriptionChange,
@@ -64,27 +63,11 @@ export default function TourAccommodationDescriptionBlock({
 }: TourAccommodationDescriptionBlockProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [expandedDiff, setExpandedDiff] = useState(false);
-  const [urlInput, setUrlInput] = useState("");
   const [photoError, setPhotoError] = useState<string | null>(null);
   const [photoUploading, setPhotoUploading] = useState(false);
 
   async function uploadFile(file: File) {
-    if (!file.type.startsWith("image/")) {
-      throw new Error("Выберите файл изображения");
-    }
-    if (file.size > ORGANIZER_TOUR_PHOTO_MAX_BYTES) {
-      throw new Error("Фото должно быть не больше 5 МБ");
-    }
-    return readFileAsDataUrl(file);
-  }
-
-  function normalizeUrl(value: string): string {
-    const trimmed = value.trim();
-    if (!trimmed) throw new Error("Вставьте ссылку на фото");
-    if (!/^https?:\/\//i.test(trimmed)) {
-      throw new Error("Ссылка должна начинаться с http:// или https://");
-    }
-    return trimmed;
+    return uploadOrganizerProductImage(productId, file);
   }
 
   async function addPhoto(src: string) {
@@ -100,19 +83,6 @@ export default function TourAccommodationDescriptionBlock({
     setPhotoError(null);
     try {
       await addPhoto(await uploadFile(file));
-    } catch (error) {
-      setPhotoError(error instanceof Error ? error.message : "Не удалось загрузить фото");
-    } finally {
-      setPhotoUploading(false);
-    }
-  }
-
-  async function handleUrlUpload() {
-    setPhotoUploading(true);
-    setPhotoError(null);
-    try {
-      await addPhoto(normalizeUrl(urlInput));
-      setUrlInput("");
     } catch (error) {
       setPhotoError(error instanceof Error ? error.message : "Не удалось загрузить фото");
     } finally {
@@ -205,7 +175,7 @@ export default function TourAccommodationDescriptionBlock({
           ref={fileInputRef}
           id="tour-accommodation-photo-file"
           type="file"
-          accept="image/*"
+          accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
           className="sr-only"
           onChange={(event) => {
             const file = event.target.files?.[0];
@@ -222,30 +192,6 @@ export default function TourAccommodationDescriptionBlock({
           <Camera className="h-4 w-4" />
           Загрузить фото с устройства
         </button>
-
-        <div className="flex flex-col gap-2 sm:flex-row">
-          <Input
-            value={urlInput}
-            onChange={(event) => setUrlInput(event.target.value)}
-            placeholder="Или вставьте ссылку на фото"
-            disabled={photosFull || photoUploading}
-            onKeyDown={(event) => {
-              if (event.key === "Enter") {
-                event.preventDefault();
-                void handleUrlUpload();
-              }
-            }}
-          />
-          <Button
-            type="button"
-            disabled={photosFull || photoUploading || !urlInput.trim()}
-            onClick={() => void handleUrlUpload()}
-            className="shrink-0 sm:min-w-[132px]"
-          >
-            <Camera className="h-4 w-4" />
-            Загрузить
-          </Button>
-        </div>
 
         {photoError ? <p className="text-sm text-red-600">{photoError}</p> : null}
 

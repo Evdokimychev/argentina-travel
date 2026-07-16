@@ -4,7 +4,12 @@ import { useEffect, useState } from "react";
 import { X, ListOrdered } from "lucide-react";
 import { TourDetail } from "@/types";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/context/AuthContext";
@@ -177,17 +182,19 @@ export default function TourWaitlistModal({ tour }: TourWaitlistModalProps) {
 
   return (
     <Dialog open={waitlistOpen} onOpenChange={(open) => !open && closeWaitlist()}>
-      <DialogContent bottomSheet className="max-w-lg p-0">
+      <DialogContent bottomSheet showClose={false} className="max-w-lg p-0">
         <div className="border-b border-gray-100 px-5 py-4">
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className={tourDetailPromoHeadingClass}>
                 Лист ожидания
               </p>
-              <h2 className="font-heading text-xl font-bold text-charcoal">
+              <DialogTitle className="font-heading text-xl font-bold text-charcoal">
                 Записаться в очередь
-              </h2>
-              <p className="mt-1 text-sm text-slate">{WAITLIST_HINT}</p>
+              </DialogTitle>
+              <DialogDescription className="mt-1 text-sm text-slate">
+                {WAITLIST_HINT}
+              </DialogDescription>
             </div>
             <button
               type="button"

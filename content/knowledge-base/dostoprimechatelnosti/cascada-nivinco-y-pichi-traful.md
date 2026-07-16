@@ -1,7 +1,7 @@
 ---
 id: cascada-nivinco-y-pichi-traful
 type: attraction
-title: Ñivinco and Pichi Traful Waterfalls
+title: Водопады Нивинко и Пичи-Трафуль
 title_es: Cascada Ñivinco y Pichi Traful
 title_en: Ñivinco and Pichi Traful Waterfalls
 summary: "Два водопада в национальном парке Науэль-Уапи: андские тропы к Нивинко и Пичи-Трафуль."

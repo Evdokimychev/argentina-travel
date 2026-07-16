@@ -552,6 +552,11 @@ export interface Database {
           title: string;
           listing: Json | null;
           payload: Json;
+          product_type: string;
+          editor_draft: Json | null;
+          approved_listing: Json | null;
+          approved_payload: Json | null;
+          approved_at: string | null;
           published_at: string | null;
           moderation_status: string;
           moderation_notes: string | null;
@@ -568,6 +573,11 @@ export interface Database {
           title: string;
           listing?: Json | null;
           payload: Json;
+          product_type?: string;
+          editor_draft?: Json | null;
+          approved_listing?: Json | null;
+          approved_payload?: Json | null;
+          approved_at?: string | null;
           published_at?: string | null;
           moderation_status?: string;
           moderation_notes?: string | null;
@@ -584,6 +594,11 @@ export interface Database {
           title?: string;
           listing?: Json | null;
           payload?: Json;
+          product_type?: string;
+          editor_draft?: Json | null;
+          approved_listing?: Json | null;
+          approved_payload?: Json | null;
+          approved_at?: string | null;
           published_at?: string | null;
           moderation_status?: string;
           moderation_notes?: string | null;

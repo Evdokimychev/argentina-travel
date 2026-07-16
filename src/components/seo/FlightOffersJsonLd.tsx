@@ -1,6 +1,7 @@
 import type { FlightPriceTeaser } from "@/lib/flights/hub-price-teasers";
 
 import { absoluteUrl } from "@/lib/site-url";
+import { serializeJsonLd } from "@/lib/schema-json-ld";
 
 const SITE_ORIGIN = absoluteUrl("");
 
@@ -37,7 +38,7 @@ export default function FlightOffersJsonLd({ teasers, pageUrl }: FlightOffersJso
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }

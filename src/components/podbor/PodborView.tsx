@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Compass, Sparkles } from "lucide-react";
 import type { TourListing } from "@/types";
 import type { ExcursionListing } from "@/types/excursion";
-import type { PodborAnswers, PodborQuestionId, PodborMatchResult } from "@/types/podbor";
+import type { PodborAnswers, PodborMatchResult } from "@/types/podbor";
 import PodborProgressBar from "./PodborProgressBar";
 import PodborQuestionScreen from "./PodborQuestionScreen";
 import PodborResultsView from "./PodborResultsView";
@@ -68,7 +68,11 @@ export default function PodborView({ tours }: PodborViewProps) {
 
   useEffect(() => {
     if (!activeQuestionId) return;
-    setDraftSelection(answers[activeQuestionId] ?? []);
+    const question = getQuestionForDisplay(activeQuestionId, answers);
+    setDraftSelection(
+      answers[activeQuestionId] ??
+        (question.numericInput ? [String(question.numericInput.defaultValue)] : [])
+    );
   }, [activeQuestionId, answers]);
 
   useEffect(() => {
@@ -132,22 +136,9 @@ export default function PodborView({ tours }: PodborViewProps) {
     setPhase("intro");
   }, []);
 
-  if (!hydrated) {
-    return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-sky border-t-transparent" />
-      </div>
-    );
-  }
-
   if (phase === "results" && result) {
     return (
-      <div>
-        <PodborResultsView result={result} onRestart={handleRestart} />
-        <div className="mx-auto max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
-          <PodborTourMatchChat className="mt-8" />
-        </div>
-      </div>
+      <PodborResultsView result={result} onRestart={handleRestart} />
     );
   }
 
@@ -214,9 +205,6 @@ export default function PodborView({ tours }: PodborViewProps) {
         ) : null}
       </AnimatePresence>
 
-      <div className="mx-auto max-w-3xl px-4 pb-12 sm:px-6">
-        <PodborTourMatchChat compact className="mt-6" />
-      </div>
     </div>
   );
 }

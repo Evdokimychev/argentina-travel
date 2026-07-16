@@ -1,7 +1,7 @@
 ---
 id: cerros-catedral-y-perito-moreno
 type: attraction
-title: Cerros Catedral y Перито-Морено
+title: Горнолыжные центры Серро-Катедраль и Серро-Перито-Морено
 title_es: Cerros Catedral y Perito Moreno
 title_en: Cerro Catedral and Perito Moreno hills
 summary: "Крупнейшие горнолыжные центры Патагонии — Серро-Катедраль у Барилоче и Серро-Перито-Морено."

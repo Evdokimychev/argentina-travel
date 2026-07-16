@@ -448,9 +448,9 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
     selectionMode: "single",
     options: [
       { id: "under-500", label: "До 500 $", tags: ["budget-low"] },
-      { id: "500-1000", label: "500–1000 $", tags: ["budget-mid"] },
-      { id: "1000-2000", label: "1000–2000 $", tags: ["budget-comfort"] },
-      { id: "2000-5000", label: "2000–5000 $", tags: ["budget-premium"] },
+      { id: "500-1000", label: "501–1000 $", tags: ["budget-mid"] },
+      { id: "1000-2000", label: "1001–2000 $", tags: ["budget-comfort"] },
+      { id: "2000-5000", label: "2001–5000 $", tags: ["budget-premium"] },
       { id: "5000+", label: "Более 5000 $", tags: ["budget-luxury"] },
     ],
   },
@@ -466,6 +466,15 @@ export const PODBOR_QUESTIONS: Record<PodborQuestionId, PodborQuestion> = {
       { id: "friends", label: "Друзья", tags: ["friends"] },
       { id: "corporate", label: "Корпоративная группа", tags: ["corporate"] },
     ],
+  },
+
+  "party-size": {
+    id: "party-size",
+    title: "Сколько человек едет?",
+    subtitle: "Точное число нужно для проверки вместимости и цены на человека.",
+    selectionMode: "single",
+    numericInput: { min: 1, max: 20, defaultValue: 2 },
+    options: [],
   },
 
   activity: {

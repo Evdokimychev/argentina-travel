@@ -7,6 +7,7 @@ import {
   updateCmsDocument,
 } from "@/lib/cms/content-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { validateAndNormalizeCmsSeo } from "@/lib/cms/seo-utils";
 import type { CmsDocumentBody, CmsDocumentSeo, CmsDocumentStatus } from "@/types/cms-content";
 
 type PatchBody = {
@@ -45,6 +46,10 @@ export async function PATCH(
   const { id } = await context.params;
   const decodedId = decodeURIComponent(id);
   const body = (await request.json()) as PatchBody;
+  const validatedSeo = body.seo === undefined ? null : validateAndNormalizeCmsSeo(body.seo);
+  if (validatedSeo && !validatedSeo.ok) {
+    return NextResponse.json({ error: validatedSeo.error }, { status: 400 });
+  }
 
   if (body.status === "published" || body.status === "scheduled") {
     const publishAuth = await authorizeAdminRequest(request, "content.publish");
@@ -55,7 +60,7 @@ export async function PATCH(
   const result = await updateCmsDocument(supabase, decodedId, {
     title: body.title,
     body: body.body,
-    seo: body.seo,
+    seo: validatedSeo?.seo,
     status: body.status,
     actorId: auth.actorId,
   });

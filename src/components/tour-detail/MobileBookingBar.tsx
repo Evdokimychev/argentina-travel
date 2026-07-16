@@ -11,7 +11,6 @@ import { getGuestLimits } from "@/lib/tour-booking-spots";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 import { tourDetailMobileBarClass } from "@/lib/tour-detail-ui";
-import { useRandomAttentionPulse } from "@/hooks/useRandomAttentionPulse";
 import TourPublicPriceDisplay from "./TourPublicPriceDisplay";
 import FormattedPrice from "@/components/FormattedPrice";
 import { resolveTourPriceFromPrefix } from "@/lib/tour-price-public";
@@ -19,7 +18,6 @@ import GuestCounter from "./GuestCounter";
 import { useTourBooking } from "./TourBookingContext";
 import BookingDateSelector, { validateBookingDates } from "./BookingDateSelector";
 import ExternalBookingButton from "./ExternalBookingButton";
-import { DEFAULT_CUSTOM_BOOKING_HINT } from "@/lib/tour-custom-booking-link";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
@@ -53,8 +51,8 @@ function formatMobileDateSummary(
 export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   const isPartnerTour = isPartnerTourDetail(tour);
   const {
+    productKind,
     totalPriceUsd,
-    totalOriginalPriceUsd,
     openCheckout,
     dateMode,
     customDate,
@@ -63,6 +61,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     selectedDateId,
     canJoinWaitlist,
     openWaitlist,
+    offerCapabilities,
     usesExternalBooking,
     externalBookingLink,
     externalBookingHref,
@@ -74,9 +73,6 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     partnerEditRequest,
   } = useTourBooking();
   const priceOnRequest = Boolean(tour.priceOnRequest);
-  const bookButtonPulseKey = useRandomAttentionPulse({
-    enabled: !usesExternalBooking,
-  });
   const [expanded, setExpanded] = useState(false);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
 
@@ -197,12 +193,14 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
   }
 
   const primaryLabel = usesExternalBooking
-    ? externalBookingLink?.label ?? "Забронировать на сайте организатора"
-    : priceOnRequest
+    ? offerCapabilities.primaryActionLabel
+    : offerCapabilities.bookingMode === "disabled"
+      ? offerCapabilities.primaryActionLabel
+      : priceOnRequest
       ? "Запросить расчёт"
       : canJoinWaitlist && bookingValidationError
         ? "Лист ожидания"
-        : "Заявка";
+        : "Забронировать";
 
   const showFromPrefix = resolveTourPriceFromPrefix({
     priceUsd: tour.priceUsd,
@@ -221,7 +219,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               <button
                 type="button"
                 onClick={() => setExpanded(false)}
-                className="flex items-center gap-1 text-xs font-medium text-slate hover:text-charcoal"
+                className="flex min-h-11 items-center gap-1 rounded-lg px-2 text-xs font-medium text-slate hover:bg-gray-50 hover:text-charcoal"
               >
                 Свернуть
                 <ChevronDown className="h-4 w-4" aria-hidden />
@@ -244,16 +242,16 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               <a
                 href="#dates"
                 onClick={() => setExpanded(false)}
-                className="block text-center text-xs font-medium text-sky hover:underline"
+                className="flex min-h-11 items-center justify-center text-center text-xs font-medium text-sky-ink hover:underline"
               >
-                Все даты тура
+                Все даты {productKind === "excursion" ? "экскурсии" : "тура"}
               </a>
             ) : null}
           </div>
         </div>
       ) : null}
 
-      <div className="py-4">
+      <div className="py-2.5">
         <div className={cn(siteContainerClass, "flex flex-col gap-2")}>
           {error ? (
             <InlineFeedback
@@ -268,7 +266,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
             <button
               type="button"
               onClick={() => setExpanded(true)}
-              className="flex w-full min-h-[36px] items-center justify-between gap-3 rounded-lg px-0.5 text-left text-xs text-slate transition-colors hover:text-charcoal"
+              className="flex min-h-11 w-full items-center justify-between gap-3 rounded-lg px-1 text-left text-xs text-slate transition-colors hover:bg-gray-50 hover:text-charcoal"
             >
               <span className="min-w-0 truncate">
                 <span className="font-medium text-charcoal">{dateSummary}</span>
@@ -311,12 +309,13 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               />
             ) : (
               <button
-                key={bookButtonPulseKey}
                 type="button"
                 onClick={handlePrimaryAction}
+                disabled={offerCapabilities.bookingMode === "disabled"}
                 className={cn(
-                  "min-h-[44px] flex-1 rounded-xl bg-sky py-3 text-center text-sm font-semibold text-white hover:bg-sky-dark",
-                  bookButtonPulseKey > 0 && "animate-book-cta-pulse"
+                  "min-h-11 flex-1 rounded-xl bg-sky-ink py-3 text-center text-sm font-semibold text-white hover:bg-sky-ink/90",
+                  offerCapabilities.bookingMode === "disabled" &&
+                    "cursor-not-allowed bg-gray-300 text-slate hover:bg-gray-300",
                 )}
               >
                 {primaryLabel}

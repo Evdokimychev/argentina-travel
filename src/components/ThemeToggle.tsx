@@ -4,6 +4,7 @@ import { Moon, Sun } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useTheme } from "@/context/ThemeContext";
 import { DARK_THEME_ENABLED } from "@/types/theme";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ThemeToggleVariant = "header" | "settings";
 
@@ -20,24 +21,29 @@ export default function ThemeToggle({ variant = "header", className }: ThemeTogg
   const isDark = resolvedTheme === "dark";
 
   if (variant === "header") {
+    const label = isDark ? "Включить светлую тему" : "Включить тёмную тему";
     return (
-      <button
-        type="button"
-        onClick={toggleTheme}
-        disabled={!ready}
-        aria-label={isDark ? "Светлая тема" : "Тёмная тема"}
-        title={isDark ? "Светлая тема" : "Тёмная тема"}
-        className={cn(
-          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal/[0.06] text-foreground ring-1 ring-charcoal/10 backdrop-blur-sm transition-colors hover:bg-sky/10 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 disabled:opacity-60 dark:bg-white/10 dark:ring-white/10 dark:hover:bg-sky/20",
-          className
-        )}
-      >
-        {isDark ? (
-          <Sun className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden />
-        ) : (
-          <Moon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden />
-        )}
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={toggleTheme}
+            disabled={!ready}
+            aria-label={label}
+            className={cn(
+              "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-charcoal/[0.06] text-foreground ring-1 ring-charcoal/10 backdrop-blur-sm transition-colors hover:bg-sky/10 hover:text-sky hover:ring-sky/25 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 disabled:opacity-60 dark:bg-white/10 dark:ring-white/10 dark:hover:bg-sky/20",
+              className
+            )}
+          >
+            {isDark ? (
+              <Sun className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden />
+            ) : (
+              <Moon className="h-[18px] w-[18px]" strokeWidth={1.75} aria-hidden />
+            )}
+          </button>
+        </TooltipTrigger>
+        <TooltipContent>{label}</TooltipContent>
+      </Tooltip>
     );
   }
 

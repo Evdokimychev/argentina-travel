@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import JoinPageView from "@/components/join/JoinPageView";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildPublicPageMetadata({
   title: "Авторам путешествий",
   description:
     "Размещайте авторские туры по Аргентине на платформе «Пора в Аргентину». Бесплатное размещение, новый канал продаж и поддержка авторов.",
-};
+  path: "/join",
+});
 
 export default function JoinPage() {
   return <JoinPageView />;

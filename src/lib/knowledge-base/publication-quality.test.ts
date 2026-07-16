@@ -10,6 +10,8 @@ const validEntry: KbEntry = {
   summary: "Город на Огненной Земле и отправная точка для поездок по региону.",
   status: "published",
   site_ready: true,
+  media: { hero: { url: "/images/ushuaia.jpg" } },
+  editorial: { word_count: 180 },
   body: "Полезное описание.",
 };
 
@@ -26,6 +28,15 @@ describe("KB publication quarantine", () => {
     [{ summary: "TODO placeholder" }, "placeholder_content"],
   ] as const)("quarantines critical issue %s", (overrides, issue) => {
     const entry = { ...validEntry, ...overrides };
+    expect(getPublicationIssues(entry)).toContain(issue);
+    expect(isPublicKbEntry(entry)).toBe(false);
+  });
+
+  it.each([
+    [{ editorial: { word_count: 40 } }, "thin_content"],
+    [{ media: null }, "missing_hero"],
+  ] as const)("quarantines incomplete public content %s", (overrides, issue) => {
+    const entry = { ...validEntry, ...overrides } as KbEntry;
     expect(getPublicationIssues(entry)).toContain(issue);
     expect(isPublicKbEntry(entry)).toBe(false);
   });

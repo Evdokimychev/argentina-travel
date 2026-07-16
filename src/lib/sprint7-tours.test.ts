@@ -63,7 +63,8 @@ describe("Sprint 7 — tours catalog & detail", () => {
   it("TourDetailGallery has mobile carousel and desktop mosaic", () => {
     const gallery = readFileSync(join(root, "components/tour-detail/TourDetailGallery.tsx"), "utf8");
     const mosaic = readFileSync(join(root, "components/shared/GalleryMosaicDesktop.tsx"), "utf8");
-    expect(gallery).toContain("useGalleryKeyboard");
+    expect(gallery).toContain("onKeyDown");
+    expect(gallery).not.toContain('window.addEventListener("keydown"');
     expect(gallery).toContain("GalleryMosaicDesktop");
     expect(gallery).toContain("md:hidden");
     expect(mosaic).toContain("tourDetailGalleryGridClass");
@@ -83,9 +84,9 @@ describe("Sprint 7 — tours catalog & detail", () => {
     expect(dayOnePoints.length).toBeGreaterThan(0);
   });
 
-  it("MobileBookingBar uses compact Заявка CTA", () => {
+  it("MobileBookingBar uses a clear booking CTA", () => {
     const source = readFileSync(join(root, "components/tour-detail/MobileBookingBar.tsx"), "utf8");
-    expect(source).toContain('"Заявка"');
+    expect(source).toContain('"Забронировать"');
     expect(source).toContain("FormattedPrice");
   });
 

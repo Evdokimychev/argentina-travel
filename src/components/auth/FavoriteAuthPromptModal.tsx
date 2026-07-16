@@ -28,7 +28,7 @@ export default function FavoriteAuthPromptModal() {
           <button
             type="button"
             onClick={closeFavoritePrompt}
-            className="flex h-9 w-9 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+            className="flex h-11 w-11 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Закрыть"
           >
             <X className="h-5 w-5" />

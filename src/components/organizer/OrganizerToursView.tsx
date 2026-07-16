@@ -4,16 +4,27 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ExternalLink, Eye, PencilLine, Plus, Search, Map } from "lucide-react";
+import { ExternalLink, Eye, Footprints, PencilLine, Plus, Search, Map } from "lucide-react";
 import OrganizerOnboardingWizard from "@/components/onboarding/OrganizerOnboardingWizard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { EmptyState } from "@/components/ui/empty-state";
 import { ORGANIZER_TOUR_LISTINGS } from "@/data/organizer-tours";
 import { useAuth } from "@/context/AuthContext";
-import { getOrganizerTourListingsForUser, createOrganizerTour } from "@/lib/organizer-tour-store";
+import {
+  cacheOrganizerTourDraft,
+  createOrganizerTour,
+  deleteOrganizerTour,
+  getOrganizerTourListingsForUser,
+} from "@/lib/organizer-tour-store";
+import {
+  fetchOrganizerTourDraftsRemote,
+  patchOrganizerTourDraftRemote,
+} from "@/lib/organizer-tour-draft-api";
+import { isRemoteToursMode } from "@/lib/tour-content-api";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/cn";
-import { cabinetCardClass, cabinetLinkClass } from "@/lib/cabinet-ui";
+import { cabinetCardClass } from "@/lib/cabinet-ui";
 import { formatDays, formatWithWord, pluralRu } from "@/lib/pluralize";
 import type { OrganizerTourListing, OrganizerTourStatus, OrganizerTourType } from "@/types/organizer-tour";
 import { ORGANIZER_TOURS_UPDATED_EVENT } from "@/types/organizer-tour";
@@ -37,8 +48,24 @@ function formatToursAndExcursions(tours: number, excursions: number): string {
   return `${tourPart} и ${excursionPart}`;
 }
 
-function StatusBadge({ status }: { status: OrganizerTourStatus }) {
-  if (status === "published") {
+function StatusBadge({ tour }: { tour: OrganizerTourListing }) {
+  if (tour.moderationStatus === "pending") {
+    return (
+      <span className="inline-flex rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
+        На модерации
+      </span>
+    );
+  }
+
+  if (tour.moderationStatus === "rejected") {
+    return (
+      <span className="inline-flex rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-700">
+        Нужны исправления
+      </span>
+    );
+  }
+
+  if (tour.status === "published") {
     return (
       <span className="inline-flex rounded-full bg-emerald-50 px-2.5 py-1 text-xs font-semibold text-emerald-700">
         Опубликовано
@@ -86,7 +113,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
       <div className="flex flex-1 flex-col p-4">
         <div className="mb-3">
           <div className="flex flex-wrap items-center gap-2">
-            <StatusBadge status={tour.status} />
+            <StatusBadge tour={tour} />
             {tour.isPrivate ? (
               <span className="inline-flex rounded-full bg-charcoal/10 px-2.5 py-1 text-xs font-semibold text-charcoal">
                 Приватный
@@ -123,7 +150,7 @@ function TourListingCard({ tour }: { tour: OrganizerTourListing }) {
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-gray-50 text-slate transition-colors hover:bg-gray-100 hover:text-sky"
-            aria-label="Предпросмотр тура"
+            aria-label={tour.type === "excursion" ? "Предпросмотр экскурсии" : "Предпросмотр тура"}
           >
             <Eye className="h-4 w-4" />
           </Link>
@@ -143,6 +170,9 @@ export default function OrganizerToursView() {
   const [typeFilter, setTypeFilter] = useState<TypeFilter>("all");
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("all");
   const [tours, setTours] = useState<OrganizerTourListing[]>(ORGANIZER_TOUR_LISTINGS);
+  const [createDialogOpen, setCreateDialogOpen] = useState(false);
+  const [createBusy, setCreateBusy] = useState(false);
+  const [listError, setListError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -152,6 +182,17 @@ export default function OrganizerToursView() {
     }
 
     refreshTours();
+
+    if (isRemoteToursMode()) {
+      void fetchOrganizerTourDraftsRemote()
+        .then((drafts) => {
+          for (const draft of drafts) cacheOrganizerTourDraft(draft, user);
+          refreshTours();
+        })
+        .catch(() => {
+          setListError("Не удалось обновить список с сервера. Показаны сохранённые на устройстве черновики.");
+        });
+    }
 
     window.addEventListener(ORGANIZER_TOURS_UPDATED_EVENT, refreshTours);
     window.addEventListener("focus", refreshTours);
@@ -175,9 +216,44 @@ export default function OrganizerToursView() {
     router.replace("/organizer/tours", { scroll: false });
   }
 
-  function handleCreateTour() {
-    const result = createOrganizerTour(user);
-    if ("error" in result) return;
+  async function handleCreateTour(type: OrganizerTourType) {
+    setCreateBusy(true);
+    setListError(null);
+    const result = createOrganizerTour(user, type, { skipRemoteSync: true });
+    if ("error" in result) {
+      setCreateBusy(false);
+      setListError(result.error);
+      return;
+    }
+    if (isRemoteToursMode()) {
+      try {
+        const synced = await patchOrganizerTourDraftRemote({
+          tourId: result.draft.id,
+          draft: result.draft,
+          expectedUpdatedAt: null,
+        });
+        cacheOrganizerTourDraft(
+          {
+            ...result.draft,
+            updatedAt: synced.updatedAt ?? result.draft.updatedAt,
+            moderationStatus: synced.moderationStatus,
+            moderationNotes: synced.moderationNotes,
+          },
+          user
+        );
+      } catch (createError) {
+        deleteOrganizerTour(result.draft.id, user, { skipRemoteSync: true });
+        setCreateBusy(false);
+        setListError(
+          createError instanceof Error
+            ? createError.message
+            : "Не удалось создать предложение на сервере"
+        );
+        return;
+      }
+    }
+    setCreateBusy(false);
+    setCreateDialogOpen(false);
     router.push(`/organizer/tours/${result.draft.id}/edit`);
   }
 
@@ -230,11 +306,17 @@ export default function OrganizerToursView() {
               {formatToursAndExcursions(tourCount, excursionCount)}
             </p>
           </div>
-          <Button type="button" className="shrink-0 gap-2 self-start" onClick={handleCreateTour}>
+          <Button type="button" className="shrink-0 gap-2 self-start" onClick={() => setCreateDialogOpen(true)}>
             <Plus className="h-4 w-4" />
             Добавить тур или экскурсию
           </Button>
         </div>
+
+        {listError ? (
+          <div role="alert" className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+            {listError}
+          </div>
+        ) : null}
 
         <div className="grid gap-3 lg:grid-cols-3">
           <div className="relative lg:col-span-1">
@@ -242,14 +324,14 @@ export default function OrganizerToursView() {
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Поиск по турам"
+              placeholder="Поиск по турам и экскурсиям"
               className="pl-10"
             />
           </div>
 
           <div>
             <label htmlFor="organizer-tour-type-filter" className="sr-only">
-              Тип тура
+              Тип предложения
             </label>
             <select
               id="organizer-tour-type-filter"
@@ -265,7 +347,7 @@ export default function OrganizerToursView() {
 
           <div>
             <label htmlFor="organizer-tour-status-filter" className="sr-only">
-              Статус публикации тура
+              Статус публикации
             </label>
             <select
               id="organizer-tour-status-filter"
@@ -292,17 +374,52 @@ export default function OrganizerToursView() {
             title="Ничего не найдено"
             description={
               archiveTab === "archive"
-                ? "В архиве пока нет туров по выбранным фильтрам."
-                : "Измените фильтры или добавьте новый тур."
+                ? "В архиве пока нет предложений по выбранным фильтрам."
+                : "Измените фильтры или добавьте тур либо экскурсию."
             }
             action={
               archiveTab !== "archive"
-                ? { label: "Добавить тур", onClick: handleCreateTour }
+                ? { label: "Добавить предложение", onClick: () => setCreateDialogOpen(true) }
                 : undefined
             }
           />
         )}
       </div>
+
+      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogTitle>Что вы хотите добавить?</DialogTitle>
+          <DialogDescription>
+            Тип определяет раздел сайта и набор стартовых настроек. После создания его нельзя изменить.
+          </DialogDescription>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <button
+              type="button"
+              disabled={createBusy}
+              onClick={() => void handleCreateTour("tour")}
+              className="flex min-h-32 flex-col items-start justify-between rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-sky hover:bg-sky/5 disabled:opacity-60"
+            >
+              <Map className="h-6 w-6 text-sky" />
+              <span>
+                <span className="block font-semibold text-charcoal">Авторский тур</span>
+                <span className="mt-1 block text-sm leading-relaxed text-slate">Многодневная программа с датами и проживанием</span>
+              </span>
+            </button>
+            <button
+              type="button"
+              disabled={createBusy}
+              onClick={() => void handleCreateTour("excursion")}
+              className="flex min-h-32 flex-col items-start justify-between rounded-lg border border-gray-200 bg-white p-4 text-left transition-colors hover:border-coral hover:bg-coral/5 disabled:opacity-60"
+            >
+              <Footprints className="h-6 w-6 text-coral" />
+              <span>
+                <span className="block font-semibold text-charcoal">Экскурсия</span>
+                <span className="mt-1 block text-sm leading-relaxed text-slate">Однодневная активность без проживания</span>
+              </span>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

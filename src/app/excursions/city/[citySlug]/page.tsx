@@ -9,6 +9,7 @@ import {
   fetchExcursionCityServer,
   fetchExcursionsServer,
 } from "@/lib/tripster/excursion-server";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 type CityPageProps = {
   params: Promise<{ citySlug: string }>;
@@ -19,18 +20,11 @@ export async function generateMetadata({ params }: CityPageProps): Promise<Metad
   const city = await fetchExcursionCityServer(citySlug);
   if (!city) return { title: "Город не найден" };
 
-  return {
+  return buildPublicPageMetadata({
     title: `Экскурсии в ${city.name}`,
-    description: `Городские экскурсии и активности в ${city.name}, Аргентина.`,
-    openGraph: {
-      title: `Экскурсии в ${city.name}`,
-      description: `Городские экскурсии и активности в ${city.name}, Аргентина.`,
-      type: "website",
-    },
-    alternates: {
-      canonical: `/excursions/city/${citySlug}`,
-    },
-  };
+    description: `Авторские экскурсии, прогулки и активности в ${city.name}, Аргентина: выбирайте маршрут, гида и удобную дату.`,
+    path: `/excursions/city/${citySlug}`,
+  });
 }
 
 export default async function ExcursionCityPage({ params }: CityPageProps) {

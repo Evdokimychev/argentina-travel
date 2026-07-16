@@ -1,7 +1,7 @@
 ---
 id: cabalgatas-en-la-estepa-de-bariloche
 type: attraction
-title: Cabalgatas en la estepa de Барилоче
+title: Конные прогулки по степям Барилоче
 title_es: Cabalgatas en la estepa de Bariloche
 title_en: Horseback riding on the Bariloche steppe
 summary: "Верховые прогулки по патагонской степи в окрестностях Барилоче."

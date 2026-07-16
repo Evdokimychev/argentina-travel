@@ -10,7 +10,12 @@ import {
 import { I18N_LOCALES, isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Database } from "@/types/database";
-import { cmsDocumentId, type CmsDocType, type CmsDocument } from "@/types/cms-content";
+import {
+  cmsDocumentId,
+  type CmsDocType,
+  type CmsDocument,
+  type CmsDocumentSeo,
+} from "@/types/cms-content";
 
 export type CmsDbClient = SupabaseClient<Database>;
 
@@ -18,6 +23,7 @@ export type CmsResolverMetadata = {
   requestedLocale: I18nLocale;
   translationStatus: CmsTranslationStatus;
   showTranslationBanner: boolean;
+  seo?: CmsDocumentSeo;
 };
 
 export type CmsContentWithMetadata<T extends object> = T & {
@@ -41,13 +47,15 @@ function getRequestedLocaleStatus(
 
 export function buildCmsResolverMetadata(
   requestedLocale: string,
-  translationStatus: CmsTranslationStatus
+  translationStatus: CmsTranslationStatus,
+  seo?: CmsDocumentSeo,
 ): CmsResolverMetadata {
   const locale = normalizeRequestedLocale(requestedLocale);
   return {
     requestedLocale: locale,
     translationStatus,
     showTranslationBanner: locale !== "ru" && !getRequestedLocaleStatus(locale, translationStatus),
+    ...(seo ? { seo } : {}),
   };
 }
 
@@ -65,7 +73,8 @@ export function getCmsResolverMetadata(value: unknown): CmsResolverMetadata | nu
 }
 
 export function cmsFallbackRobots(value: unknown): { index: false; follow: true } | undefined {
-  return getCmsResolverMetadata(value)?.showTranslationBanner
+  const metadata = getCmsResolverMetadata(value);
+  return metadata?.showTranslationBanner || metadata?.seo?.noIndex
     ? { index: false, follow: true }
     : undefined;
 }
@@ -144,15 +153,17 @@ export async function resolvePublishedCmsLocaleSlugs(
   if (!supabase) return { ru: slug };
 
   const slugs: Partial<Record<I18nLocale, string>> = {};
+  let hasRuOverride = false;
 
   for (const locale of I18N_LOCALES) {
     const doc = await fetchPublishedCmsDocument(supabase, docType, slug, locale);
-    if (doc) {
+    if (locale === "ru" && doc) hasRuOverride = true;
+    if (doc && !doc.seo.noIndex && isCmsDocumentComplete(doc)) {
       slugs[locale] = doc.slug;
     }
   }
 
-  if (!slugs.ru) slugs.ru = slug;
+  if (!slugs.ru && !hasRuOverride) slugs.ru = slug;
   return slugs;
 }
 
@@ -214,14 +225,26 @@ export async function listPublishedCmsSlugs(
 
   const { data } = await supabase
     .from("content_documents")
-    .select("slug")
+    .select("slug, seo")
     .eq("doc_type", docType)
     .eq("locale", locale)
     .eq("status", "published");
 
-  const cmsSlugs = (data ?? []).map((row) => row.slug);
+  const noIndexSlugs = new Set(
+    (data ?? [])
+      .filter((row) => {
+        const seo = row.seo;
+        return Boolean(seo && typeof seo === "object" && !Array.isArray(seo) && seo.noIndex === true);
+      })
+      .map((row) => row.slug),
+  );
+  const cmsSlugs = (data ?? [])
+    .map((row) => row.slug)
+    .filter((slug) => !noIndexSlugs.has(slug));
   if (options?.cmsOnly) return Array.from(new Set(cmsSlugs));
-  return Array.from(new Set([...fallbackSlugs, ...cmsSlugs]));
+  return Array.from(
+    new Set([...fallbackSlugs.filter((slug) => !noIndexSlugs.has(slug)), ...cmsSlugs]),
+  );
 }
 
 /**
@@ -242,8 +265,9 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
   merge: (doc: CmsDocument, fallback: T | undefined) => T | null;
   supabase?: CmsDbClient | null;
   isUsable?: (doc: CmsDocument) => boolean;
+  onResolvedDocument?: (doc: CmsDocument) => void;
 }): Promise<T | null> {
-  const { docType, slug, locale = "ru", fallback, merge, isUsable } = options;
+  const { docType, slug, locale = "ru", fallback, merge, isUsable, onResolvedDocument } = options;
   const supabase = options.supabase === undefined ? await getCmsServerClient() : options.supabase;
   if (!supabase) return fallback;
 
@@ -251,6 +275,7 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
     const override = await fetchPublishedCmsDocument(supabase, docType, slug, tryLocale);
     if (override) {
       if (isUsable && !isUsable(override)) continue;
+      onResolvedDocument?.(override);
       return merge(override, fallback ?? undefined) ?? fallback;
     }
   }

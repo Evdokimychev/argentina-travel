@@ -11,6 +11,7 @@ import {
   Heart,
   LayoutGrid,
   Mail,
+  MoreHorizontal,
   Settings,
   ShoppingBag,
   Star,
@@ -22,7 +23,7 @@ import NotificationsBell from "@/components/notifications/NotificationsBell";
 import { cn } from "@/lib/cn";
 import {
   cabinetMobileHeaderClass,
-  cabinetMobileNavClass,
+  cabinetMobileBottomNavClass,
   cabinetNavBadgeClass,
   cabinetNavActiveClass,
   cabinetNavIdleClass,
@@ -47,12 +48,11 @@ import {
 import { useConversationInboxRealtime } from "@/hooks/useConversationInboxRealtime";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { MESSAGES_UPDATED_EVENT } from "@/types/messages";
-import { NOTIFICATIONS_UPDATED_EVENT } from "@/lib/notifications";
-import { NOTIFICATIONS_HUB_UPDATED_EVENT } from "@/lib/notifications/notifications-api";
 import { SITE_LEGAL_LINKS } from "@/data/site-links";
 
 const SIDEBAR_COLLAPSED_KEY = "profile-sidebar-collapsed";
 const AUTO_COLLAPSE_MAX_WIDTH = 1279;
+const PROFILE_MOBILE_PRIMARY_IDS: ProfileNavId[] = ["dashboard", "favorites", "bookings"];
 
 const NAV_ICONS: Record<Exclude<ProfileNavId, "settings">, typeof LayoutGrid> = {
   dashboard: LayoutGrid,
@@ -226,7 +226,7 @@ export default function ProfileSidebar({
 
       <nav
         className={cn(
-          "shrink-0 space-y-1",
+          "min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain scrollbar-thin",
           isCompact ? "px-2 py-3" : "px-3 py-4"
         )}
       >
@@ -319,11 +319,11 @@ export default function ProfileSidebar({
 export function ProfileMobileHeader() {
   return (
     <div className={cabinetMobileHeaderClass}>
-      <Link href="/" className="inline-flex">
+      <Link href="/" className="inline-flex min-h-11 items-center">
         <ArgentinaLogo size="sm" />
       </Link>
       <p className="text-sm font-semibold text-charcoal">Личный кабинет</p>
-      <Link href={PROFILE_SETTINGS_HREF} className="text-xs font-medium text-sky">
+      <Link href={PROFILE_SETTINGS_HREF} className="-mr-2 inline-flex min-h-11 items-center px-2 text-xs font-medium text-sky">
         Настройки
       </Link>
     </div>
@@ -335,6 +335,7 @@ export function ProfileMobileNav() {
   const userId = user?.id ?? null;
   const pathname = usePathname();
   const [navItems, setNavItems] = useState(PROFILE_NAV_ITEMS);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   useEffect(() => {
     if (!userId) return;
@@ -359,35 +360,98 @@ export function ProfileMobileNav() {
     void loadProfileNavItems(userId).then(setNavItems);
   });
 
+  useEffect(() => {
+    setMoreOpen(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!moreOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMoreOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [moreOpen]);
+
+  const primaryItems = navItems.filter((item) => PROFILE_MOBILE_PRIMARY_IDS.includes(item.id));
+  const moreItems = navItems.filter((item) => !PROFILE_MOBILE_PRIMARY_IDS.includes(item.id));
+  const isItemActive = (href: string) =>
+    href === "/profile" ? pathname === "/profile" : pathname.startsWith(href);
+  const isMoreActive =
+    pathname.startsWith(PROFILE_SETTINGS_HREF) || moreItems.some((item) => isItemActive(item.href));
+  const hasMoreBadge = moreItems.some((item) => (item.badge ?? 0) > 0);
+
   return (
-    <nav className={cabinetMobileNavClass}>
-      {navItems.map((item) => {
+    <>
+    <nav className={cn(cabinetMobileBottomNavClass, "grid grid-cols-4 items-center")} aria-label="Навигация личного кабинета">
+      {primaryItems.map((item) => {
         const Icon = NAV_ICONS[item.id as Exclude<ProfileNavId, "settings">];
-        const active =
-          item.href === "/profile"
-            ? pathname === "/profile"
-            : pathname.startsWith(item.href);
+        const active = isItemActive(item.href);
 
         return (
           <Link
             key={item.id}
             href={item.href}
+            aria-current={active ? "page" : undefined}
             className={cn(
               cabinetNavLinkClass,
-              "flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2.5 text-xs font-medium transition-colors min-h-11",
-              active ? cn(cabinetNavActiveClass, "before:hidden") : cabinetNavIdleClass
+              "relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+              active ? "text-sky" : "text-slate hover:text-foreground",
             )}
           >
-            <Icon className="h-3.5 w-3.5" strokeWidth={1.75} />
-            {item.label}
+            <span className={cn("relative flex h-7 w-7 items-center justify-center rounded-lg", active ? "bg-sky/10 text-sky" : "bg-gray-100 text-slate")}>
+            <Icon className="h-4 w-4" strokeWidth={1.85} />
             {item.badge ? (
-              <span className={cn(cabinetNavBadgeClass, "ml-0.5 h-4 min-w-4 px-1 text-[9px]")}>
+              <span className={cn(cabinetNavBadgeClass, "absolute -right-1.5 -top-1 h-4 min-w-4 px-1 text-[9px]")}>
                 {item.badge}
               </span>
             ) : null}
+            </span>
+            {item.label}
           </Link>
         );
       })}
+      <button
+        type="button"
+        aria-expanded={moreOpen}
+        aria-controls="profile-mobile-more-menu"
+        aria-label="Ещё разделы"
+        onClick={() => setMoreOpen((open) => !open)}
+        className={cn(
+          "relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
+          isMoreActive || moreOpen ? "text-sky" : "text-slate hover:text-foreground",
+        )}
+      >
+        <span className={cn("relative flex h-7 w-7 items-center justify-center rounded-lg", isMoreActive || moreOpen ? "bg-sky/10 text-sky" : "bg-gray-100 text-slate")}>
+          <MoreHorizontal className="h-4 w-4" strokeWidth={1.85} />
+          {hasMoreBadge ? <span className={cn(cabinetNavBadgeClass, "absolute -right-1.5 -top-1 h-4 min-w-4 text-[9px]")}>•</span> : null}
+        </span>
+        Ещё
+      </button>
     </nav>
+
+    {moreOpen ? (
+      <div className="fixed inset-0 z-30 md:hidden">
+        <button type="button" aria-label="Закрыть дополнительные разделы" onClick={() => setMoreOpen(false)} className="absolute inset-0 bg-black/25" />
+        <div id="profile-mobile-more-menu" role="dialog" aria-modal="true" aria-label="Дополнительные разделы личного кабинета" className="absolute inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] max-h-[calc(100dvh-6.5rem-env(safe-area-inset-bottom,0px))] overflow-y-auto overscroll-contain rounded-2xl border border-border-subtle bg-surface-elevated p-2 shadow-elevated">
+          <div className="grid grid-cols-2 gap-2">
+            {moreItems.map((item) => {
+              const Icon = NAV_ICONS[item.id as Exclude<ProfileNavId, "settings">];
+              const active = isItemActive(item.href);
+              return (
+                <Link key={item.id} href={item.href} aria-current={active ? "page" : undefined} onClick={() => setMoreOpen(false)} className={cn(cabinetSurfaceButtonClass, "flex items-center justify-between gap-2 px-3 py-2.5 text-sm", active && "border-sky/30 bg-sky/10 text-sky")}>
+                  <span className="inline-flex items-center gap-2"><Icon className="h-4 w-4" strokeWidth={1.75} />{item.label}</span>
+                  {item.badge ? <span className={cn(cabinetNavBadgeClass, "h-4 min-w-4 px-1 text-[9px]")}>{item.badge}</span> : null}
+                </Link>
+              );
+            })}
+            <Link href={PROFILE_SETTINGS_HREF} aria-current={pathname.startsWith(PROFILE_SETTINGS_HREF) ? "page" : undefined} onClick={() => setMoreOpen(false)} className={cn(cabinetSurfaceButtonClass, "flex items-center gap-2 px-3 py-2.5 text-sm", pathname.startsWith(PROFILE_SETTINGS_HREF) && "border-sky/30 bg-sky/10 text-sky")}>
+              <Settings className="h-4 w-4" strokeWidth={1.75} />Настройки
+            </Link>
+          </div>
+        </div>
+      </div>
+    ) : null}
+    </>
   );
 }

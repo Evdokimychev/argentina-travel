@@ -1,7 +1,7 @@
 ---
 id: parque-nacional-los-alerces-patrimonio-de-la-humanidad
 type: national_park
-title: 'национальный парк Los Alerces: Patrimonio de la Humanidad'
+title: 'Национальный парк Лос-Алерсес — объект Всемирного наследия'
 title_es: 'Parque Nacional Los Alerces: Patrimonio de la Humanidad'
 title_en: 'Los Alerces National Park: World Heritage Site'
 summary: "Лос-Алерсес в Чубуте (ЮНЕСКО) — реликтовые леса с одними из древнейших в мире деревьев алерсе."

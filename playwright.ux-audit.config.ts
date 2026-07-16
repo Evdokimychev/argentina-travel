@@ -17,7 +17,10 @@ export default defineConfig({
     timeout: 15_000,
   },
   retries: isCI ? 1 : 0,
-  workers: isCI ? 2 : undefined,
+  // The catalog and protected workspaces perform server-side partner/auth
+  // lookups. Capping concurrency keeps the audit deterministic on laptops and
+  // prevents one slow external response from starving unrelated browser tests.
+  workers: 2,
   reporter: [
     ["list"],
     ["./tests/e2e/reporters/sprint-backlog-reporter.ts"],

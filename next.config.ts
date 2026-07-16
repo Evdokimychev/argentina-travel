@@ -18,6 +18,9 @@ const isDemoBuild =
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
+  // Local production previews use a dedicated directory so an IDE-managed
+  // `next dev` process cannot overwrite the production bundle in `.next`.
+  distDir: process.env.NEXT_DIST_DIR?.trim() || ".next",
   // Не даём одной странице блокировать сборку бесконечно (Vercel hard limit ~45 мин).
   staticPageGenerationTimeout: 180,
   // Keep Supabase in Node externals — avoids brittle vendor-chunks/@supabase.js in dev workers.
@@ -98,12 +101,42 @@ const nextConfig: NextConfig = {
         destination: "/blog/argentina-tourist-visa-2026",
         permanent: true,
       },
+      {
+        source: "/baza-znaniy/ciudad-de-salta",
+        destination: "/baza-znaniy/salta",
+        permanent: true,
+      },
+      {
+        source: "/baza-znaniy/parque-nacional-los-cardones",
+        destination: "/baza-znaniy/los-cardones",
+        permanent: true,
+      },
+      {
+        source: "/excursions/city/city-151",
+        destination: "/excursions/city/Buenos_Aires",
+        permanent: true,
+      },
+      {
+        source: "/excursions/city/Puerto_Iguasu",
+        destination: "/destinations/iguazu",
+        permanent: true,
+      },
+      {
+        source: "/excursions/city/Puerto_Iguazu",
+        destination: "/destinations/iguazu",
+        permanent: true,
+      },
     ];
   },
   images: {
     // Vercel image optimization can return 402 when quota/billing blocks optimizer requests.
     // The project serves curated media from its own CDN, so prefer visible images over broken cards.
     unoptimized: disableNextImageOptimization,
+    localPatterns: [
+      {
+        pathname: "/api/media/partner-image",
+      },
+    ],
     remotePatterns: [
       {
         protocol: "https",

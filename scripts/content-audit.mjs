@@ -57,7 +57,7 @@ function severity(issues) {
 const raw = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 const entries = raw.entities.map((entry) => {
   const issues = issuesFor(entry);
-  const quarantined = issues.some((issue) => issue.severity === "critical");
+  const quarantined = issues.some((issue) => ["critical", "high"].includes(issue.severity));
   return {
     id: entry.id,
     route: `/baza-znaniy/${entry.id}`,
@@ -94,7 +94,7 @@ const audit = { generatedAt: new Date().toISOString(), scope: "knowledge-base", 
 const actions = entries.filter((entry) => entry.issues.length).map((entry) => ({
   id: entry.id,
   sourcePath: entry.sourcePath,
-  action: entry.severity === "critical" ? "quarantine_and_review" : "editorial_review",
+  action: ["critical", "high"].includes(entry.severity) ? "quarantine_and_review" : "editorial_review",
   reversible: true,
   issues: entry.issues.map((issue) => issue.code),
 }));
@@ -133,4 +133,7 @@ const report = [
 fs.writeFileSync(reportPath, report);
 console.log(JSON.stringify(counts, null, 2));
 
-if (process.argv.includes("--strict") && counts.critical > 0) process.exitCode = 1;
+const publicBlockers = entries.filter(
+  (entry) => entry.indexable && ["critical", "high"].includes(entry.severity)
+);
+if (process.argv.includes("--strict") && publicBlockers.length > 0) process.exitCode = 1;

@@ -30,17 +30,39 @@ import { getAllBlogHubIds, blogHubPath } from "@/data/blog-hubs";
 import { buildBlogAuthorProfiles } from "@/lib/blog-authors";
 import { YANDEX_PRIORITY_HUB_PATHS } from "@/lib/site-sections-json-ld";
 import { absoluteUrl } from "@/lib/site-url";
-import { KB_SECTIONS, getAllEntryIds } from "@/lib/knowledge-base/content";
+import { KB_SECTIONS, getAllEntryIds, getEntry } from "@/lib/knowledge-base/content";
 import { entryHref, sectionHref } from "@/lib/knowledge-base/urls";
+import { normalizeExcursionCitySlug } from "@/data/excursion-city-links";
 import type { BlogPost } from "@/types";
+
+// Partner city exists in aggregate counters but its detail lookup is not stable,
+// so exposing it in sitemap would intermittently produce a noindex/not-found page.
+const EXCURSION_CITY_SITEMAP_EXCLUSIONS = new Set([
+  "puerto_iguazu",
+  "puerto_iguasu",
+]);
 
 function isIndexableInternalPath(href: string): boolean {
   if (!href.startsWith("/")) return false;
   if (href.includes("?")) return false;
   if (href.startsWith("/organizer")) return false;
   if (href.startsWith("/profile")) return false;
+  if (href === "/booking/find") return false;
   if (href.startsWith("/booking/pay")) return false;
   if (href.startsWith("/booking/travelers")) return false;
+  if (href === "/baza-znaniy/poisk") return false;
+
+  const excursionCitySlug = href.match(/^\/excursions\/city\/([^/]+)$/)?.[1];
+  if (
+    excursionCitySlug &&
+    EXCURSION_CITY_SITEMAP_EXCLUSIONS.has(decodeURIComponent(excursionCitySlug).toLowerCase())
+  ) {
+    return false;
+  }
+
+  const kbSlug = href.match(/^\/baza-znaniy\/([^/]+)$/)?.[1];
+  if (kbSlug && !getEntry(kbSlug)) return false;
+
   return true;
 }
 
@@ -55,7 +77,7 @@ function toSitemapEntry(
 ): MetadataRoute.Sitemap[number] {
   return {
     url: absoluteUrl(path),
-    lastModified: lastModified ? new Date(lastModified) : new Date(),
+    ...(lastModified ? { lastModified: new Date(lastModified) } : {}),
     ...(priority !== undefined ? { priority } : {}),
   };
 }
@@ -86,15 +108,45 @@ export async function collectExcursionSitemapPaths(): Promise<string[]> {
   const paths = ["/excursions"];
 
   try {
-    const { fetchExcursionSlugsServer, fetchExcursionsServer } = await import(
-      "@/lib/tripster/excursion-server"
-    );
-    const [{ cities }, slugs] = await Promise.all([
-      fetchExcursionsServer({ pageSize: 1 }),
+    const {
+      fetchExcursionCityServer,
+      fetchExcursionSlugsServer,
+      fetchExcursionsServer,
+    } = await import("@/lib/tripster/excursion-server");
+    const [{ cities, items }, slugs] = await Promise.all([
+      fetchExcursionsServer({ pageSize: 500 }),
       fetchExcursionSlugsServer(),
     ]);
 
-    for (const city of cities) {
+    const citySlugsWithPublishedExcursions = new Set(
+      items.map((item) => normalizeExcursionCitySlug(item.citySlug, item.cityName).toLowerCase()),
+    );
+    const indexableCities = await Promise.all(
+      cities.map(async (city) => {
+        if (EXCURSION_CITY_SITEMAP_EXCLUSIONS.has(city.slug.toLowerCase())) return null;
+        if (!citySlugsWithPublishedExcursions.has(city.slug.toLowerCase())) return null;
+        return (await fetchExcursionCityServer(city.slug)) ? city : null;
+      }),
+    );
+
+    // Partners can expose the same city twice: once with a readable slug and
+    // once with a technical `city-123` alias. Only the readable canonical page
+    // belongs in sitemap, otherwise both pages compete for the same query.
+    const uniqueIndexableCities = new Map<
+      string,
+      NonNullable<(typeof indexableCities)[number]>
+    >();
+    for (const city of indexableCities) {
+      if (!city) continue;
+      const identity = city.name.trim().toLocaleLowerCase("ru-RU");
+      const current = uniqueIndexableCities.get(identity);
+      const isReadableSlug = !/^city-\d+$/i.test(city.slug);
+      const currentIsTechnical = current ? /^city-\d+$/i.test(current.slug) : false;
+      if (!current || (currentIsTechnical && isReadableSlug)) {
+        uniqueIndexableCities.set(identity, city);
+      }
+    }
+    for (const city of uniqueIndexableCities.values()) {
       paths.push(`/excursions/city/${city.slug}`);
     }
     for (const slug of slugs) {
@@ -220,7 +272,7 @@ export async function collectSitemapPaths(options?: { blogCatalog?: BlogPost[] }
     ...kbPaths,
     ...flightRoutePaths,
     ...organizerPaths,
-  ]);
+  ]).filter(isIndexableInternalPath);
 }
 
 export async function buildSitemapEntries(): Promise<MetadataRoute.Sitemap> {

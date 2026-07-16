@@ -11,7 +11,7 @@ import {
   Sparkles,
   Wrench,
 } from "lucide-react";
-import { SITE_NAV_MOBILE_SECTIONS, SITE_NAV_SECTIONS } from "@/data/site-nav";
+import { SITE_NAV_MOBILE_SECTIONS } from "@/data/site-nav";
 import type { SiteNavSection } from "@/types/site-nav";
 
 /** Visual groups for the mobile drawer — every mobile section appears exactly once. */
@@ -67,10 +67,12 @@ export function getSiteNavSectionIcon(sectionId: string): LucideIcon {
   return SITE_NAV_SECTION_ICONS[sectionId] ?? Compass;
 }
 
-export function buildMobileNavGroups(): Array<
+export function buildMobileNavGroups(
+  sections: SiteNavSection[] = SITE_NAV_MOBILE_SECTIONS,
+): Array<
   SiteNavMobileGroup & { sections: SiteNavSection[] }
 > {
-  const byId = new Map(SITE_NAV_SECTIONS.map((section) => [section.id, section]));
+  const byId = new Map(sections.map((section) => [section.id, section]));
 
   return SITE_NAV_MOBILE_GROUPS.map((group) => ({
     ...group,

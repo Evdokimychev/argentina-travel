@@ -56,8 +56,14 @@ function assetsForPlace(slug: string): MediaAsset[] {
 }
 
 function assetsForDestination(id: string): MediaAsset[] {
+  const curatedPrefix = `media/destinations/${id}/`;
   return manifest.assets
-    .filter((a) => a.destinationId === id)
+    .filter(
+      (a) =>
+        a.destinationId === id &&
+        a.localPath.startsWith(curatedPrefix) &&
+        /\.(?:avif|jpe?g|png|webp)$/i.test(a.localPath),
+    )
     .sort((a, b) => a.id.localeCompare(b.id));
 }
 

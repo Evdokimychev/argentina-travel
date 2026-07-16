@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 
 export function useCanGoBack(): boolean {
   const pathname = usePathname();
   const [canGoBack, setCanGoBack] = useState(false);
+  const previousPathRef = useRef(pathname);
 
   useEffect(() => {
     if (pathname === "/") {
@@ -13,12 +14,17 @@ export function useCanGoBack(): boolean {
       return;
     }
 
-    const sameOriginReferrer =
-      typeof document !== "undefined" &&
-      Boolean(document.referrer) &&
-      new URL(document.referrer).origin === window.location.origin;
+    const navigatedInsideApp = previousPathRef.current !== pathname;
+    let sameOriginReferrer = false;
+    try {
+      sameOriginReferrer =
+        Boolean(document.referrer) && new URL(document.referrer).origin === window.location.origin;
+    } catch {
+      sameOriginReferrer = false;
+    }
 
-    setCanGoBack(window.history.length > 1 || sameOriginReferrer);
+    setCanGoBack(navigatedInsideApp || sameOriginReferrer);
+    previousPathRef.current = pathname;
   }, [pathname]);
 
   return canGoBack;

@@ -20,6 +20,12 @@ import {
   resolveYouTravelBookingRedirectFromApi,
 } from "@/lib/youtravel/checkout-url";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
+import {
+  claimPartnerBookingOperation,
+  completePartnerBookingOperation,
+  fingerprintPartnerBookingRequest,
+  isValidBookingOperationKey,
+} from "@/lib/partner-booking/idempotency";
 
 type BookingRequestBody = {
   slug?: string;
@@ -105,7 +111,7 @@ async function postYouTravelBookingRequest(request: Request) {
     data: { user: authUser },
   } = await supabase.auth.getUser();
 
-  const userId = authUser?.id ?? body.userId?.trim() ?? null;
+  const userId = authUser?.id ?? null;
   let profileCountry: string | null = null;
 
   if (authUser) {
@@ -210,6 +216,81 @@ async function postYouTravelBookingRequest(request: Request) {
     });
   }
 
+  const idempotencyKey = request.headers.get("idempotency-key")?.trim() ?? null;
+  if (!isValidBookingOperationKey(idempotencyKey)) {
+    return NextResponse.json(
+      { error: "Для безопасного бронирования повторите отправку формы." },
+      { status: 400 },
+    );
+  }
+  const operationKey = idempotencyKey;
+
+  let operationStore: ReturnType<typeof createSupabaseAdminClient>;
+  try {
+    operationStore = createSupabaseAdminClient();
+  } catch {
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "idempotency_unavailable",
+      error: "Безопасное создание заказа сейчас недоступно — продолжаем на сайте YouTravel.me.",
+    });
+  }
+
+  const claim = await claimPartnerBookingOperation(operationStore, {
+    provider: "youtravel",
+    idempotencyKey: operationKey,
+    requestFingerprint: fingerprintPartnerBookingRequest({
+      tourId,
+      offerId,
+      startDate,
+      endDate,
+      personsCount,
+      name,
+      email,
+      phone,
+      message: message ?? null,
+    }),
+  });
+
+  if (claim.state === "replay") {
+    return NextResponse.json(claim.response.payload, {
+      status: claim.response.statusCode,
+      headers: { "X-Idempotent-Replay": "true" },
+    });
+  }
+  if (claim.state === "conflict") {
+    return NextResponse.json(
+      { error: "Ключ бронирования уже использован для другой заявки." },
+      { status: 409 },
+    );
+  }
+  if (claim.state === "in_progress") {
+    return NextResponse.json(
+      { error: "Заявка уже отправляется. Подождите результат и не создавайте её повторно." },
+      { status: 409, headers: { "Retry-After": "5" } },
+    );
+  }
+  if (claim.state === "unavailable") {
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "idempotency_unavailable",
+      error: "Безопасное создание заказа сейчас недоступно — продолжаем на сайте YouTravel.me.",
+    });
+  }
+
+  async function respond(payload: Record<string, unknown>, statusCode = 200) {
+    await completePartnerBookingOperation(operationStore, {
+      provider: "youtravel",
+      idempotencyKey: operationKey,
+      response: { payload, statusCode },
+    });
+    return NextResponse.json(payload, { status: statusCode });
+  }
+
   try {
     const order = await createYouTravelBookingRequest({
       tourId,
@@ -250,7 +331,7 @@ async function postYouTravelBookingRequest(request: Request) {
     });
 
     if (redirectUrl) {
-      return NextResponse.json({
+      return respond({
         ok: true,
         mode: "youtravel_order",
         orderId,
@@ -270,7 +351,7 @@ async function postYouTravelBookingRequest(request: Request) {
         priceSnapshot: error.details,
       });
 
-      return NextResponse.json({
+      return respond({
         ok: false,
         mode: "affiliate_fallback",
         fallbackUrl,
@@ -290,7 +371,7 @@ async function postYouTravelBookingRequest(request: Request) {
     status: "affiliate_fallback",
   });
 
-  return NextResponse.json({
+  return respond({
     ok: false,
     mode: "affiliate_fallback",
     fallbackUrl,

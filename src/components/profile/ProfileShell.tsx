@@ -11,6 +11,7 @@ import ProfileSidebar, {
 import { cn } from "@/lib/cn";
 import {
   cabinetContentGapClass,
+  cabinetMobileBottomInsetClass,
   cabinetPanelClass,
   cabinetShellClass,
 } from "@/lib/cabinet-ui";
@@ -49,18 +50,14 @@ export default function ProfileShell({ children }: { children: React.ReactNode }
 
   return (
     <AccessGate allowed={canAccessTouristCabinet(user)} fallback={loginFallback}>
-      <div className={cabinetShellClass}>
+      <div className={cn(cabinetShellClass, cabinetMobileBottomInsetClass)}>
         <ProfileMobileHeader />
         <ProfileMobileNav />
 
         <div className={cn(siteContainerClass, cabinetContentGapClass)}>
           <ProfileSidebar userName={user.fullName} avatarUrl={user.avatarUrl} />
 
-          <div className="min-w-0 flex-1">
-            <div className="min-h-[calc(100dvh-2rem)] rounded-3xl md:min-h-[calc(100dvh-2.5rem)]">
-              {children}
-            </div>
-          </div>
+          <main className="min-w-0 flex-1">{children}</main>
         </div>
       </div>
     </AccessGate>

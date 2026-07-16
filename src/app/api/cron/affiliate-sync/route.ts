@@ -20,7 +20,11 @@ export async function GET(request: Request) {
 
   try {
     const origin = new URL(request.url).origin;
-    const headers: HeadersInit = { "x-vercel-cron": "1" };
+    const cronSecret = process.env.CRON_SECRET?.trim();
+    if (!cronSecret) {
+      throw new Error("CRON_SECRET is not configured");
+    }
+    const headers: HeadersInit = { authorization: `Bearer ${cronSecret}` };
 
     const tripsterRes = await fetch(`${origin}/api/cron/tripster-sync`, { headers });
     const tripster = await tripsterRes.json();

@@ -56,7 +56,7 @@ function computeVisiblePrimaryCount(
 
 export function useSiteNavLayout(navRef: RefObject<HTMLElement | null>) {
   const itemWidthsRef = useRef<Map<string, number>>(new Map());
-  const [visiblePrimaryCount, setVisiblePrimaryCount] = useState(3);
+  const [visiblePrimaryCount, setVisiblePrimaryCount] = useState(5);
   const [navWidth, setNavWidth] = useState(0);
 
   const registerItemRef = useCallback(

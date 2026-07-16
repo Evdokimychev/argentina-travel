@@ -46,16 +46,16 @@ export const tokenButtonOutlineClass =
 
 /** Site header shell — fixed chrome with token z-index and borders */
 export const tokenHeaderShellClass =
-  "site-header fixed inset-x-0 top-0 isolate z-header border-b border-charcoal/[0.06] bg-page-band shadow-[0_1px_0_rgba(26,26,46,0.04)] dark:border-white/10 dark:bg-background dark:shadow-[0_1px_0_rgba(255,255,255,0.06)]";
+  "site-header fixed inset-x-0 top-0 isolate z-header border-b border-charcoal/[0.06] bg-white/95 shadow-[0_1px_0_rgba(26,26,46,0.04)] backdrop-blur-xl dark:border-white/10 dark:bg-background/95 dark:shadow-[0_1px_0_rgba(255,255,255,0.06)]";
 
 /** Applied when page is scrolled — subtle frosted backdrop (Sprint 10). */
 export const tokenHeaderShellScrolledClass =
-  "border-charcoal/[0.08] bg-page-band/90 shadow-[0_4px_24px_-8px_rgba(26,26,46,0.12)] backdrop-blur-md supports-[backdrop-filter]:bg-page-band/85 dark:border-white/12 dark:bg-background/90 dark:supports-[backdrop-filter]:bg-background/85";
+  "border-charcoal/[0.08] bg-white/88 shadow-[0_12px_35px_-24px_rgba(26,26,46,0.34)] supports-[backdrop-filter]:bg-white/82 dark:border-white/12 dark:bg-background/90 dark:supports-[backdrop-filter]:bg-background/85";
 
 /** Header inner navigation bar */
 export const tokenHeaderNavBarClass =
-  "flex w-full items-center gap-2 rounded-panel border border-charcoal/[0.07] bg-surface-elevated px-2 py-2.5 shadow-header-bar dark:border-white/10 dark:bg-surface-elevated dark:shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_rgba(0,0,0,0.45)] sm:gap-3 sm:px-3";
+  "flex w-full items-center gap-2 rounded-[1.35rem] border border-charcoal/[0.07] bg-surface-elevated/92 px-2 py-2 shadow-[0_10px_32px_-24px_rgba(26,26,46,0.35)] dark:border-white/10 dark:bg-surface-elevated dark:shadow-[0_1px_0_rgba(255,255,255,0.04)_inset,0_8px_24px_-12px_rgba(0,0,0,0.45)] sm:gap-3 sm:px-3";
 
 /** Circular icon control in header */
 export const tokenHeaderCircleButtonClass =
-  "flex h-10 w-10 shrink-0 items-center justify-center rounded-pill bg-charcoal/[0.06] text-foreground ring-1 ring-charcoal/10 backdrop-blur-sm transition-colors hover:bg-sky/10 hover:text-sky hover:ring-sky/25 dark:bg-white/10 dark:ring-white/10 dark:hover:bg-sky/20";
+  "flex h-11 w-11 shrink-0 items-center justify-center rounded-pill bg-charcoal/[0.06] text-foreground ring-1 ring-charcoal/10 backdrop-blur-sm transition-colors hover:bg-sky/10 hover:text-sky hover:ring-sky/25 dark:bg-white/10 dark:ring-white/10 dark:hover:bg-sky/20";

@@ -27,6 +27,9 @@ const SKIP_PATTERN_REGEXES = [
 
 /** Dynamic patterns we cannot resolve without live DB / API. */
 const SKIP_UNRESOLVED_PATTERNS = [
+  // Published tour slugs are owned by the live catalog. Stage 2 acceptance
+  // discovers and verifies an actual detail route from /tours instead.
+  /^\/tours\/\[slug\]$/,
   /^\/admin\/content\/documents\/\[id\]/,
   /^\/organizer\/tours\/\[id\]/,
   /^\/organizer\/bookings\/\[id\]/,
@@ -43,7 +46,6 @@ const SKIP_UNRESOLVED_PATTERNS = [
 ];
 
 const SLUG_BY_PARENT: Record<string, string> = {
-  tours: "patagonia-glaciers",
   blog: "buenos-aires-rajony",
   destinations: "patagonia",
   places: "iguazu-falls",

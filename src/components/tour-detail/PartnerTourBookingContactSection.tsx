@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -83,6 +83,7 @@ export default function PartnerTourBookingContactSection({
   const partnerLabel = isYouTravel ? "YouTravel.me" : "Tripster";
   const { user } = useAuth();
   const feedback = useSiteFeedback();
+  const bookingOperationKeyRef = useRef<string | null>(null);
   const {
     guests,
     dateMode,
@@ -421,10 +422,14 @@ export default function PartnerTourBookingContactSection({
             userId: user?.id,
           };
 
+      bookingOperationKeyRef.current ??= crypto.randomUUID();
       const response = await fetch(bookingEndpoint, {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": bookingOperationKeyRef.current,
+        },
         body: JSON.stringify(bookingBody),
       });
 
@@ -438,6 +443,10 @@ export default function PartnerTourBookingContactSection({
         error?: string;
         details?: Record<string, string[] | { non_field_errors?: string[] }>;
       };
+
+      if (response.ok && (data.ok || data.mode === "affiliate_fallback")) {
+        bookingOperationKeyRef.current = null;
+      }
 
       if (data.mode === "affiliate_fallback") {
         completePartnerBookingTransition(

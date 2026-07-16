@@ -1,7 +1,7 @@
 ---
 id: cabalgatas-en-cerro-belvedere-y-cascada-inacayal
 type: attraction
-title: Horseback rides in Belvedere Hill and Inacayal waterfall
+title: Конные прогулки к Серро-Бельведере и водопаду Инакайаль
 title_es: Cabalgatas en cerro Belvedere y cascada Inacayal
 title_en: Horseback rides in Belvedere Hill and Inacayal waterfall
 summary: "Конные прогулки у Вилья-Ла-Ангостуры: тропы к смотровой Бельведере и водопаду Инакайаль."

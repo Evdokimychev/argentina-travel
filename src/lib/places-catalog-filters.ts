@@ -60,12 +60,7 @@ export function sortPlaces(items: PlaceListing[], sort: PlaceSortOption): PlaceL
   const copy = [...items];
   switch (sort) {
     case "rating":
-      return copy.sort((a, b) => {
-        const ar = a.rating ?? -1;
-        const br = b.rating ?? -1;
-        if (br !== ar) return br - ar;
-        return b.popularity - a.popularity;
-      });
+      return copy.sort((a, b) => b.popularity - a.popularity);
     case "name_asc":
       return copy.sort((a, b) => a.name.localeCompare(b.name, "ru"));
     case "name_desc":

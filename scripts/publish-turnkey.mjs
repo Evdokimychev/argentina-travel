@@ -179,7 +179,13 @@ async function main() {
   }
 
   if (full && !skipBuild) {
-    steps.push(runStep("build:next", "Production build", "npm", ["run", "build"]));
+    steps.push(
+      runStep("build:next", "Production build", "npm", ["run", "build"], {
+        NEXT_PUBLIC_APP_MODE: "production",
+        NEXT_PUBLIC_ENABLE_DEMO_SEED: "false",
+        DEMO_DEPLOYMENT: "false",
+      })
+    );
   }
 
   const smokeStep = runStep("smoke:production", "Production smoke", "node", ["scripts/production-smoke.mjs"], {

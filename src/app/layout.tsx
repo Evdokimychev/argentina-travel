@@ -10,7 +10,12 @@ import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { localeCodeFromI18n } from "@/lib/i18n/sync-messages";
 import { siteRobotsMetadata } from "@/lib/cms/site-globals/robots-meta";
 import { resolveSiteVerificationMeta } from "@/lib/analytics/site-verification-meta";
-import { fetchSiteBranding, fetchSiteNavigation, fetchSitePublicMeta } from "@/lib/site-settings-server";
+import {
+  fetchSiteBranding,
+  fetchSiteDesign,
+  fetchSiteNavigation,
+  fetchSitePublicMeta,
+} from "@/lib/site-settings-server";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
@@ -107,20 +112,31 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const [siteFooter, siteNavigation] = await Promise.all([
+  const [siteFooter, siteNavigation, siteDesign] = await Promise.all([
     loadSiteFooterInfo(),
     fetchSiteNavigation(),
+    fetchSiteDesign(),
   ]);
   const i18nLocale = await getServerI18nLocale();
   const locale = localeCodeFromI18n(i18nLocale);
 
   return (
-    <html lang={locale} className={unbounded.variable} data-site-header="visible" suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={unbounded.variable}
+      data-site-header="visible"
+      data-site-palette={siteDesign.palettePreset}
+      data-site-heading-font={siteDesign.headingFont}
+      data-site-header-variant={siteDesign.headerVariant}
+      data-site-footer-variant={siteDesign.footerVariant}
+      data-site-utility-bar={siteDesign.showUtilityBar ? "visible" : "hidden"}
+      suppressHydrationWarning
+    >
       <head>
         <GtmHeadScripts />
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var h=w?132:88;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
+            __html: `(function(){try{var d=document.documentElement;var w=window.matchMedia("(min-width:768px)").matches;var c=d.dataset.siteHeaderVariant==="compact";var u=w&&d.dataset.siteUtilityBar==="visible";var h=c?64:(w?86:80);if(u)h+=28;d.style.setProperty("--site-header-full-height",h+"px");d.style.setProperty("--site-header-height",h+"px");d.dataset.siteHeader="visible";}catch(e){}})();`,
           }}
         />
       </head>
@@ -128,7 +144,9 @@ export default async function RootLayout({
         <ThemeScript />
         <SiteJsonLd />
         <Providers locale={locale}>
-          <SiteChrome siteFooter={siteFooter} siteNavigation={siteNavigation}>{children}</SiteChrome>
+          <SiteChrome siteFooter={siteFooter} siteNavigation={siteNavigation} siteDesign={siteDesign}>
+            {children}
+          </SiteChrome>
         </Providers>
       </body>
     </html>

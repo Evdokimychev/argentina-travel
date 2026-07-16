@@ -1,7 +1,7 @@
 ---
 id: puente-rosario-victoria
 type: attraction
-title: Rosario-Victoria Bridge
+title: Мост Росарио — Виктория
 title_es: Puente Rosario-Victoria
 title_en: Rosario-Victoria Bridge
 summary: "Мост Росарио-Виктория — монументальный виадук через Парану, связывающий Санта-Фе и Энтре-Риос."

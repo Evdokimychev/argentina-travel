@@ -55,6 +55,7 @@ interface MarketplaceHomeProps {
   platformStats: PlatformStats;
   excursionCities?: ExcursionCity[];
   travelPrepStrip?: React.ReactNode;
+  heroBackdropSrc?: string;
   heroCollage?: React.ReactNode;
   showHomepageRecommendationsV2?: boolean;
   personalizedTours?: TourListing[];
@@ -108,6 +109,7 @@ export default function MarketplaceHome({
   platformStats,
   excursionCities = [],
   travelPrepStrip,
+  heroBackdropSrc,
   heroCollage,
   showHomepageRecommendationsV2 = false,
   personalizedTours = [],
@@ -195,28 +197,53 @@ export default function MarketplaceHome({
       {/* Hero */}
       <section
         data-scroll-rail-tone="light"
-        className="relative overflow-hidden border-b border-gray-100 bg-white"
+        data-editorial-theme="city"
+        className="editorial-hero relative overflow-hidden border-b border-[var(--editorial-line)]"
       >
-        <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-16")}>
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(42%,380px)] xl:grid-cols-[minmax(0,1fr)_420px] xl:gap-14">
-            <div className="min-w-0">
-              <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink">
+        {heroBackdropSrc ? (
+          <div className="absolute inset-0 bg-charcoal lg:hidden" aria-hidden>
+            <Image
+              src={heroBackdropSrc}
+              alt=""
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-[62%_center]"
+            />
+            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_24_36/0.48),rgb(10_24_36/0.76)_52%,rgb(10_24_36/0.94))]" />
+          </div>
+        ) : null}
+        <div
+          className={cn(
+            siteContainerClass,
+            "relative py-5 sm:py-8 md:py-9 lg:py-9 xl:py-10",
+          )}
+        >
+          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(520px,1.08fr)] lg:gap-x-10 lg:gap-y-6 xl:gap-x-14">
+            <div className="order-1 min-w-0">
+              <span className="editorial-kicker inline-flex whitespace-nowrap rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] max-lg:!border-white/25 max-lg:!bg-white/10 max-lg:!text-white sm:text-xs sm:tracking-[0.14em]">
                 {t("home.hero.eyebrow")}
               </span>
-              <h1 className="mt-4 max-w-2xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.65rem]">
+              <div
+                className="editorial-rule mt-3 h-1 w-12 rounded-full max-lg:!bg-sky sm:mt-4"
+                aria-hidden
+              />
+              <h1 className="mt-3 max-w-3xl font-display text-[2.1rem] font-bold leading-[1.06] tracking-[-0.03em] text-white sm:mt-4 sm:text-[2.55rem] lg:text-[2.7rem] lg:text-charcoal xl:text-[2.85rem]">
                 {t("home.hero.title")}{" "}
-                <span className="text-sky-dark">{t("home.hero.titleAccent")}</span>
+                <span className="editorial-accent-text max-lg:!text-sky">
+                  {t("home.hero.titleAccent")}
+                </span>
               </h1>
-              <p className="mt-3 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
+              <p className="mt-3 line-clamp-2 max-w-xl text-[0.95rem] leading-relaxed text-white/85 sm:mt-4 sm:line-clamp-none sm:text-[1.05rem] lg:text-slate">
                 {t("home.hero.subtitle")}
               </p>
-              <div className="mt-5 flex flex-wrap items-center gap-3">
+              <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5">
                 <Link
                   href="/podbor"
                   className={buttonVariants({
-                    variant: "outline",
-                    size: "sm",
-                    className: "rounded-full gap-2",
+                    variant: "default",
+                    size: "default",
+                    className: "rounded-full gap-2 px-6",
                   })}
                 >
                   <Compass className="h-4 w-4" aria-hidden />
@@ -224,7 +251,7 @@ export default function MarketplaceHome({
                 </Link>
                 <Link
                   href="/podbor"
-                  className="inline-flex items-center gap-1 text-sm font-medium text-sky-ink hover:underline"
+                  className="hidden items-center gap-1 text-sm font-medium text-white/90 hover:text-white hover:underline sm:inline-flex lg:text-sky-ink"
                 >
                   {t("home.hero.ctaHint")}
                   <ArrowRight className="h-4 w-4" aria-hidden />
@@ -232,47 +259,49 @@ export default function MarketplaceHome({
               </div>
             </div>
 
-            {heroCollage}
-          </div>
+            {heroCollage ? (
+              <div className="order-3 hidden lg:order-2 lg:block">{heroCollage}</div>
+            ) : null}
 
-          <div className="mt-8 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20 lg:pb-2">
-            <HomeMultiSearch
-              tours={tours}
-              excursionCities={excursionCities}
-              query={filters.query}
-              dateFrom={filters.dateFrom}
-              dateTo={filters.dateTo}
-              nearMe={filters.nearMe}
-              onQueryChange={(q) => setFilters((f) => ({ ...f, query: q }))}
-              onDatesChange={(from, to) =>
-                setFilters((f) => ({ ...f, dateFrom: from, dateTo: to }))
-              }
-              onNearMe={(coords) =>
-                setFilters((f) => ({
-                  ...f,
-                  nearMe: !!coords,
-                  userCoords: coords,
-                }))
-              }
-              onTabChange={setSearchTab}
-              onToursSearch={() => {
-                const hasCriteria =
-                  filters.query.trim() ||
-                  filters.dateFrom ||
-                  filters.dateTo ||
-                  filters.nearMe ||
-                  activeCount > 0;
-                if (hasCriteria) {
-                  router.push(buildCatalogFilterHref(filters, "recommended", currency, tours));
-                  return;
+            <div className="order-2 lg:order-3 lg:col-span-2 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20">
+              <HomeMultiSearch
+                tours={tours}
+                excursionCities={excursionCities}
+                query={filters.query}
+                dateFrom={filters.dateFrom}
+                dateTo={filters.dateTo}
+                nearMe={filters.nearMe}
+                onQueryChange={(q) => setFilters((f) => ({ ...f, query: q }))}
+                onDatesChange={(from, to) =>
+                  setFilters((f) => ({ ...f, dateFrom: from, dateTo: to }))
                 }
-                router.push("/tours");
-              }}
-            />
+                onNearMe={(coords) =>
+                  setFilters((f) => ({
+                    ...f,
+                    nearMe: !!coords,
+                    userCoords: coords,
+                  }))
+                }
+                onTabChange={setSearchTab}
+                onToursSearch={() => {
+                  const hasCriteria =
+                    filters.query.trim() ||
+                    filters.dateFrom ||
+                    filters.dateTo ||
+                    filters.nearMe ||
+                    activeCount > 0;
+                  if (hasCriteria) {
+                    router.push(buildCatalogFilterHref(filters, "recommended", currency, tours));
+                    return;
+                  }
+                  router.push("/tours");
+                }}
+              />
+            </div>
           </div>
 
           {searchTab === "tours" ? (
-            <div className="mt-4 min-h-11">
+            <div className="mt-3 min-h-11">
               <FilterBar tours={tours} filters={filters} onChange={setFilters} />
             </div>
           ) : null}
@@ -390,24 +419,31 @@ export default function MarketplaceHome({
         href="/destinations"
         linkLabel="Обзор регионов"
       >
-        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-          {HOME_FEATURED_REGIONS.map((dest) => (
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-12 sm:gap-4">
+          {HOME_FEATURED_REGIONS.map((dest, index) => (
             <Link
               key={dest.id}
               href={destinationHref(dest.id)}
-              className="group relative block h-44 overflow-hidden rounded-lg ring-1 ring-gray-100 transition-shadow hover:shadow-elevated sm:h-56"
+              className={cn(
+                "group relative block h-44 overflow-hidden rounded-[1.35rem] ring-1 ring-gray-100 transition-shadow hover:shadow-elevated",
+                index === 0
+                  ? "col-span-2 h-64 sm:col-span-7 sm:h-72"
+                  : index === 1
+                    ? "sm:col-span-5 sm:h-72"
+                    : "sm:col-span-6 sm:h-56 lg:col-span-3",
+              )}
             >
               <Image
                 src={dest.image}
                 alt={dest.imageAlt ?? dest.name}
                 fill
-                className="object-cover transition-transform duration-500 group-hover:scale-105 motion-reduce:transform-none"
-                sizes="(max-width: 768px) 50vw, 33vw"
+                className="editorial-media-zoom object-cover"
+                sizes={index < 2 ? "(max-width: 640px) 100vw, 50vw" : "(max-width: 1024px) 50vw, 25vw"}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-charcoal/85 via-charcoal/25 to-transparent" />
-              <div className="absolute bottom-0 p-4 text-white">
-                <p className="text-[11px] font-medium uppercase tracking-wider text-white/70">{dest.region}</p>
-                <h3 className="mt-1 font-heading text-lg font-bold">{dest.name}</h3>
+              <div className="absolute bottom-0 p-5 text-white sm:p-6">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-white/70">{dest.region}</p>
+                <h3 className={cn("mt-1 font-display font-bold", index === 0 ? "text-2xl sm:text-3xl" : index === 1 ? "text-lg sm:text-3xl" : "text-lg sm:text-xl")}>{dest.name}</h3>
                 <p className="mt-0.5 hidden line-clamp-2 text-xs leading-relaxed text-white/80 sm:block">{dest.description}</p>
               </div>
             </Link>

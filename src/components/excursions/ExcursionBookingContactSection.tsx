@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CheckCircle2, ExternalLink } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -84,8 +84,11 @@ export default function ExcursionBookingContactSection() {
   const [popupBlocked, setPopupBlocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState(() => createExcursionContactForm(user));
+  const bookingOperationKeyRef = useRef<string | null>(null);
 
   const selectedSlot = selectedSlots.find((slot) => slot.time === selectedTime);
+  const isPlatform = excursion.partner === "platform";
+  const collectContact = isPlatform || ENABLE_PARTNER_CONTACT_FORM;
 
   const prefilledPartnerOpenUrl = useMemo(() => {
     if (!selectedDate || !selectedTime) {
@@ -189,7 +192,7 @@ export default function ExcursionBookingContactSection() {
       email: autofill.contactEmail || prev.email,
       phone: autofill.contactPhone || prev.phone,
     }));
-  }, [user?.id, user?.phone, user?.country, user?.email, user?.fullName]);
+  }, [user]);
 
   function handleClosePreview() {
     closeBookingPreview();
@@ -241,12 +244,17 @@ export default function ExcursionBookingContactSection() {
       return;
     }
 
-    if (ENABLE_PARTNER_CONTACT_FORM && !form.name.trim()) {
+    if (collectContact && !form.name.trim()) {
       setError(t("excursions.booking.name"));
       return;
     }
 
-    const contact = ENABLE_PARTNER_CONTACT_FORM
+    if (isPlatform && !/^\S+@\S+\.\S+$/.test(form.email.trim())) {
+      setError("Проверьте email для связи.");
+      return;
+    }
+
+    const contact = collectContact
       ? buildTripsterBookingContactPayload({
           name: form.name,
           email: form.email,
@@ -265,15 +273,76 @@ export default function ExcursionBookingContactSection() {
     setError(null);
 
     try {
+      if (isPlatform) {
+        if (!excursion.platformTourId) {
+          throw new Error("Экскурсия временно недоступна для бронирования.");
+        }
+        bookingOperationKeyRef.current ??= crypto.randomUUID();
+        const selectedPlatformDate = excursion.platformDates?.find(
+          (date) => date.startDate === selectedDate
+        );
+        const response = await fetch("/api/bookings", {
+          method: "POST",
+          credentials: "same-origin",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            command: {
+              tourId: excursion.platformTourId,
+              optionId: selectedPlatformDate?.id,
+              startDate: selectedDate,
+              travelers: { adults: persons },
+              customer: {
+                name: contact.name,
+                email: contact.email,
+                phone: contact.phone,
+              },
+              idempotencyKey: bookingOperationKeyRef.current,
+              intent: "booking",
+              details: {
+                comment: [
+                  `Время экскурсии: ${selectedTime}`,
+                  contact.messageToGuide,
+                ].filter(Boolean).join("\n"),
+                fillTravelersLater: true,
+              },
+            },
+          }),
+        });
+        const data = (await response.json()) as { booking?: { id: string }; error?: string };
+        if (!response.ok || !data.booking) {
+          throw new Error(data.error || t("excursions.booking.failed"));
+        }
+
+        bookingOperationKeyRef.current = null;
+        setSubmitted(true);
+        trackBookingSubmit({
+          productType: "excursion",
+          slug: excursion.slug,
+          title: excursion.title,
+          partner: excursion.partner,
+          guests: persons,
+          source: "excursion_booking",
+        });
+        feedback.success({
+          title: "Заявка отправлена",
+          description: "Организатор получил заявку и свяжется с вами для подтверждения.",
+        });
+        return;
+      }
+
       const endpoint =
         excursion.partner === "tripster"
           ? "/api/tripster/booking-request"
           : `/api/excursions/${excursion.slug}/book`;
 
+      bookingOperationKeyRef.current ??= crypto.randomUUID();
       const response = await fetch(endpoint, {
         method: "POST",
         credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": bookingOperationKeyRef.current,
+        },
         body: JSON.stringify({
           slug: excursion.slug,
           date: selectedDate,
@@ -297,6 +366,10 @@ export default function ExcursionBookingContactSection() {
         error?: string;
         details?: Record<string, string[] | { non_field_errors?: string[] }>;
       };
+
+      if (response.ok && (data.ok || data.mode === "affiliate_fallback")) {
+        bookingOperationKeyRef.current = null;
+      }
 
       if (data.mode === "affiliate_fallback") {
         completePartnerBookingTransition(
@@ -356,6 +429,23 @@ export default function ExcursionBookingContactSection() {
   }
 
   if (submitted) {
+    if (isPlatform) {
+      return (
+        <div className="space-y-5 text-center">
+          <CheckCircle2 className="mx-auto h-12 w-12 text-success" aria-hidden />
+          <div>
+            <h3 className="font-heading text-xl font-semibold text-charcoal">Заявка отправлена</h3>
+            <p className="mt-2 text-sm leading-relaxed text-slate">
+              Организатор получил заявку и свяжется с вами для подтверждения экскурсии.
+            </p>
+          </div>
+          <Button type="button" variant="outline" className="w-full" onClick={handleClosePreview}>
+            Закрыть
+          </Button>
+        </div>
+      );
+    }
+
     const partnerLabel = excursion.partner === "sputnik8" ? "Sputnik8" : "Tripster";
 
     return (
@@ -394,7 +484,7 @@ export default function ExcursionBookingContactSection() {
         Восстановление: ENABLE_PARTNER_CONTACT_FORM = true
         (@/lib/booking/partner-contact-form-flag).
       */}
-      {ENABLE_PARTNER_CONTACT_FORM ? (
+      {collectContact ? (
         <div className="space-y-3">
           <div>
             <label htmlFor="excursion-contact-name" className="mb-1.5 block text-xs font-medium text-charcoal">
@@ -462,10 +552,10 @@ export default function ExcursionBookingContactSection() {
           loadingLabel={t("excursions.booking.submitting")}
           onClick={() => void handleConfirmBooking()}
         >
-          Подтвердить и забронировать
-          <ExternalLink className="h-4 w-4" aria-hidden />
+          {isPlatform ? "Отправить заявку" : "Подтвердить и забронировать"}
+          {isPlatform ? null : <ExternalLink className="h-4 w-4" aria-hidden />}
         </Button>
-        {prefilledPartnerOpenUrl ? (
+        {!isPlatform && prefilledPartnerOpenUrl ? (
           <p className="text-center text-xs leading-relaxed text-slate">
             Если автоматическая отправка не сработала, можно{" "}
             <a

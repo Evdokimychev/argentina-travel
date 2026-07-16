@@ -28,7 +28,8 @@ import type { SiteFeedbackMessage } from "@/types/site-feedback";
 export default function BookingTravelersFormView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
   const [travelers, setTravelers] = useState<BookingTraveler[]>([]);
-  const [consent, setConsent] = useState(true);
+  const [consent, setConsent] = useState(false);
+  const [dateErrors, setDateErrors] = useState<Record<string, string>>({});
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -84,6 +85,23 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
+    const nextDateErrors = Object.fromEntries(
+      travelers
+        .filter((traveler) => !traveler.dateOfBirth.trim())
+        .map((traveler) => [traveler.id, "Укажите дату рождения"])
+    );
+
+    if (Object.keys(nextDateErrors).length > 0) {
+      setDateErrors(nextDateErrors);
+      const firstInvalidTraveler = travelers.find((traveler) => nextDateErrors[traveler.id]);
+      if (firstInvalidTraveler) {
+        document.getElementById(`dob-${firstInvalidTraveler.id}`)?.focus();
+      }
+      return;
+    }
+
+    setDateErrors({});
     if (!consent) {
       setError("Подтвердите согласие на обработку персональных данных");
       return;
@@ -167,22 +185,45 @@ export default function BookingTravelersFormView({ token }: { token: string }) {
               </div>
 
               <div className="grid gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="mb-1.5 block text-sm text-slate" htmlFor={`dob-${index}`}>
-                    Дата рождения
+                <div
+                  role="group"
+                  aria-describedby={dateErrors[traveler.id] ? `dob-${traveler.id}-error` : undefined}
+                >
+                  <label className="mb-1.5 block text-sm text-slate" htmlFor={`dob-${traveler.id}`}>
+                    Дата рождения <span className="text-brand" aria-hidden="true">*</span>
+                    <span className="sr-only"> (обязательное поле)</span>
                   </label>
                   <SingleDatePicker
-                    id={`dob-${index}`}
+                    id={`dob-${traveler.id}`}
                     value={parseBookingTravelerDate(traveler.dateOfBirth)}
-                    onChange={(date) =>
-                      updateTraveler(index, { dateOfBirth: formatBookingTravelerDate(date) })
-                    }
+                    onChange={(date) => {
+                      updateTraveler(index, { dateOfBirth: formatBookingTravelerDate(date) });
+                      if (date) {
+                        setDateErrors((current) => {
+                          if (!current[traveler.id]) return current;
+                          const next = { ...current };
+                          delete next[traveler.id];
+                          return next;
+                        });
+                      }
+                    }}
                     min={minBirthDateIso()}
                     max={maxBirthDateIso()}
                     birthDatePicker
                     placeholder="ДД.ММ.ГГГГ"
-                    className="h-11 rounded-xl bg-gray-50"
+                    className={dateErrors[traveler.id]
+                      ? "h-11 rounded-xl border-error bg-error-muted ring-2 ring-error/20"
+                      : "h-11 rounded-xl bg-gray-50"}
                   />
+                  {dateErrors[traveler.id] ? (
+                    <p
+                      id={`dob-${traveler.id}-error`}
+                      role="alert"
+                      className="mt-1.5 text-xs font-medium text-error"
+                    >
+                      {dateErrors[traveler.id]}
+                    </p>
+                  ) : null}
                   {participantAgeLabel(parseBookingTravelerDate(traveler.dateOfBirth)) ? (
                     <p className="mt-1.5 text-xs text-slate">
                       Возраст: {participantAgeLabel(parseBookingTravelerDate(traveler.dateOfBirth))}

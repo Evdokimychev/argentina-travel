@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/types/database";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { Booking } from "@/types/tourist";
 import type { SessionUser } from "@/types/user";
 import type { MessageSenderRole, MessageThread } from "@/types/messages";
@@ -222,7 +223,8 @@ export async function getOrCreateConversationThreadForBooking(
     return { error: "Нельзя создать переписку с самим собой" };
   }
 
-  const { data, error } = await supabase
+  const admin = createSupabaseAdminClient();
+  const { data, error } = await admin
     .from("conversation_threads")
     .insert({
       booking_id: bookingId,

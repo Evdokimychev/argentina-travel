@@ -8,7 +8,8 @@
     "build": "node scripts/build.mjs",
     "build:demo": "NEXT_PUBLIC_APP_MODE=demo DEMO_DEPLOYMENT=true node scripts/build.mjs",
     "postinstall": "prisma generate",
-    "start": "next start",
+    "start": "node scripts/start.mjs",
+    "preview:production": "NEXT_PUBLIC_ENABLE_DEMO_SEED=false node scripts/start.mjs --build",
     "lint": "next lint",
     "supabase:migrate": "node scripts/supabase-apply-migration.mjs",
     "supabase:resolve-db": "node scripts/supabase-resolve-db-url.mjs",
@@ -124,6 +125,9 @@
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "overrides": {
+    "@xmldom/xmldom": "0.8.13"
+  },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
     "@dnd-kit/sortable": "^10.0.0",
@@ -135,6 +139,7 @@
     "@radix-ui/react-popover": "^1.1.16",
     "@radix-ui/react-slider": "^1.4.0",
     "@radix-ui/react-slot": "^1.2.5",
+    "@radix-ui/react-tooltip": "^1.2.12",
     "@react-pdf/renderer": "^4.5.1",
     "@sentry/nextjs": "^10.58.0",
     "@supabase/ssr": "^0.12.0",

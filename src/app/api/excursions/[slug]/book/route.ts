@@ -83,6 +83,13 @@ export async function POST(request: Request, context: RouteContext) {
   // на сайт партнёра, где он заполнит контакты сам.
   const hasContactInput = Boolean(name || email || phone);
 
+  if (excursion.partner === "platform") {
+    return NextResponse.json(
+      { error: "Для собственной экскурсии используйте оформление заявки на сайте." },
+      { status: 409 }
+    );
+  }
+
   const parsed = parseExcursionSlug(slug);
 
   if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {

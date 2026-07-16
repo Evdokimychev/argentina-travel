@@ -43,7 +43,7 @@ export default function DesktopSiteNav({
   return (
     <nav
       ref={navRef}
-      className="hidden min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden lg:flex xl:gap-1.5 2xl:gap-2"
+      className="hidden min-w-0 flex-1 items-center justify-center gap-1 overflow-hidden xl:flex xl:gap-1.5 2xl:gap-2"
       aria-label={t("nav.main")}
     >
       {visiblePrimarySections.map((section, index) => (

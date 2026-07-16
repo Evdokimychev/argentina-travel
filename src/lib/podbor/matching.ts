@@ -13,14 +13,10 @@ import {
   scorePodborRegions,
 } from "@/lib/podbor/scoring";
 import { buildPodborNarrative, buildPodborAiPayload } from "@/lib/podbor/narrative";
-
-const BUDGET_USD: Record<string, [number, number]> = {
-  "under-500": [200, 500],
-  "500-1000": [500, 1000],
-  "1000-2000": [1000, 2000],
-  "2000-5000": [2000, 5000],
-  "5000+": [5000, 12000],
-};
+import {
+  assessTourForPodborBudget,
+  resolvePodborBudgetRange,
+} from "@/lib/podbor/budget";
 
 const DURATION_DAYS: Record<string, [number, number]> = {
   "3-5": [3, 5],
@@ -69,6 +65,13 @@ function scoreTour(
   answers: PodborAnswers
 ): number {
   let score = 0;
+  const partySize = Number.parseInt(answers["party-size"]?.[0] ?? "1", 10);
+  if (
+    Number.isFinite(partySize) &&
+    (partySize < tour.groupSizeMin || partySize > tour.groupSizeMax)
+  ) {
+    return Number.NEGATIVE_INFINITY;
+  }
 
   for (const [regionId, regionScore] of Object.entries(regionScores) as Array<
     [PodborRegionId, number]
@@ -77,10 +80,11 @@ function scoreTour(
   }
 
   const budgetId = answers.budget?.[0];
-  if (budgetId && BUDGET_USD[budgetId]) {
-    const [, maxUsd] = BUDGET_USD[budgetId];
-    if (tour.priceUsd <= maxUsd * 1.15) score += 4;
-    if (tour.priceUsd > maxUsd * 1.5) score -= 3;
+  if (budgetId) {
+    const [, maxUsd] = resolvePodborBudgetRange(budgetId);
+    const budget = assessTourForPodborBudget(tour, maxUsd, partySize);
+    if (budget.status === "within_budget") score += 4;
+    if (budget.status === "over_budget") score -= 3;
   }
 
   const durationId = answers.duration?.[0];
@@ -160,12 +164,37 @@ export function buildPodborMatchResult(
 
   const regions = ranked.slice(0, 3).map(({ id, score }) => toRegionResult(id, score));
 
-  const scoredTours = tours
+  const rankedTours = tours
     .map((tour) => ({ tour, score: scoreTour(tour, regionScores, tags, answers) }))
     .filter(({ score }) => score > 0)
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score - a.score);
+
+  const budgetId = answers.budget?.[0] ?? "1000-2000";
+  const budgetUsdRange = resolvePodborBudgetRange(budgetId);
+  const partySize = Number.parseInt(answers["party-size"]?.[0] ?? "1", 10);
+  const budgetAssessments = rankedTours.map(({ tour }) =>
+    assessTourForPodborBudget(tour, budgetUsdRange[1], partySize)
+  );
+  const scoredTours = budgetAssessments
+    .filter((item) => item.status === "within_budget")
     .slice(0, 4)
     .map(({ tour }) => tour);
+  const overBudgetTours = budgetAssessments
+    .filter(
+      (item): item is typeof item & { normalizedTotalUsd: number } =>
+        item.status === "over_budget" && item.normalizedTotalUsd != null
+    )
+    .sort((a, b) => a.overageUsd - b.overageUsd)
+    .slice(0, 4)
+    .map(({ tour, normalizedTotalUsd, overageUsd, overagePercent }) => ({
+      tour,
+      normalizedTotalUsd,
+      overageUsd,
+      overagePercent,
+    }));
+  const priceUnknownTourCount = budgetAssessments.filter(
+    (item) => item.status === "price_unknown"
+  ).length;
 
   const scoredExcursions = excursions
     .map((excursion) => ({
@@ -178,13 +207,12 @@ export function buildPodborMatchResult(
     .map(({ excursion }) => excursion);
 
   const compatibilityIndex = computeCompatibilityIndex(regionScores);
-  const budgetId = answers.budget?.[0] ?? "1000-2000";
-  const budgetUsdRange = BUDGET_USD[budgetId] ?? [1000, 2000];
-
   const result: PodborMatchResult = {
     compatibilityIndex,
     regions,
     tours: scoredTours,
+    overBudgetTours,
+    priceUnknownTourCount,
     excursions: scoredExcursions,
     bestSeason: resolveBestSeason(topRegionIds),
     suggestedDuration: resolveDurationLabel(answers),

@@ -154,6 +154,50 @@ export function normalizeBlogBodyBlock(value: unknown): BlogBodyBlock | null {
         alt: asString(record.alt),
         caption: asString(record.caption) || undefined,
       };
+    case "image-text":
+      return {
+        type: "image-text",
+        src: asString(record.src),
+        alt: asString(record.alt),
+        title: asString(record.title, "Заголовок истории"),
+        body: asString(record.body),
+        imagePosition: record.imagePosition === "right" ? "right" : "left",
+        caption: asString(record.caption) || undefined,
+      };
+    case "author-card":
+      return {
+        type: "author-card",
+        name: asString(record.name, "Имя автора"),
+        role: asString(record.role) || undefined,
+        bio: asString(record.bio),
+        avatarSrc: asString(record.avatarSrc) || undefined,
+        avatarAlt: asString(record.avatarAlt) || undefined,
+        href: asString(record.href) || undefined,
+        linkLabel: asString(record.linkLabel) || undefined,
+      };
+    case "facts-grid":
+      return {
+        type: "facts-grid",
+        title: asString(record.title) || undefined,
+        items: Array.isArray(record.items)
+          ? record.items
+              .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+              .map((item) => ({
+                label: asString(item.label),
+                value: asString(item.value),
+                description: asString(item.description) || undefined,
+              }))
+          : [],
+        columns:
+          record.columns === 2 || record.columns === 4 ? record.columns : 3,
+      };
+    case "quote":
+      return {
+        type: "quote",
+        text: asString(record.text),
+        author: asString(record.author) || undefined,
+        context: asString(record.context) || undefined,
+      };
     case "infobox":
       return {
         type: "infobox",
@@ -348,6 +392,21 @@ export function blocksToPlainText(blocks: BlogBodyBlock[]): string {
           return block.items.join("\n");
         case "callout":
           return `${block.title}\n${block.body}`;
+        case "image-text":
+          return `${block.title}\n${block.body}`;
+        case "author-card":
+          return [block.name, block.role, block.bio].filter(Boolean).join("\n");
+        case "facts-grid":
+          return [
+            block.title,
+            ...block.items.map((item) =>
+              [item.label, item.value, item.description].filter(Boolean).join(": ")
+            ),
+          ]
+            .filter(Boolean)
+            .join("\n");
+        case "quote":
+          return [block.text, block.author, block.context].filter(Boolean).join("\n");
         case "faq":
           return block.items.map((i) => `${i.question}\n${i.answer}`).join("\n\n");
         default:

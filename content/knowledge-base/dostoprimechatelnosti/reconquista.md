@@ -1,7 +1,7 @@
 ---
 id: reconquista
 type: attraction
-title: Reconquista
+title: Реконкиста
 title_es: Reconquista
 title_en: Reconquista
 summary: "Реконкиста в Санта-Фе — город Литораля с историческим, археологическим и палеонтологическим наследием."

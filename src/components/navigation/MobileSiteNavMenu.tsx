@@ -11,7 +11,6 @@ import {
 } from "lucide-react";
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
 import { MegaMenuServicesFooter } from "@/components/navigation/MegaMenuServicesFooter";
-import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import {
   buildMobileNavGroups,
   getSiteNavSectionIcon,
@@ -102,6 +101,7 @@ function MobileNavLinkRow({
         rel="noopener noreferrer"
         onClick={onNavigate}
         className={className}
+        aria-current={active ? "page" : undefined}
       >
         {inner}
       </a>
@@ -109,7 +109,7 @@ function MobileNavLinkRow({
   }
 
   return (
-    <Link href={link.href} onClick={onNavigate} className={className}>
+    <Link href={link.href} onClick={onNavigate} className={className} aria-current={active ? "page" : undefined}>
       {inner}
     </Link>
   );
@@ -173,7 +173,7 @@ function MobileNavSectionScreen({
         <button
           type="button"
           onClick={onBack}
-          className="inline-flex shrink-0 items-center gap-1.5 rounded-lg px-1.5 py-1.5 text-sm font-medium text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-2 text-sm font-medium text-slate transition-colors hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
         >
           <ArrowLeft className="h-4 w-4" strokeWidth={1.75} aria-hidden />
           <span className="sr-only sm:not-sr-only">Назад</span>
@@ -185,7 +185,7 @@ function MobileNavSectionScreen({
           <Link
             href={section.href}
             onClick={onNavigate}
-            className="inline-flex shrink-0 items-center gap-1 rounded-lg px-2 py-1.5 text-xs font-semibold text-sky transition-colors hover:bg-sky/5"
+            className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-lg px-2 text-xs font-semibold text-sky transition-colors hover:bg-sky/5"
           >
             Раздел
             <ArrowUpRight className="h-3.5 w-3.5" aria-hidden />
@@ -216,12 +216,14 @@ function MobileNavSectionScreen({
 
 function MobileNavSectionRow({
   section,
+  allSections,
   pathname,
   t,
   onOpen,
   onNavigate,
 }: {
   section: SiteNavSection;
+  allSections: SiteNavSection[];
   pathname: string;
   t: NavTranslate;
   onOpen: () => void;
@@ -229,7 +231,7 @@ function MobileNavSectionRow({
 }) {
   const label = navSectionLabel(section, t);
   const Icon = getSiteNavSectionIcon(section.id);
-  const active = isNavSectionActive(pathname, section, SITE_NAV_SECTIONS);
+  const active = isNavSectionActive(pathname, section, allSections);
   const hasColumns = (section.columns?.length ?? 0) > 0;
 
   const rowClass = cn(
@@ -286,29 +288,32 @@ function MobileNavSectionRow({
   }
 
   return (
-    <Link href={section.href} onClick={onNavigate} className={rowClass}>
+    <Link href={section.href} onClick={onNavigate} className={rowClass} aria-current={active ? "page" : undefined}>
       {content}
     </Link>
   );
 }
 
 function MobileNavRoot({
+  sections,
   pathname,
   t,
   onNavigate,
   onOpenSection,
 }: {
+  sections: SiteNavSection[];
   pathname: string;
   t: NavTranslate;
   onNavigate: () => void;
   onOpenSection: (sectionId: string) => void;
 }) {
-  const groups = buildMobileNavGroups();
+  const groups = buildMobileNavGroups(sections);
 
   return (
     <div className="space-y-5">
       <Link
         href="/"
+        aria-current={pathname === "/" ? "page" : undefined}
         onClick={onNavigate}
         className={cn(
           "flex items-center gap-3 rounded-xl border px-3 py-2.5 transition-colors",
@@ -342,6 +347,7 @@ function MobileNavRoot({
               <MobileNavSectionRow
                 key={section.id}
                 section={section}
+                allSections={sections}
                 pathname={pathname}
                 t={t}
                 onOpen={() => onOpenSection(section.id)}
@@ -405,6 +411,7 @@ export function MobileSiteNavMenu({
 
   return (
     <MobileNavRoot
+      sections={sections}
       pathname={pathname}
       t={t}
       onNavigate={onNavigate}

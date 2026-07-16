@@ -17,13 +17,13 @@ export const cabinetLinkClass =
   "font-medium text-sky transition-colors hover:text-sky-dark hover:underline";
 
 export const cabinetSidebarClass =
-  "sticky top-5 hidden h-fit shrink-0 flex-col rounded-3xl border border-border-subtle bg-surface-elevated shadow-card transition-[width] duration-300 ease-out md:flex dark:border-border-subtle dark:bg-surface-elevated";
+  "sticky top-5 hidden max-h-[calc(100dvh-2.5rem)] shrink-0 flex-col overflow-hidden rounded-3xl border border-border-subtle bg-surface-elevated shadow-card transition-[width] duration-300 ease-out md:flex dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetSidebarSkeletonClass =
-  "sticky top-5 h-fit rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated";
+  "sticky top-5 max-h-[calc(100dvh-2.5rem)] rounded-3xl border border-border-subtle bg-surface-elevated shadow-card dark:border-border-subtle dark:bg-surface-elevated";
 
 export const cabinetMobileHeaderClass =
-  "flex items-center justify-between border-b border-border-subtle bg-surface-elevated/95 px-4 py-3 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
+  "flex min-h-14 items-center justify-between border-b border-border-subtle bg-surface-elevated/95 px-4 py-1.5 backdrop-blur-md md:hidden dark:border-border-subtle dark:bg-surface-elevated/95";
 
 /** Horizontal section nav — sticky below site header on mobile cabinets. */
 export const cabinetMobileNavClass =

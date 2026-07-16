@@ -23,6 +23,7 @@ export type PodborQuestionId =
   | "duration"
   | "budget"
   | "travelers"
+  | "party-size"
   | "activity";
 
 export type PodborSelectionMode = "single" | "multi";
@@ -50,6 +51,7 @@ export interface PodborQuestion {
   minSelections?: number;
   maxSelections?: number;
   options: PodborOption[];
+  numericInput?: { min: number; max: number; defaultValue: number };
 }
 
 export type PodborAnswers = Partial<Record<PodborQuestionId, string[]>>;
@@ -71,6 +73,13 @@ export interface PodborMatchResult {
   compatibilityIndex: number;
   regions: PodborRegionResult[];
   tours: TourListing[];
+  overBudgetTours: Array<{
+    tour: TourListing;
+    normalizedTotalUsd: number;
+    overageUsd: number;
+    overagePercent: number;
+  }>;
+  priceUnknownTourCount: number;
   excursions: ExcursionListing[];
   bestSeason: string;
   suggestedDuration: string;

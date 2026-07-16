@@ -1,15 +1,14 @@
-/* Catalog listing pages — gray-to-sky gradient hero + lifted search card (mirrors /flights) */
+/* Catalog listing pages — shared editorial palette + lifted planning card. */
 
 .catalog-listing-page-hero {
   position: relative;
   overflow: hidden;
-  border-bottom: 1px solid rgb(26 26 46 / 0.08);
+  border-bottom: 1px solid var(--editorial-line, rgb(26 26 46 / 0.08));
   background: linear-gradient(
-    152deg,
-    var(--token-color-page-band) 0%,
-    var(--token-color-sky-50) 35%,
-    var(--token-color-sky-100) 62%,
-    var(--token-color-white) 100%
+    120deg,
+    var(--editorial-soft, var(--token-color-page-band)) 0%,
+    var(--token-color-white) 60%,
+    var(--editorial-soft-strong, var(--token-color-sky-100)) 135%
   );
 }
 
@@ -35,7 +34,7 @@
   right: -2rem;
   height: 11rem;
   width: 11rem;
-  background: rgb(116 172 223 / 0.14);
+  background: color-mix(in srgb, var(--editorial-accent, #74acdf) 18%, transparent);
 }
 
 .catalog-listing-page-hero__glow--secondary {
@@ -43,7 +42,7 @@
   left: 10%;
   height: 8rem;
   width: 14rem;
-  background: rgb(116 172 223 / 0.08);
+  background: color-mix(in srgb, var(--editorial-accent, #74acdf) 10%, transparent);
 }
 
 .dark .catalog-listing-page-hero__glow--primary {

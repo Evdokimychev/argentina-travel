@@ -8,7 +8,13 @@ test.describe("Авторизация", () => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto("/");
 
-    await page.getByRole("button", { name: "Войти в профиль" }).click();
+    const desktopSignIn = page.getByRole("button", { name: "Войти в профиль" });
+    if (await desktopSignIn.isVisible()) {
+      await desktopSignIn.click();
+    } else {
+      await page.getByRole("button", { name: "Меню" }).click();
+      await page.getByRole("button", { name: "Войти", exact: true }).click();
+    }
 
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();

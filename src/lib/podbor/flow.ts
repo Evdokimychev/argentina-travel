@@ -9,6 +9,7 @@ const TAIL: PodborQuestionId[] = [
   "duration",
   "budget",
   "travelers",
+  "party-size",
   "activity",
 ];
 

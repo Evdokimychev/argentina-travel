@@ -126,6 +126,18 @@ export type SiteNavigationGlobal = {
   utilityContactUrl: string;
 };
 
+export type SiteDesignGlobal = {
+  palettePreset: "argentina" | "patagonia" | "wine";
+  headingFont: "unbounded" | "serif" | "system";
+  headerVariant: "floating" | "compact";
+  footerVariant: "light" | "mist";
+  showUtilityBar: boolean;
+  showHeaderMapButton: boolean;
+  showThemeToggle: boolean;
+  showFooterNewsletter: boolean;
+  showFooterRouteCta: boolean;
+};
+
 /** Resolved public shapes — locales stripped after resolveSiteGlobalForLocale. */
 export type SiteBrandingGlobalResolved = SiteBrandingGlobalBase;
 export type SiteSeoGlobalResolved = SiteSeoGlobalBase;
@@ -140,6 +152,7 @@ export type SiteGlobalKey =
   | "site.seo"
   | "site.contact"
   | "site.navigation"
+  | "site.design"
   | "site.maintenance";
 
 export type SiteGlobalsMap = {
@@ -149,6 +162,7 @@ export type SiteGlobalsMap = {
   "site.seo": SiteSeoGlobal;
   "site.contact": SiteContactGlobal;
   "site.navigation": SiteNavigationGlobal;
+  "site.design": SiteDesignGlobal;
   "site.maintenance": SiteMaintenanceGlobal;
 };
 
@@ -157,6 +171,7 @@ export const SITE_GLOBAL_KEYS = [
   "site.seo",
   "site.contact",
   "site.navigation",
+  "site.design",
   "site.legal",
   "site.features",
   "site.maintenance",

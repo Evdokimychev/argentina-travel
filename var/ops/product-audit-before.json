@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-14T21:50:54.839Z",
+  "generatedAt": "2026-07-15T20:08:17.521Z",
   "baselineSha": "df839a6871c6697e7ed96aa0c45607629bd2e70f",
   "productionDeployment": "dpl_HVXqRU5EVbd58UVM98ipYJhw7pGR",
   "confirmedCriticalIssues": [
@@ -8,10 +8,10 @@
     "local_storage_business_fallbacks_present"
   ],
   "counts": {
-    "routes": 358,
-    "pages": 132,
-    "apiRoutes": 226,
-    "critical": 69,
-    "withIssues": 37
+    "routes": 368,
+    "pages": 133,
+    "apiRoutes": 235,
+    "critical": 73,
+    "withIssues": 39
   }
 }

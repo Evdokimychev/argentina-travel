@@ -91,6 +91,7 @@ export async function resolvePlacePage(slug: string, locale = "ru"): Promise<Pla
       })
     : buildDefaultTranslationStatus(Boolean(fallback));
 
+  let resolvedSeo: CmsDocument["seo"] | undefined;
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "place",
     slug,
@@ -99,9 +100,15 @@ export async function resolvePlacePage(slug: string, locale = "ru"): Promise<Pla
     merge: (doc, fb) => placeDetailFromCms(doc, fb),
     supabase,
     isUsable: isCmsDocumentComplete,
+    onResolvedDocument: (doc) => {
+      resolvedSeo = doc.seo;
+    },
   });
   if (!resolved) return null;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedPlaceSlugs(locale = "ru"): Promise<string[]> {

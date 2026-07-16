@@ -87,8 +87,8 @@ export default function ExcursionDetailView({
 
   return (
     <ExcursionBookingProvider excursion={excursion}>
-    <div className="pb-24 lg:pb-16">
-      <div className={siteContainerClass}>
+      <div className="pb-28 lg:pb-16">
+        <div className={siteContainerClass}>
         <PageBreadcrumbs
           items={[
             { label: "Главная", href: "/" },
@@ -101,6 +101,54 @@ export default function ExcursionDetailView({
           ]}
         />
 
+        <div className="mt-5">
+          <div className="flex flex-wrap items-center gap-3 text-sm text-slate">
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="h-4 w-4" aria-hidden />
+              <Link href={`/excursions/city/${excursion.citySlug}`} className="hover:text-sky-ink">
+                {excursion.cityName}
+              </Link>
+            </span>
+            {durationLabel ? (
+              <span className="inline-flex items-center gap-1">
+                <Clock className="h-4 w-4" aria-hidden />
+                {durationLabel}
+              </span>
+            ) : null}
+          </div>
+
+          <div className="mt-3 flex items-start justify-between gap-4">
+            <h1 className="min-w-0 flex-1 font-display text-3xl font-bold leading-tight text-charcoal lg:text-4xl">
+              {excursion.title}
+            </h1>
+            <div className="flex shrink-0 items-center gap-1.5">
+              <ExcursionFavoriteButton
+                excursion={excursion}
+                className={favoriteHeaderButtonClass}
+                iconClassName="h-4 w-4"
+              />
+              <button
+                type="button"
+                onClick={handleShare}
+                aria-label={shared ? "Ссылка скопирована" : "Поделиться"}
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-gray-200/80 bg-white/90 text-charcoal shadow-sm transition-colors hover:border-sky/30 hover:bg-white"
+              >
+                <Share2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          {excursion.tagline ? (
+            <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate sm:text-lg">
+              {excursion.tagline}
+            </p>
+          ) : null}
+
+          <div className="mt-4">
+            <ExcursionMetaBadges excursion={excursion} t={t} />
+          </div>
+        </div>
+
         {galleryImages.length > 0 ? (
           <div className="mt-6">
             <TourDetailGallery
@@ -110,58 +158,14 @@ export default function ExcursionDetailView({
             />
           </div>
         ) : null}
-      </div>
+        </div>
 
-      <ExcursionSectionNav links={sectionLinks} />
+        <ExcursionSectionNav links={sectionLinks} />
 
-      <div className={cn(siteContainerClass, "pt-6")}>
+        <div className={cn(siteContainerClass, "pt-6")}>
           <div className="grid gap-6 lg:grid-cols-[1fr_360px] xl:gap-10">
             <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-3 text-sm text-slate">
-                <span className="inline-flex items-center gap-1">
-                  <MapPin className="h-4 w-4" aria-hidden />
-                  <Link href={`/excursions/city/${excursion.citySlug}`} className="hover:text-sky">
-                    {excursion.cityName}
-                  </Link>
-                </span>
-                {durationLabel ? (
-                  <span className="inline-flex items-center gap-1">
-                    <Clock className="h-4 w-4" aria-hidden />
-                    {durationLabel}
-                  </span>
-                ) : null}
-              </div>
-
-              <div className="mt-3 flex items-start justify-between gap-4">
-                <h1 className="min-w-0 flex-1 font-display text-3xl font-bold text-charcoal lg:text-4xl">
-                  {excursion.title}
-                </h1>
-                <div className="flex shrink-0 items-center gap-1.5">
-                  <ExcursionFavoriteButton
-                    excursion={excursion}
-                    className={favoriteHeaderButtonClass}
-                    iconClassName="h-4 w-4"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleShare}
-                    aria-label={shared ? "Ссылка скопирована" : "Поделиться"}
-                    className="flex h-9 w-9 items-center justify-center rounded-full border border-gray-200/80 bg-white/90 text-charcoal shadow-sm transition-colors hover:border-sky/30 hover:bg-white"
-                  >
-                    <Share2 className="h-4 w-4" />
-                  </button>
-                </div>
-              </div>
-
-              {excursion.tagline ? (
-                <p className="mt-3 text-lg text-slate">{excursion.tagline}</p>
-              ) : null}
-
-              <div className="mt-4">
-                <ExcursionMetaBadges excursion={excursion} t={t} />
-              </div>
-
-              <div className="mt-6">
+              <div>
                 <ExcursionStatsSection excursion={excursion} />
               </div>
 
@@ -264,15 +268,15 @@ export default function ExcursionDetailView({
             </aside>
           </div>
 
-          <ExcursionSimilarSection
-            excursions={similarExcursions}
-            cityName={excursion.cityName}
-          />
-      </div>
+            <ExcursionSimilarSection
+              excursions={similarExcursions}
+              cityName={excursion.cityName}
+            />
+        </div>
 
-      <ExcursionMobileBookingBar prefersAffiliate={prefersAffiliate} />
-      <ExcursionBookingModal />
-    </div>
+        <ExcursionMobileBookingBar prefersAffiliate={prefersAffiliate} />
+        <ExcursionBookingModal />
+      </div>
     </ExcursionBookingProvider>
   );
 }

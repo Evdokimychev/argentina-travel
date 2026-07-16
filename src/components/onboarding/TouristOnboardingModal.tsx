@@ -74,7 +74,7 @@ export default function TouristOnboardingModal() {
           <button
             type="button"
             onClick={handleDismiss}
-            className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             aria-label="Закрыть подсказку"
           >
             <X className="h-4 w-4" />

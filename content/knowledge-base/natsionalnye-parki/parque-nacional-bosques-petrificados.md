@@ -1,10 +1,10 @@
 ---
 id: parque-nacional-bosques-petrificados
 type: national_park
-title: национальный парк Bosques Petrificados
+title: Национальный парк Боске-Петрификадос
 title_es: Parque Nacional Bosques Petrificados
 title_en: Bosques Petrificados [Petrified Forests] National Park
-summary: "Окаменелый лес в Санта-Крусе (Хараміло): стволы араукарий, погребённые около 150 млн лет назад."
+summary: "Окаменелый лес в Санта-Крусе (Харамийо): стволы араукарий, погребённые около 150 млн лет назад."
 status: published
 site_sections:
 - puteshestviya-po-argentine

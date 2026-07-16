@@ -1,7 +1,7 @@
 ---
 id: parque-nacional-laguna-blanca
 type: national_park
-title: национальный парк Laguna Blanca
+title: Национальный парк Лагуна-Бланка
 title_es: Parque Nacional Laguna Blanca
 title_en: Laguna Blanca National Park
 summary: "Лагуна-Бланка в Неукене — высокогорное озеро-зеркало, важное для водоплавающих птиц."

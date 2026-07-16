@@ -33,8 +33,12 @@ function calculatePlatformAverageRating(reviews: TourReview[]): number {
   return Math.round((sum / reviews.length) * 10) / 10;
 }
 
-export function buildTourProductJsonLd(tour: TourDetail, siteUrl = getSiteUrl()) {
-  const url = `${siteUrl}/tours/${tour.slug}`;
+export function buildTourProductJsonLd(
+  tour: TourDetail,
+  siteUrl = getSiteUrl(),
+  catalogPath: "/tours" | "/excursions" = "/tours"
+) {
+  const url = `${siteUrl}${catalogPath}/${tour.slug}`;
   const platformOnly = tour.reviews.filter(
     (review) => review.source === "platform" && review.text.trim()
   );

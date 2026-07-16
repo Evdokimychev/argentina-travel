@@ -83,6 +83,7 @@ interface TourDetailViewProps {
   previewPublishBlockingCount?: number;
   initialDepartureDate?: string | null;
   catalogPlaces?: PlaceListing[];
+  catalogKind?: "tour" | "excursion";
 }
 
 export default function TourDetailView({
@@ -99,8 +100,9 @@ export default function TourDetailView({
   previewPublishBlockingCount = 0,
   initialDepartureDate = null,
   catalogPlaces = [],
+  catalogKind = "tour",
 }: TourDetailViewProps) {
-  useTrackEntityView("tour", previewMode ? null : slug, {
+  useTrackEntityView("tour", previewMode || !initialTour ? null : slug, {
     title: initialTour?.title,
     priceUsd: initialTour?.priceUsd,
     organizerId: initialTour?.organizer?.slug,
@@ -116,7 +118,7 @@ export default function TourDetailView({
   );
 
   useEffect(() => {
-    if (!tour || !initialDepartureDate?.trim()) return;
+    if (!tour?.slug || !initialDepartureDate?.trim()) return;
     const target = document.getElementById("booking");
     if (!target) return;
     window.requestAnimationFrame(() => {
@@ -127,12 +129,14 @@ export default function TourDetailView({
   if (!tour) {
     return (
       <div className={cn(siteContainerClass, "py-24 text-center")}>
-        <h1 className="font-display text-2xl font-bold text-charcoal">Тур не найден</h1>
+        <h1 className="font-display text-2xl font-bold text-charcoal">
+          {catalogKind === "excursion" ? "Экскурсия не найдена" : "Тур не найден"}
+        </h1>
         <p className="mt-2 text-slate">
-          Возможно, тур ещё не опубликован, скрыт или доступен только по персональной ссылке от
+          Возможно, предложение ещё не опубликовано, скрыто или доступно только по персональной ссылке от
           организатора.
         </p>
-        <Link href="/tours" className="mt-6 inline-block text-sm font-medium text-brand hover:underline">
+        <Link href={catalogKind === "excursion" ? "/excursions" : "/tours"} className="mt-6 inline-block text-sm font-medium text-brand hover:underline">
           Вернуться в каталог
         </Link>
       </div>
@@ -179,7 +183,11 @@ export default function TourDetailView({
   const isYouTravel = isYouTravelPartnerDetail(tour);
 
   return (
-    <TourBookingProvider tour={tour} initialDepartureDate={initialDepartureDate}>
+    <TourBookingProvider
+      tour={tour}
+      productKind={catalogKind}
+      initialDepartureDate={initialDepartureDate}
+    >
       {previewMode && previewEditHref ? (
         <TourPreviewBanner
           title={tour.title}
@@ -193,15 +201,20 @@ export default function TourDetailView({
         <ReviewPromptBanner tourSlug={tour.slug} isPartnerTour={isPartnerTour} />
       </Suspense>
 
-      <div className={cn(siteContainerClass, "pt-4 sm:pt-5 lg:pt-6")}>
+      <TourDetailHeader
+        tour={tour}
+        canonicalTour={canonicalTour}
+        showMedia={tour.gallery.length === 0}
+        catalogKind={catalogKind}
+      />
+
+      <div className={cn(siteContainerClass, "py-5 sm:py-6 lg:py-8")}>
         <TourDetailGallery
           images={tour.gallery}
           title={tour.title}
           layoutSeed={tour.slug}
         />
       </div>
-
-      <TourDetailHeader tour={tour} canonicalTour={canonicalTour} />
       {tour.isPrivate ? (
         <div className={cn(siteContainerClass, "mt-4")}>
           <PrivateTourBanner />
@@ -215,7 +228,7 @@ export default function TourDetailView({
 
       <TourSectionNav items={sectionLinks} />
 
-      <div className="bg-surface-muted pb-24 lg:pb-16">
+      <div className="bg-surface-muted pb-32 lg:pb-16">
         <div className={cn(siteContainerClass, "py-6 md:py-10")}>
           <div className="grid gap-6 lg:grid-cols-[1fr_360px] xl:gap-10">
             <div className={cn("min-w-0", tourDetailSectionStackClass)}>

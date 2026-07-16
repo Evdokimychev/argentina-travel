@@ -1,7 +1,7 @@
 ---
 id: avistaje-de-aves-en-santa-cruz
 type: attraction
-title: Bird watching in Santa Cruz
+title: Наблюдение за птицами в Санта-Крусе
 title_es: Avistaje de aves en Santa Cruz
 title_en: Bird watching in Santa Cruz
 summary: "Наблюдение за птицами в Санта-Крусе: экстремальные, но богатые жизнью местообитания патагонской фауны."

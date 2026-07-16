@@ -4,6 +4,7 @@ import type {
   SiteBrandingTranslatable,
   SiteContactGlobal,
   SiteContactTranslatable,
+  SiteDesignGlobal,
   SiteFeaturesGlobal,
   SiteGlobalLocaleOverrides,
   SiteLegalGlobal,
@@ -127,6 +128,18 @@ export const DEFAULT_SITE_NAVIGATION: SiteNavigationGlobal = {
   utilityContactUrl: "/contacts",
 };
 
+export const DEFAULT_SITE_DESIGN: SiteDesignGlobal = {
+  palettePreset: "argentina",
+  headingFont: "unbounded",
+  headerVariant: "floating",
+  footerVariant: "light",
+  showUtilityBar: false,
+  showHeaderMapButton: true,
+  showThemeToggle: true,
+  showFooterNewsletter: true,
+  showFooterRouteCta: true,
+};
+
 function normalizeNavigationHref(value: unknown, fallback: string): string {
   const href = asString(value).trim();
   if (href.startsWith("/") && !href.startsWith("//")) return href;
@@ -140,6 +153,14 @@ function asString(value: unknown, fallback = ""): string {
 
 function asBool(value: unknown, fallback: boolean): boolean {
   return typeof value === "boolean" ? value : fallback;
+}
+
+function asAllowedValue<T extends string>(
+  value: unknown,
+  allowed: readonly T[],
+  fallback: T,
+): T {
+  return typeof value === "string" && allowed.includes(value as T) ? (value as T) : fallback;
 }
 
 function parseLocaleOverrides<T extends Record<string, string>>(
@@ -234,6 +255,49 @@ export function normalizeSiteNavigation(value: unknown): SiteNavigationGlobal {
     utilityOrganizerUrl: normalizeNavigationHref(row.utilityOrganizerUrl, DEFAULT_SITE_NAVIGATION.utilityOrganizerUrl),
     utilityContactLabel: asString(row.utilityContactLabel, DEFAULT_SITE_NAVIGATION.utilityContactLabel),
     utilityContactUrl: normalizeNavigationHref(row.utilityContactUrl, DEFAULT_SITE_NAVIGATION.utilityContactUrl),
+  };
+}
+
+export function normalizeSiteDesign(value: unknown): SiteDesignGlobal {
+  if (!value || typeof value !== "object" || Array.isArray(value)) {
+    return DEFAULT_SITE_DESIGN;
+  }
+  const row = value as Record<string, unknown>;
+  return {
+    palettePreset: asAllowedValue(
+      row.palettePreset,
+      ["argentina", "patagonia", "wine"] as const,
+      DEFAULT_SITE_DESIGN.palettePreset,
+    ),
+    headingFont: asAllowedValue(
+      row.headingFont,
+      ["unbounded", "serif", "system"] as const,
+      DEFAULT_SITE_DESIGN.headingFont,
+    ),
+    headerVariant: asAllowedValue(
+      row.headerVariant,
+      ["floating", "compact"] as const,
+      DEFAULT_SITE_DESIGN.headerVariant,
+    ),
+    footerVariant: asAllowedValue(
+      row.footerVariant,
+      ["light", "mist"] as const,
+      DEFAULT_SITE_DESIGN.footerVariant,
+    ),
+    showUtilityBar: asBool(row.showUtilityBar, DEFAULT_SITE_DESIGN.showUtilityBar),
+    showHeaderMapButton: asBool(
+      row.showHeaderMapButton,
+      DEFAULT_SITE_DESIGN.showHeaderMapButton,
+    ),
+    showThemeToggle: asBool(row.showThemeToggle, DEFAULT_SITE_DESIGN.showThemeToggle),
+    showFooterNewsletter: asBool(
+      row.showFooterNewsletter,
+      DEFAULT_SITE_DESIGN.showFooterNewsletter,
+    ),
+    showFooterRouteCta: asBool(
+      row.showFooterRouteCta,
+      DEFAULT_SITE_DESIGN.showFooterRouteCta,
+    ),
   };
 }
 

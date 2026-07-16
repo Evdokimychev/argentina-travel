@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/types/database";
 import type { TourContentAdminSummary, TourModerationStatus } from "@/types/tour-content";
+import { getCmsRevisionById, updateCmsDocument } from "@/lib/cms/content-server";
 import { sendOrganizerNewReviewEmail } from "@/lib/notifications/email-delivery";
 import { notifyReviewApprovedInApp } from "@/lib/notifications/event-emitters";
 import type { ModerationReviewSummary, ModerationReviewReportSummary } from "@/lib/reviews-db-mapper";
@@ -44,9 +45,38 @@ export type ModerationQueueItem = {
 export type ModerationResolveAction = "approve" | "reject";
 
 export async function syncPendingToursToQueue(supabase: DbClient): Promise<number> {
+  const { data: queuedTourItems } = await supabase
+    .from("moderation_queue")
+    .select("id, entity_id")
+    .eq("entity_type", "tour")
+    .in("status", ["pending", "in_review"])
+    .limit(200);
+
+  if (queuedTourItems?.length) {
+    const ids = queuedTourItems.map((item) => item.entity_id);
+    const { data: currentTours } = await supabase
+      .from("tours")
+      .select("id, moderation_status")
+      .in("id", ids);
+    const pendingIds = new Set(
+      (currentTours ?? [])
+        .filter((tour) => tour.moderation_status === "pending")
+        .map((tour) => tour.id)
+    );
+    const staleQueueIds = queuedTourItems
+      .filter((item) => !pendingIds.has(item.entity_id))
+      .map((item) => item.id);
+    if (staleQueueIds.length) {
+      await supabase
+        .from("moderation_queue")
+        .update({ status: "cancelled", resolved_at: new Date().toISOString() })
+        .in("id", staleQueueIds);
+    }
+  }
+
   const { data: pendingTours, error } = await supabase
     .from("tours")
-    .select("id, slug, title, owner_user_id, status, moderation_status, updated_at")
+    .select("id, slug, title, owner_user_id, product_type, status, moderation_status, updated_at")
     .eq("moderation_status", "pending")
     .limit(100);
 
@@ -59,11 +89,15 @@ export async function syncPendingToursToQueue(supabase: DbClient): Promise<numbe
         entity_type: "tour",
         entity_id: tour.id,
         status: "pending",
-        reason: "Публикация тура организатором",
+        reason:
+          tour.product_type === "excursion"
+            ? "Публикация экскурсии организатором"
+            : "Публикация тура организатором",
         metadata: {
           slug: tour.slug,
           title: tour.title,
           ownerUserId: tour.owner_user_id,
+          productType: tour.product_type,
         } as Json,
       },
       { onConflict: "entity_type,entity_id" }
@@ -168,19 +202,82 @@ export async function resolveModerationItem(
   const tourModerationStatus: TourModerationStatus =
     action === "approve" ? "approved" : "rejected";
 
-  const { error: queueUpdateError } = await supabase
-    .from("moderation_queue")
-    .update({
-      status: resolvedStatus,
-      resolved_at: now,
-      resolved_by: actorUserId,
-      reason: note?.trim() || item.reason,
-    })
-    .eq("id", queueId);
+  if (item.entity_type === "author_article") {
+    const submittedRevisionId = metadataString(item.metadata, "submittedRevisionId");
+    if (!submittedRevisionId) {
+      return { error: "В заявке не закреплена редакция статьи. Автору нужно отправить материал повторно." };
+    }
 
-  if (queueUpdateError) return { error: queueUpdateError.message };
+    const revision = await getCmsRevisionById(supabase, item.entity_id, submittedRevisionId);
+    if (!revision) {
+      return { error: "Закреплённая редакция статьи не найдена. Публикация остановлена." };
+    }
+
+    const documentResult = await updateCmsDocument(
+      supabase,
+      item.entity_id,
+      action === "approve"
+        ? {
+            title: revision.title,
+            body: revision.body,
+            seo: revision.seo,
+            status: "published",
+            actorId: actorUserId,
+          }
+        : { status: "draft", actorId: actorUserId },
+    );
+    if ("error" in documentResult || documentResult.document.body.kind !== "author_article") {
+      return {
+        error:
+          "error" in documentResult
+            ? documentResult.error
+            : "Закреплённая редакция не является авторской статьёй",
+      };
+    }
+
+    const { error: queueUpdateError } = await supabase
+      .from("moderation_queue")
+      .update({
+        status: resolvedStatus,
+        resolved_at: now,
+        resolved_by: actorUserId,
+        reason: note?.trim() || item.reason,
+      })
+      .eq("id", queueId)
+      .in("status", ["pending", "in_review"]);
+
+    if (queueUpdateError) return { error: queueUpdateError.message };
+
+    let ownerEmail: string | null = null;
+    if (documentResult.document.createdBy) {
+      const { data: ownerProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", documentResult.document.createdBy)
+        .maybeSingle();
+      ownerEmail = ownerProfile?.email ?? null;
+    }
+
+    return {
+      ok: true,
+      entityType: "author_article",
+      entityTitle: documentResult.document.title,
+      ownerEmail,
+    };
+  }
 
   if (item.entity_type === "tour") {
+    const { data: previousTour, error: previousTourError } = await supabase
+      .from("tours")
+      .select(
+        "title, owner_user_id, product_type, status, listing, payload, moderation_status, moderation_notes, moderated_by, moderated_at, approved_listing, approved_payload, approved_at"
+      )
+      .eq("id", item.entity_id)
+      .maybeSingle();
+    if (previousTourError || !previousTour) {
+      return { error: previousTourError?.message ?? "Предложение не найдено" };
+    }
+
     const tourUpdate: Database["public"]["Tables"]["tours"]["Update"] = {
       moderation_status: tourModerationStatus,
       moderation_notes: note?.trim() || null,
@@ -188,7 +285,13 @@ export async function resolveModerationItem(
       moderated_at: now,
     };
 
-    if (action === "reject") {
+    if (action === "approve") {
+      tourUpdate.approved_listing = previousTour.listing;
+      tourUpdate.approved_payload = previousTour.payload;
+      tourUpdate.approved_at = now;
+    }
+
+    if (action === "reject" && !previousTour.approved_payload) {
       tourUpdate.status = "draft";
     }
 
@@ -196,10 +299,38 @@ export async function resolveModerationItem(
       .from("tours")
       .update(tourUpdate)
       .eq("id", item.entity_id)
-      .select("title, owner_user_id")
+      .select("title, owner_user_id, product_type")
       .maybeSingle();
 
     if (tourError) return { error: tourError.message };
+
+    const { error: queueUpdateError } = await supabase
+      .from("moderation_queue")
+      .update({
+        status: resolvedStatus,
+        resolved_at: now,
+        resolved_by: actorUserId,
+        reason: note?.trim() || item.reason,
+      })
+      .eq("id", queueId)
+      .in("status", ["pending", "in_review"]);
+
+    if (queueUpdateError) {
+      await supabase
+        .from("tours")
+        .update({
+          status: previousTour.status,
+          moderation_status: previousTour.moderation_status,
+          moderation_notes: previousTour.moderation_notes,
+          moderated_by: previousTour.moderated_by,
+          moderated_at: previousTour.moderated_at,
+          approved_listing: previousTour.approved_listing,
+          approved_payload: previousTour.approved_payload,
+          approved_at: previousTour.approved_at,
+        })
+        .eq("id", item.entity_id);
+      return { error: queueUpdateError.message };
+    }
 
     let ownerEmail: string | null = null;
     if (tourRow?.owner_user_id) {
@@ -213,46 +344,23 @@ export async function resolveModerationItem(
 
     return {
       ok: true,
-      entityType: "tour",
+      entityType: tourRow?.product_type === "excursion" ? "excursion" : "tour",
       entityTitle: tourRow?.title ?? metadataString(item.metadata, "title") ?? item.entity_id,
       ownerEmail,
     };
   }
 
-  if (item.entity_type === "author_article") {
-    const { data: document, error: documentError } = await supabase
-      .from("content_documents")
-      .update({
-        status: action === "approve" ? "published" : "draft",
-        published_at: action === "approve" ? now : null,
-        updated_by: actorUserId,
-      })
-      .eq("id", item.entity_id)
-      .eq("doc_type", "author_article")
-      .select("title, created_by")
-      .maybeSingle();
+  const { error: queueUpdateError } = await supabase
+    .from("moderation_queue")
+    .update({
+      status: resolvedStatus,
+      resolved_at: now,
+      resolved_by: actorUserId,
+      reason: note?.trim() || item.reason,
+    })
+    .eq("id", queueId);
 
-    if (documentError || !document) {
-      return { error: documentError?.message ?? "Статья не найдена" };
-    }
-
-    let ownerEmail: string | null = null;
-    if (document.created_by) {
-      const { data: ownerProfile } = await supabase
-        .from("profiles")
-        .select("email")
-        .eq("id", document.created_by)
-        .maybeSingle();
-      ownerEmail = ownerProfile?.email ?? null;
-    }
-
-    return {
-      ok: true,
-      entityType: "author_article",
-      entityTitle: document.title,
-      ownerEmail,
-    };
-  }
+  if (queueUpdateError) return { error: queueUpdateError.message };
 
   if (item.entity_type === "review") {
     const reviewResult = await resolveReviewModeration(
@@ -346,15 +454,22 @@ export async function enqueueTourModeration(
   supabase: DbClient,
   tourId: string,
   metadata: Record<string, unknown>
-): Promise<void> {
-  await supabase.from("moderation_queue").upsert(
+): Promise<{ ok: true } | { error: string }> {
+  const { error } = await supabase.from("moderation_queue").upsert(
     {
       entity_type: "tour",
       entity_id: tourId,
       status: "pending",
-      reason: "Публикация тура организатором",
+      assigned_to: null,
+      resolved_at: null,
+      resolved_by: null,
+      reason:
+        metadata.productType === "excursion"
+          ? "Публикация экскурсии организатором"
+          : "Публикация тура организатором",
       metadata: metadata as Json,
     },
     { onConflict: "entity_type,entity_id" }
   );
+  return error ? { error: error.message } : { ok: true };
 }

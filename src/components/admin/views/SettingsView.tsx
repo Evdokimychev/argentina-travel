@@ -12,6 +12,7 @@ import CmsOpsPanel from "@/components/admin/cms/CmsOpsPanel";
 import SiteGlobalsSeoPreview from "@/components/admin/cms/SiteGlobalsSeoPreview";
 import MaintenancePreviewPanel from "@/components/admin/cms/MaintenancePreviewPanel";
 import SiteNavigationPreview from "@/components/admin/cms/SiteNavigationPreview";
+import SiteDesignPreview from "@/components/admin/cms/SiteDesignPreview";
 import ThemeSettingsSection from "@/components/settings/ThemeSettingsSection";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
@@ -85,6 +86,7 @@ type SettingsResponse = {
 };
 
 type SettingsTab = "content" | "ops" | "maintenance";
+const SITE_DESIGN_KEY = "site.design" as SiteGlobalKey;
 
 const TAB_LABELS: Record<SettingsTab, string> = {
   content: "Бренд, меню и контакты",
@@ -104,6 +106,7 @@ function emptyGlobalsState(): Record<SiteGlobalKey, Record<string, unknown>> {
     "site.seo": {},
     "site.contact": {},
     "site.navigation": {},
+    "site.design": {},
     "site.legal": {},
     "site.features": {},
     "site.maintenance": {},
@@ -162,7 +165,7 @@ export default function SettingsView() {
   );
 
   const contentDefinitions = useMemo(() => {
-    const keys = new Set<string>(SITE_CONTENT_GLOBAL_KEYS);
+    const keys = new Set<string>([...SITE_CONTENT_GLOBAL_KEYS, SITE_DESIGN_KEY]);
     return SITE_GLOBAL_DEFINITIONS.filter((def) => keys.has(def.key));
   }, []);
 
@@ -209,9 +212,9 @@ export default function SettingsView() {
               key={tabKey}
               type="button"
               onClick={() => setTab(tabKey)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              className={`inline-flex min-h-11 items-center justify-center rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                 tab === tabKey
-                  ? "bg-sky text-white"
+                  ? "bg-sky-ink text-white"
                   : "bg-surface-elevated text-charcoal hover:bg-sky/10"
               }`}
             >
@@ -237,6 +240,7 @@ export default function SettingsView() {
                 updatedAt={data?.updatedAt?.[definition.key] ?? null}
               />
             ))}
+            <SiteDesignPreview values={globals[SITE_DESIGN_KEY]} />
             <SiteNavigationPreview values={globals["site.navigation"]} />
             <SiteGlobalsSeoPreview
               branding={globals["site.branding"]}

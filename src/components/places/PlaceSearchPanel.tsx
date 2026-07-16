@@ -52,14 +52,14 @@ export default function PlaceSearchPanel({
             value={filters.query}
             onChange={(e) => onChange({ ...filters, query: e.target.value })}
             placeholder={labels.searchPlaceholder}
-            className="w-full rounded-button border border-border-default bg-surface-elevated py-2.5 pl-10 pr-4 text-sm text-charcoal shadow-sm outline-none focus:border-sky focus:ring-2 focus:ring-sky/20"
+            className="min-h-11 w-full rounded-button border border-border-default bg-surface-elevated py-2.5 pl-10 pr-4 text-sm text-charcoal shadow-sm outline-none focus:border-sky focus:ring-2 focus:ring-sky/20"
           />
         </div>
         <button
           type="button"
           onClick={() => setShowFilters((v) => !v)}
           className={cn(
-            "inline-flex items-center justify-center gap-2 rounded-button border px-4 py-2.5 text-sm font-medium transition-colors",
+            "inline-flex min-h-11 items-center justify-center gap-2 rounded-button border px-4 py-2.5 text-sm font-medium transition-colors",
             showFilters || activeCount > 0
               ? "border-sky bg-sky/10 text-sky-ink"
               : "border-border-default bg-surface-elevated text-charcoal hover:border-slate/30",
@@ -85,7 +85,7 @@ export default function PlaceSearchPanel({
                 onChange={(e) =>
                   onChange({ ...filters, category: e.target.value as PlaceCatalogFilters["category"] })
                 }
-                className="w-full rounded-button border border-border-default px-3 py-2 text-sm"
+                className="min-h-11 w-full rounded-button border border-border-default px-3 py-2 text-sm"
               >
                 <option value="">{labels.categoryAll}</option>
                 {PLACE_CATEGORIES.map((cat) => (
@@ -101,7 +101,7 @@ export default function PlaceSearchPanel({
               <select
                 value={filters.region}
                 onChange={(e) => onChange({ ...filters, region: e.target.value })}
-                className="w-full rounded-button border border-border-default px-3 py-2 text-sm"
+                className="min-h-11 w-full rounded-button border border-border-default px-3 py-2 text-sm"
               >
                 <option value="">{labels.regionAll}</option>
                 {regions.map((r) => (
@@ -117,7 +117,7 @@ export default function PlaceSearchPanel({
               <select
                 value={filters.province}
                 onChange={(e) => onChange({ ...filters, province: e.target.value })}
-                className="w-full rounded-button border border-border-default px-3 py-2 text-sm"
+                className="min-h-11 w-full rounded-button border border-border-default px-3 py-2 text-sm"
               >
                 <option value="">{labels.provinceAll}</option>
                 {provinces.map((p) => (
@@ -133,10 +133,9 @@ export default function PlaceSearchPanel({
               <select
                 value={filters.sort}
                 onChange={(e) => onChange({ ...filters, sort: e.target.value as PlaceSortOption })}
-                className="w-full rounded-button border border-border-default px-3 py-2 text-sm"
+                className="min-h-11 w-full rounded-button border border-border-default px-3 py-2 text-sm"
               >
                 <option value="popular">{labels.sortPopular}</option>
-                <option value="rating">{labels.sortRating}</option>
                 <option value="name_asc">{labels.sortNameAsc}</option>
                 <option value="name_desc">{labels.sortNameDesc}</option>
               </select>
@@ -147,7 +146,7 @@ export default function PlaceSearchPanel({
             <button
               type="button"
               onClick={onReset}
-              className="mt-4 inline-flex items-center gap-1 text-sm text-sky-ink hover:underline"
+              className="mt-3 inline-flex min-h-11 items-center gap-1 text-sm text-sky-ink hover:underline"
             >
               <X className="h-3.5 w-3.5" aria-hidden />
               {labels.reset}

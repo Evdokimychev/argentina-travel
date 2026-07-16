@@ -52,6 +52,18 @@ type TransactionalSendContext = {
 };
 
 const RESEND_ENDPOINT = "https://api.resend.com/emails";
+const EMAIL_MAX_ATTEMPTS = 5;
+
+type EmailOutboxRow = {
+  id: string;
+  from_email: string;
+  recipients: string[];
+  subject: string;
+  html_body: string;
+  text_body: string;
+  headers: Record<string, string> | null;
+  attempts: number;
+};
 
 function resolveEmailConfig(): EmailConfig | null {
   const apiKey = process.env.RESEND_API_KEY?.trim();
@@ -90,8 +102,25 @@ function resolveUnsubscribeUrl(context: TransactionalSendContext): string | null
   return buildUnsubscribeUrl(context.userId, context.category);
 }
 
-async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<boolean> {
-  if (!input.to.length) return false;
+function nextEmailAttemptAt(attempts: number): string {
+  const delayMs = Math.min(60 * 60_000, 60_000 * 2 ** Math.max(0, attempts - 1));
+  return new Date(Date.now() + delayMs).toISOString();
+}
+
+async function deliverEmailOutboxRow(
+  config: EmailConfig,
+  row: EmailOutboxRow,
+): Promise<boolean> {
+  const supabase = createSupabaseAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const table = (supabase as any).from("email_delivery_outbox");
+  const { data: claimed, error: claimError } = await table
+    .update({ status: "sending", attempts: row.attempts + 1, last_attempt_at: new Date().toISOString() })
+    .eq("id", row.id)
+    .in("status", ["pending", "failed"])
+    .select("id")
+    .maybeSingle();
+  if (claimError || !claimed) return false;
 
   try {
     const response = await fetch(RESEND_ENDPOINT, {
@@ -99,21 +128,122 @@ async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<bo
       headers: {
         Authorization: `Bearer ${config.apiKey}`,
         "Content-Type": "application/json",
+        "Idempotency-Key": row.id,
       },
       body: JSON.stringify({
-        from: config.from,
-        to: input.to,
-        subject: input.subject,
-        html: input.html,
-        text: input.text,
-        headers: input.headers,
+        from: row.from_email,
+        to: row.recipients,
+        subject: row.subject,
+        html: row.html_body,
+        text: row.text_body,
+        headers: row.headers ?? undefined,
       }),
       signal: AbortSignal.timeout(10_000),
     });
-    return response.ok;
+
+    if (response.ok) {
+      const responseBody = (await response.json().catch(() => null)) as { id?: string } | null;
+      await table
+        .update({
+          status: "delivered",
+          delivered_at: new Date().toISOString(),
+          provider_message_id: responseBody?.id ?? null,
+          last_error: null,
+          next_attempt_at: null,
+        })
+        .eq("id", row.id);
+      return true;
+    }
+
+    const attempts = row.attempts + 1;
+    await table
+      .update({
+        status: attempts >= EMAIL_MAX_ATTEMPTS ? "dead" : "failed",
+        last_error: `Resend HTTP ${response.status}`,
+        next_attempt_at: attempts >= EMAIL_MAX_ATTEMPTS ? null : nextEmailAttemptAt(attempts),
+      })
+      .eq("id", row.id);
+    return false;
+  } catch (error) {
+    const attempts = row.attempts + 1;
+    await table
+      .update({
+        status: attempts >= EMAIL_MAX_ATTEMPTS ? "dead" : "failed",
+        last_error: error instanceof Error ? error.message.slice(0, 1000) : "Email delivery failed",
+        next_attempt_at: attempts >= EMAIL_MAX_ATTEMPTS ? null : nextEmailAttemptAt(attempts),
+      })
+      .eq("id", row.id);
+    return false;
+  }
+}
+
+async function sendEmail(config: EmailConfig, input: SendEmailInput): Promise<boolean> {
+  if (!input.to.length) return false;
+
+  try {
+    const supabase = createSupabaseAdminClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
+      .from("email_delivery_outbox")
+      .insert({
+        from_email: config.from,
+        recipients: input.to,
+        subject: input.subject,
+        html_body: input.html,
+        text_body: input.text,
+        headers: input.headers ?? {},
+        status: "pending",
+        next_attempt_at: new Date().toISOString(),
+      })
+      .select("id, from_email, recipients, subject, html_body, text_body, headers, attempts")
+      .single();
+
+    if (error || !data) return false;
+    return deliverEmailOutboxRow(config, data as EmailOutboxRow);
   } catch {
     return false;
   }
+}
+
+export async function processEmailOutboxRetries(limit = 50): Promise<{
+  queued: number;
+  delivered: number;
+  failed: number;
+}> {
+  const config = resolveEmailConfig();
+  if (!config) return { queued: 0, delivered: 0, failed: 0 };
+
+  const supabase = createSupabaseAdminClient();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const table = (supabase as any).from("email_delivery_outbox");
+  const staleSendingBefore = new Date(Date.now() - 15 * 60_000).toISOString();
+  await table
+    .update({ status: "failed", next_attempt_at: new Date().toISOString(), last_error: "Stale sending lease" })
+    .eq("status", "sending")
+    .lt("updated_at", staleSendingBefore);
+
+  const deliveredRetentionCutoff = new Date(Date.now() - 30 * 24 * 60 * 60_000).toISOString();
+  const deadRetentionCutoff = new Date(Date.now() - 90 * 24 * 60 * 60_000).toISOString();
+  await table.delete().eq("status", "delivered").lt("delivered_at", deliveredRetentionCutoff);
+  await table.delete().eq("status", "dead").lt("updated_at", deadRetentionCutoff);
+
+  const { data, error } = await table
+    .select("id, from_email, recipients, subject, html_body, text_body, headers, attempts")
+    .in("status", ["pending", "failed"])
+    .lte("next_attempt_at", new Date().toISOString())
+    .lt("attempts", EMAIL_MAX_ATTEMPTS)
+    .order("next_attempt_at", { ascending: true })
+    .limit(Math.max(1, Math.min(100, Math.floor(limit))));
+
+  if (error || !Array.isArray(data)) {
+    throw new Error(error?.message ?? "Не удалось прочитать очередь писем");
+  }
+
+  let delivered = 0;
+  for (const row of data as EmailOutboxRow[]) {
+    if (await deliverEmailOutboxRow(config, row)) delivered += 1;
+  }
+  return { queued: data.length, delivered, failed: data.length - delivered };
 }
 
 async function sendTemplateEmail(
@@ -385,14 +515,13 @@ export async function sendPrivacyDeleteCompletedEmail(input: {
     supportEmail: config.adminEmail,
   });
 
-  await sendEmail(config, {
+  return sendEmail(config, {
     to: recipients,
     subject: template.subject,
     html: template.html,
     text: template.text,
   });
 
-  return true;
 }
 
 export async function sendOrganizerNewReviewEmail(input: {
@@ -448,13 +577,6 @@ export async function sendOrganizerNewReviewEmail(input: {
       layoutOptions
     ),
   });
-}
-
-export async function sendAdminUnreadDigestHook(input: {
-  unreadCount: number;
-}): Promise<void> {
-  if (input.unreadCount <= 0) return;
-  // Stub for scheduled digest delivery based on unread admin_notifications count.
 }
 
 export async function sendContentFreshnessReportEmail(input: {

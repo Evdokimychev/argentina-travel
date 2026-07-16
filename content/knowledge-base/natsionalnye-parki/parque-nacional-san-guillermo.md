@@ -1,7 +1,7 @@
 ---
 id: parque-nacional-san-guillermo
 type: national_park
-title: национальный парк San Guillermo
+title: Национальный парк Сан-Гильермо
 title_es: Parque Nacional San Guillermo
 title_en: San Guillermo National Park
 summary: "Сан-Гильермо в Сан-Хуане — высокогорная пустыня-заповедник с крупнейшими популяциями викуний."

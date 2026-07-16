@@ -232,7 +232,8 @@ export default function TourGroupDatesAddModal({
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
-        className="flex max-h-[92vh] max-w-2xl flex-col overflow-hidden border border-gray-200 p-0"
+        showClose={false}
+        className="flex flex-col overflow-hidden border border-gray-200 p-0 sm:max-h-[92vh] sm:max-w-2xl"
         onPointerDownOutside={onClose}
         onEscapeKeyDown={onClose}
       >

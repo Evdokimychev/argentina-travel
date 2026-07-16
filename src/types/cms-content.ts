@@ -4,7 +4,12 @@ import type { BlogPost } from "@/types";
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceDetail, PlaceFaqItem } from "@/types/place";
 import { formatBlogReadTime } from "@/lib/blog-utils";
-import { resolveBlogPostCardImage } from "@/lib/media-resolver";
+import {
+  getDestinationGallery,
+  getDestinationImage,
+  getDestinationImageAlt,
+  resolveBlogPostCardImage,
+} from "@/lib/media-resolver";
 
 /** Document types supported by CMS v1.4 */
 export type CmsDocType =
@@ -112,6 +117,10 @@ export type CmsDocumentSeo = {
   title?: string;
   /** OG / meta image — localPath, /media/... or absolute URL */
   image?: string;
+  /** Optional canonical override. Empty means the document's own public URL. */
+  canonical?: string;
+  /** Explicitly prevent indexing after publication. Drafts are never public. */
+  noIndex?: boolean;
 };
 
 export type CmsDocument = {
@@ -283,7 +292,7 @@ export function blogPostFromCms(doc: CmsDocument, fallback?: BlogPost): BlogPost
     tags: fallback?.tags ?? [],
     featured: doc.body.featured ?? fallback?.featured,
     editorialReviewed: fallback?.editorialReviewed,
-    noIndex: fallback?.noIndex,
+    noIndex: doc.seo.noIndex ?? fallback?.noIndex,
     canonicalSlug: fallback?.canonicalSlug,
     dateModified: fallback?.dateModified,
     richArticleId: fallback?.richArticleId,
@@ -323,15 +332,22 @@ export function destinationPageFromCms(
   const keywords = fallback?.keywords?.length
     ? fallback.keywords
     : [doc.slug.replace(/-/g, " "), doc.title];
+  const resolvedImage =
+    fallback?.image && fallback.image !== "/logo-light.svg"
+      ? fallback.image
+      : getDestinationImage(doc.slug);
+  const resolvedGallery = fallback?.gallery?.length
+    ? fallback.gallery
+    : getDestinationGallery(doc.slug);
 
   return {
     id: doc.slug,
     name: doc.title,
     region: fallback?.region ?? regionGroup,
     description,
-    image: fallback?.image ?? "/logo-light.svg",
-    imageAlt: fallback?.imageAlt,
-    gallery: fallback?.gallery,
+    image: resolvedImage,
+    imageAlt: fallback?.imageAlt ?? getDestinationImageAlt(doc.slug),
+    gallery: resolvedGallery.length ? resolvedGallery : [resolvedImage],
     keywords,
     intro,
     highlights: doc.body.highlights ?? fallback?.highlights ?? [],

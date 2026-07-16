@@ -1,7 +1,7 @@
 ---
 id: volcan-lanin
 type: attraction
-title: Lanín volcano
+title: Вулкан Ланин
 title_es: Volcán Lanín
 title_en: Lanín volcano
 summary: "Вулкан Ланин в Патагонии — восхождение к конусу высотой более 3700 метров на границе с Чили."

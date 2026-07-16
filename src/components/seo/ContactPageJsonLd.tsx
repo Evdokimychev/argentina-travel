@@ -5,6 +5,7 @@ import {
   SITE_WORKING_HOURS,
 } from "@/data/site-contacts";
 import { absoluteUrl, getSiteUrl } from "@/lib/site-url";
+import { serializeJsonLd } from "@/lib/schema-json-ld";
 
 export default function ContactPageJsonLd() {
   const jsonLd = {
@@ -42,7 +43,7 @@ export default function ContactPageJsonLd() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }

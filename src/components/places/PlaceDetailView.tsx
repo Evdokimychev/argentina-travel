@@ -8,7 +8,6 @@ import {
   Clock,
   ExternalLink,
   MapPin,
-  Star,
   Ticket,
 } from "lucide-react";
 import PlaceDetailContentSections from "@/components/places/PlaceDetailContentSections";
@@ -26,7 +25,6 @@ import type { PlaceDetail } from "@/types/place";
 import type { TourListing } from "@/types";
 import { destinationHref } from "@/lib/destinations";
 import { pairedDestinationIdForPlace } from "@/lib/geography-links";
-import { matchToursForPlace } from "@/lib/places-tour-match";
 import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
 import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { collectionHref, itineraryHref } from "@/lib/places-urls";
@@ -53,7 +51,7 @@ export default function PlaceDetailView({
 
   return (
     <article className="pb-16">
-      <div className="relative aspect-[21/9] min-h-[240px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
+      <div className="relative aspect-[21/9] min-h-[360px] w-full overflow-hidden bg-charcoal sm:min-h-[320px]">
         {place.coverImage ? (
           <Image
             src={place.coverImage}
@@ -65,7 +63,7 @@ export default function PlaceDetailView({
           />
         ) : null}
         <div className="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/30 to-charcoal/10" />
-        <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-8 pt-16")}>
+        <div className={cn(siteContainerClass, "relative flex h-full flex-col justify-end pb-6 pt-12 sm:pb-8 sm:pt-16")}>
           <PageBreadcrumbs
             variant="on-dark"
             separator="dash"
@@ -213,15 +211,6 @@ export default function PlaceDetailView({
                   <div>
                     <dt className="text-slate">Стоимость</dt>
                     <dd className="font-medium text-charcoal">{place.ticketPrice}</dd>
-                  </div>
-                </div>
-              ) : null}
-              {place.rating != null ? (
-                <div className="flex gap-3">
-                  <Star className="mt-0.5 h-4 w-4 shrink-0 fill-sun text-sun" aria-hidden />
-                  <div>
-                    <dt className="text-slate">Рейтинг</dt>
-                    <dd className="font-medium text-charcoal">{place.rating.toFixed(1)} / 5</dd>
                   </div>
                 </div>
               ) : null}

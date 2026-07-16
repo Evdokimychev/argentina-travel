@@ -41,8 +41,8 @@ export const GTM_EVENT_PARAM_SHAPE: Record<GtmEventName, string[]> = {
   blog_comment_post: ["item_id", "item_name"],
   blog_affiliate_embed_view: ["item_id", "affiliate_service"],
   locale_switch: ["locale_from", "locale_to", "page_path"],
-  search_submit: ["search_term", "results_count", "search_source", "search_kind"],
-  search_result_click: ["search_term", "item_id", "item_kind", "position", "search_source"],
+  search_submit: ["search_query_length", "results_count", "search_source", "search_kind"],
+  search_result_click: ["search_query_length", "item_id", "item_kind", "position", "search_source"],
 };
 
 describe("gtm-events", () => {
@@ -128,10 +128,11 @@ describe("gtm-events", () => {
     });
     expect(window.dataLayer?.[0]).toMatchObject({
       event: GTM_EVENTS.searchSubmit,
-      search_term: "патагония",
+      search_query_length: 9,
       results_count: 3,
       search_source: "meilisearch",
       search_kind: "tour",
     });
+    expect(window.dataLayer?.[0]).not.toHaveProperty("search_term");
   });
 });

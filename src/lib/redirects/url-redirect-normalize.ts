@@ -57,6 +57,41 @@ export function validateUrlRedirectInput(input: UrlRedirectInput): string | null
   return null;
 }
 
+export type RedirectGraphEntry = Pick<UrlRedirectInput, "fromPath" | "toPath"> & {
+  enabled?: boolean;
+};
+
+export function validateUrlRedirectGraph(entries: RedirectGraphEntry[]): string | null {
+  const redirects = new Map<string, string>();
+
+  for (const entry of entries) {
+    if (entry.enabled === false) continue;
+    const fromPath = normalizeRedirectFromPath(entry.fromPath);
+    const toPath = normalizeRedirectToPath(entry.toPath);
+    if (!toPath.startsWith("/")) continue;
+    redirects.set(fromPath, toPath);
+  }
+
+  for (const start of redirects.keys()) {
+    const visited = new Set<string>();
+    let current: string | undefined = start;
+
+    while (current && redirects.has(current)) {
+      if (visited.has(current)) {
+        return `Редиректы образуют цикл, начинающийся с ${start}`;
+      }
+      visited.add(current);
+      current = redirects.get(current);
+    }
+
+    if (visited.size > 10) {
+      return `Цепочка редиректов от ${start} длиннее 10 переходов`;
+    }
+  }
+
+  return null;
+}
+
 export function mapUrlRedirectRow(row: {
   id: string;
   from_path: string;

@@ -1,7 +1,7 @@
 ---
 id: el-hoyo
 type: attraction
-title: El Hoyo
+title: Эль-Ойо
 title_es: El Hoyo
 title_en: El Hoyo
 summary: "Эль-Ойо в Патагонии (Чубут) — «национальная столица мелких ягод» среди гор и садов."

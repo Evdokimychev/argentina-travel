@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -27,6 +26,12 @@ import {
   wrapTripsterUrlWithAffiliate,
 } from "@/lib/tripster/checkout-url-server";
 import { getClientIp, withRateLimit } from "@/lib/rate-limit";
+import {
+  claimPartnerBookingOperation,
+  completePartnerBookingOperation,
+  fingerprintPartnerBookingRequest,
+  isValidBookingOperationKey,
+} from "@/lib/partner-booking/idempotency";
 
 type BookingRequestBody = {
   slug?: string;
@@ -204,7 +209,7 @@ async function postTripsterBookingRequest(request: Request) {
     data: { user: authUser },
   } = await supabase.auth.getUser();
 
-  const userId = authUser?.id ?? body.userId?.trim() ?? null;
+  const userId = authUser?.id ?? null;
   let profileCountry: string | null = null;
 
   if (authUser) {
@@ -356,7 +361,76 @@ async function postTripsterBookingRequest(request: Request) {
     });
   }
 
-  const idempotencyKey = randomUUID();
+  const idempotencyKey = request.headers.get("idempotency-key")?.trim() ?? null;
+  if (!isValidBookingOperationKey(idempotencyKey)) {
+    return NextResponse.json(
+      { error: "Для безопасного бронирования повторите отправку формы." },
+      { status: 400 },
+    );
+  }
+
+  if (!admin) {
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "idempotency_unavailable",
+      error: "Безопасное создание заказа сейчас недоступно — продолжаем на сайте Tripster.",
+    });
+  }
+  const operationStore = admin;
+  const operationKey = idempotencyKey;
+
+  const requestFingerprint = fingerprintPartnerBookingRequest({
+    experienceId,
+    date,
+    time: normalizeTimeForApi(time),
+    personsCount,
+    tickets,
+    name,
+    email,
+    phone,
+    messageToGuide: messageToGuide ?? null,
+  });
+  const claim = await claimPartnerBookingOperation(operationStore, {
+    provider: "tripster",
+    idempotencyKey: operationKey,
+    requestFingerprint,
+  });
+
+  if (claim.state === "replay") {
+    return NextResponse.json(claim.response.payload, {
+      status: claim.response.statusCode,
+      headers: { "X-Idempotent-Replay": "true" },
+    });
+  }
+  if (claim.state === "conflict") {
+    return NextResponse.json({ error: "Ключ бронирования уже использован для другой заявки." }, { status: 409 });
+  }
+  if (claim.state === "in_progress") {
+    return NextResponse.json(
+      { error: "Заявка уже отправляется. Подождите результат и не создавайте её повторно." },
+      { status: 409, headers: { "Retry-After": "5" } },
+    );
+  }
+  if (claim.state === "unavailable") {
+    return NextResponse.json({
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "idempotency_unavailable",
+      error: "Безопасное создание заказа сейчас недоступно — продолжаем на сайте Tripster.",
+    });
+  }
+
+  async function respond(payload: Record<string, unknown>, statusCode = 200) {
+    await completePartnerBookingOperation(operationStore, {
+      provider: "tripster",
+      idempotencyKey: operationKey,
+      response: { payload, statusCode },
+    });
+    return NextResponse.json(payload, { status: statusCode });
+  }
 
   try {
     const order = await createTripsterExternalOrder(
@@ -371,7 +445,7 @@ async function postTripsterBookingRequest(request: Request) {
         phone,
         message_to_guide: messageToGuide || undefined,
       },
-      idempotencyKey
+      operationKey
     );
 
     const rawOrderUrl = resolveTripsterCheckoutUrl(
@@ -404,7 +478,7 @@ async function postTripsterBookingRequest(request: Request) {
       priceSnapshot: order.price ?? null,
     });
 
-    return NextResponse.json({
+    return respond({
       ok: true,
       mode: "tripster_order",
       orderId: order.id,
@@ -443,7 +517,7 @@ async function postTripsterBookingRequest(request: Request) {
         priceSnapshot: error.details,
       });
 
-      return NextResponse.json({
+      return respond({
         ok: false,
         mode: "affiliate_fallback",
         fallbackUrl,
@@ -474,7 +548,7 @@ async function postTripsterBookingRequest(request: Request) {
       status: "affiliate_fallback",
     });
 
-    return NextResponse.json({
+    return respond({
       ok: false,
       mode: "affiliate_fallback",
       fallbackUrl,

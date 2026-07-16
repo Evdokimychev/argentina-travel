@@ -263,6 +263,7 @@ export default function BookingOrganizerEditModal({
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
+        showClose={false}
         className="flex max-h-[92vh] max-w-2xl flex-col overflow-hidden border border-gray-200 p-0"
         onPointerDownOutside={onClose}
         onEscapeKeyDown={onClose}

@@ -1,6 +1,7 @@
 "use client";
 
 import { cloneElement, isValidElement, type ReactElement } from "react";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/cn";
 
 type FormFieldControlProps = {
@@ -15,7 +16,11 @@ export function FormField({
   label,
   hint,
   error,
+  success,
+  counter,
   required,
+  optional,
+  decorateControl = true,
   children,
   className,
   labelClassName,
@@ -25,7 +30,12 @@ export function FormField({
   label: string;
   hint?: string;
   error?: string;
+  success?: string;
+  counter?: string;
   required?: boolean;
+  optional?: boolean;
+  /** Отключает клонирование, когда children — составной контрол со своим aria-describedby. */
+  decorateControl?: boolean;
   children: ReactElement<FormFieldControlProps>;
   className?: string;
   labelClassName?: string;
@@ -33,12 +43,17 @@ export function FormField({
 }) {
   const hintId = hint ? `${id}-hint` : undefined;
   const errorId = error ? `${id}-error` : undefined;
-  const describedBy = [hintId, errorId].filter(Boolean).join(" ") || undefined;
+  const successId = success && !error ? `${id}-success` : undefined;
+  const counterId = counter ? `${id}-counter` : undefined;
+  const describedBy = [hintId, errorId, successId, counterId].filter(Boolean).join(" ") || undefined;
+  const childDescribedBy = isValidElement(children) ? children.props["aria-describedby"] : undefined;
+  const mergedDescribedBy = [childDescribedBy, describedBy].filter(Boolean).join(" ") || undefined;
+  const controlId = decorateControl && isValidElement(children) ? (children.props.id ?? id) : id;
 
-  const control = isValidElement(children)
+  const control = decorateControl && isValidElement(children)
     ? cloneElement(children, {
         id: children.props.id ?? id,
-        "aria-describedby": describedBy,
+        "aria-describedby": mergedDescribedBy,
         "aria-invalid": error ? true : children.props["aria-invalid"],
         "aria-required": required ? true : children.props["aria-required"],
       })
@@ -47,7 +62,7 @@ export function FormField({
   return (
     <div className={className}>
       <label
-        htmlFor={id}
+        htmlFor={controlId}
         className={cn(
           "mb-1.5 block font-medium text-charcoal",
           size === "sm" ? "text-xs" : "text-sm",
@@ -60,7 +75,7 @@ export function FormField({
             <span className="text-brand" aria-hidden="true"> *</span>
             <span className="sr-only"> (обязательное поле)</span>
           </>
-        ) : null}
+        ) : optional ? <span className="ml-1 font-normal text-muted">(необязательно)</span> : null}
       </label>
       {control}
       {hint ? (
@@ -69,8 +84,20 @@ export function FormField({
         </p>
       ) : null}
       {error ? (
-        <p id={errorId} role="alert" className="mt-1.5 text-xs text-error">
-          {error}
+        <p id={errorId} role="alert" className="mt-1.5 flex items-start gap-1.5 text-xs font-medium leading-relaxed text-error">
+          <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+          <span><span className="sr-only">Ошибка: </span>{error}</span>
+        </p>
+      ) : null}
+      {success && !error ? (
+        <p id={successId} role="status" className="mt-1.5 flex items-start gap-1.5 text-xs leading-relaxed text-success">
+          <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+          <span>{success}</span>
+        </p>
+      ) : null}
+      {counter ? (
+        <p id={counterId} className="mt-1 text-right text-[11px] tabular-nums text-muted">
+          {counter}
         </p>
       ) : null}
     </div>

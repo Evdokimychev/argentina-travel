@@ -94,6 +94,8 @@ function parseSeo(value: Json): CmsDocumentSeo {
     description: typeof record.description === "string" ? record.description : undefined,
     title: typeof record.title === "string" ? record.title : undefined,
     image: typeof record.image === "string" ? record.image : undefined,
+    canonical: typeof record.canonical === "string" ? record.canonical : undefined,
+    noIndex: typeof record.noIndex === "boolean" ? record.noIndex : undefined,
   };
 }
 

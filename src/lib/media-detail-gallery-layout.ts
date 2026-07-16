@@ -169,8 +169,12 @@ export function buildGalleryMosaicPlan(
   }
 
   const start = imageCount > visibleCount ? hashString(`${seed}:offset`) % imageCount : 0;
-  const pickedIndices: number[] = [];
-  const usedKeys = new Set<string>();
+  // The canonical cover is part of the visual promise made by the catalog
+  // card, so it must remain visible even when the rest of the mosaic varies.
+  const pickedIndices: number[] = visibleCount > 0 ? [0] : [];
+  const usedKeys = new Set<string>(
+    visibleCount > 0 ? [galleryImageIdentityKey(deduped[0]!)] : [],
+  );
   let cursor = start;
   let guard = 0;
 

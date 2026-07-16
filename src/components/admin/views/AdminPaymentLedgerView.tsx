@@ -434,7 +434,7 @@ export function AdminPaymentLedgerPanel() {
       </section>
 
       <Dialog open={Boolean(selectedId)} onOpenChange={(open) => !open && setSelectedId(null)}>
-        <DialogContent className="max-w-2xl" showClose>
+        <DialogContent className="sm:max-w-2xl" showClose>
           <DialogHeader>
             <DialogTitle>Детали платёжной операции</DialogTitle>
             <DialogDescription>

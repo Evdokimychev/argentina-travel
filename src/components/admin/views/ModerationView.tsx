@@ -178,7 +178,7 @@ export default function ModerationView() {
                     <>
                       <p className="font-medium text-charcoal">{item.tour.title}</p>
                       <p className="text-slate">
-                        {item.tour.slug} · организатор {item.tour.ownerUserId}
+                        {item.tour.productType === "excursion" ? "Экскурсия" : "Тур"} · {item.tour.slug} · организатор {item.tour.ownerUserId}
                       </p>
                       <p className="text-slate">
                         Статус каталога:{" "}
@@ -186,7 +186,7 @@ export default function ModerationView() {
                         · модерация:{" "}
                         <AdminStatusChip domain="moderation" value={item.tour.moderationStatus} />
                       </p>
-                      <Link href={`/tours/${item.tour.slug}`} className="text-sky hover:underline">
+                      <Link href={`/${item.tour.productType === "excursion" ? "excursions" : "tours"}/${item.tour.slug}`} className="text-sky hover:underline">
                         Открыть на сайте
                       </Link>
                     </>

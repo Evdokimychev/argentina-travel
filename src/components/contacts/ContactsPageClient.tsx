@@ -14,9 +14,9 @@ import {
   SITE_PHONES,
   SITE_WHATSAPP_URL,
 } from "@/data/site-contacts";
-import { Input } from "@/components/ui/input";
+import { SmartInput } from "@/components/ui/smart-input";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+import { SmartTextarea } from "@/components/ui/smart-textarea";
 import { cn } from "@/lib/cn";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
@@ -26,6 +26,7 @@ import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { trackContactFormSubmit } from "@/lib/analytics/gtm-events";
 import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
+import { requiredField, validateEmail } from "@/lib/form-validation";
 
 type ContactFormContext = {
   tourSlug?: string;
@@ -177,61 +178,53 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
               action={submitError.action}
             />
           ) : null}
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-charcoal">
-              Имя
-            </label>
-            <Input
+          <SmartInput
               type="text"
               id="name"
+              label="Имя"
               name="name"
               required
-              className="mt-1"
+              autoComplete="name"
+              enterKeyHint="next"
+              validate={requiredField("имя")}
               placeholder="Ваше имя"
             />
-          </div>
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-charcoal">
-              Email
-            </label>
-            <Input
+          <SmartInput
               type="email"
               id="email"
+              label="Email"
               name="email"
               required
-              className="mt-1"
+              autoComplete="email"
+              inputMode="email"
+              enterKeyHint="next"
+              validate={validateEmail}
               placeholder="email@example.com"
             />
-          </div>
-          <div>
-            <label htmlFor="tour" className="block text-sm font-medium text-charcoal">
-              Интересующий тур
-            </label>
-            <Input
+          <SmartInput
               type="text"
               id="tour"
+              label="Интересующий тур"
               name="tour"
               readOnly={Boolean(tour)}
               defaultValue={tour?.title ?? ""}
-              className={cn("mt-1", tour && "read-only:bg-gray-50")}
+              className={cn(tour && "read-only:bg-gray-50")}
               placeholder="Название тура (необязательно)"
+              optional
             />
-          </div>
-          <div>
-            <label htmlFor="message" className="block text-sm font-medium text-charcoal">
-              Сообщение
-            </label>
-            <Textarea
+          <SmartTextarea
               id="message"
+              label="Сообщение"
               name="message"
               rows={4}
               required
               value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              className="mt-1"
+              onValueChange={setMessage}
+              minLength={10}
+              maxLength={2000}
+              validate={(value) => value.trim().length < 10 ? "Расскажите немного подробнее — хотя бы 10 символов" : null}
               placeholder="Расскажите о ваших планах..."
             />
-          </div>
           <Button
             type="submit"
             className="w-full sm:w-auto sm:px-10"

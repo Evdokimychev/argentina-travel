@@ -25,6 +25,7 @@ export async function resolveAuthorArticle(
       })
     : buildDefaultTranslationStatus(false);
 
+  let resolvedSeo: CmsDocument["seo"] | undefined;
   const resolved = await resolveWithPublishedCmsOverride<BlogPost>({
     docType: "author_article",
     slug,
@@ -33,10 +34,16 @@ export async function resolveAuthorArticle(
     merge: (doc) => authorArticleFromCms(doc) ?? null,
     supabase,
     isUsable: isCmsDocumentComplete,
+    onResolvedDocument: (doc) => {
+      resolvedSeo = doc.seo;
+    },
   });
 
   if (!resolved) return undefined;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedAuthorArticleSlugs(locale = "ru"): Promise<string[]> {
@@ -45,12 +52,17 @@ export async function listPublishedAuthorArticleSlugs(locale = "ru"): Promise<st
 
   const { data } = await supabase
     .from("content_documents")
-    .select("slug")
+    .select("slug, seo")
     .eq("doc_type", "author_article")
     .eq("locale", locale)
     .eq("status", "published");
 
-  return (data ?? []).map((row) => row.slug);
+  return (data ?? [])
+    .filter((row) => {
+      const seo = row.seo;
+      return !(seo && typeof seo === "object" && !Array.isArray(seo) && seo.noIndex === true);
+    })
+    .map((row) => row.slug);
 }
 
 export type { CmsDocument };

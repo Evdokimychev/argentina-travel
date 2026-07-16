@@ -1,0 +1,16 @@
+{
+  "measuredAt": "2026-07-15T16:53:00-03:00",
+  "status": "partial",
+  "verified": [
+    "/podbor returns useful SSR content instead of a hydration-only spinner",
+    "/booking/find no longer adds a nested main landmark",
+    "missing tour and excursion render a visible H1 on a styled 404 page",
+    "TypeScript, ESLint accessibility rules and 1023 unit tests pass"
+  ],
+  "blocked": [
+    "In-app browser policy rejected localhost control",
+    "No final keyboard-only and axe pass in Chromium, Firefox and WebKit",
+    "Existing lint warnings remain for an archived combobox option and PDF image alt props"
+  ],
+  "routes": []
+}

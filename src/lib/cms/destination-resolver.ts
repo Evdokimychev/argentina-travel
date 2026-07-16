@@ -105,6 +105,7 @@ export async function resolveDestinationPage(
       })
     : buildDefaultTranslationStatus(cutover.destination ? false : Boolean(fallback));
 
+  let resolvedSeo: CmsDocument["seo"] | undefined;
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "destination",
     slug,
@@ -113,9 +114,15 @@ export async function resolveDestinationPage(
     merge: (doc, fb) => destinationPageFromCms(doc, fb),
     supabase,
     isUsable: isCmsDocumentComplete,
+    onResolvedDocument: (doc) => {
+      resolvedSeo = doc.seo;
+    },
   });
   if (!resolved) return null;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedDestinationSlugs(locale = "ru"): Promise<string[]> {

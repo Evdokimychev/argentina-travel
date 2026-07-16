@@ -1,11 +1,11 @@
 {
-  "ranAt": "2026-07-12T15:00:47.789Z",
-  "overall": 8.5,
-  "grade": "B+",
+  "ranAt": "2026-07-16T03:00:56.164Z",
+  "overall": 7.6,
+  "grade": "B",
   "dimensions": {
     "code": {
-      "score": 9.9,
-      "note": "OK 15, warn 1, fail 0"
+      "score": 4.4,
+      "note": "OK 14, warn 1, fail 1"
     },
     "cms": {
       "score": 10,
@@ -16,17 +16,17 @@
       "note": "https://www.goargentina.ru"
     },
     "analytics": {
-      "score": 0,
+      "score": 10,
       "manual": false,
-      "note": "OK 3, warn 7, fail 6 — блокеры аналитики"
+      "note": "OK 1, warn 0, fail 0"
     },
     "performance": {
-      "score": 5.7,
-      "note": "median perf 65, a11y 97, worst CLS 0.981 (prod CDN)"
+      "score": 5.9,
+      "note": "median perf 49, a11y 97, worst CLS 0.668 (prod CDN)"
     }
   },
   "blockers": [
-    "analytics: 6 blocking failure(s)"
+    "publish:verify has blocking failures"
   ],
   "manualNext": [
     "Vercel: NEXT_PUBLIC_GTM_ID + verification tokens → redeploy",

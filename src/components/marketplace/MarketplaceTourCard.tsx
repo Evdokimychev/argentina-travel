@@ -37,6 +37,7 @@ import {
   TourListingOverlayBadges,
   TourListingThematicTags,
 } from "./TourListingCatalogBadges";
+import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -75,6 +76,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
           <TourCardGallery
             images={tour.gallery}
             alt={tourCoverAlt(tour.title)}
+            fallbackImage={resolveTourCardFallbackImage(tour)}
             variant="tour"
             priority={imagePriority}
           />

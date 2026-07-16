@@ -4,6 +4,7 @@ import {
   DEFAULT_SITE_BRANDING,
   normalizeSiteBranding,
   normalizeSiteContact,
+  normalizeSiteDesign,
   normalizeSiteFeatures,
   normalizeSiteLegal,
   normalizeSiteMaintenance,
@@ -17,6 +18,7 @@ import type {
   SiteBrandingGlobalResolved,
   SiteContactGlobal,
   SiteContactGlobalResolved,
+  SiteDesignGlobal,
   SiteFeaturesGlobal,
   SiteGlobalKey,
   SiteGlobalLocaleOverrides,
@@ -132,6 +134,14 @@ export async function fetchSiteNavigation(): Promise<SiteNavigationGlobal> {
   return parsed;
 }
 
+export async function fetchSiteDesign(): Promise<SiteDesignGlobal> {
+  const cached = readCache<SiteDesignGlobal>("site.design");
+  if (cached) return cached;
+  const parsed = normalizeSiteDesign(await loadSettingsKey("site.design"));
+  writeCache("site.design", parsed);
+  return parsed;
+}
+
 export async function fetchSiteMaintenance(locale?: I18nLocale): Promise<SiteMaintenanceGlobalResolved> {
   const cached = readCache<SiteMaintenanceGlobal>("site.maintenance");
   const stored = cached ?? normalizeSiteMaintenance(await loadSettingsKey("site.maintenance"));
@@ -172,6 +182,7 @@ export async function fetchAllSiteGlobalsForAdmin(): Promise<Record<SiteGlobalKe
     "site.seo": normalizeSiteSeo(settings["site.seo"]) as unknown as Json,
     "site.contact": normalizeSiteContact(settings["site.contact"]) as unknown as Json,
     "site.navigation": normalizeSiteNavigation(settings["site.navigation"]) as unknown as Json,
+    "site.design": normalizeSiteDesign(settings["site.design"]) as unknown as Json,
     "site.maintenance": normalizeSiteMaintenance(settings["site.maintenance"]) as unknown as Json,
   };
 }

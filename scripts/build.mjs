@@ -11,8 +11,11 @@ import nextEnv from "@next/env";
 import {
   killPorts,
   killProjectNextDev,
+  readProductionBuildLock,
   removeDevLock,
   removeNextCache,
+  removeProductionBuildLock,
+  writeProductionBuildLock,
 } from "./dev-utils.mjs";
 import { validateBuildMode } from "./validate-build-mode.mjs";
 
@@ -22,7 +25,36 @@ const { loadEnvConfig } = nextEnv;
 loadEnvConfig(root, false);
 const isCiBuild = Boolean(process.env.VERCEL || process.env.CI);
 process.env.BUILD_TARGET = "production";
+if (!isCiBuild && !process.env.NEXT_DIST_DIR?.trim()) {
+  process.env.NEXT_DIST_DIR = ".next-production";
+}
 const { mode: appMode } = validateBuildMode();
+
+const existingBuildLock = readProductionBuildLock(root);
+const inheritedLockOwnerPid = Number(process.env.PRODUCTION_LOCK_OWNER_PID ?? 0);
+const usesInheritedLock =
+  existingBuildLock &&
+  !existingBuildLock.stale &&
+  inheritedLockOwnerPid > 0 &&
+  existingBuildLock.lock.pid === inheritedLockOwnerPid;
+
+if (existingBuildLock && !existingBuildLock.stale && !usesInheritedLock) {
+  throw new Error(`Another production build is running (pid ${existingBuildLock.lock.pid})`);
+}
+if (existingBuildLock?.stale) {
+  removeProductionBuildLock(root, existingBuildLock.lock?.pid);
+}
+if (!usesInheritedLock) {
+  writeProductionBuildLock(root);
+}
+
+function cleanupBuildLock() {
+  if (!usesInheritedLock) {
+    removeProductionBuildLock(root);
+  }
+}
+
+process.on("exit", cleanupBuildLock);
 
 let killedNext = [];
 let killedByPort = new Map();
@@ -46,8 +78,8 @@ if (killedPortCount > 0) {
 
 removeDevLock(root);
 
-if (removeNextCache(root)) {
-  console.log("Removed .next cache before production build");
+if (removeNextCache(root, process.env.NEXT_DIST_DIR)) {
+  console.log(`Removed ${process.env.NEXT_DIST_DIR || ".next"} cache before production build`);
 }
 
 console.log("Running next build …");

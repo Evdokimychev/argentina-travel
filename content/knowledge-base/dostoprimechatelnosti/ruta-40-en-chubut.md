@@ -1,7 +1,7 @@
 ---
 id: ruta-40-en-chubut
 type: attraction
-title: Ruta 40 in Chubut
+title: Трасса 40 в провинции Чубут
 title_es: Ruta 40 en Chubut
 title_en: Ruta 40 in Chubut
 summary: "Участок Рута-40 в Чубуте: леса, региональная гастрономия и активный отдых Патагонии."

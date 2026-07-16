@@ -16,18 +16,41 @@ const PAGE_TITLE_FALLBACK = "Экскурсии по Аргентине";
 const PAGE_DESCRIPTION_FALLBACK =
   "Городские экскурсии и активности в Буэнос-Айресе, Патагонии и других регионах Аргентины.";
 
-export async function generateMetadata(): Promise<Metadata> {
+const EXCURSION_FILTER_PARAMS = new Set([
+  "query",
+  "city",
+  "sort",
+  "format",
+  "duration",
+  "minRating",
+  "maxPrice",
+  "partner",
+  "page",
+]);
+
+type ExcursionsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export async function generateMetadata({ searchParams }: ExcursionsPageProps): Promise<Metadata> {
   const locale = await getServerI18nLocale();
+  const params = await searchParams;
   const title = resolveStaticPageCopy(
     "excursions.catalog.title",
     PAGE_TITLE_FALLBACK,
     locale
   );
-  const description = resolveStaticPageCopy(
+  const localizedDescription = resolveStaticPageCopy(
     "excursions.subtitle",
     PAGE_DESCRIPTION_FALLBACK,
     locale
   );
+  const description =
+    localizedDescription.trim().length >= 50
+      ? localizedDescription
+      : PAGE_DESCRIPTION_FALLBACK;
+
+  const hasCatalogParams = Object.keys(params).some((key) => EXCURSION_FILTER_PARAMS.has(key));
 
   return {
     ...buildPublicPageMetadata({
@@ -36,6 +59,7 @@ export async function generateMetadata(): Promise<Metadata> {
       path: "/excursions",
     }),
     alternates: buildHreflangAlternates("/excursions"),
+    ...(hasCatalogParams ? { robots: { index: false, follow: true } } : {}),
   };
 }
 

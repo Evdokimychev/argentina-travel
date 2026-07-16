@@ -2,7 +2,11 @@
 import fs from "node:fs";
 import path from "node:path";
 
-const roots = [".next/static", ".next/server"].map((item) => path.resolve(item));
+const distDir =
+  process.env.NEXT_DIST_DIR?.trim() ||
+  (process.env.CI || process.env.VERCEL ? ".next" : ".next-production");
+const buildRoot = path.resolve(distDir);
+const roots = ["static", "server"].map((item) => path.join(buildRoot, item));
 const forbidden = [
   /https?:\/\/(?:localhost|127\.0\.0\.1):300[0-3](?:\/|["'`])/i,
   /argentina-travel-auth-users/i,
@@ -24,6 +28,11 @@ function walk(directory) {
       if (marker.test(source)) findings.push(`${path.relative(process.cwd(), target)}: ${marker}`);
     }
   }
+}
+
+if (!fs.existsSync(path.join(buildRoot, "BUILD_ID"))) {
+  console.error(`Production build not found in ${distDir}; run npm run build first`);
+  process.exit(1);
 }
 
 for (const root of roots) walk(root);

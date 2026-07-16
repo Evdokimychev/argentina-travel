@@ -14,11 +14,15 @@ import BlogSectionDivider from "@/components/blog/BlogSectionDivider";
 import BlogStepList from "@/components/blog/BlogStepList";
 import BlogTicketLink from "@/components/blog/BlogTicketLink";
 import BlogAccordionBlock from "@/components/page-builder/blocks/BlogAccordionBlock";
+import BlogAuthorCardBlock from "@/components/page-builder/blocks/BlogAuthorCardBlock";
 import BlogComparisonTableBlock from "@/components/page-builder/blocks/BlogComparisonTableBlock";
 import BlogContentEmbedBlock from "@/components/page-builder/blocks/BlogContentEmbedBlock";
 import BlogCtaBlock from "@/components/page-builder/blocks/BlogCtaBlock";
 import BlogGalleryBlock from "@/components/page-builder/blocks/BlogGalleryBlock";
+import BlogFactsGridBlock from "@/components/page-builder/blocks/BlogFactsGridBlock";
+import BlogImageTextBlock from "@/components/page-builder/blocks/BlogImageTextBlock";
 import BlogInfoboxBlock from "@/components/page-builder/blocks/BlogInfoboxBlock";
+import BlogQuoteBlock from "@/components/page-builder/blocks/BlogQuoteBlock";
 import BlogRouteMapBlock from "@/components/page-builder/blocks/BlogRouteMapBlock";
 import BlogTourBookingBlock from "@/components/page-builder/blocks/BlogTourBookingBlock";
 import BlogVideoBlock from "@/components/page-builder/blocks/BlogVideoBlock";
@@ -119,6 +123,49 @@ function renderBlock(block: BlogBodyBlock, index: number, linkifyText?: boolean)
     case "media":
       return (
         <BlogMediaBlock key={index} src={block.src} alt={block.alt} caption={block.caption} />
+      );
+    case "image-text":
+      return (
+        <BlogImageTextBlock
+          key={index}
+          src={block.src}
+          alt={block.alt}
+          title={block.title}
+          body={block.body}
+          imagePosition={block.imagePosition}
+          caption={block.caption}
+        />
+      );
+    case "author-card":
+      return (
+        <BlogAuthorCardBlock
+          key={index}
+          name={block.name}
+          role={block.role}
+          bio={block.bio}
+          avatarSrc={block.avatarSrc}
+          avatarAlt={block.avatarAlt}
+          href={block.href}
+          linkLabel={block.linkLabel}
+        />
+      );
+    case "facts-grid":
+      return (
+        <BlogFactsGridBlock
+          key={index}
+          title={block.title}
+          items={block.items}
+          columns={block.columns}
+        />
+      );
+    case "quote":
+      return (
+        <BlogQuoteBlock
+          key={index}
+          text={block.text}
+          author={block.author}
+          context={block.context}
+        />
       );
     case "infobox":
       return (

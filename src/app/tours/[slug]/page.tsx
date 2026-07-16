@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 import TourDetailView from "@/components/tour-detail/TourDetailView";
 import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import TourJsonLd from "@/components/seo/TourJsonLd";
@@ -51,7 +52,7 @@ export async function generateMetadata({ params, searchParams }: TourPageProps) 
   const cookieStore = await cookies();
   const access = accessFromQuery ?? getTourPrivateAccessFromCookies(cookieStore, slug);
   const tour = await fetchTourDetail(slug, { accessToken: access });
-  if (!tour) return { title: "Тур не найден" };
+  if (!tour) notFound();
   const pageUrl = absoluteUrl(`/tours/${slug}`);
   const coverImage = resolveTourCoverImage(tour);
   const imageUrl = coverImage ? resolvePublicUrl(coverImage) : undefined;
@@ -87,12 +88,13 @@ export default async function TourDetailPage({
   searchParams,
 }: Pick<TourPageProps, "params" | "searchParams">) {
   const { slug } = await params;
-  const { departure } = await searchParams;
+  const { departure, access: accessFromQuery } = await searchParams;
   const cookieStore = await cookies();
-  const access = getTourPrivateAccessFromCookies(cookieStore, slug);
+  const access = accessFromQuery ?? getTourPrivateAccessFromCookies(cookieStore, slug);
   const tour = await fetchTourDetail(slug, { accessToken: access });
+  if (!tour) notFound();
   const [similarTours, initialCanonicalTour, catalogPlaces] = await Promise.all([
-    tour ? fetchSimilarTours(slug, 3) : Promise.resolve([]),
+    fetchSimilarTours(slug, 3),
     fetchCutoverCanonicalTourBySlug(slug),
     fetchPlacesServer(),
   ]);

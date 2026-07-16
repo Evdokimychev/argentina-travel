@@ -15,7 +15,7 @@ export default function PodborProgressBar({
   total,
 }: PodborProgressBarProps) {
   return (
-    <div className="sticky top-0 z-20 border-b border-gray-100/80 bg-white/90 backdrop-blur-md">
+    <div className="sticky top-[var(--site-header-height,80px)] z-20 border-b border-gray-100/80 bg-white/90 backdrop-blur-md">
       <div className="mx-auto max-w-3xl px-4 py-3 sm:px-6">
         <div className="mb-2 flex items-center justify-between text-xs text-slate">
           <span className="font-medium text-charcoal">Подбор маршрута</span>

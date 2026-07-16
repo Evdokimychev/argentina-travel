@@ -1,7 +1,7 @@
 ---
 id: catamaran-en-la-triple-frontera
 type: attraction
-title: Catamaran at the Triple Frontier
+title: Катамаран у Тройной границы
 title_es: Catamarán en la Triple Frontera
 title_en: Catamaran at the Triple Frontier
 summary: "Прогулка на катамаране к «тройной границе», где сходятся воды Аргентины, Бразилии и Парагвая."

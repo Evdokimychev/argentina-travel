@@ -1,6 +1,7 @@
 import { ARGENTINA_CITIES } from "@/data/argentina-cities";
 import type { MapObject } from "@/lib/map-types";
 import type { PlaceListing } from "@/types/place";
+import { getEntry } from "@/lib/knowledge-base/content";
 
 /** Города из справочника, которых нет в каталоге мест — добавляем на карту как city. */
 export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject[] {
@@ -18,6 +19,9 @@ export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject
     const coordKey = `${city.lat.toFixed(3)}:${city.lng.toFixed(3)}`;
     if (coveredCoords.has(coordKey)) continue;
 
+    const knowledgeEntry = getEntry(city.slug);
+    const knowledgeHref = knowledgeEntry ? `/baza-znaniy/${city.slug}` : "";
+
     objects.push({
       id: `city:${city.slug}`,
       slug: city.slug,
@@ -27,9 +31,11 @@ export function buildSupplementaryCityObjects(places: PlaceListing[]): MapObject
       latitude: city.lat,
       longitude: city.lng,
       region: city.macroRegionRu,
-      href: `/baza-znaniy/${city.slug}`,
+      href: knowledgeHref,
       meta: city.provinceRu,
-      relatedArticles: [{ title: city.nameRu, href: `/baza-znaniy/${city.slug}` }],
+      relatedArticles: knowledgeEntry
+        ? [{ title: city.nameRu, href: knowledgeHref }]
+        : undefined,
     });
   }
 

@@ -27,7 +27,7 @@ export default async function SiteJsonLd() {
         buildOrganizationSchema({
           name: branding.siteName,
           url: siteUrl,
-          logoUrl: absoluteUrl("/logo-light.svg"),
+          logoUrl: absoluteUrl("/icons/icon-512.png"),
           sameAs,
           contactEmail: contact.supportEmail?.trim() || undefined,
         }),

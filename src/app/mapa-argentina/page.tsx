@@ -6,6 +6,7 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import { fetchMapObjects } from "@/lib/map-objects-server";
 import { parseMapArgentinaKindsParam, parseMapArgentinaUrlState } from "@/lib/map-argentina-url-state";
 import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
+import { buildPublicPageMetadata } from "@/lib/page-metadata";
 
 type PageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -30,11 +31,18 @@ export async function generateMetadata({ searchParams }: PageProps): Promise<Met
   const description =
     "Полноэкранная карта Аргентины: города, национальные парки, достопримечательности, экскурсии и аэропорты. Поиск и фильтры без перезагрузки. OpenStreetMap + MapLibre.";
 
-  return {
+  const metadata = buildPublicPageMetadata({
     title,
     description,
-    alternates: buildHreflangAlternates("/mapa-argentina"),
-    openGraph: { title, description, url: "/mapa-argentina", type: "website" },
+    path: "/mapa-argentina",
+  });
+
+  return {
+    ...metadata,
+    alternates: {
+      ...buildHreflangAlternates("/mapa-argentina"),
+      ...metadata.alternates,
+    },
   };
 }
 
@@ -65,6 +73,7 @@ export default async function MapaArgentinaPage({ searchParams }: PageProps) {
         ]}
       />
       <WebPageJsonLd name={pageTitle} description={pageDescription} path="/mapa-argentina" />
+      <h1 className="sr-only">{pageTitle}</h1>
       <Suspense
         fallback={
           <div className="flex h-[60vh] items-center justify-center text-slate">Загрузка карты…</div>

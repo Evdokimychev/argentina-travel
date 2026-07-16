@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { revalidateTag } from "next/cache";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
 import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -8,6 +9,17 @@ type PatchBody = {
   action?: ModerationResolveAction;
   note?: string;
 };
+
+function resolveModerationActorId(
+  request: Request,
+  auth: { actorId: string; via: "session" | "service_role" }
+) {
+  if (auth.via === "session") return auth.actorId;
+  const delegatedActorId = request.headers.get("x-admin-actor-id")?.trim() ?? "";
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(delegatedActorId)
+    ? delegatedActorId
+    : null;
+}
 
 export async function PATCH(
   request: Request,
@@ -23,12 +35,33 @@ export async function PATCH(
     return NextResponse.json({ error: "Укажите action: approve или reject" }, { status: 400 });
   }
 
+  const actorId = resolveModerationActorId(request, auth);
+  if (!actorId) {
+    return NextResponse.json(
+      { error: "Для служебной модерации укажите UUID администратора в X-Admin-Actor-Id" },
+      { status: 400 }
+    );
+  }
+
   const supabase = createSupabaseAdminClient();
+  if (body.action === "approve") {
+    const { data: queueItem } = await supabase
+      .from("moderation_queue")
+      .select("entity_type")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (queueItem?.entity_type === "author_article") {
+      const publishAuth = await authorizeAdminRequest(request, "content.publish");
+      if (!publishAuth.ok) return publishAuth.response;
+    }
+  }
+
   const result = await resolveModerationItem(
     supabase,
     id,
     body.action,
-    auth.actorId,
+    actorId,
     body.note
   );
 
@@ -37,7 +70,7 @@ export async function PATCH(
   }
 
   await writeAdminAuditLog({
-    actorUserId: auth.actorId,
+    actorUserId: actorId,
     action: `moderation.${body.action}`,
     entityType: "moderation_queue",
     entityId: id,
@@ -54,6 +87,11 @@ export async function PATCH(
       action: body.action,
       note: body.note,
     });
+  }
+
+  if (result.entityType === "tour" || result.entityType === "excursion") {
+    revalidateTag("tours");
+    revalidateTag("excursions");
   }
 
   return NextResponse.json({ ok: true });

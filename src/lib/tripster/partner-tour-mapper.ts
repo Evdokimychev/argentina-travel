@@ -53,6 +53,10 @@ import {
   resolveTripsterThematicTags,
 } from "@/lib/tripster/partner-tour-levels";
 import { resolveTripsterCatalogAvailableDates } from "@/lib/tripster/partner-tour-listing-schedule";
+import {
+  disabledPartnerCapabilities,
+  externalPartnerCapabilities,
+} from "@/lib/product-capabilities";
 
 type PartnerTourCityRow = {
   id: number;
@@ -420,6 +424,10 @@ export function partnerTourRowToListing(
     partnerPriceUnit: priceUnit,
     partnerInstantBooking: resolveTripsterInstantBooking(experience),
     partnerThematicTags: resolveTripsterThematicTags(experience),
+    offerCapabilities:
+      experience.is_bookable === false
+        ? disabledPartnerCapabilities("tripster")
+        : externalPartnerCapabilities("tripster"),
   };
 }
 
@@ -530,13 +538,16 @@ export function partnerTourRowToDetail(
     faq: [],
     dates: [],
     tags: ["Tripster", "Партнёрский тур"],
-    customBookingLink: {
-      url: `/api/affiliate/go/${row.slug}`,
-      label: "Забронировать на Tripster",
-      openInNewTab: true,
-      passContext: true,
-      hint: "Выберите дату и число туристов, нажмите «Забронировать на Tripster» — мы передадим данные заявки на Tripster.",
-    },
+    customBookingLink:
+      experience.is_bookable === false
+        ? undefined
+        : {
+            url: `/api/affiliate/go/${row.slug}`,
+            label: "Перейти к бронированию на Tripster",
+            openInNewTab: true,
+            passContext: true,
+            hint: "После проверки даты и числа туристов вы перейдёте на Tripster. Оплату и отмену обрабатывает партнёр.",
+          },
     partnerSource: "tripster",
     partnerExperienceId: row.id,
     partnerPriceDisplay: listing.partnerPriceDisplay,
@@ -545,5 +556,6 @@ export function partnerTourRowToDetail(
     partnerOriginalPriceValue: listing.partnerOriginalPriceValue,
     partnerPriceUnit: listing.partnerPriceUnit,
     partnerContent,
+    offerCapabilities: listing.offerCapabilities,
   };
 }

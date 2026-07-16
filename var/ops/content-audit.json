@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-07-14T20:08:29.772Z",
+  "generatedAt": "2026-07-16T03:01:10.862Z",
   "scope": "knowledge-base",
   "counts": {
     "total": 689,
-    "critical": 388,
-    "high": 44,
+    "critical": 367,
+    "high": 65,
     "medium": 2,
     "low": 0,
     "none": 255,
-    "notIndexable": 390
+    "notIndexable": 434
   },
   "entries": [
     {
@@ -199,7 +199,7 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/almacenes-de-ramos-generales-en-la-pampa.md",
       "sourceUrl": "https://www.argentina.travel/actividades/almacenes-de-ramos-generales-en-la-pampa",
-      "title": "Общие букетные магазины в Ла-Пампа",
+      "title": "Старинные универсальные магазины Ла-Пампы",
       "summary": "Подойдите поближе к многовековым складам, которые были центром торговой и общественной жизни пампасских народов.",
       "publicationStatus": "published",
       "indexable": true,
@@ -509,7 +509,7 @@
       "sourcePath": "content/knowledge-base/marshruty/argentina-10-dney.md",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_view_of_Iguazu_Falls_from_the_Argentina_side.jpg",
       "title": "Маршрут по Аргентине на 10 дней",
-      "summary": "Компактный маршрут для короткого отпуска: столица и два сильных направления без спешки — два рабочих варианта на выбор.",
+      "summary": "Два готовых маршрута по Аргентине на 10 дней: Буэнос-Айрес, Игуасу и ледники Патагонии или поездка с акцентом на юг страны. Программа по дням и советы по логистике.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -535,7 +535,7 @@
       "sourcePath": "content/knowledge-base/marshruty/argentina-2-nedeli.md",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:155_-_Glacier_Perito_Moreno_-_Panorama_de_la_partie_nord_-_Janvier_2010.jpg",
       "title": "Маршрут по Аргентине на 2 недели",
-      "summary": "Классический маршрут-капстоун: Буэнос-Айрес, водопады Игуасу и ледники с горами Патагонии — золотая середина для первой поездки в страну.",
+      "summary": "Готовый маршрут по Аргентине на 14 дней для первой поездки: Буэнос-Айрес, водопады Игуасу, ледник Перито-Морено и горы Патагонии. Программа по дням и варианты южного акцента.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -560,8 +560,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/marshruty/argentina-3-nedeli.md",
       "sourceUrl": "https://commons.wikimedia.org/wiki/File:Cachi-Salta-Argentina.jpg",
-      "title": "Маршрут по Аргентине на 3 недели (гранд-тур)",
-      "summary": "Большой гранд-тур на 21 день: к классике добавляются винный север (Сальта, Мендоса) и озёрный край Патагонии — самый полный охват страны без бесконечного марафона.",
+      "title": "Маршрут по Аргентине на 3 недели",
+      "summary": "Готовый маршрут по Аргентине на 21 день: Буэнос-Айрес, Игуасу, Сальта, Мендоса, ледники и озёрный край Патагонии. Насыщенная программа с возможностью убрать один регион и путешествовать спокойнее.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -1001,12 +1001,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/avistaje-de-aves-en-santa-cruz.md",
       "sourceUrl": "https://www.argentina.travel/actividades/avistaje-de-aves-en-santa-cruz",
-      "title": "Bird watching in Santa Cruz",
+      "title": "Наблюдение за птицами в Санта-Крусе",
       "summary": "Наблюдение за птицами в Санта-Крусе: экстремальные, но богатые жизнью местообитания патагонской фауны.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -1019,12 +1019,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -1067,8 +1063,8 @@
       "sourceUrl": null,
       "title": "Баия-Бланка",
       "summary": "Крупный город и глубоководный порт на юго-западе провинции Буэнос-Айрес — главный транспортный и промышленный узел юга провинции и удобные «ворота» по пути в Патагонию. Не курорт, но важная опорная точка с университетами, театром и культурной жизнью.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1237,8 +1233,8 @@
       "sourceUrl": null,
       "title": "Барреаль и Эль-Леонсито",
       "summary": "Тихий оазисный посёлок в провинции Сан-Хуан у подножия высоких Анд, центр астротуризма Аргентины. Рядом — национальный парк Эль-Леонсито с двумя астрономическими обсерваториями (одно из самых чистых и ясных небес страны) и глинистая равнина Барреаль-Бланко для «сухопутного парусного спорта».",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -1615,12 +1611,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/buceo-en-las-costas-de-ushuaia.md",
       "sourceUrl": "https://www.argentina.travel/actividades/buceo-en-las-costas-de-ushuaia",
-      "title": "Buceo en las costas de Ушуайя",
+      "title": "Дайвинг у берегов Ушуайи",
       "summary": "Дайвинг в водах канала Бигл у Ушуайи — погружение в подводный мир самой южной Патагонии.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "tierra-del-fuego",
@@ -1893,12 +1889,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cabalgatas-en-cerro-belvedere-y-cascada-inacayal.md",
       "sourceUrl": "https://www.argentina.travel/actividades/cabalgatas-en-cerro-belvedere-y-cascada-inacayal",
-      "title": "Horseback rides in Belvedere Hill and Inacayal waterfall",
+      "title": "Конные прогулки к Серро-Бельведере и водопаду Инакайаль",
       "summary": "Конные прогулки у Вилья-Ла-Ангостуры: тропы к смотровой Бельведере и водопаду Инакайаль.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -1911,12 +1907,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -1931,12 +1923,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cabalgatas-en-la-estepa-de-bariloche.md",
       "sourceUrl": "https://www.argentina.travel/actividades/cabalgatas-en-la-estepa-de-bariloche",
-      "title": "Cabalgatas en la estepa de Барилоче",
+      "title": "Конные прогулки по степям Барилоче",
       "summary": "Верховые прогулки по патагонской степи в окрестностях Барилоче.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -1965,12 +1957,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cabalgatas-en-las-sierras-bonaerenses.md",
       "sourceUrl": "https://www.argentina.travel/actividades/cabalgatas-en-las-sierras-bonaerenses",
-      "title": "Horseback riding in the hills of Буэнос-Айрес",
+      "title": "Конные прогулки в сьеррах провинции Буэнос-Айрес",
       "summary": "Конные прогулки по сьеррам провинции Буэнос-Айрес — традиционное занятие этих мест.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "buenos-aires-province",
@@ -2294,12 +2286,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/canon-del-atuel.md",
       "sourceUrl": "https://www.argentina.travel/actividades/canon-del-atuel",
-      "title": "Atuel Canyon",
+      "title": "Каньон Атуэль",
       "summary": "Каньон реки Атуэль в Мендосе (Сан-Рафаэль): живописное ущелье и активный отдых на воде.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "cuyo",
@@ -2312,12 +2304,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -2665,12 +2653,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cascada-nivinco-y-pichi-traful.md",
       "sourceUrl": "https://www.argentina.travel/actividades/cascada-nivinco-y-pichi-traful",
-      "title": "Ñivinco and Pichi Traful Waterfalls",
+      "title": "Водопады Нивинко и Пичи-Трафуль",
       "summary": "Два водопада в национальном парке Науэль-Уапи: андские тропы к Нивинко и Пичи-Трафуль.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -2683,12 +2671,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -2779,12 +2763,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/catamaran-en-la-triple-frontera.md",
       "sourceUrl": "https://www.argentina.travel/actividades/catamaran-en-la-triple-frontera",
-      "title": "Catamaran at the Triple Frontier",
+      "title": "Катамаран у Тройной границы",
       "summary": "Прогулка на катамаране к «тройной границе», где сходятся воды Аргентины, Бразилии и Парагвая.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -2797,12 +2781,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -2884,12 +2864,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/caviahue-copahue.md",
       "sourceUrl": "https://www.argentina.travel/actividades/caviahue-copahue",
-      "title": "Caviahue - Copahue",
+      "title": "Кавиауэ и Копауэ",
       "summary": "Кавиауэ и Копауэ в Неукене: термальные источники, вулкан и активный отдых среди араукарий.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -2902,12 +2882,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -3150,12 +3126,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/cerros-catedral-y-perito-moreno.md",
       "sourceUrl": "https://www.argentina.travel/actividades/cerros-catedral-y-perito-moreno",
-      "title": "Cerros Catedral y Перито-Морено",
+      "title": "Горнолыжные центры Серро-Катедраль и Серро-Перито-Морено",
       "summary": "Крупнейшие горнолыжные центры Патагонии — Серро-Катедраль у Барилоче и Серро-Перито-Морено.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -3652,12 +3628,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ciudad-de-corrientes.md",
       "sourceUrl": "https://www.argentina.travel/actividades/ciudad-de-corrientes",
-      "title": "Город Corrientes",
+      "title": "Коррьентес",
       "summary": "Коррьентес — столица провинции на берегу Параны: четыре века истории, карнавал и чамаме.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -3724,12 +3700,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ciudad-de-salta.md",
       "sourceUrl": "https://www.argentina.travel/actividades/ciudad-de-salta",
-      "title": "Город Salta",
+      "title": "Сальта",
       "summary": "Сальта «Ла Линда» — самая большая столица аргентинского северо-запада: колониальный центр и ворота в кальчакские долины.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "noa",
@@ -3742,8 +3718,12 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "high",
+      "severity": "critical",
       "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -3912,8 +3892,8 @@
       "sourceUrl": null,
       "title": "Колон",
       "summary": "Курортный городок на берегу реки Уругвай в провинции Энтре-Риос: песчаные речные пляжи, термальный комплекс и удобная база для поездки в национальный парк Эль-Пальмар с рощами пальм ятай. Одно из любимых мест внутреннего пляжно-термального отдыха аргентинцев.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -3989,12 +3969,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/colonia-menonita-en-la-pampa.md",
       "sourceUrl": "https://www.argentina.travel/actividades/colonia-menonita-en-la-pampa",
-      "title": "Mennonite Colony in La Pampa",
+      "title": "Менонитская колония в Ла-Пампе",
       "summary": "Познакомьтесь с религиозной общиной, которая сохраняет свои обычаи более четырех веков.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "pampa",
@@ -4007,12 +3987,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -4360,12 +4336,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/costa-atlantica-bonaerense.md",
       "sourceUrl": "https://www.argentina.travel/actividades/costa-atlantica-bonaerense",
-      "title": "Буэнос-Айрес Atlantic Coast",
+      "title": "Атлантическое побережье провинции Буэнос-Айрес",
       "summary": "Атлантическое побережье провинции Буэнос-Айрес: длинные пляжи и курорты от Мар-дель-Платы до юга.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "buenos-aires-province",
@@ -5334,12 +5310,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/el-hoyo.md",
       "sourceUrl": "https://www.argentina.travel/actividades/el-hoyo",
-      "title": "El Hoyo",
+      "title": "Эль-Ойо",
       "summary": "Эль-Ойо в Патагонии (Чубут) — «национальная столица мелких ягод» среди гор и садов.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -5352,12 +5328,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -5678,8 +5650,8 @@
       "sourceUrl": "https://www.argentina.travel/actividades/el-tren-patagonico",
       "title": "Патагонский поезд",
       "summary": "Легендарный патагонский поезд через степь Рио-Негро, связывающий Анды и Атлантику.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -5812,12 +5784,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/empedrado.md",
       "sourceUrl": "https://www.argentina.travel/actividades/empedrado",
-      "title": "Empedrado",
+      "title": "Эмпедрадо",
       "summary": "Эмпедрадо в Корриентесе — тихое место на Паране, известное спортивной рыбалкой.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -5830,12 +5802,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -5954,8 +5922,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -5985,8 +5953,8 @@
       "sourceUrl": null,
       "title": "Эскель",
       "summary": "Городок на западе провинции Чубут у подножия Анд — главная база для национального парка Лос-Алерсес и отправная точка старинного узкоколейного поезда «Ла-Трочита». Ворота в валлийскую Патагонию и к горнолыжному центру Ла-Ойя.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7121,8 +7089,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/dengi/gid-po-dengam.md",
       "sourceUrl": null,
-      "title": "Деньги в Аргентине: полный тематический гид",
-      "summary": "Навигационная точка входа по всей денежной теме: обмен валюты и курсы (blue/MEP), оплата без карт РФ, банковский счёт и переводы, бюджеты для туриста/одиночки/семьи, налоги, инфляция и защита накоплений, оплата удалёнки, бизнес и доход от аренды. Собирает все финансовые записи базы в одну карту.",
+      "title": "Деньги в Аргентине: обмен, карты, банки и бюджет",
+      "summary": "Как расплачиваться и менять деньги в Аргентине, переводить средства, планировать бюджет поездки или жизни и пользоваться местными банками. Выберите нужный раздел и перейдите к подробной инструкции.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
@@ -7152,8 +7120,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/gid-po-dokumentam.md",
       "sourceUrl": null,
-      "title": "Документы и легализация в Аргентине: полный тематический гид",
-      "summary": "Навигационная точка входа по документам и легализации: виза и въезд, все пути резиденции (работа, рантье/пенсия, учёба, семья, кочевник), DNI и CUIL, путь к гражданству, апостиль и переводы, признание диплома, воинский учёт. Собирает всю документальную вертикаль базы в одну карту.",
+      "title": "Документы для въезда и переезда в Аргентину",
+      "summary": "Путеводитель по документам для поездки и переезда в Аргентину: въезд, основания для резиденции, DNI и CUIL, гражданство, апостиль и перевод. Начните с вашего этапа и перейдите к подробной инструкции.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
@@ -7183,8 +7151,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/kultura/gid-po-kulture.md",
       "sourceUrl": null,
-      "title": "Культура и жизнь Аргентины: полный тематический гид",
-      "summary": "Навигационная точка входа по культуре и повседневной жизни: гастрономия (асадо, мате, вино, эмпанадас, сладкое, как и когда едят), культурные коды (танго, фольклор, народные святые, карнавал), менталитет и этикет, язык, и «живой слой» — интересные факты, мифы, сравнение с Россией. Собирает всю культурную тему в одну карту.",
+      "title": "Культура Аргентины: традиции, еда и повседневная жизнь",
+      "summary": "Путеводитель по культуре и повседневной жизни Аргентины: асадо, мате и вино, танго и фольклор, местный испанский, этикет и привычки. Выберите тему, чтобы лучше понять страну перед поездкой или переездом.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -7209,8 +7177,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/medicina/gid-po-medicine.md",
       "sourceUrl": null,
-      "title": "Медицина и здоровье в Аргентине: полный тематический гид",
-      "summary": "Навигационная точка входа по медицине и здоровью: как устроена система (público/obra social/prepaga), какую страховку выбрать, роды и беременность, доступная среда, плюс практические FAQ (вода из-под крана, прививки, страховка на въезд, бесплатная ли медицина туристу). Собирает всю медицинскую тему в одну карту.",
+      "title": "Медицина и страховка в Аргентине: путеводитель",
+      "summary": "Путеводитель по медицине в Аргентине для туристов и переезжающих: устройство системы, страховка, частные планы, беременность и роды, прививки и частые практические вопросы.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
@@ -7240,8 +7208,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/transport/gid-po-transportu.md",
       "sourceUrl": null,
-      "title": "Транспорт в Аргентине: полный тематический гид",
-      "summary": "Навигационная точка входа по транспорту: как долететь из России, внутренние перелёты и расстояния, междугородние автобусы и поезда, аренда и покупка авто, права, городской транспорт по SUBE, трансфер из аэропорта. Собирает всю транспортную тему в одну карту — для туриста и релоканта.",
+      "title": "Транспорт в Аргентине: перелёты, автобусы и аренда авто",
+      "summary": "Как добраться до Аргентины и перемещаться по стране: внутренние перелёты, автобусы и поезда, трансферы из аэропортов, городской транспорт, аренда авто и водительские права.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -7266,10 +7234,10 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/zhile/gid-po-zhilyu.md",
       "sourceUrl": null,
-      "title": "Жильё в Аргентине: полный тематический гид",
-      "summary": "Навигационная точка входа по жилью: где остановиться туристу, как снять квартиру вдолгую (и без гаранта), покупка недвижимости иностранцем, сдача в аренду и налоги, бытовые нюансы жилья и выбор района. Собирает все записи про жильё в одну карту — для туриста и релоканта.",
-      "publicationStatus": "quarantined",
-      "indexable": false,
+      "title": "Жильё в Аргентине: аренда, районы и покупка недвижимости",
+      "summary": "Как выбрать жильё в Аргентине для поездки или переезда: отели и краткосрочная аренда, долгосрочный договор, выбор района, покупка недвижимости и бытовые особенности квартир.",
+      "publicationStatus": "published",
+      "indexable": true,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -7281,13 +7249,8 @@
       "duplicateGroup": null,
       "sourceCount": 0,
       "verifiedAt": "2026-07-05",
-      "severity": "critical",
-      "issues": [
-        {
-          "code": "missing_sensitive_source",
-          "severity": "critical"
-        }
-      ]
+      "severity": "none",
+      "issues": []
     },
     {
       "id": "gid-puteshestvennika",
@@ -7297,8 +7260,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/puteshestvie/gid-puteshestvennika.md",
       "sourceUrl": null,
-      "title": "Гид путешественника: с чего начать поездку в Аргентину",
-      "summary": "Навигационная точка входа для туриста: весь путь подготовки к поездке в Аргентину по шагам — от решения ехать до жизни на месте, со ссылками на подробные разборы каждого этапа. Начните здесь, если планируете путешествие и не знаете, за что хвататься.",
+      "title": "Поездка в Аргентину: как спланировать путешествие",
+      "summary": "Пошаговый путеводитель по самостоятельной поездке в Аргентину: когда ехать, как составить маршрут и бюджет, купить билеты, выбрать жильё и подготовить документы.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
@@ -7323,8 +7286,8 @@
       "sourceType": "knowledge-base",
       "sourcePath": "content/knowledge-base/pereezd/gid-relokanta.md",
       "sourceUrl": null,
-      "title": "Гид релоканта: весь путь переезда в Аргентину по этапам",
-      "summary": "Навигационная точка входа для переезжающего: весь путь от решения до интеграции по шести этапам (решаюсь → готовлюсь в России → первые дни → легализация → быт → интеграция), со ссылками на подробные разборы, плюс маршруты под особые случаи (семья, пенсионер, бизнес, инвестиции, студент, доступность). Начните здесь, если думаете о переезде.",
+      "title": "Переезд в Аргентину: пошаговый путеводитель",
+      "summary": "Пошаговый путеводитель по переезду в Аргентину: подготовка документов и денег, первые дни в стране, легализация, жильё, работа и адаптация. Выберите свой этап и перейдите к подробной инструкции.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
@@ -7654,8 +7617,8 @@
       "sourceUrl": null,
       "title": "Серрания-де-Орнокаль (Гора 14 цветов)",
       "summary": "Зубчатая разноцветная гряда над городком Умауака в провинции Жужуй — «гора 14 цветов». Смотровая площадка лежит на высоте около 4350 м; резкие известняковые «зубцы» переливаются оттенками охры, розового и белого, особенно в послеполуденном свете.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -8558,8 +8521,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -8846,8 +8809,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -8964,8 +8927,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -9051,12 +9014,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/kayak-en-bariloche.md",
       "sourceUrl": "https://www.argentina.travel/actividades/kayak-en-bariloche",
-      "title": "Kayak en Барилоче",
+      "title": "Каякинг на озёрах Барилоче",
       "summary": "Каякинг в Барилоче по озёрам Науэль-Уапи и Морено.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -9206,8 +9169,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -9674,12 +9637,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/laberinto-patagonia.md",
       "sourceUrl": "https://www.argentina.travel/actividades/laberinto-patagonia",
-      "title": "Laberinto Патагония",
+      "title": "Лабиринт Патагонии",
       "summary": "Лабиринт Патагонии в Эль-Больсоне — тематический парк на стыке мифологии, философии и сакральной геометрии.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -9822,12 +9785,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/lagos-de-tierra-del-fuego.md",
       "sourceUrl": "https://www.argentina.travel/actividades/lagos-de-tierra-del-fuego",
-      "title": "Lagos de Огненная Земля",
+      "title": "Озёра Огненной Земли",
       "summary": "Озёра Огненной Земли: лагуна Эсмеральда и озёра Фаньяно, Эскондидо и Асигами (Рока).",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "tierra-del-fuego",
@@ -10027,8 +9990,8 @@
       "sourceUrl": null,
       "title": "Лас-Леньяс",
       "summary": "Один из самых известных и высоких горнолыжных курортов Аргентины на юге провинции Мендоса. Славится большим перепадом высот, сложными внетрассовыми спусками и «пудровым» снегом; зимой (июнь-сентябрь) — магнит для лыжников со всего мира, летом — база для горного треккинга.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -10406,8 +10369,8 @@
       "sourceUrl": null,
       "title": "Лухан",
       "summary": "Город в провинции Буэнос-Айрес, главный центр католического паломничества Аргентины: к неоготической базилике Девы Лухан — покровительницы страны — ежегодно идут пешком из столицы более миллиона человек. Рядом — большой музей транспорта и истории. Классическая поездка из Буэнос-Айреса.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -10573,8 +10536,8 @@
       "sourceUrl": null,
       "title": "Мар-де-лас-Пампас",
       "summary": "Тихий лесной посёлок-курорт на побережье провинции Буэнос-Айрес, рядом с Вилья-Хесель. Хвойный лес подходит к самым дюнам, улицы намеренно грунтовые, вместо многоэтажек — уютные домики среди деревьев. Спокойная и «атмосферная» альтернатива большим шумным курортам.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -10943,8 +10906,8 @@
       "sourceUrl": null,
       "title": "Мерло",
       "summary": "Курортный городок на востоке провинции Сан-Луис у подножия гор Сьеррас-де-лос-Комечингонес, знаменитый мягким микроклиматом, который считается одним из самых благоприятных в мире. Спокойный семейный отдых: чистый воздух, зелёные горы, водопады и парапланеризм.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -11534,8 +11497,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -11882,12 +11845,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/navegacion-en-los-rios-limay-y-neuquen.md",
       "sourceUrl": "https://www.argentina.travel/actividades/navegacion-en-los-rios-limay-y-neuquen",
-      "title": "Sailing on the Limay and Neuquén rivers",
+      "title": "Водные прогулки по рекам Лимай и Неукен",
       "summary": "Навигация по рекам Лимай и Неукен — там, где сливаются две главные реки северной Патагонии.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -11900,12 +11863,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -11992,12 +11951,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/navegacion-por-el-lago-argentino.md",
       "sourceUrl": "https://www.argentina.travel/actividades/navegacion-por-el-lago-argentino",
-      "title": "Sailing along Lago Argentino",
+      "title": "Водные прогулки по озеру Архентино",
       "summary": "Навигация по озеру Архентино от Пуэрто-Бандеры к ледникам парка Лос-Гласьярес.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -12010,12 +11969,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -12032,8 +11987,8 @@
       "sourceUrl": null,
       "title": "Некочеа",
       "summary": "Крупный пляжный курорт на юге атлантического побережья провинции Буэнос-Айрес: очень длинные и широкие пляжи и один из самых больших приморских лесопарков страны. Спокойнее и дешевле Мар-дель-Платы — популярное семейное направление.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -12131,12 +12086,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/newells-old-boys.md",
       "sourceUrl": "https://www.argentina.travel/actividades/newells-old-boys",
-      "title": "Newell's Old Boys",
+      "title": "«Ньюэллс Олд Бойз» в Росарио",
       "summary": "«Ньюэллс Олд Бойз» в Росарио — клуб, где в детстве начинал Лионель Месси.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -12149,12 +12104,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -12264,8 +12215,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -13014,12 +12965,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-bosques-petrificados.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-bosques-petrificados",
-      "title": "национальный парк Bosques Petrificados",
-      "summary": "Окаменелый лес в Санта-Крусе (Хараміло): стволы араукарий, погребённые около 150 млн лет назад.",
+      "title": "Национальный парк Боске-Петрификадос",
+      "summary": "Окаменелый лес в Санта-Крусе (Харамийо): стволы араукарий, погребённые около 150 млн лет назад.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -13208,12 +13159,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-el-leoncito.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-el-leoncito",
-      "title": "национальный парк El Leoncito",
+      "title": "Национальный парк Эль-Леонсито",
       "summary": "Эль-Леонсито в Сан-Хуане на высоте ~2250 м — одно из самых чистых небес Земли и астрономические обсерватории.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "cuyo",
@@ -13334,12 +13285,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-islas-de-santa-fe.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-islas-de-santa-fe",
-      "title": "национальный парк Islas de Santa Fe",
+      "title": "Национальный парк Ислас-де-Санта-Фе",
       "summary": "Островной парк на Паране в Санта-Фе — почти три тысячи гектаров нетронутой дельты.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -13397,12 +13348,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-laguna-blanca.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-laguna-blanca",
-      "title": "национальный парк Laguna Blanca",
+      "title": "Национальный парк Лагуна-Бланка",
       "summary": "Лагуна-Бланка в Неукене — высокогорное озеро-зеркало, важное для водоплавающих птиц.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -13426,12 +13377,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-los-alerces-patrimonio-de-la-humanidad.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-los-alerces-patrimonio-de-la-humanidad",
-      "title": "национальный парк Los Alerces: Patrimonio de la Humanidad",
+      "title": "Национальный парк Лос-Алерсес — объект Всемирного наследия",
       "summary": "Лос-Алерсес в Чубуте (ЮНЕСКО) — реликтовые леса с одними из древнейших в мире деревьев алерсе.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -13489,12 +13440,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-los-cardones.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-los-cardones",
-      "title": "национальный парк Los Cardones",
+      "title": "Национальный парк Лос-Кардонес",
       "summary": "Лос-Кардонес в Сальте: гигантские кактусы-кардоны и прямая Ректа-дель-Тин-Тин среди разных экорегионов.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "noa",
@@ -13507,8 +13458,13 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "none",
-      "issues": []
+      "severity": "critical",
+      "issues": [
+        {
+          "code": "not_publication_ready",
+          "severity": "critical"
+        }
+      ]
     },
     {
       "id": "parque-nacional-los-glaciares-patrimonio-de-la-humanidad",
@@ -13552,12 +13508,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-monte-leon.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-monte-leon",
-      "title": "национальный парк Monte León",
+      "title": "Национальный парк Монте-Леон",
       "summary": "Монте-Леон в Санта-Крусе — первый морской национальный парк Аргентины с колониями пингвинов на атлантическом берегу.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -13678,12 +13634,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-nacional-san-guillermo.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-nacional-san-guillermo",
-      "title": "национальный парк San Guillermo",
+      "title": "Национальный парк Сан-Гильермо",
       "summary": "Сан-Гильермо в Сан-Хуане — высокогорная пустыня-заповедник с крупнейшими популяциями викуний.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "cuyo",
@@ -13776,8 +13732,8 @@
       "sourceUrl": "https://www.argentina.travel/actividades/parque-provincial-cordon-del-plata",
       "title": "Провинциальный парк Кордон-дель-Плата",
       "summary": "Окунитесь в экстремальное приключение рядом с горным хребтом в аргентинских Андах.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -13808,12 +13764,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/natsionalnye-parki/parque-provincial-ischigualasto.md",
       "sourceUrl": "https://www.argentina.travel/actividades/parque-provincial-ischigualasto",
-      "title": "провинциальный парк Ischigualasto",
+      "title": "Провинциальный парк Исчигуаласто",
       "summary": "Исчигуаласто (Долина Луны) в Сан-Хуане — инопланетные пейзажи и палеонтология, объект ЮНЕСКО.",
       "publicationStatus": "published",
       "indexable": true,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "cuyo",
@@ -15308,12 +15264,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/pueblos-galeses-y-comunidades-originarias.md",
       "sourceUrl": "https://www.argentina.travel/actividades/pueblos-galeses-y-comunidades-originarias",
-      "title": "Welsh towns and native communities",
+      "title": "Валлийские поселения и коренные народы Чубута",
       "summary": "Валлийские посёлки и коренные общины Патагонии: традиции иммигрантов и первых жителей Чубута.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -15326,12 +15282,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -15460,12 +15412,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/puente-rosario-victoria.md",
       "sourceUrl": "https://www.argentina.travel/actividades/puente-rosario-victoria",
-      "title": "Rosario-Victoria Bridge",
+      "title": "Мост Росарио — Виктория",
       "summary": "Мост Росарио-Виктория — монументальный виадук через Парану, связывающий Санта-Фе и Энтре-Риос.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -15478,12 +15430,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -16080,12 +16028,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/rafting-en-el-rio-hua-hum.md",
       "sourceUrl": "https://www.argentina.travel/actividades/rafting-en-el-rio-hua-hum",
-      "title": "Rafting in the Hua Hum River",
+      "title": "Рафтинг по реке Уа-Ум",
       "summary": "Рафтинг по реке Уа-Ум в Патагонии — сплав с адреналином и выходом к чилийской границе.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -16098,12 +16046,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -16156,12 +16100,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/rafting-en-el-rio-mendoza.md",
       "sourceUrl": "https://www.argentina.travel/actividades/rafting-en-el-rio-mendoza",
-      "title": "Rafting en el río Мендоса",
+      "title": "Рафтинг по реке Мендоса",
       "summary": "Рафтинг по талой реке Мендоса с видами на Анды.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "cuyo",
@@ -16242,12 +16186,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/reconquista.md",
       "sourceUrl": "https://www.argentina.travel/actividades/reconquista",
-      "title": "Reconquista",
+      "title": "Реконкиста",
       "summary": "Реконкиста в Санта-Фе — город Литораля с историческим, археологическим и палеонтологическим наследием.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -16260,12 +16204,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -17219,8 +17159,8 @@
       "sourceUrl": null,
       "title": "Руины Кильмес",
       "summary": "Крупнейшее доколумбово поселение Аргентины в Кальчакских долинах провинции Тукуман — каменный город народа кильмес на склоне холма, с реконструированными постройками и мощной историей сопротивления испанской колонизации.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -17255,12 +17195,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ruta-40-en-chubut.md",
       "sourceUrl": "https://www.argentina.travel/actividades/ruta-40-en-chubut",
-      "title": "Ruta 40 in Chubut",
+      "title": "Трасса 40 в провинции Чубут",
       "summary": "Участок Рута-40 в Чубуте: леса, региональная гастрономия и активный отдых Патагонии.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -17273,12 +17213,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -17459,12 +17395,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/ruta-de-los-siete-lagos.md",
       "sourceUrl": "https://www.argentina.travel/actividades/ruta-de-los-siete-lagos",
-      "title": "Route of Seven Lakes",
+      "title": "Дорога семи озёр",
       "summary": "«Дорога семи озёр» между Сан-Мартин-де-лос-Андес и Вилья-Ла-Ангостурой — классический маршрут озёрного края.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -17477,12 +17413,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -18107,8 +18039,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -18883,8 +18815,8 @@
       "sourceUrl": null,
       "title": "Сьерра-де-ла-Вентана",
       "summary": "Горный район и одноимённый посёлок на юго-западе провинции Буэнос-Айрес — лучшее место для треккинга в равнинной провинции. Здесь находится Серро-Трес-Пикос, высшая точка провинции, а гора Вентана знаменита сквозным отверстием-«окном», давшим имя всему массиву.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -18917,8 +18849,8 @@
       "sourceUrl": "https://www.argentina.travel/actividades/sierra-de-las-quijadas",
       "title": "Национальный парк Сьерра-де-лас-Кихадас",
       "summary": "Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на северо-западе провинции Сан-Луис — палеонтологический памятник с окаменелостями возрастом около 120 млн лет и уникальным птерозавром Pterodaustro.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19161,8 +19093,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -19192,8 +19124,8 @@
       "sourceUrl": null,
       "title": null,
       "summary": null,
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "undetermined",
         "summary": "undetermined"
@@ -19584,8 +19516,8 @@
       "sourceUrl": null,
       "title": "Сускес",
       "summary": "Высокогорный посёлок в Пуне провинции Жужуй на высоте около 3896 м — самая высокая точка Аргентины, куда ведёт асфальтированная дорога. «Ворота Анд»: отсюда открываются пути к Салинас-Грандес, Кебрада-де-Умауака и перевалу Хама на границе с Чили.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19618,8 +19550,8 @@
       "sourceUrl": null,
       "title": "Тафи-дель-Валье",
       "summary": "Прохладная высокогорная долина в провинции Тукуман на высоте около 2000 м — популярный уик-энд-побег из жаркого Тукумана: зелёные горы, водохранилище Ла-Анготура, парк менгиров и знаменитый местный сыр (quesillo). Ворота к Кальчакским долинам и Кафайяте.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -19719,8 +19651,8 @@
       "sourceUrl": null,
       "title": "Тандиль",
       "summary": "Городок среди древних невысоких гор в центре провинции Буэнос-Айрес — популярное направление выходного дня. Славится гастрономией (местные колбасы и сыры — «пикада»), активным отдыхом в сьеррах и большим религиозным туризмом на Страстную неделю.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -20322,12 +20254,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/tradicion-cervecera-en-santa-fe.md",
       "sourceUrl": "https://www.argentina.travel/actividades/tradicion-cervecera-en-santa-fe",
-      "title": "Brewing tradition in Santa Fe",
+      "title": "Пивные традиции Санта-Фе",
       "summary": "Пивная традиция Санта-Фе: бокал «лисо» и уникальный «пивопровод» длиной 850 метров.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "litoral",
@@ -20340,12 +20272,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -20432,12 +20360,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/trekking-en-bosques-y-lagos.md",
       "sourceUrl": "https://www.argentina.travel/actividades/trekking-en-bosques-y-lagos",
-      "title": "Trekking in forests and lakes",
+      "title": "Треккинг среди лесов и озёр Патагонии",
       "summary": "Треккинг среди лесов и озёр андской Патагонии — от лёгких прогулок до серьёзных маршрутов.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -20450,12 +20378,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -20580,12 +20504,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/trekking-en-tolhuin.md",
       "sourceUrl": "https://www.argentina.travel/actividades/trekking-en-tolhuin",
-      "title": "Trekking in Tolhuin",
+      "title": "Треккинг в Тольуине",
       "summary": "Треккинг в окрестностях Тольуина на Огненной Земле — маршруты разной сложности.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "tierra-del-fuego",
@@ -20598,12 +20522,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"
@@ -20620,8 +20540,8 @@
       "sourceUrl": "https://www.argentina.travel/actividades/tren-a-las-nubes",
       "title": "Поезд в облака",
       "summary": "Один из самых высокогорных железнодорожных маршрутов мира — кульминация у виадука Ла-Полворилья на высоте 4220 м, куда с 2015 года туристов везут комбинацией автобуса из Сальты и поезда от Сан-Антонио-де-лос-Кобрес.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -20692,8 +20612,8 @@
       "sourceUrl": null,
       "title": "Тревелин",
       "summary": "Небольшой городок валлийских переселенцев в предгорьях Анд провинции Чубут, рядом с Эскелем. Сохранил валлийский колорит: чайные домики с домашней выпечкой, старая мельница-музей и тюльпановые поля, а рядом — водопад Науэль-Пан и национальный парк Лос-Алерсес.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -21237,8 +21157,8 @@
       "sourceUrl": null,
       "title": "Валье-де-Уко",
       "summary": "Высокогорная винная долина в провинции Мендоса (около 900-1500 м) у подножия Анд — самый премиальный и модный винный регион Аргентины. Здесь сосредоточены знаковые винодельни с архитектурой и ресторанами, а высота даёт особенно выразительный мальбек.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -21269,12 +21189,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/valle-de-uco-mendoza.md",
       "sourceUrl": "https://www.argentina.travel/actividades/valle-de-uco-mendoza",
-      "title": "Valle de Uco, Мендоса",
+      "title": "Долина Уко в Мендосе",
       "summary": "Долина Уко в Мендосе — высокогорные винодельни и гастрономия среди горных пейзажей.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
-        "title": "mixed",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "cuyo",
@@ -22034,8 +21954,8 @@
       "sourceUrl": null,
       "title": "Вильявисенсио",
       "summary": "Природный заповедник в горах провинции Мендоса недалеко от столицы региона, давший имя знаменитой марке минеральной воды. Известен историческим отелем-гостиницей, термальными источниками и живописной старой горной дорогой «Караколес» с бесчисленными серпантинами.",
-      "publicationStatus": "published",
-      "indexable": true,
+      "publicationStatus": "quarantined",
+      "indexable": false,
       "languageDetected": {
         "title": "ru",
         "summary": "ru"
@@ -22597,12 +22517,12 @@
       "sourceType": "inprotur",
       "sourcePath": "content/knowledge-base/dostoprimechatelnosti/volcan-lanin.md",
       "sourceUrl": "https://www.argentina.travel/actividades/volcan-lanin",
-      "title": "Lanín volcano",
+      "title": "Вулкан Ланин",
       "summary": "Вулкан Ланин в Патагонии — восхождение к конусу высотой более 3700 метров на границе с Чили.",
       "publicationStatus": "quarantined",
       "indexable": false,
       "languageDetected": {
-        "title": "es-or-en",
+        "title": "ru",
         "summary": "ru"
       },
       "regionId": "patagonia",
@@ -22615,12 +22535,8 @@
       "duplicateGroup": null,
       "sourceCount": 1,
       "verifiedAt": "2026-07-07",
-      "severity": "critical",
+      "severity": "high",
       "issues": [
-        {
-          "code": "non_russian_title",
-          "severity": "critical"
-        },
         {
           "code": "thin_content",
           "severity": "high"

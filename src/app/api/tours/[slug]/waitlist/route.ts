@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchTourAvailabilityBySlug } from "@/lib/tour-availability-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
@@ -39,7 +40,7 @@ export async function POST(request: Request, context: RouteContext) {
       data: { user: authUser },
     } = await supabase.auth.getUser();
 
-    const availability = await fetchTourAvailabilityBySlug(supabase, slug);
+    const availability = await fetchTourAvailabilityBySlug(createSupabaseAdminClient(), slug);
     if (!availability) {
       return NextResponse.json({ error: "Тур не найден" }, { status: 404 });
     }

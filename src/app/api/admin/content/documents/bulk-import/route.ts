@@ -45,6 +45,11 @@ export async function POST(request: Request) {
   if (!auth.ok) return auth.response;
 
   const body = (await request.json().catch(() => ({}))) as BulkImportBody;
+  const publish = body.publish === true;
+  if (publish) {
+    const publishAuth = await authorizeAdminRequest(request, "content.publish");
+    if (!publishAuth.ok) return publishAuth.response;
+  }
   const docTypes = body.docTypes?.length
     ? body.docTypes.filter((type) => ALLOWED_TYPES.includes(type))
     : undefined;
@@ -52,7 +57,7 @@ export async function POST(request: Request) {
   const supabase = createSupabaseAdminClient();
   const seedOptions = {
     docTypes,
-    publish: body.publish ?? true,
+    publish,
     skipExisting: body.skipExisting ?? true,
     includeRichHtml: body.includeRichHtml !== false,
     actorId: auth.actorId,

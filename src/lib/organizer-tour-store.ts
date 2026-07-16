@@ -57,6 +57,7 @@ import {
   ORGANIZER_TOURS_UPDATED_EVENT,
   type OrganizerTourDraft,
   type OrganizerTourListing,
+  type OrganizerTourType,
 } from "@/types/organizer-tour";
 import { DEFAULT_TOUR_CHECKOUT_PAYMENT_OPTIONS, normalizeTourCheckoutPaymentOptions } from "@/types/tour-checkout-payment";
 import {
@@ -70,7 +71,7 @@ import {
   mergeSectionOrganizerComments,
   normalizeSectionOrganizerComments,
 } from "@/lib/tour-section-comments";
-import { fireOrganizerTourSync } from "@/lib/tour-content-api";
+import { isRemoteToursMode } from "@/lib/tour-content-api";
 import {
   markTourDeletedBySlug,
   upsertTourFromOrganizerDraft,
@@ -90,11 +91,11 @@ import {
 } from "@/lib/permissions";
 import type { SessionUser } from "@/types/user";
 import { DEFAULT_ORGANIZER_OWNER_ID } from "@/types/user";
-import { tourCover } from "@/lib/seed-media";
+import { ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE } from "@/data/tour-photos-defaults";
 
 const DRAFTS_KEY = "argentina-travel-organizer-tour-drafts";
 const LISTINGS_KEY = "argentina-travel-organizer-tour-listings";
-const DEFAULT_TOUR_IMAGE = tourCover("patagonia-glaciers");
+const DEFAULT_TOUR_IMAGE = ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE;
 
 function readDraftMap(): Record<string, OrganizerTourDraft> {
   if (typeof window === "undefined") return {};
@@ -128,6 +129,20 @@ function readListingsMap(): Record<string, OrganizerTourListing> {
 
 function writeListingsMap(listings: Record<string, OrganizerTourListing>) {
   window.localStorage.setItem(LISTINGS_KEY, JSON.stringify(listings));
+}
+
+function fireOrganizerDraftSync(draft: OrganizerTourDraft): void {
+  if (!isRemoteToursMode()) return;
+  void import("@/lib/organizer-tour-draft-api")
+    .then(({ patchOrganizerTourDraftRemote }) =>
+      patchOrganizerTourDraftRemote({
+        tourId: draft.id,
+        draft,
+        expectedUpdatedAt: null,
+        force: true,
+      })
+    )
+    .catch(() => undefined);
 }
 
 function mergeSeedListing(seed: OrganizerTourListing): OrganizerTourListing {
@@ -285,6 +300,8 @@ function buildSeedDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     individualPeriodTo:
       isoToDayMonth(detail?.requestDateTo ?? marketplace?.requestDateTo) || "31.12",
     individualPriceUsd: detail?.priceUsd ?? marketplace?.priceUsd ?? 0,
+    excursionStartTime: detail?.arrival.startTime ?? "10:00",
+    excursionEndTime: detail?.arrival.finishTime ?? "",
     autoRollGroupDatesToNextYear: false,
     groupTourDates: mergeGroupDatesSeed(
       catalogSlug,
@@ -400,24 +417,26 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     isPrivate: false,
     privateAccessToken: undefined,
     waitlistEnabled: false,
-    individualTourEnabled: false,
+    individualTourEnabled: listing.type === "excursion",
     individualPeriodFrom: "01.01",
     individualPeriodTo: "31.12",
     individualPriceUsd: 0,
+    excursionStartTime: "10:00",
+    excursionEndTime: "",
     autoRollGroupDatesToNextYear: false,
     groupTourDates: [],
-    activityType: "Авторские туры",
-    tourActivities: ["Авторские туры"],
+    activityType: listing.type === "excursion" ? "Экскурсионные туры" : "Авторские туры",
+    tourActivities: [listing.type === "excursion" ? "Экскурсионные туры" : "Авторские туры"],
     collections: [],
     difficultyLevel: "Умеренная",
     difficultyDescriptionText: "",
-    comfortLevel: "Комфорт",
-    comfortLevels: ["Комфорт"],
-    accommodationType: "Отель",
+    comfortLevel: listing.type === "excursion" ? "Без проживания" : "Комфорт",
+    comfortLevels: [listing.type === "excursion" ? "Без проживания" : "Комфорт"],
+    accommodationType: listing.type === "excursion" ? "Без проживания" : "Отель",
     accommodationDescriptionText: "",
     accommodationPhotos: [],
     accommodationPlaces: [],
-    accommodationUpgradesEnabled: true,
+    accommodationUpgradesEnabled: listing.type !== "excursion",
     groupMin: 1,
     groupMax: 12,
     minimumAge: 0,
@@ -427,7 +446,7 @@ function buildEmptyDraft(listing: OrganizerTourListing): OrganizerTourDraft {
     languages: ["Русский"],
     includedText: "",
     excludedText: "",
-    bookingMode: "both",
+    bookingMode: listing.type === "excursion" ? "on_request" : "both",
     gallery: [listing.image],
     places: [],
     guides: createDefaultTourGuides(),
@@ -474,12 +493,17 @@ function draftToListing(draft: OrganizerTourDraft): OrganizerTourListing {
     durationDays: draft.durationDays,
     type: draft.type,
     status: draft.status,
+    moderationStatus: draft.moderationStatus,
+    moderationNotes: draft.moderationNotes,
     archived: draft.archived,
     deleted: draft.deleted,
     isPreliminaryProgram: draft.isPreliminaryProgram,
     partnerName: draft.partnerName,
     partnerUrl: draft.partnerUrl,
     updatedAt: draft.updatedAt,
+    isPrivate: draft.isPrivate,
+    privateAccessToken: draft.privateAccessToken,
+    waitlistEnabled: draft.waitlistEnabled,
   };
 }
 
@@ -547,7 +571,10 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
         ? draft.privateAccessToken ?? seed.privateAccessToken
         : undefined,
     waitlistEnabled: draft.waitlistEnabled ?? seed.waitlistEnabled ?? false,
-    individualTourEnabled: draft.individualTourEnabled ?? seed.individualTourEnabled,
+    individualTourEnabled:
+      draft.bookingMode === "on_request" || draft.bookingMode === "both"
+        ? true
+        : draft.individualTourEnabled ?? seed.individualTourEnabled,
     individualPeriodFrom: draft.individualPeriodFrom?.trim()
       ? draft.individualPeriodFrom
       : seed.individualPeriodFrom,
@@ -556,6 +583,8 @@ function normalizeDraft(draft: OrganizerTourDraft, listing: OrganizerTourListing
       : seed.individualPeriodTo,
     individualPriceUsd:
       draft.individualPriceUsd != null ? draft.individualPriceUsd : seed.individualPriceUsd,
+    excursionStartTime: draft.excursionStartTime?.trim() || seed.excursionStartTime || "10:00",
+    excursionEndTime: draft.excursionEndTime?.trim() || seed.excursionEndTime || "",
     autoRollGroupDatesToNextYear:
       draft.autoRollGroupDatesToNextYear ?? seed.autoRollGroupDatesToNextYear,
     groupTourDates: draft.groupTourDates?.length
@@ -772,6 +801,10 @@ export function saveOrganizerTourDraft(
     importantInfo: normalizeTermsItems(draft.importantInfo),
     faq: normalizeFaqItems(draft.faq).filter((item) => item.question && item.answer),
     places: normalizeImpressions(draft.places),
+    guides: draft.guides.map((guide) => ({
+      ...guide,
+      avatar: /^data:/i.test(guide.avatar.trim()) ? "" : guide.avatar.trim(),
+    })),
     packingListText: draft.packingListText.trim().slice(0, ORGANIZER_TOUR_PACKING_LIST_MAX),
     insuranceDescription: draft.insuranceDescription
       .trim()
@@ -793,9 +826,9 @@ export function saveOrganizerTourDraft(
   writeDraftMap(drafts);
 
   saveOrganizerListing(draftToListing(next));
-  const canonical = upsertTourFromOrganizerDraft(next);
+  upsertTourFromOrganizerDraft(next);
   if (!options?.skipRemoteSync) {
-    fireOrganizerTourSync(canonical);
+    fireOrganizerDraftSync(next);
   }
 
   if (typeof window !== "undefined") {
@@ -805,8 +838,31 @@ export function saveOrganizerTourDraft(
   return { draft: next };
 }
 
-export function createOrganizerTour(
+export function cacheOrganizerTourDraft(
+  draft: OrganizerTourDraft,
   actor: SessionUser | null
+): { draft: OrganizerTourDraft } | { error: string } {
+  const allowed = assertPermission(canEditTour(actor, draft.ownerUserId ?? actor?.id ?? ""));
+  if ("error" in allowed) return { error: allowed.error };
+  if (!actor || draft.ownerUserId !== actor.id) return { error: "Доступ запрещён" };
+
+  const listing = draftToListing(draft);
+  const normalized = normalizeDraft(draft, listing);
+  saveOrganizerListing(draftToListing(normalized));
+  const drafts = readDraftMap();
+  drafts[normalized.id] = normalized;
+  writeDraftMap(drafts);
+
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
+  }
+  return { draft: normalized };
+}
+
+export function createOrganizerTour(
+  actor: SessionUser | null,
+  type: OrganizerTourType = "tour",
+  options?: { skipRemoteSync?: boolean }
 ): { draft: OrganizerTourDraft } | { error: string } {
   const allowed = assertPermission(canCreateTour(actor));
   if ("error" in allowed) return { error: allowed.error };
@@ -819,7 +875,7 @@ export function createOrganizerTour(
     getAllOrganizerListingsIncludingDeleted(),
     marketplaceTours.map((tour) => tour.slug)
   );
-  const slug = generateUniqueTourSlug("novyi-tur", takenSlugs);
+  const slug = generateUniqueTourSlug(type === "excursion" ? "novaya-ekskursiya" : "novyi-tur", takenSlugs);
   const id = createOrganizerTourId();
 
   const listing: OrganizerTourListing = {
@@ -827,14 +883,14 @@ export function createOrganizerTour(
     ownerUserId: actor!.id,
     slug,
     catalogSlug: slug,
-    title: "Новый тур",
+    title: type === "excursion" ? "Новая экскурсия" : "Новый тур",
     image: DEFAULT_TOUR_IMAGE,
     durationDays: 1,
-    type: "tour",
+    type,
     status: "draft",
     archived: false,
     partnerName: "Пора в Аргентину",
-    partnerUrl: "/tours",
+    partnerUrl: type === "excursion" ? "/excursions" : "/tours",
     updatedAt: new Date().toISOString(),
   };
 
@@ -845,8 +901,8 @@ export function createOrganizerTour(
   drafts[id] = draft;
   writeDraftMap(drafts);
 
-  const canonical = upsertTourFromOrganizerDraft(draft);
-  fireOrganizerTourSync(canonical);
+  upsertTourFromOrganizerDraft(draft);
+  if (!options?.skipRemoteSync) fireOrganizerDraftSync(draft);
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
@@ -857,7 +913,8 @@ export function createOrganizerTour(
 
 export function cloneOrganizerTour(
   sourceTourId: string,
-  actor: SessionUser | null
+  actor: SessionUser | null,
+  options?: { skipRemoteSync?: boolean }
 ): { draft: OrganizerTourDraft } | { error: string } {
   if (typeof window === "undefined") {
     return { error: "Клонирование доступно в браузере" };
@@ -936,8 +993,8 @@ export function cloneOrganizerTour(
   drafts[id] = clone;
   writeDraftMap(drafts);
 
-  const canonical = upsertTourFromOrganizerDraft(clone);
-  fireOrganizerTourSync(canonical);
+  upsertTourFromOrganizerDraft(clone);
+  if (!options?.skipRemoteSync) fireOrganizerDraftSync(clone);
 
   if (typeof window !== "undefined") {
     window.dispatchEvent(new CustomEvent(ORGANIZER_TOURS_UPDATED_EVENT));
@@ -948,7 +1005,8 @@ export function cloneOrganizerTour(
 
 export function deleteOrganizerTour(
   tourId: string,
-  actor: SessionUser | null
+  actor: SessionUser | null,
+  options?: { skipRemoteSync?: boolean }
 ): { ok: true } | { error: string } {
   if (typeof window === "undefined") {
     return { error: "Удаление доступно в браузере" };
@@ -973,8 +1031,12 @@ export function deleteOrganizerTour(
   if (drafts[tourId]) {
     drafts[tourId] = { ...drafts[tourId], deleted: true };
     writeDraftMap(drafts);
-    const canonical = upsertTourFromOrganizerDraft(drafts[tourId]);
-    fireOrganizerTourSync(canonical);
+    upsertTourFromOrganizerDraft(drafts[tourId]);
+    if (!options?.skipRemoteSync && isRemoteToursMode()) {
+      void import("@/lib/organizer-tour-draft-api")
+        .then(({ deleteOrganizerTourRemote }) => deleteOrganizerTourRemote(tourId))
+        .catch(() => undefined);
+    }
   }
 
   if (typeof window !== "undefined") {

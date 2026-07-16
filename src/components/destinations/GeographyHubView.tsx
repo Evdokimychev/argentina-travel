@@ -52,7 +52,7 @@ function DestinationCard({
       <div
         className={cn(
           "relative overflow-hidden",
-          featured ? "aspect-[21/9] sm:aspect-[2.4/1]" : "aspect-[4/3]",
+          featured ? "aspect-[4/3] sm:aspect-[2/1] lg:aspect-[2.4/1]" : "aspect-[4/3]",
         )}
       >
         <SafeImage
@@ -116,7 +116,7 @@ function ConceptCard({
       <p className="mt-2 flex-1 text-sm leading-relaxed text-slate">{description}</p>
       <Link
         href={href}
-        className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-sky-ink hover:underline"
+        className="mt-3 inline-flex min-h-11 items-center gap-1.5 text-sm font-semibold text-sky-ink hover:underline"
       >
         {cta}
         <ArrowRight className="h-4 w-4" aria-hidden />
@@ -143,6 +143,7 @@ export default function GeographyHubView({ destinations, places, collections = [
         title="Куда поехать в Аргентине"
         subtitle="Регионы — для планирования поездки: сезоны, логистика и туры. Места — справочник парков, городов и достопримечательностей с картой и подборками."
         image={getPlaceCoverImage("perito-moreno-glacier")}
+        theme="glacier"
         compact
       />
 

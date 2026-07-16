@@ -5,7 +5,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Lock, MessageSquare, Pin } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { Button } from "@/components/ui/button";
+import { SmartInput } from "@/components/ui/smart-input";
+import { SmartTextarea } from "@/components/ui/smart-textarea";
 import type { ForumCategory, ForumThreadSummary } from "@/lib/forum/forum-types";
+import { sanitizeForumBody, sanitizeForumTitle } from "@/lib/forum/forum-body";
 import { formatDateShort } from "@/lib/utils";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
@@ -23,7 +28,9 @@ export default function ForumCategoryView({
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [titleError, setTitleError] = useState<string | null>(null);
+  const [bodyError, setBodyError] = useState<string | null>(null);
+  const [formError, setFormError] = useState<string | null>(null);
 
   const canRead = category.publicRead || Boolean(user);
   const canPost = Boolean(user);
@@ -32,8 +39,14 @@ export default function ForumCategoryView({
     event.preventDefault();
     if (!canPost) return;
 
+    const nextTitleError = validateTitle(title);
+    const nextBodyError = validateBody(body);
+    setTitleError(nextTitleError);
+    setBodyError(nextBodyError);
+    if (nextTitleError || nextBodyError) return;
+
     setSubmitting(true);
-    setError(null);
+    setFormError(null);
 
     try {
       const res = await fetch(`/api/forum/categories/${category.slug}/threads`, {
@@ -53,7 +66,9 @@ export default function ForumCategoryView({
         router.refresh();
       }
     } catch (createError) {
-      setError(createError instanceof Error ? createError.message : "Ошибка");
+      setFormError(
+        createError instanceof Error ? createError.message : "Не удалось создать тему"
+      );
     } finally {
       setSubmitting(false);
     }
@@ -97,13 +112,15 @@ export default function ForumCategoryView({
 
           <div className="mt-6 flex flex-wrap items-center gap-3">
             {canPost ? (
-              <button
+              <Button
                 type="button"
+                size="sm"
                 onClick={() => setShowForm((value) => !value)}
-                className="rounded-xl bg-sky px-4 py-2 text-sm font-medium text-white hover:bg-sky/90"
+                aria-expanded={showForm}
+                aria-controls="forum-new-thread-form"
               >
                 {showForm ? "Скрыть форму" : "Новая тема"}
-              </button>
+              </Button>
             ) : (
               <p className="text-sm text-slate">
                 <Link href="/join" className="font-medium text-sky hover:underline">
@@ -122,38 +139,57 @@ export default function ForumCategoryView({
 
           {showForm && canPost ? (
             <form
+              id="forum-new-thread-form"
               onSubmit={(event) => void handleCreateThread(event)}
-              className="mt-4 space-y-3 rounded-2xl border border-border-subtle bg-surface-elevated p-5"
+              className="mt-4 space-y-4 rounded-2xl border border-border-subtle bg-surface-elevated p-5"
             >
-              <label className="block text-sm text-charcoal">
-                Заголовок
-                <input
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                  required
-                  maxLength={200}
-                  className="mt-1 w-full rounded-xl border border-border-subtle bg-surface px-3 py-2 text-sm"
+              <SmartInput
+                id="forum-thread-title"
+                label="Заголовок"
+                value={title}
+                onValueChange={(value) => {
+                  setTitle(value);
+                  setTitleError(null);
+                  setFormError(null);
+                }}
+                error={titleError}
+                validate={validateTitle}
+                required
+                maxLength={200}
+                autoComplete="off"
+                placeholder="Коротко опишите тему обсуждения"
+              />
+              <SmartTextarea
+                id="forum-thread-body"
+                label="Сообщение"
+                value={body}
+                onValueChange={(value) => {
+                  setBody(value);
+                  setBodyError(null);
+                  setFormError(null);
+                }}
+                error={bodyError}
+                validate={validateBody}
+                required
+                rows={5}
+                maxLength={10_000}
+                hint="Можно использовать простую разметку: **жирный**, *курсив* и списки."
+                placeholder="Расскажите подробнее, чтобы участникам было легче помочь"
+              />
+              {formError ? (
+                <InlineFeedback
+                  variant="error"
+                  title="Не удалось опубликовать тему"
+                  description={formError}
                 />
-              </label>
-              <label className="block text-sm text-charcoal">
-                Сообщение
-                <textarea
-                  value={body}
-                  onChange={(event) => setBody(event.target.value)}
-                  required
-                  rows={5}
-                  className="mt-1 w-full rounded-xl border border-border-subtle bg-surface px-3 py-2 text-sm"
-                  placeholder="Поддерживается простая разметка: **жирный**, *курсив*, списки."
-                />
-              </label>
-              {error ? <p className="text-sm text-red-600">{error}</p> : null}
-              <button
+              ) : null}
+              <Button
                 type="submit"
-                disabled={submitting}
-                className="rounded-xl bg-sky px-4 py-2 text-sm font-medium text-white disabled:opacity-60"
+                loading={submitting}
+                loadingLabel="Публикуем…"
               >
-                {submitting ? "Публикация…" : "Опубликовать тему"}
-              </button>
+                Опубликовать тему
+              </Button>
             </form>
           ) : null}
 
@@ -194,4 +230,14 @@ export default function ForumCategoryView({
       </div>
     </div>
   );
+}
+
+function validateTitle(value: string): string | null {
+  const result = sanitizeForumTitle(value);
+  return "error" in result ? result.error : null;
+}
+
+function validateBody(value: string): string | null {
+  const result = sanitizeForumBody(value);
+  return "error" in result ? result.error : null;
 }

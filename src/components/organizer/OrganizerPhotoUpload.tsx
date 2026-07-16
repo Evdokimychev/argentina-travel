@@ -3,12 +3,10 @@
 import { useRef, useState } from "react";
 import Image from "next/image";
 import { Camera, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
-import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { uploadOrganizerProductImage } from "@/lib/organizer-product-media-client";
 
 interface OrganizerPhotoUploadProps {
+  productId: string;
   images: string[];
   onChange: (images: string[]) => void;
   inputId: string;
@@ -18,6 +16,7 @@ interface OrganizerPhotoUploadProps {
 }
 
 export default function OrganizerPhotoUpload({
+  productId,
   images,
   onChange,
   inputId,
@@ -26,26 +25,12 @@ export default function OrganizerPhotoUpload({
   disabled,
 }: OrganizerPhotoUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [urlInput, setUrlInput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [uploading, setUploading] = useState(false);
   const canAdd = images.length < maxPhotos;
 
   async function uploadFile(file: File) {
-    if (!file.type.startsWith("image/")) throw new Error("Выберите файл изображения");
-    if (file.size > ORGANIZER_TOUR_PHOTO_MAX_BYTES) {
-      throw new Error("Фото должно быть не больше 5 МБ");
-    }
-    return readFileAsDataUrl(file);
-  }
-
-  function normalizeUrl(value: string): string {
-    const trimmed = value.trim();
-    if (!trimmed) throw new Error("Вставьте ссылку на фото");
-    if (!/^https?:\/\//i.test(trimmed)) {
-      throw new Error("Ссылка должна начинаться с http:// или https://");
-    }
-    return trimmed;
+    return uploadOrganizerProductImage(productId, file);
   }
 
   async function addImage(src: string) {
@@ -58,19 +43,6 @@ export default function OrganizerPhotoUpload({
     setUploading(true);
     try {
       await addImage(await uploadFile(file));
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Не удалось загрузить фото");
-    } finally {
-      setUploading(false);
-    }
-  }
-
-  async function handleUrlUpload() {
-    setError(null);
-    setUploading(true);
-    try {
-      await addImage(normalizeUrl(urlInput));
-      setUrlInput("");
     } catch (err) {
       setError(err instanceof Error ? err.message : "Не удалось загрузить фото");
     } finally {
@@ -104,7 +76,7 @@ export default function OrganizerPhotoUpload({
         ref={fileInputRef}
         id={inputId}
         type="file"
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
         className="sr-only"
         onChange={(event) => {
           const file = event.target.files?.[0];
@@ -121,29 +93,6 @@ export default function OrganizerPhotoUpload({
         <Camera className="h-4 w-4" />
         Загрузить фото с устройства
       </button>
-
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <Input
-          value={urlInput}
-          onChange={(event) => setUrlInput(event.target.value)}
-          placeholder="Или вставьте ссылку на фото"
-          disabled={disabled || uploading || !canAdd}
-          onKeyDown={(event) => {
-            if (event.key === "Enter") {
-              event.preventDefault();
-              void handleUrlUpload();
-            }
-          }}
-        />
-        <Button
-          type="button"
-          disabled={disabled || uploading || !canAdd || !urlInput.trim()}
-          onClick={() => void handleUrlUpload()}
-          className="shrink-0 sm:min-w-[132px]"
-        >
-          Загрузить
-        </Button>
-      </div>
 
       {error ? <p className="text-xs text-brand">{error}</p> : null}
     </div>

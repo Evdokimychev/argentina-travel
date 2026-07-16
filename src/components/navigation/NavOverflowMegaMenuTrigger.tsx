@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { MegaMenuDropdown } from "@/components/navigation/MegaMenuDropdown";
@@ -65,6 +65,22 @@ function OverflowMegaMenuPanel({
           className="scrollbar-hide flex gap-1 overflow-x-auto p-2 lg:flex-col lg:gap-0.5 lg:overflow-visible lg:p-3"
           role="tablist"
           aria-label={overflowTriggerLabel(t)}
+          onKeyDown={(event) => {
+            if (!["ArrowDown", "ArrowUp", "ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) return;
+            const tabs = Array.from(
+              event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
+            );
+            if (!tabs.length) return;
+            const currentIndex = Math.max(0, tabs.indexOf(document.activeElement as HTMLButtonElement));
+            let nextIndex = currentIndex;
+            if (event.key === "Home") nextIndex = 0;
+            else if (event.key === "End") nextIndex = tabs.length - 1;
+            else if (event.key === "ArrowDown" || event.key === "ArrowRight") nextIndex = (currentIndex + 1) % tabs.length;
+            else nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+            event.preventDefault();
+            tabs[nextIndex]?.focus();
+            tabs[nextIndex]?.click();
+          }}
         >
           {sections.map((section) => {
             const selected = section.id === activeSection.id;
@@ -77,7 +93,10 @@ function OverflowMegaMenuPanel({
                 key={section.id}
                 type="button"
                 role="tab"
+                id={`site-nav-overflow-tab-${section.id}`}
+                aria-controls={`site-nav-overflow-content-${section.id}`}
                 aria-selected={selected}
+                tabIndex={selected ? 0 : -1}
                 onClick={() => onActiveSectionChange(section.id)}
                 className={cn(
                   "shrink-0 rounded-xl px-3 py-2.5 text-left transition-colors lg:w-full",
@@ -121,7 +140,12 @@ function OverflowMegaMenuPanel({
         </div>
       </div>
 
-      <div className="min-h-0 min-w-0 flex-1 overflow-y-auto" role="tabpanel">
+      <div
+        id={`site-nav-overflow-content-${activeSection.id}`}
+        className="min-h-0 min-w-0 flex-1 overflow-y-auto"
+        role="tabpanel"
+        aria-labelledby={`site-nav-overflow-tab-${activeSection.id}`}
+      >
         <MegaMenuSectionContent section={activeSection} t={t} onNavigate={onNavigate} />
       </div>
     </div>
@@ -149,6 +173,8 @@ export function NavOverflowMegaMenuTrigger({
   const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? "");
   const { rootRef, panelRef, openMenu, scheduleClose, closeMenu, rememberPointer } =
     useMegaMenuHoverIntent(open, onOpenChange);
+  const triggerButtonRef = useRef<HTMLButtonElement>(null);
+  const panelId = "site-nav-overflow-panel";
 
   const label = overflowTriggerLabel(t);
   const ariaSections = useMemo(
@@ -174,6 +200,27 @@ export function NavOverflowMegaMenuTrigger({
     setActiveSectionId(activeSection?.id ?? sections[0]?.id ?? "");
   }, [open, pathname, sections]);
 
+  useEffect(() => {
+    if (!open) return;
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      closeMenu();
+      triggerButtonRef.current?.focus();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [closeMenu, open]);
+
+  const openFromControl = () => {
+    openMenu();
+    window.setTimeout(() => {
+      panelRef.current
+        ?.querySelector<HTMLElement>('[role="tab"], a[href], button:not([disabled])')
+        ?.focus();
+    }, 0);
+  };
+
   return (
     <div
       ref={rootRef}
@@ -182,12 +229,14 @@ export function NavOverflowMegaMenuTrigger({
       onMouseLeave={handleMouseLeave}
     >
       <button
+        ref={triggerButtonRef}
         type="button"
         id="site-nav-overflow-trigger"
         aria-expanded={open}
         aria-haspopup="true"
+        aria-controls={panelId}
         aria-label={`${label}: ${ariaSections}`}
-        onClick={() => (open ? closeMenu() : openMenu())}
+        onClick={() => (open ? closeMenu() : openFromControl())}
         className={cn(
           navOverflowTriggerClassName,
           active || open
@@ -218,6 +267,7 @@ export function NavOverflowMegaMenuTrigger({
         widthClass={megaMenuWidthClass(activeSectionId || "more")}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
+        panelId={panelId}
       >
         <OverflowMegaMenuPanel
           sections={sections}

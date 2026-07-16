@@ -8,6 +8,8 @@ describe("completedDeleteMetadata", () => {
       completedAt: "2026-07-15T10:01:00.000Z",
       bookingsAnonymized: 2,
       sessionsRevoked: 1,
+      relatedRowsDeleted: 12,
+      commerceRowsAnonymized: 4,
     });
 
     expect(metadata).toEqual({
@@ -15,6 +17,8 @@ describe("completedDeleteMetadata", () => {
       completedAt: "2026-07-15T10:01:00.000Z",
       bookingsAnonymized: 2,
       sessionsRevoked: 1,
+      relatedRowsDeleted: 12,
+      commerceRowsAnonymized: 4,
     });
     expect(JSON.stringify(metadata)).not.toContain("email");
     expect(JSON.stringify(metadata)).not.toContain("fullName");

@@ -26,7 +26,8 @@ function VariantPlacesModal({
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
-        className="flex max-h-[90vh] max-w-lg flex-col overflow-hidden p-0"
+        showClose={false}
+        className="flex flex-col overflow-hidden p-0 sm:max-h-[90vh] sm:max-w-lg"
         onPointerDownOutside={onClose}
         onEscapeKeyDown={onClose}
       >

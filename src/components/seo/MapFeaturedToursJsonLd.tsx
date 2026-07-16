@@ -1,5 +1,6 @@
 import type { MapTourPoint } from "@/lib/map-types";
 import { buildMapFeaturedToursItemListJsonLd } from "@/lib/map-json-ld";
+import { serializeJsonLd } from "@/lib/schema-json-ld";
 
 export default function MapFeaturedToursJsonLd({ tours }: { tours: MapTourPoint[] }) {
   if (tours.length === 0) return null;
@@ -9,7 +10,7 @@ export default function MapFeaturedToursJsonLd({ tours }: { tours: MapTourPoint[
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(jsonLd) }}
     />
   );
 }

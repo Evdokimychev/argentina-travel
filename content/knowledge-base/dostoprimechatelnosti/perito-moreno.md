@@ -87,6 +87,6 @@ title_en: Perito Moreno Glacier
 - База для посещения — Эль-Калафате (~80 км), обычно одним днём. ## Рекомендации См. `recommendations` в метаданных. ## Предупреждения См. `warnings` в метаданных — про погоду, безопасность у кромки и актуальную цену входа. ## Связанные объекты - [[los-glasiares|Национальный парк Лос-Гласьярес]] — нацпарк, частью которого является ледник (полное описание парка, Фицрой, другие ледники).
 - [[el-calafate|Эль-Калафате]] — город-база для посещения Перито-Морено.
 - [[el-chalten|Эль-Чальтен]] — треккинговая столица у Фицроя, логичная связка по тому же парку.
-- [[ruta-40-sem-ozer|Дорога семи озёр и Рута 40]], [[argentina-3-nedeli|Маршрут по Аргентине на 3 недели (гранд-тур)]] — большие патагонские маршруты, куда входит ледник. ## Источники - [APN — Parque Nacional Los Glaciares](https://www.argentina.gob.ar/parquesnacionales/losglaciares) — статус, ЮНЕСКО, доступ.
+- [[ruta-40-sem-ozer|Дорога семи озёр и Рута 40]], [[argentina-3-nedeli|Маршрут по Аргентине на 3 недели]] — большие патагонские маршруты, куда входит ледник. ## Источники - [APN — Parque Nacional Los Glaciares](https://www.argentina.gob.ar/parquesnacionales/losglaciares) — статус, ЮНЕСКО, доступ.
 - [APN Ventaweb](https://ventaweb.apn.gob.ar/) — актуальная цена входа, онлайн-билет.
 - [Calafate Tours — Perito Moreno 2026](https://calafate.tours/en/perito-moreno-glacier/) — логистика, пасарелас, катер, мини-треккинг.

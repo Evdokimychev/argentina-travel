@@ -4,12 +4,11 @@ import TranslationPreparingBanner from "@/components/i18n/TranslationPreparingBa
 import ArticleJsonLd from "@/components/seo/ArticleJsonLd";
 import BlogFaqJsonLd from "@/components/seo/BlogFaqJsonLd";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import { cmsFallbackRobots, getCmsResolverMetadata } from "@/lib/cms/content-resolver";
+import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { resolveAuthorArticle, listPublishedAuthorArticleSlugs } from "@/lib/cms/author-article-resolver";
 import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
-import { buildPublicPageMetadata } from "@/lib/page-metadata";
-import { absoluteUrl } from "@/lib/site-url";
+import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
 
 interface AuthorArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -31,22 +30,14 @@ export async function generateMetadata({ params }: AuthorArticlePageProps) {
   if (!post) return { title: "Статья не найдена" };
 
   const alternates = await buildCmsContentHreflangAlternates("author_article", slug, locale);
-  const pageMetadata = buildPublicPageMetadata({
+  return buildCmsPageMetadata({
+    content: post,
     title: post.seoTitle ?? post.title,
     description: post.excerpt,
     path: `/blog/author/${slug}`,
     image: post.image,
+    alternates,
   });
-
-  return {
-    ...pageMetadata,
-    alternates: {
-      ...alternates,
-      ...pageMetadata.alternates,
-      canonical: absoluteUrl(`/blog/author/${slug}`),
-    },
-    robots: cmsFallbackRobots(post),
-  };
 }
 
 export default async function AuthorArticlePage({ params }: AuthorArticlePageProps) {

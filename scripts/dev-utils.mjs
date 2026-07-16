@@ -115,8 +115,8 @@ function sleepMs(ms) {
   }
 }
 
-export function removeNextCache(root) {
-  const nextDir = path.join(root, ".next");
+export function removeNextCache(root, directory = ".next") {
+  const nextDir = path.join(root, directory || ".next");
   if (!fs.existsSync(nextDir)) return false;
 
   for (let attempt = 0; attempt < 12; attempt += 1) {
@@ -127,7 +127,7 @@ export function removeNextCache(root) {
       /* retry below */
     }
 
-    const trashDir = path.join(root, `.next-trash-${Date.now()}-${attempt}`);
+    const trashDir = path.join(root, `${path.basename(nextDir)}-trash-${Date.now()}-${attempt}`);
     try {
       if (fs.existsSync(nextDir)) {
         fs.renameSync(nextDir, trashDir);
@@ -274,5 +274,46 @@ export function readStaleDevLock(root) {
     }
   } catch {
     return { lockPath, stale: true };
+  }
+}
+
+function productionBuildLockPath(root) {
+  return path.join(root, "node_modules", ".cache", "production-build.lock.json");
+}
+
+export function readProductionBuildLock(root) {
+  const lockPath = productionBuildLockPath(root);
+  if (!fs.existsSync(lockPath)) return null;
+
+  try {
+    const lock = JSON.parse(fs.readFileSync(lockPath, "utf8"));
+    if (!lock?.pid) return { lockPath, stale: true };
+
+    try {
+      process.kill(lock.pid, 0);
+      return { lockPath, stale: false, lock };
+    } catch {
+      return { lockPath, stale: true, lock };
+    }
+  } catch {
+    return { lockPath, stale: true };
+  }
+}
+
+export function writeProductionBuildLock(root) {
+  const lockPath = productionBuildLockPath(root);
+  fs.mkdirSync(path.dirname(lockPath), { recursive: true });
+  fs.writeFileSync(
+    lockPath,
+    JSON.stringify({ pid: process.pid, startedAt: new Date().toISOString() }, null, 2)
+  );
+  return lockPath;
+}
+
+export function removeProductionBuildLock(root, expectedPid = process.pid) {
+  const state = readProductionBuildLock(root);
+  if (!state) return;
+  if (!state.lock?.pid || state.lock.pid === expectedPid || state.stale) {
+    fs.rmSync(state.lockPath, { force: true });
   }
 }

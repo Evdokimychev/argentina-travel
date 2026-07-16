@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Layers, MapPin } from "lucide-react";
 import Hero from "@/components/Hero";
@@ -6,9 +5,10 @@ import SectionShell from "@/components/layout/SectionShell";
 import type { PlaceCollection } from "@/types/place";
 import { collectionHref } from "@/lib/places-urls";
 import { formatSpots } from "@/lib/pluralize";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
+import { getPlacesCatalogHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/cn";
+import { SafeImage } from "@/components/ui/safe-image";
 
 function CollectionCard({ col }: { col: PlaceCollection }) {
   return (
@@ -18,10 +18,12 @@ function CollectionCard({ col }: { col: PlaceCollection }) {
     >
       <div className="relative aspect-[4/3] overflow-hidden">
         {col.coverImage ? (
-          <Image
+          <SafeImage
             src={col.coverImage}
             alt={col.title}
             fill
+            preferLocalMedia
+            placeholderVariant="destination"
             className="object-cover transition-transform duration-700 group-hover:scale-105 motion-reduce:transform-none"
             sizes="(max-width: 768px) 100vw, 33vw"
           />
@@ -65,7 +67,7 @@ export default function CollectionsIndexView({
         eyebrow="Места и маршруты"
         title="Подборки мест"
         subtitle="Тематические коллекции для планирования поездки: Патагония, UNESCO, винный маршрут и другие готовые списки."
-        image={getServicePageHeroImage("places")}
+        image={getPlacesCatalogHeroImage()}
         compact
       />
 

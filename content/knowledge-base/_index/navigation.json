@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-07-14 17:08",
+  "generated_at": "2026-07-15 19:16",
   "hubs": [
     "gid-po-dengam",
     "gid-po-dokumentam",
@@ -54,7 +54,7 @@
           "id": "almacenes-de-ramos-generales-en-la-pampa",
           "type": "attraction",
           "subtype": null,
-          "title": "Общие букетные магазины в Ла-Пампа"
+          "title": "Старинные универсальные магазины Ла-Пампы"
         },
         {
           "id": "alumine",
@@ -114,7 +114,7 @@
           "id": "argentina-3-nedeli",
           "type": "route",
           "subtype": null,
-          "title": "Маршрут по Аргентине на 3 недели (гранд-тур)"
+          "title": "Маршрут по Аргентине на 3 недели"
         },
         {
           "id": "arte-urbano-en-buenos-aires",
@@ -186,7 +186,7 @@
           "id": "avistaje-de-aves-en-santa-cruz",
           "type": "attraction",
           "subtype": null,
-          "title": "Bird watching in Santa Cruz"
+          "title": "Наблюдение за птицами в Санта-Крусе"
         },
         {
           "id": "bahia-blanca",
@@ -276,7 +276,7 @@
           "id": "buceo-en-las-costas-de-ushuaia",
           "type": "attraction",
           "subtype": null,
-          "title": "Buceo en las costas de Ушуайя"
+          "title": "Дайвинг у берегов Ушуайи"
         },
         {
           "id": "buenos-aires",
@@ -324,19 +324,19 @@
           "id": "cabalgatas-en-cerro-belvedere-y-cascada-inacayal",
           "type": "attraction",
           "subtype": null,
-          "title": "Horseback rides in Belvedere Hill and Inacayal waterfall"
+          "title": "Конные прогулки к Серро-Бельведере и водопаду Инакайаль"
         },
         {
           "id": "cabalgatas-en-la-estepa-de-bariloche",
           "type": "attraction",
           "subtype": null,
-          "title": "Cabalgatas en la estepa de Барилоче"
+          "title": "Конные прогулки по степям Барилоче"
         },
         {
           "id": "cabalgatas-en-las-sierras-bonaerenses",
           "type": "attraction",
           "subtype": null,
-          "title": "Horseback riding in the hills of Буэнос-Айрес"
+          "title": "Конные прогулки в сьеррах провинции Буэнос-Айрес"
         },
         {
           "id": "cabalgatas-en-tafi-del-valle",
@@ -390,7 +390,7 @@
           "id": "canon-del-atuel",
           "type": "attraction",
           "subtype": null,
-          "title": "Atuel Canyon"
+          "title": "Каньон Атуэль"
         },
         {
           "id": "capilla-del-monte",
@@ -450,7 +450,7 @@
           "id": "cascada-nivinco-y-pichi-traful",
           "type": "attraction",
           "subtype": null,
-          "title": "Ñivinco and Pichi Traful Waterfalls"
+          "title": "Водопады Нивинко и Пичи-Трафуль"
         },
         {
           "id": "cascadas-santa-ana-y-dora",
@@ -468,7 +468,7 @@
           "id": "catamaran-en-la-triple-frontera",
           "type": "attraction",
           "subtype": null,
-          "title": "Catamaran at the Triple Frontier"
+          "title": "Катамаран у Тройной границы"
         },
         {
           "id": "caucete-san-juan",
@@ -480,7 +480,7 @@
           "id": "caviahue-copahue",
           "type": "attraction",
           "subtype": null,
-          "title": "Caviahue - Copahue"
+          "title": "Кавиауэ и Копауэ"
         },
         {
           "id": "centro-de-esqui-la-hoya",
@@ -522,7 +522,7 @@
           "id": "cerros-catedral-y-perito-moreno",
           "type": "attraction",
           "subtype": null,
-          "title": "Cerros Catedral y Перито-Морено"
+          "title": "Горнолыжные центры Серро-Катедраль и Серро-Перито-Морено"
         },
         {
           "id": "certificado-de-legalidad-prav",
@@ -588,7 +588,7 @@
           "id": "ciudad-de-corrientes",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Corrientes"
+          "title": "Коррьентес"
         },
         {
           "id": "ciudad-de-formosa",
@@ -600,7 +600,7 @@
           "id": "ciudad-de-salta",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Salta"
+          "title": "Сальта"
         },
         {
           "id": "ciudad-de-san-juan",
@@ -642,7 +642,7 @@
           "id": "colonia-menonita-en-la-pampa",
           "type": "attraction",
           "subtype": null,
-          "title": "Mennonite Colony in La Pampa"
+          "title": "Менонитская колония в Ла-Пампе"
         },
         {
           "id": "colonia-suiza",
@@ -702,7 +702,7 @@
           "id": "costa-atlantica-bonaerense",
           "type": "attraction",
           "subtype": null,
-          "title": "Буэнос-Айрес Atlantic Coast"
+          "title": "Атлантическое побережье провинции Буэнос-Айрес"
         },
         {
           "id": "costa-atlantica-de-la-provincia-de-buenos-aires",
@@ -864,7 +864,7 @@
           "id": "el-hoyo",
           "type": "attraction",
           "subtype": null,
-          "title": "El Hoyo"
+          "title": "Эль-Ойо"
         },
         {
           "id": "el-mate",
@@ -942,7 +942,7 @@
           "id": "empedrado",
           "type": "attraction",
           "subtype": null,
-          "title": "Empedrado"
+          "title": "Эмпедрадо"
         },
         {
           "id": "empedrado-y-el-carrizal",
@@ -1146,25 +1146,25 @@
           "id": "gid-po-kulture",
           "type": "guide",
           "subtype": "culture",
-          "title": "Культура и жизнь Аргентины: полный тематический гид"
+          "title": "Культура Аргентины: традиции, еда и повседневная жизнь"
         },
         {
           "id": "gid-po-transportu",
           "type": "transport",
           "subtype": null,
-          "title": "Транспорт в Аргентине: полный тематический гид"
+          "title": "Транспорт в Аргентине: перелёты, автобусы и аренда авто"
         },
         {
           "id": "gid-po-zhilyu",
           "type": "guide",
           "subtype": "accommodation",
-          "title": "Жильё в Аргентине: полный тематический гид"
+          "title": "Жильё в Аргентине: аренда, районы и покупка недвижимости"
         },
         {
           "id": "gid-puteshestvennika",
           "type": "guide",
           "subtype": "planning",
-          "title": "Гид путешественника: с чего начать поездку в Аргентину"
+          "title": "Поездка в Аргентину: как спланировать путешествие"
         },
         {
           "id": "glaciar-huemul",
@@ -1440,7 +1440,7 @@
           "id": "kayak-en-bariloche",
           "type": "attraction",
           "subtype": null,
-          "title": "Kayak en Барилоче"
+          "title": "Каякинг на озёрах Барилоче"
         },
         {
           "id": "kayak-en-el-parana",
@@ -1542,7 +1542,7 @@
           "id": "laberinto-patagonia",
           "type": "attraction",
           "subtype": null,
-          "title": "Laberinto Патагония"
+          "title": "Лабиринт Патагонии"
         },
         {
           "id": "lago-del-desierto",
@@ -1566,7 +1566,7 @@
           "id": "lagos-de-tierra-del-fuego",
           "type": "attraction",
           "subtype": null,
-          "title": "Lagos de Огненная Земля"
+          "title": "Озёра Огненной Земли"
         },
         {
           "id": "laguna-de-mar-chiquita",
@@ -1884,7 +1884,7 @@
           "id": "navegacion-en-los-rios-limay-y-neuquen",
           "type": "attraction",
           "subtype": null,
-          "title": "Sailing on the Limay and Neuquén rivers"
+          "title": "Водные прогулки по рекам Лимай и Неукен"
         },
         {
           "id": "navegacion-en-tierra-del-fuego",
@@ -1902,7 +1902,7 @@
           "id": "navegacion-por-el-lago-argentino",
           "type": "attraction",
           "subtype": null,
-          "title": "Sailing along Lago Argentino"
+          "title": "Водные прогулки по озеру Архентино"
         },
         {
           "id": "necochea",
@@ -1926,7 +1926,7 @@
           "id": "newells-old-boys",
           "type": "attraction",
           "subtype": null,
-          "title": "Newell's Old Boys"
+          "title": "«Ньюэллс Олд Бойз» в Росарио"
         },
         {
           "id": "noa",
@@ -2052,7 +2052,7 @@
           "id": "parque-nacional-bosques-petrificados",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Bosques Petrificados"
+          "title": "Национальный парк Боске-Петрификадос"
         },
         {
           "id": "parque-nacional-calilegua",
@@ -2088,7 +2088,7 @@
           "id": "parque-nacional-el-leoncito",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк El Leoncito"
+          "title": "Национальный парк Эль-Леонсито"
         },
         {
           "id": "parque-nacional-el-palmar",
@@ -2112,7 +2112,7 @@
           "id": "parque-nacional-islas-de-santa-fe",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Islas de Santa Fe"
+          "title": "Национальный парк Ислас-де-Санта-Фе"
         },
         {
           "id": "parque-nacional-lago-puelo",
@@ -2124,13 +2124,13 @@
           "id": "parque-nacional-laguna-blanca",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Laguna Blanca"
+          "title": "Национальный парк Лагуна-Бланка"
         },
         {
           "id": "parque-nacional-los-alerces-patrimonio-de-la-humanidad",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Los Alerces: Patrimonio de la Humanidad"
+          "title": "Национальный парк Лос-Алерсес — объект Всемирного наследия"
         },
         {
           "id": "parque-nacional-los-arrayanes",
@@ -2142,7 +2142,7 @@
           "id": "parque-nacional-los-cardones",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Los Cardones"
+          "title": "Национальный парк Лос-Кардонес"
         },
         {
           "id": "parque-nacional-los-glaciares-patrimonio-de-la-humanidad",
@@ -2154,7 +2154,7 @@
           "id": "parque-nacional-monte-leon",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Monte León"
+          "title": "Национальный парк Монте-Леон"
         },
         {
           "id": "parque-nacional-perito-moreno",
@@ -2178,7 +2178,7 @@
           "id": "parque-nacional-san-guillermo",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк San Guillermo"
+          "title": "Национальный парк Сан-Гильермо"
         },
         {
           "id": "parque-nacional-tierra-del-fuego",
@@ -2202,7 +2202,7 @@
           "id": "parque-provincial-ischigualasto",
           "type": "national_park",
           "subtype": null,
-          "title": "провинциальный парк Ischigualasto"
+          "title": "Провинциальный парк Исчигуаласто"
         },
         {
           "id": "parques-de-parana",
@@ -2442,7 +2442,7 @@
           "id": "pueblos-galeses-y-comunidades-originarias",
           "type": "attraction",
           "subtype": null,
-          "title": "Welsh towns and native communities"
+          "title": "Валлийские поселения и коренные народы Чубута"
         },
         {
           "id": "pueblos-pintorescos-de-cordoba",
@@ -2466,7 +2466,7 @@
           "id": "puente-rosario-victoria",
           "type": "attraction",
           "subtype": null,
-          "title": "Rosario-Victoria Bridge"
+          "title": "Мост Росарио — Виктория"
         },
         {
           "id": "puerto-almanza",
@@ -2562,7 +2562,7 @@
           "id": "rafting-en-el-rio-hua-hum",
           "type": "attraction",
           "subtype": null,
-          "title": "Rafting in the Hua Hum River"
+          "title": "Рафтинг по реке Уа-Ум"
         },
         {
           "id": "rafting-en-el-rio-manso",
@@ -2574,7 +2574,7 @@
           "id": "rafting-en-el-rio-mendoza",
           "type": "attraction",
           "subtype": null,
-          "title": "Rafting en el río Мендоса"
+          "title": "Рафтинг по реке Мендоса"
         },
         {
           "id": "razvlecheniya-i-nochnaya-zhizn",
@@ -2586,7 +2586,7 @@
           "id": "reconquista",
           "type": "attraction",
           "subtype": null,
-          "title": "Reconquista"
+          "title": "Реконкиста"
         },
         {
           "id": "red-de-refugios-de-montana",
@@ -2730,7 +2730,7 @@
           "id": "ruta-40-en-chubut",
           "type": "attraction",
           "subtype": null,
-          "title": "Ruta 40 in Chubut"
+          "title": "Трасса 40 в провинции Чубут"
         },
         {
           "id": "ruta-40-en-santa-cruz",
@@ -2766,7 +2766,7 @@
           "id": "ruta-de-los-siete-lagos",
           "type": "attraction",
           "subtype": null,
-          "title": "Route of Seven Lakes"
+          "title": "Дорога семи озёр"
         },
         {
           "id": "ruta-del-adobe-en-catamarca",
@@ -3198,7 +3198,7 @@
           "id": "tradicion-cervecera-en-santa-fe",
           "type": "attraction",
           "subtype": null,
-          "title": "Brewing tradition in Santa Fe"
+          "title": "Пивные традиции Санта-Фе"
         },
         {
           "id": "tradiciones-gauchas",
@@ -3216,7 +3216,7 @@
           "id": "trekking-en-bosques-y-lagos",
           "type": "attraction",
           "subtype": null,
-          "title": "Trekking in forests and lakes"
+          "title": "Треккинг среди лесов и озёр Патагонии"
         },
         {
           "id": "trekking-en-lihue-calel",
@@ -3240,7 +3240,7 @@
           "id": "trekking-en-tolhuin",
           "type": "attraction",
           "subtype": null,
-          "title": "Trekking in Tolhuin"
+          "title": "Треккинг в Тольуине"
         },
         {
           "id": "tren-a-las-nubes",
@@ -3348,7 +3348,7 @@
           "id": "valle-de-uco-mendoza",
           "type": "attraction",
           "subtype": null,
-          "title": "Valle de Uco, Мендоса"
+          "title": "Долина Уко в Мендосе"
         },
         {
           "id": "valle-encantado",
@@ -3546,7 +3546,7 @@
           "id": "volcan-lanin",
           "type": "attraction",
           "subtype": null,
-          "title": "Lanín volcano"
+          "title": "Вулкан Ланин"
         },
         {
           "id": "volcan-malacara",
@@ -3605,7 +3605,7 @@
           "id": "almacenes-de-ramos-generales-en-la-pampa",
           "type": "attraction",
           "subtype": null,
-          "title": "Общие букетные магазины в Ла-Пампа"
+          "title": "Старинные универсальные магазины Ла-Пампы"
         },
         {
           "id": "alumine",
@@ -3707,7 +3707,7 @@
           "id": "avistaje-de-aves-en-santa-cruz",
           "type": "attraction",
           "subtype": null,
-          "title": "Bird watching in Santa Cruz"
+          "title": "Наблюдение за птицами в Санта-Крусе"
         },
         {
           "id": "ba-rajony-realnyj-vybor",
@@ -3785,7 +3785,7 @@
           "id": "buceo-en-las-costas-de-ushuaia",
           "type": "attraction",
           "subtype": null,
-          "title": "Buceo en las costas de Ушуайя"
+          "title": "Дайвинг у берегов Ушуайи"
         },
         {
           "id": "buenos-aires",
@@ -3827,19 +3827,19 @@
           "id": "cabalgatas-en-cerro-belvedere-y-cascada-inacayal",
           "type": "attraction",
           "subtype": null,
-          "title": "Horseback rides in Belvedere Hill and Inacayal waterfall"
+          "title": "Конные прогулки к Серро-Бельведере и водопаду Инакайаль"
         },
         {
           "id": "cabalgatas-en-la-estepa-de-bariloche",
           "type": "attraction",
           "subtype": null,
-          "title": "Cabalgatas en la estepa de Барилоче"
+          "title": "Конные прогулки по степям Барилоче"
         },
         {
           "id": "cabalgatas-en-las-sierras-bonaerenses",
           "type": "attraction",
           "subtype": null,
-          "title": "Horseback riding in the hills of Буэнос-Айрес"
+          "title": "Конные прогулки в сьеррах провинции Буэнос-Айрес"
         },
         {
           "id": "cabalgatas-en-tafi-del-valle",
@@ -3893,7 +3893,7 @@
           "id": "canon-del-atuel",
           "type": "attraction",
           "subtype": null,
-          "title": "Atuel Canyon"
+          "title": "Каньон Атуэль"
         },
         {
           "id": "capilla-del-monte",
@@ -3953,7 +3953,7 @@
           "id": "cascada-nivinco-y-pichi-traful",
           "type": "attraction",
           "subtype": null,
-          "title": "Ñivinco and Pichi Traful Waterfalls"
+          "title": "Водопады Нивинко и Пичи-Трафуль"
         },
         {
           "id": "cascadas-santa-ana-y-dora",
@@ -3971,7 +3971,7 @@
           "id": "catamaran-en-la-triple-frontera",
           "type": "attraction",
           "subtype": null,
-          "title": "Catamaran at the Triple Frontier"
+          "title": "Катамаран у Тройной границы"
         },
         {
           "id": "catamarca",
@@ -3989,7 +3989,7 @@
           "id": "caviahue-copahue",
           "type": "attraction",
           "subtype": null,
-          "title": "Caviahue - Copahue"
+          "title": "Кавиауэ и Копауэ"
         },
         {
           "id": "centro-de-esqui-la-hoya",
@@ -4031,7 +4031,7 @@
           "id": "cerros-catedral-y-perito-moreno",
           "type": "attraction",
           "subtype": null,
-          "title": "Cerros Catedral y Перито-Морено"
+          "title": "Горнолыжные центры Серро-Катедраль и Серро-Перито-Морено"
         },
         {
           "id": "cholila",
@@ -4067,7 +4067,7 @@
           "id": "ciudad-de-corrientes",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Corrientes"
+          "title": "Коррьентес"
         },
         {
           "id": "ciudad-de-formosa",
@@ -4079,7 +4079,7 @@
           "id": "ciudad-de-salta",
           "type": "attraction",
           "subtype": null,
-          "title": "Город Salta"
+          "title": "Сальта"
         },
         {
           "id": "ciudad-de-san-juan",
@@ -4121,7 +4121,7 @@
           "id": "colonia-menonita-en-la-pampa",
           "type": "attraction",
           "subtype": null,
-          "title": "Mennonite Colony in La Pampa"
+          "title": "Менонитская колония в Ла-Пампе"
         },
         {
           "id": "colonia-suiza",
@@ -4181,7 +4181,7 @@
           "id": "costa-atlantica-bonaerense",
           "type": "attraction",
           "subtype": null,
-          "title": "Буэнос-Айрес Atlantic Coast"
+          "title": "Атлантическое побережье провинции Буэнос-Айрес"
         },
         {
           "id": "costa-atlantica-de-la-provincia-de-buenos-aires",
@@ -4325,7 +4325,7 @@
           "id": "el-hoyo",
           "type": "attraction",
           "subtype": null,
-          "title": "El Hoyo"
+          "title": "Эль-Ойо"
         },
         {
           "id": "el-mate",
@@ -4397,7 +4397,7 @@
           "id": "empedrado",
           "type": "attraction",
           "subtype": null,
-          "title": "Empedrado"
+          "title": "Эмпедрадо"
         },
         {
           "id": "empedrado-y-el-carrizal",
@@ -4745,7 +4745,7 @@
           "id": "kayak-en-bariloche",
           "type": "attraction",
           "subtype": null,
-          "title": "Kayak en Барилоче"
+          "title": "Каякинг на озёрах Барилоче"
         },
         {
           "id": "kayak-en-el-parana",
@@ -4835,7 +4835,7 @@
           "id": "laberinto-patagonia",
           "type": "attraction",
           "subtype": null,
-          "title": "Laberinto Патагония"
+          "title": "Лабиринт Патагонии"
         },
         {
           "id": "lago-del-desierto",
@@ -4859,7 +4859,7 @@
           "id": "lagos-de-tierra-del-fuego",
           "type": "attraction",
           "subtype": null,
-          "title": "Lagos de Огненная Земля"
+          "title": "Озёра Огненной Земли"
         },
         {
           "id": "laguna-de-mar-chiquita",
@@ -5081,7 +5081,7 @@
           "id": "navegacion-en-los-rios-limay-y-neuquen",
           "type": "attraction",
           "subtype": null,
-          "title": "Sailing on the Limay and Neuquén rivers"
+          "title": "Водные прогулки по рекам Лимай и Неукен"
         },
         {
           "id": "navegacion-en-tierra-del-fuego",
@@ -5099,7 +5099,7 @@
           "id": "navegacion-por-el-lago-argentino",
           "type": "attraction",
           "subtype": null,
-          "title": "Sailing along Lago Argentino"
+          "title": "Водные прогулки по озеру Архентино"
         },
         {
           "id": "necochea",
@@ -5123,7 +5123,7 @@
           "id": "newells-old-boys",
           "type": "attraction",
           "subtype": null,
-          "title": "Newell's Old Boys"
+          "title": "«Ньюэллс Олд Бойз» в Росарио"
         },
         {
           "id": "noa",
@@ -5213,7 +5213,7 @@
           "id": "parque-nacional-bosques-petrificados",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Bosques Petrificados"
+          "title": "Национальный парк Боске-Петрификадос"
         },
         {
           "id": "parque-nacional-calilegua",
@@ -5249,7 +5249,7 @@
           "id": "parque-nacional-el-leoncito",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк El Leoncito"
+          "title": "Национальный парк Эль-Леонсито"
         },
         {
           "id": "parque-nacional-el-palmar",
@@ -5273,7 +5273,7 @@
           "id": "parque-nacional-islas-de-santa-fe",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Islas de Santa Fe"
+          "title": "Национальный парк Ислас-де-Санта-Фе"
         },
         {
           "id": "parque-nacional-lago-puelo",
@@ -5285,13 +5285,13 @@
           "id": "parque-nacional-laguna-blanca",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Laguna Blanca"
+          "title": "Национальный парк Лагуна-Бланка"
         },
         {
           "id": "parque-nacional-los-alerces-patrimonio-de-la-humanidad",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Los Alerces: Patrimonio de la Humanidad"
+          "title": "Национальный парк Лос-Алерсес — объект Всемирного наследия"
         },
         {
           "id": "parque-nacional-los-arrayanes",
@@ -5303,7 +5303,7 @@
           "id": "parque-nacional-los-cardones",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Los Cardones"
+          "title": "Национальный парк Лос-Кардонес"
         },
         {
           "id": "parque-nacional-los-glaciares-patrimonio-de-la-humanidad",
@@ -5315,7 +5315,7 @@
           "id": "parque-nacional-monte-leon",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк Monte León"
+          "title": "Национальный парк Монте-Леон"
         },
         {
           "id": "parque-nacional-perito-moreno",
@@ -5339,7 +5339,7 @@
           "id": "parque-nacional-san-guillermo",
           "type": "national_park",
           "subtype": null,
-          "title": "национальный парк San Guillermo"
+          "title": "Национальный парк Сан-Гильермо"
         },
         {
           "id": "parque-nacional-tierra-del-fuego",
@@ -5363,7 +5363,7 @@
           "id": "parque-provincial-ischigualasto",
           "type": "national_park",
           "subtype": null,
-          "title": "провинциальный парк Ischigualasto"
+          "title": "Провинциальный парк Исчигуаласто"
         },
         {
           "id": "parques-de-parana",
@@ -5537,7 +5537,7 @@
           "id": "pueblos-galeses-y-comunidades-originarias",
           "type": "attraction",
           "subtype": null,
-          "title": "Welsh towns and native communities"
+          "title": "Валлийские поселения и коренные народы Чубута"
         },
         {
           "id": "pueblos-pintorescos-de-cordoba",
@@ -5561,7 +5561,7 @@
           "id": "puente-rosario-victoria",
           "type": "attraction",
           "subtype": null,
-          "title": "Rosario-Victoria Bridge"
+          "title": "Мост Росарио — Виктория"
         },
         {
           "id": "puerto-almanza",
@@ -5657,7 +5657,7 @@
           "id": "rafting-en-el-rio-hua-hum",
           "type": "attraction",
           "subtype": null,
-          "title": "Rafting in the Hua Hum River"
+          "title": "Рафтинг по реке Уа-Ум"
         },
         {
           "id": "rafting-en-el-rio-manso",
@@ -5669,13 +5669,13 @@
           "id": "rafting-en-el-rio-mendoza",
           "type": "attraction",
           "subtype": null,
-          "title": "Rafting en el río Мендоса"
+          "title": "Рафтинг по реке Мендоса"
         },
         {
           "id": "reconquista",
           "type": "attraction",
           "subtype": null,
-          "title": "Reconquista"
+          "title": "Реконкиста"
         },
         {
           "id": "red-de-refugios-de-montana",
@@ -5819,7 +5819,7 @@
           "id": "ruta-40-en-chubut",
           "type": "attraction",
           "subtype": null,
-          "title": "Ruta 40 in Chubut"
+          "title": "Трасса 40 в провинции Чубут"
         },
         {
           "id": "ruta-40-en-santa-cruz",
@@ -5843,7 +5843,7 @@
           "id": "ruta-de-los-siete-lagos",
           "type": "attraction",
           "subtype": null,
-          "title": "Route of Seven Lakes"
+          "title": "Дорога семи озёр"
         },
         {
           "id": "ruta-del-adobe-en-catamarca",
@@ -6227,7 +6227,7 @@
           "id": "tradicion-cervecera-en-santa-fe",
           "type": "attraction",
           "subtype": null,
-          "title": "Brewing tradition in Santa Fe"
+          "title": "Пивные традиции Санта-Фе"
         },
         {
           "id": "tradiciones-gauchas",
@@ -6245,7 +6245,7 @@
           "id": "trekking-en-bosques-y-lagos",
           "type": "attraction",
           "subtype": null,
-          "title": "Trekking in forests and lakes"
+          "title": "Треккинг среди лесов и озёр Патагонии"
         },
         {
           "id": "trekking-en-lihue-calel",
@@ -6269,7 +6269,7 @@
           "id": "trekking-en-tolhuin",
           "type": "attraction",
           "subtype": null,
-          "title": "Trekking in Tolhuin"
+          "title": "Треккинг в Тольуине"
         },
         {
           "id": "tren-a-las-nubes",
@@ -6377,7 +6377,7 @@
           "id": "valle-de-uco-mendoza",
           "type": "attraction",
           "subtype": null,
-          "title": "Valle de Uco, Мендоса"
+          "title": "Долина Уко в Мендосе"
         },
         {
           "id": "valle-encantado",
@@ -6533,7 +6533,7 @@
           "id": "volcan-lanin",
           "type": "attraction",
           "subtype": null,
-          "title": "Lanín volcano"
+          "title": "Вулкан Ланин"
         },
         {
           "id": "volcan-malacara",
@@ -6879,25 +6879,25 @@
           "id": "gid-po-kulture",
           "type": "guide",
           "subtype": "culture",
-          "title": "Культура и жизнь Аргентины: полный тематический гид"
+          "title": "Культура Аргентины: традиции, еда и повседневная жизнь"
         },
         {
           "id": "gid-po-medicine",
           "type": "guide",
           "subtype": "health",
-          "title": "Медицина и здоровье в Аргентине: полный тематический гид"
+          "title": "Медицина и страховка в Аргентине: путеводитель"
         },
         {
           "id": "gid-po-transportu",
           "type": "transport",
           "subtype": null,
-          "title": "Транспорт в Аргентине: полный тематический гид"
+          "title": "Транспорт в Аргентине: перелёты, автобусы и аренда авто"
         },
         {
           "id": "gid-po-zhilyu",
           "type": "guide",
           "subtype": "accommodation",
-          "title": "Жильё в Аргентине: полный тематический гид"
+          "title": "Жильё в Аргентине: аренда, районы и покупка недвижимости"
         },
         {
           "id": "gosudarstvennye-prilozheniya",
@@ -7340,7 +7340,7 @@
           "id": "gid-po-dengam",
           "type": "guide",
           "subtype": "finance",
-          "title": "Деньги в Аргентине: полный тематический гид"
+          "title": "Деньги в Аргентине: обмен, карты, банки и бюджет"
         },
         {
           "id": "inflyatsiya-i-ekonomika",
@@ -7537,13 +7537,13 @@
           "id": "gid-po-dokumentam",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Документы и легализация в Аргентине: полный тематический гид"
+          "title": "Документы для въезда и переезда в Аргентину"
         },
         {
           "id": "gid-relokanta",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Гид релоканта: весь путь переезда в Аргентину по этапам"
+          "title": "Переезд в Аргентину: пошаговый путеводитель"
         },
         {
           "id": "grazhdanstvo",
@@ -7932,7 +7932,7 @@
           "id": "gid-po-dokumentam",
           "type": "guide",
           "subtype": "immigration",
-          "title": "Документы и легализация в Аргентине: полный тематический гид"
+          "title": "Документы для въезда и переезда в Аргентину"
         },
         {
           "id": "gosudarstvennye-prilozheniya",

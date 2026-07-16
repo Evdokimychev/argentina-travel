@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     };
 
     if (!body.email?.trim()) {
-      return NextResponse.json({ error: "Email is required." }, { status: 400 });
+      return NextResponse.json({ error: "Укажите email." }, { status: 400 });
     }
 
     await submitNewsletter({
@@ -37,6 +37,6 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: error.message }, { status });
     }
 
-    return NextResponse.json({ error: "Unexpected error." }, { status: 500 });
+    return NextResponse.json({ error: "Не удалось оформить подписку. Попробуйте позже." }, { status: 500 });
   }
 }

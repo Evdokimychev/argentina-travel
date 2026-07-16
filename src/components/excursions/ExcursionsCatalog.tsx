@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import ExcursionCard from "@/components/excursions/ExcursionCard";
 import ExcursionSearchPanel from "@/components/excursions/ExcursionSearchPanel";
@@ -134,8 +135,6 @@ export default function ExcursionsCatalog({
     loadMore,
     sentinelRef,
   } = useCatalogLazySlice(sorted, PAGE_SIZE, { resetKey: lazyResetKey });
-  const selectedCityName = uniqueCities.find((city) => city.slug === filters.citySlug)?.name;
-
   const basePath =
     catalogBasePath ??
     (initialCitySlug ? `/excursions/city/${initialCitySlug}` : "/excursions");
@@ -190,7 +189,7 @@ export default function ExcursionsCatalog({
 
   return (
     <div className="catalog-listing-page-root w-full max-w-full overflow-x-clip pb-16">
-      <header className="catalog-listing-page-hero" data-scroll-rail-tone="light">
+      <header className="catalog-listing-page-hero editorial-hero" data-scroll-rail-tone="light" data-editorial-theme="city">
         <div
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--primary"
           aria-hidden
@@ -199,16 +198,33 @@ export default function ExcursionsCatalog({
           className="catalog-listing-page-hero__glow catalog-listing-page-hero__glow--secondary"
           aria-hidden
         />
-        <div className={cn(siteContainerClass, "relative pt-10 pb-9 md:pt-12 sm:pb-10 lg:pt-14 lg:pb-12")}>
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-sky/90">
-            Tripster · Sputnik8
-          </p>
-          <h1 className="mt-2 max-w-2xl font-display text-[1.75rem] font-bold leading-tight tracking-tight text-charcoal sm:text-4xl lg:text-[2.35rem]">
-            {resolvedTitle}
-          </h1>
-          <p className="mt-2.5 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
-            {resolvedSubtitle}
-          </p>
+        <div className={cn(siteContainerClass, "relative grid items-center gap-6 pb-9 pt-8 sm:pb-10 sm:pt-9 md:grid-cols-[minmax(0,1fr)_16rem] lg:gap-10 lg:pb-12 lg:pt-10")}>
+          <div>
+            <p className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
+              С локальными гидами
+            </p>
+            <div className="editorial-rule mt-4 h-1 w-12 rounded-full" aria-hidden />
+            <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-charcoal sm:text-4xl lg:text-[2.65rem]">
+              {resolvedTitle}
+            </h1>
+            <p className="mt-3 max-w-xl text-base leading-relaxed text-slate/90 sm:text-[1.05rem]">
+              {resolvedSubtitle}
+            </p>
+          </div>
+          <div className="editorial-media-frame group relative hidden aspect-[4/3] overflow-hidden rounded-[1.5rem] border md:block">
+            <Image
+              src="/media/home/showcase-ba.jpg"
+              alt="Городская архитектура Буэнос-Айреса"
+              fill
+              priority
+              sizes="288px"
+              className="editorial-media-zoom object-cover"
+            />
+            <div className="editorial-media-overlay absolute inset-0 opacity-60" aria-hidden />
+            <p className="absolute inset-x-0 bottom-0 p-5 text-xs font-semibold uppercase tracking-[0.14em] text-white/90">
+              Города · культура · гастрономия
+            </p>
+          </div>
         </div>
       </header>
 
@@ -320,8 +336,12 @@ export default function ExcursionsCatalog({
                       : "flex flex-col gap-5",
                   )}
                 >
-                  {visibleItems.map((excursion) => (
-                    <ExcursionCard key={`${excursion.partner}-${excursion.slug}`} excursion={excursion} />
+                  {visibleItems.map((excursion, index) => (
+                    <ExcursionCard
+                      key={`${excursion.partner}-${excursion.slug}`}
+                      excursion={excursion}
+                      imagePriority={index < 3}
+                    />
                   ))}
                 </div>
                 <CatalogLazyLoadFooter

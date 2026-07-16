@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "../styles/tokens.css";
+@import "../styles/editorial.css";
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -45,7 +46,7 @@
   --color-error: var(--token-color-error);
   --color-error-muted: var(--token-color-error-muted);
 
-  --font-display: var(--font-unbounded), system-ui, sans-serif;
+  --font-display: var(--site-font-display, var(--font-unbounded), system-ui, sans-serif);
   --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 
   /* Typography scale */
@@ -132,6 +133,51 @@
   --motion-ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Public design presets. Semantic surfaces stay neutral; only the calm accent family changes. */
+html[data-site-palette="patagonia"] {
+  --token-color-sky-50: #f0f6f3;
+  --token-color-sky-100: #dcebe4;
+  --token-color-sky: #4f7668;
+  --token-color-sky-dark: #456b5e;
+  --token-color-sky-ink: #356451;
+}
+
+html[data-site-palette="wine"] {
+  --token-color-sky-50: #fbf3f4;
+  --token-color-sky-100: #f1dfe2;
+  --token-color-sky: #8d525c;
+  --token-color-sky-dark: #733943;
+  --token-color-sky-ink: #733943;
+}
+
+html[data-site-heading-font="serif"] {
+  --site-font-display: Georgia, "Times New Roman", serif;
+  --site-font-heading: Georgia, "Times New Roman", serif;
+}
+
+html[data-site-heading-font="system"] {
+  --site-font-display: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --site-font-heading: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html[data-site-header-variant="compact"] {
+  --token-site-header-full-height: 64px;
+}
+
+@media (min-width: 768px) {
+  html[data-site-header-variant="floating"][data-site-utility-bar="visible"] {
+    --token-site-header-full-height: 114px;
+  }
+
+  html[data-site-header-variant="compact"] {
+    --token-site-header-full-height: 64px;
+  }
+
+  html[data-site-header-variant="compact"][data-site-utility-bar="visible"] {
+    --token-site-header-full-height: 92px;
+  }
+}
+
 /* E62 — dark theme semantic tokens (chrome + cabinets) */
 html.dark {
   --token-color-foreground: #e8eaef;
@@ -188,7 +234,7 @@ html {
 
 @media (min-width: 768px) {
   :root {
-    --site-header-spacer-fallback: 132px;
+    --site-header-spacer-fallback: 114px;
   }
 }
 
@@ -196,6 +242,31 @@ html {
   padding-bottom: env(safe-area-inset-bottom, 0px);
   padding-left: env(safe-area-inset-left, 0px);
   padding-right: env(safe-area-inset-right, 0px);
+}
+
+.site-footer-shell {
+  background-color: var(--token-color-page-band);
+}
+
+html[data-site-footer-variant="mist"] .site-footer-shell {
+  background-color: var(--token-color-sky-50);
+}
+
+html.dark .site-footer-shell {
+  background-color: var(--token-color-background);
+}
+
+html.dark[data-site-footer-variant="mist"] .site-footer-shell {
+  background-color: var(--token-color-surface-muted);
+}
+
+/* Cookie choices are the only bottom prompt while consent is unresolved. */
+html[data-cookie-consent-visible="true"] .site-cookie-suppressible {
+  display: none;
+}
+
+html[data-pwa-install-visible="true"] .site-install-prompt-suppressible {
+  display: none;
 }
 
 @media (display-mode: standalone) {
@@ -265,12 +336,12 @@ body {
 
 /* Unbounded — только явно через .font-display (h1 страниц и страницы тура) */
 .font-display {
-  font-family: var(--font-display);
+  font-family: var(--site-font-display, var(--font-display));
 }
 
-/* Заголовки карточек, секций и информационных блоков — системный sans */
+/* Заголовки карточек, секций и информационных блоков — выбранный безопасный стек */
 .font-heading {
-  font-family: var(--font-body);
+  font-family: var(--site-font-heading, var(--font-body));
 }
 
 .gradient-hero {

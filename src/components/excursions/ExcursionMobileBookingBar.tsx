@@ -54,8 +54,8 @@ export default function ExcursionMobileBookingBar({
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-gray-200 bg-white/95 shadow-lg backdrop-blur-sm lg:hidden">
-      <div className={cn(siteContainerClass, "flex items-center justify-between gap-4 py-4")}>
+    <div className="fixed [bottom:var(--cookie-consent-offset,0px)] left-0 right-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom,0px)] shadow-lg backdrop-blur-sm transition-[bottom] duration-200 lg:hidden">
+      <div className={cn(siteContainerClass, "flex items-center justify-between gap-3 py-2.5")}>
         <div className="min-w-0">
           {bookingPrice ? (
             <PartnerTourBookingPriceSummary
@@ -76,12 +76,12 @@ export default function ExcursionMobileBookingBar({
             href={excursion.bookingHref}
             target="_blank"
             rel="noopener noreferrer"
-            className={cn(buttonVariants(), "shrink-0 rounded-xl px-5")}
+            className={cn(buttonVariants(), "min-h-11 max-w-[65%] shrink-0 rounded-xl px-5 text-center")}
           >
             {ctaLabel}
           </a>
         ) : (
-          <Button type="button" className="shrink-0 rounded-xl px-5" onClick={handleMobileBookClick}>
+          <Button type="button" className="min-h-11 max-w-[65%] shrink-0 rounded-xl px-5" onClick={handleMobileBookClick}>
             {submitButtonLabel}
           </Button>
         )}

@@ -24,7 +24,9 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
     initialRegion && GALLERY_REGIONS.some((r) => r.slug === initialRegion) ? initialRegion : null
   );
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const returnFocusRef = useRef<HTMLButtonElement | null>(null);
 
   useSiteHeaderOverlayLock(lightboxItem != null);
 
@@ -42,21 +44,54 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
     window.history.replaceState(null, "", url);
   }, []);
 
+  const openLightbox = useCallback((item: GalleryItem, trigger: HTMLButtonElement) => {
+    returnFocusRef.current = trigger;
+    setLightboxItem(item);
+  }, []);
+
+  const closeLightbox = useCallback(() => {
+    setLightboxItem(null);
+    window.setTimeout(() => returnFocusRef.current?.focus(), 0);
+  }, []);
+
   useEffect(() => {
     if (!lightboxItem) return;
 
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     closeButtonRef.current?.focus();
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         event.preventDefault();
-        setLightboxItem(null);
+        closeLightbox();
+        return;
+      }
+
+      if (event.key !== "Tab" || !dialogRef.current) return;
+
+      const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [lightboxItem]);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [closeLightbox, lightboxItem]);
 
   return (
     <>
@@ -75,14 +110,15 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
           </p>
         </div>
 
-        <div className="mt-8 flex flex-wrap gap-2">
+        <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Фильтр по региону">
           <button
             type="button"
             onClick={() => selectRegion(null)}
+            aria-pressed={activeRegion === null}
             className={cn(
-              "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+              "min-h-11 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
               activeRegion === null
-                ? "bg-sky text-white"
+                ? "bg-sky-ink text-white"
                 : "border border-gray-200 bg-white text-charcoal hover:border-sky/40 hover:text-sky"
             )}
           >
@@ -93,10 +129,11 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
               key={region.slug}
               type="button"
               onClick={() => selectRegion(region.slug)}
+              aria-pressed={activeRegion === region.slug}
               className={cn(
-                "rounded-full px-4 py-2 text-sm font-medium transition-colors",
+                "min-h-11 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40",
                 activeRegion === region.slug
-                  ? "bg-sky text-white"
+                  ? "bg-sky-ink text-white"
                   : "border border-gray-200 bg-white text-charcoal hover:border-sky/40 hover:text-sky"
               )}
             >
@@ -113,9 +150,9 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
               <button
                 key={item.id}
                 type="button"
-                onClick={() => setLightboxItem(item)}
+                onClick={(event) => openLightbox(item, event.currentTarget)}
                 aria-label={`Открыть фото: ${item.title}`}
-                className="group mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-shadow hover:shadow-elevated"
+                className="group mb-4 block w-full break-inside-avoid overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-card transition-shadow hover:shadow-elevated focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
               >
                 <div className="relative aspect-[4/3] overflow-hidden">
                   <Image
@@ -144,27 +181,29 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
 
       {lightboxItem ? (
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-lightbox flex items-center justify-center bg-charcoal/90 p-4 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
-          aria-label={lightboxItem.title}
-          onClick={() => setLightboxItem(null)}
+          aria-labelledby="gallery-lightbox-title"
+          aria-describedby="gallery-lightbox-location"
+          onClick={closeLightbox}
         >
           <button
             ref={closeButtonRef}
             type="button"
-            onClick={() => setLightboxItem(null)}
-            className="absolute right-4 top-4 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+            onClick={closeLightbox}
+            className="absolute right-4 top-[max(1rem,env(safe-area-inset-top,0px))] z-10 flex h-11 w-11 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40 sm:top-4"
             aria-label="Закрыть"
           >
-            <X className="h-5 w-5" />
+            <X className="h-5 w-5" aria-hidden />
           </button>
 
           <div
-            className="relative max-h-[85vh] w-full max-w-5xl overflow-hidden rounded-panel bg-charcoal shadow-elevated"
+            className="relative flex h-[min(85dvh,48rem)] w-full max-w-5xl flex-col overflow-hidden rounded-panel bg-charcoal shadow-elevated"
             onClick={(event) => event.stopPropagation()}
           >
-            <div className="relative aspect-[16/10] max-h-[70vh] w-full">
+            <div className="relative min-h-0 w-full flex-1">
               <Image
                 src={lightboxItem.imageUrl}
                 alt={lightboxItem.title}
@@ -176,18 +215,26 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
             </div>
             <div className="flex flex-col gap-3 border-t border-white/10 bg-charcoal p-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0">
-                <p className="font-heading text-lg font-bold text-white">{lightboxItem.title}</p>
-                <p className="mt-1 flex items-center gap-1 text-sm text-gray-300">
+                <p
+                  id="gallery-lightbox-title"
+                  className="font-heading text-lg font-bold text-white"
+                >
+                  {lightboxItem.title}
+                </p>
+                <p
+                  id="gallery-lightbox-location"
+                  className="mt-1 flex items-center gap-1 text-sm text-gray-300"
+                >
                   <MapPin className="h-3.5 w-3.5 shrink-0" aria-hidden />
                   {lightboxItem.destination} · {lightboxItem.region}
                 </p>
               </div>
               <Link
                 href={`/tours/${lightboxItem.tourSlug}`}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full bg-sky-ink px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-ink/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
+                className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-sky-ink px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-sky-ink/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/40"
               >
                 Смотреть тур
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-4 w-4" aria-hidden />
               </Link>
             </div>
           </div>

@@ -211,6 +211,8 @@ function buildArrivalInfo(tour: Tour): TourArrivalInfo {
     flights,
     transfers,
     meetingPoint,
+    startTime: tour.booking.excursionStartTime,
+    finishTime: tour.booking.excursionEndTime,
   };
 }
 
@@ -533,8 +535,13 @@ export function organizerDraftToTour(draft: OrganizerTourDraft, base: Tour): Tou
     },
     booking: {
       mode: draft.bookingMode,
+      excursionStartTime: draft.type === "excursion" ? draft.excursionStartTime : undefined,
+      excursionEndTime: draft.type === "excursion" ? draft.excursionEndTime : undefined,
       groupDates: draft.groupTourDates,
-      individual: draft.individualTourEnabled
+      individual:
+        draft.individualTourEnabled ||
+        draft.bookingMode === "on_request" ||
+        draft.bookingMode === "both"
         ? {
             enabled: true,
             periodFrom: draft.individualPeriodFrom,
@@ -693,6 +700,7 @@ export function tourToListing(tour: Tour): TourListing {
     id: tour.id,
     slug: tour.slug,
     title: tour.title,
+    productType: tour.type,
     shortDescription: tour.shortDescription,
     image: tour.media.coverImage,
     gallery: tour.media.gallery,
@@ -945,8 +953,13 @@ export function createMinimalTourFromDraft(
     },
     booking: {
       mode: draft.bookingMode,
+      excursionStartTime: draft.type === "excursion" ? draft.excursionStartTime : undefined,
+      excursionEndTime: draft.type === "excursion" ? draft.excursionEndTime : undefined,
       groupDates: draft.groupTourDates,
-      individual: draft.individualTourEnabled
+      individual:
+        draft.individualTourEnabled ||
+        draft.bookingMode === "on_request" ||
+        draft.bookingMode === "both"
         ? {
             enabled: true,
             periodFrom: draft.individualPeriodFrom,

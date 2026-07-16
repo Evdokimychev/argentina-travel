@@ -123,14 +123,23 @@ async function fetchTourRowBySlug(
 ): Promise<Pick<TourRow, "id" | "payload"> | null> {
   const { data, error } = await supabase
     .from("tours")
-    .select("id, payload, moderation_status")
+    .select("id, payload, approved_payload, moderation_status")
     .eq("slug", slug)
     .eq("status", "published")
-    .in("moderation_status", [...PUBLIC_TOUR_MODERATION_STATUSES])
+    .in("moderation_status", [
+      ...PUBLIC_TOUR_MODERATION_STATUSES,
+      "pending",
+      "rejected",
+    ])
     .maybeSingle();
 
   if (error || !data) return null;
-  return data as Pick<TourRow, "id" | "payload">;
+  const payload =
+    data.moderation_status === "pending" || data.moderation_status === "rejected"
+      ? data.approved_payload
+      : data.payload;
+  if (!payload) return null;
+  return { id: data.id, payload };
 }
 
 async function fetchTourRowById(

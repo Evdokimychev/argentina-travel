@@ -49,6 +49,21 @@ export async function POST(_request: Request, context: RouteContext) {
     );
   }
 
+  const { data: submittedRevision, error: revisionError } = await admin
+    .from("content_revisions")
+    .select("id, revision_number, created_at")
+    .eq("document_id", document.id)
+    .order("revision_number", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (revisionError || !submittedRevision) {
+    return NextResponse.json(
+      { error: "Не удалось зафиксировать редакцию статьи. Сохраните материал и повторите отправку." },
+      { status: 409 },
+    );
+  }
+
   const { data, error } = await admin
     .from("moderation_queue")
     .upsert(
@@ -63,6 +78,9 @@ export async function POST(_request: Request, context: RouteContext) {
           slug: document.slug,
           ownerUserId: user.id,
           articleType: document.body.articleType ?? "story",
+          submittedRevisionId: submittedRevision.id,
+          submittedRevisionNumber: submittedRevision.revision_number,
+          submittedRevisionCreatedAt: submittedRevision.created_at,
         } as Json,
         resolved_at: null,
         resolved_by: null,

@@ -264,11 +264,11 @@ function budgetScore(
   tour: TourListing,
   intent: TourMatchIntent
 ): { score: number; reason?: string } {
-  if (tour.priceOnRequest) return { score: 1, reason: "цена по запросу — уточняйте у организатора" };
+  if (tour.priceOnRequest) return { score: 0, reason: "стоимость требует уточнения" };
   const { budgetMinUsd, budgetMaxUsd } = intent;
   if (budgetMaxUsd == null && budgetMinUsd == null) return { score: 0 };
 
-  if (budgetMaxUsd != null && tour.priceUsd <= budgetMaxUsd * 1.1) {
+  if (budgetMaxUsd != null && tour.priceUsd <= budgetMaxUsd) {
     return { score: 5, reason: `укладывается в бюджет до ${budgetMaxUsd.toLocaleString("ru-RU")} $` };
   }
   if (budgetMaxUsd != null && tour.priceUsd > budgetMaxUsd * 1.35) {
@@ -447,7 +447,22 @@ export function rankToursForIntent(
   tours: TourListing[],
   intent: TourMatchIntent
 ): MatchedTourResult[] {
-  const ranked = tours
+  const eligibleTours = tours.filter((tour) => {
+    if (
+      intent.groupSize != null &&
+      (intent.groupSize < tour.groupSizeMin || intent.groupSize > tour.groupSizeMax)
+    ) {
+      return false;
+    }
+    if (intent.budgetMaxUsd == null) return true;
+    if (tour.priceOnRequest || tour.priceUsd <= 0) return false;
+    const normalizedPrice =
+      tour.partnerPriceUnit === "per_group" && intent.groupSize
+        ? tour.priceUsd / intent.groupSize
+        : tour.priceUsd;
+    return normalizedPrice <= intent.budgetMaxUsd;
+  });
+  const ranked = eligibleTours
     .map((tour) => scoreTourForIntent(tour, intent))
     .sort((a, b) => b.score - a.score);
 

@@ -352,6 +352,7 @@ function CheckoutSummary({
 
 export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const {
+    productKind,
     checkoutOpen,
     closeCheckout,
     guests,
@@ -507,7 +508,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   useEffect(() => {
     if (!checkoutOpen || !user) return;
     setForm((prev) => applyAuthUserToCheckoutForm(prev, user));
-  }, [checkoutOpen, user?.id]);
+  }, [checkoutOpen, user]);
 
   useEffect(() => {
     setForm((prev) => {
@@ -692,6 +693,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       <DialogContent
         data-private-content="checkout"
         bottomSheet
+        showClose={false}
         className="ym-hide-content flex h-[100dvh] max-w-6xl flex-col overflow-hidden p-0 shadow-2xl sm:h-auto sm:max-h-[92vh] lg:flex-row"
         onPointerDownOutside={closeCheckout}
         onEscapeKeyDown={closeCheckout}
@@ -707,8 +709,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
               </DialogTitle>
               <DialogDescription className="sr-only">
                 {submitted
-                  ? "Заявка на бронирование тура отправлена организатору"
-                  : "Пошаговое оформление заявки на бронирование тура"}
+                  ? `Заявка на бронирование ${productKind === "excursion" ? "экскурсии" : "тура"} отправлена организатору`
+                  : `Пошаговое оформление заявки на бронирование ${productKind === "excursion" ? "экскурсии" : "тура"}`}
               </DialogDescription>
               {!submitted && (
                 <div className="mt-3 space-y-3">
@@ -821,7 +823,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                     <p className="font-medium text-charcoal">Оформите страховку для поездки</p>
                     <p className="mt-1 text-slate">
                       Полис для {formatForTourists(form.insuranceTravelers)} — на сайте партнёра,
-                      отдельно от оплаты тура.
+                      отдельно от оплаты {productKind === "excursion" ? "экскурсии" : "тура"}.
                     </p>
                     <Link
                       href={buildInsuranceHref({ travelers: form.insuranceTravelers })}
@@ -832,7 +834,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   </div>
                 ) : null}
                 <Button className="mt-6 w-full" onClick={closeCheckout}>
-                  Вернуться к туру
+                  Вернуться к {productKind === "excursion" ? "экскурсии" : "туру"}
                 </Button>
                 {savedToProfile ? (
                   <Link

@@ -49,7 +49,7 @@ describe("Sprint 10 — Design System v2 & performance trim", () => {
     const tokens = readFileSync(join(root, "lib/design-tokens.ts"), "utf8");
     expect(header).toContain("headerScrolled");
     expect(header).toContain("tokenHeaderShellScrolledClass");
-    expect(tokens).toContain("backdrop-blur-md");
+    expect(tokens).toContain("backdrop-blur-xl");
   });
 
   it("footer newsletter uses upgraded token surface", () => {

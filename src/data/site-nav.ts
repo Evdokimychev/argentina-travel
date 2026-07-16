@@ -123,12 +123,6 @@ const EXCURSION_BROWSE_LINKS: SiteNavLink[] = [
     href: excursionCityHref(EXCURSION_CITY_LINKS.iguazu.slug),
     description: "Водопады Игуасу",
   },
-  {
-    id: "excursions-tours",
-    label: "Авторские туры",
-    href: "/tours",
-    description: "Многодневные маршруты на платформе",
-  },
 ];
 
 const TOURS_BROWSE_LINKS: SiteNavLink[] = [
@@ -146,22 +140,10 @@ const TOURS_BROWSE_LINKS: SiteNavLink[] = [
     description: "Персональный подбор за 2 минуты",
   },
   {
-    id: "travel-map",
-    label: "Карта Аргентины",
-    href: "/mapa-argentina",
-    description: "Интерактивная карта страны",
-  },
-  {
     id: "travel-booking",
     label: "Найти заявку",
     href: "/booking/find",
     description: "По email без входа",
-  },
-  {
-    id: "travel-join",
-    label: "Стать организатором",
-    href: "/join",
-    description: "Публикация туров",
   },
 ];
 
@@ -359,8 +341,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     columns: [
       {
         id: "tours-browse",
-        title: "Поиск",
-        titleKey: "nav.columns.search",
+        title: "Планирование",
         links: TOURS_BROWSE_LINKS,
       },
       {
@@ -383,8 +364,7 @@ export const SITE_NAV_SECTIONS: SiteNavSection[] = [
     columns: [
       {
         id: "excursions-browse",
-        title: "Поиск",
-        titleKey: "nav.columns.search",
+        title: "Каталог",
         links: EXCURSION_BROWSE_LINKS,
       },
       {

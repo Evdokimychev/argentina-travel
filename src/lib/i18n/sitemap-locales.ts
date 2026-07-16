@@ -1,6 +1,3 @@
-import { PREFIXED_I18N_LOCALES } from "./config";
-import { addLocalePrefix } from "./locale-path";
-
 /**
  * Paths eligible for /es/ and /en/ sitemap variants (E39 pilot + E43 CMS i18n).
  * Russian canonical stays unprefixed.
@@ -20,14 +17,7 @@ export function isI18nSitemapPath(path: string): boolean {
 }
 
 export function expandI18nSitemapPaths(paths: string[]): string[] {
-  const expanded = new Set(paths);
-
-  for (const path of paths) {
-    if (!isI18nSitemapPath(path)) continue;
-    for (const locale of PREFIXED_I18N_LOCALES) {
-      expanded.add(addLocalePrefix(path, locale));
-    }
-  }
-
-  return [...expanded];
+  // Locale fallbacks are noindex. Add translated URLs only after the CMS
+  // supplies an explicit publication-aware locale registry.
+  return [...new Set(paths)];
 }

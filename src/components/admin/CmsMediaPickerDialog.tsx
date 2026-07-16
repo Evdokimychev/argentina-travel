@@ -37,7 +37,7 @@ export default function CmsMediaPickerDialog({ open, onClose, onSelect }: Props)
 
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
-      <DialogContent className="max-w-2xl p-0 sm:max-w-2xl">
+      <DialogContent className="p-0 sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Выбор изображения</DialogTitle>
           <DialogDescription className="sr-only">Библиотека медиа CMS</DialogDescription>

@@ -57,6 +57,8 @@ export interface TourPricing {
 
 export interface TourBooking {
   mode: TourBookingMode;
+  excursionStartTime?: string;
+  excursionEndTime?: string;
   groupDates: OrganizerGroupTourDate[];
   individual?: {
     enabled: boolean;

@@ -35,6 +35,7 @@ export async function resolveLegalDocument(slug: string, locale = "ru"): Promise
       })
     : buildDefaultTranslationStatus(Boolean(fallback));
 
+  let resolvedSeo: CmsDocument["seo"] | undefined;
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "legal",
     slug,
@@ -43,9 +44,15 @@ export async function resolveLegalDocument(slug: string, locale = "ru"): Promise
     merge: (doc) => legalDocumentFromCms(doc),
     supabase,
     isUsable: isCmsDocumentComplete,
+    onResolvedDocument: (doc) => {
+      resolvedSeo = doc.seo;
+    },
   });
   if (!resolved) return null;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedLegalSlugs(locale = "ru"): Promise<string[]> {

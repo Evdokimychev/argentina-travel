@@ -112,6 +112,7 @@ export default function ReviewsSection({
               <button
                 key={String(value)}
                 type="button"
+                aria-pressed={filter === value}
                 onClick={() => {
                   setFilter(value);
                   setPage(1);

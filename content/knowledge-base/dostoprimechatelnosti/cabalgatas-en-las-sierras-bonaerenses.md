@@ -1,7 +1,7 @@
 ---
 id: cabalgatas-en-las-sierras-bonaerenses
 type: attraction
-title: Horseback riding in the hills of Буэнос-Айрес
+title: Конные прогулки в сьеррах провинции Буэнос-Айрес
 title_es: Cabalgatas en las sierras bonaerenses
 title_en: Horseback riding in the hills of Buenos Aires
 summary: "Конные прогулки по сьеррам провинции Буэнос-Айрес — традиционное занятие этих мест."

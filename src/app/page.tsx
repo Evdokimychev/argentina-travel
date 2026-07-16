@@ -18,10 +18,32 @@ import {
 } from "@/lib/personalization/recommendations-server";
 import { fetchExcursionCitiesServer } from "@/lib/tripster/excursion-server";
 import { getHomeHeroAlt, getHomeHeroImage, getHomeShowcaseImages } from "@/lib/media-resolver";
+import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
+import { getRecommendedListings } from "@/lib/tour-recommendations";
+import type { TourListing } from "@/types";
 
 const PAGE_TITLE = "Авторские туры по Аргентине — Патагония, Буэнос-Айрес, Мендоса";
 const PAGE_DESCRIPTION =
   "Русскоязычные гиды, проверенные маршруты и путеводитель по стране: туры, иммиграция и практические советы для поездки.";
+
+function selectHomeTourPayload(
+  tours: TourListing[],
+  personalized: TourListing[],
+  limit = 30,
+): TourListing[] {
+  const homepageTours = filterArgentinaHomepageTours(tours);
+  const hot = homepageTours.filter((tour) => tour.isHot).slice(0, 6);
+  const youTravel = homepageTours
+    .filter((tour) => tour.partnerSource === "youtravel")
+    .slice(0, 8);
+  const ranked = getRecommendedListings(homepageTours, 18);
+  const unique = new Map<string, TourListing>();
+  for (const tour of [...personalized, ...hot, ...youTravel, ...ranked, ...homepageTours]) {
+    if (!unique.has(tour.slug)) unique.set(tour.slug, tour);
+    if (unique.size >= limit) break;
+  }
+  return [...unique.values()];
+}
 
 export const metadata: Metadata = {
   ...buildPublicPageMetadata({
@@ -54,14 +76,15 @@ export default async function HomePage() {
         : Promise.resolve({ tours: [], personalized: false }),
       fetchExcursionCitiesServer(),
     ]);
+  const homeTours = selectHomeTourPayload(tours, recommendedTours.tours);
 
   return (
     <>
       <WebPageJsonLd name={PAGE_TITLE} description={PAGE_DESCRIPTION} path="/" />
       <HomePrimarySectionsItemListJsonLd />
       <MarketplaceHome
-        tours={tours}
-        blogPosts={blogPosts}
+        tours={homeTours}
+        blogPosts={blogPosts.slice(0, 3)}
         testimonials={testimonials}
         platformStats={platformStats}
         excursionCities={excursionCities}
@@ -70,6 +93,7 @@ export default async function HomePage() {
             <TravelPrepStrip />
           </Suspense>
         }
+        heroBackdropSrc={heroSrc}
         heroCollage={
           <HomeHeroCollage
             key="home-hero-collage"

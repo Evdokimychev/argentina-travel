@@ -94,7 +94,8 @@ export const KB_SECTIONS: KbSectionMeta[] = [
     id: "pereezd-v-argentinu",
     slug: "pereezd",
     title: "Переезд в Аргентину",
-    description: "Полный путь релоканта: от решения до интеграции.",
+    description:
+      "Пошаговый путь релоканта: от решения и подготовки документов до переезда и интеграции.",
     icon: "🧳",
   },
   {
@@ -117,7 +118,8 @@ export const KB_SECTIONS: KbSectionMeta[] = [
     id: "lichnyy-opyt",
     slug: "lichnyy-opyt",
     title: "Личный опыт",
-    description: "Живые истории и наблюдения из первых рук.",
+    description:
+      "Личные истории переезда, путешествий и жизни в Аргентине с практическими выводами.",
     icon: "✍️",
   },
 ];

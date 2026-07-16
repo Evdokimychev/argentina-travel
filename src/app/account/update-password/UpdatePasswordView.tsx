@@ -5,7 +5,8 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { SmartInput } from "@/components/ui/smart-input";
+import { validatePassword, validatePasswordConfirmation } from "@/lib/form-validation";
 
 export default function UpdatePasswordView({ recoveryReady }: { recoveryReady: boolean }) {
   const [password, setPassword] = useState("");
@@ -52,8 +53,8 @@ export default function UpdatePasswordView({ recoveryReady }: { recoveryReady: b
         </div>
       ) : recoveryReady ? (
         <form onSubmit={submit} className="mt-6 space-y-4">
-          <div><label htmlFor="new-password" className="mb-2 block text-sm font-medium text-charcoal">Новый пароль</label><Input id="new-password" name="new-password" type="password" autoComplete="new-password" minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} placeholder="Не менее 8 символов" required /></div>
-          <div><label htmlFor="confirm-password" className="mb-2 block text-sm font-medium text-charcoal">Повторите пароль</label><Input id="confirm-password" name="confirm-password" type="password" autoComplete="new-password" minLength={8} value={confirmation} onChange={(event) => setConfirmation(event.target.value)} required /></div>
+          <SmartInput id="new-password" label="Новый пароль" name="new-password" type="password" autoComplete="new-password" minLength={8} value={password} onValueChange={setPassword} validate={validatePassword(8)} hint="Не менее 8 символов" required />
+          <SmartInput id="confirm-password" label="Повторите пароль" name="confirm-password" type="password" autoComplete="new-password" minLength={8} value={confirmation} onValueChange={setConfirmation} validate={validatePasswordConfirmation(password)} required />
           {error ? <InlineFeedback variant="error" title="Не удалось сохранить пароль" description={error} /> : null}
           <Button type="submit" className="w-full" loading={loading} loadingLabel="Сохраняем…">Сохранить пароль</Button>
         </form>

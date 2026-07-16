@@ -109,7 +109,7 @@ export default function OrganizerCreateExternalBookingDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
+      <DialogContent className="overflow-y-auto sm:max-h-[90vh] sm:max-w-lg">
         <DialogTitle className="font-heading text-xl font-bold text-charcoal">
           Внешнее бронирование
         </DialogTitle>

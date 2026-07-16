@@ -43,7 +43,8 @@ describe("Sprint 8 — geography & map", () => {
     const view = readFileSync(join(root, "components/destinations/DestinationDetailView.tsx"), "utf8");
     expect(view).toContain("HubQuickFactsGrid");
     expect(view).toContain("sm:grid-cols-3");
-    expect(view).toContain("min-h-[56vh]");
+    expect(view).toContain("min-h-[52svh]");
+    expect(view).toContain("sm:min-h-[58svh]");
     expect(DESTINATION_PAGES.length).toBe(POPULAR_DESTINATIONS.length);
     expect(DESTINATION_PAGES.length).toBe(8);
   });
@@ -52,7 +53,7 @@ describe("Sprint 8 — geography & map", () => {
     const view = readFileSync(join(root, "components/places/PlaceDetailView.tsx"), "utf8");
     expect(view).toContain("PlaceTransportMapSection");
     expect(view).toContain('variant: "strip"');
-    expect(view).toContain("matchToursForPlace");
+    expect(view).toContain("resolveRelatedToursForPlace");
     const transport = readFileSync(join(root, "components/places/PlaceTransportMapSection.tsx"), "utf8");
     expect(transport).toContain("PlaceDetailMap");
     expect(transport).toContain("buildMapPlaceDeepLink");

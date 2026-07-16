@@ -1,15 +1,150 @@
 {
-  "commitSha": "bf8d81bfcb11fdaf1e5d551bc379d8a098411ffe",
-  "timestamp": "2026-07-14T23:58:31.390Z",
-  "environment": "local-production",
-  "requestedGroup": "production",
-  "status": "failed",
+  "commitSha": "543ead8ac198d8e45e73b840221a460fb43cdb7b",
+  "timestamp": "2026-07-16T03:07:23.598Z",
+  "environment": "preview",
+  "requestedGroup": "all",
+  "status": "passed",
   "checks": [
+    {
+      "id": "static:environment",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 45,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-environment.log",
+      "command": "node scripts/validate-build-mode.mjs"
+    },
+    {
+      "id": "static:secrets",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 2745,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-secrets.log",
+      "command": "node scripts/audit-secrets.mjs"
+    },
+    {
+      "id": "static:typescript",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 4798,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-typescript.log",
+      "command": "npx tsc --noEmit"
+    },
+    {
+      "id": "static:lint",
+      "group": "static",
+      "status": "passed",
+      "durationMs": 3005,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/static-lint.log",
+      "command": "npm run lint"
+    },
+    {
+      "id": "contracts:unit-integration-contracts",
+      "group": "contracts",
+      "status": "passed",
+      "durationMs": 14730,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/contracts-unit-integration-contracts.log",
+      "command": "npm test"
+    },
+    {
+      "id": "contracts:manual-content-sync",
+      "group": "contracts",
+      "status": "passed",
+      "durationMs": 211,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/contracts-manual-content-sync.log",
+      "command": "npm run sync-manual-posts:check"
+    },
+    {
+      "id": "contracts:rich-content-sync",
+      "group": "contracts",
+      "status": "passed",
+      "durationMs": 233,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/contracts-rich-content-sync.log",
+      "command": "npm run sync-rich-articles:check"
+    },
+    {
+      "id": "contracts:redirect-contracts",
+      "group": "contracts",
+      "status": "passed",
+      "durationMs": 312,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/contracts-redirect-contracts.log",
+      "command": "npm run sync-content-plan-redirects:check"
+    },
+    {
+      "id": "content:content-lint",
+      "group": "content",
+      "status": "passed",
+      "durationMs": 231,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/content-content-lint.log",
+      "command": "npm run content:audit"
+    },
+    {
+      "id": "content:seo-live-baseline",
+      "group": "content",
+      "status": "failed",
+      "durationMs": 147312,
+      "blocking": false,
+      "artifact": "var/ops/release-gate-logs/content-seo-live-baseline.log",
+      "command": "npm run seo-audit"
+    },
+    {
+      "id": "content:media",
+      "group": "content",
+      "status": "passed",
+      "durationMs": 269,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/content-media.log",
+      "command": "npm run media:integrity"
+    },
+    {
+      "id": "security:rls",
+      "group": "security",
+      "status": "passed",
+      "durationMs": 196,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/security-rls.log",
+      "command": "npm run rls-audit"
+    },
+    {
+      "id": "security:auth-readiness",
+      "group": "security",
+      "status": "passed",
+      "durationMs": 178,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/security-auth-readiness.log",
+      "command": "npm run auth:readiness"
+    },
+    {
+      "id": "commerce:booking-payment-integrity",
+      "group": "commerce",
+      "status": "passed",
+      "durationMs": 3086,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/commerce-booking-payment-integrity.log",
+      "command": "npx vitest run src/lib/booking-create-command-integrity.test.ts src/lib/booking-cancellation-integrity.test.ts src/lib/booking-pricing.test.ts src/lib/booking-state-machine.test.ts src/lib/payments/payment-integrity.test.ts src/lib/payments/webhook-handler.test.ts src/lib/database-url.test.ts"
+    },
+    {
+      "id": "journeys:playwright-critical",
+      "group": "journeys",
+      "status": "passed",
+      "durationMs": 101435,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/journeys-playwright-critical.log",
+      "command": "npm run test:e2e:smoke"
+    },
     {
       "id": "production:production-build",
       "group": "production",
       "status": "passed",
-      "durationMs": 155285,
+      "durationMs": 119883,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/production-production-build.log",
       "command": "npm run build"
@@ -17,8 +152,8 @@
     {
       "id": "production:production-isolation",
       "group": "production",
-      "status": "failed",
-      "durationMs": 586,
+      "status": "passed",
+      "durationMs": 340,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/production-production-isolation.log",
       "command": "node scripts/scan-production-artifacts.mjs"

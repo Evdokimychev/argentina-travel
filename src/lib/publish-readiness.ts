@@ -1,5 +1,6 @@
 import type { OrganizerTourDraft } from "@/types/organizer-tour";
 import { isValidCustomBookingUrl } from "@/lib/tour-custom-booking-link";
+import { ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE } from "@/data/tour-photos-defaults";
 
 export type PublishReadinessSeverity = "blocking" | "warning";
 
@@ -37,11 +38,12 @@ function hasDescription(draft: OrganizerTourDraft): boolean {
 
 export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishReadinessResult {
   const issues: PublishReadinessIssue[] = [];
+  const productGenitive = draft.type === "excursion" ? "экскурсии" : "тура";
 
   if (!draft.title.trim()) {
     issues.push({
       id: "title",
-      label: "Укажите название тура",
+      label: `Укажите название ${productGenitive}`,
       severity: "blocking",
       tabId: "main",
     });
@@ -66,7 +68,7 @@ export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishRead
   } else if (draft.priceUsd <= 0) {
     issues.push({
       id: "price",
-      label: "Укажите цену тура (больше 0) или включите режим «Цена по запросу»",
+      label: `Укажите цену ${productGenitive} (больше 0) или включите режим «Цена по запросу»`,
       severity: "blocking",
       tabId: "conditions",
     });
@@ -81,11 +83,15 @@ export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishRead
     });
   }
 
-  const images = draft.gallery.filter(Boolean);
-  if (images.length === 0 && !draft.image.trim()) {
+  const images = draft.gallery.filter(
+    (image) => Boolean(image) && image !== ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE
+  );
+  const hasCustomCover =
+    Boolean(draft.image.trim()) && draft.image !== ORGANIZER_PRODUCT_PLACEHOLDER_IMAGE;
+  if (images.length === 0 && !hasCustomCover) {
     issues.push({
       id: "images",
-      label: "Загрузите хотя бы одно фото тура",
+      label: `Загрузите хотя бы одно фото ${productGenitive}`,
       severity: "blocking",
       tabId: "main",
     });
@@ -112,7 +118,10 @@ export function evaluatePublishReadiness(draft: OrganizerTourDraft): PublishRead
   if (!hasScheduleOrOnRequest(draft)) {
     issues.push({
       id: "dates",
-      label: "Добавьте даты группового тура или включите бронирование по запросу",
+      label:
+        draft.type === "excursion"
+          ? "Добавьте даты экскурсии или включите бронирование по запросу"
+          : "Добавьте даты группового тура или включите бронирование по запросу",
       severity: "blocking",
       tabId: "conditions",
     });

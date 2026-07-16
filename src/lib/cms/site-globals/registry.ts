@@ -6,6 +6,7 @@ export type SiteGlobalFieldType =
   | "url"
   | "textarea"
   | "checkbox"
+  | "select"
   | "color"
   | "media";
 
@@ -16,6 +17,7 @@ export type SiteGlobalFieldDef = {
   placeholder?: string;
   hint?: string;
   required?: boolean;
+  options?: ReadonlyArray<{ label: string; value: string }>;
   /** When true, field supports RU base + locales.en/es overrides. */
   translatable?: boolean;
 };
@@ -56,7 +58,12 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         type: "media",
         hint: "Изображение по умолчанию для Open Graph",
       },
-      { name: "themeColor", label: "Theme color", type: "color" },
+      {
+        name: "themeColor",
+        label: "Цвет интерфейса браузера",
+        type: "color",
+        hint: "Используется в метаданных и оформлении браузера. Палитра сайта выбирается в разделе «Дизайн».",
+      },
       {
         name: "faviconUrl",
         label: "Favicon",
@@ -69,6 +76,57 @@ export const SITE_GLOBAL_DEFINITIONS: SiteGlobalDefinition[] = [
         type: "media",
         hint: "Иконка для «Добавить на экран»",
       },
+    ],
+  },
+  {
+    key: "site.design",
+    label: "Дизайн",
+    description: "Предустановленная палитра, типографика и состав глобальных элементов сайта",
+    fields: [
+      {
+        name: "palettePreset",
+        label: "Палитра сайта",
+        type: "select",
+        options: [
+          { label: "Аргентина", value: "argentina" },
+          { label: "Патагония", value: "patagonia" },
+          { label: "Вино", value: "wine" },
+        ],
+        hint: "Только проверенные палитры дизайн-системы; произвольный HEX здесь не используется.",
+      },
+      {
+        name: "headingFont",
+        label: "Шрифт заголовков",
+        type: "select",
+        options: [
+          { label: "Unbounded", value: "unbounded" },
+          { label: "Антиква", value: "serif" },
+          { label: "Системный", value: "system" },
+        ],
+      },
+      {
+        name: "headerVariant",
+        label: "Вариант шапки",
+        type: "select",
+        options: [
+          { label: "Воздушная", value: "floating" },
+          { label: "Компактная", value: "compact" },
+        ],
+      },
+      {
+        name: "footerVariant",
+        label: "Вариант футера",
+        type: "select",
+        options: [
+          { label: "Светлый", value: "light" },
+          { label: "Дымка", value: "mist" },
+        ],
+      },
+      { name: "showUtilityBar", label: "Показывать служебную панель", type: "checkbox" },
+      { name: "showHeaderMapButton", label: "Показывать кнопку карты в шапке", type: "checkbox" },
+      { name: "showThemeToggle", label: "Показывать переключатель темы", type: "checkbox" },
+      { name: "showFooterNewsletter", label: "Показывать подписку в футере", type: "checkbox" },
+      { name: "showFooterRouteCta", label: "Показывать CTA маршрута в футере", type: "checkbox" },
     ],
   },
   {
@@ -242,6 +300,7 @@ export const SITE_CONTENT_GLOBAL_KEYS = [
   "site.seo",
   "site.contact",
   "site.navigation",
+  "site.design",
 ] as const satisfies readonly SiteGlobalKey[];
 
 export const SITE_OPS_GLOBAL_KEYS = ["site.legal", "site.features"] as const satisfies readonly SiteGlobalKey[];

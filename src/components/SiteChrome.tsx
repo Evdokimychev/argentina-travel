@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import SkipToContentLink from "@/components/SkipToContentLink";
 import type { SiteFooterInfo } from "@/lib/site-footer-info";
-import type { SiteNavigationGlobal } from "@/types/site-globals";
+import type { SiteDesignGlobal, SiteNavigationGlobal } from "@/types/site-globals";
 import { isWorkspacePath } from "@/lib/internal-route-access";
 
 export type { SiteFooterInfo };
@@ -19,11 +19,13 @@ export default function SiteChrome({
   /** @deprecated Pass siteFooter instead */
   siteLegal,
   siteNavigation,
+  siteDesign,
 }: {
   children: React.ReactNode;
   siteFooter?: SiteFooterInfo;
   siteLegal?: SiteFooterInfo;
   siteNavigation?: SiteNavigationGlobal;
+  siteDesign?: SiteDesignGlobal;
 }) {
   const pathname = usePathname();
   const isEmbed = pathname?.startsWith("/embed");
@@ -49,12 +51,12 @@ export default function SiteChrome({
   return (
     <>
       <SkipToContentLink />
-      <Header navigation={siteNavigation} />
+      <Header navigation={siteNavigation} design={siteDesign} />
       <div className="site-header-spacer shrink-0" aria-hidden="true" />
       <main id="main-content" className="relative z-0 flex-1 bg-surface-elevated" tabIndex={-1}>
         {children}
       </main>
-      <Footer siteFooter={footerInfo} />
+      <Footer siteFooter={footerInfo} design={siteDesign} />
     </>
   );
 }

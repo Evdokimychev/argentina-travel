@@ -1,0 +1,7 @@
+area,entity,status,before,after,evidence,remaining_risk
+knowledge-base,all 689 source entries,preserved,existing content tree,unchanged by code fixes,content/knowledge-base,145 orphan entries remain in latest validation report
+blog,best-time-to-visit-argentina,preserved,19 sections,19 sections,read-only CMS comparison,no new editorial review in this pass
+blog,blue-dollar-argentina-2026,needs-review,16 sections,content preserved,read-only CMS comparison,dynamic financial claims need visible sources and review date
+places,ratings,fixed,manual values shown as reviews,ratings hidden from public UI,PlaceCard and PlaceDetailView,source model still needs ratingSource reviewCount updatedAt
+map,supplementary cities,fixed,7 dead KB links,CTA omitted when entry absent,map-supplementary-cities.ts,browser regression pending
+localization,EN and ES,blocked,fallback pages mixed with sitemap,no code change yet,sitemap-locales.ts,publication-aware locale registry required

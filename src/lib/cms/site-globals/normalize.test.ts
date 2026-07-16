@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   DEFAULT_SITE_BRANDING,
   DEFAULT_SITE_CONTACT,
+  DEFAULT_SITE_DESIGN,
   DEFAULT_SITE_FEATURES,
   DEFAULT_SITE_LEGAL_LOCALES,
   DEFAULT_SITE_MAINTENANCE,
@@ -9,6 +10,7 @@ import {
   DEFAULT_SITE_SEO,
   normalizeSiteBranding,
   normalizeSiteContact,
+  normalizeSiteDesign,
   normalizeSiteFeatures,
   normalizeSiteLegal,
   normalizeSiteMaintenance,
@@ -165,6 +167,64 @@ describe("normalizeSiteNavigation", () => {
   it("rejects unsafe utility links", () => {
     expect(normalizeSiteNavigation({ utilityContactUrl: "javascript:alert(1)" }).utilityContactUrl)
       .toBe(DEFAULT_SITE_NAVIGATION.utilityContactUrl);
+  });
+});
+
+describe("normalizeSiteDesign", () => {
+  it("uses defaults for invalid input", () => {
+    expect(normalizeSiteDesign(undefined)).toEqual(DEFAULT_SITE_DESIGN);
+    expect(normalizeSiteDesign([])).toEqual(DEFAULT_SITE_DESIGN);
+    expect(DEFAULT_SITE_DESIGN.showUtilityBar).toBe(false);
+  });
+
+  it("accepts only supported presets and variants", () => {
+    expect(
+      normalizeSiteDesign({
+        palettePreset: "wine",
+        headingFont: "serif",
+        headerVariant: "compact",
+        footerVariant: "mist",
+      }),
+    ).toMatchObject({
+      palettePreset: "wine",
+      headingFont: "serif",
+      headerVariant: "compact",
+      footerVariant: "mist",
+    });
+
+    expect(
+      normalizeSiteDesign({
+        palettePreset: "custom",
+        headingFont: "comic-sans",
+        headerVariant: "full-screen",
+        footerVariant: "dark",
+      }),
+    ).toMatchObject({
+      palettePreset: DEFAULT_SITE_DESIGN.palettePreset,
+      headingFont: DEFAULT_SITE_DESIGN.headingFont,
+      headerVariant: DEFAULT_SITE_DESIGN.headerVariant,
+      footerVariant: DEFAULT_SITE_DESIGN.footerVariant,
+    });
+  });
+
+  it("keeps explicit booleans and drops unknown fields", () => {
+    expect(
+      normalizeSiteDesign({
+        showUtilityBar: false,
+        showHeaderMapButton: false,
+        showThemeToggle: false,
+        showFooterNewsletter: false,
+        showFooterRouteCta: false,
+        unknownCssColor: "#ff00ff",
+      }),
+    ).toEqual({
+      ...DEFAULT_SITE_DESIGN,
+      showUtilityBar: false,
+      showHeaderMapButton: false,
+      showThemeToggle: false,
+      showFooterNewsletter: false,
+      showFooterRouteCta: false,
+    });
   });
 });
 

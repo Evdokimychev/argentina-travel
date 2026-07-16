@@ -50,7 +50,7 @@ export default function VisualPageBuilder({
   const [mediaTarget, setMediaTarget] = useState<{
     sectionIndex: number;
     blockIndex: number;
-    kind: "media" | "gallery";
+    kind: "media" | "gallery" | "image-text" | "author-card";
   } | null>(null);
 
   function updateSection(index: number, patch: Partial<VisualPageBuilderSection>) {
@@ -69,6 +69,18 @@ export default function VisualPageBuilder({
     updateSection(sectionIndex, patch);
   }
 
+  function addPattern(sectionIndex: number, patternBlocks: BlogBodyBlock[]) {
+    const section = sections[sectionIndex];
+    const blocks = [...(section.blocks ?? []), ...patternBlocks];
+    const suggested = patternBlocks
+      .map((block) => PAGE_BUILDER_BLOCK_BY_SLUG[block.type].suggestedSectionKind)
+      .find(Boolean);
+    updateSection(sectionIndex, {
+      blocks,
+      ...(!section.blockType && suggested ? { blockType: suggested } : {}),
+    });
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2">
@@ -83,8 +95,8 @@ export default function VisualPageBuilder({
       </div>
 
       <p className="text-xs text-slate">
-        Перетаскивайте блоки за ручку слева. Добавляйте блоки через «+» — без кода, как в Payload
-        layout builder.
+        Перетаскивайте блоки за ручку слева. Через «+» можно добавить отдельный блок или готовую
+        секцию из библиотеки — без кода.
       </p>
 
       {sections.length === 0 ? (
@@ -141,7 +153,14 @@ export default function VisualPageBuilder({
                 setMediaTarget({
                   sectionIndex,
                   blockIndex,
-                  kind: block?.type === "gallery" ? "gallery" : "media",
+                  kind:
+                    block?.type === "gallery"
+                      ? "gallery"
+                      : block?.type === "image-text"
+                        ? "image-text"
+                        : block?.type === "author-card"
+                          ? "author-card"
+                          : "media",
                 });
               }}
             />
@@ -176,6 +195,9 @@ export default function VisualPageBuilder({
         onSelect={(slug) => {
           if (pickerSectionIndex !== null) addBlock(pickerSectionIndex, slug);
         }}
+        onSelectPattern={(blocks) => {
+          if (pickerSectionIndex !== null) addPattern(pickerSectionIndex, blocks);
+        }}
       />
 
       <CmsMediaPickerDialog
@@ -201,6 +223,14 @@ export default function VisualPageBuilder({
             }
             const blocks = [...(section.blocks ?? [])];
             blocks[mediaTarget.blockIndex] = { ...block, items };
+            updateSection(mediaTarget.sectionIndex, { blocks });
+          } else if (block.type === "image-text") {
+            const blocks = [...(section.blocks ?? [])];
+            blocks[mediaTarget.blockIndex] = { ...block, src };
+            updateSection(mediaTarget.sectionIndex, { blocks });
+          } else if (block.type === "author-card") {
+            const blocks = [...(section.blocks ?? [])];
+            blocks[mediaTarget.blockIndex] = { ...block, avatarSrc: src };
             updateSection(mediaTarget.sectionIndex, { blocks });
           }
         }}

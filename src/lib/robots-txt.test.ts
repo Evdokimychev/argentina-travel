@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { buildRobotsTxtBody, YANDEX_CLEAN_PARAMS } from "@/lib/robots-txt";
+import {
+  buildRobotsTxtBody,
+  isCanonicalIndexingRequest,
+  YANDEX_CLEAN_PARAMS,
+} from "@/lib/robots-txt";
 
 describe("robots-txt", () => {
   it("blocks entire site when indexing disabled", () => {
@@ -17,5 +21,25 @@ describe("robots-txt", () => {
     expect(body).toContain("Sitemap: https://www.goargentina.ru/sitemap.xml");
     expect(body).toContain("utm_source");
     expect(body).toContain("gclid");
+  });
+
+  it("allows indexing only on the canonical production host", () => {
+    expect(
+      isCanonicalIndexingRequest("https://www.goargentina.ru/tours", {
+        NODE_ENV: "production",
+        VERCEL_ENV: "production",
+      }),
+    ).toBe(true);
+    expect(
+      isCanonicalIndexingRequest("https://argentina-travel-git-seo.vercel.app/tours", {
+        NODE_ENV: "production",
+        VERCEL_ENV: "preview",
+      }),
+    ).toBe(false);
+    expect(
+      isCanonicalIndexingRequest("http://localhost:3000/tours", {
+        NODE_ENV: "production",
+      }),
+    ).toBe(false);
   });
 });

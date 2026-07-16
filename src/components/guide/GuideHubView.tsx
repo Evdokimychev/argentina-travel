@@ -81,6 +81,7 @@ export default function GuideHubView() {
         title={heroTitle}
         subtitle={heroSubtitle}
         image={hub.heroImage}
+        theme="highland"
         eyebrow={{ label: t("guide.hub.hero.eyebrow") }}
         ctas={hub.heroCtas}
       />

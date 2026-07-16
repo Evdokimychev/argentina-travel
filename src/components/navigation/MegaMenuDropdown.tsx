@@ -16,6 +16,7 @@ type MegaMenuDropdownProps = {
   onMouseEnter?: (event: MouseEvent) => void;
   onMouseLeave?: (event: MouseEvent) => void;
   children: ReactNode;
+  panelId?: string;
 };
 
 export function MegaMenuDropdown({
@@ -26,6 +27,7 @@ export function MegaMenuDropdown({
   onMouseEnter,
   onMouseLeave,
   children,
+  panelId,
 }: MegaMenuDropdownProps) {
   const internalPanelRef = useRef<HTMLDivElement>(null);
   const panelRef = panelRefProp ?? internalPanelRef;
@@ -37,6 +39,7 @@ export function MegaMenuDropdown({
   return createPortal(
     <div
       ref={panelRef}
+      id={panelId}
       className={cn(
         "fixed z-mega-menu",
         widthClass,

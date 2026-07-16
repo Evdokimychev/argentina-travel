@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { NativeSelect } from "@/components/ui/native-select";
 import CmsMediaPathField from "@/components/admin/CmsMediaPathField";
 import { cabinetCardClass } from "@/lib/cabinet-ui";
 import type { SiteGlobalDefinition, SiteGlobalFieldDef } from "@/lib/cms/site-globals/registry";
@@ -87,16 +88,57 @@ export default function SiteGlobalForm({
 
   function renderField(field: SiteGlobalFieldDef) {
     const value = readLocaleValue(values, localeTab, field.name);
+    const fieldId = `site-global-${definition.key}-${localeTab}-${field.name}`.replaceAll(".", "-");
+    const hintId = field.hint ? `${fieldId}-hint` : undefined;
 
     if (field.type === "checkbox") {
       return (
-        <label key={`${localeTab}-${field.name}`} className="flex items-center gap-2 text-sm sm:col-span-2">
+        <label
+          key={`${localeTab}-${field.name}`}
+          htmlFor={fieldId}
+          className="flex min-h-11 cursor-pointer items-center gap-3 rounded-xl border border-border-subtle bg-surface-elevated px-3 py-2 text-sm transition-colors hover:border-sky/30 hover:bg-sky/[0.04] sm:col-span-2"
+        >
           <input
+            id={fieldId}
             type="checkbox"
             checked={value === true}
             onChange={(e) => updateField(field, e.target.checked)}
+            aria-describedby={hintId}
+            className="h-5 w-5 shrink-0 cursor-pointer rounded border-border-subtle accent-sky-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
           />
-          {field.label}
+          <span className="min-w-0">
+            <span className="block font-medium text-foreground">{field.label}</span>
+            {field.hint ? (
+              <span id={hintId} className="mt-0.5 block text-xs leading-relaxed text-muted">
+                {field.hint}
+              </span>
+            ) : null}
+          </span>
+        </label>
+      );
+    }
+
+    if (field.type === "select") {
+      const options = field.options ?? [];
+
+      return (
+        <label key={`${localeTab}-${field.name}`} htmlFor={fieldId} className="block text-sm">
+          <span className="text-slate">{field.label}</span>
+          {field.hint ? (
+            <span id={hintId} className="ml-2 text-xs text-slate">{field.hint}</span>
+          ) : null}
+          <NativeSelect
+            id={fieldId}
+            className="mt-1"
+            value={typeof value === "string" ? value : ""}
+            onChange={(event) => updateField(field, event.target.value)}
+            aria-describedby={hintId}
+            required={field.required}
+          >
+            {options.map((option) => (
+              <option key={option.value} value={option.value}>{option.label}</option>
+            ))}
+          </NativeSelect>
         </label>
       );
     }
@@ -162,9 +204,9 @@ export default function SiteGlobalForm({
               key={tab}
               type="button"
               onClick={() => setLocaleTab(tab)}
-              className={`rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+              className={`inline-flex min-h-11 items-center justify-center rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                 localeTab === tab
-                  ? "bg-sky text-white"
+                  ? "bg-sky-ink text-white"
                   : "bg-surface-elevated text-charcoal hover:bg-sky/10"
               }`}
             >

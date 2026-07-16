@@ -1,7 +1,7 @@
 ---
 id: parque-nacional-monte-leon
 type: national_park
-title: национальный парк Monte León
+title: Национальный парк Монте-Леон
 title_es: Parque Nacional Monte León
 title_en: Monte León National Park
 summary: "Монте-Леон в Санта-Крусе — первый морской национальный парк Аргентины с колониями пингвинов на атлантическом берегу."

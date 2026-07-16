@@ -14,6 +14,7 @@ import TourProgramDayActivitiesEditor from "@/components/organizer/TourProgramDa
 import { formatDays } from "@/lib/pluralize";
 
 interface TourProgramDayEditorProps {
+  productId: string;
   day: OrganizerProgramDay;
   index: number;
   total: number;
@@ -31,6 +32,7 @@ interface TourProgramDayEditorProps {
 }
 
 export default function TourProgramDayEditor({
+  productId,
   day,
   index,
   total,
@@ -105,6 +107,7 @@ export default function TourProgramDayEditor({
       </div>
 
       <OrganizerPhotoUpload
+        productId={productId}
         inputId={`program-day-photos-${day.id}`}
         images={day.images}
         onChange={(images) => onChange({ ...day, images })}

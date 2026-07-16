@@ -1,7 +1,7 @@
 ---
 id: almacenes-de-ramos-generales-en-la-pampa
 type: attraction
-title: Общие букетные магазины в Ла-Пампа
+title: Старинные универсальные магазины Ла-Пампы
 title_es: Almacenes de ramos generales en La Pampa
 title_en: Old general stores in La Pampa
 summary: Подойдите поближе к многовековым складам, которые были центром торговой и

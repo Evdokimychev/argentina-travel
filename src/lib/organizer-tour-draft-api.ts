@@ -4,11 +4,20 @@ import type { Tour } from "@/types/tour";
 interface DraftSnapshotResponse {
   updatedAt: string | null;
   tour: Tour | null;
+  draft: OrganizerTourDraft | null;
+  moderationStatus?: OrganizerTourDraft["moderationStatus"];
+  moderationNotes?: string | null;
 }
 
 interface DraftPatchResponse {
   ok: true;
   updatedAt: string | null;
+  moderationStatus?: OrganizerTourDraft["moderationStatus"];
+  moderationNotes?: string | null;
+}
+
+interface DraftListResponse {
+  drafts: OrganizerTourDraft[];
 }
 
 interface ApiErrorPayload {
@@ -68,4 +77,24 @@ export async function patchOrganizerTourDraftRemote(input: {
   }
 
   return readJson<DraftPatchResponse>(response);
+}
+
+export async function fetchOrganizerTourDraftsRemote(): Promise<OrganizerTourDraft[]> {
+  const result = await readJson<DraftListResponse>(
+    await fetch("/api/organizer/tours", {
+      method: "GET",
+      credentials: "same-origin",
+      cache: "no-store",
+    })
+  );
+  return result.drafts;
+}
+
+export async function deleteOrganizerTourRemote(tourId: string): Promise<void> {
+  await readJson<{ ok: true }>(
+    await fetch(`/api/organizer/tours/${encodeURIComponent(tourId)}/draft`, {
+      method: "DELETE",
+      credentials: "same-origin",
+    })
+  );
 }

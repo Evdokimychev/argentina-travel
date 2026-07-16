@@ -23,6 +23,20 @@ export type PrivacyDeleteProcessSummary = {
   failedIds: string[];
 };
 
+const PERSONAL_ROWS_TO_DELETE = [
+  ["user_favorites", "user_id"],
+  ["push_subscriptions", "user_id"],
+  ["user_interactions", "user_id"],
+  ["notification_preferences", "user_id"],
+  ["notification_events", "user_id"],
+  ["blog_reading_history", "user_id"],
+  ["organizer_inbox_reads", "user_id"],
+  ["trip_prep_progress", "user_id"],
+  ["group_trip_members", "user_id"],
+  ["ai_match_sessions", "user_id"],
+  ["expert_inquiries", "user_id"],
+] as const;
+
 function asObject(value: Json | null): Record<string, unknown> {
   if (!value || typeof value !== "object" || Array.isArray(value)) return {};
   return value as Record<string, unknown>;
@@ -107,12 +121,172 @@ async function anonymizeBookings(
       })
       .eq("id", booking.id);
 
-    if (!error) {
-      updatedCount += 1;
-    }
+    if (error) throw new Error(`bookings:${booking.id}: ${error.message}`);
+    updatedCount += 1;
   }
 
   return updatedCount;
+}
+
+async function deletePersonalRows(supabase: DbClient, userId: string): Promise<number> {
+  let deleted = 0;
+  for (const [tableName, column] of PERSONAL_ROWS_TO_DELETE) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
+      .from(tableName)
+      .delete()
+      .eq(column, userId)
+      .select("*");
+    if (error) throw new Error(`${tableName}: ${error.message}`);
+    deleted += Array.isArray(data) ? data.length : 0;
+  }
+
+  // Conversation messages cascade with their user-participating thread.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: threads, error: threadError } = await (supabase as any)
+    .from("conversation_threads")
+    .delete()
+    .or(`tourist_user_id.eq.${userId},organizer_user_id.eq.${userId}`)
+    .select("id");
+  if (threadError) throw new Error(`conversation_threads: ${threadError.message}`);
+  deleted += Array.isArray(threads) ? threads.length : 0;
+
+  return deleted;
+}
+
+async function linkedRowIds(
+  supabase: DbClient,
+  tableName: string,
+  userId: string,
+  originalEmail: string | null,
+  emailColumn = "customer_email",
+): Promise<string[]> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const table = (supabase as any).from(tableName);
+  const byUser = await table.select("id").eq("user_id", userId);
+  if (byUser.error) throw new Error(`${tableName}: ${byUser.error.message}`);
+  const byEmail = originalEmail
+    ? await table.select("id").ilike(emailColumn, originalEmail)
+    : { data: [] as Array<{ id: string }>, error: null };
+  if (byEmail.error) throw new Error(`${tableName}: ${byEmail.error.message}`);
+
+  return [
+    ...new Set(
+      [...(byUser.data ?? []), ...(byEmail.data ?? [])]
+        .map((row: { id?: string }) => row.id)
+        .filter((id: string | undefined): id is string => Boolean(id)),
+    ),
+  ];
+}
+
+async function anonymizePartnerBookingRows(
+  supabase: DbClient,
+  userId: string,
+  originalEmail: string | null,
+): Promise<number> {
+  let updated = 0;
+  for (const tableName of ["tripster_booking_requests", "youtravel_booking_requests"] as const) {
+    const ids = await linkedRowIds(supabase, tableName, userId, originalEmail);
+    for (const id of ids) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error } = await (supabase as any)
+        .from(tableName)
+        .update({
+          user_id: null,
+          customer_name: "Удалённый пользователь",
+          customer_email: `deleted+${id}@example.invalid`,
+          customer_phone: "",
+          ...(tableName === "tripster_booking_requests"
+            ? { message_to_guide: null }
+            : { message: null }),
+        })
+        .eq("id", id);
+      if (error) throw new Error(`${tableName}:${id}: ${error.message}`);
+      updated += 1;
+    }
+  }
+  return updated;
+}
+
+async function anonymizeOtherCommerceRows(
+  supabase: DbClient,
+  userId: string,
+  originalEmail: string | null,
+): Promise<number> {
+  let updated = 0;
+  const shopOrderIds = await linkedRowIds(supabase, "shop_orders", userId, originalEmail);
+  for (const id of shopOrderIds) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any)
+      .from("shop_orders")
+      .update({
+        user_id: null,
+        guest_email: null,
+        customer_name: "Удалённый пользователь",
+        customer_email: `deleted+${id}@example.invalid`,
+        customer_phone: "",
+        notes: null,
+      })
+      .eq("id", id);
+    if (error) throw new Error(`shop_orders:${id}: ${error.message}`);
+    updated += 1;
+  }
+
+  const waitlistIds = await linkedRowIds(
+    supabase,
+    "tour_waitlist_entries",
+    userId,
+    originalEmail,
+    "email",
+  );
+  for (const id of waitlistIds) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { error } = await (supabase as any)
+      .from("tour_waitlist_entries")
+      .update({
+        user_id: null,
+        email: `deleted+${id}@example.invalid`,
+        contact_name: "Удалённый пользователь",
+        contact_phone: null,
+        note: null,
+      })
+      .eq("id", id);
+    if (error) throw new Error(`tour_waitlist_entries:${id}: ${error.message}`);
+    updated += 1;
+  }
+  return updated;
+}
+
+async function deleteRowsLinkedByEmail(
+  supabase: DbClient,
+  originalEmail: string | null,
+): Promise<number> {
+  if (!originalEmail) return 0;
+  let deleted = 0;
+  for (const [tableName, emailColumn] of [
+    ["newsletter_subscribers", "email"],
+    ["contact_submissions", "email"],
+  ] as const) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any)
+      .from(tableName)
+      .delete()
+      .ilike(emailColumn, originalEmail)
+      .select("id");
+    if (error) throw new Error(`${tableName}: ${error.message}`);
+    deleted += Array.isArray(data) ? data.length : 0;
+  }
+
+  // Remove prior queued/delivered messages addressed to the account.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data: emails, error: emailError } = await (supabase as any)
+    .from("email_delivery_outbox")
+    .delete()
+    .contains("recipients", [originalEmail.trim().toLowerCase()])
+    .select("id");
+  if (emailError) throw new Error(`email_delivery_outbox: ${emailError.message}`);
+  deleted += Array.isArray(emails) ? emails.length : 0;
+  return deleted;
 }
 
 function mergeMetadata(
@@ -130,6 +304,8 @@ export function completedDeleteMetadata(input: {
   completedAt: string;
   bookingsAnonymized: number;
   sessionsRevoked: number;
+  relatedRowsDeleted: number;
+  commerceRowsAnonymized: number;
 }): Database["public"]["Tables"]["privacy_requests"]["Update"]["metadata"] {
   return { ...input } as Json;
 }
@@ -216,6 +392,20 @@ async function processDeleteRequest(
       originalEmail,
       completedAt
     );
+    const personalRowsDeleted = await deletePersonalRows(supabase, request.user_id);
+    const emailRowsDeleted = await deleteRowsLinkedByEmail(supabase, originalEmail);
+    const relatedRowsDeleted = personalRowsDeleted + emailRowsDeleted;
+    const partnerRequestsAnonymized = await anonymizePartnerBookingRows(
+      supabase,
+      request.user_id,
+      originalEmail,
+    );
+    const otherCommerceRowsAnonymized = await anonymizeOtherCommerceRows(
+      supabase,
+      request.user_id,
+      originalEmail,
+    );
+    const commerceRowsAnonymized = partnerRequestsAnonymized + otherCommerceRowsAnonymized;
 
     const { error: completeError } = await supabase
       .from("privacy_requests")
@@ -228,6 +418,8 @@ async function processDeleteRequest(
           completedAt,
           bookingsAnonymized,
           sessionsRevoked: revokeResult.revokedCount,
+          relatedRowsDeleted,
+          commerceRowsAnonymized,
         }),
       })
       .eq("id", request.id);

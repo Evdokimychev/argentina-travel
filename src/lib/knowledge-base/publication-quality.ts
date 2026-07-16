@@ -16,13 +16,15 @@ export type PublicationIssue =
   | "non_russian_title"
   | "non_russian_summary"
   | "placeholder_content"
-  | "missing_sensitive_source";
+  | "missing_sensitive_source"
+  | "thin_content"
+  | "missing_hero";
 
 export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   const issues: PublicationIssue[] = [];
   const title = entry.title ?? "";
   const summary = entry.summary ?? "";
-  const visibleText = `${title} ${summary}`;
+  const visibleText = `${title} ${summary} ${entry.body ?? ""}`;
   const titleScripts = scriptCounts(title);
   const summaryScripts = scriptCounts(summary);
 
@@ -35,6 +37,20 @@ export function getPublicationIssues(entry: KbEntry): PublicationIssue[] {
   if (PLACEHOLDER_RE.test(visibleText)) issues.push("placeholder_content");
   if (entry.editorial?.sensitive && entry.editorial.missing_sources) {
     issues.push("missing_sensitive_source");
+  }
+  if (
+    entry.status === "published" &&
+    typeof entry.editorial?.word_count === "number" &&
+    entry.editorial.word_count < 120
+  ) {
+    issues.push("thin_content");
+  }
+  if (
+    entry.site_ready === true &&
+    !entry.media?.hero &&
+    ["city", "national_park", "attraction", "region", "route"].includes(entry.type)
+  ) {
+    issues.push("missing_hero");
   }
 
   return [...new Set(issues)];

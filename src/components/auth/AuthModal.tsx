@@ -370,8 +370,8 @@ export default function AuthModal() {
     }
 
     const nextPassword = resolvePasswordInput(password);
-    if (nextPassword.length < 6) {
-      setError("Пароль должен содержать не менее 6 символов");
+    if (nextPassword.length < 8) {
+      setError("Пароль должен содержать не менее 8 символов");
       return;
     }
     if (nextPassword !== passwordConfirmation) {
@@ -693,7 +693,9 @@ export default function AuthModal() {
                 name="new-password"
                 type="password"
                 autoComplete="new-password"
-                placeholder="Придумайте пароль"
+                placeholder="Не менее 8 символов"
+                minLength={8}
+                required
                 value={password}
                 onChange={(event) => {
                   setPassword(event.target.value);
@@ -710,6 +712,8 @@ export default function AuthModal() {
                 name="new-password-confirmation"
                 type="password"
                 autoComplete="new-password"
+                minLength={8}
+                required
                 value={passwordConfirmation}
                 onChange={(event) => {
                   setPasswordConfirmation(event.target.value);
@@ -1271,7 +1275,8 @@ export default function AuthModal() {
                       name="new-password"
                       type={showPassword ? "text" : "password"}
                       autoComplete="new-password"
-                      placeholder="Не менее 6 символов"
+                      placeholder="Не менее 8 символов"
+                      minLength={8}
                       value={password}
                       onChange={(event) => {
                         setPassword(event.target.value);
@@ -1302,6 +1307,8 @@ export default function AuthModal() {
                     name="new-password-confirmation"
                     type="password"
                     autoComplete="new-password"
+                    minLength={8}
+                    required
                     value={passwordConfirmation}
                     onChange={(event) => {
                       setPasswordConfirmation(event.target.value);

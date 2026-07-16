@@ -1,7 +1,7 @@
 ---
 id: trekking-en-bosques-y-lagos
 type: attraction
-title: Trekking in forests and lakes
+title: Треккинг среди лесов и озёр Патагонии
 title_es: Trekking en bosques y lagos
 title_en: Trekking in forests and lakes
 summary: "Треккинг среди лесов и озёр андской Патагонии — от лёгких прогулок до серьёзных маршрутов."

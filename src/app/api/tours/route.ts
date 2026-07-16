@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
-import { fetchPublishedListings } from "@/lib/tour-content-server";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { fetchPublishedListingsServer } from "@/lib/tour-content-server";
 
 export async function GET() {
   if (!isSupabaseToursEnabled()) {
@@ -9,8 +8,7 @@ export async function GET() {
   }
 
   try {
-    const supabase = await createSupabaseServerClient();
-    const tours = await fetchPublishedListings(supabase);
+    const tours = await fetchPublishedListingsServer();
     return NextResponse.json({ tours });
   } catch (error) {
     return NextResponse.json(

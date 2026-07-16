@@ -18,6 +18,7 @@ import RouteProgressBar from "@/components/feedback/RouteProgressBar";
 import FirstTouchAttributionCapture from "@/components/attribution/FirstTouchAttributionCapture";
 import InteractionTrackingProvider from "@/components/personalization/InteractionTrackingProvider";
 import { isWorkspacePath } from "@/lib/internal-route-access";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const CustomCursor = dynamic(() => import("@/components/CustomCursor"), { ssr: false });
 const ScrollNavigationRail = dynamic(() => import("@/components/ScrollNavigationRail"), {
@@ -44,6 +45,7 @@ export default function Providers({
   const isWorkspace = isWorkspacePath(pathname);
 
   return (
+    <TooltipProvider delayDuration={450} skipDelayDuration={250}>
     <ThemeProvider>
       <LocaleCurrencyProvider initialLocale={locale}>
         <SiteFeedbackProvider>
@@ -75,5 +77,6 @@ export default function Providers({
         </SiteFeedbackProvider>
       </LocaleCurrencyProvider>
     </ThemeProvider>
+    </TooltipProvider>
   );
 }

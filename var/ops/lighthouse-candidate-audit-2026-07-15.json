@@ -1,0 +1,60 @@
+{
+  "at": "2026-07-15T22:49:55.595Z",
+  "baseUrl": "http://127.0.0.1:3100",
+  "categories": [
+    "performance",
+    "accessibility"
+  ],
+  "budget": {
+    "performance": 75,
+    "accessibility": 95,
+    "lcpMs": 2500,
+    "cls": 0.1,
+    "inpMs": 200
+  },
+  "medianPerformance": 56,
+  "medianAccessibility": 100,
+  "results": [
+    {
+      "path": "/",
+      "url": "http://127.0.0.1:3100/",
+      "performance": 47,
+      "accessibility": 100,
+      "lcpMs": 59488,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/tours",
+      "url": "http://127.0.0.1:3100/tours",
+      "performance": 56,
+      "accessibility": 100,
+      "lcpMs": 10092,
+      "cls": 0.03,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/blog",
+      "url": "http://127.0.0.1:3100/blog",
+      "performance": 45,
+      "accessibility": 100,
+      "lcpMs": 9694,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    },
+    {
+      "path": "/destinations/patagonia",
+      "url": "http://127.0.0.1:3100/destinations/patagonia",
+      "performance": 56,
+      "accessibility": 97,
+      "lcpMs": 11378,
+      "cls": 0,
+      "inpMs": null,
+      "pass": false
+    }
+  ],
+  "pass": false
+}

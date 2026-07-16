@@ -22,7 +22,7 @@ export default function BlogPostHeroImage({ post, className }: BlogPostHeroImage
   return (
     <figure
       className={cn(
-        "relative overflow-hidden rounded-2xl border border-gray-100 bg-charcoal/5 shadow-card",
+        "group relative overflow-hidden rounded-2xl border border-gray-100 bg-charcoal/5 shadow-card",
         className
       )}
     >
@@ -33,7 +33,7 @@ export default function BlogPostHeroImage({ post, className }: BlogPostHeroImage
           fill
           priority
           sizes="(min-width: 1024px) 380px, 100vw"
-          className="object-cover"
+          className="editorial-media-zoom object-cover"
         />
       </div>
       {caption ? (

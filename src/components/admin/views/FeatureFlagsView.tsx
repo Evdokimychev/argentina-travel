@@ -2,8 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { FormField } from "@/components/ui/form-field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import InlineFeedback from "@/components/feedback/InlineFeedback";
 import { AdminPageHeader, AdminPageShell } from "@/components/admin/AdminSidebar";
 import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminApi } from "@/hooks/useAdminApi";
@@ -27,6 +29,16 @@ type FeatureFlagDraft = {
   metadataText: string;
 };
 
+type OperationFeedback = {
+  variant: "success" | "error";
+  title: string;
+  description: string;
+};
+
+type ValidationResult<T> =
+  | { value: T; error?: undefined }
+  | { value?: undefined; error: string };
+
 const EXAMPLE_KEYS = [
   "homepage_recommendations_v2",
   "checkout_currency_default",
@@ -41,10 +53,55 @@ function stringifyMetadata(metadata: Json): string {
   }
 }
 
-function normalizeRollout(input: string): number {
-  const parsed = Number.parseInt(input, 10);
-  if (!Number.isFinite(parsed)) return 0;
-  return Math.max(0, Math.min(100, parsed));
+function validateKey(input: string): string | undefined {
+  const key = input.trim().toLowerCase();
+  if (!key) return "Укажите ключ флага.";
+  if (!/^[a-z0-9_]{2,80}$/.test(key)) {
+    return "Используйте 2–80 строчных букв, цифр и знаков подчёркивания.";
+  }
+  return undefined;
+}
+
+function parseRollout(input: string): ValidationResult<number> {
+  if (!input.trim()) return { error: "Укажите процент от 0 до 100." };
+  const parsed = Number(input);
+  if (!Number.isFinite(parsed) || !Number.isInteger(parsed)) {
+    return { error: "Введите целое число от 0 до 100." };
+  }
+  if (parsed < 0 || parsed > 100) {
+    return { error: "Процент не может быть меньше 0 или больше 100." };
+  }
+  return { value: parsed };
+}
+
+function jsonLineAndColumn(source: string, position: number): { line: number; column: number } {
+  const beforeError = source.slice(0, Math.max(0, position));
+  const lines = beforeError.split("\n");
+  return { line: lines.length, column: (lines.at(-1)?.length ?? 0) + 1 };
+}
+
+function parseMetadata(input: string): ValidationResult<Json> {
+  if (!input.trim()) return { error: "Metadata не может быть пустой. Используйте {} без данных." };
+  try {
+    return { value: JSON.parse(input) as Json };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    const lineColumnMatch = message.match(/line\s+(\d+)\s+column\s+(\d+)/i);
+    if (lineColumnMatch) {
+      return {
+        error: `Некорректный JSON: строка ${lineColumnMatch[1]}, столбец ${lineColumnMatch[2]}.`,
+      };
+    }
+
+    const positionMatch = message.match(/position\s+(\d+)/i);
+    if (positionMatch) {
+      const location = jsonLineAndColumn(input, Number(positionMatch[1]));
+      return {
+        error: `Некорректный JSON: строка ${location.line}, столбец ${location.column}.`,
+      };
+    }
+    return { error: "Некорректный JSON. Проверьте кавычки, запятые и скобки." };
+  }
 }
 
 export default function FeatureFlagsView() {
@@ -57,8 +114,15 @@ export default function FeatureFlagsView() {
   const [creating, setCreating] = useState(false);
   const [savingKey, setSavingKey] = useState<string | null>(null);
   const [deletingKey, setDeletingKey] = useState<string | null>(null);
+  const [createAttempted, setCreateAttempted] = useState(false);
+  const [metadataTouched, setMetadataTouched] = useState(false);
+  const [rolloutTouched, setRolloutTouched] = useState(false);
+  const [feedback, setFeedback] = useState<OperationFeedback | null>(null);
 
   const items = useMemo(() => data?.items ?? [], [data?.items]);
+  const newKeyError = validateKey(newKey);
+  const newRollout = parseRollout(newRolloutPercent);
+  const newMetadata = parseMetadata(newMetadataText);
 
   useEffect(() => {
     const nextDrafts: Record<string, FeatureFlagDraft> = {};
@@ -73,6 +137,7 @@ export default function FeatureFlagsView() {
   }, [items]);
 
   function updateDraft(key: string, patch: Partial<FeatureFlagDraft>) {
+    setFeedback(null);
     setDrafts((prev) => ({
       ...prev,
       [key]: {
@@ -83,20 +148,11 @@ export default function FeatureFlagsView() {
   }
 
   async function createFlag() {
+    setCreateAttempted(true);
     const key = newKey.trim().toLowerCase();
-    if (!key) {
-      window.alert("Укажите ключ флага");
-      return;
-    }
+    if (newKeyError || newRollout.error || newMetadata.error) return;
 
-    let metadata: Json = {};
-    try {
-      metadata = JSON.parse(newMetadataText) as Json;
-    } catch {
-      window.alert("Metadata должна быть валидным JSON");
-      return;
-    }
-
+    setFeedback(null);
     setCreating(true);
     try {
       const response = await fetch("/api/admin/feature-flags", {
@@ -105,8 +161,8 @@ export default function FeatureFlagsView() {
         body: JSON.stringify({
           key,
           enabled: newEnabled,
-          rolloutPercent: normalizeRollout(newRolloutPercent),
-          metadata,
+          rolloutPercent: newRollout.value,
+          metadata: newMetadata.value,
         }),
       });
       const payload = (await response.json()) as { error?: string };
@@ -118,9 +174,21 @@ export default function FeatureFlagsView() {
       setNewEnabled(false);
       setNewRolloutPercent("0");
       setNewMetadataText("{\n  \"description\": \"\"\n}");
+      setCreateAttempted(false);
+      setMetadataTouched(false);
+      setRolloutTouched(false);
       await refresh();
+      setFeedback({
+        variant: "success",
+        title: "Флаг создан",
+        description: `${key} сохранён и доступен для серверного вычисления.`,
+      });
     } catch (createError) {
-      window.alert(createError instanceof Error ? createError.message : "Ошибка");
+      setFeedback({
+        variant: "error",
+        title: "Не удалось создать флаг",
+        description: createError instanceof Error ? createError.message : "Попробуйте ещё раз.",
+      });
     } finally {
       setCreating(false);
     }
@@ -130,14 +198,11 @@ export default function FeatureFlagsView() {
     const draft = drafts[key];
     if (!draft) return;
 
-    let metadata: Json = {};
-    try {
-      metadata = JSON.parse(draft.metadataText) as Json;
-    } catch {
-      window.alert(`Флаг ${key}: metadata должна быть валидным JSON`);
-      return;
-    }
+    const rollout = parseRollout(draft.rolloutPercent);
+    const metadata = parseMetadata(draft.metadataText);
+    if (rollout.error || metadata.error) return;
 
+    setFeedback(null);
     setSavingKey(key);
     try {
       const response = await fetch("/api/admin/feature-flags", {
@@ -146,8 +211,8 @@ export default function FeatureFlagsView() {
         body: JSON.stringify({
           key,
           enabled: draft.enabled,
-          rolloutPercent: normalizeRollout(draft.rolloutPercent),
-          metadata,
+          rolloutPercent: rollout.value,
+          metadata: metadata.value,
         }),
       });
       const payload = (await response.json()) as { error?: string };
@@ -155,8 +220,17 @@ export default function FeatureFlagsView() {
         throw new Error(payload.error ?? "Не удалось сохранить флаг");
       }
       await refresh();
+      setFeedback({
+        variant: "success",
+        title: "Изменения сохранены",
+        description: `Настройки ${key} обновлены.`,
+      });
     } catch (saveError) {
-      window.alert(saveError instanceof Error ? saveError.message : "Ошибка");
+      setFeedback({
+        variant: "error",
+        title: "Не удалось сохранить флаг",
+        description: saveError instanceof Error ? saveError.message : "Попробуйте ещё раз.",
+      });
     } finally {
       setSavingKey(null);
     }
@@ -165,6 +239,7 @@ export default function FeatureFlagsView() {
   async function deleteFlag(key: string) {
     if (!window.confirm(`Удалить флаг ${key}?`)) return;
 
+    setFeedback(null);
     setDeletingKey(key);
     try {
       const response = await fetch("/api/admin/feature-flags", {
@@ -177,8 +252,17 @@ export default function FeatureFlagsView() {
         throw new Error(payload.error ?? "Не удалось удалить флаг");
       }
       await refresh();
+      setFeedback({
+        variant: "success",
+        title: "Флаг удалён",
+        description: `${key} больше не участвует в вычислении функций.`,
+      });
     } catch (deleteError) {
-      window.alert(deleteError instanceof Error ? deleteError.message : "Ошибка");
+      setFeedback({
+        variant: "error",
+        title: "Не удалось удалить флаг",
+        description: deleteError instanceof Error ? deleteError.message : "Попробуйте ещё раз.",
+      });
     } finally {
       setDeletingKey(null);
     }
@@ -197,54 +281,102 @@ export default function FeatureFlagsView() {
           }
         />
 
-        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        {error ? (
+          <InlineFeedback variant="error" title="Не удалось загрузить флаги" description={error} />
+        ) : null}
+        {feedback ? (
+          <InlineFeedback
+            variant={feedback.variant}
+            title={feedback.title}
+            description={feedback.description}
+          />
+        ) : null}
 
         <section className={`${cabinetCardClass} space-y-4 p-5`}>
           <h2 className="font-heading text-lg font-bold text-charcoal">Новый флаг</h2>
           <p className="text-sm text-slate">
             Примеры ключей: {EXAMPLE_KEYS.join(", ")}. Для частичного rollout укажите процент 1-99.
           </p>
-          <div className="grid gap-3 md:grid-cols-2">
-            <label className="block text-sm">
-              <span className="text-slate">Ключ (snake_case)</span>
-              <Input
-                className="mt-1"
-                value={newKey}
-                onChange={(event) => setNewKey(event.target.value)}
-                placeholder="homepage_recommendations_v2"
+          <form
+            onSubmit={(event) => {
+              event.preventDefault();
+              void createFlag();
+            }}
+            noValidate
+            className="space-y-4"
+          >
+            <div className="grid gap-3 md:grid-cols-2">
+              <FormField
+                id="new-flag-key"
+                label="Ключ (snake_case)"
+                hint="Например, homepage_recommendations_v2."
+                error={createAttempted || newKey ? newKeyError : undefined}
+                required
+              >
+                <Input
+                  value={newKey}
+                  onChange={(event) => {
+                    setNewKey(event.target.value);
+                    setFeedback(null);
+                  }}
+                  placeholder="homepage_recommendations_v2"
+                  autoComplete="off"
+                  required
+                />
+              </FormField>
+              <FormField
+                id="new-flag-rollout"
+                label="Rollout, %"
+                hint="0 — никому, 100 — всем пользователям."
+                error={createAttempted || rolloutTouched ? newRollout.error : undefined}
+                required
+              >
+                <Input
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={newRolloutPercent}
+                  onChange={(event) => {
+                    setNewRolloutPercent(event.target.value);
+                    setRolloutTouched(true);
+                    setFeedback(null);
+                  }}
+                  required
+                />
+              </FormField>
+            </div>
+            <label className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={newEnabled}
+                onChange={(event) => setNewEnabled(event.target.checked)}
               />
+              Включен
             </label>
-            <label className="block text-sm">
-              <span className="text-slate">Rollout, %</span>
-              <Input
-                className="mt-1"
-                type="number"
-                min={0}
-                max={100}
-                value={newRolloutPercent}
-                onChange={(event) => setNewRolloutPercent(event.target.value)}
+            <FormField
+              id="new-flag-metadata"
+              label="Metadata (JSON)"
+              hint="JSON проверяется сразу при вводе. Для пустого объекта используйте {}."
+              error={createAttempted || metadataTouched ? newMetadata.error : undefined}
+              required
+            >
+              <Textarea
+                className="min-h-28 font-mono text-xs"
+                value={newMetadataText}
+                onChange={(event) => {
+                  setNewMetadataText(event.target.value);
+                  setMetadataTouched(true);
+                  setFeedback(null);
+                }}
+                spellCheck={false}
+                required
               />
-            </label>
-          </div>
-          <label className="flex items-center gap-2 text-sm">
-            <input
-              type="checkbox"
-              checked={newEnabled}
-              onChange={(event) => setNewEnabled(event.target.checked)}
-            />
-            Включен
-          </label>
-          <label className="block text-sm">
-            <span className="text-slate">Metadata (JSON)</span>
-            <Textarea
-              className="mt-1 min-h-28 font-mono text-xs"
-              value={newMetadataText}
-              onChange={(event) => setNewMetadataText(event.target.value)}
-            />
-          </label>
-          <Button onClick={() => void createFlag()} loading={creating} loadingLabel="Создаём…">
-            Создать флаг
-          </Button>
+            </FormField>
+            <Button type="submit" loading={creating} loadingLabel="Создаём…">
+              Создать флаг
+            </Button>
+          </form>
         </section>
 
         <section className={`${cabinetCardClass} space-y-4 p-5`}>
@@ -259,6 +391,9 @@ export default function FeatureFlagsView() {
                   rolloutPercent: String(item.rolloutPercent),
                   metadataText: stringifyMetadata(item.metadata),
                 };
+                const rollout = parseRollout(draft.rolloutPercent);
+                const metadata = parseMetadata(draft.metadataText);
+                const hasValidationError = Boolean(rollout.error || metadata.error);
                 return (
                   <li key={item.key} className="rounded-xl border border-gray-100 p-4">
                     <div className="flex flex-wrap items-center justify-between gap-3">
@@ -270,6 +405,7 @@ export default function FeatureFlagsView() {
                           onClick={() => void saveFlag(item.key)}
                           loading={savingKey === item.key}
                           loadingLabel="Сохраняем…"
+                          disabled={hasValidationError || deletingKey === item.key}
                         >
                           Сохранить
                         </Button>
@@ -279,25 +415,31 @@ export default function FeatureFlagsView() {
                           onClick={() => void deleteFlag(item.key)}
                           loading={deletingKey === item.key}
                           loadingLabel="Удаляем…"
+                          disabled={savingKey === item.key}
                         >
                           Удалить
                         </Button>
                       </div>
                     </div>
                     <div className="mt-3 grid gap-3 md:grid-cols-2">
-                      <label className="block text-sm">
-                        <span className="text-slate">Rollout, %</span>
+                      <FormField
+                        id={`flag-${item.key}-rollout`}
+                        label="Rollout, %"
+                        error={rollout.error}
+                        required
+                      >
                         <Input
-                          className="mt-1"
                           type="number"
                           min={0}
                           max={100}
+                          step={1}
                           value={draft.rolloutPercent}
                           onChange={(event) =>
                             updateDraft(item.key, { rolloutPercent: event.target.value })
                           }
+                          required
                         />
-                      </label>
+                      </FormField>
                       <label className="flex items-end gap-2 pb-2 text-sm">
                         <input
                           type="checkbox"
@@ -309,16 +451,24 @@ export default function FeatureFlagsView() {
                         Включен
                       </label>
                     </div>
-                    <label className="mt-3 block text-sm">
-                      <span className="text-slate">Metadata (JSON)</span>
+                    <FormField
+                      id={`flag-${item.key}-metadata`}
+                      label="Metadata (JSON)"
+                      hint="JSON проверяется при вводе."
+                      error={metadata.error}
+                      required
+                      className="mt-3"
+                    >
                       <Textarea
-                        className="mt-1 min-h-28 font-mono text-xs"
+                        className="min-h-28 font-mono text-xs"
                         value={draft.metadataText}
                         onChange={(event) =>
                           updateDraft(item.key, { metadataText: event.target.value })
                         }
+                        spellCheck={false}
+                        required
                       />
-                    </label>
+                    </FormField>
                   </li>
                 );
               })}

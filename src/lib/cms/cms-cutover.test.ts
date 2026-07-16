@@ -6,7 +6,7 @@ import {
   destinationsFromCmsDocuments,
 } from "@/lib/cms/cms-cutover";
 import { getAllDestinations } from "@/lib/destinations";
-import type { CmsDocument } from "@/types/cms-content";
+import { destinationPageFromCms, type CmsDocument } from "@/types/cms-content";
 
 function baseDoc(overrides: Partial<CmsDocument>): CmsDocument {
   return {
@@ -164,6 +164,27 @@ describe("evaluateCutoverLane", () => {
 });
 
 describe("destinationsFromCmsDocuments", () => {
+  it("keeps curated media for a CMS destination without a TS fallback", () => {
+    const page = destinationPageFromCms(
+      baseDoc({
+        id: "destination:iguazu:ru",
+        docType: "destination",
+        slug: "iguazu",
+        title: "Пуэрто-Игуасу",
+        body: {
+          kind: "destination",
+          description: "Водопады и атлантический лес",
+          intro: "Практический гид по Игуасу",
+        },
+      }),
+    );
+
+    expect(page?.image).toContain("/media/destinations/iguazu/");
+    expect(page?.image).not.toBe("/logo-light.svg");
+    expect(page?.gallery).toHaveLength(5);
+    expect(page?.imageAlt).toMatch(/Игуасу|водопад/i);
+  });
+
   it("maps complete destination documents preserving order", () => {
     const tsOrder = getAllDestinations().slice(0, 2).map((d) => d.id);
     if (tsOrder.length < 2) return;
@@ -184,5 +205,7 @@ describe("destinationsFromCmsDocuments", () => {
 
     const pages = destinationsFromCmsDocuments(docs, tsOrder);
     expect(pages.map((p) => p.id)).toEqual(tsOrder);
+    expect(pages.every((page) => page.image !== "/logo-light.svg")).toBe(true);
+    expect(pages.every((page) => page.gallery?.length)).toBe(true);
   });
 });

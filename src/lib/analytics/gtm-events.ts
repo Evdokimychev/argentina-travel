@@ -261,7 +261,7 @@ export function trackSearchSubmit(input: {
   kind?: string;
 }): void {
   trackGtmEvent(GTM_EVENTS.searchSubmit, {
-    search_term: input.query,
+    search_query_length: input.query.trim().length,
     results_count: input.resultsCount,
     search_source: input.source,
     search_kind: input.kind ?? "all",
@@ -276,7 +276,7 @@ export function trackSearchResultClick(input: {
   source: "meilisearch" | "postgres" | "static";
 }): void {
   trackGtmEvent(GTM_EVENTS.searchResultClick, {
-    search_term: input.query,
+    search_query_length: input.query.trim().length,
     item_id: input.itemId,
     item_kind: input.itemKind,
     position: input.position,

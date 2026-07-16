@@ -77,6 +77,7 @@ function scoreItem(item: SearchIndexItem, tokens: string[]): number {
 const TYPE_ORDER: SearchResultType[] = [
   "tour",
   "excursion",
+  "place",
   "blog",
   "guide",
   "destination",

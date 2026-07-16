@@ -15,10 +15,12 @@ import {
 import { ORGANIZER_TOUR_PHOTO_MAX_BYTES } from "@/data/tour-photos-defaults";
 import { joinFullName, splitFullName } from "@/lib/full-name";
 import { readFileAsDataUrl } from "@/lib/read-file-as-data-url";
+import { uploadOrganizerProductImage } from "@/lib/organizer-product-media-client";
 import type { OrganizerTeamGuide } from "@/types/organizer-profile";
 import type { OrganizerTourGuide } from "@/types/organizer-tour";
 
 interface TourGuideCreateModalProps {
+  productId?: string;
   open: boolean;
   onClose: () => void;
   /** @deprecated Use onSave */
@@ -28,6 +30,7 @@ interface TourGuideCreateModalProps {
 }
 
 export default function TourGuideCreateModal({
+  productId,
   open,
   onClose,
   onCreate,
@@ -82,7 +85,9 @@ export default function TourGuideCreateModal({
     if (file.size > ORGANIZER_TOUR_PHOTO_MAX_BYTES) {
       throw new Error("Фото должно быть не больше 5 МБ");
     }
-    return readFileAsDataUrl(file);
+    return productId
+      ? uploadOrganizerProductImage(productId, file)
+      : readFileAsDataUrl(file);
   }
 
   function normalizeUrl(value: string): string {
@@ -153,7 +158,8 @@ export default function TourGuideCreateModal({
   return (
     <Dialog open={open} onOpenChange={(next) => !next && onClose()}>
       <DialogContent
-        className="flex max-h-[90vh] max-w-lg animate-fade-in-up flex-col overflow-hidden p-0"
+        showClose={false}
+        className="flex flex-col overflow-hidden p-0 animate-fade-in-up sm:max-h-[90vh] sm:max-w-lg"
         onPointerDownOutside={onClose}
         onEscapeKeyDown={onClose}
       >
@@ -204,7 +210,7 @@ export default function TourGuideCreateModal({
               <input
                 ref={fileInputRef}
                 type="file"
-                accept="image/*"
+                accept="image/jpeg,image/png,image/webp,image/avif,image/gif"
                 className="sr-only"
                 onChange={(event) => {
                   const file = event.target.files?.[0];
@@ -222,7 +228,7 @@ export default function TourGuideCreateModal({
                 Загрузить фото с устройства
               </button>
 
-              <div className="flex flex-col gap-2 sm:flex-row">
+              {!productId ? <div className="flex flex-col gap-2 sm:flex-row">
                 <Input
                   value={urlInput}
                   onChange={(event) => setUrlInput(event.target.value)}
@@ -244,7 +250,7 @@ export default function TourGuideCreateModal({
                   <Camera className="h-4 w-4" />
                   Загрузить
                 </Button>
-              </div>
+              </div> : null}
             </div>
           </div>
 

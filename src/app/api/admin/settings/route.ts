@@ -57,6 +57,7 @@ export async function GET(request: Request) {
       "site.seo": normalized["site.seo"],
       "site.contact": normalized["site.contact"],
       "site.navigation": normalized["site.navigation"],
+      "site.design": normalized["site.design"],
       "site.maintenance": normalized["site.maintenance"],
     },
     updatedAt,

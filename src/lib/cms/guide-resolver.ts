@@ -82,6 +82,7 @@ export async function resolveGuidePage(slug: string, locale = "ru"): Promise<Con
       })
     : buildDefaultTranslationStatus(cutover.guide ? false : Boolean(fallback));
 
+  let resolvedSeo: CmsDocument["seo"] | undefined;
   const resolved = await resolveWithPublishedCmsOverride({
     docType: "guide",
     slug,
@@ -90,9 +91,15 @@ export async function resolveGuidePage(slug: string, locale = "ru"): Promise<Con
     merge: (doc, fb) => guidePageFromCms(doc, fb),
     supabase,
     isUsable: isCmsDocumentComplete,
+    onResolvedDocument: (doc) => {
+      resolvedSeo = doc.seo;
+    },
   });
   if (!resolved) return null;
-  return attachCmsResolverMetadata(resolved, buildCmsResolverMetadata(locale, translationStatus));
+  return attachCmsResolverMetadata(
+    resolved,
+    buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
+  );
 }
 
 export async function listPublishedGuideSlugs(locale = "ru"): Promise<string[]> {

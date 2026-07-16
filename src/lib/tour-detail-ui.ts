@@ -45,7 +45,7 @@ export const tourDetailStickyPanelClass =
 
 /** Нижняя панель бронирования (мобильные) */
 export const tourDetailMobileBarClass =
-  "fixed bottom-0 left-0 right-0 z-40 border-t border-border-subtle bg-surface-elevated/95 shadow-elevated backdrop-blur-sm pb-[env(safe-area-inset-bottom,0px)] lg:hidden";
+  "fixed [bottom:var(--cookie-consent-offset,0px)] left-0 right-0 z-40 max-h-[min(82dvh,42rem)] overflow-y-auto overscroll-contain border-t border-border-subtle bg-surface-elevated/95 shadow-elevated backdrop-blur-sm pb-[env(safe-area-inset-bottom,0px)] transition-[bottom] duration-200 lg:hidden";
 
 /** Вертикальный ритм между секциями страницы */
 export const tourDetailSectionStackClass = "space-y-6 md:space-y-8";

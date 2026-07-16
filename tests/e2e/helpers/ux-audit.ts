@@ -75,15 +75,32 @@ export async function waitForPageStable(page: Page, hydrationMs = 400): Promise<
   await page.waitForTimeout(hydrationMs);
 }
 
+async function retryAfterClientNavigation<T>(page: Page, evaluate: () => Promise<T>): Promise<T> {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      return await evaluate();
+    } catch (error) {
+      const isNavigationRace =
+        error instanceof Error && /execution context was destroyed|cannot find context/i.test(error.message);
+      if (!isNavigationRace || attempt === 2) throw error;
+      await page.waitForLoadState("domcontentloaded").catch(() => undefined);
+      await page.waitForTimeout(250);
+    }
+  }
+  throw new Error("Page evaluation did not stabilize after navigation");
+}
+
 export async function hasHorizontalScroll(page: Page): Promise<{ overflow: boolean; delta: number }> {
-  return page.evaluate((tolerance) => {
-    const root = document.documentElement;
-    const body = document.body;
-    const scrollWidth = Math.max(root.scrollWidth, body.scrollWidth);
-    const clientWidth = root.clientWidth;
-    const delta = scrollWidth - clientWidth;
-    return { overflow: delta > tolerance, delta };
-  }, HORIZONTAL_SCROLL_TOLERANCE_PX);
+  return retryAfterClientNavigation(page, () =>
+    page.evaluate((tolerance) => {
+      const root = document.documentElement;
+      const body = document.body;
+      const scrollWidth = Math.max(root.scrollWidth, body.scrollWidth);
+      const clientWidth = root.clientWidth;
+      const delta = scrollWidth - clientWidth;
+      return { overflow: delta > tolerance, delta };
+    }, HORIZONTAL_SCROLL_TOLERANCE_PX),
+  );
 }
 
 export type ViewportOverflowSample = {
@@ -99,8 +116,9 @@ export async function findViewportOverflows(
   page: Page,
   maxSamples = 10,
 ): Promise<ViewportOverflowSample[]> {
-  return page.evaluate(
-    ({ maxSamples: limit, tolerance }) => {
+  return retryAfterClientNavigation(page, () =>
+    page.evaluate(
+      ({ maxSamples: limit, tolerance }) => {
       const viewportWidth = window.innerWidth;
       const samples: ViewportOverflowSample[] = [];
 
@@ -121,6 +139,22 @@ export async function findViewportOverflows(
         const leftOverflow = -rect.left;
         if (rightOverflow <= tolerance && leftOverflow <= tolerance) continue;
 
+        // A card/table may legitimately extend beyond the viewport inside a
+        // clipped or horizontally scrollable carousel. The document-level
+        // horizontal-scroll check still catches a real page overflow, while
+        // this check focuses on elements that escape their layout boundary.
+        let boundary = element.parentElement;
+        let containedByOverflowBoundary = false;
+        while (boundary && boundary !== document.body && boundary !== document.documentElement) {
+          const boundaryStyle = window.getComputedStyle(boundary);
+          if (/^(auto|scroll|hidden|clip)$/.test(boundaryStyle.overflowX)) {
+            containedByOverflowBoundary = true;
+            break;
+          }
+          boundary = boundary.parentElement;
+        }
+        if (containedByOverflowBoundary) continue;
+
         // Skip off-screen elements intentionally translated away (e.g. closed drawers).
         if (rect.right < -tolerance || rect.left > viewportWidth + tolerance) continue;
 
@@ -136,12 +170,13 @@ export async function findViewportOverflows(
 
       return samples;
     },
-    { maxSamples, tolerance: HORIZONTAL_SCROLL_TOLERANCE_PX },
+      { maxSamples, tolerance: HORIZONTAL_SCROLL_TOLERANCE_PX },
+    ),
   );
 }
 
 export async function assertModalCloseButton(page: Page): Promise<boolean> {
-  const dialogs = page.locator('[role="dialog"]');
+  const dialogs = page.locator('[role="dialog"]:visible');
   const count = await dialogs.count();
   if (count === 0) return false;
 
@@ -165,11 +200,24 @@ export async function assertModalCloseButton(page: Page): Promise<boolean> {
 }
 
 export async function expectAuthWall(page: Page): Promise<boolean> {
-  const loginButton = page.getByRole("button", { name: /войти/i });
-  const loginHeading = page.getByRole("heading", {
-    name: /личный кабинет|вход|авторизация|кабинет организатора|админ/i,
-  });
-  return (await loginButton.count()) > 0 || (await loginHeading.count()) > 0;
+  const candidates = [
+    page.getByRole("dialog").filter({ hasText: /войдите|вход|авторизац|нет доступа/i }),
+    page.getByRole("heading", {
+      name: /личный кабинет|войдите|вход|авторизация|кабинет организатора|админ/i,
+    }),
+    page.getByRole("button", { name: /^войти(?: в профиль)?$/i }),
+    page.getByText(/нет доступа|требуется авторизация/i),
+  ];
+  const deadline = Date.now() + 10_000;
+
+  while (Date.now() < deadline) {
+    for (const candidate of candidates) {
+      if (await candidate.first().isVisible().catch(() => false)) return true;
+    }
+    await page.waitForTimeout(250);
+  }
+
+  return false;
 }
 
 export function severityForCheck(check: UxCheckType): UxViolationSeverity {

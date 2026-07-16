@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { Search, Calendar, Navigation, X } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from "date-fns/locale";
@@ -43,7 +43,7 @@ function ClearButton({
       type="button"
       onClick={onClick}
       aria-label={label}
-      className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal"
+      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-slate transition-colors hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:h-8 sm:w-8"
     >
       <X className="h-4 w-4" />
     </button>
@@ -61,7 +61,7 @@ function DestinationOption({
     <li className="border-t border-gray-100 first:border-t-0">
       <button
         type="button"
-        className="flex w-full items-start justify-between gap-4 rounded-xl px-3 py-3.5 text-left transition-colors hover:bg-gray-50"
+        className="flex min-h-11 w-full items-start justify-between gap-4 rounded-xl px-3 py-3.5 text-left transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
         onClick={() => onSelect(destination.label)}
       >
         <div className="min-w-0 flex-1">
@@ -96,6 +96,7 @@ export default function SearchBlock({
   const [geoError, setGeoError] = useState<string | null>(null);
   const destPopoverRef = useRef<HTMLDivElement>(null);
   const destInteractedRef = useRef(false);
+  const destinationStatusId = useId();
 
   useEffect(() => {
     if (!destOpen) return;
@@ -193,6 +194,11 @@ export default function SearchBlock({
             <PopoverTrigger asChild>
               <button
                 type="button"
+                aria-label={
+                  hasDestination
+                    ? `Направление: ${nearMe ? "рядом со мной" : query}`
+                    : "Выбрать направление"
+                }
                 className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left lg:py-4"
               >
                 <Search className="h-5 w-5 shrink-0 text-sky" />
@@ -234,6 +240,7 @@ export default function SearchBlock({
             <div className="shrink-0 border-b border-gray-100 p-4">
               <div className="relative">
                 <Input
+                  type="search"
                   placeholder="Регион, город, парк или достопримечательность"
                   value={query}
                   onChange={(e) => {
@@ -241,13 +248,15 @@ export default function SearchBlock({
                     onQueryChange(e.target.value);
                   }}
                   autoFocus
+                  aria-label="Поиск направления"
+                  aria-describedby={destinationStatusId}
                   className={query ? "pr-10" : undefined}
                 />
                 {query && (
                   <button
                     type="button"
                     onClick={() => onQueryChange("")}
-                    className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-slate hover:bg-gray-100 hover:text-charcoal"
+                    className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-slate hover:bg-gray-100 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:right-1 sm:h-9 sm:w-9"
                     aria-label="Очистить поле"
                   >
                     <X className="h-4 w-4" />
@@ -261,9 +270,9 @@ export default function SearchBlock({
                 type="button"
                 onClick={handleNearMe}
                 disabled={locating}
-                aria-describedby="nearby-search-hint"
+                aria-describedby={!locating && !nearMe ? "nearby-search-hint" : undefined}
                 className={cn(
-                  "flex w-full items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium transition-colors disabled:opacity-80",
+                  "flex min-h-11 w-full items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 disabled:opacity-80",
                   nearMe
                     ? "bg-sky/10 text-sky-dark"
                     : "text-charcoal hover:bg-gray-50"
@@ -290,6 +299,12 @@ export default function SearchBlock({
                 {isSearching ? "Лучшее совпадение" : "Популярное"}
               </p>
             </div>
+
+            <p id={destinationStatusId} className="sr-only" role="status" aria-live="polite">
+              {destinations.length > 0
+                ? `Найдено ${destinations.length} направлений`
+                : "Направления не найдены"}
+            </p>
 
             <ul className="min-h-0 flex-1 overflow-y-auto px-2 pb-2">
               {destinations.length === 0 ? (
@@ -332,6 +347,7 @@ export default function SearchBlock({
             <PopoverTrigger asChild>
               <button
                 type="button"
+                aria-label={`Даты: ${dateLabel}`}
                 className="flex min-w-0 flex-1 items-center gap-3 px-4 py-3 text-left lg:py-4"
               >
                 <Calendar className="h-5 w-5 shrink-0 text-sky" />

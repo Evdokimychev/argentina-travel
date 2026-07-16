@@ -1,8 +1,9 @@
 import Link from "next/link";
-import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
+import { SafeImage } from "@/components/ui/safe-image";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import type { EditorialTheme } from "@/lib/editorial-theme";
 import {
   pageBandAccentBlurBottomClass,
   pageBandAccentBlurTopClass,
@@ -21,27 +22,35 @@ type HubHeroProps = {
   title: string;
   subtitle?: string;
   image: string;
+  imageAlt?: string;
   eyebrow?: HubHeroEyebrow;
   ctas?: GuidePillarHeroCta[];
   searchSlot?: React.ReactNode;
   tone?: "band" | "accent";
+  theme?: EditorialTheme;
 };
 
 export default function HubHero({
   title,
   subtitle,
   image,
+  imageAlt = "",
   eyebrow,
   ctas,
   searchSlot,
   tone = "band",
+  theme = "default",
 }: HubHeroProps) {
   const accent = tone === "accent";
 
   return (
     <section
       data-scroll-rail-tone="light"
-      className={accent ? pageBandAccentSectionClass : pageBandSectionClass}
+      data-editorial-theme={theme}
+      className={cn(
+        accent ? pageBandAccentSectionClass : pageBandSectionClass,
+        "editorial-hero",
+      )}
     >
       {accent ? (
         <>
@@ -50,14 +59,14 @@ export default function HubHero({
         </>
       ) : null}
 
-      <div className={cn(siteContainerClass, "relative py-10 md:py-12 lg:py-14")}>
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_min(38%,320px)] xl:grid-cols-[minmax(0,1fr)_360px] xl:gap-12">
+      <div className={cn(siteContainerClass, "relative py-8 sm:py-10 lg:py-12")}>
+        <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_min(42%,460px)] xl:gap-12">
           <div className="min-w-0">
             {eyebrow ? (
               eyebrow.href ? (
                 <Link
                   href={eyebrow.href}
-                  className="group inline-flex items-center gap-1.5 rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky-ink transition-colors hover:border-sky/30 hover:bg-sky/10"
+                  className="editorial-kicker group inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] transition-colors hover:bg-white/80"
                 >
                   {eyebrow.label}
                   <ArrowUpRight
@@ -66,24 +75,25 @@ export default function HubHero({
                   />
                 </Link>
               ) : (
-                <span className="inline-flex rounded-full border border-sky/15 bg-sky/5 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-sky">
+                <span className="editorial-kicker inline-flex rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em]">
                   {eyebrow.label}
                 </span>
               )
             ) : null}
 
-            <h1 className="mt-4 max-w-2xl font-display text-3xl font-bold leading-[1.12] tracking-tight text-charcoal sm:text-4xl lg:text-[2.65rem]">
+            <div className="editorial-rule mt-4 h-1 w-12 rounded-full" aria-hidden />
+            <h1 className="mt-3 max-w-3xl font-display text-3xl font-bold leading-[1.08] tracking-[-0.035em] text-charcoal sm:text-4xl lg:text-[2.85rem]">
               {title}
             </h1>
 
             {subtitle ? (
-              <p className="mt-3 max-w-xl text-base leading-relaxed text-slate sm:text-[1.05rem]">
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate sm:text-lg">
                 {subtitle}
               </p>
             ) : null}
 
             {ctas && ctas.length > 0 ? (
-              <div className="mt-6 flex flex-wrap gap-2">
+              <div className="mt-5 flex flex-wrap gap-2.5">
                 {ctas.map((cta) => (
                   <Link
                     key={cta.href + cta.label}
@@ -100,7 +110,7 @@ export default function HubHero({
                               : "ghost",
                         size: "sm",
                       }),
-                      "rounded-full px-4"
+                      "rounded-full px-5"
                     )}
                   >
                     {cta.label}
@@ -112,26 +122,36 @@ export default function HubHero({
             {searchSlot}
           </div>
 
-          <div className="relative mx-auto w-full max-w-md lg:mx-0 lg:max-w-none">
+          <div className="relative mx-auto w-full max-w-xl lg:mx-0 lg:max-w-none">
             <div
-              className="pointer-events-none absolute -bottom-3 -left-3 hidden h-[calc(100%-0.5rem)] w-[calc(100%-0.5rem)] rounded-2xl border border-sky/20 lg:block"
+              className="pointer-events-none absolute -bottom-4 -left-4 hidden h-[calc(100%-0.75rem)] w-[calc(100%-0.75rem)] rounded-[2rem] border border-[var(--editorial-line)] lg:block"
               aria-hidden
             />
-            <div className="relative overflow-hidden rounded-2xl bg-charcoal/5 shadow-card ring-1 ring-gray-100">
-              <div className="relative aspect-[16/10] w-full sm:aspect-[5/3] lg:aspect-[4/3]">
-                <Image
+            <div className="editorial-media-frame group relative overflow-hidden rounded-[1.75rem] border bg-charcoal/5">
+              <div className="relative aspect-[16/9] w-full sm:aspect-[5/3] lg:aspect-[5/4]">
+                <SafeImage
                   src={image}
-                  alt={title}
+                  alt={imageAlt}
                   fill
                   priority
                   fetchPriority="high"
-                  sizes="(max-width: 1024px) 100vw, 360px"
-                  className="object-cover"
+                  preferLocalMedia
+                  placeholderVariant="destination"
+                  sizes="(max-width: 1024px) 100vw, 520px"
+                  className="editorial-media-zoom object-cover"
                 />
                 <div
-                  className="absolute inset-0 bg-gradient-to-t from-charcoal/25 via-transparent to-transparent"
+                  className="editorial-media-overlay absolute inset-0 opacity-70"
                   aria-hidden
                 />
+                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 text-white sm:p-6">
+                  <p className="max-w-xs text-xs font-semibold uppercase tracking-[0.16em] text-white/80">
+                    Пора в Аргентину
+                  </p>
+                  <span className="font-editorial text-3xl italic text-white/90" aria-hidden>
+                    AR
+                  </span>
+                </div>
               </div>
             </div>
           </div>

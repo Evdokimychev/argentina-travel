@@ -23,4 +23,19 @@ describe("auth role hardening", () => {
     expect(source).not.toContain("bootstrapRecord");
     expect(source).not.toContain("BOOTSTRAP_CAPABILITIES");
   });
+
+  it("prevents users from assigning the organizer role to themselves", () => {
+    const sql = fs.readFileSync(
+      path.join(root, "supabase/migrations/20260715124500_lock_profile_roles.sql"),
+      "utf8",
+    );
+    expect(sql).toContain("new.roles := old.roles");
+    expect(sql).not.toContain("'organizer' = any(new.roles)");
+
+    const provider = fs.readFileSync(
+      path.join(root, "src/lib/supabase-auth-provider.ts"),
+      "utf8",
+    );
+    expect(provider).not.toContain('update({ roles: nextRoles, active_role: "organizer" })');
+  });
 });

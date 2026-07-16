@@ -20,6 +20,7 @@ const SUBTASKS: Subtask[] = [
   { key: "bookingReminder24h", path: "/api/cron/messaging/booking-reminder-24h" },
   { key: "tripPrepReminders", path: "/api/cron/trip-prep/reminders" },
   { key: "digest", path: "/api/cron/notifications/digest" },
+  { key: "emailRetry", path: "/api/cron/notifications/email-retry" },
   { key: "contentFreshness", path: "/api/cron/content-freshness" },
   { key: "cmsPublishScheduled", path: "/api/cron/cms/publish-scheduled" },
   { key: "searchReindex", path: "/api/cron/search/reindex" },
@@ -40,7 +41,11 @@ export async function GET(request: Request) {
 
   try {
     const origin = new URL(request.url).origin;
-    const headers: HeadersInit = { "x-vercel-cron": "1" };
+    const cronSecret = process.env.CRON_SECRET?.trim();
+    if (!cronSecret) {
+      throw new Error("CRON_SECRET is not configured");
+    }
+    const headers: HeadersInit = { authorization: `Bearer ${cronSecret}` };
     const results: Record<string, unknown> = {};
     const checks: boolean[] = [];
 

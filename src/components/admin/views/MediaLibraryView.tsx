@@ -54,7 +54,7 @@ function sourceLabel(source: MediaSource): string {
 
 export default function MediaLibraryView() {
   const { data, loading, error, refresh } = useAdminApi<MediaResponse>("/api/admin/media");
-  const assets = data?.assets ?? [];
+  const assets = useMemo(() => data?.assets ?? [], [data?.assets]);
 
   const [query, setQuery] = useState("");
   const [source, setSource] = useState<MediaSource | "all">("all");
@@ -155,26 +155,26 @@ export default function MediaLibraryView() {
           }
         />
 
-        <div className="mb-6 grid gap-3 sm:grid-cols-5">
-          <div className={cabinetCardClass}>
+        <div className="mb-6 grid grid-cols-2 gap-3 xl:grid-cols-5">
+          <div className={`${cabinetCardClass} p-4`}>
             <p className="text-xs text-slate">Всего</p>
             <p className="text-2xl font-bold text-charcoal">{stats.total}</p>
           </div>
-          <div className={cabinetCardClass}>
+          <div className={`${cabinetCardClass} p-4`}>
             <p className="text-xs text-slate">CMS uploads</p>
             <p className="text-2xl font-bold text-charcoal">{stats.cmsUploads}</p>
           </div>
-          <div className={cabinetCardClass}>
+          <div className={`${cabinetCardClass} p-4`}>
             <p className="text-xs text-slate">Stock</p>
             <p className="text-2xl font-bold text-charcoal">{stats.stock}</p>
           </div>
-          <div className={cabinetCardClass}>
+          <div className={`${cabinetCardClass} p-4`}>
             <p className="text-xs text-slate">Wikimedia</p>
             <p className="text-2xl font-bold text-charcoal">
               {stats.bySource.get("wikimedia") ?? 0}
             </p>
           </div>
-          <div className={cabinetCardClass}>
+          <div className={`${cabinetCardClass} col-span-2 p-4 xl:col-span-1`}>
             <p className="text-xs text-slate">Pinned</p>
             <p className="text-2xl font-bold text-charcoal">{stats.pinned}</p>
           </div>

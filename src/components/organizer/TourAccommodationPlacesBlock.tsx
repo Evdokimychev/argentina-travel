@@ -9,11 +9,13 @@ import {
 import TourAccommodationPlaceEditor from "@/components/organizer/TourAccommodationPlaceEditor";
 
 interface TourAccommodationPlacesBlockProps {
+  productId: string;
   places: OrganizerTourAccommodationPlace[];
   onChange: (places: OrganizerTourAccommodationPlace[]) => void;
 }
 
 export default function TourAccommodationPlacesBlock({
+  productId,
   places,
   onChange,
 }: TourAccommodationPlacesBlockProps) {
@@ -55,6 +57,7 @@ export default function TourAccommodationPlacesBlock({
         <div className="space-y-4">
           {places.map((place, index) => (
             <TourAccommodationPlaceEditor
+              productId={productId}
               key={place.id}
               index={index}
               total={places.length}

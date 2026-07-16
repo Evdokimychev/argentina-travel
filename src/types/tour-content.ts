@@ -8,6 +8,7 @@ export type TourContentAdminSummary = {
   ownerUserId: string;
   status: TourContentStatus;
   title: string;
+  productType: "tour" | "excursion";
   publishedAt: string | null;
   updatedAt: string;
   moderationStatus: TourModerationStatus;

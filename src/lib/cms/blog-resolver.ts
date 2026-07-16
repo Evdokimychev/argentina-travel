@@ -91,6 +91,7 @@ export async function resolveBlogPost(slug: string, locale = "ru"): Promise<Blog
         })
       : buildDefaultTranslationStatus(Boolean(fallback));
 
+    let resolvedSeo: CmsDocument["seo"] | undefined;
     const resolved = await resolveWithPublishedCmsOverride({
       docType: "blog",
       slug: lookupSlug,
@@ -99,6 +100,9 @@ export async function resolveBlogPost(slug: string, locale = "ru"): Promise<Blog
       merge: (doc, fb) => blogPostFromCms(doc, fb),
       supabase,
       isUsable: isCmsDocumentComplete,
+      onResolvedDocument: (doc) => {
+        resolvedSeo = doc.seo;
+      },
     });
 
     if (resolved) {
@@ -107,7 +111,7 @@ export async function resolveBlogPost(slug: string, locale = "ru"): Promise<Blog
       }
       return attachCmsResolverMetadata(
         resolved,
-        buildCmsResolverMetadata(locale, translationStatus),
+        buildCmsResolverMetadata(locale, translationStatus, resolvedSeo),
       );
     }
   }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Cookie } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ export default function CookieConsentBanner() {
   const [visible, setVisible] = useState(false);
   const [customizing, setCustomizing] = useState(false);
   const [draft, setDraft] = useState(() => defaultCookieConsentDraft());
+  const bannerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const sync = () => {
@@ -39,6 +40,31 @@ export default function CookieConsentBanner() {
       window.removeEventListener(COOKIE_CONSENT_OPEN_EVENT, open);
     };
   }, []);
+
+  useEffect(() => {
+    if (!visible || !bannerRef.current) {
+      document.documentElement.style.removeProperty("--cookie-consent-offset");
+      delete document.documentElement.dataset.cookieConsentVisible;
+      return;
+    }
+
+    const banner = bannerRef.current;
+    document.documentElement.dataset.cookieConsentVisible = "true";
+    const updateOffset = () => {
+      document.documentElement.style.setProperty(
+        "--cookie-consent-offset",
+        `${Math.ceil(banner.getBoundingClientRect().height + 24)}px`,
+      );
+    };
+    updateOffset();
+    const observer = new ResizeObserver(updateOffset);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--cookie-consent-offset");
+      delete document.documentElement.dataset.cookieConsentVisible;
+    };
+  }, [visible, customizing]);
 
   function acceptAll() {
     acceptAllCookieConsent();
@@ -64,16 +90,17 @@ export default function CookieConsentBanner() {
   // Немодальное уведомление: role="region", а не dialog — не перехватывает фокус и не требует кнопки «Закрыть»
   return (
     <div
+      ref={bannerRef}
       role="region"
       aria-label="Уведомление о cookie"
       className={cn(
-        "fixed bottom-4 left-1/2 z-cookie w-[min(calc(100%-2rem),40rem)] -translate-x-1/2",
-        "rounded-2xl border border-gray-200/80 bg-white/95 p-4 shadow-lg backdrop-blur-md sm:p-5"
+        "fixed bottom-1.5 left-1/2 z-cookie w-[min(calc(100%-0.75rem),40rem)] -translate-x-1/2 sm:bottom-4 sm:w-[min(calc(100%-2rem),40rem)]",
+        "max-h-[calc(100dvh-0.75rem-env(safe-area-inset-top,0px)-env(safe-area-inset-bottom,0px))] overflow-y-auto overscroll-contain rounded-2xl border border-gray-200/80 bg-white/95 p-3 shadow-lg backdrop-blur-md sm:max-h-[calc(100dvh-2rem)] sm:p-5"
       )}
     >
       <div className="flex items-start gap-3">
         <div
-          className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky"
+          className="mt-0.5 hidden h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky/10 text-sky sm:flex"
           aria-hidden
         >
           <Cookie className="h-4 w-4" strokeWidth={2} />
@@ -81,8 +108,9 @@ export default function CookieConsentBanner() {
 
         <div className="min-w-0 flex-1">
           <p className="text-sm font-semibold text-charcoal sm:text-base">Настройки cookie</p>
-          <p className="mt-1 text-sm leading-relaxed text-slate">
-            Необходимые cookie обеспечивают вход и бронирование. Аналитику и персональные рекомендации включаем только с вашего согласия.{" "}
+          <p className="mt-1 text-xs leading-snug text-slate sm:text-sm sm:leading-relaxed">
+            <span className="sm:hidden">Необходимые cookie работают всегда. Аналитика и рекомендации — только с вашего согласия. </span>
+            <span className="hidden sm:inline">Необходимые cookie обеспечивают вход и бронирование. Аналитику и персональные рекомендации включаем только с вашего согласия. </span>
             <Link href="/legal/cookies" className="font-medium text-sky-ink hover:underline">
               Подробнее
             </Link>
@@ -90,30 +118,30 @@ export default function CookieConsentBanner() {
 
           {customizing ? (
             <div className="mt-4 space-y-3 rounded-xl bg-surface-muted p-3">
-              <label className="flex items-start gap-3 text-sm text-charcoal">
+              <label className="flex min-h-11 items-start gap-3 rounded-lg text-sm text-charcoal">
                 <input type="checkbox" checked disabled className="mt-1" />
                 <span><strong className="block">Необходимые</strong><span className="text-xs text-slate">Вход, безопасность, корзина и бронирование.</span></span>
               </label>
-              <label className="flex items-start gap-3 text-sm text-charcoal">
+              <label className="flex min-h-11 items-start gap-3 rounded-lg text-sm text-charcoal">
                 <input type="checkbox" checked={draft.analytics} onChange={(event) => setDraft({ ...draft, analytics: event.target.checked })} className="mt-1" />
                 <span><strong className="block">Аналитика</strong><span className="text-xs text-slate">Помогает находить ошибки и медленные страницы. Поля форм не передаются.</span></span>
               </label>
-              <label className="flex items-start gap-3 text-sm text-charcoal">
+              <label className="flex min-h-11 items-start gap-3 rounded-lg text-sm text-charcoal">
                 <input type="checkbox" checked={draft.personalization} onChange={(event) => setDraft({ ...draft, personalization: event.target.checked })} className="mt-1" />
                 <span><strong className="block">Рекомендации</strong><span className="text-xs text-slate">Использует историю действий, чтобы показывать подходящие места и туры.</span></span>
               </label>
             </div>
           ) : null}
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button type="button" size="sm" variant="outline" onClick={acceptAll}>
+          <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
+            <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={acceptAll}>
               Принять все
             </Button>
-            <Button type="button" size="sm" variant="outline" onClick={acceptNecessary}>Только необходимые</Button>
+            <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={acceptNecessary}>Только необходимые</Button>
             {customizing ? (
-              <Button type="button" size="sm" variant="outline" onClick={saveCustom}>Сохранить выбор</Button>
+              <Button type="button" size="sm" variant="outline" className="min-h-11 px-2 text-xs sm:px-3" onClick={saveCustom}>Сохранить выбор</Button>
             ) : (
-              <Button type="button" size="sm" variant="outline" onClick={() => setCustomizing(true)}>Настроить</Button>
+              <Button type="button" size="sm" variant="ghost" className="min-h-11 px-2 text-xs sm:px-3" onClick={() => setCustomizing(true)}>Настроить</Button>
             )}
           </div>
         </div>

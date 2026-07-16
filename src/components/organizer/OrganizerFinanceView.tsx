@@ -202,7 +202,7 @@ export default function OrganizerFinanceView() {
             <Card variant="cabinet" className="p-4 sm:p-6">
               <h2 className="font-heading text-base font-bold text-charcoal">Пакеты выплат</h2>
               <CabinetTableWrap className="mt-4">
-                <Table>
+                <Table className="min-w-[560px]">
                   <TableHeader>
                     <TableRow className={cabinetTableHeaderClass}>
                       <TableHead>Период</TableHead>
@@ -241,7 +241,7 @@ export default function OrganizerFinanceView() {
                 Разбивка комиссии при каждом успешном списании
               </p>
               <CabinetTableWrap className="mt-4">
-                <Table>
+                <Table className="min-w-[720px]">
                   <TableHeader>
                     <TableRow className={cabinetTableHeaderClass}>
                       <TableHead>Заявка / тур</TableHead>

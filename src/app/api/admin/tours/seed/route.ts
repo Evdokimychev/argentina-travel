@@ -15,7 +15,13 @@ export async function POST(request: Request) {
   const errors: string[] = [];
 
   for (const { tour, ownerUserId } of rows) {
-    const result = await upsertTourFromCanonical(supabase, tour, ownerUserId);
+    const result = await upsertTourFromCanonical(
+      supabase,
+      tour,
+      ownerUserId,
+      undefined,
+      { bypassModeration: true }
+    );
     if ("error" in result) {
       errors.push(`${tour.slug}: ${result.error}`);
     } else {

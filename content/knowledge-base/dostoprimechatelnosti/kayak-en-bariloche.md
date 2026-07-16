@@ -1,7 +1,7 @@
 ---
 id: kayak-en-bariloche
 type: attraction
-title: Kayak en Барилоче
+title: Каякинг на озёрах Барилоче
 title_es: Kayak en Bariloche
 title_en: Kayak in Bariloche
 summary: "Каякинг в Барилоче по озёрам Науэль-Уапи и Морено."

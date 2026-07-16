@@ -89,8 +89,12 @@ for (const group of groupNames) {
         NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.goargentina.ru",
         SEO_AUDIT_BASE_URL:
           process.env.SEO_AUDIT_BASE_URL ?? "https://www.goargentina.ru",
-        PLAYWRIGHT_BASE_URL:
-          process.env.PLAYWRIGHT_BASE_URL ?? "https://www.goargentina.ru",
+        // Leave Playwright unset for local/CI gates so its config starts the
+        // candidate application. A deployed environment can still be supplied
+        // explicitly by the caller.
+        ...(process.env.PLAYWRIGHT_BASE_URL
+          ? { PLAYWRIGHT_BASE_URL: process.env.PLAYWRIGHT_BASE_URL }
+          : {}),
       },
       encoding: "utf8",
       maxBuffer: 100 * 1024 * 1024,

@@ -16,6 +16,7 @@ import { buildCmsRevisionDiff } from "@/lib/cms/revision-diff";
 import { parseContentSlugList } from "@/lib/cms-content-cross-links";
 import type { CmsLocaleCoverage } from "@/lib/cms/cms-locale";
 import { isI18nLocale, type I18nLocale } from "@/lib/i18n/config";
+import { addLocalePrefix } from "@/lib/i18n/locale-path";
 import type { BlogPostSection } from "@/types";
 import type { ContentSection } from "@/types/content-page";
 import type {
@@ -297,6 +298,8 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
       title: seo.title?.trim() || undefined,
       description: seo.description?.trim() || undefined,
       image: seo.image?.trim() || undefined,
+      canonical: seo.canonical?.trim() || undefined,
+      noIndex: seo.noIndex === true ? true : undefined,
     };
   }
 
@@ -417,11 +420,15 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
     if (!canPublish) return;
     setSaving(true);
     try {
-      await fetch(`/api/admin/content/documents/${encodedId}`, {
+      const saveResponse = await fetch(`/api/admin/content/documents/${encodedId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: title.trim(), body: buildBody(), seo: buildSeo() }),
       });
+      const saved = (await saveResponse.json()) as DocumentResponse;
+      if (!saveResponse.ok) {
+        throw new Error(saved.error ?? "Не удалось сохранить изменения перед публикацией");
+      }
       const res = await fetch(`/api/admin/content/documents/${encodedId}/publish`, {
         method: "POST",
       });
@@ -555,7 +562,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
   const isBlogLike = isBlog || isAuthorArticle;
   const isDestination = doc.body.kind === "destination";
   const isPlace = doc.body.kind === "place";
-  const publicHref = isLegal
+  const publicPathWithoutLocale = isLegal
     ? `/legal/${doc.slug}`
     : isGuide
       ? `/guide/${doc.slug}`
@@ -566,6 +573,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
           : isDestination
             ? `/destinations/${doc.slug}`
             : `/places/${doc.slug}`;
+  const publicHref = addLocalePrefix(publicPathWithoutLocale, currentLocale);
 
   const isScheduled = status === "scheduled";
   const scheduledLabel =
@@ -902,6 +910,7 @@ export default function ContentDocumentEditorView({ documentId }: Props) {
               seo={seo}
               onChange={setSeo}
               publicPath={publicHref}
+              documentStatus={status}
             />
 
             <section className={`${cabinetCardClass} p-4`}>

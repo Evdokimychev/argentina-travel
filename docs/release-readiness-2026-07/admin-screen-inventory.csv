@@ -1,0 +1,12 @@
+area,route,capability,status,main_risk
+dashboard,/admin,dashboard.view,implemented,production account smoke pending
+content,/admin/content,content.edit,implemented,publish workflow has open P1
+media,/admin/media,content.edit,implemented,rights and usage guard incomplete
+moderation,/admin/moderation,marketplace.moderation,implemented,submitted revision is not pinned
+staff,/admin/staff,users.manage,implemented,preset SQL migration pending
+settings,/admin/settings,system.settings,implemented,no versioned rollback for globals
+redirects,/admin/redirects,system.settings,implemented,cycle validation incomplete
+bookings,/admin/bookings,operations.bookings,implemented,authenticated E2E pending
+shop,/admin/shop,commerce.manage,partial,delivery asset chain incomplete
+analytics,/admin/analytics,analytics.view,partial,server ingestion incomplete
+health,/admin/health,system.audit,implemented,external infrastructure access not fully verified

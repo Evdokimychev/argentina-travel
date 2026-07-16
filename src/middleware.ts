@@ -15,18 +15,72 @@ import {
   shouldBlockInternalRoute,
 } from "@/lib/internal-route-access";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
-import { fetchSiteFeatures } from "@/lib/site-settings-server";
-import { matchUrlRedirect } from "@/lib/redirects/url-redirect-server";
+import { fetchSiteFeaturesEdge } from "@/lib/site-settings-edge";
+import { matchUrlRedirectEdge } from "@/lib/redirects/url-redirect-edge";
 import { tourPrivateAccessCookieName } from "@/lib/tour-private-access";
 import { getAppRuntimeMode } from "@/lib/runtime-mode";
 import {
   COOKIE_CONSENT_COOKIE_NAME,
   hasPersonalizationConsentFromCookieValue,
 } from "@/lib/cookie-consent";
+import { isCanonicalIndexingRequest } from "@/lib/robots-txt";
 import type { Database } from "@/types/database";
 
 const FIRST_TOUCH_COOKIE_MAX_AGE = 60 * 60 * 24 * 90;
 const TOUR_PRIVATE_ACCESS_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
+
+function publicDetailMatch(pathname: string): {
+  kind: "tours" | "excursions";
+  slug: string;
+} | null {
+  const match = pathname.match(/^\/(tours|excursions)\/([^/]+)$/);
+  if (!match) return null;
+  return {
+    kind: match[1] as "tours" | "excursions",
+    slug: match[2]!,
+  };
+}
+
+async function rejectMissingPublicDetail(
+  request: NextRequest,
+  routePathname: string,
+): Promise<NextResponse | null> {
+  if (request.method !== "GET" && request.method !== "HEAD") return null;
+
+  const detail = publicDetailMatch(routePathname);
+  if (!detail) return null;
+
+  if (
+    detail.kind === "tours" &&
+    (request.nextUrl.searchParams.has("access") ||
+      request.cookies.has(tourPrivateAccessCookieName(detail.slug)))
+  ) {
+    return null;
+  }
+
+  try {
+    const checkUrl = new URL(
+      `/api/public-detail-exists/${detail.kind}/${encodeURIComponent(detail.slug)}`,
+      request.url,
+    );
+    const response = await fetch(checkUrl, { method: "HEAD" });
+    if (response.status !== 404) return null;
+
+    const notFoundUrl = request.nextUrl.clone();
+    notFoundUrl.pathname = "/_not-found";
+    notFoundUrl.search = "";
+
+    return NextResponse.rewrite(notFoundUrl, {
+      status: 404,
+      headers: {
+        "Cache-Control": "public, max-age=60, s-maxage=600",
+        "X-Robots-Tag": "noindex, nofollow",
+      },
+    });
+  } catch {
+    return null;
+  }
+}
 
 function applyFirstTouchAttributionCookie(
   request: NextRequest,
@@ -71,7 +125,7 @@ function applyTourPrivateAccessCookie(
   response: NextResponse,
 ): NextResponse {
   const pathname = stripLocalePrefix(request.nextUrl.pathname);
-  const tourMatch = pathname.match(/^\/tours\/([^/]+)$/);
+  const tourMatch = pathname.match(/^\/(?:tours|excursions)\/([^/]+)$/);
   if (!tourMatch) return response;
 
   const access = request.nextUrl.searchParams.get("access")?.trim();
@@ -92,10 +146,20 @@ function finalizeMiddlewareResponse(
   request: NextRequest,
   response: NextResponse,
 ): NextResponse {
-  return applyTourPrivateAccessCookie(
+  const finalized = applyTourPrivateAccessCookie(
     request,
     applyFirstTouchAttributionCookie(request, response),
   );
+
+  if (!isCanonicalIndexingRequest(request.url)) {
+    finalized.headers.set("X-Robots-Tag", "noindex, nofollow");
+  } else if (getLocaleFromPathname(request.nextUrl.pathname)) {
+    // /en and /es currently reuse fallback copy. Publish them only after the
+    // CMS exposes a locale-aware publication registry and hreflang entries.
+    finalized.headers.set("X-Robots-Tag", "noindex, follow");
+  }
+
+  return finalized;
 }
 
 function createSupabaseMiddlewareClient(request: NextRequest, response: NextResponse) {
@@ -171,9 +235,12 @@ export async function middleware(request: NextRequest) {
     });
   }
 
+  const missingPublicDetail = await rejectMissingPublicDetail(request, routePathname);
+  if (missingPublicDetail) return missingPublicDetail;
+
   if (request.method === "GET" || request.method === "HEAD") {
     try {
-      const redirect = await matchUrlRedirect(routePathname);
+      const redirect = await matchUrlRedirectEdge(routePathname);
       if (redirect) {
         const target = redirect.toPath.startsWith("http")
           ? new URL(redirect.toPath)
@@ -210,7 +277,7 @@ export async function middleware(request: NextRequest) {
 
   if (!isMaintenanceExempt(routePathname)) {
     try {
-      const features = await fetchSiteFeatures();
+      const features = await fetchSiteFeaturesEdge();
       if (features.maintenanceMode) {
         return NextResponse.redirect(new URL("/maintenance", request.url));
       }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { ArrowRightLeft, Plane, Search } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
@@ -27,7 +27,7 @@ function HubOptionButton({
     <li>
       <button
         type="button"
-        className="flex w-full items-start justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50"
+        className="flex min-h-11 w-full items-start justify-between gap-3 rounded-xl px-3 py-2.5 text-left transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
         onClick={() => onSelect(hub.code)}
       >
         <span className="min-w-0">
@@ -135,6 +135,8 @@ export function HubPicker({
   const [open, setOpen] = useState(false);
   const [searchEnabled, setSearchEnabled] = useState(false);
   const [query, setQuery] = useState("");
+  const optionsId = useId();
+  const statusId = useId();
   const sections = useMemo(() => getFlightHubPickerSections(kind), [kind]);
   const filteredSections = useMemo(
     () => filterHubSections(sections, query),
@@ -165,8 +167,9 @@ export function HubPicker({
       <PopoverTrigger asChild>
         <button
           type="button"
+          aria-label={`${label}: ${value ? getFlightHubLabel(value) : placeholder}`}
           className={cn(
-            "flex min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-gray-50/80 sm:px-4 lg:py-3",
+            "flex min-h-11 min-w-0 flex-1 items-center gap-2.5 px-3 py-2.5 text-left transition-colors hover:bg-gray-50/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky/40 sm:px-4 lg:py-3",
             compact && "lg:py-2.5",
             triggerClassName,
           )}
@@ -201,10 +204,15 @@ export function HubPicker({
         {searchEnabled ? (
           <div className="shrink-0 border-b border-gray-100 p-3">
             <Input
+              autoFocus
+              type="search"
               placeholder={placeholder}
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              className="h-9"
+              aria-label={`Поиск аэропорта: ${label.toLowerCase()}`}
+              aria-controls={optionsId}
+              aria-describedby={statusId}
+              className="h-11"
             />
           </div>
         ) : (
@@ -212,14 +220,20 @@ export function HubPicker({
             <button
               type="button"
               onClick={enableSearch}
-              className="flex h-9 w-full items-center gap-2 rounded-lg border border-gray-200 px-3 text-sm text-slate transition-colors hover:border-sky/30 hover:bg-sky/[0.03]"
+              className="flex min-h-11 w-full items-center gap-2 rounded-lg border border-gray-200 px-3 text-sm text-slate transition-colors hover:border-sky/30 hover:bg-sky/[0.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
             >
               <Search className="h-4 w-4 shrink-0" aria-hidden />
               Искать…
             </button>
           </div>
         )}
-        <ul className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
+        <p id={statusId} className="sr-only" role="status" aria-live="polite">
+          {filteredSections &&
+          filteredSections.popular.length + filteredSections.all.length > 0
+            ? `Найдено ${filteredSections.popular.length + filteredSections.all.length} вариантов`
+            : "Аэропорты не найдены"}
+        </p>
+        <ul id={optionsId} className="min-h-0 flex-1 overflow-y-auto px-2 py-2">
           {filteredSections ? (
             <HubOptionsList sections={filteredSections} onSelect={handleSelect} />
           ) : null}
@@ -274,7 +288,7 @@ export function FlightRouteRow({
         <button
           type="button"
           onClick={swapEndpoints}
-          className="relative z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5"
+          className="relative z-10 flex h-11 w-11 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:h-9 sm:w-9"
           aria-label={t("flights.form.swap")}
         >
           <ArrowRightLeft className="h-3.5 w-3.5" />
@@ -292,7 +306,7 @@ export function FlightRouteRow({
       <button
         type="button"
         onClick={swapEndpoints}
-        className="absolute right-2 top-1/2 z-10 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5 sm:hidden"
+        className="absolute right-1.5 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-gray-200 bg-white text-sky shadow-sm transition-colors hover:border-sky/30 hover:bg-sky/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:hidden"
         aria-label={t("flights.form.swap")}
       >
         <ArrowRightLeft className="h-3.5 w-3.5" />

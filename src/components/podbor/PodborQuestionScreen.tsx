@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, Minus, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import PodborOptionCard from "./PodborOptionCard";
 import {
@@ -28,6 +28,9 @@ export default function PodborQuestionScreen({
   canGoBack,
 }: PodborQuestionScreenProps) {
   const ready = canProceed(question, selected);
+  const numericValue = question.numericInput
+    ? Number(selected[0] ?? question.numericInput.defaultValue)
+    : null;
   const isCompactGrid =
     question.id === "duration" ||
     question.id === "budget" ||
@@ -70,6 +73,36 @@ export default function PodborQuestionScreen({
           ) : null}
         </div>
 
+        {question.numericInput && numericValue != null ? (
+          <div className="flex items-center justify-center gap-4 rounded-xl border border-gray-200 bg-white p-6 shadow-card">
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Уменьшить количество путешественников"
+              disabled={numericValue <= question.numericInput.min}
+              onClick={() => onChange([String(Math.max(question.numericInput!.min, numericValue - 1))])}
+            >
+              <Minus className="h-5 w-5" aria-hidden />
+            </Button>
+            <output
+              aria-live="polite"
+              className="min-w-28 text-center font-heading text-3xl font-bold tabular-nums text-charcoal"
+            >
+              {numericValue} {numericValue === 1 ? "человек" : numericValue < 5 ? "человека" : "человек"}
+            </output>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              aria-label="Увеличить количество путешественников"
+              disabled={numericValue >= question.numericInput.max}
+              onClick={() => onChange([String(Math.min(question.numericInput!.max, numericValue + 1))])}
+            >
+              <Plus className="h-5 w-5" aria-hidden />
+            </Button>
+          </div>
+        ) : (
         <div
           className={
             isCompactGrid
@@ -90,6 +123,7 @@ export default function PodborQuestionScreen({
             />
           ))}
         </div>
+        )}
 
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-gray-100 bg-white/95 backdrop-blur-md">
           <div className="mx-auto flex max-w-3xl items-center justify-between gap-3 px-4 py-4 sm:px-6">

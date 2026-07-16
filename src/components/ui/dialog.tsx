@@ -152,7 +152,7 @@ function DialogContent({
         </DialogPrimitive.Close>
         {showClose ? (
           <DialogPrimitive.Close
-            className="absolute right-4 top-4 z-20 flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+            className="absolute right-4 top-[max(1rem,env(safe-area-inset-top,0px))] z-20 flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40 sm:top-4"
             aria-label="Закрыть"
           >
             <X className="h-4 w-4" />

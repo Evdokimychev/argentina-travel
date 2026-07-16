@@ -1,7 +1,7 @@
 ---
 id: lagos-de-tierra-del-fuego
 type: attraction
-title: Lagos de Огненная Земля
+title: Озёра Огненной Земли
 title_es: Lagos de Tierra del Fuego
 title_en: Tierra del Fuego lakes
 summary: "Озёра Огненной Земли: лагуна Эсмеральда и озёра Фаньяно, Эскондидо и Асигами (Рока)."

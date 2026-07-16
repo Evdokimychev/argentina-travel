@@ -3,6 +3,7 @@
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { CALLOUT_VARIANTS } from "@/lib/cms/page-builder/block-registry";
 import type { BlogBodyBlock } from "@/types/blog-content-blocks";
 
@@ -361,6 +362,251 @@ export default function PageBuilderBlockFields({ block, onChange, onPickMedia }:
             onChange={(e) => onChange({ ...block, caption: e.target.value || undefined })}
             placeholder="Подпись"
           />
+        </div>
+      );
+
+    case "image-text":
+      return (
+        <div className="space-y-3">
+          <div className="flex gap-2">
+            <Input
+              value={block.src}
+              onChange={(e) => onChange({ ...block, src: e.target.value })}
+              placeholder="Адрес фотографии"
+              aria-label="Адрес фотографии"
+              className="font-mono text-xs"
+            />
+            {onPickMedia ? (
+              <Button type="button" size="sm" variant="outline" onClick={onPickMedia}>
+                Выбрать
+              </Button>
+            ) : null}
+          </div>
+          <Input
+            value={block.alt}
+            onChange={(e) => onChange({ ...block, alt: e.target.value })}
+            placeholder="Что изображено — для доступности"
+            aria-label="Описание фотографии"
+          />
+          <Input
+            value={block.title}
+            onChange={(e) => onChange({ ...block, title: e.target.value })}
+            placeholder="Заголовок истории"
+            aria-label="Заголовок"
+          />
+          <Textarea
+            value={block.body}
+            onChange={(e) => onChange({ ...block, body: e.target.value })}
+            placeholder="Текст рядом с фотографией"
+            aria-label="Основной текст"
+          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <NativeSelect
+              value={block.imagePosition ?? "left"}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  imagePosition: e.target.value as typeof block.imagePosition,
+                })
+              }
+              aria-label="Положение фотографии"
+            >
+              <option value="left">Фото слева</option>
+              <option value="right">Фото справа</option>
+            </NativeSelect>
+            <Input
+              value={block.caption ?? ""}
+              onChange={(e) => onChange({ ...block, caption: e.target.value || undefined })}
+              placeholder="Подпись на фото"
+              aria-label="Подпись на фотографии"
+            />
+          </div>
+        </div>
+      );
+
+    case "author-card":
+      return (
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Input
+              value={block.name}
+              onChange={(e) => onChange({ ...block, name: e.target.value })}
+              placeholder="Имя автора"
+              aria-label="Имя автора"
+            />
+            <Input
+              value={block.role ?? ""}
+              onChange={(e) => onChange({ ...block, role: e.target.value || undefined })}
+              placeholder="Автор, эксперт, проводник"
+              aria-label="Роль автора"
+            />
+          </div>
+          <Textarea
+            value={block.bio}
+            onChange={(e) => onChange({ ...block, bio: e.target.value })}
+            placeholder="Коротко об опыте и связи автора с Аргентиной"
+            aria-label="Описание автора"
+          />
+          <div className="flex gap-2">
+            <Input
+              value={block.avatarSrc ?? ""}
+              onChange={(e) => onChange({ ...block, avatarSrc: e.target.value || undefined })}
+              placeholder="Адрес портрета"
+              aria-label="Адрес портрета"
+              className="font-mono text-xs"
+            />
+            {onPickMedia ? (
+              <Button type="button" size="sm" variant="outline" onClick={onPickMedia}>
+                Выбрать
+              </Button>
+            ) : null}
+          </div>
+          <Input
+            value={block.avatarAlt ?? ""}
+            onChange={(e) => onChange({ ...block, avatarAlt: e.target.value || undefined })}
+            placeholder="Описание портрета"
+            aria-label="Описание портрета"
+          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Input
+              value={block.href ?? ""}
+              onChange={(e) => onChange({ ...block, href: e.target.value || undefined })}
+              placeholder="Ссылка на страницу автора"
+              aria-label="Ссылка на страницу автора"
+            />
+            <Input
+              value={block.linkLabel ?? ""}
+              onChange={(e) => onChange({ ...block, linkLabel: e.target.value || undefined })}
+              placeholder="Текст ссылки: Об авторе"
+              aria-label="Текст ссылки"
+            />
+          </div>
+        </div>
+      );
+
+    case "facts-grid":
+      return (
+        <div className="space-y-3">
+          <div className="grid gap-2 sm:grid-cols-[1fr_10rem]">
+            <Input
+              value={block.title ?? ""}
+              onChange={(e) => onChange({ ...block, title: e.target.value || undefined })}
+              placeholder="Заголовок блока"
+              aria-label="Заголовок блока фактов"
+            />
+            <NativeSelect
+              value={block.columns ?? 3}
+              onChange={(e) =>
+                onChange({
+                  ...block,
+                  columns: Number(e.target.value) as typeof block.columns,
+                })
+              }
+              aria-label="Количество колонок"
+            >
+              <option value={2}>2 колонки</option>
+              <option value={3}>3 колонки</option>
+              <option value={4}>4 колонки</option>
+            </NativeSelect>
+          </div>
+          {block.items.map((item, index) => (
+            <fieldset key={index} className="space-y-2 rounded-xl border border-gray-100 p-3">
+              <legend className="px-1 text-xs font-medium text-slate">Факт {index + 1}</legend>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <Input
+                  value={item.label}
+                  onChange={(e) => {
+                    const items = [...block.items];
+                    items[index] = { ...items[index], label: e.target.value };
+                    onChange({ ...block, items });
+                  }}
+                  placeholder="Параметр: Когда ехать"
+                  aria-label={`Название факта ${index + 1}`}
+                />
+                <Input
+                  value={item.value}
+                  onChange={(e) => {
+                    const items = [...block.items];
+                    items[index] = { ...items[index], value: e.target.value };
+                    onChange({ ...block, items });
+                  }}
+                  placeholder="Значение: Октябрь — апрель"
+                  aria-label={`Значение факта ${index + 1}`}
+                />
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  value={item.description ?? ""}
+                  onChange={(e) => {
+                    const items = [...block.items];
+                    items[index] = {
+                      ...items[index],
+                      description: e.target.value || undefined,
+                    };
+                    onChange({ ...block, items });
+                  }}
+                  placeholder="Пояснение (необязательно)"
+                  aria-label={`Пояснение к факту ${index + 1}`}
+                />
+                {block.items.length > 1 ? (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    className="shrink-0 text-error"
+                    onClick={() =>
+                      onChange({
+                        ...block,
+                        items: block.items.filter((_, itemIndex) => itemIndex !== index),
+                      })
+                    }
+                    aria-label={`Удалить факт ${index + 1}`}
+                  >
+                    Удалить
+                  </Button>
+                ) : null}
+              </div>
+            </fieldset>
+          ))}
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() =>
+              onChange({
+                ...block,
+                items: [...block.items, { label: "", value: "" }],
+              })
+            }
+          >
+            + Добавить факт
+          </Button>
+        </div>
+      );
+
+    case "quote":
+      return (
+        <div className="space-y-3">
+          <Textarea
+            value={block.text}
+            onChange={(e) => onChange({ ...block, text: e.target.value })}
+            placeholder="Текст цитаты"
+            aria-label="Текст цитаты"
+          />
+          <div className="grid gap-2 sm:grid-cols-2">
+            <Input
+              value={block.author ?? ""}
+              onChange={(e) => onChange({ ...block, author: e.target.value || undefined })}
+              placeholder="Автор цитаты"
+              aria-label="Автор цитаты"
+            />
+            <Input
+              value={block.context ?? ""}
+              onChange={(e) => onChange({ ...block, context: e.target.value || undefined })}
+              placeholder="Роль или источник"
+              aria-label="Источник цитаты"
+            />
+          </div>
         </div>
       );
 

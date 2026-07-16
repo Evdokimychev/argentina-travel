@@ -282,7 +282,7 @@ export default function OrganizerSidebar({
 
       <nav
         className={cn(
-          "shrink-0 space-y-1",
+          "min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain scrollbar-thin",
           isCompact ? "px-2 py-3" : "px-3 py-4"
         )}
       >
@@ -370,11 +370,11 @@ export default function OrganizerSidebar({
 export function OrganizerMobileHeader() {
   return (
     <div className={cabinetMobileHeaderClass}>
-      <Link href="/" className="inline-flex">
+      <Link href="/" className="inline-flex min-h-11 items-center">
         <ArgentinaLogo size="sm" />
       </Link>
       <p className="text-sm font-semibold text-foreground">Кабинет организатора</p>
-      <Link href="/organizer/settings" className="text-xs font-medium text-sky">
+      <Link href="/organizer/settings" className="-mr-2 inline-flex min-h-11 items-center px-2 text-xs font-medium text-sky">
         Управление
       </Link>
     </div>
@@ -398,6 +398,15 @@ export function OrganizerMobileNav() {
     setMoreOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!moreOpen) return;
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setMoreOpen(false);
+    };
+    window.addEventListener("keydown", closeOnEscape);
+    return () => window.removeEventListener("keydown", closeOnEscape);
+  }, [moreOpen]);
+
   function renderPrimaryItem(item: OrganizerNavItem) {
     const Icon = NAV_ICONS[item.id];
     const active = isNavItemActive(pathname, item.href);
@@ -405,6 +414,7 @@ export function OrganizerMobileNav() {
       <Link
         key={item.id}
         href={item.href}
+        aria-current={active ? "page" : undefined}
         className={cn(
           "relative flex min-h-11 min-w-11 flex-col items-center justify-center gap-1 rounded-xl px-2 py-1.5 text-[11px] font-semibold transition-colors",
           active ? "text-sky" : "text-slate hover:text-foreground"
@@ -435,6 +445,7 @@ export function OrganizerMobileNav() {
         <button
           type="button"
           aria-expanded={moreOpen}
+          aria-controls="organizer-mobile-more-menu"
           aria-label="Ещё разделы"
           onClick={() => setMoreOpen((prev) => !prev)}
           className={cn(
@@ -467,7 +478,7 @@ export function OrganizerMobileNav() {
             onClick={() => setMoreOpen(false)}
             className="absolute inset-0 bg-black/25"
           />
-          <div className="absolute inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] rounded-2xl border border-border-subtle bg-surface-elevated p-2 shadow-elevated">
+          <div id="organizer-mobile-more-menu" role="dialog" aria-modal="true" aria-label="Дополнительные разделы кабинета организатора" className="absolute inset-x-3 bottom-[calc(4.75rem+env(safe-area-inset-bottom,0px))] max-h-[calc(100dvh-6.5rem-env(safe-area-inset-bottom,0px))] overflow-y-auto overscroll-contain rounded-2xl border border-border-subtle bg-surface-elevated p-2 shadow-elevated">
             <div className="grid grid-cols-2 gap-2">
               {moreItems.map((item) => {
                 const Icon = NAV_ICONS[item.id];
@@ -476,6 +487,7 @@ export function OrganizerMobileNav() {
                   <Link
                     key={item.id}
                     href={item.href}
+                    aria-current={active ? "page" : undefined}
                     onClick={() => setMoreOpen(false)}
                     className={cn(
                       cabinetSurfaceButtonClass,
@@ -497,6 +509,7 @@ export function OrganizerMobileNav() {
               })}
               <Link
                 href="/organizer/settings"
+                aria-current={pathname.startsWith("/organizer/settings") ? "page" : undefined}
                 onClick={() => setMoreOpen(false)}
                 className={cn(
                   cabinetSurfaceButtonClass,

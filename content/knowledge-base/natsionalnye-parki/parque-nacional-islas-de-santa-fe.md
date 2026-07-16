@@ -1,7 +1,7 @@
 ---
 id: parque-nacional-islas-de-santa-fe
 type: national_park
-title: национальный парк Islas de Santa Fe
+title: Национальный парк Ислас-де-Санта-Фе
 title_es: Parque Nacional Islas de Santa Fe
 title_en: Islas de Santa Fe National Park
 summary: "Островной парк на Паране в Санта-Фе — почти три тысячи гектаров нетронутой дельты."

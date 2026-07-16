@@ -7,7 +7,7 @@ import { totalCommandTravelers } from "@/lib/booking-create-command";
 import { calculateCanonicalBookingPrice } from "@/lib/booking-create-pricing";
 import type { BookingPriceSnapshot } from "@/lib/booking-create-pricing";
 import { resolveTourCheckoutRoomOptions } from "@/lib/tour-checkout-accommodation";
-import { fetchPublishedTourBookingSourceById } from "@/lib/tour-content-server";
+import { fetchPublishedTourBookingSourceByIdServer } from "@/lib/tour-content-server";
 import { getAllCanonicalTours } from "@/lib/tour-repository";
 import { tourToDetail } from "@/lib/tour-mapper";
 import { resolveTourOwnerUserId } from "@/lib/organizer-public";
@@ -142,7 +142,7 @@ export async function buildCanonicalBooking(
   command: CreateBookingCommand,
   authUserId?: string | null
 ): Promise<{ booking: Booking; organizerUserId: string; requestFingerprint: string }> {
-  const databaseSource = await fetchPublishedTourBookingSourceById(supabase, command.tourId);
+  const databaseSource = await fetchPublishedTourBookingSourceByIdServer(command.tourId);
   const canonicalTour = databaseSource
     ? null
     : getAllCanonicalTours().find(

@@ -31,7 +31,7 @@ import { openSiteMap, prefetchQuickExploreMap } from "@/lib/site-map-open";
 import { openSiteSearch } from "@/lib/site-search-open";
 import { siteViewportInsetClass } from "@/lib/site-container";
 import { resolveNavLabel } from "@/lib/site-nav";
-import type { SiteNavigationGlobal } from "@/types/site-globals";
+import type { SiteDesignGlobal, SiteNavigationGlobal } from "@/types/site-globals";
 
 const CircleButton = forwardRef<
   HTMLButtonElement,
@@ -94,7 +94,13 @@ const SECTION_VISIBILITY_KEYS: Partial<Record<string, keyof SiteNavigationGlobal
   about: "showAbout",
 };
 
-export default function Header({ navigation }: { navigation?: SiteNavigationGlobal }) {
+export default function Header({
+  navigation,
+  design,
+}: {
+  navigation?: SiteNavigationGlobal;
+  design?: SiteDesignGlobal;
+}) {
   const router = useRouter();
   const pathname = usePathname();
   const canGoBack = useCanGoBack();
@@ -105,6 +111,10 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
   const mobileMenuTriggerRef = useRef<HTMLButtonElement>(null);
   const { t } = useLocaleCurrency();
   const { isAuthenticated, openAuth } = useAuth();
+  const compact = design?.headerVariant === "compact";
+  const showUtilityBar = design?.showUtilityBar === true;
+  const showMapButton = design?.showHeaderMapButton !== false;
+  const showThemeToggle = design?.showThemeToggle !== false;
 
   const headerAutoHideDisabled = mobileMenuOpen || openMegaMenuId !== null;
   const overlayLocked = useSiteHeaderOverlayLocked();
@@ -152,26 +162,28 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
 
   const mobileMenuHeaderActions = (
     <>
-      <button
-        type="button"
-        onClick={() => {
-          setMobileMenuOpen(false);
-          openSiteMap();
-        }}
-        onMouseEnter={prefetchQuickExploreMap}
-        onFocus={prefetchQuickExploreMap}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
-        aria-label="Быстрая карта"
-      >
-        <MapPinned className="h-4 w-4" strokeWidth={1.75} aria-hidden />
-      </button>
+      {showMapButton ? (
+        <button
+          type="button"
+          onClick={() => {
+            setMobileMenuOpen(false);
+            openSiteMap();
+          }}
+          onMouseEnter={prefetchQuickExploreMap}
+          onFocus={prefetchQuickExploreMap}
+          className="flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+          aria-label="Быстрая карта"
+        >
+          <MapPinned className="h-4 w-4" strokeWidth={1.75} aria-hidden />
+        </button>
+      ) : null}
       <button
         type="button"
         onClick={() => {
           setMobileMenuOpen(false);
           openSiteSearch();
         }}
-        className="flex h-9 w-9 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-border-subtle text-foreground transition-colors hover:border-sky/40 hover:bg-sky/5 hover:text-sky focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky/40"
         aria-label="Поиск по сайту"
       >
         <Search className="h-4 w-4" strokeWidth={1.75} aria-hidden />
@@ -180,7 +192,7 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
         <Link
           href="/profile"
           onClick={() => setMobileMenuOpen(false)}
-          className="hidden rounded-full px-3 py-1.5 text-xs font-semibold text-sky transition-colors hover:bg-sky/5 sm:inline-flex"
+          className="inline-flex min-h-11 items-center rounded-full px-3 py-1.5 text-xs font-semibold text-sky-ink transition-colors hover:bg-sky/5 dark:text-sky"
         >
           {t("nav.profile")}
         </Link>
@@ -191,7 +203,7 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
             setMobileMenuOpen(false);
             openAuth();
           }}
-          className="hidden rounded-full px-3 py-1.5 text-xs font-semibold text-charcoal transition-colors hover:bg-surface-muted sm:inline-flex"
+          className="inline-flex min-h-11 items-center rounded-full px-3 py-1.5 text-xs font-semibold text-charcoal transition-colors hover:bg-surface-muted"
         >
           Войти
         </button>
@@ -200,8 +212,9 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
   );
 
   const mobileMenuFooter = (
-    <div className="flex items-center justify-center">
-      <LocaleCurrencySwitcher variant="compact" />
+    <div className="flex items-center justify-center gap-3">
+      {showThemeToggle ? <ThemeToggle /> : null}
+      <LocaleCurrencySwitcher />
     </div>
   );
 
@@ -213,17 +226,19 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
         headerScrolled && tokenHeaderShellScrolledClass,
         !headerVisible && "-translate-y-full",
       )}
+      data-variant={compact ? "compact" : "floating"}
     >
       <div
         className={cn(
-          "site-header-utility-bar hidden overflow-hidden border-b border-charcoal/[0.04] md:grid md:grid-rows-[1fr]"
+          "site-header-utility-bar hidden border-b border-charcoal/[0.04] dark:border-white/[0.06]",
+          showUtilityBar && "md:block",
         )}
       >
         <div className="min-h-0 overflow-hidden">
           <div
             className={cn(
               siteViewportInsetClass,
-              "flex items-center justify-between gap-4 py-2 text-2xs text-slate"
+              "flex items-center justify-between gap-4 py-1.5 text-2xs text-slate"
             )}
           >
             <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-1">
@@ -251,10 +266,19 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
         </div>
       </div>
 
-      <div className={cn(siteViewportInsetClass, "pb-2.5 pt-3 sm:pb-3 sm:pt-3.5 lg:pt-4")}>
-        <div className={tokenHeaderNavBarClass}>
+      <div
+        className={cn(
+          siteViewportInsetClass,
+          compact ? "py-1.5" : "pb-2 pt-2.5 sm:pb-2.5 sm:pt-2.5",
+        )}
+      >
+        <div className={cn(tokenHeaderNavBarClass, compact && "py-1.5")}>
           {canGoBack ? (
-            <CircleButton ariaLabel="Назад" onClick={() => router.back()}>
+            <CircleButton
+              ariaLabel="Назад"
+              onClick={() => router.back()}
+              className="lg:hidden"
+            >
               <ArrowLeft className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </CircleButton>
           ) : null}
@@ -265,13 +289,15 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
             ariaExpanded={mobileMenuOpen}
             ariaControls="site-nav-overlay"
             onClick={() => setMobileMenuOpen((open) => !open)}
-            className="lg:hidden"
+            className="xl:hidden"
           >
             <Menu className="h-[18px] w-[18px]" strokeWidth={1.75} />
           </CircleButton>
 
           <Link href="/" className="relative z-10 shrink-0" aria-label={t("nav.home")}>
-            <ArgentinaLogo />
+            <ArgentinaLogo
+              className={cn(canGoBack && "max-sm:h-9", compact && "!h-9")}
+            />
           </Link>
 
           <DesktopSiteNav
@@ -283,24 +309,31 @@ export default function Header({ navigation }: { navigation?: SiteNavigationGlob
           />
 
           <div className="relative z-10 ml-auto flex shrink-0 items-center gap-1 sm:gap-1.5">
-            <CircleButton
-              ariaLabel="Быстрая карта — куда поехать"
-              onClick={() => openSiteMap()}
-              onMouseEnter={prefetchQuickExploreMap}
-              onFocus={prefetchQuickExploreMap}
-              className="max-sm:hidden bg-sky-ink text-white ring-sky-ink/30 hover:bg-sky-ink/90 hover:text-white hover:ring-sky-ink/40 dark:bg-sky dark:text-charcoal dark:ring-sky/40 dark:hover:bg-sky/90"
-            >
-              <MapPinned className="h-[18px] w-[18px]" strokeWidth={1.75} />
-            </CircleButton>
+            {showMapButton ? (
+              <button
+                type="button"
+                aria-label="Быстрая карта — куда поехать"
+                onClick={() => openSiteMap()}
+                onMouseEnter={prefetchQuickExploreMap}
+                onFocus={prefetchQuickExploreMap}
+                className="hidden min-h-10 items-center gap-2 rounded-full bg-sky-ink px-3 text-sm font-semibold text-white ring-1 ring-sky-ink/30 transition-colors hover:bg-sky-ink/90 xl:inline-flex dark:bg-sky dark:text-charcoal dark:ring-sky/40 dark:hover:bg-sky/90"
+              >
+                <MapPinned className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                Карта
+              </button>
+            ) : null}
             <CircleButton
               ariaLabel="Поиск по сайту"
               onClick={() => openSiteSearch()}
+              className={canGoBack ? "max-[374px]:hidden" : undefined}
             >
               <Search className="h-[18px] w-[18px]" strokeWidth={1.75} />
             </CircleButton>
-            <ThemeToggle />
-            <LocaleCurrencySwitcher variant="header" />
-            <ProfileMenu />
+            {showThemeToggle ? (
+              <div className="hidden xl:block"><ThemeToggle /></div>
+            ) : null}
+            <div className="hidden xl:block"><LocaleCurrencySwitcher variant="header" /></div>
+            <div className="hidden xl:block"><ProfileMenu /></div>
           </div>
         </div>
       </div>

@@ -1,0 +1,21 @@
+
+> argentina-travel@0.1.0 sync-manual-posts:check
+> node scripts/sync-blog-manual-posts-from-md.mjs --check
+
+OK argentina-2-nedeli-marshrut.ts
+OK argentina-10-dnej-3-nedeli.ts
+OK ruta-40-sem-ozer.ts
+OK vnutrennie-aviabilety-argentina.ts
+OK kak-dobratsya-v-argentinu.ts
+OK byudzhet-poezdki-argentina.ts
+OK stoimost-zhizni-buenos-aires.ts
+OK kak-menyat-dengi-argentina.ts
+OK buenos-aires-rajony.ts
+OK mendoza-vinnyj-gid.ts
+OK vnzh-argentina-rezidenciya.ts
+OK viza-cifrovogo-kochevnika-argentina.ts
+OK dni-cuil-argentina.ts
+OK grazhdanstvo-argentiny.ts
+OK bankovskij-schet-argentina.ts
+OK index.ts
+All manual blog posts in sync with MD sources.

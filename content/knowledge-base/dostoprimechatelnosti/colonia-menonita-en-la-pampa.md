@@ -1,7 +1,7 @@
 ---
 id: colonia-menonita-en-la-pampa
 type: attraction
-title: Mennonite Colony in La Pampa
+title: Менонитская колония в Ла-Пампе
 title_es: Colonia menonita en La Pampa
 title_en: Mennonite Colony in La Pampa
 summary: Познакомьтесь с религиозной общиной, которая сохраняет свои обычаи более

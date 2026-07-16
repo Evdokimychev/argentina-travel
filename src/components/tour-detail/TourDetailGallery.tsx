@@ -1,7 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
-import Image from "next/image";
+import { useCallback, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { dedupeGalleryImages } from "@/lib/gallery-images";
@@ -19,33 +18,6 @@ interface TourDetailGalleryProps {
   layoutSeed?: string;
 }
 
-function useGalleryKeyboard(
-  enabled: boolean,
-  onPrev: () => void,
-  onNext: () => void,
-  onClose?: () => void
-) {
-  useEffect(() => {
-    if (!enabled) return;
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "ArrowLeft") {
-        event.preventDefault();
-        onPrev();
-      } else if (event.key === "ArrowRight") {
-        event.preventDefault();
-        onNext();
-      } else if (event.key === "Escape" && onClose) {
-        event.preventDefault();
-        onClose();
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [enabled, onClose, onNext, onPrev]);
-}
-
 function GalleryCarousel({
   images,
   title,
@@ -55,6 +27,7 @@ function GalleryCarousel({
   className,
   priorityFirst = false,
   scrollRef: externalScrollRef,
+  totalImageCount,
 }: {
   images: string[];
   title: string;
@@ -64,6 +37,7 @@ function GalleryCarousel({
   className?: string;
   priorityFirst?: boolean;
   scrollRef?: React.RefObject<HTMLDivElement | null>;
+  totalImageCount?: number;
 }) {
   const internalScrollRef = useRef<HTMLDivElement>(null);
   const scrollRef = externalScrollRef ?? internalScrollRef;
@@ -77,7 +51,7 @@ function GalleryCarousel({
       el.scrollTo({ left: nextIndex * el.clientWidth, behavior: "smooth" });
       onActiveIndexChange(nextIndex);
     },
-    [images.length, onActiveIndexChange]
+    [images.length, onActiveIndexChange, scrollRef]
   );
 
   const goPrev = useCallback(() => scrollToIndex(activeIndex - 1), [activeIndex, scrollToIndex]);
@@ -90,9 +64,7 @@ function GalleryCarousel({
     if (index >= 0 && index < images.length && index !== activeIndex) {
       onActiveIndexChange(index);
     }
-  }, [activeIndex, images.length, onActiveIndexChange]);
-
-  useGalleryKeyboard(hasMultiple, goPrev, goNext);
+  }, [activeIndex, images.length, onActiveIndexChange, scrollRef]);
 
   return (
     <div
@@ -179,7 +151,7 @@ function GalleryCarousel({
         onClick={() => onOpenLightbox(activeIndex)}
         className="absolute bottom-3 right-3 z-10 min-h-[44px] rounded-full bg-white/95 px-4 py-2 text-sm font-medium text-charcoal shadow-md backdrop-blur-sm"
       >
-        {hasMultiple ? `Все фото (${images.length})` : "На весь экран"}
+        {hasMultiple ? `Все фото (${totalImageCount ?? images.length})` : "На весь экран"}
       </button>
     </div>
   );
@@ -209,7 +181,7 @@ function GalleryThumbnailStrip({
       role="tablist"
       aria-label="Миниатюры галереи"
     >
-      {images.map((src, index) => (
+      {images.slice(0, 12).map((src, index) => (
         <button
           key={`${src}-thumb-${index}`}
           type="button"
@@ -222,10 +194,13 @@ function GalleryThumbnailStrip({
             index === activeIndex && "ring-2 ring-sky shadow-sm"
           )}
         >
-          <Image
+          <SafeImage
             src={buildSupabaseCdnUrl(src, { width: 320, quality: 72 })}
             alt={index === 0 ? title : `${title} — ${index + 1}`}
             fill
+            placeholderVariant="tour"
+            partnerImageWidth={320}
+            partnerImageQuality={72}
             className="object-cover"
             sizes="96px"
             loading="lazy"
@@ -245,6 +220,8 @@ export default function TourDetailGallery({
   const [activeIndex, setActiveIndex] = useState(0);
   const carouselScrollRef = useRef<HTMLDivElement>(null);
   const galleryImages = dedupeGalleryImages(images.filter(Boolean));
+  const mobileGalleryImages = galleryImages.slice(0, 12);
+  const mobileActiveIndex = Math.min(activeIndex, Math.max(0, mobileGalleryImages.length - 1));
   const mosaicSeed = layoutSeed ?? title;
 
   const scrollCarouselToIndex = useCallback((index: number) => {
@@ -271,24 +248,25 @@ export default function TourDetailGallery({
     <div data-scroll-rail-tone="dark">
       <div className={cn("w-full md:hidden", tourDetailGalleryMobileAspectClass)}>
         <GalleryCarousel
-          images={galleryImages}
+          images={mobileGalleryImages}
           title={title}
-          activeIndex={activeIndex}
+          activeIndex={mobileActiveIndex}
           onActiveIndexChange={setActiveIndex}
           onOpenLightbox={(index) => {
             setActiveIndex(index);
             setLightbox(true);
           }}
           scrollRef={carouselScrollRef}
+          totalImageCount={galleryImages.length}
           className="h-full"
           priorityFirst
         />
       </div>
 
       <GalleryThumbnailStrip
-        images={galleryImages}
+        images={mobileGalleryImages}
         title={title}
-        activeIndex={activeIndex}
+        activeIndex={mobileActiveIndex}
         onSelect={scrollCarouselToIndex}
         className="md:hidden"
       />

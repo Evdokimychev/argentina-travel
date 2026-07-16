@@ -1,0 +1,803 @@
+
+> argentina-travel@0.1.0 build
+> node scripts/build.mjs
+
+Application mode: production (protected build)
+Removed .next-production cache before production build
+Running next build …
+Migration meta: 67 files, latest=20260715202136_native_tour_excursion_workflow → src/lib/ops/migration-meta.generated.json
+   ▲ Next.js 15.5.19
+   - Environments: .env.local
+
+   Creating an optimized production build ...
+   Linting and checking validity of types ...
+
+./src/app/api/admin/cms/cutover-enable/route.ts
+6:3  Warning: 'fetchCmsCutoverReadiness' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/admin/excursions/route.ts
+3:10  Warning: 'clientIpFromRequest' is defined but never used.  @typescript-eslint/no-unused-vars
+3:31  Warning: 'writeAdminAuditLog' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/api/conversations/by-booking/[bookingId]/route.ts
+4:3  Warning: 'fetchConversationMessages' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/app/blog/feed.xml/route.ts
+1:10  Warning: 'NextResponse' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/archive/flights-native-search/components/AirportCombobox.tsx
+144:17  Warning: Elements with the ARIA role "option" must have the following attributes defined: aria-selected  jsx-a11y/role-has-required-aria-props
+
+./src/components/admin/CmsLocaleTabs.tsx
+17:3  Warning: 'docType' is defined but never used.  @typescript-eslint/no-unused-vars
+18:3  Warning: 'slug' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/admin/views/BookingsView.tsx
+42:9  Warning: The 'bookings' logical expression could make the dependencies of useMemo Hook (at line 60) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'bookings' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/admin/views/ContentDocumentEditorView.tsx
+320:6  Warning: React Hook useMemo has missing dependencies: 'buildBody' and 'buildSeo'. Either include them or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/admin/views/ShopOrdersView.tsx
+31:10  Warning: 'paymentStatusLabel' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/analytics/YandexMetrikaHeadScripts.tsx
+25:11  Warning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` or a custom image loader to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-element
+
+./src/components/auth/PhoneCountryInput.tsx
+299:13  Warning: 'start' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogPostBreadcrumbs.tsx
+1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogPostSectionView.tsx
+7:10  Warning: 'hasContentSlotImage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogReadingHistoryRecorder.tsx
+25:6  Warning: React Hook useEffect has a missing dependency: 'post'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/blog/BlogSearchFilters.tsx
+6:10  Warning: 'pluralizeArticles' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/blog/BlogStatsOverview.tsx
+3:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/flights/FlightsWhitelabelWidget.tsx
+5:41  Warning: 'ParsedFlightsSearch' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/GuidePillarView.tsx
+1:8  Warning: 'Link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/GuideWidgetSlot.tsx
+4:3  Warning: 'ArgentinaSeasonMatrixSkeleton' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/hub/DomesticRoutesMap.tsx
+91:17  Warning: The ref value 'layersRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'layersRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/guide/hub/HubDataTable.tsx
+39:32  Warning: '_isFirst' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/guide/hub/KakDobratsyaHubView.tsx
+5:3  Warning: 'ExternalLink' is defined but never used.  @typescript-eslint/no-unused-vars
+6:3  Warning: 'MapPin' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/immigration/ImmigrationNextTopic.tsx
+6:10  Warning: 'getImmigrationHubHeroImage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/map/ArgentinaMapCanvas.tsx
+366:6  Warning: React Hook useEffect has a missing dependency: 'renderAllLayers'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/map/ArgentinaMapLibreCanvasInner.tsx
+666:25  Warning: The ref value 'loadedThematicRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'loadedThematicRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+676:6  Warning: React Hook useEffect has a missing dependency: 'syncActiveThematicLayers'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/marketplace/CatalogDepartureCalendarModal.tsx
+18:33  Warning: 'DialogDescription' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/marketplace/ToursCatalogMap.tsx
+88:18  Warning: The ref value 'markersRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'markersRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/messages/MessagesInboxView.tsx
+287:6  Warning: React Hook useEffect has a missing dependency: 'activeThread'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/navigation/DestinationsMegaMenuPanel.tsx
+34:26  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/ExcursionsMegaMenuPanel.tsx
+35:24  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/NavOverflowMegaMenuTrigger.tsx
+161:3  Warning: 'compact' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/PlacesMegaMenuPanel.tsx
+42:20  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/navigation/ToursMegaMenuPanel.tsx
+35:19  Warning: '_link' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerBookingDetailView.tsx
+47:8  Warning: 'FormattedPrice' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerBookingsView.tsx
+31:8  Warning: 'FormattedPrice' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerCancellationTab.tsx
+24:8  Warning: 'OrganizerCancellationPolicyType' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerGuidesTab.tsx
+19:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerTripOperationsPanel.tsx
+35:10  Warning: 'BOOKINGS_UPDATED_EVENT' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerWaitlistDetailView.tsx
+30:10  Warning: 'cabinetCardClass' is defined but never used.  @typescript-eslint/no-unused-vars
+30:28  Warning: 'cabinetTableHeaderClass' is defined but never used.  @typescript-eslint/no-unused-vars
+30:53  Warning: 'cabinetTableWrapClass' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/OrganizerWaitlistView.tsx
+26:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/TourArrivalDepartureBlock.tsx
+6:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/TourGroupDatesBlock.tsx
+135:6  Warning: React Hook useEffect has a missing dependency: 'refreshInventory'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/organizer/TourIndividualBlock.tsx
+7:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/organizer/TourRoutePointsEditor.tsx
+199:9  Warning: The 'points' conditional could make the dependencies of useMemo Hook (at line 205) change on every render. To fix this, wrap the initialization of 'points' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/GroupDiscountPanel.tsx
+4:3  Warning: 'formatGroupDiscountTierGuestRange' is defined but never used.  @typescript-eslint/no-unused-vars
+5:3  Warning: 'formatGroupDiscountTierValueLabel' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/tour-detail/OrganizerSection.tsx
+29:62  Warning: 'tourDetailInsetMutedClass' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/tour-detail/PartnerTourAccommodationSection.tsx
+15:10  Warning: 'tourDetailCardBorderClass' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/components/tour-detail/PartnerTourBookingContactSection.tsx
+135:6  Warning: React Hook useMemo has a missing dependency: 'isYouTravel'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+223:6  Warning: React Hook useEffect has a missing dependency: 'user'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/PartnerTourImportantSection.tsx
+26:9  Warning: The 'items' logical expression could make the dependencies of useMemo Hook (at line 30) change on every render. Move it inside the useMemo callback. Alternatively, wrap the initialization of 'items' in its own useMemo() Hook.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/RouteMap.tsx
+176:18  Warning: The ref value 'markersRef.current' will likely have changed by the time this effect cleanup function runs. If this ref points to a node rendered by React, copy 'markersRef.current' to a variable inside the effect, and use that variable in the cleanup function.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/RouteMapSection.tsx
+153:6  Warning: React Hook useEffect has a missing dependency: 'progress'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/components/tour-detail/TourFlightBriefingPanel.tsx
+5:10  Warning: 'cn' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/context/LocaleCurrencyContext.tsx
+70:6  Warning: React Hook useEffect has a missing dependency: 'pathname'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/data/blog-content/article-content.ts
+233:3  Warning: 'region' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/blog-editorial/money.ts
+15:7  Warning: 'CASH' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+19:7  Warning: 'CHECKLIST' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/blog.ts
+2:30  Warning: 'filterIndexableBlogPosts' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/places-seed.ts
+10:7  Warning: 'MEDIA_FALLBACK' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/data/tour-guides-defaults.ts
+89:25  Warning: '_ignored' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/hooks/usePartnerTourPriceQuote.ts
+75:6  Warning: React Hook useEffect has a missing dependency: 'parsedDate'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/hooks/usePartnerTourSchedule.ts
+77:6  Warning: React Hook useEffect has a missing dependency: 'tour'. Either include it or remove the dependency array.  react-hooks/exhaustive-deps
+
+./src/hooks/useRepositoryTourListings.ts
+8:3  Warning: 'getMarketplaceListings' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/attribution/first-touch.ts
+22:10  Warning: 'normalizeReferrer' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/blog-post-ux.test.ts
+17:31  Warning: 'sortBlogPostsByUpdated' is defined but never used.  @typescript-eslint/no-unused-vars
+19:3  Warning: 'getBlogPostFooterLinks' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/bookings-store.ts
+4:10  Warning: 'SITE_SUPPORT_EMAIL' is defined but never used.  @typescript-eslint/no-unused-vars
+85:3  Warning: 'appendTripClientUpdates' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/flights/destination-airports.ts
+58:53  Warning: 'hub' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/geo/locations.ts
+6:15  Warning: 'GeoCountryCode' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/image-provider/page-registry.ts
+1:38  Warning: 'ResolvedImage' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/media-resolver.ts
+9:3  Warning: 'GUIDE_TOPIC_PLACE_MAP' is defined but never used.  @typescript-eslint/no-unused-vars
+266:10  Warning: 'stockAssetsBy' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/organizer/inbox-server.ts
+7:3  Warning: 'OrganizerInboxCategory' is defined but never used.  @typescript-eslint/no-unused-vars
+10:3  Warning: 'OrganizerInboxItemType' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/payments/commission-server.ts
+237:23  Warning: '_bookings' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/payments/mercadopago-client.ts
+184:9  Warning: 'returnUrl' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/payments/transaction-server.ts
+337:23  Warning: '_bookings' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/permissions.ts
+11:10  Warning: 'hasAnyRole' is defined but never used.  @typescript-eslint/no-unused-vars
+36:32  Warning: '_user' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/places-ingestion/overpass.ts
+9:15  Warning: '_query' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/privacy/delete-automation.ts
+3:8  Warning: 'pg' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/quick-explore/build-payload.ts
+5:26  Warning: 'PLACE_TO_KB_ID' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/site-search-client.ts
+8:10  Warning: 'buildExcursionSearchItems' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/social-feed/manifest.ts
+42:40  Warning: '_id' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/social-feed/providers/instagram-api.ts
+12:12  Warning: '_request' is defined but never used.  @typescript-eslint/no-unused-vars
+21:12  Warning: '_request' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/social-feed/resolve-context.ts
+7:41  Warning: '_context' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Warning: '_context' is defined but never used.  @typescript-eslint/no-unused-vars
+14:3  Warning: '_topicList' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-accommodation-public.ts
+7:15  Warning: 'AccommodationType' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-content-server.ts
+12:3  Warning: 'rowToTour' is defined but never used.  @typescript-eslint/no-unused-vars
+13:3  Warning: 'rowToTourDetail' is defined but never used.  @typescript-eslint/no-unused-vars
+14:3  Warning: 'rowToTourListing' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-itinerary-pdf/TourItineraryPdfDocument.tsx
+109:22  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+178:23  Warning: Image elements must have an alt prop, either with meaningful text, or an empty string for decorative images.  jsx-a11y/alt-text
+
+./src/lib/tour-mapper.ts
+6:3  Warning: 'normalizeItineraryOrganizerComment' is defined but never used.  @typescript-eslint/no-unused-vars
+7:3  Warning: 'normalizeAccommodationOrganizerComment' is defined but never used.  @typescript-eslint/no-unused-vars
+20:3  Warning: 'TourDate' is defined but never used.  @typescript-eslint/no-unused-vars
+60:32  Warning: 'canViewTourDetail' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-nav-icons.ts
+10:3  Warning: 'MessageSquare' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tour-slug.ts
+1:15  Warning: 'OrganizerTourDraft' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tripster/argentina-resolver.ts
+2:10  Warning: 'getTripsterSyncCountryMatchers' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tripster/auth.ts
+12:3  Warning: Unused eslint-disable directive (no problems were reported from 'no-var').
+
+./src/lib/tripster/partner-tour-guide-server.ts
+5:30  Warning: 'isTripsterConfigured' is defined but never used.  @typescript-eslint/no-unused-vars
+11:10  Warning: 'mapPartnerTourReviews' is defined but never used.  @typescript-eslint/no-unused-vars
+12:10  Warning: 'tripsterReviewToRow' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/tripster/partner-tour-mapper.ts
+26:3  Warning: 'ComfortLevel' is defined but never used.  @typescript-eslint/no-unused-vars
+28:3  Warning: 'DifficultyLevel' is defined but never used.  @typescript-eslint/no-unused-vars
+32:3  Warning: 'TourDate' is defined but never used.  @typescript-eslint/no-unused-vars
+33:3  Warning: 'TourDescriptionExtra' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/youtravel/offers-mapper.ts
+266:25  Warning: '_sort' is assigned a value but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/youtravel/partner-pipeline.test.ts
+18:15  Warning: 'CurrencyCode' is defined but never used.  @typescript-eslint/no-unused-vars
+
+./src/lib/youtravel/partner-tour-utils.ts
+89:51  Warning: '_slug' is defined but never used.  @typescript-eslint/no-unused-vars
+
+info  - Need to disable some ESLint rules? Learn more here: https://nextjs.org/docs/app/api-reference/config/eslint#disabling-rules
+   Collecting page data ...
+   Generating static pages (0/874) ...
+   Generating static pages (218/874)
+   Generating static pages (436/874)
+   Generating static pages (655/874)
+ ✓ Generating static pages (874/874)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                                                                                               Size  First Load JS
+┌ ƒ /                                                                                                  38.5 kB         838 kB
+├ ƒ /_not-found                                                                                          405 B         105 kB
+├ ƒ /about                                                                                             7.91 kB         495 kB
+├ ƒ /account/update-password                                                                           6.99 kB         123 kB
+├ ƒ /admin                                                                                             6.53 kB         549 kB
+├ ƒ /admin/analytics                                                                                   4.85 kB         547 kB
+├ ƒ /admin/analytics/funnels                                                                           5.72 kB         548 kB
+├ ƒ /admin/content-freshness                                                                           3.81 kB         546 kB
+├ ƒ /admin/content/documents                                                                           25.5 kB         783 kB
+├ ƒ /admin/content/documents/[id]                                                                      19.3 kB         850 kB
+├ ƒ /admin/content/documents/[id]/preview                                                              3.64 kB        1.19 MB
+├ ƒ /admin/content/map                                                                                 5.03 kB         548 kB
+├ ƒ /admin/content/social-feed                                                                         5.16 kB         548 kB
+├ ƒ /admin/content/translations                                                                        3.39 kB         546 kB
+├ ƒ /admin/feature-flags                                                                               5.86 kB         548 kB
+├ ƒ /admin/leads                                                                                         405 B         105 kB
+├ ƒ /admin/marketplace/excursions                                                                      5.39 kB         548 kB
+├ ƒ /admin/marketplace/experts                                                                         2.41 kB         548 kB
+├ ƒ /admin/marketplace/moderation                                                                      7.39 kB         550 kB
+├ ƒ /admin/marketplace/organizers                                                                      1.83 kB         548 kB
+├ ƒ /admin/marketplace/tours                                                                           4.22 kB         547 kB
+├ ƒ /admin/media                                                                                       7.01 kB         550 kB
+├ ƒ /admin/operations                                                                                  3.52 kB         546 kB
+├ ƒ /admin/operations/bookings                                                                         8.84 kB         603 kB
+├ ƒ /admin/operations/leads                                                                             2.7 kB         545 kB
+├ ƒ /admin/operations/payments                                                                           208 B         610 kB
+├ ƒ /admin/operations/privacy-requests                                                                 3.19 kB         546 kB
+├ ƒ /admin/operations/reconciliation                                                                     209 B         610 kB
+├ ƒ /admin/operations/shop-orders                                                                      5.52 kB         548 kB
+├ ƒ /admin/system/api-keys                                                                             3.91 kB         546 kB
+├ ƒ /admin/system/audit                                                                                2.41 kB         545 kB
+├ ƒ /admin/system/redirects                                                                             3.8 kB         546 kB
+├ ƒ /admin/system/settings                                                                             24.2 kB         567 kB
+├ ƒ /admin/system/staff                                                                                4.74 kB         547 kB
+├ ƒ /admin/users                                                                                       4.41 kB         547 kB
+├ ƒ /api/admin/analytics                                                                                1.5 kB         171 kB
+├ ƒ /api/admin/analytics/export                                                                          824 B         170 kB
+├ ƒ /api/admin/analytics/funnels                                                                         824 B         170 kB
+├ ƒ /api/admin/api-keys                                                                                  824 B         170 kB
+├ ƒ /api/admin/api-keys/[id]                                                                             824 B         170 kB
+├ ƒ /api/admin/audit                                                                                     824 B         170 kB
+├ ƒ /api/admin/bookings                                                                                 1.5 kB         171 kB
+├ ƒ /api/admin/bookings/[id]                                                                            1.5 kB         171 kB
+├ ƒ /api/admin/bookings/export                                                                          1.5 kB         171 kB
+├ ƒ /api/admin/cms/cutover-enable                                                                       1.5 kB         171 kB
+├ ƒ /api/admin/cms/cutover-status                                                                       1.5 kB         171 kB
+├ ƒ /api/admin/content                                                                                  1.5 kB         171 kB
+├ ƒ /api/admin/content-freshness                                                                         824 B         170 kB
+├ ƒ /api/admin/content/documents                                                                        1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/[id]                                                                   1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/[id]/publish                                                           1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/[id]/revisions                                                         1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/[id]/revisions/[revisionId]                                            1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/[id]/revisions/[revisionId]/restore                                    1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/[id]/schedule                                                          1.5 kB         171 kB
+├ ƒ /api/admin/content/documents/bulk-import                                                            1.5 kB         171 kB
+├ ƒ /api/admin/content/map                                                                              1.5 kB         171 kB
+├ ƒ /api/admin/content/translations                                                                     1.5 kB         171 kB
+├ ƒ /api/admin/dashboard                                                                                 824 B         170 kB
+├ ƒ /api/admin/excursions                                                                                824 B         170 kB
+├ ƒ /api/admin/experts                                                                                  1.5 kB         171 kB
+├ ƒ /api/admin/experts/[id]                                                                              824 B         170 kB
+├ ƒ /api/admin/feature-flags                                                                             824 B         170 kB
+├ ƒ /api/admin/health                                                                                    824 B         170 kB
+├ ƒ /api/admin/leads                                                                                     824 B         170 kB
+├ ƒ /api/admin/leads/export                                                                              824 B         170 kB
+├ ƒ /api/admin/media                                                                                     824 B         170 kB
+├ ƒ /api/admin/media/[id]                                                                                824 B         170 kB
+├ ƒ /api/admin/moderation                                                                               1.5 kB         171 kB
+├ ƒ /api/admin/moderation/[id]                                                                          1.5 kB         171 kB
+├ ƒ /api/admin/notifications                                                                            1.5 kB         171 kB
+├ ƒ /api/admin/notifications/[id]/read                                                                  1.5 kB         171 kB
+├ ƒ /api/admin/notifications/digest                                                                     1.5 kB         171 kB
+├ ƒ /api/admin/notifications/mark-all-read                                                              1.5 kB         171 kB
+├ ƒ /api/admin/operations/summary                                                                       1.5 kB         171 kB
+├ ƒ /api/admin/organizer-applications                                                                    824 B         170 kB
+├ ƒ /api/admin/organizer-applications/[id]                                                              1.5 kB         171 kB
+├ ƒ /api/admin/payments                                                                                 1.5 kB         171 kB
+├ ƒ /api/admin/payments/payouts                                                                          824 B         170 kB
+├ ƒ /api/admin/payments/payouts/[id]/export                                                              824 B         170 kB
+├ ƒ /api/admin/payments/reconciliation                                                                   824 B         170 kB
+├ ƒ /api/admin/payments/refund                                                                          1.5 kB         171 kB
+├ ƒ /api/admin/payments/refunds/[id]/approve                                                             824 B         170 kB
+├ ƒ /api/admin/payments/refunds/[id]/reject                                                              824 B         170 kB
+├ ƒ /api/admin/payments/transactions                                                                     824 B         170 kB
+├ ƒ /api/admin/payments/transactions/[id]                                                                824 B         170 kB
+├ ƒ /api/admin/privacy-requests                                                                          824 B         170 kB
+├ ƒ /api/admin/redirects                                                                                 824 B         170 kB
+├ ƒ /api/admin/redirects/[id]                                                                            824 B         170 kB
+├ ƒ /api/admin/search/reindex                                                                           1.5 kB         171 kB
+├ ƒ /api/admin/session                                                                                   824 B         170 kB
+├ ƒ /api/admin/settings                                                                                 1.5 kB         171 kB
+├ ƒ /api/admin/shop/orders                                                                               824 B         170 kB
+├ ƒ /api/admin/shop/orders/[id]                                                                          824 B         170 kB
+├ ƒ /api/admin/shop/orders/export                                                                        824 B         170 kB
+├ ƒ /api/admin/social-feed                                                                               824 B         170 kB
+├ ƒ /api/admin/staff                                                                                     824 B         170 kB
+├ ƒ /api/admin/staff/[userId]                                                                            824 B         170 kB
+├ ƒ /api/admin/summary                                                                                  1.5 kB         171 kB
+├ ƒ /api/admin/tours                                                                                    1.5 kB         171 kB
+├ ƒ /api/admin/tours/seed                                                                               1.5 kB         171 kB
+├ ƒ /api/admin/trip-prep/templates                                                                       824 B         170 kB
+├ ƒ /api/admin/users                                                                                     824 B         170 kB
+├ ƒ /api/admin/users/[id]                                                                                824 B         170 kB
+├ ƒ /api/admin/youtravel/affise                                                                          824 B         170 kB
+├ ƒ /api/affiliate/audio-guides/book                                                                     405 B         105 kB
+├ ƒ /api/affiliate/esim/book                                                                             405 B         105 kB
+├ ƒ /api/affiliate/flights/book                                                                          405 B         105 kB
+├ ƒ /api/affiliate/go/[slug]                                                                           1.02 kB         106 kB
+├ ƒ /api/affiliate/transfers/book                                                                        405 B         105 kB
+├ ƒ /api/affiliate/transfers/search                                                                      405 B         105 kB
+├ ƒ /api/ai/tour-match                                                                                 1.02 kB         106 kB
+├ ƒ /api/assistant/ask                                                                                 1.02 kB         106 kB
+├ ƒ /api/audio-guides/products                                                                           405 B         105 kB
+├ ƒ /api/audio-guides/products/[id]                                                                      405 B         105 kB
+├ ƒ /api/audio-guides/search                                                                             405 B         105 kB
+├ ƒ /api/auth/ensure-profile                                                                             405 B         105 kB
+├ ƒ /api/auth/experience                                                                                 405 B         105 kB
+├ ƒ /api/auth/login-by-phone                                                                             405 B         105 kB
+├ ƒ /api/auth/login-email                                                                                405 B         105 kB
+├ ƒ /api/auth/lookup-email                                                                               405 B         105 kB
+├ ƒ /api/auth/lookup-phone                                                                               405 B         105 kB
+├ ƒ /api/auth/register                                                                                   405 B         105 kB
+├ ƒ /api/auth/request-password-reset                                                                     405 B         105 kB
+├ ƒ /api/auth/sign-in-phone                                                                              405 B         105 kB
+├ ƒ /api/auth/update-password                                                                            405 B         105 kB
+├ ƒ /api/auth/workspace                                                                                  405 B         105 kB
+├ ƒ /api/blog/comments                                                                                   405 B         105 kB
+├ ƒ /api/blog/comments/report                                                                            405 B         105 kB
+├ ƒ /api/blog/reading-history                                                                            824 B         170 kB
+├ ƒ /api/blog/recommendations                                                                           1.5 kB         171 kB
+├ ƒ /api/bookings                                                                                       1.5 kB         171 kB
+├ ƒ /api/bookings/[id]                                                                                  1.5 kB         171 kB
+├ ƒ /api/bookings/[id]/payment/preference                                                              1.02 kB         106 kB
+├ ƒ /api/bookings/[id]/payment/receipt                                                                  1.5 kB         171 kB
+├ ƒ /api/bookings/[id]/payment/refund                                                                   1.5 kB         171 kB
+├ ƒ /api/bookings/[id]/payment/sandbox                                                                  1.5 kB         171 kB
+├ ƒ /api/bookings/[id]/payment/stripe/session                                                          1.02 kB         106 kB
+├ ƒ /api/bookings/attach-guest                                                                          1.5 kB         171 kB
+├ ƒ /api/bookings/lookup                                                                               1.02 kB         106 kB
+├ ƒ /api/bookings/lookup/results                                                                         405 B         105 kB
+├ ƒ /api/bookings/lookup/verify                                                                          405 B         105 kB
+├ ƒ /api/bookings/notify                                                                                 405 B         105 kB
+├ ƒ /api/bookings/payment-link/[token]                                                                 1.02 kB         106 kB
+├ ƒ /api/cms/blog/link-suggestions                                                                      1.5 kB         171 kB
+├ ƒ /api/contact                                                                                         405 B         105 kB
+├ ƒ /api/conversations/[threadId]/messages                                                              1.5 kB         171 kB
+├ ƒ /api/conversations/[threadId]/read                                                                  1.5 kB         171 kB
+├ ƒ /api/conversations/[threadId]/typing                                                                1.5 kB         171 kB
+├ ƒ /api/conversations/by-booking/[bookingId]                                                           1.5 kB         171 kB
+├ ƒ /api/conversations/inbox                                                                            1.5 kB         171 kB
+├ ƒ /api/cron/affiliate-sync                                                                             405 B         105 kB
+├ ƒ /api/cron/bookings/expire-unpaid                                                                   1.02 kB         106 kB
+├ ƒ /api/cron/cms/publish-scheduled                                                                    1.02 kB         106 kB
+├ ƒ /api/cron/content-freshness                                                                        1.02 kB         106 kB
+├ ƒ /api/cron/messaging/booking-reminder-24h                                                           1.02 kB         106 kB
+├ ƒ /api/cron/messaging/cleanup-typing                                                                   405 B         105 kB
+├ ƒ /api/cron/notifications/digest                                                                     1.02 kB         106 kB
+├ ƒ /api/cron/notifications/email-retry                                                                1.02 kB         106 kB
+├ ƒ /api/cron/ops/backup-hint                                                                            405 B         105 kB
+├ ƒ /api/cron/ops/health-report                                                                          824 B         170 kB
+├ ƒ /api/cron/platform-maintenance                                                                       405 B         105 kB
+├ ƒ /api/cron/privacy/process                                                                          1.02 kB         106 kB
+├ ƒ /api/cron/search/reindex                                                                           1.02 kB         106 kB
+├ ƒ /api/cron/sputnik8-sync                                                                              405 B         105 kB
+├ ƒ /api/cron/trip-prep/reminders                                                                      1.02 kB         106 kB
+├ ƒ /api/cron/tripster-sync                                                                              405 B         105 kB
+├ ƒ /api/cron/youtravel-affise-snapshot                                                                  405 B         105 kB
+├ ƒ /api/cron/youtravel-booking-status                                                                   405 B         105 kB
+├ ƒ /api/cron/youtravel-sync                                                                             405 B         105 kB
+├ ƒ /api/esim/offers                                                                                     405 B         105 kB
+├ ƒ /api/exchange-rates                                                                                  405 B         105 kB
+├ ƒ /api/excursions                                                                                    1.02 kB         106 kB
+├ ƒ /api/excursions/[slug]                                                                             1.02 kB         106 kB
+├ ƒ /api/excursions/[slug]/book                                                                        1.02 kB         106 kB
+├ ƒ /api/excursions/[slug]/booking-conditions                                                          1.02 kB         106 kB
+├ ƒ /api/excursions/[slug]/price                                                                       1.02 kB         106 kB
+├ ƒ /api/excursions/[slug]/schedule                                                                    1.02 kB         106 kB
+├ ƒ /api/excursions/search-index                                                                       1.02 kB         106 kB
+├ ƒ /api/experts                                                                                         405 B         105 kB
+├ ƒ /api/experts/[slug]                                                                                  405 B         105 kB
+├ ƒ /api/experts/[slug]/inquiry                                                                         1.5 kB         171 kB
+├ ƒ /api/experts/apply                                                                                   824 B         170 kB
+├ ƒ /api/favorites                                                                                      1.5 kB         171 kB
+├ ƒ /api/feature-flags                                                                                   405 B         105 kB
+├ ƒ /api/flights/prices                                                                                  405 B         105 kB
+├ ƒ /api/forum/categories                                                                                405 B         105 kB
+├ ƒ /api/forum/categories/[slug]/threads                                                                 405 B         105 kB
+├ ƒ /api/forum/posts/[postId]/report                                                                     405 B         105 kB
+├ ƒ /api/forum/threads/[threadId]                                                                        405 B         105 kB
+├ ƒ /api/forum/threads/[threadId]/posts                                                                  405 B         105 kB
+├ ƒ /api/group-trips                                                                                   1.02 kB         106 kB
+├ ƒ /api/group-trips/[id]/join                                                                         1.02 kB         106 kB
+├ ƒ /api/group-trips/[id]/leave                                                                        1.02 kB         106 kB
+├ ƒ /api/health                                                                                          405 B         105 kB
+├ ƒ /api/interactions                                                                                    405 B         105 kB
+├ ƒ /api/map/layers                                                                                    1.02 kB         106 kB
+├ ƒ /api/map/objects                                                                                   1.02 kB         106 kB
+├ ƒ /api/media/partner-image                                                                             405 B         105 kB
+├ ƒ /api/newsletter                                                                                      405 B         105 kB
+├ ƒ /api/notifications                                                                                  1.5 kB         171 kB
+├ ƒ /api/notifications/preferences                                                                      1.5 kB         171 kB
+├ ƒ /api/notifications/push/subscribe                                                                    824 B         170 kB
+├ ƒ /api/notifications/unsubscribe                                                                     1.02 kB         106 kB
+├ ƒ /api/organizer-applications                                                                          405 B         105 kB
+├ ƒ /api/organizer/analytics                                                                             824 B         170 kB
+├ ƒ /api/organizer/api-keys                                                                              824 B         170 kB
+├ ƒ /api/organizer/api-keys/[id]                                                                         824 B         170 kB
+├ ƒ /api/organizer/articles                                                                             1.5 kB         171 kB
+├ ƒ /api/organizer/articles/[id]                                                                        1.5 kB         171 kB
+├ ƒ /api/organizer/articles/[id]/submit                                                                 1.5 kB         171 kB
+├ ƒ /api/organizer/bookings                                                                             1.5 kB         171 kB
+├ ƒ /api/organizer/bookings/[id]/commission                                                             1.5 kB         171 kB
+├ ƒ /api/organizer/bookings/[id]/trip-prep-summary                                                      1.5 kB         171 kB
+├ ƒ /api/organizer/finance/statement                                                                     824 B         170 kB
+├ ƒ /api/organizer/finance/summary                                                                       824 B         170 kB
+├ ƒ /api/organizer/group-trips/[id]                                                                     1.5 kB         171 kB
+├ ƒ /api/organizer/inbox                                                                                1.5 kB         171 kB
+├ ƒ /api/organizer/payments/refund-request                                                              1.5 kB         171 kB
+├ ƒ /api/organizer/reviews                                                                              1.5 kB         171 kB
+├ ƒ /api/organizer/reviews/[id]                                                                         1.5 kB         171 kB
+├ ƒ /api/organizer/tours                                                                                 824 B         170 kB
+├ ƒ /api/organizer/tours/[id]/availability                                                               824 B         170 kB
+├ ƒ /api/organizer/tours/[id]/draft                                                                     1.5 kB         171 kB
+├ ƒ /api/organizer/tours/[id]/media                                                                      824 B         170 kB
+├ ƒ /api/organizer/tours/sync                                                                            824 B         170 kB
+├ ƒ /api/organizer/webhooks                                                                              824 B         170 kB
+├ ƒ /api/organizer/webhooks/[id]                                                                         824 B         170 kB
+├ ƒ /api/organizer/webhooks/[id]/test                                                                    824 B         170 kB
+├ ƒ /api/partner-tours/[slug]/price                                                                    1.02 kB         106 kB
+├ ƒ /api/partner-tours/[slug]/schedule                                                                 1.02 kB         106 kB
+├ ƒ /api/payments/sandbox-mode                                                                           405 B         105 kB
+├ ƒ /api/places                                                                                          405 B         105 kB
+├ ƒ /api/places/ai/itinerary-suggest                                                                     405 B         105 kB
+├ ƒ /api/podbor/narrative                                                                              1.02 kB         106 kB
+├ ƒ /api/privacy/delete-request                                                                          824 B         170 kB
+├ ƒ /api/privacy/export                                                                                 1.5 kB         171 kB
+├ ƒ /api/public-detail-exists/[kind]/[slug]                                                            1.02 kB         106 kB
+├ ƒ /api/quick-explore                                                                                 1.02 kB         106 kB
+├ ƒ /api/recommendations                                                                               1.02 kB         106 kB
+├ ƒ /api/reviews                                                                                       1.02 kB         106 kB
+├ ƒ /api/reviews/[id]                                                                                  1.02 kB         106 kB
+├ ƒ /api/reviews/[id]/report                                                                           1.02 kB         106 kB
+├ ƒ /api/reviews/eligibility                                                                           1.02 kB         106 kB
+├ ƒ /api/saved-articles                                                                                  824 B         170 kB
+├ ƒ /api/search                                                                                        1.02 kB         106 kB
+├ ƒ /api/shop/orders                                                                                     824 B         170 kB
+├ ƒ /api/shop/orders/[id]                                                                                824 B         170 kB
+├ ƒ /api/site/globals                                                                                    405 B         105 kB
+├ ƒ /api/site/legal                                                                                      405 B         105 kB
+├ ƒ /api/site/search-index                                                                             1.02 kB         106 kB
+├ ƒ /api/social-feed                                                                                     405 B         105 kB
+├ ƒ /api/tours                                                                                         1.02 kB         106 kB
+├ ƒ /api/tours/[slug]                                                                                  1.02 kB         106 kB
+├ ƒ /api/tours/[slug]/availability                                                                       405 B         105 kB
+├ ƒ /api/tours/[slug]/program.pdf                                                                      1.02 kB         106 kB
+├ ƒ /api/tours/[slug]/waitlist                                                                           405 B         105 kB
+├ ƒ /api/transfers/autocomplete                                                                          405 B         105 kB
+├ ƒ /api/transfers/search                                                                                405 B         105 kB
+├ ƒ /api/travelpayouts/links                                                                             405 B         105 kB
+├ ƒ /api/trip-prep                                                                                      1.5 kB         171 kB
+├ ƒ /api/trip-prep/progress                                                                             1.5 kB         171 kB
+├ ƒ /api/tripster/booking-request                                                                      1.02 kB         106 kB
+├ ƒ /api/v1/excursions                                                                                 1.02 kB         106 kB
+├ ƒ /api/v1/tours                                                                                      1.02 kB         106 kB
+├ ƒ /api/v1/tours/[slug]                                                                               1.02 kB         106 kB
+├ ƒ /api/webhooks/payments/mercadopago                                                                 1.02 kB         106 kB
+├ ƒ /api/webhooks/payments/stripe                                                                      1.02 kB         106 kB
+├ ƒ /api/webhooks/youtravel/booking                                                                      405 B         105 kB
+├ ƒ /api/youtravel/booking-request                                                                     1.02 kB         106 kB
+├ ƒ /api/youtravel/booking-request/[id]/refresh                                                          405 B         105 kB
+├ ƒ /api/youtravel/tours/[slug]/offers                                                                 1.02 kB         106 kB
+├ ƒ /audio-guides                                                                                      8.16 kB         354 kB
+├ ƒ /audio-guides/[id]                                                                                  6.6 kB         180 kB
+├ ƒ /auth/callback                                                                                       405 B         105 kB
+├ ƒ /auth/confirm                                                                                        405 B         105 kB
+├ ƒ /auth/error                                                                                          170 B         108 kB
+├ ƒ /auth/reset-password                                                                                 405 B         105 kB
+├ ƒ /baza-znaniy                                                                                         847 B         109 kB
+├ ● /baza-znaniy/[slug]                                                                                3.56 kB         170 kB
+├   ├ /baza-znaniy/aconcagua-provincial-park
+├   ├ /baza-znaniy/aep-eze-stykovka
+├   ├ /baza-znaniy/aeroporty
+├   └ [+210 more paths]
+├ ƒ /baza-znaniy/poisk                                                                                 1.71 kB         110 kB
+├ ● /baza-znaniy/razdel/[slug]                                                                           847 B         109 kB
+├   ├ /baza-znaniy/razdel/puteshestviya
+├   ├ /baza-znaniy/razdel/goroda-i-regiony
+├   ├ /baza-znaniy/razdel/zhizn-v-strane
+├   └ [+4 more paths]
+├ ƒ /blog                                                                                              18.9 kB         801 kB
+├ ● /blog/[slug]                                                                                        8.3 kB         880 kB
+├   ├ /blog/salta-i-severo-zapad-marshrut
+├   ├ /blog/best-time-to-visit-argentina
+├   ├ /blog/argentinian-steak-guide
+├   └ [+84 more paths]
+├ ● /blog/author/[slug]                                                                                 8.3 kB         880 kB
+├ ƒ /blog/authors                                                                                        834 B         114 kB
+├ ● /blog/authors/[slug]                                                                               6.81 kB         480 kB
+├   └ /blog/authors/redaktsiya
+├ ƒ /blog/feed.xml                                                                                     1.02 kB         106 kB
+├ ● /blog/hub/[hubId]                                                                                  1.76 kB         784 kB
+├   ├ /blog/hub/national-parks
+├   ├ /blog/hub/putevoditel
+├   ├ /blog/hub/patagonia
+├   └ /blog/hub/sever-i-salta
+├ ƒ /booking/find                                                                                      10.7 kB         182 kB
+├ ƒ /booking/pay/[token]                                                                               6.82 kB         465 kB
+├ ƒ /booking/pay/[token]/result                                                                         4.4 kB         462 kB
+├ ƒ /booking/travelers/[token]                                                                         11.7 kB         443 kB
+├ ƒ /car-rental                                                                                        10.6 kB         179 kB
+├ ƒ /collections                                                                                       5.54 kB         127 kB
+├ ● /collections/[slug]                                                                                10.2 kB         568 kB
+├   ├ /collections/patagonia-highlights
+├   ├ /collections/northwest-colors
+├   ├ /collections/unesco-heritage
+├   └ [+11 more paths]
+├ ƒ /contacts                                                                                          20.1 kB         372 kB
+├ ƒ /destinations                                                                                      15.6 kB         573 kB
+├ ● /destinations/[slug]                                                                               9.87 kB         685 kB
+├   ├ /destinations/ba
+├   ├ /destinations/bariloche
+├   ├ /destinations/calafate
+├   └ [+5 more paths]
+├ ƒ /dev/design-system                                                                                 21.9 kB         154 kB
+├ ƒ /embed/flights/wl                                                                                  2.59 kB         182 kB
+├ ƒ /embed/tours                                                                                       8.62 kB         605 kB
+├ ƒ /esim                                                                                              13.6 kB         359 kB
+├ ƒ /excursions                                                                                          265 B         615 kB
+├ ● /excursions/[slug]                                                                                 25.6 kB         798 kB
+├   ├ /excursions/alhimiya-kofe-v-serdtse-buenos-ayresa-t114465
+├   ├ /excursions/argentinskaya-palitra-takoy-raznyy-buenos-ayres-t84149
+├   ├ /excursions/argentinskaya-venetsiya-gorod-tigre-s75517
+├   └ [+65 more paths]
+├ ƒ /excursions/city/[citySlug]                                                                          275 B         616 kB
+├ ● /excursions/guide/[guideId]                                                                        6.56 kB         591 kB
+├   ├ /excursions/guide/5676
+├   ├ /excursions/guide/102634
+├   ├ /excursions/guide/104777
+├   └ [+22 more paths]
+├ ƒ /experts                                                                                           7.04 kB         123 kB
+├ ƒ /experts/[slug]                                                                                    6.15 kB         506 kB
+├ ƒ /faq                                                                                               2.25 kB         119 kB
+├ ƒ /flights                                                                                           2.07 kB         196 kB
+├ ● /flights/[route]                                                                                   10.4 kB         194 kB
+├   ├ /flights/mow-bue
+├   ├ /flights/bue-brc
+├   ├ /flights/bue-ush
+├   └ [+4 more paths]
+├ ƒ /forum                                                                                               831 B         109 kB
+├ ƒ /forum/[category]                                                                                  5.94 kB         509 kB
+├ ƒ /forum/[category]/[threadId]                                                                        5.9 kB         509 kB
+├ ƒ /gallery                                                                                           4.88 kB         309 kB
+├ ƒ /guide                                                                                             10.1 kB         672 kB
+├ ● /guide/[slug]                                                                                      6.51 kB         919 kB
+├   ├ /guide/kak-dobratsya
+├   ├ /guide/gde-zhit
+├   ├ /guide/transport
+├   └ [+16 more paths]
+├ ƒ /guide/ob-argentine                                                                                9.58 kB         659 kB
+├ ƒ /immigration                                                                                       35.1 kB         677 kB
+├ ● /immigration/[slug]                                                                                9.35 kB         922 kB
+├   ├ /immigration/zhizn-v-strane
+├   ├ /immigration/protsess-immigratsii
+├   ├ /immigration/rody-v-argentine
+├   └ [+8 more paths]
+├ ƒ /insurance                                                                                         10.3 kB         175 kB
+├ ƒ /itineraries                                                                                         835 B         114 kB
+├ ● /itineraries/[slug]                                                                                3.56 kB         170 kB
+├   ├ /itineraries/patagonia-classic-10-days
+├   ├ /itineraries/northwest-7-days
+├   └ /itineraries/buenos-aires-iguazu-5-days
+├ ƒ /join                                                                                              15.7 kB         521 kB
+├ ● /legal/[slug]                                                                                      3.87 kB         515 kB
+├   ├ /legal/privacy
+├   ├ /legal/terms
+├   ├ /legal/booking
+├   └ [+3 more paths]
+├ ƒ /maintenance                                                                                       1.74 kB         123 kB
+├ ƒ /map                                                                                                 405 B         105 kB
+├ ƒ /mapa-argentina                                                                                    2.12 kB         107 kB
+├ ƒ /organizer                                                                                         9.27 kB         613 kB
+├ ƒ /organizer/analytics                                                                               13.2 kB         607 kB
+├ ƒ /organizer/articles                                                                                11.3 kB         554 kB
+├ ƒ /organizer/articles/[id]/edit                                                                      6.85 kB         811 kB
+├ ƒ /organizer/articles/[id]/preview                                                                   1.19 kB        1.18 MB
+├ ƒ /organizer/bookings                                                                                7.32 kB         611 kB
+├ ƒ /organizer/bookings/[id]                                                                           19.8 kB         625 kB
+├ ƒ /organizer/finance                                                                                 6.77 kB         604 kB
+├ ƒ /organizer/group-trips                                                                              3.7 kB         546 kB
+├ ƒ /organizer/integrations                                                                            6.49 kB         549 kB
+├ ƒ /organizer/messages                                                                                1.55 kB         549 kB
+├ ƒ /organizer/payments                                                                                7.51 kB         605 kB
+├ ƒ /organizer/reviews                                                                                 4.11 kB         547 kB
+├ ƒ /organizer/settings                                                                                20.2 kB         571 kB
+├ ƒ /organizer/tours                                                                                   8.57 kB         551 kB
+├ ● /organizer/tours/[id]/edit                                                                         63.9 kB         615 kB
+├   ├ /organizer/tours/org-iguazu/edit
+├   ├ /organizer/tours/org-salta/edit
+├   ├ /organizer/tours/org-mendoza/edit
+├   └ [+2 more paths]
+├ ● /organizer/tours/[id]/preview                                                                      1.39 kB         774 kB
+├   ├ /organizer/tours/org-iguazu/preview
+├   ├ /organizer/tours/org-salta/preview
+├   ├ /organizer/tours/org-mendoza/preview
+├   └ [+2 more paths]
+├ ƒ /organizer/waitlist/[id]                                                                           4.24 kB         550 kB
+├ ● /organizers/[slug]                                                                                 10.2 kB         598 kB
+├   └ /organizers/ivan-evdokimychev
+├ ƒ /places                                                                                            17.4 kB         575 kB
+├ ● /places/[slug]                                                                                     6.72 kB         689 kB
+├   ├ /places/buenos-aires
+├   ├ /places/ushuaia
+├   ├ /places/el-calafate
+├   └ [+95 more paths]
+├ ƒ /podbor                                                                                            32.3 kB         662 kB
+├ ƒ /profile                                                                                           17.4 kB         611 kB
+├ ƒ /profile/bookings                                                                                  12.6 kB         580 kB
+├ ƒ /profile/bookings/[id]                                                                             9.53 kB         586 kB
+├ ƒ /profile/favorites                                                                                 12.5 kB         570 kB
+├ ƒ /profile/group-trips                                                                               6.62 kB         507 kB
+├ ƒ /profile/messages                                                                                  7.28 kB         513 kB
+├ ƒ /profile/orders                                                                                    7.32 kB         563 kB
+├ ƒ /profile/reviews                                                                                   10.4 kB         516 kB
+├ ƒ /profile/settings                                                                                  16.8 kB         553 kB
+├ ƒ /profile/trip-prep                                                                                 2.06 kB         510 kB
+├ ƒ /robots.txt                                                                                          405 B         105 kB
+├ ƒ /services                                                                                          3.77 kB         125 kB
+├ ƒ /shop                                                                                              3.18 kB         568 kB
+├ ƒ /shop/[slug]                                                                                       2.54 kB         567 kB
+├ ƒ /sitemap.xml                                                                                         405 B         105 kB
+├ ƒ /tours                                                                                               16 kB         623 kB
+├ ● /tours/[slug]                                                                                        299 B         773 kB
+├   ├ /tours/po-kontrastnoy-argentine-v-ritme-tango-buenos-ayres-patagoniya-vodopady-iguasu-i-t108535
+├   ├ /tours/bolshoy-tur-v-argentinu-chili-i-braziliyu-trekkingi-v-patagonii-vodopady-iguasu--t92532
+├   ├ /tours/ot-buenos-ayresa-do-kraya-sveta-bolshoy-fototur-po-znakovym-lokatsiyam-argentiny-t109207
+├   └ [+50 more paths]
+├ ƒ /transfers                                                                                         15.6 kB         361 kB
+├ ƒ /trip-prep                                                                                           831 B         109 kB
+├ ƒ /trip/[token]                                                                                      4.88 kB         412 kB
+└ ƒ /yandex-verification                                                                                 405 B         105 kB
++ First Load JS shared by all                                                                           104 kB
+  ├ chunks/31255-1694efc89059d06f.js                                                                     46 kB
+  ├ chunks/4bd1b696-bad92808725a934a.js                                                                54.2 kB
+  └ other shared chunks (total)                                                                        4.29 kB
+
+Route (pages)                                                                                             Size  First Load JS
+─   /_app                                                                                                  0 B         101 kB
++ First Load JS shared by all                                                                           101 kB
+  ├ chunks/framework-2746044f3499a1c3.js                                                               59.8 kB
+  ├ chunks/main-d47b0a8f09d0c5c3.js                                                                    37.9 kB
+  └ other shared chunks (total)                                                                        3.64 kB
+
+ƒ Middleware                                                                                           92.9 kB
+
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+Production client bundle contains no demo authentication adapter markers
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+<w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
+ ⚠ Compiled with warnings in 62s
+
+./node_modules/@supabase/supabase-js/dist/index.mjs
+A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
+Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+
+Import trace for requested module:
+./node_modules/@supabase/supabase-js/dist/index.mjs
+./node_modules/@supabase/ssr/dist/module/createServerClient.js
+./node_modules/@supabase/ssr/dist/module/index.js

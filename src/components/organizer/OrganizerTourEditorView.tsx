@@ -28,6 +28,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useDebouncedValue } from "@/hooks/useDebouncedValue";
 import {
+  cacheOrganizerTourDraft,
   cloneOrganizerTour,
   deleteOrganizerTour,
   readOrganizerTourDraft,
@@ -99,6 +100,7 @@ import {
 import { isRemoteToursMode } from "@/lib/tour-content-api";
 import {
   OrganizerDraftConflictError,
+  deleteOrganizerTourRemote,
   fetchOrganizerTourDraftSnapshot,
   patchOrganizerTourDraftRemote,
 } from "@/lib/organizer-tour-draft-api";
@@ -216,7 +218,7 @@ function FloatingLabeledInput({
         {label}
         {required ? <span className="text-brand"> *</span> : null}
       </label>
-      <Input id={id} className="h-14 pt-1" {...props} />
+      <Input id={id} required={required} className="h-14 pt-1" {...props} />
     </div>
   );
 }
@@ -425,19 +427,21 @@ function DraftSyncConflictDialog({
   serverUpdatedAt,
   onOpenChange,
   onForceSync,
+  onUseServer,
 }: {
   open: boolean;
   localUpdatedAt: string | null;
   serverUpdatedAt: string | null;
   onOpenChange: (open: boolean) => void;
   onForceSync: () => void;
+  onUseServer: () => void;
 }) {
   const localLabel = formatEditorDateTime(localUpdatedAt) ?? "неизвестно";
   const serverLabel = formatEditorDateTime(serverUpdatedAt) ?? "неизвестно";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-amber-600" />
@@ -455,6 +459,9 @@ function DraftSyncConflictDialog({
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Закрыть
           </Button>
+          <Button type="button" variant="outline" onClick={onUseServer}>
+            Открыть версию с сервера
+          </Button>
           <Button type="button" onClick={onForceSync}>
             Перезаписать сервер
           </Button>
@@ -465,12 +472,14 @@ function DraftSyncConflictDialog({
 }
 
 function TourEditorActionsMenu({
+  productType,
   isPublished,
   isArchived,
   onUnpublish,
   onArchive,
   onDelete,
 }: {
+  productType: OrganizerTourDraft["type"];
   isPublished: boolean;
   isArchived: boolean;
   onUnpublish: () => void;
@@ -504,7 +513,7 @@ function TourEditorActionsMenu({
       : null,
     {
       key: "delete",
-      label: "Удалить тур",
+      label: productType === "excursion" ? "Удалить экскурсию" : "Удалить тур",
       icon: Trash2,
       onClick: () => {
         onDelete();
@@ -581,14 +590,25 @@ function TourEditorSidebar({
   onOpenPublishChecklist: () => void;
 }) {
   const isPublished = draft.status === "published";
+  const isPending = draft.moderationStatus === "pending";
+  const isRejected = draft.moderationStatus === "rejected";
+  const isPublic = isPublished && !isPending && !isRejected;
+  const productLabel = draft.type === "excursion" ? "экскурсии" : "тура";
   const platformName = draft.partnerName || "Пора в Аргентину";
   const catalogSlug = getCatalogSlug(draft);
-  const tourUrl = draft.isPrivate && draft.privateAccessToken
+  const catalogPath = draft.type === "excursion" ? "/excursions" : "/tours";
+  const tourUrl = draft.type === "tour" && draft.isPrivate && draft.privateAccessToken
     ? buildPrivateTourHref(catalogSlug, draft.privateAccessToken)
-    : `/tours/${catalogSlug}`;
+    : `${catalogPath}/${catalogSlug}`;
   const lastChanged = formatEditorDate(draft.updatedAt);
 
-  const statusLabel = isPublished ? "Опубликовано" : "Черновик";
+  const statusLabel = isPending
+    ? "На модерации"
+    : isRejected
+      ? "Нужны исправления"
+      : isPublished
+        ? "Опубликовано"
+        : "Черновик";
 
   return (
     <aside className={cn("hidden xl:sticky xl:block xl:h-fit xl:max-h-[calc(100vh-var(--site-header-height,72px)-2rem)] xl:w-[280px] xl:shrink-0 xl:self-start xl:overflow-y-auto", siteStickyBelowHeaderInsetClass)}>
@@ -597,7 +617,9 @@ function TourEditorSidebar({
 
         <div className="space-y-4 rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <div>
-            <h2 className="font-heading text-base font-bold text-charcoal">Редактирование тура</h2>
+            <h2 className="font-heading text-base font-bold text-charcoal">
+              Редактирование {productLabel}
+            </h2>
             {lastChanged ? (
               <p className="mt-1.5 text-xs text-slate">Последнее изменение: {lastChanged}</p>
             ) : null}
@@ -644,14 +666,23 @@ function TourEditorSidebar({
                 : "Сохранено"}
           </p>
 
-          {isPublished && draft.isPrivate ? (
+          {isPending ? (
             <div className="rounded-xl bg-amber-50 px-3 py-3 text-sm leading-relaxed text-charcoal">
-              Приватный тур — в каталоге скрыт. Делитесь ссылкой из вкладки «Публикация».
+              Предложение проверяет администратор. До одобрения оно не видно в каталоге.
+            </div>
+          ) : isRejected ? (
+            <div className="rounded-xl bg-red-50 px-3 py-3 text-sm leading-relaxed text-charcoal">
+              Внесите исправления и повторно отправьте предложение на модерацию.
+              {draft.moderationNotes ? ` Комментарий: ${draft.moderationNotes}` : ""}
+            </div>
+          ) : isPublished && draft.isPrivate ? (
+            <div className="rounded-xl bg-amber-50 px-3 py-3 text-sm leading-relaxed text-charcoal">
+              Приватное предложение скрыто в каталоге. Делитесь ссылкой из вкладки «Публикация».
             </div>
           ) : isPublished ? (
             <div className="rounded-xl bg-brand-light/70 px-3 py-3 text-sm leading-relaxed text-charcoal">
-              Изменения опубликуются на площадках:{" "}
-              <Link href={draft.partnerUrl ?? "/tours"} className="font-medium text-sky hover:underline">
+              Изменения опубликуются на площадке:{" "}
+              <Link href={draft.partnerUrl ?? catalogPath} className="font-medium text-sky hover:underline">
                 {platformName}
               </Link>
             </div>
@@ -667,6 +698,7 @@ function TourEditorSidebar({
               Создать копию
             </button>
             <TourEditorActionsMenu
+              productType={draft.type}
               isPublished={isPublished}
               isArchived={draft.archived}
               onUnpublish={onUnpublish}
@@ -680,22 +712,30 @@ function TourEditorSidebar({
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm">
           <h2 className="font-heading text-base font-bold text-charcoal">
-            {draft.isPrivate ? "Приватная ссылка" : "Тур на площадке"}
+            {draft.isPrivate
+              ? "Приватная ссылка"
+              : draft.type === "excursion"
+                ? "Экскурсия на площадке"
+                : "Тур на площадке"}
           </h2>
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Link
-              href={isPublished ? tourUrl : "#"}
-              target={isPublished ? "_blank" : undefined}
-              aria-disabled={!isPublished}
+              href={isPublic ? tourUrl : "#"}
+              target={isPublic ? "_blank" : undefined}
+              aria-disabled={!isPublic}
               className={cn(
                 "text-sm font-medium text-sky hover:underline",
-                !isPublished && "pointer-events-none text-slate"
+                !isPublic && "pointer-events-none text-slate"
               )}
             >
               {platformName}
             </Link>
             <ExternalLink className="h-4 w-4 shrink-0 text-brand" aria-hidden />
-            {isPublished ? (
+            {isPending ? (
+              <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-semibold text-amber-700">
+                На модерации
+              </span>
+            ) : isPublic ? (
               <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-semibold text-emerald-700">
                 Опубликовано
               </span>
@@ -722,6 +762,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const [activeTab, setActiveTab] = useState<OrganizerTourEditorTabId>("main");
   const [draft, setDraft] = useState<OrganizerTourDraft | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [dirty, setDirty] = useState(false);
   const [loading, setLoading] = useState(false);
   const [syncStatus, setSyncStatus] = useState<DraftSyncStatus>("saved");
@@ -737,7 +778,11 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const serverUpdatedAtRef = useRef<string | null>(null);
   const initialRemoteSnapshotTourRef = useRef<string | null>(null);
   const remoteSyncInFlightRef = useRef(false);
+  const dirtyRef = useRef(false);
   const lastPersistedDraftRef = useRef<OrganizerTourDraft | null>(null);
+  const conflictServerDraftRef = useRef<OrganizerTourDraft | null>(null);
+  const activeUserRef = useRef(user);
+  activeUserRef.current = user;
 
   useEffect(() => {
     const tab = searchParams.get("tab");
@@ -750,17 +795,42 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   }, [searchParams]);
 
   useEffect(() => {
-    const nextDraft = readOrganizerTourDraft(tourId, user);
-    if (!nextDraft) {
-      router.replace("/organizer/tours");
-      return;
-    }
-    setDraft(nextDraft);
-    lastPersistedDraftRef.current = nextDraft;
-    setDirty(false);
-    setSyncStatus(hasQueuedOrganizerTourDraftSync(tourId) ? "saving" : "saved");
-    initialRemoteSnapshotTourRef.current = null;
-  }, [router, tourId, user]);
+    let active = true;
+    const currentUser = activeUserRef.current;
+    const localDraft = readOrganizerTourDraft(tourId, currentUser);
+
+    void (async () => {
+      let nextDraft = localDraft;
+      if (!nextDraft && currentUser && isRemoteToursMode()) {
+        try {
+          const snapshot = await fetchOrganizerTourDraftSnapshot(tourId);
+          serverUpdatedAtRef.current = snapshot.updatedAt;
+          if (snapshot.draft) {
+            const cached = cacheOrganizerTourDraft(snapshot.draft, currentUser);
+            if (!("error" in cached)) nextDraft = cached.draft;
+          }
+        } catch {
+          // The redirect below handles missing and inaccessible drafts alike.
+        }
+      }
+
+      if (!active) return;
+      if (!nextDraft) {
+        router.replace("/organizer/tours");
+        return;
+      }
+      setDraft(nextDraft);
+      lastPersistedDraftRef.current = nextDraft;
+      dirtyRef.current = false;
+      setDirty(false);
+      setSyncStatus(hasQueuedOrganizerTourDraftSync(tourId) ? "saving" : "saved");
+      initialRemoteSnapshotTourRef.current = null;
+    })();
+
+    return () => {
+      active = false;
+    };
+  }, [router, tourId, user?.id]);
 
   const canSyncDraftToRemote = useCallback(
     (nextDraft: OrganizerTourDraft): boolean => {
@@ -805,7 +875,20 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         });
         clearOrganizerTourDraftSync(nextDraft.id);
         serverUpdatedAtRef.current = response.updatedAt ?? nextDraft.updatedAt ?? null;
-        setSyncStatus("saved");
+        const syncedDraft: OrganizerTourDraft = {
+          ...nextDraft,
+          updatedAt: response.updatedAt ?? nextDraft.updatedAt,
+          moderationStatus: response.moderationStatus ?? nextDraft.moderationStatus,
+          moderationNotes: response.moderationNotes ?? null,
+        };
+        if (!dirtyRef.current) {
+          cacheOrganizerTourDraft(syncedDraft, user);
+          lastPersistedDraftRef.current = syncedDraft;
+          setDraft((current) =>
+            current?.id === syncedDraft.id ? { ...current, ...syncedDraft } : current
+          );
+        }
+        setSyncStatus(dirtyRef.current ? "saving" : "saved");
         return "synced";
       } catch (syncError) {
         if (syncError instanceof OrganizerDraftConflictError) {
@@ -828,7 +911,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         remoteSyncInFlightRef.current = false;
       }
     },
-    [canSyncDraftToRemote]
+    [canSyncDraftToRemote, user]
   );
 
   const flushDraftSyncQueue = useCallback(
@@ -888,6 +971,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         const snapshot = await fetchOrganizerTourDraftSnapshot(tourId);
         if (!active) return;
         serverUpdatedAtRef.current = snapshot.updatedAt;
+        conflictServerDraftRef.current = snapshot.draft;
 
         const localUpdatedAt = toDateValue(draft.updatedAt);
         const serverUpdatedAt = toDateValue(snapshot.updatedAt);
@@ -932,6 +1016,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
       setDraft(result.draft);
       lastPersistedDraftRef.current = result.draft;
+      dirtyRef.current = false;
       setDirty(false);
       await syncDraftToRemote(result.draft);
     })();
@@ -975,12 +1060,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   if (!draft) {
     return (
       <div className="rounded-3xl bg-white p-8 text-center shadow-sm ring-1 ring-gray-200/60">
-        <p className="text-sm text-slate">Загружаем редактор тура…</p>
+        <p className="text-sm text-slate">Загружаем редактор предложения…</p>
       </div>
     );
   }
 
   function markDirty() {
+    dirtyRef.current = true;
     setDirty(true);
     setError(null);
     if (syncStatus !== "conflict") {
@@ -1036,6 +1122,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
     setLoading(true);
     setError(null);
+    setNotice(null);
     setSyncStatus("saving");
 
     const result = saveOrganizerTourDraft(normalizeDraftForSave(draftToPersist), user, {
@@ -1052,6 +1139,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
     setDraft(result.draft);
     lastPersistedDraftRef.current = result.draft;
+    dirtyRef.current = false;
     setDirty(false);
     const remoteStatus = await syncDraftToRemote(result.draft, {
       force: options?.forceRemoteSync,
@@ -1059,9 +1147,25 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     if (remoteStatus === "conflict") {
       return false;
     }
+    if (options?.forcePublished && isRemoteToursMode() && remoteStatus !== "synced") {
+      clearOrganizerTourDraftSync(result.draft.id);
+      const rollback: OrganizerTourDraft = {
+        ...result.draft,
+        status: "draft",
+        moderationStatus: result.draft.moderationStatus === "approved" ? "approved" : "none",
+      };
+      const rolledBack = saveOrganizerTourDraft(rollback, user, { skipRemoteSync: true });
+      if (!("error" in rolledBack)) {
+        setDraft(rolledBack.draft);
+        lastPersistedDraftRef.current = rolledBack.draft;
+      }
+      setError("Не удалось отправить предложение на модерацию. Проверьте соединение и повторите публикацию.");
+      return false;
+    }
     setPendingPublishSave(false);
     if (options?.forcePublished) {
       setPublishChecklistOpen(false);
+      setNotice("Предложение отправлено на модерацию. Оно появится в каталоге после проверки администратором.");
     }
     return true;
   }
@@ -1110,6 +1214,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
       archived: false,
     };
     setDraft(nextDraft);
+    dirtyRef.current = true;
     setDirty(true);
     await persistDraft({ forcePublished: true, draftOverride: nextDraft });
   }
@@ -1131,6 +1236,27 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     }
   }
 
+  function handleUseServerDraft() {
+    const serverDraft = conflictServerDraftRef.current;
+    if (!serverDraft || !user) {
+      setConflictDialogOpen(false);
+      return;
+    }
+    const cached = cacheOrganizerTourDraft(serverDraft, user);
+    if ("error" in cached) {
+      setError(cached.error);
+      return;
+    }
+    clearOrganizerTourDraftSync(serverDraft.id);
+    setDraft(cached.draft);
+    lastPersistedDraftRef.current = cached.draft;
+    serverUpdatedAtRef.current = cached.draft.updatedAt ?? null;
+    dirtyRef.current = false;
+    setDirty(false);
+    setSyncStatus("saved");
+    setConflictDialogOpen(false);
+  }
+
   function handleStatusChange(nextStatus: OrganizerTourStatus) {
     if (!draft) return;
     if (nextStatus === "published") {
@@ -1146,22 +1272,46 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     window.open(`/organizer/tours/${draft.id}/preview`, "_blank", "noopener,noreferrer");
   }
 
-  function handleClone() {
-    const result = cloneOrganizerTour(tourId, user);
+  async function handleClone() {
+    const result = cloneOrganizerTour(tourId, user, { skipRemoteSync: true });
     if ("error" in result) {
       setError(result.error);
       return;
     }
+    if (isRemoteToursMode()) {
+      try {
+        await patchOrganizerTourDraftRemote({
+          tourId: result.draft.id,
+          draft: result.draft,
+          expectedUpdatedAt: null,
+        });
+      } catch (cloneError) {
+        deleteOrganizerTour(result.draft.id, user, { skipRemoteSync: true });
+        setError(cloneError instanceof Error ? cloneError.message : "Не удалось создать копию");
+        return;
+      }
+    }
     router.push(`/organizer/tours/${result.draft.id}/edit`);
   }
 
-  function handleDelete() {
+  async function handleDelete() {
+    if (!draft) return;
+    const productLabel = draft.type === "excursion" ? "экскурсию" : "тур";
     const confirmed = window.confirm(
-      "Удалить тур? Он исчезнет из каталога и поиска. Это действие нельзя отменить."
+      `Удалить ${productLabel}? Предложение исчезнет из каталога и поиска. Это действие нельзя отменить.`
     );
     if (!confirmed) return;
 
-    const result = deleteOrganizerTour(tourId, user);
+    if (isRemoteToursMode()) {
+      try {
+        await deleteOrganizerTourRemote(tourId);
+      } catch (deleteError) {
+        setError(deleteError instanceof Error ? deleteError.message : "Не удалось удалить предложение");
+        return;
+      }
+    }
+
+    const result = deleteOrganizerTour(tourId, user, { skipRemoteSync: true });
     if ("error" in result) {
       setError(result.error);
       return;
@@ -1173,6 +1323,12 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   const catalogSlug = getCatalogSlug(draft);
   const completionPercent = tourProfileCompletionPercent(draft);
   const showEditorPanels = mobilePanel === "editor";
+  const editorTabs = ORGANIZER_TOUR_EDITOR_TABS.map((tab) =>
+    draft.type === "excursion" && tab.id === "description"
+      ? { ...tab, label: "Формат и комфорт" }
+      : tab
+  );
+  const hasAccommodation = !draft.comfortLevels.includes(NO_ACCOMMODATION_LABEL);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4 pb-24 xl:pb-0">
@@ -1182,13 +1338,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           <Link
             href="/organizer/tours"
             className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-gray-200/80 bg-white text-slate transition-colors hover:bg-gray-50 hover:text-charcoal"
-            aria-label="Назад к списку туров"
+            aria-label="Назад к списку туров и экскурсий"
           >
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div className="min-w-0">
             <p className="text-[11px] font-semibold uppercase tracking-[0.12em] text-slate">
-              Редактор тура
+              {draft.type === "excursion" ? "Редактор экскурсии" : "Редактор тура"}
             </p>
             <h1 className="font-display text-lg font-bold leading-snug text-charcoal sm:text-xl lg:text-2xl">
               {draft.title}
@@ -1207,9 +1363,9 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             <Eye className="h-4 w-4 text-brand" />
             Предпросмотр
           </button>
-          {draft.status === "published" ? (
+          {draft.status === "published" && draft.moderationStatus !== "pending" && draft.moderationStatus !== "rejected" ? (
             <Link
-              href={`/tours/${draft.slug}`}
+              href={`${draft.type === "excursion" ? "/excursions" : "/tours"}/${draft.slug}`}
               target="_blank"
               className="inline-flex h-10 items-center gap-2 rounded-xl border border-gray-200/80 bg-white px-4 text-sm font-medium text-charcoal transition-colors hover:bg-gray-50"
             >
@@ -1233,7 +1389,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
       {showEditorPanels ? (
       <nav
-        aria-label="Разделы редактора тура"
+        aria-label={draft.type === "excursion" ? "Разделы редактора экскурсии" : "Разделы редактора тура"}
         className={cn(
           "sticky z-30 w-full transition-[max-width] duration-300 ease-out",
           siteStickyBelowHeaderInset075Class,
@@ -1242,7 +1398,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
       >
         <div className="overflow-hidden rounded-2xl bg-white/95 shadow-sm ring-1 ring-gray-200/60 backdrop-blur-md supports-[backdrop-filter]:bg-white/90">
           <div className="flex gap-1 overflow-x-auto px-3 scrollbar-hide sm:px-4">
-            {ORGANIZER_TOUR_EDITOR_TABS.map((tab) => (
+            {editorTabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
@@ -1299,12 +1455,12 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             {activeTab === "main" ? (
               <section className="space-y-5 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
                 <h2 className="font-heading text-xl font-bold text-charcoal sm:text-2xl">
-                  Расскажите о вашем туре
+                  Расскажите о {draft.type === "excursion" ? "вашей экскурсии" : "вашем туре"}
                 </h2>
 
                 <div>
                   <FieldLabel htmlFor="tour-title" required>
-                    Название тура
+                    Название {draft.type === "excursion" ? "экскурсии" : "тура"}
                   </FieldLabel>
                   <Input
                     id="tour-title"
@@ -1444,6 +1600,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "main" ? (
               <TourDifficultyBlock
+                productType={draft.type}
                 difficultyLevel={draft.difficultyLevel}
                 difficultyDescriptionText={draft.difficultyDescriptionText}
                 onDifficultyLevelChange={(difficultyLevel) => updateDraft({ difficultyLevel })}
@@ -1462,6 +1619,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "main" ? (
               <TourGeographyBlock
+                productType={draft.type}
                 countries={draft.countries}
                 cities={draft.cities}
                 mainLocation={draft.mainLocation}
@@ -1476,7 +1634,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
               <section className="rounded-2xl border border-gray-100 bg-white p-4 shadow-card">
                 <h3 className="font-heading text-base font-bold text-charcoal">Справочник мест</h3>
                 <p className="mt-1 text-sm text-slate">
-                  Slug мест из /places — для блока «Места рядом с маршрутом» на странице тура.
+                  Slug мест из /places — для блока «Места рядом с маршрутом» на странице{" "}
+                  {draft.type === "excursion" ? "экскурсии" : "тура"}.
                 </p>
                 <label className="mt-3 block space-y-1 text-sm">
                   <span className="text-slate">Связанные места (slug через запятую)</span>
@@ -1560,6 +1719,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "main" ? (
               <TourPhotosBlock
+                productId={draft.id}
+                productType={draft.type}
                 coverImage={draft.image}
                 gallery={draft.gallery}
                 onCoverChange={(image) => updateDraft({ image })}
@@ -1570,6 +1731,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             {activeTab === "main" ? (
               <>
                 <TourImpressionsBlock
+                  productId={draft.id}
                   places={draft.places}
                   onChange={(places) => updateDraft({ places })}
                 />
@@ -1584,6 +1746,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
             {activeTab === "main" ? (
               <TourGuidesBlock
+                productId={draft.id}
+                productType={draft.type}
                 guides={draft.guides}
                 onChange={(guides) => updateDraft({ guides })}
               />
@@ -1619,7 +1783,14 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   }}
                 />
 
-                <TourAccommodationDescriptionBlock
+                {!hasAccommodation ? (
+                  <div className="rounded-xl border border-sky/20 bg-sky/5 px-4 py-3 text-sm leading-relaxed text-slate">
+                    Для экскурсии без проживания достаточно заполнить формат и уровень комфорта. Блоки жилья появятся, если вы добавите проживание.
+                  </div>
+                ) : null}
+
+                {hasAccommodation ? <TourAccommodationDescriptionBlock
+                  productId={draft.id}
                   description={draft.accommodationDescriptionText}
                   photos={draft.accommodationPhotos}
                   onDescriptionChange={(accommodationDescriptionText) =>
@@ -1629,9 +1800,9 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   variantLabel={variantSync?.variantLabel}
                   variantDiff={variantSync?.accommodationDescriptionDiff}
                   onApplySync={() => markDirty()}
-                />
+                /> : null}
 
-                {variantSync?.accommodationDescriptionDiff ? (
+                {hasAccommodation && variantSync?.accommodationDescriptionDiff ? (
                   <TourAccommodationVariantsBlock
                     variantLabel={variantSync.variantLabel}
                     variantPlaces={IGUAZU_VARIANT_ACCOMMODATIONS}
@@ -1639,19 +1810,20 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                   />
                 ) : null}
 
-                <TourAccommodationSettingsBlock
+                {hasAccommodation ? <TourAccommodationSettingsBlock
                   upgradesEnabled={draft.accommodationUpgradesEnabled}
                   onChange={(accommodationUpgradesEnabled) =>
                     updateDraft({ accommodationUpgradesEnabled })
                   }
-                />
+                /> : null}
 
-                <TourAccommodationPlacesBlock
+                {hasAccommodation ? <TourAccommodationPlacesBlock
+                  productId={draft.id}
                   places={draft.accommodationPlaces}
                   onChange={(accommodationPlaces) => updateDraft({ accommodationPlaces })}
-                />
+                /> : null}
 
-                <TourAccommodationFooterBlock
+                {hasAccommodation ? <TourAccommodationFooterBlock
                   comfortLevels={draft.comfortLevels}
                   accommodationOrganizerCommentText={sectionCommentValue("accommodations")}
                   onCommentChange={(accommodationOrganizerCommentText) =>
@@ -1663,7 +1835,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                       { accommodationOrganizerCommentText }
                     )
                   }
-                />
+                /> : null}
               </>
             ) : null}
 
@@ -1697,6 +1869,37 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                     onChange={(groupDiscount) => updateDraft({ groupDiscount })}
                   />
                 </>
+              ) : null}
+
+              {draft.type === "excursion" ? (
+                <section className="space-y-4 rounded-2xl border border-gray-200/60 bg-white p-4 shadow-sm sm:p-5">
+                  <div>
+                    <h3 className="font-heading text-base font-semibold text-charcoal">Время экскурсии</h3>
+                    <p className="mt-1 text-xs leading-relaxed text-slate">
+                      Это время турист увидит при выборе даты и отправке заявки.
+                    </p>
+                  </div>
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <label htmlFor="excursion-start-time" className="space-y-1.5">
+                      <span className="block text-xs font-medium text-charcoal">Начало</span>
+                      <Input
+                        id="excursion-start-time"
+                        type="time"
+                        value={draft.excursionStartTime || "10:00"}
+                        onChange={(event) => updateDraft({ excursionStartTime: event.target.value })}
+                      />
+                    </label>
+                    <label htmlFor="excursion-end-time" className="space-y-1.5">
+                      <span className="block text-xs font-medium text-charcoal">Окончание, если известно</span>
+                      <Input
+                        id="excursion-end-time"
+                        type="time"
+                        value={draft.excursionEndTime || ""}
+                        onChange={(event) => updateDraft({ excursionEndTime: event.target.value })}
+                      />
+                    </label>
+                  </div>
+                </section>
               ) : null}
 
               <TourIndividualBlock
@@ -1772,6 +1975,8 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             {activeTab === "program" ? (
               <>
                 <TourProgramBlock
+                  productId={draft.id}
+                  productType={draft.type}
                   routeMapImage={draft.routeMapImage}
                   routePoints={draft.routePoints}
                   programDays={draft.programDays}
@@ -1848,7 +2053,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
 
                 <TourTermsListBlock
                   title="Важно знать"
-                  description="Ключевые рекомендации и ограничения для участников тура"
+                  description={`Ключевые рекомендации и ограничения для участников ${draft.type === "excursion" ? "экскурсии" : "тура"}`}
                   items={draft.importantInfo}
                   onChange={(importantInfo) => updateDraft({ importantInfo })}
                   placeholder="Например: возьмите непромокаемую обувь"
@@ -1914,11 +2119,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
                       className="flex h-11 w-full rounded-xl border border-gray-200 bg-white px-4 text-sm text-charcoal focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
                     >
                       <option value="draft">Черновик</option>
-                      <option value="published">Опубликовано</option>
+                      <option value="published">Отправить на модерацию</option>
                     </select>
                   </div>
                   <div>
-                    <FieldLabel htmlFor="tour-slug">URL тура</FieldLabel>
+                    <FieldLabel htmlFor="tour-slug">
+                      {draft.type === "excursion" ? "URL экскурсии" : "URL тура"}
+                    </FieldLabel>
                     <Input id="tour-slug" value={catalogSlug} readOnly className="bg-gray-50" />
                   </div>
                 </div>
@@ -1960,6 +2167,12 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
             {error ? (
               <div role="alert" className="rounded-xl bg-red-50 px-3 py-2.5 text-sm text-red-700">
                 {error}
+              </div>
+            ) : null}
+
+            {notice ? (
+              <div role="status" className="rounded-xl bg-emerald-50 px-3 py-2.5 text-sm text-emerald-800">
+                {notice}
               </div>
             ) : null}
 
@@ -2030,6 +2243,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         serverUpdatedAt={conflictServerUpdatedAt}
         onOpenChange={setConflictDialogOpen}
         onForceSync={handleForceSyncAfterConflict}
+        onUseServer={handleUseServerDraft}
       />
 
       <TourEditorMobileBar
