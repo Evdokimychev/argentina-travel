@@ -1,15 +1,15 @@
-✔ accepts fresh evidence for the exact candidate tree and allowed environment (1.003417ms)
-✔ rejects production baselines, another tree, missing run id, and wrong environment (0.123792ms)
-✔ rejects stale, undated, and canonical production reports (0.123542ms)
-✔ dirty path parser ignores staged-only and runtime outputs but rejects live inputs (0.27175ms)
-✔ finalization rejects a changed tree or dirty candidate (1.456125ms)
-✔ staging candidate evidence must be bound to the deployed tree (0.152875ms)
-✔ readiness routes every scored slot through the fail-closed selector (0.507375ms)
-✔ isolates the live production SEO baseline from candidate evidence (0.863667ms)
-✔ ignores the canonical candidate report variable for the live baseline (0.098541ms)
-✔ does not add SEO report settings to unrelated checks (0.077084ms)
-✔ accepts BlogPosting as a specialized Article schema (0.502209ms)
-✔ keeps unrelated schema expectations exact (0.089625ms)
+✔ accepts fresh evidence for the exact candidate tree and allowed environment (1.003709ms)
+✔ rejects production baselines, another tree, missing run id, and wrong environment (0.128875ms)
+✔ rejects stale, undated, and canonical production reports (0.131042ms)
+✔ dirty path parser ignores staged-only and runtime outputs but rejects live inputs (0.263333ms)
+✔ finalization rejects a changed tree or dirty candidate (1.361625ms)
+✔ staging candidate evidence must be bound to the deployed tree (0.152708ms)
+✔ readiness routes every scored slot through the fail-closed selector (0.527542ms)
+✔ isolates the live production SEO baseline from candidate evidence (0.928583ms)
+✔ ignores the canonical candidate report variable for the live baseline (0.101375ms)
+✔ does not add SEO report settings to unrelated checks (0.075625ms)
+✔ accepts BlogPosting as a specialized Article schema (0.546167ms)
+✔ keeps unrelated schema expectations exact (0.13825ms)
 ℹ tests 12
 ℹ suites 0
 ℹ pass 12
@@ -17,4 +17,4 @@
 ℹ cancelled 0
 ℹ skipped 0
 ℹ todo 0
-ℹ duration_ms 66.501584
+ℹ duration_ms 64.713708

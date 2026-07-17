@@ -1,4 +1,1 @@
-Forbidden production artifact markers:
-.next-production/static/chunks/15989-547ab9ac14f24a79.js: structured demo record id
-.next-production/static/chunks/15989-547ab9ac14f24a79.js: demo example email
-.next-production/static/chunks/15989-547ab9ac14f24a79.js: demo value in token or id field
+Production artifacts contain no localhost, demo seed, credential, token, or ID markers

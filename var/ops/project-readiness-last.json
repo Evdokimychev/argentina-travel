@@ -1,7 +1,7 @@
 {
-  "ranAt": "2026-07-17T08:31:52.671Z",
-  "overall": 7.6,
-  "grade": "B",
+  "ranAt": "2026-07-17T08:41:37.861Z",
+  "overall": 6.6,
+  "grade": "C+",
   "dimensions": {
     "code": {
       "score": 4.4,
@@ -16,9 +16,9 @@
       "note": "https://www.goargentina.ru"
     },
     "analytics": {
-      "score": 10,
+      "score": 0,
       "manual": false,
-      "note": "OK 1, warn 0, fail 0"
+      "note": "OK 3, warn 7, fail 6 — блокеры аналитики"
     },
     "performance": {
       "score": 5.9,

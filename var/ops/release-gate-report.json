@@ -1,10 +1,10 @@
 {
   "schemaVersion": 3,
   "evidenceScope": "candidate",
-  "candidateTree": "1ba5b3ea5b04809bfddaf9f1489a9689f7fa4805",
-  "evidenceRunId": "b44d0d23-76a7-46c5-bc03-a22290629c9e",
-  "evidenceStartedAt": "2026-07-17T08:31:26.509Z",
-  "evidenceGeneratedAt": "2026-07-17T08:38:24.402Z",
+  "candidateTree": "150dccbd3a8b1b1b0092b7fde10098ba4b0337de",
+  "evidenceRunId": "d3a5ce7a-e2c6-4d90-82ff-9c7f35022779",
+  "evidenceStartedAt": "2026-07-17T08:41:12.155Z",
+  "evidenceGeneratedAt": "2026-07-17T08:48:07.506Z",
   "evidenceEnvironment": "local-production",
   "evidenceBaseUrl": "http://127.0.0.1:3000",
   "evidenceIntegrity": {
@@ -21,8 +21,8 @@
     "branch": "codex/readiness-90-program",
     "dirtyTree": {
       "isDirty": true,
-      "entryCount": 1262,
-      "fingerprint": "0b849739862a977292a40e7068bb286bc7d7c0b9dc49f17511ccdc81b4235bda",
+      "entryCount": 1266,
+      "fingerprint": "92eb8ba9b460c15905ea92fe8f6faeec14d90b1e99716cd756ba2aba582a8414",
       "entries": [
         "M  .cursor/templates/migration.md",
         "M  .env.example",
@@ -1172,6 +1172,9 @@
         "A  src/lib/travelpayouts/target-url.test.ts",
         "A  src/lib/travelpayouts/target-url.ts",
         "A  src/lib/waitlist-api.ts",
+        "A  src/lib/waitlist-demo-seeds-active.demo.ts",
+        "A  src/lib/waitlist-demo-seeds-active.ts",
+        "M  src/lib/waitlist-store.ts",
         "M  src/locales/en/common.json",
         "M  src/locales/es/common.json",
         "M  src/locales/pt/common.json",
@@ -1277,6 +1280,7 @@
         "M  var/ops/release-gate-logs/contracts-unit-integration-contracts.log",
         "M  var/ops/release-gate-logs/journeys-playwright-critical.log",
         "M  var/ops/release-gate-logs/production-production-build.log",
+        "M  var/ops/release-gate-logs/production-production-isolation.log",
         "M  var/ops/release-gate-logs/security-rls.log",
         "M  var/ops/release-gate-logs/static-lint.log",
         "A  var/ops/release-gate-logs/static-release-evidence-contracts.log",
@@ -1298,16 +1302,16 @@
       "sha256": "ce1bf32c19e4f1eb71da2137b32bfb0207ea43c4d4a69ccb99cb539a0089fb3e"
     }
   },
-  "timestamp": "2026-07-17T08:38:24.402Z",
+  "timestamp": "2026-07-17T08:48:07.506Z",
   "environment": "local-production",
   "requestedGroup": "all",
-  "status": "failed",
+  "status": "passed",
   "checks": [
     {
       "id": "static:environment",
       "group": "static",
       "status": "passed",
-      "durationMs": 39,
+      "durationMs": 38,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/static-environment.log",
       "command": "node scripts/validate-build-mode.mjs"
@@ -1316,7 +1320,7 @@
       "id": "static:secrets",
       "group": "static",
       "status": "passed",
-      "durationMs": 3882,
+      "durationMs": 3773,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/static-secrets.log",
       "command": "node scripts/audit-secrets.mjs"
@@ -1325,7 +1329,7 @@
       "id": "static:release-evidence-contracts",
       "group": "static",
       "status": "passed",
-      "durationMs": 107,
+      "durationMs": 105,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/static-release-evidence-contracts.log",
       "command": "node --test scripts/lib/candidate-evidence.test.mjs scripts/lib/release-gate-env.test.mjs scripts/lib/seo-schema-contract.test.mjs"
@@ -1334,7 +1338,7 @@
       "id": "static:typescript",
       "group": "static",
       "status": "passed",
-      "durationMs": 4376,
+      "durationMs": 3927,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/static-typescript.log",
       "command": "npx tsc --noEmit"
@@ -1343,7 +1347,7 @@
       "id": "static:lint",
       "group": "static",
       "status": "passed",
-      "durationMs": 16661,
+      "durationMs": 16530,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/static-lint.log",
       "command": "npm run lint"
@@ -1352,7 +1356,7 @@
       "id": "contracts:unit-integration-contracts",
       "group": "contracts",
       "status": "passed",
-      "durationMs": 18214,
+      "durationMs": 18495,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/contracts-unit-integration-contracts.log",
       "command": "npm test"
@@ -1361,7 +1365,7 @@
       "id": "contracts:manual-content-sync",
       "group": "contracts",
       "status": "passed",
-      "durationMs": 184,
+      "durationMs": 185,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/contracts-manual-content-sync.log",
       "command": "npm run sync-manual-posts:check"
@@ -1370,7 +1374,7 @@
       "id": "contracts:rich-content-sync",
       "group": "contracts",
       "status": "passed",
-      "durationMs": 193,
+      "durationMs": 190,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/contracts-rich-content-sync.log",
       "command": "npm run sync-rich-articles:check"
@@ -1379,7 +1383,7 @@
       "id": "contracts:redirect-contracts",
       "group": "contracts",
       "status": "passed",
-      "durationMs": 287,
+      "durationMs": 280,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/contracts-redirect-contracts.log",
       "command": "npm run sync-content-plan-redirects:check"
@@ -1388,7 +1392,7 @@
       "id": "content:content-lint",
       "group": "content",
       "status": "passed",
-      "durationMs": 216,
+      "durationMs": 215,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/content-content-lint.log",
       "command": "npm run content:audit"
@@ -1397,7 +1401,7 @@
       "id": "content:seo-live-baseline",
       "group": "content",
       "status": "failed",
-      "durationMs": 148767,
+      "durationMs": 150298,
       "blocking": false,
       "artifact": "var/ops/release-gate-logs/content-seo-live-baseline.log",
       "command": "npm run seo-audit"
@@ -1406,7 +1410,7 @@
       "id": "content:media",
       "group": "content",
       "status": "passed",
-      "durationMs": 195,
+      "durationMs": 196,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/content-media.log",
       "command": "npm run media:integrity"
@@ -1415,7 +1419,7 @@
       "id": "content:media-rights",
       "group": "content",
       "status": "passed",
-      "durationMs": 2248,
+      "durationMs": 2262,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/content-media-rights.log",
       "command": "npm run media:rights:check"
@@ -1424,7 +1428,7 @@
       "id": "security:rls",
       "group": "security",
       "status": "passed",
-      "durationMs": 312,
+      "durationMs": 328,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/security-rls.log",
       "command": "npm run rls-audit"
@@ -1433,7 +1437,7 @@
       "id": "security:auth-readiness",
       "group": "security",
       "status": "passed",
-      "durationMs": 163,
+      "durationMs": 165,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/security-auth-readiness.log",
       "command": "npm run auth:readiness"
@@ -1442,7 +1446,7 @@
       "id": "commerce:booking-payment-integrity",
       "group": "commerce",
       "status": "passed",
-      "durationMs": 2528,
+      "durationMs": 2574,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/commerce-booking-payment-integrity.log",
       "command": "npx vitest run src/lib/booking-create-command-integrity.test.ts src/lib/booking-cancellation-integrity.test.ts src/lib/booking-create-pricing.test.ts src/lib/booking-state-machine.test.ts src/lib/payments/payment-integrity.test.ts src/lib/payments/webhook-handler.test.ts src/lib/payments/payment-idempotency.test.ts src/lib/payments/provider-contract.test.ts src/lib/database-url.test.ts"
@@ -1451,7 +1455,7 @@
       "id": "journeys:playwright-critical",
       "group": "journeys",
       "status": "passed",
-      "durationMs": 92519,
+      "durationMs": 91263,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/journeys-playwright-critical.log",
       "command": "npm run test:e2e:smoke"
@@ -1460,7 +1464,7 @@
       "id": "production:production-build",
       "group": "production",
       "status": "passed",
-      "durationMs": 124949,
+      "durationMs": 122527,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/production-production-build.log",
       "command": "npm run build"
@@ -1468,8 +1472,8 @@
     {
       "id": "production:production-isolation",
       "group": "production",
-      "status": "failed",
-      "durationMs": 1662,
+      "status": "passed",
+      "durationMs": 1615,
       "blocking": true,
       "artifact": "var/ops/release-gate-logs/production-production-isolation.log",
       "command": "node scripts/scan-production-artifacts.mjs"

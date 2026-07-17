@@ -73,9 +73,10 @@
 - SQL lifecycle smoke: 12/12 файлов;
 - TypeScript: PASS;
 - ESLint: 0 errors;
-- Vitest: 349/349 файлов, 1656/1656 тестов;
+- Vitest: 349/349 файлов, 1657/1657 тестов;
 - media/runtime Wave 1: 15/15 targeted tests, public client leaks 69 → 60;
-- production build и release gate выполняются один раз после фиксации этого документа.
+- production build и единый release gate: PASS на candidate tree
+  `150dccbd3a8b1b1b0092b7fde10098ba4b0337de`.
 
 ## Почему нельзя честно назвать production deployment завершённым
 
@@ -98,8 +99,8 @@ Exit criteria:
 
 - отдельные staging Supabase и Vercel;
 - backup production и документированное восстановление;
-- 93 миграции применяются с нуля и поверх production-like snapshot;
-- 12 SQL smoke, 1656 unit tests и critical Playwright проходят на staging;
+- 94 миграции применяются с нуля и поверх production-like snapshot;
+- 12 SQL smoke, 1657 unit tests и critical Playwright проходят на staging;
 - deploy, rollback и 60-минутное наблюдение подтверждены evidence одного tree.
 
 Копируемый промпт:

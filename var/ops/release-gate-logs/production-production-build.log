@@ -689,33 +689,33 @@ Route (app)                                                                     
 ├ ƒ /mapa-argentina                                                                                    36.6 kB         187 kB
 ├ ƒ /mobility                                                                                            305 B         136 kB
 ├ ƒ /organizer                                                                                         14.7 kB         598 kB
-├ ƒ /organizer/analytics                                                                               13.6 kB         594 kB
-├ ƒ /organizer/apartments                                                                                859 B         551 kB
-├ ƒ /organizer/articles                                                                                10.8 kB         546 kB
+├ ƒ /organizer/analytics                                                                               13.7 kB         593 kB
+├ ƒ /organizer/apartments                                                                                860 B         550 kB
+├ ƒ /organizer/articles                                                                                10.8 kB         545 kB
 ├ ƒ /organizer/articles/[id]/edit                                                                      12.9 kB         804 kB
 ├ ƒ /organizer/articles/[id]/preview                                                                   13.7 kB         947 kB
-├ ƒ /organizer/bookings                                                                                17.4 kB         601 kB
-├ ƒ /organizer/bookings/[id]                                                                           20.8 kB         616 kB
-├ ƒ /organizer/finance                                                                                 6.27 kB         538 kB
+├ ƒ /organizer/bookings                                                                                17.4 kB         600 kB
+├ ƒ /organizer/bookings/[id]                                                                           20.8 kB         615 kB
+├ ƒ /organizer/finance                                                                                 6.27 kB         537 kB
 ├ ƒ /organizer/group-trips                                                                              3.9 kB         532 kB
-├ ƒ /organizer/integrations                                                                            6.99 kB         536 kB
+├ ƒ /organizer/integrations                                                                            6.99 kB         535 kB
 ├ ƒ /organizer/messages                                                                                1.81 kB         535 kB
 ├ ƒ /organizer/mobility                                                                                  137 B         139 kB
-├ ƒ /organizer/payments                                                                                7.65 kB         591 kB
-├ ƒ /organizer/reviews                                                                                 4.32 kB         533 kB
-├ ƒ /organizer/settings                                                                                22.4 kB         563 kB
-├ ƒ /organizer/tours                                                                                   9.57 kB         542 kB
-├ ● /organizer/tours/[id]/edit                                                                           64 kB         605 kB
+├ ƒ /organizer/payments                                                                                7.66 kB         590 kB
+├ ƒ /organizer/reviews                                                                                 4.32 kB         532 kB
+├ ƒ /organizer/settings                                                                                22.4 kB         562 kB
+├ ƒ /organizer/tours                                                                                   9.57 kB         541 kB
+├ ● /organizer/tours/[id]/edit                                                                           64 kB         604 kB
 ├   ├ /organizer/tours/org-iguazu/edit
 ├   ├ /organizer/tours/org-salta/edit
 ├   ├ /organizer/tours/org-mendoza/edit
 ├   └ [+2 more paths]
-├ ● /organizer/tours/[id]/preview                                                                      1.37 kB         775 kB
+├ ● /organizer/tours/[id]/preview                                                                      1.37 kB         774 kB
 ├   ├ /organizer/tours/org-iguazu/preview
 ├   ├ /organizer/tours/org-salta/preview
 ├   ├ /organizer/tours/org-mendoza/preview
 ├   └ [+2 more paths]
-├ ƒ /organizer/waitlist/[id]                                                                           5.28 kB         537 kB
+├ ƒ /organizer/waitlist/[id]                                                                           5.28 kB         536 kB
 ├ ● /organizers/[slug]                                                                                 13.3 kB         514 kB
 ├   └ /organizers/ivan-evdokimychev
 ├ ƒ /places                                                                                            17.5 kB         210 kB
@@ -726,7 +726,7 @@ Route (app)                                                                     
 ├   └ [+95 more paths]
 ├ ƒ /podbor                                                                                            32.1 kB         513 kB
 ├ ƒ /profile                                                                                             25 kB         539 kB
-├ ƒ /profile/bookings                                                                                  11.5 kB         492 kB
+├ ƒ /profile/bookings                                                                                  11.5 kB         491 kB
 ├ ƒ /profile/bookings/[id]                                                                             10.7 kB         563 kB
 ├ ƒ /profile/favorites                                                                                 11.2 kB         204 kB
 ├ ƒ /profile/group-trips                                                                               7.58 kB         140 kB
@@ -774,7 +774,7 @@ Production client bundle contains no demo authentication adapter markers
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (127kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (102kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
 <w> [webpack.cache.PackFileCacheStrategy] Serializing big strings (244kiB) impacts deserialization performance (consider using Buffer instead and decode when needed)
- ⚠ Compiled with warnings in 66s
+ ⚠ Compiled with warnings in 64s
 
 ../argentina-travel/node_modules/@supabase/supabase-js/dist/index.mjs
 A Node.js API is used (process.version at line: 27) which is not supported in the Edge Runtime.
