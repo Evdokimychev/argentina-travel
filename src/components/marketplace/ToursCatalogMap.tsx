@@ -67,6 +67,8 @@ export default function ToursCatalogMap({
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const markers = markersRef.current;
+
     const map = L.map(containerRef.current, {
       scrollWheelZoom: true,
       zoomControl: true,
@@ -85,7 +87,7 @@ export default function ToursCatalogMap({
     mapRef.current = map;
 
     return () => {
-      markersRef.current.clear();
+      markers.clear();
       map.remove();
       mapRef.current = null;
     };

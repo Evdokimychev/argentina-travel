@@ -3,9 +3,9 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { Suspense, use, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Compass, Search } from "lucide-react";
+import { ArrowRight, Search } from "lucide-react";
 import { TourListing, TourFilters, BlogPost, Testimonial } from "@/types";
 import { filterTours, countActiveFilters, getDefaultFilters } from "@/lib/filter-tours";
 import { buildCatalogFilterHref } from "@/lib/catalog-filter-url";
@@ -15,6 +15,7 @@ import { useRepositoryTourListings } from "@/hooks/useRepositoryTourListings";
 import { POPULAR_DESTINATIONS } from "@/data/filters";
 import { destinationHref } from "@/lib/destinations";
 import HomeMultiSearch, { type HomeSearchTab } from "./HomeMultiSearch";
+import MarketplaceHomeHero from "./MarketplaceHomeHero";
 
 const FilterBar = dynamic(() => import("./FilterBar"), {
   loading: () => (
@@ -24,42 +25,57 @@ const FilterBar = dynamic(() => import("./FilterBar"), {
     />
   ),
 });
-import HomeExcursionFilterStrip from "./HomeExcursionFilterStrip";
-import MarketplaceTourCard from "./MarketplaceTourCard";
-import CatalogDepartureCalendarButton from "./CatalogDepartureCalendarButton";
-import TourEmbedSection from "@/components/embed/TourEmbedSection";
 import type { TourEmbedConfig } from "@/types/tour-embed";
-import BlogCard from "@/components/BlogCard";
 import { formatCatalogHeadline } from "@/lib/catalog-stats";
 import { filtersWord, tripsWord } from "@/lib/pluralize";
-import PlatformStatsBlock from "./PlatformStatsBlock";
-import HomeTestimonialsSection from "./HomeTestimonialsSection";
 import SectionShell from "@/components/layout/SectionShell";
 import type { PlatformStats } from "@/lib/organizer-public";
-import { getRecommendedListings } from "@/lib/tour-recommendations";
+import { getRecommendedListings } from "@/lib/tour-listing-ranking";
 import { filterArgentinaHomepageTours } from "@/lib/homepage-tours";
 import { getTourListingReactKey } from "@/lib/tour-public-display";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import HubQuickFactsGrid from "@/components/guide/hub/HubQuickFactsGrid";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
 import { cn } from "@/lib/cn";
 import type { ExcursionCity } from "@/types/excursion";
+import type { SiteNavigationGlobal } from "@/types/site-globals";
+
+// Keep the first screen focused on the primary tour search. These components
+// remain server-rendered where they are visible on initial load, while their
+// hydration code is split from the homepage entry chunk.
+const HomeExcursionFilterStrip = dynamic(() => import("./HomeExcursionFilterStrip"), {
+  loading: () => (
+    <div className="h-11 w-full animate-pulse rounded-full bg-surface-muted motion-reduce:animate-none" />
+  ),
+});
+const MarketplaceTourCard = dynamic(() => import("./MarketplaceTourCard"));
+const CatalogDepartureCalendarButton = dynamic(
+  () => import("./CatalogDepartureCalendarButton"),
+);
+const TourEmbedSection = dynamic(() => import("@/components/embed/TourEmbedSection"));
+const BlogCard = dynamic(() => import("@/components/BlogCard"));
+const PlatformStatsBlock = dynamic(() => import("./PlatformStatsBlock"));
+const HomeTestimonialsSection = dynamic(() => import("./HomeTestimonialsSection"));
 
 const HOME_FEATURED_REGIONS = POPULAR_DESTINATIONS.slice(0, 6);
 
-interface MarketplaceHomeProps {
+export interface MarketplaceHomeCatalogData {
   tours: TourListing[];
-  blogPosts: BlogPost[];
-  testimonials: Testimonial[];
   platformStats: PlatformStats;
-  excursionCities?: ExcursionCity[];
+  showHomepageRecommendationsV2: boolean;
+  personalizedTours: TourListing[];
+  personalizedActive: boolean;
+}
+
+interface MarketplaceHomeProps {
+  catalogData: Promise<MarketplaceHomeCatalogData>;
+  navigation: Promise<SiteNavigationGlobal>;
+  blogPosts: BlogPost[];
+  testimonials: Promise<Testimonial[]>;
+  excursionCities: Promise<ExcursionCity[]>;
   travelPrepStrip?: React.ReactNode;
-  heroBackdropSrc?: string;
   heroCollage?: React.ReactNode;
-  showHomepageRecommendationsV2?: boolean;
-  personalizedTours?: TourListing[];
-  personalizedActive?: boolean;
 }
 
 function TourGrid({
@@ -102,27 +118,38 @@ function TourGrid({
   );
 }
 
-export default function MarketplaceHome({
-  tours: initialTours,
+interface MarketplaceHomeIslandProps {
+  catalogData: Promise<MarketplaceHomeCatalogData>;
+  navigation: Promise<SiteNavigationGlobal>;
+  filters: TourFilters;
+  setFilters: React.Dispatch<React.SetStateAction<TourFilters>>;
+}
+
+function MarketplaceHomeBody({
+  catalogData,
+  navigation: navigationPromise,
   blogPosts,
-  testimonials,
-  platformStats,
-  excursionCities = [],
+  testimonials: testimonialsPromise,
+  filters,
+  setFilters,
   travelPrepStrip,
-  heroBackdropSrc,
-  heroCollage,
-  showHomepageRecommendationsV2 = false,
-  personalizedTours = [],
-  personalizedActive = false,
-}: MarketplaceHomeProps) {
-  const router = useRouter();
+}: MarketplaceHomeIslandProps & {
+  blogPosts: BlogPost[];
+  testimonials: Promise<Testimonial[]>;
+  travelPrepStrip?: React.ReactNode;
+}) {
+  const {
+    tours: initialTours,
+    platformStats,
+    showHomepageRecommendationsV2,
+    personalizedTours,
+    personalizedActive,
+  } = use(catalogData);
+  const navigation = use(navigationPromise);
+  const testimonials = use(testimonialsPromise);
   const tours = useRepositoryTourListings(initialTours);
   const homepageTours = useMemo(() => filterArgentinaHomepageTours(tours), [tours]);
-  const { currency, t } = useLocaleCurrency();
-  const [filters, setFilters] = useState<TourFilters>(() =>
-    getDefaultFilters(currency, tours)
-  );
-  const [searchTab, setSearchTab] = useState<HomeSearchTab>("tours");
+  const { currency } = useLocaleCurrency();
 
   useSyncPriceFilters(tours, currency, setFilters);
 
@@ -194,129 +221,9 @@ export default function MarketplaceHome({
 
   return (
     <>
-      {/* Hero */}
-      <section
-        data-scroll-rail-tone="light"
-        data-editorial-theme="city"
-        className="editorial-hero relative overflow-hidden border-b border-[var(--editorial-line)]"
-      >
-        {heroBackdropSrc ? (
-          <div className="absolute inset-0 bg-charcoal lg:hidden" aria-hidden>
-            <Image
-              src={heroBackdropSrc}
-              alt=""
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover object-[62%_center]"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgb(10_24_36/0.48),rgb(10_24_36/0.76)_52%,rgb(10_24_36/0.94))]" />
-          </div>
-        ) : null}
-        <div
-          className={cn(
-            siteContainerClass,
-            "relative py-5 sm:py-8 md:py-9 lg:py-9 xl:py-10",
-          )}
-        >
-          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,0.92fr)_minmax(520px,1.08fr)] lg:gap-x-10 lg:gap-y-6 xl:gap-x-14">
-            <div className="order-1 min-w-0">
-              <span className="editorial-kicker inline-flex whitespace-nowrap rounded-full border px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.1em] max-lg:!border-white/25 max-lg:!bg-white/10 max-lg:!text-white sm:text-xs sm:tracking-[0.14em]">
-                {t("home.hero.eyebrow")}
-              </span>
-              <div
-                className="editorial-rule mt-3 h-1 w-12 rounded-full max-lg:!bg-sky sm:mt-4"
-                aria-hidden
-              />
-              <h1 className="mt-3 max-w-3xl font-display text-[2.1rem] font-bold leading-[1.06] tracking-[-0.03em] text-white sm:mt-4 sm:text-[2.55rem] lg:text-[2.7rem] lg:text-charcoal xl:text-[2.85rem]">
-                {t("home.hero.title")}{" "}
-                <span className="editorial-accent-text max-lg:!text-sky">
-                  {t("home.hero.titleAccent")}
-                </span>
-              </h1>
-              <p className="mt-3 line-clamp-2 max-w-xl text-[0.95rem] leading-relaxed text-white/85 sm:mt-4 sm:line-clamp-none sm:text-[1.05rem] lg:text-slate">
-                {t("home.hero.subtitle")}
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-3 sm:mt-5">
-                <Link
-                  href="/podbor"
-                  className={buttonVariants({
-                    variant: "default",
-                    size: "default",
-                    className: "rounded-full gap-2 px-6",
-                  })}
-                >
-                  <Compass className="h-4 w-4" aria-hidden />
-                  {t("home.hero.ctaRoute")}
-                </Link>
-                <Link
-                  href="/podbor"
-                  className="hidden items-center gap-1 text-sm font-medium text-white/90 hover:text-white hover:underline sm:inline-flex lg:text-sky-ink"
-                >
-                  {t("home.hero.ctaHint")}
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </Link>
-              </div>
-            </div>
+      {!hasActiveSearch && navigation.showServices && travelPrepStrip ? travelPrepStrip : null}
 
-            {heroCollage ? (
-              <div className="order-3 hidden lg:order-2 lg:block">{heroCollage}</div>
-            ) : null}
-
-            <div className="order-2 lg:order-3 lg:col-span-2 lg:sticky lg:top-[calc(var(--site-header-height,72px)+0.75rem)] lg:z-20">
-              <HomeMultiSearch
-                tours={tours}
-                excursionCities={excursionCities}
-                query={filters.query}
-                dateFrom={filters.dateFrom}
-                dateTo={filters.dateTo}
-                nearMe={filters.nearMe}
-                onQueryChange={(q) => setFilters((f) => ({ ...f, query: q }))}
-                onDatesChange={(from, to) =>
-                  setFilters((f) => ({ ...f, dateFrom: from, dateTo: to }))
-                }
-                onNearMe={(coords) =>
-                  setFilters((f) => ({
-                    ...f,
-                    nearMe: !!coords,
-                    userCoords: coords,
-                  }))
-                }
-                onTabChange={setSearchTab}
-                onToursSearch={() => {
-                  const hasCriteria =
-                    filters.query.trim() ||
-                    filters.dateFrom ||
-                    filters.dateTo ||
-                    filters.nearMe ||
-                    activeCount > 0;
-                  if (hasCriteria) {
-                    router.push(buildCatalogFilterHref(filters, "recommended", currency, tours));
-                    return;
-                  }
-                  router.push("/tours");
-                }}
-              />
-            </div>
-          </div>
-
-          {searchTab === "tours" ? (
-            <div className="mt-3 min-h-11">
-              <FilterBar tours={tours} filters={filters} onChange={setFilters} />
-            </div>
-          ) : null}
-
-          {searchTab === "excursions" ? (
-            <div className="mt-4">
-              <HomeExcursionFilterStrip />
-            </div>
-          ) : null}
-        </div>
-      </section>
-
-      {!hasActiveSearch && travelPrepStrip ? travelPrepStrip : null}
-
-      {hasActiveSearch ? (
+      {navigation.showTours && hasActiveSearch ? (
         <section id="tour-results" className={cn(siteContainerClass, "py-8", siteScrollAnchorClass)}>
           <div className="flex flex-wrap items-center justify-between gap-3 border-b border-gray-100 pb-6">
             <p className="text-sm text-slate">
@@ -376,7 +283,7 @@ export default function MarketplaceHome({
             </div>
           ) : null}
         </section>
-      ) : (
+      ) : navigation.showTours ? (
         <SectionShell
           reveal
           tone="muted"
@@ -406,20 +313,21 @@ export default function MarketplaceHome({
             </Link>
           </div>
         </SectionShell>
-      )}
+      ) : null}
 
-      <PlatformStatsBlock initialStats={platformStats} />
+      {navigation.showTours ? <PlatformStatsBlock initialStats={platformStats} /> : null}
 
       {/* Regions & places */}
+      {navigation.showGeography && (navigation.showDestinations || navigation.showPlaces) ? (
       <SectionShell
         reveal
         eyebrow="География"
-        title="Регионы и места"
+        title={navigation.showDestinations ? "Регионы и места" : "Места Аргентины"}
         subtitle="Региональные гиды для планирования и справочник парков, городов и достопримечательностей"
-        href="/destinations"
-        linkLabel="Обзор регионов"
+        href={navigation.showDestinations ? "/destinations" : "/places"}
+        linkLabel={navigation.showDestinations ? "Обзор регионов" : "Все места"}
       >
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-12 sm:gap-4">
+        {navigation.showDestinations ? <div className="grid grid-cols-2 gap-3 sm:grid-cols-12 sm:gap-4">
           {HOME_FEATURED_REGIONS.map((dest, index) => (
             <Link
               key={dest.id}
@@ -448,8 +356,8 @@ export default function MarketplaceHome({
               </div>
             </Link>
           ))}
-        </div>
-        <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
+        </div> : null}
+        {navigation.showPlaces ? <div className="mt-6 flex flex-wrap items-center justify-center gap-3 text-sm">
           <Link
             href="/places"
             className="inline-flex items-center gap-1.5 rounded-full border border-gray-200 bg-white px-4 py-2 font-medium text-charcoal hover:border-sky hover:text-sky"
@@ -469,11 +377,12 @@ export default function MarketplaceHome({
           >
             Подборки
           </Link>
-        </div>
+        </div> : null}
       </SectionShell>
+      ) : null}
 
       {/* One ranked offer shelf keeps the primary choice focused. */}
-      <section className="border-y border-gray-100 bg-white py-12 md:py-14">
+      {navigation.showTours ? <section className="border-y border-gray-100 bg-white py-12 md:py-14">
         <div className={siteContainerClass}>
           <TourGrid
             id="recommended"
@@ -483,12 +392,12 @@ export default function MarketplaceHome({
             variant="strip"
           />
         </div>
-      </section>
+      </section> : null}
 
-      {!hasActiveSearch ? <HomeTestimonialsSection testimonials={testimonials} /> : null}
+      {navigation.showTours && !hasActiveSearch ? <HomeTestimonialsSection testimonials={testimonials} /> : null}
 
       {/* Blog */}
-      {!hasActiveSearch ? (
+      {navigation.showJournal && !hasActiveSearch ? (
         <SectionShell
           reveal
           eyebrow="Блог"
@@ -508,7 +417,7 @@ export default function MarketplaceHome({
       ) : null}
 
       {/* Guide & immigration */}
-      {!hasActiveSearch ? (
+      {(navigation.showGuide || navigation.showImmigration) && !hasActiveSearch ? (
         <SectionShell
           reveal
           tone="dark"
@@ -519,23 +428,202 @@ export default function MarketplaceHome({
           scrollRailTone="dark"
         >
           <div className="flex flex-wrap gap-3">
-            <Link
+            {navigation.showGuide ? <Link
               href="/guide"
               className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
             >
               Путеводитель
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
+            </Link> : null}
+            {navigation.showImmigration ? <Link
               href="/immigration"
               className="inline-flex items-center gap-1 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15"
             >
               Иммиграция
               <ArrowRight className="h-4 w-4" />
-            </Link>
+            </Link> : null}
           </div>
         </SectionShell>
       ) : null}
+    </>
+  );
+}
+
+function HomeSearchFallback() {
+  return (
+    <div
+      className="min-h-[19rem] animate-pulse rounded-3xl border border-white/20 bg-white/15 sm:min-h-[17rem] lg:min-h-[9.5rem] lg:border-gray-200/80 lg:bg-white/70 motion-reduce:animate-none"
+      role="status"
+      aria-label="Загружаем поиск туров"
+    />
+  );
+}
+
+function MarketplaceHomeSearchControls({
+  catalogData,
+  navigation: navigationPromise,
+  excursionCities,
+  filters,
+  setFilters,
+  setSearchTab,
+}: MarketplaceHomeIslandProps & {
+  excursionCities: Promise<ExcursionCity[]>;
+  setSearchTab: React.Dispatch<React.SetStateAction<HomeSearchTab>>;
+}) {
+  const { tours: initialTours } = use(catalogData);
+  const navigation = use(navigationPromise);
+  const tours = useRepositoryTourListings(initialTours);
+  const router = useRouter();
+  const { currency } = useLocaleCurrency();
+  const activeCount = countActiveFilters(filters, currency, tours);
+  const enabledSearchTabs = useMemo<HomeSearchTab[]>(
+    () => [
+      ...(navigation.showTours ? (["tours"] as const) : []),
+      ...(navigation.showExcursions ? (["excursions"] as const) : []),
+      "flights",
+    ],
+    [navigation.showExcursions, navigation.showTours],
+  );
+
+  return (
+    <div className="min-h-[19rem] sm:min-h-[17rem] lg:min-h-[9.5rem]">
+      <HomeMultiSearch
+        tours={tours}
+        excursionCities={excursionCities}
+        query={filters.query}
+        dateFrom={filters.dateFrom}
+        dateTo={filters.dateTo}
+        nearMe={filters.nearMe}
+        onQueryChange={(query) => setFilters((current) => ({ ...current, query }))}
+        onDatesChange={(dateFrom, dateTo) =>
+          setFilters((current) => ({ ...current, dateFrom, dateTo }))
+        }
+        onNearMe={(coords) =>
+          setFilters((current) => ({
+            ...current,
+            nearMe: Boolean(coords),
+            userCoords: coords,
+          }))
+        }
+        onTabChange={setSearchTab}
+        enabledTabs={enabledSearchTabs}
+        onToursSearch={() => {
+          const hasCriteria =
+            filters.query.trim() ||
+            filters.dateFrom ||
+            filters.dateTo ||
+            filters.nearMe ||
+            activeCount > 0;
+          router.push(
+            hasCriteria
+              ? buildCatalogFilterHref(filters, "recommended", currency, tours)
+              : "/tours",
+          );
+        }}
+      />
+    </div>
+  );
+}
+
+function MarketplaceHomeFilterControls({
+  catalogData,
+  navigation: navigationPromise,
+  filters,
+  setFilters,
+  searchTab,
+}: MarketplaceHomeIslandProps & { searchTab: HomeSearchTab }) {
+  const { tours: initialTours } = use(catalogData);
+  const navigation = use(navigationPromise);
+  const tours = useRepositoryTourListings(initialTours);
+
+  if (navigation.showTours && searchTab === "tours") {
+    return (
+      <div className="mt-3 min-h-11">
+        <FilterBar tours={tours} filters={filters} onChange={setFilters} />
+      </div>
+    );
+  }
+
+  if (navigation.showExcursions && searchTab === "excursions") {
+    return (
+      <div className="mt-4">
+        <HomeExcursionFilterStrip />
+      </div>
+    );
+  }
+
+  return null;
+}
+
+export default function MarketplaceHome({
+  catalogData,
+  navigation,
+  blogPosts,
+  testimonials,
+  excursionCities,
+  travelPrepStrip,
+  heroCollage,
+}: MarketplaceHomeProps) {
+  const { currency } = useLocaleCurrency();
+  const [filters, setFilters] = useState<TourFilters>(() =>
+    getDefaultFilters(currency),
+  );
+  const [searchTab, setSearchTab] = useState<HomeSearchTab>("tours");
+
+  return (
+    <>
+      <MarketplaceHomeHero
+        heroCollage={heroCollage}
+        searchControls={
+          <Suspense fallback={<HomeSearchFallback />}>
+            <MarketplaceHomeSearchControls
+              catalogData={catalogData}
+              navigation={navigation}
+              excursionCities={excursionCities}
+              filters={filters}
+              setFilters={setFilters}
+              setSearchTab={setSearchTab}
+            />
+          </Suspense>
+        }
+        filterControls={
+          <Suspense
+            fallback={
+              <div
+                className="mt-3 min-h-11 rounded-full bg-surface-muted/60"
+                aria-hidden
+              />
+            }
+          >
+            <MarketplaceHomeFilterControls
+              catalogData={catalogData}
+              navigation={navigation}
+              filters={filters}
+              setFilters={setFilters}
+              searchTab={searchTab}
+            />
+          </Suspense>
+        }
+      />
+
+      <Suspense
+        fallback={
+          <div
+            className="min-h-screen border-b border-gray-100 bg-surface-elevated"
+            aria-hidden
+          />
+        }
+      >
+        <MarketplaceHomeBody
+          catalogData={catalogData}
+          navigation={navigation}
+          blogPosts={blogPosts}
+          testimonials={testimonials}
+          filters={filters}
+          setFilters={setFilters}
+          travelPrepStrip={travelPrepStrip}
+        />
+      </Suspense>
     </>
   );
 }

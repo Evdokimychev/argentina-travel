@@ -5,12 +5,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   BarChart3,
+  CarFront,
   ChevronLeft,
   ChevronRight,
   Clock3,
   Compass,
   FileText,
   LayoutGrid,
+  House,
   Mail,
   MoreHorizontal,
   Settings,
@@ -63,6 +65,8 @@ const NAV_ICONS: Record<OrganizerNavId, typeof LayoutGrid> = {
   dashboard: LayoutGrid,
   analytics: BarChart3,
   tours: Compass,
+  apartments: House,
+  mobility: CarFront,
   articles: FileText,
   bookings: Clock3,
   groupTrips: Users,

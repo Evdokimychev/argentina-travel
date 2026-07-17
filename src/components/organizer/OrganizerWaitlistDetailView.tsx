@@ -27,9 +27,14 @@ import {
 } from "@/types/waitlist";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { cn } from "@/lib/cn";
-import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { Textarea } from "@/components/ui/textarea";
+import { isRemoteBookingsMode } from "@/lib/bookings-api";
+import {
+  apiAddOrganizerWaitlistComment,
+  apiFetchOrganizerWaitlistEntry,
+  apiUpdateOrganizerWaitlistStatus,
+} from "@/lib/waitlist-api";
 
 interface OrganizerWaitlistDetailViewProps {
   waitlistId: string;
@@ -43,15 +48,40 @@ export default function OrganizerWaitlistDetailView({
   const [entry, setEntry] = useState<WaitlistEntry | null>(null);
   const [comment, setComment] = useState("");
   const [busy, setBusy] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const remoteMode = isRemoteBookingsMode();
 
   useEffect(() => {
-    function refresh() {
-      setEntry(getWaitlistEntryById(waitlistId) ?? null);
+    async function refresh() {
+      setLoading(true);
+      setLoadError("");
+      try {
+        setEntry(
+          remoteMode
+            ? await apiFetchOrganizerWaitlistEntry(waitlistId)
+            : getWaitlistEntryById(waitlistId) ?? null
+        );
+      } catch (error) {
+        setEntry(null);
+        setLoadError(error instanceof Error ? error.message : "Не удалось загрузить заявку");
+      } finally {
+        setLoading(false);
+      }
     }
-    refresh();
-    window.addEventListener(WAITLIST_UPDATED_EVENT, refresh);
-    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, refresh);
-  }, [waitlistId]);
+    void refresh();
+    const onUpdated = () => void refresh();
+    window.addEventListener(WAITLIST_UPDATED_EVENT, onUpdated);
+    return () => window.removeEventListener(WAITLIST_UPDATED_EVENT, onUpdated);
+  }, [remoteMode, waitlistId]);
+
+  if (loading) {
+    return <p className="py-10 text-center text-sm text-slate" role="status">Загружаем заявку…</p>;
+  }
+
+  if (loadError) {
+    return <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-sm text-red-800" role="alert">{loadError}</div>;
+  }
 
   if (!entry) {
     return (
@@ -73,18 +103,29 @@ export default function OrganizerWaitlistDetailView({
 
   async function handleStatus(next: WaitlistStatus) {
     setBusy(true);
-    const result = updateWaitlistStatus({
-      waitlistId: entry!.id,
-      status: next,
-      changedBy: "organizer",
-    });
-    setBusy(false);
-    if ("error" in result) {
-      feedback.showError({ title: "Не удалось обновить статус", description: result.error });
-      return;
+    try {
+      if (remoteMode) {
+        const updated = await apiUpdateOrganizerWaitlistStatus(entry!.id, next);
+        setEntry(updated);
+      } else {
+        const result = updateWaitlistStatus({
+          waitlistId: entry!.id,
+          status: next,
+          changedBy: "organizer",
+        });
+        if ("error" in result) throw new Error(result.error);
+        setEntry(result.entry);
+      }
+      window.dispatchEvent(new CustomEvent(WAITLIST_UPDATED_EVENT));
+      feedback.success({ title: "Статус обновлён", description: WAITLIST_STATUS_LABELS[next] });
+    } catch (error) {
+      feedback.showError({
+        title: "Не удалось обновить статус",
+        description: error instanceof Error ? error.message : "Попробуйте ещё раз",
+      });
+    } finally {
+      setBusy(false);
     }
-    setEntry(result.entry);
-    feedback.success({ title: "Статус обновлён", description: WAITLIST_STATUS_LABELS[next] });
   }
 
   async function handleConvert() {
@@ -111,18 +152,27 @@ export default function OrganizerWaitlistDetailView({
   async function handleComment() {
     if (!comment.trim()) return;
     setBusy(true);
-    const result = addWaitlistOrganizerComment({
-      waitlistId: entry!.id,
-      text: comment,
-      authorName: user?.fullName ?? user?.email ?? "Организатор",
-    });
-    setBusy(false);
-    if ("error" in result) {
-      feedback.showError({ title: "Не удалось сохранить комментарий", description: result.error });
-      return;
+    try {
+      if (remoteMode) {
+        setEntry(await apiAddOrganizerWaitlistComment(entry!.id, comment));
+      } else {
+        const result = addWaitlistOrganizerComment({
+          waitlistId: entry!.id,
+          text: comment,
+          authorName: user?.fullName ?? user?.email ?? "Организатор",
+        });
+        if ("error" in result) throw new Error(result.error);
+        setEntry(result.entry);
+      }
+      setComment("");
+    } catch (error) {
+      feedback.showError({
+        title: "Не удалось сохранить комментарий",
+        description: error instanceof Error ? error.message : "Попробуйте ещё раз",
+      });
+    } finally {
+      setBusy(false);
     }
-    setEntry(result.entry);
-    setComment("");
   }
 
   return (
@@ -249,16 +299,23 @@ export default function OrganizerWaitlistDetailView({
                       {WAITLIST_STATUS_LABELS[status]}
                     </Button>
                   ))}
-                  <Button
-                    type="button"
-                    size="sm"
-                    className="w-full"
-                    disabled={busy}
-                    onClick={handleConvert}
-                  >
-                    Оформить бронирование
-                  </Button>
+                  {!remoteMode ? (
+                    <Button
+                      type="button"
+                      size="sm"
+                      className="w-full"
+                      disabled={busy}
+                      onClick={handleConvert}
+                    >
+                      Оформить бронирование
+                    </Button>
+                  ) : null}
                 </div>
+                {remoteMode ? (
+                  <p className="mt-3 text-xs leading-relaxed text-slate">
+                    После согласования места переведите заявку в статус «Предложено». Создание бронирования выполняется из основного раздела заявок.
+                  </p>
+                ) : null}
               </div>
             ) : null}
 

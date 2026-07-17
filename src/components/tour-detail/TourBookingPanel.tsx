@@ -150,13 +150,9 @@ export default function TourBookingPanel({
     ? offerCapabilities.primaryActionLabel
     : offerCapabilities.bookingMode === "disabled"
       ? offerCapabilities.primaryActionLabel
-      : priceOnRequest
-      ? "Запросить расчёт"
       : canJoinWaitlist && bookingValidationError
         ? "Встать в лист ожидания"
-        : dateMode === "custom" || bookingMode === "on_request"
-          ? "Забронировать индивидуально"
-          : "Забронировать";
+        : offerCapabilities.primaryActionLabel;
 
   function handleBookClick() {
     if (bookingValidationError) {
@@ -359,6 +355,7 @@ export default function TourBookingPanel({
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
+                label={offerCapabilities.primaryActionLabel}
                 className="mt-3"
                 onClick={handleExternalBookingClick}
               />

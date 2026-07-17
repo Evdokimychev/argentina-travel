@@ -1,11 +1,12 @@
 "use client";
 
-import { useMemo, useState, type FormEvent } from "react";
+import { useCallback, useMemo, useState, type FormEvent } from "react";
 import { Mail, MapPin, MessageCircle } from "lucide-react";
 import Hero from "@/components/Hero";
 import ContactOfficeMap from "@/components/contacts/ContactOfficeMap";
 import ContactTeamBlock from "@/components/contacts/ContactTeamBlock";
 import { getShopProductBySlug } from "@/data/shop-products";
+import { formatShopMoney } from "@/types/shop-product";
 import { getServiceBySlug } from "@/data/services-hub";
 import { getTourBySlug } from "@/data/tours";
 import {
@@ -27,6 +28,7 @@ import { trackContactFormSubmit } from "@/lib/analytics/gtm-events";
 import { siteContainerClass } from "@/lib/site-container";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { requiredField, validateEmail } from "@/lib/form-validation";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 type ContactFormContext = {
   tourSlug?: string;
@@ -40,7 +42,12 @@ type ContactsPageClientProps = {
   whatsAppUrl?: string | null;
   telegramUrl?: string | null;
   instagramUrl?: string | null;
+  youtubeUrl?: string | null;
+  tiktokUrl?: string | null;
+  facebookUrl?: string | null;
+  xUrl?: string | null;
   supportEmail?: string;
+  formEnabled?: boolean;
   formContext?: ContactFormContext;
 };
 
@@ -74,6 +81,9 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
   const [submitError, setSubmitError] = useState<SiteFeedbackMessage | null>(null);
   const feedback = useSiteFeedback();
   const [message, setMessage] = useState(() => buildInitialMessage(formContext));
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const handleCaptchaToken = useCallback((token: string) => setCaptchaToken(token), []);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -86,6 +96,7 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
     const email = String(formData.get("email") ?? "").trim();
     const tourTitle = String(formData.get("tour") ?? "").trim();
     const bodyMessage = String(formData.get("message") ?? message).trim();
+    const honeypot = String(formData.get("company") ?? "");
 
     try {
       const response = await fetch("/api/contact", {
@@ -105,6 +116,8 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
             topic: formContext.topic,
           },
           pageUrl: typeof window !== "undefined" ? window.location.href : null,
+          captchaToken,
+          honeypot,
         }),
       });
 
@@ -133,6 +146,7 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
       feedback.showError(normalized);
     } finally {
       setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
   }
 
@@ -149,7 +163,7 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
           Заказ продукта: <span className="font-medium">{product.title}</span>
           <span className="text-slate">
             {" "}
-            · ${product.price} {product.currency}
+            · {formatShopMoney(product.priceMinor, product.currency)}
           </span>
         </div>
       ) : null}
@@ -169,6 +183,10 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
         />
       ) : (
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
+          <label className="absolute -left-[10000px] h-px w-px overflow-hidden" aria-hidden="true">
+            Компания
+            <input name="company" tabIndex={-1} autoComplete="off" />
+          </label>
           {submitError ? (
             <InlineFeedback
               variant="error"
@@ -225,6 +243,11 @@ function ContactsForm({ formContext = {} }: { formContext?: ContactFormContext }
               validate={(value) => value.trim().length < 10 ? "Расскажите немного подробнее — хотя бы 10 символов" : null}
               placeholder="Расскажите о ваших планах..."
             />
+          <TurnstileField
+            formId="contact"
+            onToken={handleCaptchaToken}
+            resetSignal={captchaResetSignal}
+          />
           <Button
             type="submit"
             className="w-full sm:w-auto sm:px-10"
@@ -244,13 +267,24 @@ export default function ContactsPageClient({
   whatsAppUrl,
   telegramUrl,
   instagramUrl,
+  youtubeUrl,
+  tiktokUrl,
+  facebookUrl,
+  xUrl,
   supportEmail,
+  formEnabled = true,
   formContext = {},
 }: ContactsPageClientProps) {
   const { t } = useLocaleCurrency();
   const whatsAppHref = whatsAppUrl?.trim() || SITE_WHATSAPP_URL;
   const telegramHref = telegramUrl?.trim() || undefined;
   const instagramHref = instagramUrl?.trim() || undefined;
+  const additionalSocialLinks = [
+    { label: "YouTube", href: youtubeUrl?.trim() },
+    { label: "TikTok", href: tiktokUrl?.trim() },
+    { label: "Facebook", href: facebookUrl?.trim() },
+    { label: "X", href: xUrl?.trim() },
+  ].filter((link): link is { label: string; href: string } => Boolean(link.href));
   const emailDisplay = supportEmail?.trim() || SITE_EMAIL.display;
   const emailHref = `mailto:${emailDisplay}`;
   const formIntro = contactPageIntro?.trim() || t("contacts.form.defaultIntro");
@@ -284,7 +318,16 @@ export default function ContactsPageClient({
           <div className="rounded-3xl border border-gray-100 bg-white p-6 shadow-card sm:p-8">
             <h2 className="font-heading text-2xl font-bold text-charcoal">{t("contacts.form.title")}</h2>
             <p className="mt-3 text-slate">{formIntro}</p>
-            <ContactsForm formContext={formContext} />
+            {formEnabled ? (
+              <ContactsForm formContext={formContext} />
+            ) : (
+              <InlineFeedback
+                variant="info"
+                title="Форма обращений временно закрыта"
+                description="Напишите нам по email или в доступный мессенджер — контакты указаны рядом."
+                className="mt-6"
+              />
+            )}
           </div>
 
           <div>
@@ -335,6 +378,18 @@ export default function ContactsPageClient({
                         </a>
                       </li>
                     ) : null}
+                    {additionalSocialLinks.map((link) => (
+                      <li key={link.label}>
+                        <a
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-slate transition-colors hover:text-sky"
+                        >
+                          {link.label}
+                        </a>
+                      </li>
+                    ))}
                   </ul>
                 </div>
               </div>

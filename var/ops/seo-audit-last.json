@@ -1,9 +1,9 @@
 {
-  "checkedAt": "2026-07-16T03:08:03.821Z",
-  "baseUrl": "http://127.0.0.1:3000",
+  "checkedAt": "2026-07-17T03:57:38.525Z",
+  "baseUrl": "http://127.0.0.1:3131",
   "configuration": {
     "canonicalOrigin": "https://www.goargentina.ru",
-    "concurrency": 8,
+    "concurrency": 12,
     "enforceResponseNoindex": false,
     "maxUrls": null
   },
@@ -12,8 +12,8 @@
     "issues": []
   },
   "sitemap": {
-    "urlCount": 603,
-    "crawledUrlCount": 603,
+    "urlCount": 550,
+    "crawledUrlCount": 550,
     "structureIssues": [],
     "criticalIssues": [],
     "warnings": [],
@@ -48,8 +48,8 @@
         "path": "/destinations",
         "url": "https://www.goargentina.ru/destinations",
         "status": 200,
-        "title": "Регионы и места",
-        "description": "8 регионов для планирования поездки и справочник мест Аргентины: парки, ледники, водопады и города — с картой, подборками и турами.",
+        "title": "Направления и места",
+        "description": "7 городов и 1 макрорегион для планирования поездки, а также справочник мест Аргентины с картой, подборками и турами.",
         "canonical": "https://www.goargentina.ru/destinations",
         "robots": "index, follow",
         "hreflang": [
@@ -687,51 +687,6 @@
         "title": "Подбор маршрута по Аргентине",
         "description": "Интерактивный подбор путешествия по Аргентине: регионы, туры и экскурсии под ваши цели, бюджет и темп.",
         "canonical": "https://www.goargentina.ru/podbor",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 2,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/excursions/city/Buenos_Aires",
-        "url": "https://www.goargentina.ru/excursions/city/Buenos_Aires",
-        "status": 200,
-        "title": "Экскурсии в Буэнос-Айрес",
-        "description": "Авторские экскурсии, прогулки и активности в Буэнос-Айрес, Аргентина: выбирайте маршрут, гида и удобную дату.",
-        "canonical": "https://www.goargentina.ru/excursions/city/Buenos_Aires",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 2,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/excursions/city/Ushuaia",
-        "url": "https://www.goargentina.ru/excursions/city/Ushuaia",
-        "status": 200,
-        "title": "Экскурсии в Ушуайя",
-        "description": "Авторские экскурсии, прогулки и активности в Ушуайя, Аргентина: выбирайте маршрут, гида и удобную дату.",
-        "canonical": "https://www.goargentina.ru/excursions/city/Ushuaia",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 2,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/excursions/city/Mendoza",
-        "url": "https://www.goargentina.ru/excursions/city/Mendoza",
-        "status": 200,
-        "title": "Экскурсии в Мендоса",
-        "description": "Авторские экскурсии, прогулки и активности в Мендоса, Аргентина: выбирайте маршрут, гида и удобную дату.",
-        "canonical": "https://www.goargentina.ru/excursions/city/Mendoza",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -1638,7 +1593,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 6,
+        "jsonLdBlocks": 5,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1662,7 +1617,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 6,
+        "jsonLdBlocks": 5,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1686,7 +1641,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 6,
+        "jsonLdBlocks": 5,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1710,7 +1665,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 6,
+        "jsonLdBlocks": 5,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1734,7 +1689,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 6,
+        "jsonLdBlocks": 5,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1758,7 +1713,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 6,
+        "jsonLdBlocks": 5,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1830,7 +1785,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 5,
+        "jsonLdBlocks": 4,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1854,7 +1809,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 5,
+        "jsonLdBlocks": 4,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -1878,7 +1833,7 @@
           }
         ],
         "h1Count": 1,
-        "jsonLdBlocks": 5,
+        "jsonLdBlocks": 4,
         "criticalIssues": [],
         "warnings": [],
         "ok": true
@@ -4258,7 +4213,7 @@
         "url": "https://www.goargentina.ru/places/san-juan",
         "status": 200,
         "title": "Сан-Хуан — места Аргентины",
-        "description": "Путеводитель по месту «Сан-Хуан»: Солнечная винная столица сиры и ворота к Исчигуаласто.",
+        "description": "Путеводитель по месту «Сан-Хуан»: Столица одноимённой провинции у подножия Анд, второй по значимости винный регион Аргентины после Мендосы (Сира, Бонарда) и город, полностью…",
         "canonical": "https://www.goargentina.ru/places/san-juan",
         "robots": "",
         "hreflang": [
@@ -4546,7 +4501,7 @@
         "url": "https://www.goargentina.ru/places/lujan",
         "status": 200,
         "title": "Лухан — места Аргентины",
-        "description": "Путеводитель по месту «Лухан»: Город в провинции Буэнос-Айрес, главный центр католического паломничества Аргентины: к неоготической базилике Девы Лухан — покровительницы страны —…",
+        "description": "Путеводитель по месту «Лухан»: Город в провинции Буэнос-Айрес и главный центр католического паломничества Аргентины с неоготической базиликой Девы Лухан.",
         "canonical": "https://www.goargentina.ru/places/lujan",
         "robots": "",
         "hreflang": [
@@ -4594,7 +4549,7 @@
         "url": "https://www.goargentina.ru/places/necochea",
         "status": 200,
         "title": "Некочеа — места Аргентины",
-        "description": "Путеводитель по месту «Некочеа»: Крупный пляжный курорт на юге атлантического побережья провинции Буэнос-Айрес: очень длинные и широкие пляжи и один из самых больших приморских…",
+        "description": "Путеводитель по месту «Некочеа»: Крупный пляжный курорт на юге атлантического побережья провинции Буэнос-Айрес с длинными и широкими пляжами.",
         "canonical": "https://www.goargentina.ru/places/necochea",
         "robots": "",
         "hreflang": [
@@ -4810,7 +4765,7 @@
         "url": "https://www.goargentina.ru/places/merlo",
         "status": 200,
         "title": "Мерло — места Аргентины",
-        "description": "Путеводитель по месту «Мерло»: Курортный городок на востоке провинции Сан-Луис у подножия гор Сьеррас-де-лос-Комечингонес, знаменитый мягким микроклиматом, который считается одним…",
+        "description": "Путеводитель по месту «Мерло»: Курортный городок на востоке провинции Сан-Луис у подножия гор Сьеррас-де-лос-Комечингонес, известный мягким микроклиматом.",
         "canonical": "https://www.goargentina.ru/places/merlo",
         "robots": "",
         "hreflang": [
@@ -4882,7 +4837,7 @@
         "url": "https://www.goargentina.ru/places/sierra-de-las-quijadas",
         "status": 200,
         "title": "Национальный парк Сьерра-де-лас-Кихадас — места Аргентины",
-        "description": "Путеводитель по месту «Национальный парк Сьерра-де-лас-Кихадас»: Драматичный красный каньон и природный амфитеатр Потреро-де-ла-Агуада на северо-западе провинции Сан-Луис…",
+        "description": "Путеводитель по месту «Национальный парк Сьерра-де-лас-Кихадас»: Красный каньон и природный амфитеатр Потреро-де-ла-Агуада на северо-западе провинции Сан-Луис.",
         "canonical": "https://www.goargentina.ru/places/sierra-de-las-quijadas",
         "robots": "",
         "hreflang": [
@@ -4954,7 +4909,7 @@
         "url": "https://www.goargentina.ru/places/colon-entre-rios",
         "status": 200,
         "title": "Колóн — места Аргентины",
-        "description": "Путеводитель по месту «Колóн»: Курортный городок на берегу реки Уругвай в провинции Энтре-Риос: песчаные речные пляжи, термальный комплекс и удобная база для поездки в…",
+        "description": "Путеводитель по месту «Колóн»: Курортный городок на берегу реки Уругвай в провинции Энтре-Риос с песчаными пляжами и термальным комплексом.",
         "canonical": "https://www.goargentina.ru/places/colon-entre-rios",
         "robots": "",
         "hreflang": [
@@ -5194,7 +5149,7 @@
         "url": "https://www.goargentina.ru/places/san-ignacio-mini",
         "status": 200,
         "title": "Сан-Игнасио-Мини — места Аргентины",
-        "description": "Путеводитель по месту «Сан-Игнасио-Мини»: Лучше всего сохранившиеся руины иезуитской миссии гуарани в Аргентине, объект Всемирного наследия ЮНЕСКО — резной красный песчаник в…",
+        "description": "Путеводитель по месту «Сан-Игнасио-Мини»: Хорошо сохранившиеся руины иезуитской миссии гуарани из красного песчаника, входящие в список Всемирного наследия ЮНЕСКО.",
         "canonical": "https://www.goargentina.ru/places/san-ignacio-mini",
         "robots": "",
         "hreflang": [
@@ -5314,7 +5269,7 @@
         "url": "https://www.goargentina.ru/places/ruinas-de-quilmes",
         "status": 200,
         "title": "Руины Кильмес — места Аргентины",
-        "description": "Путеводитель по месту «Руины Кильмес»: Крупнейшее доколумбово поселение Аргентины в Кальчакских долинах провинции Тукуман — каменный город народа кильмес на склоне холма, с…",
+        "description": "Путеводитель по месту «Руины Кильмес»: Крупное доколумбово поселение в Кальчакских долинах провинции Тукуман — каменный город народа кильмес на склоне холма.",
         "canonical": "https://www.goargentina.ru/places/ruinas-de-quilmes",
         "robots": "",
         "hreflang": [
@@ -5386,7 +5341,7 @@
         "url": "https://www.goargentina.ru/places/tafi-del-valle",
         "status": 200,
         "title": "Тафи-дель-Валье — места Аргентины",
-        "description": "Путеводитель по месту «Тафи-дель-Валье»: Прохладная высокогорная долина в провинции Тукуман на высоте около 2000 м — популярный уик-энд-побег из жаркого Тукумана: зелёные горы…",
+        "description": "Путеводитель по месту «Тафи-дель-Валье»: Прохладная высокогорная долина в провинции Тукуман с зелёными горами и водохранилищем.",
         "canonical": "https://www.goargentina.ru/places/tafi-del-valle",
         "robots": "",
         "hreflang": [
@@ -5482,7 +5437,7 @@
         "url": "https://www.goargentina.ru/places/santa-fe",
         "status": 200,
         "title": "Санта-Фе — места Аргентины",
-        "description": "Путеводитель по месту «Санта-Фе»: Административный центр провинции Санта-Фе на реке того же имени (система Параны) — исторический и транспортный узел Литораля, а не туристический…",
+        "description": "Путеводитель по месту «Санта-Фе»: Административный центр провинции Санта-Фе на одноимённой реке, исторический и транспортный узел Литораля.",
         "canonical": "https://www.goargentina.ru/places/santa-fe",
         "robots": "",
         "hreflang": [
@@ -5530,7 +5485,7 @@
         "url": "https://www.goargentina.ru/places/bosque-petrificado",
         "status": 200,
         "title": "Национальный парк Окаменевшие леса Харамільо — места Аргентины",
-        "description": "Путеводитель по месту «Национальный парк Окаменевшие леса Харамільо»: Национальный парк в засушливой степи провинции Санта-Крус, где посреди патагонского плато лежат гигантские…",
+        "description": "Путеводитель по месту «Национальный парк Окаменевшие леса Харамільо»: Национальный парк в степи провинции Санта-Крус с гигантскими окаменевшими стволами араукарий на патагонском…",
         "canonical": "https://www.goargentina.ru/places/bosque-petrificado",
         "robots": "",
         "hreflang": [
@@ -5698,7 +5653,7 @@
         "url": "https://www.goargentina.ru/collections/patagonia-highlights",
         "status": 200,
         "title": "Жемчужины Патагонии — подборки мест",
-        "description": "Семь мест, без которых не обходится классический маршрут по южной Патагонии: от Perito Moreno до Fitz Roy и полуострова Вальдес.",
+        "description": "Семь мест для первого знакомства с Патагонией: ледники, горы, озёра и побережье с колониями морских животных.",
         "canonical": "https://www.goargentina.ru/collections/patagonia-highlights",
         "robots": "index, follow",
         "hreflang": [],
@@ -5743,7 +5698,7 @@
         "url": "https://www.goargentina.ru/collections/wine-mendoza",
         "status": 200,
         "title": "Винный маршрут Мендосы — подборки мест",
-        "description": "Мендоса и окрестности — дегустации Malbec, bodegas Maipú и Luján de Cuyo, высокогорный Valle de Uco и озеро Potrerillos у подножия Cordillera de los Andes.",
+        "description": "Мендоса и окрестности — дегустации мальбека, винодельни Майпу и Лухан-де-Куйо, высокогорная долина Уко и озеро Потрерильос у подножия Анд.",
         "canonical": "https://www.goargentina.ru/collections/wine-mendoza",
         "robots": "index, follow",
         "hreflang": [],
@@ -5772,8 +5727,8 @@
         "path": "/collections/best-waterfalls",
         "url": "https://www.goargentina.ru/collections/best-waterfalls",
         "status": 200,
-        "title": "Лучшие водопады — подборки мест",
-        "description": "Главный водопадный комплекс страны и отправная точка для маршрута по северо-востоку.",
+        "title": "Водопады Игуасу — подборки мест",
+        "description": "Практическая страница для планирования поездки к водопадам Игуасу и прогулок по национальному парку.",
         "canonical": "https://www.goargentina.ru/collections/best-waterfalls",
         "robots": "index, follow",
         "hreflang": [],
@@ -6093,1806 +6048,6 @@
         "ok": true
       },
       {
-        "path": "/blog/best-time-to-visit-argentina",
-        "url": "https://www.goargentina.ru/blog/best-time-to-visit-argentina",
-        "status": 200,
-        "title": "Когда лучше ехать в Аргентину: полный гид по сезонам и регионам",
-        "description": "Аргентина — одна из немногих стран мира, куда можно путешествовать круглый год. Разбираем климат по месяцам, лучшие сезоны для разных направлений и помогаем выбрать идеальное…",
-        "canonical": "https://www.goargentina.ru/blog/best-time-to-visit-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/best-time-to-visit-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/best-time-to-visit-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/argentinian-steak-guide",
-        "url": "https://www.goargentina.ru/blog/argentinian-steak-guide",
-        "status": 200,
-        "title": "Аргентинский стейк: asado и parrilla",
-        "description": "Asado и parrilla — первые слова аргентинской мясной культуры. Разбираем отрубы, прожарку, chimichurri и типичные ошибки туристов.",
-        "canonical": "https://www.goargentina.ru/blog/argentinian-steak-guide",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/argentinian-steak-guide"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/argentinian-steak-guide"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/tango-beginners-guide",
-        "url": "https://www.goargentina.ru/blog/tango-beginners-guide",
-        "status": 200,
-        "title": "Танго для начинающих: милонга и первые шаги",
-        "description": "Настоящее танго живёт на милонгах — вечерах социального танца в Буэнос-Айресе. Как начать с нуля: abrazo, кабесео, tandas и куда идти новичку.",
-        "canonical": "https://www.goargentina.ru/blog/tango-beginners-guide",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/tango-beginners-guide"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/tango-beginners-guide"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-packing-list",
-        "url": "https://www.goargentina.ru/blog/patagonia-packing-list",
-        "status": 200,
-        "title": "Что взять в Патагонию: полный список вещей для путешествия",
-        "description": "Патагония — один из самых красивых регионов мира, но туристы чаще всего ошибаются при сборе вещей. Полный список экипировки с принципом многослойности для переменчивой погоды.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-packing-list",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-packing-list"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-packing-list"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B0%D0%B2%D0%B8%D0%B0%D0%B1%D0%B8%D0%BB%D0%B5%D1%82%D1%8B",
-        "url": "https://www.goargentina.ru/blog/patagonia-авиабилеты",
-        "status": 200,
-        "title": "Патагония: как долететь и купить внутренние рейсы",
-        "description": "Патагония — один из самых популярных регионов Аргентины, но многие туристы сталкиваются с одной проблемой ещё до начала путешествия: как правильно организовать перелёты.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D0%B2%D0%B8%D0%B0%D0%B1%D0%B8%D0%BB%D0%B5%D1%82%D1%8B",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D0%B2%D0%B8%D0%B0%D0%B1%D0%B8%D0%BB%D0%B5%D1%82%D1%8B"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D0%B2%D0%B8%D0%B0%D0%B1%D0%B8%D0%BB%D0%B5%D1%82%D1%8B"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-penguins",
-        "url": "https://www.goargentina.ru/blog/patagonia-penguins",
-        "status": 200,
-        "title": "Патагония: пингвины — практический гид",
-        "description": "Для многих путешественников встреча с пингвинами — одно из самых ярких впечатлений от поездки в Аргентину. Где увидеть колонии в Патагонии, когда лучше ехать и как организовать…",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-penguins",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-penguins"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-penguins"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/iguazu-garganta-del-diablo",
-        "url": "https://www.goargentina.ru/blog/iguazu-garganta-del-diablo",
-        "status": 200,
-        "title": "Garganta del Diablo (Глотка Дьявола): как посмотреть главный каскад…",
-        "description": "Если существует одно место, ради которого миллионы туристов ежегодно приезжают на водопады Игуасу, то это именно Глотка Дьявола — Garganta del Diablo. Как добраться по мосткам…",
-        "canonical": "https://www.goargentina.ru/blog/iguazu-garganta-del-diablo",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/iguazu-garganta-del-diablo"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/iguazu-garganta-del-diablo"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/iguazu-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F",
-        "url": "https://www.goargentina.ru/blog/iguazu-за-3-дня",
-        "status": 200,
-        "title": "Водопады Игуасу за 3 дня: готовый маршрут по дням",
-        "description": "Три дня — идеальное время для знакомства с водопадами Игуасу. Этого достаточно, чтобы увидеть аргентинскую и бразильскую стороны, посетить главные смотровые площадки, прокатиться…",
-        "canonical": "https://www.goargentina.ru/blog/iguazu-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/iguazu-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/iguazu-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/blue-dollar-argentina-2026",
-        "url": "https://www.goargentina.ru/blog/blue-dollar-argentina-2026",
-        "status": 200,
-        "title": "Синий доллар и оплата в Аргентине: что нужно знать туристу",
-        "description": "Разберёмся, что такое dólar blue, стоит ли менять наличные и как сейчас выгоднее платить в Аргентине.",
-        "canonical": "https://www.goargentina.ru/blog/blue-dollar-argentina-2026",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/blue-dollar-argentina-2026"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/blue-dollar-argentina-2026"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-whale-watching",
-        "url": "https://www.goargentina.ru/blog/patagonia-whale-watching",
-        "status": 200,
-        "title": "Наблюдение за китами в Аргентине: полуостров Вальдес, сезоны и…",
-        "description": "Каждый год тысячи путешественников приезжают в аргентинскую Патагонию ради одной цели — увидеть китов в дикой природе. Когда лучше ехать на полуостров Вальдес, где смотреть китов…",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-whale-watching",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-whale-watching"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-whale-watching"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-los-glasiares",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-los-glasiares",
-        "status": 200,
-        "title": "Парк Лос-Гласьярес: Перито-Морено и Фицрой, гид 2026",
-        "description": "Гид по парку Лос-Гласьярес 2026: ледник Перито-Морено, треккинг к Фицрою, цены на билеты, как добраться, когда ехать и практические советы.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-los-glasiares",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-los-glasiares"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-los-glasiares"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-los-cardones",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-los-cardones",
-        "status": 200,
-        "title": "Парк Лос-Кардонес: кактусы и пустыня Сальты — гид 2026",
-        "description": "Гид по парку Лос-Кардонес 2026: гигантские кактусы-кардоны, Куэста-дель-Обиспо, Прямая Тин-Тин, следы динозавров, бесплатный вход и как добраться.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-los-cardones",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-los-cardones"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-los-cardones"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%81-%D1%80%D0%B5%D0%B1%D1%91%D0%BD%D0%BA%D0%BE%D0%BC",
-        "url": "https://www.goargentina.ru/blog/patagonia-с-ребёнком",
-        "status": 200,
-        "title": "Патагония с ребёнком: маршрут, жильё и безопасность",
-        "description": "Патагония с детьми: безопасные маршруты, ритм поездки, жильё и что реально понравится школьникам и малышам.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D1%80%D0%B5%D0%B1%D1%91%D0%BD%D0%BA%D0%BE%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D1%80%D0%B5%D0%B1%D1%91%D0%BD%D0%BA%D0%BE%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D1%80%D0%B5%D0%B1%D1%91%D0%BD%D0%BA%D0%BE%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC",
-        "url": "https://www.goargentina.ru/blog/patagonia-с-гидом",
-        "status": 200,
-        "title": "Патагония: когда нужен гид, а когда можно самому",
-        "description": "Когда в Патагонии нужен гид, а когда можно обойтись самостоятельно — ледник, треки, киты и пингвины.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B7%D0%B0-7-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/patagonia-за-7-дней",
-        "status": 200,
-        "title": "Патагония за 7 дней: готовый маршрут по дням",
-        "description": "Патагония за 7 дней: классический маршрут Calafate — Chaltén — Ushuaia с треком и ледником.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-7-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-7-%D0%B4%D0%BD%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-7-%D0%B4%D0%BD%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%81-%D1%87%D0%B5%D0%BC-%D1%81%D0%BE%D0%B2%D0%BC%D0%B5%D1%89%D0%B0%D1%82%D1%8C",
-        "url": "https://www.goargentina.ru/blog/patagonia-с-чем-совмещать",
-        "status": 200,
-        "title": "Патагония: С чем совмещать маршрут — практический гид",
-        "description": "С чем совмещать поездку в Патагонию: Буэнос-Айрес, Игуасу, Мендоса и логистика open-jaw маршрутов.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D1%87%D0%B5%D0%BC-%D1%81%D0%BE%D0%B2%D0%BC%D0%B5%D1%89%D0%B0%D1%82%D1%8C",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D1%87%D0%B5%D0%BC-%D1%81%D0%BE%D0%B2%D0%BC%D0%B5%D1%89%D0%B0%D1%82%D1%8C"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81-%D1%87%D0%B5%D0%BC-%D1%81%D0%BE%D0%B2%D0%BC%D0%B5%D1%89%D0%B0%D1%82%D1%8C"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/argentina-tourist-visa-2026",
-        "url": "https://www.goargentina.ru/blog/argentina-tourist-visa-2026",
-        "status": 200,
-        "title": "Въезд туриста в Аргентину: виза, сроки и документы",
-        "description": "Безвизовый въезд для россиян: 90 дней, документы на границе, страховка и типичные ошибки перед поездкой.",
-        "canonical": "https://www.goargentina.ru/blog/argentina-tourist-visa-2026",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/argentina-tourist-visa-2026"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/argentina-tourist-visa-2026"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/itinerary-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82",
-        "url": "https://www.goargentina.ru/blog/itinerary-чек-лист",
-        "status": 200,
-        "title": "Аргентина: чек-лист перед поездкой",
-        "description": "Планируете путешествие в Аргентину? Перед вылетом важно проверить документы, подготовить деньги, изучить особенности страны и убедиться, что вы ничего не забыли.",
-        "canonical": "https://www.goargentina.ru/blog/itinerary-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/itinerary-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/itinerary-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-lanin",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-lanin",
-        "status": 200,
-        "title": "Парк Ланин: вулкан, араукарии и озёра — гид 2026",
-        "description": "Гид по парку Ланин 2026: вулкан Ланин, араукарии-пеуэн, озёра Неукена, восхождение, рыбалка, цены, как добраться и когда ехать в Патагонию.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-lanin",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-lanin"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-lanin"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC",
-        "url": "https://www.goargentina.ru/blog/patagonia-советы-новичкам",
-        "status": 200,
-        "title": "Патагония: полный гид для новичков — с чего начать",
-        "description": "Первый раз в Патагонии: как выбрать базы, сезон и маршрут без перегруза — от Эль-Калафате до Ушуайи.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%BB%D0%B5%D1%82%D0%BE%D0%BC",
-        "url": "https://www.goargentina.ru/blog/patagonia-летом",
-        "status": 200,
-        "title": "Патагония летом: погода, одежда и что успеть",
-        "description": "Патагония летом (декабрь–февраль): пик сезона, жара ли на юге, очереди у ледника и как успеть Fitz Roy.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%BB%D0%B5%D1%82%D0%BE%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BB%D0%B5%D1%82%D0%BE%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BB%D0%B5%D1%82%D0%BE%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F",
-        "url": "https://www.goargentina.ru/blog/patagonia-за-3-дня",
-        "status": 200,
-        "title": "Патагония за 3 дня: готовый маршрут по дням",
-        "description": "Патагония за 3 дня: реалистичный мини-маршрут вокруг El Calafate и Perito Moreno без иллюзий «увидеть всё».",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%85%D0%BE%D0%BB%D0%BE%D0%B4",
-        "url": "https://www.goargentina.ru/blog/patagonia-холод",
-        "status": 200,
-        "title": "Патагония: Холод и одежда — практический гид",
-        "description": "Холод в Патагонии: слои одежды, температура по сезонам и что взять для ледника и треков.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%85%D0%BE%D0%BB%D0%BE%D0%B4",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%85%D0%BE%D0%BB%D0%BE%D0%B4"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%85%D0%BE%D0%BB%D0%BE%D0%B4"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/buenos-aires-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82",
-        "url": "https://www.goargentina.ru/blog/buenos-aires-бюджет",
-        "status": 200,
-        "title": "Буэнос-Айрес: сколько стоит поездка и как сэкономить",
-        "description": "Сколько стоит Буэнос-Айрес: жильё по районам, еда, транспорт, tango и музеи. Актуально на июнь 2026 года.",
-        "canonical": "https://www.goargentina.ru/blog/buenos-aires-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-tierra-del-fuego",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-tierra-del-fuego",
-        "status": 200,
-        "title": "Парк Огненная Земля: Ушуайя и край света — гид 2026",
-        "description": "Подробный гид по национальному парку Огненная Земля: Ушуайя, поезд на край света, залив Лапатайя, тропы, цены на билеты 2026, как добраться и когда ехать.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-tierra-del-fuego",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-tierra-del-fuego"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-tierra-del-fuego"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-nauel-uapi",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-nauel-uapi",
-        "status": 200,
-        "title": "Парк Науэль-Уапи: Барилоче, озёра и горы — гид 2026",
-        "description": "Подробный гид по национальному парку Науэль-Уапи: Барилоче, Серро-Тронадор, Малый круг, остров Виктория, треккинг, цены на билеты 2026, как добраться и когда ехать.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-nauel-uapi",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-nauel-uapi"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-nauel-uapi"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-ibera",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-ibera",
-        "status": 200,
-        "title": "Парк Ибера: болота Корриентеса и ягуары — гид 2026",
-        "description": "Гид по парку Ибера 2026: болота Эстерос-дель-Ибера, сафари, ягуары и рейуайлдинг, порталы, цены, как добраться и когда ехать в Корриентес.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-ibera",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-ibera"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-ibera"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/banado-la-estrella",
-        "url": "https://www.goargentina.ru/blog/banado-la-estrella",
-        "status": 200,
-        "title": "Баньядо-ла-Эстрелья: призрачные болота Формосы 2026",
-        "description": "Гид по Баньядо-ла-Эстрелья 2026: призрачный затопленный лес Формосы, кайманы и птицы, сафари, как добраться и когда ехать. Не нацпарк, а резерват.",
-        "canonical": "https://www.goargentina.ru/blog/banado-la-estrella",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/banado-la-estrella"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/banado-la-estrella"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%84%D0%BE%D1%82%D0%BE",
-        "url": "https://www.goargentina.ru/blog/patagonia-фото",
-        "status": 200,
-        "title": "Патагония: Фотосъёмка — практический гид",
-        "description": "Фотосъёмка в Патагонии: свет у Fitz Roy, ледник Perito Moreno, северное сияние ли, техника и этика на тропах.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%84%D0%BE%D1%82%D0%BE",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%84%D0%BE%D1%82%D0%BE"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%84%D0%BE%D1%82%D0%BE"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B2%D0%B5%D1%82%D0%B5%D1%80",
-        "url": "https://www.goargentina.ru/blog/patagonia-ветер",
-        "status": 200,
-        "title": "Патагония: Ветреная погода — практический гид",
-        "description": "Ветер в Патагонии: как готовиться, что отменяют из-за ветра и как одеваться на тропах и лодках.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B2%D0%B5%D1%82%D0%B5%D1%80",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B2%D0%B5%D1%82%D0%B5%D1%80"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B2%D0%B5%D1%82%D0%B5%D1%80"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/buenos-aires-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC",
-        "url": "https://www.goargentina.ru/blog/buenos-aires-советы-новичкам",
-        "status": 200,
-        "title": "Буэнос-Айрес: полный гид для новичков — с чего начать",
-        "description": "Первые дни в Буэнос-Айресе: безопасность, транспорт SUBE, районы для жилья и типичные ошибки. Актуально на июнь 2026 года.",
-        "canonical": "https://www.goargentina.ru/blog/buenos-aires-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D1%81%D0%BE%D0%B2%D0%B5%D1%82%D1%8B-%D0%BD%D0%BE%D0%B2%D0%B8%D1%87%D0%BA%D0%B0%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/buenos-aires-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC",
-        "url": "https://www.goargentina.ru/blog/buenos-aires-с-гидом",
-        "status": 200,
-        "title": "Буэнос-Айрес: когда нужен гид, а когда можно самому",
-        "description": "Когда в Буэнос-Айресе стоит брать экскурсию с гидом, а когда достаточно самостоятельных прогулок и приложений.",
-        "canonical": "https://www.goargentina.ru/blog/buenos-aires-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-iguasu",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-iguasu",
-        "status": 200,
-        "title": "Национальный парк Игуасу: гид 2026, водопады и цены",
-        "description": "Полный гид по парку Игуасу 2026: водопады, маршруты, цены на билеты, как добраться из Буэнос-Айреса, когда ехать и практические советы.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-iguasu",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-iguasu"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-iguasu"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82",
-        "url": "https://www.goargentina.ru/blog/patagonia-бюджет",
-        "status": 200,
-        "title": "Патагония: сколько стоит поездка и как сэкономить",
-        "description": "Сколько реально стоит поездка в Патагонию: перелёты, парки, жильё и где сэкономить без потери главного.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B1%D1%8E%D0%B4%D0%B6%D0%B5%D1%82"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-patagonia",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-patagonia",
-        "status": 200,
-        "title": "Парк Патагония: плато, степь и кондоры — гид 2026",
-        "description": "Гид по Национальному парку Патагония 2026: плато Санта-Круса, озеро Буэнос-Айрес, маса тобиано, тропы, бесплатный вход и как добраться по Руте 40.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-patagonia",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-patagonia"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-patagonia"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B7%D0%B8%D0%BC%D0%BE%D0%B9",
-        "url": "https://www.goargentina.ru/blog/patagonia-зимой",
-        "status": 200,
-        "title": "Патагония зимой: погода, одежда и что успеть",
-        "description": "Патагония зимой (июнь–август): что открыто, какая погода, стоит ли ехать и чем заняться в El Calafate и Ushuaia.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B8%D0%BC%D0%BE%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B8%D0%BC%D0%BE%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B8%D0%BC%D0%BE%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE",
-        "url": "https://www.goargentina.ru/blog/patagonia-самостоятельно",
-        "status": 200,
-        "title": "Патагония самостоятельно: пошаговый план",
-        "description": "Патагония без тура: перелёты, автобусы, треки из El Chaltén и Perito Moreno своими силами — пошаговый план.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B7%D0%B0-10-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/patagonia-за-10-дней",
-        "status": 200,
-        "title": "Патагония за 10 дней: готовый маршрут по дням",
-        "description": "Патагония за 10 дней: ледники, Fitz Roy, Ushuaia и запас на погоду или estancia.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-10-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-10-%D0%B4%D0%BD%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-10-%D0%B4%D0%BD%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B0%D0%B2%D1%82%D0%BE%D0%B1%D1%83%D1%81%D1%8B",
-        "url": "https://www.goargentina.ru/blog/patagonia-автобусы",
-        "status": 200,
-        "title": "Патагония: междугородние автобусы — маршруты, компании и советы…",
-        "description": "Хотя большинство туристов добираются в Патагонию на самолёте, именно автобусы остаются одним из самых популярных способов путешествовать между городами региона. Они позволяют…",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D0%B2%D1%82%D0%BE%D0%B1%D1%83%D1%81%D1%8B",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D0%B2%D1%82%D0%BE%D0%B1%D1%83%D1%81%D1%8B"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D0%B2%D1%82%D0%BE%D0%B1%D1%83%D1%81%D1%8B"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/buenos-aires-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F",
-        "url": "https://www.goargentina.ru/blog/buenos-aires-за-3-дня",
-        "status": 200,
-        "title": "Буэнос-Айрес за 3 дня: готовый маршрут по дням",
-        "description": "Готовый маршрут по Буэнос-Айресу на три дня: Recoleta, Palermo, San Telmo, tango и parrilla без спешки.",
-        "canonical": "https://www.goargentina.ru/blog/buenos-aires-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-%D0%B7%D0%B0-3-%D0%B4%D0%BD%D1%8F"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-poluostrov-valdes",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-poluostrov-valdes",
-        "status": 200,
-        "title": "Полуостров Вальдес: киты, пингвины и wildlife — гид 2026",
-        "description": "Гид по полуострову Valdés 2026: southern right whales, пингвины, Punta Norte, Puerto Madryn, сезоны, цены и как добраться. UNESCO и Reserva Faunística Chubut.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-poluostrov-valdes",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-poluostrov-valdes"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-poluostrov-valdes"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%BE%D1%81%D0%B5%D0%BD%D1%8C%D1%8E",
-        "url": "https://www.goargentina.ru/blog/patagonia-осенью",
-        "status": 200,
-        "title": "Патагония осенью: погода, одежда и что успеть",
-        "description": "Патагония осенью (март–май): золотые степи, первый снег на пиках, закрытие сезона и выгодные цены.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%81%D0%B5%D0%BD%D1%8C%D1%8E",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%81%D0%B5%D0%BD%D1%8C%D1%8E"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%81%D0%B5%D0%BD%D1%8C%D1%8E"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-talampaya",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-talampaya",
-        "status": 200,
-        "title": "Парк Талампая: красный каньон Ла-Риохи — гид 2026",
-        "description": "Гид по парку Талампая 2026: красные каньоны Ла-Риохи, динозавры триаса, петроглифы, цены, экскурсии и как добраться. Объект ЮНЕСКО в Аргентине.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-talampaya",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-talampaya"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-talampaya"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B2%D0%B5%D1%81%D0%BD%D0%BE%D0%B9",
-        "url": "https://www.goargentina.ru/blog/patagonia-весной",
-        "status": 200,
-        "title": "Патагония весной: погода, одежда и что успеть",
-        "description": "Патагония весной (сентябрь–ноябрь): пробуждение сезона, погода, цветущие степи и как спланировать первый рейс после зимы.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B2%D0%B5%D1%81%D0%BD%D0%BE%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B2%D0%B5%D1%81%D0%BD%D0%BE%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B2%D0%B5%D1%81%D0%BD%D0%BE%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82",
-        "url": "https://www.goargentina.ru/blog/patagonia-чек-лист",
-        "status": 200,
-        "title": "Патагония: чек-лист перед поездкой",
-        "description": "Что проверить перед поездкой в Патагонию: документы, снаряжение, брони, деньги и приложения — полный список.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D1%87%D0%B5%D0%BA-%D0%BB%D0%B8%D1%81%D1%82"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/patagonia-за-14-дней",
-        "status": 200,
-        "title": "Патагония за 14 дней: готовый маршрут по дням",
-        "description": "Патагония за 14 дней: полный юг — ледники, Fitz Roy, Ushuaia и опционально Valdés или Chile.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B0%D1%80%D0%B5%D0%BD%D0%B4%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE",
-        "url": "https://www.goargentina.ru/blog/patagonia-аренда-авто",
-        "status": 200,
-        "title": "Патагония: аренда автомобиля — практический гид",
-        "description": "Патагония — одно из лучших мест в мире для автомобильных путешествий. Когда машина действительно нужна, сколько стоит аренда и стоит ли ехать по знаменитой Ruta 40.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D1%80%D0%B5%D0%BD%D0%B4%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D1%80%D0%B5%D0%BD%D0%B4%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B0%D1%80%D0%B5%D0%BD%D0%B4%D0%B0-%D0%B0%D0%B2%D1%82%D0%BE"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnye-parki-argentiny",
-        "url": "https://www.goargentina.ru/blog/natsionalnye-parki-argentiny",
-        "status": 200,
-        "title": "Все национальные парки Аргентины: список и гид 2026",
-        "description": "Все национальные парки Аргентины 2026: полный список из ~39 парков по регионам, сравнительная таблица, объекты ЮНЕСКО, цены и как выбрать парк.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnye-parki-argentiny",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnye-parki-argentiny"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnye-parki-argentiny"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/wildlife-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC",
-        "url": "https://www.goargentina.ru/blog/wildlife-с-гидом",
-        "status": 200,
-        "title": "Дикая природа Аргентины: когда нужен гид, а когда можно самому",
-        "description": "Когда в Аргентине можно смотреть дикую природу самостоятельно, а когда без гида не обойтись — Игуасу, Вальдес, Ибера, киты и пумы.",
-        "canonical": "https://www.goargentina.ru/blog/wildlife-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/wildlife-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/wildlife-%D1%81-%D0%B3%D0%B8%D0%B4%D0%BE%D0%BC"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B8",
-        "url": "https://www.goargentina.ru/blog/patagonia-ошибки",
-        "status": 200,
-        "title": "Патагония: 10 типичных ошибок туристов",
-        "description": "Десять типичных ошибок в Патагонии: мало дней, игнор ветра, неправильная обувь и смешение регионов в один маршрут.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B8",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B8"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%88%D0%B8%D0%B1%D0%BA%D0%B8"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-camping",
-        "url": "https://www.goargentina.ru/blog/patagonia-camping",
-        "status": 200,
-        "title": "Патагония: Кемпинг — практический гид",
-        "description": "Кемпинг в Патагонии: где ставить палатку у Fitz Roy, правила парков и снаряжение против ветра.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-camping",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-camping"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-camping"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%BE%D1%82%D0%B5%D0%BB%D0%B8",
-        "url": "https://www.goargentina.ru/blog/patagonia-отели",
-        "status": 200,
-        "title": "Патагония: отели и бронирование — практический гид",
-        "description": "Патагония — один из самых популярных туристических регионов Южной Америки. Где жить в Эль-Калафате, Эль-Чальтене, Ушуае и Барилоче, когда бронировать и как не переплатить в…",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%82%D0%B5%D0%BB%D0%B8",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%82%D0%B5%D0%BB%D0%B8"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%BE%D1%82%D0%B5%D0%BB%D0%B8"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/northwest-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/northwest-за-5-дней",
-        "status": 200,
-        "title": "Северо-запад Аргентины за 5 дней: готовый маршрут по дням",
-        "description": "Маршрут на 5 дней по северо-западу: Сальта, Кафаяте, Пурмамарка и Quebrada de Humahuaca — логистика, сезоны и бюджет. Актуально на июнь 2026 года.",
-        "canonical": "https://www.goargentina.ru/blog/northwest-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/northwest-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/northwest-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/itinerary-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/itinerary-за-14-дней",
-        "status": 200,
-        "title": "Аргентина за 14 дней: маршрут BA, Игуасу, Патагония, Барилоче",
-        "description": "Готовый маршрут на 14 дней: Буэнос-Айрес, водопады Игуасу, Патагония (Эль-Калафате и Эль-Чальтен) и Барилоче — внутренние перелёты, дни и бюджет.",
-        "canonical": "https://www.goargentina.ru/blog/itinerary-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/itinerary-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/itinerary-%D0%B7%D0%B0-14-%D0%B4%D0%BD%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/natsionalnyy-park-los-alerses",
-        "url": "https://www.goargentina.ru/blog/natsionalnyy-park-los-alerses",
-        "status": 200,
-        "title": "Парк Лос-Алерсес: тысячелетние деревья — гид 2026",
-        "description": "Гид по парку Лос-Алерсес 2026: тысячелетние деревья-алерсе, озёра Чубута, лодка к Эль-Абуэло, цены, как добраться и когда ехать. Объект ЮНЕСКО.",
-        "canonical": "https://www.goargentina.ru/blog/natsionalnyy-park-los-alerses",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-los-alerses"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/natsionalnyy-park-los-alerses"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/patagonia-за-5-дней",
-        "status": 200,
-        "title": "Патагония за 5 дней: готовый маршрут по дням",
-        "description": "Патагония за 5 дней: Calafate, Perito Moreno и El Chaltén с одним треком к Fitz Roy.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-%D0%B7%D0%B0-5-%D0%B4%D0%BD%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/patagonia-mini-trekking",
-        "url": "https://www.goargentina.ru/blog/patagonia-mini-trekking",
-        "status": 200,
-        "title": "Патагония: Мини-треккинг на Perito Moreno — практический гид",
-        "description": "Mini-trekking на Perito Moreno: возраст, снаряжение, цены и чем отличается от прогулки по pasarelas.",
-        "canonical": "https://www.goargentina.ru/blog/patagonia-mini-trekking",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/patagonia-mini-trekking"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/patagonia-mini-trekking"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/northwest-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE",
-        "url": "https://www.goargentina.ru/blog/northwest-самостоятельно",
-        "status": 200,
-        "title": "Северо-запад Аргентины самостоятельно: пошаговый план",
-        "description": "Самостоятельная поездка на северо-запад: перелёты, автобусы, аренда авто, жильё и типичные ошибки. Актуально на июнь 2026 года.",
-        "canonical": "https://www.goargentina.ru/blog/northwest-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/northwest-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/northwest-%D1%81%D0%B0%D0%BC%D0%BE%D1%81%D1%82%D0%BE%D1%8F%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D0%BE"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/northwest-%D1%81%D0%B5%D0%B7%D0%BE%D0%BD-%D0%B4%D0%BE%D0%B6%D0%B4%D0%B5%D0%B9",
-        "url": "https://www.goargentina.ru/blog/northwest-сезон-дождей",
-        "status": 200,
-        "title": "Северо-запад Аргентины: Сезон дождей — практический гид",
-        "description": "Сезон дождей на северо-западе Аргентины: когда льёт, как это влияет на дороги и что всё равно стоит увидеть. Актуально на июнь 2026 года.",
-        "canonical": "https://www.goargentina.ru/blog/northwest-%D1%81%D0%B5%D0%B7%D0%BE%D0%BD-%D0%B4%D0%BE%D0%B6%D0%B4%D0%B5%D0%B9",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/northwest-%D1%81%D0%B5%D0%B7%D0%BE%D0%BD-%D0%B4%D0%BE%D0%B6%D0%B4%D0%B5%D0%B9"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/northwest-%D1%81%D0%B5%D0%B7%D0%BE%D0%BD-%D0%B4%D0%BE%D0%B6%D0%B4%D0%B5%D0%B9"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/ischigualasto-valle-de-la-luna",
-        "url": "https://www.goargentina.ru/blog/ischigualasto-valle-de-la-luna",
-        "status": 200,
-        "title": "Исчигуаласто (Долина Луны): гид по парку 2026",
-        "description": "Гид по Исчигуаласто 2026: Долина Луны, триасовые динозавры, автоколонна, цены, сезоны и связка с Талампаей. UNESCO вместе с Талампаей.",
-        "canonical": "https://www.goargentina.ru/blog/ischigualasto-valle-de-la-luna",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/ischigualasto-valle-de-la-luna"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/ischigualasto-valle-de-la-luna"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/argentina-2-nedeli-marshrut",
-        "url": "https://www.goargentina.ru/blog/argentina-2-nedeli-marshrut",
-        "status": 200,
-        "title": "Маршрут по Аргентине на 2 недели: план 2026",
-        "description": "Готовый маршрут по Аргентине на 2 недели 2026: Буэнос-Айрес, Игуасу, Патагония. План по дням, бюджет, перелёты, варианты и когда ехать.",
-        "canonical": "https://www.goargentina.ru/blog/argentina-2-nedeli-marshrut",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/argentina-2-nedeli-marshrut"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/argentina-2-nedeli-marshrut"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/argentina-10-dnej-3-nedeli",
-        "url": "https://www.goargentina.ru/blog/argentina-10-dnej-3-nedeli",
-        "status": 200,
-        "title": "Маршрут по Аргентине на 10 дней и 3 недели (2026)",
-        "description": "Маршруты по Аргентине на 10 дней и 3 недели 2026: компактный план и большой гранд-тур, варианты под вино, треккинг и бюджет, перелёты и сезон.",
-        "canonical": "https://www.goargentina.ru/blog/argentina-10-dnej-3-nedeli",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/argentina-10-dnej-3-nedeli"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/argentina-10-dnej-3-nedeli"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/ruta-40-sem-ozer",
-        "url": "https://www.goargentina.ru/blog/ruta-40-sem-ozer",
-        "status": 200,
-        "title": "Дорога семи озёр и Рута 40: роуд-трип 2026",
-        "description": "Дорога семи озёр и Рута 40 в 2026: маршрут Вилья-Ла-Ангостура — Сан-Мартин, озёра, хайлайты Руты 40, аренда авто, топливо и когда ехать.",
-        "canonical": "https://www.goargentina.ru/blog/ruta-40-sem-ozer",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/ruta-40-sem-ozer"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/ruta-40-sem-ozer"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/vnutrennie-aviabilety-argentina",
-        "url": "https://www.goargentina.ru/blog/vnutrennie-aviabilety-argentina",
-        "status": 200,
-        "title": "Внутренние авиабилеты по Аргентине 2026: как купить",
-        "description": "Внутренние авиабилеты по Аргентине 2026: авиакомпании (Aerolíneas, JetSMART, Flybondi), цены, багаж, Аэропарке vs Эсейса и как купить дёшево.",
-        "canonical": "https://www.goargentina.ru/blog/vnutrennie-aviabilety-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/vnutrennie-aviabilety-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/vnutrennie-aviabilety-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/kak-dobratsya-v-argentinu",
-        "url": "https://www.goargentina.ru/blog/kak-dobratsya-v-argentinu",
-        "status": 200,
-        "title": "Как добраться из России в Аргентину 2026: маршруты",
-        "description": "Как добраться из России и СНГ в Аргентину 2026: стыковки через Дубай, Стамбул, Доху, время в пути, цены, виза (безвиз 90 дней) и оплата.",
-        "canonical": "https://www.goargentina.ru/blog/kak-dobratsya-v-argentinu",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/kak-dobratsya-v-argentinu"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/kak-dobratsya-v-argentinu"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/byudzhet-poezdki-argentina",
-        "url": "https://www.goargentina.ru/blog/byudzhet-poezdki-argentina",
-        "status": 200,
-        "title": "Бюджет поездки по Аргентине 2026: сколько брать",
-        "description": "Бюджет поездки по Аргентине 2026: дневные нормы (бэкпекер/комфорт), цены на жильё, еду, перелёты, входы в парки и пример сметы на 2 недели.",
-        "canonical": "https://www.goargentina.ru/blog/byudzhet-poezdki-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/byudzhet-poezdki-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/byudzhet-poezdki-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/stoimost-zhizni-buenos-aires",
-        "url": "https://www.goargentina.ru/blog/stoimost-zhizni-buenos-aires",
-        "status": 200,
-        "title": "Стоимость жизни в Буэнос-Айресе 2026: бюджет в USD",
-        "description": "Сколько стоит жизнь в Буэнос-Айресе в 2026: аренда, еда, транспорт, медстраховка и реальный месячный бюджет в долларах — от экономного до комфортного.",
-        "canonical": "https://www.goargentina.ru/blog/stoimost-zhizni-buenos-aires",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/stoimost-zhizni-buenos-aires"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/stoimost-zhizni-buenos-aires"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/kak-menyat-dengi-argentina",
-        "url": "https://www.goargentina.ru/blog/kak-menyat-dengi-argentina",
-        "status": 200,
-        "title": "Как менять деньги в Аргентине 2026: курс и способы",
-        "description": "Как менять деньги в Аргентине 2026: blue, MEP, карты, наличные, Western Union, крипта. Что выгоднее туристу и важный нюанс для россиян.",
-        "canonical": "https://www.goargentina.ru/blog/kak-menyat-dengi-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/kak-menyat-dengi-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/kak-menyat-dengi-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/buenos-aires-rajony",
-        "url": "https://www.goargentina.ru/blog/buenos-aires-rajony",
-        "status": 200,
-        "title": "Буэнос-Айрес: гид по районам — где жить 2026",
-        "description": "Районы Буэнос-Айреса 2026: где остановиться туристу и где жить релоканту — Палермо, Реколета, Сан-Тельмо, Бельграно. Цены, безопасность и что выбрать.",
-        "canonical": "https://www.goargentina.ru/blog/buenos-aires-rajony",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-rajony"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/buenos-aires-rajony"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/vnzh-argentina-rezidenciya",
-        "url": "https://www.goargentina.ru/blog/vnzh-argentina-rezidenciya",
-        "status": 200,
-        "title": "ВНЖ Аргентины 2026: все легальные пути и визы",
-        "description": "ВНЖ Аргентины 2026: резиденция рантье, инвестора, по работе, учёбе и семье, виза цифрового кочевника. Реформа DNU 366/2025 и путь к гражданству.",
-        "canonical": "https://www.goargentina.ru/blog/vnzh-argentina-rezidenciya",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/vnzh-argentina-rezidenciya"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/vnzh-argentina-rezidenciya"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/dni-cuil-argentina",
-        "url": "https://www.goargentina.ru/blog/dni-cuil-argentina",
-        "status": 200,
-        "title": "DNI и CUIL в Аргентине 2026: пошаговая инструкция",
-        "description": "DNI и CUIL/CUIT в Аргентине 2026: как иностранцу получить документы — RENAPER, ANSES, ARCA, тарифы, порядок и нюансы (CDI заменили на CUIT).",
-        "canonical": "https://www.goargentina.ru/blog/dni-cuil-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/dni-cuil-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/dni-cuil-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/bankovskij-schet-argentina",
-        "url": "https://www.goargentina.ru/blog/bankovskij-schet-argentina",
-        "status": 200,
-        "title": "Банковский счёт в Аргентине для релоканта: гид 2026",
-        "description": "Банковский счёт в Аргентине для иностранца 2026: DNI и CUIT, банки и финтех (Ualá, Brubank), счёт в долларах, MEP и нюанс для россиян.",
-        "canonical": "https://www.goargentina.ru/blog/bankovskij-schet-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/bankovskij-schet-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/bankovskij-schet-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/mendoza-vinnyj-gid",
-        "url": "https://www.goargentina.ru/blog/mendoza-vinnyj-gid",
-        "status": 200,
-        "title": "Мендоса: винный гид по Аргентине 2026 (Мальбек)",
-        "description": "Мендоса 2026: винный гид по Мальбеку — зоны Майпу, Лухан-де-Куйо и Долина Уко, лучшие бодеги, как посещать (вело/туры), вендимия и как добраться.",
-        "canonical": "https://www.goargentina.ru/blog/mendoza-vinnyj-gid",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/mendoza-vinnyj-gid"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/mendoza-vinnyj-gid"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 6,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/viza-cifrovogo-kochevnika-argentina",
-        "url": "https://www.goargentina.ru/blog/viza-cifrovogo-kochevnika-argentina",
-        "status": 200,
-        "title": "Виза цифрового кочевника Аргентины: гид 2026",
-        "description": "Виза цифрового кочевника Аргентины 2026: требования, доход, документы, срок 180+180 дней, сколько стоит и как оформить удалёнщику. Пошагово.",
-        "canonical": "https://www.goargentina.ru/blog/viza-cifrovogo-kochevnika-argentina",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/viza-cifrovogo-kochevnika-argentina"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/viza-cifrovogo-kochevnika-argentina"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/blog/grazhdanstvo-argentiny",
-        "url": "https://www.goargentina.ru/blog/grazhdanstvo-argentiny",
-        "status": 200,
-        "title": "Гражданство Аргентины за 2 года: гид 2026",
-        "description": "Гражданство Аргентины за 2 года: натурализация в 2026, новые правила DNU 366/2025, ребёнок-аргентинец, двойное гражданство и документы.",
-        "canonical": "https://www.goargentina.ru/blog/grazhdanstvo-argentiny",
-        "robots": "",
-        "hreflang": [
-          {
-            "hreflang": "ru",
-            "href": "https://www.goargentina.ru/blog/grazhdanstvo-argentiny"
-          },
-          {
-            "hreflang": "x-default",
-            "href": "https://www.goargentina.ru/blog/grazhdanstvo-argentiny"
-          }
-        ],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
         "path": "/guide/sezony-i-klimat",
         "url": "https://www.goargentina.ru/guide/sezony-i-klimat",
         "status": 200,
@@ -8073,21 +6228,6 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/almacenes-de-ramos-generales-en-la-pampa",
-        "url": "https://www.goargentina.ru/baza-znaniy/almacenes-de-ramos-generales-en-la-pampa",
-        "status": 200,
-        "title": "Старинные универсальные магазины Ла-Пампы — База знаний",
-        "description": "Подойдите поближе к многовековым складам, которые были центром торговой и общественной жизни пампасских народов.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/almacenes-de-ramos-generales-en-la-pampa",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
         "path": "/baza-znaniy/apostil-i-perevod-dokumentov",
         "url": "https://www.goargentina.ru/baza-znaniy/apostil-i-perevod-dokumentov",
         "status": 200,
@@ -8178,42 +6318,12 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/arte-urbano-en-buenos-aires",
-        "url": "https://www.goargentina.ru/baza-znaniy/arte-urbano-en-buenos-aires",
-        "status": 200,
-        "title": "Стрит-арт в Буэнос-Айресе — База знаний",
-        "description": "С помощью граффити и фресок откройте для себя одно из самых активных городских художественных движений в Латинской Америке.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/arte-urbano-en-buenos-aires",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
         "path": "/baza-znaniy/asado",
         "url": "https://www.goargentina.ru/baza-znaniy/asado",
         "status": 200,
         "title": "Асадо: аргентинское барбекю от ритуала до отрубов — База знаний",
         "description": "Асадо — не просто жареное мясо, а социальный ритуал в основе аргентинской культуры: как устроена паррилья, кто такой асадор, какие отрубы заказывать, чем чорипан отличается от…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/asado",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/baza-znaniy/avistaje-de-aves-en-la-pampa",
-        "url": "https://www.goargentina.ru/baza-znaniy/avistaje-de-aves-en-la-pampa",
-        "status": 200,
-        "title": "Наблюдение за птицами в Ла-Пампа — База знаний",
-        "description": "В одной провинции вас ждет почти треть птиц, населяющих всю страну.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/avistaje-de-aves-en-la-pampa",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8244,6 +6354,36 @@
         "title": "Баньядо-ла-Эстрелья — База знаний",
         "description": "Второе по величине водно-болотное угодье Аргентины в провинции Формоса: призрачный затопленный лес champales, кайманы, капибары и гигантский аист ябиру — одно из «7 чудес природы…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/banado-la-estrella",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/banki-i-perevody",
+        "url": "https://www.goargentina.ru/baza-znaniy/banki-i-perevody",
+        "status": 200,
+        "title": "Как завести и перевести деньги в Аргентину — База знаний",
+        "description": "Практика перевода денег в Аргентину в 2026 году после отмены большинства валютных ограничений: наличные доллары, Western Union, карты, USDT/стейблкоины и Wise — что выгоднее и…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/banki-i-perevody",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/bankovskij-schet",
+        "url": "https://www.goargentina.ru/baza-znaniy/bankovskij-schet",
+        "status": 200,
+        "title": "Банковский счёт и финансы релоканта в Аргентине — База знаний",
+        "description": "Как открыть счёт и карту в Аргентине: финтех (Ualá, Brubank, Mercado Pago) с первого дня, банковский счёт после DNI и CUIT, покупка долларов по MEP — и отдельная схема для…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/bankovskij-schet",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8343,12 +6483,12 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/buenos-aires-tradicional",
-        "url": "https://www.goargentina.ru/baza-znaniy/buenos-aires-tradicional",
+        "path": "/baza-znaniy/byt-i-zhilyo",
+        "url": "https://www.goargentina.ru/baza-znaniy/byt-i-zhilyo",
         "status": 200,
-        "title": "Традиционный Буэнос-Айрес — База знаний",
-        "description": "Тур по Пласа-де-Майо и Сан-Тельмо, Ла-Бока и Реколета, Палермо и Пуэрто-Мадеро.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/buenos-aires-tradicional",
+        "title": "Быт в Аргентине: квартиры, отопление, коммуналка — База знаний",
+        "description": "Чем аргентинский быт отличается от российского: почему в домах нет центрального отопления и как здесь греются (газовая колонка, обогреватели, кондиционер), одинарные окна и холод…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/byt-i-zhilyo",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8358,12 +6498,12 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/byt-i-zhilyo",
-        "url": "https://www.goargentina.ru/baza-znaniy/byt-i-zhilyo",
+        "path": "/baza-znaniy/byudzhet-poezdki",
+        "url": "https://www.goargentina.ru/baza-znaniy/byudzhet-poezdki",
         "status": 200,
-        "title": "Быт в Аргентине: квартиры, отопление, коммуналка — База знаний",
-        "description": "Чем аргентинский быт отличается от российского: почему в домах нет центрального отопления и как здесь греются (газовая колонка, обогреватели, кондиционер), одинарные окна и холод…",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/byt-i-zhilyo",
+        "title": "Бюджет поездки по Аргентине — База знаний",
+        "description": "Дневные нормы по уровням (бэкпекер ~$30-40, средний ~$70-120, комфорт от $150) и пример сметы на классические 2 недели — внутренние перелёты и Патагония определяют итоговую сумму.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/byudzhet-poezdki",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8538,12 +6678,12 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/cordero-patagonico",
-        "url": "https://www.goargentina.ru/baza-znaniy/cordero-patagonico",
+        "path": "/baza-znaniy/chto-takoe-sube",
+        "url": "https://www.goargentina.ru/baza-znaniy/chto-takoe-sube",
         "status": 200,
-        "title": "Патагонский ягненок — База знаний",
-        "description": "Патагония производит всемирно известное мясо ягненка. Попробуйте и узнайте, почему.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/cordero-patagonico",
+        "title": "Что такое карта SUBE и нужна ли она туристу? — База знаний",
+        "description": "SUBE — единая транспортная карта Аргентины для автобусов, метро и пригородных поездов. Туристу в Буэнос-Айресе она уже не обязательна: город и всё больше провинций принимают…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/chto-takoe-sube",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8589,6 +6729,21 @@
         "title": "Дикая природа Аргентины: где кого смотреть по сезонам — База знаний",
         "description": "Путеводитель по животному миру Аргентины: где и когда увидеть южных китов, пингвинов, гуанако, кондоров, фламинго, капибар, косаток и вернувшегося ягуара. Хаб-обзор поверх…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/dikaya-priroda",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/dni-cuil",
+        "url": "https://www.goargentina.ru/baza-znaniy/dni-cuil",
+        "status": 200,
+        "title": "DNI и CUIL/CUIT в Аргентине: пошагово для иностранца — База знаний",
+        "description": "Порядок получения документов после одобрения резиденции: DNI в RENAPER, затем CUIL (найм) или CUIT (самозанятость, счета, бизнес) — с учётом упразднения CDI в 2026 году.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/dni-cuil",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8703,6 +6858,21 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/esim-i-svyaz",
+        "url": "https://www.goargentina.ru/baza-znaniy/esim-i-svyaz",
+        "status": 200,
+        "title": "eSIM и связь в Аргентине — База знаний",
+        "description": "Туристу проще eSIM (Airalo, Holafly) — активация за минуту по прилёте; релоканту на долгий срок выгоднее локальная SIM (Claro, Movistar, Personal), особенно после получения DNI.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/esim-i-svyaz",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/falshivye-policejskie-i-obmenniki",
         "url": "https://www.goargentina.ru/baza-znaniy/falshivye-policejskie-i-obmenniki",
         "status": 200,
@@ -8748,12 +6918,27 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/gastronomia-portena",
-        "url": "https://www.goargentina.ru/baza-znaniy/gastronomia-portena",
+        "path": "/baza-znaniy/futbol",
+        "url": "https://www.goargentina.ru/baza-znaniy/futbol",
         "status": 200,
-        "title": "Кухня Буэнос-Айреса — База знаний",
-        "description": "Откройте для себя фирменную кухню Буэнос-Айреса, кафе, коктейль-бары, пивоварни и крыши.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/gastronomia-portena",
+        "title": "Футбол в Аргентине — База знаний",
+        "description": "Футбол в Аргентине — это религия, но попасть на матч туристу непросто: билеты в основном продаются членам клубов, а гостевых болельщиков на трибуны не допускают.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/futbol",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/futbol-kak-popast-bez-skama",
+        "url": "https://www.goargentina.ru/baza-znaniy/futbol-kak-popast-bez-skama",
+        "status": 200,
+        "title": "На футбол в Аргентине нельзя купить билет «как в Европе» — и это…",
+        "description": "Система socios закрывает прямую продажу билетов иностранцам на сайте клуба — практический путь на трибуну идёт через тур-операторов и hospitality-пакеты, а не через прямую покупку.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/futbol-kak-popast-bez-skama",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8823,6 +7008,21 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/gosudarstvennye-prilozheniya",
+        "url": "https://www.goargentina.ru/baza-znaniy/gosudarstvennye-prilozheniya",
+        "status": 200,
+        "title": "Государственные приложения Аргентины: Mi Argentina, miBA, ARCA…",
+        "description": "Цифровая инфраструктура жизни в Аргентине держится на трёх государственных приложениях. Mi Argentina — единый профиль гражданина с документами и цифровыми правами (licencia…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/gosudarstvennye-prilozheniya",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/govoryat-li-v-argentine-po-anglijski",
         "url": "https://www.goargentina.ru/baza-znaniy/govoryat-li-v-argentine-po-anglijski",
         "status": 200,
@@ -8844,6 +7044,21 @@
         "title": "Гражданство Аргентины: натурализация и правила 2026 — База знаний",
         "description": "После реформы DNU 366/2025 натурализация — административная процедура через Миграционную службу (DNM), а не суд: нужно 2 года легальной непрерывной резиденции без выездов.",
         "canonical": "https://www.goargentina.ru/baza-znaniy/grazhdanstvo",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/iguasu-foto-sekrety",
+        "url": "https://www.goargentina.ru/baza-znaniy/iguasu-foto-sekrety",
+        "status": 200,
+        "title": "Как снимать водопады Игуасу так, чтобы по фото было видно их…",
+        "description": "Несколько технических приёмов фотосъёмки на Игуасу: масштаб через людей в кадре, защита от брызг, поляризационный фильтр и охота за вылетом стрижей на рассвете.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/iguasu-foto-sekrety",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -8958,12 +7173,72 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/kak-dobratsya-iz-rossii",
+        "url": "https://www.goargentina.ru/baza-znaniy/kak-dobratsya-iz-rossii",
+        "status": 200,
+        "title": "Как добраться из России и СНГ в Аргентину — База знаний",
+        "description": "Прямых рейсов нет — путь занимает примерно 26-32 часа с одной-двумя пересадками через Дубай, Стамбул, Доху или Аддис-Абебу; виза для граждан РФ не нужна (безвиз до 90 дней).",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/kak-dobratsya-iz-rossii",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/kak-menyat-valyutu",
+        "url": "https://www.goargentina.ru/baza-znaniy/kak-menyat-valyutu",
+        "status": 200,
+        "title": "Как менять валюту в Аргентине: курс, blue, MEP, карты — База знаний",
+        "description": "После отмены валютных ограничений (cepo) в апреле 2025 года разрыв курсов почти исчез — карта стала выгоднее наличных для большинства, кроме россиян, чьи карты РФ не работают за…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/kak-menyat-valyutu",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/kak-perevezti-kota-ili-sobaku",
         "url": "https://www.goargentina.ru/baza-znaniy/kak-perevezti-kota-ili-sobaku",
         "status": 200,
         "title": "Как перевезти кота или собаку в Аргентину? — База знаний",
         "description": "Нужны микрочип, действующая прививка от бешенства (первичная — минимум за 21 день до въезда) и международный ветеринарный сертификат (CVI), действительный 60 дней. Обязательного…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/kak-perevezti-kota-ili-sobaku",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/kak-poluchit-prava-v-argentine",
+        "url": "https://www.goargentina.ru/baza-znaniy/kak-poluchit-prava-v-argentine",
+        "status": 200,
+        "title": "Как получить водительские права в Аргентине: иностранные, обмен и с…",
+        "description": "Полное руководство для иностранцев: можно ли ездить с российскими и другими иностранными правами, кому доступен обмен (canje), как получить аргентинскую лицензию с нуля и какие…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/kak-poluchit-prava-v-argentine",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/kak-snyat-kvartiru-bez-garanta",
+        "url": "https://www.goargentina.ru/baza-znaniy/kak-snyat-kvartiru-bez-garanta",
+        "status": 200,
+        "title": "Как снять квартиру в Аргентине без гаранта (garantía)? — База знаний",
+        "description": "Четыре рабочих варианта: страховой полис-гарантия (seguro de caución), повышенный депозит, агентства, специализирующиеся на иностранцах, или прямые договорённости с…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/kak-snyat-kvartiru-bez-garanta",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -9573,6 +7848,21 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+        "url": "https://www.goargentina.ru/baza-znaniy/mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+        "status": 200,
+        "title": "Можно ли иностранцу устроиться на работу в аргентинскую компанию?…",
+        "description": "Легально — да, но по трудовому договору вас может нанять только работодатель, зарегистрированный в реестре RENURE, и не каждая компания готова этим заниматься ради одного…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/mozhno-li-rabotat-na-mestnuyu-kompaniyu",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/mozhno-li-snimat-dronom",
         "url": "https://www.goargentina.ru/baza-znaniy/mozhno-li-snimat-dronom",
         "status": 200,
@@ -9618,21 +7908,6 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/museos-de-buenos-aires",
-        "url": "https://www.goargentina.ru/baza-znaniy/museos-de-buenos-aires",
-        "status": 200,
-        "title": "Музеи Буэнос-Айреса — База знаний",
-        "description": "Посетите музеи, которые предлагают широкий спектр национальной и международной культуры и искусства.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/museos-de-buenos-aires",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
         "path": "/baza-znaniy/nalogi-i-monotributo",
         "url": "https://www.goargentina.ru/baza-znaniy/nalogi-i-monotributo",
         "status": 200,
@@ -9669,6 +7944,21 @@
         "title": "Национальный парк Науэль-Уапи — База знаний",
         "description": "Первый национальный парк Аргентины: огромное ледниковое озеро, горы и курортный город Барилоче — самый разносторонний и доступный из больших парков страны.",
         "canonical": "https://www.goargentina.ru/baza-znaniy/nauel-uapi",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/nauka-i-tehnologii",
+        "url": "https://www.goargentina.ru/baza-znaniy/nauka-i-tehnologii",
+        "status": 200,
+        "title": "Наука, космос и технологии: чем гордится Аргентина — База знаний",
+        "description": "Аргентина — не только футбол и вино: три научных нобелевских лауреата, собственные спутники (ARSAT, SAOCOM), экспорт ядерных исследовательских реакторов (INVAP), постоянные…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/nauka-i-tehnologii",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -9759,6 +8049,36 @@
         "title": "Недооценённая смотровая Эль-Чальтена в обход очереди на…",
         "description": "Лома-дель-Плиегуэ-Тумбадо — менее раскрученный трек в Эль-Чальтене с панорамой шире, чем у популярных озёр, и почти без людей.",
         "canonical": "https://www.goargentina.ru/baza-znaniy/obzornaya-loma-pliege-tumbado",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/ognennaya-zemlya",
+        "url": "https://www.goargentina.ru/baza-znaniy/ognennaya-zemlya",
+        "status": 200,
+        "title": "Национальный парк Огненная Земля — База знаний",
+        "description": "Самый южный национальный парк Аргентины: патагонский лес сбегает прямо к проливу Бигль, а в заливе Лапатайя обрывается Трасса №3 — конечная точка Панамериканы.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/ognennaya-zemlya",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/ognennaya-zemlya-serro-guanako",
+        "url": "https://www.goargentina.ru/baza-znaniy/ognennaya-zemlya-serro-guanako",
+        "status": 200,
+        "title": "Огненная Земля: вид сверху, который видят немногие, и торфяники…",
+        "description": "Подъём на Серро-Гуанако даёт лучшую панораму парка, а настил над торфяниками Лагуна-Негра показывает экосистему, на которую туристы обычно не обращают внимания.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/ognennaya-zemlya-serro-guanako",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -10098,6 +8418,36 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/pervyj-mesyac-plan",
+        "url": "https://www.goargentina.ru/baza-znaniy/pervyj-mesyac-plan",
+        "status": 200,
+        "title": "Первый месяц в Аргентине по дням: пошаговый план — База знаний",
+        "description": "Дневной план действий на первый месяц после переезда в Буэнос-Айрес: что сделать в день прилёта, в первую неделю (SIM, SUBE, наличные, жильё), во вторую (счёт-финтех, старт…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/pervyj-mesyac-plan",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/pervyj-mesyac-v-argentine",
+        "url": "https://www.goargentina.ru/baza-znaniy/pervyj-mesyac-v-argentine",
+        "status": 200,
+        "title": "Первый месяц в Аргентине: ощущение, что попал на другую планету…",
+        "description": "Личная история Ивана о первых неделях после переезда в феврале 2023-го: языковой шок, жетоны для стирки, автобусы, которые надо ловить рукой, июльский холод без отопления и…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/pervyj-mesyac-v-argentine",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/pinamar",
         "url": "https://www.goargentina.ru/baza-znaniy/pinamar",
         "status": 200,
@@ -10188,12 +8538,42 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/pokupka-nedvizhimosti",
+        "url": "https://www.goargentina.ru/baza-znaniy/pokupka-nedvizhimosti",
+        "status": 200,
+        "title": "Покупка недвижимости в Аргентине для иностранца — База знаний",
+        "description": "Иностранец может купить недвижимость в Аргентине наравне с гражданами — без резиденции и визы. Как устроена сделка (boleto → escritura у нотариуса-эскрибано), почему платят…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/pokupka-nedvizhimosti",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/pokupki-i-tax-free",
         "url": "https://www.goargentina.ru/baza-znaniy/pokupki-i-tax-free",
         "status": 200,
         "title": "Покупки и tax free в Аргентине — База знаний",
         "description": "Возврат НДС туристам в Аргентине с 2026 года переведён на цифровую систему ARCA, рынки вроде Сан-Тельмо — лучшее место за кожей, мате и сувенирами, а главный риск при покупках…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/pokupki-i-tax-free",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/poleznye-prilozheniya",
+        "url": "https://www.goargentina.ru/baza-znaniy/poleznye-prilozheniya",
+        "status": 200,
+        "title": "Полезные приложения и сервисы в Аргентине — База знаний",
+        "description": "Набор приложений, который реально упрощает жизнь в Аргентине: такси (Uber, Cabify, DiDi), платежи и QR (Mercado Pago), транспорт (SUBE, Cómo Llego, Ecobici), доставка еды…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/poleznye-prilozheniya",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -10338,6 +8718,36 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/rabochaya-viza",
+        "url": "https://www.goargentina.ru/baza-znaniy/rabochaya-viza",
+        "status": 200,
+        "title": "Рабочая резиденция в Аргентине: наём местным работодателем — База…",
+        "description": "Углублённый разбор резиденции по трудоустройству (trabajador migrante): пре-контракт, требование RENURE к работодателю, отличие от визы цифрового кочевника и реальная проблема…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/rabochaya-viza",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/rabota-i-poisk-raboty",
+        "url": "https://www.goargentina.ru/baza-znaniy/rabota-i-poisk-raboty",
+        "status": 200,
+        "title": "Работа в Аргентине: рынок труда, зарплаты и как искать — База знаний",
+        "description": "Как устроен рынок труда в Аргентине для иностранца: какие профессии востребованы, сколько реально зарабатывают, где искать вакансии (LinkedIn, Bumeran, Computrabajo, ZonaJobs…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/rabota-i-poisk-raboty",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/raskhozhdeniya-dni-cuit-cuil",
         "url": "https://www.goargentina.ru/baza-znaniy/raskhozhdeniya-dni-cuit-cuil",
         "status": 200,
@@ -10443,6 +8853,21 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/rossiya-vs-argentina",
+        "url": "https://www.goargentina.ru/baza-znaniy/rossiya-vs-argentina",
+        "status": 200,
+        "title": "Россия и Аргентина: чем жизнь здесь отличается — База знаний",
+        "description": "Честное сравнение жизни в России и Аргентине по вещам, которые сильнее всего чувствует переехавший: климат и отопление, темп и бюрократия, деньги и инфляция, устройство города…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/rossiya-vs-argentina",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/ruta-40-sem-ozer",
         "url": "https://www.goargentina.ru/baza-znaniy/ruta-40-sem-ozer",
         "status": 200,
@@ -10509,6 +8934,21 @@
         "title": "Один день из Сальты через перевал в Качи и Кальчакские долины…",
         "description": "Авторская последовательность дня по дороге Куэста-дель-Обиспо, Прямой Тин-Тин и Кальчакским долинам: ранний выезд, утренний перевал, обед в Качи, по возможности — ночёвка вместо…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/salta-kalchakskie-doliny-marshrut",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/san-huan",
+        "url": "https://www.goargentina.ru/baza-znaniy/san-huan",
+        "status": 200,
+        "title": "Сан-Хуан — База знаний",
+        "description": "Столица одноимённой провинции у подножия Анд, второй по значимости винный регион Аргентины после Мендосы (Сира, Бонарда) и город, полностью отстроенный заново после…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/san-huan",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -10698,6 +9138,21 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/soobshestvo-i-adaptaciya",
+        "url": "https://www.goargentina.ru/baza-znaniy/soobshestvo-i-adaptaciya",
+        "status": 200,
+        "title": "Где найти своих и как пережить адаптацию в Аргентине — База знаний",
+        "description": "Тёплый и честный разбор для первых месяцев: где найти русскоязычное сообщество (чаты, группы, специалисты на русском — юристы, бухгалтеры, врачи, риелторы), русские магазины и…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/soobshestvo-i-adaptaciya",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/status-expediente-migraciones",
         "url": "https://www.goargentina.ru/baza-znaniy/status-expediente-migraciones",
         "status": 200,
@@ -10713,12 +9168,57 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/stoimost-zhizni-ba",
+        "url": "https://www.goargentina.ru/baza-znaniy/stoimost-zhizni-ba",
+        "status": 200,
+        "title": "Сколько стоит жизнь в Буэнос-Айресе — База знаний",
+        "description": "Реальный месячный бюджет в Буэнос-Айресе в 2026 году: от экономного ~$1100 до комфортного $2300+, с аренды как главной статьи расходов.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/stoimost-zhizni-ba",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/stoimost-zhizni-semya-i-para",
+        "url": "https://www.goargentina.ru/baza-znaniy/stoimost-zhizni-semya-i-para",
+        "status": 200,
+        "title": "Стоимость жизни в Аргентине для пары и семьи: сценарии и уровни…",
+        "description": "Месячные бюджеты для пары и для семьи с ребёнком в Буэнос-Айресе в 2026 году, по трём уровням (эконом / комфорт / высокий). Что реально входит в каждую статью, почему пара…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/stoimost-zhizni-semya-i-para",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/stoit-li-ehat-na-poezde-v-oblaka",
         "url": "https://www.goargentina.ru/baza-znaniy/stoit-li-ehat-na-poezde-v-oblaka",
         "status": 200,
         "title": "Стоит ли ехать на «Поезде в облака»? — База знаний",
         "description": "Стоит, если вы понимаете, что покупаете: с 2015 года это связка «автобус из Сальты + поезд от Сан-Антонио-де-лос-Кобрес до виадука на 4220 м», полный день в пути и премиальный…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/stoit-li-ehat-na-poezde-v-oblaka",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/stoit-li-ehat-v-argentinu",
+        "url": "https://www.goargentina.ru/baza-znaniy/stoit-li-ehat-v-argentinu",
+        "status": 200,
+        "title": "Стоит ли ехать в Аргентину: далеко, дорого, опасно? — База знаний",
+        "description": "Ободряющий и честный разбор для тех, кто впервые задумался об Аргентине и слышит от близких «далеко, дорого, опасно». Реальный порядок бюджета на двоих на 2 недели (включая…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/stoit-li-ehat-v-argentinu",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -10788,21 +9288,6 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/tango-en-buenos-aires",
-        "url": "https://www.goargentina.ru/baza-znaniy/tango-en-buenos-aires",
-        "status": 200,
-        "title": "Танго в Буэнос-Айресе — База знаний",
-        "description": "Посетите колыбель зрелища, которое очаровывает мир.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/tango-en-buenos-aires",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
         "path": "/baza-znaniy/teatr-kolon",
         "url": "https://www.goargentina.ru/baza-znaniy/teatr-kolon",
         "status": 200,
@@ -10818,12 +9303,12 @@
         "ok": true
       },
       {
-        "path": "/baza-znaniy/teatro-y-literatura-en-buenos-aires",
-        "url": "https://www.goargentina.ru/baza-znaniy/teatro-y-literatura-en-buenos-aires",
+        "path": "/baza-znaniy/termas-de-rio-hondo",
+        "url": "https://www.goargentina.ru/baza-znaniy/termas-de-rio-hondo",
         "status": 200,
-        "title": "Театр и литература в Буэнос-Айресе — База знаний",
-        "description": "Прогуляйтесь по одной из великих культурных осей города Буэнос-Айрес: мифическому проспекту Корриентес.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/teatro-y-literatura-en-buenos-aires",
+        "title": "Термас-де-Рио-Ондо — База знаний",
+        "description": "Термальный город-курорт на берегу водохранилища Рио-Ондо — один из самых популярных курортов у самих аргентинцев (особенно пенсионеров), но малоизвестный русскоязычным туристам.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/termas-de-rio-hondo",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -10839,6 +9324,21 @@
         "title": "Огненная Земля — База знаний",
         "description": "«Край света» — самый южный регион Аргентины: Ушуайя у пролива Бигль, национальный парк Огненная Земля и главная стартовая точка круизов в Антарктиду. Выделен в базе отдельно от…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/tierra-del-fuego",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/tigre-i-delta",
+        "url": "https://www.goargentina.ru/baza-znaniy/tigre-i-delta",
+        "status": 200,
+        "title": "Тигре и Дельта Параны — База знаний",
+        "description": "Самая популярная однодневная вылазка из Буэнос-Айреса: городок Тигре в ~30 км к северу и огромная речная Дельта Параны — лабиринт проток и островов, где вместо улиц каналы, а…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/tigre-i-delta",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -10884,21 +9384,6 @@
         "title": "Ушуайя — База знаний",
         "description": "Главные ворота в Антарктиду и самый известный город Огненной Земли — компактный порт у пролива Бигль в предгорьях хребта Мартиал.",
         "canonical": "https://www.goargentina.ru/baza-znaniy/ushuaia",
-        "robots": "index, follow",
-        "hreflang": [],
-        "h1Count": 1,
-        "jsonLdBlocks": 5,
-        "criticalIssues": [],
-        "warnings": [],
-        "ok": true
-      },
-      {
-        "path": "/baza-znaniy/vida-nocturna-en-buenos-aires",
-        "url": "https://www.goargentina.ru/baza-znaniy/vida-nocturna-en-buenos-aires",
-        "status": 200,
-        "title": "Ночная жизнь Буэнос-Айреса — База знаний",
-        "description": "Откройте для себя всемирно известную ночную жизнь в одном из самых соблазнительных городов Латинской Америки.",
-        "canonical": "https://www.goargentina.ru/baza-znaniy/vida-nocturna-en-buenos-aires",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -11013,6 +9498,21 @@
         "ok": true
       },
       {
+        "path": "/baza-znaniy/vnutrennie-aviabilety",
+        "url": "https://www.goargentina.ru/baza-znaniy/vnutrennie-aviabilety",
+        "status": 200,
+        "title": "Внутренние авиабилеты по Аргентине — База знаний",
+        "description": "Каркас почти любого маршрута по стране: три авиакомпании, аэропорты Аэропарке (AEP) и Эсейса (EZE) — разные точки, и правила, как купить дешевле.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/vnutrennie-aviabilety",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
         "path": "/baza-znaniy/vnzh-argentina",
         "url": "https://www.goargentina.ru/baza-znaniy/vnzh-argentina",
         "status": 200,
@@ -11034,6 +9534,21 @@
         "title": "ВНЖ Аргентины по учёбе (студенческая резиденция) — База знаний",
         "description": "Резиденция по учёбе — популярный «вход» для молодёжи: зачисление в признанное учебное заведение даёт легальное пребывание на время обучения. Что нужно (программа от 3 лет…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/vnzh-po-uchebe",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/vnzh-rantye",
+        "url": "https://www.goargentina.ru/baza-znaniy/vnzh-rantye",
+        "status": 200,
+        "title": "Резиденция рантье и пенсионера в Аргентине: пошаговый гайд — База…",
+        "description": "Углублённый разбор самого популярного пути ВНЖ для релокантов на пассивном доходе — точный список документов, актуальный порог дохода на 2026 год, реальные сроки и причины отказов.",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/vnzh-rantye",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -11169,6 +9684,21 @@
         "title": "Жильё и аренда в Аргентине — База знаний",
         "description": "Краткосрочная аренда через Airbnb/Booking для туристов и первых недель релокации против классического договора аренды (alquiler): гарантия, инмобилиария, депозит и схемы для тех…",
         "canonical": "https://www.goargentina.ru/baza-znaniy/zhile-i-arenda",
+        "robots": "index, follow",
+        "hreflang": [],
+        "h1Count": 1,
+        "jsonLdBlocks": 5,
+        "criticalIssues": [],
+        "warnings": [],
+        "ok": true
+      },
+      {
+        "path": "/baza-znaniy/zhizn-bez-ispanskogo",
+        "url": "https://www.goargentina.ru/baza-znaniy/zhizn-bez-ispanskogo",
+        "status": 200,
+        "title": "Жизнь без испанского: как справляться в Аргентине первое время…",
+        "description": "Практический разбор, как жить в Аргентине, пока не выучил испанский: где реально можно на английском и приложениях, а где без языка тяжело (госучреждения, банки, врачи, аренда).…",
+        "canonical": "https://www.goargentina.ru/baza-znaniy/zhizn-bez-ispanskogo",
         "robots": "index, follow",
         "hreflang": [],
         "h1Count": 1,
@@ -11414,10 +9944,8 @@
         "FAQPage",
         "Question",
         "Answer",
-        "ItemList",
-        "ListItem",
-        "Article",
-        "BreadcrumbList"
+        "BreadcrumbList",
+        "ListItem"
       ]
     }
   ],

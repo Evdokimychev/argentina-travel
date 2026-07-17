@@ -130,6 +130,8 @@ export type ExcursionDetail = Omit<ExcursionListing, "guide"> & {
   platformRequestDateTo?: string;
   platformStartTime?: string;
   platformEndTime?: string;
+  /** Единый источник поведения CTA, оплаты, поддержки и подтверждения. */
+  offerCapabilities?: import("@/types/product-capability").OfferCapabilities;
 };
 
 export type ExcursionReview = {

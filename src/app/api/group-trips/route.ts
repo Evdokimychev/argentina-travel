@@ -8,18 +8,24 @@ import {
   listGroupTripsForMember,
 } from "@/lib/group-trips-server";
 import type { CreateGroupTripListingInput } from "@/types/group-trips";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const mine = url.searchParams.get("mine") === "1";
+  const organizer = url.searchParams.get("organizer") === "1";
+  if (!mine && !organizer) {
+    const moduleBlocked = await enforcePublicModuleAccess("tours", "public_read");
+    if (moduleBlocked) return moduleBlocked;
+  }
+
   if (!isSupabaseToursEnabled()) {
     return NextResponse.json({ listings: [] });
   }
 
   try {
-    const url = new URL(request.url);
     const tourId = url.searchParams.get("tourId")?.trim() || undefined;
     const slotDate = url.searchParams.get("slotDate")?.trim() || undefined;
-    const mine = url.searchParams.get("mine") === "1";
-    const organizer = url.searchParams.get("organizer") === "1";
 
     const supabase = await createSupabaseServerClient();
     const {
@@ -64,6 +70,9 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   if (!isSupabaseToursEnabled()) {
     return NextResponse.json({ error: "Набор группы недоступен" }, { status: 503 });
   }

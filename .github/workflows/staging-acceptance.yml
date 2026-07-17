@@ -1,0 +1,69 @@
+name: Staging acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      base_url:
+        description: Isolated staging deployment URL (never production)
+        required: true
+        type: string
+      run_id:
+        description: Unique fixture namespace for this run
+        required: true
+        type: string
+
+concurrency:
+  group: staging-acceptance-${{ inputs.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    environment: staging-acceptance
+    timeout-minutes: 45
+    env:
+      GIT_SHA: ${{ github.sha }}
+      STAGING_ACCEPTANCE_ENABLED: "true"
+      STAGING_ACCEPTANCE_BASE_URL: ${{ inputs.base_url }}
+      STAGING_ACCEPTANCE_RUN_ID: ${{ inputs.run_id }}
+      STAGING_ACCEPTANCE_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
+      STAGING_ACCEPTANCE_SUPABASE_PROJECT_REF: ${{ vars.STAGING_SUPABASE_PROJECT_REF }}
+      PRODUCTION_SUPABASE_PROJECT_REF: uooxrypocahomoqzdvzy
+      STAGING_ACCEPTANCE_MAILBOX_MODE: disposable
+      STAGING_ACCEPTANCE_MAILBOX_TOKEN: ${{ secrets.STAGING_MAILBOX_TOKEN }}
+      STAGING_ACCEPTANCE_PARTNER_WRITES: "false"
+      PAYMENT_SANDBOX_MODE: "true"
+      NEXT_PUBLIC_SUPABASE_URL: ${{ vars.STAGING_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.STAGING_SUPABASE_ANON_KEY }}
+      SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
+
+    steps:
+      - name: Checkout requested revision
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Hard safety preflight
+        run: npm run staging:acceptance:preflight
+
+      - name: Install acceptance browsers
+        run: npx playwright install --with-deps chromium webkit
+
+      - name: Run staging acceptance
+        run: npm run test:e2e:staging-acceptance
+
+      - name: Upload evidence and machine-readable report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: staging-acceptance-${{ inputs.run_id }}-${{ github.sha }}
+          path: test-results/staging-acceptance/
+          if-no-files-found: warn
+          retention-days: 14

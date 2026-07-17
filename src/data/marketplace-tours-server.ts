@@ -5,6 +5,10 @@ import { mergeMarketplaceTourListings } from "@/lib/tripster/partner-tour-utils"
 
 /** Каталог меняется редко; 5 мин — баланс свежести и TTFB для роботов и cold start. */
 export const MARKETPLACE_CATALOG_REVALIDATE_SEC = 300;
+export const MARKETPLACE_CATALOG_DEADLINE_MS = 2_500;
+
+let lastSuccessfulMarketplaceTours: TourListing[] | null = null;
+let marketplaceToursInFlight: Promise<TourListing[]> | null = null;
 
 function reportMarketplaceSourceError(source: string, error: unknown): void {
   console.error("[marketplace_source_error]", {
@@ -16,9 +20,10 @@ function reportMarketplaceSourceError(source: string, error: unknown): void {
 async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
   const { isSupabaseToursEnabled, getToursSourceMode } = await import("@/lib/auth-mode");
   const { fetchRepositoryMarketplaceTours } = await import("@/lib/tour-repository");
+  const { isProductionRuntime } = await import("@/lib/runtime-mode");
 
   if (!isSupabaseToursEnabled()) {
-    return fetchRepositoryMarketplaceTours();
+    return isProductionRuntime() ? [] : fetchRepositoryMarketplaceTours();
   }
 
   try {
@@ -31,7 +36,7 @@ async function loadPlatformTourListingsForCatalog(): Promise<TourListing[]> {
     reportMarketplaceSourceError("platform_tours", error);
   }
 
-  if (getToursSourceMode() === "hybrid") {
+  if (getToursSourceMode() === "hybrid" && !isProductionRuntime()) {
     return fetchRepositoryMarketplaceTours();
   }
   return [];
@@ -81,7 +86,46 @@ const cachedMarketplaceTours = unstable_cache(
   },
 );
 
+export async function resolveMarketplaceCatalogWithinDeadline(
+  catalogPromise: Promise<TourListing[]>,
+  fallback: () => TourListing[],
+  deadlineMs = MARKETPLACE_CATALOG_DEADLINE_MS,
+): Promise<TourListing[]> {
+  let timeout: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<TourListing[]>((resolve) => {
+    timeout = setTimeout(() => resolve(fallback()), deadlineMs);
+  });
+
+  try {
+    return await Promise.race([catalogPromise, deadline]);
+  } finally {
+    if (timeout) clearTimeout(timeout);
+  }
+}
+
+function loadMarketplaceToursInBackground(): Promise<TourListing[]> {
+  if (marketplaceToursInFlight) return marketplaceToursInFlight;
+
+  marketplaceToursInFlight = cachedMarketplaceTours()
+    .then((tours) => {
+      lastSuccessfulMarketplaceTours = tours;
+      return tours;
+    })
+    .catch((error) => {
+      reportMarketplaceSourceError("catalog", error);
+      return lastSuccessfulMarketplaceTours ?? [];
+    })
+    .finally(() => {
+      marketplaceToursInFlight = null;
+    });
+
+  return marketplaceToursInFlight;
+}
+
 /** Cross-request catalog cache + dedupe внутри одного RSC-запроса. */
 export const fetchMarketplaceTours = cache(async (): Promise<TourListing[]> => {
-  return cachedMarketplaceTours();
+  return resolveMarketplaceCatalogWithinDeadline(
+    loadMarketplaceToursInBackground(),
+    () => lastSuccessfulMarketplaceTours ?? [],
+  );
 });

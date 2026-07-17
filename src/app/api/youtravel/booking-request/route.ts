@@ -26,6 +26,9 @@ import {
   fingerprintPartnerBookingRequest,
   isValidBookingOperationKey,
 } from "@/lib/partner-booking/idempotency";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { publicBookingError } from "@/lib/partner-booking/public-errors";
 
 type BookingRequestBody = {
   slug?: string;
@@ -38,6 +41,8 @@ type BookingRequestBody = {
   phone?: string;
   message?: string;
   userId?: string;
+  captchaToken?: string;
+  company?: string;
 };
 
 function resolveAffiliateFallbackReason(status?: number): string {
@@ -91,7 +96,30 @@ async function persistYouTravelRequest(input: {
 async function postYouTravelBookingRequest(request: Request) {
   const body = (await request.json().catch(() => null)) as BookingRequestBody | null;
   if (!body) {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_INVALID_REQUEST"), { status: 400 });
+  }
+
+  const protection = await verifyGuestFormProtection({
+    request,
+    formId: "partner_booking",
+    captchaToken: body.captchaToken,
+    honeypot: body.company,
+  });
+  if (!protection.ok) {
+    if (protection.kind === "configuration") {
+      return NextResponse.json(
+        publicBookingError("BOOKING_VERIFICATION_UNAVAILABLE"),
+        { status: 503 },
+      );
+    }
+    return NextResponse.json(
+      publicBookingError("BOOKING_VERIFICATION_FAILED"),
+      { status: 400 },
+    );
+  }
+
+  if (!(await fetchSiteNavigation()).showTours) {
+    return NextResponse.json(publicBookingError("BOOKING_SECTION_UNAVAILABLE"), { status: 404 });
   }
 
   const slug = body.slug?.trim();
@@ -103,7 +131,7 @@ async function postYouTravelBookingRequest(request: Request) {
     body.offerId != null && Number.isFinite(body.offerId) ? Number(body.offerId) : null;
 
   if (!slug || !startDate || personsCount < 1) {
-    return NextResponse.json({ error: "Missing required booking fields." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_REQUIRED_FIELDS"), { status: 400 });
   }
 
   const supabase = await createSupabaseServerClient();
@@ -145,7 +173,7 @@ async function postYouTravelBookingRequest(request: Request) {
     });
 
     if ("error" in contact) {
-      return NextResponse.json({ error: contact.error }, { status: 400 });
+      return NextResponse.json(publicBookingError("BOOKING_CONTACT_INVALID"), { status: 400 });
     }
 
     ({ name, email, phone } = contact);
@@ -155,7 +183,7 @@ async function postYouTravelBookingRequest(request: Request) {
   const tourId = tourDetail?.partnerExperienceId ?? parseYouTravelTourSlug(slug);
 
   if (!tourId) {
-    return NextResponse.json({ error: "YouTravel tour not found." }, { status: 404 });
+    return NextResponse.json(publicBookingError("BOOKING_PRODUCT_NOT_FOUND"), { status: 404 });
   }
 
   const fallbackUrl = buildYouTravelAffiliateFallbackPath({
@@ -194,8 +222,7 @@ async function postYouTravelBookingRequest(request: Request) {
       mode: "affiliate_fallback",
       fallbackUrl,
       fallbackReason: "api_not_configured",
-      error:
-        "Сервис бронирования YouTravel.me сейчас недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
     });
   }
 
@@ -211,15 +238,14 @@ async function postYouTravelBookingRequest(request: Request) {
       mode: "affiliate_fallback",
       fallbackUrl,
       fallbackReason: "contact_on_partner_site",
-      error:
-        "Контактные данные заполняются на сайте партнёра — открываем YouTravel.me с выбранной датой и числом туристов.",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
     });
   }
 
   const idempotencyKey = request.headers.get("idempotency-key")?.trim() ?? null;
   if (!isValidBookingOperationKey(idempotencyKey)) {
     return NextResponse.json(
-      { error: "Для безопасного бронирования повторите отправку формы." },
+      publicBookingError("BOOKING_REQUEST_KEY_INVALID"),
       { status: 400 },
     );
   }
@@ -234,7 +260,7 @@ async function postYouTravelBookingRequest(request: Request) {
       mode: "affiliate_fallback",
       fallbackUrl,
       fallbackReason: "idempotency_unavailable",
-      error: "Безопасное создание заказа сейчас недоступно — продолжаем на сайте YouTravel.me.",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
     });
   }
 
@@ -262,13 +288,13 @@ async function postYouTravelBookingRequest(request: Request) {
   }
   if (claim.state === "conflict") {
     return NextResponse.json(
-      { error: "Ключ бронирования уже использован для другой заявки." },
+      publicBookingError("BOOKING_REQUEST_CONFLICT"),
       { status: 409 },
     );
   }
   if (claim.state === "in_progress") {
     return NextResponse.json(
-      { error: "Заявка уже отправляется. Подождите результат и не создавайте её повторно." },
+      publicBookingError("BOOKING_REQUEST_IN_PROGRESS"),
       { status: 409, headers: { "Retry-After": "5" } },
     );
   }
@@ -278,7 +304,7 @@ async function postYouTravelBookingRequest(request: Request) {
       mode: "affiliate_fallback",
       fallbackUrl,
       fallbackReason: "idempotency_unavailable",
-      error: "Безопасное создание заказа сейчас недоступно — продолжаем на сайте YouTravel.me.",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
     });
   }
 
@@ -351,18 +377,21 @@ async function postYouTravelBookingRequest(request: Request) {
         priceSnapshot: error.details,
       });
 
-      return respond({
-        ok: false,
-        mode: "affiliate_fallback",
-        fallbackUrl,
-        fallbackReason: isInfraError
-          ? resolveAffiliateFallbackReason(error.status)
-          : "api_booking_rejected",
-        youtravelStatus: error.status,
-        error: isInfraError
-          ? "Автоматическое бронирование через API YouTravel.me недоступно — переходим на сайт партнёра с выбранной датой и числом туристов."
-          : "Не удалось создать заказ через API YouTravel.me — переходим на сайт партнёра с заполненными данными.",
-      });
+      return respond(
+        {
+          ok: false,
+          mode: "affiliate_fallback",
+          fallbackUrl,
+          fallbackReason: isInfraError
+            ? resolveAffiliateFallbackReason(error.status)
+            : "api_booking_rejected",
+          youtravelStatus: error.status,
+          ...publicBookingError(
+            isInfraError ? "BOOKING_PARTNER_HANDOFF" : "BOOKING_PARTNER_REJECTED",
+          ),
+        },
+        error.status >= 400 && error.status < 600 ? error.status : 502,
+      );
     }
   }
 
@@ -371,14 +400,16 @@ async function postYouTravelBookingRequest(request: Request) {
     status: "affiliate_fallback",
   });
 
-  return respond({
-    ok: false,
-    mode: "affiliate_fallback",
-    fallbackUrl,
-    fallbackReason: "api_unavailable",
-    error:
-      "Сервис бронирования YouTravel.me временно недоступен — переходим на сайт партнёра с выбранной датой и числом туристов.",
-  });
+  return respond(
+    {
+      ok: false,
+      mode: "affiliate_fallback",
+      fallbackUrl,
+      fallbackReason: "api_unavailable",
+      ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+    },
+    502,
+  );
 }
 
 export const POST = withRateLimit(postYouTravelBookingRequest, {
@@ -400,7 +431,7 @@ export async function GET() {
   } = await supabase.auth.getUser();
 
   if (!authUser) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json(publicBookingError("BOOKING_AUTH_REQUIRED"), { status: 401 });
   }
 
   const admin = createSupabaseAdminClient();

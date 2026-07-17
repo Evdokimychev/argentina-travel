@@ -54,7 +54,7 @@ function buildItineraryFromSeed(seed: ItinerarySeed): PlaceItinerary {
         dayNumber: stop.dayNumber,
         sortOrder: stop.sortOrder,
         title: stop.title,
-        description: stop.description,
+        description: stop.description ?? placeSeed?.shortDescription,
         place: placeSeed ? toPlaceListing(placeSeed) : undefined,
       };
     }),
@@ -98,15 +98,15 @@ function enrichPlaceDetail(seed: (typeof PLACES_SEED)[number]): PlaceDetail {
 
 /** List all places — Prisma when PLACES_USE_DB=true, else curated seed. */
 export async function fetchPlacesServer(): Promise<PlaceListing[]> {
+  const { applyKbToListing } = await import("@/lib/kb-place-bridge");
   if (isPlacesDbEnabled()) {
     try {
       const rows = await prisma.place.findMany({ orderBy: { popularity: "desc" } });
-      return rows.map(mapPrismaPlace);
+      return rows.map(mapPrismaPlace).map(applyKbToListing);
     } catch {
       // fall through to seed
     }
   }
-  const { applyKbToListing } = await import("@/lib/kb-place-bridge");
   return getAllPlaceListings().map(applyKbToListing);
 }
 
@@ -117,12 +117,14 @@ export async function fetchPlaceBySlugServer(slug: string): Promise<PlaceDetail 
       if (row) {
         const mapped = mapPrismaPlace(row);
         const all = await fetchPlacesServer();
-        return {
+        const detail: PlaceDetail = {
           ...mapped,
           relatedPlaces: buildPlaceRelations(mapped, all).map((r) => r.place),
           collections: [],
           itineraryReferences: [],
         };
+        const { applyKbToDetail } = await import("@/lib/kb-place-bridge");
+        return applyKbToDetail(detail);
       }
     } catch {
       // fall through

@@ -34,7 +34,7 @@ function parseProvider(value: string | null): PaymentProviderId | "all" {
 }
 
 export async function GET(request: Request) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.view");
   if (!auth.ok) return auth.response;
 
   const url = new URL(request.url);

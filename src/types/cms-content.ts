@@ -15,6 +15,7 @@ import {
 export type CmsDocType =
   | "legal"
   | "blog"
+  | "knowledge"
   | "guide"
   | "destination"
   | "place"
@@ -37,6 +38,25 @@ export type CmsBlogSection = {
   blocks?: BlogBodyBlock[];
 };
 
+export type CmsCollectorProvenance = {
+  schemaVersion: number;
+  identity: string;
+  source: string;
+  sourceId: string;
+  sourceItemId: string | number | null;
+  sourceUrl?: string;
+  fingerprint: string;
+  qualityScore: number;
+  scoreBreakdown: Record<string, number>;
+  flags: string[];
+  category?: string;
+  province?: string;
+  city?: string;
+  tags: string[];
+  media: string[];
+  collectedAt?: string;
+};
+
 export type CmsBlogBody = {
   kind: "blog";
   excerpt?: string;
@@ -44,6 +64,7 @@ export type CmsBlogBody = {
   content?: string;
   featured?: boolean;
   relatedDestinations?: string[];
+  collector?: CmsCollectorProvenance;
 };
 
 export type CmsGuideBody = {
@@ -137,6 +158,8 @@ export type CmsDocument = {
   scheduledPublishAt: string | null;
   createdBy: string | null;
   updatedBy: string | null;
+  /** Optimistic concurrency token supplied back with every write. */
+  rowVersion: number;
   createdAt: string;
   updatedAt: string;
 };

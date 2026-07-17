@@ -10,6 +10,7 @@ import {
   canStartPaymentForBookingStatus,
 } from "@/lib/payments/payment-integrity";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { publicApiError } from "@/lib/public-api/safe-error";
 
 type CreatePreferenceBody = {
   paymentLinkToken?: string;
@@ -20,18 +21,12 @@ export async function POST(
   context: { params: Promise<{ id: string }> }
 ) {
   if (!isSupabaseBookingsEnabled()) {
-    return NextResponse.json({ error: "Bookings API unavailable" }, { status: 503 });
+    return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 503 });
   }
 
   const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN?.trim();
   if (!accessToken) {
-    return NextResponse.json(
-      {
-        error:
-          "Mercado Pago is not configured. Set MERCADOPAGO_ACCESS_TOKEN to create checkout preferences.",
-      },
-      { status: 503 }
-    );
+    return NextResponse.json(publicApiError("PAYMENT_UNAVAILABLE"), { status: 503 });
   }
 
   const { id } = await context.params;
@@ -41,38 +36,38 @@ export async function POST(
     const supabase = createSupabaseAdminClient();
     const booking = await fetchBookingById(supabase, id);
     if (!booking) {
-      return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+      return NextResponse.json(publicApiError("RESOURCE_NOT_FOUND"), { status: 404 });
     }
 
     if (!booking.paymentLink) {
-      return NextResponse.json({ error: "Booking has no active payment link" }, { status: 400 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_UNAVAILABLE"), { status: 400 });
     }
 
     if (!canStartPaymentForBookingStatus(booking.status)) {
       return NextResponse.json(
-        { error: "Cancelled or completed booking cannot be paid" },
+        publicApiError("PAYMENT_NOT_ALLOWED"),
         { status: 409 },
       );
     }
 
     if (!body.paymentLinkToken?.trim()) {
-      return NextResponse.json({ error: "paymentLinkToken is required" }, { status: 400 });
+      return NextResponse.json(publicApiError("INVALID_REQUEST"), { status: 400 });
     }
 
     if (booking.paymentLink.token !== body.paymentLinkToken.trim()) {
-      return NextResponse.json({ error: "Invalid payment link token" }, { status: 403 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_UNAVAILABLE"), { status: 403 });
     }
 
     if (isBookingPaymentLinkExpired(booking.paymentLink)) {
-      return NextResponse.json({ error: "Payment link expired" }, { status: 409 });
+      return NextResponse.json(publicApiError("PAYMENT_LINK_EXPIRED"), { status: 409 });
     }
 
     if (booking.paymentLink.status === "cancelled") {
-      return NextResponse.json({ error: "Payment link cancelled" }, { status: 409 });
+      return NextResponse.json(publicApiError("PAYMENT_NOT_ALLOWED"), { status: 409 });
     }
 
     if (booking.paymentLink.status === "paid") {
-      return NextResponse.json({ error: "Booking already paid" }, { status: 409 });
+      return NextResponse.json(publicApiError("PAYMENT_ALREADY_COMPLETED"), { status: 409 });
     }
 
     if (booking.paymentLink.preferenceId && booking.paymentLink.checkoutUrl) {
@@ -119,7 +114,7 @@ export async function POST(
         bookingId: booking.id,
         error: updateResult.error,
       });
-      return NextResponse.json({ error: updateResult.error }, { status: 500 });
+      return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), { status: 500 });
     }
 
     return NextResponse.json({
@@ -136,14 +131,6 @@ export async function POST(
       tags: { area: "payments", provider: "mercadopago", action: "create_preference" },
       extra: { bookingId: id },
     });
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : "Unexpected error while creating Mercado Pago preference",
-      },
-      { status: 500 }
-    );
+    return NextResponse.json(publicApiError("PAYMENT_PROCESSING_FAILED"), { status: 500 });
   }
 }

@@ -124,14 +124,6 @@ sources:
 
 **Вывод:** для Семи озёр и озёрного края — октябрь–апрель (осень особенно живописна); для глубокого юга Руты 40 — декабрь–март.
 
-## Рекомендации
-
-См. `recommendations` в метаданных.
-
-## Предупреждения
-
-См. `warnings` в метаданных.
-
 ## Связанные объекты
 
 - [[nauel-uapi|Национальный парк Науэль-Уапи]] и [[lanin|Национальный парк Ланин]] — национальные парки, через территорию которых проходит Дорога семи озёр.
@@ -144,4 +136,3 @@ sources:
 - [La Ruta Natural — Ruta de los Siete Lagos](https://larutanatural.gob.ar/es/imperdible/48/ruta-de-los-siete-lagos)
 - [Villa La Angostura Turismo — Camino de los Siete Lagos](https://www.villalaangosturaturismo.gob.ar/circuitos/camino-de-los-siete-lagos/)
 - [Interpatagonia — Seven Lakes Route](https://www.interpatagonia.com/sanmartindelosandes/seven-lakes-route.html)
-- Архивный лонгрид `Маршруты-Дорога-семи-озёр-и-Рута-40.md` в корне проекта — полностью влит в эту запись 2026-07-02 (`long_form_merged: true`).

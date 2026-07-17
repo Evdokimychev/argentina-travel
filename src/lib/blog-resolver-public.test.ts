@@ -29,6 +29,7 @@ describe("public blog catalog", () => {
       scheduledPublishAt: null,
       createdBy: null,
       updatedBy: null,
+      rowVersion: 1,
       createdAt: "2026-01-01T00:00:00.000Z",
       seo: { title: "Auto draft" },
       body: {

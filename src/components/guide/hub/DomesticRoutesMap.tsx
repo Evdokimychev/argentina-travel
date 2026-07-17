@@ -71,6 +71,8 @@ export default function DomesticRoutesMap() {
   useEffect(() => {
     if (!containerRef.current) return;
 
+    const layers = layersRef.current;
+
     const map = L.map(containerRef.current, {
       scrollWheelZoom: false,
       zoomControl: true,
@@ -86,9 +88,9 @@ export default function DomesticRoutesMap() {
     mapRef.current = map;
 
     return () => {
-      layersRef.current.lines.clear();
-      layersRef.current.markers.clear();
-      layersRef.current.regionalLines = [];
+      layers.lines.clear();
+      layers.markers.clear();
+      layers.regionalLines = [];
       map.remove();
       mapRef.current = null;
     };

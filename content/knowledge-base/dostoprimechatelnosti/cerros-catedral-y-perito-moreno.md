@@ -55,4 +55,8 @@ sources:
   note: INPROTUR; текст автопереведён, фото с официального CDN — атрибуция argentina.travel
 ---
 
-- **Провинция:** Рио-Негро ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/cerros-catedral-y-perito-moreno) (исп.; адаптировано 2026-07-07).
+- **Провинция:** Рио-Негро
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/cerros-catedral-y-perito-moreno) (исп.; адаптировано 2026-07-07).

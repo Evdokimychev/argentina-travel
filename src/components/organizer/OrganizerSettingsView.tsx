@@ -296,7 +296,7 @@ export default function OrganizerSettingsView() {
             <Puzzle className="h-4 w-4" />
           </div>
           <p className="text-sm leading-relaxed text-charcoal">
-            API-ключи, виджет туров и статистика запросов — в разделе интеграций.
+            Внешние подключения, виджет туров и статистика использования находятся в отдельном разделе.
           </p>
         </div>
         <Link

@@ -1,10 +1,9 @@
 import type { BookingAttribution } from "@/types/booking-attribution";
 import type { CreateBookingCommand } from "@/lib/booking-create-command";
 import { assertBookingStatusTransition } from "@/lib/booking-state-machine";
-import { SITE_SUPPORT_EMAIL } from "@/data/site-support-email";
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
-import { shouldSeedDemoData } from "@/lib/demo-mode";
+import { getDemoBookingSeeds } from "@/lib/bookings-demo-seeds-active";
 import { isRemoteBookingsMode, apiAttachGuestBookings, apiCreateBooking } from "@/lib/bookings-api";
 import {
   ensureTravelersSlotCount,
@@ -35,7 +34,6 @@ import {
 } from "@/lib/booking-payment-link";
 import { resolveBookingInvoices } from "@/lib/booking-payment";
 import type { BookingInvoice } from "@/types/booking-payment";
-import { tourCover } from "@/lib/seed-media";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { getCanonicalTourBySlug } from "@/lib/tour-repository";
@@ -84,7 +82,6 @@ import {
   mergeTripOperationsWithClientUpdates,
   appendTripClientUpdates,
 } from "@/lib/trip-operations";
-import { buildTripsterIguazuDemoOperations } from "@/data/trip-operations-seeds";
 import type { BookingSource, TripClientRequirements, TripOperations } from "@/types/trip-operations";
 
 function createId(prefix: string): string {
@@ -243,227 +240,14 @@ export function normalizeBooking(raw: Booking): Booking {
   });
 }
 
-function seedDemoBookingsIfEmpty(): Booking[] {
+function seedBookingsIfEmpty(): Booking[] {
   const existing = readRawBookings();
   if (existing.length > 0) {
     return existing.map(normalizeBooking);
   }
 
-  if (!shouldSeedDemoData()) {
-    return [];
-  }
-
   const now = new Date().toISOString();
-  const seeded: Booking[] = [
-    {
-      id: "booking-demo-new",
-      userId: "ivan-evdokimychev",
-      organizerTourId: "org-iguazu",
-      tourId: "4",
-      tourSlug: "iguazu-falls",
-      tourTitle: "Водопады Игуасу за 1 день: аргентинская и бразильская стороны",
-      tourImage: tourCover("iguazu-falls"),
-      status: "new",
-      guests: 2,
-      startDate: "2026-09-12",
-      endDate: "2026-09-13",
-      totalPriceUsd: 1180,
-      contactName: "Иван Евдокимычев",
-      contactEmail: "SITE_SUPPORT_EMAIL",
-      contactPhone: "+79999226564",
-      touristComment: "Прилетаем утренним рейсом.",
-      organizerComments: [],
-      statusHistory: [
-        {
-          id: "status-demo-new-1",
-          from: null,
-          to: "new",
-          changedAt: now,
-          changedBy: "system",
-        },
-      ],
-      createdAt: now,
-      updatedAt: now,
-      fillTravelersLater: true,
-      travelersFormToken: "trv-demo-new",
-    },
-    {
-      id: "booking-demo-pending",
-      userId: "ivan-evdokimychev",
-      organizerTourId: "org-salta",
-      tourId: "3",
-      tourSlug: "salta-northwest",
-      tourTitle: "Сальта и ХуХуй: горные деревни, виноградники и долина Калчакí",
-      tourImage: tourCover("salta-northwest"),
-      status: "pending",
-      guests: 3,
-      startDate: "2026-10-05",
-      endDate: "2026-10-08",
-      totalPriceUsd: 2100,
-      contactName: "Иван Евдокимычев",
-      contactEmail: "SITE_SUPPORT_EMAIL",
-      contactPhone: "+79999226564",
-      organizerComments: [
-        {
-          id: "comment-demo-1",
-          text: "Проверяем наличие мест на выбранные даты.",
-          authorName: "Иван Евдокимычев",
-          createdAt: now,
-        },
-      ],
-      statusHistory: [
-        {
-          id: "status-demo-pending-1",
-          from: null,
-          to: "new",
-          changedAt: "2026-06-01T10:24:00.000Z",
-          changedBy: "system",
-        },
-        {
-          id: "status-demo-pending-2",
-          from: "new",
-          to: "pending",
-          changedAt: "2026-06-01T11:00:00.000Z",
-          changedBy: "organizer",
-        },
-      ],
-      createdAt: "2026-06-01T10:24:00.000Z",
-      updatedAt: now,
-      fillTravelersLater: true,
-      travelersFormToken: "trv-demo-pending",
-    },
-    {
-      id: "booking-demo-completed",
-      userId: "ivan-evdokimychev",
-      organizerTourId: "org-mendoza",
-      tourId: "2",
-      tourSlug: "mendoza-wine",
-      tourTitle: "Мендоса: винные маршруты, Аконкагуа и гастрономические ужины",
-      tourImage: tourCover("mendoza-wine"),
-      status: "completed",
-      guests: 2,
-      startDate: "2025-11-03",
-      endDate: "2025-11-05",
-      totalPriceUsd: 1560,
-      contactName: "Иван Евдокимычев",
-      contactEmail: "SITE_SUPPORT_EMAIL",
-      contactPhone: "+79999226564",
-      organizerComments: [
-        {
-          id: "comment-demo-2",
-          text: "Места подтверждены. Отправили программу на email.",
-          authorName: "Иван Евдокимычев",
-          createdAt: "2025-10-05T12:10:00.000Z",
-        },
-      ],
-      statusHistory: [
-        {
-          id: "status-demo-completed-1",
-          from: null,
-          to: "new",
-          changedAt: "2025-10-01T10:00:00.000Z",
-          changedBy: "system",
-        },
-        {
-          id: "status-demo-completed-2",
-          from: "new",
-          to: "pending",
-          changedAt: "2025-10-02T09:00:00.000Z",
-          changedBy: "organizer",
-        },
-        {
-          id: "status-demo-completed-3",
-          from: "pending",
-          to: "confirmed",
-          changedAt: "2025-10-05T12:10:00.000Z",
-          changedBy: "organizer",
-        },
-        {
-          id: "status-demo-completed-4",
-          from: "confirmed",
-          to: "completed",
-          changedAt: "2025-11-06T10:00:00.000Z",
-          changedBy: "organizer",
-        },
-      ],
-      createdAt: "2025-10-01T10:00:00.000Z",
-      updatedAt: "2025-11-06T10:00:00.000Z",
-      fillTravelersLater: false,
-      travelersFormToken: "trv-demo-completed",
-      travelersCompletedAt: "2025-10-08T14:30:00.000Z",
-      travelers: [
-        {
-          id: "guest-1",
-          fullName: "Иван Евдокимычев",
-          dateOfBirth: "1990-05-15",
-          passportNumber: "4510 123456",
-          dietaryRestrictions: "Без ограничений",
-          email: "SITE_SUPPORT_EMAIL",
-          phone: "+79999226564",
-        },
-        {
-          id: "guest-2",
-          fullName: "Мария Евдокимычева",
-          dateOfBirth: "1992-08-22",
-          passportNumber: "4511 654321",
-          dietaryRestrictions: "Без глютена",
-          email: "maria@example.com",
-          phone: "+79991234567",
-        },
-      ],
-    },
-    {
-      id: "booking-demo-tripster",
-      userId: guestUserIdFromEmail("anna.k.demo@example.com"),
-      organizerTourId: "org-iguazu",
-      tourId: "4",
-      tourSlug: "iguazu-falls",
-      tourTitle: "Индивидуальный тур: водопады Игуасу (2 дня)",
-      tourImage: tourCover("iguazu-falls"),
-      status: "confirmed",
-      guests: 2,
-      startDate: "2026-09-12",
-      endDate: "2026-09-13",
-      totalPriceUsd: 890,
-      contactName: "Анна и Михаил К.",
-      contactEmail: "anna.k.demo@example.com",
-      contactPhone: "+7 916 555-12-34",
-      touristComment: "Бронирование с Tripster, нужен ранний выезд к парку.",
-      organizerComments: [
-        {
-          id: "comment-tripster-1",
-          text: "Билеты на аргентинскую сторону куплены. Ждём решение по бразильской.",
-          authorName: "Иван Евдокимычев",
-          createdAt: now,
-        },
-      ],
-      statusHistory: [
-        {
-          id: "status-tripster-1",
-          from: null,
-          to: "new",
-          changedAt: "2026-06-08T08:00:00.000Z",
-          changedBy: "system",
-          note: "Импорт с Tripster",
-        },
-        {
-          id: "status-tripster-2",
-          from: "new",
-          to: "confirmed",
-          changedAt: "2026-06-09T11:00:00.000Z",
-          changedBy: "organizer",
-        },
-      ],
-      createdAt: "2026-06-08T08:00:00.000Z",
-      updatedAt: now,
-      bookingSource: "tripster",
-      externalReference: "TS-88421",
-      clientPortalToken: "trip-demo-iguazu",
-      travelersFormToken: "trv-demo-tripster",
-      fillTravelersLater: true,
-      tripOperations: buildTripsterIguazuDemoOperations(now),
-    },
-  ];
+  const seeded = getDemoBookingSeeds(now);
 
   writeAllBookings(seeded.map(normalizeBooking));
   return seeded.map(normalizeBooking);
@@ -471,7 +255,7 @@ function seedDemoBookingsIfEmpty(): Booking[] {
 
 export function getAllBookings(): Booking[] {
   if (typeof window === "undefined") return [];
-  return seedDemoBookingsIfEmpty();
+  return seedBookingsIfEmpty();
 }
 
 export function getUserBookings(userId: string): Booking[] {
@@ -804,7 +588,7 @@ export function createBookingFromCheckoutLocal(input: {
   checkoutCurrency?: CheckoutCurrencyCode;
   checkoutRates?: Partial<Record<CurrencyCode, number>>;
   checkoutRatesUpdatedAt?: string;
-  checkoutRatesSource?: "frankfurter" | "fallback";
+  checkoutRatesSource?: "frankfurter" | "frankfurter_partial" | "fallback";
   payNowUsd?: number;
   attribution?: BookingAttribution;
 }): Booking | { error: string } {
@@ -952,11 +736,13 @@ export async function createBookingFromCheckout(input: {
   checkoutCurrency?: CheckoutCurrencyCode;
   checkoutRates?: Partial<Record<CurrencyCode, number>>;
   checkoutRatesUpdatedAt?: string;
-  checkoutRatesSource?: "frankfurter" | "fallback";
+  checkoutRatesSource?: "frankfurter" | "frankfurter_partial" | "fallback";
   payNowUsd?: number;
   attribution?: BookingAttribution;
   optionId?: string;
   idempotencyKey?: string;
+  captchaToken?: string;
+  honeypot?: string;
 }): Promise<Booking | { error: string }> {
   if (!isRemoteBookingsMode()) {
     return createBookingFromCheckoutLocal(input);
@@ -1007,7 +793,10 @@ export async function createBookingFromCheckout(input: {
   };
 
   try {
-    const saved = await apiCreateBooking(command);
+    const saved = await apiCreateBooking(command, {
+      captchaToken: input.captchaToken,
+      honeypot: input.honeypot,
+    });
     notifyUpdated();
     return saved;
   } catch (error) {

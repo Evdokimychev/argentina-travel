@@ -19,8 +19,10 @@ const TRACKED: CurrencyCode[] = [
 
 export type ExchangeRatesPayload = {
   rates: Partial<Record<CurrencyCode, number>>;
-  source: "frankfurter" | "fallback";
-  updatedAt: string;
+  source: "frankfurter" | "frankfurter_partial" | "fallback";
+  updatedAt: string | null;
+  liveCurrencies: CurrencyCode[];
+  fallbackCurrencies: CurrencyCode[];
 };
 
 function fallbackRates(): ExchangeRatesPayload {
@@ -29,7 +31,11 @@ function fallbackRates(): ExchangeRatesPayload {
       Record<CurrencyCode, number>
     >,
     source: "fallback",
-    updatedAt: new Date().toISOString(),
+    updatedAt: null,
+    liveCurrencies: ["USD"],
+    fallbackCurrencies: CURRENCIES.map((currency) => currency.code).filter(
+      (code): code is CurrencyCode => code !== "USD",
+    ),
   };
 }
 
@@ -48,26 +54,48 @@ export async function fetchLiveExchangeRates(): Promise<ExchangeRatesPayload> {
     };
 
     const rates: Partial<Record<CurrencyCode, number>> = { USD: 1 };
+    const liveCurrencies: CurrencyCode[] = ["USD"];
+    const fallbackCurrencies: CurrencyCode[] = [];
 
     for (const code of TRACKED) {
       const live = payload.rates?.[code];
       if (typeof live === "number" && Number.isFinite(live)) {
         rates[code] = live;
+        liveCurrencies.push(code);
       } else {
         rates[code] = CURRENCIES.find((c) => c.code === code)?.rateFromUsd ?? 1;
+        fallbackCurrencies.push(code);
       }
     }
 
     return {
       rates,
-      source: "frankfurter",
+      source: fallbackCurrencies.length > 0 ? "frankfurter_partial" : "frankfurter",
       updatedAt: payload.date
         ? `${payload.date}T12:00:00.000Z`
-        : new Date().toISOString(),
+        : null,
+      liveCurrencies,
+      fallbackCurrencies,
     };
   } catch {
     return fallbackRates();
   }
+}
+
+/** Payment amounts must never be calculated from approximate static display rates. */
+export function requireLiveRateFromUsd(
+  payload: ExchangeRatesPayload,
+  currency: CurrencyCode,
+): number {
+  if (currency === "USD") return 1;
+  if (!payload.liveCurrencies.includes(currency)) {
+    throw new Error(`Live ${currency} exchange rate is unavailable.`);
+  }
+  const rate = payload.rates[currency];
+  if (typeof rate !== "number" || !Number.isFinite(rate) || rate <= 0) {
+    throw new Error(`Live ${currency} exchange rate is invalid.`);
+  }
+  return rate;
 }
 
 export function resolveRateFromUsd(

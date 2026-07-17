@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import {
   buildPartnerImageProxyUrl,
   isAllowedPartnerImageUrl,
@@ -21,5 +23,19 @@ describe("partner image proxy", () => {
     expect(buildPartnerImageProxyUrl("https://example.com/photo.jpg")).toBe(
       "https://example.com/photo.jpg",
     );
+  });
+
+  it("serves small catalog avatars without the 1440px default", () => {
+    const result = buildPartnerImageProxyUrl(youtravel, { width: 160, quality: 60 });
+    expect(result).toContain("w=160");
+    expect(result).toContain("q=60");
+    expect(result).not.toContain("w=1440");
+
+    const card = readFileSync(
+      join(process.cwd(), "src/components/marketplace/MarketplaceTourCard.tsx"),
+      "utf8",
+    );
+    expect(card).toContain("partnerImageWidth={160}");
+    expect(card).toContain("partnerImageQuality={60}");
   });
 });

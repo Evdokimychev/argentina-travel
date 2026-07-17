@@ -9,6 +9,7 @@ import type { MouseEvent } from "react";
 interface ExternalBookingButtonProps {
   href: string;
   link: TourCustomBookingLinkPublic;
+  label?: string;
   className?: string;
   onClick?: (event: MouseEvent<HTMLAnchorElement>) => void;
 }
@@ -16,6 +17,7 @@ interface ExternalBookingButtonProps {
 export default function ExternalBookingButton({
   href,
   link,
+  label,
   className,
   onClick,
 }: ExternalBookingButtonProps) {
@@ -27,7 +29,7 @@ export default function ExternalBookingButton({
       onClick={onClick}
       className={cn(buttonVariants({ variant: "default" }), "w-full gap-2", className)}
     >
-      {link.label}
+      {label ?? link.label}
       <ExternalLink className="h-4 w-4" aria-hidden />
     </a>
   );

@@ -33,6 +33,6 @@ describe("product event taxonomy", () => {
   it("emits only after analytics consent", () => {
     window.localStorage.setItem(COOKIE_CONSENT_STORAGE_KEY, JSON.stringify({ version: COOKIE_CONSENT_VERSION, necessary: true, analytics: true, personalization: false, decidedAt: new Date().toISOString(), expiresAt: new Date(Date.now() + 60_000).toISOString() }));
     trackProductEvent("map_opened", { source: "header" });
-    expect(window.dataLayer?.[0]).toMatchObject({ event: "map_opened", event_version: 2, source: "header" });
+    expect(window.dataLayer?.[0]).toMatchObject({ event: "map_opened", event_version: 3, source: "header" });
   });
 });

@@ -41,7 +41,7 @@ import {
   SEARCH_TYPE_LABELS,
   type SearchIndexItem,
   type SearchResultType,
-} from "@/lib/site-search-index";
+} from "@/lib/site-search-schema";
 import { TOURS_REPOSITORY_UPDATED_EVENT } from "@/types/tour";
 
 const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
@@ -49,6 +49,7 @@ const TYPE_ICONS: Record<SearchResultType, typeof Search> = {
   excursion: Landmark,
   place: Mountain,
   blog: BookOpen,
+  knowledge: BookOpen,
   faq: HelpCircle,
   page: Compass,
   legal: FileText,
@@ -63,6 +64,7 @@ const KIND_FILTERS: Array<{ kind: SearchResultType | "all"; label: string }> = [
   { kind: "excursion", label: SEARCH_TYPE_LABELS.excursion },
   { kind: "place", label: SEARCH_TYPE_LABELS.place },
   { kind: "blog", label: SEARCH_TYPE_LABELS.blog },
+  { kind: "knowledge", label: SEARCH_TYPE_LABELS.knowledge },
   { kind: "guide", label: SEARCH_TYPE_LABELS.guide },
   { kind: "destination", label: SEARCH_TYPE_LABELS.destination },
 ];
@@ -145,6 +147,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
     "tour",
     "excursion",
     "place",
+    "knowledge",
     "blog",
     "guide",
     "destination",
@@ -157,7 +160,7 @@ function groupHitsByKind(hits: SearchHit[]): SearchResultGroup[] {
   return order.filter((type) => groups.has(type)).map((type) => groups.get(type)!);
 }
 
-export default function SiteSearch() {
+export default function SiteSearch({ initialOpen = false }: { initialOpen?: boolean }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -171,6 +174,10 @@ export default function SiteSearch() {
   const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const abortRef = useRef<AbortController | null>(null);
   const lastTrackedSubmitRef = useRef<string>("");
+
+  useEffect(() => {
+    if (initialOpen) setOpen(true);
+  }, [initialOpen]);
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -210,6 +217,7 @@ export default function SiteSearch() {
   const [searchIndex, setSearchIndex] = useState<SearchIndexItem[]>(() => getDefaultSearchIndex());
 
   useEffect(() => {
+    if (!open) return;
     let cancelled = false;
 
     void loadSearchIndex().then((index) => {
@@ -219,7 +227,7 @@ export default function SiteSearch() {
     return () => {
       cancelled = true;
     };
-  }, [indexVersion]);
+  }, [indexVersion, open]);
 
   const trimmedQuery = query.trim();
   const hasQuery = trimmedQuery.length > 0;

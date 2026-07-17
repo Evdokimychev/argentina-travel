@@ -22,6 +22,22 @@ function toSearchParams(input: Record<string, string | string[] | undefined>): U
   return params;
 }
 
+async function MapaArgentinaData({
+  kinds,
+  urlState,
+}: {
+  kinds: ReturnType<typeof parseMapArgentinaKindsParam>;
+  urlState: ReturnType<typeof parseMapArgentinaUrlState>;
+}) {
+  const initialData = await fetchMapObjects({
+    kinds,
+    city: urlState.city || undefined,
+    q: urlState.q || undefined,
+  });
+
+  return <MapaArgentinaClient initialData={initialData} initialState={urlState} />;
+}
+
 export async function generateMetadata({ searchParams }: PageProps): Promise<Metadata> {
   const raw = await searchParams;
   const q = typeof raw.q === "string" ? raw.q.trim() : "";
@@ -54,12 +70,6 @@ export default async function MapaArgentinaPage({ searchParams }: PageProps) {
     typeof rawParams.kind === "string" ? rawParams.kind : null
   );
 
-  const initialData = await fetchMapObjects({
-    kinds,
-    city: urlState.city || undefined,
-    q: urlState.q || undefined,
-  });
-
   const pageTitle = "Интерактивная карта Аргентины";
   const pageDescription =
     "Города, национальные парки, достопримечательности, экскурсии и аэропорты на одной карте.";
@@ -79,7 +89,7 @@ export default async function MapaArgentinaPage({ searchParams }: PageProps) {
           <div className="flex h-[60vh] items-center justify-center text-slate">Загрузка карты…</div>
         }
       >
-        <MapaArgentinaClient initialData={initialData} initialState={urlState} />
+        <MapaArgentinaData kinds={kinds} urlState={urlState} />
       </Suspense>
     </>
   );

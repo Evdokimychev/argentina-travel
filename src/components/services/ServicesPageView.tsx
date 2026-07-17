@@ -6,15 +6,20 @@ import {
   SERVICE_CATEGORIES,
   SERVICES_HUB_DISCLAIMER,
   SERVICES_HUB_INTRO,
+  type ServiceCategory,
 } from "@/data/services-hub";
 import { getServiceCategoryCardImage, getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 
 type ServicesPageViewProps = {
   flightsTeaser?: React.ReactNode;
+  categories?: ServiceCategory[];
 };
 
-export default function ServicesPageView({ flightsTeaser }: ServicesPageViewProps) {
+export default function ServicesPageView({
+  flightsTeaser,
+  categories = SERVICE_CATEGORIES,
+}: ServicesPageViewProps) {
   return (
     <>
       <Hero
@@ -30,7 +35,7 @@ export default function ServicesPageView({ flightsTeaser }: ServicesPageViewProp
         </div>
 
         <div className="mt-10 space-y-10">
-          {SERVICE_CATEGORIES.map((category) => {
+          {categories.map((category) => {
             const categoryImage = getServiceCategoryCardImage(category.id);
             return (
             <div key={category.id}>

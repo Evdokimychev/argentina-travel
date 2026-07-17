@@ -8,7 +8,24 @@ export async function GET(request: Request) {
   if (!auth.ok) return auth.response;
 
   const supabase = createSupabaseAdminClient();
-  const tours = await fetchAllToursAdmin(supabase);
+  const url = new URL(request.url);
+  const limit = Math.min(100, Math.max(1, Number(url.searchParams.get("limit") ?? 50) || 50));
+  const offset = Math.max(0, Number(url.searchParams.get("offset") ?? 0) || 0);
+  const rawStatus = url.searchParams.get("status");
+  const status = rawStatus === "draft" || rawStatus === "published" || rawStatus === "archived"
+    ? rawStatus
+    : undefined;
+  const rawProductType = url.searchParams.get("productType");
+  const productType = rawProductType === "tour" || rawProductType === "excursion"
+    ? rawProductType
+    : undefined;
+  const result = await fetchAllToursAdmin(supabase, { limit, offset, status, productType });
+  if (result.error) {
+    return NextResponse.json(
+      { error: "Не удалось загрузить предложения. Повторите попытку позже." },
+      { status: 503 }
+    );
+  }
 
-  return NextResponse.json({ tours });
+  return NextResponse.json({ ...result, limit, offset });
 }

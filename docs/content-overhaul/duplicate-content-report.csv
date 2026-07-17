@@ -1,0 +1,7 @@
+"duplicate_group","reason","entry_id","url","title","public","action","status","owner","evidence"
+"title:f9a1ffcfd053","exact_normalized_title","ciudad-de-salta","/baza-znaniy/ciudad-de-salta","Сальта","no","HUMAN_REVIEW","review_required","Content architect","exact normalization of current content.json"
+"title:f9a1ffcfd053","exact_normalized_title","salta","/baza-znaniy/salta","Сальта","yes","HUMAN_REVIEW","review_required","Content architect","exact normalization of current content.json"
+"title:71c1d062d66a","exact_normalized_title","los-cardones","/baza-znaniy/los-cardones","Национальный парк Лос-Кардонес","yes","HUMAN_REVIEW","review_required","Content architect","exact normalization of current content.json"
+"title:71c1d062d66a","exact_normalized_title","parque-nacional-los-cardones","/baza-znaniy/parque-nacional-los-cardones","Национальный парк Лос-Кардонес","no","HUMAN_REVIEW","review_required","Content architect","exact normalization of current content.json"
+"title:7a3de42ac66c","exact_normalized_title","ognennaya-zemlya","/baza-znaniy/ognennaya-zemlya","Национальный парк Огненная Земля","yes","HUMAN_REVIEW","review_required","Content architect","exact normalization of current content.json"
+"title:7a3de42ac66c","exact_normalized_title","parque-nacional-tierra-del-fuego","/baza-znaniy/parque-nacional-tierra-del-fuego","национальный парк Огненная Земля","yes","HUMAN_REVIEW","review_required","Content architect","exact normalization of current content.json"

@@ -45,7 +45,6 @@ import {
   JOIN_STEPS,
 } from "@/data/join-page";
 import { cn } from "@/lib/cn";
-import { getPlaceCoverAlt, getPlaceCoverImage } from "@/lib/media-resolver";
 import { siteContainerClass, siteScrollAnchorClass } from "@/lib/site-container";
 import { CARD_HOVER } from "@/styles/design-tokens";
 import { userHasAccountRole } from "@/types/user";
@@ -85,9 +84,6 @@ const heroHighlightIcons = {
   audience: Globe2,
 } as const;
 
-const joinHeroImage = getPlaceCoverImage("perito-moreno-glacier");
-const joinHeroImageAlt = getPlaceCoverAlt("perito-moreno-glacier");
-
 function HeroHighlightCard({
   label,
   value,
@@ -117,7 +113,13 @@ function HeroHighlightCard({
   );
 }
 
-export default function JoinPageView() {
+export default function JoinPageView({
+  heroImage,
+  heroImageAlt,
+}: {
+  heroImage: string;
+  heroImageAlt: string;
+}) {
   const { user, openAuth } = useAuth();
   const [openFaqId, setOpenFaqId] = useState<string | null>(JOIN_FAQ[0]?.id ?? null);
   function focusApplicationForm() {
@@ -265,8 +267,8 @@ export default function JoinPageView() {
             <div className="relative mx-auto w-full max-w-xl lg:max-w-none">
               <div className="relative overflow-hidden rounded-[1.75rem] border border-white/20 bg-white/5 shadow-elevated backdrop-blur-sm">
                 <Image
-                  src={joinHeroImage}
-                  alt={joinHeroImageAlt}
+                  src={heroImage}
+                  alt={heroImageAlt}
                   width={960}
                   height={720}
                   className="aspect-[4/3] w-full object-cover"

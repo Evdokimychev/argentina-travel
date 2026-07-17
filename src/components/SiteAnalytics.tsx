@@ -12,6 +12,10 @@ import {
 } from "@/lib/cookie-consent";
 import { isGtmEnabled } from "@/lib/analytics/gtm-config";
 import { isYandexMetrikaEnabled } from "@/lib/analytics/yandex-metrika-config";
+import {
+  getConfiguredYandexMetrikaCounterId,
+  teardownYandexMetrika,
+} from "@/lib/analytics/yandex-metrika";
 
 /** Vercel Analytics + GTM (via consent) — see legal/cookies. */
 export default function SiteAnalytics() {
@@ -20,7 +24,14 @@ export default function SiteAnalytics() {
   useEffect(() => {
     setEnabled(hasAnalyticsConsent());
 
-    const onConsent = () => setEnabled(hasAnalyticsConsent());
+    const onConsent = () => {
+      const nextEnabled = hasAnalyticsConsent();
+      if (!nextEnabled) {
+        const counterId = getConfiguredYandexMetrikaCounterId();
+        if (counterId !== null) teardownYandexMetrika(counterId);
+      }
+      setEnabled(nextEnabled);
+    };
     window.addEventListener(COOKIE_CONSENT_CHANGED_EVENT, onConsent);
     return () => window.removeEventListener(COOKIE_CONSENT_CHANGED_EVENT, onConsent);
   }, []);

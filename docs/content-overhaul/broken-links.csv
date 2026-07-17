@@ -1,0 +1,4 @@
+"source_id","source_url","link_kind","target","status","action","owner","evidence"
+"all-kb-entries","/baza-znaniy","kb_internal","all current related IDs and wikilinks","closed_no_broken_links","KEEP","Content editor","current content IDs"
+"audit-scope:kb-markdown-external","/baza-znaniy","markdown_external_http","823 recorded links","not_checked_network","HUMAN_REVIEW","Content editor + operations","network validation intentionally not inferred by local generator"
+"audit-scope:source-registry-external","/baza-znaniy","source_external_http","846 recorded source URLs","not_checked_network","HUMAN_REVIEW","Fact checker + operations","source-registry.csv; live HTTP status not checked"

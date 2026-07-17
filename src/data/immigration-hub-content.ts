@@ -1,6 +1,5 @@
 import type { ImmigrationHubContent } from "@/types/immigration-hub";
 // TODO(E77 Phase 5+): translate IMMIGRATION_HUB topics, FAQ, warnings via CMS or i18n bundles.
-import { getImmigrationHubHeroImage } from "@/lib/media-resolver";
 import {
   IMMIGRATION_BIRTH,
   IMMIGRATION_CITIZENSHIP,
@@ -88,11 +87,10 @@ const FAQ: ImmigrationHubContent["faq"] = [
   },
 ];
 
-export const IMMIGRATION_HUB: ImmigrationHubContent = {
+export const IMMIGRATION_HUB: Omit<ImmigrationHubContent, "heroImage"> = {
   heroTitle: "Иммиграция в Аргентину",
   heroSubtitle:
     "Жизнь в стране, ВНЖ и ПМЖ, гражданство, роды и правила въезда — справочно, без юридических гарантий.",
-  heroImage: getImmigrationHubHeroImage(),
   heroCtas: [
     { label: "🏠 Жизнь в стране", href: "/immigration/zhizn-v-strane", variant: "primary" },
     { label: "📋 ВНЖ и ПМЖ", href: "/immigration/vnzh-i-pmzh", variant: "secondary" },

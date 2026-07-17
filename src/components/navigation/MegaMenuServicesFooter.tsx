@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { NAV_FOOTER_SERVICE_LINKS } from "@/data/site-nav";
+import { NAV_FOOTER_SERVICE_LINKS } from "@/data/site-nav-client-static";
 import { cn } from "@/lib/cn";
 import { navLinkLabel } from "@/lib/site-nav";
 import type { NavTranslate } from "@/lib/site-nav";

@@ -16,11 +16,16 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import {
   getAllEntryIds,
   getBreadcrumbs,
-  getEntry,
   getEntrySection,
   getRelated,
   getSectionNeighbours,
 } from "@/lib/knowledge-base/content";
+import {
+  listPublishedKnowledgeSlugs,
+  resolveKnowledgeEntry,
+} from "@/lib/cms/knowledge-resolver";
+import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
+import { cmsFallbackRobots } from "@/lib/cms/content-resolver";
 import { buildKbEntryArticleJsonLd } from "@/lib/content-json-ld";
 import SocialFeed from "@/components/social-feed/SocialFeed";
 import { kbCrumbsToJsonLdItems } from "@/lib/knowledge-base/kb-breadcrumbs-json-ld";
@@ -38,21 +43,26 @@ interface PageProps {
 export const revalidate = 86_400;
 export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return capBuildStaticParams(getAllEntryIds()).map((id) => ({ slug: id }));
+export async function generateStaticParams() {
+  return capBuildStaticParams(await listPublishedKnowledgeSlugs()).map((id) => ({ slug: id }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const entry = getEntry(slug);
+  const entry = await resolveKnowledgeEntry(slug);
   if (!entry) return {};
   const pageTitle = `${entry.title} — База знаний`;
   const description = entry.summary?.trim() || entry.title;
-  return buildPublicPageMetadata({
+  const metadata = buildPublicPageMetadata({
     title: pageTitle,
     description,
     path: `/baza-znaniy/${entry.id}`,
   });
+  return {
+    ...metadata,
+    alternates: await buildCmsContentHreflangAlternates("knowledge", entry.id),
+    ...(cmsFallbackRobots(entry) ? { robots: cmsFallbackRobots(entry) } : {}),
+  };
 }
 
 const CONFIDENCE_STYLE: Record<string, string> = {
@@ -81,10 +91,10 @@ function imageCredit(hero: NonNullable<KbEntry["media"]>["hero"]) {
 
 export default async function KnowledgeArticlePage({ params }: PageProps) {
   const { slug } = await params;
-  const entry = getEntry(slug);
+  const entry = await resolveKnowledgeEntry(slug);
   if (!entry) notFound();
 
-  const validIds = new Set(getAllEntryIds());
+  const validIds = new Set([...getAllEntryIds(), entry.id]);
   const headings = extractHeadings(entry.body);
   const related = getRelated(entry, 6);
   const { prev, next } = getSectionNeighbours(entry);

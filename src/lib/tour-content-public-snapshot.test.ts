@@ -5,6 +5,7 @@ import type { TourRow } from "@/types/database";
 function row(overrides: Partial<TourRow> = {}): TourRow {
   return {
     id: "org-1",
+    market_code: "ar",
     slug: "new-title",
     owner_user_id: "owner-1",
     product_type: "tour",
@@ -21,6 +22,7 @@ function row(overrides: Partial<TourRow> = {}): TourRow {
     moderation_notes: null,
     moderated_by: null,
     moderated_at: null,
+    row_version: 2,
     created_at: "2026-07-15T00:00:00.000Z",
     updated_at: "2026-07-15T00:00:00.000Z",
     ...overrides,

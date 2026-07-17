@@ -1,5 +1,4 @@
 import type { GuideTopicPage } from "@/types/guide-topic";
-import { getGuideTopicHeroImage } from "@/lib/media-resolver";
 
 export const GUIDE_INDEX_INTRO =
   "Главная страница «Об Аргентине» — география и маршруты; 14 тем — практика, сервисы и туры. Каждый раздел — отправная точка перед бронированием на платформе.";
@@ -604,7 +603,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
     shortDescription:
       "Подробное руководство: песо, синий и официальный курс, обмен, карты, банкоматы и деньги для эмигрантов",
     intro:
-      "Аргентина живёт с несколькими курсами доллара одновременно: oficial, blue, MEP и tarjeta. От выбора способа оплаты зависит, насколько выгодно ваше путешествие или переезд. Этот гид — для туристов и будущих резидентов: курс, обмен, банкоматы, инфляция, счета и 20 ответов в FAQ.",
+      "Курс и комиссии в Аргентине зависят от способа оплаты. Этот раздел объясняет, как безопасно пользоваться картами, банкоматами, официальными обменными пунктами и денежными переводами.",
     features: { exchangeRates: true },
     sections: [
       {
@@ -615,7 +614,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
       {
         heading: "Как платить туристу",
         body:
-          "Карты Visa/Mastercard работают, но курс конвертации может быть официальным. Многие туристы меняют USD наличными в cueva (обменник) или через Western Union для лучшего курса — только проверенные точки, не на улице. Сохраняйте мелочь для чаевых и автобусов.",
+          "Карты Visa/Mastercard обычно работают, но итоговый курс и комиссии зависят от банка. Наличные меняйте только в банках и обменных пунктах, уполномоченных BCRA; избегайте уличных менял. Сохраняйте мелкие купюры для чаевых и транспорта.",
       },
       {
         heading: "Инфляция и цены",
@@ -767,12 +766,7 @@ const GUIDE_TOPICS_RAW: Record<string, GuideTopicPage> = {
   },
 };
 
-export const GUIDE_TOPICS: Record<string, GuideTopicPage> = Object.fromEntries(
-  Object.entries(GUIDE_TOPICS_RAW).map(([slug, topic]) => [
-    slug,
-    { ...topic, heroImage: getGuideTopicHeroImage(slug) },
-  ]),
-) as Record<string, GuideTopicPage>;
+export const GUIDE_TOPICS: Record<string, GuideTopicPage> = GUIDE_TOPICS_RAW;
 
 export const GUIDE_TOPIC_LIST: GuideTopicPage[] = Object.values(GUIDE_TOPICS);
 

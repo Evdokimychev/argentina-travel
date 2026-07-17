@@ -16,6 +16,8 @@ type ApiKeysResponse = {
 const SCOPE_OPTIONS: { value: PublicApiScope; label: string }[] = [
   { value: "tours:read", label: "Туры (чтение)" },
   { value: "excursions:read", label: "Экскурсии (чтение)" },
+  { value: "content:write", label: "База знаний (черновики)" },
+  { value: "content:status", label: "База знаний (статусы)" },
   { value: "*", label: "Все ресурсы" },
 ];
 
@@ -96,7 +98,7 @@ export default function AdminApiKeysView() {
       <AdminPageShell>
         <AdminPageHeader
           title="API-ключи партнёров"
-          subtitle="Публичное API v1 для туров и экскурсий"
+          subtitle="Публичное API v1 и интеграции базы знаний"
         />
 
         {error ? <p className="text-sm text-red-600">{error}</p> : null}

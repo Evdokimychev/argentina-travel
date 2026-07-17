@@ -387,6 +387,7 @@ export async function fetchSimilarExcursionsServer(
 
 async function loadExcursionCitiesUncached(): Promise<ExcursionCity[]> {
   const supabase = getClient();
+  const nativePromise = fetchNativeExcursionListings(supabase);
 
   let tripster: ExcursionCity[] = [];
   let sputnik8: ExcursionCity[] = [];
@@ -398,14 +399,18 @@ async function loadExcursionCitiesUncached(): Promise<ExcursionCity[]> {
     ]);
   }
 
-  if (tripster.length === 0) {
-    tripster = await pgFetchTripsterExcursionCities();
-  }
-  if (sputnik8.length === 0) {
-    sputnik8 = await pgFetchSputnik8ExcursionCities();
-  }
+  const [tripsterFallback, sputnik8Fallback] = await Promise.all([
+    tripster.length === 0
+      ? pgFetchTripsterExcursionCities()
+      : Promise.resolve(tripster),
+    sputnik8.length === 0
+      ? pgFetchSputnik8ExcursionCities()
+      : Promise.resolve(sputnik8),
+  ]);
+  tripster = tripsterFallback;
+  sputnik8 = sputnik8Fallback;
 
-  const native = await fetchNativeExcursionListings(supabase);
+  const native = await nativePromise;
   return mergeCities(tripster, sputnik8, nativeExcursionCities(native));
 }
 

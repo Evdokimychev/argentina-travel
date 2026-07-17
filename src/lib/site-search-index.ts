@@ -23,40 +23,13 @@ import type { BlogPost, TourListing } from "@/types";
 import type { DestinationPage } from "@/data/destination-pages";
 import type { PlaceListing } from "@/types/place";
 import type { ContentPage } from "@/types/content-page";
+import {
+  type SearchIndexItem,
+  type SearchResultType,
+} from "@/lib/site-search-schema";
 
-export type SearchResultType =
-  | "tour"
-  | "excursion"
-  | "place"
-  | "blog"
-  | "faq"
-  | "page"
-  | "legal"
-  | "destination"
-  | "guide"
-  | "immigration";
-
-export type SearchIndexItem = {
-  id: string;
-  type: SearchResultType;
-  title: string;
-  description?: string;
-  href: string;
-  keywords?: string[];
-};
-
-export const SEARCH_TYPE_LABELS: Record<SearchResultType, string> = {
-  tour: "Туры",
-  excursion: "Экскурсии",
-  place: "Места",
-  blog: "Блог",
-  faq: "FAQ",
-  page: "Страницы",
-  legal: "Документы",
-  destination: "Регионы",
-  guide: "Путеводитель",
-  immigration: "Иммиграция",
-};
+export { SEARCH_TYPE_LABELS } from "@/lib/site-search-schema";
+export type { SearchIndexItem, SearchResultType } from "@/lib/site-search-schema";
 
 const STATIC_PAGES: SearchIndexItem[] = [
   {
@@ -126,8 +99,8 @@ const STATIC_PAGES: SearchIndexItem[] = [
   {
     id: "page-destinations",
     type: "page",
-    title: "Регионы и места",
-    description: "8 регионов для планирования и справочник мест Аргентины.",
+    title: "Направления и места",
+    description: "7 городов и 1 макрорегион для планирования поездки по Аргентине.",
     href: "/destinations",
     keywords: ["регионы", "города", "места", "патагония"],
   },
@@ -194,6 +167,7 @@ const SEARCH_TYPE_PRIORITY: Record<SearchResultType, number> = {
   excursion: 9,
   place: 8,
   blog: 7,
+  knowledge: 7,
   guide: 6,
   immigration: 5,
   destination: 4,
@@ -329,8 +303,8 @@ export function buildStaticSearchIndex(
     {
       id: "destinations-index",
       type: "destination",
-      title: "Регионы и места",
-      description: "Регионы для планирования и справочник мест Аргентины",
+      title: "Направления и места",
+      description: "7 городов и 1 макрорегион для планирования поездки по Аргентине",
       href: "/destinations",
       keywords: ["направления", "регионы", "города", "места"],
     },

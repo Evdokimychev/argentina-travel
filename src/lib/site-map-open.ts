@@ -4,17 +4,15 @@ import {
   prefetchQuickExplorePayload,
   scheduleQuickExplorePrefetch,
 } from "@/lib/quick-explore/client-cache";
+import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-events";
 
-export const SITE_MAP_OPEN_EVENT = "site-map:open";
+export { SITE_MAP_OPEN_EVENT };
 
 /** Warm quick-explore API + map chunk before the user opens the dialog. */
 export function prefetchQuickExploreMap(): void {
   if (typeof window === "undefined") return;
-  if (getQuickExplorePayloadCache()) {
-    prefetchQuickExploreMapChunk();
-    return;
-  }
-  prefetchQuickExplorePayload();
+  prefetchQuickExploreMapChunk();
+  if (!getQuickExplorePayloadCache()) prefetchQuickExplorePayload();
 }
 
 export function openSiteMap(): void {

@@ -2,7 +2,6 @@ import Link from "next/link";
 import { ArrowRight, Compass } from "lucide-react";
 import MarketplaceTourCard from "@/components/marketplace/MarketplaceTourCard";
 import { BLOG_CATEGORY_TOUR_CTAS } from "@/data/blog-category-tours";
-import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
 import { cn } from "@/lib/cn";
 import type { TourListing } from "@/types";
 
@@ -15,14 +14,14 @@ const FEATURED_TOUR_LINKS = [
 
 type BlogRecommendedToursProps = {
   className?: string;
-  initialTours?: TourListing[];
+  featuredTours?: TourListing[];
 };
 
 export default function BlogRecommendedTours({
   className,
-  initialTours = [],
+  featuredTours = [],
 }: BlogRecommendedToursProps) {
-  const liveTours = pickBlogIndexFeaturedTours(initialTours, 4);
+  const liveTours = featuredTours.slice(0, 4);
 
   return (
     <section className={cn(className)} aria-labelledby="blog-recommended-tours-title">

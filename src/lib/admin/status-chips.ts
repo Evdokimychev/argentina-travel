@@ -50,6 +50,7 @@ const MODERATION_ENTITY_LABELS: Record<string, string> = {
   tour: "Тур",
   review: "Отзыв",
   review_report: "Жалоба на отзыв",
+  blog_comment_report: "Жалоба на комментарий",
   forum_post: "Сообщение форума",
 };
 
@@ -57,6 +58,7 @@ const MODERATION_ENTITY_TONE: Record<string, ChipTone> = {
   tour: "bg-amber-100 text-amber-800 ring-amber-200/80",
   review: "bg-sky/10 text-sky ring-sky/20",
   review_report: "bg-warning-muted text-warning ring-warning/30",
+  blog_comment_report: "bg-amber-50 text-amber-800 ring-amber-200/80",
   forum_post: "bg-violet-50 text-violet-700 ring-violet-200/80",
 };
 

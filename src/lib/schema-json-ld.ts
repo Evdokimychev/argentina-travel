@@ -1,5 +1,6 @@
 import type {
   Article,
+  Apartment,
   BreadcrumbList,
   FAQPage,
   ItemList,
@@ -20,6 +21,7 @@ export type JsonLdGraph = WithContext<
   | FAQPage
   | BreadcrumbList
   | Article
+  | Apartment
   | ItemList
   | Trip
   | TouristDestination

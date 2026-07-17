@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Database, Info, Plus, RefreshCw } from "lucide-react";
 import { useHtml5ListReorder } from "@/hooks/useHtml5ListReorder";
 import { cn } from "@/lib/cn";
@@ -60,7 +60,7 @@ export default function TourGroupDatesBlock({
   const reorder = useHtml5ListReorder(dates, onDatesChange);
   const canSyncInventory = Boolean(tourId);
 
-  async function refreshInventory() {
+  const refreshInventory = useCallback(async () => {
     if (!tourId) return;
     setSyncRefreshing(true);
     setSyncError(null);
@@ -72,20 +72,20 @@ export default function TourGroupDatesBlock({
       });
       const body = (await response.json()) as { slots?: unknown[]; error?: string };
       if (!response.ok) {
-        throw new Error(body.error ?? "Не удалось загрузить слоты из базы");
+        throw new Error(body.error ?? "Не удалось загрузить доступные даты");
       }
       setDbSlotsCount(Array.isArray(body.slots) ? body.slots.length : 0);
       setSyncMessage(
         Array.isArray(body.slots) && body.slots.length > 0
-          ? `В базе сохранено ${body.slots.length} слотов.`
-          : "В базе пока нет слотов — используются даты из черновика."
+          ? `Для бронирования сохранено дат: ${body.slots.length}.`
+          : "Для бронирования пока не сохранено ни одной даты. Текущий список остаётся в редакторе."
       );
     } catch (error) {
       setSyncError(error instanceof Error ? error.message : "Не удалось загрузить слоты");
     } finally {
       setSyncRefreshing(false);
     }
-  }
+  }, [tourId]);
 
   async function syncInventoryToDb() {
     if (!tourId) return;
@@ -98,12 +98,9 @@ export default function TourGroupDatesBlock({
         .map((date) => {
           const normalizedCapacity = Math.max(0, date.totalSeats || date.spotsLeft || 0);
           const normalizedLeft = Math.max(0, date.spotsLeft || 0);
-          const bookedCount =
-            normalizedCapacity > 0 ? Math.max(normalizedCapacity - normalizedLeft, 0) : 0;
           return {
             date: date.startDate,
             capacity: normalizedCapacity,
-            bookedCount,
             status: normalizedLeft <= 0 ? "sold_out" : "open",
           };
         });
@@ -116,12 +113,12 @@ export default function TourGroupDatesBlock({
       });
       const body = (await response.json()) as { slots?: unknown[]; error?: string };
       if (!response.ok) {
-        throw new Error(body.error ?? "Не удалось сохранить слоты в базе");
+        throw new Error(body.error ?? "Не удалось сохранить доступные даты");
       }
 
       const total = Array.isArray(body.slots) ? body.slots.length : slots.length;
       setDbSlotsCount(total);
-      setSyncMessage(`Слоты сохранены в базе: ${total}.`);
+      setSyncMessage(`Даты для бронирования сохранены: ${total}.`);
     } catch (error) {
       setSyncError(error instanceof Error ? error.message : "Ошибка сохранения слотов");
     } finally {
@@ -132,7 +129,7 @@ export default function TourGroupDatesBlock({
   useEffect(() => {
     if (!tourId) return;
     void refreshInventory();
-  }, [tourId]);
+  }, [refreshInventory, tourId]);
 
   return (
     <>
@@ -202,10 +199,10 @@ export default function TourGroupDatesBlock({
           <div className="rounded-xl border border-gray-200 bg-gray-50/80 px-4 py-3">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="text-sm font-semibold text-charcoal">Инвентарь в базе</p>
+                <p className="text-sm font-semibold text-charcoal">Доступность для бронирования</p>
                 <p className="mt-1 text-xs text-slate">
-                  Слоты для checkout и листа ожидания.
-                  {dbSlotsCount != null ? ` Сейчас в базе: ${dbSlotsCount}.` : ""}
+                  Эти даты увидят туристы при оформлении заявки и подписке на освободившиеся места.
+                  {dbSlotsCount != null ? ` Сейчас доступно дат: ${dbSlotsCount}.` : ""}
                 </p>
               </div>
               <div className="flex flex-wrap gap-2">
@@ -226,7 +223,7 @@ export default function TourGroupDatesBlock({
                   disabled={syncLoading}
                 >
                   <Database className="h-3.5 w-3.5" />
-                  {syncLoading ? "Сохраняем…" : "Сохранить слоты"}
+                  {syncLoading ? "Сохраняем…" : "Сохранить доступность"}
                 </Button>
               </div>
             </div>

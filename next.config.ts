@@ -1,14 +1,30 @@
 import type { NextConfig } from "next";
 import bundleAnalyzer from "@next/bundle-analyzer";
+import { withSentryConfig } from "@sentry/nextjs";
 import path from "node:path";
 
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === "true",
 });
 
-const hasExternalMediaCdn = Boolean(process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim());
 const disableNextImageOptimization =
-  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true" || hasExternalMediaCdn;
+  process.env.NEXT_PUBLIC_DISABLE_NEXT_IMAGE_OPTIMIZATION === "true";
+const mediaCdnRemotePattern = (() => {
+  const raw = process.env.NEXT_PUBLIC_MEDIA_CDN_URL?.trim();
+  if (!raw) return null;
+  try {
+    const url = new URL(raw);
+    if (url.protocol !== "http:" && url.protocol !== "https:") return null;
+    return {
+      protocol: url.protocol.slice(0, -1) as "http" | "https",
+      hostname: url.hostname,
+      port: url.port,
+      pathname: "/media/**",
+    };
+  } catch {
+    return null;
+  }
+})();
 const isDemoBuild =
   process.env.NEXT_PUBLIC_APP_MODE === "demo" ||
   (!process.env.NEXT_PUBLIC_APP_MODE &&
@@ -30,6 +46,22 @@ const nextConfig: NextConfig = {
       config.resolve.alias["@/lib/auth-provider-active"] = path.resolve(
         process.cwd(),
         "src/lib/auth-provider-active.demo.ts"
+      );
+      config.resolve.alias["@/lib/bookings-demo-seeds-active"] = path.resolve(
+        process.cwd(),
+        "src/lib/bookings-demo-seeds-active.demo.ts"
+      );
+      config.resolve.alias["@/lib/reviews-demo-seeds-active"] = path.resolve(
+        process.cwd(),
+        "src/lib/reviews-demo-seeds-active.demo.ts"
+      );
+      config.resolve.alias["@/lib/waitlist-demo-seeds-active"] = path.resolve(
+        process.cwd(),
+        "src/lib/waitlist-demo-seeds-active.demo.ts"
+      );
+      config.resolve.alias["@/data/tour-private-seeds"] = path.resolve(
+        process.cwd(),
+        "src/data/tour-private-seeds.demo.ts"
       );
     }
     config.module.rules.push({
@@ -129,15 +161,26 @@ const nextConfig: NextConfig = {
     ];
   },
   images: {
-    // Vercel image optimization can return 402 when quota/billing blocks optimizer requests.
-    // The project serves curated media from its own CDN, so prefer visible images over broken cards.
+    // Keep optimization enabled for both local files and the configured media CDN.
+    // Emergency bypass remains available through the explicit env flag.
     unoptimized: disableNextImageOptimization,
+    qualities: [60, 75],
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1440, 1920],
+    imageSizes: [32, 48, 64, 96, 128, 160, 256, 384],
     localPatterns: [
+      {
+        pathname: "/media/**",
+      },
+      {
+        pathname: "/logo-light.svg",
+      },
       {
         pathname: "/api/media/partner-image",
       },
     ],
     remotePatterns: [
+      ...(mediaCdnRemotePattern ? [mediaCdnRemotePattern] : []),
       {
         protocol: "https",
         hostname: "upload.wikimedia.org",
@@ -210,4 +253,21 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withBundleAnalyzer(nextConfig);
+const analyzedConfig = withBundleAnalyzer(nextConfig);
+
+export default withSentryConfig(analyzedConfig, {
+  org: process.env.SENTRY_ORG,
+  project: process.env.SENTRY_PROJECT,
+  authToken: process.env.SENTRY_AUTH_TOKEN,
+  silent: !process.env.CI,
+  sourcemaps: {
+    disable: !process.env.SENTRY_AUTH_TOKEN,
+    deleteSourcemapsAfterUpload: true,
+  },
+  webpack: {
+    automaticVercelMonitors: true,
+    treeshake: {
+      removeDebugLogging: true,
+    },
+  },
+});

@@ -5,6 +5,7 @@ import { Globe2, MapPinned, X } from "lucide-react";
 import {
   MAP_THEMATIC_GROUP_LABELS,
   MAP_THEMATIC_LAYERS,
+  PUBLIC_MAP_THEMATIC_LAYER_IDS,
   getThematicLayersByGroup,
   type MapThematicLayerGroup,
   type MapThematicLayerId,
@@ -41,7 +42,7 @@ export default function MapThematicLayersControl({
   const rootRef = useRef<HTMLDivElement>(null);
   const grouped = getThematicLayersByGroup();
 
-  const activeCount = Object.values(thematic).filter(Boolean).length;
+  const activeCount = PUBLIC_MAP_THEMATIC_LAYER_IDS.filter((id) => thematic[id]).length;
 
   useEffect(() => {
     if (!open) return;
@@ -112,12 +113,14 @@ export default function MapThematicLayersControl({
           </div>
 
           <p className="mt-1 text-[10px] leading-snug text-slate">
-            Границы, климат, районы BA, парки и маршруты — включаются независимо от меток.
+            Границы, районы Буэнос-Айреса, парки и маршруты включаются независимо от меток.
           </p>
 
           <div className="mt-3 space-y-3">
             {GROUP_ORDER.map((group) => {
-              const layers = grouped[group];
+              const layers = grouped[group].filter(
+                (layer) => layerAvailability[layer.id] === true,
+              );
               if (!layers.length) return null;
               return (
                 <section key={group}>
@@ -134,11 +137,7 @@ export default function MapThematicLayersControl({
                         <button
                           key={layer.id}
                           type="button"
-                          title={
-                            available
-                              ? layer.description
-                              : `${layer.description}. Геоданные подключаются — слой временно недоступен.`
-                          }
+                          title={layer.description}
                           onClick={() => available && onToggleThematic(layer.id)}
                           disabled={!available}
                           className={cn(
@@ -162,9 +161,6 @@ export default function MapThematicLayersControl({
                           />
                           <span className="min-w-0 flex-1 leading-snug">
                             {layer.label}
-                            {!available ? (
-                              <span className="ml-1 font-normal text-[9px] text-slate">скоро</span>
-                            ) : null}
                           </span>
                           <span
                             className={cn(
@@ -197,24 +193,24 @@ export default function MapThematicLayersControl({
                 Легенда ({activeCount})
               </p>
               <ul className="mt-1 space-y-0.5">
-                {MAP_THEMATIC_LAYERS &&
-                  Object.values(MAP_THEMATIC_LAYERS)
-                    .filter((layer) => thematic[layer.id])
-                    .map((layer) => (
-                      <li
-                        key={layer.id}
-                        className="flex items-center gap-1.5 text-[10px] text-violet-950"
-                      >
-                        <span
-                          className="h-2 w-2 shrink-0 rounded-full"
-                          style={{
-                            backgroundColor:
-                              layer.fillColor ?? layer.lineColor ?? "#64748b",
-                          }}
-                        />
-                        {layer.label}
-                      </li>
-                    ))}
+                {PUBLIC_MAP_THEMATIC_LAYER_IDS
+                  .map((id) => MAP_THEMATIC_LAYERS[id])
+                  .filter((layer) => thematic[layer.id])
+                  .map((layer) => (
+                    <li
+                      key={layer.id}
+                      className="flex items-center gap-1.5 text-[10px] text-violet-950"
+                    >
+                      <span
+                        className="h-2 w-2 shrink-0 rounded-full"
+                        style={{
+                          backgroundColor:
+                            layer.fillColor ?? layer.lineColor ?? "#64748b",
+                        }}
+                      />
+                      {layer.label}
+                    </li>
+                  ))}
               </ul>
             </div>
           ) : null}

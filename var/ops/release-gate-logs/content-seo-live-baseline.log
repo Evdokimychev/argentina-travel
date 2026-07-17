@@ -20,7 +20,7 @@ SEO audit base URL: https://www.goargentina.ru
 ✓ JSON-LD (blog post): /blog/best-time-to-visit-argentina
 ✓ hub page SEO: /destinations
 
-Report: var/ops/seo-audit-last.json
+Report: var/ops/seo-audit-production-baseline-last.json
 ✗ full sitemap crawl — 903 critical issue(s)
   - /podbor: missing canonical link
   - /booking/find: missing canonical link

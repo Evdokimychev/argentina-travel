@@ -29,4 +29,25 @@ describe("partner booking idempotency", () => {
       expect(source).toContain('request.headers.get("idempotency-key")');
     }
   });
+
+  it("keeps the legacy excursion booking route fail-closed and replay-safe", () => {
+    const source = fs.readFileSync(
+      path.join(process.cwd(), "src/app/api/excursions/[slug]/book/route.ts"),
+      "utf8",
+    );
+
+    expect(source).toContain("ENABLE_PARTNER_CONTACT_FORM");
+    expect(source.indexOf("!ENABLE_PARTNER_CONTACT_FORM")).toBeLessThan(
+      source.indexOf("createTripsterExternalOrder("),
+    );
+    expect(source).toContain('request.headers.get("idempotency-key")');
+    expect(source).toContain("claimPartnerBookingOperation");
+    expect(source).toContain("completePartnerBookingOperation");
+    expect(source).toContain("checkRateLimit(");
+    expect(source).toContain("excursions:partner-booking:ip:");
+    expect(source).toContain("affiliate_only");
+    expect(source).not.toContain("createSputnik8Order");
+    expect(source).not.toContain("randomUUID");
+    expect(source).not.toContain("body.userId");
+  });
 });

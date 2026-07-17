@@ -17,6 +17,11 @@ export type OfferMessagingMode = "partner" | "email" | "internal_chat" | "none";
 export type OfferSource = "goargentina" | "tripster" | "youtravel" | "sputnik8" | "other";
 export type OfferAvailabilityMode = "partner" | "internal_live" | "static" | "unknown";
 export type OfferCancellationOwner = "platform" | "organizer" | "partner" | "unknown";
+export type OfferExperienceType = "tour" | "excursion";
+export type OfferDataFreshness = "live" | "cached" | "manual" | "unknown";
+export type OfferConfirmationMode = "organizer" | "partner" | "instant" | "none";
+export type OfferSupportOwner = "platform" | "organizer" | "partner" | "none";
+export type OfferRetryMode = "same_operation" | "partner_handoff" | "contact_support" | "none";
 
 export interface OfferCapabilities {
   bookingMode: OfferBookingMode;
@@ -25,6 +30,13 @@ export interface OfferCapabilities {
   source: OfferSource;
   availabilityMode: OfferAvailabilityMode;
   cancellationOwner: OfferCancellationOwner;
+  experienceType: OfferExperienceType;
+  contentOwner: OfferSource;
+  dataSource: OfferSource;
+  dataFreshness: OfferDataFreshness;
+  confirmationMode: OfferConfirmationMode;
+  supportOwner: OfferSupportOwner;
+  retryMode: OfferRetryMode;
   primaryActionLabel: string;
   disclosure: string;
   disabledReason?: string;

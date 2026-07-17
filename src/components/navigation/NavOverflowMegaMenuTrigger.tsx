@@ -11,7 +11,6 @@ import {
 import { NavBadge } from "@/components/navigation/MegaMenuPanel";
 import { navOverflowTriggerClassName } from "@/components/navigation/nav-mega-menu-trigger-styles";
 import { getSiteNavSectionIcon } from "@/data/site-nav-mobile";
-import { SITE_NAV_SECTIONS } from "@/data/site-nav";
 import { useMegaMenuHoverIntent } from "@/hooks/useMegaMenuHoverIntent";
 import { cn } from "@/lib/cn";
 import { getActiveNavSectionId, isNavSectionActive, navSectionLabel } from "@/lib/site-nav";
@@ -32,6 +31,7 @@ function overflowSectionPreview(sections: SiteNavSection[], t: NavTranslate, max
 
 function OverflowMegaMenuPanel({
   sections,
+  allSections,
   activeSectionId,
   onActiveSectionChange,
   t,
@@ -39,6 +39,7 @@ function OverflowMegaMenuPanel({
   pathname,
 }: {
   sections: SiteNavSection[];
+  allSections: SiteNavSection[];
   activeSectionId: string;
   onActiveSectionChange: (sectionId: string) => void;
   t: NavTranslate;
@@ -85,7 +86,7 @@ function OverflowMegaMenuPanel({
           {sections.map((section) => {
             const selected = section.id === activeSection.id;
             const label = navSectionLabel(section, t);
-            const sectionActive = isNavSectionActive(pathname, section, SITE_NAV_SECTIONS);
+            const sectionActive = isNavSectionActive(pathname, section, allSections);
             const Icon = getSiteNavSectionIcon(section.id);
 
             return (
@@ -154,6 +155,7 @@ function OverflowMegaMenuPanel({
 
 export function NavOverflowMegaMenuTrigger({
   sections,
+  allSections,
   active,
   t,
   open,
@@ -161,6 +163,7 @@ export function NavOverflowMegaMenuTrigger({
   compact = false,
 }: {
   sections: SiteNavSection[];
+  allSections: SiteNavSection[];
   index?: number;
   active: boolean;
   t: NavTranslate;
@@ -195,10 +198,10 @@ export function NavOverflowMegaMenuTrigger({
   useEffect(() => {
     if (!open) return;
     const activeSection = sections.find(
-      (section) => getActiveNavSectionId(pathname, SITE_NAV_SECTIONS) === section.id,
+      (section) => getActiveNavSectionId(pathname, allSections) === section.id,
     );
     setActiveSectionId(activeSection?.id ?? sections[0]?.id ?? "");
-  }, [open, pathname, sections]);
+  }, [allSections, open, pathname, sections]);
 
   useEffect(() => {
     if (!open) return;
@@ -271,6 +274,7 @@ export function NavOverflowMegaMenuTrigger({
       >
         <OverflowMegaMenuPanel
           sections={sections}
+          allSections={allSections}
           activeSectionId={activeSectionId}
           onActiveSectionChange={setActiveSectionId}
           t={t}

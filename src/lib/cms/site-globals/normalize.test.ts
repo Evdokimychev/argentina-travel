@@ -4,16 +4,25 @@ import {
   DEFAULT_SITE_CONTACT,
   DEFAULT_SITE_DESIGN,
   DEFAULT_SITE_FEATURES,
+  DEFAULT_SITE_FORMS,
+  DEFAULT_SITE_EMAIL,
+  DEFAULT_SITE_MARKETING,
   DEFAULT_SITE_LEGAL_LOCALES,
   DEFAULT_SITE_MAINTENANCE,
+  DEFAULT_SITE_MODULES,
   DEFAULT_SITE_NAVIGATION,
   DEFAULT_SITE_SEO,
   normalizeSiteBranding,
   normalizeSiteContact,
   normalizeSiteDesign,
   normalizeSiteFeatures,
+  normalizeSiteForms,
+  normalizeSiteEmail,
+  normalizeSiteMarketing,
+  normalizeSiteGlobalByKey,
   normalizeSiteLegal,
   normalizeSiteMaintenance,
+  normalizeSiteModules,
   normalizeSiteNavigation,
   normalizeSiteSeo,
   sanitizeGlobalForSave,
@@ -224,6 +233,93 @@ describe("normalizeSiteDesign", () => {
       showThemeToggle: false,
       showFooterNewsletter: false,
       showFooterRouteCta: false,
+    });
+  });
+});
+
+describe("normalizeSiteModules", () => {
+  it("uses safe product defaults for invalid input", () => {
+    expect(normalizeSiteModules(undefined)).toEqual(DEFAULT_SITE_MODULES);
+    expect(normalizeSiteModules([])).toEqual(DEFAULT_SITE_MODULES);
+  });
+
+  it("accepts supported modes and visibility switches", () => {
+    expect(
+      normalizeSiteModules({
+        apartmentsMode: "native_request",
+        carRentalMode: "preparing_hybrid",
+        transfersMode: "request",
+        hotelsMode: "disabled",
+        showApartmentsInServices: false,
+        showCarRentalInServices: false,
+        showTransfersInServices: true,
+      }),
+    ).toEqual({
+      apartmentsMode: "native_request",
+      carRentalMode: "preparing_hybrid",
+      transfersMode: "request",
+      hotelsMode: "disabled",
+      showApartmentsInServices: false,
+      showCarRentalInServices: false,
+      showTransfersInServices: true,
+    });
+  });
+
+  it("rejects unsupported modes without enabling unfinished products", () => {
+    expect(
+      normalizeSiteModules({
+        apartmentsMode: "instant_checkout",
+        carRentalMode: "native",
+        transfersMode: "native",
+        hotelsMode: "booking",
+      }),
+    ).toMatchObject({
+      apartmentsMode: DEFAULT_SITE_MODULES.apartmentsMode,
+      carRentalMode: DEFAULT_SITE_MODULES.carRentalMode,
+      transfersMode: DEFAULT_SITE_MODULES.transfersMode,
+      hotelsMode: DEFAULT_SITE_MODULES.hotelsMode,
+    });
+  });
+});
+
+describe("communications globals", () => {
+  it("normalizes form protection without accepting unsupported modes", () => {
+    expect(normalizeSiteForms(undefined)).toEqual(DEFAULT_SITE_FORMS);
+    expect(
+      normalizeSiteForms({
+        contactEnabled: false,
+        captchaMode: "custom-provider",
+        captchaShopOrder: false,
+      }),
+    ).toEqual({
+      ...DEFAULT_SITE_FORMS,
+      contactEnabled: false,
+      captchaShopOrder: false,
+    });
+  });
+
+  it("normalizes email and marketing values", () => {
+    expect(normalizeSiteEmail(undefined)).toEqual(DEFAULT_SITE_EMAIL);
+    expect(normalizeSiteMarketing(undefined)).toEqual(DEFAULT_SITE_MARKETING);
+    expect(normalizeSiteMarketing({ announcementTone: "neon" }).announcementTone).toBe(
+      DEFAULT_SITE_MARKETING.announcementTone,
+    );
+    expect(
+      normalizeSiteEmail({ leadAlertsEnabled: false, replyToEmail: " ops@example.com " }),
+    ).toMatchObject({ leadAlertsEnabled: false, replyToEmail: "ops@example.com" });
+  });
+
+  it("drops unknown browser fields through the keyed persistence schema", () => {
+    expect(
+      normalizeSiteGlobalByKey("site.forms", {
+        contactEnabled: false,
+        captchaMode: "selected",
+        injectedSecret: "must-not-persist",
+      }),
+    ).toEqual({
+      ...DEFAULT_SITE_FORMS,
+      contactEnabled: false,
+      captchaMode: "selected",
     });
   });
 });

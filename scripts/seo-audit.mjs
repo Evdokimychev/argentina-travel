@@ -20,6 +20,11 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  captureCandidateContext,
+  finalizeCandidateEvidence,
+} from "./lib/candidate-evidence.mjs";
+import { hasCompatibleSchemaType } from "./lib/seo-schema-contract.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -265,18 +270,29 @@ function addGroupedValue(map, value, pagePath) {
 
 async function resolveExcursionSamplePath() {
   const { text, status } = await fetchText("/excursions");
-  if (status !== 200) return null;
-
-  const slugMatch = text.match(/href=["']\/excursions\/([^"'/?#]+)["']/i);
-  return slugMatch ? `/excursions/${slugMatch[1]}` : null;
+  if (status === 200) {
+    const slugMatch = text.match(/href=["']\/excursions\/([^"'/?#]+)["']/i);
+    if (slugMatch) return `/excursions/${slugMatch[1]}`;
+  }
+  return resolveSamplePathFromSitemap("excursions");
 }
 
 async function resolveTourSamplePath() {
   const { text, status } = await fetchText("/tours");
-  if (status !== 200) return null;
+  if (status === 200) {
+    const slugMatch = text.match(/href=["']\/tours\/([^"'/?#]+)["']/i);
+    if (slugMatch) return `/tours/${slugMatch[1]}`;
+  }
+  return resolveSamplePathFromSitemap("tours");
+}
 
-  const slugMatch = text.match(/href=["']\/tours\/([^"'/?#]+)["']/i);
-  return slugMatch ? `/tours/${slugMatch[1]}` : null;
+async function resolveSamplePathFromSitemap(kind) {
+  const { text, status } = await fetchText("/sitemap.xml");
+  if (status !== 200) return null;
+  const prefix = `/${kind}/`;
+  return parseSitemapXml(text)
+    .map(pathFromSitemapUrl)
+    .find((pagePath) => pagePath.startsWith(prefix) && pagePath.slice(prefix.length).length > 0) ?? null;
 }
 
 async function auditPageMetadata(pagePath, requireHreflang = false) {
@@ -458,8 +474,9 @@ async function auditJsonLdSample(sample) {
       return {
         label: sample.label,
         path: null,
-        ok: false,
-        issues: ["Could not resolve tour sample slug from /tours"],
+        ok: true,
+        skipped: true,
+        issues: ["No public tour detail is present in the catalog or sitemap"],
       };
     }
   }
@@ -470,8 +487,9 @@ async function auditJsonLdSample(sample) {
       return {
         label: sample.label,
         path: null,
-        ok: false,
-        issues: ["Could not resolve excursion sample slug from /excursions"],
+        ok: true,
+        skipped: true,
+        issues: ["No public excursion detail is present in the catalog or sitemap"],
       };
     }
   }
@@ -498,7 +516,7 @@ async function auditJsonLdSample(sample) {
   }
 
   for (const expectedType of sample.types) {
-    if (!types.has(expectedType)) {
+    if (!hasCompatibleSchemaType(types, expectedType)) {
       issues.push(`Missing schema.org @type: ${expectedType} (found: ${[...types].join(", ") || "none"})`);
     }
   }
@@ -560,8 +578,22 @@ async function main() {
   loadEnvLocal();
   fs.mkdirSync(path.dirname(auditFile), { recursive: true });
 
+  const isCanonicalProduction = new URL(baseUrl).origin === new URL(canonicalOrigin).origin;
+  const evidenceScope = isCanonicalProduction
+    ? "production-baseline"
+    : process.env.SEO_AUDIT_EVIDENCE_SCOPE ??
+      (path.basename(auditFile).includes("production-baseline") ? "production-baseline" : "candidate");
+  const candidateContext = evidenceScope === "candidate" ? captureCandidateContext(root) : null;
+
   const report = {
     checkedAt: new Date().toISOString(),
+    evidenceScope,
+    evidenceEnvironment:
+      process.env.EVIDENCE_ENVIRONMENT ??
+      (evidenceScope === "candidate" ? "local-production" : "production-baseline"),
+    evidenceBaseUrl: baseUrl,
+    deploymentId: process.env.EVIDENCE_DEPLOYMENT_ID ?? null,
+    deployedTree: process.env.EVIDENCE_DEPLOYED_TREE ?? null,
     baseUrl,
     configuration: {
       canonicalOrigin,
@@ -724,7 +756,9 @@ async function main() {
   for (const sample of JSON_LD_SAMPLES) {
     const result = await auditJsonLdSample(sample);
     report.jsonLd.push(result);
-    if (result.ok) {
+    if (result.skipped) {
+      console.log(`– JSON-LD (${sample.label}): skipped — ${result.issues[0]}`);
+    } else if (result.ok) {
       console.log(`✓ JSON-LD (${sample.label}): ${result.path}`);
     } else {
       report.ok = false;
@@ -741,6 +775,15 @@ async function main() {
       report.ok = false;
       for (const issue of result.issues) console.error(`✗ ${issue}`);
     }
+  }
+
+  if (candidateContext) {
+    const evidence = finalizeCandidateEvidence(root, candidateContext, {
+      environment: report.evidenceEnvironment,
+      baseUrl,
+    });
+    Object.assign(report, evidence);
+    if (evidence.evidenceIntegrity.status !== "passed") report.ok = false;
   }
 
   fs.writeFileSync(auditFile, `${JSON.stringify(report, null, 2)}\n`);

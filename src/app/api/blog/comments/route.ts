@@ -5,7 +5,9 @@ import {
   listBlogArticleComments,
 } from "@/lib/blog-comments-server";
 import { parseBlogCommentBody, parseBlogCommentSlug } from "@/lib/blog-comments-parsers";
+import { isPublicPathEnabled } from "@/lib/public-module-visibility";
 import { checkRateLimit, getClientIp } from "@/lib/rate-limit";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 type CommentBody = {
@@ -49,6 +51,11 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
+  const navigation = await fetchSiteNavigation();
+  if (!isPublicPathEnabled("/blog", navigation)) {
+    return NextResponse.json({ error: "Блог отключён" }, { status: 404 });
+  }
+
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json({ error: "Комментарии недоступны" }, { status: 503 });
   }

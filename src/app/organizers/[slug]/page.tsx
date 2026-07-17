@@ -2,10 +2,8 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import OrganizerPublicView from "@/components/organizer-public/OrganizerPublicView";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
-import {
-  buildPublicOrganizerProfile,
-  resolveListingOwnerUserId,
-} from "@/lib/organizer-public";
+import { buildPublicOrganizerProfile } from "@/lib/organizer-public";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 import { PUBLIC_ORGANIZERS } from "@/data/public-organizers";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 

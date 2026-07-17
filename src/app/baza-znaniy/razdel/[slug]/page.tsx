@@ -10,9 +10,10 @@ import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import {
   KB_SECTIONS,
   getSectionBySlug,
-  getSectionCount,
-  getSectionGroups,
+  getSectionCountFrom,
+  getSectionGroupsFrom,
 } from "@/lib/knowledge-base/content";
+import { resolveKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
 import { buildDetailBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -44,8 +45,9 @@ export default async function KnowledgeSectionPage({ params }: PageProps) {
   if (!section) notFound();
 
   const sectionPath = `/baza-znaniy/razdel/${section.slug}`;
-  const total = getSectionCount(section.id);
-  const { hubs, groups } = getSectionGroups(section.id);
+  const entries = await resolveKnowledgeCatalog(locale);
+  const total = getSectionCountFrom(entries, section.id);
+  const { hubs, groups } = getSectionGroupsFrom(entries, section.id);
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { marketplaceTours } from "@/data/marketplace-tours";
 import { buildSeedTourFromSlug } from "@/lib/tour-mapper";
-import { resolveListingOwnerUserId } from "@/lib/organizer-public";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 import type { Tour } from "@/types/tour";
 
 export function buildMarketplaceSeedTours(): Tour[] {

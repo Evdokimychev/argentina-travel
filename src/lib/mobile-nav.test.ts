@@ -8,7 +8,7 @@ import {
 
 describe("mobile site navigation", () => {
   it("groups cover every mobile section exactly once", () => {
-    assertMobileNavCoverage();
+    assertMobileNavCoverage(SITE_NAV_MOBILE_SECTIONS);
 
     const groupedIds = SITE_NAV_MOBILE_GROUPS.flatMap((group) => group.sectionIds);
     const mobileIds = SITE_NAV_MOBILE_SECTIONS.map((section) => section.id);
@@ -18,7 +18,7 @@ describe("mobile site navigation", () => {
   });
 
   it("buildMobileNavGroups resolves sections in declared order", () => {
-    const groups = buildMobileNavGroups();
+    const groups = buildMobileNavGroups(SITE_NAV_MOBILE_SECTIONS);
     expect(groups[0]?.id).toBe("travel");
     expect(groups[0]?.sections.map((section) => section.id)).toEqual([
       "geography",

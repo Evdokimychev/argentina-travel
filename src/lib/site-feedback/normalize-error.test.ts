@@ -38,4 +38,10 @@ describe("normalizeSiteError", () => {
     const result = normalizeSiteError("Ссылка устарела");
     expect(result.title).toBe("Ссылка устарела");
   });
+
+  it("does not expose unknown technical error messages", () => {
+    const result = normalizeSiteError(new Error("secret provider detail"));
+    expect(result.description).not.toContain("secret provider detail");
+    expect(result.description).toBeTruthy();
+  });
 });

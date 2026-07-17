@@ -187,7 +187,7 @@ function DestinationBubble({
     >
       <span
         className={cn(
-          "flex items-center justify-center rounded-full border-2 border-teal-500/80 bg-teal-500 text-white shadow-md transition-all duration-300",
+          "flex items-center justify-center rounded-full border-2 border-teal-700 bg-teal-700 text-white shadow-md transition-all duration-300",
           active && "scale-110 border-teal-400 ring-4 ring-teal-200/60"
         )}
         style={{ width: size, height: size }}
@@ -376,7 +376,7 @@ function EraButton({
       )}
     >
       <div className="flex items-center justify-between gap-2">
-        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800/80">
+        <span className="text-[10px] font-bold uppercase tracking-wider text-amber-900">
           {era.yearLabel}
         </span>
         {era.badge ? (
@@ -413,7 +413,7 @@ function EraDetail({ era }: { era: TourismTimelineEra }) {
       {era.href && era.linkLabel ? (
         <Link
           href={era.href}
-          className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky hover:underline"
+          className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-sky-ink hover:underline"
         >
           {era.linkLabel}
           <ChevronRight className="h-4 w-4" aria-hidden />

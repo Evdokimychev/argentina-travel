@@ -6,22 +6,25 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowRight, MapPin, X } from "lucide-react";
 import Hero from "@/components/Hero";
 import { useSiteHeaderOverlayLock } from "@/hooks/useSiteHeaderOverlayLock";
-import {
-  GALLERY_REGIONS,
-  galleryItems,
-  type GalleryItem,
-} from "@/data/gallery-items";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
+import type { GalleryItem } from "@/data/gallery-items";
 import { cn } from "@/lib/cn";
 import { siteContainerClass } from "@/lib/site-container";
 
 interface GalleryPageViewProps {
   initialRegion?: string;
+  heroImage: string;
+  galleryItems: GalleryItem[];
+  regions: Array<{ slug: string; label: string }>;
 }
 
-export default function GalleryPageView({ initialRegion }: GalleryPageViewProps) {
+export default function GalleryPageView({
+  initialRegion,
+  heroImage,
+  galleryItems,
+  regions,
+}: GalleryPageViewProps) {
   const [activeRegion, setActiveRegion] = useState<string | null>(
-    initialRegion && GALLERY_REGIONS.some((r) => r.slug === initialRegion) ? initialRegion : null
+    initialRegion && regions.some((region) => region.slug === initialRegion) ? initialRegion : null
   );
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
@@ -35,7 +38,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
       activeRegion
         ? galleryItems.filter((item) => item.regionSlug === activeRegion)
         : galleryItems,
-    [activeRegion]
+    [activeRegion, galleryItems]
   );
 
   const selectRegion = useCallback((slug: string | null) => {
@@ -98,7 +101,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
       <Hero
         title="Галерея Аргентины"
         subtitle="Фото из авторских туров — Патагония, вино, танго и природные чудеса"
-        image={getServicePageHeroImage("gallery")}
+        image={heroImage}
         compact
       />
 
@@ -124,7 +127,7 @@ export default function GalleryPageView({ initialRegion }: GalleryPageViewProps)
           >
             Все регионы
           </button>
-          {GALLERY_REGIONS.map((region) => (
+          {regions.map((region) => (
             <button
               key={region.slug}
               type="button"

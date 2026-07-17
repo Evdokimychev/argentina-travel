@@ -18,6 +18,8 @@ import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
 import { fetchMarketplaceTours } from "@/data/marketplace-tours-server";
+import { pickBlogIndexFeaturedTours } from "@/lib/blog-index-tours";
+import { toBlogIndexCatalog } from "@/lib/blog-index-payload";
 
 const PAGE_TITLE = "Блог — советы и маршруты по Аргентине";
 const PAGE_DESCRIPTION =
@@ -56,11 +58,13 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
   const locale = await getServerI18nLocale();
   const cookieStore = await cookies();
   const history = parseBlogReadingHistoryCookie(cookieStore.get(BLOG_READING_HISTORY_COOKIE)?.value);
-  const [posts, initialTours] = await Promise.all([
+  const [posts, tours] = await Promise.all([
     resolveBlogCatalog(locale),
     fetchMarketplaceTours(),
   ]);
   const indexable = filterIndexableBlogPosts(posts);
+  const indexCatalog = toBlogIndexCatalog(indexable);
+  const featuredTours = pickBlogIndexFeaturedTours(tours, 4);
 
   const heroVariantCookie = cookieStore.get(BLOG_HERO_VARIANT_COOKIE)?.value;
   const heroVariant = resolveBlogHeroVariantFromCookie(
@@ -95,9 +99,9 @@ export default async function BlogPage({ searchParams }: BlogPageProps) {
       />
       <BlogIndexHero variant={heroVariant} indexablePostsCount={indexable.length} />
       <BlogIndexView
-        posts={posts}
-        initialTours={initialTours}
-        initialPersonalizedPosts={initialPersonalized}
+        posts={indexCatalog}
+        featuredTours={featuredTours}
+        initialPersonalizedSlugs={initialPersonalized.map((post) => post.slug)}
         heroVariant={heroVariant}
         initialTag={readSearchParam(params, "tag")}
         initialCategory={readSearchParam(params, "category")}

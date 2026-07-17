@@ -18,6 +18,8 @@ function parseDraft(
   value: unknown,
   row: {
     owner_user_id: string;
+    market_code: string;
+    row_version: number;
     product_type: string;
     status: string;
     moderation_status: string;
@@ -32,6 +34,8 @@ function parseDraft(
   return {
     ...candidate,
     ownerUserId: row.owner_user_id,
+    marketId: row.market_code,
+    rowVersion: row.row_version,
     type: row.product_type === "excursion" ? "excursion" : "tour",
     status: row.status === "published" ? "published" : "draft",
     archived: row.status === "archived" || Boolean(candidate.archived),
@@ -55,14 +59,17 @@ export async function GET() {
   const { data, error } = await supabase
     .from("tours")
     .select(
-      "owner_user_id, product_type, status, moderation_status, moderation_notes, updated_at, editor_draft"
+      "owner_user_id, market_code, row_version, product_type, status, moderation_status, moderation_notes, updated_at, editor_draft"
     )
     .eq("owner_user_id", sessionUser.id)
     .order("updated_at", { ascending: false })
     .limit(500);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось загрузить предложения. Повторите попытку позже." },
+      { status: 503 }
+    );
   }
 
   return NextResponse.json({

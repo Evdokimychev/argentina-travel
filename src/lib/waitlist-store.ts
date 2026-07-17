@@ -1,7 +1,5 @@
 import type { TourDetail } from "@/types";
 import type { CheckoutFormState } from "@/components/tour-detail/checkout/types";
-import { shouldSeedDemoData } from "@/lib/demo-mode";
-import { tourCover } from "@/lib/seed-media";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { getOrganizerTourListings, getOrganizerTourOwnerId } from "@/lib/organizer-tour-store";
 import { createBooking } from "@/lib/bookings-store";
@@ -22,6 +20,7 @@ import {
   WAITLIST_UPDATED_EVENT,
 } from "@/types/waitlist";
 import { isActiveWaitlistStatus } from "@/data/waitlist-statuses";
+import { getDemoWaitlistSeeds } from "@/lib/waitlist-demo-seeds-active";
 
 function createId(prefix: string): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) {
@@ -106,72 +105,7 @@ function resolveOrganizerTourId(tourSlug: string): string | undefined {
 }
 
 function seedDemoWaitlist(): WaitlistEntry[] {
-  if (!shouldSeedDemoData()) return [];
-  const now = new Date().toISOString();
-  const weekAgo = new Date(Date.now() - 5 * 86400000).toISOString();
-
-  const demo: WaitlistEntry[] = [
-    {
-      id: "waitlist-demo-1",
-      userId: "guest-demo@example.com",
-      organizerTourId: resolveOrganizerTourId("patagonia-glaciers"),
-      tourId: "1",
-      tourSlug: "patagonia-glaciers",
-      tourTitle: "Ледники Патагонии: Перито-Морено и Torres del Paine",
-      tourImage: tourCover("patagonia-glaciers"),
-      tourDateId: "dt3",
-      startDate: "2025-12-01",
-      endDate: "2025-12-10",
-      guests: 8,
-      contactName: "Анна Петрова",
-      contactEmail: "guest-demo@example.com",
-      contactPhone: "+7 900 111-22-33",
-      touristComment: "Готовы подождать до декабря, если наберётся группа.",
-      status: "waiting",
-      statusHistory: [
-        createStatusChange({ from: null, to: "waiting", changedBy: "system" }),
-      ],
-      organizerComments: [],
-      createdAt: weekAgo,
-      updatedAt: weekAgo,
-    },
-    {
-      id: "waitlist-demo-2",
-      userId: "guest-demo2@example.com",
-      organizerTourId: resolveOrganizerTourId("mendoza-wine"),
-      tourId: "3",
-      tourSlug: "mendoza-wine",
-      tourTitle: "Винный тур в Мендосе",
-      tourImage: tourCover("mendoza-wine"),
-      tourDateId: "dt-default",
-      startDate: "2025-11-01",
-      endDate: "2025-11-07",
-      guests: 4,
-      contactName: "Игорь Смирнов",
-      contactEmail: "guest-demo2@example.com",
-      contactPhone: "+7 916 555-44-33",
-      status: "contacted",
-      statusHistory: [
-        createStatusChange({ from: null, to: "waiting", changedBy: "system" }),
-        createStatusChange({
-          from: "waiting",
-          to: "contacted",
-          changedBy: "organizer",
-          note: "Написали в WhatsApp — ждём ответа",
-        }),
-      ],
-      organizerComments: [
-        {
-          id: "wl-comment-demo-1",
-          text: "Возможно освободится 1 место после отмены — держим в резерве.",
-          authorName: "Организатор",
-          createdAt: weekAgo,
-        },
-      ],
-      createdAt: weekAgo,
-      updatedAt: now,
-    },
-  ];
+  const demo = getDemoWaitlistSeeds();
 
   if (typeof window !== "undefined") {
     writeAll(demo);

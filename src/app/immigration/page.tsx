@@ -43,7 +43,10 @@ export default async function ImmigrationPage() {
   return (
     <>
       <BreadcrumbListJsonLd items={breadcrumbItems} />
-      <ImmigrationHubView flightHint={<ImmigrationFlightHint locale={locale} />} />
+      <ImmigrationHubView
+        heroImage={getImmigrationHubHeroImage()}
+        flightHint={<ImmigrationFlightHint locale={locale} />}
+      />
     </>
   );
 }

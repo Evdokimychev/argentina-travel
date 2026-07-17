@@ -2,37 +2,38 @@
 
 import { useState } from "react";
 import { Download, Wallet } from "lucide-react";
-import FormattedPrice from "@/components/FormattedPrice";
 import { AdminTableState } from "@/components/admin/AdminTableState";
 import { NativeSelect } from "@/components/ui/native-select";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { cabinetCardClass, cabinetTableHeaderClass } from "@/lib/cabinet-ui";
+import { formatLedgerAmount } from "@/lib/payments/format-money";
 import { CabinetTableWrap } from "@/components/ui/table";
 import type { AdminPaymentPeriodFilter } from "@/types/admin-payments";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import type { CommissionReportTotals } from "@/types/platform-commission";
-import type { PayoutRecordRow } from "@/types/payment-platform";
+import type { PayoutRecordRow, PayoutSummary } from "@/types/payment-platform";
 import { PAYOUT_RECORD_STATUS_LABELS } from "@/types/payment-platform";
+import { useAdminContext } from "@/context/AdminContext";
 
 type PayoutsApiResponse = {
   payouts?: PayoutRecordRow[];
-  payoutSummary?: {
-    totalPending: number;
-    totalApproved: number;
-    totalExported: number;
-    totalCompleted: number;
-    recordCount: number;
-  };
+  payoutSummary?: PayoutSummary;
   commissionReport?: CommissionReportTotals;
   error?: string;
 };
 
 export function AdminPayoutsPanel() {
+  const { hasCapability } = useAdminContext();
+  const canCreate = hasCapability("finance.payouts.create");
+  const canApprove = hasCapability("finance.payouts.approve");
+  const canExport = hasCapability("finance.payouts.export");
+  const canComplete = hasCapability("finance.payouts.complete");
   const [period, setPeriod] = useState<AdminPaymentPeriodFilter>("30d");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [organizerUserId, setOrganizerUserId] = useState("");
+  const [payoutCurrency, setPayoutCurrency] = useState<"RUB" | "ARS" | "USD" | "EUR">("USD");
 
   const query = `/api/admin/payments/payouts?period=${period}&status=${statusFilter}`;
   const { data, loading, error, refresh } = useAdminApi<PayoutsApiResponse>(query);
@@ -45,6 +46,14 @@ export function AdminPayoutsPanel() {
     action: "approve" | "complete" | "cancel" | "create_batch",
     payoutId?: string
   ) {
+    const confirmation = action === "approve"
+      ? "Одобрить пакет выплаты? После этого станет доступен банковский CSV."
+      : action === "complete"
+        ? "Подтвердить, что банковский перевод действительно выполнен? Это финансовое действие нельзя выдавать за автоматическую оплату."
+        : action === "cancel"
+          ? "Отменить пакет выплаты? Начисления должны остаться доступными для следующего пакета."
+          : "Создать пакет из всех доступных начислений выбранного организатора?";
+    if (!window.confirm(confirmation)) return;
     setActionLoading(payoutId ?? action);
     setMessage(null);
     try {
@@ -52,6 +61,7 @@ export function AdminPayoutsPanel() {
       if (payoutId) body.payoutId = payoutId;
       if (action === "create_batch" && organizerUserId.trim()) {
         body.organizerUserId = organizerUserId.trim();
+        body.currency = payoutCurrency;
       }
 
       const response = await fetch("/api/admin/payments/payouts", {
@@ -82,10 +92,14 @@ export function AdminPayoutsPanel() {
   }
 
   async function exportBatch(payoutId: string, currentStatus: PayoutRecordRow["status"]) {
+    if (currentStatus === "approved" && !window.confirm("Экспортировать банковский CSV и отметить пакет как экспортированный? Сам перевод выполняется вне сайта.")) return;
     setActionLoading(`export-${payoutId}`);
     setMessage(null);
     try {
-      const response = await fetch(`/api/admin/payments/payouts/${payoutId}/export`);
+      const response = await fetch(`/api/admin/payments/payouts/${payoutId}/export`, {
+        method: currentStatus === "approved" ? "POST" : "GET",
+        cache: "no-store",
+      });
       if (!response.ok) {
         const payload = (await response.json().catch(() => ({}))) as { error?: string };
         setMessage(payload.error ?? "Не удалось экспортировать пакет");
@@ -163,30 +177,47 @@ export function AdminPayoutsPanel() {
             <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-charcoal">
               Организаторов: {commissionReport.organizerCount}
             </span>
-            <span className="rounded-full bg-success-muted px-3 py-1 text-xs font-medium text-success">
-              Брутто: <FormattedPrice priceUsd={commissionReport.grossTotal} />
-            </span>
-            <span className="rounded-full bg-sky/10 px-3 py-1 text-xs font-medium text-sky">
-              Комиссия: <FormattedPrice priceUsd={commissionReport.commissionTotal} />
-            </span>
-            <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-medium text-charcoal">
-              Нетто организаторов:{" "}
-              <FormattedPrice priceUsd={commissionReport.organizerNetTotal} />
-            </span>
           </div>
+          <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {commissionReport.byCurrency.map((bucket) => (
+              <div key={bucket.currency} className="rounded-xl bg-gray-50 p-3 text-sm text-slate">
+                <p className="font-semibold text-charcoal">{bucket.currency}</p>
+                <p className="mt-1">Брутто: {formatLedgerAmount(bucket.grossTotal, bucket.currency)}</p>
+                <p>Комиссия: {formatLedgerAmount(bucket.commissionTotal, bucket.currency)}</p>
+                <p>
+                  Нетто: {formatLedgerAmount(bucket.organizerNetTotal, bucket.currency)}
+                </p>
+              </div>
+            ))}
+          </div>
+          {commissionReport.invalidRecordCount > 0 ? (
+            <p className="mt-3 text-sm text-error">
+              Не включено некорректных начислений: {commissionReport.invalidRecordCount}.
+            </p>
+          ) : null}
         </section>
       ) : null}
 
       {payoutSummary ? (
         <section className={`${cabinetCardClass} p-4 sm:p-6`}>
           <h2 className="font-heading text-base font-bold text-charcoal">Сводка выплат</h2>
-          <p className="mt-2 text-sm text-slate">
-            Записей: {payoutSummary.recordCount}. Ожидают:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalPending} />, одобрено:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalApproved} />, экспортировано:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalExported} />, завершено:{" "}
-            <FormattedPrice priceUsd={payoutSummary.totalCompleted} />.
-          </p>
+          <p className="mt-2 text-sm text-slate">Записей: {payoutSummary.recordCount}.</p>
+          <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+            {payoutSummary.byCurrency.map((bucket) => (
+              <div key={bucket.currency} className="rounded-xl bg-gray-50 p-3 text-sm text-slate">
+                <p className="font-semibold text-charcoal">{bucket.currency}</p>
+                <p className="mt-1">Ожидают: {formatLedgerAmount(bucket.totalPending, bucket.currency)}</p>
+                <p>Одобрено: {formatLedgerAmount(bucket.totalApproved, bucket.currency)}</p>
+                <p>Экспортировано: {formatLedgerAmount(bucket.totalExported, bucket.currency)}</p>
+                <p>Завершено: {formatLedgerAmount(bucket.totalCompleted, bucket.currency)}</p>
+              </div>
+            ))}
+          </div>
+          {payoutSummary.invalidRecordCount > 0 ? (
+            <p className="mt-3 text-sm text-error">
+              Не включено некорректных записей: {payoutSummary.invalidRecordCount}.
+            </p>
+          ) : null}
           <p className="mt-1 text-xs text-slate">
             Цепочка: ожидает → одобрено → экспортировано → завершено (банковский перевод вне
             системы).
@@ -208,9 +239,22 @@ export function AdminPayoutsPanel() {
             placeholder="ID организатора"
             className="rounded-xl border border-gray-200 px-3 py-2 text-sm"
           />
+          <NativeSelect
+            value={payoutCurrency}
+            onChange={(event) =>
+              setPayoutCurrency(event.target.value as "RUB" | "ARS" | "USD" | "EUR")
+            }
+            className="w-32"
+            aria-label="Валюта пакета выплаты"
+          >
+            <option value="RUB">RUB</option>
+            <option value="ARS">ARS</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+          </NativeSelect>
           <button
             type="button"
-            disabled={actionLoading === "create_batch" || !organizerUserId.trim()}
+            disabled={actionLoading === "create_batch" || !organizerUserId.trim() || !canCreate}
             onClick={() => void runAction("create_batch")}
             className="rounded-xl bg-brand px-3 py-2 text-sm font-semibold text-white hover:bg-brand-dark disabled:opacity-60"
           >
@@ -253,7 +297,7 @@ export function AdminPayoutsPanel() {
                       {PAYOUT_RECORD_STATUS_LABELS[row.status]}
                     </td>
                     <td className="px-4 py-3 font-medium text-charcoal">
-                      <FormattedPrice priceUsd={row.amount} /> {row.currency}
+                      {formatLedgerAmount(row.amount, row.currency)}
                     </td>
                     <td className="px-4 py-3 text-xs text-slate">
                       {row.exportedAt ? (
@@ -272,6 +316,9 @@ export function AdminPayoutsPanel() {
                         onExport={() => void exportBatch(row.id, row.status)}
                         onComplete={() => void runAction("complete", row.id)}
                         onCancel={() => void runAction("cancel", row.id)}
+                        canApprove={canApprove}
+                        canExport={canExport}
+                        canComplete={canComplete}
                       />
                     </td>
                   </tr>
@@ -292,6 +339,9 @@ function PayoutRowActions({
   onExport,
   onComplete,
   onCancel,
+  canApprove,
+  canExport,
+  canComplete,
 }: {
   row: PayoutRecordRow;
   actionLoading: string | null;
@@ -299,6 +349,9 @@ function PayoutRowActions({
   onExport: () => void;
   onComplete: () => void;
   onCancel: () => void;
+  canApprove: boolean;
+  canExport: boolean;
+  canComplete: boolean;
 }) {
   const busy = actionLoading === row.id || actionLoading === `export-${row.id}`;
 
@@ -308,7 +361,7 @@ function PayoutRowActions({
 
   return (
     <div className="flex flex-wrap gap-2">
-      {(row.status === "pending" || row.status === "scheduled") && (
+      {canApprove && (row.status === "pending" || row.status === "scheduled") && (
         <button
           type="button"
           disabled={busy}
@@ -318,7 +371,7 @@ function PayoutRowActions({
           Одобрить
         </button>
       )}
-      {(row.status === "approved" || row.status === "exported") && (
+      {canExport && (row.status === "approved" || row.status === "exported") && (
         <button
           type="button"
           disabled={busy}
@@ -329,7 +382,7 @@ function PayoutRowActions({
           CSV
         </button>
       )}
-      {row.status === "exported" && (
+      {canComplete && row.status === "exported" && (
         <button
           type="button"
           disabled={busy}
@@ -339,7 +392,7 @@ function PayoutRowActions({
           Подтвердить перевод
         </button>
       )}
-      {row.status !== "exported" && (
+      {canApprove && row.status !== "exported" && (
         <button
           type="button"
           disabled={busy}

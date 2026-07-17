@@ -1,6 +1,6 @@
 import type { TourListing } from "@/types";
 import { filterDefaultCatalogTours } from "@/lib/catalog-country-relevance";
-import { resolveListingOwnerUserId } from "@/lib/organizer-public";
+import { resolveListingOwnerUserId } from "@/lib/organizer-public-routing";
 import { isPartnerTourListing } from "@/lib/tripster/partner-tour-utils";
 import { formatTours, toursWord } from "@/lib/pluralize";
 

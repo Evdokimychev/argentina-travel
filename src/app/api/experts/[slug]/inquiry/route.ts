@@ -4,6 +4,13 @@ import { fetchExpertBySlug } from "@/lib/local-experts-server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
+import { publicApiError } from "@/lib/public-api/safe-error";
+
+const SAFE_INQUIRY_VALIDATION_ERRORS = new Set([
+  "Введите сообщение",
+  "Сообщение слишком длинное",
+  "Эксперт недоступен для обращений",
+]);
 
 export async function POST(
   request: Request,
@@ -11,7 +18,7 @@ export async function POST(
 ) {
   if (!isSupabaseAuthEnabled()) {
     return NextResponse.json(
-      { error: "Обращения доступны после настройки Supabase" },
+      publicApiError("SERVICE_UNAVAILABLE"),
       { status: 503 }
     );
   }
@@ -22,12 +29,12 @@ export async function POST(
     const sessionUser = await loadSessionUserFromSupabase(supabase);
 
     if (!sessionUser) {
-      return NextResponse.json({ error: "Войдите в аккаунт" }, { status: 401 });
+      return NextResponse.json(publicApiError("AUTH_REQUIRED"), { status: 401 });
     }
 
     const expert = await fetchExpertBySlug(supabase, slug);
     if (!expert || expert.status !== "published") {
-      return NextResponse.json({ error: "Эксперт не найден" }, { status: 404 });
+      return NextResponse.json(publicApiError("RESOURCE_NOT_FOUND"), { status: 404 });
     }
 
     const body = (await request.json()) as { message?: string };
@@ -41,7 +48,10 @@ export async function POST(
     });
 
     if ("error" in result) {
-      return NextResponse.json({ error: result.error }, { status: 400 });
+      if (SAFE_INQUIRY_VALIDATION_ERRORS.has(result.error)) {
+        return NextResponse.json({ code: "INVALID_REQUEST", error: result.error }, { status: 400 });
+      }
+      return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 503 });
     }
 
     return NextResponse.json({
@@ -51,10 +61,7 @@ export async function POST(
         ? `/profile/messages?thread=${encodeURIComponent(result.threadId)}`
         : null,
     });
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Unexpected error" },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json(publicApiError("SERVICE_UNAVAILABLE"), { status: 500 });
   }
 }

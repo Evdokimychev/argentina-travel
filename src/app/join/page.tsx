@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import JoinPageView from "@/components/join/JoinPageView";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
+import { getPlaceCoverAlt, getPlaceCoverImage } from "@/lib/media-resolver";
 
 export const metadata: Metadata = buildPublicPageMetadata({
   title: "Авторам путешествий",
@@ -10,5 +11,10 @@ export const metadata: Metadata = buildPublicPageMetadata({
 });
 
 export default function JoinPage() {
-  return <JoinPageView />;
+  return (
+    <JoinPageView
+      heroImage={getPlaceCoverImage("perito-moreno-glacier")}
+      heroImageAlt={getPlaceCoverAlt("perito-moreno-glacier")}
+    />
+  );
 }

@@ -1,21 +1,22 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { resolveBookingPaymentSummary } from "@/lib/booking-payment";
 import { resolveBookingPaymentStatus } from "@/lib/booking-params";
 import { fetchBookingById } from "@/lib/bookings-server";
 import {
   createRefundRequest,
-  executeRefundAttempt,
 } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { BookingPaymentGateway } from "@/types/booking-payment";
 import type { PaymentProviderId } from "@/types/payment-webhook";
+import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
   bookingId?: string;
   amountUsd?: number;
   reason?: string;
+  operationId?: string;
+  sourceTransactionId?: string;
 };
 
 function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
@@ -25,13 +26,22 @@ function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
 }
 
 export async function POST(request: Request) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.refunds.prepare");
   if (!auth.ok) return auth.response;
+  if (auth.via !== "session" || !isUuid(auth.actorId)) {
+    return NextResponse.json({ error: "Финансовые операции требуют личную сессию" }, { status: 403 });
+  }
 
   const body = (await request.json().catch(() => ({}))) as PostBody;
   const bookingId = body.bookingId?.trim();
   if (!bookingId) {
     return NextResponse.json({ error: "Укажите идентификатор бронирования" }, { status: 400 });
+  }
+  if (!isUuid(body.operationId)) {
+    return NextResponse.json({ error: "Некорректный идентификатор операции" }, { status: 400 });
+  }
+  if (body.sourceTransactionId && !isUuid(body.sourceTransactionId)) {
+    return NextResponse.json({ error: "Некорректное исходное списание" }, { status: 400 });
   }
 
   const supabase = createSupabaseAdminClient();
@@ -51,7 +61,7 @@ export async function POST(request: Request) {
   const summary = resolveBookingPaymentSummary(booking);
   const amount = Math.max(
     0,
-    Math.round(body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0)
+    Math.round((body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0) * 100) / 100
   );
   if (amount <= 0) {
     return NextResponse.json({ error: "Укажите сумму возврата" }, { status: 400 });
@@ -63,6 +73,8 @@ export async function POST(request: Request) {
     currency: "USD",
     provider: gatewayToProvider(booking.paymentLink?.gateway),
     requestedBy: auth.actorId,
+    operationId: body.operationId,
+    sourceTransactionId: body.sourceTransactionId,
     reason: body.reason,
     metadata: {
       source: "admin_refund_action",
@@ -74,43 +86,10 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: created.error }, { status: 400 });
   }
 
-  const attempt = await executeRefundAttempt(supabase, {
-    transactionId: created.transaction.id,
-    actorUserId: auth.actorId,
-    adminNotes: "Запуск возврата из админ-панели",
-    strictProviderConfig: false,
-    allowManualCompletion: false,
-  });
-
-  const transaction = attempt.ok ? attempt.transaction : created.transaction;
-  const providerAttempt = attempt.ok
-    ? {
-        executed: attempt.providerExecuted,
-        skippedReason: attempt.skippedReason ?? null,
-      }
-    : {
-        executed: false,
-        error: attempt.error,
-        code: attempt.code,
-      };
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "payment.refund_created",
-    entityType: "payment_transaction",
-    entityId: transaction.id,
-    payload: {
-      bookingId,
-      provider: transaction.provider,
-      providerAttempt,
-    },
-    ipAddress: clientIpFromRequest(request),
-  });
-
   return NextResponse.json(
     {
-      transaction,
-      providerAttempt,
+      transaction: created.transaction,
+      nextStep: "approval_required",
     },
     { status: 201 }
   );

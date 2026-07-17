@@ -19,6 +19,8 @@ import {
 
 export type CmsDbClient = SupabaseClient<Database>;
 
+const CMS_PUBLIC_QUERY_TIMEOUT_MS = 1_500;
+
 export type CmsResolverMetadata = {
   requestedLocale: I18nLocale;
   translationStatus: CmsTranslationStatus;
@@ -100,6 +102,8 @@ export async function fetchPublishedCmsDocument(
     .select("*")
     .eq("id", id)
     .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false)
     .maybeSingle();
 
   if (error || !data) return null;
@@ -116,7 +120,9 @@ export async function fetchPublishedCmsDocumentsByType(
     .select("*")
     .eq("doc_type", docType)
     .eq("locale", locale)
-    .eq("status", "published");
+    .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false);
 
   if (error || !data) return [];
   return data.map(rowToCmsDocument);
@@ -133,9 +139,11 @@ export async function fetchPublishedCmsDocumentsMergedByLocaleChain(
 ): Promise<CmsDocument[]> {
   const bySlug = new Map<string, CmsDocument>();
   const chain = [...cmsLocaleFallbackChain(locale)].reverse();
+  const docsByLocale = await Promise.all(
+    chain.map((tryLocale) => fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale)),
+  );
 
-  for (const tryLocale of chain) {
-    const docs = await fetchPublishedCmsDocumentsByType(supabase, docType, tryLocale);
+  for (const docs of docsByLocale) {
     for (const doc of docs) {
       bySlug.set(doc.slug, doc);
     }
@@ -155,8 +163,14 @@ export async function resolvePublishedCmsLocaleSlugs(
   const slugs: Partial<Record<I18nLocale, string>> = {};
   let hasRuOverride = false;
 
-  for (const locale of I18N_LOCALES) {
-    const doc = await fetchPublishedCmsDocument(supabase, docType, slug, locale);
+  const localizedDocuments = await Promise.all(
+    I18N_LOCALES.map(async (locale) => ({
+      locale,
+      doc: await fetchPublishedCmsDocument(supabase, docType, slug, locale),
+    })),
+  );
+
+  for (const { locale, doc } of localizedDocuments) {
     if (locale === "ru" && doc) hasRuOverride = true;
     if (doc && !doc.seo.noIndex && isCmsDocumentComplete(doc)) {
       slugs[locale] = doc.slug;
@@ -193,7 +207,12 @@ export async function fetchCmsTranslationStatusForSlug(
   options?: { ruFallbackComplete?: boolean }
 ): Promise<CmsTranslationStatus> {
   const ids = I18N_LOCALES.map((locale) => cmsDocumentId(docType, slug, locale));
-  const { data, error } = await supabase.from("content_documents").select("*").in("id", ids);
+  const { data, error } = await supabase
+    .from("content_documents")
+    .select("*")
+    .in("id", ids)
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false);
   if (error) {
     return buildDefaultTranslationStatus(options?.ruFallbackComplete ?? false);
   }
@@ -228,7 +247,9 @@ export async function listPublishedCmsSlugs(
     .select("slug, seo")
     .eq("doc_type", docType)
     .eq("locale", locale)
-    .eq("status", "published");
+    .eq("status", "published")
+    .abortSignal(AbortSignal.timeout(CMS_PUBLIC_QUERY_TIMEOUT_MS))
+    .retry(false);
 
   const noIndexSlugs = new Set(
     (data ?? [])
@@ -271,8 +292,12 @@ export async function resolveWithPublishedCmsOverride<T>(options: {
   const supabase = options.supabase === undefined ? await getCmsServerClient() : options.supabase;
   if (!supabase) return fallback;
 
-  for (const tryLocale of cmsLocaleFallbackChain(locale)) {
-    const override = await fetchPublishedCmsDocument(supabase, docType, slug, tryLocale);
+  const chain = cmsLocaleFallbackChain(locale);
+  const overrides = await Promise.all(
+    chain.map((tryLocale) => fetchPublishedCmsDocument(supabase, docType, slug, tryLocale)),
+  );
+
+  for (const override of overrides) {
     if (override) {
       if (isUsable && !isUsable(override)) continue;
       onResolvedDocument?.(override);

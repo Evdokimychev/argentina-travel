@@ -141,7 +141,12 @@ export async function buildCanonicalBooking(
   supabase: DbClient,
   command: CreateBookingCommand,
   authUserId?: string | null
-): Promise<{ booking: Booking; organizerUserId: string; requestFingerprint: string }> {
+): Promise<{
+  booking: Booking;
+  organizerUserId: string;
+  requestFingerprint: string;
+  productKind: "tour" | "excursion";
+}> {
   const databaseSource = await fetchPublishedTourBookingSourceByIdServer(command.tourId);
   const canonicalTour = databaseSource
     ? null
@@ -263,5 +268,10 @@ export async function buildCanonicalBooking(
   booking.amountDue = paymentSummary.remainingAmountUsd;
   booking.amountPaid = paymentSummary.paidAmountUsd;
 
-  return { booking, organizerUserId: ownerUserId, requestFingerprint };
+  return {
+    booking,
+    organizerUserId: ownerUserId,
+    requestFingerprint,
+    productKind: tour.productType === "excursion" ? "excursion" : "tour",
+  };
 }

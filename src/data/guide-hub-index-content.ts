@@ -1,6 +1,5 @@
 import { GUIDE_INDEX_INTRO, GUIDE_TOPICS } from "@/data/guide-topics";
 // TODO(E77 Phase 5+): translate GUIDE_HUB topic groups, FAQ, planning cards via CMS or i18n bundles.
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { guideTopicHref } from "@/lib/guide-topics";
 import type { GuideIndexHubContent } from "@/types/guide-index-hub";
 
@@ -95,7 +94,6 @@ export const GUIDE_HUB: GuideIndexHubContent = {
   heroTitle: "Путеводитель по Аргентине",
   heroSubtitle:
     "14 тем для планирования поездки: перелёты, регионы, деньги, культура и безопасность — с турами и сервисами на платформе.",
-  heroImage: getServicePageHeroImage("guide-hub"),
   heroCtas: [
     {
       label: "🇦🇷 Об Аргентине",

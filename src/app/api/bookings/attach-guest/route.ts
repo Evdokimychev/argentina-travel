@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { isSupabaseBookingsEnabled } from "@/lib/auth-mode";
-import { attachGuestBookingsByEmail } from "@/lib/bookings-server";
+import { attachGuestBookingsToCurrentUser } from "@/lib/bookings-server";
 import { attachGuestShopOrdersByEmail } from "@/lib/shop-order-server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
 
@@ -21,20 +21,16 @@ export async function POST() {
     }
 
     const sessionUser = await loadSessionUserFromSupabase(supabase);
-    if (!sessionUser?.email) {
-      return NextResponse.json({ error: "Profile email required" }, { status: 400 });
+    if (!sessionUser || !authUser.email) {
+      return NextResponse.json({ error: "Verified account email required" }, { status: 400 });
     }
 
-    const attachedBookings = await attachGuestBookingsByEmail(
-      supabase,
-      authUser.id,
-      sessionUser.email
-    );
+    const attachedBookings = await attachGuestBookingsToCurrentUser(supabase);
 
     const attachedShopOrders = await attachGuestShopOrdersByEmail(
       supabase,
       authUser.id,
-      sessionUser.email
+      authUser.email
     );
 
     return NextResponse.json({ attached: attachedBookings, attachedShopOrders });

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { NativeSelect } from "@/components/ui/native-select";
@@ -9,6 +9,7 @@ import CapabilityGate from "@/components/admin/CapabilityGate";
 import { useAdminContext } from "@/context/AdminContext";
 import { useAdminApi } from "@/hooks/useAdminApi";
 import { formatAdminWhen } from "@/lib/admin/format";
+import { USER_MANAGEABLE_ROLES } from "@/lib/admin/user-identity-management";
 import { cabinetCardClass, cabinetTableHeaderClass, cabinetTableWrapClass } from "@/lib/cabinet-ui";
 import type { AccountRoleDb } from "@/types/database";
 
@@ -24,9 +25,9 @@ type AdminUserRow = {
   createdAt: string;
 };
 
-type UsersResponse = { users?: AdminUserRow[] };
+type UsersResponse = { users?: AdminUserRow[]; total?: number; limit?: number; offset?: number };
 
-const ALL_ROLES: AccountRoleDb[] = ["tourist", "organizer", "admin"];
+const FILTER_ROLES: AccountRoleDb[] = ["tourist", "organizer", "admin"];
 
 const ROLE_LABELS: Record<AccountRoleDb, string> = {
   tourist: "Турист",
@@ -46,6 +47,13 @@ function UserBlockButton({
   const [busy, setBusy] = useState(false);
 
   async function toggle() {
+    const action = isBlocked ? "разблокировать" : "заблокировать";
+    const confirmed = window.confirm(
+      isBlocked
+        ? "Разблокировать вход этого пользователя?"
+        : "Заблокировать вход и завершить активные сеансы этого пользователя?",
+    );
+    if (!confirmed) return;
     setBusy(true);
     try {
       const res = await fetch(`/api/admin/users/${userId}`, {
@@ -55,7 +63,7 @@ function UserBlockButton({
       });
       if (!res.ok) {
         const json = (await res.json()) as { error?: string };
-        throw new Error(json.error ?? "Ошибка");
+        throw new Error(json.error ?? `Не удалось ${action} пользователя`);
       }
       onDone();
     } catch (toggleError) {
@@ -80,9 +88,13 @@ function UserManagePanel({
   onDone: () => void;
 }) {
   const [roles, setRoles] = useState<AccountRoleDb[]>(
-    user.roles.length ? user.roles : ["tourist"]
+    user.roles.filter((role) => role !== "admin").length
+      ? user.roles.filter((role) => role !== "admin")
+      : ["tourist"]
   );
-  const [activeRole, setActiveRole] = useState<AccountRoleDb>(user.activeRole);
+  const [activeRole, setActiveRole] = useState<AccountRoleDb>(
+    user.activeRole === "admin" ? "tourist" : user.activeRole,
+  );
   const [adminNotes, setAdminNotes] = useState(user.adminNotes ?? "");
   const [busy, setBusy] = useState(false);
 
@@ -97,6 +109,15 @@ function UserManagePanel({
   }
 
   async function save() {
+    const rolesChanged =
+      [...roles].sort().join(",") !== [...user.roles.filter((role) => role !== "admin")].sort().join(",") ||
+      activeRole !== user.activeRole;
+    if (
+      rolesChanged &&
+      !window.confirm("Сохранить новые роли пользователя? Изменение сразу повлияет на доступ к кабинету.")
+    ) {
+      return;
+    }
     setBusy(true);
     try {
       const safeRoles = roles.length ? roles : (["tourist"] as AccountRoleDb[]);
@@ -125,8 +146,12 @@ function UserManagePanel({
   return (
     <div className="space-y-3 rounded-2xl border border-gray-100 bg-gray-50/80 p-4 text-sm">
       <p className="font-medium text-charcoal">{user.fullName}</p>
+      <p className="text-xs leading-relaxed text-slate">
+        Роль организатора можно выдать только после одобрения заявки. Доступ администраторов
+        настраивается отдельно в разделе «Команда и доступы».
+      </p>
       <div className="flex flex-wrap gap-2">
-        {ALL_ROLES.map((role) => (
+        {USER_MANAGEABLE_ROLES.map((role) => (
           <label key={role} className="flex items-center gap-2 text-xs text-charcoal">
             <input
               type="checkbox"
@@ -143,7 +168,7 @@ function UserManagePanel({
           value={activeRole}
           onChange={(e) => setActiveRole(e.target.value as AccountRoleDb)}
         >
-          {(roles.length ? roles : ALL_ROLES).map((role) => (
+          {(roles.length ? roles : USER_MANAGEABLE_ROLES).map((role) => (
             <option key={role} value={role}>
               {ROLE_LABELS[role]}
             </option>
@@ -164,36 +189,30 @@ function UserManagePanel({
 export default function UsersView() {
   const { hasCapability } = useAdminContext();
   const canManage = hasCapability("users.manage");
-  const { data, loading, error, refresh } = useAdminApi<UsersResponse>("/api/admin/users");
   const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search.trim());
   const [roleFilter, setRoleFilter] = useState<AccountRoleDb | "">("");
   const [statusFilter, setStatusFilter] = useState<"" | "active" | "blocked">("");
+  const [page, setPage] = useState(0);
   const [manageId, setManageId] = useState<string | null>(null);
-
-  const filtered = useMemo(() => {
-    const users = data?.users ?? [];
-    const query = search.trim().toLowerCase();
-    return users.filter((user) => {
-      if (roleFilter && !user.roles.includes(roleFilter)) return false;
-      if (statusFilter === "blocked" && !user.isBlocked) return false;
-      if (statusFilter === "active" && user.isBlocked) return false;
-      if (!query) return true;
-      const haystack = [user.fullName, user.email, user.phone, user.roles.join(" ")]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return haystack.includes(query);
-    });
-  }, [data?.users, roleFilter, search, statusFilter]);
-
-  const managedUser = filtered.find((u) => u.id === manageId) ?? data?.users?.find((u) => u.id === manageId);
+  const queryUrl = useMemo(() => {
+    const params = new URLSearchParams({ limit: "50", offset: String(page * 50) });
+    if (deferredSearch) params.set("q", deferredSearch);
+    if (roleFilter) params.set("role", roleFilter);
+    if (statusFilter) params.set("status", statusFilter);
+    return `/api/admin/users?${params.toString()}`;
+  }, [deferredSearch, page, roleFilter, statusFilter]);
+  const { data, loading, error, refresh } = useAdminApi<UsersResponse>(queryUrl);
+  const users = useMemo(() => data?.users ?? [], [data?.users]);
+  const total = data?.total ?? 0;
+  const managedUser = users.find((user) => user.id === manageId);
 
   return (
     <CapabilityGate capability="users.view">
       <AdminPageShell>
         <AdminPageHeader
           title="Пользователи"
-          subtitle="Аккаунты платформы (последние 100)"
+          subtitle={`Все аккаунты платформы · найдено ${total}`}
           actions={
             <Button variant="outline" onClick={() => void refresh()} disabled={loading}>
               Обновить
@@ -207,7 +226,7 @@ export default function UsersView() {
           <section className={`${cabinetCardClass} space-y-4 p-4 sm:p-6`}>
             <Input
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={(e) => { setSearch(e.target.value); setPage(0); setManageId(null); }}
               placeholder="Поиск по имени, email, роли…"
               className="sm:max-w-md"
             />
@@ -215,12 +234,12 @@ export default function UsersView() {
             <div className="flex flex-wrap gap-3">
               <NativeSelect
                 value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value as AccountRoleDb | "")}
+                onChange={(e) => { setRoleFilter(e.target.value as AccountRoleDb | ""); setPage(0); setManageId(null); }}
                 className="sm:max-w-[180px]"
                 aria-label="Фильтр по роли"
               >
                 <option value="">Все роли</option>
-                {ALL_ROLES.map((role) => (
+                {FILTER_ROLES.map((role) => (
                   <option key={role} value={role}>
                     {ROLE_LABELS[role]}
                   </option>
@@ -228,7 +247,7 @@ export default function UsersView() {
               </NativeSelect>
               <NativeSelect
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value as "" | "active" | "blocked")}
+                onChange={(e) => { setStatusFilter(e.target.value as "" | "active" | "blocked"); setPage(0); setManageId(null); }}
                 className="sm:max-w-[180px]"
                 aria-label="Фильтр по статусу"
               >
@@ -248,14 +267,14 @@ export default function UsersView() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filtered.length === 0 ? (
+                  {users.length === 0 ? (
                     <tr>
                       <td colSpan={3} className="px-4 py-10 text-center text-slate">
                         {loading ? "Загрузка…" : "Пользователи не найдены"}
                       </td>
                     </tr>
                   ) : (
-                    filtered.map((user) => (
+                    users.map((user) => (
                       <tr key={user.id} className={manageId === user.id ? "bg-sky/5" : undefined}>
                         <td className="px-4 py-3">
                           <p className="font-medium text-charcoal">{user.fullName}</p>
@@ -275,7 +294,7 @@ export default function UsersView() {
                         <td className="px-4 py-3">
                           <p className="text-slate">{formatAdminWhen(user.createdAt)}</p>
                           <div className="mt-2 flex flex-wrap gap-2">
-                            {canManage ? (
+                            {canManage && !user.roles.includes("admin") ? (
                               <>
                                 <Button
                                   size="sm"
@@ -291,6 +310,11 @@ export default function UsersView() {
                                 />
                               </>
                             ) : null}
+                            {user.roles.includes("admin") ? (
+                              <span className="text-xs text-slate">
+                                Доступы: раздел «Команда»
+                              </span>
+                            ) : null}
                           </div>
                         </td>
                       </tr>
@@ -299,9 +323,20 @@ export default function UsersView() {
                 </tbody>
               </table>
             </div>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-xs text-slate">Показано {users.length} из {total}</p>
+              <div className="flex gap-2">
+                <Button size="sm" variant="outline" disabled={loading || page === 0} onClick={() => { setPage((value) => Math.max(0, value - 1)); setManageId(null); }}>
+                  Назад
+                </Button>
+                <Button size="sm" variant="outline" disabled={loading || (page + 1) * 50 >= total} onClick={() => { setPage((value) => value + 1); setManageId(null); }}>
+                  Дальше
+                </Button>
+              </div>
+            </div>
           </section>
 
-          {canManage && managedUser ? (
+          {canManage && managedUser && !managedUser.roles.includes("admin") ? (
             <aside>
               <UserManagePanel
                 user={managedUser}

@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "status": "passed",
+  "baseUrl": "http://127.0.0.1:3112",
+  "protectedLocalPreview": true,
+  "sitemapUrlCount": 625,
+  "uniquePageCount": 625,
+  "checkedAt": "2026-07-16T23:57:19.119Z",
+  "summary": {
+    "passed": 625,
+    "failed": 0
+  },
+  "errors": []
+}

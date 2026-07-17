@@ -399,6 +399,8 @@ export interface TourDatePrice {
 
 export interface TourDetail {
   id: string;
+  /** Public product lane used by server-side module gates. */
+  productType?: "tour" | "excursion";
   slug: string;
   title: string;
   country: string;

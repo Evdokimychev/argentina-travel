@@ -26,6 +26,7 @@ export type FlightPriceTeaser = {
 export const HUB_FLIGHT_TEASER_ROUTE_IDS = ["mow-bue", "bue-brc", "bue-fte"] as const;
 
 export const HOME_TRAVEL_PREP_ROUTE_IDS = ["mow-bue"] as const;
+const PUBLIC_TEASER_WAIT_MS = 3_000;
 
 async function fetchFlightPriceTeasersForRoutesUncached(
   routeIds: readonly string[],
@@ -34,11 +35,9 @@ async function fetchFlightPriceTeasersForRoutesUncached(
   if (!isTravelpayoutsConfigured()) return [];
 
   const market = resolveAviasalesMarket(locale);
-  const teasers: FlightPriceTeaser[] = [];
-
-  for (const routeId of routeIds) {
+  const teasers = await Promise.all(routeIds.map(async (routeId): Promise<FlightPriceTeaser | null> => {
     const route = FLIGHT_POPULAR_ROUTES.find((entry) => entry.id === routeId);
-    if (!route) continue;
+    if (!route) return null;
 
     let offers: Awaited<ReturnType<typeof fetchLatestFlightPrices>>;
     try {
@@ -49,13 +48,13 @@ async function fetchFlightPriceTeasersForRoutesUncached(
         limit: 1,
       });
     } catch {
-      continue;
+      return null;
     }
 
     const best = offers[0];
-    if (!best) continue;
+    if (!best) return null;
 
-    teasers.push({
+    return {
       routeId: route.id,
       origin: route.origin,
       destination: route.destination,
@@ -65,19 +64,35 @@ async function fetchFlightPriceTeasersForRoutesUncached(
       currency: best.currency,
       departureAt: best.departureAt,
       ticketPath: best.ticketPath,
-    });
-  }
+    } satisfies FlightPriceTeaser;
+  }));
 
-  return teasers;
+  return teasers.filter((teaser): teaser is FlightPriceTeaser => Boolean(teaser));
+}
+
+async function withPublicTeaserDeadline(
+  request: Promise<FlightPriceTeaser[]>,
+): Promise<FlightPriceTeaser[]> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const deadline = new Promise<FlightPriceTeaser[]>((resolve) => {
+    timer = setTimeout(() => resolve([]), PUBLIC_TEASER_WAIT_MS);
+  });
+
+  try {
+    return await Promise.race([request, deadline]);
+  } finally {
+    if (timer) clearTimeout(timer);
+  }
 }
 
 export function getFlightPriceTeasers(routeIds: readonly string[], locale: LocaleCode = "ru") {
   const cacheKey = routeIds.join(",");
-  return unstable_cache(
+  const request = unstable_cache(
     () => fetchFlightPriceTeasersForRoutesUncached(routeIds, locale),
     ["flight-price-teasers", locale, cacheKey],
     { revalidate: 3600 }
   )();
+  return withPublicTeaserDeadline(request);
 }
 
 export function getHubFlightPriceTeasers(locale: LocaleCode = "ru") {

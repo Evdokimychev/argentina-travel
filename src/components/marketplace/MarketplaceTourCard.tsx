@@ -22,7 +22,7 @@ import {
 } from "@/components/content/ContentCard";
 import { formatTourLocationCompactPlain } from "@/lib/geo";
 import { resolveListingComfortLevel } from "@/lib/tour-accommodation";
-import { buildOrganizerPublicHref } from "@/lib/organizer-public";
+import { buildOrganizerPublicHref } from "@/lib/organizer-public-routing";
 import { avatarAlt, tourCoverAlt } from "@/lib/media-alt-text";
 import { resolveTourRatingLabel, resolveTourCardScheduleDisplay } from "@/lib/tour-public-display";
 import { resolvePartnerTourBadge } from "@/lib/partner-tours/badge";
@@ -38,6 +38,7 @@ import {
   TourListingThematicTags,
 } from "./TourListingCatalogBadges";
 import { resolveTourCardFallbackImage } from "@/lib/tour-card-fallback-image";
+import { resolveTourOfferCapabilities } from "@/lib/product-capabilities";
 
 const BADGE_CONFIG: Record<TourBadge, { label: string; variant: "hot" | "new" | "hit" | "family" | "expedition" }> = {
   hot: { label: "Горящий", variant: "hot" },
@@ -68,6 +69,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
   const cityDisplay = formatTourLocationCompactPlain(tour);
   const isPartnerTour = isPartnerTourListing(tour);
   const partnerBadge = resolvePartnerTourBadge(tour);
+  const offerCapabilities = resolveTourOfferCapabilities(tour);
 
   return (
     <ContentCard>
@@ -130,6 +132,8 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
                 fill
                 placeholderVariant="avatar"
                 placeholderCompact
+                partnerImageWidth={160}
+                partnerImageQuality={60}
                 className="object-cover"
                 sizes="28px"
               />
@@ -226,7 +230,7 @@ export default function MarketplaceTourCard({ tour, imagePriority = false }: Mar
           ) : null}
 
           <div className="mt-3 flex flex-wrap gap-1.5 border-t border-gray-100 pt-3">
-            {tour.bookingMode === "on_request" && (
+            {offerCapabilities.bookingMode === "internal_request" && (
               <span className="inline-flex items-center gap-1 rounded-md border border-sky/15 bg-sky/5 px-2 py-0.5 text-[11px] font-medium text-sky-ink">
                 <UserRound className="h-3 w-3 shrink-0" aria-hidden />
                 Индивидуально

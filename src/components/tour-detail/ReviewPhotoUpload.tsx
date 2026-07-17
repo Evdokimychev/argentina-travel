@@ -57,7 +57,7 @@ export default function ReviewPhotoUpload({
       try {
         supabase = createSupabaseBrowserClient();
       } catch {
-        setError("Загрузка фото недоступна — проверьте настройки Supabase");
+        setError("Загрузка фото временно недоступна. Попробуйте ещё раз позднее.");
         return;
       }
 

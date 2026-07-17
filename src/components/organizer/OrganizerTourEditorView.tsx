@@ -426,14 +426,14 @@ function DraftSyncConflictDialog({
   localUpdatedAt,
   serverUpdatedAt,
   onOpenChange,
-  onForceSync,
+  onReplaceServer,
   onUseServer,
 }: {
   open: boolean;
   localUpdatedAt: string | null;
   serverUpdatedAt: string | null;
   onOpenChange: (open: boolean) => void;
-  onForceSync: () => void;
+  onReplaceServer: () => void;
   onUseServer: () => void;
 }) {
   const localLabel = formatEditorDateTime(localUpdatedAt) ?? "неизвестно";
@@ -462,7 +462,7 @@ function DraftSyncConflictDialog({
           <Button type="button" variant="outline" onClick={onUseServer}>
             Открыть версию с сервера
           </Button>
-          <Button type="button" onClick={onForceSync}>
+          <Button type="button" onClick={onReplaceServer}>
             Перезаписать сервер
           </Button>
         </DialogFooter>
@@ -842,10 +842,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   );
 
   const syncDraftToRemote = useCallback(
-    async (
-      nextDraft: OrganizerTourDraft,
-      options?: { force?: boolean }
-    ): Promise<"synced" | "queued" | "conflict" | "skipped"> => {
+    async (nextDraft: OrganizerTourDraft): Promise<"synced" | "queued" | "conflict" | "skipped"> => {
       if (!canSyncDraftToRemote(nextDraft)) {
         setSyncStatus("saved");
         return "skipped";
@@ -871,13 +868,13 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
           tourId: nextDraft.id,
           draft: nextDraft,
           expectedUpdatedAt,
-          force: options?.force ?? false,
         });
         clearOrganizerTourDraftSync(nextDraft.id);
         serverUpdatedAtRef.current = response.updatedAt ?? nextDraft.updatedAt ?? null;
         const syncedDraft: OrganizerTourDraft = {
           ...nextDraft,
           updatedAt: response.updatedAt ?? nextDraft.updatedAt,
+          rowVersion: response.rowVersion ?? nextDraft.rowVersion,
           moderationStatus: response.moderationStatus ?? nextDraft.moderationStatus,
           moderationNotes: response.moderationNotes ?? null,
         };
@@ -1115,7 +1112,6 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
   async function persistDraft(options?: {
     forcePublished?: boolean;
     draftOverride?: OrganizerTourDraft;
-    forceRemoteSync?: boolean;
   }) {
     const draftToPersist = options?.draftOverride ?? draft;
     if (!draftToPersist) return false;
@@ -1141,9 +1137,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     lastPersistedDraftRef.current = result.draft;
     dirtyRef.current = false;
     setDirty(false);
-    const remoteStatus = await syncDraftToRemote(result.draft, {
-      force: options?.forceRemoteSync,
-    });
+    const remoteStatus = await syncDraftToRemote(result.draft);
     if (remoteStatus === "conflict") {
       return false;
     }
@@ -1219,15 +1213,21 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
     await persistDraft({ forcePublished: true, draftOverride: nextDraft });
   }
 
-  async function handleForceSyncAfterConflict() {
+  async function handleReplaceServerAfterConflict() {
     if (!lastPersistedDraftRef.current) {
       setConflictDialogOpen(false);
       return;
     }
 
-    const result = await syncDraftToRemote(lastPersistedDraftRef.current, {
-      force: true,
-    });
+    try {
+      const latest = await fetchOrganizerTourDraftSnapshot(lastPersistedDraftRef.current.id);
+      serverUpdatedAtRef.current = latest.updatedAt;
+      conflictServerDraftRef.current = latest.draft;
+    } catch {
+      setError("Не удалось проверить актуальную версию. Повторите попытку позже.");
+      return;
+    }
+    const result = await syncDraftToRemote(lastPersistedDraftRef.current);
     if (result !== "conflict") {
       setConflictDialogOpen(false);
       if (hasQueuedOrganizerTourDraftSync(lastPersistedDraftRef.current.id)) {
@@ -2242,7 +2242,7 @@ export default function OrganizerTourEditorView({ tourId }: OrganizerTourEditorV
         localUpdatedAt={conflictLocalUpdatedAt}
         serverUpdatedAt={conflictServerUpdatedAt}
         onOpenChange={setConflictDialogOpen}
-        onForceSync={handleForceSyncAfterConflict}
+        onReplaceServer={handleReplaceServerAfterConflict}
         onUseServer={handleUseServerDraft}
       />
 

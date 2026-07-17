@@ -4,11 +4,14 @@ import type { Database, Json } from "@/types/database";
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import type {
   PaymentTransactionRow,
+  ReconciliationCurrencyTotals,
   ReconciliationDiscrepancy,
   ReconciliationSnapshotRow,
   ReconciliationTotals,
 } from "@/types/payment-platform";
 import { listPaymentTransactions } from "@/lib/payments/transaction-server";
+import { aggregateReconciliationByCurrency } from "@/lib/payments/ledger-aggregation";
+import { parseMoneyCurrency } from "@/lib/payments/money";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -37,16 +40,40 @@ function mapSnapshotRow(
   row: Database["public"]["Tables"]["payment_audit_log"]["Row"]
 ): ReconciliationSnapshotRow {
   const totalsRaw = asRecord(row.totals);
-  const totals: ReconciliationTotals = {
-    chargeCount: Number(totalsRaw.chargeCount) || 0,
-    chargeAmount: Number(totalsRaw.chargeAmount) || 0,
-    refundCount: Number(totalsRaw.refundCount) || 0,
-    refundAmount: Number(totalsRaw.refundAmount) || 0,
-    payoutCount: Number(totalsRaw.payoutCount) || 0,
-    payoutAmount: Number(totalsRaw.payoutAmount) || 0,
-    netAmount: Number(totalsRaw.netAmount) || 0,
-    pendingRefundCount: Number(totalsRaw.pendingRefundCount) || 0,
-  };
+  const byCurrency = Array.isArray(totalsRaw.byCurrency)
+    ? totalsRaw.byCurrency.flatMap((value): ReconciliationCurrencyTotals[] => {
+        const record = asRecord(value);
+        const currency =
+          typeof record.currency === "string" ? parseMoneyCurrency(record.currency) : null;
+        if (!currency) return [];
+        return [
+          {
+            currency,
+            chargeCount: Number(record.chargeCount) || 0,
+            chargeAmount: Number(record.chargeAmount) || 0,
+            refundCount: Number(record.refundCount) || 0,
+            refundAmount: Number(record.refundAmount) || 0,
+            payoutCount: Number(record.payoutCount) || 0,
+            payoutAmount: Number(record.payoutAmount) || 0,
+            netAmount: Number(record.netAmount) || 0,
+            pendingRefundCount: Number(record.pendingRefundCount) || 0,
+          },
+        ];
+      })
+    : [];
+  const isVersion2 = Number(totalsRaw.schemaVersion) === 2;
+  const totals: ReconciliationTotals = isVersion2
+    ? {
+        schemaVersion: 2,
+        byCurrency,
+        invalidRecordCount: Number(totalsRaw.invalidRecordCount) || 0,
+      }
+    : {
+        schemaVersion: 1,
+        byCurrency: [],
+        invalidRecordCount: 0,
+        legacyUnknownCurrency: true,
+      };
 
   return {
     id: row.id,
@@ -63,40 +90,12 @@ function mapSnapshotRow(
 export function computeReconciliationTotals(
   transactions: PaymentTransactionRow[]
 ): ReconciliationTotals {
-  const totals: ReconciliationTotals = {
-    chargeCount: 0,
-    chargeAmount: 0,
-    refundCount: 0,
-    refundAmount: 0,
-    payoutCount: 0,
-    payoutAmount: 0,
-    netAmount: 0,
-    pendingRefundCount: 0,
+  const result = aggregateReconciliationByCurrency(transactions);
+  return {
+    schemaVersion: 2,
+    byCurrency: [...result.byCurrency],
+    invalidRecordCount: result.issues.length,
   };
-
-  for (const tx of transactions) {
-    if (tx.type === "charge" && tx.status === "completed") {
-      totals.chargeCount += 1;
-      totals.chargeAmount += tx.amount;
-    } else if (tx.type === "refund") {
-      if (tx.status === "pending") {
-        totals.pendingRefundCount += 1;
-      }
-      if (tx.status === "completed" || tx.status === "processing") {
-        totals.refundCount += 1;
-        totals.refundAmount += tx.amount;
-      }
-    } else if (tx.type === "payout" && (tx.status === "completed" || tx.status === "processing")) {
-      totals.payoutCount += 1;
-      totals.payoutAmount += tx.amount;
-    }
-  }
-
-  totals.chargeAmount = Math.round(totals.chargeAmount);
-  totals.refundAmount = Math.round(totals.refundAmount);
-  totals.payoutAmount = Math.round(totals.payoutAmount);
-  totals.netAmount = Math.round(totals.chargeAmount - totals.refundAmount - totals.payoutAmount);
-  return totals;
 }
 
 export function detectReconciliationDiscrepancies(

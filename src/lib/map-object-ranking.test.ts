@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { rankMapObjects } from "@/lib/map-objects-server";
+import {
+  rankMapObjects,
+  selectTransportHubsForMap,
+} from "@/lib/map-objects-server";
 import type { MapObject } from "@/lib/map-types";
 
 function object(id: string, patch: Partial<MapObject> = {}): MapObject {
@@ -42,5 +45,24 @@ describe("rankMapObjects", () => {
       object("high", { slug: "same", qualityScore: 95 }),
     ]);
     expect(result.map((item) => item.id)).toEqual(["high"]);
+  });
+});
+
+describe("selectTransportHubsForMap", () => {
+  const canonicalIatas = ["EZE", "AEP", "BRC", "IGR", "USH"];
+
+  it("removes airport-shaped transport hubs when canonical airports are present", () => {
+    const hubs = selectTransportHubsForMap(true);
+    expect(hubs.some((hub) => hub.kind === "bus_terminal")).toBe(true);
+    for (const iata of canonicalIatas) {
+      expect(hubs.some((hub) => hub.iata === iata)).toBe(false);
+    }
+  });
+
+  it("keeps transport airport hubs when the canonical airport layer is absent", () => {
+    const hubs = selectTransportHubsForMap(false);
+    for (const iata of canonicalIatas) {
+      expect(hubs.some((hub) => hub.iata === iata)).toBe(true);
+    }
   });
 });

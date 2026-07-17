@@ -7,11 +7,11 @@ import BreadcrumbListJsonLd from "@/components/seo/BreadcrumbListJsonLd";
 import WebPageJsonLd from "@/components/seo/WebPageJsonLd";
 import {
   KB_SECTIONS,
-  getAllEntries,
-  getHubs,
-  getSectionCount,
+  KB_HUB_ORDER,
+  getSectionCountFrom,
   sectionHref,
 } from "@/lib/knowledge-base/content";
+import { resolveKnowledgeCatalog } from "@/lib/cms/knowledge-resolver";
 import { buildTwoLevelBreadcrumbItems } from "@/lib/detail-breadcrumbs";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildPublicPageMetadata } from "@/lib/page-metadata";
@@ -28,8 +28,12 @@ export const metadata: Metadata = buildPublicPageMetadata({
 
 export default async function KnowledgeBaseHomePage() {
   const locale = await getServerI18nLocale();
-  const hubs = getHubs();
-  const total = getAllEntries().length;
+  const entries = await resolveKnowledgeCatalog(locale);
+  const byId = new Map(entries.map((entry) => [entry.id, entry]));
+  const hubs = KB_HUB_ORDER.map((id) => byId.get(id)).filter(
+    (entry): entry is NonNullable<typeof entry> => Boolean(entry),
+  );
+  const total = entries.length;
 
   return (
     <>
@@ -94,7 +98,7 @@ export default async function KnowledgeBaseHomePage() {
                     {section.title}
                   </span>
                   <span className="rounded-full bg-surface-muted px-2 py-0.5 text-2xs font-medium text-slate">
-                    {getSectionCount(section.id)}
+                    {getSectionCountFrom(entries, section.id)}
                   </span>
                 </span>
                 <span className="mt-1 block text-sm leading-relaxed text-muted">

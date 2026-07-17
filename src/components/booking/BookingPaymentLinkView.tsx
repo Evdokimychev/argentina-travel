@@ -31,7 +31,7 @@ import {
 import type { Booking } from "@/types/tourist";
 import { BOOKINGS_UPDATED_EVENT } from "@/types/tourist";
 import { Button } from "@/components/ui/button";
-import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
 import { useCheckoutCurrencyRates } from "@/hooks/useCheckoutCurrencyRates";
@@ -39,6 +39,11 @@ import {
   resolveDefaultCheckoutCurrency,
   type CheckoutCurrencyCode,
 } from "@/lib/payments/checkout-currency";
+
+const PAYMENT_LOAD_ERROR =
+  "Не удалось загрузить данные оплаты. Обновите страницу или попробуйте немного позже.";
+const PAYMENT_UNAVAILABLE_ERROR =
+  "Сейчас не удалось открыть оплату. Попробуйте ещё раз или обратитесь в поддержку.";
 
 export default function BookingPaymentLinkView({ token }: { token: string }) {
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -75,12 +80,10 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
         const payload = await apiFetchPaymentLinkStatus(token);
         if (cancelled) return;
         setBooking(payload.booking ?? null);
-      } catch (error) {
+      } catch {
         if (cancelled) return;
         setBooking(null);
-        setLoadError(
-          error instanceof Error ? error.message : "Не удалось загрузить ссылку на оплату"
-        );
+        setLoadError(PAYMENT_LOAD_ERROR);
       } finally {
         if (!cancelled) setLoadingBooking(false);
       }
@@ -172,11 +175,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
             setLoadingBooking(true);
             void apiFetchPaymentLinkStatus(token)
               .then((payload) => setBooking(payload.booking ?? null))
-              .catch((error) =>
-                setLoadError(
-                  error instanceof Error ? error.message : "Не удалось загрузить ссылку на оплату"
-                )
-              )
+              .catch(() => setLoadError(PAYMENT_LOAD_ERROR))
               .finally(() => setLoadingBooking(false));
           }}
         />
@@ -221,9 +220,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     if (!booking?.paymentLink) return;
     const gateway = selectedGateway ?? defaultProvider;
     if (!gateway) {
-      setCheckoutError(
-        "Онлайн-оплата недоступна: не настроены платёжные провайдеры. Обратитесь в поддержку."
-      );
+      setCheckoutError(PAYMENT_UNAVAILABLE_ERROR);
       return;
     }
 
@@ -234,9 +231,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
     }
 
     if (!remoteMode) {
-      setCheckoutError(
-        "Онлайн-оплата доступна после подключения серверного режима бронирований и ключей платёжных провайдеров."
-      );
+      setCheckoutError(PAYMENT_UNAVAILABLE_ERROR);
       return;
     }
 
@@ -250,7 +245,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
         });
         const checkoutUrl = result.checkoutUrl?.trim();
         if (!checkoutUrl) {
-          throw new Error("Stripe не вернул checkout URL.");
+          throw new Error(PAYMENT_UNAVAILABLE_ERROR);
         }
 
         setBooking((prev) =>
@@ -277,7 +272,7 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
       });
       const checkoutUrl = result.checkoutUrl?.trim();
       if (!checkoutUrl) {
-        throw new Error("Mercado Pago не вернул checkout URL.");
+        throw new Error(PAYMENT_UNAVAILABLE_ERROR);
       }
 
       setBooking((prev) =>
@@ -296,13 +291,13 @@ export default function BookingPaymentLinkView({ token }: { token: string }) {
       );
       setRedirecting(true);
       window.location.assign(checkoutUrl);
-    } catch (error) {
-      const normalized = normalizeSiteError(error, {
+    } catch {
+      setCheckoutError({
         title: "Не удалось открыть оплату",
+        description: PAYMENT_UNAVAILABLE_ERROR,
         steps: ["Попробуйте снова через минуту", "Если ошибка повторяется — напишите в поддержку"],
         action: { label: "Контакты", href: "/contacts" },
       });
-      setCheckoutError(normalized);
     } finally {
       setCheckoutLoading(false);
     }

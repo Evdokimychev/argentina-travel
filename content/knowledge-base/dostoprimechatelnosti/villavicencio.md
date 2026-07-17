@@ -32,4 +32,8 @@ confidence: medium
 seo_slug: villavicencio-zapovednik-mendosy
 ---
 
-- **Провинция:** Мендоса ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/villavicencio) (исп.; адаптировано 2026-07-07).
+- **Провинция:** Мендоса
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/villavicencio) (исп.; адаптировано 2026-07-07).

@@ -7,7 +7,7 @@ import { buildHreflangAlternates } from "@/lib/i18n/hreflang";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { resolveLocaleBreadcrumbItems } from "@/lib/locale-breadcrumbs";
 import { getServicePageHeroImage } from "@/lib/media-resolver";
-import { fetchSiteContact } from "@/lib/site-settings-server";
+import { fetchSiteContact, fetchSiteForms } from "@/lib/site-settings-server";
 import { resolveStaticPageCopy } from "@/lib/static-page-copy";
 
 const PAGE_TITLE_FALLBACK = "Контакты — связаться с командой";
@@ -45,7 +45,10 @@ type PageProps = {
 
 export default async function ContactsPage({ searchParams }: PageProps) {
   const locale = await getServerI18nLocale();
-  const contact = await fetchSiteContact(locale);
+  const [contact, forms] = await Promise.all([
+    fetchSiteContact(locale),
+    fetchSiteForms(),
+  ]);
   const params = await searchParams;
   const pageTitle = resolveStaticPageCopy("contacts.meta.title", PAGE_TITLE_FALLBACK, locale);
   const pageDescription = resolveStaticPageCopy(
@@ -67,7 +70,12 @@ export default async function ContactsPage({ searchParams }: PageProps) {
         whatsAppUrl={contact.whatsAppUrl}
         telegramUrl={contact.telegramUrl}
         instagramUrl={contact.instagramUrl}
+        youtubeUrl={contact.youtubeUrl}
+        tiktokUrl={contact.tiktokUrl}
+        facebookUrl={contact.facebookUrl}
+        xUrl={contact.xUrl}
         supportEmail={contact.supportEmail}
+        formEnabled={forms.contactEnabled}
         formContext={{
           tourSlug: params.tour,
           productSlug: params.product,

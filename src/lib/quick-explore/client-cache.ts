@@ -89,7 +89,6 @@ export async function fetchQuickExplorePayload(force = false): Promise<QuickExpl
     .then((data) => {
       cache.data = data;
       cache.error = null;
-      prefetchQuickExploreMapChunk();
       return data;
     })
     .catch((err: unknown) => {

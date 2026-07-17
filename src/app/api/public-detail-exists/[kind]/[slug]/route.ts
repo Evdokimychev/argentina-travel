@@ -15,9 +15,17 @@ const RESPONSE_HEADERS = {
   "X-Robots-Tag": "noindex, nofollow",
 };
 
+const PUBLIC_DETAIL_KINDS: PublicDetailKind[] = [
+  "tours",
+  "excursions",
+  "places",
+  "blog",
+  "author-articles",
+];
+
 export async function HEAD(_request: Request, context: RouteContext) {
   const { kind, slug } = await context.params;
-  if ((kind !== "tours" && kind !== "excursions") || !slug.trim()) {
+  if (!PUBLIC_DETAIL_KINDS.includes(kind as PublicDetailKind) || !slug.trim()) {
     return new NextResponse(null, { status: 400, headers: RESPONSE_HEADERS });
   }
 

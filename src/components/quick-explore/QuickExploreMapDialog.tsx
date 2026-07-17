@@ -29,7 +29,7 @@ import { serializeMapArgentinaKinds } from "@/lib/map-argentina-url-state";
 import { ARGENTINA_MAP_VIEW } from "@/lib/map-view-config";
 import type { MapMarkerKind, MapObject } from "@/lib/map-types";
 import { spotsToMapObjects } from "@/lib/quick-explore/spot-to-map-object";
-import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-open";
+import { SITE_MAP_OPEN_EVENT } from "@/lib/site-map-events";
 import type {
   QuickExploreProvince,
   QuickExploreSpot,
@@ -76,13 +76,17 @@ function filterSpots(spots: QuickExploreSpot[], query: string): QuickExploreSpot
   );
 }
 
-export default function QuickExploreMapDialog() {
+export default function QuickExploreMapDialog({ initialOpen = false }: { initialOpen?: boolean }) {
   const { payload, loading, error, refresh } = useQuickExplore();
   const [open, setOpen] = useState(false);
   const [provinceIso, setProvinceIso] = useState<string | null>(null);
   const [selectedSpotId, setSelectedSpotId] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (initialOpen) setOpen(true);
+  }, [initialOpen]);
 
   useEffect(() => {
     function onOpenRequest() {

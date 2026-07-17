@@ -76,25 +76,28 @@ export async function resolveGuidePage(slug: string, locale = "ru"): Promise<Con
   const cutover = await getCmsCutoverFlags();
   const fallback = cutover.guide ? null : (getContentPage("guide", slug) ?? null);
   const supabase = await getCmsServerClient();
-  const translationStatus = supabase
-    ? await fetchCmsTranslationStatusForSlug(supabase, "guide", slug, {
+  const translationStatusPromise = supabase
+    ? fetchCmsTranslationStatusForSlug(supabase, "guide", slug, {
         ruFallbackComplete: cutover.guide ? false : Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(cutover.guide ? false : Boolean(fallback));
+    : Promise.resolve(buildDefaultTranslationStatus(cutover.guide ? false : Boolean(fallback)));
 
   let resolvedSeo: CmsDocument["seo"] | undefined;
-  const resolved = await resolveWithPublishedCmsOverride({
-    docType: "guide",
-    slug,
-    locale,
-    fallback,
-    merge: (doc, fb) => guidePageFromCms(doc, fb),
-    supabase,
-    isUsable: isCmsDocumentComplete,
-    onResolvedDocument: (doc) => {
-      resolvedSeo = doc.seo;
-    },
-  });
+  const [translationStatus, resolved] = await Promise.all([
+    translationStatusPromise,
+    resolveWithPublishedCmsOverride({
+      docType: "guide",
+      slug,
+      locale,
+      fallback,
+      merge: (doc, fb) => guidePageFromCms(doc, fb),
+      supabase,
+      isUsable: isCmsDocumentComplete,
+      onResolvedDocument: (doc) => {
+        resolvedSeo = doc.seo;
+      },
+    }),
+  ]);
   if (!resolved) return null;
   return attachCmsResolverMetadata(
     resolved,

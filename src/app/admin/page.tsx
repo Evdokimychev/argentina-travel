@@ -14,6 +14,7 @@ import type { AdminDashboardWidgets, AdminOperationsSummary } from "@/types/admi
 import type { AnalyticsPeriod } from "@/types/admin-analytics";
 import { ANALYTICS_PERIOD_LABELS } from "@/types/admin-analytics";
 import { ActionQueue, type ActionQueueItem } from "@/components/workspace/ActionQueue";
+import AdminOwnerOnboardingChecklist from "@/components/admin/AdminOwnerOnboardingChecklist";
 
 type DashboardResponse = { widgets?: AdminDashboardWidgets };
 type OperationsSummaryResponse = { summary?: AdminOperationsSummary };
@@ -149,6 +150,8 @@ export default function AdminDashboardPage() {
             </Link>
           </div>
         ) : null}
+
+        <AdminOwnerOnboardingChecklist />
 
         <ActionQueue
           title="Сегодня"

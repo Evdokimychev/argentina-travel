@@ -13,7 +13,7 @@ import {
   getGuideNavColumnIcon,
   getGuideNavLinkIcon,
 } from "@/lib/guide-nav-icons";
-import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-about-argentina";
+import { GUIDE_ABOUT_ARGENTINA_PATH } from "@/data/guide-paths";
 import { isNavHrefActive, navLinkLabel, resolveNavLabel } from "@/lib/site-nav";
 import { siteContainerClass, siteStickyBelowHeaderClass } from "@/lib/site-container";
 import type { SiteNavLink } from "@/types/site-nav";
@@ -78,21 +78,21 @@ export default function GuideSectionNav() {
                               "border-sky/35 bg-gradient-to-br from-sky/12 via-sky/5 to-white text-charcoal hover:border-sky/45 hover:from-sky/18",
                             isFeatured &&
                               active &&
-                              "border-sky bg-sky text-white shadow-md ring-sky/30",
+                              "border-sky-ink bg-sky-ink text-white shadow-md ring-sky/30",
                             !isFeatured &&
                               active &&
-                              "border-sky/30 bg-sky/10 font-medium text-sky",
+                              "border-sky/30 bg-sky/10 font-medium text-sky-ink",
                             !isFeatured &&
                               !active &&
-                              "border-gray-200 bg-white font-medium text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky"
+                              "border-gray-200 bg-white font-medium text-foreground/80 hover:border-sky/30 hover:bg-sky/5 hover:text-sky-ink"
                           )}
                         >
                           <LinkIcon
                             className={cn(
                               "h-3.5 w-3.5 shrink-0",
                               isFeatured && active && "text-white",
-                              isFeatured && !active && "text-sky",
-                              !isFeatured && active && "text-sky",
+                              isFeatured && !active && "text-sky-ink",
+                              !isFeatured && active && "text-sky-ink",
                               !isFeatured && !active && "text-slate/70"
                             )}
                             aria-hidden

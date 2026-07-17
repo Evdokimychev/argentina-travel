@@ -7,7 +7,7 @@ import { siteScrollAnchorClass } from "@/lib/site-container";
 type HubSectionProps = {
   id: string;
   title: string;
-  subtitle?: string;
+  subtitle?: ReactNode;
   children: ReactNode;
   className?: string;
 };

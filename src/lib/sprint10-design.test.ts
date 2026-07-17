@@ -73,8 +73,17 @@ describe("Sprint 10 — Design System v2 & performance trim", () => {
     expect(itinerary).not.toMatch(/import TourItineraryPdfButton from/);
 
     const mapClient = readFileSync(join(root, "components/map/MapaArgentinaClient.tsx"), "utf8");
-    expect(mapClient).toContain("dynamic(");
+    expect(mapClient).not.toContain("dynamic(");
     expect(mapClient).toContain("ArgentinaMapFullscreenHub");
+
+    const mapPage = readFileSync(join(process.cwd(), "src/app/mapa-argentina/page.tsx"), "utf8");
+    expect(mapPage).toContain("async function MapaArgentinaData");
+    expect(mapPage).toContain("<MapaArgentinaData kinds={kinds} urlState={urlState} />");
+
+    const mapData = readFileSync(join(root, "lib/map-objects-server.ts"), "utf8");
+    expect(mapData).toContain("await Promise.allSettled([");
+    expect(mapData).toContain('toursResult.status === "fulfilled"');
+    expect(mapData).toContain('placesResult.status === "fulfilled"');
 
     const mapCanvas = readFileSync(join(root, "components/map/ArgentinaMapLibreCanvas.tsx"), "utf8");
     expect(mapCanvas).toContain("dynamic(");

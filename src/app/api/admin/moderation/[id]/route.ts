@@ -1,14 +1,30 @@
 import { NextResponse } from "next/server";
 import { revalidateTag } from "next/cache";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
+import { clientIpFromRequest } from "@/lib/admin/audit";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { resolveModerationItem, type ModerationResolveAction } from "@/lib/admin/moderation-server";
 
 type PatchBody = {
   action?: ModerationResolveAction;
   note?: string;
+  expectedQueueStatus?: string;
+  expectedQueueVersion?: number;
+  expectedEntityStatus?: string;
+  expectedEntityVersion?: number;
+  expectedRelatedStatus?: string;
+  expectedRelatedVersion?: number;
+  expectedReportStatus?: string;
+  expectedCommentStatus?: string;
 };
+
+const MODERATION_ACTIONS = new Set<ModerationResolveAction>([
+  "approve",
+  "reject",
+  "hide_comment",
+  "restore_comment",
+  "dismiss_report",
+]);
 
 function resolveModerationActorId(
   request: Request,
@@ -31,8 +47,8 @@ export async function PATCH(
   const { id } = await context.params;
   const body = (await request.json()) as PatchBody;
 
-  if (body.action !== "approve" && body.action !== "reject") {
-    return NextResponse.json({ error: "Укажите action: approve или reject" }, { status: 400 });
+  if (!body.action || !MODERATION_ACTIONS.has(body.action)) {
+    return NextResponse.json({ error: "Укажите корректное действие модерации" }, { status: 400 });
   }
 
   const actorId = resolveModerationActorId(request, auth);
@@ -62,31 +78,65 @@ export async function PATCH(
     id,
     body.action,
     actorId,
-    body.note
+    body.note,
+    {
+      queueStatus: body.expectedQueueStatus,
+      queueVersion: body.expectedQueueVersion,
+      entityStatus: body.expectedEntityStatus,
+      entityVersion: body.expectedEntityVersion,
+      relatedStatus: body.expectedRelatedStatus,
+      relatedVersion: body.expectedRelatedVersion,
+      reportStatus: body.expectedReportStatus,
+      commentStatus: body.expectedCommentStatus,
+      ipAddress: clientIpFromRequest(request),
+    },
   );
 
   if ("error" in result) {
-    return NextResponse.json({ error: result.error }, { status: 500 });
+    const status =
+      result.code === "version_conflict" || result.code === "expected_state_required"
+        ? 409
+        : result.code === "forbidden"
+          ? 403
+          : result.code === "not_found"
+            ? 404
+            : result.code === "invalid_action" || result.code === "invalid_transition"
+              ? 400
+              : 500;
+    return NextResponse.json(
+      {
+        error: result.error,
+        code: result.code,
+        actualQueueStatus: result.actualQueueStatus,
+        actualQueueVersion: result.actualQueueVersion,
+        actualEntityStatus: result.actualEntityStatus,
+        actualEntityVersion: result.actualEntityVersion,
+        actualRelatedStatus: result.actualRelatedStatus,
+        actualRelatedVersion: result.actualRelatedVersion,
+        actualReportStatus: result.actualReportStatus,
+        actualCommentStatus: result.actualCommentStatus,
+      },
+      { status },
+    );
   }
 
-  await writeAdminAuditLog({
-    actorUserId: actorId,
-    action: `moderation.${body.action}`,
-    entityType: "moderation_queue",
-    entityId: id,
-    payload: { note: body.note ?? null },
-    ipAddress: clientIpFromRequest(request),
-  });
-
-  if (result.entityType !== "review") {
+  if (
+    result.entityType !== "review" &&
+    result.entityType !== "blog_comment_report" &&
+    (body.action === "approve" || body.action === "reject")
+  ) {
     const { notifyModerationOutcome } = await import("@/lib/admin/moderation-notify");
-    await notifyModerationOutcome({
-      entityType: result.entityType,
-      entityTitle: result.entityTitle,
-      ownerEmail: result.ownerEmail,
-      action: body.action,
-      note: body.note,
-    });
+    try {
+      await notifyModerationOutcome({
+        entityType: result.entityType,
+        entityTitle: result.entityTitle,
+        ownerEmail: result.ownerEmail,
+        action: body.action,
+        note: body.note,
+      });
+    } catch {
+      // Business truth and durable delivery intent were already committed atomically.
+    }
   }
 
   if (result.entityType === "tour" || result.entityType === "excursion") {

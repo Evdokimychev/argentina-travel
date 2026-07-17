@@ -14,7 +14,7 @@ export default function DestinationsRouteError({
       error={error}
       reset={reset}
       title="Не удалось загрузить раздел"
-      description="Обзор регионов временно недоступен. Попробуйте обновить страницу."
+      description="Каталог направлений временно недоступен. Попробуйте обновить страницу."
       homeHref="/"
       homeLabel="На главную"
       secondaryHref="/places"

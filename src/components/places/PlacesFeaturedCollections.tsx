@@ -35,7 +35,7 @@ export default function PlacesFeaturedCollections({
         </div>
         <Link
           href="/collections"
-          className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-sky hover:underline"
+          className="inline-flex shrink-0 items-center gap-1 text-sm font-medium text-sky-ink hover:underline"
         >
           {viewAllLabel}
           <ArrowRight className="h-3.5 w-3.5" aria-hidden />

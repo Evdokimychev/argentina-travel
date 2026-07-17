@@ -20,6 +20,18 @@ export async function GET() {
   if (contact.instagramUrl?.trim()) {
     social.push({ label: "Instagram", href: contact.instagramUrl.trim() });
   }
+  if (contact.youtubeUrl?.trim()) {
+    social.push({ label: "YouTube", href: contact.youtubeUrl.trim() });
+  }
+  if (contact.tiktokUrl?.trim()) {
+    social.push({ label: "TikTok", href: contact.tiktokUrl.trim() });
+  }
+  if (contact.facebookUrl?.trim()) {
+    social.push({ label: "Facebook", href: contact.facebookUrl.trim() });
+  }
+  if (contact.xUrl?.trim()) {
+    social.push({ label: "X", href: contact.xUrl.trim() });
+  }
 
   const supportEmail =
     contact.supportEmail?.trim() || legal.supportEmail?.trim() || null;

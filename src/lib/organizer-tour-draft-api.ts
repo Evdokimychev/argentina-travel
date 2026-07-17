@@ -3,6 +3,7 @@ import type { Tour } from "@/types/tour";
 
 interface DraftSnapshotResponse {
   updatedAt: string | null;
+  rowVersion?: number;
   tour: Tour | null;
   draft: OrganizerTourDraft | null;
   moderationStatus?: OrganizerTourDraft["moderationStatus"];
@@ -12,6 +13,7 @@ interface DraftSnapshotResponse {
 interface DraftPatchResponse {
   ok: true;
   updatedAt: string | null;
+  rowVersion?: number;
   moderationStatus?: OrganizerTourDraft["moderationStatus"];
   moderationNotes?: string | null;
 }
@@ -58,7 +60,6 @@ export async function patchOrganizerTourDraftRemote(input: {
   tourId: string;
   draft: OrganizerTourDraft;
   expectedUpdatedAt?: string | null;
-  force?: boolean;
 }): Promise<DraftPatchResponse> {
   const response = await fetch(`/api/organizer/tours/${encodeURIComponent(input.tourId)}/draft`, {
     method: "PATCH",
@@ -67,7 +68,6 @@ export async function patchOrganizerTourDraftRemote(input: {
     body: JSON.stringify({
       draft: input.draft,
       expectedUpdatedAt: input.expectedUpdatedAt ?? null,
-      force: Boolean(input.force),
     }),
   });
 

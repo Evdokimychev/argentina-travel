@@ -10,7 +10,6 @@ import {
 } from "@/lib/travelpayouts";
 import {
   fetchExperienceForAffiliate,
-  logAffiliateClick,
   updateExperiencePartnerUrl,
 } from "@/lib/tripster/repository";
 import {
@@ -20,9 +19,9 @@ import {
 import { resolveTripsterAffiliateCheckoutUrl, resolveTripsterAffiliateExperienceUrl } from "@/lib/tripster/checkout-url-server";
 import {
   fetchSputnik8ProductForAffiliate,
-  logSputnik8AffiliateClick,
   updateSputnik8ProductPartnerUrl,
 } from "@/lib/sputnik8/repository";
+import { logSafeAffiliateClick } from "@/lib/attribution/affiliate-click-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -122,6 +121,14 @@ export async function GET(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Partner URL unavailable" }, { status: 500 });
     }
 
+    await logSafeAffiliateClick(supabase, {
+      provider: "youtravel",
+      slug: normalizedSlug,
+      destination: partnerUrl,
+      fallbackDestination: tour.youtravel_url,
+      request,
+    });
+
     return NextResponse.redirect(partnerUrl, 302);
   }
 
@@ -168,15 +175,12 @@ export async function GET(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Partner URL unavailable" }, { status: 500 });
     }
 
-    const referer = request.headers.get("referer") ?? undefined;
-    const userAgent = request.headers.get("user-agent") ?? undefined;
-
-    await logSputnik8AffiliateClick(supabase, {
-      productId: product.id,
-      experienceSlug: normalizedSlug,
-      partnerUrl,
-      referer,
-      userAgent,
+    await logSafeAffiliateClick(supabase, {
+      provider: "sputnik8",
+      slug: normalizedSlug,
+      destination: partnerUrl,
+      fallbackDestination: product.sputnik8_url,
+      request,
     });
 
     return NextResponse.redirect(partnerUrl, 302);
@@ -215,9 +219,22 @@ export async function GET(request: Request, context: RouteContext) {
             tripsterUrl: excursion.tripsterUrl,
           });
 
+      await logSafeAffiliateClick(supabase, {
+        provider: "tripster",
+        slug: normalizedSlug,
+        destination: partnerUrl,
+        fallbackDestination: excursion.tripsterUrl,
+        request,
+      });
       return NextResponse.redirect(partnerUrl, 302);
     }
     if (excursion?.partner === "sputnik8" && excursion.partnerUrl) {
+      await logSafeAffiliateClick(supabase, {
+        provider: "sputnik8",
+        slug: normalizedSlug,
+        destination: excursion.partnerUrl,
+        request,
+      });
       return NextResponse.redirect(excursion.partnerUrl, 302);
     }
     return NextResponse.json({ error: "Experience not found" }, { status: 404 });
@@ -256,7 +273,7 @@ export async function GET(request: Request, context: RouteContext) {
     });
   }
 
-  if (partnerUrl && isTravelpayoutsConfigured()) {
+  if (partnerUrl && !wantsBookingDeepLink && isTravelpayoutsConfigured()) {
     try {
       await updateExperiencePartnerUrl(supabase, experience.id, partnerUrl);
     } catch {
@@ -268,15 +285,13 @@ export async function GET(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Partner URL unavailable" }, { status: 500 });
   }
 
-  const referer = request.headers.get("referer") ?? undefined;
-  const userAgent = request.headers.get("user-agent") ?? undefined;
-
-  await logAffiliateClick(supabase, {
+  await logSafeAffiliateClick(supabase, {
+    provider: "tripster",
+    slug: normalizedSlug,
     experienceId: experience.id,
-    experienceSlug: normalizedSlug,
-    partnerUrl,
-    referer,
-    userAgent,
+    destination: partnerUrl,
+    fallbackDestination: experience.tripster_url,
+    request,
   });
 
   return NextResponse.redirect(partnerUrl, 302);

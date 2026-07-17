@@ -4,10 +4,11 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { SmartInput } from "@/components/ui/smart-input";
 import InlineFeedback from "@/components/feedback/InlineFeedback";
+import { changePasswordWithCurrentCredential } from "@/lib/auth-password-change";
 import { createSupabaseBrowserClient } from "@/lib/supabase/client";
 import { isSupabaseAuthEnabled } from "@/lib/auth-mode";
 import { cabinetPanelClass } from "@/lib/cabinet-ui";
-import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
+import { siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
 import { validatePassword, validatePasswordConfirmation } from "@/lib/form-validation";
 
@@ -28,46 +29,17 @@ export default function ProfilePasswordSection() {
     setError(null);
     setSaved(false);
 
-    if (newPassword.length < 8) {
-      setError(siteFormError("Новый пароль должен содержать не менее 8 символов"));
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError(siteFormError("Пароли не совпадают"));
-      return;
-    }
-
     setLoading(true);
     const supabase = createSupabaseBrowserClient();
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user?.email) {
-      setLoading(false);
-      setError(siteFormError("Не удалось определить аккаунт"));
-      return;
-    }
-
-    if (currentPassword.trim()) {
-      const { error: reauthError } = await supabase.auth.signInWithPassword({
-        email: user.email,
-        password: currentPassword,
-      });
-      if (reauthError) {
-        setLoading(false);
-        setError(normalizeSiteError("Неверный текущий пароль"));
-        return;
-      }
-    }
-
-    const { error: updateError } = await supabase.auth.updateUser({ password: newPassword });
+    const result = await changePasswordWithCurrentCredential(supabase, {
+      currentPassword,
+      newPassword,
+      confirmPassword,
+    });
     setLoading(false);
 
-    if (updateError) {
-      setError(normalizeSiteError(updateError.message, { title: "Не удалось сменить пароль" }));
+    if (!result.ok) {
+      setError(siteFormError(result.message));
       return;
     }
 
@@ -96,9 +68,9 @@ export default function ProfilePasswordSection() {
               setSaved(false);
               setError(null);
             }}
-            placeholder="Для подтверждения"
-            hint="Оставьте пустым, если входили по одноразовому коду"
-            optional
+            placeholder="Введите текущий пароль"
+            hint="Нужен для безопасного подтверждения смены пароля."
+            required
           />
 
         <SmartInput

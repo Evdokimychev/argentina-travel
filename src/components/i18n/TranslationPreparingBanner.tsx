@@ -17,7 +17,8 @@ export default function TranslationPreparingBanner({ locale }: Props) {
 
   return (
     <section className={cn(siteContainerClass, "mb-5 rounded-2xl border border-amber-300 bg-amber-50 py-3 text-sm text-amber-900")}>
-      Перевод на {LOCALE_NAMES[locale]} язык готовится. Пока показываем русскую версию материала.
+      Для этой страницы пока доступна полная версия на русском языке. Выбранный язык интерфейса —{" "}
+      {LOCALE_NAMES[locale]}.
     </section>
   );
 }

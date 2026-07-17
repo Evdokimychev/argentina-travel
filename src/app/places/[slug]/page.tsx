@@ -15,6 +15,8 @@ import { buildCmsContentHreflangAlternates } from "@/lib/cms/cms-hreflang";
 import { getCmsResolverMetadata } from "@/lib/cms/content-resolver";
 import { getServerI18nLocale } from "@/lib/i18n/server-locale";
 import { buildCmsPageMetadata } from "@/lib/cms/cms-page-metadata";
+import { getPlaceCoverAlt, getPlaceGalleryAlts } from "@/lib/media-resolver";
+import { resolveRelatedToursForPlace } from "@/lib/cms-content-cross-links";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -50,6 +52,7 @@ export default async function PlaceDetailPage({ params }: PageProps) {
 
   const knowledgeLinks = resolveKnowledgeLinksForPlace(slug);
   const initialTours = await fetchMarketplaceTours();
+  const relatedTours = resolveRelatedToursForPlace(place, initialTours);
 
   return (
     <>
@@ -66,7 +69,13 @@ export default async function PlaceDetailPage({ params }: PageProps) {
       {place.faq && place.faq.length > 0 ? (
         <FAQPageJsonLd questions={place.faq} path={placeHref(slug)} />
       ) : null}
-      <PlaceDetailView place={place} knowledgeLinks={knowledgeLinks} initialTours={initialTours} />
+      <PlaceDetailView
+        place={place}
+        knowledgeLinks={knowledgeLinks}
+        initialTours={relatedTours}
+        coverImageAlt={getPlaceCoverAlt(place.slug)}
+        galleryAlts={getPlaceGalleryAlts(place.slug)}
+      />
       <SocialFeed placement={`place:${slug}`} compact />
     </>
   );

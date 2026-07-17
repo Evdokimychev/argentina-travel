@@ -236,6 +236,7 @@ export default function OrganizerToursView() {
           {
             ...result.draft,
             updatedAt: synced.updatedAt ?? result.draft.updatedAt,
+            rowVersion: synced.rowVersion ?? result.draft.rowVersion,
             moderationStatus: synced.moderationStatus,
             moderationNotes: synced.moderationNotes,
           },

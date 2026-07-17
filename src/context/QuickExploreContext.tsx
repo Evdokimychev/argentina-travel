@@ -1,10 +1,9 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useSyncExternalStore } from "react";
+import { createContext, useCallback, useContext, useSyncExternalStore } from "react";
 import {
   fetchQuickExplorePayload,
   getQuickExploreCacheSnapshot,
-  scheduleQuickExplorePrefetch,
   subscribeQuickExploreCache,
 } from "@/lib/quick-explore/client-cache";
 import type { QuickExplorePayload } from "@/lib/quick-explore/types";
@@ -26,10 +25,6 @@ export function QuickExploreProvider({ children }: { children: React.ReactNode }
     getQuickExploreCacheSnapshot,
     () => SERVER_SNAPSHOT
   );
-
-  useEffect(() => {
-    scheduleQuickExplorePrefetch();
-  }, []);
 
   const refresh = useCallback(async () => {
     try {

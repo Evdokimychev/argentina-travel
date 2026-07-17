@@ -116,7 +116,7 @@ describe("buildDestinationsCatalogItemListJsonLd", () => {
   it("builds TouristDestination items", () => {
     const jsonLd = buildDestinationsCatalogItemListJsonLd([sampleDestination()], "en");
 
-    expect(jsonLd.name).toBe("Regions & places");
+    expect(jsonLd.name).toBe("Destinations & places");
     expect(jsonLd.itemListElement[0]?.item["@type"]).toBe("TouristDestination");
     expect(jsonLd.itemListElement[0]?.item.url).toContain("/destinations/patagonia");
   });

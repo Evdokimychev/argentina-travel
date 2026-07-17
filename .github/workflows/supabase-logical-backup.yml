@@ -1,0 +1,53 @@
+name: Encrypted Supabase logical backup
+
+on:
+  schedule:
+    # 03:30 Buenos Aires (UTC-3). GitHub schedules use UTC.
+    - cron: "30 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: encrypted-supabase-logical-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    environment: production-backup
+    timeout-minutes: 60
+    env:
+      BACKUP_DATABASE_URL: ${{ secrets.BACKUP_DATABASE_URL }}
+      BACKUP_AGE_RECIPIENT: ${{ secrets.BACKUP_AGE_RECIPIENT }}
+      BACKUP_SOURCE_PROJECT_REF: ${{ vars.BACKUP_SOURCE_PROJECT_REF }}
+      BACKUP_OUTPUT_DIR: ${{ runner.temp }}/encrypted-database-backup
+      GIT_SHA: ${{ github.sha }}
+
+    steps:
+      - name: Checkout backup tooling
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install PostgreSQL client and age
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes postgresql-client age
+
+      - name: Create, verify and encrypt logical backup
+        id: backup
+        run: node scripts/supabase-full-backup.mjs
+
+      - name: Upload encrypted backup and non-PII manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.backup.outputs.artifact_name }}
+          path: ${{ steps.backup.outputs.artifact_dir }}
+          if-no-files-found: error
+          retention-days: ${{ steps.backup.outputs.retention_days }}
+          compression-level: 0

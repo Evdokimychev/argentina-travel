@@ -17,12 +17,19 @@ async function parseJson<T>(response: Response): Promise<T> {
   return body;
 }
 
-export async function apiCreateBooking(command: CreateBookingCommand): Promise<Booking> {
+export async function apiCreateBooking(
+  command: CreateBookingCommand,
+  protection?: { captchaToken?: string; honeypot?: string },
+): Promise<Booking> {
   const data = await parseJson<{ booking: Booking }>(
     await fetch("/api/bookings", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ command }),
+      body: JSON.stringify({
+        command,
+        captchaToken: protection?.captchaToken,
+        company: protection?.honeypot,
+      }),
     })
   );
   return data.booking;

@@ -1,21 +1,43 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
+import { escapeCsvCell } from "@/lib/admin/csv";
+import {
+  AdminExportTooLargeError,
+  collectAdminExportRows,
+} from "@/lib/admin/export-pagination";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
-import { fetchAllShopOrdersAdmin } from "@/lib/shop-order-server";
-
-function csvEscape(value: string): string {
-  if (value.includes(",") || value.includes('"') || value.includes("\n")) {
-    return `"${value.replace(/"/g, '""')}"`;
-  }
-  return value;
-}
+import { rowsToShopOrders } from "@/lib/shop-order-mapper";
+import type { ShopOrderRow } from "@/types/database";
 
 export async function GET(request: Request) {
   const auth = await authorizeAdminRequest(request, "operations.shop");
   if (!auth.ok) return auth.response;
 
   const supabase = createSupabaseAdminClient();
-  const orders = await fetchAllShopOrdersAdmin(supabase);
+  let orderRows: ShopOrderRow[];
+  try {
+    orderRows = await collectAdminExportRows(async (from, to) => {
+      const { data, error } = await supabase
+        .from("shop_orders")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .order("id", { ascending: false })
+        .range(from, to);
+      if (error) throw error;
+      return data ?? [];
+    });
+  } catch (error) {
+    return NextResponse.json(
+      {
+        error:
+          error instanceof AdminExportTooLargeError
+            ? "Выгрузка слишком большая для одного файла. Сузьте период или обратитесь к владельцу сайта."
+            : "Не удалось подготовить выгрузку заказов. Попробуйте ещё раз.",
+      },
+      { status: error instanceof AdminExportTooLargeError ? 413 : 503 },
+    );
+  }
+  const orders = rowsToShopOrders(orderRows);
 
   const lines: string[] = [];
   lines.push(
@@ -25,18 +47,18 @@ export async function GET(request: Request) {
   for (const row of orders) {
     lines.push(
       [
-        csvEscape(row.id),
-        csvEscape(row.productTitle),
-        csvEscape(row.productSlug),
+        escapeCsvCell(row.id),
+        escapeCsvCell(row.productTitle),
+        escapeCsvCell(row.productSlug),
         String(row.priceUsd),
-        csvEscape(row.currency),
-        csvEscape(row.status),
-        csvEscape(row.paymentStatus),
-        csvEscape(row.customerName),
-        csvEscape(row.customerEmail),
-        csvEscape(row.customerPhone),
-        csvEscape(row.deliveryUrl ?? ""),
-        csvEscape(row.notes ?? ""),
+        escapeCsvCell(row.currency),
+        escapeCsvCell(row.status),
+        escapeCsvCell(row.paymentStatus),
+        escapeCsvCell(row.customerName),
+        escapeCsvCell(row.customerEmail),
+        escapeCsvCell(row.customerPhone),
+        escapeCsvCell(row.deliveryUrl ?? ""),
+        escapeCsvCell(row.notes ?? ""),
         row.createdAt,
       ].join(",")
     );
@@ -47,6 +69,8 @@ export async function GET(request: Request) {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
       "Content-Disposition": 'attachment; filename="shop-orders-export.csv"',
+      "Cache-Control": "private, no-store",
+      "X-Content-Type-Options": "nosniff",
     },
   });
 }

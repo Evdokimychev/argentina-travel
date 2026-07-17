@@ -14,6 +14,7 @@ import {
   placeDetailFromCms,
   type CmsDocument,
 } from "@/types/cms-content";
+import { renderMarkdown } from "@/lib/knowledge-base/markdown";
 
 type Props = {
   doc: CmsDocument;
@@ -23,6 +24,27 @@ export default function CmsDocumentPreviewContent({ doc }: Props) {
   if (doc.body.kind === "legal") {
     const legal = legalDocumentFromCms(doc);
     return legal ? <LegalPageView document={legal} /> : null;
+  }
+
+  if (doc.docType === "knowledge" && doc.body.kind === "blog") {
+    const body =
+      doc.body.content?.trim() ||
+      doc.body.sections?.map((section) => `## ${section.title}\n\n${section.body}`).join("\n\n") ||
+      "";
+    return (
+      <article className="mx-auto max-w-3xl px-5 py-10 sm:px-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.12em] text-sky-ink">
+          База знаний · предпросмотр
+        </p>
+        <h1 className="mt-3 font-heading text-3xl font-bold text-foreground">{doc.title}</h1>
+        {doc.body.excerpt ? (
+          <p className="mt-4 text-lg leading-7 text-slate">{doc.body.excerpt}</p>
+        ) : null}
+        <div className="mt-8 text-base">
+          {renderMarkdown(body, { validIds: new Set([doc.slug]) })}
+        </div>
+      </article>
+    );
   }
 
   if (doc.body.kind === "blog") {

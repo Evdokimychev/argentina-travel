@@ -7,6 +7,8 @@ import { leaveGroupTripListing } from "@/lib/group-trips-server";
 type RouteContext = { params: Promise<{ id: string }> };
 
 export async function POST(_request: Request, context: RouteContext) {
+  // Safety/continuity action: a member may leave an existing group even while
+  // public tour discovery and new joins are disabled by the module kill-switch.
   if (!isSupabaseToursEnabled()) {
     return NextResponse.json({ error: "Набор группы недоступен" }, { status: 503 });
   }

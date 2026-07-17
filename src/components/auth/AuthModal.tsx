@@ -7,7 +7,7 @@ import { CheckCircle2, Eye, EyeOff, Mail, Phone, X } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { touchTargetIconClass } from "@/lib/responsive-ui";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useAuth, useHasOrganizerRole } from "@/context/AuthContext";
 import type { AuthUserRole } from "@/types/auth";
@@ -59,7 +59,6 @@ export default function AuthModal() {
     loginByEmail,
     loginForOrganizerUpgrade,
     register,
-    addOrganizerRole,
     requestPasswordReset,
     logout,
   } = useAuth();
@@ -101,7 +100,7 @@ export default function AuthModal() {
   };
 
   function completeAuthSuccess(
-    destination: "/profile" | "/organizer",
+    destination: "/profile" | "/organizer" | "/join#join-application",
     sessionUser?: { fullName?: string | null } | null
   ) {
     if (isFavoriteFlow) {
@@ -400,7 +399,10 @@ export default function AuthModal() {
     setLoading(false);
 
     if (result.ok) {
-      completeAuthSuccess(isOrganizerFlow ? "/organizer" : "/profile", result.user);
+      completeAuthSuccess(
+        isOrganizerFlow ? "/join#join-application" : "/profile",
+        result.user,
+      );
       return;
     }
 
@@ -419,25 +421,6 @@ export default function AuthModal() {
     }
 
     setError(normalizeSiteError(result.error));
-  }
-
-  async function handleConnectOrganizerRole() {
-    setLoading(true);
-    setError(null);
-
-    const result = await addOrganizerRole();
-    setLoading(false);
-
-    if (!result.ok) {
-      setError(normalizeSiteError(result.error));
-      return;
-    }
-
-    feedback.success({
-      title: "Роль организатора подключена",
-      description: "Теперь можно размещать туры на платформе.",
-      action: { label: "Кабинет организатора", href: "/organizer" },
-    });
   }
 
   function renderAuthenticatedView() {
@@ -476,11 +459,12 @@ export default function AuthModal() {
           <Button
             type="button"
             className="w-full rounded-xl"
-            loading={loading}
-            loadingLabel="Подключаем…"
-            onClick={handleConnectOrganizerRole}
+            onClick={() => {
+              closeAuth();
+              router.push("/join#join-application");
+            }}
           >
-            Подключить роль организатора
+            Подать заявку организатора
           </Button>
 
           <Button type="button" variant="outline" className="w-full" onClick={logout}>
@@ -530,12 +514,15 @@ export default function AuthModal() {
         {!hasOrganizerRole ? (
           <button
             type="button"
-            onClick={() => handleConnectOrganizerRole()}
+            onClick={() => {
+              closeAuth();
+              router.push("/join#join-application");
+            }}
             className="w-full rounded-xl border border-brand/20 bg-brand-light/30 px-4 py-3 text-left text-sm transition-colors hover:bg-brand-light/50"
           >
             <span className="font-semibold text-brand">Стать организатором</span>
             <span className="mt-0.5 block text-xs text-slate">
-              Подключить роль автора туров к этому профилю
+              Заполнить анкету и пройти проверку перед публикацией туров
             </span>
           </button>
         ) : null}
@@ -852,6 +839,13 @@ export default function AuthModal() {
       : step === "register"
         ? "Регистрация"
         : "Войдите или зарегистрируйтесь";
+  const modalDescription = isAuthenticated
+    ? "Управление профилем и переход в нужный раздел кабинета."
+    : step === "forgot-password"
+      ? "Введите адрес электронной почты, чтобы получить ссылку для смены пароля."
+      : isOrganizerFlow
+        ? "Вход или регистрация представителя организатора путешествий."
+        : "Вход в личный кабинет или создание новой учётной записи.";
 
   return (
     <Dialog open={authOpen} onOpenChange={(next) => !next && closeAuth()}>
@@ -862,6 +856,7 @@ export default function AuthModal() {
         <div className="flex items-start justify-between gap-4 border-b border-gray-100 px-5 py-4 sm:px-6">
           <div>
             <DialogTitle>{modalTitle}</DialogTitle>
+            <DialogDescription className="sr-only">{modalDescription}</DialogDescription>
             {isOrganizerFlow && !isAuthenticated ? (
               <p className="mt-1 text-xs text-slate">
                 Регистрация и вход представителя организатора

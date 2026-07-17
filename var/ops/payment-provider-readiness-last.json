@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "reportType": "payment-provider-readiness",
+  "generatedAt": "2026-07-17T04:37:48.509Z",
+  "evidenceScope": "candidate",
+  "candidateTree": "dc10266ca8d074b22a120ece2241ffeded4a147e",
+  "evidenceRunId": "9d9f31ec-fb38-4993-a55f-e33019b96aa7",
+  "evidenceStartedAt": "2026-07-17T04:37:44.895Z",
+  "evidenceGeneratedAt": "2026-07-17T04:37:48.509Z",
+  "evidenceEnvironment": "local-contract",
+  "evidenceBaseUrl": null,
+  "evidenceIntegrity": {
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
+  },
+  "evidenceLevel": "local-contract",
+  "environment": "local-contract",
+  "status": "passed",
+  "live": false,
+  "sandbox": false,
+  "external": false,
+  "ownerApproval": false,
+  "sandboxPayment": false,
+  "signedWebhook": false,
+  "reconciliation": false,
+  "refundProof": false,
+  "disputeProcess": false,
+  "idempotency": false,
+  "legalReview": false,
+  "receiptPolicy": false,
+  "merchantContract": false,
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3
+  },
+  "localContracts": {
+    "providerNeutralContract": true,
+    "idempotency": true,
+    "webhookVerificationLogic": true,
+    "sandboxStateMappingOnly": true,
+    "refundPlanning": true,
+    "reconciliationLogic": true
+  },
+  "checks": [
+    {
+      "id": "payment-core-contracts",
+      "label": "Provider-neutral money and idempotency contracts",
+      "kind": "command",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1119,
+      "command": "npx --no-install vitest run src/lib/payments/provider-contract.test.ts src/lib/payments/money.test.ts src/lib/payments/payment-idempotency.test.ts src/lib/payments/payment-integrity.test.ts src/lib/payments/payment-sandbox.test.ts src/lib/payments/sandbox-mode.test.ts",
+      "sources": [
+        "src/lib/payments/provider-contract.test.ts",
+        "src/lib/payments/money.test.ts",
+        "src/lib/payments/payment-idempotency.test.ts",
+        "src/lib/payments/payment-integrity.test.ts",
+        "src/lib/payments/payment-sandbox.test.ts",
+        "src/lib/payments/sandbox-mode.test.ts"
+      ]
+    },
+    {
+      "id": "webhook-contracts",
+      "label": "Webhook signature, replay and amount integrity contracts",
+      "kind": "command",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1059,
+      "command": "npx --no-install vitest run src/lib/payments/webhook-handler.test.ts",
+      "sources": [
+        "src/lib/payments/webhook-handler.test.ts"
+      ]
+    },
+    {
+      "id": "refund-reconciliation-contracts",
+      "label": "Refund planning and reconciliation contracts",
+      "kind": "command",
+      "status": "passed",
+      "exitCode": 0,
+      "durationMs": 1082,
+      "command": "npx --no-install vitest run src/lib/payments/refund-client-idempotency.test.ts src/lib/payments/refund-planning-server.test.ts src/lib/payments/reconciliation-server.test.ts src/lib/payments/ledger-aggregation.test.ts",
+      "sources": [
+        "src/lib/payments/refund-client-idempotency.test.ts",
+        "src/lib/payments/refund-planning-server.test.ts",
+        "src/lib/payments/reconciliation-server.test.ts",
+        "src/lib/payments/ledger-aggregation.test.ts"
+      ]
+    }
+  ],
+  "limitations": [
+    "No payment provider has owner approval in this report.",
+    "No sandbox or live charge, signed provider callback, refund or reconciliation was executed.",
+    "No legal, receipt, tax, dispute or merchant-contract review is represented."
+  ]
+}

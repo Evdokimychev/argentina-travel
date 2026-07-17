@@ -196,11 +196,9 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
     ? offerCapabilities.primaryActionLabel
     : offerCapabilities.bookingMode === "disabled"
       ? offerCapabilities.primaryActionLabel
-      : priceOnRequest
-      ? "Запросить расчёт"
       : canJoinWaitlist && bookingValidationError
         ? "Лист ожидания"
-        : "Забронировать";
+        : offerCapabilities.primaryActionLabel;
 
   const showFromPrefix = resolveTourPriceFromPrefix({
     priceUsd: tour.priceUsd,
@@ -304,6 +302,7 @@ export default function MobileBookingBar({ tour }: { tour: TourDetail }) {
               <ExternalBookingButton
                 href={externalBookingHref}
                 link={externalBookingLink}
+                label={offerCapabilities.primaryActionLabel}
                 className="flex-1 rounded-xl py-3 text-sm font-semibold"
                 onClick={handleExternalBookingClick}
               />

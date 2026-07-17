@@ -19,6 +19,18 @@ function socialLinksFromContact(contact: SiteContactGlobal): SiteFooterInfo["soc
   if (contact.instagramUrl?.trim()) {
     links.push({ label: "Instagram", href: contact.instagramUrl.trim() });
   }
+  if (contact.youtubeUrl?.trim()) {
+    links.push({ label: "YouTube", href: contact.youtubeUrl.trim() });
+  }
+  if (contact.tiktokUrl?.trim()) {
+    links.push({ label: "TikTok", href: contact.tiktokUrl.trim() });
+  }
+  if (contact.facebookUrl?.trim()) {
+    links.push({ label: "Facebook", href: contact.facebookUrl.trim() });
+  }
+  if (contact.xUrl?.trim()) {
+    links.push({ label: "X", href: contact.xUrl.trim() });
+  }
   return links;
 }
 

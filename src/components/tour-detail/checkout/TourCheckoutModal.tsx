@@ -81,6 +81,7 @@ import BookingCheckoutProgress from "@/components/booking/BookingCheckoutProgres
 import { useSiteFeedback } from "@/context/SiteFeedbackContext";
 import { normalizeSiteError, siteFormError } from "@/lib/site-feedback/normalize-error";
 import type { SiteFeedbackMessage } from "@/types/site-feedback";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 interface TourCheckoutModalProps {
   tour: TourDetail;
@@ -399,6 +400,9 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
   const [createdBookingId, setCreatedBookingId] = useState<string | null>(null);
   const [error, setErrorState] = useState<SiteFeedbackMessage | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const [company, setCompany] = useState("");
   const idempotencyKeyRef = useRef(crypto.randomUUID());
   const feedback = useSiteFeedback();
 
@@ -486,6 +490,8 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
       );
       setSubmitted(false);
       setSavedToProfile(false);
+      setCaptchaToken("");
+      setCompany("");
       setError(null);
       setCheckoutCurrency(resolveDefaultCheckoutCurrency(localeCurrency));
       setForm(() => {
@@ -630,57 +636,62 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
             .slice(0, 10)
         : selectedDate?.endDate;
 
-    const bookingResult = await createBookingFromCheckout({
-      actor: user,
-      userId: user?.id,
-      tour,
-      guests,
-      startDate,
-      endDate,
-      totalPriceUsd: totalUsd,
-      form,
-      checkoutCurrency,
-      checkoutRates,
-      checkoutRatesUpdatedAt: ratesUpdatedAt,
-      checkoutRatesSource: ratesSource,
-      payNowUsd,
-      attribution: getStoredFirstTouchAttribution() ?? undefined,
-      optionId: selectedDate?.id,
-      idempotencyKey: idempotencyKeyRef.current,
-    });
-
-    if ("error" in bookingResult) {
-      const normalized = normalizeSiteError(bookingResult.error, {
-        title: "Не удалось отправить заявку",
-        steps: ["Проверьте контактные данные", "Попробуйте ещё раз или свяжитесь с организатором"],
+    try {
+      const bookingResult = await createBookingFromCheckout({
+        actor: user,
+        userId: user?.id,
+        tour,
+        guests,
+        startDate,
+        endDate,
+        totalPriceUsd: totalUsd,
+        form,
+        checkoutCurrency,
+        checkoutRates,
+        checkoutRatesUpdatedAt: ratesUpdatedAt,
+        checkoutRatesSource: ratesSource,
+        payNowUsd,
+        attribution: getStoredFirstTouchAttribution() ?? undefined,
+        optionId: selectedDate?.id,
+        idempotencyKey: idempotencyKeyRef.current,
+        captchaToken,
+        honeypot: company,
       });
-      setError(normalized);
-      feedback.showError(normalized);
-      setSubmitting(false);
-      return;
-    }
 
-    if (user) {
-      setSavedToProfile(true);
+      if ("error" in bookingResult) {
+        const normalized = normalizeSiteError(bookingResult.error, {
+          title: "Не удалось отправить заявку",
+          steps: ["Проверьте контактные данные", "Попробуйте ещё раз или свяжитесь с организатором"],
+        });
+        setError(normalized);
+        feedback.showError(normalized);
+        return;
+      }
+
+      if (user) {
+        setSavedToProfile(true);
+      }
+      setCreatedBookingId(bookingResult.id);
+      setSubmitted(true);
+      trackBookingSubmit({
+        productType: "tour",
+        slug: tour.slug,
+        title: tour.title,
+        guests,
+        valueUsd: totalUsd,
+        source: "checkout_modal",
+      });
+      feedback.success({
+        title: "Заявка отправлена",
+        description: savedToProfile || user
+          ? "Заявка сохранена в личном кабинете — следите за статусом в разделе «Бронирования»."
+          : "Организатор свяжется с вами по указанному email.",
+        action: user ? { label: "Мои бронирования", href: "/profile/bookings" } : undefined,
+      });
+    } finally {
+      setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
-    setCreatedBookingId(bookingResult.id);
-    setSubmitted(true);
-    trackBookingSubmit({
-      productType: "tour",
-      slug: tour.slug,
-      title: tour.title,
-      guests,
-      valueUsd: totalUsd,
-      source: "checkout_modal",
-    });
-    setSubmitting(false);
-    feedback.success({
-      title: "Заявка отправлена",
-      description: savedToProfile || user
-        ? "Заявка сохранена в личном кабинете — следите за статусом в разделе «Бронирования»."
-        : "Организатор свяжется с вами по указанному email.",
-      action: user ? { label: "Мои бронирования", href: "/profile/bookings" } : undefined,
-    });
   }
 
   function goBack() {
@@ -760,9 +771,7 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                 <p className="mt-2 text-sm leading-relaxed text-slate">
                   {savedToProfile ? (
                     <>
-                      Заявка сохранена в профиле. Уведомление о статусе — в разделе «Обзор» и на{" "}
-                      <span className="font-medium text-charcoal">{form.contactEmail}</span> (когда
-                      подключим email).
+                      Заявка сохранена в профиле. Следить за статусом можно в разделе «Обзор».
                     </>
                   ) : (
                     <>
@@ -772,13 +781,12 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                   )}{" "}
                   {form.paymentOption === "later" ? (
                     <>
-                      Оплата через платформу скоро — сейчас списание не производится. После
-                      подтверждения откройте ссылку на оплату из уведомлений или личного кабинета.
+                      Средства сейчас не списываются. После подтверждения организатор сообщит
+                      доступный способ оплаты.
                     </>
                   ) : (
                     <>
-                      Оплата картой на сайте появится позже. Организатор пришлёт ссылку на
-                      предоплату после подтверждения заявки.
+                      После подтверждения организатор сообщит доступный способ предоплаты.
                     </>
                   )}
                   {form.fillTravelersLater
@@ -1306,10 +1314,26 @@ export default function TourCheckoutModal({ tour }: TourCheckoutModalProps) {
                       </div>
                     ) : (
                       <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm leading-relaxed text-charcoal">
-                        Оплата картой на сайте появится позже. Пожалуйста, выберите «Оплатить позже»
-                        и отправьте заявку организатору.
+                        Для этого тура оплата проводится после подтверждения. Выберите «Оплатить
+                        позже» и отправьте заявку организатору.
                       </div>
                     )}
+
+                    <input
+                      type="text"
+                      name="company"
+                      value={company}
+                      onChange={(event) => setCompany(event.target.value)}
+                      tabIndex={-1}
+                      autoComplete="off"
+                      className="hidden"
+                      aria-hidden="true"
+                    />
+                    <TurnstileField
+                      formId="native_booking"
+                      onToken={setCaptchaToken}
+                      resetSignal={captchaResetSignal}
+                    />
 
                   </section>
                 )}

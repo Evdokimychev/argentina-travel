@@ -6,7 +6,7 @@ import { Bookmark, BookOpen } from "lucide-react";
 import { useSavedArticles } from "@/hooks/useSavedArticles";
 import { cn } from "@/lib/cn";
 import { cabinetCardClass, cabinetLinkClass } from "@/lib/cabinet-ui";
-import { mediaUrl } from "@/lib/media-resolver";
+import { mediaUrl } from "@/lib/media/media-cdn";
 
 type ProfileSavedArticlesPanelProps = {
   className?: string;

@@ -519,14 +519,6 @@ export async function resolveReviewModeration(
   };
 }
 
-const REVIEW_REPORT_REASON_LABELS: Record<string, string> = {
-  spam: "Спам",
-  offensive: "Оскорбления",
-  fake: "Подозрение на фальсификацию",
-  irrelevant: "Не относится к туру",
-  other: "Другое",
-};
-
 type ReviewReportRow = Database["public"]["Tables"]["review_reports"]["Row"];
 
 export async function submitReviewReport(
@@ -576,27 +568,6 @@ export async function submitReviewReport(
   if (insertError || !report) {
     return { error: insertError?.message ?? "Не удалось отправить жалобу" };
   }
-
-  const reasonLabel = REVIEW_REPORT_REASON_LABELS[input.reason] ?? input.reason;
-  await supabase.from("moderation_queue").upsert(
-    {
-      entity_type: "review_report",
-      entity_id: report.id,
-      status: "pending",
-      reason: `Жалоба на отзыв: ${reasonLabel}`,
-      submitted_by: input.reporterUserId,
-      metadata: {
-        reviewId: input.reviewId,
-        tourTitle: review.tour_title,
-        tourSlug: review.tour_slug,
-        rating: review.rating,
-        reason: input.reason,
-        reasonLabel,
-        details: input.details?.trim() || null,
-      } as Json,
-    },
-    { onConflict: "entity_type,entity_id" }
-  );
 
   return { reportId: report.id };
 }

@@ -13,7 +13,6 @@ import { buildTripsterBookingContactPayload } from "@/lib/tripster/booking-conta
 import {
   normalizePartnerBookingUrl,
   openPartnerBookingUrl,
-  PARTNER_EXCURSION_BOOKING_THANK_YOU,
   resolveTripsterFallbackDescription,
 } from "@/lib/tripster/open-partner-booking-url";
 import {
@@ -36,8 +35,14 @@ import {
   resolveExcursionBookingPreviewPrice,
 } from "@/lib/excursion-price-display";
 import { normalizeSiteError } from "@/lib/site-feedback/normalize-error";
+import { resolvePublicBookingErrorMessage } from "@/lib/partner-booking/public-errors";
 import type { AuthUser } from "@/types/auth";
 import { trackBookingSubmit } from "@/lib/analytics/gtm-events";
+import {
+  partnerTransitionMessage,
+  type PartnerTransitionOutcome,
+} from "@/lib/booking/partner-handoff-copy";
+import TurnstileField from "@/components/forms/TurnstileField";
 
 function RequiredMark() {
   return (
@@ -80,9 +85,13 @@ export default function ExcursionBookingContactSection() {
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [transitionOutcome, setTransitionOutcome] = useState<PartnerTransitionOutcome>("partner_handoff");
   const [partnerBookingUrl, setPartnerBookingUrl] = useState<string | null>(null);
   const [popupBlocked, setPopupBlocked] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaResetSignal, setCaptchaResetSignal] = useState(0);
+  const [company, setCompany] = useState("");
   const [form, setForm] = useState(() => createExcursionContactForm(user));
   const bookingOperationKeyRef = useRef<string | null>(null);
 
@@ -196,7 +205,10 @@ export default function ExcursionBookingContactSection() {
 
   function handleClosePreview() {
     closeBookingPreview();
+    setSubmitted(false);
     setError(null);
+    setCaptchaToken("");
+    setCompany("");
     setPartnerBookingUrl(null);
     setPopupBlocked(false);
   }
@@ -207,6 +219,7 @@ export default function ExcursionBookingContactSection() {
   ) {
     const normalized = normalizePartnerBookingUrl(openUrl);
     setSubmitted(true);
+    setTransitionOutcome("partner_handoff");
     setPartnerBookingUrl(normalized);
     setPopupBlocked(!openPartnerBookingUrl(normalized));
     trackBookingSubmit({
@@ -217,8 +230,8 @@ export default function ExcursionBookingContactSection() {
       guests: persons,
       source: "excursion_affiliate_fallback",
     });
-    feedback.success({
-      title: "Заявка принята",
+    feedback.info({
+      title: "Продолжите у партнёра",
       description: resolveTripsterFallbackDescription(fallbackReason),
     });
   }
@@ -306,11 +319,20 @@ export default function ExcursionBookingContactSection() {
                 fillTravelersLater: true,
               },
             },
+            captchaToken,
+            company,
           }),
         });
-        const data = (await response.json()) as { booking?: { id: string }; error?: string };
+        const data = (await response.json().catch(() => ({}))) as {
+          booking?: { id: string };
+          code?: string;
+        };
         if (!response.ok || !data.booking) {
-          throw new Error(data.error || t("excursions.booking.failed"));
+          throw new Error(
+            data.code
+              ? resolvePublicBookingErrorMessage(data.code)
+              : t("excursions.booking.failed"),
+          );
         }
 
         bookingOperationKeyRef.current = null;
@@ -352,19 +374,21 @@ export default function ExcursionBookingContactSection() {
           email: contact.email,
           phone: contact.phone,
           messageToGuide: contact.messageToGuide,
+          productType: "excursion",
           userId: user?.id,
+          captchaToken,
+          company,
         }),
       });
 
-      const data = (await response.json()) as {
+      const data = (await response.json().catch(() => ({}))) as {
         ok?: boolean;
         mode?: string;
         orderId?: number;
         orderUrl?: string;
         fallbackUrl?: string;
         fallbackReason?: string;
-        error?: string;
-        details?: Record<string, string[] | { non_field_errors?: string[] }>;
+        code?: string;
       };
 
       if (response.ok && (data.ok || data.mode === "affiliate_fallback")) {
@@ -372,6 +396,7 @@ export default function ExcursionBookingContactSection() {
       }
 
       if (data.mode === "affiliate_fallback") {
+        bookingOperationKeyRef.current = null;
         completePartnerBookingTransition(
           resolveTripsterBookingRedirectFromApi({
             response: data,
@@ -384,16 +409,15 @@ export default function ExcursionBookingContactSection() {
       }
 
       if (!response.ok || !data.ok) {
-        const details = data.details;
-        const firstFieldError =
-          details &&
-          Object.values(details)
-            .flatMap((value) => (Array.isArray(value) ? value : value.non_field_errors ?? []))
-            .find(Boolean);
-        throw new Error(firstFieldError || data.error || t("excursions.booking.failed"));
+        throw new Error(
+          data.code
+            ? resolvePublicBookingErrorMessage(data.code)
+            : t("excursions.booking.failed"),
+        );
       }
 
       setSubmitted(true);
+      setTransitionOutcome("order_created");
       trackBookingSubmit({
         productType: "excursion",
         slug: excursion.slug,
@@ -413,8 +437,12 @@ export default function ExcursionBookingContactSection() {
       setPartnerBookingUrl(checkoutUrl);
       setPopupBlocked(!openPartnerBookingUrl(checkoutUrl));
       feedback.success({
-        title: "Заявка принята",
-        description: PARTNER_EXCURSION_BOOKING_THANK_YOU,
+        title: "Заказ создан у партнёра",
+        description: partnerTransitionMessage({
+          outcome: "order_created",
+          productType: "excursion",
+          partnerLabel: "Tripster",
+        }),
       });
       return;
     } catch (submitError) {
@@ -425,6 +453,7 @@ export default function ExcursionBookingContactSection() {
       feedback.showError(normalized);
     } finally {
       setSubmitting(false);
+      setCaptchaResetSignal((signal) => signal + 1);
     }
   }
 
@@ -450,12 +479,17 @@ export default function ExcursionBookingContactSection() {
 
     return (
       <PartnerBookingSuccessPanel
-        message={PARTNER_EXCURSION_BOOKING_THANK_YOU}
+        message={partnerTransitionMessage({
+          outcome: transitionOutcome,
+          productType: "excursion",
+          partnerLabel,
+        })}
         partnerLabel={partnerLabel}
+        outcome={transitionOutcome}
         partnerBookingUrl={partnerBookingUrl}
         popupBlocked={popupBlocked}
         productType="excursion"
-        onClose={closeBookingPreview}
+        onClose={handleClosePreview}
       />
     );
   }
@@ -541,6 +575,22 @@ export default function ExcursionBookingContactSection() {
           </div>
         </div>
       ) : null}
+
+      <input
+        type="text"
+        name="company"
+        value={company}
+        onChange={(event) => setCompany(event.target.value)}
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden="true"
+      />
+      <TurnstileField
+        formId={isPlatform ? "native_booking" : "partner_booking"}
+        onToken={setCaptchaToken}
+        resetSignal={captchaResetSignal}
+      />
 
       {error ? <InlineFeedback variant="error" title="Проверьте форму" description={error} /> : null}
 

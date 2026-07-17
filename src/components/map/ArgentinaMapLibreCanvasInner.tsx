@@ -4,7 +4,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import maplibregl from "maplibre-gl";
 import type { Feature, FeatureCollection, LineString, Point } from "geojson";
 import { boundaryGeoJsonSource } from "@/lib/map-geodata-source";
-import { prepareArgentinaProvinceGeometry } from "@/lib/map-geodata-sanitize";
 import type { MapMarkerKind, MapObject, MapRouteItem } from "@/lib/map-types";
 import { MAP_KIND_COLORS } from "@/lib/map-kind-colors";
 import {
@@ -26,7 +25,6 @@ import {
 } from "@/lib/map-thematic-maplibre";
 import { MAP_THEMATIC_LAYER_IDS, type MapThematicLayerId, type MapThematicState } from "@/lib/map-thematic-layers";
 import { registerMapMarkerImages } from "@/lib/map-marker-icons";
-import { MAP_GEODATA_BASE_PATH } from "@/data/map-thematic/layer-registry";
 import { cn } from "@/lib/cn";
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -328,10 +326,20 @@ export default function ArgentinaMapLibreCanvas({
     }
   }, []);
 
+  const syncActiveThematicLayers = useCallback(async (map: maplibregl.Map, state: MapThematicState) => {
+    for (const layerId of MAP_THEMATIC_LAYER_IDS) {
+      if (!state[layerId]) continue;
+      if (loadedThematicRef.current.has(layerId)) continue;
+      const ok = await ensureThematicLayerData(map, layerId);
+      if (ok) loadedThematicRef.current.add(layerId);
+    }
+  }, []);
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
     const initialTheme = themeRef.current;
+    const loadedThematic = loadedThematicRef.current;
     containerRef.current.style.backgroundColor = MAP_BASEMAP_THEMES[initialTheme].backgroundColor;
 
     const map = new maplibregl.Map({
@@ -483,15 +491,9 @@ export default function ArgentinaMapLibreCanvas({
         "regions",
         boundaryGeoJsonSource({ type: "FeatureCollection", features: [] })
       );
-      void fetch(`${MAP_GEODATA_BASE_PATH}/provinces.geojson`, { cache: "force-cache" })
-        .then((res) => (res.ok ? res.json() : null))
-        .then((data) => {
-          if (!data || !mapRef.current) return;
-          const argentina = prepareArgentinaProvinceGeometry(data as FeatureCollection);
-          const source = map.getSource("regions") as maplibregl.GeoJSONSource | undefined;
-          source?.setData(argentina);
-        })
-        .catch(() => undefined);
+      // Detailed province boundaries weigh about 14 MB. Keep the public map
+      // responsive and let ensureThematicLayerData load them only after the
+      // visitor explicitly enables a province-derived thematic layer.
       map.addLayer({
         id: "regions-fill",
         type: "fill",
@@ -663,7 +665,7 @@ export default function ArgentinaMapLibreCanvas({
       userLocationMarkerRef.current = null;
       thematicCleanupRef.current?.();
       thematicCleanupRef.current = null;
-      loadedThematicRef.current.clear();
+      loadedThematic.clear();
       map.remove();
       mapRef.current = null;
       layersReadyRef.current = false;
@@ -673,7 +675,7 @@ export default function ArgentinaMapLibreCanvas({
       lastArcsKeyRef.current = null;
       didFitBoundsRef.current = false;
     };
-  }, [applyLayerData, applyMapOverlays]);
+  }, [applyLayerData, applyMapOverlays, syncActiveThematicLayers]);
 
   useLayoutEffect(() => {
     const map = mapRef.current;
@@ -692,15 +694,6 @@ export default function ArgentinaMapLibreCanvas({
     if (!map || !layersReadyRef.current) return;
     applyMapOverlays(map, overlays);
   }, [overlays, applyMapOverlays]);
-
-  const syncActiveThematicLayers = useCallback(async (map: maplibregl.Map, state: MapThematicState) => {
-    for (const layerId of MAP_THEMATIC_LAYER_IDS) {
-      if (!state[layerId]) continue;
-      if (loadedThematicRef.current.has(layerId)) continue;
-      const ok = await ensureThematicLayerData(map, layerId);
-      if (ok) loadedThematicRef.current.add(layerId);
-    }
-  }, []);
 
   useEffect(() => {
     const map = mapRef.current;

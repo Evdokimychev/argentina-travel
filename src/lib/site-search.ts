@@ -2,7 +2,7 @@ import {
   SEARCH_TYPE_LABELS,
   type SearchIndexItem,
   type SearchResultType,
-} from "@/lib/site-search-index";
+} from "@/lib/site-search-schema";
 
 export type SearchResultGroup = {
   type: SearchResultType;

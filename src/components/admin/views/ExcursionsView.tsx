@@ -158,8 +158,8 @@ export default function ExcursionsView() {
             <p className="mt-3 text-red-600">{affiseError}</p>
           ) : affiseData?.configured === false ? (
             <p className="mt-3 text-slate">
-              Укажите <code className="text-xs">YOUTRAVEL_AFFISE_API_KEY</code> в окружении сервера,
-              чтобы видеть конверсии партнёрской программы.
+              Статистика партнёрской программы ещё не подключена. Добавьте доступ в разделе
+              «Интеграции», затем вернитесь сюда и обновите данные.
             </p>
           ) : (
             <div className="mt-3 space-y-4">
@@ -242,7 +242,7 @@ export default function ExcursionsView() {
           <section className={`${cabinetCardClass} px-5 py-8 text-sm text-slate`}>
             {loading
               ? "Загрузка…"
-              : "Нет данных по экскурсиям. Проверьте миграции Supabase и синхронизацию Tripster."}
+              : "Данные по экскурсиям пока недоступны. Проверьте состояние интеграции и запустите обновление каталога."}
           </section>
         ) : (
           <>

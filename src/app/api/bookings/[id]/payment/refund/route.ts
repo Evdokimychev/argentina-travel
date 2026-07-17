@@ -17,10 +17,12 @@ import {
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import type { BookingPaymentGateway } from "@/types/booking-payment";
 import type { PaymentProviderId } from "@/types/payment-webhook";
+import { isUuid } from "@/lib/admin/user-identity-management";
 
 type PostBody = {
   reason?: string;
   amountUsd?: number;
+  operationId?: string;
 };
 
 function gatewayToProvider(gateway?: BookingPaymentGateway): PaymentProviderId {
@@ -48,7 +50,7 @@ export async function GET(
       return NextResponse.json({ error: "Not found" }, { status: 404 });
     }
 
-    if (!canAccessBooking(booking, sessionUser, sessionUser?.email)) {
+    if (!canAccessBooking(booking, sessionUser)) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -77,6 +79,10 @@ export async function POST(
 
   try {
     const body = (await request.json().catch(() => ({}))) as PostBody;
+    const operationId = body.operationId?.trim();
+    if (!isUuid(operationId)) {
+      return NextResponse.json({ error: "Некорректный идентификатор операции" }, { status: 400 });
+    }
     const supabase = await createSupabaseServerClient();
     const sessionUser = await loadSessionUserFromSupabase(supabase);
 
@@ -110,14 +116,17 @@ export async function POST(
     const summary = resolveBookingPaymentSummary(booking);
     const amount = Math.max(
       0,
-      Math.round(body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0)
+      Math.round((body.amountUsd ?? summary.paidAmountUsd ?? booking.amountPaid ?? 0) * 100) / 100
     );
 
     if (amount <= 0) {
       return NextResponse.json({ error: "Укажите сумму возврата" }, { status: 400 });
     }
 
-    const paidAmount = Math.max(0, Math.round(summary.paidAmountUsd ?? booking.amountPaid ?? 0));
+    const paidAmount = Math.max(
+      0,
+      Math.round((summary.paidAmountUsd ?? booking.amountPaid ?? 0) * 100) / 100
+    );
     if (amount !== paidAmount) {
       return NextResponse.json(
         {
@@ -135,6 +144,7 @@ export async function POST(
       currency: "USD",
       provider: gatewayToProvider(booking.paymentLink?.gateway),
       requestedBy: sessionUser.id,
+      operationId,
       reason: body.reason,
       metadata: {
         source: isOrganizer ? "organizer_refund_request_legacy" : "tourist_refund_request",

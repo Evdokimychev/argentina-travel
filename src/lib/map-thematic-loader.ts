@@ -16,6 +16,7 @@ import {
 } from "@/lib/map-geodata-sanitize";
 import {
   MAP_THEMATIC_LAYER_IDS,
+  PUBLIC_MAP_THEMATIC_LAYER_IDS,
   type MapThematicLayerId,
 } from "@/lib/map-thematic-layers";
 
@@ -88,6 +89,15 @@ async function fetchGeoJson(url: string): Promise<FeatureCollection | null> {
   }
 }
 
+async function probeGeoJsonResource(url: string): Promise<boolean> {
+  try {
+    const res = await fetch(url, { method: "HEAD", cache: "force-cache" });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
 export async function checkThematicLayerAvailable(layerId: MapThematicLayerId): Promise<boolean> {
   if (availability.has(layerId)) return availability.get(layerId)!;
 
@@ -97,12 +107,6 @@ export async function checkThematicLayerAvailable(layerId: MapThematicLayerId): 
     if (!parentOk) {
       availability.set(layerId, false);
       return false;
-    }
-    if (spec.derivedTransform) {
-      const data = await loadThematicLayerGeoJson(layerId);
-      const ok = data !== null && data.features.length > 0;
-      availability.set(layerId, ok);
-      return ok;
     }
     availability.set(layerId, parentOk);
     return parentOk;
@@ -114,8 +118,9 @@ export async function checkThematicLayerAvailable(layerId: MapThematicLayerId): 
     return false;
   }
 
-  const data = await fetchGeoJson(url);
-  const ok = data !== null && data.features.length > 0;
+  // Availability controls must not download and parse every thematic dataset.
+  // Some public GeoJSON files are 5–14 MB and are loaded only when selected.
+  const ok = await probeGeoJsonResource(url);
   availability.set(layerId, ok);
   return ok;
 }
@@ -198,10 +203,21 @@ export async function loadThematicLayerGeoJson(
 }
 
 export async function probeThematicLayerAvailability(): Promise<Record<MapThematicLayerId, boolean>> {
-  const entries = await Promise.all(
-    MAP_THEMATIC_LAYER_IDS.map(async (id) => [id, await checkThematicLayerAvailable(id)] as const)
-  );
-  return Object.fromEntries(entries) as Record<MapThematicLayerId, boolean>;
+  // The GeoJSON files are versioned public build assets and are verified by
+  // tests. Avoid a fan-out of network probes every time the map is opened.
+  const configured = (layerId: MapThematicLayerId): boolean => {
+    const spec = MAP_THEMATIC_DATA_REGISTRY[layerId];
+    return Boolean(spec.dataFile || (spec.derivedFrom && configured(spec.derivedFrom)));
+  };
+  const entries = PUBLIC_MAP_THEMATIC_LAYER_IDS.map((id) => {
+    const ok = configured(id);
+    availability.set(id, ok);
+    return [id, ok] as const;
+  });
+  return {
+    ...Object.fromEntries(MAP_THEMATIC_LAYER_IDS.map((id) => [id, false])),
+    ...Object.fromEntries(entries),
+  } as Record<MapThematicLayerId, boolean>;
 }
 
 export function getCachedThematicLayerGeoJson(layerId: MapThematicLayerId): FeatureCollection {

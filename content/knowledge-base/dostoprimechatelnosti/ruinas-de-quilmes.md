@@ -31,4 +31,8 @@ confidence: medium
 seo_slug: ruiny-kilmes-quilmes
 ---
 
-- **Провинция:** Тукуман ## Источники - Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/ruinas-de-quilmes) (исп.; адаптировано 2026-07-07).
+- **Провинция:** Тукуман
+
+## Источники
+
+- Официальный портал INPROTUR — [Visit Argentina](https://www.argentina.travel/es/actividades/ruinas-de-quilmes) (исп.; адаптировано 2026-07-07).

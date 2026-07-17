@@ -7,7 +7,8 @@ import { simulateSandboxPayment } from "@/lib/payments/sandbox-payment-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { loadSessionUserFromSupabase } from "@/lib/supabase-auth-provider";
-import { userHasAccountRole } from "@/types/user";
+import { resolveAdminCapabilitiesWithClient } from "@/lib/admin/staff";
+import { hasAdminCapability } from "@/lib/admin/capabilities";
 
 type SandboxPaymentBody = {
   asPartial?: boolean;
@@ -44,9 +45,12 @@ export async function POST(
     const isOwner =
       booking.userId === sessionUser.id ||
       bookingMatchesContactEmail(booking, sessionUser.email);
-    const isAdmin = userHasAccountRole(sessionUser, "admin");
+    const staff = isOwner
+      ? null
+      : await resolveAdminCapabilitiesWithClient(supabase, sessionUser);
+    const isBookingAdmin = hasAdminCapability(staff?.capabilities, "operations.bookings");
 
-    if (!isOwner && !isAdmin) {
+    if (!isOwner && !isBookingAdmin) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 

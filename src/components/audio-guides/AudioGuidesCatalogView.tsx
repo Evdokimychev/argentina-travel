@@ -8,14 +8,11 @@ import AudioGuideBenefits from "@/components/audio-guides/AudioGuideBenefits";
 import AudioGuideCard from "@/components/audio-guides/AudioGuideCard";
 import { DEFAULT_WEGOTTRIP_CITY_ID, WEGOTTRIP_FEATURED_CITIES } from "@/lib/wegottrip/constants";
 import { useLocaleCurrency } from "@/context/LocaleCurrencyContext";
-import { getServicePageHeroImage } from "@/lib/media-resolver";
 import { siteContainerClass } from "@/lib/site-container";
 import { cn } from "@/lib/utils";
 import type { WeGoTripProductSummary } from "@/lib/wegottrip/types";
 
-const HERO_IMAGE = getServicePageHeroImage("audio-guides");
-
-export default function AudioGuidesCatalogView() {
+export default function AudioGuidesCatalogView({ heroImage }: { heroImage: string }) {
   const searchParams = useSearchParams();
   const { t, locale, currency } = useLocaleCurrency();
   const [cityId, setCityId] = useState<number>(DEFAULT_WEGOTTRIP_CITY_ID);
@@ -111,7 +108,7 @@ export default function AudioGuidesCatalogView() {
         title={t("audioGuides.title")}
         subtitle={t("audioGuides.subtitle")}
         description={t("audioGuides.description")}
-        image={HERO_IMAGE}
+        image={heroImage}
         compact
         ctaText={t("audioGuides.heroCta")}
         ctaHref="#audio-guides-catalog"

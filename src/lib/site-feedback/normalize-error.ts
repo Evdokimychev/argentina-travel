@@ -212,7 +212,6 @@ export function normalizeSiteError(
 
   return {
     ...GENERIC_HINT,
-    description: raw || GENERIC_HINT.description,
     ...context,
   };
 }

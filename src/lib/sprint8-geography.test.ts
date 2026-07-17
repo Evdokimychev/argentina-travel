@@ -51,9 +51,11 @@ describe("Sprint 8 — geography & map", () => {
 
   it("place pages combine transport and map with tour strip", () => {
     const view = readFileSync(join(root, "components/places/PlaceDetailView.tsx"), "utf8");
+    const page = readFileSync(join(root, "app/places/[slug]/page.tsx"), "utf8");
     expect(view).toContain("PlaceTransportMapSection");
     expect(view).toContain('variant: "strip"');
-    expect(view).toContain("resolveRelatedToursForPlace");
+    expect(page).toContain("resolveRelatedToursForPlace");
+    expect(view).not.toContain("resolveRelatedToursForPlace");
     const transport = readFileSync(join(root, "components/places/PlaceTransportMapSection.tsx"), "utf8");
     expect(transport).toContain("PlaceDetailMap");
     expect(transport).toContain("buildMapPlaceDeepLink");

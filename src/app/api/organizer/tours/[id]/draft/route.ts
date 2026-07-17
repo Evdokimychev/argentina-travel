@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { createMinimalTourFromDraft, organizerDraftToTour } from "@/lib/tour-mapper";
-import { upsertTourFromCanonical } from "@/lib/tour-content-server";
-import { rowToTour } from "@/lib/tour-content-mapper";
+import { rowToTour, tourToContentRow } from "@/lib/tour-content-mapper";
 import { getCatalogSlug } from "@/lib/tour-slug";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
@@ -12,13 +11,15 @@ import type { Tour } from "@/types/tour";
 import { userHasAccountRole } from "@/types/user";
 import { evaluatePublishReadiness } from "@/lib/publish-readiness";
 import type { OrganizerTourModerationStatus, OrganizerTourType } from "@/types/organizer-tour";
+import { clientIpFromRequest } from "@/lib/admin/audit";
+import { PRIMARY_PUBLIC_MARKET } from "@/lib/market-context";
+import type { Json } from "@/types/database";
 
 type RouteContext = { params: Promise<{ id: string }> };
 
 interface PatchBody {
   draft?: OrganizerTourDraft;
   expectedUpdatedAt?: string | null;
-  force?: boolean;
 }
 
 const MAX_DRAFT_BYTES = 1_000_000;
@@ -48,11 +49,82 @@ function toTimestamp(value: string | null | undefined): number | null {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-function isServerNewer(serverUpdatedAt: string, expectedUpdatedAt: string | null): boolean {
+function isSameRevision(serverUpdatedAt: string, expectedUpdatedAt: string | null): boolean {
   const serverTs = toTimestamp(serverUpdatedAt);
   const expectedTs = toTimestamp(expectedUpdatedAt);
-  if (serverTs == null || expectedTs == null) return false;
-  return serverTs > expectedTs;
+  return serverTs != null && expectedTs != null && serverTs === expectedTs;
+}
+
+type AtomicTourMutationResult = {
+  id: string;
+  rowVersion: number;
+  updatedAt: string;
+  status: string;
+  moderationStatus: string;
+  moderationNotes: string | null;
+};
+
+function parseAtomicMutationResult(value: Json): AtomicTourMutationResult | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const row = value as Record<string, Json | undefined>;
+  if (
+    typeof row.id !== "string" ||
+    typeof row.rowVersion !== "number" ||
+    typeof row.updatedAt !== "string" ||
+    typeof row.status !== "string" ||
+    typeof row.moderationStatus !== "string"
+  ) {
+    return null;
+  }
+  return {
+    id: row.id,
+    rowVersion: row.rowVersion,
+    updatedAt: row.updatedAt,
+    status: row.status,
+    moderationStatus: row.moderationStatus,
+    moderationNotes: typeof row.moderationNotes === "string" ? row.moderationNotes : null,
+  };
+}
+
+function atomicMutationErrorResponse(message: string, serverUpdatedAt?: string | null) {
+  if (message.includes("TOUR_VERSION_CONFLICT")) {
+    return NextResponse.json(
+      { error: "Черновик уже обновлён в другом сеансе", serverUpdatedAt: serverUpdatedAt ?? null },
+      { status: 409 }
+    );
+  }
+  if (message.includes("TOUR_SLUG_CONFLICT")) {
+    return NextResponse.json(
+      { error: "Такой адрес страницы уже занят. Измените название предложения." },
+      { status: 409 }
+    );
+  }
+  if (message.includes("TOUR_ACTIVE_OFFER_LIMIT_REACHED")) {
+    return NextResponse.json(
+      { error: "Достигнут лимит активных предложений по вашему тарифу. Архивируйте предложение или измените тариф." },
+      { status: 409 }
+    );
+  }
+  if (
+    message.includes("TOUR_MODULE_NOT_ENTITLED") ||
+    message.includes("TOUR_MARKET_NOT_ENTITLED") ||
+    message.includes("TOUR_ACTIVE_OFFER_LIMIT_DISABLED")
+  ) {
+    return NextResponse.json(
+      { error: "Текущий тариф не разрешает это действие. Проверьте доступные возможности тарифа." },
+      { status: 403 }
+    );
+  }
+  if (message.includes("TOUR_COMMERCIAL_CONTRACT_UNAVAILABLE")) {
+    return NextResponse.json(
+      { error: "Не удалось безопасно проверить возможности тарифа. Повторите попытку позже." },
+      { status: 503 }
+    );
+  }
+  return NextResponse.json(
+    { error: "Не удалось сохранить предложение. Повторите попытку позже." },
+    { status: 500 }
+  );
 }
 
 async function requireOrganizer() {
@@ -98,6 +170,8 @@ function parseStoredDraft(
   value: unknown,
   fallback: {
     ownerUserId: string;
+    marketCode: string;
+    rowVersion: number;
     productType: string;
     status: string;
     moderationStatus: string;
@@ -112,6 +186,8 @@ function parseStoredDraft(
   return {
     ...candidate,
     ownerUserId: fallback.ownerUserId,
+    marketId: fallback.marketCode,
+    rowVersion: fallback.rowVersion,
     type: fallback.productType === "excursion" ? "excursion" : "tour",
     status: fallback.status === "published" ? "published" : "draft",
     archived: fallback.status === "archived" || Boolean(candidate.archived),
@@ -133,7 +209,10 @@ export async function GET(_request: Request, context: RouteContext) {
     .maybeSingle();
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось загрузить предложение. Повторите попытку позже." },
+      { status: 503 }
+    );
   }
 
   if (!data) {
@@ -146,9 +225,12 @@ export async function GET(_request: Request, context: RouteContext) {
 
   return NextResponse.json({
     updatedAt: data.updated_at,
+    rowVersion: data.row_version,
     tour: rowToTour(data),
     draft: parseStoredDraft(data.editor_draft, {
       ownerUserId: data.owner_user_id,
+      marketCode: data.market_code,
+      rowVersion: data.row_version,
       productType: data.product_type,
       status: data.status,
       moderationStatus: data.moderation_status,
@@ -179,7 +261,6 @@ export async function PATCH(request: Request, context: RouteContext) {
   const draft = body.draft ?? null;
   const expectedUpdatedAt =
     typeof body.expectedUpdatedAt === "string" ? body.expectedUpdatedAt : null;
-  const force = Boolean(body.force);
 
   if (!draft || typeof draft !== "object" || Array.isArray(draft) || draft.id !== id) {
     return NextResponse.json({ error: "Некорректный идентификатор предложения" }, { status: 400 });
@@ -232,7 +313,10 @@ export async function PATCH(request: Request, context: RouteContext) {
     .maybeSingle();
 
   if (existingError) {
-    return NextResponse.json({ error: existingError.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось проверить предложение. Повторите попытку позже." },
+      { status: 503 }
+    );
   }
 
   if (existingRow && existingRow.owner_user_id !== auth.sessionUser.id) {
@@ -250,12 +334,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Доступ запрещён" }, { status: 403 });
   }
 
-  if (
-    existingRow &&
-    !force &&
-    expectedUpdatedAt &&
-    isServerNewer(existingRow.updated_at, expectedUpdatedAt)
-  ) {
+  if (existingRow && !isSameRevision(existingRow.updated_at, expectedUpdatedAt)) {
     return NextResponse.json(
       {
         error: "Черновик уже обновлён в другом сеансе",
@@ -273,7 +352,10 @@ export async function PATCH(request: Request, context: RouteContext) {
     .maybeSingle();
 
   if (slugError) {
-    return NextResponse.json({ error: slugError.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось проверить адрес страницы. Повторите попытку позже." },
+      { status: 503 }
+    );
   }
   if (slugOwner) {
     return NextResponse.json(
@@ -289,6 +371,11 @@ export async function PATCH(request: Request, context: RouteContext) {
     type: productType,
     slug: catalogSlug,
     catalogSlug,
+    marketId:
+      typeof draft.marketId === "string" && /^[a-z][a-z0-9_-]{1,31}$/.test(draft.marketId)
+        ? draft.marketId
+        : PRIMARY_PUBLIC_MARKET.id,
+    rowVersion: existingRow?.row_version ?? 0,
   };
 
   if (serverDraft.status === "published" && !serverDraft.archived) {
@@ -304,29 +391,56 @@ export async function PATCH(request: Request, context: RouteContext) {
   const existingTour = existingRow ? rowToTour(existingRow) : null;
   const base = resolveBaseTour(serverDraft, existingTour);
   const canonical = organizerDraftToTour(serverDraft, base);
-
-  const syncResult = await upsertTourFromCanonical(
-    auth.supabase,
-    canonical,
-    auth.sessionUser.id,
-    serverDraft,
-    { moderationClient: createSupabaseAdminClient() }
+  const canonicalRow = tourToContentRow(canonical, auth.sessionUser.id);
+  const operation = serverDraft.archived
+    ? "archive"
+    : serverDraft.status === "published"
+      ? "submit"
+      : "save";
+  const admin = createSupabaseAdminClient();
+  const { data: mutationData, error: mutationError } = await admin.rpc(
+    "organizer_mutate_tour_atomic",
+    {
+      p_tour_id: canonical.id,
+      p_actor_user_id: auth.sessionUser.id,
+      p_expected_version: existingRow?.row_version ?? 0,
+      p_operation: operation,
+      p_market_code: serverDraft.marketId ?? PRIMARY_PUBLIC_MARKET.id,
+      p_product_type: productType,
+      p_slug: canonical.slug,
+      p_title: canonical.title,
+      p_listing: canonicalRow.listing ?? {},
+      p_payload: canonicalRow.payload,
+      p_editor_draft: serverDraft as unknown as Json,
+      p_ip_address: clientIpFromRequest(request),
+    }
   );
-  if ("error" in syncResult) {
-    return NextResponse.json({ error: syncResult.error }, { status: 500 });
+  if (mutationError) {
+    let latestUpdatedAt = existingRow?.updated_at ?? null;
+    if (mutationError.message.includes("TOUR_VERSION_CONFLICT")) {
+      const { data: latest } = await auth.supabase
+        .from("tours")
+        .select("updated_at")
+        .eq("id", id)
+        .maybeSingle();
+      latestUpdatedAt = latest?.updated_at ?? latestUpdatedAt;
+    }
+    return atomicMutationErrorResponse(mutationError.message, latestUpdatedAt);
   }
-
-  const { data: persistedRow } = await auth.supabase
-    .from("tours")
-    .select("updated_at, moderation_status, moderation_notes")
-    .eq("id", canonical.id)
-    .maybeSingle();
+  const persisted = parseAtomicMutationResult(mutationData);
+  if (!persisted) {
+    return NextResponse.json(
+      { error: "Не удалось подтвердить сохранение предложения. Повторите попытку позже." },
+      { status: 500 }
+    );
+  }
 
   return NextResponse.json({
     ok: true,
-    updatedAt: persistedRow?.updated_at ?? canonical.updatedAt ?? null,
-    moderationStatus: parseModerationStatus(persistedRow?.moderation_status ?? "none"),
-    moderationNotes: persistedRow?.moderation_notes ?? null,
+    updatedAt: persisted.updatedAt,
+    rowVersion: persisted.rowVersion,
+    moderationStatus: parseModerationStatus(persisted.moderationStatus),
+    moderationNotes: persisted.moderationNotes,
   });
 }
 
@@ -342,7 +456,10 @@ export async function DELETE(_request: Request, context: RouteContext) {
     .maybeSingle();
 
   if (existingError) {
-    return NextResponse.json({ error: existingError.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось проверить предложение. Повторите попытку позже." },
+      { status: 503 }
+    );
   }
   if (!existing) {
     return NextResponse.json({ ok: true });
@@ -358,7 +475,10 @@ export async function DELETE(_request: Request, context: RouteContext) {
     .eq("owner_user_id", auth.sessionUser.id);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { error: "Не удалось удалить предложение. Повторите попытку позже." },
+      { status: 500 }
+    );
   }
 
   const storagePrefix = `${auth.sessionUser.id}/${id}`;

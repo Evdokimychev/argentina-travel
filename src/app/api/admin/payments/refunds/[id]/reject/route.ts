@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { authorizeAdminRequest } from "@/lib/admin/authorize-request";
-import { clientIpFromRequest, writeAdminAuditLog } from "@/lib/admin/audit";
 import { rejectRefundRequest } from "@/lib/payments/transaction-server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 
@@ -12,8 +11,11 @@ export async function POST(
   request: Request,
   context: { params: Promise<{ id: string }> }
 ) {
-  const auth = await authorizeAdminRequest(request, "operations.bookings");
+  const auth = await authorizeAdminRequest(request, "finance.refunds.approve");
   if (!auth.ok) return auth.response;
+  if (auth.via !== "session") {
+    return NextResponse.json({ error: "Финансовые операции требуют личную сессию" }, { status: 403 });
+  }
 
   const { id } = await context.params;
   const body = (await request.json().catch(() => ({}))) as PostBody;
@@ -24,14 +26,6 @@ export async function POST(
   if ("error" in result) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
-
-  await writeAdminAuditLog({
-    actorUserId: auth.actorId,
-    action: "payment.refund_rejected",
-    entityType: "payment_transaction",
-    entityId: id,
-    ipAddress: clientIpFromRequest(request),
-  });
 
   return NextResponse.json({ transaction: result.transaction });
 }

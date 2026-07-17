@@ -1,5 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database, Json } from "@/types/database";
+import type { Database } from "@/types/database";
 import {
   forumAccountAgeMessage,
   isAccountOldEnoughForForum,
@@ -14,7 +14,6 @@ import type {
   ForumThreadDetail,
   ForumThreadSummary,
 } from "@/lib/forum/forum-types";
-import { FORUM_REPORT_REASON_LABELS } from "@/lib/forum/forum-types";
 
 type DbClient = SupabaseClient<Database>;
 
@@ -53,27 +52,35 @@ async function loadAuthors(
   return new Map((data ?? []).map((row) => [row.id, row]));
 }
 
-function mapCategory(row: Database["public"]["Tables"]["forum_categories"]["Row"]): ForumCategory {
+type ForumCategoryRow = Database["public"]["Tables"]["forum_categories"]["Row"] & {
+  is_active?: boolean;
+};
+
+function mapCategory(row: ForumCategoryRow): ForumCategory {
   return {
     id: row.id,
     slug: row.slug,
     title: row.title,
     description: row.description,
     publicRead: row.public_read,
+    isActive: row.is_active !== false,
     sortOrder: row.sort_order,
   };
 }
 
 export async function fetchForumCategories(supabase: DbClient): Promise<ForumCategory[]> {
-  const { data, error } = await supabase
+  // is_active is introduced by the forum admin migration ahead of generated database types.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from("forum_categories")
     .select("*")
+    .eq("is_active", true)
     .order("sort_order", { ascending: true })
     .order("title", { ascending: true });
 
   if (error || !data?.length) return [];
 
-  const categories = data.map(mapCategory);
+  const categories = (data as ForumCategoryRow[]).map(mapCategory);
   const categoryIds = categories.map((category) => category.id);
 
   const { data: threadCounts } = await supabase
@@ -96,14 +103,16 @@ export async function fetchForumCategoryBySlug(
   supabase: DbClient,
   slug: string
 ): Promise<ForumCategory | null> {
-  const { data, error } = await supabase
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const { data, error } = await (supabase as any)
     .from("forum_categories")
     .select("*")
     .eq("slug", slug)
+    .eq("is_active", true)
     .maybeSingle();
 
   if (error || !data) return null;
-  return mapCategory(data);
+  return mapCategory(data as ForumCategoryRow);
 }
 
 export async function fetchForumThreadsByCategorySlug(
@@ -454,7 +463,7 @@ export async function submitForumPostReport(
 ): Promise<{ reportId: string } | { error: string }> {
   const { data: post, error: postError } = await supabase
     .from("forum_posts")
-    .select("id, body, status, thread_id")
+    .select("id, status")
     .eq("id", input.postId)
     .maybeSingle();
 
@@ -473,15 +482,6 @@ export async function submitForumPostReport(
     return { error: "Вы уже отправили жалобу на это сообщение" };
   }
 
-  const { data: thread } = await supabase
-    .from("forum_threads")
-    .select("title, forum_categories(slug, title)")
-    .eq("id", post.thread_id)
-    .maybeSingle();
-
-  const category = thread?.forum_categories as { slug: string; title: string } | null;
-  const reasonLabel = FORUM_REPORT_REASON_LABELS[input.reason];
-
   const { data: report, error: reportError } = await supabase
     .from("forum_post_reports")
     .insert({
@@ -497,62 +497,5 @@ export async function submitForumPostReport(
     return { error: reportError?.message ?? "Не удалось отправить жалобу" };
   }
 
-  await supabase.from("moderation_queue").upsert(
-    {
-      entity_type: "forum_post",
-      entity_id: post.id,
-      status: "pending",
-      reason: `Жалоба на сообщение: ${reasonLabel}`,
-      submitted_by: input.reporterUserId,
-      metadata: {
-        reportId: report.id,
-        threadTitle: thread?.title ?? null,
-        categorySlug: category?.slug ?? null,
-        categoryTitle: category?.title ?? null,
-        reason: input.reason,
-        reasonLabel,
-        details: input.details?.trim() || null,
-        bodyPreview: post.body.slice(0, 280),
-      } as Json,
-    },
-    { onConflict: "entity_type,entity_id" }
-  );
-
   return { reportId: report.id };
-}
-
-export async function resolveForumPostModeration(
-  supabase: DbClient,
-  postId: string,
-  action: "approve" | "reject",
-  actorUserId: string,
-  metadata: Record<string, unknown> | null
-): Promise<{ ok: true } | { error: string }> {
-  const now = new Date().toISOString();
-  const reportId =
-    metadata && typeof metadata.reportId === "string" ? metadata.reportId : null;
-
-  if (action === "approve") {
-    const { error } = await supabase
-      .from("forum_posts")
-      .update({ status: "hidden" })
-      .eq("id", postId);
-
-    if (error) return { error: error.message };
-  }
-
-  if (reportId) {
-    const { error } = await supabase
-      .from("forum_post_reports")
-      .update({
-        status: action === "approve" ? "resolved" : "dismissed",
-        resolved_by: actorUserId,
-        resolved_at: now,
-      })
-      .eq("id", reportId);
-
-    if (error) return { error: error.message };
-  }
-
-  return { ok: true };
 }

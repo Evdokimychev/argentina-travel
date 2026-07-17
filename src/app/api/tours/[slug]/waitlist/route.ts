@@ -3,6 +3,10 @@ import { isSupabaseToursEnabled } from "@/lib/auth-mode";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { fetchTourAvailabilityBySlug } from "@/lib/tour-availability-server";
+import { checkRateLimit, getClientIp, rateLimitErrorResponse } from "@/lib/rate-limit";
+import { hashRateLimitIdentifier } from "@/lib/rate-limit-identifier";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { enforcePublicModuleAccess } from "@/lib/public-module-policy-server";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -13,6 +17,8 @@ interface WaitlistJoinBody {
   slotDate?: string;
   guests?: number;
   note?: string;
+  captchaToken?: string | null;
+  honeypot?: string | null;
 }
 
 function toIsoDate(value: string | null | undefined): string | null {
@@ -28,13 +34,44 @@ function normalizeGuests(value: number | undefined): number {
 }
 
 export async function POST(request: Request, context: RouteContext) {
+  const moduleBlocked = await enforcePublicModuleAccess("tours", "public_write");
+  if (moduleBlocked) return moduleBlocked;
+
   if (!isSupabaseToursEnabled()) {
     return NextResponse.json({ error: "Лист ожидания недоступен" }, { status: 503 });
+  }
+
+  const ip = getClientIp(request);
+  const ipLimit = await checkRateLimit(`tour-waitlist:ip:${ip}`, 5, 60_000);
+  if (!ipLimit.ok) {
+    return rateLimitErrorResponse(
+      ipLimit.retryAfterSec,
+      "Слишком много заявок в лист ожидания. Повторите позже.",
+    );
   }
 
   try {
     const { slug } = await context.params;
     const body = (await request.json()) as WaitlistJoinBody;
+    const protection = await verifyGuestFormProtection({
+      request,
+      formId: "waitlist",
+      captchaToken: body.captchaToken,
+      honeypot: body.honeypot,
+    });
+    if (!protection.ok) {
+      if (protection.kind === "configuration") {
+        return NextResponse.json(
+          {
+            error: "Защита листа ожидания временно недоступна.",
+            code: "FORM_PROTECTION_UNAVAILABLE",
+          },
+          { status: 503 },
+        );
+      }
+      return NextResponse.json({ ok: true });
+    }
+
     const supabase = await createSupabaseServerClient();
     const {
       data: { user: authUser },
@@ -48,6 +85,21 @@ export async function POST(request: Request, context: RouteContext) {
     const email = (body.email ?? authUser?.email ?? "").trim().toLowerCase();
     if (!authUser && !email) {
       return NextResponse.json({ error: "Укажите email для листа ожидания" }, { status: 400 });
+    }
+
+    if (email) {
+      const emailHash = hashRateLimitIdentifier("tour-waitlist", email);
+      const emailLimit = await checkRateLimit(
+        `tour-waitlist:email:${emailHash}`,
+        3,
+        15 * 60_000,
+      );
+      if (!emailLimit.ok) {
+        return rateLimitErrorResponse(
+          emailLimit.retryAfterSec,
+          "Слишком много заявок для этого адреса. Повторите позже.",
+        );
+      }
     }
 
     const slotDate = toIsoDate(body.slotDate);

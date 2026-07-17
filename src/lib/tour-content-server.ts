@@ -9,9 +9,6 @@ import {
   rowToPublicTour,
   rowToPublicTourDetail,
   rowToPublicTourListing,
-  rowToTour,
-  rowToTourDetail,
-  rowToTourListing,
   tourToContentRow,
 } from "@/lib/tour-content-mapper";
 import { PUBLIC_TOUR_MODERATION_STATUSES } from "@/lib/tour-content-visibility";
@@ -132,7 +129,7 @@ export async function upsertTourFromCanonical(
 
   const { data: existing } = await supabase
     .from("tours")
-    .select("published_at, moderation_status, approved_listing, approved_payload, approved_at")
+    .select("published_at, moderation_status, approved_listing, approved_payload, approved_at, row_version")
     .eq("id", tour.id)
     .maybeSingle();
 
@@ -146,6 +143,7 @@ export async function upsertTourFromCanonical(
   row.approved_listing = existing?.approved_listing ?? null;
   row.approved_payload = existing?.approved_payload ?? null;
   row.approved_at = existing?.approved_at ?? null;
+  row.row_version = existing?.row_version ?? 1;
 
   if (isPublishing && bypassModeration) {
     row.approved_listing = row.listing;
@@ -200,15 +198,28 @@ export async function deleteTourBySlug(
   return { ok: true };
 }
 
-export async function fetchAllToursAdmin(supabase: DbClient): Promise<TourContentAdminSummary[]> {
-  const { data, error } = await supabase
+export async function fetchAllToursAdmin(
+  supabase: DbClient,
+  options: {
+    limit?: number;
+    offset?: number;
+    status?: "draft" | "published" | "archived";
+    productType?: "tour" | "excursion";
+  } = {}
+): Promise<{ tours: TourContentAdminSummary[]; total: number; error?: "unavailable" }> {
+  const limit = Math.min(100, Math.max(1, options.limit ?? 50));
+  const offset = Math.max(0, options.offset ?? 0);
+  let query = supabase
     .from("tours")
-    .select("*")
+    .select("*", { count: "exact" })
     .order("updated_at", { ascending: false })
-    .limit(500);
+    .range(offset, offset + limit - 1);
+  if (options.status) query = query.eq("status", options.status);
+  if (options.productType) query = query.eq("product_type", options.productType);
+  const { data, error, count } = await query;
 
-  if (error || !data) return [];
-  return data.map(rowToAdminSummary);
+  if (error || !data) return { tours: [], total: 0, error: "unavailable" };
+  return { tours: data.map(rowToAdminSummary), total: count ?? data.length };
 }
 
 export async function fetchPublishedExcursionListings(

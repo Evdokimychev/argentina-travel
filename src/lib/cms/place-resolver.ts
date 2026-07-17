@@ -85,25 +85,28 @@ export async function resolvePlaceCatalog(locale = "ru"): Promise<PlaceListing[]
 export async function resolvePlacePage(slug: string, locale = "ru"): Promise<PlaceDetail | null> {
   const fallback = await fetchPlaceBySlugServer(slug);
   const supabase = await getCmsServerClient();
-  const translationStatus = supabase
-    ? await fetchCmsTranslationStatusForSlug(supabase, "place", slug, {
+  const translationStatusPromise = supabase
+    ? fetchCmsTranslationStatusForSlug(supabase, "place", slug, {
         ruFallbackComplete: Boolean(fallback),
       })
-    : buildDefaultTranslationStatus(Boolean(fallback));
+    : Promise.resolve(buildDefaultTranslationStatus(Boolean(fallback)));
 
   let resolvedSeo: CmsDocument["seo"] | undefined;
-  const resolved = await resolveWithPublishedCmsOverride({
-    docType: "place",
-    slug,
-    locale,
-    fallback,
-    merge: (doc, fb) => placeDetailFromCms(doc, fb),
-    supabase,
-    isUsable: isCmsDocumentComplete,
-    onResolvedDocument: (doc) => {
-      resolvedSeo = doc.seo;
-    },
-  });
+  const [translationStatus, resolved] = await Promise.all([
+    translationStatusPromise,
+    resolveWithPublishedCmsOverride({
+      docType: "place",
+      slug,
+      locale,
+      fallback,
+      merge: (doc, fb) => placeDetailFromCms(doc, fb),
+      supabase,
+      isUsable: isCmsDocumentComplete,
+      onResolvedDocument: (doc) => {
+        resolvedSeo = doc.seo;
+      },
+    }),
+  ]);
   if (!resolved) return null;
   return attachCmsResolverMetadata(
     resolved,

@@ -1,11 +1,4 @@
-import { marketplaceTours } from "@/data/marketplace-tours";
-import {
-  buildFullSearchIndex,
-  buildStaticSearchIndex,
-  buildTourSearchItems,
-  type SearchIndexItem,
-} from "@/lib/site-search-index";
-import { buildExcursionSearchItems } from "@/lib/excursion-search-index";
+import type { SearchIndexItem } from "@/lib/site-search-schema";
 
 function dedupeByHref(items: SearchIndexItem[]): SearchIndexItem[] {
   const seen = new Set<string>();
@@ -18,15 +11,14 @@ function dedupeByHref(items: SearchIndexItem[]): SearchIndexItem[] {
 }
 
 export function getDefaultSearchIndex(): SearchIndexItem[] {
-  return buildFullSearchIndex(marketplaceTours);
+  return [];
 }
 
 export async function loadSearchIndex(): Promise<SearchIndexItem[]> {
   if (typeof window === "undefined") return getDefaultSearchIndex();
 
   try {
-    const [{ getMarketplaceListings }, excursionsRes, staticRes] = await Promise.all([
-      import("@/lib/tour-repository"),
+    const [excursionsRes, staticRes] = await Promise.all([
       fetch("/api/excursions/search-index").catch(() => null),
       fetch("/api/site/search-index").catch(() => null),
     ]);
@@ -35,10 +27,9 @@ export async function loadSearchIndex(): Promise<SearchIndexItem[]> {
       excursionsRes?.ok ? ((await excursionsRes.json()) as SearchIndexItem[]) : [];
     const staticItems = staticRes?.ok
       ? ((await staticRes.json()) as SearchIndexItem[])
-      : buildStaticSearchIndex();
+      : [];
 
     return dedupeByHref([
-      ...buildTourSearchItems(getMarketplaceListings()),
       ...excursionItems,
       ...staticItems,
     ]);

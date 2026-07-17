@@ -41,6 +41,16 @@ export function buildBlogAuthorProfiles(posts: BlogPost[]): BlogAuthorProfile[] 
     });
   }
 
+  if (!profiles.some((profile) => profile.slug === "redaktsiya")) {
+    profiles.push({
+      slug: "redaktsiya",
+      name: BLOG_EDITORIAL.name,
+      bio: BLOG_EDITORIAL.bio,
+      avatar: BLOG_EDITORIAL.avatar,
+      postCount: 0,
+    });
+  }
+
   return profiles.sort((a, b) => b.postCount - a.postCount || a.name.localeCompare(b.name, "ru"));
 }
 

@@ -24,6 +24,7 @@ export default function ExcursionMobileBookingBar({
     selectedTime,
     openBookingPreview,
     submitButtonLabel,
+    offerCapabilities,
   } = useExcursionBooking();
 
   const hasDateAndTime = Boolean(selectedDate && selectedTime);
@@ -33,10 +34,10 @@ export default function ExcursionMobileBookingBar({
     (excursion.priceValue != null
       ? `${Math.round(excursion.priceValue)}${excursion.priceCurrency ? ` ${excursion.priceCurrency}` : ""}`
       : null);
-  const ctaLabel =
-    excursion.partner === "tripster" && excursion.tripsterPartnerApiConfigured
-      ? "Забронировать на сайте"
-      : t("excursions.book");
+  const ctaLabel = offerCapabilities.primaryActionLabel;
+  const bookingDisabled =
+    offerCapabilities.bookingMode === "disabled" ||
+    offerCapabilities.bookingMode === "information_only";
 
   function scrollToBooking() {
     document.getElementById("booking")?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -71,7 +72,11 @@ export default function ExcursionMobileBookingBar({
           )}
         </div>
 
-        {prefersAffiliate && excursion.bookingHref ? (
+        {bookingDisabled ? (
+          <Button type="button" disabled className="min-h-11 max-w-[65%] shrink-0 rounded-xl px-5">
+            {ctaLabel}
+          </Button>
+        ) : prefersAffiliate && excursion.bookingHref ? (
           <a
             href={excursion.bookingHref}
             target="_blank"

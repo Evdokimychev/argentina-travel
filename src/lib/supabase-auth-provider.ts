@@ -189,7 +189,7 @@ async function registerByApi(input: {
     return { confirmationRequired: true, email: normalizedEmail };
   }
 
-  return loginWithCredentials(normalizedEmail, password, input.role);
+  return loginWithCredentials(normalizedEmail, password, "tourist");
 }
 
 export const supabaseAuthProvider: AuthProvider = {

@@ -81,7 +81,11 @@ export function buildDestinationsCatalogItemListJsonLd(
   locale?: I18nLocale
 ) {
   const capped = destinations.slice(0, MAX_CATALOG_ITEM_LIST);
-  const name = resolveCatalogListName(locale, "nav.geography", "Регионы и места");
+  const name = resolveCatalogListName(
+    locale,
+    "destinations.catalog.title",
+    "Направления и места",
+  );
 
   return {
     "@context": "https://schema.org",

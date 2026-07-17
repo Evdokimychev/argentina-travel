@@ -4,6 +4,8 @@ import Link from "next/link";
 import { BookOpen, Compass, Map, MapPin, Plane } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
+import type { PartnerTransitionOutcome } from "@/lib/booking/partner-handoff-copy";
+import { partnerTransitionTitle } from "@/lib/booking/partner-handoff-copy";
 
 type ExploreLink = {
   href: string;
@@ -19,6 +21,7 @@ type PartnerBookingSuccessPanelProps = {
   productType?: "excursion" | "tour";
   onClose?: () => void;
   className?: string;
+  outcome?: PartnerTransitionOutcome;
 };
 
 function buildExploreLinks(productType: "excursion" | "tour"): ExploreLink[] {
@@ -49,13 +52,22 @@ export default function PartnerBookingSuccessPanel({
   productType = "excursion",
   onClose,
   className,
+  outcome = "partner_handoff",
 }: PartnerBookingSuccessPanelProps) {
   const exploreLinks = buildExploreLinks(productType);
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50/80 to-white px-4 py-3.5 text-sm leading-relaxed text-charcoal">
-        {message}
+      <div
+        className={cn(
+          "rounded-2xl border px-4 py-3.5 text-sm leading-relaxed text-charcoal",
+          outcome === "order_created"
+            ? "border-emerald-100 bg-gradient-to-br from-emerald-50/80 to-white"
+            : "border-amber-200 bg-amber-50/80"
+        )}
+      >
+        <p className="font-semibold">{partnerTransitionTitle(outcome)}</p>
+        <p className="mt-1">{message}</p>
       </div>
 
       {popupBlocked && partnerBookingUrl ? (

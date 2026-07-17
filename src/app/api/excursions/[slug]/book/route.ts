@@ -1,21 +1,26 @@
-import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
+import { ENABLE_PARTNER_CONTACT_FORM } from "@/lib/booking/partner-contact-form-flag";
 import { parseExcursionSlug } from "@/lib/excursion-slug";
 import { buildDefaultTickets } from "@/lib/excursion-schedule";
 import { fetchExcursionDetailServer } from "@/lib/excursion-server";
+import {
+  claimPartnerBookingOperation,
+  completePartnerBookingOperation,
+  fingerprintPartnerBookingRequest,
+  isValidBookingOperationKey,
+} from "@/lib/partner-booking/idempotency";
+import { checkRateLimit, getClientIp, rateLimitErrorResponse } from "@/lib/rate-limit";
 import {
   createTripsterExternalOrder,
   TripsterBookingError,
 } from "@/lib/tripster/booking-api";
 import { isTripsterConfigured } from "@/lib/tripster/env";
-import {
-  createSputnik8Order,
-  Sputnik8BookingError,
-} from "@/lib/sputnik8/booking-api";
-import { fetchSputnik8Events } from "@/lib/sputnik8/client";
-import { isSputnik8Configured } from "@/lib/sputnik8/env";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isSupabaseConfigured } from "@/lib/supabase/env";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { verifyGuestFormProtection } from "@/lib/forms/captcha-server";
+import { fetchSiteNavigation } from "@/lib/site-settings-server";
+import { publicBookingError } from "@/lib/partner-booking/public-errors";
 
 type RouteContext = { params: Promise<{ slug: string }> };
 
@@ -27,8 +32,8 @@ type BookBody = {
   email?: string;
   phone?: string;
   messageToGuide?: string;
-  userId?: string;
-  eventId?: number;
+  captchaToken?: string;
+  company?: string;
 };
 
 function normalizeTimeForApi(time: string): string {
@@ -36,34 +41,51 @@ function normalizeTimeForApi(time: string): string {
   return normalized.length === 5 ? `${normalized}:00` : normalized;
 }
 
-async function resolveSputnik8EventId(
-  productId: number,
-  date: string,
-  time: string,
-  explicitEventId?: number
-): Promise<number | null> {
-  if (explicitEventId) return explicitEventId;
-
-  const events = await fetchSputnik8Events(productId);
-  const match = events.find((item) => {
-    const eventDate = item.date ?? item.datetime?.slice(0, 10) ?? item.starts_at?.slice(0, 10);
-    const eventTime = item.time ?? item.datetime?.slice(11, 16) ?? item.starts_at?.slice(11, 16);
-    return eventDate === date && eventTime?.startsWith(time.slice(0, 5));
-  });
-
-  return match?.id ?? events[0]?.id ?? null;
-}
-
 export async function POST(request: Request, context: RouteContext) {
-  const { slug } = await context.params;
-  const excursion = await fetchExcursionDetailServer(slug);
-  if (!excursion) {
-    return NextResponse.json({ error: "Excursion not found." }, { status: 404 });
+  const limit = await checkRateLimit(
+    `excursions:partner-booking:ip:${getClientIp(request)}`,
+    5,
+    60_000,
+  );
+  if (!limit.ok) {
+    return rateLimitErrorResponse(
+      limit.retryAfterSec,
+      "Слишком много попыток бронирования. Повторите позже.",
+    );
   }
 
   const body = (await request.json().catch(() => null)) as BookBody | null;
   if (!body) {
-    return NextResponse.json({ error: "Invalid JSON body." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_INVALID_REQUEST"), { status: 400 });
+  }
+
+  const protection = await verifyGuestFormProtection({
+    request,
+    formId: "partner_booking",
+    captchaToken: body.captchaToken,
+    honeypot: body.company,
+  });
+  if (!protection.ok) {
+    if (protection.kind === "configuration") {
+      return NextResponse.json(
+        publicBookingError("BOOKING_VERIFICATION_UNAVAILABLE"),
+        { status: 503 },
+      );
+    }
+    return NextResponse.json(
+      publicBookingError("BOOKING_VERIFICATION_FAILED"),
+      { status: 400 },
+    );
+  }
+
+  if (!(await fetchSiteNavigation()).showExcursions) {
+    return NextResponse.json(publicBookingError("BOOKING_SECTION_UNAVAILABLE"), { status: 404 });
+  }
+
+  const { slug } = await context.params;
+  const excursion = await fetchExcursionDetailServer(slug);
+  if (!excursion) {
+    return NextResponse.json(publicBookingError("BOOKING_PRODUCT_NOT_FOUND"), { status: 404 });
   }
 
   const date = body.date?.trim();
@@ -75,133 +97,106 @@ export async function POST(request: Request, context: RouteContext) {
   const messageToGuide = body.messageToGuide?.trim();
 
   if (!date || !time || personsCount < 1) {
-    return NextResponse.json({ error: "Missing required booking fields." }, { status: 400 });
+    return NextResponse.json(publicBookingError("BOOKING_REQUIRED_FIELDS"), { status: 400 });
   }
 
-  // Контактные данные больше не собираются в форме (см. ENABLE_PARTNER_CONTACT_FORM).
-  // Без них заказ через External Orders создать нельзя — отправляем туриста
-  // на сайт партнёра, где он заполнит контакты сам.
   const hasContactInput = Boolean(name || email || phone);
 
   if (excursion.partner === "platform") {
     return NextResponse.json(
-      { error: "Для собственной экскурсии используйте оформление заявки на сайте." },
+      publicBookingError("BOOKING_USE_SITE_CHECKOUT"),
       { status: 409 }
     );
   }
 
   const parsed = parseExcursionSlug(slug);
+  const affiliateFallback = (reason: string, status = 200) =>
+    NextResponse.json(
+      {
+        ok: false,
+        mode: "affiliate_fallback",
+        fallbackUrl: `/api/affiliate/go/${slug}`,
+        fallbackReason: reason,
+        ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+      },
+      { status },
+    );
 
   if (parsed?.partner === "sputnik8" || excursion.partner === "sputnik8") {
-    if (!hasContactInput || !isSputnik8Configured()) {
-      return NextResponse.json({
-        ok: false,
-        mode: "affiliate_fallback",
-        fallbackUrl: `/api/affiliate/go/${slug}`,
-        error: "Sputnik8 booking API unavailable. Redirecting to partner site.",
-      });
-    }
-
-    const idempotencyKey = randomUUID();
-
-    try {
-      const eventId = await resolveSputnik8EventId(excursion.id, date, time, body.eventId);
-      if (!eventId) {
-        return NextResponse.json({
-          ok: false,
-          mode: "affiliate_fallback",
-          fallbackUrl: `/api/affiliate/go/${slug}`,
-          error: "No available event. Redirecting to partner site.",
-        });
-      }
-
-      const order = await createSputnik8Order(
-        {
-          event_id: eventId,
-          name,
-          email,
-          phone,
-          persons_count: personsCount,
-          comment: messageToGuide || undefined,
-        },
-        idempotencyKey
-      );
-
-      if (isSupabaseConfigured()) {
-        try {
-          const supabase = createSupabaseAdminClient();
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          await (supabase as any).from("sputnik8_booking_requests").insert({
-            product_id: excursion.id,
-            product_slug: excursion.slug,
-            user_id: body.userId?.trim() || null,
-            event_id: eventId,
-            event_date: date,
-            event_time: time,
-            persons_count: personsCount,
-            customer_name: name,
-            customer_email: email,
-            customer_phone: phone,
-            comment: messageToGuide || null,
-            sputnik8_order_id: order.id,
-            sputnik8_order_url: order.url ?? order.payment_url ?? null,
-            sputnik8_status: order.status,
-            price_snapshot: order.price ?? null,
-          });
-        } catch {
-          // Non-blocking persistence
-        }
-      }
-
-      return NextResponse.json({
-        ok: true,
-        mode: "sputnik8_order",
-        orderId: order.id,
-        status: order.status,
-        orderUrl: order.url ?? order.payment_url,
-        price: order.price,
-      });
-    } catch (error) {
-      if (error instanceof Sputnik8BookingError) {
-        if (error.status === 403 || error.status === 401 || error.status === 503) {
-          return NextResponse.json({
-            ok: false,
-            mode: "affiliate_fallback",
-            fallbackUrl: `/api/affiliate/go/${slug}`,
-            error: "External booking API unavailable. Redirecting to partner site.",
-          });
-        }
-
-        return NextResponse.json(
-          {
-            ok: false,
-            error: "Booking failed.",
-            details: error.details,
-          },
-          { status: error.status >= 400 && error.status < 600 ? error.status : 400 }
-        );
-      }
-
-      return NextResponse.json({
-        ok: false,
-        mode: "affiliate_fallback",
-        fallbackUrl: `/api/affiliate/go/${slug}`,
-        error: "Booking failed. Redirecting to partner site.",
-      });
-    }
+    // Sputnik8 is affiliate-only in the product contract. The API route must
+    // never turn crafted contact payloads into real partner orders.
+    return affiliateFallback("affiliate_only");
   }
 
-  if (!hasContactInput || !isTripsterConfigured()) {
-    return NextResponse.json({
-      ok: false,
-      mode: "affiliate_fallback",
-      fallbackUrl: `/api/affiliate/go/${slug}`,
-      error: "Tripster booking API unavailable. Redirecting to partner site.",
-    });
+  // UI hiding is not a security boundary. Keep the server-side feature guard
+  // authoritative so direct requests cannot create real External Orders while
+  // partner contact collection is disabled.
+  if (!ENABLE_PARTNER_CONTACT_FORM || !hasContactInput) {
+    return affiliateFallback("contact_on_partner_site");
+  }
+
+  if (!isTripsterConfigured() || !isSupabaseConfigured()) {
+    return affiliateFallback("api_not_configured");
+  }
+
+  const idempotencyKey = request.headers.get("idempotency-key")?.trim() ?? null;
+  if (!isValidBookingOperationKey(idempotencyKey)) {
+    return NextResponse.json(
+      publicBookingError("BOOKING_REQUEST_KEY_INVALID"),
+      { status: 400 },
+    );
   }
 
   const tickets = buildDefaultTickets(excursion.ticketOptions, personsCount);
-  const idempotencyKey = randomUUID();
+  const operationKey = idempotencyKey;
+  const operationStore = createSupabaseAdminClient();
+  const requestFingerprint = fingerprintPartnerBookingRequest({
+    experienceId: excursion.id,
+    date,
+    time: normalizeTimeForApi(time),
+    personsCount,
+    tickets,
+    name,
+    email,
+    phone,
+    messageToGuide: messageToGuide ?? null,
+  });
+  const claim = await claimPartnerBookingOperation(operationStore, {
+    provider: "tripster",
+    idempotencyKey: operationKey,
+    requestFingerprint,
+  });
+
+  if (claim.state === "replay") {
+    return NextResponse.json(claim.response.payload, {
+      status: claim.response.statusCode,
+      headers: { "X-Idempotent-Replay": "true" },
+    });
+  }
+  if (claim.state === "conflict") {
+    return NextResponse.json(
+      publicBookingError("BOOKING_REQUEST_CONFLICT"),
+      { status: 409 },
+    );
+  }
+  if (claim.state === "in_progress") {
+    return NextResponse.json(
+      publicBookingError("BOOKING_REQUEST_IN_PROGRESS"),
+      { status: 409, headers: { "Retry-After": "5" } },
+    );
+  }
+  if (claim.state === "unavailable") {
+    return affiliateFallback("idempotency_unavailable");
+  }
+
+  async function respond(payload: Record<string, unknown>, statusCode = 200) {
+    await completePartnerBookingOperation(operationStore, {
+      provider: "tripster",
+      idempotencyKey: operationKey,
+      response: { payload, statusCode },
+    });
+    return NextResponse.json(payload, { status: statusCode });
+  }
 
   try {
     const order = await createTripsterExternalOrder(
@@ -216,36 +211,37 @@ export async function POST(request: Request, context: RouteContext) {
         phone,
         message_to_guide: messageToGuide || undefined,
       },
-      idempotencyKey
+      operationKey
     );
 
-    if (isSupabaseConfigured()) {
-      try {
-        const supabase = createSupabaseAdminClient();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        await (supabase as any).from("tripster_booking_requests").insert({
-          experience_id: excursion.id,
-          experience_slug: excursion.slug,
-          user_id: body.userId?.trim() || null,
-          event_date: date,
-          event_time: time,
-          persons_count: personsCount,
-          tickets,
-          customer_name: name,
-          customer_email: email,
-          customer_phone: phone,
-          message_to_guide: messageToGuide || null,
-          tripster_order_id: order.id,
-          tripster_order_url: order.url ?? null,
-          tripster_status: order.status,
-          price_snapshot: order.price ?? null,
-        });
-      } catch {
-        // Non-blocking persistence for CRM/analytics
-      }
+    try {
+      const session = await createSupabaseServerClient();
+      const {
+        data: { user },
+      } = await session.auth.getUser();
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (operationStore as any).from("tripster_booking_requests").insert({
+        experience_id: excursion.id,
+        experience_slug: excursion.slug,
+        user_id: user?.id ?? null,
+        event_date: date,
+        event_time: time,
+        persons_count: personsCount,
+        tickets,
+        customer_name: name,
+        customer_email: email,
+        customer_phone: phone,
+        message_to_guide: messageToGuide || null,
+        tripster_order_id: order.id,
+        tripster_order_url: order.url ?? null,
+        tripster_status: order.status,
+        price_snapshot: order.price ?? null,
+      });
+    } catch {
+      // Non-blocking persistence for CRM/analytics
     }
 
-    return NextResponse.json({
+    return respond({
       ok: true,
       mode: "tripster_order",
       orderId: order.id,
@@ -256,24 +252,27 @@ export async function POST(request: Request, context: RouteContext) {
   } catch (error) {
     if (error instanceof TripsterBookingError) {
       if (error.status === 403 || error.status === 401) {
-        return NextResponse.json({
-          ok: false,
-          mode: "affiliate_fallback",
-          fallbackUrl: `/api/affiliate/go/${slug}`,
-          error: "External booking API unavailable. Redirecting to partner site.",
-        });
+        return respond(
+          {
+            ok: false,
+            mode: "affiliate_fallback",
+            fallbackUrl: `/api/affiliate/go/${slug}`,
+            fallbackReason: "external_orders_unauthorized",
+            ...publicBookingError("BOOKING_PARTNER_HANDOFF"),
+          },
+          error.status,
+        );
       }
 
-      return NextResponse.json(
+      return respond(
         {
           ok: false,
-          error: "Booking failed.",
-          details: error.details,
+          ...publicBookingError("BOOKING_PARTNER_REJECTED"),
         },
-        { status: error.status >= 400 && error.status < 600 ? error.status : 400 }
+        error.status >= 400 && error.status < 600 ? error.status : 400,
       );
     }
 
-    return NextResponse.json({ error: "Booking failed." }, { status: 502 });
+    return respond(publicBookingError("BOOKING_SERVICE_UNAVAILABLE"), 502);
   }
 }

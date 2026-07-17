@@ -51,7 +51,7 @@ describe("native tour and excursion workflow", () => {
     expect(route).toContain("evaluatePublishReadiness(serverDraft)");
     expect(route).toContain('.neq("id", id)');
     expect(route).toContain("serverDraft");
-    expect(route).toContain("auth.sessionUser.id,\n    serverDraft");
+    expect(route).toContain("p_actor_user_id: auth.sessionUser.id");
     expect(route).toContain("containsEmbeddedDataUrl(draft)");
   });
 
@@ -66,19 +66,23 @@ describe("native tour and excursion workflow", () => {
     expect(server).toContain("fetchPublishedExcursionBySlugServer");
   });
 
-  it("updates the product before closing its moderation queue item", () => {
+  it("resolves product and queue through the atomic moderation contract", () => {
     const source = fs.readFileSync(
       path.join(root, "src/lib/admin/moderation-server.ts"),
       "utf8"
     );
-    const tourBranch = source.slice(
-      source.indexOf('if (item.entity_type === "tour")'),
-      source.indexOf('if (item.entity_type === "review")')
+    const migration = fs.readFileSync(
+      path.join(
+        root,
+        "supabase/migrations/20260717050000_general_moderation_atomic_workflow.sql",
+      ),
+      "utf8",
     );
 
-    expect(tourBranch.indexOf('.from("tours")\n      .update(tourUpdate)')).toBeGreaterThan(-1);
-    expect(tourBranch.indexOf('.from("tours")\n      .update(tourUpdate)')).toBeLessThan(
-      tourBranch.indexOf('.from("moderation_queue")\n      .update')
+    expect(source).toContain('supabase.rpc("admin_resolve_moderation_item_atomic"');
+    expect(migration).toContain("where id = tour_row.id and row_version = p_expected_entity_version");
+    expect(migration.indexOf("update public.tours")).toBeLessThan(
+      migration.indexOf("update public.moderation_queue", migration.indexOf("update public.tours")),
     );
   });
 
@@ -106,12 +110,13 @@ describe("native tour and excursion workflow", () => {
     expect(source).not.toContain("upsertTourFromCanonical");
   });
 
-  it("queues organizer publications with a server moderation client", () => {
+  it("queues organizer publications through the atomic database workflow", () => {
     const route = fs.readFileSync(
       path.join(root, "src/app/api/organizer/tours/[id]/draft/route.ts"),
       "utf8"
     );
-    expect(route).toContain("moderationClient: createSupabaseAdminClient()");
+    expect(route).toContain('"organizer_mutate_tour_atomic"');
+    expect(route).not.toMatch(/\bforce\b/);
   });
 
   it("loads and books first-party excursions without falling through to partner APIs", () => {

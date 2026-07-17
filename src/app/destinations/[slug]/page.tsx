@@ -57,8 +57,10 @@ export default async function DestinationDetailPage({ params }: PageProps) {
   if (!destination) notFound();
   const cmsMetadata = getCmsResolverMetadata(destination);
 
-  const tours = await fetchMarketplaceTours();
-  const flightTeasers = await getDestinationFlightTeasers(destination.id, locale);
+  const [tours, flightTeasers] = await Promise.all([
+    fetchMarketplaceTours(),
+    getDestinationFlightTeasers(destination.id, locale),
+  ]);
   const knowledgeLinks = resolveKnowledgeLinksForDestination(destination.id);
 
   return (

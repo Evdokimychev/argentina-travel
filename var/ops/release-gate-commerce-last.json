@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 3,
+  "evidenceScope": "candidate",
+  "candidateTree": "dc10266ca8d074b22a120ece2241ffeded4a147e",
+  "evidenceRunId": "439fdf8b-09c5-48ee-8d3f-244d9bceeee3",
+  "evidenceStartedAt": "2026-07-17T04:38:38.802Z",
+  "evidenceGeneratedAt": "2026-07-17T04:38:42.190Z",
+  "evidenceEnvironment": "local-production",
+  "evidenceBaseUrl": "http://127.0.0.1:3000",
+  "evidenceIntegrity": {
+    "status": "passed",
+    "reasons": [],
+    "dirtyPaths": []
+  },
+  "commitSha": "ec5d30e6f533dbd3b620f673541664acfef7526d",
+  "timestamp": "2026-07-17T04:38:42.190Z",
+  "environment": "local-production",
+  "requestedGroup": "commerce",
+  "status": "passed",
+  "checks": [
+    {
+      "id": "commerce:booking-payment-integrity",
+      "group": "commerce",
+      "status": "passed",
+      "durationMs": 2999,
+      "blocking": true,
+      "artifact": "var/ops/release-gate-logs/commerce-booking-payment-integrity.log",
+      "command": "npx vitest run src/lib/booking-create-command-integrity.test.ts src/lib/booking-cancellation-integrity.test.ts src/lib/booking-create-pricing.test.ts src/lib/booking-state-machine.test.ts src/lib/payments/payment-integrity.test.ts src/lib/payments/webhook-handler.test.ts src/lib/payments/payment-idempotency.test.ts src/lib/payments/provider-contract.test.ts src/lib/database-url.test.ts"
+    }
+  ]
+}

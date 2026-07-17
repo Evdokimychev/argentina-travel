@@ -56,14 +56,27 @@ jobs:
         run: npm run bundle:report
         continue-on-error: true
 
-      - name: Lighthouse blog CWV
+      - name: Blocking public performance budgets (3 cold mobile runs)
         env:
           LIGHTHOUSE_BASE_URL: http://127.0.0.1:3000
           LIGHTHOUSE_START_TIMEOUT_MS: 180000
-          LIGHTHOUSE_CATEGORIES: performance,accessibility
-          LIGHTHOUSE_SAMPLE_PATHS: /blog,/blog/authors,/blog/hub/patagonia,/blog/patagonia-packing-list,/blog/natsionalnyy-park-iguasu
-        run: node scripts/lighthouse-ci.mjs
-        continue-on-error: true
+          LIGHTHOUSE_CATEGORIES: performance,accessibility,seo
+          LIGHTHOUSE_RUNS_PER_PATH: "3"
+          LIGHTHOUSE_PERF_BUDGET: "75"
+          LIGHTHOUSE_LCP_BUDGET_MS: "4000"
+          LIGHTHOUSE_CLS_BUDGET: "0.1"
+          LIGHTHOUSE_TBT_BUDGET_MS: "300"
+        run: node scripts/lighthouse-phase2-ci.mjs
+
+      - name: Upload performance evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: performance-budgets-${{ github.sha }}
+          path: |
+            var/ops/lighthouse-phase2-sample-last.json
+            var/ops/lh-*.json
+          if-no-files-found: error
 
       - name: E2E UX audit
         run: npm run test:e2e:ux-audit
